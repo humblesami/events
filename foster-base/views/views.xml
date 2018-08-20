@@ -2,9 +2,9 @@
   <data>
     <!-- explicit list view definition -->
     <!--
-    <record model="ir.ui.view" id="foster-base.list">
-      <field name="name">foster-base list</field>
-      <field name="model">foster-base.foster-base</field>
+    <record model="ir.ui.view" id="foster_management.list">
+      <field name="name">foster_management list</field>
+      <field name="model">foster_management.foster_management</field>
       <field name="arch" type="xml">
         <tree>
           <field name="name"/>
@@ -17,18 +17,18 @@
 
     <!-- actions opening views on models -->
     <!--
-    <record model="ir.actions.act_window" id="foster-base.action_window">
-      <field name="name">foster-base window</field>
-      <field name="res_model">foster-base.foster-base</field>
+    <record model="ir.actions.act_window" id="foster_management.action_window">
+      <field name="name">foster_management window</field>
+      <field name="res_model">foster_management.foster_management</field>
       <field name="view_mode">tree,form</field>
     </record>
     -->
 
     <!-- server action to the one above -->
     <!--
-    <record model="ir.actions.server" id="foster-base.action_server">
-      <field name="name">foster-base server</field>
-      <field name="model_id" ref="model_foster-base_foster-base"/>
+    <record model="ir.actions.server" id="foster_management.action_server">
+      <field name="name">foster_management server</field>
+      <field name="model_id" ref="model_foster_management_foster_management"/>
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -42,19 +42,19 @@
 
     <!-- Top menu item -->
     <!--
-    <menuitem name="foster-base" id="foster-base.menu_root"/>
+    <menuitem name="foster_management" id="foster_management.menu_root"/>
     -->
     <!-- menu categories -->
     <!--
-    <menuitem name="Menu 1" id="foster-base.menu_1" parent="foster-base.menu_root"/>
-    <menuitem name="Menu 2" id="foster-base.menu_2" parent="foster-base.menu_root"/>
+    <menuitem name="Menu 1" id="foster_management.menu_1" parent="foster_management.menu_root"/>
+    <menuitem name="Menu 2" id="foster_management.menu_2" parent="foster_management.menu_root"/>
     -->
     <!-- actions -->
     <!--
-    <menuitem name="List" id="foster-base.menu_1_list" parent="foster-base.menu_1"
-              action="foster-base.action_window"/>
-    <menuitem name="Server to list" id="foster-base" parent="foster-base.menu_2"
-              action="foster-base.action_server"/>
+    <menuitem name="List" id="foster_management.menu_1_list" parent="foster_management.menu_1"
+              action="foster_management.action_window"/>
+    <menuitem name="Server to list" id="foster_management" parent="foster_management.menu_2"
+              action="foster_management.action_server"/>
     -->
   </data>
 </odoo>

@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 from odoo import http
 
-# class Foster-base(http.Controller):
-#     @http.route('/foster-base/foster-base/', auth='public')
+# class FosterManagement(http.Controller):
+#     @http.route('/foster_management/foster_management/', auth='public')
 #     def index(self, **kw):
 #         return "Hello, world"
 
-#     @http.route('/foster-base/foster-base/objects/', auth='public')
+#     @http.route('/foster_management/foster_management/objects/', auth='public')
 #     def list(self, **kw):
-#         return http.request.render('foster-base.listing', {
-#             'root': '/foster-base/foster-base',
-#             'objects': http.request.env['foster-base.foster-base'].search([]),
+#         return http.request.render('foster_management.listing', {
+#             'root': '/foster_management/foster_management',
+#             'objects': http.request.env['foster_management.foster_management'].search([]),
 #         })
 
-#     @http.route('/foster-base/foster-base/objects/<model("foster-base.foster-base"):obj>/', auth='public')
+#     @http.route('/foster_management/foster_management/objects/<model("foster_management.foster_management"):obj>/', auth='public')
 #     def object(self, obj, **kw):
-#         return http.request.render('foster-base.object', {
+#         return http.request.render('foster_management.object', {
 #             'object': obj
 #         })

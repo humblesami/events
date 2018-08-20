@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "foster-base",
+    'name': "foster_management",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
