@@ -2,7 +2,7 @@
     <data>
         <template id="assets_backend" inherit_id="web.assets_backend" name="Web Custom Assets" >
             <xpath expr=".">
-                <link rel="stylesheet" href="/foster_management/static/web.css"/>
+                <link rel="stylesheet" href="/foster-base/static/web.css"/>
             </xpath>
         </template>
     </data>

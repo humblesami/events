@@ -113,9 +113,28 @@ class childcare_plan_services(models.Model):
     description = fields.Text("Description")
     plan_service = fields.Many2one("foster.applicants")
 
-# class pets(models.Model):
-#     pet_name = fields.Char("Pet Name")
-#     breed = fields.Char("Breed(if dog)")
+class pets(models.Model):
+    pet_name = fields.Char("Pet Name")
+    breed = fields.Char("Breed(if dog)")
+
+class health_status(models.Model):
+    _name = 'fodter.health_status'
+    household_member_name = fields.Char('Household Member Name')
+    treatment_provider_name = fields.Char('Treatment Provider Name')
+    address = fields.Text('Address')
+    treatment_type = fields.Char('Treatment Type')
+    condition_date_onset = fields.Datetime('Date of onset')
+    is_cured = fields.Boolean('Current Condition?')
+
+class refrence(models.Model):
+    _name = 'foster.refrence'
+    type = fields.Char('Type of reference')
+    address = fields.Text('Address')
+    phone_no = fields.Char('Phone Number')
+    city = fields.Char('City')
+    state =  fields.Char('State')
+    zip =  fields.Char('Zip')
+
 
 class Applicant(models.Model):
     _name = 'foster.applicants'
