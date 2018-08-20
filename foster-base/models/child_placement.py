@@ -1,0 +1,100 @@
+from odoo import models, fields
+
+class parent(models.Model):
+    _name = 'foster.parent'
+    is_mother = fields.Boolean(string='Mother?')
+    name = fields.Char(string='Name')
+    address = fields.Text(string='Parent Address')
+    other_caretaker = fields.Char(string='Other Significant Caretaker')
+    child_address = fields.Text(string='Child’s Address Prior To Placement')
+
+
+class child(models.Model):
+    _name = 'foster.child'
+    date_placed = fields.Datetime(string='Date Placed')
+    full_name = fields.Char(string='Full Name')
+    dob = fields.Date(string='Date of Birth')
+    religion = fields.Char(string='Religion')
+    ethnicity = fields.Char(string='Ethnicity')
+    language = fields.Char(string='Language')
+    parent = fields.Many2one('foster.parent')
+    legal_status = fields.Char(string='Child’s Legal Status')
+    reason = fields.Selection([('a','51B Removal'),
+        ('b','Placement Disruption'),
+        ('c','CHINS'),
+        ('d','Sexual Abuse'),
+        ('e','Temporary Family Emergency'),
+        ('f','Court Ordered'),
+        ('g','Neglect'),
+        ('h','Voluntary Placement'),
+        ('i','Other(e.g. need for less restrictive setting, adoption surrender, etc.)'),
+        ('j', 'Physical Abuse')])
+    servic_goal = fields.Text(string='Child’s Service Plan Goal')
+    placement_history = fields.Char(string='Placement History Type (Foster Care, Group Home, Residential)')
+    placement_with = fields.Char(string='With Whom')
+    leaving_reason = fields.Text(string='Reason(s) For Leaving')
+    is_enrolled = fields.Boolean(string='Currently enrolled in child care or in school?')
+    school_name = fields.Char(string='School Name')
+    school_address = fields.Text(string='School Address')
+    grade = fields.Char(string='Grade/Level')
+    is_iep = fields.Boolean(string='Individual Education Plan (I.E.P.)')
+    special_medical = fields.Char(string='Special Medical Needs (e.g. allergies, HIV, other acute or chronic conditions, etc)')
+    medical_details = fields.Text(string='Please describe briefly')
+    is_anticipated = fields.Boolean(string='Is child receiving therapy/counseling, or is it anticipated?')
+    frequency = fields.Text(string='Frequency')
+    therapist_details = fields.Text(string='Name and Address of Therapist if currently receiving treatment.')
+    visit_schedule = fields.Text(string='Provisions for Visitation Schedule')
+    non_acdamic_details = fields.Text(string='Please describe the child’s strengths, hobbies, interests, religious requirements and attributes')
+    other_needs = fields.Text(string='Please describe any other individual needs of this child, or any other information, that would be helpful for the foster parent and is not included elsewhere on this form')
+
+    acting_out_aggressively = fields.Boolean(string='Acting out Aggressively')
+    school_adjustment_disorder = fields.Boolean(string='School Adjustment Disorder')
+    enuresis = fields.Boolean(string='Enuresis')
+    psychosis = fields.Boolean(string='Psychosis')
+    history_of_physical_abuse = fields.Boolean(string='History of Physical Abuse')
+    communicable_diseases = fields.Boolean(string='Communicable Diseases')
+    history_of_neglect = fields.Boolean(string='History of Neglect')
+    chronic_medical_condition = fields.Boolean(string='Chronic Medical Condition')
+    cerebral_palsy = fields.Boolean(string='Cerebral Palsy')
+    autism = fields.Boolean(string='Autism')
+    depression = fields.Boolean(string='Depression')
+    apnea = fields.Boolean(string='Apnea')
+    non_ambulatory = fields.Boolean(string='Non-Ambulatory')
+    alcohol_abuse = fields.Boolean(string='Alcohol Abuse')
+    past_psychiatric_hospitalization = fields.Boolean(string='Past Psychiatric Hospitalization')
+    motion_impairment = fields.Boolean(string='Motion Impairment')
+    parenting_teen = fields.Boolean(string='Parenting Teen')
+    development_delayed = fields.Boolean(string='Development Delayed')
+    physical_disability = fields.Boolean(string='Physical Disability')
+    attachment_disorder = fields.Boolean(string='Attachment Disorder')
+    running_away = fields.Boolean(string='Running Away')
+    hyperactivity = fields.Boolean(string='Hyperactivity')
+    seizure_disorder = fields.Boolean(string='Seizure Disorder')
+    hiv_risk = fields.Boolean(string='HIV Risk')
+    sexually_active = fields.Boolean(string='Sexually Active')
+    history_of_sexual_abuse = fields.Boolean(string='History of Sexual Abuse')
+    severe_behavior_disorder = fields.Boolean(string='Severe Behavior Disorder')
+    hearing_impairment = fields.Boolean(string='Hearing Impairment')
+    vision_impairment = fields.Boolean(string='Vision Impairment')
+    general_emotional_disorder = fields.Boolean(string='General Emotional Disorder')
+    tantrums = fields.Boolean(string='Tantrums')
+    fire_setting = fields.Boolean(string='Fire Setting')
+    suicidal = fields.Boolean(string='Suicidal')
+    encopresis = fields.Boolean(string='Encopresis')
+    stealing = fields.Boolean(string='Stealing')
+    feeding_disorder = fields.Boolean(string='Feeding Disorder')
+    speech_disorder = fields.Boolean(string='Speech/Language Disorder')
+    drug_addicted_at_birth = fields.Boolean(string='Drug Addicted at Birth')
+    smoking = fields.Boolean(string='Smoking')
+    poor_social_skills = fields.Boolean(string='Poor Social Skills')
+    self_abuse = fields.Boolean(string='Self Abuse')
+    failure_to_thrive = fields.Boolean(string='Failure to Thrive')
+    fetal_alcohol_syndrome = fields.Boolean(string='Fetal Alcohol Syndrome')
+    rocking_or_head_banging = fields.Boolean(string='Rocking or Head-banging')
+    involvement_in_delinquent_behavior_ = fields.Boolean(string='Involvement in Delinquent Behavior')
+    sexual_acting_out = fields.Boolean(string='Sexual Acting Out')
+    involvement_in_criminal_justice_system = fields.Boolean(string='Involvement in Criminal Justice System')
+    truancy = fields.Boolean(string='Truancy')
+    racial_ethnic_linguistic_or_cultural_issues = fields.Boolean(string='Racial Ethnic Linguistic or Cultural Issues')
+    other = fields.Boolean(string='Others')
+
