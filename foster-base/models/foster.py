@@ -11,6 +11,7 @@ class Partner(models.Model):
     partner_id = fields.Many2one("foster.applicants", string="Partner/Spouse")
     co_home_phone = fields.Char("Work Phone")
     co_cell_phone = fields.Char("Cell/Mobile Phone")
+    co_work_phone  = fields.Char("Work Phone")
     co_applicant_email = fields.Char("Email")
     sex = fields.Selection([
         ('male', 'Male'),
@@ -60,10 +61,10 @@ class Family_memebers(models.Model):
     ])
     birth_date = fields.Date("Birth Date")
     security_number = fields.Integer("Social Security Number")
-    living_at_home = fields.Selection([
+    living_at_hom = fields.Selection([
         ('yes','Yes'),
         ('no','No')
-    ])
+    ],string="Living at Home")
     relation_to_applicant = fields.Char("Relation to Applicant")
     members = fields.Many2one("foster.applicants")
 
@@ -81,7 +82,7 @@ class Other_members_home(models.Model):
     living_at_home = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
-    ])
+    ],string="Living at Home")
     nature = fields.Char("Nature of Contact")
     other_members = fields.Many2one("foster.applicants")
 
@@ -113,34 +114,55 @@ class childcare_plan_services(models.Model):
     description = fields.Text("Description")
     plan_service = fields.Many2one("foster.applicants")
 
+
+
 class pets(models.Model):
-    pet_name = fields.Char("Pet Name")
+    _name = 'applicant.pets'
+
+    name = fields.Char("Name")
     breed = fields.Char("Breed(if dog)")
+    pets = fields.Many2one('foster.applicants')
 
-class health_status(models.Model):
-    _name = 'fodter.health_status'
-    household_member_name = fields.Char('Household Member Name')
-    treatment_provider_name = fields.Char('Treatment Provider Name')
-    address = fields.Text('Address')
-    treatment_type = fields.Char('Treatment Type')
-    condition_date_onset = fields.Datetime('Date of onset')
-    is_cured = fields.Boolean('Current Condition?')
+class health(models.Model):
+    _name = "health.history"
 
-class refrence(models.Model):
-    _name = 'foster.refrence'
-    type = fields.Char('Type of reference')
-    address = fields.Text('Address')
-    phone_no = fields.Char('Phone Number')
-    city = fields.Char('City')
-    state =  fields.Char('State')
-    zip =  fields.Char('Zip')
+    member_name = fields.Char("Household Member's Name")
+    provider_name = fields.Char("Treatment Provider's Name")
+    address = fields.Text("Address")
+    phone = fields.Char("Telephone")
+    treat_type = fields.Char("Treatment Type")
+    treated = fields.Many2one('foster.applicants')
 
+class medical_problems(models.Model):
+    _name = 'medical.problems'
+
+    member_name = fields.Char("Household Member's Name")
+    provider_name = fields.Char("Treatment Provider's Name")
+    address = fields.Text("Address")
+    phone = fields.Char("Telephone")
+    date = fields.Date("Condition date of onset")
+    current_problem = fields.Many2one('foster.applicants')
+
+class foster_care_history(models.Model):
+    _name = 'foster.history'
+
+    name = fields.Char("Name of Agency")
+    date = fields.Date("Date of Application")
+    adopt = fields.Many2one("foster.applicants")
+
+class providing_foster(models.Model):
+    _name = 'providing.foster'
+
+    name = fields.Char("Household member's name")
+    agency = fields.Char("Name of Agency")
+    provide = fields.Many2one('foster.applicants')
 
 class Applicant(models.Model):
     _name = 'foster.applicants'
 
+
     date = fields.Date("Date")
-    last_name = fields.Char("Last Name")
+    last_name = fields.Char(string ="Last Name")
     first_name = fields.Char("First")
     middle_name = fields.Char("Middle")
     other_name = fields.Char("Any Other Name")
@@ -212,3 +234,8 @@ class Applicant(models.Model):
     family_care_agent = fields.One2many('family.childcare', 'care_agent', string='Family Care')
     childcare_person = fields.One2many("childcare.plan.person", "plan_person", string="Child Care Person")
     childcare_service = fields.One2many("childcare.plan.services", "plan_service", string="Child Care Service")
+    petss = fields.One2many('applicant.pets','pets')
+    adoption = fields.One2many("foster.history", "adopt")
+    provide_foster = fields.One2many('providing.foster', 'provide')
+    treated_individual = fields.One2many('health.history', 'treated')
+    current_medical_problem = fields.One2many('medical.problems', 'current_problem')

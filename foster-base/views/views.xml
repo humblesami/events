@@ -1,60 +1,170 @@
 <odoo>
   <data>
-    <!-- explicit list view definition -->
-    <!--
-    <record model="ir.ui.view" id="foster_management.list">
+
+
+    <record id="foster_applicant_kanban" model="ir.ui.view">
+      <field name="name">foster.applicant.kanban</field>
+      <field name="model">foster.applicants</field>
+      <field name="priority" eval="1"/>
+      <field name="arch" type="xml">
+        <kanban>
+          <templates>
+            <t t-name="kanban-box">
+              <div class="oe_module_vignette oe_kanban_global_click">
+                <div class="oe_module_desc">
+                  <div class="o_hidden committee_id">
+                    <field name="last_name" />
+                    <field name="middle_name" />
+                  </div>
+
+                </div>
+
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="foster_management_list">
       <field name="name">foster_management list</field>
-      <field name="model">foster_management.foster_management</field>
+      <field name="model">foster.applicants</field>
       <field name="arch" type="xml">
         <tree>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
+          <field name="last_name"/>
+          <field name="middle_name"/>
         </tree>
       </field>
     </record>
-    -->
 
-    <!-- actions opening views on models -->
-    <!--
-    <record model="ir.actions.act_window" id="foster_management.action_window">
-      <field name="name">foster_management window</field>
-      <field name="res_model">foster_management.foster_management</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-    -->
+    <record model="ir.ui.view" id="foster_management_form">
+      <field name="name">foster_management form</field>
+      <field name="model">foster.applicants</field>
+      <field name="arch" type="xml">
+        <form>
+          <notebook>
+            <page name="person" string="Preson Details">
 
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="foster_management.action_server">
-      <field name="name">foster_management server</field>
-      <field name="model_id" ref="model_foster_management_foster_management"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
+              <group>
+                <field name = "date"/>
+              </group>
+              <group>
+                <field name="last_name" string="Last Name"/>
+                <field name="first_name"/>
+                <field name="middle_name"/>
+                <field name="other_name"/>
+                <field name="sex"/>
+                <field name="birthdate"/>
+                <field name="place_of_birth"/>
+              </group>
+              <group>
+                <label for="address" string="ADDRESS"/>
+                <field name="address"/>
+                <field name="town"/>
+                <field name="country_state"/>
+                <field name="zip"/>
+              </group>
+              <group>
+                <label for="home_phone" string="TELEPHONE"/>
+                <field name="home_phone"/>
+                <field name="work_phone"/>
+                <field name="cell_phone"/>
+                <field name="security_number"/>
+              </group>
+              <group>
+                <label for="applicant_email" string="EMAIL"/>
+                <field name="applicant_email"/>
+              </group>
+              <group>
+                <label for="citizen_ship" string="CITIZENSHIP"/>
+                <field name="citizen_ship"/>
+                <field name="immigration"/>
+              </group>
+              <group>
+                <label for="education" string="EDUCATION"/>
+                <field name="education"/>
+                <field name="last_grade"/>
+              </group>
+              <group>
+                <label for="current_marriage_date" string="MARRIAGE"/>
+                <field name="current_marriage_date"/>
+                <field name="previous_marriage_date"/>
+                <field name="previous_marriage_date_end"/>
+              </group>
+              <group>
+                <label for="employment_type" string="EMPLOYMENT"/>
+                <field name="employment_type"/>
+                <field name="days_worked"/>
+                <field name="date_employment_began"/>
+                <field name="income_year"/>
+              </group>
+              <group>
+                <label for="employer_name" string="EMPLOYER"/>
+                <field name="employer_name"/>
+                <field name="employer_phone"/>
+              </group>
+              <group>
+                <label for="lang_primary" string="LANGUAGES"/>
+                <br/><label for="lang_primary" string="Spoken in household"/>
+                <field name="lang_primary"/>
+                <field name="lang_other"/>
+                <label for="comp_primary" string="Written Comprehension"/>
+                <field name="comp_primary"/>
+                <field name="comp_other"/>
+              </group>
+              <group>
+                <label for="house" string="HOUSING"/>
+                <field name="house"/>
+                <field name="current_address_period"/>
+                <field name="name_of_contact"/>
+                <field name="phone_of_contact"/>
+                <field name="previous_address"/>
+              </group>
+              <group>
+                <label for="note" string="NOTES"/>
+                <field name="note"/>
+              </group>
+
+
+            </page>
+            <page name="partner" string="Partner/Spouse">
+              <field name="patner"/>
+            </page>
+            <page name="family_members" string="Family/Other Members">
+              <field name="family_members"/>
+              <field name="other_living_members"/>
+              <field name="childcare_agent"/>
+              <field name="family_care_agent"/>
+              <field name="childcare_person"/>
+              <field name="childcare_service"/>
+            </page>
+          </notebook>
+        </form>
       </field>
     </record>
-    -->
 
-    <!-- Top menu item -->
-    <!--
-    <menuitem name="foster_management" id="foster_management.menu_root"/>
-    -->
-    <!-- menu categories -->
-    <!--
-    <menuitem name="Menu 1" id="foster_management.menu_1" parent="foster_management.menu_root"/>
-    <menuitem name="Menu 2" id="foster_management.menu_2" parent="foster_management.menu_root"/>
-    -->
-    <!-- actions -->
-    <!--
-    <menuitem name="List" id="foster_management.menu_1_list" parent="foster_management.menu_1"
-              action="foster_management.action_window"/>
-    <menuitem name="Server to list" id="foster_management" parent="foster_management.menu_2"
-              action="foster_management.action_server"/>
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="foster_applicant_window">
+      <field name="name">foster_management window</field>
+      <field name="res_model">foster.applicants</field>
+      <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem
+            id="foster_management_menu_root"
+            name="Foster Management"
+            sequence="-2"
+            action="foster_applicant_window"
+    />
+    <menuitem
+            id="foster_management_resource"
+            parent="foster_management_menu_root"
+            name="Family Resource"
+            sequence="1"
+            action="foster_applicant_window"
+    />
+
     -->
   </data>
 </odoo>

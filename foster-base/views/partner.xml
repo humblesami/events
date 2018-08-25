@@ -1,0 +1,58 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="foster_partenr_form">
+            <field name="name">foster_partenr form</field>
+            <field name="model">foster.partner</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="spouse_last_name"/>
+                        <field name="spouse_first_name"/>
+                        <field name="spouse_middle_name"/>
+                        <field name="spouse_other_name"/>
+                        <field name="sex"/>
+                        <field name="birthdate"/>
+                        <field name="place_of_birth"/>
+                    </group>
+                    <group>
+                        <label for="co_cell_phone" string="TELEPHONE"/>
+                        <field name="co_cell_phone"/>
+                        <field name="co_work_phone"/>
+                    </group>
+                    <group>
+                        <label for="co_applicant_email" string="EMAIL"/>
+                        <field name="co_applicant_email"/>
+                    </group>
+                    <group>
+                        <label for="citizen_ship" string="CITIZENSHIP"/>
+                        <field name="citizen_ship"/>
+                        <field name="immigration"/>
+                    </group>
+                    <group>
+                        <label for="education" string="EDUCATION"/>
+                        <field name="education"/>
+                        <field name="last_grade"/>
+                    </group>
+                    <group>
+                        <label for="current_marriage_date" string="MARRIAGE"/>
+                        <field name="current_marriage_date"/>
+                        <field name="previous_marriage_date"/>
+                        <field name="previous_marriage_date_end"/>
+                    </group>
+                    <group>
+                        <label for="employment_type" string="EMPLOYMENT"/>
+                        <field name="employment_type"/>
+                        <field name="days_worked"/>
+                        <field name="date_employment_began"/>
+                        <field name="income_year"/>
+                    </group>
+                    <group>
+                        <label for="employer_name" string="EMPLOYER"/>
+                        <field name="employer_name"/>
+                        <field name="employer_phone"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

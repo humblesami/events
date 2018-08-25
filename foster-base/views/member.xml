@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="foster_family_members_list">
+      <field name="name">foster_family_members list</field>
+      <field name="model">foster.family.members</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="full_name"/>
+        </tree>
+      </field>
+    </record>
+
+        <record model="ir.ui.view" id="foster_family_members_form">
+      <field name="name">foster_family_members form</field>
+      <field name="model">foster.family.members</field>
+      <field name="arch" type="xml">
+        <form>
+            <group>
+                <field name="full_name"/>
+                <field name="sex"/>
+                <field name="birth_date"/>
+                <field name="security_number"/>
+                <field name="living_at_hom"/>
+                <field name="relation_to_applicant"/>
+            </group>
+
+        </form>
+      </field>
+    </record>
+
+        <!--other members-->
+        <record model="ir.ui.view" id="foster_other_members_list">
+      <field name="name">foster_other_members list</field>
+      <field name="model">foster.other.members</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="full_name"/>
+        </tree>
+      </field>
+    </record>
+
+        <record model="ir.ui.view" id="foster_other_members_form">
+      <field name="name">foster_other_members form</field>
+      <field name="model">foster.other.members</field>
+      <field name="arch" type="xml">
+        <form>
+            <group>
+                <field name="full_name"/>
+                <field name="sex"/>
+                <field name="birth_date"/>
+                <field name="security_number"/>
+                <field name="living_at_home"/>
+                <field name="nature"/>
+            </group>
+
+        </form>
+      </field>
+    </record>
+    </data>
+</odoo>

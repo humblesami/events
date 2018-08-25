@@ -1,7 +1,7 @@
 # # -*- coding: utf-8 -*-
-#
-# from odoo import models, fields, api
-#
+
+from odoo import models, fields, api
+
 # class foster_management(models.Model):
 #     _name = 'foster.applicant'
 #
