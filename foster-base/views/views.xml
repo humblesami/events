@@ -12,11 +12,8 @@
             <t t-name="kanban-box">
               <div class="oe_module_vignette oe_kanban_global_click">
                 <div class="oe_module_desc">
-                  <div class="o_hidden committee_id">
                     <field name="last_name" />
                     <field name="middle_name" />
-                  </div>
-
                 </div>
 
               </div>
@@ -131,7 +128,9 @@
               <field name="patner"/>
             </page>
             <page name="family_members" string="Family/Other Members">
+              <h2>Family Members</h2>
               <field name="family_members"/>
+              <h2>Other Living Members</h2>
               <field name="other_living_members"/>
               <field name="childcare_agent"/>
               <field name="family_care_agent"/>
