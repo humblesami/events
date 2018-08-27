@@ -15,40 +15,68 @@
             <field name="model">foster.child</field>
             <field name="arch" type="xml">
                 <form>
-                    <group>
-                        <field name="foster_parent"/>
-                        <field name="date_placed"/>
-                        <field name="full_name"/>
-                        <field name="dob"/>
-                        <field name="religion"/>
-                        <field name="ethnicity"/>
-                        <field name="language"/>
-                        <field name="mother"/>
-                        <field name="mother_address"/>
-                        <field name="father"/>
-                        <field name="father_address"/>
-                        <field name="legal_status"/>
-                        <field name="reason" widget="many2many_tags"/>
-                        <field name="describe"/>
-                        <field name="servic_goal"/>
-                        <field name="placement_with"/>
-                        <field name="leaving_reason"/>
-                        <field name="is_enrolled"/>
-                        <field name="school_name"/>
-                        <field name="school_address"/>
-                        <field name="grade"/>
-                        <field name="is_iep" widget="radio"/>
-                        <field name="is_anticipated"/>
-                        <field name="frequency"/>
-                        <field name="therapist_name"/>
-                        <field name="therapist_address"/>
-                        <field name="visit_schedule"/>
-                        <field name="child_strength"/>
-                        <field name="child_hobbies"/>
-                        <field name="child_interests"/>
-                        <field name="religious_requirements"/>
-                        <field name="attributes"/>
-                    </group>
+                    <notebook>
+                        <page string="Child Details">
+                            <group>
+                                <field name="foster_parent"/>
+                                <field name="date_placed"/>
+                                <field name="full_name"/>
+                                <field name="dob"/>
+                                <field name="religion"/>
+                                <field name="ethnicity"/>
+                                <field name="language"/>
+                                <field name="mother"/>
+                                <field name="mother_address"/>
+                                <field name="father"/>
+                                <field name="father_address"/>
+                                <field name="legal_status"/>
+                                <field name="reason" widget="many2many_tags"/>
+                                <field name="describe"/>
+                                <field name="servic_goal"/>
+                                <field name="placement_with"/>
+                                <field name="leaving_reason"/>
+                            </group>
+                        </page>
+                        <page string="Child's Individual Needs">
+                            <h5>Child's Individual Needs/Expectations of Foster Parents</h5>
+                            <group>
+                                <field name="is_enrolled"/>
+                                <field name="school_name"/>
+                                <field name="school_address"/>
+                                <field name="grade"/>
+                                <field name="is_iep" widget="radio"/>
+                                <field name="is_anticipated"/>
+                                <field name="frequency"/>
+                                <field name="therapist_name"/>
+                                <field name="therapist_address"/>
+                            </group>
+                            <h5>Provisions for Visitation Schedule:</h5>
+                                <field name="visit_schedule"/>
+                            <h5>Please describe the child’s strengths, hobbies, interests, religious requirements and attributes:</h5>
+                            <group>
+                                <field name="child_strength"/>
+                                <field name="child_hobbies"/>
+                                <field name="child_interests"/>
+                                <field name="religious_requirements"/>
+                                <field name="attributes"/>
+                            </group>
+                            <h5>Please describe any other individual needs of this child, or any other information, that would
+     be helpful for the foster parent and is not included elsewhere on this form:
+</h5>
+                            <field name="other_needs"/>
+                        </page>
+                        <page string="Other Information">
+                            <h5>If this child is in need of Special Education Services, she/he may need an Educational Surrogate Parent.  This foster parent is   <field name="willing" widget="radio"/>  to allow DCF to identify this foster parent to the Department of Education to be considered as an Educational Surrogate Parent for this child.</h5>
+                        <br/>
+                            <h5>A copy of the child’s Service Plan and the Medical Passport are given to the foster parent along with this agreement.  They include information on the child’s medical and dental health, the child’s emotional health and educational needs, child’s placement history, and the visitation plan with her/his biological family.
+</h5>
+                            <group>
+                                <field name="daily_rate"/>
+                                <field name="clothing_rate"/>
+                                <field name="emergency_clothing"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
