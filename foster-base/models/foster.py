@@ -43,6 +43,8 @@ class Partner(models.Model):
     employer_name = fields.Char("Employer Name")
     employer_phone = fields.Char("Employer Phone")
     income_year = fields.Char("Income per Year")
+    employer_reference = fields.One2many('employer.references', 'partner_employer_id')
+    medical_reference = fields.One2many('medical.references', 'spouse_id')
 
 class Emergency_contact_person(models.Model):
     _name = 'foster.emergency.contact.person'
@@ -67,6 +69,8 @@ class Family_memebers(models.Model):
     ],string="Living at Home")
     relation_to_applicant = fields.Char("Relation to Applicant")
     members = fields.Many2one("foster.applicants")
+    medical_reference = fields.One2many('medical.references','member_id',string="Medical References")
+
 
 class Other_members_home(models.Model):
     _name = 'foster.other.members'
@@ -85,6 +89,7 @@ class Other_members_home(models.Model):
     ],string="Living at Home")
     nature = fields.Char("Nature of Contact")
     other_members = fields.Many2one("foster.applicants")
+    medical_reference = fields.One2many('medical.references', 'living_member_id', string="Medical References")
 
 class Family_based_childcare(models.Model):
     _name = 'disable.childcare'
@@ -156,6 +161,53 @@ class providing_foster(models.Model):
     name = fields.Char("Household member's name")
     agency = fields.Char("Name of Agency")
     provide = fields.Many2one('foster.applicants')
+
+class applicant_driver(models.Model):
+    _name = 'foster.drivers'
+
+    name= fields.Char("Driver's Name")
+    license_number = fields.Char("License Number")
+    expiration_date = fields.Date("Expiration Date")
+    state = fields.Many2one('res.country.state', string="State")
+    driver_info  = fields.Many2one('foster.applicants')
+
+class References(models.Model):
+    _name = 'medical.references'
+
+    name = fields.Char("Name")
+    address = fields.Text('Address')
+    city = fields.Char('City')
+    state = fields.Many2one('res.country.state', string="State")
+    zip = fields.Char('Zip')
+    phone = fields.Char('Phone')
+    member_id = fields.Many2one('foster.family.members')
+    living_member_id = fields.Many2one('foster.other.members')
+    spouse_id = fields.Many2one('foster.partner')
+    applicant_id = fields.Many2one('foster.applicants')
+
+class Employer_References(models.Model):
+    _name = "employer.references"
+
+    name = fields.Char("Name")
+    address = fields.Text('Address')
+    city = fields.Char('City')
+    state = fields.Many2one('res.country.state', string="State")
+    zip = fields.Char('Zip')
+    phone = fields.Char('Phone')
+    partner_employer_id = fields.Many2one('foster.partner')
+    applicant_employer_id = fields.Many2one('foster.applicants')
+
+class Personal_References(models.Model):
+    _name = 'personal.references'
+
+    name = fields.Char("Name")
+    relation_to = fields.Char("Relationship to you")
+    address = fields.Text('Address')
+    city = fields.Char('City')
+    state = fields.Many2one('res.country.state', string="State")
+    zip = fields.Char('Zip')
+    phone = fields.Char('Phone')
+    applicant_id = fields.Many2one('foster.applicants')
 
 class Applicant(models.Model):
     _name = 'foster.applicants'
@@ -239,3 +291,7 @@ class Applicant(models.Model):
     provide_foster = fields.One2many('providing.foster', 'provide')
     treated_individual = fields.One2many('health.history', 'treated')
     current_medical_problem = fields.One2many('medical.problems', 'current_problem')
+    drivers = fields.One2many('foster.drivers', 'driver_info')
+    employer_reference = fields.One2many('employer.references', 'applicant_employer_id')
+    medical_reference = fields.One2many('medical.references', 'applicant_id')
+    personal_reference = fields.One2many('personal.references', 'applicant_id')

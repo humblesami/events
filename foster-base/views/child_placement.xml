@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="foster_child_list">
+            <field name="name">child.placement list</field>
+            <field name="model">foster.child</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="foster_parent"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="foster_child_form">
+            <field name="name">child.placement form</field>
+            <field name="model">foster.child</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="foster_parent"/>
+                        <field name="date_placed"/>
+                        <field name="full_name"/>
+                        <field name="dob"/>
+                        <field name="religion"/>
+                        <field name="ethnicity"/>
+                        <field name="language"/>
+                        <field name="mother"/>
+                        <field name="mother_address"/>
+                        <field name="father"/>
+                        <field name="father_address"/>
+                        <field name="legal_status"/>
+                        <field name="reason" widget="many2many_tags"/>
+                        <field name="describe"/>
+                        <field name="servic_goal"/>
+                        <field name="placement_with"/>
+                        <field name="leaving_reason"/>
+                        <field name="is_enrolled"/>
+                        <field name="school_name"/>
+                        <field name="school_address"/>
+                        <field name="grade"/>
+                        <field name="is_iep" widget="radio"/>
+                        <field name="is_anticipated"/>
+                        <field name="frequency"/>
+                        <field name="therapist_name"/>
+                        <field name="therapist_address"/>
+                        <field name="visit_schedule"/>
+                        <field name="child_strength"/>
+                        <field name="child_hobbies"/>
+                        <field name="child_interests"/>
+                        <field name="religious_requirements"/>
+                        <field name="attributes"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="child_placement_window">
+            <field name="name">Child Placement</field>
+            <field name="res_model">foster.child</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+                id="child_placement_resource"
+                parent="foster_management_menu_root"
+                name="Child Placement"
+                sequence="1"
+                action="child_placement_window"
+        />
+    </data>
+</odoo>

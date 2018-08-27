@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+        <record id="child_placement_reason1" model="replacement.reason">
+            <field name="name">51B Removal</field>
+        </record>
+         <record id="child_placement_reason2" model="replacement.reason">
+            <field name="name">Placement Disruption</field>
+        </record>
+         <record id="child_placement_reason3" model="replacement.reason">
+            <field name="name">CHINS</field>
+        </record>
+         <record id="child_placement_reason4" model="replacement.reason">
+            <field name="name">Sexual Abuse</field>
+        </record>
+         <record id="child_placement_reason5" model="replacement.reason">
+            <field name="name">Temporary Family Emergency</field>
+            <field name="model">foster.child</field>
+        </record>
+         <record id="child_placement_reason6" model="replacement.reason">
+            <field name="name">Court Ordered</field>
+        </record>
+         <record id="child_placement_reason7" model="replacement.reason">
+            <field name="name">Voluntary Placement</field>
+        </record>
+        <record id="child_placement_reason8" model="replacement.reason">
+            <field name="name">Other(e.g. need for less restrictive setting, adoption surrender, etc.)</field>
+        </record>
+        <record id="child_placement_reason9" model="replacement.reason">
+            <field name="name">Physical Abuse</field>
+        </record>
+    </data>
+</odoo>

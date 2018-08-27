@@ -51,6 +51,14 @@
                         <field name="employer_name"/>
                         <field name="employer_phone"/>
                     </group>
+                    <h4>
+                        MEDICAL Reference(s)-One required for each household member
+                    </h4>
+                    <field name="medical_reference"/>
+                    <h4>
+                        EMPLOYER Reference(s)--One required for each Applicant
+                    </h4>
+                    <field name="employer_reference"/>
                 </form>
             </field>
         </record>

@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="foster_medical_references_form">
+            <field name="name">medical.references form</field>
+            <field name="model">medical.references</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="address"/>
+                        <field name="city"/>
+                        <field name="state"/>
+                        <field name="zip"/>
+                        <field name= "phone"/>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="foster_employer_references_form">
+            <field name="name">employer.references form</field>
+            <field name="model">employer.references</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="address"/>
+                        <field name="city"/>
+                        <field name="state"/>
+                        <field name="zip"/>
+                        <field name= "phone"/>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="foster_personal_references_form">
+            <field name="name">personal.references form</field>
+            <field name="model">personal.references</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="address"/>
+                        <field name="city"/>
+                        <field name="state"/>
+                        <field name="zip"/>
+                        <field name= "phone"/>
+                        <field name="relation_to"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

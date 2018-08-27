@@ -30,7 +30,10 @@
         'views/partner.xml',
         'views/member.xml',
         'views/emergency_person.xml',
-        'views/health.xml'
+        'views/health.xml',
+        'views/refencrences.xml',
+        'views/child_placement.xml',
+        'views/reason.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

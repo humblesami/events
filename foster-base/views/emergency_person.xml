@@ -14,7 +14,7 @@
                 </form>
             </field>
         </record>
-
+        <!--Applicant pet-->
         <record model="ir.ui.view" id="foster_pet_form">
             <field name="name">applicant.pet form</field>
             <field name="model">applicant.pets</field>
@@ -24,7 +24,21 @@
                         <field name="name"/>
                         <field name="breed"/>
                     </group>
-
+                </form>
+            </field>
+        </record>
+        <!--drivers info-->
+        <record model="ir.ui.view" id="foster_driver_form">
+            <field name="name">applicant.driver form</field>
+            <field name="model">foster.drivers</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="license_number"/>
+                        <field name="expiration_date"/>
+                        <field name="state"/>
+                    </group>
                 </form>
             </field>
         </record>
