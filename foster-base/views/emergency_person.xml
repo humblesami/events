@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="foster_emergency_person_form">
+            <field name="name">foster_emergency_person form</field>
+            <field name="model">foster.emergency.contact.person</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="telephone"/>
+                        <field name="hours_available"/>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="foster_pet_form">
+            <field name="name">applicant.pet form</field>
+            <field name="model">applicant.pets</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="breed"/>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

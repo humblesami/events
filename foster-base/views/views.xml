@@ -12,8 +12,8 @@
             <t t-name="kanban-box">
               <div class="oe_module_vignette oe_kanban_global_click">
                 <div class="oe_module_desc">
-                    <field name="last_name" />
-                    <field name="middle_name" />
+                  <field name="last_name" />
+                  <field name="middle_name" />
                 </div>
 
               </div>
@@ -69,7 +69,7 @@
                 <field name="security_number"/>
               </group>
               <group>
-                <label for="applicant_email" string="EMAIL"/>
+                <label for="applicant_email" string="EMAIL ADDRESS"/>
                 <field name="applicant_email"/>
               </group>
               <group>
@@ -121,21 +121,89 @@
                 <label for="note" string="NOTES"/>
                 <field name="note"/>
               </group>
+                <label for="emrgency_contact" string="EMERGENCY CONTACT"/><br/>
+                <p>
+                  Please provide the name and telephone number of person(s) through whom you can be reached in an emergency
+                </p><br/>
+                <field name="emrgency_contact"/>
+              <group>
+                <label for="house" string="HOUSING"/>
+                <field name="house"/>
+                <field name="current_address_period"/>
+                <field name="name_of_contact"/>
+                <field name="phone_of_contact"/>
+                <field name="previous_address"/>
+              </group>
+                <label for="petss" string="PETS IN THE HOME"/>
+                <field name="petss"/>
 
+              <label for = "adoption" string="HISTORY AS FOSTER CARE OR ADOPTIVE FAMILY"/><br/>
+              <p> Have you ever applied to this or any other agency for foster care or adoption?</p>
+              <field name="adoption"/>
+              <br/>
 
+              <p>Are you, or any member of your household, now providing foster or pre-adoptive care?
+                If yes, please list the name of person(s) providing foster/pre-adoptive care and identify the placement agency</p>
+              <field name="provide_foster"/>
             </page>
             <page name="partner" string="Partner/Spouse">
               <field name="patner"/>
             </page>
             <page name="family_members" string="Family/Other Members">
               <h2>Family Members</h2>
+              <p>
+                Please provide the following information for ALL additional family members including children
+                and any other individuals living in your home
+
+              </p>
               <field name="family_members"/>
               <h2>Other Living Members</h2>
+              <p>
+                Please provide the following information for other individuals age 14 or older who spend substantial time at the home,
+                especially those who stay overnight or provide child care in the home
+              </p>
               <field name="other_living_members"/>
-              <field name="childcare_agent"/>
+              <h2>
+                Family Based Child Care
+              </h2>
+              <p>
+                Is someone providing family-based childcare in the home?
+              </p>
               <field name="family_care_agent"/>
+              <h2>
+                Disabled Individual Care
+              </h2>
+              <p>
+                Is someone caring for a disabled individual in the home?
+                If yes, please explain who is receiving care, why and who is providing care; identify the agency, if any, that is supporting the care being provided.
+              </p>
+              <field name="childcare_agent"/>
+              <h2>
+                Child Care Plan
+              </h2>
+              <p>
+                Please provide names of any person(s) other than yourself or your co-applicant who will provide day care
+                and supervision in your home for any child/children placed with you
+              </p>
               <field name="childcare_person"/>
+              <p>
+                describe any other child care or day care services you plan to use,
+                or will need, to assist you in providing care and supervision
+              </p>
               <field name="childcare_service"/>
+            </page>
+            <page name="health_histoy" string="Health History">
+              <p>
+                Have you or any member of your household been treated for any
+                serious or chronic illness, drug or alcohol abuse? If yes, please identify
+              </p>
+              <field name="treated_individual"/>
+              <br/>
+              <p>
+                Do you or any member of your household have any other current medical problems or conditions that Dare should be aware of?
+                If yes, please identify
+              </p>
+              <field name="current_medical_problem"/>
             </page>
           </notebook>
         </form>

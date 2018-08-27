@@ -20,7 +20,7 @@
                         <field name="co_work_phone"/>
                     </group>
                     <group>
-                        <label for="co_applicant_email" string="EMAIL"/>
+                        <label for="co_applicant_email" string="EMAIL ADDRESS"/>
                         <field name="co_applicant_email"/>
                     </group>
                     <group>

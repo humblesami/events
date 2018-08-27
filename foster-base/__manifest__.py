@@ -28,7 +28,9 @@
         'views/views.xml',
         'views/templates.xml',
         'views/partner.xml',
-        'views/member.xml'
+        'views/member.xml',
+        'views/emergency_person.xml',
+        'views/health.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
