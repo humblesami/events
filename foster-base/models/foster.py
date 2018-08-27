@@ -135,7 +135,6 @@ class refrence(models.Model):
     state =  fields.Char('State')
     zip =  fields.Char('Zip')
 
-
 class Applicant(models.Model):
     _name = 'foster.applicants'
 
