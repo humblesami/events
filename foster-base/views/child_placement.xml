@@ -51,7 +51,7 @@
                                 <field name="therapist_address"/>
                             </group>
                             <h5>Provisions for Visitation Schedule:</h5>
-                                <field name="visit_schedule"/>
+                            <field name="visit_schedule"/>
                             <h5>Please describe the child’s strengths, hobbies, interests, religious requirements and attributes:</h5>
                             <group>
                                 <field name="child_strength"/>
@@ -61,19 +61,45 @@
                                 <field name="attributes"/>
                             </group>
                             <h5>Please describe any other individual needs of this child, or any other information, that would
-     be helpful for the foster parent and is not included elsewhere on this form:
-</h5>
+                                be helpful for the foster parent and is not included elsewhere on this form:
+                            </h5>
                             <field name="other_needs"/>
+                        </page>
+                        <page string="Child Placement Agreement">
+                            <p>
+                                To be completed by the child’s social worker in collaboration with the resource worker and foster parent at the time of placement, or in an emergency, within (3) working days after the placement. It provides information about expectations and responsibilities of the foster parent, child’s worker and DCF so that the foster parent may provide optimal care for the child.
+                            </p>
+                            <group>
+                                <field name="child_name"/>
+                                <field name="date_placement"/>
+                                <field name="placement_length"/>
+                            </group>
+                            <span style="font-size: 13px;font-weight: bold;">Service Being Provided to Above-Named Child:</span> <field name="care" widget="radio"/>
+                            <h4>
+                                FOSTER PARENTS
+                            </h4>
+                            <group>
+                                <field name="foster_parent_name"/>
+                                <field name="foster_parent_address"/>
+                            </group>
+                            <h4>RESPONSIBILITIES</h4>
+                            <p>
+                                The above-identified foster parent is hereby authorized to, and will, obtain routine and emergency medical and dental services for this child and will submit applicable documentation to the child’s worker.
+
+                            </p><p>This agreement may be terminated at the discretion of the foster parent, DCF or HopeWell.  Whenever possible consideration of a ten (10) day notice will be expected.
+
+                        </p>
                         </page>
                         <page string="Other Information">
                             <h5>If this child is in need of Special Education Services, she/he may need an Educational Surrogate Parent.  This foster parent is   <field name="willing" widget="radio"/>  to allow DCF to identify this foster parent to the Department of Education to be considered as an Educational Surrogate Parent for this child.</h5>
-                        <br/>
+                            <br/>
                             <h5>A copy of the child’s Service Plan and the Medical Passport are given to the foster parent along with this agreement.  They include information on the child’s medical and dental health, the child’s emotional health and educational needs, child’s placement history, and the visitation plan with her/his biological family.
-</h5>
+                            </h5>
                             <group>
                                 <field name="daily_rate"/>
                                 <field name="clothing_rate"/>
                                 <field name="emergency_clothing"/>
+                                <field name="sign" widget="signature"/>
                             </group>
                         </page>
                     </notebook>

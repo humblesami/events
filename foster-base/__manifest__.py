@@ -33,10 +33,13 @@
         'views/health.xml',
         'views/refencrences.xml',
         'views/child_placement.xml',
-        'views/reason.xml'
+        'views/reason.xml',
+        'views/intake_sheet.xml',
+        'views/consumer.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
+    'application': True,
 }

@@ -1,0 +1,82 @@
+<odoo>
+    <data>
+        <record id="consumer_kanban" model="ir.ui.view">
+            <field name="name">Consumer Profile kanban</field>
+            <field name="model">consumer.profile</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <div class="oe_module_desc">
+                                    <field name="client" />
+                                    <field name="placement_date" />
+                                </div>
+
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="consumer_profile_tree">
+            <field name="name">Consumer Profile tree</field>
+            <field name="model">consumer.profile</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="client"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="consumer_profile_form">
+            <field name="name">Consumer Profile form</field>
+            <field name="model">consumer.profile</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="client"/>
+                        <field name="birth_date"/>
+                        <field name="placement_date"/>
+                        <field name="assessment_date"/>
+                        <field name="foster_parent"/>
+                        <field name="bio_parent"/>
+                        <field name="social_worker"/>
+                        <field name="legal_status"/>
+                        <field name="goal"/>
+                        <field name="description"/>
+                        <field name="living_situation"/>
+                        <field name="referral_plan"/>
+                        <field name="background_info"/>
+                        <field name="past_placements"/>
+                        <field name="family_relations"/>
+                        <field name="medical_status"/>
+                        <field name="education"/>
+                        <field name="curr_service"/>
+                        <field name="special_assets"/>
+                        <field name="recreation"/>
+                        <field name="needs"/>
+                        <field name="prefrences"/>
+                        <field name="future_goals"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="consumer_profile_action">
+            <field name="name">Consumer Profile</field>
+            <field name="res_model">consumer.profile</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <menuitem
+                id="consumer_profile_menu"
+                name="Consumer Profile"
+                sequence="4"
+                parent="foster_management_menu_root"
+                action="consumer_profile_action"
+        />
+    </data>
+</odoo>

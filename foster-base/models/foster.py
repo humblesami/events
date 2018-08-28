@@ -295,3 +295,5 @@ class Applicant(models.Model):
     employer_reference = fields.One2many('employer.references', 'applicant_employer_id')
     medical_reference = fields.One2many('medical.references', 'applicant_id')
     personal_reference = fields.One2many('personal.references', 'applicant_id')
+    applicant_sign = fields.Binary('Applicant Signature')
+    partner_sign = fields.Binary("Spouse/Partner Signature")

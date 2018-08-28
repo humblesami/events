@@ -13,7 +13,6 @@
                                     <field name="last_name" />
                                     <field name="middle_name" />
                                 </div>
-
                             </div>
                         </t>
                     </templates>
@@ -232,6 +231,16 @@
                             </p>
                             <field name="drivers"/>
                         </page>
+                        <page string="Terms and Conditions">
+                            <p>
+                                I hereby apply to be a foster parent. I agree to participate in the HopeWell approved prelicensing training and parenting group for preparation and assessment that is required for the type of license I am seeking. I further agree to release any information necessary for this application/evaluation and to allow an inspection of my home. I understand that DCF will obtain references, make inquiries regarding any child abuse or criminal record, and that any falsification or withholding of information on this application may be grounds for my denial as a foster or adoptive parent. I agree that Hope Well/DCF may make collateral contacts with any individuals named in this application, as well as other individuals regarded by DCF as useful to evaluation of this application. I understand it is my obligation to report any change in circumstances regarding housing, health, household membership (including all individuals who spend substantial time - especially overnights - in my home), pets/animals and/or other background information provided in this application. I also understand that, upon licensing as a foster or adoptive parent, I become a "mandated reporter" and will be required to report suspected child abuse and neglect.
+
+                            </p>
+                            <group>
+                                <field name="applicant_sign" widget="signature"/>
+                                <field name="partner_sign" widget="signature"/>
+                            </group>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -259,6 +268,5 @@
                 action="foster_applicant_window"
         />
 
-        -->
     </data>
 </odoo>
