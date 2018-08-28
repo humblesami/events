@@ -3,6 +3,7 @@ from odoo import models, fields
 class Consumer_Profile(models.Model):
     _name = 'consumer.profile'
 
+    client = fields.Char(string='Client')
     birth_date = fields.Date(string='Date of Birth')
     placement_date = fields.Date(string='Placement Date')
     assessment_date = fields.Date(string='Assessment Date')
