@@ -241,6 +241,13 @@
                                 <field name="partner_sign" widget="signature"/>
                             </group>
                         </page>
+                        <page string="CORI Form">
+                            <h3>CORI</h3>
+                            <p>
+                                The Department of Children and Families will conduct a search of your Criminal and Child Welfare records to determine if you, or any members of your household or frequent visitors, 14 and older, have a history of previous/present involvement with DCF or criminal conduct that would make your home ineligible for the placement of children. DCF will also conduct a Sexual Offender Registry Information (SORT) check at the same time. If you have lived in another state you are requested to provide comparable information from other authority's court and child welfare systems
+                            </p>
+                            <field name="cori_form"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -268,5 +275,47 @@
                 action="foster_applicant_window"
         />
 
+        <!--CORI Form-->
+
+        <record model="ir.ui.view" id="cori_tree">
+            <field name="name">Cori form</field>
+            <field name="model">cori.form</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="cori_applicant"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="cori_form">
+            <field name="name">Cori form</field>
+            <field name="model">cori.form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="cori_applicant"/>
+                        <field name="cori_partner"/>
+                        <field name="house_hold_member"/>
+                        <field name="other_member"/>
+                        <field name="cori_last_name"/>
+                        <field name="cori_first_name"/>
+                        <field name="cori_middle_name"/>
+                        <field name="corimaiden_name"/>
+                        <field name="cori_dob"/>
+                        <field name="race"/>
+                        <field name="cori_ss_num"/>
+                        <field name="ethnicity"/>
+                        <field name="cori_address"/>
+                        <field name="cori_city"/>
+                        <field name="cori_state"/>
+                        <field name="cori_zip"/>
+                        <field name="other_state"/>
+                        <field name="resided_date"/>
+                        <field name="phone_num"/>
+                        <field name="cori_sign" widget="signature"/>
+                    </group>
+                </form>
+            </field>
+        </record>
     </data>
 </odoo>

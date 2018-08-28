@@ -209,6 +209,32 @@ class Personal_References(models.Model):
     phone = fields.Char('Phone')
     applicant_id = fields.Many2one('foster.applicants')
 
+class Cori_form(models.Model):
+    _name = 'cori.form'
+
+    cori_applicant = fields.Char("Applicant/Foster Parent")
+    cori_partner = fields.Char("Spouse/Partner")
+    house_hold_member = fields.Char("Household Member")
+    other_member = fields.Char("Other(Specify)")
+    cori_last_name = fields.Char("Last Name")
+    cori_first_name = fields.Char("First Name")
+    cori_middle_name = fields.Char("Middle")
+    corimaiden_name = fields.Char("Maiden Name/Alias (If Applicable)")
+    cori_dob = fields.Date("Date of Birth")
+    race = fields.Char("Race")
+    cori_ss_num = fields.Char("Social Security Number")
+    ethnicity = fields.Char("Ethnicity")
+    cori_address = fields.Text("Address")
+    cori_city = fields.Char("City")
+    cori_state = fields.Many2one('res.country.state', string="State")
+    cori_zip = fields.Char('Zip')
+    other_state = fields.Many2one('res.country.state', string="Other State Resided In")
+    resided_date = fields.Date("Date")
+    phone_num = fields.Char("Phone Number")
+    cori_sign = fields.Binary("Signature")
+    corri_applicant_id = fields.Many2one('foster.applicants')
+
+
 class Applicant(models.Model):
     _name = 'foster.applicants'
 
@@ -297,3 +323,4 @@ class Applicant(models.Model):
     personal_reference = fields.One2many('personal.references', 'applicant_id')
     applicant_sign = fields.Binary('Applicant Signature')
     partner_sign = fields.Binary("Spouse/Partner Signature")
+    cori_form = fields.One2many('cori.form', 'corri_applicant_id', string="CORI")
