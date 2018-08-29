@@ -61,3 +61,7 @@ margin: 0;
 .o_form_view .o_form_statusbar > .o_statusbar_status > .o_arrow_button.btn-primary.disabled {
         background-color: #f9f9f9 !important;
 }
+.o_form_view.o_form_editable .oe_title {
+max-width: 100%;
+padding-right: 0;
+}
