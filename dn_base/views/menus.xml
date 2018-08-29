@@ -1,0 +1,135 @@
+<odoo>
+    <data>
+
+        <menuitem
+                id="my_management"
+                name="Dev Menu"
+                sequence="-2"
+                web_icon="dn_base,static/menu_icons/dev.jpg"
+                groups="base.group_system"
+        />
+
+        <!--<menuitem-->
+                <!--id="menu_seen_by"-->
+                <!--name="Records Seen"-->
+                <!--groups="base.group_system"-->
+                <!--action="action_seen_by"-->
+        <!--/>-->
+
+        <menuitem
+                id="menu_dn_system"
+                name="System Info"
+                groups="group_dn_app_manager"
+        />
+
+
+        <menuitem
+                id="extras"
+                name="Odoo Apps"
+                sequence="799"
+                web_icon="dn_base,static/menu_icons/odoo-apps.jpg"
+                groups="base.group_system"
+        />
+
+        <menuitem
+                id="menu_dn_partners"
+                name="Partners Custom Action"
+                action="action_res_partners"
+                parent="base.menu_users"
+        />
+
+        <menuitem
+                id="menu_dn_groups"
+                name="Groups Without Debug"
+                action="base.action_res_groups"
+                parent="base.menu_users"
+        />
+
+        <menuitem
+                id="base_setup.menu_config"
+                name="General Settings"
+                action="base_setup.action_general_configuration"
+                groups="base.group_system"
+                parent="my_management"
+        />
+
+        <menuitem
+                id="base.menu_management"
+                name="Apps"
+                sequence="1"
+                parent="my_management"
+                groups="base.group_system"
+                web_icon="base,static/description/modules.png"
+        />
+
+        <menuitem
+                name="Update Apps List"
+                action="base.action_view_base_module_update"
+                id="base.menu_view_base_module_update"
+                groups="base.group_system"
+                parent="base.menu_management"
+                sequence="40"
+                icon="fa-exchange"/>
+
+        <menuitem
+                id="base.menu_custom"
+                name="Technical"
+                groups="base.group_system"
+                parent="base.menu_administration"
+                sequence="110"
+        />
+        <menuitem
+                id="base.next_id_9" name="Database Structure"
+                parent="base.menu_custom"
+                sequence="1"
+        />
+        <menuitem
+                id="base.next_id_2" name="User Interface"
+                parent="base.menu_custom"
+                sequence="2"
+        />
+        <menuitem
+                id="base.menu_email" name="Email"
+                parent="base.menu_custom"
+                sequence="11"/>
+
+
+        <menuitem
+                id="base.menu_users"
+                name="User and Company"
+                sequence="3"
+                groups="base.group_system"
+                action="base.action_res_users"
+                parent="my_management"
+        />
+        <menuitem
+                id="base.menu_custom"
+                name="Technical"
+                parent="my_management"
+        />
+
+        <menuitem
+                name="Settings"
+                id="base.menu_administration"
+                web_icon="base,static/description/settings.png"
+                parent="my_management"
+        />
+
+        <menuitem
+                id="mail.mail_channel_menu_root_chat"
+                name="Discuss"
+                sequence="77"
+                action="mail.mail_channel_action_client_chat"
+                web_icon="mail,static/description/icon.png"
+                parent="extras"
+        />
+
+        <!--<menuitem-->
+                <!--id="hr.menu_hr_root"-->
+                <!--name="Employees"-->
+                <!--web_icon="hr,static/description/icon.png"-->
+                <!--sequence="75"-->
+        <!--/>-->
+
+    </data>
+</odoo>

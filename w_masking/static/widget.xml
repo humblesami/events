@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="w_mask">
+		<span t-if="widget.mode !== 'readonly'">
+			<input type="text"/>
+		</span>
+		<span t-if="widget.mode === 'readonly'"/>
+    </t>
+</templates>
+

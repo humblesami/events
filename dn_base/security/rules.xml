@@ -1,0 +1,110 @@
+<odoo>
+    <data>
+
+        <!--<record id="dn_base_comments_rule" model="ir.rule">-->
+            <!--<field name="name">Read All comments and Own Notes</field>-->
+            <!--<field name="model_id" ref="mail.model_mail_message"/>-->
+            <!--<field name="domain_force">['|','|',('subtype_id.name','=','Discussions'),('message_type','=','email'),"&amp;",('subtype_id.name','=','Note'),('create_uid','=',user.id)]</field>-->
+            <!--<field name="groups" eval="[(4, ref('base.group_user'))]"/>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+            <!--<field eval="0" name="perm_write"/>-->
+            <!--<field eval="1" name="perm_read"/>-->
+            <!--<field eval="1" name="perm_create"/>-->
+        <!--</record>-->
+
+         <!--<record id="dn_base_message_read_rule_admin" model="ir.rule">-->
+            <!--<field name="name">Message update rule</field>-->
+            <!--<field name="model_id" ref="mail.model_mail_message"/>-->
+            <!--<field name="domain_force">[('create_uid','=',user.id)] </field>-->
+            <!--<field name="groups" eval="[(4, ref('base.group_user')),(4, ref('base.group_portal'))]"/>-->
+            <!--<field eval="1" name="perm_unlink"/>-->
+            <!--<field eval="1" name="perm_write"/>-->
+            <!--<field eval="0" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+        <!--</record>-->
+
+        <!--<record id="dn_base_message_update_rule_admin" model="ir.rule">-->
+            <!--<field name="name">Message rule admin</field>-->
+            <!--<field name="model_id" ref="mail.model_mail_message"/>-->
+            <!--<field name="domain_force">[('message_type','=','notification')] </field>-->
+            <!--<field name="groups" eval="[(4, ref('dn_base.group_dn_app_manager'),(4, ref('dn_base.group_dn_app_manager'))]"/>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+            <!--<field eval="0" name="perm_write"/>-->
+            <!--<field eval="1" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+        <!--</record>-->
+
+        <record id="access_base_user_profile" model="ir.rule">
+            <field name="name">Limiting access to user own profile</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain_force">[('id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+
+        <record id="access_other_profile_app_admin" model="ir.rule">
+            <field name="name">remove limit of accessing own profile</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain_force">[('id','!=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_dn_app_manager'))]"/>
+            <field eval="0" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+
+        <record id="access_custom_user_profile" model="ir.rule">
+            <field name="name">Limit to custom user own profile</field>
+            <field name="model_id" ref="model_dnspusers"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_create"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+
+        <record id="restrict_read_super_admin" model="ir.rule">
+            <field name="name">restrict read super admin</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="domain_force">[('id','!=',1)]</field>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_unlink"/>
+        </record>
+
+        <record id="access_system_views" model="ir.rule">
+            <field name="name">Access to views</field>
+            <field name="model_id" ref="base.model_ir_ui_view"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+          <!--<record id="mp_users_access3" model="ir.rule">-->
+            <!--<field name="name">Restrict access to super admin</field>-->
+            <!--<field name="model_id" ref="base.model_res_users"/>-->
+            <!--<field name="domain_force">[('id','!=', 1)]</field>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+            <!--<field eval="0" name="perm_write"/>-->
+            <!--<field eval="1" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+        <!--</record>-->
+
+         <!--<record id="mp_users_access4" model="ir.rule">-->
+            <!--<field name="name">Restrict access to super partner</field>-->
+            <!--<field name="model_id" ref="base.model_res_partner"/>-->
+            <!--<field name="domain_force">[('id','!=', 3)]</field>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+            <!--<field eval="0" name="perm_write"/>-->
+            <!--<field eval="1" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+        <!--</record>-->
+    </data>
+</odoo>

@@ -20,11 +20,13 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['dn_base'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'security/groups.xml',
+        'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
         'views/partner.xml',
@@ -35,7 +37,13 @@
         'views/child_placement.xml',
         'views/reason.xml',
         'views/intake_sheet.xml',
-        'views/consumer.xml'
+        'views/consumer.xml',
+        'views/users.xml',
+        'views/case_worker.xml',
+        'views/manager.xml',
+        'views/admin.xml',
+        'views/supervisor.xml',
+        'views/family_resource.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

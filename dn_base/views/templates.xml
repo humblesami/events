@@ -1,0 +1,62 @@
+<odoo>
+    <data>
+
+        <template id="assets_backend" inherit_id="web.assets_backend" name="Web Custom Assets" >
+            <xpath expr=".">
+                <link rel="stylesheet" href="/dn_base/static/css/custom_head.css"/>
+                <script type="application/javascript" src="/dn_base/static/js/web.js"/>
+            </xpath>
+            <xpath expr="//script[@src='/web/static/src/js/services/crash_manager.js']" position="replace">
+                <script type="text/javascript" src="/dn_base/static/js/crash_manager.js"></script>
+            </xpath>
+        </template>
+
+        <template id="assets_common" inherit_id="web.assets_common">
+            <xpath expr="//script[@src='/web/static/src/js/core/ajax.js']" position="replace">
+                <script type="text/javascript" src="/dn_base/static/js/ajax.js"></script>
+            </xpath>
+        </template>
+
+        <template id="assets_frontend" inherit_id="web.assets_frontend" name="Front End Inherit">
+            <xpath expr=".">
+                <link rel="stylesheet" href="/dn_base/static/css/dn_front.css" />
+                <script src="/dn_base/static/js/frontend.js"></script>
+            </xpath>
+        </template>
+
+        <template id="login_layout" inherit_id="web.login_layout" name="Login Inherit">
+            <xpath expr=".">
+                <div class="dn_footer">Copy rights</div>
+                <link rel="stylesheet" href="/dn_base/static/css/dn_login.css" />
+                <script src="/dn_base/static/js/login.js"></script>
+            </xpath>
+        </template>
+
+        <template id="web.layout" name="Web layout">
+            &lt;!DOCTYPE html&gt;
+            <html t-att="html_data or {}">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+
+                    <title t-esc="title or 'OdooHQ'"/>
+                    <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/dn_base/static/favicon.ico'"/>
+
+                    <script type="text/javascript">
+                        var odoo = {
+                            csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                        };
+                    </script>
+
+                    <t t-raw="head or ''"/>
+                </head>
+                <body t-att-class="body_classname">
+                    <t t-raw="0"/>
+                </body>
+            </html>
+        </template>
+
+
+    </data>
+</odoo>
