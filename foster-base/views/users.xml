@@ -45,8 +45,8 @@
                     <h4>Access Groups</h4>
                     <field name="groups_id" widget="many2many_checkboxes" domain="[('category_id.name','=','FosterManagement')]" />
                     <group>
-                        <field name="work_phone" class="phone masked_input"/>
-                        <field name="mobile_phone" class="phone masked_input"/>/>
+                        <field name="work_phone"/>
+                        <field name="mobile_phone"/>
                         <field name="website"/>
                         <field name="fax"/>
                         <field name="bio"/>
