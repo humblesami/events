@@ -22,7 +22,6 @@ import datetime
 import calendar
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-from tzlocal import get_localzone
 
 week_days = [(calendar.day_name[0], _(calendar.day_name[0])),
              (calendar.day_name[1], _(calendar.day_name[1])),
@@ -136,8 +135,6 @@ class OpSession(models.Model):
 
     @api.model
     def create(self, values):
-        local_tz = get_localzone()
-        d=datetime.datetime.now()
         res = super(OpSession, self).create(values)
         mfids = res.message_follower_ids
         partner_val = []
