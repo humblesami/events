@@ -34,7 +34,7 @@
 
         <menuitem
                 id="menu_foster_case_worker"
-                parent="menu_foster_users"
+                parent="menu_main_foster_users"
                 name="Case Workers"
                 sequence="3"
                 action="action_foster_case_worker"

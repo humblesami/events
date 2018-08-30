@@ -6,3 +6,4 @@ from . import child_placement
 from . import intake
 from . import consumer
 from . import users
+from . import roles

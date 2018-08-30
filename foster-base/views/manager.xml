@@ -34,7 +34,7 @@
 
         <menuitem
                 id="menu_foster_manger"
-                parent="menu_foster_users"
+                parent="menu_main_foster_users"
                 name="Managers"
                 sequence="4"
                 action="action_foster_manger"

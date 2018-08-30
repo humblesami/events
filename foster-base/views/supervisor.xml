@@ -34,7 +34,7 @@
 
            <menuitem
                 id="menu_foster_supervisor"
-                parent="menu_foster_users"
+                parent="menu_main_foster_users"
                 name="Supervisors"
                 sequence="5"
                 action="action_foster_supervisor"

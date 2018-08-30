@@ -5,13 +5,27 @@
             <field name="model">foster.users</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban class="o_hr_employee_kanban" default_order="name">
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('foster.users', 'image_medium')"/>
+                                </div>
                                 <div class="oe_module_desc">
                                     <field name="name"/>
                                 </div>
+                                <ul>
+                                    <li t-if="record.work_phone.raw_value">
+                                            <i class="fa fa-phone"/>
+                                            <field name="work_phone" />
+                                        </li>
+                                        <li t-if="record.login.raw_value">
+                                            <i class="fa fa-envelope"/>
+                                            <field name="login" widget="email"/>
+                                        </li>
+                                </ul>
+
                             </div>
                         </t>
                     </templates>
@@ -45,8 +59,8 @@
                     <h4>Access Groups</h4>
                     <field name="groups_id" widget="many2many_checkboxes" domain="[('category_id.name','=','FosterManagement')]" />
                     <group>
-                        <field name="work_phone"/>
-                        <field name="mobile_phone"/>
+                        <field name="work_phone" class="phone masked_input"/>
+                        <field name="mobile_phone" class="phone masked_input"/>
                         <field name="website"/>
                         <field name="fax"/>
                         <field name="bio"/>
@@ -85,11 +99,17 @@
         </record>
 
         <menuitem
-                name="All Users" id="menu_foster_users"
+                name="Foster Users" id="menu_main_foster_users"
                 parent="foster_management_menu_root"
                 sequence="5"
-                action="action_foster_users"
         />
+         <!--<menuitem-->
+                <!--id="menu_foster_all_users"-->
+                <!--parent="menu_main_foster_users"-->
+                <!--name="All Users"-->
+                <!--sequence="6"-->
+                <!--action="action_foster_users"-->
+        <!--/>-->
 
     </data>
 </odoo>

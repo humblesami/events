@@ -19,7 +19,7 @@
                         <field name="full_name"/>
                         <field name="sex"/>
                         <field name="birth_date"/>
-                        <field name="security_number"/>
+                        <field name="security_number" class="phone masked_input"/>
                         <field name="living_at_hom"/>
                         <field name="relation_to_applicant"/>
                     </group>
@@ -52,7 +52,7 @@
                         <field name="full_name"/>
                         <field name="sex"/>
                         <field name="birth_date"/>
-                        <field name="security_number"/>
+                        <field name="security_number" class="phone masked_input"/>
                         <field name="living_at_home"/>
                         <field name="nature"/>
                     </group>

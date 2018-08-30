@@ -34,7 +34,7 @@
 
          <menuitem
                 id="menu_foster_admin"
-                parent="menu_foster_users"
+                parent="menu_main_foster_users"
                 name="Admins"
                 sequence="1"
                 action="action_foster_admin"

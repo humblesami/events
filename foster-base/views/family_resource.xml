@@ -34,8 +34,8 @@
 
         <menuitem
                 id="menu_foster_family_resource"
-                parent="menu_foster_users"
-                name="Family Resource"
+                parent="menu_main_foster_users"
+                name="Foster Parent"
                 sequence="3"
                 action="action_foster_family_resorce"
         />

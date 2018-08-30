@@ -43,7 +43,8 @@
         'views/manager.xml',
         'views/admin.xml',
         'views/supervisor.xml',
-        'views/family_resource.xml'
+        'views/family_resource.xml',
+        'views/role.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

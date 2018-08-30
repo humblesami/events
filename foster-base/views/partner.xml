@@ -16,8 +16,8 @@
                     </group>
                     <group>
                         <label for="co_cell_phone" string="TELEPHONE"/>
-                        <field name="co_cell_phone"/>
-                        <field name="co_work_phone"/>
+                        <field name="co_cell_phone" class="phone masked_input"/>
+                        <field name="co_work_phone" class="phone masked_input"/>
                     </group>
                     <group>
                         <label for="co_applicant_email" string="EMAIL ADDRESS"/>
@@ -49,7 +49,7 @@
                     <group>
                         <label for="employer_name" string="EMPLOYER"/>
                         <field name="employer_name"/>
-                        <field name="employer_phone"/>
+                        <field name="employer_phone" class="phone masked_input"/>
                     </group>
                     <h4>
                         MEDICAL Reference(s)-One required for each household member

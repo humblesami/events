@@ -21,7 +21,7 @@
                                 <field name="youth_name_first"/>
                                 <field name="pre_caretaker"/>
                                 <field name="address"/>
-                                <field name="phone"/>
+                                <field name="phone" class="phone masked_input"/>
                                 <field name="dob"/>
                                 <field name="birth_place"/>
                                 <field name="citizenship"/>
@@ -47,7 +47,7 @@
                             <h3>SUPERVISOR</h3>
                             <group>
                                 <field name="supervisor"/>
-                                <field name="supervisor_phone"/>
+                                <field name="supervisor_phone" class="phone masked_input"/>
                                 <field name="supervisor_email"/>
                                 <field name="supervisor_address"/>
                             </group>
@@ -86,7 +86,7 @@
                                 <field name="mother_maiden_name"/>
                                 <field name="mother_first_name"/>
                                 <field name="mother_address"/>
-                                <field name="mother_phone"/>
+                                <field name="mother_phone" class="phone masked_input"/>
                                 <field name="mother_background"/>
                                 </group>
                             <h3>FATHER</h3>
@@ -94,7 +94,7 @@
                                 <field name="father_last_name"/>
                                 <field name="father_first_name"/>
                                 <field name="father_address"/>
-                                <field name="father_phone"/>
+                                <field name="father_phone" class="phone masked_input"/>
                                 <field name="father_background"/>
                             </group>
                         </page>
@@ -124,14 +124,14 @@
                             <group>
                                 <field name="family_therapist"/>
                                 <field name="family_therapist_clinic"/>
-                                <field name="family_therapist_phone"/>
+                                <field name="family_therapist_phone" class="phone masked_input"/>
                                 <field name="family_therapist_address"/>
                             </group>
                             <h3>FAMILY PHYCHIATRIST</h3>
                             <group>
                                 <field name="family_psychiatrist"/>
                                 <field name="family_psychiatrist_clinic"/>
-                                <field name="family_psychiatrist_phone"/>
+                                <field name="family_psychiatrist_phone" class="phone masked_input"/>
                                 <field name="family_psychiatrist_address"/>
                             </group>
                             <group>
@@ -157,20 +157,22 @@
                                 <field name="IEP"/>
                                 <field name="prob_officer"/>
                             </group>
+                        </page>
+                        <page string="Legal">
                             <h3>COURT</h3>
                             <group>
                                 <field name="court"/>
-                                <field name="court_phone"/>
+                                <field name="court_phone" class="phone masked_input"/>
                             </group>
                             <h3>GAL</h3>
                             <group>
                                 <field name="GAL"/>
-                                <field name="GAL_phone"/>
+                                <field name="GAL_phone" class="phone masked_input"/>
                             </group>
                             <h3>ATTORNEY</h3>
                             <group>
                                 <field name="attorney"/>
-                                <field name="attorney_phone"/>
+                                <field name="attorney_phone" class="phone masked_input"/>
                             </group>
                             <group>
                                 <field name="placement_restrictions" widget="many2many_tags"/>
@@ -181,6 +183,7 @@
                             </group>
                         </page>
                     </notebook>
+                    <link href="/foster-base/static/resource_form.css" rel="stylesheet"/>
                 </form>
             </field>
         </record>
@@ -191,10 +194,17 @@
         </record>
 
         <menuitem
-                id="intake_face_sheet_menu"
-                name="Client Intake Face Sheet"
+                id="client_menu"
+                name="Client"
                 sequence="3"
                 parent="foster_management_menu_root"
+        />
+
+        <menuitem
+                id="client_intake_face_sheet_menu"
+                name="Client Intake Face Sheet"
+                sequence="3"
+                parent="client_menu"
                 action="intake_face_sheet_action"
         />
 
@@ -222,7 +232,7 @@
                     <group>
                         <field name="last_name"/>
                         <field name="first_name"/>
-                        <field name="phone"/>
+                        <field name="phone" class="phone masked_input"/>
                         <field name="relation"/>
                         <field name="address"/>
                     </group>

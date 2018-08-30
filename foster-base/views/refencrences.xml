@@ -10,8 +10,8 @@
                         <field name="address"/>
                         <field name="city"/>
                         <field name="state"/>
-                        <field name="zip"/>
-                        <field name= "phone"/>
+                        <field name="zip" class="zip masked_input"/>
+                        <field name= "phone" class="phone masked_input"/>
                     </group>
 
                 </form>
@@ -27,8 +27,8 @@
                         <field name="address"/>
                         <field name="city"/>
                         <field name="state"/>
-                        <field name="zip"/>
-                        <field name= "phone"/>
+                        <field name="zip" class="zip masked_input"/>
+                        <field name= "phone" class="phone masked_input"/>
                     </group>
 
                 </form>
@@ -45,8 +45,8 @@
                         <field name="address"/>
                         <field name="city"/>
                         <field name="state"/>
-                        <field name="zip"/>
-                        <field name= "phone"/>
+                        <field name="zip" class="zip masked_input"/>
+                        <field name= "phone" class="phone masked_input"/>
                         <field name="relation_to"/>
                     </group>
                 </form>

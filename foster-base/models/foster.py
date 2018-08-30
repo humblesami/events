@@ -3,7 +3,7 @@ from odoo import models, fields, api
 class Partner(models.Model):
     _name = 'foster.partner'
     name = fields.Char("Name")
-    age = fields.Integer("Age")
+    age = fields.Char("Age")
     spouse_last_name = fields.Char("Last Name")
     spouse_first_name = fields.Char("First")
     spouse_middle_name = fields.Char("Middle")
@@ -49,7 +49,7 @@ class Partner(models.Model):
 class Emergency_contact_person(models.Model):
     _name = 'foster.emergency.contact.person'
     name = fields.Char("Name")
-    telephone = fields.Integer("Phone")
+    telephone = fields.Char("Phone")
     hours_available = fields.Integer("Hours Available")
     applicant = fields.Many2one("foster.applicants")
 
@@ -62,7 +62,7 @@ class Family_memebers(models.Model):
         ('other', 'Other')
     ])
     birth_date = fields.Date("Birth Date")
-    security_number = fields.Integer("Social Security Number")
+    security_number = fields.Char("Social Security Number")
     living_at_hom = fields.Selection([
         ('yes','Yes'),
         ('no','No')
@@ -82,7 +82,7 @@ class Other_members_home(models.Model):
         ('other', 'Other')
     ])
     birth_date = fields.Date("Birth Date")
-    security_number = fields.Integer("Social Security Number")
+    security_number = fields.Char("Social Security Number")
     living_at_home = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')

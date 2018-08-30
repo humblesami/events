@@ -73,9 +73,9 @@
 
         <menuitem
                 id="consumer_profile_menu"
-                name="Consumer Profile"
-                sequence="4"
-                parent="foster_management_menu_root"
+                name="Client Consumer Profile"
+                sequence="2"
+                parent="client_menu"
                 action="consumer_profile_action"
         />
     </data>

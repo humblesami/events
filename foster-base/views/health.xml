@@ -18,7 +18,7 @@
                         <field name="member_name"/>
                         <field name="provider_name"/>
                         <field name="address"/>
-                        <field name="phone"/>
+                        <field name="phone" class="phone masked_input"/>
                         <field name="treat_type"/>
                     </group>
                 </form>
@@ -43,7 +43,7 @@
                         <field name="member_name"/>
                         <field name="provider_name"/>
                         <field name="address"/>
-                        <field name="phone"/>
+                        <field name="phone" class="phone masked_input"/>
                         <field name="date"/>
                     </group>
                 </form>

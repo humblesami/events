@@ -7,7 +7,7 @@
                 <form>
                     <group>
                         <field name="name"/>
-                        <field name="telephone"/>
+                        <field name="telephone" class="phone masked_input"/>
                         <field name="hours_available"/>
                     </group>
 
