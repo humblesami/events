@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_op_term_tree" model="ir.ui.view">
+            <field name="name">op.term.tree</field>
+            <field name="model">op.term</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="term">
+                    <field name="name" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_term_form" model="ir.ui.view">
+            <field name="name">op.term.form</field>
+            <field name="model">op.term</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="term">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                        </group>
+
+                        <group col="4" name="main">
+
+                            <field name="start_date" />
+                            <field name="end_date" />
+                            <field name="break_start" />
+                            <field name="break_end" />
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="act_open_op_term">
+            <field name="name">Terms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.term</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="view_op_category_search" />-->
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_term_form">
+            <field name="act_window_id" ref="act_open_op_term" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_term_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_term_tree">
+            <field name="act_window_id" ref="act_open_op_term" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_term_tree" />
+        </record>
+
+    </data>
+</odoo>

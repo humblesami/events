@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+    
+      <menuitem id="menu_op_timetable" name="Time Tables"
+            parent="openeducat_core.menu_op_school_root" sequence="21"
+            groups="openeducat_core.group_op_faculty" />
+
+        <menuitem id="menu_op_sessions" name="Sessions" parent="menu_op_timetable" sequence="1"
+            action="act_open_op_session_view" groups="openeducat_core.group_op_back_office,openeducat_core.group_op_back_office_admin" />
+
+        <menuitem id="menu_opp_config" name="Configuration" parent="menu_op_timetable" sequence="2"/>
+
+        <menuitem id="menu_opp_period" string="Timing"
+            parent="menu_opp_config" groups="openeducat_core.group_op_faculty"
+            sequence="1" action="act_open_op_timing_view" />
+        <menuitem id="menu_generate_time_tablee" string="Generate Timetable"
+            parent="menu_opp_config" groups="openeducat_core.group_op_back_office"
+            sequence="2" action="act_open_generate_time_table_view" />
+        <menuitem id="menu_generate_time_table_reportt" string="Generate Timetable Report"
+            parent="menu_opp_config" groups="openeducat_core.group_op_student"
+            sequence="3" action="act_open_time_table_report_view" />
+        <menuitem id="menu_session_analysis_pivott" name="Session Analysis"
+            parent="menu_opp_config" sequence="4"
+            action="act_open_op_session_view_pivot" />
+        
+        
+    </data>
+</odoo>

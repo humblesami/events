@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_op_class_form_inherit" model="ir.ui.view">
+            <field name="name">op.class.form.inherit</field>
+            <field name="model">op.batch</field>
+            <field name="inherit_id" ref="openeducat_core.view_op_batch_form" />
+            <field name="arch" type="xml">
+                <field name="faculty_id" position="after">
+                    <field name="room_id" context="{'form_view_ref' : 'openeducat_classroom.view_op_classroom_form2'}" domain="[('batch_id','=',False),('branch_id','=',branch_id)]"/>
+
+                </field>
+
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
