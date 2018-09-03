@@ -15,7 +15,7 @@
             <field name="category_id" ref="module_category_foster"/>
             <field name="implied_ids" eval="[(4, ref('group_foster_base')),
             (4, ref('base.group_user'))]"/>
-            <field name="user_model_ids" eval="[(4, ref('foster-base.model_foster_users'))]"/>
+            <field name="user_model_ids" eval="[(4, ref('foster_base.model_foster_users'))]"/>
         </record>
 
         <record model="res.groups" id="group_foster_supervisor">
@@ -23,7 +23,7 @@
             <field name="category_id" ref="module_category_foster"/>
             <field name="implied_ids" eval="[(4, ref('group_foster_base')),
             (4, ref('base.group_user'))]"/>
-            <field name="user_model_ids" eval="[(4, ref('foster-base.model_foster_users'))]"/>
+            <field name="user_model_ids" eval="[(4, ref('foster_base.model_foster_users'))]"/>
         </record>
         <record model="res.groups" id="group_foster_manager">
             <field name="name">Manager</field>
@@ -31,21 +31,21 @@
             <field name="implied_ids" eval="[(4, ref('group_foster_base')),
             (4, ref('base.group_user'))]"/>
             <!--<field name="users" eval="[(4, ref('base.user_root'))]"/>-->
-            <field name="user_model_ids" eval="[(4, ref('foster-base.model_foster_users'))]"/>
+            <field name="user_model_ids" eval="[(4, ref('foster_base.model_foster_users'))]"/>
         </record>
          <record model="res.groups" id="group_foster_admin">
             <field name="name">Admin</field>
             <field name="category_id" ref="module_category_foster"/>
              <field name="implied_ids" eval="[(4, ref('group_foster_base')),
             (4, ref('base.group_user'))]"/>
-            <field name="user_model_ids" eval="[(4, ref('foster-base.model_foster_users'))]"/>
+            <field name="user_model_ids" eval="[(4, ref('foster_base.model_foster_users'))]"/>
         </record>
          <record model="res.groups" id="group_foster_family_resource">
             <field name="name">FamilyResource</field>
             <field name="category_id" ref="module_category_foster"/>
              <field name="implied_ids" eval="[(4, ref('group_foster_base')),
             (4, ref('base.group_user'))]"/>
-             <field name="user_model_ids" eval="[(4, ref('foster-base.model_foster_users'))]"/>
+             <field name="user_model_ids" eval="[(4, ref('foster_base.model_foster_users'))]"/>
 
         </record>
     </data>

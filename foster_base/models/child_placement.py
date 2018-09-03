@@ -16,10 +16,11 @@ class Reason(models.Model):
     name = fields.Char("Name")
 class child(models.Model):
     _name = 'foster.child'
+    _rec_name = 'full_name'
 
     foster_parent = fields.Char("Foster Parent")
     date_placed = fields.Date(string='Date Placed')
-    full_name = fields.Char(string="Child's Full Name")
+    full_name = fields.Char(string="Child's Full Name", required = True)
     dob = fields.Date(string='Date of Birth')
     religion = fields.Char(string='Religion')
     ethnicity = fields.Char(string='Ethnicity')

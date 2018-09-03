@@ -2,8 +2,9 @@ from odoo import models, fields
 
 class Consumer_Profile(models.Model):
     _name = 'consumer.profile'
+    _rec_name = 'client'
 
-    client = fields.Char(string='Client')
+    client = fields.Char(string='Client', required=True)
     birth_date = fields.Date(string='Date of Birth')
     placement_date = fields.Date(string='Placement Date')
     assessment_date = fields.Date(string='Assessment Date')
@@ -26,4 +27,5 @@ class Consumer_Profile(models.Model):
     needs = fields.Text(string='Critical Needs/ Issues')
     prefrences = fields.Text(string='Consumer Preference')
     future_goals = fields.Text(string='Future Goals')
+    consumer_id = fields.Many2one('foster.applicants')
 

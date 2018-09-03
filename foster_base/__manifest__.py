@@ -44,7 +44,11 @@
         'views/admin.xml',
         'views/supervisor.xml',
         'views/family_resource.xml',
-        'views/role.xml'
+        'views/role.xml',
+        'views/report.xml',
+        'views/wizard.xml'
+
+
     ],
     # only loaded in demonstration mode
     'demo': [

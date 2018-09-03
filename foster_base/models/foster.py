@@ -4,8 +4,8 @@ class Partner(models.Model):
     _name = 'foster.partner'
     name = fields.Char("Name")
     age = fields.Char("Age")
-    spouse_last_name = fields.Char("Last Name")
-    spouse_first_name = fields.Char("First")
+    spouse_last_name = fields.Char("Last Name", required=True)
+    spouse_first_name = fields.Char("First", required=True)
     spouse_middle_name = fields.Char("Middle")
     spouse_other_name = fields.Char("Any Other Name")
     partner_id = fields.Many2one("foster.applicants", string="Partner/Spouse")
@@ -55,7 +55,7 @@ class Emergency_contact_person(models.Model):
 
 class Family_memebers(models.Model):
     _name = 'foster.family.members'
-    full_name = fields.Char("Name")
+    full_name = fields.Char("Name", required=True)
     sex = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -75,7 +75,7 @@ class Family_memebers(models.Model):
 class Other_members_home(models.Model):
     _name = 'foster.other.members'
 
-    full_name = fields.Char("Name")
+    full_name = fields.Char("Name", required=True)
     sex = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -237,11 +237,12 @@ class Cori_form(models.Model):
 
 class Applicant(models.Model):
     _name = 'foster.applicants'
+    _rec_name = "last_name"
 
 
     date = fields.Date("Date")
-    last_name = fields.Char(string ="Last Name")
-    first_name = fields.Char("First")
+    last_name = fields.Char(string ="Last Name", required=True)
+    first_name = fields.Char("First", required=True)
     middle_name = fields.Char("Middle")
     other_name = fields.Char("Any Other Name")
     address = fields.Char("Address")
@@ -324,3 +325,4 @@ class Applicant(models.Model):
     applicant_sign = fields.Binary('Applicant Signature')
     partner_sign = fields.Binary("Spouse/Partner Signature")
     cori_form = fields.One2many('cori.form', 'corri_applicant_id', string="CORI")
+    consumer = fields.One2many('consumer.profile','consumer_id',string="Client Consumer",readonly=True)

@@ -26,6 +26,7 @@ class Placement_Restrictions(models.Model):
 
 class Intake(models.Model):
     _name = 'foster.intake'
+    _rec_name = 'intake_worker'
 
     intake_worker = fields.Char(string='Intake Worker')
     date = fields.Date(string='Date of Intake')

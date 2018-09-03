@@ -60,6 +60,7 @@
                         <field name="needs"/>
                         <field name="prefrences"/>
                         <field name="future_goals"/>
+                        <field name = "consumer_id" string="Foster Parent" options="{'no_quick_create':True,'no_create_edit':True}"/>
                     </group>
                 </form>
             </field>

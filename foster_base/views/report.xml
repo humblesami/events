@@ -1,0 +1,115 @@
+<odoo>
+    <data>
+        <report
+                id="foster_report"
+                model="foster.applicants"
+                string="Foster Reports"
+                report_type="qweb-pdf"
+                name="foster_base.foster_report_invoice"
+                file="foster_base.foster_report_invoice"
+                menu="True"
+        />
+
+        <template id="foster_report_invoice">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                table {
+                                font-family: arial, sans-serif;
+                                border-collapse: collapse;
+                                width: 100%;
+                                }
+
+                                td, th {
+                                border: 1px solid #dddddd;
+                                text-align: left;
+                                padding: 8px;
+                                }
+
+                                tr:nth-child(even) {
+                                background-color: #dddddd;
+                                }
+                            </style>
+                            <div class="row text-center">
+                                <h2>
+                                    <b>
+                                        <span t-field="res_company.name"/>
+                                    </b>
+                                </h2>
+                            </div>
+                            <div class="row text-center">
+                                <h2>
+                                    <strong>Report title</strong>
+                                </h2>
+                            </div>
+                            <table>
+                                <tr>
+                                    <th>Foster Applicant</th>
+                                    <th>Partner</th>
+                                    <th>Pets</th>
+                                    <th>Family Members</th>
+                                    <th>Other Living Members</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span t-field="o.last_name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.patner.spouse_last_name"/>
+                                    </td>
+                                    <td>
+                                        <t t-foreach="o.petss" t-as="h">
+                                            <span t-field="h.name"/><br/>
+                                        </t>
+                                    </td>
+                                     <td>
+                                        <t t-foreach="o.family_members" t-as="a">
+                                            <span t-field="a.full_name"/><br/>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-foreach="o.other_living_members" t-as="b">
+                                            <span t-field="b.full_name"/><br/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                            <h4>Applicant signature</h4>
+                            <span t-if="o.applicant_sign">
+                                <span t-field="o.applicant_sign" t-field-options='{"widget": "image"}'/>
+                            </span>
+                            <h4>Partner signature</h4>
+                            <span t-if="o.partner_sign">
+                                <span t-field="o.partner_sign" t-field-options='{"widget": "image"}'/>
+                            </span>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_frenchcheck" model="report.paperformat">
+            <field name="name">French Bank Check</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">80</field>
+            <field name="page_width">175</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">3</field>
+            <field name="margin_bottom">3</field>
+            <field name="margin_left">3</field>
+            <field name="margin_right">3</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">3</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <!--<menuitem-->
+        <!--name="Foster Repasdfort"-->
+        <!--parent="foster_management_menu_root"-->
+        <!--action="foster_report"-->
+        <!--id="menu_foster_summary"/>-->
+    </data>
+</odoo>

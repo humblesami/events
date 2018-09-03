@@ -7,3 +7,5 @@ from . import intake
 from . import consumer
 from . import users
 from . import roles
+from . import reports
+from . import wizards

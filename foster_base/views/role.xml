@@ -68,7 +68,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('category_id.name','=','FosterManagement')]</field>
-            <field name="context">{'module_name' : 'foster-base','mp_groups' : True}</field>
+            <field name="context">{'module_name' : 'foster_base','mp_groups' : True}</field>
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give
                 them access and rights to specific applications and tasks in the system. You can create custom groups or
                 edit the ones existing by default in order to customize the view of the menu that users will be able to
