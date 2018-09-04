@@ -32,8 +32,12 @@ class OpBatch(models.Model):
     code = fields.Char('Code', size=16, required=True)
     name = fields.Char('Name', size=32, required=True)
     start_date = fields.Date(
-        'Start Date')
-    end_date = fields.Date('End Date')
+        'Admissions Start')
+    end_date = fields.Date('Admissions End')
+    product_id = fields.Many2one(
+        'product.product', 'Fee',
+        domain=[('type', '=', 'service')], track_visibility='onchange')
+
     course_id = fields.Many2one('op.course', 'Course', required=True)
     branch_id = fields.Many2one('op.branch', 'Location(Education Center)', required=True)
     funded_by = fields.Selection(

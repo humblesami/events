@@ -44,8 +44,9 @@ class OpBatch(models.Model):
     def write(self, vals):
         if "room_id" in vals and self.room_id:
             self.room_id.batch_id=False
+            self.room_id.course_id = False
         r = super(OpBatch, self).write(vals)
-        if "room_id" in vals:
+        if "room_id" in vals and self.room_id:
             self.room_id.batch_id = self.id
             self.room_id.course_id = self.course_id
             self.room_id.branch_id = self.branch_id

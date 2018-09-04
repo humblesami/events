@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="view_op_class_form_inherit" model="ir.ui.view">
+        <record id="view_op_class_form_inherit1" model="ir.ui.view">
             <field name="name">op.class.form.inherit</field>
             <field name="model">op.batch</field>
             <field name="inherit_id" ref="openeducat_core.view_op_batch_form" />
             <field name="arch" type="xml">
-                <xpath expr="//header" position="inside">
-                    <button string="Create Timetable" type="object" name="action_create_timetable"  />
-
-                </xpath>
-
                 <notebook position="inside">
-                    <page name="time_table" string="Sessions">
-                        <field name="session_ids" colspan="4" />
+                    <page name="time_table" string="Applications">
+                        <field name="admission_ids" context="{'default_course_id': course_id,'default_batch_id': active_id}"/>
+
                     </page>
+
+
                 </notebook>
 
 

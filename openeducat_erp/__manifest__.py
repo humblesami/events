@@ -35,6 +35,9 @@
                 'openeducat_parent', 'openeducat_support',
                 'openeducat_timetable', 'web_openeducat'],
     'data': [
+        'data/default.xml',
+        'views/home.xml',
+        'views/menu.xml'
     ],
     'demo': [
     ],

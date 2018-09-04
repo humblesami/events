@@ -109,7 +109,7 @@ class OpAdmission(models.Model):
         'op.student', 'Student', states={'done': [('readonly', True)]})
     nbr = fields.Integer('No of Admission', readonly=True)
     register_id = fields.Many2one(
-        'op.admission.register', 'Admission Register', required=True,
+        'op.admission.register', 'Admission Register',
         states={'done': [('readonly', True)]})
     partner_id = fields.Many2one('res.partner', 'Partner')
     is_student = fields.Boolean('Is Already Student')
@@ -157,30 +157,32 @@ class OpAdmission(models.Model):
             self.state_id = False
             self.partner_id = False
 
-    @api.onchange('register_id')
+    @api.onchange('batch_id')
     def onchange_register(self):
-        self.course_id = self.register_id.course_id
-        self.fees = self.register_id.product_id.lst_price
-
+        if not 'default_course_id' in self._context:
+            self.course_id = self.batch_id.course_id
+            self.fees = self.batch_id.product_id.lst_price
+        self.fees = self.batch_id.product_id.lst_price
     @api.onchange('course_id')
     def onchange_course(self):
-        self.batch_id = False
-        term_id = False
-        if self.course_id and self.course_id.fees_term_id:
-            term_id = self.course_id.fees_term_id.id
-        self.fees_term_id = term_id
+        if not 'default_course_id' in self._context:
+            self.batch_id = False
+            term_id = False
+            if self.course_id and self.course_id.fees_term_id:
+                term_id = self.course_id.fees_term_id.id
+            self.fees_term_id = term_id
 
     @api.multi
-    @api.constrains('register_id', 'application_date')
+    @api.constrains('batch_id', 'application_date')
     def _check_admission_register(self):
         for record in self:
-            start_date = fields.Date.from_string(record.register_id.start_date)
-            end_date = fields.Date.from_string(record.register_id.end_date)
+            start_date = fields.Date.from_string(record.batch_id.start_date)
+            end_date = fields.Date.from_string(record.batch_id.end_date)
             application_date = fields.Date.from_string(record.application_date)
             if application_date < start_date or application_date > end_date:
                 raise ValidationError(_(
                     "Application Date should be between Start Date & \
-                    End Date of Admission Register."))
+                    End Date of Admissions."))
 
     @api.multi
     @api.constrains('birth_date')
@@ -248,12 +250,12 @@ class OpAdmission(models.Model):
     def enroll_student(self):
         for record in self:
             total_admission = self.env['op.admission'].search_count(
-                [('register_id', '=', record.register_id.id),
+                [('batch_id', '=', record.batch_id.id),
                  ('state', '=', 'done')])
-            if record.register_id.max_count:
-                if not total_admission < record.register_id.max_count:
-                    msg = 'Max Admission In Admission Register :- (%s)' % (
-                        record.register_id.max_count)
+            if record.batch_id.max_students:
+                if not total_admission < record.batch_id.max_students:
+                    msg = 'Max Admission In Class :- (%s)' % (
+                        record.batch_id.max_students)
                     raise ValidationError(_(msg))
             if not record.student_id:
                 vals = record.get_student_vals()
@@ -271,7 +273,7 @@ class OpAdmission(models.Model):
                 })
             if record.fees_term_id:
                 val = []
-                product_id = record.register_id.product_id.id
+                product_id = record.batch_id.product_id.id
                 for line in record.fees_term_id.line_ids:
                     no_days = line.due_days
                     per_amount = line.value
@@ -353,7 +355,7 @@ class OpAdmission(models.Model):
         partner_id = self.env['res.partner'].create({'name': self.name})
 
         account_id = False
-        product = self.register_id.product_id
+        product = self.batch_id.product_id
         if product.id:
             account_id = product.property_account_income_id.id
         if not account_id:
@@ -385,7 +387,7 @@ class OpAdmission(models.Model):
                 'price_unit': amount,
                 'quantity': 1.0,
                 'discount': 0.0,
-                'uom_id': self.register_id.product_id.uom_id.id,
+                'uom_id': self.batch_id.product_id.uom_id.id,
                 'product_id': product.id,
             })],
         })

@@ -61,7 +61,7 @@ class OpSession(models.Model):
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirmed'),
          ('done', 'Done'), ('cancel', 'Canceled')],
-        'Status', default='draft')
+        'Status', default='confirm')
     user_ids = fields.Many2many(
         'res.users', compute='_compute_batch_users',
         store=True, string='Users')
@@ -153,16 +153,16 @@ class OpSession(models.Model):
                     partner_ids.append(val.student_id.user_id.partner_id.id)
         subtype_id = self.env['mail.message.subtype'].sudo().search([
             ('name', '=', 'Discussions')])
-        if partner_ids and subtype_id:
-            for partner in partner_ids:
-                if partner in partner_val:
-                    continue
-                val = self.env['mail.followers'].sudo().create({
-                    'res_model': res._name,
-                    'res_id': res.id,
-                    'partner_id': partner,
-                    'subtype_ids': [[6, 0, [subtype_id[0].id]]]
-                })
+        # if partner_ids and subtype_id:
+        #     for partner in partner_ids:
+        #         if partner in partner_val:
+        #             continue
+        #         val = self.env['mail.followers'].sudo().create({
+        #             'res_model': res._name,
+        #             'res_id': res.id,
+        #             'partner_id': partner,
+        #             'subtype_ids': [[6, 0, [subtype_id[0].id]]]
+        #         })
         return res
 
     @api.onchange('course_id')
@@ -190,13 +190,13 @@ class OpSession(models.Model):
     @api.multi
     def get_subject(self):
         return 'lacture of ' + self.faculty_id.name + \
-            ' for ' + self.subject_id.name + ' is ' + self.state
+            ' for ' + self.course_id.name + ' is ' + self.state
 
     @api.multi
     @api.model
     def write(self, vals):
         data = super(OpSession,
                      self.with_context(check_move_validity=False)).write(vals)
-        if self.state not in ('draft', 'done'):
-            self.notify_user()
+        # if self.state not in ('draft', 'done'):
+        #     self.notify_user()
         return data

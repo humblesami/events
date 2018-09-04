@@ -70,7 +70,7 @@
                         <notebook colspan="4">
                             <page name="admission_detail" string="Admission Detail">
                                 <group col="4" colspan="4">
-                                    <field name="register_id" domain="[('state', 'in', ['application','admission'])]" widget="selection" />
+                                    <!--<field name="register_id" domain="[('state', 'in', ['application','admission'])]" widget="selection" />-->
                                     <field name="application_number" />
                                     <field name="application_date" />
                                     <field name="admission_date" />
@@ -80,7 +80,7 @@
                                     <field name="due_date" />
                                     <field name="fees_term_id" required="1"
                                         attrs="{'readonly': [('state','not in', ['draft', 'submit', 'confirm'])]}"/>
-                                    <field name="partner_id" attrs="{'invisible': [('is_student','!=', False)]}"/>
+                                    <!--<field name="partner_id" attrs="{'invisible': [('is_student','!=', False)]}"/>-->
                                 </group>
                             </page>
                             <page name="educational_detail" string="Educational Detail">

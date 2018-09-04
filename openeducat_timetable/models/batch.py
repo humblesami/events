@@ -30,6 +30,8 @@ from odoo.exceptions import ValidationError
 class OpClass(models.Model):
     _inherit = 'op.batch'
 
+    session_ids = fields.One2many('op.session', 'batch_id', 'Sessions')
+
     @api.multi
     def action_create_timetable(self):
         for c in self:
@@ -37,6 +39,8 @@ class OpClass(models.Model):
             end_time = str(datetime.timedelta(hours=c.end)).rsplit(':', 1)[0] + ":00"
             h1 = int(strt_time.split(":")[0])
             h2 = int(end_time.split(":")[0])
+            students=self.env['op.admission'].search([('batch_id','=',c.id),('state','=','done')])
+
             days=[]
             for d in c.days:
                 days.append(int(d.day))
@@ -48,9 +52,12 @@ class OpClass(models.Model):
                 for n in range((end_date - start_date).days + 1):
                     curr_date = start_date + datetime.timedelta(n)
                     curr_day = curr_date.weekday()
+                    temp0=curr_date.strftime('%Y-%m-%d ')
+                    if term.break_start and term.break_end:
+                        if temp0>=term.break_start and temp0<=term.break_end:
+                            continue
 
-                    temp_date1 = datetime.datetime.strptime(curr_date.strftime('%Y-%m-%d ') +
-                        strt_time, '%Y-%m-%d %H:%M:%S')
+                    temp_date1 = datetime.datetime.strptime(temp0+ strt_time, '%Y-%m-%d %H:%M:%S')
                     local_tz = pytz.timezone(
                         self.env.user.partner_id.tz or 'GMT')
                     # local_tz = pytz.UTC
@@ -78,6 +85,10 @@ class OpClass(models.Model):
                                 available = True
                                 break
                         if available:
+                            st_arr = []
+                            for s in students:
+                                obj = (0, 0, {'student_id': s.student_id.id,'attendance_date':temp0})
+                                st_arr.append(obj)
                             self.env['op.session'].create({
                                 'faculty_id': c.faculty_id.id,
                                 # 'subject_id': line.subject_id.id,
@@ -90,6 +101,7 @@ class OpClass(models.Model):
                                 'end_datetime':
                                     curr_end_date.strftime("%Y-%m-%d %H:%M:%S"),
                                 'type': calendar.day_name[curr_day],
+                                'attendance_line': st_arr,
                             })
                         else:
                             raise ValidationError(_("%s not available at selected time %s to %s." % (

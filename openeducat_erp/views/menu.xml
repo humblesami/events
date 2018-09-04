@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--<menuitem id="menu_op_home" name="Home"-->
+            <!--sequence="0" parent="openeducat_core.menu_op_school_academics" action="action_openedu_home"   />-->
+
+
+    </data>
+</odoo>

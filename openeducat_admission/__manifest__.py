@@ -35,6 +35,7 @@
         'views/admission_view.xml',
         'views/admission_sequence.xml',
         'views/student_view.xml',
+        'views/class.xml',
         'report/report_menu.xml',
         'report/report_admission_analysis.xml',
         'wizard/admission_analysis_wizard_view.xml',

@@ -7,6 +7,7 @@ from odoo.addons.dn_base.statics import raise_dn_model_error
 from odoo.addons.mail.models.mail_message import Message
 
 class MyMail(Message):
+    @api.multi
     def unlink(self):
         if self.env.uid != 1:
             if self.env.uid == self.create_uid.id:

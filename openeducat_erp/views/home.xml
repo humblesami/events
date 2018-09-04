@@ -1,0 +1,76 @@
+<odoo>
+    <data>
+
+
+        <record id="view_openedu_home_tree" model="ir.ui.view">
+            <field name="name">openedu.home.tree</field>
+            <field name="model">openeducat.home</field>
+            <field name="sequence" eval="1"/>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+
+                </tree>
+            </field>
+        </record>
+
+        <!--<record id="view_meeting_news_admin_form" model="ir.ui.view">-->
+            <!--<field name="name">meeting_point.news.admin.form</field>-->
+            <!--<field name="model">meeting_point.news</field>-->
+            <!--<field name="sequence" eval="2"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<form>-->
+                    <!--<group>-->
+                        <!--<field name="title" />-->
+                        <!--<field name="photo" filename="filename" widget="image"/>-->
+                        <!--<field name="filename" invisible="1"/>-->
+                        <!--<field name="description" />-->
+                        <!--<field name="doc_ids" />-->
+                        <!--<field name="video_ids" />-->
+                        <!--&lt;!&ndash;<field name="validated" />&ndash;&gt;-->
+                        <!--<field name="validated" invisible="1" />-->
+                    <!--</group>-->
+                    <!--<script src="/meeting_point/static/js/news.js"/>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <record id="view_openedu_home_form" model="ir.ui.view">
+            <field name="name">openedu.home.form</field>
+            <field name="model">openeducat.home</field>
+            <field name="sequence" eval="3"/>
+            <field name="arch" type="xml">
+                <form>
+                    <!--<link rel="stylesheet" href="/meeting_point/static/mphome.css"/>-->
+
+
+                    <div style="display:none">
+                        <field name="session_ids"  mode="kanban"/>
+                        <field name="sessions"/>
+                    </div>
+                    <!--<script src="/meeting_point/static/js/home.js"/>-->
+
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="action_openedu_home" model="ir.actions.act_window" >
+            <field name="name">Home</field>
+            <field name="res_model">openeducat.home</field>
+            <field name="view_id" ref="view_openedu_home_form" />
+            <field name="res_id" ref="openeducation_home_record"/>
+        </record>
+
+
+        <!--<record id="action_meetingnews_admin_news" model="ir.actions.act_window">-->
+            <!--<field name="name">News</field>-->
+            <!--<field name="res_model">meeting_point.news</field>-->
+            <!--<field name="view_id" ref="view_meeting_news_admin_home_tree"/>-->
+            <!--<field name="view_mode">tree,form</field>-->
+        <!--</record>-->
+
+
+    </data>
+</odoo>

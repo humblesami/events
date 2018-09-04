@@ -6,11 +6,12 @@
             <field name="model">op.classroom</field>
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
-                <tree string="Classroom">
-                    <field name="name" />
-                    <field name="code" />
-                    <field name="capacity" />
-                    <field name="facilities" />
+             <tree string="Classroom">
+                    <field name="name"/>
+                    <field name="room_no"/>
+                      <field name="branch_id"/>
+                    <field name="capacity"/>
+                    <!--<field name="facilities"/>-->
                 </tree>
             </field>
         </record>
