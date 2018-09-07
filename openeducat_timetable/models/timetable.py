@@ -66,6 +66,7 @@ class OpSession(models.Model):
         'res.users', compute='_compute_batch_users',
         store=True, string='Users')
     availaible = fields.Char(compute='_compute_availaible', string='Availaibility')
+    term = fields.Char(compute='_compute_term', string='Term')
 
     @api.multi
     @api.depends('start_datetime')
@@ -73,6 +74,20 @@ class OpSession(models.Model):
         for record in self:
             record.type = fields.Datetime.from_string(
                 record.start_datetime).strftime("%A")
+
+    @api.multi
+    def _compute_term(self):
+        colors=['purple','orange','green','blue','pink']
+        for record in self:
+
+            i=0
+            for t in record.batch_id.term_ids:
+                d=record.start_datetime.split(" ")[0]
+                if d >= t.start_date and d <= t.end_date:
+                    record.term=colors[i]
+                    break
+                i+=1
+
 
     @api.multi
     @api.depends('faculty_id')

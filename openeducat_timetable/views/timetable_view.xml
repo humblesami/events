@@ -157,6 +157,10 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
+                                     <div class="o_hidden session_id">
+                                            <field name="id" class="o_hidden" />
+                                            </div>
+
                                     <div>
                                         <strong>
                                             <field name="timing_id" />

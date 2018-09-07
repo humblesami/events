@@ -15,24 +15,24 @@
         </record>
 
         <!--<record id="view_meeting_news_admin_form" model="ir.ui.view">-->
-            <!--<field name="name">meeting_point.news.admin.form</field>-->
-            <!--<field name="model">meeting_point.news</field>-->
-            <!--<field name="sequence" eval="2"/>-->
-            <!--<field name="arch" type="xml">-->
-                <!--<form>-->
-                    <!--<group>-->
-                        <!--<field name="title" />-->
-                        <!--<field name="photo" filename="filename" widget="image"/>-->
-                        <!--<field name="filename" invisible="1"/>-->
-                        <!--<field name="description" />-->
-                        <!--<field name="doc_ids" />-->
-                        <!--<field name="video_ids" />-->
-                        <!--&lt;!&ndash;<field name="validated" />&ndash;&gt;-->
-                        <!--<field name="validated" invisible="1" />-->
-                    <!--</group>-->
-                    <!--<script src="/meeting_point/static/js/news.js"/>-->
-                <!--</form>-->
-            <!--</field>-->
+        <!--<field name="name">meeting_point.news.admin.form</field>-->
+        <!--<field name="model">meeting_point.news</field>-->
+        <!--<field name="sequence" eval="2"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<form>-->
+        <!--<group>-->
+        <!--<field name="title" />-->
+        <!--<field name="photo" filename="filename" widget="image"/>-->
+        <!--<field name="filename" invisible="1"/>-->
+        <!--<field name="description" />-->
+        <!--<field name="doc_ids" />-->
+        <!--<field name="video_ids" />-->
+        <!--&lt;!&ndash;<field name="validated" />&ndash;&gt;-->
+        <!--<field name="validated" invisible="1" />-->
+        <!--</group>-->
+        <!--<script src="/meeting_point/static/js/news.js"/>-->
+        <!--</form>-->
+        <!--</field>-->
         <!--</record>-->
 
         <record id="view_openedu_home_form" model="ir.ui.view">
@@ -41,15 +41,40 @@
             <field name="sequence" eval="3"/>
             <field name="arch" type="xml">
                 <form>
-                    <!--<link rel="stylesheet" href="/meeting_point/static/mphome.css"/>-->
+                    <style>
+                        .o_cp_left{
+                        display:none!important
+                        }
+                        .o_cp_right{
+                        display:none!important
+                        }
+                        #calendar{
+                        margin:10px
+                        }
+                    </style>
+                    <notebook>
+                        <page string="Calendar" >
+                            <div class="top" style="display:inline">
+                                <h2 style="display:inline" >Class:</h2>
+                                <select  id="dropdown" style="width:25%;display:inline"></select>
+                            </div>
+
+                            <div id="calendar"></div>
+
+                        </page>
+                    </notebook>
 
 
                     <div style="display:none">
-                        <field name="session_ids"  mode="kanban"/>
+                        <field name="session_ids" mode="kanban"/>
                         <field name="sessions"/>
+                        <field name="classes"/>
                     </div>
-                    <!--<script src="/meeting_point/static/js/home.js"/>-->
 
+                    <script src="/openeducat_erp/static/js/calendar/fullcalendar.js"></script>
+                    <!--<script src="/openeducat_erp/static/js/calendar/moment.min.js"></script>-->
+                    <link rel="stylesheet" href="/openeducat_erp/static/css/calendar.css"/>
+                    <script src="/openeducat_erp/static/js/calendar/calendar.js"></script>
                 </form>
             </field>
         </record>
@@ -57,7 +82,7 @@
 
 
         <record id="action_openedu_home" model="ir.actions.act_window" >
-            <field name="name">Home</field>
+            <field name="name">Dashboard</field>
             <field name="res_model">openeducat.home</field>
             <field name="view_id" ref="view_openedu_home_form" />
             <field name="res_id" ref="openeducation_home_record"/>
@@ -65,10 +90,10 @@
 
 
         <!--<record id="action_meetingnews_admin_news" model="ir.actions.act_window">-->
-            <!--<field name="name">News</field>-->
-            <!--<field name="res_model">meeting_point.news</field>-->
-            <!--<field name="view_id" ref="view_meeting_news_admin_home_tree"/>-->
-            <!--<field name="view_mode">tree,form</field>-->
+        <!--<field name="name">News</field>-->
+        <!--<field name="res_model">meeting_point.news</field>-->
+        <!--<field name="view_id" ref="view_meeting_news_admin_home_tree"/>-->
+        <!--<field name="view_mode">tree,form</field>-->
         <!--</record>-->
 
 

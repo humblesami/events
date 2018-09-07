@@ -52,12 +52,12 @@ class OpClass(models.Model):
                 for n in range((end_date - start_date).days + 1):
                     curr_date = start_date + datetime.timedelta(n)
                     curr_day = curr_date.weekday()
-                    temp0=curr_date.strftime('%Y-%m-%d ')
+                    temp0=curr_date.strftime('%Y-%m-%d')
                     if term.break_start and term.break_end:
                         if temp0>=term.break_start and temp0<=term.break_end:
                             continue
 
-                    temp_date1 = datetime.datetime.strptime(temp0+ strt_time, '%Y-%m-%d %H:%M:%S')
+                    temp_date1 = datetime.datetime.strptime(temp0+' '+ strt_time, '%Y-%m-%d %H:%M:%S')
                     local_tz = pytz.timezone(
                         self.env.user.partner_id.tz or 'GMT')
                     # local_tz = pytz.UTC

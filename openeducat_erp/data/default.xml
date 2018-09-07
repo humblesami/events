@@ -1,8 +1,8 @@
 <odoo>
-    <data noupdate="1">
+    <data>
 
         <record id="openeducation_home_record" model="openeducat.home">
-            <field name="name">Home</field>
+            <field name="name">Dashboard</field>
             <field name="description">Please Request Admin to update the message</field>
         </record>
 
