@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="openeducat_core.view_op_batch_form" />
             <field name="arch" type="xml">
                 <field name="faculty_id" position="after">
-                    <field name="room_id" context="{'form_view_ref' : 'openeducat_classroom.view_op_classroom_form2'}" domain="[('batch_id','=',False),('branch_id','=',branch_id)]"/>
+                    <field name="room_id" context="{'terms': term_ids,'location':branch_id}" />
 
                 </field>
 

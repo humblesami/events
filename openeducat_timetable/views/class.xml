@@ -17,6 +17,37 @@
                     </page>
                 </notebook>
 
+                  <group name="main" position="after">
+
+                  <group class="oe_edit_only" string="Faculty availability and Scheduled classes">
+                       <field name="faculty_ids" nolabel="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="availaible"/>
+
+                            </tree>
+                        </field>
+                  </group>
+
+                    <group class="oe_edit_only" >
+
+
+
+                        <field name="class_ids" nolabel="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="faculty_id"/>
+                                <field name="class_start"/>
+                                <field name="class_end"/>
+                                <field name="start"/>
+                                <field name="end"/>
+                                <field name="total_sched_hrs" widget="float_time"/>
+                                <field name="total_avail_hrs" widget="float_time"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
+
 
             </field>
         </record>

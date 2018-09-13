@@ -78,9 +78,9 @@
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
                 <form string="Faculty">
-                <header groups="openeducat_core.group_op_back_office_admin">
-                    <button name="%(faculty_create_employee_act)d" string="Create Employee" type="action" class="oe_highlight" attrs="{'invisible': [('emp_id', '!=', False)]}"/>
-                </header>
+                    <header groups="openeducat_core.group_op_back_office_admin">
+                        <button name="%(faculty_create_employee_act)d" string="Create Employee" type="action" class="oe_highlight" attrs="{'invisible': [('emp_id', '!=', False)]}"/>
+                    </header>
                     <sheet>
                         <field name="image" widget="image" class="oe_left oe_avatar" />
                         <div class="oe_title">
@@ -89,11 +89,11 @@
                             </h1>
                             <h1><table>
                                 <tr>
-                                <td style="padding-right:10px"><field name="name" required="1" placeholder="First Name" /></td>
-                                <td style="padding-right:10px"><field name="middle_name" placeholder="Middle Name" /></td>
-                                <td style="padding-right:10px"><field name="last_name" placeholder="Last Name" /></td>
+                                    <td style="padding-right:10px"><field name="name" required="1" placeholder="First Name" /></td>
+                                    <td style="padding-right:10px"><field name="middle_name" placeholder="Middle Name" /></td>
+                                    <td style="padding-right:10px"><field name="last_name" placeholder="Last Name" /></td>
                                 </tr>
-                                </table>
+                            </table>
                             </h1>
                         </div>
                         <group col="6" colspan="4">
@@ -111,7 +111,7 @@
                                     <field name="visa_info" />
                                     <field name="lang" />
                                     <field name="emergency_contact" context="{'show_address': 1}"
-                                        options='{"always_reload": True}' />
+                                           options='{"always_reload": True}' />
                                     <field name='emp_id' />
                                 </group>
                                 <group string="Address Detail" name="address">
@@ -126,16 +126,37 @@
                                         <div class="address_format">
                                             <field name="city" placeholder="City" style="width: 40%%" />
                                             <field name="state_id" class="oe_no_button"
-                                                placeholder="State" style="width: 37%%" options='{"no_open": True}' />
+                                                   placeholder="State" style="width: 37%%" options='{"no_open": True}' />
                                             <field name="zip" placeholder="ZIP" style="width: 20%%" />
                                         </div>
                                         <field name="country_id" placeholder="Country" class="oe_no_button"
-                                            options='{"no_open": True}' />
+                                               options='{"no_open": True}' />
                                     </div>
                                 </group>
                             </page>
-                            <page name="subjects" string="Subjects">
-                                <field name="faculty_subject_ids" colspan="4" nolabel="1" />
+                            <!--<page name="subjects" string="Subjects">-->
+                            <!--<field name="faculty_subject_ids" colspan="4" nolabel="1" />-->
+                            <!--</page>-->
+                            <page name="courses" string="Courses">
+                                <field name="faculty_course_ids" colspan="4" nolabel="1" />
+                            </page>
+                            <page name="courses" string="Capacity">
+                                <notebook>
+                                    <page name="classes" string="Classes">
+                                        <field name="class_ids" colspan="4" nolabel="1">
+                                            <tree>
+                                                <field name="name"/>
+                                                <field name="class_start"/>
+                                                <field name="class_end"/>
+                                                <!--<field name="classhrs_week" widget="float_time"/>-->
+                                                <!--<field name="total_instr_hrs" widget="float_time"/>-->
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page name ="bydate" string="By Date">
+
+                                    </page>
+                                </notebook>
                             </page>
                         </notebook>
                     </sheet>
@@ -153,9 +174,9 @@
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter name="blood_group" string="Blood Group" domain="[]"
-                            context="{'group_by':'blood_group'}" />
+                                context="{'group_by':'blood_group'}" />
                         <filter name="nationality" string="Nationality" domain="[]"
-                            context="{'group_by':'nationality'}" />
+                                context="{'group_by':'nationality'}" />
                         <filter name="language" string="Language" domain="[]" context="{'group_by':'lang'}" />
                     </group>
                 </search>

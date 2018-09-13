@@ -20,36 +20,27 @@
 ###############################################################################
 
 from odoo import models, fields, api
+import datetime
 
 
-class OpBatch(models.Model):
-    _inherit = 'op.batch'
+class OpFaculty(models.Model):
+    _inherit = 'op.classroom'
 
-    room_id = fields.Many2one('op.classroom', 'Classroom')
 
-    # _sql_constraints = [
-    #     ('unique_batch_room',
-    #      'unique(room_id)', 'Classroom should be unique per branch!')]
+    filter_start = fields.Date('From')
+    filter_end = fields.Date('To')
+    total_sched_hrs = fields.Float('Total scheduled hours', compute="_compute_avail_hrs")
+    total_avail_hrs = fields.Float('Free hours', compute="_compute_avail_hrs")
 
-    @api.model
-    def create(self, vals):
-        r = super(OpBatch, self).create(vals)
-        if r.room_id:
-            r.room_id.batch_id = r.id
-            r.room_id.course_id = r.course_id
-            r.room_id.branch_id = r.branch_id
-        return r
 
+    @api.depends('filter_start','filter_end')
     @api.multi
-    def write(self, vals):
-        if "room_id" in vals and self.room_id:
-            self.room_id.batch_id=False
-            self.room_id.course_id = False
-        r = super(OpBatch, self).write(vals)
-        if "room_id" in vals and self.room_id:
-            self.room_id.batch_id = self.id
-            self.room_id.course_id = self.course_id
-            self.room_id.branch_id = self.branch_id
-        return r
+    def _compute_avail_hrs(self):
+        for rec in self:
+            if rec.filter_end and rec.filter_start:
+                hours = rec.class_ids.calculate_hours(rec.filter_start, rec.filter_end,room=True)
+                rec.total_sched_hrs = hours["scheduled"]
+                rec.total_avail_hrs = hours["available"]
+
 
 

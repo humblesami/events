@@ -39,6 +39,7 @@ class OpClassroom(models.Model):
     facilities = fields.One2many(
         'op.facility.line', 'classroom_id', string='Facility Lines')
     asset_line = fields.One2many('op.asset', 'asset_id', 'Asset')
+    class_ids = fields.One2many('op.batch', 'room_id', 'Classes')
 
 
     _sql_constraints = [
@@ -63,5 +64,21 @@ class OpClassroom(models.Model):
             a=record.allocated.split("/")
             if int(a[0]) == int(a[1]):
                 raise ValidationError(_("All classrooms are allocated"))
+
+    @api.multi
+    def name_get(self):
+        if self.env.context.get('terms', False):
+            terms=self.env['op.term'].browse(self.env.context["terms"][0][2])
+            location=self.env.context["location"]
+            if not terms or not location:
+                raise ValidationError(_("Enter Location and terms."))
+
+            rooms=[]
+            for t in self.env['op.classroom'].search([('branch_id','=',location)]):
+                hours=t.class_ids.calculate_hours(False,False,terms=terms,room=True)
+                rooms.append((t.id,t.name+"(available hours:"+str(hours["available"])+")"))
+            return rooms
+
+        return super(OpClassroom, self).name_get()
 
 

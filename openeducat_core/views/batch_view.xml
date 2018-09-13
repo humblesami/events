@@ -12,7 +12,7 @@
                     <field name="start_date" />
                     <field name="end_date" />
                     <field name="course_id" />
-                     <field name="branch_id" />
+                    <field name="branch_id" />
                 </tree>
             </field>
         </record>
@@ -21,7 +21,12 @@
             <field name="model">op.batch</field>
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
-                <form string="Batch">
+               <form string="Batch">
+  <style>
+    div[name="faculty_ids"] .o_data_cell{
+    white-space: pre
+}
+  </style>
                     <header>
 
                     </header>
@@ -35,15 +40,23 @@
 
                             <field name="branch_id"/>
                             <field name="course_id"/>
-                            <field name="faculty_id"/>
-                            <field name="days" widget="many2many_tags"/>
-                        </group>
-                        <group col="4">
-                             <field name="start" widget="float_time" required="1" class="dn_time_picker"/>
-                            <field name="end" widget="float_time" required="1" class="dn_time_picker"/>
                             <field name="no_of_students"/>
                             <field name="max_students"/>
+
                         </group>
+                        <group string="Terms">
+
+                            <field name="term_ids" nolabel="1"/>
+                        </group>
+                        <h3 style="color:#00a09d">Required hours: <field class="badge" name="total_instr_hrs" widget="float_time"/></h3>
+                        <group col="4">
+                            <field name="start" widget="float_time" required="1" class="dn_time_picker"/>
+                            <field name="end" widget="float_time" required="1" class="dn_time_picker"/>
+                                 <field name="days" widget="many2many_tags"/>
+                            <field name="faculty_id" context="{'filter_teachers': term_ids,'course': course_id,'class_id': active_id,'days': days,'start': start,'end': end,'total_instr_hrs': total_instr_hrs}"/>
+
+                        </group>
+
                         <group>
                             <field name="funded_by"/>
                             <field name="prephrs_week" widget="float_time" class="dn_time_picker"/>
@@ -53,9 +66,9 @@
                         </group>
 
                         <notebook>
-                            <page name="terms" string="Terms">
-                                <field name="term_ids"/>
-                            </page>
+                            <!--<page name="terms" string="Terms">-->
+                            <!--    <field name="term_ids"/>-->
+                            <!--</page>-->
 
                             <page name="admission" string="Admission details">
                                 <group>
@@ -65,19 +78,19 @@
 
                                 </group>
                             </page>
-                              <page name="admission" string="Total hours">
-                               <group col="4">
-                            <field name="classhrs_week" widget="float_time"/>
-                            <field name="weekly_fte"/>
-                            <field name="weeks"/>
-                            <field name="cycles"/>
-                            <field name="total_hrs" widget="float_time"/>
-                            <field name="total_instr_hrs" widget="float_time"/>
-                            <field name="total_prep_hrs" widget="float_time"/>
-                            <!--<field name="total_dev_hrs" widget="float_time"/>-->
-                            <field name="fte_hrs_employed"/>
-                            <field name="fte"/>
-                        </group>
+                            <page name="admission" string="Total hours">
+                                <group col="4">
+                                    <field name="classhrs_week" widget="float_time"/>
+                                    <field name="weekly_fte"/>
+                                    <field name="weeks"/>
+                                    <field name="cycles"/>
+                                    <field name="total_hrs" widget="float_time"/>
+                                    <field name="total_instr_hrs" widget="float_time"/>
+                                    <field name="total_prep_hrs" widget="float_time"/>
+                                    <!--<field name="total_dev_hrs" widget="float_time"/>-->
+                                    <field name="fte_hrs_employed"/>
+                                    <field name="fte"/>
+                                </group>
                             </page>
                         </notebook>
 
@@ -100,7 +113,7 @@
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter string="Start Date" domain="[]"
-                            context="{'group_by':'start_date'}" />
+                                context="{'group_by':'start_date'}" />
                         <filter string="End Date" domain="[]" context="{'group_by':'end_date'}" />
                         <filter string="Course" domain="[]" context="{'group_by':'course_id'}" />
                     </group>

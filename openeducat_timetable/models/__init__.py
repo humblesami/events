@@ -23,3 +23,4 @@ from . import faculty
 from . import timetable
 from . import timing
 from . import batch
+from . import room

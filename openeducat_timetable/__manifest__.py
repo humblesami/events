@@ -35,6 +35,7 @@
         'views/timing_view.xml',
         'views/faculty_view.xml',
         'views/class.xml',
+        'views/room.xml',
         'report/report_timetable_student_generate.xml',
         'report/report_timetable_teacher_generate.xml',
         'report/report_menu.xml',
