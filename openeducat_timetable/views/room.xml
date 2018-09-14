@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="openeducat_classroom.view_op_classroom_form" />
             <field name="arch" type="xml">
 
-                <form position="inside">
+                <sheet position="inside">
                     <notebook >
                         <page name="capacity" string="Capacity">
                             <notebook >
@@ -37,7 +37,7 @@
                             </notebook>
                         </page>
                     </notebook>
-                </form>
+                </sheet>
 
 
             </field>

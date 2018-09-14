@@ -57,7 +57,7 @@ class OpClass(models.Model):
     def _compute_avail_hrs(self):
         for rec in self:
 
-            hours = rec.faculty_id.class_ids.calculate_hours(rec.class_start,rec.class_end)
+            hours = rec.faculty_id.class_ids.calculate_hours(rec.class_start,rec.class_end,faculty=rec.faculty_id)
             rec.total_sched_hrs = hours["scheduled"]
             rec.total_avail_hrs = hours["available"]
 
@@ -65,7 +65,7 @@ class OpClass(models.Model):
     def _compute_avail_hrs1(self):
         for rec in self:
 
-            hours = rec.room_id.class_ids.calculate_hours(rec.class_start,rec.class_end)
+            hours = rec.room_id.class_ids.calculate_hours(rec.class_start,rec.class_end,room=True)
             rec.total_sched_hrs_room = hours["scheduled"]
             rec.total_avail_hrs_room = hours["available"]
 
@@ -151,11 +151,9 @@ class OpClass(models.Model):
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
-    def calculate_hours(self,start,end,terms=False,local=False,room=False,withBreaks=False):
+    def calculate_hours(self,start,end,terms=False,local=False,faculty=False,room=False,withBreaks=False):
         sessions=[]
-        faculty_id=False
         for c in self:
-            faculty_id=c.faculty_id
             strt_time = str(datetime.timedelta(hours=c.start)).rsplit(':', 1)[0] + ":00"
             end_time = str(datetime.timedelta(hours=c.end)).rsplit(':', 1)[0] + ":00"
             h1 = int(strt_time.split(":")[0])
@@ -229,7 +227,6 @@ class OpClass(models.Model):
         if terms:
             sessions1=[]
             daygenerator=[]
-            days=self.get_weeks(terms,withBreaks)
             for term in terms:
                 temp=[]
                 start_date = datetime.datetime.strptime(term.start_date, '%Y-%m-%d')
@@ -256,10 +253,6 @@ class OpClass(models.Model):
             end_date = datetime.datetime.strptime(end, '%Y-%m-%d')
             daygenerator = [start_date + datetime.timedelta(x ) for x in range((end_date - start_date).days+1)]
 
-            days = (end_date - start_date).days
-            days=sum(1 for day in daygenerator if day.weekday() < 5)
-
-
             sessions1 = [s for s in sessions if
                          s["start_datetime"] >= start and s["start_datetime"] <= end]
         for s in sessions1:
@@ -269,33 +262,20 @@ class OpClass(models.Model):
 
 
         total = 0
-        if faculty_id:
+        if faculty:
             for day in daygenerator:
-                for a in faculty_id.available_times:
+                for a in faculty.available_times:
                     if int(a.day) == day.weekday():
                         total+=int(a.end) - int(a.start)
         if room:
+            days = sum(1 for day in daygenerator if day.weekday() < 5)
             total = 12*days
         available = total - scheduled
 
 
         return {"scheduled":scheduled,"available":available,"total":total,'sessions':sessions1}
 
-    def get_weeks(self,terms,breaks):
-        days = 0
-        for t in terms:
-            start_date = datetime.datetime.strptime(t.start_date, '%Y-%m-%d')
-            end_date = datetime.datetime.strptime(t.end_date, '%Y-%m-%d')
 
-            days = days + (end_date - start_date).days
-            if t.break_start and t.break_end and not breaks:
-                start_break = datetime.datetime.strptime(t.break_start, '%Y-%m-%d')
-                end_break = datetime.datetime.strptime(t.break_end, '%Y-%m-%d')
-                minus = (end_break - start_break).days
-                days = days - minus
-        weeks = days / 7
-        weeks = math.ceil(weeks / 0.5) * 0.5
-        return days
 
 
 

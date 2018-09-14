@@ -154,7 +154,7 @@ class OpBatch(models.Model):
                     raise ValidationError(_("%s not available at selected time %s to %s on %s." % (
                         c.faculty_id.name, str(h1),str(h2),calendar.day_name[int(d.day)])))
 
-            hours = c.faculty_id.class_ids.filtered(lambda x: x.id!=c.id).calculate_hours(False,False,terms=c.term_ids,local=True)
+            hours = c.faculty_id.class_ids.filtered(lambda x: x.id!=c.id).calculate_hours(False,False,faculty=c.faculty_id,terms=c.term_ids,local=True)
             available_hrs=hours["available"]
             if c.total_instr_hrs >available_hrs:
                 raise ValidationError(_("Required faculty hours:%s Available hours:%s" % (

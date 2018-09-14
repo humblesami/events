@@ -71,7 +71,7 @@
                         <field name="classes"/>
                     </div>
 
-                    <script src="/openeducat_erp/static/js/calendar/fullcalendar.js"></script>
+                    <!--<script src="/openeducat_erp/static/js/calendar/fullcalendar.js"></script>-->
                     <!--<script src="/openeducat_erp/static/js/calendar/moment.min.js"></script>-->
                     <link rel="stylesheet" href="/openeducat_erp/static/css/calendar.css"/>
                     <script src="/openeducat_erp/static/js/calendar/calendar.js"></script>
@@ -86,6 +86,7 @@
             <field name="res_model">openeducat.home</field>
             <field name="view_id" ref="view_openedu_home_form" />
             <field name="res_id" ref="openeducation_home_record"/>
+            <field name="target">inline</field>
         </record>
 
 

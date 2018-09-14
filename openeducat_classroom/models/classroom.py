@@ -21,6 +21,7 @@
 
 from odoo import models, fields, api,_
 from odoo.exceptions import ValidationError
+import datetime
 
 
 class OpClassroom(models.Model):
@@ -70,12 +71,45 @@ class OpClassroom(models.Model):
         if self.env.context.get('terms', False):
             terms=self.env['op.term'].browse(self.env.context["terms"][0][2])
             location=self.env.context["location"]
-            if not terms or not location:
+            class_id = self.env.context["class_id"]
+            days = self.env['op.days'].browse(self.env.context["days"][0][2])
+            start = self.env.context["start"]
+            end = self.env.context["end"]
+            req_hours = self.env.context["total_instr_hrs"]
+
+            if not terms or not location or not days or not start or not end:
                 raise ValidationError(_("Enter Location and terms."))
 
             rooms=[]
+            days1 = []
+            for d in days:
+                days1.append(int(d.day))
             for t in self.env['op.classroom'].search([('branch_id','=',location)]):
-                hours=t.class_ids.calculate_hours(False,False,terms=terms,room=True)
+                if class_id:
+                    hours = t.class_ids.filtered(lambda x: x.id!=class_id).calculate_hours(False, False, terms=terms, room=True,local=True)
+                else:
+                    hours = t.class_ids.calculate_hours(False, False, terms=terms, room=True,local=True)
+                available_hrs = hours["available"]
+                if req_hours > available_hrs:
+                    continue
+
+                sessions = hours["sessions"]
+                avail = True
+                for s in sessions:
+                    st = datetime.datetime.strptime(s["start_datetime"], "%Y-%m-%d %H:%M:%S")
+                    en = datetime.datetime.strptime(s["end_datetime"], "%Y-%m-%d %H:%M:%S")
+                    day = st.weekday()
+                    st = st.hour + st.minute / 60.0
+                    en = en.hour + en.minute / 60.0
+                    x = start
+                    y = end
+
+                    if day in days1:
+                        if x >= st and x < en or y > st and y <= en:
+                            avail = False
+                            break
+                if not avail:
+                    continue
                 rooms.append((t.id,t.name+"(available hours:"+str(hours["available"])+")"))
             return rooms
 

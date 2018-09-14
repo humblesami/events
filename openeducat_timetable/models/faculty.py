@@ -64,7 +64,7 @@ class OpFaculty(models.Model):
     def _compute_avail_hrs1(self):
         for rec in self:
             if rec.filter_end and rec.filter_start:
-                hours = rec.class_ids.calculate_hours(rec.filter_start, rec.filter_end)
+                hours = rec.class_ids.calculate_hours(rec.filter_start, rec.filter_end,faculty=rec)
                 rec.total_sched_hrs1 = hours["scheduled"]
                 rec.total_avail_hrs1 = hours["available"]
 

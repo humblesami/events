@@ -118,9 +118,9 @@ class OpFaculty(models.Model):
                     continue
 
                 if class_id:
-                    hours = t.class_ids.filtered(lambda x: x.id!=class_id).calculate_hours(False, False, terms=terms,local=True)
+                    hours = t.class_ids.filtered(lambda x: x.id!=class_id).calculate_hours(False, False,faculty=t, terms=terms,local=True)
                 else:
-                    hours=t.class_ids.calculate_hours(False,False,terms=terms,local=True)
+                    hours=t.class_ids.calculate_hours(False,False,faculty=t,terms=terms,local=True)
                 available_hrs = hours["available"]
                 if req_hours > available_hrs:
                     continue
