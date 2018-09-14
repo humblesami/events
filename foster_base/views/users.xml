@@ -10,21 +10,23 @@
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-att-src="kanban_image('foster.users', 'image_medium')"/>
+                                    <!--<img t-att-src="kanban_image('foster.users', 'image_medium')"/>-->
+                                    <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;:&quot;image_medium&quot;}"/>
                                 </div>
-                                <div class="oe_module_desc">
+                                <div class="oe_kanban_details">
                                     <field name="name"/>
+
+                                    <ul>
+                                        <li t-if="record.work_phone.raw_value">
+                                                <i class="fa fa-phone"/>
+                                                <field name="work_phone" />
+                                            </li>
+                                            <li t-if="record.login.raw_value">
+                                                <i class="fa fa-envelope"/>
+                                                <field name="login" widget="email"/>
+                                            </li>
+                                    </ul>
                                 </div>
-                                <ul>
-                                    <li t-if="record.work_phone.raw_value">
-                                            <i class="fa fa-phone"/>
-                                            <field name="work_phone" />
-                                        </li>
-                                        <li t-if="record.login.raw_value">
-                                            <i class="fa fa-envelope"/>
-                                            <field name="login" widget="email"/>
-                                        </li>
-                                </ul>
 
                             </div>
                         </t>
@@ -52,6 +54,10 @@
             <field name="inherit_id" ref="dn_base.dn_base_user_form"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <!--<xpath expr="//div[@class='profile-last-login']" position="before">-->
+                    <!--<button type="object" name="send_email_to_foster" style="float:right" string="Send Email to Foster-->
+                    <!--Parent"/>-->
+                <!--</xpath>-->
                 <xpath expr="//h2[@name='login']" position="after">
                     <!--<group>-->
                         <!--<field name="send_email"/>-->
@@ -103,13 +109,5 @@
                 parent="foster_management_menu_root"
                 sequence="5"
         />
-         <!--<menuitem-->
-                <!--id="menu_foster_all_users"-->
-                <!--parent="menu_main_foster_users"-->
-                <!--name="All Users"-->
-                <!--sequence="6"-->
-                <!--action="action_foster_users"-->
-        <!--/>-->
-
     </data>
 </odoo>

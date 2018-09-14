@@ -1,5 +1,15 @@
 <odoo>
     <data>
+         <record model="ir.ui.view" id="foster_partenr_tree">
+            <field name="name">foster_partenr tree</field>
+            <field name="model">foster.partner</field>
+            <field name="arch" type="xml">
+        <tree>
+             <field name="spouse_last_name"/>
+                        <field name="spouse_first_name"/>
+        </tree>
+            </field>
+         </record>
         <record model="ir.ui.view" id="foster_partenr_form">
             <field name="name">foster_partenr form</field>
             <field name="model">foster.partner</field>

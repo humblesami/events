@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['dn_base'],
+    'depends': ['dn_website','e_sign','web_digital_sign'],
 
     # always loaded
     'data': [
@@ -46,7 +46,9 @@
         'views/family_resource.xml',
         'views/role.xml',
         'views/report.xml',
-        'views/wizard.xml'
+        'views/wizard.xml',
+        'views/doc.xml',
+        'views/webiste_form.xml'
 
 
     ],

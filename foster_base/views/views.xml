@@ -7,11 +7,11 @@
             <field name="arch" type="xml">
                 <kanban>
                     <templates>
-                        <t t-name="kanban-box">
+                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click">
-                                <div class="oe_module_desc">
-                                    <field name="last_name" />
-                                    <field name="middle_name" />
+                                <div class="oe_kanban_details">
+                                    <field name="first_name"/>
+                                    <field name="last_name"/>
                                 </div>
                             </div>
                         </t>
@@ -45,6 +45,7 @@
                                         <field name = "date"/>
                                     </group>
                                     <group>
+                                        <field name="foster_id"/>
                                         <field name="last_name" string="Last Name"/>
                                         <field name="first_name"/>
                                         <field name="middle_name"/>
@@ -98,6 +99,14 @@
                                     <group>
                                         <field name="consumer"/>
                                     </group>
+                                    <div class="o2m_kanban">
+                                      <h4>Foster Documents</h4>
+                                        <field name="doc_ids" class="kanban_document" mode="kanban"/>
+                                    </div>
+                                    <div class="o2m_kanban">
+                                      <h4>Signature Documents</h4>
+                                        <field name="signature_doc" class="kanban_document" mode="kanban"/>
+                                    </div>
                                 </page>
                                 <page string="Marriage Details">
                                     <group>
@@ -261,7 +270,7 @@
         <!-- actions opening views on models -->
 
         <record model="ir.actions.act_window" id="foster_applicant_window">
-            <field name="name">Foster Resources</field>
+            <field name="name">Family Resources</field>
             <field name="res_model">foster.applicants</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>

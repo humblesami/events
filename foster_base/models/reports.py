@@ -12,7 +12,24 @@ class FosterReport(models.AbstractModel):
 
         foster_report = self.env['ir.actions.report']._get_report_from_name('foster_base.foster_report_invoice')
 
-        applicants = self.env['foster.applicants'].browse(data['form']['foster_id'][0])
+        applicants = self.env['foster.applicants'].browse(data['form']['foster_id'])
+        return {
+            'doc_ids': self.ids,
+            'doc_model': foster_report.model,
+            'docs': applicants,
+        }
+
+class ChildReport(models.AbstractModel):
+    _name = 'report.foster_base.child_report_invoice'
+
+    @api.model
+    def get_report_values(self, docids, data):
+        if not data.get('form'):
+            raise UserError(("Form content is missing, this report cannot be printed."))
+
+        foster_report = self.env['ir.actions.report']._get_report_from_name('foster_base.child_report_invoice')
+
+        applicants = self.env['foster.child'].browse(data['form']['child_id'])
         return {
             'doc_ids': self.ids,
             'doc_model': foster_report.model,

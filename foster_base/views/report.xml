@@ -1,59 +1,63 @@
 <odoo>
     <data>
+        <!--Foster Parent report-->
         <report
                 id="foster_report"
                 model="foster.applicants"
                 string="Foster Reports"
-                report_type="qweb-pdf"
+                report_type="qweb-html"
                 name="foster_base.foster_report_invoice"
                 file="foster_base.foster_report_invoice"
-                menu="True"
+                menu="False"
         />
 
         <template id="foster_report_invoice">
             <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="web.external_layout">
-                        <div class="page">
-                            <style>
-                                table {
-                                font-family: arial, sans-serif;
-                                border-collapse: collapse;
-                                width: 100%;
-                                }
 
-                                td, th {
-                                border: 1px solid #dddddd;
-                                text-align: left;
-                                padding: 8px;
-                                }
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                            table {
+                            font-family: arial, sans-serif;
+                            border-collapse: collapse;
+                            width: 100%;
+                            }
 
-                                tr:nth-child(even) {
-                                background-color: #dddddd;
-                                }
-                            </style>
-                            <div class="row text-center">
-                                <h2>
-                                    <b>
-                                        <span t-field="res_company.name"/>
-                                    </b>
-                                </h2>
-                            </div>
-                            <div class="row text-center">
-                                <h2>
-                                    <strong>Report title</strong>
-                                </h2>
-                            </div>
-                            <table>
-                                <tr>
-                                    <th>Foster Applicant</th>
-                                    <th>Partner</th>
-                                    <th>Pets</th>
-                                    <th>Family Members</th>
-                                    <th>Other Living Members</th>
-                                </tr>
+                            td, th {
+                            border: 1px solid #dddddd;
+                            text-align: left;
+                            padding: 8px;
+                            }
+
+                            .img-responsive, .thumbnail > img, .thumbnail a > img, .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+                              width :200px !important;
+                            }
+                        </style>
+                        <div class="row text-center">
+                            <h2>
+                                <b>
+                                    <span t-field="res_company.name"/>
+                                </b>
+                            </h2>
+                        </div>
+                        <div class="row text-center">
+                            <h2>
+                                <strong>Report title</strong>
+                            </h2>
+                        </div>
+                        <table>
+                            <tr>
+                                <th>Foster Applicant</th>
+                                <th>Partner</th>
+                                <th>Pets</th>
+                                <th>Family Members</th>
+                                <th>Other Living Members</th>
+                                <th>Signature</th>
+                            </tr>
+                            <t t-foreach="docs" t-as="o">
                                 <tr>
                                     <td>
+                                        <span t-field="o.first_name"/>
                                         <span t-field="o.last_name"/>
                                     </td>
                                     <td>
@@ -64,7 +68,7 @@
                                             <span t-field="h.name"/><br/>
                                         </t>
                                     </td>
-                                     <td>
+                                    <td>
                                         <t t-foreach="o.family_members" t-as="a">
                                             <span t-field="a.full_name"/><br/>
                                         </t>
@@ -74,42 +78,98 @@
                                             <span t-field="b.full_name"/><br/>
                                         </t>
                                     </td>
+                                    <td>
+                                        <span t-if="o.applicant_sign">
+                                            <span t-field="o.applicant_sign" t-field-options="{&quot;widget&quot;: &quot;image&quot;}"/>
+                                        </span>
+                                    </td>
                                 </tr>
-                            </table>
-                            <h4>Applicant signature</h4>
-                            <span t-if="o.applicant_sign">
-                                <span t-field="o.applicant_sign" t-field-options='{"widget": "image"}'/>
-                            </span>
-                            <h4>Partner signature</h4>
-                            <span t-if="o.partner_sign">
-                                <span t-field="o.partner_sign" t-field-options='{"widget": "image"}'/>
-                            </span>
-                        </div>
-                    </t>
+                            </t>
+                        </table>
+                        <!--<h4>Applicant signature</h4>-->
+                        <!--<span t-if="o.applicant_sign">-->
+                        <!--<span t-field="o.applicant_sign" t-field-options='{"widget": "image"}'/>-->
+                        <!--</span>-->
+                        <!--<h4>Partner signature</h4>-->
+                        <!--<span t-if="o.partner_sign">-->
+                        <!--<span t-field="o.partner_sign" t-field-options='{"widget": "image"}'/>-->
+                        <!--</span>-->
+                    </div>
                 </t>
             </t>
         </template>
 
-        <record id="paperformat_frenchcheck" model="report.paperformat">
-            <field name="name">French Bank Check</field>
-            <field name="default" eval="True"/>
-            <field name="format">custom</field>
-            <field name="page_height">80</field>
-            <field name="page_width">175</field>
-            <field name="orientation">Landscape</field>
-            <field name="margin_top">3</field>
-            <field name="margin_bottom">3</field>
-            <field name="margin_left">3</field>
-            <field name="margin_right">3</field>
-            <field name="header_line" eval="False"/>
-            <field name="header_spacing">3</field>
-            <field name="dpi">80</field>
-        </record>
+        <!--Child report-->
+        <report
+                id="child_report"
+                model="foster.child"
+                string="Child Placement Reports"
+                report_type="qweb-html"
+                name="foster_base.child_report_invoice"
+                file="foster_base.child_report_invoice"
+                menu="False"
+        />
 
-        <!--<menuitem-->
-        <!--name="Foster Repasdfort"-->
-        <!--parent="foster_management_menu_root"-->
-        <!--action="foster_report"-->
-        <!--id="menu_foster_summary"/>-->
+        <template id="child_report_invoice">
+            <t t-call="web.html_container">
+
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                            table {
+                            font-family: arial, sans-serif;
+                            border-collapse: collapse;
+                            width: 100%;
+                            }
+
+                            td, th {
+                            border: 1px solid #dddddd;
+                            text-align: left;
+                            padding: 8px;
+                            }
+                            .o_report_layout_clean table tbody tr td:last-child{
+                                text-align : left !important;
+                            }
+                        </style>
+                        <div class="row text-center">
+                            <h2>
+                                <b>
+                                    <span t-field="res_company.name"/>
+                                </b>
+                            </h2>
+                        </div>
+                        <div class="row text-center">
+                            <h2>
+                                <strong>Report title</strong>
+                            </h2>
+                        </div>
+                        <table>
+                            <tr>
+                                <th>Child</th>
+                                <th>Foster Parents</th>
+                                <th>Birth Mother</th>
+                                <th>Father</th>
+                            </tr>
+                            <t t-foreach="docs" t-as="o">
+                                <tr>
+                                    <td>
+                                        <span t-field="o.full_name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.foster_parent"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.mother"/>
+                                    </td>
+                                    <td>
+                                       <span t-field="o.father"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
     </data>
 </odoo>

@@ -67,6 +67,24 @@
                                 <field name="hospitalization"/>
                                 <field name="other"/>
                             </group>
+                            <h2>PARENTS</h2>
+                            <h4>BIRTH MOTHER</h4>
+                            <group>
+                                <field name="mother_married_name"/>
+                                <field name="mother_maiden_name"/>
+                                <field name="mother_first_name"/>
+                                <field name="mother_address"/>
+                                <field name="mother_phone" class="phone masked_input"/>
+                                <field name="mother_background"/>
+                                </group>
+                            <h34>FATHER</h34>
+                            <group>
+                                <field name="father_last_name"/>
+                                <field name="father_first_name"/>
+                                <field name="father_address"/>
+                                <field name="father_phone" class="phone masked_input"/>
+                                <field name="father_background"/>
+                            </group>
                         </page>
                         <page string="Intake Worker">
                             <group>
@@ -77,25 +95,6 @@
                                 <field name="social_worker"/>
                                 <field name="c_supervisor"/>
                                 <field name="assign_date"/>
-                            </group>
-                        </page>
-                        <page string="Parents">
-                            <h3>BIRTH MOTHER</h3>
-                            <group>
-                                <field name="mother_married_name"/>
-                                <field name="mother_maiden_name"/>
-                                <field name="mother_first_name"/>
-                                <field name="mother_address"/>
-                                <field name="mother_phone" class="phone masked_input"/>
-                                <field name="mother_background"/>
-                                </group>
-                            <h3>FATHER</h3>
-                            <group>
-                                <field name="father_last_name"/>
-                                <field name="father_first_name"/>
-                                <field name="father_address"/>
-                                <field name="father_phone" class="phone masked_input"/>
-                                <field name="father_background"/>
                             </group>
                         </page>
                         <page string="Emergency Contact Person">

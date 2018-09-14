@@ -58,6 +58,7 @@ class FosterUsers(models.Model):
             group_id = self.env.ref('foster_base.group_case_worker').id
             vals['groups_id'] = [group_id]
         a =  super(FosterUsers, self).create(vals)
+        a.user_id.partner_id.user_id = a.user_id
         return a
 
     @api.multi

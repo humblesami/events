@@ -1,0 +1,4 @@
+"id","name","model_id/id","group_id/id","perm_read","perm_write","perm_create","perm_unlink"
+
+"document_user","Documents User","dn_documents.model_dn_documents_allfiles","group_doc_user",1,0,0,0
+"document_admin","Documents Admin","dn_documents.model_dn_documents_allfiles","group_doc_manager",1,1,1,1

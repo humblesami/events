@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <record id="action_foster_family_resorce" model="ir.actions.act_window">
-            <field name="name">Family Resource</field>
+            <field name="name">Foster Parents</field>
             <field name="res_model">foster.users</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="foster_user_kanban"/>
@@ -35,7 +35,7 @@
         <menuitem
                 id="menu_foster_family_resource"
                 parent="menu_main_foster_users"
-                name="Foster Parent"
+                name="Foster Parents"
                 sequence="3"
                 action="action_foster_family_resorce"
         />

@@ -241,6 +241,7 @@ class Applicant(models.Model):
 
 
     date = fields.Date("Date")
+    foster_id = fields.Many2one('foster.users', string="User")
     last_name = fields.Char(string ="Last Name", required=True)
     first_name = fields.Char("First", required=True)
     middle_name = fields.Char("Middle")
@@ -326,3 +327,25 @@ class Applicant(models.Model):
     partner_sign = fields.Binary("Spouse/Partner Signature")
     cori_form = fields.One2many('cori.form', 'corri_applicant_id', string="CORI")
     consumer = fields.One2many('consumer.profile','consumer_id',string="Client Consumer",readonly=True)
+    doc_ids = fields.One2many('foster.doc', 'foster_id', string="Foster Document(s)")
+    signature_doc = fields.One2many('foster.sign_docs', 'foster_id', string= "Document(s) To Sign")
+    seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
+
+    @api.multi
+    def _compute_seen_by_me(self):
+        try:
+            uid = self.env.uid
+            res_model = self._name
+            seen_model = self.env['dn.seen']
+            for obj in self:
+                if obj.create_uid.id == uid:
+                    obj.seen_by_me = 1
+                    continue
+                res_id = obj.id
+                filters = [('create_uid', '=', uid), ('res_model', '=', res_model), ('res_id', '=', res_id)]
+                res = seen_model.search(filters)
+                if res:
+                    obj.seen_by_me = 1
+        except:
+            a = 1
+

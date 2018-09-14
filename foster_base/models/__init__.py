@@ -9,3 +9,4 @@ from . import users
 from . import roles
 from . import reports
 from . import wizards
+from . import doc

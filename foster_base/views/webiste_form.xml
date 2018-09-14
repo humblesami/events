@@ -1,0 +1,442 @@
+<odoo>
+    <data>
+        <template id="foster_application_page" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Applicant Details</h3>
+                    <form action="/application/submit" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+
+                        <!--Date field-->
+                        <div t-attf-class="form-group #{error and 'date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="date">Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="date" required="True" t-attf-value="#{date or ''}"/>
+                            </div>
+                        </div>
+                        <!--Char field-->
+                        <div t-attf-class="form-group #{error and 'last_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="last_name">Last Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="last_name" required="True" t-attf-value="#{last_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'last_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="first_name">First</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="first_name" required="True" t-attf-value="#{first_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'middle_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="middle_name">Middle</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="middle_name" t-attf-value="#{middle_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'other_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="other_name">Any Other Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="other_name" t-attf-value="#{other_name or ''}"/>
+                            </div>
+                        </div>
+                        <!--selection field-->
+                        <div t-attf-class="form-group #{error and 'sex' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="sex">Sex</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="sex" class="form-control">
+                                    <option></option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'birth_date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="birth_date">Birth Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="birth_date" required="True" t-attf-value="#{birth_date or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'place_of_birth' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="place_of_birth">Place of Birth</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="place_of_birth" t-attf-value="#{place_of_birth or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'email' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="email">Email</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="email" class="form-control" name="email" t-attf-value="#{email or ''}"/>
+                            </div>
+                        </div>
+                        <h4 style="margin-left: -6px;font-weight: bold;">ADDRESS</h4>
+                        <div t-attf-class="form-group #{error and 'address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="address">Address</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="address" t-attf-value="#{address or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'town' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="town">Town</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="town" t-attf-value="#{town or ''}"/>
+                            </div>
+                        </div>
+                        <!--many2one field-->
+                        <div t-attf-class="form-group #{error and 'state' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="state">State</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="state" name="states">
+                                    <option></option>
+                                    <t t-foreach="states" t-as="state">
+                                        <option t-attf-value="#{state.id}"><t t-esc="state.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'zip' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="zip">Zip</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="zip"/>
+                            </div>
+                        </div>
+                        <h4 style="margin-left: -6px;font-weight: bold;">TELEPHONE</h4>
+                        <div t-attf-class="form-group #{error and 'home_phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="home_phone">Home Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="home_phone" t-attf-value="#{home_phone or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'work_phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="work_phone">Work Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="work_phone" t-attf-value="#{work_phone or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'cell_phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cell_phone">Cell/Mobile Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cell_phone" t-attf-value="#{cell_phone or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'security_number' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="security_number">Social Security Number</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="security_number" t-attf-value="#{security_number or ''}"/>
+                            </div>
+                        </div>
+                        <h4 style="margin-left: -6px;font-weight: bold;">CITIZENSHIP</h4>
+                        <div t-attf-class="form-group #{error and 'country' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="country">Country</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="country" name="countries">
+                                    <option></option>
+                                    <t t-foreach="countries" t-as="country">
+                                        <option t-attf-value="#{country.id}"><t t-esc="country.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'immigration' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="immigration">If not Citizen,Immigration Status</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="immigration" t-attf-value="#{immigration or ''}"/>
+                            </div>
+                        </div>
+                        <!--Languages-->
+                        <h4 style="margin-left: -6px;font-weight: bold;">EDUCATION</h4>
+                        <div t-attf-class="form-group #{error and 'education' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="education">Education</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="education" t-attf-value="#{education or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'last_grade' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="last_grade">Last Grade</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="last_grade" class="form-control">
+                                    <option></option>
+                                    <option value="a">A</option>
+                                    <option value="b">B</option>
+                                    <option value="c">C</option>
+                                    <option value="d">D</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h4 style="margin-left: -6px;font-weight: bold;">LANGUAGES</h4>
+                        <h5 style="margin-left: -6px">Spoken in household</h5>
+                        <div t-attf-class="form-group #{error and 'lang_primary' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="lang_primary">Primary</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="lang_primary" t-attf-value="#{lang_primary or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'lang_other' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="lang_other">Other</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="lang_other" t-attf-value="#{lang_other or ''}"/>
+                            </div>
+                        </div>
+                        <h5 style="margin-left: -6px">Written Comprehension</h5>
+                        <div t-attf-class="form-group #{error and 'comp_primary' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="comp_primary">Primary</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="comp_primary" t-attf-value="#{comp_primary or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'comp_other' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="comp_other">Other</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="comp_other" t-attf-value="#{comp_other or ''}"/>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </t>
+        </template>
+
+        <!--Partner Form-->
+        <template id="foster_partner_page" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Partner Details</h3>
+                    <form action="/partner/submit" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'spouse_last_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="spouse_last_name">Last Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="spouse_last_name" required="True" t-attf-value="#{spouse_last_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'spouse_first_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="spouse_first_name">First Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="spouse_first_name" required="True" t-attf-value="#{spouse_first_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'spouse_middle_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="spouse_middle_name">Middle</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="spouse_middle_name"  t-attf-value="#{spouse_middle_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'spouse_other_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="spouse_other_name">Any Other Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="spouse_other_name"  t-attf-value="#{spouse_other_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'age' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="age">Age</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="age" t-attf-value="#{age or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'co_home_phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="co_home_phone">Home Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="co_home_phone"  t-attf-value="#{co_home_phone or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'co_cell_phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="co_cell_phone">Cell/Mobile Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="co_cell_phone" t-attf-value="#{co_cell_phone or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'co_work_phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="co_work_phone">Work Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="co_work_phone"  t-attf-value="#{co_work_phone or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'security_number' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="security_number">Social Security Number</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="security_number"  t-attf-value="#{security_number or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'co_applicant_email' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="co_applicant_email">Email</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="co_applicant_email"  t-attf-value="#{co_applicant_email or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'sex' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="sex">Sex</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="sex" class="form-control">
+                                    <option></option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'birthdate' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="birthdate">Birth Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="birthdate" required="True" t-attf-value="#{birthdate or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'place_of_birth' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="place_of_birth">Place of Birth</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="place_of_birth"  t-attf-value="#{place_of_birth or ''}"/>
+                            </div>
+                        </div>
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </t>
+        </template>
+
+        <!--Family Members-->
+        <template id="foster_family_members_page" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Family Members Details</h3>
+                    <form action="/family/members/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'full_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="full_name">Full Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="full_name" required="True" t-attf-value="#{full_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'birth_date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="birth_date">Birth Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="birth_date" required="True" t-attf-value="#{birth_date or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'sex' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="sex">Sex</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="sex" class="form-control">
+                                    <option></option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'living_at_hom' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="living_at_hom">Living at Home</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="living_at_hom" class="form-control">
+                                    <option></option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div t-attf-class="form-group #{error and 'security_number' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="security_number">Social Security Number</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="security_number"  t-attf-value="#{security_number or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'relation_to_applicant' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="relation_to_applicant">Relation to Applicant</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="relation_to_applicant"  t-attf-value="#{relation_to_applicant or ''}"/>
+                            </div>
+                        </div>
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>

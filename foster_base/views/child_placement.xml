@@ -10,6 +10,25 @@
             </field>
         </record>
 
+        <record id="child_placement_kanban" model="ir.ui.view">
+            <field name="name">child.placement.kanban</field>
+            <field name="model">foster.child</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                         <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <field name="full_name"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="foster_child_form">
             <field name="name">child.placement form</field>
             <field name="model">foster.child</field>
