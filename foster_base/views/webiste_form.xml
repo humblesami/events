@@ -206,7 +206,118 @@
                                 <input type="text" class="form-control" name="comp_other" t-attf-value="#{comp_other or ''}"/>
                             </div>
                         </div>
+                        <h4 style="margin-left: -6px;font-weight: bold;">NOTES</h4>
+                        <h5 style="margin-left: -6px;">Direction to your home</h5>
+                        <div t-attf-class="form-group #{error and 'note' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="note">Notes</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="note" t-attf-value="#{note or ''}"/>
+                            </div>
+                        </div>
+                        <h4 style="margin-left: -6px;font-weight: bold;">MARRIAGE</h4>
+                        <div t-attf-class="form-group #{error and 'current_marriage_date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="current_marriage_date">Current Marriage Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="current_marriage_date" t-attf-value="#{current_marriage_date or ''}"/>
+                            </div>
+                        </div>
 
+                        <div t-attf-class="form-group #{error and 'previous_marriage_date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="previous_marriage_date">Previous Marriage Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="previous_marriage_date" t-attf-value="#{previous_marriage_date or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'previous_marriage_date_end' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="previous_marriage_date_end">Previous Marriage Date Ended</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="previous_marriage_date_end" t-attf-value="#{previous_marriage_date_end or ''}"/>
+                            </div>
+                        </div>
+                        <!--Employment Details-->
+                        <div t-attf-class="form-group #{error and 'employment_type' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="employment_type">Last Grade</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="employment_type" class="form-control">
+                                    <option></option>
+                                    <option value="employee">Employee</option>
+                                    <option value="worker">Worker</option>
+                                    <option value="self-employed">Self-Employed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'days_worked' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="days_worked">Hours/Days Worked</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="days_worked" t-attf-value="#{days_worked or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'date_employment_began' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="date_employment_began">Date Employment Began</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="date_employment_began" t-attf-value="#{date_employment_began or ''}"/>
+                            </div>
+                        </div>
+
+                         <div t-attf-class="form-group #{error and 'income_year' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="income_year">Income Per Year</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="income_year" t-attf-value="#{income_year or ''}"/>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-left: -6px;font-weight: bold;">EMPLOYER</h4>
+                        <div t-attf-class="form-group #{error and 'employer_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="employer_name">Employer Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="employer_name" t-attf-value="#{employer_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'employer_phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="employer_phone">Employe Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="employer_phone" t-attf-value="#{employer_phone or ''}"/>
+                            </div>
+                        </div>
+                        <h4 style="margin-left: -6px;font-weight: bold;">HOUSING</h4>
+                        <div t-attf-class="form-group #{error and 'house' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="house">House</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="house" class="form-control">
+                                    <option></option>
+                                    <option value="yes">Own</option>
+                                    <option value="no">Rent</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'current_address_period' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="current_address_period">How long at current address</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="current_address_period" t-attf-value="#{current_address_period or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'name_of_contact' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name_of_contact">Name of contact for verification</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name_of_contact" t-attf-value="#{name_of_contact or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'phone_of_contact' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="phone_of_contact">Phone Number of contact for verification</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="phone_of_contact" t-attf-value="#{phone_of_contact or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'previous_address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="previous_address">Previous Address and how long</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="previous_address" t-attf-value="#{previous_address or ''}"/>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
