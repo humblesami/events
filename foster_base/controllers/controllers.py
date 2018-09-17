@@ -51,7 +51,12 @@ class Foster(http.Controller):
             'security_number':values['security_number'],'applicant_email':values['email'],
             'date':values['date'],'citizen_ship':values['countries'],'immigration':values['immigration'],
             'education':values['education'],'last_grade':values['last_grade'],'lang_primary':values['lang_primary'],
-            'lang_other':values['lang_other'],'comp_primary':values['comp_primary'],'comp_other':values['comp_other']})
+            'lang_other':values['lang_other'],'comp_primary':values['comp_primary'],'comp_other':values['comp_other'],
+            'note':values['note'],'current_marriage_date':values['current_marriage_date'],'previous_marriage_date':values['previous_marriage_date'],
+            'previous_marriage_date_end':values['previous_marriage_date_end'],'employment_type':values['employment_type'],
+            'days_worked':values['days_worked'],'date_employment_began':['date_employment_began'],'income_year':values['income_year'],
+            'employer_name':values['employer_name'],'employer_phone':values['employer_phone'],'house':values['house'],'current_address_period':values['current_address_period'],
+            'name_of_contact':values['name_of_contact'],'phone_of_contact':values['phone_of_contact'],'previous_address':values['previous_address']})
 
 
         return werkzeug.utils.redirect("/partner/application")

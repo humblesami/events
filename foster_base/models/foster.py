@@ -349,3 +349,9 @@ class Applicant(models.Model):
         except:
             a = 1
 
+
+    @api.model
+    def create(self, vals):
+        a = super(Applicant, self).create(vals)
+        return a
+
