@@ -17,8 +17,8 @@ class Home(models.Model):
     sessions = fields.Char(string="Sessions", compute="compute_sessions")
     classes = fields.Char(string="Classes", compute="compute_sessions")
 
-    course_id = fields.Many2one('op.course', 'Course', required=True)
-    branch_id = fields.Many2one('op.branch', 'Location(Education Center)', required=True)
+    course_id = fields.Many2one('op.course', 'Course')
+    branch_id = fields.Many2one('op.branch', 'Location(Education Center)')
     class_ids = fields.Many2many('op.batch', string='Scheduled classes', compute="_compute_sched_classes")
     faculty_ids = fields.Many2many('op.faculty', string='Faculty availability', compute="_compute_sched_classes")
     term_ids = fields.Many2many('op.term', string='Terms')
