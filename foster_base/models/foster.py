@@ -304,6 +304,7 @@ class Applicant(models.Model):
     name_of_contact = fields.Char("Name of contact for verification")
     phone_of_contact = fields.Char("Phone Number of contact for verification")
     previous_address = fields.Text("Previous Address and how long")
+    file = fields.Binary("File")
 
 
     patner = fields.One2many('foster.partner','partner_id', string="Partner/Spouse")

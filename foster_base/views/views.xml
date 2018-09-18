@@ -97,6 +97,9 @@
                                         <field name="note"/>
                                     </group>
                                     <group>
+                                        <field name="file"/>
+                                    </group>
+                                    <group>
                                         <field name="consumer"/>
                                     </group>
                                     <div class="o2m_kanban">
@@ -277,7 +280,7 @@
 
         <menuitem
                 id="foster_management_menu_root"
-                name="Foster Management"
+                name="HopeVUE"
                 sequence="-2"
                 action="foster_applicant_window"
         />

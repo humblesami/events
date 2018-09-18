@@ -261,7 +261,7 @@
                             </div>
                         </div>
 
-                         <div t-attf-class="form-group #{error and 'income_year' in error and 'has-error' or ''}">
+                        <div t-attf-class="form-group #{error and 'income_year' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="income_year">Income Per Year</label>
                             <div class="col-md-10 col-sm-9">
                                 <input type="text" class="form-control" name="income_year" t-attf-value="#{income_year or ''}"/>
@@ -318,6 +318,12 @@
                                 <input type="text" class="form-control" name="previous_address" t-attf-value="#{previous_address or ''}"/>
                             </div>
                         </div>
+                        <div name="file_container" t-attf-class="form-group #{error and 'file' in error and 'has-error' or ''}">
+                            <label class="col-md-3 col-sm-4 control-label" for="file">Add Attachments</label>
+                            <div class="col-md-7 col-sm-8">
+                                <div class="btn btn-default btn-file col-md-12"><input name="file" id="file" type="file" multiple="multiple"/></div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -347,6 +353,18 @@
                     <form action="/partner/submit" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
 
                         <div t-attf-class="form-group #{error and 'spouse_last_name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="spouse_last_name">Last Name</label>
@@ -454,7 +472,16 @@
                         </div>
 
                     </form>
-
+                    <script>
+                        $(function(){
+                            var curl = window.location+"";
+                            var arr = curl.split('?');
+                            curl = arr[arr.length - 1];
+                            arr = curl.split('=');
+                            curl = arr[arr.length - 1];
+                            $('#foster').val(curl);
+                        });
+                    </script>
 
                 </div>
             </t>
@@ -474,9 +501,26 @@
                 </style>
                 <div class="wrap">
                     <h3>Family Members Details</h3>
+                    <p>
+                        Please provide the following information for ALL additional family members including children and any other individuals living in your home
+
+
+                    </p>
                     <form action="/family/members/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
 
                         <div t-attf-class="form-group #{error and 'full_name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="full_name">Full Name</label>
@@ -541,10 +585,842 @@
                                 <button class="btn btn-primary btn-lg">Submit</button>
                             </div>
                         </div>
-
                     </form>
+                    <script>
+                        $(function(){
+                            var curl = window.location+"";
+                            var arr = curl.split('?');
+                            curl = arr[arr.length - 1];
+                            arr = curl.split('=');
+                            curl = arr[arr.length - 1];
+                            $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+
+        <!--Other Living Member living in home-->
+        <template id="foster_other_members_page" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Other Living Members</h3>
+                    <p>Please provide the following information for other individuals age 14 or older who spend substantial time at the home, especially those who stay overnight or provide child care in the home
+
+                    </p>
+                    <form action="/other/members/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                         <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'full_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="full_name">Full Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="full_name" required="True" t-attf-value="#{full_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'birth_date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="birth_date">Birth Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="birth_date" required="True" t-attf-value="#{birth_date or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'sex' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="sex">Sex</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="sex" class="form-control">
+                                    <option></option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'living_at_hom' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="living_at_hom">Living at Home</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select type="text" name="living_at_hom" class="form-control">
+                                    <option></option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
 
 
+
+                        <div t-attf-class="form-group #{error and 'security_number' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="security_number">Social Security Number</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="security_number"  t-attf-value="#{security_number or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'nature' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="nature">Nature of Contact</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="nature"  t-attf-value="#{nature or ''}"/>
+                            </div>
+                        </div>
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                    <script>
+                        $(function(){
+                            var curl = window.location+"";
+                            var arr = curl.split('?');
+                            curl = arr[arr.length - 1];
+                            arr = curl.split('=');
+                            curl = arr[arr.length - 1];
+                            $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+
+        <!--Fmaily based child care-->
+        <template id="foster_family_based_child_care" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Family Based Child Care
+                    </h3>
+                    <p>Is someone providing family-based childcare in the home?
+
+                    </p>
+                    <form action="/family/childcare/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+                         <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                    <script>
+                        $(function(){
+                            var curl = window.location+"";
+                            var arr = curl.split('?');
+                            curl = arr[arr.length - 1];
+                            arr = curl.split('=');
+                            curl = arr[arr.length - 1];
+                            $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+
+        <!--disabled individula care-->
+        <template id="foster_disable_individual_care" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Disabled Individual Care
+
+                    </h3>
+                    <p>Is someone caring for a disabled individual in the home? If yes, please explain who is receiving care, why and who is providing care; identify the agency, if any, that is supporting the care being provided.
+
+
+
+                    </p>
+                    <form action="/diable/childcare/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                         <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'care_taker' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="care_taker">Care Taker</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="care_taker" t-attf-value="#{care_taker or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'reason' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="reason">Reason</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="reason" t-attf-value="#{reason or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'agency' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="agency">Agency</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="agency" t-attf-value="#{agency or ''}"/>
+                            </div>
+                        </div>
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                     <script>
+                        $(function(){
+                            var curl = window.location+"";
+                            var arr = curl.split('?');
+                            curl = arr[arr.length - 1];
+                            arr = curl.split('=');
+                            curl = arr[arr.length - 1];
+                            $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+
+        <!--Child care plan-->
+
+        <template id="foster_child_care_plan" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Child Care Plan
+
+                    </h3>
+                    <p>Please provide names of any person(s) other than yourself or your co-applicant who will provide day care and supervision in your home for any child/children placed with you
+
+
+
+                    </p>
+                    <form action="/childcare/plan/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                         <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                     <script>
+                        $(function(){
+                            var curl = window.location+"";
+                            var arr = curl.split('?');
+                            curl = arr[arr.length - 1];
+                            arr = curl.split('=');
+                            curl = arr[arr.length - 1];
+                            $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+        <!--any other service-->
+
+        <template id="foster_any_other_service_plan" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Child Care Plan
+
+                    </h3>
+                    <p>
+                        Describe any other child care or day care services you plan to use, or will need, to assist you in providing care and supervision
+
+
+                    </p>
+                    <form action="/other/services/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'description' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="description">Description</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="description" t-attf-value="#{description or ''}"/>
+                            </div>
+                        </div>
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        </template>
+
+        <!--health History-->
+        <template id="foster_health_history" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Health History
+
+                    </h3>
+                    <p>
+                        Have you or any member of your household been treated for any serious or chronic illness, drug or alcohol abuse? If yes, please identify
+
+
+                    </p>
+                    <form action="/health/history/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'member_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="member_name">Household Member's Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="member_name" t-attf-value="#{member_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'provider_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="provider_name">Treatment Provider's Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="provider_name" t-attf-value="#{provider_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="address">Address</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="address" t-attf-value="#{address or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="phone">Telephone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="phone" t-attf-value="#{phone or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'treat_type' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="treat_type">Treatment Type</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="treat_type" t-attf-value="#{treat_type or ''}"/>
+                            </div>
+                        </div>
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        </template>
+
+        <!--health history2-->
+        <template id="foster_health_history_second" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>Health History
+
+                    </h3>
+                    <p>
+                        Do you or any member of your household have any other current medical problems or conditions that Dare should be aware of? If yes, please identify
+
+
+                    </p>
+                    <form action="/health/historys/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'member_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="member_name">Household Member's Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="member_name" t-attf-value="#{member_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'provider_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="provider_name">Treatment Provider's Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="provider_name" t-attf-value="#{provider_name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="address">Address</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="address" t-attf-value="#{address or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="phone">Telephone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="phone" t-attf-value="#{phone or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'treat_type' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="treat_type">Treatment Type</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="treat_type" t-attf-value="#{treat_type or ''}"/>
+                            </div>
+                        </div>
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        </template>
+
+        <!--Emergency contact-->
+        <template id="foster_emergency_contact_person" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>EMERGENCY CONTACT
+                    </h3>
+                    <p>
+                        Please provide the name and telephone number of person(s) through whom you can be reached in an emergency
+
+
+                    </p>
+                    <form action="/health/history/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'telephone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="telephone">Telephone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="telephone" t-attf-value="#{telephone or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'hours_available' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="hours_available">Hours Available</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="hours_available" t-attf-value="#{hours_available or ''}"/>
+                            </div>
+                        </div>
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        </template>
+
+        <!--Pets-->
+        <template id="foster_pets" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>PETS IN THE HOME
+
+                    </h3>
+                    <form action="/pets/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'breed' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="breed">Breed(if dog)</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="breed" t-attf-value="#{breed or ''}"/>
+                            </div>
+                        </div>
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        </template>
+
+        <!--Driver Information-->
+        <template id="foster_divers" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>DRIVERS INFORMATION
+
+                    </h3>
+                    <p>
+                        Only licensed, insured drivers are able to transport foster children in Dare's care. Please list all household members, including applicant and spouse or partner, with a valid driver's license and insurance
+
+
+                    </p>
+                    <form action="/drivers/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'license_number' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="license_number">License Number</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="license_number" t-attf-value="#{license_number or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'expiration_date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="expiration_date">Expiration Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="expiration_date" t-attf-value="#{expiration_date or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'state' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="state">State</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="state" name="states">
+                                    <option></option>
+                                    <t t-foreach="states" t-as="state">
+                                        <option t-attf-value="#{state.id}"><t t-esc="state.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        </template>
+
+        <!--Foster History-->
+        <template id="foster_care_history" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>HISTORY AS FOSTER CARE OR ADOPTIVE FAMILY</h3>
+                    <p>
+                        Have you ever applied to this or any other agency for foster care or adoption?
+
+
+                    </p>
+
+                    <form action="/foster/history/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name of Agency</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="date">Date of Application</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="date" t-attf-value="#{date or ''}"/>
+                            </div>
+                        </div>
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        </template>
+
+        <!--foster history second-->
+        <template id="foster_care_history_second" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>HISTORY AS FOSTER CARE OR ADOPTIVE FAMILY</h3>
+                    <p>
+                        Are you, or any member of your household, now providing foster or pre-adoptive care? If yes, please list the name of person(s) providing foster/pre-adoptive care and identify the placement agency
+
+
+                    </p>
+
+                    <form action="/fosters/history/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Household member's name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'agency' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="agency">Name of Agency</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="agency" t-attf-value="#{agency or ''}"/>
+                            </div>
+                        </div>
+
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </t>
         </template>
