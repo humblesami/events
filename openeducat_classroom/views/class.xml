@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="openeducat_core.view_op_batch_form" />
             <field name="arch" type="xml">
                 <field name="faculty_id" position="after">
-                    <field name="room_id" context="{'terms': term_ids,'location':branch_id}" />
+                    <field name="room_id" context="{'terms': term_ids,'location':branch_id,'class_id': active_id,'days': days,'start': start,'end': end,'total_instr_hrs': total_instr_hrs}"/>
 
                 </field>
 
