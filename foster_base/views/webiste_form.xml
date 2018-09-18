@@ -1080,7 +1080,7 @@
 
 
                     </p>
-                    <form action="/health/historys/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                    <form action="/medical/history/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 

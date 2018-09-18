@@ -150,11 +150,11 @@ class Foster(http.Controller):
             if values.get("add_more") == '':
                 return werkzeug.utils.redirect("/family/childcare?foster=%s"%(foster.id))
             else:
-                return werkzeug.utils.redirect("/diabled/individuals/childcare")
+                return werkzeug.utils.redirect("/diabled/individuals/childcare?foster=%s"%(foster.id))
 
 
     # Disabled individuals care
-    @http.route(['/diabled/individuals/childcare'],
+    @http.route(['/diable/individuals/childcare'],
                 type="http", auth="public", website=True, csrf=True)
     def disabled_childcare_application(self, **kwargs):
         fosters = request.env['foster.applicants'].search([])
@@ -173,7 +173,99 @@ class Foster(http.Controller):
             if values.get("add_more") == '':
                 return werkzeug.utils.redirect("/diabled/individuals/childcare?foster=%s"%(foster.id))
             else:
-                return werkzeug.utils.redirect("/support/ticket/thanks")
+                return werkzeug.utils.redirect("/childcare/plan?foster=%s"%(foster.id))
+
+
+    # Child care plan person
+
+    @http.route(['/childcare/plan'],
+                type="http", auth="public", website=True, csrf=True)
+    def plan_childcare_application(self, **kwargs):
+        fosters = request.env['foster.applicants'].search([])
+        return request.render('foster_base.foster_child_care_plan', {'fosters': fosters})
+
+    @http.route('/childcare/plan/submition', type="http", auth="public", website=True, csrf=True)
+    def application_process_plan_childcare(self, **kwargs):
+        values = {}
+        for field_name, field_value in kwargs.items():
+            values[field_name] = field_value
+        foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
+        if http.request.env.user.name != "Public user":
+            # request.env['foster.applicants'].search([])
+            request.env['childcare.plan.person'].sudo().create(
+                {'name': values['name']})
+            if values.get("add_more") == '':
+                return werkzeug.utils.redirect("/childcare/plan?foster=%s" % (foster.id))
+            else:
+                return werkzeug.utils.redirect("/childcare/services?foster=%s" % (foster.id))
+
+    # Child care plan services
+    @http.route(['/childcare/services'],
+                type="http", auth="public", website=True, csrf=True)
+    def plan_childcare_application_services(self, **kwargs):
+        fosters = request.env['foster.applicants'].search([])
+        return request.render('foster_base.foster_any_other_service_plan', {'fosters': fosters})
+
+    @http.route('/other/services/submition', type="http", auth="public", website=True, csrf=True)
+    def application_process_plan_childcare_services(self, **kwargs):
+        values = {}
+        for field_name, field_value in kwargs.items():
+            values[field_name] = field_value
+        foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
+        if http.request.env.user.name != "Public user":
+            # request.env['foster.applicants'].search([])
+            request.env['childcare.plan.services'].sudo().create(
+                {'name': values['name'],'description':values['description']})
+            if values.get("add_more") == '':
+                return werkzeug.utils.redirect("/childcare/services?foster=%s" % (foster.id))
+            else:
+                return werkzeug.utils.redirect("/health/history?foster=%s" % (foster.id))
+
+    # health history
+    @http.route(['/health/history'],
+                type="http", auth="public", website=True, csrf=True)
+    def health_history_application(self, **kwargs):
+        fosters = request.env['foster.applicants'].search([])
+        return request.render('foster_base.foster_health_history', {'fosters': fosters})
+
+    @http.route('/health/history/submition', type="http", auth="public", website=True, csrf=True)
+    def application_process_health_history(self, **kwargs):
+        values = {}
+        for field_name, field_value in kwargs.items():
+            values[field_name] = field_value
+        foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
+        if http.request.env.user.name != "Public user":
+            # request.env['foster.applicants'].search([])
+            request.env['health.history'].sudo().create(
+                {'member_name': values['member_name'], 'provider_name': values['provider_name'],
+                 'address':values['address'],'phone':values['phone'],'treat_type':values['treat_type']})
+            if values.get("add_more") == '':
+                return werkzeug.utils.redirect("/health/history?foster=%s" % (foster.id))
+            else:
+                return werkzeug.utils.redirect("/support/ticket/thanks?foster=%s" % (foster.id))
+
+        # # health history2
+        # @http.route(['/medical/history'],
+        #             type="http", auth="public", website=True, csrf=True)
+        # def health_history_application(self, **kwargs):
+        #     fosters = request.env['foster.applicants'].search([])
+        #     return request.render('foster_base.foster_health_history', {'fosters': fosters})
+        #
+        # @http.route('/medical/history/submition', type="http", auth="public", website=True, csrf=True)
+        # def application_process_health_history(self, **kwargs):
+        #     values = {}
+        #     for field_name, field_value in kwargs.items():
+        #         values[field_name] = field_value
+        #     foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
+        #     if http.request.env.user.name != "Public user":
+        #         # request.env['foster.applicants'].search([])
+        #         request.env['health.history'].sudo().create(
+        #             {'member_name': values['member_name'], 'provider_name': values['provider_name'],
+        #              'address': values['address'], 'phone': values['phone'], 'treat_type': values['treat_type']})
+        #         if values.get("add_more") == '':
+        #             return werkzeug.utils.redirect("/health/history?foster=%s" % (foster.id))
+        #         else:
+        #             return werkzeug.utils.redirect("/support/ticket/thanks?foster=%s" % (foster.id))
 
     @http.route(['/foster/sign/<string:token>'],
                 type='http', auth='public', website=True)
