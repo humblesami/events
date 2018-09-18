@@ -42,7 +42,7 @@
             <field name="arch" type="xml">
                 <form>
                     <style>
-                        .o_cp_left{
+                        .o_cp_left,.o_cp_pager{
                         display:none!important
                         }
                         .o_cp_right{
@@ -51,15 +51,89 @@
                         #calendar{
                         margin:10px
                         }
+                        div[name="faculty_ids"] td
+                        {
+                        white-space: pre;
+
+                        }
                     </style>
                     <notebook>
-                        <page string="Calendar" >
+                        <page string="Calendar">
                             <div class="top" style="display:inline">
-                                <h2 style="display:inline" >Class:</h2>
-                                <select  id="dropdown" style="width:25%;display:inline"></select>
+                                <h2 style="display:inline">Class:</h2>
+                                <select id="dropdown" style="width:25%;display:inline"/>
                             </div>
 
-                            <div id="calendar"></div>
+                            <div id="calendar"/>
+
+                        </page>
+                        <page string="Planner">
+                            <group col="4" name="main">
+                                <field name="course_id"/>
+                                <field name="branch_id"/>
+
+
+
+                            </group>
+                            <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
+                                <h2 style="
+    background: gainsboro;
+    padding: 5px;
+    margin: 0px;
+">Faculty availability and Scheduled classes</h2>
+                                <group class="oe_edit_only" >
+                                    <field name="faculty_ids"  nolabel="1">
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="availaible"/>
+
+                                        </tree>
+                                    </field>
+                                </group>
+
+                                <group class="oe_edit_only" >
+
+
+
+                                    <field name="class_ids" nolabel="1" >
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="faculty_id"/>
+                                            <field name="class_start"/>
+                                            <field name="class_end"/>
+                                            <field name="start"/>
+                                            <field name="end"/>
+                                            <field name="total_sched_hrs" widget="float_time"/>
+                                            <field name="total_avail_hrs" widget="float_time"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </div>
+                            <group string="Terms">
+
+                                <field name="term_ids" nolabel="1"/>
+                            </group>
+                            <!--<h3 style="color:#00a09d">Required hours: <field class="badge" name="total_instr_hrs" widget="float_time"/></h3>-->
+                            <group col="4">
+                                <field name="start" widget="float_time" required="1" class="dn_time_picker"/>
+                                <field name="end" widget="float_time" required="1" class="dn_time_picker"/>
+                                <field name="days" widget="many2many_tags"/>
+
+                            </group>
+
+                            <group string="Available Teachers and Rooms">
+                                <group string="Available Teachers">
+
+                                    <field name="avail_faculty_ids" context="{'get_parent_batch':1}" mode="kanban" nolabel="1"/>
+                                </group>
+
+                                <group string="Available Rooms">
+
+                                    <field name="avail_room_ids" nolabel="1"/>
+                                </group>
+
+
+                            </group>
 
                         </page>
                     </notebook>
@@ -74,7 +148,7 @@
                     <!--<script src="/openeducat_erp/static/js/calendar/fullcalendar.js"></script>-->
                     <!--<script src="/openeducat_erp/static/js/calendar/moment.min.js"></script>-->
                     <link rel="stylesheet" href="/openeducat_erp/static/css/calendar.css"/>
-                    <script src="/openeducat_erp/static/js/calendar/calendar.js"></script>
+                    <script src="/openeducat_erp/static/js/calendar/calendar.js"/>
                 </form>
             </field>
         </record>

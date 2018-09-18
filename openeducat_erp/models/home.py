@@ -3,6 +3,8 @@ import json
 import datetime
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from odoo.http import request
+
 
 class Home(models.Model):
     _name = 'openeducat.home'
@@ -15,7 +17,125 @@ class Home(models.Model):
     sessions = fields.Char(string="Sessions", compute="compute_sessions")
     classes = fields.Char(string="Classes", compute="compute_sessions")
 
+    course_id = fields.Many2one('op.course', 'Course')
+    branch_id = fields.Many2one('op.branch', 'Location(Education Center)')
+    class_ids = fields.Many2many('op.batch', string='Scheduled classes', compute="_compute_sched_classes")
+    faculty_ids = fields.Many2many('op.faculty', string='Faculty availability', compute="_compute_sched_classes")
+    term_ids = fields.Many2many('op.term', string='Terms')
+    days = fields.Many2many('op.days', string='Days')
+    start = fields.Float('Start time')
+    end = fields.Float('End time')
+    avail_room_ids = fields.Many2many('op.classroom', string='Available rooms', compute="_compute_avail_rooms")
+    avail_faculty_ids = fields.Many2many('op.faculty', string='Available teachers', compute="_compute_avail_teachers")
+    req_hrs = fields.Float('Required', compute="_compute_classhrs")
 
+    @api.multi
+    @api.depends('course_id')
+    def _compute_sched_classes(self):
+        for rec in self:
+            if rec.course_id:
+                tchrs=self.env['op.faculty'].search([('faculty_course_ids', '=', rec.course_id.id)])
+                rec.faculty_ids = tchrs
+                faculty_ids=tchrs.ids
+                rec.class_ids=self.env['op.batch'].search([('faculty_id','in',faculty_ids)])
+
+    @api.multi
+    @api.depends('course_id','start','end','days','term_ids')
+    def _compute_avail_teachers(self):
+        for rec in self:
+            if  rec.term_ids and rec.course_id and rec.days and rec.start and rec.end:
+                temp={"course_id": rec.course_id,
+                                             "term_ids": rec.term_ids,
+                                             "days": rec.days,
+                                             "start": rec.start,
+                                             "end": rec.end}
+                hrs=self.env['op.batch'].calculate_hours_from_obj(False,False,terms=rec.term_ids,obj=temp)
+                req_hours=hrs["scheduled"]
+                teachers=[]
+                days1 = []
+                for d in rec.days:
+                    days1.append(int(d.day))
+                for t in self.env['op.faculty'].search([('faculty_course_ids','in',rec.course_id.id)]):
+                    for d in rec.days:
+                        available = False
+
+                        for a in t.available_times:
+                            if int(a.day) == int(d.day) and rec.start >= int(a.start) and rec.end <= int(a.end):
+                                available = True
+                                break
+                        if not available:
+                            break
+                    if not available:
+                        continue
+
+                    hours=t.class_ids.calculate_hours(False,False,faculty=t,terms=rec.term_ids,local=True)
+                    available_hrs = hours["available"]
+                    if req_hours > available_hrs:
+                        continue
+
+                    sessions = hours["sessions"]
+                    avail=True
+                    for s in sessions:
+                        st = datetime.datetime.strptime(s["start_datetime"], "%Y-%m-%d %H:%M:%S")
+                        en = datetime.datetime.strptime(s["end_datetime"], "%Y-%m-%d %H:%M:%S")
+                        day = st.weekday()
+                        st = st.hour + st.minute / 60.0
+                        en = en.hour + en.minute / 60.0
+                        x = rec.start
+                        y = rec.end
+
+                        if day in days1:
+                            if x >= st and x < en or y > st and y <= en:
+                                avail=False
+                                break
+                    if not avail:
+                        continue
+                    teachers.append(t.id)
+                rec.avail_faculty_ids = self.env['op.faculty'].search([('id','in',teachers)])
+
+    @api.multi
+    @api.depends('start','end','days','term_ids','branch_id')
+    def _compute_avail_rooms(self):
+        for rec in self:
+            if rec.branch_id and rec.term_ids and rec.days and rec.start and rec.end:
+                temp={"course_id": rec.course_id,
+                                             "term_ids": rec.term_ids,
+                                             "days": rec.days,
+                                             "start": rec.start,
+                                             "end": rec.end}
+                hrs=self.env['op.batch'].calculate_hours_from_obj(False,False,terms=rec.term_ids,obj=temp)
+                req_hours=hrs["scheduled"]
+                rooms=[]
+                days1 = []
+                for d in rec.days:
+                    days1.append(int(d.day))
+                for t in self.env['op.classroom'].search([('branch_id', '=', rec.branch_id.id)]):
+
+                    hours = t.class_ids.calculate_hours(False, False, terms=rec.term_ids, room=True, local=True)
+                    available_hrs = hours["available"]
+                    if req_hours > available_hrs:
+                        continue
+
+                    sessions = hours["sessions"]
+                    avail = True
+                    for s in sessions:
+                        st = datetime.datetime.strptime(s["start_datetime"], "%Y-%m-%d %H:%M:%S")
+                        en = datetime.datetime.strptime(s["end_datetime"], "%Y-%m-%d %H:%M:%S")
+                        day = st.weekday()
+                        st = st.hour + st.minute / 60.0
+                        en = en.hour + en.minute / 60.0
+                        x = rec.start
+                        y = rec.end
+
+                        if day in days1:
+                            if x >= st and x < en or y > st and y <= en:
+                                avail = False
+                                break
+                    if not avail:
+                        continue
+                    rooms.append(t.id)
+
+                rec.avail_room_ids = self.env['op.classroom'].search([('id','in',rooms)])
 
     @api.multi
     def compute_sessions(self):
