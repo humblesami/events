@@ -23,6 +23,8 @@ import calendar
 from odoo import models, fields, api
 import datetime
 
+from odoo.http import request
+
 
 class OpFaculty(models.Model):
     _inherit = 'op.faculty'
@@ -62,6 +64,15 @@ class OpFaculty(models.Model):
     @api.depends('filter_start','filter_end')
     @api.multi
     def _compute_avail_hrs1(self):
+        # if "capacity_dates" in request.session:
+        #     for rec in self:
+        #         start=request.session["capacity_dates"]["start"]
+        #         end = request.session["capacity_dates"]["end"]
+        #         hours = rec.class_ids.calculate_hours(start, end, faculty=rec)
+        #         rec.total_sched_hrs1 = hours["scheduled"]
+        #         rec.total_avail_hrs1 = hours["available"]
+        #     request.session.pop('capacity_dates', None)
+        # else:
         for rec in self:
             if rec.filter_end and rec.filter_start:
                 hours = rec.class_ids.calculate_hours(rec.filter_start, rec.filter_end,faculty=rec)

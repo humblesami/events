@@ -29,6 +29,60 @@ class Home(models.Model):
     avail_faculty_ids = fields.Many2many('op.faculty', string='Available teachers', compute="_compute_avail_teachers")
     req_hrs = fields.Float('Required', compute="_compute_classhrs")
 
+    filter_start = fields.Date('From')
+    filter_end = fields.Date('To')
+    rooms = fields.Many2many('op.classroom', string='Rooms', compute="compute_rooms")
+    teachers = fields.Many2many('op.faculty', string='Teachers', compute="compute_teachers")
+    course = fields.Many2one('op.course', 'Course')
+    branch = fields.Many2one('op.branch', 'Location(Education Center)')
+
+    # @api.onchange('filter_start', 'filter_end')
+    # def onchange_combine(self):
+    #     if self.filter_start and self.filter_end:
+    #         request.session["capacity_dates"] = {"start": self.filter_start, "end": self.filter_end}
+    #     else:
+    #         request.session.pop('capacity_dates', None)
+
+    @api.multi
+    @api.depends('course','filter_start','filter_end')
+    def compute_teachers(self):
+        for rec in self:
+            # if rec.filter_start and rec.filter_end:
+            #     request.session["capacity_dates"]={"start":rec.filter_start,"end":rec.filter_end}
+            # else:
+            #     request.session.pop('capacity_dates', None)
+            if rec.course:
+                tchrs=self.env['op.faculty'].search([('faculty_course_ids', '=', rec.course.id)])
+                if rec.filter_start and rec.filter_end:
+                    for t in tchrs:
+                        hours = t.class_ids.calculate_hours(rec.filter_start, rec.filter_end, faculty=t)
+                        t.total_sched_hrs1 = hours["scheduled"]
+                        t.total_avail_hrs1 = hours["available"]
+                rec.teachers = tchrs
+            else:
+                tchrs = self.env['op.faculty'].search([])
+                if rec.filter_start and rec.filter_end:
+                    for t in tchrs:
+                        hours = t.class_ids.calculate_hours(rec.filter_start, rec.filter_end, faculty=t)
+                        t.total_sched_hrs1 = hours["scheduled"]
+                        t.total_avail_hrs1 = hours["available"]
+
+                rec.teachers = tchrs
+
+
+    @api.multi
+    @api.depends('branch')
+    def compute_rooms(self):
+        for rec in self:
+            if rec.branch:
+                rooms=self.env['op.classroom'].search([('branch_id', '=', rec.branch.id)])
+                rec.rooms = rooms
+            else:
+                rooms = self.env['op.classroom'].search([])
+                rec.rooms = rooms
+
+
+
     @api.multi
     @api.depends('course_id')
     def _compute_sched_classes(self):

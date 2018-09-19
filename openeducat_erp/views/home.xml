@@ -76,13 +76,9 @@
 
                             </group>
                             <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
-                                <h2 style="
-    background: gainsboro;
-    padding: 5px;
-    margin: 0px;
-">Faculty availability and Scheduled classes</h2>
-                                <group class="oe_edit_only" >
-                                    <field name="faculty_ids"  nolabel="1">
+                                <h2 style="     background: gainsboro;     padding: 5px;     margin: 0px; ">Faculty availability and Scheduled classes</h2>
+                                <group class="oe_edit_only">
+                                    <field name="faculty_ids" nolabel="1">
                                         <tree>
                                             <field name="name"/>
                                             <field name="availaible"/>
@@ -91,11 +87,11 @@
                                     </field>
                                 </group>
 
-                                <group class="oe_edit_only" >
+                                <group class="oe_edit_only">
 
 
 
-                                    <field name="class_ids" nolabel="1" >
+                                    <field name="class_ids" nolabel="1">
                                         <tree>
                                             <field name="name"/>
                                             <field name="faculty_id"/>
@@ -135,6 +131,40 @@
 
                             </group>
 
+                        </page>
+                        <page string="Teacher and Room Capacity">
+                      <group col="4">
+                         <field name="filter_start"/>
+                          <field name="filter_end"/>
+                      </group>
+
+
+                        <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
+                                <h2 style="     background: gainsboro;     padding: 5px;     margin: 0px; ">Teachers</h2>
+                              <group>
+                                     <field name="course"/>
+
+                                </group>
+                           <div> <field name="teachers" mode="tree">
+                            <tree>
+                              <field name="name"/>
+                              <field name="total_sched_hrs1" sum="Total scheduled"/>
+                              <field name="total_avail_hrs1" sum="Total available"/>
+
+                            </tree>
+
+                           </field></div>
+
+                           </div>
+
+          <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
+                                <h2 style="     background: gainsboro;     padding: 5px;     margin: 0px; ">Rooms</h2>
+                              <group>
+                                     <field name="branch"/>
+
+                                </group>
+                                  <field name="rooms" />
+                            </div>
                         </page>
                     </notebook>
 
