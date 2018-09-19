@@ -354,7 +354,7 @@
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                        <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
                             <div class="col-md-10 col-sm-9">
                                 <select class="form-control" id="foster" name="fosters">
@@ -474,12 +474,12 @@
                     </form>
                     <script>
                         $(function(){
-                            var curl = window.location+"";
-                            var arr = curl.split('?');
-                            curl = arr[arr.length - 1];
-                            arr = curl.split('=');
-                            curl = arr[arr.length - 1];
-                            $('#foster').val(curl);
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
                         });
                     </script>
 
@@ -510,7 +510,7 @@
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                        <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
                             <div class="col-md-10 col-sm-9">
                                 <select class="form-control" id="foster" name="fosters">
@@ -588,12 +588,12 @@
                     </form>
                     <script>
                         $(function(){
-                            var curl = window.location+"";
-                            var arr = curl.split('?');
-                            curl = arr[arr.length - 1];
-                            arr = curl.split('=');
-                            curl = arr[arr.length - 1];
-                            $('#foster').val(curl);
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
                         });
                     </script>
                 </div>
@@ -620,7 +620,7 @@
                     <form action="/other/members/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                         <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
                             <div class="col-md-10 col-sm-9">
                                 <select class="form-control" id="foster" name="fosters">
@@ -698,12 +698,12 @@
                     </form>
                     <script>
                         $(function(){
-                            var curl = window.location+"";
-                            var arr = curl.split('?');
-                            curl = arr[arr.length - 1];
-                            arr = curl.split('=');
-                            curl = arr[arr.length - 1];
-                            $('#foster').val(curl);
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
                         });
                     </script>
                 </div>
@@ -738,7 +738,7 @@
                                 <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
                             </div>
                         </div>
-                         <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                        <div  style="display:none;" t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
                             <div class="col-md-10 col-sm-9">
                                 <select class="form-control" id="foster" name="fosters">
@@ -764,12 +764,12 @@
                     </form>
                     <script>
                         $(function(){
-                            var curl = window.location+"";
-                            var arr = curl.split('?');
-                            curl = arr[arr.length - 1];
-                            arr = curl.split('=');
-                            curl = arr[arr.length - 1];
-                            $('#foster').val(curl);
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
                         });
                     </script>
                 </div>
@@ -800,7 +800,7 @@
                     <form action="/diable/childcare/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                         <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
                             <div class="col-md-10 col-sm-9">
                                 <select class="form-control" id="foster" name="fosters">
@@ -849,14 +849,14 @@
                             </div>
                         </div>
                     </form>
-                     <script>
+                    <script>
                         $(function(){
-                            var curl = window.location+"";
-                            var arr = curl.split('?');
-                            curl = arr[arr.length - 1];
-                            arr = curl.split('=');
-                            curl = arr[arr.length - 1];
-                            $('#foster').val(curl);
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
                         });
                     </script>
                 </div>
@@ -888,7 +888,7 @@
                     <form action="/childcare/plan/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                         <div   t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
                             <div class="col-md-10 col-sm-9">
                                 <select class="form-control" id="foster" name="fosters">
@@ -919,14 +919,14 @@
                             </div>
                         </div>
                     </form>
-                     <script>
+                    <script>
                         $(function(){
-                            var curl = window.location+"";
-                            var arr = curl.split('?');
-                            curl = arr[arr.length - 1];
-                            arr = curl.split('=');
-                            curl = arr[arr.length - 1];
-                            $('#foster').val(curl);
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
                         });
                     </script>
                 </div>
@@ -946,7 +946,7 @@
                     }
                 </style>
                 <div class="wrap">
-                    <h3>Child Care Plan
+                    <h3>Child Care Services
 
                     </h3>
                     <p>
@@ -954,7 +954,7 @@
 
 
                     </p>
-                    <form action="/other/services/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                    <form action="/childcare/services/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
@@ -962,6 +962,17 @@
                             <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
                             <div class="col-md-10 col-sm-9">
                                 <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+                            <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                                <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                                <div class="col-md-10 col-sm-9">
+                                    <select class="form-control" id="foster" name="fosters">
+                                        <option></option>
+                                        <t t-foreach="fosters" t-as="foster">
+                                            <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                        </t>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div t-attf-class="form-group #{error and 'description' in error and 'has-error' or ''}">
@@ -983,6 +994,16 @@
                             </div>
                         </div>
                     </form>
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
                 </div>
             </t>
         </template>
@@ -1012,6 +1033,18 @@
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
                         <div t-attf-class="form-group #{error and 'member_name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="member_name">Household Member's Name</label>
                             <div class="col-md-10 col-sm-9">
@@ -1055,6 +1088,16 @@
                             </div>
                         </div>
                     </form>
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
                 </div>
             </t>
         </template>
@@ -1084,6 +1127,18 @@
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
                         <div t-attf-class="form-group #{error and 'member_name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="member_name">Household Member's Name</label>
                             <div class="col-md-10 col-sm-9">
@@ -1108,10 +1163,10 @@
                                 <input type="text" class="form-control" name="phone" t-attf-value="#{phone or ''}"/>
                             </div>
                         </div>
-                        <div t-attf-class="form-group #{error and 'treat_type' in error and 'has-error' or ''}">
-                            <label class="col-md-2 col-sm-3 control-label" for="treat_type">Treatment Type</label>
+                        <div t-attf-class="form-group #{error and 'date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="date">Condition date of onset</label>
                             <div class="col-md-10 col-sm-9">
-                                <input type="text" class="form-control" name="treat_type" t-attf-value="#{treat_type or ''}"/>
+                                <input type="date" class="form-control" name="date" t-attf-value="#{date or ''}"/>
                             </div>
                         </div>
 
@@ -1127,6 +1182,16 @@
                             </div>
                         </div>
                     </form>
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
                 </div>
             </t>
         </template>
@@ -1151,9 +1216,21 @@
 
 
                     </p>
-                    <form action="/health/history/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                    <form action="/emergency/contact/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
 
                         <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
@@ -1186,6 +1263,17 @@
                             </div>
                         </div>
                     </form>
+
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
                 </div>
             </t>
         </template>
@@ -1206,9 +1294,21 @@
                     <h3>PETS IN THE HOME
 
                     </h3>
-                    <form action="/pets/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                    <form action="/applicant/pets/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
 
                         <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
@@ -1236,6 +1336,17 @@
                             </div>
                         </div>
                     </form>
+
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
                 </div>
             </t>
         </template>
@@ -1261,9 +1372,22 @@
 
 
                     </p>
-                    <form action="/drivers/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                    <form action="/applicant/drivers/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
 
                         <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
@@ -1310,6 +1434,17 @@
                             </div>
                         </div>
                     </form>
+
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
                 </div>
             </t>
         </template>
@@ -1338,6 +1473,19 @@
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
+
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
                         <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="name">Name of Agency</label>
                             <div class="col-md-10 col-sm-9">
@@ -1365,6 +1513,17 @@
                             </div>
                         </div>
                     </form>
+
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
                 </div>
             </t>
         </template>
@@ -1389,10 +1548,21 @@
 
                     </p>
 
-                    <form action="/fosters/history/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                    <form action="/adoptive/history/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
                         <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
 
                         <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="name">Household member's name</label>
@@ -1421,6 +1591,571 @@
                             </div>
                         </div>
                     </form>
+
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+
+        <!--medical references-->
+        <template id="medical_references" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h4>MEDICAL Reference(s)-One required for each household member</h4>
+
+
+                    <form action="/medical/references/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+
+
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="address">Address</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="address" t-attf-value="#{address or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'city' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="city">City</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="city" t-attf-value="#{city or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'state' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="state">State</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="state" name="states">
+                                    <option></option>
+                                    <t t-foreach="states" t-as="state">
+                                        <option t-attf-value="#{state.id}"><t t-esc="state.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'zip' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="zip">Zip</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="zip" t-attf-value="#{zip or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="phone">Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="phone" t-attf-value="#{phone or ''}"/>
+                            </div>
+                        </div>
+
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+
+        <!--employer refernces-->
+        <template id="employer_references" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h4>EMPLOYER Reference(s)--One required for each Applicant</h4>
+
+
+                    <form action="/employer/references/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+
+
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="address">Address</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="address" t-attf-value="#{address or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'city' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="city">City</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="city" t-attf-value="#{city or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'state' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="state">State</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="state" name="states">
+                                    <option></option>
+                                    <t t-foreach="states" t-as="state">
+                                        <option t-attf-value="#{state.id}"><t t-esc="state.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'zip' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="zip">Zip</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="zip" t-attf-value="#{zip or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="phone">Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="phone" t-attf-value="#{phone or ''}"/>
+                            </div>
+                        </div>
+
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+
+        <!--personal refernces-->
+        <template id="personal_references" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h4>PERSONAL References-5 required for family; can be from clergy, relative, friend, or other. Please include: name, relationship, address and phone number.</h4>
+
+
+                    <form action="/personal/references/submition" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div style="display:none;"  t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="name">Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                            </div>
+
+
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="address">Address</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="address" t-attf-value="#{address or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'city' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="city">City</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="city" t-attf-value="#{city or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'state' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="state">State</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="state" name="states">
+                                    <option></option>
+                                    <t t-foreach="states" t-as="state">
+                                        <option t-attf-value="#{state.id}"><t t-esc="state.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'zip' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="zip">Zip</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="zip" t-attf-value="#{zip or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'phone' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="phone">Phone</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="phone" t-attf-value="#{phone or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'relation_to' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="relation_to">Relationship to you</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="relation_to" t-attf-value="#{relation_to or ''}"/>
+                            </div>
+                        </div>
+
+
+
+                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
+                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
+                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
+                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
+                </div>
+            </t>
+        </template>
+
+        <!--cori form-->
+        <template id="cori_form" name="Foster Application Page">
+            <t t-call="website.layout">
+                <style>
+
+                    .wrap {
+                    padding: 30px;
+                    }
+                    .wrap .control-label {
+                    text-align: left;
+                    }
+                </style>
+                <div class="wrap">
+                    <h3>CORI FORM</h3>
+                    <p>
+                        The Department of Children and Families will conduct a search of your Criminal and Child Welfare records to determine if you, or any members of your household or frequent visitors, 14 and older, have a history of previous/present involvement with DCF or criminal conduct that would make your home ineligible for the placement of children. DCF will also conduct a Sexual Offender Registry Information (SORT) check at the same time. If you have lived in another state you are requested to provide comparable information from other authority's court and child welfare systems
+
+
+                    </p>
+                    <form action="/cori/form/submit" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div  style="display:none;" t-attf-class="form-group #{error and 'foster' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="foster">Foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="foster" name="fosters">
+                                    <option></option>
+                                    <t t-foreach="fosters" t-as="foster">
+                                        <option t-attf-value="#{foster.id}"><t t-esc="foster.last_name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'cori_applicant' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_applicant">Applicant/Foster Parent</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_applicant" t-attf-value="#{cori_applicant or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'cori_partner' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_partner">Spouse/Partner</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_partner"  t-attf-value="#{cori_partner or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'house_hold_member' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="house_hold_member">Household Member</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="house_hold_member"  t-attf-value="#{house_hold_member or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'other_member' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="other_member">Other(Specify)</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="other_member"  t-attf-value="#{other_member or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'cori_last_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_last_name">Last Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_last_name" t-attf-value="#{cori_last_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'cori_first_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_first_name">First Name</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_first_name"  t-attf-value="#{cori_first_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'cori_middle_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_middle_name">Middle</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_middle_name" t-attf-value="#{cori_middle_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'corimaiden_name' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="corimaiden_name">Maiden Name/Alias (If Applicable)</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="corimaiden_name"  t-attf-value="#{corimaiden_name or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'cori_dob' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_dob">Date of Birth</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="cori_dob"  t-attf-value="#{cori_dob or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'race' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="race">Race</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="race"  t-attf-value="#{race or ''}"/>
+                            </div>
+                        </div>
+
+
+                        <div t-attf-class="form-group #{error and 'cori_ss_num' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_ss_num">Social Security Number</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_ss_num"  t-attf-value="#{cori_ss_num or ''}"/>
+                            </div>
+                        </div>
+
+                        <div t-attf-class="form-group #{error and 'ethnicity' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="ethnicity">Ethnicity</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="ethnicity"  t-attf-value="#{ethnicity or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'cori_address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_address">Address</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_address"  t-attf-value="#{cori_address or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'cori_city' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_city">City</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_city"  t-attf-value="#{cori_city or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'state' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="state">State</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="state" name="states">
+                                    <option></option>
+                                    <t t-foreach="states" t-as="state">
+                                        <option t-attf-value="#{state.id}"><t t-esc="state.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'country' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="country">Country</label>
+                            <div class="col-md-10 col-sm-9">
+                                <select class="form-control" id="country" name="countries">
+                                    <option></option>
+                                    <t t-foreach="countries" t-as="country">
+                                        <option t-attf-value="#{country.id}"><t t-esc="country.name"/></option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'cori_zip' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="cori_zip">Zip</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="cori_zip"  t-attf-value="#{cori_zip or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'resided_date' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="resided_date">Date</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="date" class="form-control" name="resided_date"  t-attf-value="#{resided_date or ''}"/>
+                            </div>
+                        </div>
+                        <div t-attf-class="form-group #{error and 'phone_num' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="phone_num">Phone Number</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input type="text" class="form-control" name="phone_num"  t-attf-value="#{phone_num or ''}"/>
+                            </div>
+                        </div>
+
+                        <!--<label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>-->
+                        <!--<input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>-->
+                        <!--<label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>-->
+                        <!--<input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>-->
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
+                                <button class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('?');
+                        curl = arr[arr.length - 1];
+                        arr = curl.split('=');
+                        curl = arr[arr.length - 1];
+                        $('#foster').val(curl);
+                        });
+                    </script>
+
+                </div>
+            </t>
+        </template>
+
+
+        <template id="support_thank_you" name="Support Ticket Thank You">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure oe_empty">
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h1 class="text-center">Thank You</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </t>
         </template>

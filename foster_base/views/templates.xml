@@ -168,30 +168,18 @@
 
 
 
-        <!--Foster applicant form -->
-        <!--<template id="foster_applicant_page" name="Foster Application Page">-->
-            <!--<t t-call="website.layout">-->
-                <!--<div class="wrap">-->
-                    <!--<div class="oe_structure"/>-->
-                    <!--<div class="container">-->
-                        <!--hello-->
-                    <!--</div>-->
 
-                <!--</div>-->
-            <!--</t>-->
-        <!--</template>-->
 
         <!--<record id="email_template_invite_foster" model="mail.template">-->
-            <!--<field name="name">Signature - OdosdfoHQ Singature</field>-->
+            <!--<field name="name">HopeVUE Form</field>-->
             <!--<field name="model_id" ref="foster_base.model_foster_users" />-->
             <!--<field name="email_from"><![CDATA["${user.company_id.name}" <${user.company_id.email}>]]></field>-->
-            <!--<field name="subject">Signature Required </field>-->
+            <!--<field name="subject">HopeVUE Form</field>-->
             <!--<field name="auto_delete" eval="True" />-->
             <!--<field name="body_html">-->
                 <!--<![CDATA[-->
 <!--<p>Dear</p>-->
-<!--<p>Your signature is required on a document:}.</p>-->
-<!--<p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="/foster/application/">Go to document</a></p>-->
+<!--<p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="/foster/application/">Go to Applicant Form</a></p>-->
 <!--<p>Best Regards,</p>-->
 
     <!--<p style="font-size: 11px; margin-top: 10px;">-->
@@ -204,6 +192,23 @@
                 <!--]]>-->
             <!--</field>-->
         <!--</record>-->
+
+        <record id="email_template_invite_foster" model="mail.template">
+            <field name="name">HopeVUE</field>
+            <field name="model_id" ref="foster_base.model_foster_users"/>
+            <field name="email_from">${object.create_uid.email|safe }</field>
+            <field name="email_to" >${'val2' in ctx and ctx['val2'] or ''}</field>
+            <field name="lang"></field>
+            <field name="subject">${object.company_id.name}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[ Dear ${'val' in ctx and ctx['val'] or ''},<br/>
+                Please filll the Applicant Form.<br/>
+                <p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="/foster/application?db=${'dbname' in ctx and ctx['dbname'] or ''}&menu_id=${'menu_id' in ctx and ctx['menu_id'] or ''}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.id}&token=${'token_id' in ctx and ctx['token_id'] or ''}">Go to Applicant Form</a></p>
+                Best regards,<br/>Administrator<br/>
+                ]]>
+            </field>
+        </record>
 
 
 

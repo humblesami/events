@@ -282,6 +282,7 @@
                 id="foster_management_menu_root"
                 name="HopeVUE"
                 sequence="-2"
+                web_icon="foster_base,static/family_icon.png"
                 action="foster_applicant_window"
         />
         <menuitem

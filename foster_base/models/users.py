@@ -1,4 +1,9 @@
+import string
+import uuid
+import random
 from odoo import models, fields, api
+from odoo.tools import pycompat
+
 
 class FosterUsers(models.Model):
     _inherits = {'res.users': 'user_id'}
@@ -14,6 +19,7 @@ class FosterUsers(models.Model):
     send_email = fields.Boolean(string="Send Email")
     bio = fields.Html(string="Bio")
     resume = fields.Binary(string="Resume")
+    token = fields.Char(string="Token", readonly=True)
 
     @api.model
     def search(self, args, offset=0, limit=0, order=None, count=False):
@@ -59,7 +65,29 @@ class FosterUsers(models.Model):
             vals['groups_id'] = [group_id]
         a =  super(FosterUsers, self).create(vals)
         a.user_id.partner_id.user_id = a.user_id
-        return a
+        user = a.user_id
+        a.email = a.login
+        if vals['groups_id'][0]==26:
+            token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(20))
+            menuId = self.env['ir.ui.menu'].search([('name', '=', 'Foster Parents')], limit=1)
+            actionId = self.env['ir.actions.act_window'].search([('name', '=', 'Foster Parents')], limit=1)
+            self = a.with_context(dbname=self._cr.dbname, action_id=actionId.id, menu_id=menuId.id, val=a.name,
+                                        val2=a.email, token_id = token)
+            temp = self.env.ref('foster_base.email_template_invite_foster')
+            if temp:
+                temp.sudo().with_context().send_mail(a.id, force_send=True)
+            return a
+        else:
+            return a
+
+
+
+    # def send_email_to_foster(self,a, uid):
+    #     invitation_template = self.env.ref('foster_base.email_template_invite_foster')
+    #     user = self.env['res.users'].search([('id', '=', uid)])
+    #     email_values = {"recipient_ids": [(4, user.partner_id.id)]}
+    #     invitation_template.send_mail(self.id, force_send=True, raise_exception=False, email_values=email_values)
+
 
     @api.multi
     def write(self, vals):
@@ -81,3 +109,4 @@ class FosterUsers(models.Model):
             if user:
                 employee = user.unlink()
         return employee
+
