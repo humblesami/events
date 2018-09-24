@@ -17,8 +17,12 @@ def http_response(er, data=False):
         eg = traceback.format_exception(*sys.exc_info())
         errorMessage = ''
         for er in eg:
-            errorMessage += "\n" + er
-        return http_response(er)
+            er = er.replace('\n', '<br>')
+            errorMessage += "<br>" + er
+        return http_response(errorMessage)
+
+def not_logged_in():
+    return http_response('Session expired, please login')
 
 def handle(er=False):
     if er:
@@ -26,9 +30,10 @@ def handle(er=False):
     eg = traceback.format_exception(*sys.exc_info())
     errorMessage = ''
     for er in eg:
-        errorMessage += "\n" + er
-    er = eg[1] + er
-    return http_response(er)
+        er = er.replace('\n', '<br>')
+        errorMessage += "<br>" + er
+    er = eg[1]   + er
+    return http_response(errorMessage)
 
 def encode(key, str):
     enc = []
@@ -65,7 +70,13 @@ def object_to_json_object(object, props):
             str = ar[0].replace('_id','')
             i = 0
             for sub_prop in ar:
-                obj = obj[sub_prop]
+                field_type = object._fields[sub_prop].type
+                if field_type == 'binary':
+                    obj = obj[sub_prop]
+                    if obj:
+                        obj = obj.decode('utf-8')
+                else:
+                    obj = obj[sub_prop]
                 if not obj:
                     break
                 if i > 0:
@@ -82,6 +93,9 @@ def object_to_json_object(object, props):
 def youtube_url(url):
     return url.replace('/watch?v=','/embed/')
 
+def log_error(er):
+    er = "Logged " + er
+    print(er)
 
 def check_auth(values):
     if request.uid and request.uid!=4:
