@@ -97,8 +97,10 @@ class annotation(http.Controller):
             if doc:
                 document_version = kw.get('version') or 0
                 document_version = int(document_version)
+                if document_version == 0:
+                    document_version = 1
                 if doc.version >= document_version:
-                    return ws_methods.http_response('', {'version': doc.version})
+                    return ws_methods.http_response('', doc.version)
 
                 res = req_env['annotation.rectangle'].search([('document_id','=',doc.id)]).unlink()
                 res = req_env['annotation.drawing'].search([('document_id','=',doc.id)]).unlink()
