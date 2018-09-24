@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <record id="module_category_meeting" model="ir.module.category">
+            <field name="name">MeetingPoint</field>
+            <field name="description">MeetingPoint</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record model="res.groups" id="group_meeting_base">
+            <field name="name">MeetingPoint</field>
+            <field name="implied_ids" eval="[(4, ref('e_sign.group_sign_user'))]"/>
+        </record>
+
+         <record model="res.groups" id="group_meeting_director">
+            <field name="name">Director</field>
+            <field name="category_id" ref="module_category_meeting"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')),(4, ref('group_meeting_base'))
+            ,(4, ref('survey.group_survey_user'))]"/>
+            <field name="user_model_ids" eval="[(4, ref('meeting_point.model_meeting_point_users'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_meeting_staff">
+            <field name="name">Staff</field>
+            <field name="category_id" ref="module_category_meeting"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user')),(4, ref('group_meeting_base'))
+            ,(4, ref('survey.group_survey_user'))]"/>
+            <field name="user_model_ids" eval="[(4, ref('meeting_point.model_meeting_point_users'))]"/>
+        </record>
+        <record model="res.groups" id="group_meeting_admin">
+            <field name="name">Admin</field>
+            <field name="category_id" ref="module_category_meeting"/>
+            <field name="implied_ids" eval="[(4, ref('group_meeting_base'))
+            ,(4, ref('base.group_partner_manager'))
+            ,(4, ref('e_sign.group_sign_manager'))
+            ,(4, ref('dn_base.group_dn_app_manager'))
+            ,(4, ref('survey.group_survey_manager')),
+            (4, ref('base.group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="user_model_ids" eval="[(4, ref('meeting_point.model_meeting_point_users'))]"/>
+        </record>
+    </data>
+</odoo>

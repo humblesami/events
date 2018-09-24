@@ -1,0 +1,19 @@
+<odoo>
+    <data noupdate="1">
+        <record id="data_meeting_point_roles" model="meeting_point.roles">
+            <field name="name">Admin</field>
+            <field name="description">A description for record #1.</field>
+        </record>
+
+        <!--<record id="meeting_point_director_profile_1" model="meeting_point.users">
+            <field name="login">tashi@gmail.com</field>
+            <field name="name">tashi</field>
+            <field name="admin_first_name">Zartash</field>
+            <field name="admin_last_name">Baig</field>
+            <field name="admin_email">tashi@gmail.com</field>
+            <field name="admin_cell_phone">55555</field>
+            <field name="groups_id"></field>
+        </record>-->
+
+    </data>
+</odoo>

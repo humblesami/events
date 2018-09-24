@@ -1,0 +1,321 @@
+<odoo>
+    <data>
+
+        <record id="mp_users_settings_form" model="ir.ui.view">
+            <field name="name">mp.users.settings.form</field>
+            <field name="model">res.users</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Users" create="false" edit="false">
+                    <div class="container">
+                        <div class="row">
+                            <header>
+                                <button string="Change Password" type="action" name="%(base.change_password_wizard_action)d" help="Change the user password."/>
+                                <button string="Send Reset Password Instructions" groups="meeting_point.group_meeting_admin" type="object" name="action_reset_password" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                                <button string="Send an Invitation Email" groups="meeting_point.group_meeting_admin" type="object" name="action_reset_password" context="{'create_user': 1}" attrs="{'invisible': [('state', '!=', 'new')]}"/>
+                                <field name="state" widget="statusbar" groups="meeting_point.group_meeting_admin"/>
+                            </header>
+
+                        </div>
+                    </div>
+
+                    <sheet>
+                        <field name="id" invisible="1"/>
+
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" required="1"/></h1>
+                            <field name="email" invisible="1"/>
+                            <label for="login" class="oe_edit_only" string="Email Address"/>
+                            <h2>
+                                <field name="login"
+                                       placeholder="email@yourcompany.com"/>
+                            </h2>
+                        </div>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="meeting_point_user_form" model="ir.ui.view">
+            <field name="name">meeting.point.user.form</field>
+            <field name="model">meeting_point.users</field>
+            <field name="inherit_id" ref="dn_base.dn_base_user_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//h2[@name='name']" position="after">
+                    <h2>
+                        <field name="nick_name" placeholder="Nick Name"/>
+                    </h2>
+                </xpath>
+
+                <xpath expr="//div[@class='oe_title']" position="after">
+                    <h4 groups="meeting_point.group_meeting_admin" attrs="{'invisible': [('id','!=',False)]}"><field name="send_email"/> Send Email </h4>
+                    <div name="access_groups">
+                        <div groups="meeting_point.group_meeting_admin"
+                             attrs="{'invisible': ['|',('own_profile', '=', True),('id','=',False)]}">
+                            <h4>Access Groups</h4>
+                            <field name="groups_id" widget="many2many_checkboxes" domain="[('category_id.name','=','MeetingPoint')]" />
+                        </div>
+                    </div>
+                    <group>
+                        <field name="job_id" placeholder="e.g. Sales Director" string="Job Title"/>
+                        <field name="department_id"/>
+                        <field class="masked_input phone" name="work_phone" string="Work Phone"/>
+                        <field class="masked_input phone" name="mobile_phone" string="Cell Phone"/>
+                        <field name="fax"/>
+                        <field name="website" widget="url" placeholder="e.g. www.yourweb.com"/>
+
+                    </group>
+                    <group name="committee_ids">
+                        <field name="committee_ids" string="Committees" widget="many2many_tags"/>
+                    </group>
+                    <field name="uid" class="o_hidden dn_uid" />
+                    <script src="/meeting_point/static/js/mpuser.js" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_my_profile" model="ir.ui.view">
+            <field name="name">my.profile</field>
+            <field name="model">meeting_point.users</field>
+            <field name="inherit_id" ref="meeting_point_user_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//h2[@name='name']" position="before">
+                    <field name="image" readonly="0" widget="image" class="oe_right oe_avatar" options="{&quot;preview_image&quot;: &quot;image_small&quot;}"/>
+
+                    <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
+                    <group name="preferences" col="4">
+                        <field name="lang" readonly="0"/>
+                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                        <field name="tz_offset" invisible="1"/>
+                        <field name="company_id" options="{'no_create': True}" readonly="0" groups="base.group_multi_company"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="meeting_point_user_kanban" model="ir.ui.view">
+            <field name="name">meeting.point.user.kanban</field>
+            <field name="model">meeting_point.users</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" default_order="name">
+                    <field name="message_is_follower"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                    <field name="id"/>
+                    <field name="message_needaction_counter"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('meeting_point.users', 'image_medium', record.id.value)"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                    <ul>
+                                        <!--<li id="last_login"/>-->
+                                        <!--<li t-if="record.job_id.raw_value">-->
+                                            <!--<field name="job_id"/>-->
+                                        <!--</li>-->
+                                        <!--<li t-if="record.work_location.raw_value">-->
+                                            <!--<field name="work_location"/>-->
+                                        <!--</li>-->
+                                        <li t-if="record.companies.raw_value">
+                                            <i class="fa fa-group"/>
+                                            <strong><field name="companies"/></strong>
+                                        </li>
+                                        <li t-if="record.work_phone.raw_value">
+                                            <i class="fa fa-phone"/>
+                                            <field name="work_phone" />
+                                        </li>
+                                        <li t-if="record.login.raw_value">
+                                            <i class="fa fa-envelope"/>
+                                            <field name="login" widget="email"/>
+                                        </li>
+                                        <!--<li t-if="record.mobile_phone.raw_value">-->
+                                            <!--<i class="fa fa-mobile"/>-->
+                                            <!--<field name="mobile_phone"/>-->
+                                        <!--</li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+
+            </field>
+        </record>
+
+        <record id="view_meeting_users_tree" model="ir.ui.view">
+            <field name="name">meeting_point.users.tree</field>
+            <field name="model">meeting_point.users</field>
+            <field name="arch" type="xml">
+                <tree string="Users" groups="meeting_point.group_meeting_admin">
+                    <field name="name"/>
+                    <field name="login"/>
+                    <field name="login_date" groups="meeting_point.group_meeting_admin"/>
+                    <field name="state" groups="meeting_point.group_meeting_admin" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_users" model="ir.actions.act_window">
+            <field name="name">Meeting Point Users</field>
+            <field name="res_model">meeting_point.users</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="meeting_point_user_kanban"/>
+            <!--[('groups_id.category_id.name','=','MeetingPoint'),'|',('groups_id.name','=','Admin'),('groups_id.name','=','Staff')]-->
+            <field name="domain">
+                [('groups_id.category_id.name','=','MeetingPoint')]
+            </field>
+            <field name="context">{'dn_users_menu':True}</field>
+
+            <!--<field name="search_view_id" ref="view_calendar_event_search"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a user.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_user_kanban" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_users"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="meeting_point_user_kanban"/>
+        </record>
+
+        <record id="action_user_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_users"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="meeting_point_user_form"/>
+        </record>
+
+        <record id="system_users_form" model="ir.ui.view">
+            <field name="name">system.user.form</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <form string="User" class="user_form">
+                    <style>
+                        <!--.o_cp_searchview{-->
+                        <!--display:none !important;-->
+                        <!--}-->
+                        .o_form_buttons_view
+                        {
+                        display:none;
+                        }
+                        .o_form_statusbar
+                        {
+                        display:none;
+                        }
+                        .o_cp_sidebar>.btn-group
+                        {
+                        display:none;
+                        }
+                        button.btn.btn-sm.oe_stat_button
+                        {
+                            float: right;
+                        }
+
+                    </style>
+                    <div class="container">
+                        <div class="row">
+                            <header>
+                                <button string="Change Password" type="action" name="%(base.change_password_wizard_action)d" help="Change the user password."/>
+                                <field name="state" widget="statusbar" groups="meeting_point.group_meeting_admin"/>
+                            </header>
+                        </div>
+                    </div>
+
+                    <sheet>
+                        <field name="own_profile" invisible="1"/>
+                        <button name="toggle_active" type="object" groups="hr.group_hr_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+
+
+                        <div class="alert alert-success text-center o_form_header" groups="meeting_point.group_meeting_admin" attrs="{'invisible': [('signup_valid', '!=', True)]}">
+                            <a class="close" data-dismiss="alert" href="#" aria-hidden="true">x</a>
+                            <div attrs="{'invisible': [('state', '!=', 'active')]}">
+                                <strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>
+                            </div>
+                            <div attrs="{'invisible': [('state', '!=', 'new')]}">
+                                <strong>An invitation email containing the following subscription link has been sent:</strong>
+                            </div>
+                            <div><field name="signup_url" widget="url"/></div>
+                            <field name="signup_valid" invisible="1"/>
+                        </div>
+
+                        <div class="oe_button_box oe_right">
+                        </div>
+
+                        <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;:&quot;image_medium&quot;}"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h2>
+                                <field name="name" required="1"/>
+                            </h2>
+
+                            <field name="email" invisible="1"/>
+                            <label for="login" class="oe_edit_only" string="Email Address"/>
+                            <h2>
+                                <field name="login"/>
+                            </h2>
+
+                            <!--<h4 groups="meeting_point.group_meeting_admin"><field name="send_email"/> Send Email </h4>-->
+                            <div groups="meeting_point.group_meeting_admin"
+                                 attrs="{'invisible': ['|',('own_profile', '=', True),('own_profile', '!=', False)]}">
+                                <h4>Access Groups</h4>
+                                <field name="groups_id" widget="many2many_checkboxes" domain="[('category_id.name','=','MeetingPoint')]" />
+                            </div>
+
+                        </div>
+
+
+                    </sheet>
+                    <script src="/meeting_point/static/js/profile.js">
+
+                    </script>
+                </form>
+
+            </field>
+        </record>
+
+
+        <record id="action_system_users" model="ir.actions.act_window">
+            <field name="name">System Users</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <!--[('groups_id.category_id.name','=','MeetingPoint'),'|',('groups_id.name','=','Admin'),('groups_id.name','=','Staff')]-->
+            <field name="context">{'dn_system_users_menu':True,'dn_users_menu':True}</field>
+            <!--<field name="search_view_id" ref="view_calendar_event_search"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a user.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_system_user_kanban" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_system_users"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.view_res_users_kanban"/>
+        </record>
+
+        <record id="action_system_user_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_system_users"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="system_users_form"/>
+        </record>
+
+    </data>
+</odoo>

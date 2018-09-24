@@ -1,0 +1,74 @@
+.o_cp_sidebar .btn-group.o_dropdown ul.dropdown-menu li:nth-child(3)
+{
+display:none;
+}
+
+.o_form_view .o_group.o_inner_group &gt; tbody &gt; tr &gt; td.o_td_label
+{
+    min-width:160px;
+}
+
+.oe_button_box.publish_btn
+{
+    margin-right:36px;
+}
+
+.dnroster:first .roster-buttons
+{
+    display:none;
+}
+
+span[name="exectime"]
+{
+    display:none;
+}
+.o_m2o_dropdown_option
+{
+    display:none !important;
+}
+
+/*.oe_read_only span
+{
+    display:none !important;
+}*/
+.o_form_view .o_field_widget .o_kanban_view.o_kanban_ungrouped
+{
+margin-left:-10px;
+}
+@media (max-width: 480px) {
+
+.o_kanban_view.o_kanban_ungrouped {
+margin: 7px 0 !important;
+}
+.o_form_view .o_group .o_field_widget {
+display: flex;
+flex-wrap: wrap;
+}
+
+
+.o_form_view .o_group .o_field_widget button {
+margin: 5px 5px 5px 0px;
+}
+
+
+}
+
+.mt32 {
+margin-top: 32px !important;
+float: left;
+padding: 20px;
+}
+
+.o_field_binary_file.o_field_widget {
+display: flex;
+flex-wrap: wrap;
+}
+
+
+.o_field_binary_file.o_field_widget button {
+margin: 5px 5px 5px 0px;
+}
+
+.font_hide {
+    display:none;
+}

@@ -1,0 +1,29 @@
+.oe_module_vignette.oe_kanban_global_click
+{
+text-align:initial;
+box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6);
+transition: 0.3s
+}
+
+.meeting_info
+{
+display:flex;
+}
+.meeting_info .details, .meeting_info .date_tam{
+float:left;
+}
+.meeting_info .date_tam{
+color: white;
+background-color: #3fa19d;
+padding: 5px;
+text-align:center;
+}
+.meeting_info .details
+{
+margin-left:10px;
+}
+.acceptancebuttons
+{
+margin-top:5px;
+text-align:center;
+}

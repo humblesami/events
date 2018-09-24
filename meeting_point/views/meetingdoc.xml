@@ -1,0 +1,370 @@
+<odoo>
+    <data>
+
+        <record id="view_meeting_doc_form" model="ir.ui.view">
+            <field name="name">meeting.doc.form</field>
+            <field name="model">meeting_point.doc</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form>
+                    <h4>Title</h4>
+                    <field name="name" class="doc_name" string="Title"/>
+                    <field name="filename" invisible="1"/>
+                    <h4>Attachment</h4>
+                    <field name="attachment" filename="filename"
+                           class="dn_documents_docs_upload oe_edit_only"/>
+                    <button type="object" name="open_view_doc_form"
+                            class="fa fa-5x fa-file-text-o"/>
+                    <script src="/dn_documents/static/js/doc.js"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_meeting_doc_kanban" model="ir.ui.view">
+            <field name="name">meeting.doc.kanban</field>
+            <field name="model">meeting_point.doc</field>
+            <field name="inherit_id" ref="dn_documents.dn_docs_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_meeting_doc_edit_form" model="ir.ui.view">
+            <field name="name">meeting_point.document.admin.form</field>
+            <field name="model">meeting_point.document</field>
+            <field name="arch" type="xml">
+                <form>
+                    <h4>Title</h4>
+                    <field name="name" class="mp_doc_name" string="Title"/>
+                    <h4>Description</h4>
+                    <field name="content" string="Description"/>
+                    <field name="filename" invisible="1"/>
+                    <h4>Attachment</h4>
+                    <field name="attachment" filename="filename" class="mp_meeting_docs_upload e_sign_docs oe_edit oe_edit_only"/>
+                    <button type="object" name="open_signature_form"
+                    class="fa fa-5x fa-file-text-o"/>
+                    <h4 groups="meeting_point.group_meeting_admin">Signatures(s)</h4>
+                    <field name="user_ids" groups="meeting_point.group_meeting_admin" string="Signature(s) " widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select signaturee..." class="oe_inline"/>
+                    <field name="signature_ids" groups="meeting_point.group_meeting_admin" string=" " mode="kanban" widget='one2many'>
+                        <kanban string="Signature(s)" create="false">
+                            <field name="draw_signature"/>
+                            <field name="id"/>
+                            <field name="showbutton"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_card" style="transition: 0.3s">
+                                        <div class="kanban_del">
+                                            <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <t t-if="record.draw_signature.raw_value">
+                                                <img style="width:100%" t-att-src="kanban_image('e_sign.signature', 'draw_signature', record.id.value)"/>
+                                            </t>
+                                            <t t-if="!record.draw_signature.raw_value">
+                                                 <strong style="color:red">Pending...</strong>
+                                             </t>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <strong class="oe_partner_heading">
+                                                <!--<field name="document_id" style="margin-right:10px"/>-->
+                                            </strong>
+                                            <field name="user_id"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                    <script src="/meeting_point/static/js/meetingdoc.js"></script>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_meeting_doc_view_sign_form" model="ir.ui.view">
+            <field name="name">meeting_point.document.view_sign.form</field>
+            <field name="model">meeting_point.document</field>
+            <field name="inherit_id" ref="dn_documents.doc_view_only_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='id']" position="replace">
+                    <field name="id" class="dn_doc_id o_hidden"/>
+                    <field name="seen_by_me" class="doc_seen o_hidden"/>
+                </xpath>
+                <xpath expr="//field[@name='html']" position="after">
+                    <link rel="stylesheet" href="/meeting_point/static/css/sign.css"/>
+                    <div class="_signature_status" style="display:flex">
+                        <strong>Signature Status:</strong><field class="my_signature_status" name="mp_signature_status"/>
+                    </div>
+
+                    <div id="start_sign" style="min-width:150px;margin:5px" attrs="{'invisible': ['|',('mp_signature_status', '=', 'Not required'),('mp_signature_status', '=', 'Completed')]}" class="btn btn-primary  strt_sign">
+                        Sign
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[@name='view_script']" position="replace">
+                    <script src="/meeting_point/static/js/jquery.ui.touch-punch.min.js"/>
+                    <script src="/meeting_point/static/js/doc.js"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_meeting_document_tree" model="ir.ui.view">
+            <field name="name">meeting_point.document.tree</field>
+            <field name="model">meeting_point.document</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Title" />
+                    <field name="mp_signature_status" />
+                    <field name="pending_signatures" type="string"/>
+                    <field name="meeting_id"/>
+                     <button type="object" name="open_signature_form"
+                             class = "fa fa-2x" icon = "fa-file-text-o"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_meeting_doc_tree" model="ir.ui.view">
+            <field name="name">meeting_point.doc.tree</field>
+            <field name="model">meeting_point.doc</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Title" />
+                    <button type="object" name="open_view_doc_form"
+                            class = "fa fa-2x" icon = "fa-file-text-o"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sign_doc_kanban" model="ir.ui.view">
+            <field name="name">meeting.sign.doc.kanban</field>
+            <field name="model">meeting_point.document</field>
+            <field name="inherit_id" ref="dn_documents.dn_docs_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='kanban_del']" position="before">
+                    <div class="o_hidden seen_by_me">
+                        <field name="seen_by_me"/>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@name='kanban_del1']" position="before">
+                    <div class="o_hidden sign-doc">
+                        <field name="seen_by_me"/>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@name='open_sign_doc']" position="replace">
+                    <button type="object" name="open_signature_form"
+                                        class="fa fa-5x fa-file-text-o"/>
+                </xpath>
+                <xpath expr="//div[@name='open_sign_doc1']" position="replace">
+                    <button type="object" name="open_signature_form"
+                                        class="fa fa-5x fa-file-text-o"/>
+                </xpath>
+
+                <xpath expr="//h2[@name='name']" position="before">
+                    <div class="sign_info">
+                        <strong class="mr4">My Signature:</strong>
+                        <field name="mp_signature_status"/>
+                        <div groups="meeting_point.group_meeting_admin">
+                            <strong>Pending Signatures:</strong>
+                            <field name="pending_signatures"/>
+                        </div>
+                    </div>
+                </xpath>
+
+                <xpath expr="//h2[@name='name1']" position="before">
+                    <div class="sign_info">
+                        <strong class="mr4">My Signature:</strong>
+                        <field name="mp_signature_status"/>
+                        <div groups="meeting_point.group_meeting_admin">
+                            <strong>Pending Signatures:</strong>
+                            <field name="pending_signatures"/>
+                        </div>
+                    </div>
+                </xpath>
+                 <xpath expr="//field[@name='name']" position="after">
+                    <br/>
+                      <div class="font_hide">
+                        <p style="font-size:14px;"><span>Meeting : </span><field name="meeting_id"/></p>
+                      </div>
+                </xpath>
+            </field>
+
+            <!--<field name="arch" type="xml">-->
+               <!--<kanban class="documents">-->
+                    <!--<templates>-->
+                        <!--<t t-name="kanban-box">-->
+                            <!--<div t-attf-class="oe_kanban_card">-->
+                                <!--<div class="kanban_del">-->
+                                    <!--<a type="delete"-->
+                                       <!--groups="meeting_point.group_meeting_admin">Delete</a>-->
+                                <!--</div>-->
+                                <!--<button type="object" name="open_signature_form"-->
+                                        <!--class="fa fa-5x fa-file-text-o"/>-->
+                                <!--<div t-attf-class="oe_kanban_content">-->
+                                    <!--&lt;!&ndash; title &ndash;&gt;-->
+                                    <!--<h2>-->
+                                        <!--<field name="name"/>-->
+                                    <!--</h2>-->
+                                    <!---->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</t>-->
+                    <!--</templates>-->
+                <!--</kanban>-->
+            <!--</field>-->
+
+        </record>
+
+        <template id="meeting_point_sign_page" name="Signature Page">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="oe_structure"/>
+                    <div class="container">
+
+                        <h1 style="text-align:center" t-field='document.name' />
+                           <div id="start_sign" style="min-width:150px;margin:5px"  class="btn btn-primary  strt_sign">
+                            Sign
+                        </div>
+                        Signature Status: <span class="mp_signature_status" t-raw="status"/>
+
+
+
+                        <form class="o_form_view">
+                               <style>
+
+                        .top_btns {
+                        background: rgb(50, 54, 57);
+
+                        }
+                        .position_btns{
+                        z-index:999
+                        }
+
+                        .pg_no{
+                        color: white;
+                        }
+
+                        .doc_btn {
+                        background-color: gray;
+                        color: white;
+                        margin: 2px;
+                        }
+
+
+                        .edit_sign:hover,.del_sign:hover {
+                        background-color: white;
+                        color:red!important
+
+                        }
+
+                        .PdfTopBtnsWrapper {
+                        padding: 4px;
+                        }
+
+                        #scaleSelectContainer select#scaleSelect {
+                        background: white;
+                        margin-left: 3px;
+                        border: navajowhite;
+                        padding: 5px 10px;
+                        font-size: 12px;
+                        border-radius: 3px;
+                        height: 29px;
+                        }
+
+                        .PdfButtonWrapper {
+                        background: #ffffff;
+                        padding: 5px;
+                        }
+                        .PdfButtonWrapper .btn {
+                        min-width: 130px;
+                        margin:3px;
+                        }
+                        #the-canvas{
+                        border-left:1px solid #000000;
+                        border-top:1px solid #cacaca;
+                        border-right:1px solid #000000;
+                        border-bottom:1px solid #000000;
+                        }
+
+                    </style>
+
+
+                            <div t-field='document.id' class="dn_doc_id" style="display:none"/>
+                            <div t-field='document.path' class="dn_documents_doc_path" style="display:none"/>
+                            <input type="hidden" class="sign_token" t-att-value="token" />
+
+                              <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);">
+                        <div class="top_btns">
+                            <div class="PdfTopBtnsWrapper">
+                                <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev"/>
+                                <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next"/>
+                                <span class="pg_no"> <span style="font-weight: bold;" id="page_num"/> / <span id="page_count"/></span>
+                                <div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out"/>
+                                <div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In"/>
+                                <span style="display: inline-block;" id="scaleSelectContainer">
+                                    <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
+                                        <option title="" value="0.5">50%</option>
+                                        <option title="" value="0.75">75%</option>
+                                        <option title="" value="1">100%</option>
+                                        <option title="" value="1.25">125%</option>
+                                        <option title="" value="1.5">150%</option>
+                                        <option title="" value="2">200%</option>
+                                        <option title="" value="3">300%</option>
+                                        <option title="" value="4">400%</option>
+                                    </select>
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div id="page_container1" style="max-height: calc(100vh - 200px);overflow-y:auto;overflow-x:auto;position:relative;">
+
+                            <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
+                                <canvas id="the-canvas"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+<script src="/meeting_point/static/js/jquery.ui.touch-punch.min.js"/>
+                            <script src="/e_sign/static/js/pdf.worker.js"/>
+                            <script src="/e_sign/static/js/pdf.js"/>
+                            <script src="/meeting_point/static/js/doc.js"/>
+                            <script src="/dn_base/static/js/web.js"/>
+                            <script src="/dn_base/static/js/ajax.js"/>
+                            <script src="/dn_base/static/js/ready.js"/>
+                            <link rel="stylesheet" href="/meeting_point/static/css/sign.css"/>
+                        </form>
+
+                    </div>
+
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </template>
+
+        <record id="action_doc_meeting" model="ir.actions.act_window">
+            <field name="name">MeetingDocs</field>
+            <field name="res_model">meeting_point.doc</field>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="action_document_sign" model="ir.actions.act_window">
+            <field name="name">MeetingSignDocs</field>
+            <field name="res_model">meeting_point.document</field>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <record id="action_esign_meeting_document" model="ir.actions.act_window">
+            <field name="name">MeetingDocSignatures</field>
+            <field name="res_model">e_sign.signature</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+    </data>
+</odoo>

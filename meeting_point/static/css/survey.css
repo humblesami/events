@@ -1,0 +1,22 @@
+/*.o_field_radio .o_radio_item:last-child,.o_field_radio .o_radio_item:nth-child(2)
+{
+    display:none;
+}*/
+ .navbar.navbar-static-top{
+    margin-top: 12px;
+ }
+ .btn-primary{
+    background-color:#3fa19d !important;
+    border-color:#3fa19d !important;
+ }
+ a{
+    color: #3fa19d;
+ }
+
+ .jumbotron.mt32 {
+    background-color: #eeeeef;
+}
+
+.form-control{
+    background-color: #eeeeef;
+}

@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+
+        <record id="access_roles" model="ir.rule">
+            <field name="name">Access to MeetingPoint roles</field>
+            <field name="model_id" ref="base.model_res_groups"/>
+            <field name="domain_force">[('category_id.name','=','MeetingPoint'),('name','!=','Admin')]</field>
+            <field name="groups" eval="[(4, ref('group_meeting_admin'))]"/>
+            <field eval="0" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_unlink"/>
+        </record>
+
+        <record id="access_meeting_point_folders" model="ir.rule">
+            <field name="name">Access to folders</field>
+            <field name="model_id" ref="model_meeting_point_folder"/>
+            <field name="domain_force">['|',('partners', 'in', [user.mp_user_id.id]),('partners','=',False)]</field>
+            <field name="groups" eval="[(4, ref('group_meeting_director')),(4, ref('group_meeting_staff'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+
+             <record id="access_meeting_point_docs" model="ir.rule">
+            <field name="name">Access to docs</field>
+            <field name="model_id" ref="model_meeting_point_doc"/>
+            <field name="domain_force">[('meeting_id.partner_ids','in',user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_meeting_director')),(4, ref('group_meeting_staff'))]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+
+        <record id="calendar.access_calendar_event_all_employee" model="ir.model.access">
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_unlink"/>
+        </record>
+
+    </data>
+</odoo>

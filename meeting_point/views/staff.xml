@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+
+
+        <record id="action_staff" model="ir.actions.act_window">
+            <field name="name">Staff</field>
+            <field name="res_model">meeting_point.users</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="meeting_point_user_kanban"/>
+            <!--[('groups_id.category_id.name','=','MeetingPoint'),'|',('groups_id.name','=','Admin'),('groups_id.name','=','Staff')]-->
+            <field name="domain">
+                [('groups_id.category_id.name','=','MeetingPoint'),('groups_id.name','=','Staff')]
+            </field>
+            <field name="context">{'dn_users_menu':True,'mp_staff_menu':True}</field>
+
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a user.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_staff_kanban" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_staff"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="meeting_point_user_kanban"/>
+        </record>
+
+        <record id="action_staff_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_staff"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="meeting_point_user_form"/>
+        </record>
+    </data>
+</odoo>

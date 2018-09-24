@@ -1,0 +1,35 @@
+.o_control_panel.o_breadcrumb_full>div
+{
+    display: none;
+}
+.o_kanban_record h2
+{
+    margin-top:5px;
+}
+.o_kanban_record h2
+{
+    margin-top:5px;
+}
+
+.o_kanban_view.o_kanban_ungrouped .o_kanban_record
+{
+    -ms-flex: none;
+    -moz-flex: none;
+    -webkit-box-flex: none;
+    -webkit-flex: none;
+    flex: none;
+    width: 23.5%;
+}
+.o_form_view.o_form_nosheet
+{
+    padding:5px;
+}
+.committees-container .members .member
+{
+    float:left;
+    width:28px;
+    height:28px;
+    margin-right:5px;
+    cursor:pointer;
+    background-size:cover;
+}
