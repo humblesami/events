@@ -18,6 +18,12 @@
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
 
+                        <div style="display:none" t-attf-class="form-group #{error and 'fosters' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="fosters">foster</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input id="foster" type="text" class="form-control" name="fosters" t-attf-value="#{fosters or ''}"/>
+                            </div>
+                        </div>
                         <!--Date field-->
                         <div t-attf-class="form-group #{error and 'date' in error and 'has-error' or ''}">
                             <label class="col-md-2 col-sm-3 control-label" for="date">Date</label>
@@ -331,6 +337,16 @@
                             </div>
                         </div>
                     </form>
+                    <script>
+                        $(function(){
+                        var curl = window.location+"";
+                        var arr = curl.split('/');
+                        curl = arr[arr.length - 1];
+                        console.log(curl,444);
+                        $('#foster').val(curl);
+                        });
+                    </script>
+
 
                 </div>
             </t>

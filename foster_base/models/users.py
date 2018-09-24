@@ -19,7 +19,7 @@ class FosterUsers(models.Model):
     send_email = fields.Boolean(string="Send Email")
     bio = fields.Html(string="Bio")
     resume = fields.Binary(string="Resume")
-    token = fields.Char(string="Token", readonly=True)
+
 
     @api.model
     def search(self, args, offset=0, limit=0, order=None, count=False):
@@ -68,11 +68,13 @@ class FosterUsers(models.Model):
         user = a.user_id
         a.email = a.login
         if vals['groups_id'][0]==26:
-            token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(20))
+            token = pycompat.text_type(uuid.uuid4())
+            foster_user = self.env['foster.applicants'].sudo().create({'token':token,'last_name':'test',
+                                                         'first_name':'test'})
             menuId = self.env['ir.ui.menu'].search([('name', '=', 'Foster Parents')], limit=1)
             actionId = self.env['ir.actions.act_window'].search([('name', '=', 'Foster Parents')], limit=1)
             self = a.with_context(dbname=self._cr.dbname, action_id=actionId.id, menu_id=menuId.id, val=a.name,
-                                        val2=a.email, token_id = token)
+                                        val2=a.email, token_id = token,foster_user_id =foster_user.id )
             temp = self.env.ref('foster_base.email_template_invite_foster')
             if temp:
                 temp.sudo().with_context().send_mail(a.id, force_send=True)

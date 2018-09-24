@@ -204,7 +204,7 @@
             <field name="body_html">
                 <![CDATA[ Dear ${'val' in ctx and ctx['val'] or ''},<br/>
                 Please filll the Applicant Form.<br/>
-                <p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="/foster/application?db=${'dbname' in ctx and ctx['dbname'] or ''}&menu_id=${'menu_id' in ctx and ctx['menu_id'] or ''}&action=${'action_id' in ctx and ctx['action_id'] or ''}&id=${object.id}&token=${'token_id' in ctx and ctx['token_id'] or ''}">Go to Applicant Form</a></p>
+                <p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="/foster/application/${'dbname' in ctx and ctx['dbname'] or ''}/${'menu_id' in ctx and ctx['menu_id'] or ''}/${'action_id' in ctx and ctx['action_id'] or ''}/${object.id}/${'token_id' in ctx and ctx['token_id'] or ''}/${'foster_user_id' in ctx and ctx['foster_user_id'] or ''}">Go to Applicant Form</a></p>
                 Best regards,<br/>Administrator<br/>
                 ]]>
             </field>

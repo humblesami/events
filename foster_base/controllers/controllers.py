@@ -18,75 +18,84 @@ from PIL import Image, ImageFont, ImageDraw
 
 class Foster(http.Controller):
 
-    @http.route(['/foster/application'],
-                type="http", auth="public", website=True, csrf=True)
-    def fill_application(self,**kwargs):
-        states = request.env['res.country.state'].search([])
-        countries = request.env['res.country'].search([])
-        return request.render('foster_base.foster_application_page',{'states':states,'countries':countries})
+    @http.route(['/foster/application/<string:dbname>/<int:menu_id>/<int:action_id>/<int:id>/<string:token>/<string:foster_user_id>'],
+                type="http", auth="public", website=True)
+    def fill_application(self,token=False,foster_user_id=False,**kwargs):
+        if token:
+            user_token = request.env['foster.applicants'].sudo().search([('token','=',token),('id','=',foster_user_id)])
+            if user_token.token == token:
+                if user_token.date == False:
+                    states = request.env['res.country.state'].search([])
+                    countries = request.env['res.country'].search([])
+                    # fosters = request.env['foster.applicants'].sudo().search([])
+                    return request.render('foster_base.foster_application_page',{'states':states,'countries':countries}, {'fosters': user_token.id})
+                else:
+                    return "<h2 style='text-align:center'>You have already filled the Applicant form</h2>"
+            else:
+                return "<h2 style='text-align:center'>Invalid Token</h2>"
 
-    @http.route(['/partner/application'],
-                type="http", auth="public", website=True, csrf=True)
-    def fill__partner_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
-        return request.render('foster_base.foster_partner_page',{'fosters':fosters})
 
 
 
-    @http.route('/application/submit', type="http", auth="public", website=True, csrf=True)
-    def application_process(self,id, **kwargs):
+    @http.route('/application/submit', type="http", auth="public", website=True)
+    def application_process(self,**kwargs):
         values = {}
+
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
+        foster = request.env['foster.applicants'].sudo().search([('id', '=', values['fosters'])])
 
-        if http.request.env.user.name != "Public user":
-            foster = request.env['foster.applicants'].sudo().create({'last_name': values['last_name'],
-            'first_name':values['first_name'],'middle_name':values['middle_name'],'other_name':values['other_name'],
-            'sex':values['sex'],'state':values['states'],'place_of_birth':values['place_of_birth'],
-            'birthdate':values['birth_date'],'address':values['address'],'town':values['town'],'zip':values['zip'],
-            'home_phone':values['home_phone'],'work_phone':values['work_phone'],'cell_phone':values['cell_phone'],
-            'security_number':values['security_number'],'applicant_email':values['email'],
-            'date':values['date'],'citizen_ship':values['countries'],'immigration':values['immigration'],
-            'education':values['education'],'last_grade':values['last_grade'],'lang_primary':values['lang_primary'],
-            'lang_other':values['lang_other'],'comp_primary':values['comp_primary'],'comp_other':values['comp_other'],
-            'note':values['note'],'current_marriage_date':values['current_marriage_date'],'previous_marriage_date':values['previous_marriage_date'],
-            'previous_marriage_date_end':values['previous_marriage_date_end'],'employment_type':values['employment_type'],
-            'days_worked':values['days_worked'],'date_employment_began':values['date_employment_began'],'income_year':values['income_year'],
-            'employer_name':values['employer_name'],'employer_phone':values['employer_phone'],'house':values['house'],'current_address_period':values['current_address_period'],
-            'name_of_contact':values['name_of_contact'],'phone_of_contact':values['phone_of_contact'],'previous_address':values['previous_address'],'file':values['file']})
+        request.env['foster.applicants'].sudo().search([('id','=',foster.id)]).write({'last_name': values['last_name'],
+        'first_name':values['first_name'],'middle_name':values['middle_name'],'other_name':values['other_name'],
+        'sex':values['sex'],'state':values['states'],'place_of_birth':values['place_of_birth'],
+        'birthdate':values['birth_date'],'address':values['address'],'town':values['town'],'zip':values['zip'],
+        'home_phone':values['home_phone'],'work_phone':values['work_phone'],'cell_phone':values['cell_phone'],
+        'security_number':values['security_number'],'applicant_email':values['email'],
+        'date':values['date'],'citizen_ship':values['countries'],'immigration':values['immigration'],
+        'education':values['education'],'last_grade':values['last_grade'],'lang_primary':values['lang_primary'],
+        'lang_other':values['lang_other'],'comp_primary':values['comp_primary'],'comp_other':values['comp_other'],
+        'note':values['note'],'current_marriage_date':values['current_marriage_date'],'previous_marriage_date':values['previous_marriage_date'],
+        'previous_marriage_date_end':values['previous_marriage_date_end'],'employment_type':values['employment_type'],
+        'days_worked':values['days_worked'],'date_employment_began':values['date_employment_began'],'income_year':values['income_year'],
+        'employer_name':values['employer_name'],'employer_phone':values['employer_phone'],'house':values['house'],'current_address_period':values['current_address_period'],
+        'name_of_contact':values['name_of_contact'],'phone_of_contact':values['phone_of_contact'],'previous_address':values['previous_address'],'file':values['file']})
 
 
-            return werkzeug.utils.redirect("/partner/application?foster=%s"%(foster.id))
 
-    @http.route('/partner/submit', type="http", auth="public", website=True, csrf=True)
+        return werkzeug.utils.redirect("/partner/application?foster=%s"%(foster.id))
+
+    @http.route(['/partner/application'],
+                type="http", auth="public", website=True)
+    def fill__partner_application(self, **kwargs):
+        fosters = request.env['foster.applicants'].sudo().search([])
+        return request.render('foster_base.foster_partner_page', {'fosters': fosters})
+
+    @http.route('/partner/submit', type="http", auth="public", website=True)
     def application_process_partner(self, **kwargs):
         values = {}
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
 
-        foster = request.env['foster.applicants'].search([('id','=',values['fosters'])])
-        partner = foster.patner
+        foster = request.env['foster.applicants'].sudo().search([('id','=',values['fosters'])])
 
 
-        if http.request.env.user.name != "Public user":
-            # request.env['foster.applicants'].search([])
-            request.env['foster.partner'].sudo().create({'spouse_last_name': values['spouse_last_name'],
-            'spouse_first_name': values['spouse_first_name'],'spouse_middle_name':values['spouse_middle_name'],
-            'spouse_other_name':values['spouse_other_name'],'age':values['age'],'co_home_phone':values['co_home_phone'],
-            'co_cell_phone':values['co_cell_phone'],'co_work_phone':values['co_work_phone'],
-            'security_number':values['security_number'],'co_applicant_email':values['co_applicant_email'],
-            'sex':values['sex'],'birthdate':values['birthdate'],'place_of_birth':values['place_of_birth'],
-             'partner_id':foster.id
-                                                         })
-            if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/partner/application?foster=%s"%(foster.id))
-            else:
-                return werkzeug.utils.redirect("/family/members?foster=%s"%(foster.id))
+        request.env['foster.partner'].sudo().create({'spouse_last_name': values['spouse_last_name'],
+        'spouse_first_name': values['spouse_first_name'],'spouse_middle_name':values['spouse_middle_name'],
+        'spouse_other_name':values['spouse_other_name'],'age':values['age'],'co_home_phone':values['co_home_phone'],
+        'co_cell_phone':values['co_cell_phone'],'co_work_phone':values['co_work_phone'],
+        'security_number':values['security_number'],'co_applicant_email':values['co_applicant_email'],
+        'sex':values['sex'],'birthdate':values['birthdate'],'place_of_birth':values['place_of_birth'],
+         'partner_id':foster.id
+                                                     })
+        if values.get("add_more") == '':
+            return werkzeug.utils.redirect("/partner/application?foster=%s"%(foster.id))
+        else:
+            return werkzeug.utils.redirect("/family/members?foster=%s"%(foster.id))
 
     @http.route(['/family/members'],
                 type="http", auth="public", website=True, csrf=True)
     def family_members_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_family_members_page',{'fosters':fosters})
 
     @http.route('/family/members/submition', type="http", auth="public", website=True, csrf=True)
@@ -95,26 +104,24 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
-            # request.env['foster.applicants'].search([])
-            request.env['foster.family.members'].sudo().create({'full_name': values['full_name'],
-                                                         'sex': values['sex'],
-                                                                'birth_date': values['birth_date'],
-                                                                'security_number': values['security_number'],
-                                                                'living_at_hom': values['living_at_hom'],
-                                                                'relation_to_applicant': values['relation_to_applicant'],
-                                                                'members':foster.id})
-            if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/family/members?foster=%s"%(foster.id))
-            else:
-                return werkzeug.utils.redirect("/other/members?foster=%s"%(foster.id))
+        request.env['foster.family.members'].sudo().create({'full_name': values['full_name'],
+                                                     'sex': values['sex'],
+                                                            'birth_date': values['birth_date'],
+                                                            'security_number': values['security_number'],
+                                                            'living_at_hom': values['living_at_hom'],
+                                                            'relation_to_applicant': values['relation_to_applicant'],
+                                                            'members':foster.id})
+        if values.get("add_more") == '':
+            return werkzeug.utils.redirect("/family/members?foster=%s"%(foster.id))
+        else:
+            return werkzeug.utils.redirect("/other/members?foster=%s"%(foster.id))
 
 
     # foster other living members in home
     @http.route(['/other/members'],
                 type="http", auth="public", website=True, csrf=True)
     def other_members_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_other_members_page',{'fosters':fosters})
 
     @http.route('/other/members/submition', type="http", auth="public", website=True, csrf=True)
@@ -142,7 +149,7 @@ class Foster(http.Controller):
     @http.route(['/family/childcare'],
                 type="http", auth="public", website=True, csrf=True)
     def family_childcare_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_family_based_child_care',{'fosters':fosters})
 
     @http.route('/family/childcare/submition', type="http", auth="public", website=True, csrf=True)
@@ -166,7 +173,7 @@ class Foster(http.Controller):
     @http.route(['/disable/individuals/childcare'],
                 type="http", auth="public", website=True, csrf=True)
     def disabled_childcare_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_disable_individual_care',{'fosters':fosters})
 
     @http.route('/diable/childcare/submition', type="http", auth="public", website=True, csrf=True)
@@ -191,7 +198,7 @@ class Foster(http.Controller):
     @http.route(['/childcare/plan'],
                 type="http", auth="public", website=True, csrf=True)
     def plan_childcare_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_child_care_plan', {'fosters': fosters})
 
     @http.route('/childcare/plan/submition', type="http", auth="public", website=True, csrf=True)
@@ -213,7 +220,7 @@ class Foster(http.Controller):
     @http.route(['/childcare/services'],
                 type="http", auth="public", website=True, csrf=True)
     def plan_childcare_application_services(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_any_other_service_plan', {'fosters': fosters})
 
     @http.route('/childcare/services/submition', type="http", auth="public", website=True, csrf=True)
@@ -235,7 +242,7 @@ class Foster(http.Controller):
     @http.route(['/health/history'],
                 type="http", auth="public", website=True, csrf=True)
     def healths_history_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_health_history', {'fosters': fosters})
 
     @http.route('/health/history/submition', type="http", auth="public", website=True, csrf=True)
@@ -259,7 +266,7 @@ class Foster(http.Controller):
     @http.route(['/medical/history'],
                 type="http", auth="public", website=True, csrf=True)
     def health_medicals_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_health_history_second', {'fosters': fosters})
 
     @http.route('/medical/history/submition', type="http", auth="public", website=True, csrf=True)
@@ -283,7 +290,7 @@ class Foster(http.Controller):
     @http.route(['/emergency/contact'],
                 type="http", auth="public", website=True, csrf=True)
     def emergency_person_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_emergency_contact_person', {'fosters': fosters})
 
     @http.route('/emergency/contact/submition', type="http", auth="public", website=True, csrf=True)
@@ -308,7 +315,7 @@ class Foster(http.Controller):
     @http.route(['/applicant/pets'],
                 type="http", auth="public", website=True, csrf=True)
     def pets_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_pets', {'fosters': fosters})
 
     @http.route('/applicant/pets/submition', type="http", auth="public", website=True, csrf=True)
@@ -331,7 +338,7 @@ class Foster(http.Controller):
     @http.route(['/applicant/drivers'],
                 type="http", auth="public", website=True, csrf=True)
     def divers_history_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_divers', {'fosters': fosters})
 
     @http.route('/applicant/drivers/submition', type="http", auth="public", website=True, csrf=True)
@@ -357,7 +364,7 @@ class Foster(http.Controller):
     @http.route(['/foster/history'],
                 type="http", auth="public", website=True, csrf=True)
     def fosters_history_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_care_history', {'fosters': fosters})
 
     @http.route('/foster/history/submition', type="http", auth="public", website=True, csrf=True)
@@ -381,7 +388,7 @@ class Foster(http.Controller):
     @http.route(['/adoptive/history'],
                 type="http", auth="public", website=True, csrf=True)
     def health_adoptive_history_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_care_history_second', {'fosters': fosters})
 
     @http.route('/adoptive/history/submition', type="http", auth="public", website=True, csrf=True)
@@ -405,7 +412,7 @@ class Foster(http.Controller):
     @http.route(['/medical/references'],
                 type="http", auth="public", website=True, csrf=True)
     def medical_refernces_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         states = request.env['res.country.state'].search([])
         return request.render('foster_base.medical_references', {'fosters': fosters,'states':states})
 
@@ -431,7 +438,7 @@ class Foster(http.Controller):
     @http.route(['/employer/references'],
                 type="http", auth="public", website=True, csrf=True)
     def employer_refrence_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         states = request.env['res.country.state'].search([])
         return request.render('foster_base.employer_references', {'fosters': fosters,'states':states})
 
@@ -457,7 +464,7 @@ class Foster(http.Controller):
     @http.route(['/personal/references'],
                 type="http", auth="public", website=True, csrf=True)
     def personal_refernces_history_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         states = request.env['res.country.state'].search([])
         return request.render('foster_base.personal_references', {'fosters': fosters, 'states': states})
 
@@ -485,7 +492,7 @@ class Foster(http.Controller):
     @http.route(['/cori/form'],
                 type="http", auth="public", website=True, csrf=True)
     def cori_form_application(self, **kwargs):
-        fosters = request.env['foster.applicants'].search([])
+        fosters = request.env['foster.applicants'].sudo().search([])
         states = request.env['res.country.state'].search([])
         countries = request.env['res.country.state'].search([])
         return request.render('foster_base.cori_form', {'fosters': fosters, 'states': states,'countries':countries})

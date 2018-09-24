@@ -331,6 +331,7 @@ class Applicant(models.Model):
     doc_ids = fields.One2many('foster.doc', 'foster_id', string="Foster Document(s)")
     signature_doc = fields.One2many('foster.sign_docs', 'foster_id', string= "Document(s) To Sign")
     seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
+    token = fields.Char(string="Token", readonly=True)
 
     @api.multi
     def _compute_seen_by_me(self):
