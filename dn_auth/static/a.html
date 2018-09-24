@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+    </head>
+    <body>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>        
+        <script src="/dn_base/static/js/ajax.js"></script>
+        <link href="/dn_auth/static/css/login-info.css" rel="stylesheet"/>
+                    <script type="text/javascript" src="/dn_base/static/js/libs/datetime.js"></script>
+                    <div class="wrapper">
+                        <div class="main-panel">
+                            <div class="content">
+                                <h1>Users</h1>
+                                <div id="users">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                              <th><input type="checkbox" id="chkall" /></th>
+                                              <th>Name</th>
+                                              <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="form-bottom">
+                                    <span class="form-item">
+                                        Interval Type:
+                                        <select id="interval-type">
+                                            <option value="Duration">Duration</option>
+                                            <option value="Date">Date</option>
+                                        </select>
+                                    </span>
+                                    <span class="form-item" id="date-div">
+                                        <span class="inner-items">
+                                            From: <input type="date" name="date_from" id="date-from" placeholder="End Date" />
+                                        </span>
+                                        <span class="inner-items">
+                                            To: <input type="date" name="date_to" id="date-to" placeholder="Start Date" />
+                                        </span>
+                                    </span>
+                                    <span class="form-item" id="duration-div">
+                                        <span class="inner-items">
+                                            Duration Type:
+                                            <select id="duration-type">
+                                                <option value="Days">Days</option>
+                                                <option value="Hours">Hours</option>
+                                                <option value="Months">Months</option>
+                                            </select>
+                                        </span>
+                                        <span class="inner-items">
+                                            Set Duration: <input type="number" value="24" name="duration" id="duration" placeholder="Select between 1-10000" />
+                                        </span>
+                                    </span>
+                                    <span class="form-item">
+                                        Gruop By User : <input type="checkbox" id="grouped-by-user" />
+                                    </span>
+                                    <span id="unique-user-checkbox" class="form-item">
+                                        Just Last Login: <input type="checkbox" id="unique-user" checked="checked" />
+                                    </span>
+                                    <span class="submit btn-primary" onclick="fetch_logins()">Get Records</span>
+                                </div>
+                                <div id="ungrouped-logins"></div>                                
+                                <div id="grouped-logins"></div>
+                                <div id="prev-logins"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <script src="/dn_auth/static/js/login-info.js"></script>
+    </body>
+</html>

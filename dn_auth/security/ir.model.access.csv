@@ -1,0 +1,5 @@
+"id","name","model_id/id","group_id/id","perm_read","perm_write","perm_create","perm_unlink"
+
+"user_login_info","user login info","model_login_info","base.group_user",1,0,1,0
+"admin_login_info","login info","model_login_info","dn_base.group_dn_app_manager",1,0,1,0
+"dn_auth_settings","Auth Settings","model_dn_auth_settings","base.group_user",1,0,0,0

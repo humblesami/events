@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Copyright 2015 LasLabs Inc.
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+
+<odoo>
+
+    <record id="password_policy_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <form string="Company" create="false">
+                  <sheet>
+                    <field name="logo" widget="image"  class="oe_avatar"/>
+                    <notebook colspan="4">
+                         <page string="Password Policy">
+                    <group>
+                        <group string="Extra">
+                            <field name="password_length" />
+                        </group>
+                    </group>
+                    <group name="chars_grp" string="Required Characters">
+                        <group>
+                            <field name="password_lower" />
+                            <field name="password_upper" />
+                        </group>
+                        <group>
+                            <field name="password_numeric" />
+                            <field name="password_special" />
+                        </group>
+                    </group>
+                </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="custom_action_password" model="ir.actions.act_window">
+            <field name="name">Password Policy</field>
+            <field name="res_model">res.company</field>
+            <!--<field name="view_mode">tree,form</field>-->
+            <field name="context">{}</field>
+
+        </record>
+
+        <record id="custom_view_company_tree" model="ir.ui.view">
+            <field name="name">res.company.tree</field>
+            <field name="model">res.company</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Companies" create="false">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="custom_action_company_tree" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="custom_action_password"/>
+            <!--<field name="sequence" eval="1"/>-->
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="custom_view_company_tree"/>
+        </record>
+        <record id="custom_action_company_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="custom_action_password"/>
+            <!--<field name="sequence" eval="2"/>-->
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="password_policy_company_form"/>
+        </record>
+      <menuitem
+                name="Password Policy" id="passpolicy"
+                sequence="91"
+                groups="base.group_system"
+                action="custom_action_password"
+                parent="base.menu_users"
+        />
+
+</odoo>

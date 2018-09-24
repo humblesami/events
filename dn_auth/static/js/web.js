@@ -1,0 +1,1 @@
+document.writeln('<script src="/dn_auth/static/js/debug.js"></script>');
