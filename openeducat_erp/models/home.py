@@ -16,6 +16,9 @@ class Home(models.Model):
     session_ids = fields.Many2many('op.session', string="Sessions", compute="compute_sessions")
     sessions = fields.Char(string="Sessions", compute="compute_sessions")
     classes = fields.Char(string="Classes", compute="compute_sessions")
+    fltr_class = fields.Many2one('op.batch', 'Class')
+    fltr_tchr = fields.Many2one('op.faculty', 'Teacher')
+    fltr_course = fields.Many2one('op.course', 'Course')
 
     course_id = fields.Many2one('op.course', 'Course')
     branch_id = fields.Many2one('op.branch', 'Location(Education Center)')
@@ -36,21 +39,12 @@ class Home(models.Model):
     course = fields.Many2one('op.course', 'Course')
     branch = fields.Many2one('op.branch', 'Location(Education Center)')
 
-    # @api.onchange('filter_start', 'filter_end')
-    # def onchange_combine(self):
-    #     if self.filter_start and self.filter_end:
-    #         request.session["capacity_dates"] = {"start": self.filter_start, "end": self.filter_end}
-    #     else:
-    #         request.session.pop('capacity_dates', None)
 
     @api.multi
     @api.depends('course','filter_start','filter_end')
     def compute_teachers(self):
         for rec in self:
-            # if rec.filter_start and rec.filter_end:
-            #     request.session["capacity_dates"]={"start":rec.filter_start,"end":rec.filter_end}
-            # else:
-            #     request.session.pop('capacity_dates', None)
+
             if rec.course:
                 tchrs=self.env['op.faculty'].search([('faculty_course_ids', '=', rec.course.id)])
                 if rec.filter_start and rec.filter_end:
@@ -71,14 +65,24 @@ class Home(models.Model):
 
 
     @api.multi
-    @api.depends('branch')
+    @api.depends('branch','filter_start','filter_end')
     def compute_rooms(self):
         for rec in self:
             if rec.branch:
                 rooms=self.env['op.classroom'].search([('branch_id', '=', rec.branch.id)])
+                if rec.filter_start and rec.filter_end:
+                    for t in rooms:
+                        hours = t.class_ids.calculate_hours(rec.filter_start, rec.filter_end,room=t)
+                        t.total_sched_hrs = hours["scheduled"]
+                        t.total_avail_hrs = hours["available"]
                 rec.rooms = rooms
             else:
                 rooms = self.env['op.classroom'].search([])
+                if rec.filter_start and rec.filter_end:
+                    for t in rooms:
+                        hours = t.class_ids.calculate_hours(rec.filter_start, rec.filter_end,room=t)
+                        t.total_sched_hrs = hours["scheduled"]
+                        t.total_avail_hrs = hours["available"]
                 rec.rooms = rooms
 
 
@@ -190,6 +194,61 @@ class Home(models.Model):
                     rooms.append(t.id)
 
                 rec.avail_room_ids = self.env['op.classroom'].search([('id','in',rooms)])
+
+    # @api.onchange('fltr_class')
+    # def onchange(self):
+    #     self.fltr_tchr=False
+    #     self.fltr_course = False
+    #
+    # @api.onchange('fltr_tchr')
+    # def onchange1(self):
+    #     self.fltr_class = False
+    #     self.fltr_course = False
+    #
+    # @api.onchange('fltr_course')
+    # def onchange2(self):
+    #     self.fltr_class = False
+    #     self.fltr_tchr = False
+
+    # @api.multi
+    # def compute_sessions(self):
+    #     environment = self.env
+    #     for obj in self:
+    #
+    #         classes=environment['op.batch'].search([])
+    #         obj.session_ids = environment['op.session'].search([])
+    #         session_ids=[]
+    #         if obj.fltr_class:
+    #             session_ids = environment['op.session'].search([('batch_id','=',obj.fltr_class.id)])
+    #         elif obj.fltr_tchr:
+    #             session_ids = environment['op.session'].search([('faculty_id','=',obj.fltr_tchr.id)])
+    #         elif obj.fltr_course:
+    #             session_ids = environment['op.session'].search([('course_id','=',obj.fltr_course.id)])
+    #         else:
+    #             session_ids = environment['op.session'].search([])
+    #         lst = []
+    #         for s in session_ids:
+    #             obj1 = {'id': s.id, 'title': s.name, 'start': s.start_datetime.split(" ")[0], 'color': s.term}
+    #             lst.append(obj1)
+    #         if session_ids and obj.fltr_class:
+    #             for c in classes:
+    #
+    #                 for term in c.term_ids:
+    #                     if not term.break_start or not term.break_end:
+    #                         continue
+    #                     start_date = datetime.datetime.strptime(
+    #                         term.break_start, '%Y-%m-%d')
+    #                     end_date = datetime.datetime.strptime(term.break_end, '%Y-%m-%d')
+    #
+    #                     for n in range((end_date - start_date).days + 1):
+    #                         curr_date = start_date + datetime.timedelta(n)
+    #                         curr_day = curr_date.weekday()
+    #                         if curr_day==5 or curr_day ==6:
+    #                             continue
+    #                         temp0 = curr_date.strftime('%Y-%m-%d')
+    #                         obj1 = {'id': '', 'title': '', 'start': temp0, 'color': 'red'}
+    #                         lst.append(obj1)
+    #         obj.sessions=json.dumps(lst)
 
     @api.multi
     def compute_sessions(self):

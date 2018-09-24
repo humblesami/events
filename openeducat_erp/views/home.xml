@@ -63,6 +63,11 @@
                                 <h2 style="display:inline">Class:</h2>
                                 <select id="dropdown" style="width:25%;display:inline"/>
                             </div>
+                            <!--<group col="6">-->
+                            <!--     <field name="fltr_class"/>-->
+                            <!--        <field name="fltr_tchr"/>-->
+                            <!--           <field name="fltr_course"/>-->
+                            <!--</group>-->
 
                             <div id="calendar"/>
 
@@ -133,37 +138,45 @@
 
                         </page>
                         <page string="Teacher and Room Capacity">
-                      <group col="4">
-                         <field name="filter_start"/>
-                          <field name="filter_end"/>
-                      </group>
+                            <group col="4">
+                                <field name="filter_start"/>
+                                <field name="filter_end"/>
+                            </group>
 
 
-                        <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
+                            <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
                                 <h2 style="     background: gainsboro;     padding: 5px;     margin: 0px; ">Teachers</h2>
-                              <group>
-                                     <field name="course"/>
+                                <group>
+                                    <field name="course"/>
 
                                 </group>
-                           <div> <field name="teachers" mode="tree">
-                            <tree>
-                              <field name="name"/>
-                              <field name="total_sched_hrs1" sum="Total scheduled"/>
-                              <field name="total_avail_hrs1" sum="Total available"/>
+                                <div> <field name="teachers" mode="tree">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="total_sched_hrs1" sum="Total scheduled"/>
+                                        <field name="total_avail_hrs1" sum="Total available"/>
 
-                            </tree>
+                                    </tree>
 
-                           </field></div>
+                                </field></div>
 
-                           </div>
+                            </div>
 
-          <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
+                            <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
                                 <h2 style="     background: gainsboro;     padding: 5px;     margin: 0px; ">Rooms</h2>
-                              <group>
-                                     <field name="branch"/>
+                                <group>
+                                    <field name="branch"/>
 
                                 </group>
-                                  <field name="rooms" />
+                                <field name="rooms">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="branch_id"/>
+                                        <field name="total_sched_hrs" sum="Total scheduled"/>
+                                        <field name="total_avail_hrs" sum="Total available"/>
+
+                                    </tree>
+                                </field>
                             </div>
                         </page>
                     </notebook>
