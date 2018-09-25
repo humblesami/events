@@ -97,6 +97,8 @@ class meeting(http.Controller):
                     attendee['state'] = 'Accepted'
                 elif attendee['state'] == 'rejected':
                     attendee['state'] = 'Rejected'
+                elif attendee['state'] == 'declined':
+                    attendee['state'] = 'Declined'
             filters = [('res_id', '=', meeting_object['id']), ('model', '=', 'calendar.event'),
                        ('message_type', '=', 'comment'),('parent_id','=',False)]
             comments = req_env['mail.message'].search(filters , order='create_date desc')
