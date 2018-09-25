@@ -61,7 +61,7 @@ class meeting(http.Controller):
                 values = values['data']
 
             id = int(values["id"])
-            date_value = dn_dt.nowStr()
+            date_value = dn_dt.nowtostr()
             filters = [('id', '=', id)]
 
 

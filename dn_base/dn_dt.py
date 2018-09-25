@@ -6,6 +6,16 @@ def now():
     res = datetime.now()
     return res
 
+def nowStr():
+    res = datetime.now()
+    res = dtTostr(res)
+    return res
+
+def nowtostr():
+    res = datetime.now()
+    res = dtTostr(res)
+    return res
+
 def today():
     res = datetime.today().date()
     return res
@@ -42,6 +52,8 @@ def dtTostr(dt, sting_format=None):
     return res
 
 def dayOfweek(dt):
+    if type(dt) is not datetime:
+        dt = strTodt(dt)
     dow = dt.strftime("%A")
     return dow
 
@@ -79,3 +91,57 @@ def addInterval(dt, interval_type, amt):
     if interval_type == 'ms':
         res = dt + relativedelta(milliseconds=amt)
     return res
+
+
+def downumber(today_day):
+    mydict = {
+            '0': 'Monday',
+            '1': 'Tuesday',
+            '2': 'Wednesday',
+            '3': 'Thursday',
+            '4': 'Friday',
+            '5': 'Saturday',
+            '6': 'Sunday'}
+    dayAlternateValue = list(mydict.keys())[list(mydict.values()).index(today_day)]
+    return dayAlternateValue
+
+def decimal2time(decimalTime):
+    clockTime = '00:00'
+    try:
+        hrs = int(decimalTime);
+        min = round((decimalTime - hrs) * 60);
+        hrs = addZeroToUnder10(hrs);
+        min = addZeroToUnder10(int(min));
+        clockTime = str(hrs) + ':' + str(min);
+    except:
+        a = 1
+    return clockTime;
+
+def addZeroToUnder10(d):
+    if d < 10:
+        d = "0" + str(d);
+    return d
+
+def timespan(later_dt, old_dt):
+    diff = False
+    try:
+        if type(later_dt) is not datetime:
+            later_dt = strTodt(later_dt)
+    except:
+        a = 1
+    try:
+        if type(old_dt) is not datetime:
+            old_dt = strTodt(old_dt)
+    except:
+        a = 1
+    try:
+        diff = later_dt - old_dt
+    except:
+        a = 1
+    return diff
+
+def timespan_minutes(later_dt, old_dt):
+    diff = timespan(later_dt, old_dt)
+    seconds = diff.seconds
+    minutes = float(seconds)/60
+    return minutes
