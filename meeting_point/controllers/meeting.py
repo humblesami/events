@@ -77,19 +77,26 @@ class meeting(http.Controller):
                 topics_arr.append(obj)
             meeting_object['topics'] = topics_arr
             meeting_object['meeting_docs'] = ws_methods.objects_list_to_json_list(meeting.doc_ids, ['id', 'name'])
-            docs_to_sign = meeting.document_ids
-            meeting_object['sign_docs'] = ws_methods.objects_list_to_json_list(docs_to_sign, ['id', 'name','mp_signature_status'])
+            docs_to_sign = []
+            props = ['id', 'name','mp_signature_status']
+            for sign_doc in meeting.document_ids:
+                sign = sign_doc.signature_ids.filtered(lambda r: r.user_id.id == uid)
+                if sign:
+                    doc_to_add = ws_methods.object_to_json_object(sign_doc, props)
+                    docs_to_sign.append(doc_to_add)
+
+            meeting_object['sign_docs'] = docs_to_sign
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(meeting.survey_ids, ['id', 'title'])
             props = ['attendance','state','email','response_by', 'photo', 'partner_id.user_id.login']
             meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
 
             for attendee in meeting_object['attendees']:
                 if attendee['state'] == 'needsAction':
-                    attendee['state'] == 'No Response'
+                    attendee['state'] = 'No Response'
                 elif attendee['state'] == 'accepted':
-                    attendee['state'] == 'Accepted'
+                    attendee['state'] = 'Accepted'
                 elif attendee['state'] == 'rejected':
-                    attendee['state'] == 'Rejected'
+                    attendee['state'] = 'Rejected'
             filters = [('res_id', '=', meeting_object['id']), ('model', '=', 'calendar.event'),
                        ('message_type', '=', 'comment'),('parent_id','=',False)]
             comments = req_env['mail.message'].search(filters , order='create_date desc')
@@ -130,12 +137,16 @@ class meeting(http.Controller):
                     filters.append(('publish', '=', True))
                     filters.append (('stop', '>=', date_value))
             filters.append(('id', '<', id))
-            prev = req_env['calendar.event'].search(filters, order='id desc', limit=1)
+            prev = req_env['calendar.event'].search(filters, limit=1, order='id desc')
+            if len(prev) > 0:
+                prev = prev[0]
             if len(filters) > 0:
                 filters[len(filters)-1] = ('id', '>', id)
             else:
                 filters = [('id', '>', id)]
             next = req_env['calendar.event'].search(filters, limit=1, order='id')
+            if len(next) > 0:
+                next = next[0]
 
             meeting_object['comments'] = ar_comments
             data = {"meeting": meeting_object, "next": next.id, "prev": prev.id}
