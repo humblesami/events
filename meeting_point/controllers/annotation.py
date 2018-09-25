@@ -93,22 +93,25 @@ class annotation(http.Controller):
 
             doc_id = kw.get('doc_id')
             doc = req_env['annotation.document'].search([('name', '=', doc_id),('user_id','=',uid)])
-
             if doc:
-                document_version = kw.get('version') or 0
-                document_version = int(document_version)
-                if document_version == 0:
-                    document_version = 1
-                if doc.version >= document_version:
-                    return ws_methods.http_response('', doc.version)
-
-                res = req_env['annotation.rectangle'].search([('document_id','=',doc.id)]).unlink()
-                res = req_env['annotation.drawing'].search([('document_id','=',doc.id)]).unlink()
+                reset = kw.get('reset')
+                if not reset:
+                    document_version = kw.get('version') or 0
+                    document_version = int(document_version)
+                    if document_version == 0:
+                        document_version = 1
+                    if doc.version >= document_version:
+                        return ws_methods.http_response('', doc.version)
+                res = req_env['annotation.rectangle'].search([('document_id', '=', doc.id)]).unlink()
+                res = req_env['annotation.drawing'].search([('document_id', '=', doc.id)]).unlink()
                 points = req_env['annotation.point'].search([]).filtered(lambda r: r.document_id.name == doc_id) #('document_id','=',doc.id)])
                 for p in points:
                     res = p.comments.filtered(lambda r: r.uid == uid).unlink()
                     if p.create_uid.id == uid and len(p.comments) == 0:
                         res = p.unlink()
+                if reset:
+                    doc.version = 0
+                    return ws_methods.http_response('', 'done')
             else:
                 doc = req_env['annotation.document'].create({'name': doc_id, 'user_id':uid, 'version':0})
 
