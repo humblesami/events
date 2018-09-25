@@ -2,14 +2,14 @@
 
 $(function(){
     var str = $('span[name="sessions"]').html();
-    var classes = $('span[name="classes"]').html();
-    classes=JSON.parse(classes);
+//    var classes = $('span[name="classes"]').html();
+//    classes=JSON.parse(classes);
     var events = JSON.parse(str);
    // console.log('events are here',events["1"])
 
-    $.each(classes, function() {
-         $('#dropdown').append($("<option />").val(this.id).text(this.title));
-        });
+//    $.each(classes, function() {
+//         $('#dropdown').append($("<option />").val(this.id).text(this.title));
+//        });
 
 function showCalendar(e)
 {
@@ -31,21 +31,29 @@ function showCalendar(e)
     });
 }
 
-var i =$('#dropdown').val();
-if(i){
-    console.log(i);
-    console.log(events[i]);
-    showCalendar(events[i]);
-}
-else{
-    showCalendar([]);
-}
+showCalendar(events);
 
-$('#dropdown').on('change', function() {
+//var i =$('#dropdown').val();
+//if(i){
+//    console.log(i);
+//    console.log(events[i]);
+//    showCalendar(events[i]);
+//}
+//else{
+//    showCalendar([]);
+//}
+
+$('span[name="sessions"]').on('DOMSubtreeModified', function() {
 //  alert( this.value );
-  i =this.value;
-  $('#calendar').fullCalendar('removeEvents')
-  $('#calendar').fullCalendar('addEventSource',events[i])
+//    console.log(new Date());
+  str = $('span[name="sessions"]').html();
+  if(str){
+    events = JSON.parse(str);
+    $('#calendar').fullCalendar('removeEvents')
+  $('#calendar').fullCalendar('addEventSource',events)
+  }
+
+
 });
 
 
@@ -73,5 +81,9 @@ $('#dropdown').on('change', function() {
 
         });
     }
+
+
+
+
 
 });

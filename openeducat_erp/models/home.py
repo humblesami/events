@@ -195,78 +195,60 @@ class Home(models.Model):
 
                 rec.avail_room_ids = self.env['op.classroom'].search([('id','in',rooms)])
 
-    # @api.onchange('fltr_class')
-    # def onchange(self):
-    #     self.fltr_tchr=False
-    #     self.fltr_course = False
-    #
-    # @api.onchange('fltr_tchr')
-    # def onchange1(self):
-    #     self.fltr_class = False
-    #     self.fltr_course = False
-    #
-    # @api.onchange('fltr_course')
-    # def onchange2(self):
-    #     self.fltr_class = False
-    #     self.fltr_tchr = False
+    @api.onchange('fltr_class')
+    def onchange0(self):
+        if "fltr_chk" in request.session:
+            request.session.pop("fltr_chk")
+            return
+        if self.fltr_course or self.fltr_tchr:
+            request.session["fltr_chk"]=True
+        self.fltr_tchr=False
+        self.fltr_course = False
 
-    # @api.multi
-    # def compute_sessions(self):
-    #     environment = self.env
-    #     for obj in self:
-    #
-    #         classes=environment['op.batch'].search([])
-    #         obj.session_ids = environment['op.session'].search([])
-    #         session_ids=[]
-    #         if obj.fltr_class:
-    #             session_ids = environment['op.session'].search([('batch_id','=',obj.fltr_class.id)])
-    #         elif obj.fltr_tchr:
-    #             session_ids = environment['op.session'].search([('faculty_id','=',obj.fltr_tchr.id)])
-    #         elif obj.fltr_course:
-    #             session_ids = environment['op.session'].search([('course_id','=',obj.fltr_course.id)])
-    #         else:
-    #             session_ids = environment['op.session'].search([])
-    #         lst = []
-    #         for s in session_ids:
-    #             obj1 = {'id': s.id, 'title': s.name, 'start': s.start_datetime.split(" ")[0], 'color': s.term}
-    #             lst.append(obj1)
-    #         if session_ids and obj.fltr_class:
-    #             for c in classes:
-    #
-    #                 for term in c.term_ids:
-    #                     if not term.break_start or not term.break_end:
-    #                         continue
-    #                     start_date = datetime.datetime.strptime(
-    #                         term.break_start, '%Y-%m-%d')
-    #                     end_date = datetime.datetime.strptime(term.break_end, '%Y-%m-%d')
-    #
-    #                     for n in range((end_date - start_date).days + 1):
-    #                         curr_date = start_date + datetime.timedelta(n)
-    #                         curr_day = curr_date.weekday()
-    #                         if curr_day==5 or curr_day ==6:
-    #                             continue
-    #                         temp0 = curr_date.strftime('%Y-%m-%d')
-    #                         obj1 = {'id': '', 'title': '', 'start': temp0, 'color': 'red'}
-    #                         lst.append(obj1)
-    #         obj.sessions=json.dumps(lst)
+    @api.onchange('fltr_tchr')
+    def onchange1(self):
+        if "fltr_chk" in request.session:
+            request.session.pop("fltr_chk")
+            return
+        if self.fltr_course or self.fltr_class:
+            request.session["fltr_chk"]=True
+        self.fltr_class = False
+        self.fltr_course = False
 
+    @api.onchange('fltr_course')
+    def onchange2(self):
+        if "fltr_chk" in request.session:
+            request.session.pop("fltr_chk")
+            return
+        if self.fltr_class or self.fltr_tchr:
+            request.session["fltr_chk"]=True
+        self.fltr_class = False
+        self.fltr_tchr = False
+
+    @api.depends('fltr_class', 'fltr_tchr', 'fltr_course')
     @api.multi
     def compute_sessions(self):
         environment = self.env
         for obj in self:
 
-            classes=environment['op.batch'].search([])
+
             obj.session_ids = environment['op.session'].search([])
-            sessions = {}
-            class_list=[]
-            for c in classes:
-                obj0 = {'id': c.id, 'title': c.name}
-                class_list.append(obj0)
-                lst=[]
-                for s in c.session_ids:
-                    obj1 = {'id':s.id,'title':s.name,'start':s.start_datetime.split(" ")[0],'color':s.term}
-                    lst.append(obj1)
-                for term in c.term_ids:
+            session_ids=[]
+            if obj.fltr_class:
+                session_ids = environment['op.session'].search([('batch_id','=',obj.fltr_class.id)])
+            elif obj.fltr_tchr:
+                session_ids = environment['op.session'].search([('faculty_id','=',obj.fltr_tchr.id)])
+            elif obj.fltr_course:
+                session_ids = environment['op.session'].search([('course_id','=',obj.fltr_course.id)])
+            else:
+                session_ids = environment['op.session'].search([])
+            lst = []
+            for s in session_ids:
+                obj1 = {'id': s.id, 'title': s.name, 'start': s.start_datetime.split(" ")[0], 'color': s.term}
+                lst.append(obj1)
+            if session_ids and obj.fltr_class:
+
+                for term in obj.fltr_class.term_ids:
                     if not term.break_start or not term.break_end:
                         continue
                     start_date = datetime.datetime.strptime(
@@ -281,8 +263,41 @@ class Home(models.Model):
                         temp0 = curr_date.strftime('%Y-%m-%d')
                         obj1 = {'id': '', 'title': '', 'start': temp0, 'color': 'red'}
                         lst.append(obj1)
-                sessions[str(c.id)]=lst
-            obj.sessions=json.dumps(sessions)
-            obj.classes = json.dumps(class_list)
+            obj.sessions=json.dumps(lst)
+
+    # @api.multi
+    # def compute_sessions(self):
+    #     environment = self.env
+    #     for obj in self:
+    #
+    #         classes=environment['op.batch'].search([])
+    #         obj.session_ids = environment['op.session'].search([])
+    #         sessions = {}
+    #         class_list=[]
+    #         for c in classes:
+    #             obj0 = {'id': c.id, 'title': c.name}
+    #             class_list.append(obj0)
+    #             lst=[]
+    #             for s in c.session_ids:
+    #                 obj1 = {'id':s.id,'title':s.name,'start':s.start_datetime.split(" ")[0],'color':s.term}
+    #                 lst.append(obj1)
+    #             for term in c.term_ids:
+    #                 if not term.break_start or not term.break_end:
+    #                     continue
+    #                 start_date = datetime.datetime.strptime(
+    #                     term.break_start, '%Y-%m-%d')
+    #                 end_date = datetime.datetime.strptime(term.break_end, '%Y-%m-%d')
+    #
+    #                 for n in range((end_date - start_date).days + 1):
+    #                     curr_date = start_date + datetime.timedelta(n)
+    #                     curr_day = curr_date.weekday()
+    #                     if curr_day==5 or curr_day ==6:
+    #                         continue
+    #                     temp0 = curr_date.strftime('%Y-%m-%d')
+    #                     obj1 = {'id': '', 'title': '', 'start': temp0, 'color': 'red'}
+    #                     lst.append(obj1)
+    #             sessions[str(c.id)]=lst
+    #         obj.sessions=json.dumps(sessions)
+    #         obj.classes = json.dumps(class_list)
 
 

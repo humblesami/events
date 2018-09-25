@@ -59,15 +59,12 @@
                     </style>
                     <notebook>
                         <page string="Calendar">
-                            <div class="top" style="display:inline">
-                                <h2 style="display:inline">Class:</h2>
-                                <select id="dropdown" style="width:25%;display:inline"/>
-                            </div>
-                            <!--<group col="6">-->
-                            <!--     <field name="fltr_class"/>-->
-                            <!--        <field name="fltr_tchr"/>-->
-                            <!--           <field name="fltr_course"/>-->
-                            <!--</group>-->
+
+                            <group class="calendar_filters" col="6">
+                                <field name="fltr_class"/>
+                                <field name="fltr_tchr"/>
+                                <field name="fltr_course"/>
+                            </group>
 
                             <div id="calendar"/>
 
