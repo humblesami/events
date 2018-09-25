@@ -78,7 +78,7 @@ class meeting(http.Controller):
             meeting_object['topics'] = topics_arr
             meeting_object['meeting_docs'] = ws_methods.objects_list_to_json_list(meeting.doc_ids, ['id', 'name'])
             docs_to_sign = meeting.document_ids
-            meeting_object['sign_docs'] = ws_methods.objects_list_to_json_list(docs_to_sign, ['id', 'name'])
+            meeting_object['sign_docs'] = ws_methods.objects_list_to_json_list(docs_to_sign, ['id', 'name','mp_signature_status'])
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(meeting.survey_ids, ['id', 'title'])
             props = ['attendance','state','email','response_by', 'photo', 'partner_id.user_id.login']
             meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
