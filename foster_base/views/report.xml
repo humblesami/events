@@ -61,7 +61,9 @@
                                         <span t-field="o.last_name"/>
                                     </td>
                                     <td>
-                                        <span t-field="o.patner.spouse_last_name"/>
+                                        <t t-foreach="o.patner" t-as="p">
+                                        <span t-field="p.spouse_last_name"/><br/>
+                                        </t>
                                     </td>
                                     <td>
                                         <t t-foreach="o.petss" t-as="h">

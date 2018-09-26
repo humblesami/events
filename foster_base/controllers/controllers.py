@@ -18,8 +18,12 @@ from PIL import Image, ImageFont, ImageDraw
 
 class Foster(http.Controller):
 
+    @http.route('/foster/sign', auth='public', csrf=False, cors='*')
+    def save_signature(self, **kw):
+        if 'data' in [kw]:
+            a = 1
     @http.route(['/foster/application/<string:dbname>/<int:menu_id>/<int:action_id>/<int:id>/<string:token>/<string:foster_user_id>'],
-                type="http", auth="public", website=True)
+                type="http", auth="public", website=True, csrf=True)
     def fill_application(self,token=False,foster_user_id=False,**kwargs):
         if token:
             user_token = request.env['foster.applicants'].sudo().search([('token','=',token),('id','=',foster_user_id)])
@@ -37,7 +41,7 @@ class Foster(http.Controller):
 
 
 
-    @http.route('/application/submit', type="http", auth="public", website=True)
+    @http.route('/application/submit', type="http", auth="public", website=True, csrf=True)
     def application_process(self,**kwargs):
         values = {}
 
@@ -45,7 +49,7 @@ class Foster(http.Controller):
             values[field_name] = field_value
         foster = request.env['foster.applicants'].sudo().search([('id', '=', values['fosters'])])
 
-        request.env['foster.applicants'].sudo().search([('id','=',foster.id)]).write({'last_name': values['last_name'],
+        request.env['foster.applicants'].sudo().search([('id','=',foster.id)]).write({'applicant_sign':values['image'],'last_name': values['last_name'],
         'first_name':values['first_name'],'middle_name':values['middle_name'],'other_name':values['other_name'],
         'sex':values['sex'],'state':values['states'],'place_of_birth':values['place_of_birth'],
         'birthdate':values['birth_date'],'address':values['address'],'town':values['town'],'zip':values['zip'],
@@ -60,12 +64,25 @@ class Foster(http.Controller):
         'employer_name':values['employer_name'],'employer_phone':values['employer_phone'],'house':values['house'],'current_address_period':values['current_address_period'],
         'name_of_contact':values['name_of_contact'],'phone_of_contact':values['phone_of_contact'],'previous_address':values['previous_address'],'file':values['file']})
 
-
+        # if 'file' in values:
+        #
+        #     for c_file in request.httprequest.files.getlist('file'):
+        #         data = c_file.read()
+        #
+        #         if c_file.filename:
+        #             datas=base64.b64encode(data)
+        #             request.env['ir.attachment'].sudo().create({
+        #                 'name': c_file.filename,
+        #                 'datas': base64.encodebytes(data),
+        #                 'datas_fname': c_file.filename,
+        #                 'res_model': 'foster.applicants',
+        #                 'res_id': foster.id
+        #             })
 
         return werkzeug.utils.redirect("/partner/application?foster=%s"%(foster.id))
 
     @http.route(['/partner/application'],
-                type="http", auth="public", website=True)
+                type="http", auth="public", website=True, csrf=True)
     def fill__partner_application(self, **kwargs):
         fosters = request.env['foster.applicants'].sudo().search([])
         return request.render('foster_base.foster_partner_page', {'fosters': fosters})
