@@ -12,9 +12,24 @@
                     }
                 </style>
                 <div class="wrap">
+                    <style>
+                        #btnClear{
+                        display:none;
+                        }
+                        #btnAccept{
+                        display:none;
+                        }
+                        .FormGroupSign .signatureArea div{
+                          padding-left: 0;
+                        }
+                        .FormGroupSignClear{
+                        width:300px;
+                        text-align:right;
+                        }
+                    </style>
                     <h3>Applicant Details</h3>
                     <form action="/application/submit" method="POST" class="form-horizontal mt32" enctype="multipart/form-data">
-                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"></label></div>
+                        <div class=" form-group"><label class="col-md-2 col-sm-3 control-label"> </label><label class="col-md-2 dn_error" style="color:red; width:620px"/></div>
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
 
@@ -62,7 +77,7 @@
                             <label class="col-md-2 col-sm-3 control-label" for="sex">Sex</label>
                             <div class="col-md-10 col-sm-9">
                                 <select type="text" name="sex" class="form-control">
-                                    <option></option>
+                                    <option/>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                     <option value="other">Other</option>
@@ -107,7 +122,7 @@
                             <label class="col-md-2 col-sm-3 control-label" for="state">State</label>
                             <div class="col-md-10 col-sm-9">
                                 <select class="form-control" id="state" name="states">
-                                    <option></option>
+                                    <option/>
                                     <t t-foreach="states" t-as="state">
                                         <option t-attf-value="#{state.id}"><t t-esc="state.name"/></option>
                                     </t>
@@ -151,7 +166,7 @@
                             <label class="col-md-2 col-sm-3 control-label" for="country">Country</label>
                             <div class="col-md-10 col-sm-9">
                                 <select class="form-control" id="country" name="countries">
-                                    <option></option>
+                                    <option/>
                                     <t t-foreach="countries" t-as="country">
                                         <option t-attf-value="#{country.id}"><t t-esc="country.name"/></option>
                                     </t>
@@ -177,7 +192,7 @@
                             <label class="col-md-2 col-sm-3 control-label" for="last_grade">Last Grade</label>
                             <div class="col-md-10 col-sm-9">
                                 <select type="text" name="last_grade" class="form-control">
-                                    <option></option>
+                                    <option/>
                                     <option value="a">A</option>
                                     <option value="b">B</option>
                                     <option value="c">C</option>
@@ -246,7 +261,7 @@
                             <label class="col-md-2 col-sm-3 control-label" for="employment_type">Last Grade</label>
                             <div class="col-md-10 col-sm-9">
                                 <select type="text" name="employment_type" class="form-control">
-                                    <option></option>
+                                    <option/>
                                     <option value="employee">Employee</option>
                                     <option value="worker">Worker</option>
                                     <option value="self-employed">Self-Employed</option>
@@ -293,7 +308,7 @@
                             <label class="col-md-2 col-sm-3 control-label" for="house">House</label>
                             <div class="col-md-10 col-sm-9">
                                 <select type="text" name="house" class="form-control">
-                                    <option></option>
+                                    <option/>
                                     <option value="yes">Own</option>
                                     <option value="no">Rent</option>
                                 </select>
@@ -330,13 +345,176 @@
                                 <div class="btn btn-default btn-file col-md-12"><input name="file" id="file" type="file" multiple="multiple"/></div>
                             </div>
                         </div>
+                        <div style="display:none" t-attf-class="form-group #{error and 'previous_address' in error and 'has-error' or ''}">
+                            <label class="col-md-2 col-sm-3 control-label" for="image">image</label>
+                            <div class="col-md-10 col-sm-9">
+                                <input id="image" type="binary" class="form-control" name="image" t-attf-value="#{image or ''}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3 control-label"></div>
+                            <div class="col-md-10 col-sm-9 FormGroupSign">
+                              <div class="FormGroupSignClear">
+                              <a class="btn btn-default" style="cursor:pointer" id="clear">Clear</a>
+                              </div>
+                              <div name="he" id="container"> </div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
-                                <button class="btn btn-primary btn-lg">Submit</button>
+                                <button id="sub_but" class="btn btn-primary btn-lg">Submit</button>
                             </div>
                         </div>
                     </form>
+                    <script>
+                        function loaded() {
+                        var signature = new ns.SignatureControl({ containerId: 'container', callback: function () {
+                        alert('hello');
+
+
+                        }
+                        });
+                        signature.init();
+                        }
+
+                        window.addEventListener('DOMContentLoaded', loaded, false);
+                    </script>
+
+                    <style>
+                        #signatureCanvas
+                        {
+                        background-color: #fff;
+                        }
+
+                        #btnClear
+                        {
+                        float: right;
+                        width: 88px;
+                        height: 32px;
+                        border: solid 2px #cacaca;
+                        background-color: #636363;
+                        }
+
+                        #btnAccept
+                        {
+                        float: left;
+                        width: 88px;
+                        height: 32px;
+                        border: solid 2px #fff;
+                        background-color: #ff6600;
+                        }
+
+                        .signatureArea
+                        {
+                        width: 300px;
+                        color: #ff6600;
+                        }
+
+                        .signatureArea div
+                        {
+                        padding-left: 60px;
+                        }
+                    </style>
+
+                    <script>
+                        (function (ns) {
+                        "use strict";
+
+                        ns.SignatureControl = function (options) {
+                        var containerId = options &amp;&amp; options.canvasId || "container",
+                        callback = options &amp;&amp; options.callback || {},
+                        label = options &amp;&amp; options.label || "",
+                        cWidth = options &amp;&amp; options.width || "300px",
+                        cHeight = options &amp;&amp; options.height || "300px",
+                        btnClearId,
+                        btnAcceptId,
+                        canvas,
+                        ctx;
+
+                        function initCotnrol() {
+                        createControlElements();
+                        wireButtonEvents();
+                        canvas = document.getElementById("signatureCanvas");
+                        canvas.addEventListener("mousedown", pointerDown, false);
+                        canvas.addEventListener("mouseup", pointerUp, false);
+                        ctx = canvas.getContext("2d");
+                        }
+
+                        function createControlElements() {
+                        var signatureArea = document.createElement("div"),
+                        labelDiv = document.createElement("div"),
+                        canvasDiv = document.createElement("div"),
+                        canvasElement = document.createElement("canvas"),
+                        buttonsContainer = document.createElement("div"),
+                        buttonClear = document.createElement("button"),
+                        buttonAccept = document.createElement("button");
+
+                        labelDiv.className = "signatureLabel";
+                        labelDiv.textContent = label;
+
+                        canvasElement.id = "signatureCanvas";
+                        //canvasElement.clientWidth = cWidth;
+                        //canvasElement.clientHeight = cHeight;
+                        canvasElement.style.border = "solid 2px black";
+
+                        buttonClear.id = "btnClear";
+                        buttonClear.textContent = "Clear";
+
+                        buttonAccept.id = "btnAccept";
+                        buttonAccept.textContent = "Accept";
+
+                        canvasDiv.appendChild(canvasElement);
+                        buttonsContainer.appendChild(buttonClear);
+                        buttonsContainer.appendChild(buttonAccept);
+
+                        signatureArea.className = "signatureArea";
+                        signatureArea.appendChild(labelDiv);
+                        signatureArea.appendChild(canvasDiv);
+                        signatureArea.appendChild(buttonsContainer);
+
+                        document.getElementById(containerId).appendChild(signatureArea);
+                        }
+
+                        function pointerDown(evt) {
+                        ctx.beginPath();
+                        ctx.moveTo(evt.offsetX, evt.offsetY);
+                        canvas.addEventListener("mousemove", paint, false);
+                        }
+
+                        function pointerUp(evt) {
+                        canvas.removeEventListener("mousemove", paint);
+                        paint(evt);
+                        }
+
+                        function paint(evt) {
+                        ctx.lineTo(evt.offsetX, evt.offsetY);
+                        ctx.stroke();
+                        }
+
+                        function wireButtonEvents() {
+                        var btnClear = document.getElementById("btnClear"),
+                        btnAccept = document.getElementById("btnAccept");
+                        btnClear.addEventListener("click", function () {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        }, false);
+                        btnAccept.addEventListener("click", function () {
+                        callback();
+                        }, false);
+                        }
+
+                        function getSignatureImage() {
+                        return ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                        }
+
+                        return {
+                        init: initCotnrol,
+                        getSignatureImage: getSignatureImage
+                        };
+
+                        }
+                        })(this.ns = this.ns || {});
+                    </script>
                     <script>
                         $(function(){
                         var curl = window.location+"";
@@ -344,11 +522,24 @@
                         curl = arr[arr.length - 1];
                         console.log(curl,444);
                         $('#foster').val(curl);
+                        $("#sub_but").click(function(){
+                        var dataURL = ($('#signatureCanvas')[0]).toDataURL("image/png");
+                        console.log(dataURL);
+                        dataURL = dataURL.replace('data:image/png;base64,', '');
+                        $('#image').val(dataURL);
+
                         });
+                        $('#clear').click(function(){
+                        var canvas = $('#signatureCanvas')[0]; // or document.getElementById('canvas');
+                        canvas.width = canvas.width;
+                        });
+                        });
+
                     </script>
 
 
                 </div>
+
             </t>
         </template>
 
@@ -476,10 +667,21 @@
                             </div>
                         </div>
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -496,6 +698,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
 
@@ -590,11 +795,21 @@
                         </div>
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -610,6 +825,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -700,11 +918,21 @@
                         </div>
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -720,6 +948,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -766,12 +997,21 @@
                             </div>
                         </div>
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
 
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
                                 <button class="btn btn-primary btn-lg">Submit</button>
@@ -786,6 +1026,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -853,11 +1096,21 @@
                             </div>
                         </div>
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -873,6 +1126,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -923,11 +1179,21 @@
                             </div>
                         </div>
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -943,6 +1209,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -998,11 +1267,21 @@
                             </div>
                         </div>
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -1018,6 +1297,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1092,11 +1374,21 @@
                             </div>
                         </div>
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -1112,6 +1404,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1186,11 +1481,21 @@
                             </div>
                         </div>
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -1206,6 +1511,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1267,12 +1575,21 @@
                             </div>
                         </div>
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
 
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
                                 <button class="btn btn-primary btn-lg">Submit</button>
@@ -1288,6 +1605,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1340,11 +1660,21 @@
                         </div>
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -1361,6 +1691,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1438,11 +1771,21 @@
                         </div>
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -1459,6 +1802,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1517,12 +1863,21 @@
                         </div>
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
 
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
                                 <button class="btn btn-primary btn-lg">Submit</button>
@@ -1538,6 +1893,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1595,11 +1953,21 @@
 
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -1616,6 +1984,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1706,12 +2077,21 @@
 
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
 
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
                                 <button class="btn btn-primary btn-lg">Submit</button>
@@ -1727,6 +2107,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1817,12 +2200,21 @@
 
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
 
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
                                 <button class="btn btn-primary btn-lg">Submit</button>
@@ -1838,6 +2230,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -1934,11 +2329,21 @@
 
 
 
-                        <label class="col-md-2 col-sm-3 control-label" for="add_more">Add More</label>
-                        <input type="checkbox" class="form-control" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/>
-                        <label class="col-md-2 col-sm-3 control-label" for="go_next">Go to Next</label>
-                        <input type="checkbox" class="form-control" name="go_next" t-attf-value="#{go_next or ''}"/>
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="add_more"><input type="radio" class="checks" name="add_more" checked="1" value="1" t-attf-value="#{add_more or ''}"/> Add More</label>
 
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 col-sm-3"></div>
+                            <div class="col-md-10 col-sm-9">
+                                <label class="control-label" for="go_next"><input type="radio" class="checks" name="go_next" t-attf-value="#{go_next or ''}"/> Go to Next</label>
+
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-sm-offset-3 col-sm-9 col-md-10">
@@ -1955,6 +2360,9 @@
                         arr = curl.split('=');
                         curl = arr[arr.length - 1];
                         $('#foster').val(curl);
+                        $('input.checks').on('change', function() {
+                        $('input.checks').not(this).prop('checked', false);
+                        });
                         });
                     </script>
                 </div>
@@ -2144,16 +2552,16 @@
                         </div>
 
                     </form>
-                    <script>
-                        $(function(){
-                        var curl = window.location+"";
-                        var arr = curl.split('?');
-                        curl = arr[arr.length - 1];
-                        arr = curl.split('=');
-                        curl = arr[arr.length - 1];
-                        $('#foster').val(curl);
-                        });
-                    </script>
+                    <!--<script>-->
+                    <!--$(function(){-->
+                    <!--var curl = window.location+"";-->
+                    <!--var arr = curl.split('?');-->
+                    <!--curl = arr[arr.length - 1];-->
+                    <!--arr = curl.split('=');-->
+                    <!--curl = arr[arr.length - 1];-->
+                    <!--$('#foster').val(curl);-->
+                    <!--});-->
+                    <!--</script>-->
 
                 </div>
             </t>

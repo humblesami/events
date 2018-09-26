@@ -333,25 +333,6 @@ class Applicant(models.Model):
     seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
     token = fields.Char(string="Token", readonly=True)
 
-    @api.multi
-    def _compute_seen_by_me(self):
-        try:
-            uid = self.env.uid
-            res_model = self._name
-            seen_model = self.env['dn.seen']
-            for obj in self:
-                if obj.create_uid.id == uid:
-                    obj.seen_by_me = 1
-                    continue
-                res_id = obj.id
-                filters = [('create_uid', '=', uid), ('res_model', '=', res_model), ('res_id', '=', res_id)]
-                res = seen_model.search(filters)
-                if res:
-                    obj.seen_by_me = 1
-        except:
-            a = 1
-
-
     @api.model
     def create(self, vals):
         a = super(Applicant, self).create(vals)
