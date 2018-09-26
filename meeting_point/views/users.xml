@@ -61,8 +61,8 @@
                         </div>
                     </div>
                     <group>
-                        <field name="job_id" placeholder="e.g. Sales Director" string="Job Title"/>
-                        <field name="department_id"/>
+                        <field name="job_title" placeholder="e.g. Sales Director" string="Job Title"/>
+                        <field name="department"/>
                         <field class="masked_input phone" name="work_phone" string="Work Phone"/>
                         <field class="masked_input phone" name="mobile_phone" string="Cell Phone"/>
                         <field name="fax"/>
@@ -120,8 +120,8 @@
                                     </strong>
                                     <ul>
                                         <!--<li id="last_login"/>-->
-                                        <!--<li t-if="record.job_id.raw_value">-->
-                                            <!--<field name="job_id"/>-->
+                                        <!--<li t-if="record.job_title.raw_value">-->
+                                            <!--<field name="job_title"/>-->
                                         <!--</li>-->
                                         <!--<li t-if="record.work_location.raw_value">-->
                                             <!--<field name="work_location"/>-->

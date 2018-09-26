@@ -23,6 +23,8 @@ def strTodt(time_string):
     return res
 
 def convert_time_zone(tz, val):
+    if not val:
+        return '0000:00:00 00:00:00'
     is_str = type(val) is str
     if is_str:
         val = strTodt(val)
@@ -160,6 +162,8 @@ def timespan_minutes(later_dt, old_dt):
     return minutes
 
 def hours_to_hoursNminutes(hours):
+    if not hours:
+        return ''
     res = int(hours)
     minutes = hours % res
     minutes = minutes * 60

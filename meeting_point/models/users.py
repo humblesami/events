@@ -42,9 +42,9 @@ class MPUser(models.Model):
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
     ], string='Marital Status')
-    department_id = fields.Char(string='Department')
+    department = fields.Char(string='Department')
     work_location = fields.Char('Work Location')
-    job_id = fields.Char(string='Job Title')
+    job_title = fields.Char(string='Job Title')
     passport_id = fields.Char('Passport No')
     city = fields.Char(string="City")
 

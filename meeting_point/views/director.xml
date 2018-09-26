@@ -7,7 +7,7 @@
             <field name="mode">primary</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='job_id']" position="after">
+                <xpath expr="//field[@name='job_title']" position="after">
                     <field class="director_only_1" name="companies"/>
                     <field class="director_only_2" name="board_joing_date"/>
                 </xpath>
@@ -75,8 +75,8 @@
                                     </strong>
                                     <ul>
                                         <!--<li id="last_login"/>-->
-                                        <!--<li t-if="record.job_id.raw_value">-->
-                                            <!--<field name="job_id"/>-->
+                                        <!--<li t-if="record.job_title.raw_value">-->
+                                            <!--<field name="job_title"/>-->
                                         <!--</li>-->
                                         <!--<li t-if="record.work_location.raw_value">-->
                                             <!--<field name="work_location"/>-->

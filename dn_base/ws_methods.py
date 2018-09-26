@@ -79,7 +79,10 @@ def object_to_json_object(object, props):
                     if obj:
                         obj = obj.decode('utf-8')
                 elif tz and field_type == 'datetime':
-                    obj = dn_dt.convert_time_zone(tz, obj[sub_prop])
+                    if obj[sub_prop]:
+                        obj = dn_dt.convert_time_zone(tz, obj[sub_prop])
+                    else:
+                        obj = False
                 else:
                     obj = obj[sub_prop]
                 if not obj:
