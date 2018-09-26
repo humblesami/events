@@ -93,7 +93,7 @@ def object_to_json_object(object, props):
                 json_obj[str] = obj
     except:
         a = 1
-        #raise
+        raise
     return json_obj
 
 def youtube_url(url):
