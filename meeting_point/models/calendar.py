@@ -46,21 +46,23 @@ class Attendee(models.Model):
     def action_online(self):
         self.attendance = "online"
 
+    @api.multi
     def write(self, vals):
-        exec_time = self.event_id.exectime
-        if exec_time == 'upcoming':
-            if 'attendance' in vals:
-                raise ValidationError("Sorry attendance can not be marked before meeting completed")
-        elif exec_time == 'ongoing':
-            do_any_thing = True
-        elif exec_time == 'completed':
-            for key in vals:
-                if key != 'attendance':
-                    raise ValidationError("Sorry can not make changes in completed meeting")
-        elif exec_time == 'archived':
-            raise ValidationError("Sorry can not make changes in completed/archived meeting")
-        else:
-            raise ValidationError("Unknown meeting type")
+        for rec in self:
+            exec_time = rec.event_id.exectime
+            if exec_time == 'upcoming':
+                if 'attendance' in vals:
+                    raise ValidationError("Sorry attendance can not be marked before meeting completed")
+            elif exec_time == 'ongoing':
+                do_any_thing = True
+            elif exec_time == 'completed':
+                for key in vals:
+                    if key != 'attendance':
+                        raise ValidationError("Sorry can not make changes in completed meeting")
+            elif exec_time == 'archived':
+                raise ValidationError("Sorry can not make changes in completed/archived meeting")
+            else:
+                raise ValidationError("Unknown meeting type")
         return super(Attendee, self).write(vals)
 
     @api.multi

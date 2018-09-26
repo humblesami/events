@@ -10,10 +10,11 @@ class MyMail(Message):
     @api.multi
     def unlink(self):
         if self.env.uid != 1:
-            if self.env.uid == self.create_uid.id:
-                res = super(Message, self).sudo().unlink()
-            else:
-                return "Can delete own comments only"
+            for rec in self:
+                if rec.env.uid == rec.create_uid.id:
+                    res = super(Message, rec).sudo().unlink()
+                else:
+                    return "Can delete own comments only"
         else:
             res = super(Message, self).unlink()
         return res
