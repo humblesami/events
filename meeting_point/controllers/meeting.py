@@ -62,7 +62,6 @@ class meeting(http.Controller):
             date_value = dn_dt.nowtostr()
             filters = [('id', '=', id)]
 
-
             meeting = req_env['calendar.event'].search(filters, limit=1, order='id')
             props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_numbe', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',

@@ -1,9 +1,9 @@
 import requests
+from odoo import http
 from dateutil import parser
+from odoo.addons.dn_base import ws_methods
 from dateutil.relativedelta import relativedelta
 
-from odoo import http
-from odoo.addons.dn_base import ws_methods
 
 class ws_profile(http.Controller):
     @http.route('/ws/profiles', type="http", csrf=False, auth='none', cors='*')
@@ -44,12 +44,10 @@ class ws_profile(http.Controller):
                          'admin_fax',
                          'admin_cell_phone',
                          'admin_work_phone',
-                         'mail_to_assistant'
+                         'mail_to_assistant',
+                         'image_small'
                          ]
-
                 profile_json = ws_methods.object_to_json_object(profile, props)
-                if profile['image_small']:
-                    profile_json['photo'] = profile['image_small']
                 if profile.committee_ids:
                     committees = ws_methods.objects_list_to_json_list(profile.committee_ids, ['id', 'name'])
                     profile_json['committees'] = committees
