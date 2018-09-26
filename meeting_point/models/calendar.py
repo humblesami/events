@@ -201,6 +201,39 @@ class Meeting(models.Model):
     archived = fields.Boolean(string="Archived")
     im_attendee = fields.Char(compute='look_if_invited')
 
+    @api.model
+    def create(self, vals):
+        surveys = vals['survey_ids']
+        del vals['survey_ids']
+        meeting = super(Meeting, self).create(vals)
+        meeting_id = meeting.id
+        for survey in surveys:
+            if survey[2] == False:
+                continue
+            survey[2]['meeting_id'] = meeting_id
+            vals = survey[2]
+            res = self.env['survey.survey'].create(vals)
+        return meeting
+
+    @api.multi
+    def write(self, vals):
+        if self.env.user.id !=1 and self.exectime == "past":
+            changing_the_past = True
+            if changing_the_past:
+                raise ValidationError("Sorry you are not authorized to change the past event, you can mark attendance and attach documents only.")
+        elif self.env.user.id !=1 and self.exectime == "completed":
+            changing_the_past = False
+            for ke in vals:
+                if ke != 'doc_ids' and ke != 'document_ids' and ke != 'attendee_ids':
+                    changing_the_past = True
+                    break
+            if changing_the_past:
+                raise ValidationError("Sorry you are not authorized to change the past event, you can mark attendance and attach documents only.")
+        if self.env.user.has_group('meeting_point.group_meeting_admin'):
+            self = self.sudo()
+        res = super(Meeting, self).write(vals)
+        return res
+
     @api.multi
     def _compute_seen_by_me(self):
         try:
@@ -264,24 +297,7 @@ class Meeting(models.Model):
                 #     event.exectime = "completed"
 
 
-    @api.multi
-    def write(self, vals):
-        if self.env.user.id !=1 and self.exectime == "past":
-            changing_the_past = True
-            if changing_the_past:
-                raise ValidationError("Sorry you are not authorized to change the past event, you can mark attendance and attach documents only.")
-        elif self.env.user.id !=1 and self.exectime == "completed":
-            changing_the_past = False
-            for ke in vals:
-                if ke != 'doc_ids' and ke != 'document_ids' and ke != 'attendee_ids':
-                    changing_the_past = True
-                    break
-            if changing_the_past:
-                raise ValidationError("Sorry you are not authorized to change the past event, you can mark attendance and attach documents only.")
-        if self.env.user.has_group('meeting_point.group_meeting_admin'):
-            self = self.sudo()
-        res = super(Meeting, self).write(vals)
-        return res
+
 
 
     @api.multi
