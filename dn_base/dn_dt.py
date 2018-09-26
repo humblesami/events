@@ -1,3 +1,5 @@
+import pytz
+from pytz import timezone
 from datetime import datetime
 from dateutil import parser, relativedelta
 relativedelta = relativedelta.relativedelta
@@ -16,12 +18,23 @@ def nowtostr():
     res = dtTostr(res)
     return res
 
-def today():
-    res = datetime.today().date()
-    return res
-
 def strTodt(time_string):
     res = parser.parse(time_string)
+    return res
+
+def convert_time_zone(tz, val):
+    is_str = type(val) is str
+    if is_str:
+        val = strTodt(val)
+    local_tz = timezone(tz).localize(val)
+    seconds = local_tz.tzinfo._utcoffset.seconds
+    val = addInterval(val, 's', seconds)
+    if is_str:
+        val = val.strftime('%Y-%m-%d %H:%M:%S')
+    return val
+
+def today():
+    res = datetime.today().date()
     return res
 
 def strdateTostrtime(str_date_time):
@@ -87,7 +100,7 @@ def addInterval(dt, interval_type, amt):
     if interval_type == 'min':
         res = dt + relativedelta(minutes=amt)
     if interval_type == 's':
-        res = dt + relativedelta(secods=amt)
+        res = dt + relativedelta(seconds=amt)
     if interval_type == 'ms':
         res = dt + relativedelta(milliseconds=amt)
     return res

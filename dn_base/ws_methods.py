@@ -3,6 +3,7 @@ import json
 import base64
 import traceback
 from odoo.http import request
+from odoo.addons.dn_base import dn_dt
 
 def http_response(er, data=False):
     try:
@@ -63,6 +64,7 @@ def objects_list_to_json_list(objects, props):
 
 def object_to_json_object(object, props):
     json_obj = {}
+    tz = request.httprequest.args.get('time_zone')
     try:
         for prop in props:
             obj = object
@@ -71,10 +73,13 @@ def object_to_json_object(object, props):
             i = 0
             for sub_prop in ar:
                 field_type = object._fields[sub_prop].type
+                #print (object._fields[sub_prop].name)
                 if field_type == 'binary':
                     obj = obj[sub_prop]
                     if obj:
                         obj = obj.decode('utf-8')
+                elif tz and field_type == 'datetime':
+                    obj = dn_dt.convert_time_zone(tz, obj[sub_prop])
                 else:
                     obj = obj[sub_prop]
                 if not obj:
@@ -87,7 +92,7 @@ def object_to_json_object(object, props):
             else:
                 json_obj[str] = obj
     except:
-        a = 1
+        raise
     return json_obj
 
 def youtube_url(url):
