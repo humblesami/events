@@ -1,9 +1,7 @@
 import sys
 from odoo import http
-from datetime import datetime
-from odoo.addons.dn_base import ws_methods
 from odoo.addons.dn_base import dn_dt
-
+from odoo.addons.dn_base import ws_methods
 
 class meeting(http.Controller):
 
@@ -73,6 +71,7 @@ class meeting(http.Controller):
             topics_arr = []
             for topic in meeting.topic_ids:
                 obj = ws_methods.object_to_json_object(topic, ['lead', 'name', 'duration', 'content', 'id'])
+                obj['duration'] = dn_dt.hours_to_hoursNminutes(obj['duration'])
                 obj["docs"] = ws_methods.objects_list_to_json_list(topic.document_ids, ['id', 'name'])
                 topics_arr.append(obj)
             meeting_object['topics'] = topics_arr
@@ -179,13 +178,10 @@ class meeting(http.Controller):
                 offset = values['paging']['offset']
                 limit = values['paging']['limit']
 
-            partner = req_env.user.partner_id
-            date_value = datetime.now()
-            date_value = date_value.strftime('%Y-%m-%d %H:%M:%S')
+            date_value = dn_dt.nowtostr()
             if 'data' in values:
                 values = values['data']
-            meetings = []
-            total_cnt = 0
+
             if not 'meeting_type' in values:
                 values['meeting_type'] = 'upcoming'
             if values['meeting_type'] == 'completed':

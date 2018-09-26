@@ -158,3 +158,21 @@ def timespan_minutes(later_dt, old_dt):
     seconds = diff.seconds
     minutes = float(seconds)/60
     return minutes
+
+def hours_to_hoursNminutes(hours):
+    res = int(hours)
+    minutes = hours % res
+    minutes = minutes * 60
+    minutes = round(minutes)
+    if res < 10:
+        res = str(res)
+        res = "0"+res
+    else:
+        res = str(res)
+    if minutes < 10:
+        minutes = str(minutes)
+        minutes = "0"+minutes
+    else:
+        minutes = str(minutes)
+    res = res +":"+ minutes
+    return res
