@@ -70,7 +70,11 @@ class meeting(http.Controller):
             topics_arr = []
             for topic in meeting.topic_ids:
                 obj = ws_methods.object_to_json_object(topic, ['lead', 'name', 'duration', 'content', 'id'])
-                obj['duration'] = dn_dt.hours_to_hoursNminutes(obj['duration'])
+                try:
+                    duration = float(obj['duration'])
+                    obj['duration'] = dn_dt.hours_to_hoursNminutes(duration)
+                except:
+                    a = 1
                 obj["docs"] = ws_methods.objects_list_to_json_list(topic.document_ids, ['id', 'name'])
                 topics_arr.append(obj)
             meeting_object['topics'] = topics_arr

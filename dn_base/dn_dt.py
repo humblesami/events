@@ -162,6 +162,11 @@ def timespan_minutes(later_dt, old_dt):
     return minutes
 
 def hours_to_hoursNminutes(hours):
+    try:
+        hours = float(hours)
+    except:
+        a = 1
+        return ''
     if not hours:
         return ''
     res = int(hours)
