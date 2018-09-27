@@ -95,11 +95,11 @@ class annotation(http.Controller):
             doc = req_env['annotation.document'].search([('name', '=', doc_id),('user_id','=',uid)])
             if doc:
                 reset = kw.get('reset')
+                if reset and doc.version == 0:
+                    return ws_methods.http_response('', 'done')
                 if not reset:
                     document_version = kw.get('version') or 0
                     document_version = int(document_version)
-                    if document_version == 0:
-                        document_version = 1
                     if doc.version >= document_version:
                         return ws_methods.http_response('', doc.version)
                 res = req_env['annotation.rectangle'].search([('document_id', '=', doc.id)]).unlink()
