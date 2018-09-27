@@ -67,6 +67,11 @@ class meeting(http.Controller):
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'company']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
+            try:
+                duration = float(meeting_object['duration'])
+                meeting_object['duration'] = dn_dt.hours_to_hoursNminutes(duration)
+            except:
+                a = 1
             topics_arr = []
             for topic in meeting.topic_ids:
                 obj = ws_methods.object_to_json_object(topic, ['lead', 'name', 'duration', 'content', 'id'])

@@ -1,4 +1,5 @@
 from odoo import http
+from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 
 class topic(http.Controller):
@@ -25,6 +26,11 @@ class topic(http.Controller):
                 values = values['data']
             topic = req_env['meeting_point.topic'].sudo().search([('id', '=', int(values["id"]))])
             obj = ws_methods.object_to_json_object(topic, ['lead', 'name', 'duration', 'content', 'id', 'meeting_id.id', 'meeting_id.name'])
+            try:
+                duration = float(obj['duration'])
+                obj['duration'] = dn_dt.hours_to_hoursNminutes(duration)
+            except:
+                a = 1
             obj["docs"] = ws_methods.objects_list_to_json_list(topic.document_ids, ['id', 'name'])
             return ws_methods.http_response('', obj)
         except:
