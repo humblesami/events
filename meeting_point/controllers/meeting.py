@@ -63,7 +63,7 @@ class meeting(http.Controller):
             filters = [('id', '=', id)]
 
             meeting = req_env['calendar.event'].search(filters, limit=1, order='id')
-            props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_numbe', 'pin', 'exectime',
+            props = ['id', 'start', 'stop', 'duration', 'zip', 'video_call_link', 'conference_bridge_numbe', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'company']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
