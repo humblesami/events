@@ -25,6 +25,9 @@ class website_survey(WebsiteSurvey):
                 values = values['data']
             survey_id = int(values['survey_id'])
             survey = request.env['survey.survey'].search([('id', '=', survey_id)])
+            user_status = survey.user_status(uid)
+            if user_status != "pending":
+                return ws_methods.http_response(user_status)
             page_id = survey.page_ids[0].id
             questions = request.env['survey.question'].search([('survey_id', '=', survey_id)])
             props = ['id','question','type']
@@ -52,7 +55,7 @@ class website_survey(WebsiteSurvey):
                 ws_methods.http_response('No answers provided')
             kw['questions'] = json.loads(questions)
         except:
-            ws_methods.handle()
+            return ws_methods.handle()
         return self.submit_dn_survey(kw)
 
     @http.route('/survey-user-response-json', type="json", csrf=False, auth='none', cors='*')
@@ -69,6 +72,9 @@ class website_survey(WebsiteSurvey):
                 values = values['data']
             survey_id = values['survey_id']
             survey = request.env['survey.survey'].search([('id', '=', survey_id)])
+            user_status = survey.user_status(uid)
+            if user_status != "pending":
+                return ws_methods.http_response(user_status)
             page_id = survey.page_ids[0].id
             user_input = request.env['survey.user_input'].create({'survey_id': survey_id, 'test_entry': True})
             post = {'button_submit': 'finish', 'token': user_input.token, 'page_id': page_id}
@@ -107,4 +113,4 @@ class website_survey(WebsiteSurvey):
 
             return ws_methods.http_response('', 'success')
         except:
-            ws_methods.handle()
+            return ws_methods.handle()

@@ -20,6 +20,7 @@ class Survey(models.Model):
                                    string='Respondents',
                                    domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
+    title = fields.Char()
 
     @api.multi
     def _compute_audience(self):
@@ -87,6 +88,28 @@ class Survey(models.Model):
         except:
             a = 1
 
+    def user_status(self, uid):
+        partner = self.env['res.users'].search([('id','=',uid)]).partner_id
+        if not self.question_ids:
+            return "done"
+
+        if self.meeting_id:
+            if not self.meeting_id.publish:
+                return 'not published'
+            if partner not in self.meeting_id.partner_ids:
+                return 'not invited'
+            elif partner not in self.partner_ids:
+                return 'not invited'
+        elif partner not in self.partner_ids:
+            return 'not invited'
+
+        for q in self.question_ids:
+            for i in q.user_input_line_ids:
+                if i.create_uid == request.env.user:
+                    return "done"
+                    break
+        return "pending"
+
     def _compute_status(self):
         partner = self.env.user.partner_id
         for survey in self:
@@ -117,7 +140,16 @@ class Survey(models.Model):
 
     @api.model
     def create(self, values):
-        values['name'] = values['title']
+        questions = values['question_ids']
+        if len(questions) == 0:
+            raise ValidationError("Survey can not not exist without questions")
+        title = values.get('title')
+        if title:
+            values['name'] = title
+        else:
+            name = values.get('name')
+            if name:
+                values['title'] = name
         res = super(Survey, self).create(values)
         page_env = self.env['survey.page']
         vals = {'title': res.title, 'survey_id': res.id, 'question_ids': res.question_ids, 'sequence': 1}
@@ -129,7 +161,16 @@ class Survey(models.Model):
     #
     @api.multi
     def write(self, values):
-        values['name'] = values['title']
+        questions = values['question_ids']
+        if len(questions) == 0:
+            raise ValidationError("Survey can not not exist without questions")
+        title = values.get('title')
+        if title:
+            values['name'] = title
+        else:
+            name = values.get('name')
+            if name:
+                values['title'] = name
         res = super(Survey, self).write(values)
         if not res:
             return False
