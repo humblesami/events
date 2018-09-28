@@ -28,8 +28,18 @@ class website_survey(WebsiteSurvey):
             user_status = survey.user_status(uid)
             if user_status != "pending":
                 return ws_methods.http_response(user_status)
-            page_id = survey.page_ids[0].id
+            #page_id = survey.page_ids[0].id
+
             questions = request.env['survey.question'].search([('survey_id', '=', survey_id)])
+            print(str(survey_id) + "-" + str(uid) +"-"+ str(len(questions)) + " get quest")
+            if not questions:
+                title = survey.title
+                if not title:
+                    title = survey.name
+                if not title:
+                    title = 'unnamed'
+                return ws_methods.http_response("Survey "+title+"-"+survey_id+" has no questions")
+
             props = ['id','question','type']
             res_questions = ws_methods.objects_list_to_json_list(questions, props)
             props = ['id', 'meeting_id.id', 'meeting_id.name', 'title']
@@ -45,7 +55,7 @@ class website_survey(WebsiteSurvey):
             survey_object['questions'] = res_questions
             return ws_methods.http_response('', survey_object)
         except:
-            ws_methods.handle()
+            return ws_methods.handle()
 
     @http.route('/survey-user-response', type="http", csrf=False, auth='none', cors='*')
     def submit_dn_survey_http(self, **kw):
@@ -70,21 +80,32 @@ class website_survey(WebsiteSurvey):
                 return ws_methods.not_logged_in()
             if 'data' in values:
                 values = values['data']
-            survey_id = values['survey_id']
+            survey_id = int(values['survey_id'])
             survey = request.env['survey.survey'].search([('id', '=', survey_id)])
+            questions = request.env['survey.question'].search([('survey_id', '=', survey_id)])
+            print(str(survey_id) + "-" + str(uid) + "-" + str(len(questions)) + " submit quest")
+            if not questions:
+                title = survey.title
+                if not title:
+                    title = survey.name
+                if not title:
+                    title = 'unnamed'
+                return ws_methods.http_response("Survey "+title+"-"+survey_id+" has no questions")
+            user_response = values['questions']
+            if not user_response:
+                return ws_methods.http_response("No answers provided to submit")
             user_status = survey.user_status(uid)
             if user_status != "pending":
                 return ws_methods.http_response(user_status)
             page_id = survey.page_ids[0].id
             user_input = request.env['survey.user_input'].create({'survey_id': survey_id, 'test_entry': True})
             post = {'button_submit': 'finish', 'token': user_input.token, 'page_id': page_id}
-            questions = values['questions']
-            for q in questions:
+
+
+            for q in user_response:
                 q_key = str(survey_id) + '_' + str(page_id) + '_' + str(q['id'])
                 if 'answer' in q:
                     post[q_key] = str(q['answer'])
-
-            questions = request.env['survey.question'].search([('survey_id', '=', survey_id)])
             # Answer validation
             errors = {}
             for question in questions:

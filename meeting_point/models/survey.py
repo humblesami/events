@@ -98,8 +98,6 @@ class Survey(models.Model):
                 return 'not published'
             if partner not in self.meeting_id.partner_ids:
                 return 'not invited'
-            elif partner not in self.partner_ids:
-                return 'not invited'
         elif partner not in self.partner_ids:
             return 'not invited'
 

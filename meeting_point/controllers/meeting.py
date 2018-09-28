@@ -93,7 +93,8 @@ class meeting(http.Controller):
                     docs_to_sign.append(doc_to_add)
 
             meeting_object['sign_docs'] = docs_to_sign
-            meeting_object['surveys'] = ws_methods.objects_list_to_json_list(meeting.survey_ids, ['id', 'title'])
+            surveys = meeting.survey_ids.filtered(lambda r: r.my_status == 'pending')
+            meeting_object['surveys'] = ws_methods.objects_list_to_json_list(surveys, ['id', 'title'])
             props = ['attendance','state','email','response_by', 'photo']
             meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
 
