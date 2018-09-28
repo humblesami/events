@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from odoo import models, api, fields
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.dn_base.models.statics import scan_virus
 from odoo.addons.dn_base.statics import raise_dn_model_error
 
 from odoo.addons.mail.models.mail_message import Message
 
 class MyMail(Message):
+
     @api.multi
     def unlink(self):
         if self.env.uid != 1:
@@ -14,10 +15,13 @@ class MyMail(Message):
                 if rec.env.uid == rec.create_uid.id:
                     res = super(Message, rec).sudo().unlink()
                 else:
-                    return "Can delete own comments only"
+                    raise ValidationError("Can delete own comments only")
+            if not res:
+                raise ValidationError("Comments not found")
+            return res
         else:
             res = super(Message, self).unlink()
-        return res
+            return res
 
 class Empty(models.Model):
     _name = "dn_base.empty"

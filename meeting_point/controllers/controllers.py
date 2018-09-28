@@ -47,7 +47,7 @@ class dn_auth(AuthSession):
 
 class meeting(http.Controller):
 
-    @http.route('/meeting/decline/<nam>/<db>/<token>/<assistant>', type='http', auth="none")
+    @http.route('/meeting/decline/<nam>/<db>/<token>/<assistant>', type='http', auth='public')
     def decline_meeting(self, nam, db, token,assistant):
         res = '<div class="o_logo" style="text-align:center">';
         res += '<img class="img img-responsive center-block" src="/web/binary/company_logo">'
@@ -79,7 +79,7 @@ class meeting(http.Controller):
         res += '<span></h2>'
         return res
 
-    @http.route('/meeting/accept/<nam>/<db>/<token>/<assistant>', type='http', auth="none")
+    @http.route('/meeting/accept/<nam>/<db>/<token>/<assistant>', type='http', auth='public')
     def accept_meeting(self, nam, token, db,assistant):
         res = '<div class="o_logo" style="text-align:center">';
 
@@ -176,7 +176,7 @@ class meeting(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/meeting_point/get_pdf',auth='none', csrf=False, cors='*')
+    @http.route('/meeting_point/get_pdf',auth='public', csrf=False, cors='*')
     def get_pdf(self, **kw):
         doc_id = kw['document_id']
         doc=http.request.env['meeting_point.document'].sudo().search([('id','=',doc_id)])
@@ -323,7 +323,7 @@ class meeting(http.Controller):
         results = json.dumps(outputdata)
         return results
 
-    @http.route('/meeting_point/getfile/<string:modelname>/<string:fieldname>/<string:id>', auth='none')
+    @http.route('/meeting_point/getfile/<string:modelname>/<string:fieldname>/<string:id>', auth='public')
     def readfile(self, modelname, fieldname, id):
         environment = http.request.env
         records = environment[modelname].search([('id', '=', id)])
@@ -333,7 +333,7 @@ class meeting(http.Controller):
         return result
 
 
-    @http.route('/aameeting/delpartners/', auth='none')
+    @http.route('/aameeting/delpartners/', auth='public')
     def delpartners(self):
         try:
             errorMessage = "Done"
@@ -397,7 +397,7 @@ class meeting(http.Controller):
 
     # Public signature
     @http.route(['/meeting_point/sign/<string:token>'],
-                type='http', auth='none', website=True)
+                type='http', auth='public', website=True)
     def start_sign(self,token=None, **post):
         if not token:
             return
@@ -442,7 +442,7 @@ class meeting(http.Controller):
             return ws_methods.handle()
 
 
-    @http.route('/meetingData', type="http", auth='none', csrf=False, cors='*')
+    @http.route('/meetingData', type="http", auth='public', csrf=False, cors='*')
     def meetingUserData(self,**kw):
         try:
             uid = 1

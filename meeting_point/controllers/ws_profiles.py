@@ -1,3 +1,5 @@
+import base64
+
 import requests
 from odoo import http
 from dateutil import parser
@@ -96,7 +98,7 @@ class ws_profile(http.Controller):
             if not profile:
                 return ws_methods.http_response('User not in meeting point')
 
-            props = ['id', 'name', 'email', 'nick_name', 'website', 'companies', 'bio', 'mobile_phone', 'work_phone',
+            props = ['id', 'name', 'image_small', 'resume', 'email', 'nick_name', 'website', 'companies', 'bio', 'mobile_phone', 'work_phone',
                      'fax', 'job_title', 'department', 'board_joing_date', 'admin_first_name', 'admin_last_name',
                      'admin_image', 'admin_nick_name', 'admin_email', 'admin_fax', 'admin_cell_phone',
                      'admin_work_phone', 'mail_to_assistant']
@@ -243,15 +245,42 @@ class ws_profile(http.Controller):
 
             if 'data' in values:
                 values = values['data']
+
+            # for key in values:
+            #     if key not in ('token','db','id', 'email', 'board_joing_date') and key in user and user[key] != values[key]:
+            #         if not user[key] and values[key] == '':
+            #             donothing = 1
+            #         else:
+            #             val = values[key]
+            #             modified_values[key] = val
+
             modified_values = {}
-            for key in values:
-                if key not in ('token','db','id', 'email', 'board_joing_date') and key in user and user[key] != values[key]:
-                    if not user[key] and values[key] == '':
-                        donothing = 1
-                    else:
-                        val = values[key]
-                        modified_values[key] = val
+            for field in user._fields:
+                val = values.get(field)
+                if val:
+                    modified_values[field] = val
+
+            image_small = values.get('image_small')
+            if image_small:
+                image_small = image_small.replace('data:image/png;base64,','')
+                modified_values['image_small'] = image_small
+            admin_image = values.get('admin_image')
+            if admin_image:
+                admin_image = admin_image.replace('data:image/png;base64,', '')
+                modified_values['admin_image'] = admin_image
             user.write(modified_values)
             return ws_methods.http_response('', 'Success')
         except:
             return ws_methods.handle()
+
+    def decode_base64(self, data):
+        """Decode base64, padding being optional.
+
+        :param data: Base64 data as an ASCII byte string
+        :returns: The decoded byte string.
+
+        """
+        missing_padding = len(data) % 4
+        if missing_padding != 0:
+            data += b'=' * (4 - missing_padding)
+        return base64.decodestring(data)

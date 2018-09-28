@@ -78,7 +78,7 @@ class Controller(http.Controller):
             else:
                 return ws_methods.http_response(res)
         except:
-            ws_methods.handle()
+            return ws_methods.handle()
 
 
     @http.route('/dn_base/update_seen_by', csrf=False)
