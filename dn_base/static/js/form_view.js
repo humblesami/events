@@ -17,7 +17,7 @@ $(function(){
 });
 
 
-var dn_masking_values = {'conference':'999-999-9999','zip':'99999','pin':'9999999999'
+var dn_masking_values = {'conference':'999-999-9999','zip':'99999'
 ,'phone':'999-999-9999'
 ,'dn_time_picker':'99:99'}
 
