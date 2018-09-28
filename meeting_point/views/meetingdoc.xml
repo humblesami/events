@@ -45,7 +45,7 @@
                     <h4>Attachment</h4>
                     <field name="attachment" filename="filename" class="mp_meeting_docs_upload e_sign_docs oe_edit oe_edit_only"/>
                     <button type="object" name="open_signature_form"
-                    class="fa fa-5x fa-file-text-o"/>
+                            class="fa fa-5x fa-file-text-o"/>
                     <h4 groups="meeting_point.group_meeting_admin">Signatures(s)</h4>
                     <field name="user_ids" groups="meeting_point.group_meeting_admin" string="Signature(s) " widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select signaturee..." class="oe_inline"/>
                     <field name="signature_ids" groups="meeting_point.group_meeting_admin" string=" " mode="kanban" widget='one2many'>
@@ -64,8 +64,8 @@
                                                 <img style="width:100%" t-att-src="kanban_image('e_sign.signature', 'draw_signature', record.id.value)"/>
                                             </t>
                                             <t t-if="!record.draw_signature.raw_value">
-                                                 <strong style="color:red">Pending...</strong>
-                                             </t>
+                                                <strong style="color:red">Pending...</strong>
+                                            </t>
                                         </div>
                                         <div class="col-sm-8">
                                             <strong class="oe_partner_heading">
@@ -120,8 +120,8 @@
                     <field name="mp_signature_status" />
                     <field name="pending_signatures" type="string"/>
                     <field name="meeting_id"/>
-                     <button type="object" name="open_signature_form"
-                             class = "fa fa-2x" icon = "fa-file-text-o"/>
+                    <button type="object" name="open_signature_form"
+                            class = "fa fa-2x" icon = "fa-file-text-o"/>
                 </tree>
             </field>
         </record>
@@ -156,11 +156,11 @@
                 </xpath>
                 <xpath expr="//div[@name='open_sign_doc']" position="replace">
                     <button type="object" name="open_signature_form"
-                                        class="fa fa-5x fa-file-text-o"/>
+                            class="fa fa-5x fa-file-text-o"/>
                 </xpath>
                 <xpath expr="//div[@name='open_sign_doc1']" position="replace">
                     <button type="object" name="open_signature_form"
-                                        class="fa fa-5x fa-file-text-o"/>
+                            class="fa fa-5x fa-file-text-o"/>
                 </xpath>
 
                 <xpath expr="//h2[@name='name']" position="before">
@@ -184,36 +184,36 @@
                         </div>
                     </div>
                 </xpath>
-                 <xpath expr="//field[@name='name']" position="after">
+                <xpath expr="//field[@name='name']" position="after">
                     <br/>
-                      <div class="font_hide">
+                    <div class="font_hide">
                         <p style="font-size:14px;"><span>Meeting : </span><field name="meeting_id"/></p>
-                      </div>
+                    </div>
                 </xpath>
             </field>
 
             <!--<field name="arch" type="xml">-->
-               <!--<kanban class="documents">-->
-                    <!--<templates>-->
-                        <!--<t t-name="kanban-box">-->
-                            <!--<div t-attf-class="oe_kanban_card">-->
-                                <!--<div class="kanban_del">-->
-                                    <!--<a type="delete"-->
-                                       <!--groups="meeting_point.group_meeting_admin">Delete</a>-->
-                                <!--</div>-->
-                                <!--<button type="object" name="open_signature_form"-->
-                                        <!--class="fa fa-5x fa-file-text-o"/>-->
-                                <!--<div t-attf-class="oe_kanban_content">-->
-                                    <!--&lt;!&ndash; title &ndash;&gt;-->
-                                    <!--<h2>-->
-                                        <!--<field name="name"/>-->
-                                    <!--</h2>-->
-                                    <!---->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</t>-->
-                    <!--</templates>-->
-                <!--</kanban>-->
+            <!--<kanban class="documents">-->
+            <!--<templates>-->
+            <!--<t t-name="kanban-box">-->
+            <!--<div t-attf-class="oe_kanban_card">-->
+            <!--<div class="kanban_del">-->
+            <!--<a type="delete"-->
+            <!--groups="meeting_point.group_meeting_admin">Delete</a>-->
+            <!--</div>-->
+            <!--<button type="object" name="open_signature_form"-->
+            <!--class="fa fa-5x fa-file-text-o"/>-->
+            <!--<div t-attf-class="oe_kanban_content">-->
+            <!--&lt;!&ndash; title &ndash;&gt;-->
+            <!--<h2>-->
+            <!--<field name="name"/>-->
+            <!--</h2>-->
+            <!---->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</t>-->
+            <!--</templates>-->
+            <!--</kanban>-->
             <!--</field>-->
 
         </record>
@@ -225,7 +225,7 @@
                     <div class="container">
 
                         <h1 style="text-align:center" t-field='document.name' />
-                           <div id="start_sign" style="min-width:150px;margin:5px"  class="btn btn-primary  strt_sign">
+                        <div id="start_sign" style="min-width:150px;margin:5px"  class="btn btn-primary  strt_sign">
                             Sign
                         </div>
                         Signature Status: <span class="mp_signature_status" t-raw="status"/>
@@ -233,103 +233,110 @@
 
 
                         <form class="o_form_view">
-                               <style>
+                            <script>
+                                $(function(){
+                                if($('.mp_signature_status').html()=="Completed"){
+                                $('#start_sign').hide();
+                                }
+                                });
+                            </script>
+                            <style>
 
-                        .top_btns {
-                        background: rgb(50, 54, 57);
+                                .top_btns {
+                                background: rgb(50, 54, 57);
 
-                        }
-                        .position_btns{
-                        z-index:999
-                        }
+                                }
+                                .position_btns{
+                                z-index:999
+                                }
 
-                        .pg_no{
-                        color: white;
-                        }
+                                .pg_no{
+                                color: white;
+                                }
 
-                        .doc_btn {
-                        background-color: gray;
-                        color: white;
-                        margin: 2px;
-                        }
+                                .doc_btn {
+                                background-color: gray;
+                                color: white;
+                                margin: 2px;
+                                }
 
 
-                        .edit_sign:hover,.del_sign:hover {
-                        background-color: white;
-                        color:red!important
+                                .edit_sign:hover,.del_sign:hover {
+                                background-color: white;
+                                color:red!important
 
-                        }
+                                }
 
-                        .PdfTopBtnsWrapper {
-                        padding: 4px;
-                        }
+                                .PdfTopBtnsWrapper {
+                                padding: 4px;
+                                }
 
-                        #scaleSelectContainer select#scaleSelect {
-                        background: white;
-                        margin-left: 3px;
-                        border: navajowhite;
-                        padding: 5px 10px;
-                        font-size: 12px;
-                        border-radius: 3px;
-                        height: 29px;
-                        }
+                                #scaleSelectContainer select#scaleSelect {
+                                background: white;
+                                margin-left: 3px;
+                                border: navajowhite;
+                                padding: 5px 10px;
+                                font-size: 12px;
+                                border-radius: 3px;
+                                height: 29px;
+                                }
 
-                        .PdfButtonWrapper {
-                        background: #ffffff;
-                        padding: 5px;
-                        }
-                        .PdfButtonWrapper .btn {
-                        min-width: 130px;
-                        margin:3px;
-                        }
-                        #the-canvas{
-                        border-left:1px solid #000000;
-                        border-top:1px solid #cacaca;
-                        border-right:1px solid #000000;
-                        border-bottom:1px solid #000000;
-                        }
+                                .PdfButtonWrapper {
+                                background: #ffffff;
+                                padding: 5px;
+                                }
+                                .PdfButtonWrapper .btn {
+                                min-width: 130px;
+                                margin:3px;
+                                }
+                                #the-canvas{
+                                border-left:1px solid #000000;
+                                border-top:1px solid #cacaca;
+                                border-right:1px solid #000000;
+                                border-bottom:1px solid #000000;
+                                }
 
-                    </style>
+                            </style>
 
 
                             <div t-field='document.id' class="dn_doc_id" style="display:none"/>
                             <div t-field='document.path' class="dn_documents_doc_path" style="display:none"/>
                             <input type="hidden" class="sign_token" t-att-value="token" />
 
-                              <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);">
-                        <div class="top_btns">
-                            <div class="PdfTopBtnsWrapper">
-                                <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev"/>
-                                <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next"/>
-                                <span class="pg_no"> <span style="font-weight: bold;" id="page_num"/> / <span id="page_count"/></span>
-                                <div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out"/>
-                                <div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In"/>
-                                <span style="display: inline-block;" id="scaleSelectContainer">
-                                    <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
-                                        <option title="" value="0.5">50%</option>
-                                        <option title="" value="0.75">75%</option>
-                                        <option title="" value="1">100%</option>
-                                        <option title="" value="1.25">125%</option>
-                                        <option title="" value="1.5">150%</option>
-                                        <option title="" value="2">200%</option>
-                                        <option title="" value="3">300%</option>
-                                        <option title="" value="4">400%</option>
-                                    </select>
-                                </span>
+                            <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);">
+                                <div class="top_btns">
+                                    <div class="PdfTopBtnsWrapper">
+                                        <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev"/>
+                                        <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next"/>
+                                        <span class="pg_no"> <span style="font-weight: bold;" id="page_num"/> / <span id="page_count"/></span>
+                                        <div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out"/>
+                                        <div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In"/>
+                                        <span style="display: inline-block;" id="scaleSelectContainer">
+                                            <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
+                                                <option title="" value="0.5">50%</option>
+                                                <option title="" value="0.75">75%</option>
+                                                <option title="" value="1">100%</option>
+                                                <option title="" value="1.25">125%</option>
+                                                <option title="" value="1.5">150%</option>
+                                                <option title="" value="2">200%</option>
+                                                <option title="" value="3">300%</option>
+                                                <option title="" value="4">400%</option>
+                                            </select>
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <div id="page_container1" style="max-height: calc(100vh - 200px);overflow-y:auto;overflow-x:auto;position:relative;">
+
+                                    <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
+                                        <canvas id="the-canvas"/>
+                                    </div>
+                                </div>
                             </div>
 
-                        </div>
 
-                        <div id="page_container1" style="max-height: calc(100vh - 200px);overflow-y:auto;overflow-x:auto;position:relative;">
-
-                            <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
-                                <canvas id="the-canvas"/>
-                            </div>
-                        </div>
-                    </div>
-
-
-<script src="/meeting_point/static/js/jquery.ui.touch-punch.min.js"/>
+                            <script src="/meeting_point/static/js/jquery.ui.touch-punch.min.js"/>
                             <script src="/e_sign/static/js/pdf.worker.js"/>
                             <script src="/e_sign/static/js/pdf.js"/>
                             <script src="/meeting_point/static/js/doc.js"/>
