@@ -44,11 +44,18 @@ class website_survey(WebsiteSurvey):
         except:
             ws_methods.handle()
 
-    @http.route('/survey/submit', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/survey-user-response', type="http", csrf=False, auth='none', cors='*')
     def submit_dn_survey_http(self, **kw):
+        try:
+            questions = kw.get('questions')
+            if not questions:
+                ws_methods.http_response('No answers provided')
+            kw['questions'] = json.loads(questions)
+        except:
+            ws_methods.handle()
         return self.submit_dn_survey(kw)
 
-    @http.route('/survey/submit-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/survey-user-response-json', type="json", csrf=False, auth='none', cors='*')
     def submit_dn_survey_json(self, **kw):
         kw = request.jsonrequest
         return self.submit_dn_survey(kw)
