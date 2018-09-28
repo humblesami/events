@@ -107,6 +107,12 @@ class ws_profile(http.Controller):
             profile_json = ws_methods.object_to_json_object(profile, props)
             profile_json['committees'] = committees
 
+            dnspuser = req_env['dnspusers'].search([('user_id','=', uid)])
+            sign = dnspuser.signature
+            if sign:
+                profile_json['signature'] = sign.decode('utf-8')
+
+
             gmt = 0
             if 'gmt' in values:
                 gmt = values['gmt']
