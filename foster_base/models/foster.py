@@ -332,6 +332,8 @@ class Applicant(models.Model):
     signature_doc = fields.One2many('foster.sign_docs', 'foster_id', string= "Document(s) To Sign")
     seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
     token = fields.Char(string="Token", readonly=True)
+    sign_date = fields.Char()
+    location = fields.Char()
 
     @api.model
     def create(self, vals):

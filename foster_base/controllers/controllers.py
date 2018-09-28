@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import datetime
 import os
 import json
 import base64
@@ -18,10 +18,6 @@ from PIL import Image, ImageFont, ImageDraw
 
 class Foster(http.Controller):
 
-    @http.route('/foster/sign', auth='public', csrf=False, cors='*')
-    def save_signature(self, **kw):
-        if 'data' in [kw]:
-            a = 1
     @http.route(['/foster/application/<string:dbname>/<int:menu_id>/<int:action_id>/<int:id>/<string:token>/<string:foster_user_id>'],
                 type="http", auth="public", website=True, csrf=True)
     def fill_application(self,token=False,foster_user_id=False,**kwargs):
@@ -47,10 +43,14 @@ class Foster(http.Controller):
 
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
-        foster = request.env['foster.applicants'].sudo().search([('id', '=', values['fosters'])])
+        date = datetime.datetime.now()
+        date = date.strftime("%B,%d,%Y")
+        http_req = request.httprequest
+        ip = http_req.environ.get('HTTP_X_FORWARDED_FOR') or http_req.environ.get('REMOTE_ADDR')
 
-        request.env['foster.applicants'].sudo().search([('id','=',foster.id)]).write({'applicant_sign':values['image'],'last_name': values['last_name'],
-        'first_name':values['first_name'],'middle_name':values['middle_name'],'other_name':values['other_name'],
+        foster = request.env['foster.applicants'].sudo().search([('id', '=', values['fosters'])])
+        request.env['foster.applicants'].sudo().search([('id','=',foster.id)]).write({'applicant_sign':values['image'],'sign_date':date,'last_name': values['last_name'],
+        'location':ip,'first_name':values['first_name'],'middle_name':values['middle_name'],'other_name':values['other_name'],
         'sex':values['sex'],'state':values['states'],'place_of_birth':values['place_of_birth'],
         'birthdate':values['birth_date'],'address':values['address'],'town':values['town'],'zip':values['zip'],
         'home_phone':values['home_phone'],'work_phone':values['work_phone'],'cell_phone':values['cell_phone'],
@@ -64,22 +64,9 @@ class Foster(http.Controller):
         'employer_name':values['employer_name'],'employer_phone':values['employer_phone'],'house':values['house'],'current_address_period':values['current_address_period'],
         'name_of_contact':values['name_of_contact'],'phone_of_contact':values['phone_of_contact'],'previous_address':values['previous_address'],'file':values['file']})
 
-        # if 'file' in values:
-        #
-        #     for c_file in request.httprequest.files.getlist('file'):
-        #         data = c_file.read()
-        #
-        #         if c_file.filename:
-        #             datas=base64.b64encode(data)
-        #             request.env['ir.attachment'].sudo().create({
-        #                 'name': c_file.filename,
-        #                 'datas': base64.encodebytes(data),
-        #                 'datas_fname': c_file.filename,
-        #                 'res_model': 'foster.applicants',
-        #                 'res_id': foster.id
-        #             })
 
-        return werkzeug.utils.redirect("/partner/application?foster=%s"%(foster.id))
+
+        return werkzeug.utils.redirect("/partner/application?token=%s/foster=%s"%(foster.token,foster.id))
 
     @http.route(['/partner/application'],
                 type="http", auth="public", website=True, csrf=True)
@@ -94,20 +81,21 @@ class Foster(http.Controller):
             values[field_name] = field_value
 
         foster = request.env['foster.applicants'].sudo().search([('id','=',values['fosters'])])
-
-
-        request.env['foster.partner'].sudo().create({'spouse_last_name': values['spouse_last_name'],
-        'spouse_first_name': values['spouse_first_name'],'spouse_middle_name':values['spouse_middle_name'],
-        'spouse_other_name':values['spouse_other_name'],'age':values['age'],'co_home_phone':values['co_home_phone'],
-        'co_cell_phone':values['co_cell_phone'],'co_work_phone':values['co_work_phone'],
-        'security_number':values['security_number'],'co_applicant_email':values['co_applicant_email'],
-        'sex':values['sex'],'birthdate':values['birthdate'],'place_of_birth':values['place_of_birth'],
-         'partner_id':foster.id
-                                                     })
-        if values.get("add_more") == '':
-            return werkzeug.utils.redirect("/partner/application?foster=%s"%(foster.id))
+        if foster.token == values['token']:
+            request.env['foster.partner'].sudo().create({'spouse_last_name': values['spouse_last_name'],
+            'spouse_first_name': values['spouse_first_name'],'spouse_middle_name':values['spouse_middle_name'],
+            'spouse_other_name':values['spouse_other_name'],'age':values['age'],'co_home_phone':values['co_home_phone'],
+            'co_cell_phone':values['co_cell_phone'],'co_work_phone':values['co_work_phone'],
+            'security_number':values['security_number'],'co_applicant_email':values['co_applicant_email'],
+            'sex':values['sex'],'birthdate':values['birthdate'],'place_of_birth':values['place_of_birth'],
+             'partner_id':foster.id
+                                                         })
+            if values.get("add_more") == '':
+                return werkzeug.utils.redirect("/partner/application?token=%s/foster=%s"%(foster.token,foster.id))
+            else:
+                return werkzeug.utils.redirect("/family/members?token=%s/foster=%s"%(foster.token,foster.id))
         else:
-            return werkzeug.utils.redirect("/family/members?foster=%s"%(foster.id))
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
 
     @http.route(['/family/members'],
                 type="http", auth="public", website=True, csrf=True)
@@ -121,17 +109,20 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        request.env['foster.family.members'].sudo().create({'full_name': values['full_name'],
-                                                     'sex': values['sex'],
-                                                            'birth_date': values['birth_date'],
-                                                            'security_number': values['security_number'],
-                                                            'living_at_hom': values['living_at_hom'],
-                                                            'relation_to_applicant': values['relation_to_applicant'],
-                                                            'members':foster.id})
-        if values.get("add_more") == '':
-            return werkzeug.utils.redirect("/family/members?foster=%s"%(foster.id))
+        if foster.token == values['token']:
+            request.env['foster.family.members'].sudo().create({'full_name': values['full_name'],
+                                                         'sex': values['sex'],
+                                                                'birth_date': values['birth_date'],
+                                                                'security_number': values['security_number'],
+                                                                'living_at_hom': values['living_at_hom'],
+                                                                'relation_to_applicant': values['relation_to_applicant'],
+                                                                'members':foster.id})
+            if values.get("add_more") == '':
+                return werkzeug.utils.redirect("/family/members?token=%s/foster=%s"%(foster.token,foster.id))
+            else:
+                return werkzeug.utils.redirect("/other/members?token=%s/foster=%s"%(foster.token,foster.id))
         else:
-            return werkzeug.utils.redirect("/other/members?foster=%s"%(foster.id))
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
 
 
     # foster other living members in home
@@ -147,7 +138,7 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['foster.other.members'].sudo().create({'full_name': values['full_name'],
                                                                 'sex': values['sex'],
@@ -157,9 +148,11 @@ class Foster(http.Controller):
                                                                 'nature': values['nature'],
                                                             'other_members':foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/other/members?foster=%s"%(foster.id))
+                return werkzeug.utils.redirect("/other/members?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/family/childcare?foster=%s"%(foster.id))
+                return werkzeug.utils.redirect("/family/childcare?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
 
     # Family Based Child Care
 
@@ -176,16 +169,17 @@ class Foster(http.Controller):
             values[field_name] = field_value
 
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['family.childcare'].sudo().create({'name': values['name'],
                                                            'care_agent':foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/family/childcare?foster=%s"%(foster.id))
+                return werkzeug.utils.redirect("/family/childcare?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/disable/individuals/childcare?foster=%s"%(foster.id))
+                return werkzeug.utils.redirect("/disable/individuals/childcare?token=%s/foster=%s"%(foster.token,foster.id))
 
-
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # Disabled individuals care
     @http.route(['/disable/individuals/childcare'],
                 type="http", auth="public", website=True, csrf=True)
@@ -199,17 +193,18 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['disable.childcare'].sudo().create({'name': values['name'],'care_taker':values['care_taker'],
                                                 'reason':values['reason'],'agency':values['agency'],
                                                               'childcare':foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/disable/individuals/childcare?foster=%s"%(foster.id))
+                return werkzeug.utils.redirect("/disable/individuals/childcare?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/childcare/plan?foster=%s"%(foster.id))
+                return werkzeug.utils.redirect("/childcare/plan?token=%s/foster=%s"%(foster.token,foster.id))
 
-
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # Child care plan person
 
     @http.route(['/childcare/plan'],
@@ -224,15 +219,16 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['childcare.plan.person'].sudo().create(
                 {'name': values['name'],'plan_person':foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/childcare/plan?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/childcare/plan?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/childcare/services?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/childcare/services?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # Child care plan services
     @http.route(['/childcare/services'],
                 type="http", auth="public", website=True, csrf=True)
@@ -246,15 +242,16 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['childcare.plan.services'].sudo().create(
                 {'name': values['name'],'description':values['description'],'plan_service':foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/childcare/services?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/childcare/services?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/health/history?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/health/history?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # health history
     @http.route(['/health/history'],
                 type="http", auth="public", website=True, csrf=True)
@@ -268,17 +265,18 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['health.history'].sudo().create(
                 {'member_name': values['member_name'], 'provider_name': values['provider_name'],
                  'address':values['address'],'phone':values['phone'],'treat_type':values['treat_type'],
                  'treated':foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/health/history?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/health/history?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/medical/history?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/medical/history?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # health history2
     @http.route(['/medical/history'],
                 type="http", auth="public", website=True, csrf=True)
@@ -292,17 +290,18 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['medical.problems'].sudo().create(
                 {'member_name': values['member_name'], 'provider_name': values['provider_name'],
                  'address': values['address'], 'phone': values['phone'], 'date': values['date'],
                  'current_problem':foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/medical/history?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/medical/history?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/emergency/contact?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/emergency/contact?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # emergency contact
     @http.route(['/emergency/contact'],
                 type="http", auth="public", website=True, csrf=True)
@@ -316,17 +315,18 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['foster.emergency.contact.person'].sudo().create(
                 {'name': values['name'], 'telephone': values['telephone'],
                  'hours_available': values['hours_available'],
                  'applicant':foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/emergency/contact?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/emergency/contact?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/applicant/pets?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/applicant/pets?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
 
     # pets
     @http.route(['/applicant/pets'],
@@ -341,16 +341,17 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['applicant.pets'].sudo().create(
                 {'name': values['name'], 'breed': values['breed'],
                  'pets': foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/applicant/pets?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/applicant/pets?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/applicant/drivers?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/applicant/drivers?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # drivers
     @http.route(['/applicant/drivers'],
                 type="http", auth="public", website=True, csrf=True)
@@ -364,18 +365,19 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['foster.drivers'].sudo().create(
                 {'name': values['name'], 'license_number': values['license_number'],
                  'expiration_date':values['expiration_date'],'state':values['states'],
                  'driver_info': foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/applicant/drivers?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/applicant/drivers?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/foster/history?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/foster/history?token=%s/foster=%s"%(foster.token,foster.id))
 
-
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # foster history
 
     @http.route(['/foster/history'],
@@ -390,16 +392,17 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['foster.history'].sudo().create(
                 {'name': values['name'], 'date': values['date'],
                  'adopt': foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/foster/history?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/foster/history?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/adoptive/history?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/adoptive/history?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # foster history 2
 
     @http.route(['/adoptive/history'],
@@ -414,17 +417,18 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['providing.foster'].sudo().create(
                 {'name': values['name'], 'agency': values['agency'],
                  'provide': foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/adoptive/history?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/adoptive/history?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/medical/references?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/medical/references?token=%s/foster=%s"%(foster.token,foster.id))
 
-
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # medical references
     @http.route(['/medical/references'],
                 type="http", auth="public", website=True, csrf=True)
@@ -439,17 +443,18 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['medical.references'].sudo().create(
                 {'name': values['name'], 'address': values['address'],'city':values['address'],
                  'state':values['states'],'zip':values['zip'],'phone':values['phone'],
                  'applicant_id': foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/medical/references?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/medical/references?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/employer/references?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/employer/references?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
 
     # employer references
     @http.route(['/employer/references'],
@@ -465,17 +470,18 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['employer.references'].sudo().create(
                 {'name': values['name'], 'address': values['address'], 'city': values['address'],
                  'state': values['states'], 'zip': values['zip'], 'phone': values['phone'],
                  'applicant_employer_id': foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/employer/references?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/employer/references?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/personal/references?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/personal/references?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
     # personal references
 
     @http.route(['/personal/references'],
@@ -491,7 +497,7 @@ class Foster(http.Controller):
         for field_name, field_value in kwargs.items():
             values[field_name] = field_value
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['personal.references'].sudo().create(
                 {'name': values['name'], 'address': values['address'], 'city': values['address'],
@@ -499,10 +505,11 @@ class Foster(http.Controller):
                  'relation_to':values['relation_to'],
                  'applicant_id': foster.id})
             if values.get("add_more") == '':
-                return werkzeug.utils.redirect("/personal/references?foster=%s" % (foster.id))
+                return werkzeug.utils.redirect("/personal/references?token=%s/foster=%s"%(foster.token,foster.id))
             else:
-                return werkzeug.utils.redirect("/cori/form?foster=%s" % (foster.id))
-
+                return werkzeug.utils.redirect("/cori/form?token=%s/foster=%s"%(foster.token,foster.id))
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
 
     # cori form
 
@@ -522,7 +529,7 @@ class Foster(http.Controller):
 
         foster = request.env['foster.applicants'].search([('id', '=', values['fosters'])])
 
-        if http.request.env.user.name != "Public user":
+        if foster.token == values['token']:
             # request.env['foster.applicants'].search([])
             request.env['cori.form'].sudo().create({'cori_applicant': values['cori_applicant'],
                                                          'cori_partner': values['cori_partner'],
@@ -545,6 +552,8 @@ class Foster(http.Controller):
                                                          })
 
             return werkzeug.utils.redirect("/thanks")
+        else:
+            return "<h2 style='text-align:center'>Invalid Token</h2>"
 
 
     # thanks

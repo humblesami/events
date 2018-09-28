@@ -20,6 +20,16 @@
             </field>
         </record>
 
+        <record id="foster_search" model="ir.ui.view">
+            <field name="name">foster.search</field>
+            <field name="model">foster.applicants</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="first_name"/>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="foster_management_list">
             <field name="name">foster_management list</field>
             <field name="model">foster.applicants</field>
@@ -36,6 +46,22 @@
             <field name="model">foster.applicants</field>
             <field name="arch" type="xml">
                 <form>
+<script>
+$(function(){
+
+
+  var b = $('[name="sign_date"]').html();
+  b = "Date:"+" "+ b + "\n"+"  ";
+  console.log(b);
+  var a = $('[name="location"]').html();
+  a = "      "+"   IP Address:" +" "+ a;
+    $('[name="applicant_sign"]').after(b,a);
+
+  });
+
+
+</script>
+
 
                     <notebook>
                         <page name="person" string="Preson Details">
@@ -256,6 +282,8 @@
                                 <field name="applicant_sign" widget="signature"/>
                                 <field name="partner_sign" widget="signature"/>
                             </group>
+                            <field style="display:none" name = "sign_date"/>
+                            <field name = "location"/>
                         </page>
                         <page string="CORI Form">
                             <h3>CORI</h3>
@@ -342,5 +370,6 @@
                 </form>
             </field>
         </record>
+
     </data>
 </odoo>

@@ -21,6 +21,7 @@
 "admin_dashboard","Meeting Admin Dashboard","model_meeting_point_dashboard","group_meeting_admin",1,0,0,0
 
 
+
 "staff_event","Meetings","model_calendar_event","group_meeting_staff",1,0,0,0
 "staff_folder","Folders/Resources","model_meeting_point_folder","group_meeting_staff",1,0,0,0
 "staff_files","Files/Resources","model_meeting_point_files","group_meeting_staff",1,0,0,0
@@ -36,7 +37,6 @@
 "staff_topic","Agenda Topic","model_meeting_point_topic","group_meeting_staff",1,0,0,0
 "staff_topic_doc","Agenda Topic Docs","model_meeting_point_topicdoc","group_meeting_staff",1,0,0,0
 
-
 "director_event","Meetings","model_calendar_event","group_meeting_director",1,0,0,0
 "director_folder","Folders/Resources","model_meeting_point_folder","group_meeting_director",1,0,0,0
 "director_files","Files/Resources","model_meeting_point_files","group_meeting_director",1,0,0,0
@@ -50,3 +50,13 @@
 "director_document","Meeting Document","model_meeting_point_doc","group_meeting_director",1,0,0,0
 "director_topic","Agenda Topic","model_meeting_point_topic","group_meeting_director",1,0,0,0
 "director_topic_doc","Agenda Topic Docs","model_meeting_point_topicdoc","group_meeting_director",1,0,0,0
+
+
+"employee_annotation_document","Employee Annotation Document","model_annotation_document","base.group_user",1,1,1,1
+"employee_annotation_point","Employee Annotation Point","model_annotation_point","base.group_user",1,1,1,1
+"employee_annotation_rectangle","Employee Annotation Rectangle","model_annotation_rectangle","base.group_user",1,1,1,1
+"employee_annotation_annotation","Employee Annotation ","model_annotation_annotation","base.group_user",1,1,1,1
+"employee_annotation_lines","Employee Annotation Lines ","model_annotation_drawing_lines","base.group_user",1,1,1,1
+"employee_annotation_rectangle_dimensions","Employee Annotation Rectangle Dimensions ","model_annotation_rectangle_dimensions","base.group_user",1,1,1,1
+"employee_annotation__comment_points","Employee Annotation Comment Points ","model_annotation_point_comments","base.group_user",1,1,1,1
+"employee_annotation_drawing","Director Employee Drawing ","model_annotation_drawing","base.group_user",1,1,1,1
