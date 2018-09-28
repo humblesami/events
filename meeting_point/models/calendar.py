@@ -203,16 +203,19 @@ class Meeting(models.Model):
 
     @api.model
     def create(self, vals):
-        surveys = vals['survey_ids']
-        del vals['survey_ids']
+        surveys = False
+        if vals.get('survey_ids'):
+            surveys = vals['survey_ids']
+            del vals['survey_ids']
         meeting = super(Meeting, self).create(vals)
         meeting_id = meeting.id
-        for survey in surveys:
-            if survey[2] == False:
-                continue
-            survey[2]['meeting_id'] = meeting_id
-            vals = survey[2]
-            res = self.env['survey.survey'].create(vals)
+        if surveys:
+            for survey in surveys:
+                if survey[2] == False:
+                    continue
+                survey[2]['meeting_id'] = meeting_id
+                vals = survey[2]
+                res = self.env['survey.survey'].create(vals)
         return meeting
 
     @api.multi
