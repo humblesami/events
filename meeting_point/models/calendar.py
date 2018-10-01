@@ -26,7 +26,7 @@ class Attendee(models.Model):
     photo = fields.Binary(related='partner_id.image_small')
     email = fields.Char('Email', help="Email of Invited Person", related='partner_id.email')
     exectime = fields.Char(related="event_id.exectime")
-    response_by=fields.Char(string="Response By")
+    response_by = fields.Char(string="Response By")
 
 
 
@@ -173,26 +173,26 @@ class Meeting(models.Model):
         return c
 
 
-    address=fields.Char(string="Address")
+    address = fields.Char(string="Address")
     customMessage = fields.Char(string="Message")
     street = fields.Char(string="Street")
     conference_bridge_numbe = fields.Char(string="Conference Bridge No.")
-    country=fields.Many2one('res.country', string="Country", default=_defualt_country)
+    country = fields.Many2one('res.country', string="Country", default=_defualt_country)
     description = fields.Html()
-    publish=fields.Boolean(string="Publish")
+    publish = fields.Boolean(string="Publish")
     pin = fields.Char(string="Meeting PIN")
     video_call_link = fields.Char(string="Video Call Link")
     country_state = fields.Many2one('res.country.state',string="Status")#, domain=lambda self:self.filter_states())
     company = fields.Char(string="Company")
     city = fields.Char(string="City")
     topic_ids = fields.One2many('meeting_point.topic', 'meeting_id')
-    document_ids=fields.One2many('meeting_point.document','meeting_id',string="Document(s) To Sign")
+    document_ids = fields.One2many('meeting_point.document','meeting_id',string="Document(s) To Sign")
     doc_ids = fields.One2many('meeting_point.doc', 'meeting_id', string="Meeting Document(s)")
-    status=fields.Char(string="Status")
+    status = fields.Char(string="Status")
     zip = fields.Char(string="Zip")
     is_active_yet = fields.Boolean(compute="_compute_active_status")
     seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
-    survey_ids=fields.One2many('survey.survey','meeting_id',string="Survey")
+    survey_ids = fields.One2many('survey.survey','meeting_id',string="Survey")
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees',
                                    states={'done': [('readonly', True)]}, default=_default_partners,
                                    domain=lambda self:self.filter_attendees(), ondelete="cascade")
@@ -203,13 +203,12 @@ class Meeting(models.Model):
 
     @api.model
     def create(self, vals):
-        surveys = False
-        if vals.get('survey_ids'):
-            surveys = vals['survey_ids']
+        surveys = vals.get('survey_ids')
+        if surveys:
             del vals['survey_ids']
         meeting = super(Meeting, self).create(vals)
-        meeting_id = meeting.id
         if surveys:
+            meeting_id = meeting.id
             for survey in surveys:
                 if survey[2] == False:
                     continue
