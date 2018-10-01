@@ -5,7 +5,7 @@ import uuid
 
 from fpdf import FPDF
 from docx import Document
-from odoo import models, fields, api
+from odoo import models, fields, api, http
 from odoo.exceptions import UserError
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from odoo.addons.dn_base.statics import raise_dn_model_error
@@ -124,10 +124,12 @@ class Document(models.Model):
                     self.create_signature(user.id, doc)
                 self.sudo().embed_signature(doc)
 
-    def embed_signature(self, doc):
+    def embed_signature(self, doc, ip=None):
         if not doc.original_pdf or len(doc.signature_ids) == 0:
             return
         #pth = tempfile.gettempdir()
+        if not ip:
+            ip = http.request.httprequest.remote_addr
         curr_dir = os.path.dirname(__file__)
         pth = curr_dir.replace('models', 'doc_signs')
 
@@ -187,7 +189,7 @@ class Document(models.Model):
                 image_result = open(signarure_image_path,'wb')
                 image_result.write(f)
                 image_result.close()
-                pdf.image(signarure_image_path, x=None, y=None, w=135, h=30)
+                pdf.image(signarure_image_path, x= -8, y=None, w=135, h=30)
             pdf.ln(5)
             pdf.set_font('Arial', 'U', 15)
             signature_authority = sign.user_id
@@ -198,11 +200,14 @@ class Document(models.Model):
                 sign_name = 'Root'
             pdf.cell(5, 5, sign_name)
             if sign.draw_signature:
-                date=datetime.strptime(sign.write_date,
+                date = datetime.strptime(sign.write_date,
                                   DEFAULT_SERVER_DATETIME_FORMAT)
-                date=date.strftime('%b %d %Y')
+                date = date.strftime('%b %d %Y')
                 pdf.ln(20)
                 pdf.cell(5, 5, date)
+                if ip:
+                    pdf.ln(25)
+                    pdf.cell(5, 5, ip)
             count = count + 1
 
 

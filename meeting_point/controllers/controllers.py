@@ -262,6 +262,58 @@ class meeting(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/meeting_point/save_signature_doc', auth='public', csrf=False, cors='*')
+    def save_signature_doc(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            doc_sign = self.get_doc_signature(kw)
+            if not 'sign' in doc_sign:
+                return ws_methods.http_response(doc_sign)
+            signature = doc_sign['sign']
+            doc = doc_sign['doc']
+
+            if kw['type'] == "auto":
+                curr_dir = os.path.dirname(__file__)
+                pth = curr_dir.replace('controllers', 'doc_signs')
+                font_dir = curr_dir.replace('controllers', 'static')
+
+                font = ImageFont.truetype(font_dir + "/FREESCPT.TTF", 200)
+                sz = font.getsize(signature.user_id.name)
+                sz = (sz[0] + 50, sz[1])
+                img = Image.new('RGB', sz, (255, 255, 255))
+                d = ImageDraw.Draw(img)
+                d.text((40, 0), signature.user_id.name, (0, 0, 0), font=font)
+                uid = http.request.env.user.id
+                img_path = pth + "/" + str(uid) + "piic.png"
+                img.save(img_path)
+
+                res = open(img_path, 'rb')
+                read = res.read()
+                binary_signature = base64.encodebytes(read)
+                binary_signature = binary_signature.decode('utf-8')
+                return ws_methods.http_response('', {"signature": binary_signature})
+            else:
+                binary_signature = kw.get('binary_signature')
+                if not binary_signature:
+                    return ws_methods.http_response("Please provide signatures")
+                if kw['type'] == "draw":
+                    signature.write({'draw_signature': binary_signature})
+                elif kw['type'] == "upload":
+                    signature.write({'draw_signature': binary_signature, 'filename': kw['filename']})
+                else:
+                    return ws_methods.http_response("Unknown sign type")
+
+            doc.embed_signature(doc)
+            doc.embed_signature(doc)
+            doc.notify_signed_mail(signature.id)
+            pdf = doc.pdf_doc.decode('utf-8')
+            doc = {'id': doc.id, "doc": pdf, 'doc_name': doc.name, 'type': 'signature', 'uid': uid}
+            return ws_methods.http_response('', doc)
+        except:
+            return ws_methods.handle()
+
     @http.route('/meeting_point/dashboard', website=True)
     def admindashboard(self):
         outputdata = {"error": " Error somewhere", "data": {"counts":{}}}
