@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+<!--<record id="hr_payroll.hr_payroll_rule_officer" model="ir.model.access">-->
+    <!--<field name="perm_read" eval="True"/>-->
+    <!--<field name="perm_write" eval="False"/>-->
+    <!--<field name="perm_create" eval="False"/>-->
+    <!--<field name="perm_unlink" eval="False"/>-->
+<!--</record>-->
+    </data>
+ </odoo>

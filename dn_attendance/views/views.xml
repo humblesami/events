@@ -1,0 +1,158 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="tree_attendance_record">
+            <field name="name">attendance records tree</field>
+            <field name="model">attendance.record</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="employee_id"/>
+                    <field name="punch_time"/>
+                    <field name="punch_type"/>
+                    <field name="work_date"/>
+                </tree>
+            </field>
+        </record>
+         <record id="record_attendance_user_kanban" model="ir.ui.view">
+            <field name="name">attendance_record.kanban</field>
+            <field name="model">attendance.record</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li>
+                                            <field name="employee_id"/>
+                                        </li>
+                                        <li>
+                                               Punch Time : <field name="punch_time" />
+                                        </li>
+                                        <li>
+                                                Date : <field name="work_date" />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+
+            </field>
+        </record>
+        <record model="ir.ui.view" id="form_attendance_record">
+            <field name="name">attendance records form</field>
+            <field name="model">attendance.record</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="punch_time"/>
+                        <field name="punch_type"/>
+                        <field name="work_date"/>
+                        <field name="attendance_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="tree_attendance_daily">
+            <field name="name">attendance daily tree</field>
+            <field name="model">attendance.daily</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="work_date"/>
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                </tree>
+            </field>
+        </record>
+    <record id="daily_attendance_user_kanban" model="ir.ui.view">
+            <field name="name">daily_attendance.kanban</field>
+            <field name="model">attendance.daily</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" default_order="name">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li>
+                                            <field name="employee_id"/>
+                                        </li>
+                                        <li>
+                                               Worked Hours : <field name="work_hour" widget="float_time"/>
+                                        </li>
+                                        <li>
+                                                Late Minutes : <field name="late_minutes" />
+                                        </li>
+                                        <li>
+                                                Date : <field name="work_date" />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+
+            </field>
+        </record>
+
+        <record id="dn_attendance_view_filter" model="ir.ui.view">
+        <field name="name">dn_attendance_view_filter</field>
+        <field name="model">attendance.daily</field>
+        <field name="arch" type="xml">
+            <search string="Hr Attendance Search">
+                <field name="employee_id"/>
+                <filter name="today" string="Today" domain="[('check_in', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('check_in', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
+                <filter string="Current Month" domain="[('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                <separator/>
+                <filter string="No Check Out" domain="[('check_out', '=', False)]" />
+                <separator/>
+                <filter string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                <group expand="0" string="Group By">
+                    <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Month" context="{'group_by':'check_in'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+        <record model="ir.actions.act_window" id="action_attendance_record">
+            <field name="name">Attendance Records</field>
+            <field name="res_model">attendance.record</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="search_view_id" ref="dn_attendance_view_filter" />
+        </record>
+
+        <record model="ir.actions.act_window" id="action_attendance_daily">
+            <field name="name">Daily Attendance</field>
+            <field name="res_model">attendance.daily</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        <record id="ir_cron_upload attendace" model="ir.cron">
+            <field name="name">Create Attendance in HR Attendance</field>
+            <field name="model_id" ref="model_attendance_daily"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.create_attendance()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <menuitem
+                name="E-Attendance"
+                id="menu_root_attendance"
+                sequence="8"
+                web_icon="e_pay_roll,static/icons/icon.png"
+        />
+        <menuitem name="All Records" action="action_attendance_record" id="menu_attendance_record" parent="menu_root_attendance"/>
+        <menuitem name="Daily Records" action="action_attendance_daily" id="menu_attendance_daily" parent="menu_root_attendance"/>
+    </data>
+</odoo>

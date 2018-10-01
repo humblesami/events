@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <menuitem
+                id="calendar.mail_menu_calendar"
+                name="Calendar"
+                parent="dn_base.extras"
+        />
+
+        <menuitem
+                id="hr_attendance.menu_hr_attendance_root"
+                name="Attendances"
+                parent="dn_base.extras"
+        />
+
+        <menuitem
+                id="hr_payroll.menu_hr_payroll_root"
+                name="Payroll"
+                parent = "dn_base.extras"
+        />
+
+        <menuitem
+                id="project.menu_main_pm"
+                name="Project"
+                parent = "dn_base.extras"
+        />
+
+        <menuitem
+                id="hr_timesheet.timesheet_menu_root"
+                name="Timesheets"
+                parent="dn_base.extras"
+        />
+
+
+
+    </data>
+</openerp>

@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+
+        <record id="custom_e_leave_manager_action_he" model="ir.actions.act_window">
+            <field name="name">E-Leave Admin</field>
+            <field name="res_model">e_leave.users</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <!--<field name="view_type">form</field>-->
+            <field name="view_id" ref="e_leave_user_kanban"/>
+            <field name="domain">[('groups_id.category_id.name','=','E-Leave'),('groups_id.name','=','Admin')]</field>
+            <field name="context">{'dn_users_menu':True,'lv_manager_menu':True, 'user_type':'admin'}</field>
+        </record>
+
+
+
+
+        <record id="action_e_leave_tree_manager_he" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="custom_e_leave_manager_action_he"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="e_leave_user_kanban"/>
+        </record>
+
+        <record id="action_e_leave_form_manager_he" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="custom_e_leave_manager_action_he"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="e_leave_users_settings_form_pass"/>
+        </record>
+
+    </data>
+</odoo>

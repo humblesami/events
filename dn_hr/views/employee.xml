@@ -1,0 +1,279 @@
+<odoo>
+    <data>
+        <!--Employee category-->
+        <!--<record model="ir.module.category" id="custom_employee">-->
+        <!--<field name="name">Employee</field>-->
+        <!--<field name="description">User access level for this module</field>-->
+        <!--<field name="sequence">3</field>-->
+        <!--</record>-->
+
+        <!--<record id="group_employee_base" model="res.groups">-->
+        <!--<field name="name">Employee</field>-->
+        <!--</record>-->
+
+        <!--<record id="group_employee_super_user" model="res.groups">-->
+        <!--<field name="name">Admin</field>-->
+        <!--<field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_manager')),(4, ref('base.group_user')),(4, ref('base.group_erp_manager'))]"/>-->
+        <!--<field name="users" eval="[(4, ref('base.user_root'))]"/>-->
+        <!--<field name="category_id" ref="custom_employee"/>-->
+        <!--</record>-->
+
+        <!--<record id="group_employee_staff" model="res.groups">-->
+        <!--<field name="name">Staff</field>-->
+        <!--<field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user')),(4, ref('base.group_user')),(4, ref('base.group_erp_manager'))]"/>-->
+        <!--<field name="category_id" ref="custom_employee"/>-->
+        <!--</record>-->
+
+        <!--<record id="group_employee_user" model="res.groups">-->
+        <!--<field name="name">User</field>-->
+        <!--<field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>-->
+        <!--<field name="category_id" ref="custom_employee"/>-->
+        <!--</record>-->
+
+
+        <!--<record id="group_form_inherited" model="ir.ui.view">-->
+        <!--<field name="name">dn.group.form.inherited</field>-->
+        <!--<field name="model">res.groups</field>-->
+        <!--<field name="inherit_id" ref="base.view_groups_form"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<field name="share" position="after">-->
+        <!--<field name="user_model_ids" widget="many2many_tags" readonly="1"></field>-->
+        <!--</field>-->
+        <!--</field>-->
+        <!--</record>-->
+
+        <record id="job_form_inherited" model="ir.ui.view">
+            <field name="name">dn.hr.job.form.inherited</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+                <!--<field name="no_of_recruitment" position="replace"/>-->
+                <data>
+                    <xpath expr="//header" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!--<record id="hr.view_employee_form" model="ir.ui.view">-->
+        <!--<field name="name">dn.employee.form.updated</field>-->
+        <!--<field name="model">hr.employee</field>-->
+        <!--<field name="sequence" eval="-1" />-->
+        <!--<field name="arch" type="xml">-->
+        <!--<form string="Employee">-->
+        <!--<sheet>-->
+        <!--<div class="oe_button_box" name="button_box">-->
+        <!--<button name="toggle_active" type="object" groups="hr.group_hr_user" class="oe_stat_button" icon="fa-archive">-->
+        <!--<field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>-->
+        <!--</button>-->
+        <!--</div>-->
+        <!--<div id="o_employee_container"><div id="o_employee_main">-->
+        <!--<field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;:&quot;image_medium&quot;}"/>-->
+        <!--<div class="oe_title">-->
+        <!--<label for="name" class="oe_edit_only"/>-->
+        <!--<h1>-->
+        <!--<field name="name" placeholder="Employee's Name" required="True"/><br/>-->
+        <!--<field name="work_email" widget="email" string="Login Id" placeholder="Email" required="True" />-->
+        <!--</h1>-->
+        <!--</div>-->
+        <!--<field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>-->
+        <!--<notebook>-->
+
+        <!--<page name="public" string="Work Information">-->
+        <!--<group>-->
+        <!--<group>-->
+        <!--&lt;!&ndash;<field name="resource_calendar_id"/>&ndash;&gt;-->
+        <!--<field name = "device_id"/>-->
+        <!--<field name="user_id" string="Related User"/>-->
+        <!--<field name="department_id"/>-->
+        <!--<field name="job_id"/>-->
+        <!--<field name="parent_id"/>-->
+        <!--<field name="coach_id"/>-->
+        <!--</group>-->
+        <!--</group>-->
+        <!--<field name="notes" placeholder="Other Information ..." colspan="4"/>-->
+        <!--</page>-->
+
+        <!--<page name="personal_information" string="Private Information" groups="hr.group_hr_user">-->
+        <!--<group>-->
+        <!--<group string="Citizenship &amp; Other Information">-->
+        <!--<field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>-->
+        <!--<field name="identification_id" groups="hr.group_hr_user"/>-->
+        <!--<field name="passport_id" groups="hr.group_hr_user"/>-->
+        <!--<field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>-->
+        <!--</group>-->
+        <!--<group string="Contact Information">-->
+        <!--<field name="address_id" context="{'show_address': 1}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>-->
+        <!--<field name="work_location"/>-->
+        <!--<field name="mobile_phone"/>-->
+        <!--<field name="work_phone"/>-->
+        <!--</group>-->
+        <!--<group string="Contact Information" invisible="1">-->
+        <!--<field name="address_home_id" context="{'show_address': 1}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>-->
+        <!--<field name="is_address_home_a_company" invisible="1"/>-->
+        <!--<div class="text-warning" attrs="{'invisible': [('is_address_home_a_company','=', False)]}">-->
+        <!--Use here the home address of the employee.-->
+        <!--This private address is used in the expense report reimbursement document.-->
+        <!--It should be different from the work address.-->
+        <!--</div>-->
+        <!--</group>-->
+        <!--<group string="Status">-->
+        <!--<field name="gender"/>-->
+        <!--<field name="marital"/>-->
+        <!--</group>-->
+        <!--<group string="Birth">-->
+        <!--<field name="birthday"/>-->
+        <!--</group>-->
+        <!--&lt;!&ndash;<group string="Work Permit" name="work_permit">&ndash;&gt;-->
+        <!--&lt;!&ndash;<field name="visa_no"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<field name="permit_no"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<field name="visa_expire"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;</group>&ndash;&gt;-->
+        <!--</group>-->
+        <!--</page>-->
+        <!--<page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">-->
+        <!--<group>-->
+        <!--<group string="Status" name="active_group">-->
+        <!--<field name="company_id" />-->
+        <!--&lt;!&ndash;<field name="user_id" string="Related User"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<field name = "device_id"/>&ndash;&gt;-->
+        <!--</group>-->
+        <!--</group>-->
+        <!--</page>-->
+        <!--</notebook>-->
+        <!--</div></div>-->
+        <!--</sheet>-->
+        <!--<div class="oe_chatter">-->
+        <!--<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>-->
+        <!--<field name="message_ids" widget="mail_thread"/>-->
+        <!--</div>-->
+        <!--</form>-->
+        <!--</field>-->
+        <!--</record>-->
+
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="identification_id" position="replace"/>
+                    <h1 position="after">
+                        <label for="identification_id" class="oe_edit_only"/>
+                        <h3>
+                            <field name="identification_id" readonly="1"/>
+                        </h3>
+                    </h1>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_employee_tree" model="ir.ui.view">
+            <field name="name">hr.employee.tree.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="name" position="after">
+                        <field name="identification_id"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_employee_filter" model="ir.ui.view">
+            <field name="name">Employees</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="identification_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_kanban_view_employees" model="ir.ui.view">
+            <field name="name">HR - Employees Kanban</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="arch" type="xml">
+                <li id="last_login" position="after">
+
+                    <field name="identification_id"/>
+                </li>
+            </field>
+        </record>
+
+        <record id="view_employee_form_custom" model="ir.ui.view">
+            <field name="name">dn.employee.form.updated_latest</field>
+            <field name="model">hr.employee</field>
+            <field name="sequence" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="hr.group_hr_user" class="oe_stat_button"
+                                    icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                       options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
+
+                        <div id="o_employee_container">
+                            <field name="image" widget="image" class="oe_avatar"
+                                   options="{&quot;preview_image&quot;:&quot;image_medium&quot;}"/>
+                            <group id="o_employee_main">
+                                <field name="identification_id" class="oe_read_only"/>
+                                <field name="name" placeholder="Employee's Name" required="True"/>
+                                <field name="work_email" string="Login Id" placeholder="Email" required="True"/>
+                                <field name="device_id"/>
+                                <field name="user_id" string="Related User"/>
+                                <field name="department_id"/>
+                                <field name="job_id"/>
+                                <field name="parent_id"/>
+                                <field name="contract_ids"/>
+                            </group>
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_attendance_kanban_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="hr.hr_kanban_view_employees"/>
+        </record>
+
+        <record id="action_attendance_tree_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr.view_employee_tree"/>
+        </record>
+
+        <record id="action_attendance_form_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_employee_form_custom"/>
+        </record>
+
+
+        <menuitem
+                id="hr.menu_hr_root"
+                name="Employees"
+                groups="base.partner_root"
+                web_icon="hr,static/description/icon.png"
+                sequence="75"/>
+
+
+    </data>
+</odoo>

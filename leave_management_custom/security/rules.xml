@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+
+        <!--<record id="E-leave_users_access_own_profiles" model="ir.rule">-->
+            <!--<field name="name">Edit own profile E-leave users</field>-->
+            <!--<field name="model_id" ref="dn_base.model_hr_employee"/>-->
+            <!--<field name="domain_force">[('user_id','=',user.id )]</field>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+            <!--<field eval="1" name="perm_write"/>-->
+            <!--<field eval="0" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+        <!--</record>-->
+        <!--<record id="access_roles_admin" model="ir.rule">-->
+            <!--<field name="name">Access to E-leave roles</field>-->
+            <!--<field name="model_id" ref="base.model_res_groups"/>-->
+            <!--<field name="domain_force">[('category_id.name','=','E-Leave'),('name','!=','Admin')]</field>-->
+            <!--<field name="groups" eval="[(4, ref('group_leave_custom_super_user'))]"/>-->
+            <!--<field eval="0" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+            <!--<field eval="1" name="perm_write"/>-->
+            <!--<field eval="1" name="perm_unlink"/>-->
+        <!--</record>-->
+
+        <!--<record id="access_E-leave_views" model="ir.rule">-->
+            <!--<field name="name">Access to views</field>-->
+            <!--<field name="model_id" ref="base.model_ir_ui_view"/>-->
+            <!--<field name="domain_force">[(1,'=',1)]</field>-->
+            <!--<field name="groups" eval="[(4, ref('group_leave_custom_base'))]"/>-->
+            <!--<field eval="1" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+            <!--<field eval="1" name="perm_write"/>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+        <!--</record>-->
+
+
+        <!--<record id="calendar.access_calendar_event_all_employee" model="ir.model.access">-->
+            <!--<field eval="1" name="perm_read"/>-->
+            <!--<field eval="0" name="perm_create"/>-->
+            <!--<field eval="0" name="perm_write"/>-->
+            <!--<field eval="0" name="perm_unlink"/>-->
+        <!--</record>-->
+    </data>
+</odoo>

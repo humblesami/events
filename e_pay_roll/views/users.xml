@@ -1,0 +1,214 @@
+<odoo>
+    <data>
+
+        <record id="e_payroll_user_kanban" model="ir.ui.view">
+            <field name="name">e.payroll.user.kanban</field>
+            <field name="model">e_payroll.users</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" default_order="name">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <!--<img t-att-src="kanban_image('foster.users', 'image_medium')"/>-->
+                                    <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;:&quot;image_medium&quot;}"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <field name="name"/>
+
+                                    <ul>
+                                        <!--<li t-if="record.work_phone.raw_value">-->
+                                            <!--<i class="fa fa-phone"/>-->
+                                            <!--<field name="work_phone" />-->
+                                        <!--</li>-->
+                                        <li t-if="record.login.raw_value">
+                                            <i class="fa fa-envelope"/>
+                                            <field name="login" widget="email"/>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+
+            </field>
+        </record>
+
+        <record id="e_payroll_users_settings_form" model="ir.ui.view">
+            <field name="name">e-payroll.users.settings.form</field>
+            <field name="model">e_payroll.users</field>
+            <field name="inherit_id" ref="dn_base.dn_base_user_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//div[@class='profile-last-login']" position="before">-->
+                <!--<button type="object" name="send_email_to_foster" style="float:right" string="Send Email to Foster-->
+                <!--Parent"/>-->
+                <!--</xpath>-->
+                <xpath expr="//h2[@name='login']" position="after">
+                    <!--<group>-->
+                    <!--<field name="send_email"/>-->
+                    <!--</group>-->
+                    <h4>Access Groups</h4>
+                    <field name="groups_id" widget="many2many_checkboxes" domain="[('category_id.name','=','E-payroll')]" />
+                    <group>
+                        <field name="work_phone" class="phone masked_input"/>
+                        <field name="mobile_phone" class="phone masked_input"/>
+                        <field name="work_location"/>
+                        <field name="department_id"/>
+                        <field name="bio"/>
+                        <field name="resume"/>
+                    </group>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="custom_e_payroll_users_employees" model="ir.ui.view">
+            <field name="name">custom.users.tree</field>
+            <field name="model">e_payroll.users</field>
+            <field name="arch" type="xml">
+                <tree string="Users">
+                    <field name="name"/>
+                    <field name="login"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_a_payroll_users" model="ir.actions.act_window">
+            <field name="name">E-Payroll Users</field>
+            <field name="res_model">e_payroll.users</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="e_payroll_user_kanban"/>
+            <field name="domain">
+                [('groups_id.category_id.name','=','E-Payroll')]
+            </field>
+            <field name="context">{'dn_users_menu':True}</field>
+
+        </record>
+
+        <record id="action_e_payroll_user_kanban" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_a_payroll_users"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="e_payroll_user_kanban"/>
+        </record>
+
+        <record id="action_e_payroll_user_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_a_payroll_users"/>
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="e_payroll_users_settings_form"/>
+        </record>
+
+        <!--payroll allusers-->
+
+          <record id="e_paryoll_actions_users" model="ir.actions.act_window">
+            <field name="name">E-Payroll Users Users</field>
+            <field name="res_model">e_payroll.users</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="e_payroll_user_kanban"/>
+            <!--[('groups_id.category_id.name','=','MeetingPoint'),'|',('groups_id.name','=','Admin'),('groups_id.name','=','Staff')]-->
+            <field name="domain">
+                [('groups_id.category_id.name','=','E-Payroll')]
+            </field>
+            <field name="context">{'dn_users_menu':True}</field>
+
+            <!--<field name="search_view_id" ref="view_calendar_event_search"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a user.
+                </p>
+            </field>
+        </record>
+
+        <record id="e_payroll_action_user_kanban" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="e_paryoll_actions_users"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="e_payroll_user_kanban"/>
+        </record>
+
+        <record id="e_payroll_action_user_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="e_paryoll_actions_users"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="e_payroll_users_settings_form"/>
+        </record>
+
+        <!--sysytem users-->
+
+        <record id ="custom_e_payroll_user_form_employees" model="ir.ui.view">
+            <field name="name">System Users</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+
+                <form string="Users">
+                    <div class="container">
+                        <div class="row">
+                            <header>
+                                <button string="Change Password" type="action" name="%(base.change_password_wizard_action)d" help="Change the user password."/>
+                                <!--<field name="state" widget="statusbar" groups="meeting_point.group_meeting_admin"/>-->
+                            </header>
+                        </div>
+                    </div>
+
+
+                    <sheet>
+                        <field name="id" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;active&quot;}"/>
+                            </button>
+                        </div>
+                        <field name="image" widget="image" style="margin-top:-64px" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_medium&quot;}"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" required="1"/></h1>
+                            <label for="login" class="oe_edit_only" string="Email Address"/>
+                            <h2><field name="login"/></h2>
+                        </div>
+
+                        <group string="Status" name="active_group">
+                            <field name="groups_id" widget="many2many_checkboxes" domain="[('category_id.name','=','E-payroll')]" required="1"/>
+                        </group>
+
+                    </sheet>
+                    <script src="/e_pay_roll/static/src/js/profile.js">
+
+                    </script>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="custom_e_payroll_user_action_employees" model="ir.actions.act_window">
+            <field name="name">System Users</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="custom_e_payroll_users_employees"/>
+            <field name="context">{'dn_system_users_menu':True,'dn_users_menu':True}</field>
+        </record>
+
+
+
+        <record id="action_epayroll_tree_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="custom_e_payroll_user_action_employees"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="custom_e_payroll_users_employees"/>
+        </record>
+
+        <record id="action_epayroll_form_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="custom_e_payroll_user_action_employees"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="custom_e_payroll_user_form_employees"/>
+        </record>
+    </data>
+</odoo>

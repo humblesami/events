@@ -1,0 +1,222 @@
+<odoo>
+    <data>
+
+        <!-- res.users -->
+
+        <record id="custom_leave_user_form" model="ir.ui.view">
+            <field name="name">custom.leave.user.form</field>
+            <field name="model">custom_leave_management.users</field>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <header>
+                        <button string="Change Password" type="action" name="%(base.change_password_wizard_action)d"
+                                help="Change the user password."/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="hr.group_hr_user"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                       options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <field name="id" invisible="1"/>
+                        <field name="image" widget='image' class="oe_avatar"
+                               options='{"preview_image":"image_medium"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h2>
+                                <field name="name" required="1"/>
+                            </h2>
+                            <separator></separator>
+                            <field name="email" invisible="1"></field>
+                            <label for="login" class="oe_edit_only" string="Email Address"/>
+                            <h2>
+                                <field name="login"/>
+                            </h2>
+                        </div>
+                        <notebook>
+                            <page name="public" string="Public Information">
+                                <group>
+                                    <group string="Contact Information">
+
+                                        <field widget="mask" data-inputmask-mask="999-999-9999"
+                                               data-inputmask-clearincomplete="True"
+                                               data-inputmask-placeholder="XXX-XXX-XXXX"
+                                               name="work_phone" string="Work Phone"/>
+                                        <field widget="mask" data-inputmask-mask="999-999-9999"
+                                               data-inputmask-clearincomplete="True"
+                                               data-inputmask-placeholder="XXX-XXX-XXXX"
+                                               name="mobile_phone" string="Cell Phone"/>
+                                        <field name="fax"/>
+                                        <field name="website" widget="url" placeholder="e.g. www.yourweb.com"/>
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id"/>
+                                        <field name="job_id" placeholder="e.g. Sales Director" string="Job Title"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
+                                <group>
+                                    <group string='Status' name="active_group">
+                                        <field name="groups_id" widget="many2many_checkboxes"
+                                               domain="[('category_id.name','=','E-Leave')]"
+                                               required="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <!--Change base user form -->
+
+        <!--<record id="meeting_point_user_form_inherited" model="ir.ui.view">-->
+        <!--<field name="name">meeting.point.user.form.inherited</field>-->
+        <!--<field name="model">res.users</field>-->
+        <!--<field name="inherit_id" ref="base.view_users_form"/>-->
+        <!--<field name="arch" type="xml">-->
+        <!--<data>-->
+        <!--<xpath expr="//field[@name='name']" position="after">-->
+        <!--<separator></separator>-->
+        <!--<h2>-->
+        <!--<field name="nick_name" placeholder="Nick Name"/>-->
+        <!--</h2>-->
+        <!--<script>-->
+        <!--$('.o_notebook li a:contains("Preferences")').hide();-->
+        <!--</script>-->
+
+
+        <!--</xpath>-->
+        <!--<xpath expr="//field[@name='login']" position="after">-->
+        <!--<group>-->
+        <!--<field name="send_email"/>-->
+        <!--</group>-->
+        <!--</xpath>-->
+        <!--<xpath expr="//page[@name='access_rights']" position="before">-->
+        <!--<page string="Personal Details">-->
+        <!--<group>-->
+        <!--<field name="function" placeholder="e.g. Sales Director" string="Job Title"/>-->
+        <!--<field widget="mask" data-inputmask-mask="999-999-9999"-->
+        <!--data-inputmask-clearincomplete="True"-->
+        <!--data-inputmask-placeholder="XXX-XXX-XXXX"-->
+        <!--name="work_phone" string="Work Phone"/>-->
+        <!--<field widget="mask" data-inputmask-mask="999-999-9999"-->
+        <!--data-inputmask-clearincomplete="True"-->
+        <!--data-inputmask-placeholder="XXX-XXX-XXXX"-->
+        <!--name="cell_phone" string="Cell Phone"/>-->
+        <!--<field name="fax"/>-->
+        <!--<field name="user_ids" invisible="1"/>-->
+        <!--<field name="website" widget="url" placeholder="e.g. www.yourweb.com"/>-->
+        <!--</group>-->
+        <!--</page>-->
+        <!--</xpath>-->
+        <!--</data>-->
+        <!--&lt;!&ndash;<page string="Preferences" position="attributes">&ndash;&gt;-->
+        <!--&lt;!&ndash;<attribute name="groups">"base.group_no_one"</attribute>&ndash;&gt;-->
+        <!--&lt;!&ndash;</page>&ndash;&gt;-->
+        <!--</field>-->
+        <!--</record>-->
+
+        <record id="custom_leave_user_kanban" model="ir.ui.view">
+            <field name="name">custom.leave.user.kanban</field>
+            <field name="model">custom_leave_management.users</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban">
+                    <field name="message_is_follower"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                    <field name="message_needaction_counter"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('meeting_point.users', 'image_medium', record.id.value)"/>
+                                    <div class="o_employee_summary_icons">
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'>
+                                                <i class='fa fa-comments'/>
+                                                <t t-raw="record.message_needaction_counter.raw_value"/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                    <ul>
+                                        <li t-if="record.job_id.raw_value">
+                                            <field name="job_id"/>
+                                        </li>
+                                        <li t-if="record.work_location.raw_value">
+                                            <field name="work_location"/>
+                                        </li>
+                                        <li t-if="record.login.raw_value">
+                                            <i class="fa fa-envelope"></i>
+                                            <field name="login"/>
+                                        </li>
+                                        <li t-if="record.work_phone.raw_value">
+                                            <i class="fa fa-phone"></i>
+                                            <field name="work_phone"/>
+                                        </li>
+                                        <li t-if="record.mobile_phone.raw_value">
+                                            <i class="fa fa-mobile"></i>
+                                            <field name="mobile_phone"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+
+            </field>
+        </record>
+
+
+        <record id="action_custom_leave_users" model="ir.actions.act_window">
+            <field name="name">Users</field>
+            <field name="res_model">custom_leave_management.users</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="custom_leave_user_kanban"/>
+            <field name="domain">[('groups_id.category_id.name','=','E-Leave'),'|',('groups_id.name','=','Admin'),('groups_id.name','=','Staff')]</field>
+            <!--<field name="context">{}</field>-->
+
+            <!--<field name="search_view_id" ref="view_calendar_event_search"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a user.
+                </p>
+                <!--<p>-->
+                <!--The calendar is shared between employees and fully integrated with-->
+
+                <!--other applications such as the employee holidays or the business-->
+                <!--opportunities.-->
+                <!--</p>-->
+            </field>
+        </record>
+        <record id="action_leave_user_kanban" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_custom_leave_users"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="custom_leave_user_kanban"/>
+        </record>
+        <record id="action_leave_user_form" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_custom_leave_users"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="custom_leave_user_form"/>
+        </record>
+
+
+    </data>
+</odoo>

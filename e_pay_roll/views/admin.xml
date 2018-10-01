@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+
+
+
+<record id="custom_e_payroll_admin_action" model="ir.actions.act_window">
+            <field name="name">Super Admins</field>
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <field name="res_model">e_payroll.users</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <!--<field name="view_type">form</field>-->
+            <field name="view_id" ref="e_payroll_user_kanban"/>
+            <field name="domain">[('groups_id.category_id.name','=','E-Payroll'),('groups_id.name','=','Admin')]</field>
+            <field name="context">{'dn_users_menu':True,'mp_admin_menu':True, 'user_type':'admin'}</field>
+            </record>
+
+
+
+
+<record id="action_epayroll_tree_admin" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="custom_e_payroll_admin_action"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="e_payroll_user_kanban"/>
+        </record>
+
+<record id="action_epayroll_form_admin" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="custom_e_payroll_admin_action"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="e_payroll_users_settings_form"/>
+        </record>
+
+    </data>
+
+    </odoo>

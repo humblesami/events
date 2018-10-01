@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record model="ir.module.category" id="custom_leave_management">
+            <field name="name">E-Leave</field>
+            <field name="description">User access level for this module</field>
+            <field name="sequence">3</field>
+        </record>
+
+          <record id="group_leave_custom_base" model="res.groups">
+            <field name="name">E-Leave</field>
+        </record>
+
+
+
+        <record id="group_leave_custom_user_admin" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="custom_leave_management"/>
+            <field name="user_model_ids" eval="[(4, ref('leave_management_custom.model_e_leave_users'))]"/>
+        </record>
+
+        <record id="group_leave_custom_user" model="res.groups">
+            <field name="name">Staff</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="custom_leave_management"/>
+            <field name="user_model_ids" eval="[(4, ref('leave_management_custom.model_e_leave_users'))]"/>
+
+        </record>
+        <record id="group_leave_custom_admin" model="res.groups">
+            <field name="name">Super Admin</field>
+            <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user')),(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+            <field name="category_id" ref="custom_leave_management"/>
+            <field name="user_model_ids" eval="[(4, ref('leave_management_custom.model_e_leave_users'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_leave_custom_super_user" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_user')),(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+            <field name="category_id" ref="custom_leave_management"/>
+              <field name="user_model_ids" eval="[(4, ref('leave_management_custom.model_e_leave_users'))]"/>
+        </record>
+
+
+
+
+    </data>
+</odoo>
