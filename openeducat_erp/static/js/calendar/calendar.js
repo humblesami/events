@@ -2,14 +2,8 @@
 
 $(function(){
     var str = $('span[name="sessions"]').html();
-//    var classes = $('span[name="classes"]').html();
-//    classes=JSON.parse(classes);
     var events = JSON.parse(str);
-   // console.log('events are here',events["1"])
 
-//    $.each(classes, function() {
-//         $('#dropdown').append($("<option />").val(this.id).text(this.title));
-//        });
 
 function showCalendar(e)
 {
@@ -30,21 +24,16 @@ function showCalendar(e)
         events: e
     });
 }
+$('.o_form_buttons_edit ul.nav-tabs').remove();
+$('.o_form_buttons_edit').append($('ul.nav-tabs'));
+
+//$('.o_breadcrumb_full .nav-tabs').remove();
+//$('.o_breadcrumb_full').append($('ul.nav-tabs'));
+
 
 showCalendar(events);
 
-//var i =$('#dropdown').val();
-//if(i){
-//    console.log(i);
-//    console.log(events[i]);
-//    showCalendar(events[i]);
-//}
-//else{
-//    showCalendar([]);
-//}
-
 $('span[name="sessions"]').on('DOMSubtreeModified', function() {
-//  alert( this.value );
 //    console.log(new Date());
   str = $('span[name="sessions"]').html();
   if(str){
@@ -68,7 +57,6 @@ $('span[name="sessions"]').on('DOMSubtreeModified', function() {
             //console.log($('.session_id span'))
             var spans = $('.session_id span');
             $.each(spans, function() {
-                //console.log($(this).text())
                 var t = $(this).text();
                 t=parseInt(t)
                 if(id==t){
@@ -76,14 +64,9 @@ $('span[name="sessions"]').on('DOMSubtreeModified', function() {
                     $(this).click();
                 }
             });
-//            $('.session_id:contains('+id+')').click();
 
 
         });
     }
-
-
-
-
 
 });

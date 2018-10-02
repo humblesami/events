@@ -42,7 +42,7 @@
             <field name="arch" type="xml">
                 <form>
                     <style>
-                        .o_cp_left,.o_cp_pager{
+                        .o_breadcrumb_full .o_form_button_cancel,.o_breadcrumb_full .o_form_button_save,.o_cp_pager{
                         display:none!important
                         }
                         .o_cp_right{
@@ -175,6 +175,23 @@
                                     </tree>
                                 </field>
                             </div>
+                        </page>
+                        <page string="Projections">
+
+                            <group string="Select courses and fee for projections">
+
+                                <field name="forecast_ids" nolabel="1"/>
+                            </group>
+
+                            <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
+                                <h2 style="     background: gainsboro;     padding: 5px;     margin: 0px; ">Projections</h2>
+
+                                <field name="projected_classes">
+
+                                </field>
+                            </div>
+
+
                         </page>
                     </notebook>
 

@@ -39,6 +39,53 @@ class Home(models.Model):
     course = fields.Many2one('op.course', 'Course')
     branch = fields.Many2one('op.branch', 'Location(Education Center)')
 
+    forecast_ids = fields.Many2many('op.forecast', string='Courses')
+    projected_classes = fields.Many2many('op.projected_class', string='Projections', compute="compute_projected_classes")
+
+
+    @api.multi
+    @api.depends('forecast_ids')
+    def compute_projected_classes(self):
+        for rec in self:
+            arr=["no","term1","term2","term3","term4","term5"]
+            lst=[]
+            for f in rec.forecast_ids:
+                for s in self.env['op.section'].search([('course_id','=',f.course_id.id)]):
+                    count=0
+                    for c in self.env['op.batch'].search([('section_id','=',s.id)]):
+                        t=self.env['op.student.course'].search([('batch_id','=',c.id)]).__len__()
+                        count+=t
+                    l=self.env['op.batch'].search([('section_id','=',s.id)]).__len__()
+                    if l !=0:
+                        count=count/l
+
+                    if f.fee:
+                        if s.time=="mor":
+                            fee=f.fee
+                        elif s.time=="eve":
+                            fee=f.fee_evening
+                        obj={"name":s.name,"students":count,"fee":fee,"total_fee":fee*count}
+                        lst.append(obj)
+
+                    elif f.term_fees:
+                        obj = {"name": s.name, "students": count}
+                        tot=0
+                        for t in f.term_fees:
+                            if s.time == "mor":
+                                fee = t.fee *count
+                                obj[arr[t.term]]=fee
+                                tot+=fee
+                            elif s.time == "eve":
+                                fee = t.fee_evening * count
+                                obj[arr[t.term]] = fee
+                                tot += fee
+                        obj["total_fee"] = tot
+                        lst.append(obj)
+
+            rec.projected_classes = lst
+
+
+
 
     @api.multi
     @api.depends('course','filter_start','filter_end')

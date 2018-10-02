@@ -21,12 +21,12 @@
             <field name="model">op.batch</field>
             <field name="priority" eval="8" />
             <field name="arch" type="xml">
-               <form string="Batch">
-  <style>
-    div[name="faculty_ids"] .o_data_cell{
-    white-space: pre
-}
-  </style>
+                <form string="Batch">
+                    <style>
+                        div[name="faculty_ids"] .o_data_cell{
+                        white-space: pre
+                        }
+                    </style>
                     <header>
 
                     </header>
@@ -40,19 +40,20 @@
 
                             <field name="branch_id"/>
                             <field name="course_id"/>
+                            <field name="section_id"/>
                             <field name="no_of_students"/>
                             <field name="max_students"/>
 
                         </group>
                         <group string="Terms">
 
-                            <field name="term_ids" nolabel="1"/>
+                            <field name="term_ids" required="1" nolabel="1"/>
                         </group>
                         <h3 style="color:#00a09d">Required hours: <field class="badge" name="total_instr_hrs" widget="float_time"/></h3>
                         <group col="4">
                             <field name="start" widget="float_time" required="1" class="dn_time_picker"/>
                             <field name="end" widget="float_time" required="1" class="dn_time_picker"/>
-                                 <field name="days" widget="many2many_tags"/>
+                            <field name="days" widget="many2many_tags"/>
                             <field name="faculty_id" context="{'filter_teachers': term_ids,'course': course_id,'class_id': active_id,'days': days,'start': start,'end': end,'total_instr_hrs': total_instr_hrs}"/>
 
                         </group>
@@ -72,8 +73,8 @@
 
                             <page name="admission" string="Admission details">
                                 <group>
-                                    <field name="start_date"/>
-                                    <field name="end_date"/>
+                                    <field name="start_date" required="1"/>
+                                    <field name="end_date" required="1"/>
                                     <field name="product_id"/>
 
                                 </group>
@@ -142,5 +143,66 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_op_batch_tree" />
         </record>
+
+
+
+
+
+
+
+
+
+        <record id="view_op_section_tree" model="ir.ui.view">
+            <field name="name">op.section.tree</field>
+            <field name="model">op.section</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="Batch">
+                    <field name="name" />
+                    <field name="course_id" />
+                    <field name="time" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_section_form" model="ir.ui.view">
+            <field name="name">op.section.form</field>
+            <field name="model">op.section</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="Batch">
+                    <group>
+                        <field name="name" />
+                        <field name="course_id" />
+                        <field name="time" />
+                    </group>
+
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_section_view">
+            <field name="name">Sections</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.section</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_section_view_form">
+            <field name="act_window_id" ref="act_open_section_view" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_section_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_section_view_tree">
+            <field name="act_window_id" ref="act_open_section_view" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_section_tree" />
+        </record>
+
+
+
     </data>
 </odoo>

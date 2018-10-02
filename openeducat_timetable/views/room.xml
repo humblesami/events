@@ -17,8 +17,8 @@
                                             <field name="name"/>
                                             <field name="class_start"/>
                                             <field name="class_end"/>
-                                            <field name="total_sched_hrs" widget="float_time" />
-                                            <field name="total_avail_hrs" widget="float_time" />
+                                            <field name="total_sched_hrs_room" widget="float_time" />
+                                            <field name="total_avail_hrs_room" widget="float_time" />
                                             <!--<field name="classhrs_week" widget="float_time"/>-->
                                             <!--<field name="total_instr_hrs" widget="float_time"/>-->
                                         </tree>

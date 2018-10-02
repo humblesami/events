@@ -43,6 +43,7 @@ class OpBatch(models.Model):
         domain=[('type', '=', 'service')], track_visibility='onchange')
 
     course_id = fields.Many2one('op.course', 'Course', required=True)
+    section_id = fields.Many2one('op.section', 'Section', required=True)
     branch_id = fields.Many2one('op.branch', 'Location(Education Center)', required=True)
     funded_by = fields.Selection(
         [('donations', 'Donations'), ('grant', 'Grant'), ('self', 'Self Pay')], 'Funded by')
@@ -190,3 +191,12 @@ class OpBatch(models.Model):
             return batches.name_get()
         return super(OpBatch, self).name_search(
             name, args, operator=operator, limit=limit)
+
+
+class OpSection(models.Model):
+    _name = 'op.section'
+
+    name = fields.Char('Name', size=32, required=True)
+    course_id = fields.Many2one('op.course', 'Course', required=True)
+    time = fields.Selection(
+        [('mor', 'Morning'), ('eve', 'Evening')], 'Mor/Eve')

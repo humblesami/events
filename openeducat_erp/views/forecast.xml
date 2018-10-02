@@ -1,0 +1,98 @@
+<odoo>
+    <data>
+
+
+        <record id="view_openedu_forecast_tree" model="ir.ui.view">
+            <field name="name">openedu.forecast.tree</field>
+            <field name="model">op.forecast</field>
+            <field name="sequence" eval="1"/>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <!--<field name="fee" />-->
+
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record id="view_openedu_forecast_form" model="ir.ui.view">
+            <field name="name">openedu.op.forecast.form</field>
+            <field name="model">op.forecast</field>
+            <field name="sequence" eval="3"/>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name" />
+                        <field name="course_id" />
+                    </group>
+                    <notebook>
+                        <page string="Course fee">
+                            <group>
+                                <field name="fee" />
+                                <field name="fee_evening" />
+                            </group>
+
+                        </page>
+                        <page string="Fee by terms">
+                            <field name="term_fees">
+                                <tree editable="bottom">
+                                    <field name="name" />
+                                    <field name="term" />
+                                    <field name="fee" />
+                                    <field name="fee_evening" />
+
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+
+                </form>
+            </field>
+        </record>
+
+
+
+        <record id="view_projection_tree" model="ir.ui.view">
+            <field name="name">openedu.projection.tree</field>
+            <field name="model">op.projected_class</field>
+            <field name="sequence" eval="1"/>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="students" sum="Total"/>
+                    <field name="fee" />
+                    <field name="term1" sum="Total"/>
+                    <field name="term2" sum="Total"/>
+                    <field name="term3" sum="Total"/>
+                    <field name="term4" sum="Total"/>
+                    <field name="term5" sum="Total"/>
+                    <field name="total_fee" sum="Total"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_terms_fee_tree" model="ir.ui.view">
+            <field name="name">openedu.terms.fee.tree</field>
+            <field name="model">op.term_fee</field>
+            <field name="sequence" eval="1"/>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="term" />
+                    <field name="fee" />
+                    <field name="fee_evening" />
+
+                </tree>
+            </field>
+        </record>
+
+
+
+
+
+    </data>
+</odoo>

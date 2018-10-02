@@ -37,7 +37,9 @@
     'data': [
         'data/default.xml',
         'views/home.xml',
-        'views/menu.xml'
+        'views/menu.xml',
+        'views/forecast.xml',
+        'security/ir.model.access.csv'
     ],
     'demo': [
     ],

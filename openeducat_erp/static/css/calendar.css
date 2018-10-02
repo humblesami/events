@@ -1110,3 +1110,9 @@ be a descendant of the grid when it is being dragged.
 .fc-time-grid-event .fc-resizer:after {
 	content: "=";
 }
+
+.fc-row .fc-content-skeleton td, .fc-row .fc-helper-skeleton td {
+    background: none;
+    border-color: #ddd;
+    border-bottom: 0;
+}
