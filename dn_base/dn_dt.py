@@ -170,8 +170,11 @@ def hours_to_hoursNminutes(hours):
     if not hours:
         return ''
     res = int(hours)
-    minutes = hours % res
-    minutes = minutes * 60
+    if res > 0:
+        minutes = hours % res
+        minutes = minutes * 60
+    else:
+        minutes = hours * 60
     minutes = round(minutes)
     if res < 10:
         res = str(res)
