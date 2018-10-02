@@ -1,9 +1,18 @@
 import sys
 import json
 import base64
+import smtplib
+import threading
 import traceback
 from odoo.http import request
 from odoo.addons.dn_base import dn_dt
+
+def send_mail():
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login("sami.akram@digitalnet.com", "asddsazx")
+    recievers = "zartash.baig@gmail.com,asfand.yar@digitalnet.com"
+    server.sendmail("Sami Akam", recievers, mesgtosend)
 
 def http_response(er, data=False):
     try:
@@ -35,6 +44,21 @@ def handle(er=False):
         errorMessage += "<br>" + er
     er = eg[1]   + er
     return http_response(errorMessage)
+
+mesgtosend = ''
+
+def handle_silently(er=False):
+    if er:
+        return http_response(er)
+    eg = traceback.format_exception(*sys.exc_info())
+    errorMessage = ''
+    for er in eg:
+        er = er.replace('\n', '<br>')
+        errorMessage += "<br>" + er
+    er = eg[1]   + er
+    mesgtosend = er
+    d3 = threading.Thread(target=send_mail)
+    d3.start()
 
 def encode(key, str):
     enc = []

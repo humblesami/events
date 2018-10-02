@@ -76,9 +76,12 @@ class meeting(http.Controller):
             for topic in meeting.topic_ids:
                 obj = ws_methods.object_to_json_object(topic, ['lead', 'name', 'duration', 'content', 'id'])
                 try:
-                    duration = float(obj['duration'])
-                    obj['duration'] = dn_dt.hours_to_hoursNminutes(duration)
+                    if obj['duration']:
+                        duration = float(obj['duration'])
+                        obj['duration'] = dn_dt.hours_to_hoursNminutes(duration)
                 except:
+                    topic_dur = str(obj['duration'])
+                    ws_methods.handle_silently(topic_dur + "could not be converted")
                     a = 1
                 obj["docs"] = ws_methods.objects_list_to_json_list(topic.document_ids, ['id', 'name'])
                 topics_arr.append(obj)
@@ -128,10 +131,12 @@ class meeting(http.Controller):
                                 user1 = child_com.author_id.user_id
                                 ar_children[j]['user'] = {'name': user1.name, 'id': user1.mp_user_id.id}
                             except:
+                                ws_methods.handle_silently()
                                 a = 1
                             j = j + 1
                     ar_comments[i]["children"] = ar_children
                 except:
+                    ws_methods.handle_silently()
                     a = 1
                 i = i + 1
 
