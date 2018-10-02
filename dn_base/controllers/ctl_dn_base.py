@@ -65,17 +65,12 @@ class Controller(http.Controller):
             if parent_id:
                 values['parent_id'] = parent_id
 
-
-            query = 'insert into mail.message(model,res_id,body,message_type,subtype_id) \
-            VALUES (%s, %s, %s, %s, %s)', (model_name,meeting_id,mesg_body,'comment',subtype_id)
-            res = ws_methods.execute_upd(query)
-            query = 'select max(id) from mail.message where create_uid = '+uid
-            res = ws_methods.execute_query(query)
-
-            comment = req_env['mail.message'].search([('create_uid','=','uid', )])
-            #comment = req_env['mail.message'].create(values)
-            #user = comment.author_id.user_id
-            comment = {'id':comment.id,  'body': values['body'],'subtype':subtype_id, 'user':{'id':user.mp_user_id.id,'name':user.name}, 'children':[]}
+            req_env.cr.execute('insert into mail_message(model,res_id,body,message_type,subtype_id) VALUES (%s, %s, %s, %s, %s)', (model_name,meeting_id,mesg_body,'comment',subtype_id))
+            query = 'select max(id) from mail_message where create_uid = ' + str((uid))
+            res = ws_methods.execute_read(query)
+            comment_id = res[0][0]
+            user = req_env.user
+            comment = {'id':comment_id,  'body': values['body'],'subtype':subtype_id, 'user':{'id':user.mp_user_id.id,'name':user.name}, 'children':[]}
             return ws_methods.http_response('', comment)
         except:
             return ws_methods.handle()
