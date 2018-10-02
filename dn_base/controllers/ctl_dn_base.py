@@ -4,12 +4,34 @@ import werkzeug
 from odoo import http
 from odoo.http import request
 from werkzeug.utils import redirect
+from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 from odoo.addons.web.controllers.main import Binary
 from odoo.addons.web.controllers.main import Session, binary_content
 
 
 class Controller(http.Controller):
+
+    @http.route('/api-token', type="http", csrf=False, auth='public', cors='*')
+    def api_token(self, **kw):
+        return 'Token service not implemented yet'
+
+    @http.route('/api-endpoint', type="http", csrf=False, auth='public', cors='*')
+    def api_get(self, **kw):
+        try:
+            kw = json.loads(kw['input_data'])
+            auth = kw.get('auth')
+            data = kw.get('req_data')
+            data['time_zone'] = kw.get('time_zone')
+            forward_url = kw.get('function_url')
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+            res = http.local_redirect(forward_url, data)
+            #res = werkzeug.utils.redirect(forward_url, data)
+            return res
+        except:
+            return ws_methods.handle()
 
     @http.route('/comment/add', type="http", csrf=False, auth='none', cors='*')
     def save_comment_http(self, **kw):
@@ -71,6 +93,10 @@ class Controller(http.Controller):
                 return ws_methods.http_response('Please provide comment id')
             req_env = http.request.env
             comment = req_env['mail.message'].search([('id','=',comment_id)])
+            if not comment:
+                rec = "Wrong Comment Id to delete "+ str(comment_id)
+                ws_methods.handle_silently(rec)
+                return ws_methods.http_response("Could not delete")
             res = comment.unlink()
             if res and type(res) is bool:
                 res = "success"

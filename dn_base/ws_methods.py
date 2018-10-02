@@ -7,11 +7,11 @@ import traceback
 from odoo.http import request
 from odoo.addons.dn_base import dn_dt
 
-def send_mail():
+def send_mail(mesgtosend):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login("sami.akram@digitalnet.com", "asddsazx")
-    recievers = "zartash.baig@gmail.com,asfand.yar@digitalnet.com"
+    recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
 def http_response(er, data=False):
@@ -45,19 +45,19 @@ def handle(er=False):
     er = eg[1]   + er
     return http_response(errorMessage)
 
-mesgtosend = ''
 
-def handle_silently(er=False):
-    if er:
-        return http_response(er)
-    eg = traceback.format_exception(*sys.exc_info())
-    errorMessage = ''
-    for er in eg:
-        er = er.replace('\n', '<br>')
-        errorMessage += "<br>" + er
-    er = eg[1]   + er
-    mesgtosend = er
-    d3 = threading.Thread(target=send_mail)
+def handle_silently(rec=False):
+    if not rec:
+        eg = traceback.format_exception(*sys.exc_info())
+        errorMessage = ''
+        for er in eg:
+            er = er.replace('\n', '<br>')
+            errorMessage += "<br>" + er
+        er = eg[1]   + er
+        mesgtosend = er
+    else:
+        mesgtosend = rec
+    d3 = threading.Thread(target=send_mail,args=[mesgtosend])
     d3.start()
 
 def encode(key, str):
