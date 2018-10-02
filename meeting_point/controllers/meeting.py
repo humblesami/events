@@ -26,7 +26,7 @@ class meeting(http.Controller):
             meeting_id = values.get('id')
             if not meeting_id:
                 return ws_methods.http_response('Please provide meeting id')
-            meeting = req_env['calendar.event'].sudo().search([('id', '=', int(values["id"]))])
+            meeting = req_env['calendar.event'].search([('id', '=', int(values["id"]))])
             props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_numbe', 'pin',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'company']

@@ -33,11 +33,11 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/comment/add', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/comment/add', type="http", csrf=False, auth='public', cors='*')
     def save_comment_http(self, **kw):
         return self.save_comment(kw)
 
-    @http.route('/comment/add-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/comment/add-json', type="json", csrf=False, auth='public', cors='*')
     def save_comment_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.save_comment(req_body)
@@ -60,15 +60,25 @@ class Controller(http.Controller):
                 subtype_id = 2
             parent_id = values.get('parent_id')
             req_env = http.request.env
-            values = {'model':model_name,'res_id':meeting_id,'body':values['body'],'message_type':'comment','subtype_id':subtype_id}
+            mesg_body = values['body']
+            values = {'model':model_name,'res_id':meeting_id,'body':mesg_body,'message_type':'comment','subtype_id':subtype_id}
             if parent_id:
                 values['parent_id'] = parent_id
-            comment = req_env['mail.message'].create(values)
-            user = comment.author_id.user_id
+
+
+            query = 'insert into mail.message(model,res_id,body,message_type,subtype_id) \
+            VALUES (%s, %s, %s, %s, %s)', (model_name,meeting_id,mesg_body,'comment',subtype_id)
+            res = ws_methods.execute_upd(query)
+            query = 'select max(id) from mail.message where create_uid = '+uid
+            res = ws_methods.execute_query(query)
+
+            comment = req_env['mail.message'].search([('create_uid','=','uid', )])
+            #comment = req_env['mail.message'].create(values)
+            #user = comment.author_id.user_id
             comment = {'id':comment.id,  'body': values['body'],'subtype':subtype_id, 'user':{'id':user.mp_user_id.id,'name':user.name}, 'children':[]}
             return ws_methods.http_response('', comment)
         except:
-            ws_methods.handle()
+            return ws_methods.handle()
 
 
     @http.route('/comment/delete', type="http", csrf=False, auth='none', cors='*')

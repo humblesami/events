@@ -179,7 +179,7 @@ class meeting(http.Controller):
     @http.route('/meeting_point/get_pdf',auth='public', csrf=False, cors='*')
     def get_pdf(self, **kw):
         doc_id = kw['document_id']
-        doc=http.request.env['meeting_point.document'].sudo().search([('id','=',doc_id)])
+        doc=http.request.env['meeting_point.document'].search([('id','=',doc_id)])
         pdf = doc.pdf_doc.decode('utf-8')
         return ws_methods.http_response('', {"pdf_binary": pdf})
 
@@ -203,7 +203,7 @@ class meeting(http.Controller):
             return "Unauthorized"
 
         my_model = http.request.env['meeting_point.document']
-        doc = my_model.sudo().search([('id', '=', doc_id)])
+        doc = my_model.search([('id', '=', doc_id)])
         if not doc:
             return "Document not found"
         if sign_token:

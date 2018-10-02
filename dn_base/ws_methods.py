@@ -14,6 +14,17 @@ def send_mail(mesgtosend):
     recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
+def execute_upd(query):
+    cr = request.env.cr
+    res = cr.execute(query)
+    return res
+
+def execute_read(query):
+    cr = request.env.cr
+    cr.execute(query)
+    res = cr.fetchall()
+    return res
+
 def http_response(er, data=False):
     try:
         if er:

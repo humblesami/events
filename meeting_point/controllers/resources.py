@@ -232,7 +232,7 @@ class ws(http.Controller):
             doc_id = int(doc_id)
             model_name = values['doc_type']
             model_name = doc_types[model_name]
-            file = http.request.env[model_name].sudo().search([('id', '=', doc_id)])
+            file = http.request.env[model_name].search([('id', '=', doc_id)])
             converted = file['pdf_doc'].decode('utf-8')
             doc = {'id': doc_id, "doc": converted, 'doc_name': file['name'], 'type': values['doc_type']}
             obj = {}
@@ -247,7 +247,7 @@ class ws(http.Controller):
                 props = ['topic_id.name', 'topic_id.id']
                 obj = ws_methods.object_to_json_object(file, props)
             elif model_name == 'signature':
-                props = ['meeting_id.name', 'meeting_id.id']
+                props = ['meeting_id.name', 'meeting_id.id', 'mp_signature_status']
                 obj = ws_methods.object_to_json_object(file, props)
 
             for ke in obj:
