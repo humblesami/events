@@ -24,7 +24,7 @@ class topic(http.Controller):
             req_env = http.request.env
             if 'data' in values:
                 values = values['data']
-            topic = req_env['meeting_point.topic'].search([('id', '=', int(values["id"]))])
+            topic = req_env['meeting_point.topic'].sudo().search([('id', '=', int(values["id"]))])
             obj = ws_methods.object_to_json_object(topic, ['lead', 'name', 'duration', 'content', 'id', 'meeting_id.id', 'meeting_id.name'])
             try:
                 duration = float(obj['duration'])

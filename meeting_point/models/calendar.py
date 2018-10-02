@@ -254,7 +254,6 @@ class Meeting(models.Model):
         except:
             a = 1
 
-
     def unlink(self):
         stop_time = self.stop
         stop_time = dn_dt.strTodt(stop_time)
