@@ -41,8 +41,20 @@ class Holidays(models.Model):
             if(date_to.day-date_from.day==0 and date_to.month-date_from.month==0):
                 tempValue = int(self.duration_temp)/HOURS_PER_DAY
             else:
+                contract = self.env['hr.contract'].search([('employee_id', '=', self.employee_id.id)], limit=1)
+                if not contract.resource_calendar_id.id:
+                    day = ['1', '1', '1', '1', '1', '0', '0']
+                else:
+                    day = ['0', '0', '0', '0', '0', '0', '0']
+                    working_schedule = self.env['resource.calendar.attendance'].search(
+                    [ ('calendar_id', '=', contract.resource_calendar_id.id)], order='__last_update')
+                    for val in working_schedule:
+                        dayLocation = int(val.dayofweek)
+                        day[dayLocation] = '1'
                 self.duration_temp = '8'
-                days = int(np.busday_count(date_from, date_to))
+                x = np.asarray(day)
+                x = ''.join(x)
+                days = int(np.busday_count(date_from, date_to,weekmask=x))
                 tempValue = float((int(self.duration_temp)/HOURS_PER_DAY)*(days+1))
 
             self.number_of_days_temp = tempValue
