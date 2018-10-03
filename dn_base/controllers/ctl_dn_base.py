@@ -33,6 +33,12 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/delallcomments', type="http", csrf=False, auth='public', cors='*')
+    def delcomments(self, **kw):
+        #http.request.env['mail.message'].sudo().search([('model', '=', 'calendar.event')]).unlink()
+        return ws_methods.http_response('', 'Done')
+
+
     @http.route('/comment/add', type="http", csrf=False, auth='public', cors='*')
     def save_comment_http(self, **kw):
         return self.save_comment(kw)
@@ -61,16 +67,33 @@ class Controller(http.Controller):
             parent_id = values.get('parent_id')
             req_env = http.request.env
             mesg_body = values['body']
-            values = {'model':model_name,'res_id':meeting_id,'body':mesg_body,'message_type':'comment','subtype_id':subtype_id}
-            if parent_id:
-                values['parent_id'] = parent_id
 
-            req_env.cr.execute('insert into mail_message(model,res_id,body,message_type,subtype_id) VALUES (%s, %s, %s, %s, %s)', (model_name,meeting_id,mesg_body,'comment',subtype_id))
-            query = 'select max(id) from mail_message where create_uid = ' + str((uid))
+            str_uid = str(uid)
+            max_comment_id = 0
+            query = 'select max(id) from mail_message where create_uid = '+ str_uid
             res = ws_methods.execute_read(query)
+            if len(res) > 0:
+                if res[0][0]:
+                    max_comment_id = res[0][0]
+
+            create_date = dn_dt.nowStr()
+            if not parent_id:
+                req_env.cr.execute(
+                    'insert into mail_message(model,res_id,body,message_type,subtype_id,create_uid,create_date) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, uid, create_date))
+            else:
+                req_env.cr.execute(
+                    'insert into mail_message(model,res_id,body,message_type,subtype_id,parent_id,create_uid,create_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, parent_id, uid, create_date))
+
+            str_comment_id = str(max_comment_id)
+            query = 'select id,create_date,create_uid from mail_message where id > '+str_comment_id+' and create_uid = '+str_uid
+            res = ws_methods.execute_read(query)
+            if len(res) == 0:
+                return ws_methods.http_response('Not created')
             comment_id = res[0][0]
             user = req_env.user
-            comment = {'id':comment_id,  'body': values['body'],'subtype':subtype_id, 'user':{'id':user.mp_user_id.id,'name':user.name}, 'children':[]}
+            comment = { 'id':comment_id, 'body': mesg_body,'subtype':subtype_id, 'create_date': create_date, 'user':{'id':user.mp_user_id.id,'name':user.name}, 'children':[]}
             return ws_methods.http_response('', comment)
         except:
             return ws_methods.handle()

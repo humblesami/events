@@ -111,33 +111,24 @@ class meeting(http.Controller):
                 elif attendee['state'] == 'declined':
                     attendee['state'] = 'Declined'
             filters = [('res_id', '=', meeting_object['id']), ('model', '=', 'calendar.event'),
-                       ('message_type', '=', 'comment'),('parent_id','=',False)]
+                       ('message_type', '=', 'comment'),('create_uid','!=',False)]
             comments = req_env['mail.message'].search(filters , order='create_date desc')
             props = ['id', 'body','subtype_id.id', 'create_date']
             ar_comments = ws_methods.objects_list_to_json_list(comments, props)
             i= 0
             for com in comments:
-                try:
-                    user = com.author_id.user_id
-                    ar_comments[i]['user'] = {'name': user.name, 'id': user.mp_user_id.id}
-
-                    ar_children = []
-                    if com.child_ids:
-                        child_ids = com.child_ids.sorted(key=lambda p: (p.create_date))
-                        ar_children = ws_methods.objects_list_to_json_list(child_ids, props)
-                        j = 0
-                        for child_com in child_ids:
-                            try:
-                                user1 = child_com.author_id.user_id
-                                ar_children[j]['user'] = {'name': user1.name, 'id': user1.mp_user_id.id}
-                            except:
-                                ws_methods.handle_silently()
-                                a = 1
-                            j = j + 1
-                    ar_comments[i]["children"] = ar_children
-                except:
-                    ws_methods.handle_silently()
-                    a = 1
+                user = com.create_uid
+                ar_comments[i]['user'] = {'name': user.name, 'id': user.mp_user_id.id}
+                ar_children = []
+                if com.child_ids:
+                    child_ids = com.child_ids.sorted(key=lambda p: (p.create_date))
+                    ar_children = ws_methods.objects_list_to_json_list(child_ids, props)
+                    j = 0
+                    for child_com in child_ids:
+                        user1 = child_com.create_uid
+                        ar_children[j]['user'] = {'name': user1.name, 'id': user1.mp_user_id.id}
+                        j = j + 1
+                ar_comments[i]["children"] = ar_children
                 i = i + 1
 
             id = int(values['id'])
