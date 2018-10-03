@@ -8,6 +8,16 @@ class Folder(models.Model):
     partners = fields.Many2many('meeting_point.users', string="Access")
     sub_folders = fields.One2many('meeting_point.folder', 'parent_folder', string="Sub Folder")
     file_ids = fields.One2many('meeting_point.files','parent_folder', string="Files")
+    allUser = fields.Boolean('All Users')
+
+    @api.onchange('allUser')
+    def alluser(self):
+        val = self.allUser
+        if(val):
+            user_ids = self.env['meeting_point.users'].sudo().search([])
+            self.partners = user_ids
+        else:
+            self.partners = []
 
 class Files(models.Model):
     _name = 'meeting_point.files'

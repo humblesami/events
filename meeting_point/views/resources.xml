@@ -44,8 +44,12 @@
                         <h5>Folder Name</h5>
                         <field name="name"/>
                         <div groups="meeting_point.group_meeting_admin">
-                            <h5>Access Rights: (Available for all by default)</h5>
+                            <h5>Access Rights:</h5>
                             <field name="partners" groups="meeting_point.group_meeting_admin" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                        </div>
+                        <div>
+                            <h6>All Users:</h6>
+                            <field name="allUser" type="checkbox" />
                         </div>
                         <div class="files">
                             <h5>Files:</h5>
