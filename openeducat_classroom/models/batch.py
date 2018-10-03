@@ -30,6 +30,7 @@ class OpBatch(models.Model):
     # _sql_constraints = [
     #     ('unique_batch_room',
     #      'unique(room_id)', 'Classroom should be unique per branch!')]
+    _sql_constraints = [('unique_batch_room', 'CHECK(1=1)', 'This attribute value already exists !')]
 
     @api.model
     def create(self, vals):
