@@ -110,8 +110,10 @@ class meeting(http.Controller):
                     attendee['state'] = 'Rejected'
                 elif attendee['state'] == 'declined':
                     attendee['state'] = 'Declined'
-            filters = [('res_id', '=', meeting_object['id']), ('model', '=', 'calendar.event'),
+            filters = [('res_id', '=', meeting_object['id']), ('parent_id','=',False), ('model', '=', 'calendar.event'),
                        ('message_type', '=', 'comment'),('create_uid','!=',False)]
+            if uid != 1:
+                filters.append(('create_uid','!=',1))
             comments = req_env['mail.message'].search(filters , order='create_date desc')
             props = ['id', 'body','subtype_id.id', 'create_date']
             ar_comments = ws_methods.objects_list_to_json_list(comments, props)
