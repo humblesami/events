@@ -8,6 +8,8 @@ transition: 0.3s
 .meeting_info
 {
 display:flex;
+margin-bottom: 30px;
+
 }
 .meeting_info .details, .meeting_info .date_tam{
 float:left;
@@ -17,13 +19,22 @@ color: white;
 background-color: #3fa19d;
 padding: 5px;
 text-align:center;
+min-width: 69px;
+height: max-content;
+display: flex;
+flex-direction: column;
 }
 .meeting_info .details
 {
 margin-left:10px;
+overflow: hidden;
+
 }
 .acceptancebuttons
 {
 margin-top:5px;
 text-align:center;
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
 }

@@ -5,10 +5,18 @@ class Folder(models.Model):
 
     name = fields.Char(string="Title")
     parent_folder = fields.Many2one('meeting_point.folder', string="Parent Folder", ondelete="cascade")
-    partners = fields.Many2many('meeting_point.users', string="Access")
     sub_folders = fields.One2many('meeting_point.folder', 'parent_folder', string="Sub Folder")
     file_ids = fields.One2many('meeting_point.files','parent_folder', string="Files")
-    allUser = fields.Boolean('All Users')
+    allUser = fields.Boolean('All Users',default = False)
+
+    @api.model
+    def _default_partners(self):
+        """ When active_model is res.partner, the current partners should be attendees """
+        partners = self.env['meeting_point.users'].sudo().search([('user_id','=',self.env.user.id)])
+        return   partners
+
+
+    partners = fields.Many2many('meeting_point.users', string="Access", default=_default_partners)
 
     @api.onchange('allUser')
     def alluser(self):

@@ -16,7 +16,7 @@
                     <field name="id" class="o_hidden meeting_id"/>
                     <field name="im_attendee" class="o_hidden is_attendee"/>
                     <!--<a href="/web#view_type=form&amp;model=calendar.event&amp;action=meeting_point.action_upcoming_meeting"-->
-                       <!--class="meeting_link btn btn-sm btn-default">Details</a>-->
+                       <!--class="meeting_link btn btn-sm btn-primary">Details</a>-->
                     <group>
                         <field name="name" string="Meeting Subject" />
                         <field name="start" string="Starting at" />
@@ -32,6 +32,7 @@
                 </form>
             </field>
         </record>
+
 
         <record id="meeting_point_kanban" model="ir.ui.view">
             <field name="name">meeting_point.kanban</field>
@@ -94,29 +95,29 @@
                                     <t t-if="record.publish.value">
                                         <div class="acceptancebuttons">
                                             <t t-if="record.attendee_status.value=='Accepted'">
-                                                <button type="object" class="btn btn-default btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept"><i class="fa fa-check fa-lg" style="color:white"/>Accept
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept"><i class="fa fa-check fa-lg" style="color:white"/>Accept
                                                 </button>
                                             </t>
                                             <t t-if="record.attendee_status.value!='Accepted'">
-                                                <button type="object" class="btn btn-default btn-sm acceptancebtn" name="do_accept">Accept
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept
                                                 </button>
                                             </t>
 
                                             <t t-if="record.attendee_status.value=='Declined'">
-                                                <button type="object" class="btn btn-default btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
                                                 </button>
                                             </t>
                                             <t t-if="record.attendee_status.value!='Declined'">
-                                                <button type="object" class="btn btn-default btn-sm acceptancebtn" name="do_decline">Decline
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline
                                                 </button>
                                             </t>
 
                                             <t t-if="record.attendee_status.value=='Uncertain'">
-                                                <button type="object" class="btn btn-default btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
                                                 </button>
                                             </t>
                                             <t t-if="record.attendee_status.value!='Uncertain'">
-                                                <button type="object" class="btn btn-default btn-sm acceptancebtn" name="do_tentative">Tentative
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
                                                 </button>
                                             </t>
                                         </div>
@@ -487,27 +488,27 @@
                                     </div>
                                     <div t-if="record.exectime.value=='ongoing' or record.exectime.value=='completed'" class="roster-buttons" groups="meeting_point.group_meeting_admin">
                                         <t>
-                                           <button type="object" name="action_absent" class="btn btn-default btn-sm">
+                                           <button type="object" name="action_absent" class="btn btn-primary btn-sm">
                                                <t t-if="record.attendance.value=='Absent'">
-                                                    <i class="fa fa-check fa-lg" style="color:green"/>
+                                                    <i class="fa fa-check fa-lg" style="color:white"/>
                                                 </t>
                                                Absent
                                            </button>
                                         </t>
 
                                         <t>
-                                           <button type="object" name="action_inperson" class="btn btn-default btn-sm">
+                                           <button type="object" name="action_inperson" class="btn btn-primary btn-sm">
                                                <t t-if="record.attendance.value=='In-Person'">
-                                                    <i class="fa fa-check fa-lg" style="color:green"/>
+                                                    <i class="fa fa-check fa-lg" style="color:white"/>
                                                 </t>
                                                In-Person
                                            </button>
                                         </t>
 
                                         <t>
-                                           <button type="object" name="action_online" class="btn btn-default btn-sm">
+                                           <button type="object" name="action_online" class="btn btn-primary btn-sm">
                                                <t t-if="record.attendance.value=='Online'">
-                                                    <i class="fa fa-check fa-lg" style="color:green"/>
+                                                    <i class="fa fa-check fa-lg" style="color:white"/>
                                                 </t>
                                                Online
                                            </button>
