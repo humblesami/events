@@ -61,8 +61,7 @@ $(function(){
             {
                 odoo.home_page_calendar = 1;
                 $('body').append('<script src="/meeting_point/static/js/calendar/fullcalendar.js"></script>');
-                $('body').append('<script src="/meeting_point/static/js/calendar/moment.min.js"></script>');
-                 $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');
+                $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');
             }
             $('.o_form_view:first').append('<script src="/meeting_point/static/js/calendar/calendar.js"></script>');
         }

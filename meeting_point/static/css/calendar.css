@@ -346,9 +346,6 @@ previous button's border...
 .fc-row table {
 	/* don't put left/right border on anything within a fake row.
 	   the outer tbody will worry about this */
-	border-left: 0 hidden transparent;
-	border-right: 0 hidden transparent;
-
 	/* no bottom borders on rows */
 	border-bottom: 0 hidden transparent;
 }

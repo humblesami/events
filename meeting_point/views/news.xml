@@ -43,9 +43,6 @@
             <field name="arch" type="xml">
                 <form edit="false">
                     <link rel="stylesheet" href="/meeting_point/static/mphome.css"/>
-                    <link rel="stylesheet" href="/meeting_point/static/css/fullcalendar.min.css"/>
-
-
                     <div class="home_btns">
                         <span class="welcome_btn btn bnt-default">Welcome</span>
                         <span class="calendar_btn btn bnt-default">Calendar</span>
@@ -54,7 +51,7 @@
                     <div class="mphome_wrapper row">
                         <div class="col-lg-12 welcome">
                             <h1 class="HeadTitle" id="myScrollspy">
-                                <field name="title" widget="html"/>
+                                <field name="title"/>
                             </h1>
                             <div class="clearfix">
                                 <field class="HeadLogo" name="photo" widget="image"/>

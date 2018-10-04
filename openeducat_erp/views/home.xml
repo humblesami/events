@@ -201,16 +201,10 @@
                         <field name="sessions"/>
                         <field name="classes"/>
                     </div>
-
-                    <!--<script src="/openeducat_erp/static/js/calendar/fullcalendar.js"></script>-->
-                    <!--<script src="/openeducat_erp/static/js/calendar/moment.min.js"></script>-->
-                    <link rel="stylesheet" href="/openeducat_erp/static/css/calendar.css"/>
-                    <script src="/openeducat_erp/static/js/calendar/calendar.js"/>
+                    <script src="/openeducat_erp/static/js/educat_home.js"/>
                 </form>
             </field>
         </record>
-
-
 
         <record id="action_openedu_home" model="ir.actions.act_window" >
             <field name="name">Dashboard</field>

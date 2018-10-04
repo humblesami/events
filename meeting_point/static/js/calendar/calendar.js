@@ -3,7 +3,6 @@
 $(function(){
     var str = $('span[name="public_event"]').html();
     var events = JSON.parse(str);
-    console.log('events are here',events)
     $('#calendar').fullCalendar({
 
         header: {
@@ -42,7 +41,6 @@ $(function(){
                 data = events[val].id
                }
             }
-            console.log('dataa ',data)
             $('.pblic_evnt_id:contains('+data+')').click();
 
 

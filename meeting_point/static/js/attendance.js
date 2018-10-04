@@ -23,17 +23,12 @@ $(function()
         var kc = event.keyCode;
         if (kc === 8 || kc === 9) {
             return true;
-        } else if(this.value.length>9)
+        } else if(this.value.length>15)
             return false;
          if( (kc < 48 || kc > 57) && (kc < 96 || kc > 105)) {
             return false;
         } else {
             return true;
-        }
-    }).blur(function(e){
-        if(this.value.length > 0 && this.value.length<4)
-        {
-            $(this).focus();
         }
     });
 });

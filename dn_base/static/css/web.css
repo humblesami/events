@@ -1,9 +1,14 @@
+body
+{
+    font-size:13.5px;
+}
+
 .o_form_view .oe_inline.o_field_one2many
 {
     width: 100% !important;
 }
 
-
+.o_form_view .o_group .o_td_label .o_form_label{font-weight: bold;}
 .badge.pull-right
 {
     display:none;
@@ -83,12 +88,17 @@ z-index : 99999
     margin-right: 5px;
 }
 
+.panel-heading.note-toolbar .note-color
+{
+    display:none;
+}
+/*
 .o_form_editable .note-editor.panel .note-toolbar button[data-name="picture"],
 .o_form_editable .note-editor.panel .note-toolbar div[data-name="fontsize"]
 {
     display:none
 }
-
+*/
 
 h1, .h1, h2, .h2, h3, .h3
 {
