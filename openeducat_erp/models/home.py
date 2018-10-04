@@ -9,6 +9,8 @@ from odoo.http import request
 class Home(models.Model):
     _name = 'openeducat.home'
 
+
+
     name = fields.Char(required=True)
     title = fields.Char()
     description = fields.Html()
@@ -41,7 +43,19 @@ class Home(models.Model):
 
     forecast_ids = fields.Many2many('op.forecast', string='Courses')
     projected_classes = fields.Many2many('op.projected_class', string='Projections', compute="compute_projected_classes")
+    click=fields.Boolean('Click')
 
+    @api.onchange('click')
+    @api.multi
+    def _default_courses(self):
+        courses = self.env['op.course'].search([])
+        lst = []
+        for c in courses:
+            created = self.env['op.forecast'].search([]).mapped("course_id").ids
+            if c.id not in created:
+                self.env['op.forecast'].create({"course_id": c.id, "name": c.name, "fee": 0})
+
+        self.forecast_ids = self.env['op.forecast'].search([])
 
     @api.multi
     @api.depends('forecast_ids')
@@ -81,6 +95,12 @@ class Home(models.Model):
                                 tot += fee
                         obj["total_fee"] = tot
                         lst.append(obj)
+                    else:
+
+                        fee=0
+                        obj={"name":s.name,"students":count,"fee":fee,"total_fee":fee*count}
+                        lst.append(obj)
+
 
             rec.projected_classes = lst
 
@@ -244,6 +264,7 @@ class Home(models.Model):
 
     @api.onchange('fltr_class')
     def onchange0(self):
+
         if "fltr_chk" in request.session:
             request.session.pop("fltr_chk")
             return

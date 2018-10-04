@@ -16,7 +16,7 @@ function showCalendar(e)
             right: 'year,month,basicWeek,basicDay'
         },
 
-        //defaultDate: '2018-03-12',
+        //defaultDatemeeting_point_kanban: '2018-03-12',
         navLinks: true, // can click day/week names to navigate views
         yearColumns: 3,
         editable: true,
@@ -67,6 +67,22 @@ $('span[name="sessions"]').on('DOMSubtreeModified', function() {
 
 
         });
+
+
+//          $(document).on('click', '.o_menu_sections a', function(){
+//
+//                $('.modal-footer:last .btn-primary').click();
+//                  });
+
+
     }
+     setTimeout(function()
+    {
+            $('div[name="click"] input:last').click();
+            setTimeout(function() {
+                    $('div[name="click"] input:last').click();
+                                  }, 1000);
+    }, 50);
+
 
 });
