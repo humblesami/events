@@ -17,10 +17,16 @@ color: white;
 background-color: #3fa19d;
 padding: 5px;
 text-align:center;
+min-width: 69px;
+display: flex;
+flex-direction: column;
+
 }
 .meeting_info .details
 {
 margin-left:10px;
+overflow: hidden;
+
 }
 .acceptancebuttons
 {
