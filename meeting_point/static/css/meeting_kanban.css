@@ -8,7 +8,7 @@ transition: 0.3s
 .meeting_info
 {
 display:flex;
-margin-bottom: 25px;
+margin-bottom: 30px;
 
 }
 .meeting_info .details, .meeting_info .date_tam{
