@@ -33,6 +33,7 @@
             </field>
         </record>
 
+
         <record id="meeting_point_kanban" model="ir.ui.view">
             <field name="name">meeting_point.kanban</field>
             <field name="model">calendar.event</field>
