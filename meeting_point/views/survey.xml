@@ -29,9 +29,9 @@
                                 <div class="oe_kanban_content" style="text-align: initial;">
 
 
-                                    <h1 class="oe_center">
+                                    <h3 class="oe_center">
                                         <field name="title"/>
-                                    </h1>
+                                    </h3>
 
                                     <t t-if="record.meeting_id.raw_value">
                                         <span>Meeting :</span><field name="meeting_id"/>
