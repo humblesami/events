@@ -125,30 +125,30 @@
                                                             <t t-if="record.publish.value">
                                                                 <div class="acceptancebuttons">
                                                                     <t t-if="record.attendee_status.value=='Accepted'">
-                                                                        <button type="object" class="btn btn-default btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept">
+                                                                        <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept">
                                                                             <i class="fa fa-check fa-lg" style="color:white"/>Accept
 
                                                                         </button>
                                                                     </t>
                                                                     <t t-if="record.attendee_status.value!='Accepted'">
-                                                                        <button type="object" class="btn btn-default btn-sm acceptancebtn" name="do_accept">Accept</button>
+                                                                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept</button>
                                                                     </t>
                                                                     <t t-if="record.attendee_status.value=='Declined'">
-                                                                        <button type="object" class="btn btn-default btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline">
+                                                                        <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline">
                                                                             <i class="fa fa-check fa-lg" style="color:white"/>Decline
 
                                                                         </button>
                                                                     </t>
                                                                     <t t-if="record.attendee_status.value!='Declined'">
-                                                                        <button type="object" class="btn btn-default btn-sm acceptancebtn" name="do_decline">Decline</button>
+                                                                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline</button>
                                                                     </t>
                                                                     <t t-if="record.attendee_status.value=='Uncertain'">
-                                                                        <button type="object" class="btn btn-default btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative">
+                                                                        <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative">
                                                                             <i class="fa fa-check fa-lg" style="color:white"/>Tentative
                                                                         </button>
                                                                     </t>
                                                                     <t t-if="record.attendee_status.value!='Uncertain'">
-                                                                        <button type="object" class="btn btn-default btn-sm acceptancebtn" name="do_tentative">Tentative</button>
+                                                                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative</button>
                                                                     </t>
                                                                 </div>
                                                             </t>
@@ -181,7 +181,7 @@
                     <script src="/meeting_point/static/extra.js"/>
                     <script src="/meeting_point/static/js/home.js"/>
                     <script>
-                    $(".related-products").owlCarousel({
+                        $(".related-products").owlCarousel({
                         navigation: true,
                         pagination: false,
                         autoPlay: 9000, //Set AutoPlay to 5 seconds
@@ -189,10 +189,10 @@
                         slideSpeed: 600,
                         items: 4,
                         itemsDesktop: [1199, 4],
-                        itemsDesktopSmall: [979, 2],
-                        itemsTablet: [800, 2],
-                        itemsMobile: [479, 1]
-                    });
+                        itemsDesktopSmall: [1190, 3],
+                        itemsTablet: [900, 2],
+                        itemsMobile: [585, 1]
+                        });
                     </script>
                 </form>
             </field>

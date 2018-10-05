@@ -6,7 +6,7 @@
             <field name="model">survey.survey</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban default_order="date">
+               <kanban default_order="date">
                     <field name="stage_id"/>
                     <field name="designed"/>
                     <field name="title"/>
@@ -19,35 +19,15 @@
                     <field name="my_status"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div
-                                    t-attf-class="survey_kanban_reocord oe_kanban_card oe_kanban_global_click oe_kanban_card oe_kanban_action"
-                                    groups="meeting_point.group_meeting_admin">
+                            <div t-attf-class="survey_kanban_reocord oe_kanban_card oe_kanban_global_click oe_kanban_card oe_kanban_action" groups="meeting_point.group_meeting_admin">
                                 <div class="seen_by_me">
                                     <field name="seen_by_me"/>
                                 </div>
                                 <div class="kanban_del">
-                                    <a type="delete"
-                                       groups="meeting_point.group_meeting_admin">Delete</a>
+                                    <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
                                 </div>
                                 <div class="oe_kanban_content" style="text-align: initial;">
-                                    <ul class="survey_kanban" style="float:right">
-                                        <li>
-                                            <t t-if="! record.designed.raw_value">
-                                                <a class="survey-button btn btn-primary mb4 mb4" style="width: 100%" groups="meeting_point.group_meeting_admin">Test</a>
-                                            </t>
-                                            <t t-if="record.designed.raw_value">
-                                                <t t-if="record.my_status.raw_value=='pending' ">
-                                                    <button type="object" class="btn btn-primary mb4 btn-md acceptancebtn oe_center" style="width: 100%" name="action_test_survey" groups="meeting_point.group_meeting_admin" attrs="{'invisible':[('stage_id', '=',3)]}">Start</button>
-                                                </t>
-                                            </t>
-                                        </li>
-                                        <li>
-                                            <a type="object" style="width: 100%" class="survey-button btn btn-primary mb4" name="action_send_survey" groups="meeting_point.group_meeting_admin">Share &amp;amp; Invite</a>
-                                        </li>
-                                        <li>
-                                            <a class="survey-button btn btn-primary mb4" style="width: 100%" name="action_result_survey" type="object" groups="meeting_point.group_meeting_admin">Analyze Answers</a>
-                                        </li>
-                                    </ul>
+
 
                                     <h1 class="oe_center">
                                         <field name="title"/>
@@ -64,12 +44,28 @@
                                             <h3 class="badge" style="float:right">Completed<i class="fa fa-check fa-lg" style="color:green"/></h3>
                                         </t>
                                     </div>
+                                    <div class="survey_kanban">
+
+                                            <t t-if="! record.designed.raw_value">
+                                                <button class="survey-button btn btn-primary  ml4" style="width: 100%" groups="meeting_point.group_meeting_admin">Test</button>
+                                            </t>
+                                            <t t-if="record.designed.raw_value">
+                                                <t t-if="record.my_status.raw_value=='pending' ">
+                                                    <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="width: 100%" name="action_test_survey" groups="meeting_point.group_meeting_admin" attrs="{'invisible':[('stage_id', '=',3)]}">Start</button>
+                                                </t>
+                                            </t>
+
+
+                                            <button type="object" style="width: 100%" class="survey-button btn btn-primary ml4" name="action_send_survey" groups="meeting_point.group_meeting_admin">Share</button>
+
+
+                                            <button class="survey-button btn btn-primary ml4" style="width: 100%" name="action_result_survey" type="object" groups="meeting_point.group_meeting_admin">Analyze</button>
+
+                                    </div>
                                 </div>
                             </div>
 
-                            <div
-                                    t-attf-class="survey_kanban_reocord oe_kanban_card  oe_kanban_card oe_kanban_action"
-                                    groups="!meeting_point.group_meeting_admin">
+                            <div t-attf-class="survey_kanban_reocord oe_kanban_card  oe_kanban_card oe_kanban_action" groups="!meeting_point.group_meeting_admin">
                                 <div class="oe_kanban_content" style="text-align: initial;">
                                     <div class="seen_by_me">
                                         <field name="seen_by_me"/>
@@ -87,26 +83,24 @@
                                         <field name="meeting_id" invisible="1"/>
                                     </t>
                                     <div>
-                                        <ul class="survey_kanban" style="float:right">
-                                            <li>
+                                        <div class="survey_kanban">
+
                                                 <a name="action_test_survey" type="object" groups="meeting_point.group_meeting_admin">Design
                                                 </a>
-                                            </li>
-                                            <li>
                                                 <t t-if="record.designed.raw_value">
                                                     <t t-if="record.my_status.raw_value=='pending' ">
-                                                        <button type="object" class="btn btn-primary mb4 btn-md acceptancebtn oe_center" style="    width: 100%" name="action_test_survey" groups="!meeting_point.group_meeting_admin" attrs="{'invisible':[('stage_id', '=',3)]}">Start
+                                                        <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="    width: 100%" name="action_test_survey" groups="!meeting_point.group_meeting_admin" attrs="{'invisible':[('stage_id', '=',3)]}">Start
                                                         </button>
                                                     </t>
                                                 </t>
-                                            </li>
-                                        </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </t>
                     </templates>
                 </kanban>
+
             </field>
         </record>
 
@@ -173,7 +167,7 @@
                         <div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">
                             <h4>Respondents</h4>
                             <field name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
-                            placeholder="Select respondents..." context="{'force_email':True}" class="oe_inline"/>
+                                   placeholder="Select respondents..." context="{'force_email':True}" class="oe_inline"/>
                         </div>
 
                         <notebook class="survey_questions">
@@ -214,7 +208,7 @@
                     <style>
                         .modal .o_form_sheet .o_group
                         {
-                            display:none;
+                        display:none;
                         }
                     </style>
                     <sheet>
@@ -231,7 +225,7 @@
                                 <div class="col-md-6 col-md-offset-3 o_preview_questions">
                                     <!-- Multiple Lines Text Zone -->
                                     <div attrs="{'invisible': [('type', '!=', 'free_text')]}">
-                                            <i class="fa fa-align-justify fa-4x"/>
+                                        <i class="fa fa-align-justify fa-4x"/>
                                     </div>
                                     <!-- Single Line Text Zone -->
                                     <div attrs="{'invisible': [('type', '!=', 'textbox')]}">
@@ -385,7 +379,7 @@
                         <div class='jumbotron mt32'>
                             <h1 t-field='survey.title' />
                             <div t-field='survey.description' class="oe_no_empty"/>
-                            <a class="btn btn-primary mb4 btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
+                            <a class="btn btn-primary ml4 btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
                                 Start
                             </a>
                         </div>
@@ -427,8 +421,8 @@
                 </t>
                 <div class="text-center mt16 mb16">
                     <button t-if="survey.users_can_go_back and page_nr > 0" type="submit" class="btn btn-default" name="button_submit" value="previous">Previous page</button>
-                    <button t-if="not last" type="submit" class="btn btn-primary mb4" name="button_submit" value="next">Next page</button>
-                    <button t-if="last" type="submit" class="btn btn-primary mb4" name="button_submit" value="finish">Submit</button>
+                    <button t-if="not last" type="submit" class="btn btn-primary ml4" name="button_submit" value="next">Next page</button>
+                    <button t-if="last" type="submit" class="btn btn-primary ml4" name="button_submit" value="finish">Submit</button>
                 </div>
             </form>
 
@@ -441,7 +435,7 @@
                             <h4 class="modal-title">A problem has occured</h4>
                         </div>
                         <div class="modal-body"><p>Something went wrong while contacting survey server. <strong class="text-danger">Your answers have probably not been recorded.</strong> Try refreshing.</p></div>
-                        <div class="modal-footer"><button type="button" class="btn btn-primary mb4" data-dismiss="modal">Close</button></div>
+                        <div class="modal-footer"><button type="button" class="btn btn-primary ml4" data-dismiss="modal">Close</button></div>
                     </div>
                 </div>
             </div>

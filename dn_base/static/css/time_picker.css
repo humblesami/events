@@ -51,10 +51,12 @@
     width:100%;
 }
 
-ul.survey_kanban {
+.survey_kanban {
     list-style: none;
     margin: 0;
     padding: 0;
+    display:flex;
+    float:right;
 }
 
 .acceptancebuttonsactive{
