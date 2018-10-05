@@ -1,3 +1,4 @@
+import json
 import string
 import random
 import requests
@@ -81,3 +82,25 @@ class auth(http.Controller):
         except:
             res = ''
         return res
+
+    @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
+    def verifytoken(self, **kw):
+        try:
+            request = http.request
+            values = json.loads(kw['user'])
+            if request.uid and request.uid != 4:
+                return "1"
+            if not values['token']:
+                return "Token Not Given"
+            db = values['db']
+            token = str(values['token'])
+            # original_token = decode('sM:de_', token)
+            filters = [('auth_token', '=', token)]
+            user = request.env['dnspusers'].sudo().search(filters)
+            if not user:
+                return "Not found"
+            # password = decode('sM:de_', password)
+            uid = request.session.authenticate(db, user.login, user.password)
+            return "1"
+        except:
+            return "Invalid Token"

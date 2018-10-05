@@ -5,6 +5,53 @@ from odoo.addons.dn_base import ws_methods
 
 class meeting(http.Controller):
 
+
+    @http.route('/meeting/respond-invitation', type="http", csrf=False, auth='public', cors='*')
+    def acceptrejectmeeting(self, **kw):
+        return self.editMeetState(kw)
+
+    @http.route('/meeting/respond-invitation-json', type="json", csrf=False, auth='public', cors='*')
+    def acceptrejectmeetingjson(self, **kw):
+        req_body = http.request.jsonrequest
+        return self.editMeetState(req_body)
+
+    def editMeetState(self, values):
+        try:
+            uid = ws_methods.check_auth(values)
+            if not uid:
+                return ws_methods.not_logged_in()
+            # req_env = http.request.env
+            if 'data' in values:
+                values = values['data']
+            meeting_id = values.get('meeting_id')
+            if not meeting_id:
+                ws_methods.http_response('Please provide meeting id')
+            status = values['status']
+            meeting = http.request.env['calendar.event'].search([('id', '=', meeting_id)])
+            res = False
+            if status == 'Accept':
+                res = meeting.do_accept()
+            elif status == 'Decline':
+                res = meeting.do_decline()
+            else:
+                res = meeting.do_tentative()
+            return ws_methods.http_response('', "success")
+        except:
+            try:
+                res = sys.exc_info()
+                error_message = False
+                if len(res) > 1:
+                    res = res[1]
+                    if res.name:
+                        error_message = res.name
+                if error_message:
+                    return ws_methods.http_response(error_message)
+                else:
+                    return ws_methods.handle()
+            except:
+                return ws_methods.handle()
+
+
     @http.route('/meeting/summary', type="http", csrf=False, auth='none', cors='*')
     def mp_meeting_http(self, **kw):
         res= self.mp_meeting_summary(kw)
@@ -29,8 +76,10 @@ class meeting(http.Controller):
             meeting = req_env['calendar.event'].sudo().search([('id', '=', int(values["id"]))])
             props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_numbe', 'pin',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
-                     'company']
+                     'status', 'company']
+
             meeting_object = ws_methods.object_to_json_object(meeting, props)
+            meeting_object['duration'] = dn_dt.hours_to_hoursNminutes(meeting_object['duration'])
 
             if req_env.user.partner_id in meeting.partner_ids:
                 meeting_object["my_event"] = 1
@@ -65,7 +114,7 @@ class meeting(http.Controller):
             meeting = req_env['calendar.event'].search(filters, limit=1, order='id')
             props = ['id', 'start', 'stop', 'duration', 'zip', 'video_call_link', 'conference_bridge_numbe', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
-                     'company']
+                     'status', 'company']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
             try:
                 duration = float(meeting_object['duration'])
@@ -98,10 +147,13 @@ class meeting(http.Controller):
             meeting_object['sign_docs'] = docs_to_sign
             surveys = meeting.survey_ids.filtered(lambda r: r.my_status == 'pending')
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(surveys, ['id', 'title'])
-            props = ['attendance','state','email','response_by', 'photo']
+            props = ['attendance','state','email','response_by', 'photo', 'partner_id']
             meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
 
+            cnt = 0
             for attendee in meeting_object['attendees']:
+                attendee['uid'] = attendee['partner'].user_id.id
+                del attendee['partner']
                 if attendee['state'] == 'needsAction':
                     attendee['state'] = 'No Response'
                 elif attendee['state'] == 'accepted':
@@ -110,6 +162,8 @@ class meeting(http.Controller):
                     attendee['state'] = 'Rejected'
                 elif attendee['state'] == 'declined':
                     attendee['state'] = 'Declined'
+                elif attendee['state'] == 'tentative':
+                    attendee['state'] = 'Uncertain'
             filters = [('res_id', '=', meeting_object['id']), ('parent_id','=',False), ('model', '=', 'calendar.event'),
                        ('message_type', '=', 'comment'),('create_uid','!=',False)]
             if uid != 1:
@@ -213,48 +267,3 @@ class meeting(http.Controller):
             return ws_methods.http_response('', meetings)
         except:
             return ws_methods.handle()
-
-    @http.route('/meeting/respond-invitation', type="http", csrf=False, auth='none', cors='*')
-    def attendeeStatusHttp(self, **kw):
-        return self.meetingAttendeeStatus(kw)
-
-    @http.route('/meeting/respond-invitation-json', type="json", csrf=False, auth='none', cors='*')
-    def attendeeStatusJson(self, **kw):
-        req_body = http.request.jsonrequest
-        return self.meetingAttendeeStatus(req_body)
-
-    def meetingAttendeeStatus(self, values):
-        try:
-            uid = ws_methods.check_auth(values)
-            if not uid:
-                return ws_methods.not_logged_in()
-            # req_env = http.request.env
-            if 'data' in values:
-                values = values['data']
-            meeting_id = values.get('meeting_id')
-            if not meeting_id:
-                ws_methods.http_response('Please provide meeting id')
-            status = values['status']
-            meeting = http.request.env['calendar.event'].search([('id', '=', meeting_id)])
-            res = False
-            if status == 'Accept':
-                res = meeting.do_accept()
-            elif status == 'Decline':
-                res = meeting.do_decline()
-            else:
-                res = meeting.do_tentative()
-            return ws_methods.http_response('', "success")
-        except:
-            try:
-                res = sys.exc_info()
-                error_message = False
-                if len(res) > 1:
-                    res = res[1]
-                    if res.name:
-                        error_message = res.name
-                if error_message:
-                    return ws_methods.http_response(error_message)
-                else:
-                    return ws_methods.handle()
-            except:
-                return ws_methods.handle()
