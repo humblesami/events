@@ -97,10 +97,10 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="details">
-                                                                        <h2>
+                                                                        <h3>
                                                                             <field name="name"/>
-                                                                        </h2>
-                                                                        <field name="start_datetime"/>
+                                                                        </h3>
+                                                                        <!--<field name="start_datetime"/>-->
                                                                         <p class="oe_module_name">
                                                                             <p>
                                                                                 <field name="company" string="Location"/>
