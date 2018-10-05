@@ -178,7 +178,7 @@
                         </page>
                         <page string="Projections">
 
-                            <group string="Select courses and fee for projections">
+                            <group string="Set course fee for projections">
 
                                 <field name="forecast_ids" nolabel="1"/>
                             </group>

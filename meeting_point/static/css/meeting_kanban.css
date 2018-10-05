@@ -1,9 +1,5 @@
 .oe_module_vignette.oe_kanban_global_click
-{
-text-align:initial;
-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6);
-transition: 0.3s
-}
+{text-align:initial;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6);transition: 0.3s;display: flex;/* height: 100%; */}
 
 .meeting_info
 {

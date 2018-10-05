@@ -7,7 +7,7 @@
             <field name="model">op.forecast</field>
             <field name="sequence" eval="1"/>
             <field name="arch" type="xml">
-                <tree>
+                <tree create="false" delete="false" >
                     <field name="name" />
                     <!--<field name="fee" />-->
 

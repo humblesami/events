@@ -193,7 +193,7 @@
      -ms-touch-action: pan-y;
 }
  .owl-carousel .owl-wrapper{
-     display: none;
+     display: flex!important;
      position: relative;
      margin-left: 6px;
      -webkit-transform: translate3d(0px, 0px, 0px);
@@ -212,6 +212,7 @@
 }
  .owl-carousel .owl-item{
      float: left;
+     display: flex;
      padding:0 10px;
 }
  .owl-controls .owl-page, .owl-controls .owl-buttons div{
@@ -357,13 +358,14 @@ span.o_field_widget
 }
 
 .related-products .item{
-     display: block !important;
-     width: auto !important;
-     min-width: auto;
-     margin: 0px 0px 0 -3px !important;
-     flex: none !important;
-     box-shadow: none !important;
-/*      padding:0 !important; */
+     /* display: block !important; */
+     /* width: auto !important; */
+     /* min-width: auto; */
+     /* margin: 0px 0px 0 -3px !important; */
+     /* flex: none !important; */
+     /* box-shadow: none !important; */
+     /*      padding:0 !important; */
+     /* height: 100%; */
 }
 
 .related-products .item:before, .related-products .item:after{
