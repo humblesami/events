@@ -243,27 +243,26 @@ class meeting(http.Controller):
             if 'data' in values:
                 values = values['data']
 
+            myModel = req_env['calendar.event']
+            filters = [('publish', '=', True)]
             if not 'meeting_type' in values:
                 values['meeting_type'] = 'upcoming'
             if values['meeting_type'] == 'completed':
-                total_cnt = len(req_env['calendar.event'].search([('publish', '=', True),('stop', '<', date_value)]))
-                meetings = req_env['calendar.event'].search([('publish', '=', True), (
-                'stop', '<', date_value)], offset=offset, limit=limit)  # .filtered(lambda r: partner in r.partner_ids)
+                filters.append(('stop', '<', date_value))
             elif values['meeting_type'] == 'archived':
-                total_cnt = len(req_env['calendar.event'].search([('archived', '=', True)]))
-                meetings = req_env['calendar.event'].search(
-                    [('archived', '=', True)], offset=offset, limit=limit)  # .filtered(lambda r: partner in r.partner_ids)
+                filters.append(('archived', '=', True))
             else:
-                total_cnt = len(req_env['calendar.event'].search([('publish', '=', True), ('stop', '>=', date_value)]))
-                meetings = req_env['calendar.event'].search([('publish', '=', True), (
-                'stop', '>=', date_value)], offset=offset, limit=limit)  # .filtered(lambda r: partner in r.partner_ids)
-
+                filters.append(('stop', '>=', date_value))
             props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_numbe', 'pin',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'company', 'status']
+
+            #total_cnt = len(myModel.search(filters))
+            partner = req_env.user.partner_id
+            meetings = myModel.search(filters, offset = offset, limit = limit).filtered(lambda r: partner in r.partner_ids)
             meetings = ws_methods.objects_list_to_json_list(meetings, props)
-            current_cnt = len(meetings)
-            meetings = {'records': meetings, 'total': total_cnt, 'count': current_cnt}
+            #current_cnt = len(meetings)
+            meetings = {'records': meetings, 'total': 0, 'count': 0}
             return ws_methods.http_response('', meetings)
         except:
             return ws_methods.handle()

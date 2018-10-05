@@ -269,10 +269,12 @@ class Meeting(models.Model):
     def look_if_invited(self):
         my_pid = self.env.user.partner_id.id
         for event in self:
+            event.im_attendee = "no"
             for p in event.partner_ids:
                 my_pid == p.id
                 event.im_attendee = "yes"
                 break
+
 
     @api.multi
     def _compute_archive(self):
