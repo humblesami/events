@@ -1,7 +1,7 @@
 if(!odoo.home_page_calendar)
 {
     odoo.home_page_calendar = 1;
-    $('body').append('<script src="/openeducat_erp/static/js/fullcalendar.js"></script>');
+    $('body').append('<script src="/openeducat_erp/static/js/calendar/fullcalendar.js"></script>');
     $('body').append(' <link rel="stylesheet" href="/openeducat_erp/static/css/calendar.css"/>');
 }
 
@@ -84,13 +84,7 @@ $('span[name="sessions"]').on('DOMSubtreeModified', function() {
 
 
     }
-     setTimeout(function()
-    {
-            $('div[name="click"] input:last').click();
-            setTimeout(function() {
-                    $('div[name="click"] input:last').click();
-                                  }, 1000);
-    }, 50);
+
 
 
 });

@@ -180,7 +180,7 @@
 
                             <group string="Set course fee for projections">
 
-                                <field name="forecast_ids" nolabel="1"/>
+                                <field name="forecast_ids" readonly="0" nolabel="1"/>
                             </group>
 
                             <div class="tables_div" style="border: solid 1px gainsboro;border-radius: 5px;margin:10px">
@@ -191,7 +191,7 @@
                                 </field>
                             </div>
 
-<field class="o_hidden" name="click"/>
+
                         </page>
                     </notebook>
 
