@@ -28,7 +28,9 @@ class auth(http.Controller):
                 return ws_methods.http_response('Please provide login and password')
             login = values['login']
             password = str(values['password'])
-            uid = http.request.session.authenticate(db, login, password)
+
+            request = http.request
+            uid = request.session.authenticate(db, login, password)
             if not uid:
                 return ws_methods.http_response('Invalid credentials')
 
@@ -36,7 +38,7 @@ class auth(http.Controller):
             # token = encode('sM:de_', token)
             # password = ws_methods.encode('sM:de_', password)
 
-            custom_user_model = http.request.env['dnspusers']
+            custom_user_model = request.env['dnspusers']
             user = custom_user_model.sudo().search([('user_id', '=', uid)])
 
             if not user:
@@ -45,7 +47,17 @@ class auth(http.Controller):
                 user.sudo().write({'login':login, 'password':password,'auth_token':token})
 
             user = user.user_id
-            request = http.request
+            app_name = values.get('app_name')
+            groups = []
+            for group in  user.groups_id:
+                if app_name:
+                    if app_name not in group.full_name:
+                        continue
+                    else:
+                        groups.append(group.full_name)
+                else:
+                    groups.append(group.full_name)
+
             http_req = request.httprequest
             if uid:
                 agent = http_req.user_agent
@@ -65,7 +77,7 @@ class auth(http.Controller):
                     d = 1
                 except:
                     return ws_methods.handle()
-            return ws_methods.http_response('', {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': ''})
+            return ws_methods.http_response('', {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': '','groups':groups })
         except:
             return ws_methods.handle()
 
@@ -101,6 +113,7 @@ class auth(http.Controller):
                 return "Not found"
             # password = decode('sM:de_', password)
             uid = request.session.authenticate(db, user.login, user.password)
+
             return "1"
         except:
             return "Invalid Token"
