@@ -189,7 +189,7 @@ class Document(models.Model):
                 image_result = open(signarure_image_path,'wb')
                 image_result.write(f)
                 image_result.close()
-                pdf.image(signarure_image_path, x= -8, y=None, w=135, h=30)
+                pdf.image(signarure_image_path, x=-2, y=None, w=345, h=150)
             pdf.ln(5)
             pdf.set_font('Arial', 'U', 15)
             signature_authority = sign.user_id

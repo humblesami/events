@@ -41,13 +41,13 @@ class Home(models.Model):
     course = fields.Many2one('op.course', 'Course')
     branch = fields.Many2one('op.branch', 'Location(Education Center)')
 
-    forecast_ids = fields.Many2many('op.forecast', string='Courses')
+    forecast_ids = fields.Many2many('op.forecast', string='Courses',compute="compute_forecast_courses")
     projected_classes = fields.Many2many('op.projected_class', string='Projections', compute="compute_projected_classes")
     click=fields.Boolean('Click')
 
-    @api.onchange('click')
+    # @api.onchange('click')
     @api.multi
-    def _default_courses(self):
+    def compute_forecast_courses(self):
         courses = self.env['op.course'].search([])
         lst = []
         for c in courses:
@@ -57,10 +57,12 @@ class Home(models.Model):
 
         self.forecast_ids = self.env['op.forecast'].search([])
 
-    @api.multi
+
     @api.depends('forecast_ids')
+    @api.multi
     def compute_projected_classes(self):
         for rec in self:
+            self.env['op.projected_class'].search([]).unlink()
             arr=["no","term1","term2","term3","term4","term5"]
             lst=[]
             for f in rec.forecast_ids:
@@ -78,11 +80,13 @@ class Home(models.Model):
                             fee=f.fee
                         elif s.time=="eve":
                             fee=f.fee_evening
-                        obj={"name":s.name,"students":count,"fee":fee,"total_fee":fee*count}
-                        lst.append(obj)
+                        # obj={"name":s.name,"students":count,"fee":fee,"total_fee":fee*count}
+                        obj=self.env['op.projected_class'].create({"name":s.name,"students":count,"fee":fee,"total_fee":fee*count})
+                        lst.append(obj.id)
 
                     elif f.term_fees:
-                        obj = {"name": s.name, "students": count}
+                        # obj = {"name": s.name, "students": count}
+                        obj = self.env['op.projected_class'].create({"name": s.name, "students": count})
                         tot=0
                         for t in f.term_fees:
                             if s.time == "mor":
@@ -94,15 +98,16 @@ class Home(models.Model):
                                 obj[arr[t.term]] = fee
                                 tot += fee
                         obj["total_fee"] = tot
-                        lst.append(obj)
+                        lst.append(obj.id)
                     else:
 
                         fee=0
-                        obj={"name":s.name,"students":count,"fee":fee,"total_fee":fee*count}
-                        lst.append(obj)
+                        # obj={"name":s.name,"students":count,"fee":fee,"total_fee":fee*count}
+                        obj = self.env['op.projected_class'].create({"name":s.name,"students":count,"fee":fee,"total_fee":fee*count})
+                        lst.append(obj.id)
 
 
-            rec.projected_classes = lst
+            rec.projected_classes = self.env['op.projected_class'].search([('id','in',lst)])
 
 
 
