@@ -64,12 +64,12 @@ div#wrapwrap footer
 
 .oe_login_buttons a
 {
-color : white;
+color : blue;
 }
 
 .oe_login_buttons a:hover
 {
-color : white;
+color : black;
 }
 
 #wrapwrap

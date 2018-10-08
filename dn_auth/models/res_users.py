@@ -222,6 +222,7 @@ class Settings(models.Model):
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
     apply_password_rules = fields.Char(string='Password Rules')
+    auth_signup_reset_password = fields.Boolean(string='Enable password reset from Login page',default = 'True')
 
     @api.model
     def get_values(self):
@@ -229,7 +230,8 @@ class ResConfigSettings(models.TransientModel):
         get_param = self.env['ir.config_parameter'].sudo().get_param
         password_rules = get_param('dn_auth.password_rules')
         res.update(
-            apply_password_rules = password_rules
+            apply_password_rules = password_rules,
+            auth_signup_reset_password = True,
         )
         return res
 

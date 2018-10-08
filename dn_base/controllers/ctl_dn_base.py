@@ -213,3 +213,9 @@ class MyBinary(Binary):
         if token:
             response.set_cookie('fileToken', token)
         return response
+
+    @http.route('/dn_base/change_password', auth='user',csrf=False)
+    def change(self,**kw):
+        req_env = http.request.env
+        new_passwd = kw.get('new_passwd')
+        res = req_env.user.write({'password': new_passwd})
