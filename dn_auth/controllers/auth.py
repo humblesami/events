@@ -58,7 +58,9 @@ class auth(http.Controller):
                 else:
                     groups.append(group.full_name)
 
-            user_photo = user.image_small.decode('utf-8')
+            user_photo = ''
+            if user.image_small:
+                user_photo = user.image_small.decode('utf-8')
             http_req = request.httprequest
             if uid:
                 agent = http_req.user_agent

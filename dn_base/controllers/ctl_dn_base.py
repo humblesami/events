@@ -214,8 +214,21 @@ class MyBinary(Binary):
             response.set_cookie('fileToken', token)
         return response
 
-    @http.route('/dn_base/change_password', auth='user',csrf=False)
+    @http.route('/dn_base/change_password', auth='none',cors='*', csrf=False)
     def change(self,**kw):
-        req_env = http.request.env
-        new_passwd = kw.get('new_passwd')
-        res = req_env.user.write({'password': new_passwd})
+        try:
+            req_env = http.request.env
+            new_passwd = kw.get('new')
+            old_passwd = kw.get('old')
+            token = kw.get('token')
+            db = kw.get('db')
+            filters = [('auth_token', '=', token)]
+            user = request.env['dnspusers'].sudo().search(filters)
+            uid = request.session.authenticate(db, user.login, old_passwd)
+            if uid:
+                res = req_env.user.write({'password': new_passwd})
+                return ws_methods.http_response('','success')
+            else:
+                return ws_methods.http_response('Invalid Password')
+        except:
+            return ws_methods.handle()
