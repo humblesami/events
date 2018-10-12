@@ -58,6 +58,7 @@ class auth(http.Controller):
                 else:
                     groups.append(group.full_name)
 
+            user_photo = user.image_small.decode('utf-8')
             http_req = request.httprequest
             if uid:
                 agent = http_req.user_agent
@@ -77,7 +78,7 @@ class auth(http.Controller):
                     d = 1
                 except:
                     return ws_methods.handle()
-            return ws_methods.http_response('', {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': '','groups':groups })
+            return ws_methods.http_response('', {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': user_photo,'groups':groups })
         except:
             return ws_methods.handle()
 
@@ -102,10 +103,11 @@ class auth(http.Controller):
             values = json.loads(kw['user'])
             if request.uid and request.uid != 4:
                 return "1"
-            if not values['token']:
+            token = values.get('token')
+            if not token:
                 return "Token Not Given"
+            token = str(token)
             db = values['db']
-            token = str(values['token'])
             # original_token = decode('sM:de_', token)
             filters = [('auth_token', '=', token)]
             user = request.env['dnspusers'].sudo().search(filters)
