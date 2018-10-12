@@ -6,14 +6,14 @@ from odoo.addons.dn_base import ws_methods
 from odoo.http import request
 from odoo.exceptions import ValidationError
 
-from odoo.addons.website_form.controllers.main import WebsiteForm
+# from odoo.addons.website_form.controllers.main import WebsiteForm
 
 import json
 
 
-class Websitebase(WebsiteForm):
+class Websitebase(http.Controller):
 
-    @http.route('/website/recaptcha/',type='http',auth='public',methods=['POST'],website=True,multilang=False,csrf=False)
+    @http.route('/website/recaptcha/',type='http',auth='public',csrf=False)
     def recaptcha_public(self):
         try:
             data= json.dumps({
@@ -24,7 +24,7 @@ class Websitebase(WebsiteForm):
         except ValidationError:
             return ws_methods.handle()
 
-    @http.route('/website/verify',type='http',auth='public',methods=['POST'],multilang=False, csrf=False )
+    @http.route('/website/verify',type='http',auth='public', csrf=False )
     def datz(self,**kwargs):
         """ Inject ReCaptcha validation into pre-existing data extraction """
         # res = super(WebsiteForm, self).extract_data(model, values)

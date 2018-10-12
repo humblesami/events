@@ -6,9 +6,9 @@ console.log('11111111')
 try
 {
     dn_json_rpc('/website/recaptcha/',{},function(result){
-    console.log('valuez',result)
+//    console.log('valuez',result)
     var data = JSON.parse(result)
-    console.log('here is comes')
+//    console.log('here is comes')
      var self = this;
      this.$captchas = self.$('.o_website_base_recaptcha');
     $captchas.append($(
@@ -28,13 +28,13 @@ function resetCaptcha(){
 }
 
 function enableBtn(){
-        console.log(1121,grecaptcha)
-        console.log(grecaptcha.getResponse())
+//        console.log(1121,grecaptcha)
+//        console.log(grecaptcha.getResponse())
        var input_data ={responseData:grecaptcha.getResponse()}
       var url = "/website/verify"
-      console.log(url,33)
+//      console.log(url,33)
     dn_json_rpc(url,input_data,function(result){
-        console.log('121',result)
+//        console.log('121',result)
         if (result == true)
         {
         document.getElementById("button1").style.display =  "flex";
