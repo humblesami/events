@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright 2016-2017 LasLabs Inc.
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+
+
+<odoo noupdate="1">
+    <record id="recaptcha_key_site_new" model="ir.config_parameter">
+        <field name="key">recaptcha.key.site</field>
+        <field name="value">Obtain from Google</field>
+    </record>
+    <record id="recaptcha_key_secret_new" model="ir.config_parameter">
+        <field name="key">recaptcha.key.secret</field>
+        <field name="value">Obtain from Google</field>
+    </record>
+     <!--<record id="crm.model_crm_lead" model="ir.model">-->
+        <!--<field name="website_form_recaptcha">True</field>-->
+    <!--</record>-->
+</odoo>
