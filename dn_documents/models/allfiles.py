@@ -4,6 +4,13 @@ import base64
 import traceback
 import subprocess
 from random import randint
+
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfpage import PDFPage
+from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
+from pdfminer.layout import LAParams
+import io
+
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.addons.dn_base.models.statics import scan_virus
@@ -18,6 +25,7 @@ class AllFiles(models.Model):
     html = fields.Char(string="Html")
     original_pdf = fields.Binary(string="Without Signs")
     path = fields.Char(string="View Document", store=False, compute='get_path')
+    content = fields.Char(string="Content")
 
     def get_path(self):
         for doc in self:
@@ -42,12 +50,13 @@ class AllFiles(models.Model):
         try:
             self.vaildate_file(values)
             if values.get("attachment"):
-                pdf_doc = self.get_pdf(values['attachment'], values['filename'])
+                pdf_doc,content = self.get_pdf(values['attachment'], values['filename'])
                 if values['filename'].endswith(('xls', 'xlsx')):
                     values['html'] = pdf_doc
                 else:
                     values['pdf_doc'] = pdf_doc
                     values['original_pdf'] = pdf_doc
+                    values['content'] = content
             doc = super(AllFiles, self).create(values)
             return doc
         except:
@@ -59,12 +68,13 @@ class AllFiles(models.Model):
 
             if values.get("attachment"):
                 self.vaildate_file(values)
-                pdf_doc = self.get_pdf(values['attachment'], values['filename'])
+                pdf_doc,content = self.get_pdf(values['attachment'], values['filename'])
                 if values['filename'].endswith(('xls', 'xlsx')):
                     values['html'] = pdf_doc
                 else:
                     values['pdf_doc'] = pdf_doc
                     values['original_pdf'] = pdf_doc
+                    values['content'] = content
             doc = super(AllFiles, self).write(values)
             return doc
         except:
@@ -89,8 +99,8 @@ class AllFiles(models.Model):
         curr_dir = os.path.dirname(__file__)
         tmp = filename.split('.')
         ext = tmp[len(tmp) - 1]
-        if ext == "pdf":
-            return docfile
+        # if ext == "pdf":
+        #     return docfile
         pth = curr_dir.replace('models', 'doc_signs/')
         pth = pth + str(randint(1, 99))
         file = docfile
@@ -98,29 +108,50 @@ class AllFiles(models.Model):
         pdf_content = open(pth + filename, 'wb')
         pdf_content.write(img_file)
         pdf_content.close()
-        if ext == "doc" or ext == "docx" or  ext == "ppt" or ext == "pptx":
-            res = self.doc2pdf(pth, filename)
+        if ext == "doc" or ext == "docx" or  ext == "ppt" or ext == "pptx" or ext == "pdf":
+            res,content = self.doc2pdf(pth, filename,ext)
             if not res:
                 raise UserError("Could not convert")
             else:
                 read = res.read()
                 # res_encode = base64.encodestring(read)
                 res_encode = base64.b64encode(read)
-                return res_encode
+                return res_encode,content
         elif ext == "xls" or ext =="xlsx":
             res = self.excel2xhtml(pth, filename)
             return res
         else:
             raise UserError("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
 
-    def doc2pdf(self, pth, filename):
+    def doc2pdf(self, pth, filename,ext):
         try:
-            subprocess.check_call(
-                ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'pdf',
-                 '-o', pth + '_new.pdf', '-d', 'document',
-                 pth + filename])
-            res = open(pth + '_new.pdf', 'rb')
-            return res
+            if ext == "pdf":
+                res = open(pth + filename, 'rb')
+            else:
+                subprocess.check_call(
+                    ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'pdf',
+                     '-o', pth + '_new.pdf', '-d', 'document',
+                     pth + filename])
+                res = open(pth + '_new.pdf', 'rb')
+            content=""
+            rsrcmgr = PDFResourceManager()
+            retstr = io.StringIO()
+            codec = 'utf-8'
+            laparams = LAParams()
+            device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
+            # Create a PDF interpreter object.
+            interpreter = PDFPageInterpreter(rsrcmgr, device)
+            # Process each page contained in the document.
+
+            for page in PDFPage.get_pages(res):
+                interpreter.process_page(page)
+                content = retstr.getvalue()
+            # print(content)
+            if ext != "pdf":
+                res = open(pth + '_new.pdf', 'rb')
+            else:
+                res = open(pth + filename, 'rb')
+            return res,content
 
         except:
             eg = traceback.format_exception(*sys.exc_info())
