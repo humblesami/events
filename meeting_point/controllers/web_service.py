@@ -71,11 +71,11 @@ class ws(http.Controller):
             return ws_methods.handle()
 
     @http.route('/meeting_point/search-docs', type="http", csrf=False, auth='none', cors='*')
-    def searchmp_http(self, **kw):
+    def searchmp_docs_http(self, **kw):
         return self.search_docs(kw)
 
     @http.route('/meeting_point/search-docs-json', type="json", csrf=False, auth='none', cors='*')
-    def searchmp_json(self, **kw):
+    def searchmp_docs_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.search_docs(req_body)
 
@@ -96,7 +96,7 @@ class ws(http.Controller):
             models = {
 
                 'meeting_point.document': ['name', 'content'],
-                # 'meeting_point.news.doc': ['name'],
+                'meeting_point.news.doc': ['name', 'content'],
                 'meeting_point.files': ['name', 'content'],
                 'meeting_point.doc': ['name', 'content'],
                 'meeting_point.topicdoc': ['name', 'content'],

@@ -217,7 +217,14 @@ class Document(models.Model):
 
 
         signature_only_pdf_path = pth + "/signature-pdf-"+str(doc.id)+".pdf"
-        pdf.output(signature_only_pdf_path, "F")
+        try:
+            pdf.output(signature_only_pdf_path, "F")
+        except:
+            if not os.path.exists(pth):
+                os.makedirs(pth)
+                pdf.output(signature_only_pdf_path, "F")
+            else:
+                raise
         pdf.close()
 
         signaturepdf = PdfFileReader(open(signature_only_pdf_path, "rb"))
