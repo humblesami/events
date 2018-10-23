@@ -70,6 +70,61 @@ class ws(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/meeting_point/search-docs', type="http", csrf=False, auth='none', cors='*')
+    def searchmp_http(self, **kw):
+        return self.search_docs(kw)
+
+    @http.route('/meeting_point/search-docs-json', type="json", csrf=False, auth='none', cors='*')
+    def searchmp_json(self, **kw):
+        req_body = http.request.jsonrequest
+        return self.search_docs(req_body)
+
+    def search_docs(self, kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            try:
+                uid = int(uid)
+            except:
+                return ws_methods.http_response(uid)
+            model_name = kw['model']
+            kw = kw['kw']
+            results = []
+            if not kw or kw == '':
+                return ws_methods.http_response('',results)
+
+            req_env = http.request.env
+            models = {
+
+                'meeting_point.document': ['name', 'content'],
+                # 'meeting_point.news.doc': ['name'],
+                'meeting_point.files': ['name', 'content'],
+                'meeting_point.doc': ['name', 'content'],
+                'meeting_point.topicdoc': ['name', 'content'],
+            }
+
+            if model_name and model_name != '':
+                models =  {model_name : models[model_name] }
+
+            for model_name in models:
+                filters = []
+                first_field = False
+                for field_name in models[model_name]:
+                    if not first_field:
+                        first_field = field_name
+                    filter = (field_name, 'ilike', kw)
+                    if len(filters) == 0:
+                        filters = [filter]
+                    else:
+                        filters.insert(0, '|')
+                        filters.append(filter)
+                res = req_env[model_name].search(filters)
+                for obj in res:
+                    results.append({'id':obj.id, 'name':obj[first_field], 'model':model_name})
+
+            return ws_methods.http_response('', results)
+        except:
+            return ws_methods.handle()
+
     @http.route('/ws/mp-home', type="http", csrf=False, auth='none', cors='*')
     def mp_home_http(self, **kw):
         return self.mp_home(kw)
