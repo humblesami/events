@@ -66,7 +66,7 @@ class ws(http.Controller):
             folder = req_env['meeting_point.folder'].search([('id', '=', id)])
             files = folder.file_ids
             sub_folders = folder.sub_folders
-            obj['sub_folders'] = ws_methods.objects_list_to_json_list(sub_folders, ['id', 'name', 'parent_folder,id'])
+            obj['sub_folders'] = ws_methods.objects_list_to_json_list(sub_folders, ['id', 'name', 'parent_folder.id'])
             obj['files'] = ws_methods.objects_list_to_json_list(files, ['id', 'name'])
 
             parent = folder.parent_folder

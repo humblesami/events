@@ -2,14 +2,14 @@ import os
 import sys
 import base64
 import traceback
+
+import io
 import subprocess
 from random import randint
-
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
-from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
 from pdfminer.layout import LAParams
-import io
+from pdfminer.converter import TextConverter
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 
 from odoo import models, fields, api
 from odoo.exceptions import UserError
