@@ -410,31 +410,6 @@ class meeting(http.Controller):
         results = json.dumps(results)
         return results
 
-    @http.route('/aameeting/memberhomepage', website=True)
-    def memberhomepage(self, inputdata):
-        try:
-            outputdata = {"error": " Error somewhere"}
-            chairmanMessage = ''
-            modelName = 'x_home'
-            obj = []
-            records = http.request.env[modelName].search([])
-            for rec in records:
-                chairmanMessage = {'title': rec.x_name, 'message': rec.x_message, "photo": rec.x_photo}
-                tempUrl = []
-                tempDoc = []
-                for v in rec.x_attachments:
-                    tempUrl.append({"url": v.x_video_urls, "title": v.x_name})
-                for d in rec.x_docs:
-                    tempDoc.append({"data": d.id, "title": d.x_name})
-                break;
-            chairmanMessage['videos'] = tempUrl
-            chairmanMessage['docs'] = tempDoc
-            results = {"error": "", "data": {"members": [], "chairman": chairmanMessage, "meetings": []}, "test": 1}
-            outputdata = json.dumps(results)
-            return ws_methods.http_response('', outputdata)
-        except:
-            return ws_methods.handle()
-
     def getLocationDetails(self, rec):
         location = ''
         if rec.street:

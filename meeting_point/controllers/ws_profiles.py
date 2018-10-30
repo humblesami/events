@@ -98,7 +98,7 @@ class ws_profile(http.Controller):
             if not profile:
                 return ws_methods.http_response('User not in meeting point')
 
-            props = ['id', 'name', 'image_small', 'resume', 'email', 'nick_name', 'website', 'companies', 'bio', 'mobile_phone', 'work_phone',
+            props = ['id', 'name', 'image_medium', 'resume', 'email', 'nick_name', 'website', 'companies', 'bio', 'mobile_phone', 'work_phone',
                      'fax', 'job_title', 'department', 'board_joing_date', 'admin_first_name', 'admin_last_name',
                      'admin_image', 'admin_nick_name', 'admin_email', 'admin_fax', 'admin_cell_phone',
                      'admin_work_phone', 'mail_to_assistant']

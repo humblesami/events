@@ -14,6 +14,12 @@ def send_mail(mesgtosend):
     recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
+def mfile_url(model, field, id):
+    conf = request.conf
+    res = 'dn/content_file/'+model+'/'+  str(id) + '/'+field+'/' + conf['db'] + '/' + conf['token']
+    res = conf['host_url']  + res
+    return res
+
 def execute_upd(query):
     cr = request.env.cr
     res = cr.execute(query)
@@ -100,6 +106,7 @@ def objects_list_to_json_list(objects, props):
 def object_to_json_object(object, props):
     json_obj = {}
     tz = request.httprequest.args.get('time_zone')
+    model = object._name
     try:
         for prop in props:
             obj = object
@@ -110,9 +117,12 @@ def object_to_json_object(object, props):
                 field_type = object._fields[sub_prop].type
                 #print (object._fields[sub_prop].name)
                 if field_type == 'binary':
-                    obj = obj[sub_prop]
-                    if obj:
-                        obj = obj.decode('utf-8')
+                    if sub_prop == 'pdf_doc':
+                        obj = obj[sub_prop]
+                        if obj:
+                            obj = obj.decode('utf-8')
+                    else:
+                        obj = mfile_url(model,sub_prop, object.id)
                 elif tz and field_type == 'datetime':
                     if obj[sub_prop]:
                         obj = dn_dt.convert_time_zone(tz, obj[sub_prop])
@@ -157,6 +167,8 @@ def check_auth(values):
         return False
     #password = decode('sM:de_', password)
     uid = request.session.authenticate(db, user.login, user.password)
+    if not hasattr(request, 'conf'):
+        request.conf = { 'host_url': request.httprequest.host_url, 'db': request.db, 'token' : token }
     return uid
 
 def authenticate(data):

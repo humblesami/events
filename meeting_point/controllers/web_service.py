@@ -210,23 +210,15 @@ class ws(http.Controller):
             current_cnt = len(committees)
             data = []
             for comit in committees:
-                committee_members = []
-                for mem in comit.user_ids:
-                    photo = ''
-                    try:
-                        if mem.image_small:
-                            photo = mem.image_small.decode('utf-8')
-                        member = {"id": mem.id, "name": mem.name, 'photo': photo}
-                        committee_members.append(member)
-                    except:
-                        a = 1
-                committee = {"name": comit.name, 'id':comit.id, "members": committee_members}
+                props = ['id', 'name', 'image_small']
+                committee_members = ws_methods.objects_list_to_json_list(comit.user_ids, props)
+                committee = {"name": comit.name, 'id': comit.id, "members": committee_members}
                 data.append(committee)
 
             data = {'records':data, 'total':total_cnt, 'count':current_cnt}
             return ws_methods.http_response('', data)
         except:
-            return ws_methods.handle('Access Error, Contact Admin')
+            return ws_methods.handle()
 
     @http.route('/committee/details', type="http", csrf=False, auth='none', cors='*')
     def get_committee_http(self, **kw):

@@ -58,9 +58,7 @@ class auth(http.Controller):
                 else:
                     groups.append(group.full_name)
 
-            user_photo = ''
-            if user.image_small:
-                user_photo = user.image_small.decode('utf-8')
+            user_photo = ws_methods.mfile_url('res.users','image_small', uid)
             http_req = request.httprequest
             if uid:
                 agent = http_req.user_agent
@@ -114,7 +112,7 @@ class auth(http.Controller):
             filters = [('auth_token', '=', token)]
             user = request.env['dnspusers'].sudo().search(filters)
             if not user:
-                return "Not found"
+                return "Token expired"
             # password = decode('sM:de_', password)
             uid = request.session.authenticate(db, user.login, user.password)
 
