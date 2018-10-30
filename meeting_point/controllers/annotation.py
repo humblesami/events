@@ -166,27 +166,52 @@ class annotation(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/del-all', type="http", csrf=False, auth='public', cors='*')
-    def delallannotations(self, **kw):
+
+    @http.route('/ws/get-attendees', type="http", csrf=False, auth='public', cors='*')
+    def getAttendees(self, **kw):
         try:
             uid = ws_methods.check_auth(kw)
             if not uid:
                 return ws_methods.not_logged_in()
-            if uid !=1:
-                return ws_methods.http_response("Ni ni, u are not")
-            req_env = http.request.env
-            req_env['annotation.document'].sudo().search([]).unlink()
-            req_env['annotation.rectangle'].sudo().search([]).unlink()
-            req_env['annotation.rectangle.dimensions'].sudo().search([]).unlink()
+            doc_type = kw.get('doc_type')
+            res_id = kw.get('res_id')
+            env = http.request.env
+            meeting = False
+            if doc_type == 'topic':
+                topic = env['meeting_point.topic'].search([('id','=',res_id)])
+                meeting = topic.meeting_id
+            elif doc_type == 'meeting':
+                meeting = env['calendar.event'].search([('id', '=', res_id)])
+            if not meeting:
+                return ws_methods.http_response('Invalid relation to meeting')
+            attendees = ws_methods.objects_list_to_json_list(meeting.attendee_ids,['id'])
+            attendees.remove(uid)
 
-            req_env['annotation.point'].sudo().search([]).unlink()
-            req_env['annotation.point.comments'].sudo().search([]).unlink()
-
-            req_env['annotation.drawing'].sudo().search([]).unlink()
-            req_env['annotation.drawing.lines'].sudo().search([]).unlink()
-            return ws_methods.http_response('', 'Successfully saved')
+            return ws_methods.http_response('', attendees)
         except:
             return ws_methods.handle()
+
+    # @http.route('/del-all', type="http", csrf=False, auth='public', cors='*')
+    # def delallannotations(self, **kw):
+    #     try:
+    #         uid = ws_methods.check_auth(kw)
+    #         if not uid:
+    #             return ws_methods.not_logged_in()
+    #         if uid !=1:
+    #             return ws_methods.http_response("Ni ni, u are not")
+    #         req_env = http.request.env
+    #         req_env['annotation.document'].sudo().search([]).unlink()
+    #         req_env['annotation.rectangle'].sudo().search([]).unlink()
+    #         req_env['annotation.rectangle.dimensions'].sudo().search([]).unlink()
+    #
+    #         req_env['annotation.point'].sudo().search([]).unlink()
+    #         req_env['annotation.point.comments'].sudo().search([]).unlink()
+    #
+    #         req_env['annotation.drawing'].sudo().search([]).unlink()
+    #         req_env['annotation.drawing.lines'].sudo().search([]).unlink()
+    #         return ws_methods.http_response('', 'Successfully saved')
+    #     except:
+    #         return ws_methods.handle()
 
 
 types = {

@@ -54,7 +54,7 @@ class meeting(http.Controller):
 
     @http.route('/meeting/summary', type="http", csrf=False, auth='none', cors='*')
     def mp_meeting_http(self, **kw):
-        res= self.mp_meeting_summary(kw)
+        res = self.mp_meeting_summary(kw)
         return res
 
     @http.route('/meeting/summary-json', type="json", csrf=False, auth='none', cors='*')
