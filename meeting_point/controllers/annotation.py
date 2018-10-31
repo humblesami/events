@@ -177,17 +177,22 @@ class annotation(http.Controller):
             res_id = kw.get('res_id')
             env = http.request.env
             meeting = False
+            res_id = int(res_id)
             if doc_type == 'topic':
-                topic = env['meeting_point.topic'].search([('id','=',res_id)])
-                meeting = topic.meeting_id
+                topic_doc = env['meeting_point.topicdoc'].search([('id','=',res_id)])
+                meeting = topic_doc.topic_id.meeting_id
             elif doc_type == 'meeting':
-                meeting = env['calendar.event'].search([('id', '=', res_id)])
+                meeting_doc = env['meeting_point.doc'].search([('id', '=', res_id)])
+                meeting = meeting_doc.meeting_id
             if not meeting:
-                return ws_methods.http_response('Invalid relation to meeting')
-            attendees = ws_methods.objects_list_to_json_list(meeting.attendee_ids,['id'])
-            attendees.remove(uid)
+                return ws_methods.http_response('Invalid doc type='+str(doc_type)+' or id ='+(res_id))
+            ids = []
+            for attendee in meeting.attendee_ids:
+                cid = attendee.partner_id.user_id.id
+                if cid != uid:
+                    ids.append(cid)
 
-            return ws_methods.http_response('', attendees)
+            return ws_methods.http_response('', ids)
         except:
             return ws_methods.handle()
 

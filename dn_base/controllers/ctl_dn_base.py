@@ -170,9 +170,9 @@ class MyBinary(Binary):
 
         values = {'token': user_token, 'db': db}
         uid = ws_methods.check_auth(values)
-        env = request.env(user=uid)
         if not uid:
             return request.not_found()
+        env = request.env(user=uid)
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -214,36 +214,6 @@ class MyBinary(Binary):
         if token:
             response.set_cookie('fileToken', token)
         return response
-
-    # @http.route(['/dn/content_file',
-    #     '/dn/content_file/<string:model>/<int:id>/<string:field>',
-    #     '/dn/content_file/<string:model>/<int:id>/<string:field>/<string:user_token>'], type='http', auth="public")
-    # def content_file(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-    #                    filename=None, filename_field='datas_fname', unique=None, mimetype=None,
-    #                    download=None, data=None, token=None,user_token=None, access_token=None, **kw):
-    #
-    #     user = request.env['dnspusers'].sudo().search([('auth_token', '=', user_token)])
-    #     env = request.env(user=user.user_id.id)
-    #     d=env[model].search([('id', '=', id)])
-    #     if not d:
-    #         return request.not_found()
-    #     status, headers, content = binary_content(
-    #         xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
-    #         filename_field=filename_field, download=download, mimetype=mimetype,
-    #         access_token=access_token,env=env)
-    #     if status == 304:
-    #         response = werkzeug.wrappers.Response(status=status, headers=headers)
-    #     elif status == 301:
-    #         return werkzeug.utils.redirect(content, code=301)
-    #     elif status != 200:
-    #         response = request.not_found()
-    #     else:
-    #         content_base64 = base64.b64decode(content)
-    #         headers.append(('Content-Length', len(content_base64)))
-    #         response = request.make_response(content_base64, headers)
-    #     if token:
-    #         response.set_cookie('fileToken', token)
-    #     return response
 
     @http.route('/dn_base/change_password', auth='none',cors='*', csrf=False)
     def change(self,**kw):
