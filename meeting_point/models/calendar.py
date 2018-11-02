@@ -29,7 +29,6 @@ class Attendee(models.Model):
     response_by = fields.Char(string="Response By")
 
 
-
     @api.multi
     def action_pending(self):
         self.attendance="pending"

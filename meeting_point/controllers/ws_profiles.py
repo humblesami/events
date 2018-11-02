@@ -47,7 +47,8 @@ class ws_profile(http.Controller):
                          'admin_cell_phone',
                          'admin_work_phone',
                          'mail_to_assistant',
-                         'image_small'
+                         'image_small',
+                         'image_medium'
                          ]
                 profile_json = ws_methods.object_to_json_object(profile, props)
                 if profile.committee_ids:
@@ -270,6 +271,10 @@ class ws_profile(http.Controller):
             if image_small:
                 image_small = image_small.replace('data:image/png;base64,','')
                 modified_values['image_small'] = image_small
+            image_medium = values.get('image_medium')
+            if image_medium:
+                image_medium = image_medium.replace('data:image/png;base64,', '')
+                modified_values['image_medium'] = image_medium
             admin_image = values.get('admin_image')
             if admin_image:
                 admin_image = admin_image.replace('data:image/png;base64,', '')
