@@ -172,7 +172,7 @@ class MyBinary(Binary):
         uid = ws_methods.check_auth(values)
         if not uid:
             return request.not_found()
-        # print(model)
+
         if field == 'image_small' or field == 'image_medium' or field == 'image' or field == 'image' or field == 'photo':
             uid = 1
         env = request.env(user=uid)
