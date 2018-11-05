@@ -172,6 +172,9 @@ class MyBinary(Binary):
         uid = ws_methods.check_auth(values)
         if not uid:
             return request.not_found()
+        # print(model)
+        if field == 'image_small' or field == 'image_medium' or field == 'image' or field == 'image' or field == 'photo':
+            uid = 1
         env = request.env(user=uid)
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
