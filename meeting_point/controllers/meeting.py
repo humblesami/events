@@ -147,18 +147,15 @@ class meeting(http.Controller):
             meeting_object['sign_docs'] = docs_to_sign
             surveys = meeting.survey_ids.filtered(lambda r: r.my_status == 'pending')
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(surveys, ['id', 'title'])
-            props = ['attendance','state','email','response_by', 'photo', 'partner_id']
+            props = ['attendance','state','response_by']
             meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
 
             cnt = 0
-            for attendee in meeting_object['attendees']:
-                partner = attendee['partner']
-                if not partner:
-                    attendee['partner_id']
-                if not partner:
-                    continue
-                attendee['uid'] = partner.user_id.id
-                del attendee['partner']
+            for attendee_partner in meeting.attendee_ids:
+                attendee = meeting_object['attendees'][cnt]
+                attendee_user = attendee_partner.partner_id.user_id
+                attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
+                attendee['uid'] = attendee_user.id
                 if attendee['state'] == 'needsAction':
                     attendee['state'] = 'No Response'
                 elif attendee['state'] == 'accepted':
@@ -169,6 +166,7 @@ class meeting(http.Controller):
                     attendee['state'] = 'Declined'
                 elif attendee['state'] == 'tentative':
                     attendee['state'] = 'Uncertain'
+                cnt += 1
             filters = [('res_id', '=', meeting_object['id']), ('parent_id','=',False), ('model', '=', 'calendar.event'),
                        ('message_type', '=', 'comment'),('create_uid','!=',False)]
             if uid != 1:
