@@ -242,18 +242,13 @@ class ws(http.Controller):
             prev = req_env['meeting_point.committee'].search([('id','<',values['id'])], limit=1, order='id desc')
             next = req_env['meeting_point.committee'].search([('id','>',values['id'])], limit=1, order='id')
 
-            committee_members = []
-            for mem in committee.user_ids:
-                photo = ''
-                if mem.image_small:
-                    photo = mem.image_small.decode('utf-8')
-                member = {"id": mem.id, "name": mem.name, 'photo': photo}
-                committee_members.append(member)
+            props = ['id', 'name', 'image_small']
+            committee_members = ws_methods.objects_list_to_json_list(committee.user_ids, props)
             committee = {"name": committee.name, 'id':committee.id, "members": committee_members,"summary":committee.summary}
             data = {"committee": committee, "next": next.id, "prev": prev.id}
             return ws_methods.http_response('', data)
         except:
-            return ws_methods.handle('Access Error, Contact Admin')
+            return ws_methods.handle()
 
 
 
