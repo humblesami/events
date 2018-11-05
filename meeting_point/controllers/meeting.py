@@ -152,7 +152,12 @@ class meeting(http.Controller):
 
             cnt = 0
             for attendee in meeting_object['attendees']:
-                attendee['uid'] = attendee['partner'].user_id.id
+                partner = attendee['partner']
+                if not partner:
+                    attendee['partner_id']
+                if not partner:
+                    continue
+                attendee['uid'] = partner.user_id.id
                 del attendee['partner']
                 if attendee['state'] == 'needsAction':
                     attendee['state'] = 'No Response'
