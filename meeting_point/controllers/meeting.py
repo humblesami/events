@@ -177,6 +177,9 @@ class meeting(http.Controller):
             i= 0
             for com in comments:
                 user = com.create_uid
+                if not user.mp_user_id.id:
+                    ar_comments[i]['is_own'] = 1
+
                 ar_comments[i]['user'] = {'name': user.name, 'id': user.mp_user_id.id}
                 ar_children = []
                 if com.child_ids:
