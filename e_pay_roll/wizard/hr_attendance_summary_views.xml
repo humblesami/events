@@ -71,14 +71,12 @@
         <field name="target">new</field>
     </record>
 
-	<!--<menuitem id="sale_pdf_report" name="PDF Reports" parent="sales_team.menu_sale_report" sequence="20"/>-->
-		<!--<menuitem id="sale_saleperson_report" name="Salesperson" action="action_salesperson_wizard" parent="sales_report.sale_pdf_report" sequence="10"/>-->
-    <!---->
-      <menuitem
-            name="Attendance Report"
-            parent="account_root_attendance"
-            action="action_attendanceperson_wizard"
-            id="menu_hr_holidays_attendance_summary"/>
+
+      <!--<menuitem-->
+            <!--name="Attendance Report"-->
+            <!--parent="account_root_attendance"-->
+            <!--action="action_attendanceperson_wizard"-->
+            <!--id="menu_hr_holidays_attendance_summary"/>-->
 
 
 </odoo>
