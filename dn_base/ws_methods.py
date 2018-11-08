@@ -115,14 +115,13 @@ def object_to_json_object(object, props):
             i = 0
             for sub_prop in ar:
                 field_type = object._fields[sub_prop].type
-                #print (object._fields[sub_prop].name)
                 if field_type == 'binary':
-                    if sub_prop == 'pdf_doc':
-                        obj = obj[sub_prop]
-                        if obj:
+                    obj = obj[sub_prop]
+                    if obj:
+                        if sub_prop in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo']:
+                            obj = mfile_url(model, sub_prop, object.id)
+                        else:
                             obj = obj.decode('utf-8')
-                    else:
-                        obj = mfile_url(model,sub_prop, object.id)
                 elif tz and field_type == 'datetime':
                     if obj[sub_prop]:
                         obj = dn_dt.convert_time_zone(tz, obj[sub_prop])

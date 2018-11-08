@@ -173,7 +173,7 @@ class MyBinary(Binary):
         if not uid:
             return request.not_found()
 
-        if field == 'image_small' or field == 'image_medium' or field == 'image' or field == 'image' or field == 'photo':
+        if field in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo']:
             uid = 1
         env = request.env(user=uid)
         status, headers, content = binary_content(
@@ -187,9 +187,12 @@ class MyBinary(Binary):
         elif status != 200:
             response = request.not_found()
         else:
-            content_base64 = base64.b64decode(content)
-            headers.append(('Content-Length', len(content_base64)))
-            response = request.make_response(content_base64, headers)
+            if not content:
+                response = request.not_found()
+            else:
+                content_base64 = base64.b64decode(content)
+                headers.append(('Content-Length', len(content_base64)))
+                response = request.make_response(content_base64, headers)
         if token:
             response.set_cookie('fileToken', token)
         return response
