@@ -168,10 +168,12 @@ class Holidays(models.Model):
 
     @api.multi
     def action_myvalidate(self):
-        self.write({'pending_approver': None})
+        approverId = self.env.uid
+        self.sudo().write({'pending_approver': None,'state':'validate'})
+
         for leave in self:
             self.env['custom_leave_management.approbation'].create(
-                {'leave': leave.id, 'approver': self.env.uid, 'date': fields.Datetime.now(),
+                {'leave': leave.id, 'approver': approverId, 'date': fields.Datetime.now(),
                  'state': 'approved'})
 
     # created a wizard by zartash (20-03-2018)

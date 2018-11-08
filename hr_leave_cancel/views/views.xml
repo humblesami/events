@@ -10,9 +10,9 @@
                         <header>
                             <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                             <button string="Approve" name="action_approve" states="confirm" type="object"
-                                    groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
+                                     class="oe_highlight"/>
                             <button string="Refuse" name="action_refuse" states="confirm,validate" type="object"
-                                    groups="hr_holidays.group_hr_holidays_user"/>
+                                    />
                             <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
                         </header>
                     </div>
