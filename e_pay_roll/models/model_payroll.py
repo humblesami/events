@@ -46,7 +46,7 @@ class EmployeeField(models.Model):
         else:
             tempRate = 0
         tempRate = tempRate/12
-        self.taxrate = tempRate
+        self.taxrate = round(tempRate)
         self.voluntary_provident_fund =  0.05*self.wage
     @api.depends('working_hours','working_days')
     @api.multi

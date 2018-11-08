@@ -144,7 +144,7 @@ class Holidays(models.Model):
                         else:
                             next_approver = leave.approval_rule.approver_ids[sequence].group_id
                 if is_last_approbation:
-                    super(Holidays, self).action_approve()
+                    # super(Holidays, self).action_approve()
                     leave.action_myvalidate()
                 else:
                     leave.write({'pending_approver': next_approver.id})

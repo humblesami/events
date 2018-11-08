@@ -1,6 +1,15 @@
 <odoo>
     <data>
-
+        <record id="hr_holidays.property_rule_holidays_employee" model="ir.rule">
+        <field name="name">Employee Leaves</field>
+        <field name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+            <field name="active" eval="False"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
         <!--<record id="E-leave_users_access_own_profiles" model="ir.rule">-->
             <!--<field name="name">Edit own profile E-leave users</field>-->
             <!--<field name="model_id" ref="dn_base.model_hr_employee"/>-->
