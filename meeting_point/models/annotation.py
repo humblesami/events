@@ -42,6 +42,7 @@ class Dimensions(models.Model):
 class PointAnnotation(models.Model):
     _inherit = 'annotation.annotation'
     _name = 'annotation.point'
+    doc_name = fields.Char()
     sub_type = fields.Char()
     x = fields.Integer()
     y = fields.Integer()
