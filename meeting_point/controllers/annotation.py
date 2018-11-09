@@ -21,16 +21,33 @@ class annotation(http.Controller):
 
             doc_id = values.get('doc_id')
             force = values.get('force')
+
+            filter = [('doc_name', '=', doc_id)]
+            point_objects = req_env['annotation.point'].search(filter)
+            props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
+
+            comments_points = ws_methods.objects_list_to_json_list(point_objects, props)
+
+            props = ['uid', 'user_name', 'date_time', 'uuid', 'content']
+            i = 0
+            for point in point_objects:
+                comments = point.comments
+                comments = ws_methods.objects_list_to_json_list(comments, props)
+                for com in comments:
+                    com['point_id'] = comments_points[i]['uuid']
+                comments_points[i]['comments'] = comments
+                i = i + 1
+
             doc = req_env['annotation.document'].search([('name', '=', doc_id),('user_id','=',uid)])
             if not doc:
-                doc = req_env['annotation.document'].create({'name': doc_id, 'user_id':uid, 'version':0})
-                res = {'version': 0, 'annotations': []}
-                return ws_methods.http_response('' ,res)
+                # doc = req_env['annotation.document'].create({'name': doc_id, 'user_id':uid, 'version':0})
+                res = {'version': -1, 'annotations': [], 'comments': comments_points}
+                return ws_methods.http_response('', res)
 
             document_version = values.get('version') or 0
             document_version = int(document_version)
             if doc.version < document_version and not force:
-                return ws_methods.http_response('', {'version': doc.version})
+                return ws_methods.http_response('', {'version': doc.version, 'comments': comments_points})
 
             document_id = doc.id
             filter = [('document_id', '=', document_id), ('type', 'in', ['underline', 'highlight', 'strikeout'])]
@@ -62,10 +79,11 @@ class annotation(http.Controller):
                 drawings[i]['width'] = 1
                 i = i + 1
 
-            filter = [('type', '=', 'point')]
+            filter = [('type', '=', 'point'),('sub_type', '=', 'personal')]
             point_objects = req_env['annotation.point'].search(filter).filtered(lambda r: r.document_id.name == doc_id)
             props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
-            points = ws_methods.objects_list_to_json_list(point_objects, props)
+
+            notes_points = ws_methods.objects_list_to_json_list(point_objects, props)
 
             props = ['uid', 'user_name', 'date_time', 'uuid', 'content']
             i = 0
@@ -73,12 +91,16 @@ class annotation(http.Controller):
                 comments = point.comments
                 comments = ws_methods.objects_list_to_json_list(comments, props)
                 for com in comments:
-                    com['point_id'] = points[i]['uuid']
-                points[i]['comments'] = comments
+                    com['point_id'] = notes_points[i]['uuid']
+                notes_points[i]['comments'] = comments
                 i = i + 1
 
+            # filter = [('type', '=', 'point'),('doc_name', '=', doc_id), ('sub_type', '!=', 'personal')]
+
+
+            points = notes_points
             annotations = rectanglular_annotations + points + drawings
-            res = {'version': doc.version, 'annotations': annotations}
+            res = {'version': doc.version, 'annotations': annotations, 'comments': comments_points}
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
@@ -95,8 +117,6 @@ class annotation(http.Controller):
             doc = req_env['annotation.document'].search([('name', '=', doc_id),('user_id','=',uid)])
             if doc:
                 reset = kw.get('reset')
-                if reset and doc.version == 0:
-                    return ws_methods.http_response('', 'done')
                 if not reset:
                     document_version = kw.get('version') or 0
                     document_version = int(document_version)
@@ -111,6 +131,10 @@ class annotation(http.Controller):
                         res = p.unlink()
                 if reset:
                     doc.version = 0
+                    # points = req_env['annotation.point'].search([])
+                    # for p in points:
+                    #     req_env['annotation.point.comments'].search([('point_id', '=', p.id)]).unlink()
+                    #     p.unlink()
                     return ws_methods.http_response('', 'done')
             else:
                 doc = req_env['annotation.document'].create({'name': doc_id, 'user_id':uid, 'version':0})
@@ -166,6 +190,38 @@ class annotation(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/save-comment-annotation', type="http", csrf=False, auth='public', cors='*')
+    def addCommentAnnotation(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            req_env = http.request.env
+
+            values = kw.get('annotations')
+            values = json.loads(values)
+            doc_id = values.get('doc_id')
+
+            doc = req_env['annotation.document'].search([('name', '=', doc_id)])
+            if not doc:
+                return ws_methods.http_response('err')
+
+            point = values.get('point')
+            comment = values.get('comment')
+
+            modal = types['point']
+            point['doc_name'] = doc_id
+            point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
+            if not point_id:
+                point_id = req_env[modal].create(point)
+
+            modal = types['comment']
+            comment['point_id'] = point_id.id
+            req_env[modal].create(comment)
+
+            return ws_methods.http_response('', 'done')
+        except:
+            return ws_methods.handle()
 
     @http.route('/ws/get-attendees', type="http", csrf=False, auth='public', cors='*')
     def getAttendees(self, **kw):
