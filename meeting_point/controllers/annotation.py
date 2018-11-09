@@ -234,12 +234,17 @@ class annotation(http.Controller):
             env = http.request.env
             meeting = False
             res_id = int(res_id)
+            doc_name = ''
+            topic_name = False
             if doc_type == 'topic':
                 topic_doc = env['meeting_point.topicdoc'].search([('id','=',res_id)])
                 meeting = topic_doc.topic_id.meeting_id
+                topic_name = topic_doc.topic_id.name
+                doc_name = topic_doc.name
             elif doc_type == 'meeting':
                 meeting_doc = env['meeting_point.doc'].search([('id', '=', res_id)])
                 meeting = meeting_doc.meeting_id
+                doc_name = meeting_doc.name
             if not meeting:
                 return ws_methods.http_response('Invalid doc type='+str(doc_type)+' or id ='+(res_id))
             ids = []
@@ -248,7 +253,12 @@ class annotation(http.Controller):
                 if cid != uid:
                     ids.append(cid)
 
-            return ws_methods.http_response('', ids)
+            res = { 'meta' : {'meeting':meeting.name, 'doc' : doc_name }}
+            if topic_name:
+                res['meta']['topic'] = topic_name
+            res['attendees'] = ids
+
+            return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
 
