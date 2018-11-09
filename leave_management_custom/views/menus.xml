@@ -129,5 +129,18 @@
                groups="group_leave_custom_admin,group_leave_custom_super_user"
      />
 
+        <record id="cron_action_view" model="ir.actions.act_window">
+            <field name="name">Scheduled Actions</field>
+            <field name="res_model">ir.cron</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="context">{'search_default_all': 1}</field>
+            <field name="view_id" ref="base.ir_cron_view_tree"/>
+        </record>
+        <menuitem id="schedule_actions_custom" action="cron_action_view"
+                  parent="dn_attendance.menu_root_attendance"
+                  name="Schedule Actions"
+                  groups="group_leave_custom_admin,group_leave_custom_super_user"/>
+
     </data>
 </odoo>

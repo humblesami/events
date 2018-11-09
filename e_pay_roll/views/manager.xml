@@ -1,4 +1,4 @@
-<odoo>
+ <odoo>
     <data>
 
         <record id="custom_e_payroll_manager_action" model="ir.actions.act_window">

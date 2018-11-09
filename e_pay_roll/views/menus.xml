@@ -11,7 +11,7 @@
 
         />
 
-         <menuitem
+        <menuitem
                 name="My Account" id="account_root" groups="base.group_user"
                 parent="menu_root" sequence="0"
         />
@@ -19,80 +19,83 @@
                 name="My Records" id="account_root_attendance" groups="base.group_user"
                 parent="dn_attendance.menu_root_attendance" sequence="0"
         />
-        <menuitem name="Attendance Record" id="myattendance" parent="account_root_attendance" action="record_attendance_rule_model_action" sequence="1"/>
+        <menuitem name="Attendance Record" id="myattendance" parent="account_root_attendance"
+                  action="record_attendance_rule_model_action" sequence="1"/>
         <!--<menuitem name="Mark Attendance" id="markattendance" parent="account_root_attendance" action="hr_attendance.hr_attendance_action_my_attendances" sequence="0"/>-->
 
         <menuitem name="Payslips" id="mypayslip" parent="account_root"
                   action="record_pay_slip_action" sequence="1"/>
         <menuitem
-              name="Contract" id="contract_employee" parent="account_root" action="action_hr_contract_employee" sequence="0"/>
+                name="Contract" id="contract_employee" parent="account_root" action="action_hr_contract_employee"
+                sequence="0"/>
 
-         <menuitem name="Provident Register"
-                   id="provident_log_staff"
-                   parent="account_root"
-                   action="custom_providents_log_action_staff" sequence="2"
-                   />
+        <menuitem name="Provident Register"
+                  id="provident_log_staff"
+                  parent="account_root"
+                  action="custom_providents_log_action_staff" sequence="2"
+        />
         <menuitem name="Attendance Log"
-                   id="attendance_log_employee"
-                   parent="account_root_attendance"
-                   action="custom_attendance_log_action_employee" sequence="4"
-                   />
+                  id="attendance_log_employee"
+                  parent="account_root_attendance"
+                  action="custom_attendance_log_action_employee" sequence="4"
+        />
 
-         <menuitem name="Attendance Record" id="e_pay_roll.attendance" parent="dn_attendance.menu_root_attendance" action="custom_attendance_action" sequence="2"
-         groups="base.group_erp_manager,custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,leave_management_custom.group_leave_custom_admin,leave_management_custom.group_leave_custom_super_user"/>
+        <menuitem name="Attendance Record" id="e_pay_roll.attendance" parent="dn_attendance.menu_root_attendance"
+                  action="custom_attendance_action" sequence="2"
+                  groups="base.group_erp_manager,custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,leave_management_custom.group_leave_custom_admin,leave_management_custom.group_leave_custom_super_user"/>
         <menuitem
-              name="Contract" id="contract" parent="menu_root" action="hr_contract.action_hr_contract" sequence="1"
-         groups="e_pay_roll.custom_group_e_payroll_admin_e,e_pay_roll.custom_group_e_payroll_manager,base.group_erp_manager,custom_group_e_payroll_officer"/>
+                name="Contract" id="contract" parent="menu_root" action="hr_contract.action_hr_contract" sequence="1"
+                groups="e_pay_roll.custom_group_e_payroll_admin_e,e_pay_roll.custom_group_e_payroll_manager,base.group_erp_manager,custom_group_e_payroll_officer"/>
         <menuitem
                 name="Payroll" id="e_pay_roll.payroll" parent="menu_root" sequence="3"
-            groups="e_pay_roll.custom_group_e_payroll_admin_e,e_pay_roll.custom_group_e_payroll_manager,base.group_erp_manager"
+                groups="e_pay_roll.custom_group_e_payroll_admin_e,e_pay_roll.custom_group_e_payroll_manager,base.group_erp_manager,e_pay_roll.custom_group_e_payroll_officer"
         />
         <menuitem
                 name="Payslips" id="e_pay_roll.payslips" parent="e_pay_roll.payroll"
-          action="hr_payroll.action_view_hr_payslip_form"
-          groups="e_pay_roll.custom_group_e_payroll_admin_e,e_pay_roll.custom_group_e_payroll_manager,custom_group_e_payroll_officer"
+                action="hr_payroll.action_view_hr_payslip_form"
+                groups="e_pay_roll.custom_group_e_payroll_admin_e,e_pay_roll.custom_group_e_payroll_manager,e_pay_roll.custom_group_e_payroll_officer"
         />
         <menuitem
                 name="Payslips Batches" id="e_pay_roll.payslipsbatch" parent="e_pay_roll.payroll"
-          action="hr_payroll.action_hr_payslip_run_tree"/>
+                action="hr_payroll.action_hr_payslip_run_tree"/>
 
         <menuitem name="Attendance Log"
-                   id="attendance_log"
-                   parent="dn_attendance.menu_root_attendance"
-                   action="custom_attendance_log_action" sequence="5"
+                  id="attendance_log"
+                  parent="dn_attendance.menu_root_attendance"
+                  action="custom_attendance_log_action" sequence="5"
                   groups="base.group_erp_manager,custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,leave_management_custom.group_leave_custom_admin,leave_management_custom.group_leave_custom_super_user,leave_management_custom.group_leave_custom_user_admin,custom_group_e_payroll_officer"
 
-                   />
+        />
 
-         <menuitem name="Provident Register"
-                   id="provident_log_admin"
-                   parent="menu_root"
-                   action="custom_providents_log_action_admin" sequence="5"
-                    groups="e_pay_roll.custom_group_e_payroll_admin_e,e_pay_roll.custom_group_e_payroll_manager,base.group_erp_manager,custom_group_e_payroll_officer"
-                   />
-    <menuitem name="Salary Settings" id="salarysetting" parent="menu_root" sequence="4"
-               groups="custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,custom_group_e_payroll_officer"
-    />
+        <menuitem name="Provident Register"
+                  id="provident_log_admin"
+                  parent="menu_root"
+                  action="custom_providents_log_action_admin" sequence="5"
+                  groups="e_pay_roll.custom_group_e_payroll_admin_e,e_pay_roll.custom_group_e_payroll_manager,base.group_erp_manager,custom_group_e_payroll_officer"
+        />
+        <menuitem name="Salary Settings" id="salarysetting" parent="menu_root" sequence="4"
+                  groups="custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,custom_group_e_payroll_officer"
+        />
         <menuitem name="Salary Structures" id="salarystructure" parent="salarysetting"
-         action="hr_payroll.action_view_hr_payroll_structure_list_form"
-                   groups="custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,custom_group_e_payroll_officer"
+                  action="hr_payroll.action_view_hr_payroll_structure_list_form"
+                  groups="custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,custom_group_e_payroll_officer"
         />
 
         <menuitem name="Salary Rule Categories" id="salaryrulecategories" parent="salarysetting"
-         action="hr_payroll.action_hr_salary_rule_category"
-         groups="custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,custom_group_e_payroll_officer"
+                  action="hr_payroll.action_hr_salary_rule_category"
+                  groups="custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,custom_group_e_payroll_officer"
         />
 
         <menuitem name="Salary Rules" id="salaryrules" parent="salarysetting"
-         action="hr_payroll.action_salary_rule_form"
-        groups="base.group_erp_manager,custom_group_e_payroll_admin_e,custom_group_e_payroll_manager"
+                  action="hr_payroll.action_salary_rule_form"
+                  groups="base.group_erp_manager,custom_group_e_payroll_admin_e,custom_group_e_payroll_manager"
         />
 
 
         <menuitem
                 name="Users" id="E_paroll_menu"
                 parent="menu_root" sequence="12"
-                 groups="e_pay_roll.custom_group_e_payroll_admin_e,base.group_erp_manager,custom_group_e_payroll_manager"
+                groups="e_pay_roll.custom_group_e_payroll_admin_e,base.group_erp_manager,custom_group_e_payroll_manager"
 
         />
         <menuitem

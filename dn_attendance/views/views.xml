@@ -143,7 +143,7 @@
             <field name="state">code</field>
             <field name="code">model.create_attendance()</field>
             <field name="interval_number">1</field>
-            <field name="interval_type">minutes</field>
+            <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
         </record>
         <menuitem
@@ -152,7 +152,7 @@
                 sequence="8"
                 web_icon="e_pay_roll,static/icons/icon.png"
         />
-        <menuitem name="All Records" action="action_attendance_record" id="menu_attendance_record" parent="menu_root_attendance"/>
+        <menuitem name="Machine Records" action="action_attendance_record" id="menu_attendance_record" parent="menu_root_attendance"/>
         <menuitem name="Daily Records" action="action_attendance_daily" id="menu_attendance_daily" parent="menu_root_attendance"/>
     </data>
 </odoo>

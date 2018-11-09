@@ -14,6 +14,7 @@ class UserView(models.Model):
     work_location = fields.Char('Work Location')
     # employee in company
     job_id = fields.Many2one('hr.job', 'Job Position')
+    device_id = fields.Char(string='Biometric Device ID')
     department_id = fields.Many2one('hr.department', 'Department')
     bio = fields.Html("Bio")
     resume = fields.Binary("Resume")
@@ -66,30 +67,28 @@ class UserView(models.Model):
             employee = super(UserView, self).create(vals)
             employee.user_id.partner_id.user_id = employee.user_id
             alpha = vals['login']
-            a = self.env['hr.employee'].search([('user_id','=', alpha)])
-            if not a:
+            tempEmployee = self.env['hr.employee'].search([('user_id','=', alpha)])
+            if not tempEmployee:
                 self.env['hr.employee'].create(
-                    {'name': vals['name'], 'user_id': employee.user_id.id, 'work_email':alpha })
+                    {'name': vals['name'], 'user_id': employee.user_id.id, 'work_email':alpha,'device_id':vals['device_id']})
             return employee
         else:
             employee = super(UserView, self).create(vals)
             employee.user_id.partner_id.user_id = employee.user_id
-            a = self.env['hr.employee'].search([('user_id', '=', vals['login'])])
-            if not a:
+            tempEmployee = self.env['hr.employee'].search([('user_id', '=', vals['login'])])
+            if not tempEmployee:
                 self.sudo().env['hr.employee'].create(
-                    {'name': vals['name'],'user_id': employee.user_id.id,'work_email': vals['login']})
+                    {'name': vals['name'],'user_id': employee.user_id.id,'work_email': vals['login'],'device_id':vals['device_id']})
             return employee
     @api.multi
     def write(self, vals):
-
-
         emp =  super(UserView,self).write(vals)
+        employeeWrite = self.env['hr.employee'].search([('user_id','=',self.user_id.id)])
         if vals.get('login'):
-            b=self.env['hr.employee'].search([('user_id','=',self.user_id.id)])
-            b.write({'work_email':vals['login']})
+            employeeWrite.write({'work_email':vals['login']})
         if vals.get('name'):
-            c=self.env['hr.employee'].search([('user_id','=',self.user_id.id)])
-            c.write({'name':vals['name']})
-
+            employeeWrite.write({'name':vals['name']})
+        if vals.get('device_id'):
+            employeeWrite.write({'device_id':vals['device_id']})
         return emp
 

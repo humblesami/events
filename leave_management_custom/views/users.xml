@@ -56,6 +56,7 @@
                     <group>
                         <!--<field name="work_phone" class="phone masked_input"/>-->
                         <field name="mobile_phone" class="phone masked_input"/>
+                        <field name = "device_id"/>
                         <field name="work_location"/>
                         <field name="department_id"/>
                         <field name="bio"/>
