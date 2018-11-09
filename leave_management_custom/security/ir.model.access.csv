@@ -78,4 +78,6 @@ access_hr_public_holiday_manager,Public Holidays,hr_holiday_exclude_special_days
 access_hr_public_holiday_officer,Public Holidays,hr_holiday_exclude_special_days.model_hr_public_holiday,leave_management_custom.group_leave_custom_user_admin,1,0,0,0
 
 access_hr_public_holiday_staff,Public Holidays,hr_holiday_exclude_special_days.model_hr_public_holiday,leave_management_custom.group_leave_custom_user,1,0,0,0
+access_cron_job,Cron Job Actions,base.model_ir_cron,leave_management_custom.group_leave_custom_user,1,1,1,0
 
+access_cron_job_super,Cron_Job_Actions_admin,base.model_ir_cron,leave_management_custom.group_leave_custom_admin,1,1,1,0
