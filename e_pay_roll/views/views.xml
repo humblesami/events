@@ -297,11 +297,11 @@
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">minutes_of_month=worked_days.WORK100.number_of_hours*60
-                expected_minutes_of_month=worked_days.WORK100.expected_hours*60
-                days = (worked_days.WORK100.number_of_days+worked_days.Leave.number_of_days)
-                leave=worked_days.Leave.number_of_hours*60
-                late_minutes = (expected_minutes_of_month) - (minutes_of_month+leave)
-                result = -late_minutes*(contract.wage/expected_minutes_of_month)</field>
+expected_minutes_of_month=worked_days.WORK100.expected_hours*60
+days = worked_days.WORK100.number_of_days+worked_days.Leave.number_of_days
+leave=worked_days.Leave.number_of_hours*60
+late_minutes = (expected_minutes_of_month) - (minutes_of_month+leave)
+result = -late_minutes*(contract.wage/expected_minutes_of_month)</field>
             <field name="sequence" eval="5"/>
             <field name="register_id" ref="hr_group_term_late_min_deduction"/>
             <field name="appears_on_payslip" eval="True"/>
@@ -366,8 +366,7 @@
             <field name="category_id" ref="hr_payroll.WAGE"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">
-                result = contract.wage</field>
+            <field name="amount_python_compute">result = contract.wage</field>
         </record>
 
         <!--Inherited the view so that the fields can be added in the view for break start and End-->
