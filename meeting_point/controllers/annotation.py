@@ -38,9 +38,8 @@ class annotation(http.Controller):
                 comments_points[i]['comments'] = comments
                 i = i + 1
 
-            doc = req_env['annotation.document'].search([('name', '=', doc_id),('user_id','=',uid)])
+            doc = req_env['annotation.document'].search([('name', '=', doc_name),('user_id','=',uid)])
             if not doc:
-                # doc = req_env['annotation.document'].create({'name': doc_id, 'user_id':uid, 'version':0})
                 res = {'version': -1, 'annotations': [], 'comments': comments_points}
                 return ws_methods.http_response('', res)
 
@@ -60,7 +59,7 @@ class annotation(http.Controller):
             for rect in rectangle_objects:
                 dimentions = ws_methods.objects_list_to_json_list(rect.rectangles, props)
                 rectanglular_annotations[i]['rectangles'] = dimentions
-                rectanglular_annotations[i]['doc_id'] = doc_id
+                rectanglular_annotations[i]['doc_id'] = doc_name
                 i = i + 1
 
             filter = [('document_id', '=', document_id), ('type', '=', 'drawing')]
@@ -75,12 +74,12 @@ class annotation(http.Controller):
                 for xy in dimentions:
                     ar_res.append([xy['x'], xy['y']])
                 drawings[i]['lines'] = ar_res
-                drawings[i]['doc_id'] = doc_id
+                drawings[i]['doc_id'] = doc_name
                 drawings[i]['width'] = 1
                 i = i + 1
 
-            filter = [('type', '=', 'point'),('sub_type', '=', 'personal')]
-            point_objects = req_env['annotation.point'].search(filter).filtered(lambda r: r.document_id.name == doc_id)
+            filter = [('document_id', '=', document_id), ('type', '=', 'point'),('sub_type', '=', 'personal')]
+            point_objects = req_env['annotation.point'].search(filter)
             props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
 
             notes_points = ws_methods.objects_list_to_json_list(point_objects, props)
@@ -94,9 +93,6 @@ class annotation(http.Controller):
                     com['point_id'] = notes_points[i]['uuid']
                 notes_points[i]['comments'] = comments
                 i = i + 1
-
-            # filter = [('type', '=', 'point'),('doc_name', '=', doc_id), ('sub_type', '!=', 'personal')]
-
 
             points = notes_points
             annotations = rectanglular_annotations + points + drawings
@@ -207,10 +203,10 @@ class annotation(http.Controller):
             modal = types['point']
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
             if not point_id:
-                doc_id = values.get('doc_id')
-                if not doc_id:
+                doc_name = values.get('doc_id')
+                if not doc_name:
                     return ws_methods.http_response('Document id not given')
-                point['doc_name'] = doc_id
+                point['doc_name'] = doc_name
                 point_id = req_env[modal].create(point)
 
             modal = types['comment']
@@ -232,17 +228,17 @@ class annotation(http.Controller):
             env = http.request.env
             meeting = False
             res_id = int(res_id)
-            doc_name = ''
+            docname = ''
             topic_name = False
             if doc_type == 'topic':
                 topic_doc = env['meeting_point.topicdoc'].search([('id','=',res_id)])
                 meeting = topic_doc.topic_id.meeting_id
                 topic_name = topic_doc.topic_id.name
-                doc_name = topic_doc.name
+                docname = topic_doc.name
             elif doc_type == 'meeting':
                 meeting_doc = env['meeting_point.doc'].search([('id', '=', res_id)])
                 meeting = meeting_doc.meeting_id
-                doc_name = meeting_doc.name
+                docname = meeting_doc.name
             if not meeting:
                 return ws_methods.http_response('Invalid doc type='+str(doc_type)+' or id ='+(res_id))
             ids = []
@@ -251,7 +247,7 @@ class annotation(http.Controller):
                 if cid != uid:
                     ids.append(cid)
 
-            res = { 'meta' : {'meeting':meeting.name, 'doc' : doc_name }}
+            res = { 'meta' : {'meeting':meeting.name, 'doc' : docname }}
             if topic_name:
                 res['meta']['topic'] = topic_name
             res['attendees'] = ids
