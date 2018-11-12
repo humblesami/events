@@ -200,11 +200,6 @@ class annotation(http.Controller):
 
             values = kw.get('annotations')
             values = json.loads(values)
-            doc_id = values.get('doc_id')
-
-            doc = req_env['annotation.document'].search([('name', '=', doc_id)])
-            if not doc:
-                return ws_methods.http_response('Document '+doc_id+' not found')
 
             point = values.get('point')
             comment = values.get('comment')
@@ -212,9 +207,13 @@ class annotation(http.Controller):
             modal = types['point']
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
             if not point_id:
-                point['doc_name'] = doc_id
+                doc_id = values.get('doc_id')
                 if not doc_id:
-                    return ws_methods.http_response('Please provide valid name for document')
+                    return ws_methods.http_response('Document id not given')
+                doc = req_env['annotation.document'].search([('name', '=', doc_id)])
+                if not doc:
+                    return ws_methods.http_response('Document '+doc_id+' does not exist')
+                point['doc_name'] = doc_id
                 point_id = req_env[modal].create(point)
 
             modal = types['comment']
