@@ -19,10 +19,10 @@ class annotation(http.Controller):
             else:
                 return ws_methods.http_response('Please Provide document id!')
 
-            doc_id = values.get('doc_id')
+            doc_name = values.get('doc_id')
             force = values.get('force')
 
-            filter = [('doc_name', '=', doc_id)]
+            filter = [('doc_name', '=', doc_name)]
             point_objects = req_env['annotation.point'].search(filter)
             props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
 
@@ -210,9 +210,6 @@ class annotation(http.Controller):
                 doc_id = values.get('doc_id')
                 if not doc_id:
                     return ws_methods.http_response('Document id not given')
-                doc = req_env['annotation.document'].search([('name', '=', doc_id)])
-                if not doc:
-                    return ws_methods.http_response('Document '+doc_id+' does not exist')
                 point['doc_name'] = doc_id
                 point_id = req_env[modal].create(point)
 
