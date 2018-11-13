@@ -109,8 +109,8 @@ class annotation(http.Controller):
                 return ws_methods.not_logged_in()
             req_env = http.request.env
 
-            doc_id = kw.get('doc_id')
-            doc = req_env['annotation.document'].search([('name', '=', doc_id),('user_id','=',uid)])
+            doc_name = kw.get('doc_id')
+            doc = req_env['annotation.document'].search([('name', '=', doc_name),('user_id','=',uid)])
             if doc:
                 reset = kw.get('reset')
                 if not reset:
@@ -120,20 +120,17 @@ class annotation(http.Controller):
                         return ws_methods.http_response('', doc.version)
                 res = req_env['annotation.rectangle'].search([('document_id', '=', doc.id)]).unlink()
                 res = req_env['annotation.drawing'].search([('document_id', '=', doc.id)]).unlink()
-                points = req_env['annotation.point'].search([]).filtered(lambda r: r.document_id.name == doc_id) #('document_id','=',doc.id)])
+                points = req_env['annotation.point'].search([('document_id', '=', doc.id),('sub_type','=','personal')])
+
                 for p in points:
-                    res = p.comments.filtered(lambda r: r.uid == uid).unlink()
-                    if p.create_uid.id == uid and len(p.comments) == 0:
+                    res = p.comments.unlink()
+                    if len(p.comments) == 0:
                         res = p.unlink()
                 if reset:
                     doc.version = 0
-                    # points = req_env['annotation.point'].search([])
-                    # for p in points:
-                    #     req_env['annotation.point.comments'].search([('point_id', '=', p.id)]).unlink()
-                    #     p.unlink()
                     return ws_methods.http_response('', 'done')
             else:
-                doc = req_env['annotation.document'].create({'name': doc_id, 'user_id':uid, 'version':0})
+                doc = req_env['annotation.document'].create({'name': doc_name, 'user_id':uid, 'version':0})
 
             values = kw.get('annotations')
             values = json.loads(values)
@@ -173,7 +170,12 @@ class annotation(http.Controller):
                     del val['comments']
                     point_id = req_env[modal].search([('uuid','=',val['uuid'])])
                     if not point_id:
+                        if val['sub_type'] != 'personal':
+                            continue
                         point_id = req_env[modal].create(val)
+                    else:
+                        if point_id.sub_type != 'personal':
+                            continue
                     modal = types['comment']
                     for vals in comments:
                         if vals['uid'] == uid:
