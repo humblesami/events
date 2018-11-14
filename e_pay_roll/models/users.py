@@ -77,8 +77,12 @@ class UserView(models.Model):
             employee.user_id.partner_id.user_id = employee.user_id
             tempEmployee = self.env['hr.employee'].search([('user_id', '=', vals['login'])])
             if not tempEmployee:
-                self.sudo().env['hr.employee'].create(
+                if vals.get('device_id'):
+                    self.sudo().env['hr.employee'].create(
                     {'name': vals['name'],'user_id': employee.user_id.id,'work_email': vals['login'],'device_id':vals['device_id']})
+                else:
+                    self.sudo().env['hr.employee'].create({'name': vals['name'], 'user_id': employee.user_id.id, 'work_email': vals['login']})
+
             return employee
     @api.multi
     def write(self, vals):

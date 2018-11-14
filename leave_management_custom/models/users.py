@@ -117,8 +117,14 @@ class LeaveUserView(models.Model):
             employee.user_id.partner_id.user_id = employee.user_id
             searchEmployee = self.env['hr.employee'].search([('user_id', '=', vals['login'])])
             if not searchEmployee:
-                self.sudo().env['hr.employee'].create(
-                    {'name': vals['name'], 'work_email': vals['login'], 'user_id': employee.user_id.id,'device_id':vals['device_id']})
+                if vals.get('device_id'):
+                    self.sudo().env['hr.employee'].create(
+                        {'name': vals['name'], 'user_id': employee.user_id.id, 'work_email': vals['login'],
+                         'device_id': vals['device_id']})
+                else:
+                    self.sudo().env['hr.employee'].create(
+                        {'name': vals['name'], 'user_id': employee.user_id.id, 'work_email': vals['login']})
+
             return employee
 
     @api.multi
