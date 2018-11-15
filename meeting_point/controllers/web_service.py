@@ -140,7 +140,6 @@ class ws(http.Controller):
             if not uid:
                 return ws_methods.not_logged_in()
             req_env = http.request.env
-            baseurl = http.request.httprequest.host_url
             home = req_env['meeting_point.news'].search([('id', '=', 1)])
 
             home_object = ws_methods.object_to_json_object(home, ['id', 'title', 'photo', 'description'])
@@ -161,8 +160,7 @@ class ws(http.Controller):
             for val in to_do_items['pending_surveys']:
                 survey_title = val['title'].replace(' ','-')
                 survey_title = survey_title.replace("'", '-')
-                start_url = baseurl + 'survey/start/' + survey_title + '-' + str(val['id']) + '/phantom/' + values['db'] + '/' + values['token']
-                #start_url = baseurl + 'survey/init/' +  str(val['id']) + '/phantom/' + values['db'] + '/' + values['token']
+                start_url = http.request.conf['host_url'] + 'survey/start/' + survey_title + '-' + str(val['id']) + '/phantom/' + values['db'] + '/' + values['token']
                 val['start_url'] = start_url
             props = ['id','name', 'mp_signature_status', 'meeting_id.name']
             to_do_items['pending_documents'] = ws_methods.objects_list_to_json_list(home.pending_documents, props)

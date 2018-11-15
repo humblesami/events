@@ -181,6 +181,7 @@ class meeting(http.Controller):
                 attendee_user = attendee_partner.partner_id.user_id
                 attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
                 attendee['uid'] = attendee_user.id
+                attendee['name'] = attendee_user.name
                 if attendee['state'] == 'needsAction':
                     attendee['state'] = 'No Response'
                 elif attendee['state'] == 'accepted':
