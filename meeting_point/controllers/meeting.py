@@ -255,6 +255,7 @@ class meeting(http.Controller):
                 values['meeting_type'] = 'upcoming'
             if values['meeting_type'] == 'completed':
                 filters.append(('stop', '<', date_value))
+                filters.append(('archived', '=', False))
             elif values['meeting_type'] == 'archived':
                 filters.append(('archived', '=', True))
             else:
