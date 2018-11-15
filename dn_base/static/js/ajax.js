@@ -18,13 +18,6 @@ function genericJsonRpc (fct_name, params, fct) {
     var result = xhr.pipe(function(result) {
         core.bus.trigger('rpc:result', data, result);
         if (result.error !== undefined) {
-            if (result.error.data.arguments[0] !== "bus.Bus not available in test mode") {
-                //console.error("Server application error", JSON.stringify(result.error));
-                if(result.error.message == "Odoo Session Expired")
-                {
-                    dntoast.error("Session expired. Please <a href='/web/login'><b>Click Here</b></a> to login.", 500);
-                }
-            }
             return $.Deferred().reject("server", result.error);
         } else {
             return result.result;

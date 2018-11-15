@@ -19,7 +19,11 @@ class IrHttp(Http):
     def session_info(self):
         request = http.request
         user = request.env.user
-        spuser = request.env['dnspusers'].sudo().search([('user_id', '=', user.id)])
+        spuser = False
+        try:
+            spuser = request.env['dnspusers'].sudo().search([('user_id', '=', user.id)])
+        except:
+            a= 1
         display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
         version_info = odoo.service.common.exp_version()
         user_info = {
