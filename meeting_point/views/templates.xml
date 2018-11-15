@@ -1,7 +1,8 @@
 <odoo>
     <data>
-        <template id="dn_base_backend" name="Web Custom Assets" inherit_id="web.assets_backend">
+        <template id="mp_backend" name="Web Custom Assets" inherit_id="web.assets_backend">
             <xpath expr=".">
+                <div id="chat_box"></div>
                 <script src="/meeting_point/static/js/web.js"/>
             </xpath>
         </template>

@@ -1,0 +1,9 @@
+#chat_box{
+    display:none;
+    position:fixed;
+    z-index:5;
+    height: 100px;
+    width:50px;
+    bottom:0;
+    background:green
+}

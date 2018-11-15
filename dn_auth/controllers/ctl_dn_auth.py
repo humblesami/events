@@ -1,5 +1,8 @@
 import sys
 import json
+import odoo
+import random
+import string
 import requests
 import traceback
 from odoo import http
@@ -9,7 +12,36 @@ from werkzeug.utils import redirect
 from odoo.addons.dn_base import ws_methods
 from odoo.addons.dn_auth import dn_auth_vars
 from dateutil.relativedelta import relativedelta
+from odoo.addons.web_enterprise.models.ir_http import Http
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
+
+class IrHttp(Http):
+    def session_info(self):
+        request = http.request
+        user = request.env.user
+        spuser = request.env['dnspusers'].sudo().search([('user_id', '=', user.id)])
+        display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
+        version_info = odoo.service.common.exp_version()
+        user_info = {
+            "session_id": request.session.sid,
+            "uid": request.session.uid,
+            "is_system": request.env.user._is_system(),
+            "is_superuser": request.env.user._is_superuser(),
+            "user_context": request.session.get_context() if request.session.uid else {},
+            "db": request.session.db,
+            "server_version": version_info.get('server_version'),
+            "server_version_info": version_info.get('server_version_info'),
+            "name": user.name,
+            "username": user.login,
+            "company_id": request.env.user.company_id.id if request.session.uid else None,
+            "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
+            "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
+            "currencies": self.get_currencies(),
+            "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
+        }
+        if spuser and spuser.auth_token:
+            user_info['token'] = spuser.auth_token
+        return user_info
 
 class AuthSession(AuthSignupHome):
 
@@ -55,9 +87,17 @@ class AuthSession(AuthSignupHome):
             return redirect('/web')
         response = super(AuthSession, self).web_login(*args, **kw)
         if request.db:
-            user_id = request.session.uid
+            uid = request.session.uid
             http_req = request.httprequest
-            if user_id:
+            if uid:
+                token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
+                custom_user_model = request.env['dnspusers']
+                user = custom_user_model.sudo().search([('user_id', '=', uid)])
+                if not user:
+                    user = custom_user_model.sudo().create({'user_id': uid, 'auth_token': token})
+                else:
+                    user.sudo().auth_token = token
+
                 agent = http_req.user_agent
                 #ip = request.httprequest.environ['REMOTE_ADDR']
                 ip = http_req.environ.get('HTTP_X_FORWARDED_FOR') or http_req.environ.get('REMOTE_ADDR')
@@ -91,34 +131,6 @@ class AuthSession(AuthSignupHome):
             return response
         else:
             return "Database is under maintenance"
-
-    @http.route('/dn_auth/update_activity', csrf=False)
-    def update_activity(self, **kw):
-        request = http.request
-
-        uid = request.session.uid
-        if not uid:
-            return ws_methods.http_response('User session expired')
-        if uid == 1:
-            return ws_methods.http_response('','success')
-
-        db = request.db
-        if dn_auth_vars.dn_sessions and dn_auth_vars.dn_sessions[db]:
-            d = 1
-        else:
-            return ws_methods.http_response('Server restarted')
-
-        uuid = 'u' + str(uid)
-        session_array = dn_auth_vars.dn_sessions
-        if db in session_array and uuid in session_array[db]:
-            timenow = datetime.now()
-            session_array[db][uuid]['last_activity'] = timenow
-            dn_auth_vars.dn_sessions = session_array
-            return ws_methods.http_response('', 'success')
-        else:
-            return ws_methods.http_response('User connection to database expired')
-
-        return ws_methods.http_response('', 'success')
 
     @http.route('/dn_auth/site_users', csrf=False)
     def get_site_users(self, **kw):

@@ -35,16 +35,12 @@ class auth(http.Controller):
                 return ws_methods.http_response('Invalid credentials')
 
             token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
-            # token = encode('sM:de_', token)
-            # password = ws_methods.encode('sM:de_', password)
-
             custom_user_model = request.env['dnspusers']
             user = custom_user_model.sudo().search([('user_id', '=', uid)])
-
             if not user:
-                user = custom_user_model.sudo().create({'user_id':uid, 'login':login, 'password':password,'auth_token':token})
+                user = custom_user_model.sudo().create({'user_id': uid, 'auth_token': token})
             else:
-                user.sudo().write({'login':login, 'password':password,'auth_token':token})
+                user.sudo().auth_token = token
 
             user = user.user_id
             app_name = values.get('app_name')
@@ -108,15 +104,12 @@ class auth(http.Controller):
             if not token:
                 return "Token Not Given"
             token = str(token)
-            db = values['db']
-            # original_token = decode('sM:de_', token)
-            filters = [('auth_token', '=', token)]
+            stuid = values.get('uid')
+            uid = int(stuid)
+            filters = [('auth_token', '=', token, 'user_id','=', uid)]
             user = request.env['dnspusers'].sudo().search(filters)
             if not user:
-                return "Token expired"
-            # password = decode('sM:de_', password)
-            uid = request.session.authenticate(db, user.login, user.password)
-
+                return "Token not valid for user "+stuid
             return "1"
         except:
             return "Invalid Token"

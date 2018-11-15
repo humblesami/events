@@ -1,4 +1,5 @@
 var dn_base_web_url = window.location.origin + '';
+console.log(odoo, 1968);
 function load_dn_assets()
 {
     try
@@ -10,8 +11,6 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/libs/signature.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/pdf.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/fullcalendar.js"/>');
-
-
 
         //Custom plugins
         document.writeln('<script src="/dn_base/static/js/toast.js"></script>');
@@ -43,7 +42,6 @@ function load_dn_assets()
         console.log(er);
     }
 }
-
 
 function timeToDecimal(t)
 {

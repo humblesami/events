@@ -159,12 +159,12 @@ def check_auth(values):
         return False
     db = values['db']
     token = str(values['token'])
-    #original_token = decode('sM:de_', token)
-    filters = [('auth_token', '=', token)]
+    stuid = values['uid']
+    uid = int(stuid)
+    filters = [('auth_token', '=', token),('user_id','=', uid)]
     user = request.env['dnspusers'].sudo().search(filters)
     if not user:
         return False
-    #password = decode('sM:de_', password)
     uid = request.session.authenticate(db, user.login, user.password)
     if not hasattr(request, 'conf'):
         request.conf = { 'host_url': request.httprequest.host_url, 'db': request.db, 'token' : token }
