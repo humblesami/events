@@ -113,92 +113,8 @@ class payAttendance(models.Model):
             va = data.employee_id.id
             data.TotalLeaves = count
             if(sickleavecounter):
-                data.sickLeaves=sickleavecounter
+                data.sickLeaves = sickleavecounter
 
-
-
-    # @api.model
-    # def create(self,vals):
-    #     tempSelf =self
-    #     if 'check_in' in vals and 'check_out' in vals:
-    #         res = super(payAttendance, self).create(vals)
-    #         tempSelf = res
-    #         if vals['check_in'] != False and vals['check_out'] != False:
-    #             workhours = res.calc_worked_hours(vals)
-    #             if workhours == None:
-    #                 raise ValidationError("Invalid entries")
-    #             vals['worked_hours'] = workhours['workhours']
-    #             vals['worked_hours1'] = workhours['workhours']
-    #             vals['breakStart'] = workhours['breakstart']
-    #             vals['breakEnd'] = workhours['breakend']
-    #             vals['lateminutes'] = workhours['lateminutes']
-    #             vals['dateValue'] = workhours['dateValue']
-    #             res = super(payAttendance, res.with_context(mail_create_nosubscribe=True)).write(vals)
-    #     else:
-    #         tempSelf = super(payAttendance, self).create(vals)
-    #     return tempSelf
-
-    # def write(self, vals):
-    #     compute = True
-    #     if 'check_in' in vals or 'check_out' in vals:
-    #         if not 'check_in' in vals:
-    #             if self.check_in:
-    #                 vals['check_in'] = self.check_in
-    #             else:
-    #                  compute = False
-    #         if not 'check_out' in vals:
-    #             if self.check_out:
-    #                 vals['check_out'] = self.check_out
-    #             else:
-    #                  compute = False
-    #     else:
-    #         compute = False
-    #
-    #         # Attendance log
-    #     if compute:
-    #         if self.check_in == vals['check_in'] and self.check_out == vals['check_out']:
-    #             pass
-    #         if self.check_in != vals['check_in'] and self.check_in:
-    #             checkinTime = datetime.strptime(self.check_in, "%Y-%m-%d %H:%M:%S") + timedelta(hours=5)
-    #             changedCheckinTime = datetime.strptime(vals['check_in'], "%Y-%m-%d %H:%M:%S") + timedelta(hours=5)
-    #             checkinTimeStr = checkinTime.strftime("%Y-%m-%d %H:%M:%S")
-    #             changedCheckinTimeStr = changedCheckinTime.strftime("%Y-%m-%d %H:%M:%S")
-    #
-    #             attendanceLog_checkin = (" %s has changed the check in time of %s from %s to %s" % (
-    #             self.env.user.display_name, self.employee_id.display_name, checkinTimeStr, changedCheckinTimeStr))
-    #             self.env['attendance.log'].create({'changeInAttendance': attendanceLog_checkin,'employee_id': self.employee_id.id})
-    #         if self.check_out != vals['check_out'] and self.check_out:
-    #             checkoutTime = datetime.strptime(self.check_out, "%Y-%m-%d %H:%M:%S") + timedelta(hours=5)
-    #             changedCheckoutTime = datetime.strptime(vals['check_out'], "%Y-%m-%d %H:%M:%S") + timedelta(hours=5)
-    #             checkoutTimeStr = checkoutTime.strftime("%Y-%m-%d %H:%M:%S")
-    #             changedCheckoutTimeStr = changedCheckoutTime.strftime("%Y-%m-%d %H:%M:%S")
-    #
-    #             attendanceLog_checkout = (" %s has changed the check out time of %s from %s to %s" % (
-    #             self.env.user.display_name, self.employee_id.display_name, checkoutTimeStr, changedCheckoutTimeStr))
-    #             self.env['attendance.log'].create(
-    #                 {'changeInAttendance': attendanceLog_checkout, 'employee_id': self.employee_id.id})
-    #        #ending of attendance Log (zartash)
-    #     workhours = self.calc_worked_hours(vals)
-    #     contract = self.env['hr.contract'].search([('employee_id', '=', self.employee_id.id)], limit=1)
-    #     if not(contract.id):
-    #         raise ValidationError("No running contract found for employee "+self.employee_id.display_name+'-'+str(self.employee_id.id))
-    #     if not contract.resource_calendar_id.id:
-    #         raise ValidationError(
-    #         "No Working Schedule found for employee " + self.employee_id.display_name + '-' + str(self.employee_id.id))
-    #     if not 'check_out' in vals and workhours == None:
-    #         res = super(payAttendance, self.with_context(mail_create_nosubscribe=True)).write(vals)
-    #         return res
-    #     vals['worked_hours'] = workhours['workhours']
-    #     vals['worked_hours1'] = workhours['workhours']
-    #     vals['breakStart'] = workhours['breakstart']
-    #     vals['breakEnd'] = workhours['breakend']
-    #     vals['lateminutes']=workhours['lateminutes']
-    #     vals['dateValue'] = workhours['dateValue']
-    #     res = super(payAttendance, self.with_context(mail_create_nosubscribe=True)).write(vals)
-    #     return res
-
-
-    #@api.depends('check_in', 'check_out')
     def calc_worked_hours(self, vals):
         try:
             # making list of days
@@ -224,6 +140,7 @@ class payAttendance(models.Model):
 
             #Getting the Value for the contract which is assigned to the employee
             contract = self.env['hr.contract'].search([('employee_id', '=', self.employee_id.id)], limit=1)
+
             # if not(contract.id):
             #     raise ValidationError("No running contract defined.Kindly define it in the contract of employee.")
             #Getting the working schedule for the specific employee on that specific working day

@@ -189,78 +189,78 @@ class HrPayslip(models.Model):
             leaves = {}
             day_leave_intervals = contract.employee_id.iter_leaves(day_from, day_to,
                                                                    calendar=contract.resource_calendar_id)
-
+            holidays = self.env['hr.holidays'].search(['&', ('state', '=', 'validate'),
+                                                      ('type', '=', 'remove'),
+                                                      ('employee_id','=',contract.employee_id.id),
+                                                      ('date_only_from', '>=',str(day_from.date())),
+                                                      ('date_only_to', '<=',str(day_to.date()))])
             leave_hour_total=0.0
             leave_day_total=0.0
-            holidayDone = ''
-            for day_intervals in day_leave_intervals:
-                for interval in day_intervals:
-                    holiday = interval[2]['leaves'].holiday_id
-                    if holidayDone == holiday.id:
-                        break
-                    else:
-                        holidayDone  = holiday.id
-                    current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
-                        'name': holiday.holiday_status_id.name,
-                        'sequence': 5,
-                        'code': holiday.holiday_status_id.name,
-                        'number_of_days': 0.0,
-                        'number_of_hours': 0.0,
-                        'contract_id': contract.id,
-                    })
+            # for day_intervals in holiday:
+            for holiday in holidays:
+                # holiday = interval.id
+                current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
+                    'name': holiday.holiday_status_id.name,
+                    'sequence': 5,
+                    'code': holiday.holiday_status_id.name,
+                    'number_of_days': 0.0,
+                    'number_of_hours': 0.0,
+                    'contract_id': contract.id,
+                })
 
-                    # leave_time = (interval[1] - interval[0]).seconds / 3600
-                    holidayName = holiday.holiday_status_id.name
-                    if not (holidayName=='Unpaid'):
 
-                        workvalue = 8
-                        for day in working_schedule:
-                            val = day_intervals[0].start_datetime.weekday()
-                            valday = day_intervals[0].start_datetime.day
-                            valMonth = day_intervals[0].start_datetime.month
-                            if (val == int(day.dayofweek)):
-                                deltaBreak = timedelta(0, 0)
-                                if not (day.break_start == 0 and day.break_end == 0):
-                                    expectedBreakStart = self.convert_string_date(day.break_start
-                                                                                  , valday, valMonth)
-                                    expectedBreakEnd = self.convert_string_date(day.break_end,
-                                                                                valday, valMonth)
-                                    deltaBreak = datetime.strptime(expectedBreakEnd,
-                                                                   DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(
-                                        expectedBreakStart, DEFAULT_SERVER_DATETIME_FORMAT)
-                                expectedCheckOutTime = self.convert_string_date(day.hour_to, valday, valMonth)
-                                expectedCheckInTime = self.convert_string_date(day.hour_from, valday, valMonth)
-                                valuedifference = time_difference_function(self, expectedCheckOutTime,
-                                                                           expectedCheckInTime) - deltaBreak
-                                if (day.date_from and day.date_to):
-                                    lower = datetime.strptime(day.date_from, "%Y-%m-%d")
-                                    upper = datetime.strptime(day.date_to, "%Y-%m-%d")
-                                    tempday = day_intervals[0].start_datetime
-                                    tempday = tempday.replace(second=0, minute=0, hour=0)
-                                    if (tempday >= lower and tempday <= upper):
-                                        customworkhour = int(valuedifference.seconds)
-                                        customworkhour = customworkhour/3600
-                                    else:
-                                        customworkhour = int(valuedifference.seconds)
-                                        customworkhour = customworkhour / 3600
+                holidayName = holiday.holiday_status_id.name
+                if not (holidayName=='Unpaid'):
 
+                    workvalue = 8
+                    for day in working_schedule:
+                        val = day_intervals[0].start_datetime.weekday()
+                        valday = day_intervals[0].start_datetime.day
+                        valMonth = day_intervals[0].start_datetime.month
+                        if (val == int(day.dayofweek)):
+                            deltaBreak = timedelta(0, 0)
+                            if not (day.break_start == 0 and day.break_end == 0):
+                                expectedBreakStart = self.convert_string_date(day.break_start
+                                                                              , valday, valMonth)
+                                expectedBreakEnd = self.convert_string_date(day.break_end,
+                                                                            valday, valMonth)
+                                deltaBreak = datetime.strptime(expectedBreakEnd,
+                                                               DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(
+                                    expectedBreakStart, DEFAULT_SERVER_DATETIME_FORMAT)
+                            expectedCheckOutTime = self.convert_string_date(day.hour_to, valday, valMonth)
+                            expectedCheckInTime = self.convert_string_date(day.hour_from, valday, valMonth)
+                            valuedifference = time_difference_function(self, expectedCheckOutTime,
+                                                                       expectedCheckInTime) - deltaBreak
+                            if (day.date_from and day.date_to):
+                                lower = datetime.strptime(day.date_from, "%Y-%m-%d")
+                                upper = datetime.strptime(day.date_to, "%Y-%m-%d")
+                                tempday = day_intervals[0].start_datetime
+                                tempday = tempday.replace(second=0, minute=0, hour=0)
+                                if (tempday >= lower and tempday <= upper):
+                                    customworkhour = int(valuedifference.seconds)
+                                    customworkhour = customworkhour/3600
                                 else:
                                     customworkhour = int(valuedifference.seconds)
                                     customworkhour = customworkhour / 3600
 
-                                temp_leave_hour_total = float(holiday.duration_temp)
-                                temp_leave_hour_total = ((customworkhour)/(workvalue/temp_leave_hour_total))*holiday.number_of_days_temp
-                                leave_hour_total +=temp_leave_hour_total
-                                current_leave_struct['number_of_hours'] += float(leave_hour_total)
-                                current_leave_struct['number_of_days'] += holiday.number_of_days_temp
-                                if (holiday.number_of_days_temp==0.5):
-                                    leave_day_total += 0.5
-                                elif(holiday.number_of_days_temp==0.25):
-                                    leave_day_total += 0.25
-                                else:
-                                    leave_day_total += holiday.number_of_days_temp
-                                break
-            # compute worked days
+                            else:
+                                customworkhour = int(valuedifference.seconds)
+                                customworkhour = customworkhour / 3600
+
+                            temp_leave_hour_total = float(holiday.duration_temp)
+                            temp_leave_hour_total = ((customworkhour)/(workvalue/temp_leave_hour_total))*holiday.number_of_days_temp
+                            leave_hour_total +=temp_leave_hour_total
+                            current_leave_struct['number_of_hours'] += float(leave_hour_total)
+                            current_leave_struct['number_of_days'] += holiday.number_of_days_temp
+                            if (holiday.number_of_days_temp==0.5):
+                                leave_day_total += 0.5
+                            elif(holiday.number_of_days_temp==0.25):
+                                leave_day_total += 0.25
+                            else:
+                                leave_day_total += holiday.number_of_days_temp
+                            break
+        # compute worked days
+
             work_data = contract.employee_id.get_work_days_data(day_from, day_to,
                                                                     calendar=contract.resource_calendar_id)
 
@@ -279,9 +279,10 @@ class HrPayslip(models.Model):
                 'expected_hours':temp,
                 'contract_id': contract.id,
             }
+
             Leaves = {
                 'name': _("Normal Leave Days paid at 100%"),
-                'sequence': 1,
+                'sequence': 2,
                 'code': 'Leave',
                 'number_of_days':leave_day_total,
                 'number_of_hours': leave_hour_total,
@@ -355,7 +356,7 @@ class Rescz(models.Model):
         if end_datetime:
             # domain += [('date_from', '<', fields.Datetime.to_string(to_naive_utc(end_datetime, self.env.user)))]
             domain += [('date_from', '<', fields.Datetime.to_string(end_datetime + timedelta(days=1)))]
-        leaves = self.env['resource.calendar.leaves'].search(domain )
+        leaves = self.env['resource.calendar.leaves'].search(domain + [('calendar_id', '=', self.id)] )
 
         filtered_leaves = self.env['resource.calendar.leaves']
         for leave in leaves:
