@@ -168,6 +168,8 @@ def check_auth(values):
     uid = request.session.authenticate(db, user.login, user.password)
     if not hasattr(request, 'conf'):
         request.conf = { 'host_url': request.httprequest.host_url, 'db': request.db, 'token' : token }
+        if '.com' in request.conf['host_url']:
+            request.conf['host_url'].replace('http:,https:')
     return uid
 
 def authenticate(data):
