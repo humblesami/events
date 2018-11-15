@@ -238,7 +238,7 @@ class Meeting(models.Model):
     @api.multi
     def _compute_video_link(self):
         for obj in self:
-            obj.video_call_link = 'https://meetvue.com/conference/'+obj.pin
+            obj.video_call_link = '/conference/'+obj.pin
 
 
     @api.multi
