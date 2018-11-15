@@ -3,6 +3,7 @@ from odoo import http
 from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 
+ongoing_meetings = {}
 class meeting(http.Controller):
 
 
@@ -51,6 +52,30 @@ class meeting(http.Controller):
             except:
                 return ws_methods.handle()
 
+
+
+    @http.route('/meeting/attendees', type="http", csrf=False, auth='public', cors='*')
+    def getMeetingAttendees(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            roomPin = kw.get('pin')
+            meeting =  http.request.env['calendar.event'].sudo().search([('pin', '=', roomPin)])
+            exe_time = meeting.exectime
+            if exe_time != 'upcoming' and exe_time != 'ongoing':
+                return ws_methods.http_response('Meeting is passed away')
+            ids = []
+            im_attendee = 'no'
+            for attendee in meeting.partner_ids:
+                cid = attendee.user_id.id
+                if cid != uid:
+                    ids.append(cid)
+                else:
+                    im_attendee = 'yes'
+            return ws_methods.http_response('',{ 'ids': ids, 'im_attendee':im_attendee})
+        except:
+            return ws_methods.handle()
 
     @http.route('/meeting/summary', type="http", csrf=False, auth='none', cors='*')
     def mp_meeting_http(self, **kw):

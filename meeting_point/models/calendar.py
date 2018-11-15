@@ -180,7 +180,7 @@ class Meeting(models.Model):
     description = fields.Html()
     publish = fields.Boolean(string="Publish")
     pin = fields.Char(string="Meeting PIN")
-    video_call_link = fields.Char(string="Video Call Link")
+    video_call_link = fields.Char(compute="_compute_video_link")
     country_state = fields.Many2one('res.country.state',string="Status")#, domain=lambda self:self.filter_states())
     company = fields.Char(string="Company")
     city = fields.Char(string="City")
@@ -234,6 +234,12 @@ class Meeting(models.Model):
             self = self.sudo()
         res = super(Meeting, self).write(vals)
         return res
+
+    @api.multi
+    def _compute_video_link(self):
+        for obj in self:
+            obj.video_call_link = 'https://meetvue.com/conference/'+obj.pin
+
 
     @api.multi
     def _compute_seen_by_me(self):
