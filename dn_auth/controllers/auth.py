@@ -104,7 +104,7 @@ class auth(http.Controller):
             if not token:
                 return "Token Not Given"
             token = str(token)
-            stuid = values.get('uid')
+            stuid = values.get('id')
             uid = int(stuid)
             filters = [('auth_token', '=', token, 'user_id','=', uid)]
             user = request.env['dnspusers'].sudo().search(filters)
