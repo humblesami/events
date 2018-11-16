@@ -111,14 +111,29 @@
 
         // Print value to target
         self.printValue = function(value) {
-            var result = self.formattingFn(value);
+            try
+            {
+                var result = self.formattingFn(value);
+                var selfd =  self.d;
+                if(selfd)
+                {
+                    if (selfd.tagName === 'INPUT') {
+                        selfd.value = result;
+                    } else if (selfd.tagName === 'text' ||  selfd.tagName === 'tspan') {
+                        selfd.textContent = result;
+                    } else {
+                        selfd.innerHTML = result;
+                    }
+                }
+                else
+                {
+                    //console.log("Self d not defiend");
+                }
 
-            if (self.d.tagName === 'INPUT') {
-                this.d.value = result;
-            } else if (self.d.tagName === 'text' ||  self.d.tagName === 'tspan') {
-                this.d.textContent = result;
-            } else {
-                this.d.innerHTML = result;
+            }
+            catch(er)
+            {
+                console.log(er)
             }
         };
 

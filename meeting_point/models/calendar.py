@@ -238,7 +238,10 @@ class Meeting(models.Model):
     @api.multi
     def _compute_video_link(self):
         for obj in self:
-            obj.video_call_link = '/conference/'+obj.pin
+            if obj.pin:
+                obj.video_call_link = '/conference/'+obj.pin
+            else:
+                obj.video_call_link = ''
 
 
     @api.multi
