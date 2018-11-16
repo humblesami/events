@@ -64,7 +64,7 @@ class meeting(http.Controller):
             meeting =  http.request.env['calendar.event'].sudo().search([('pin', '=', roomPin)])
             exe_time = meeting.exectime
             if exe_time != 'upcoming' and exe_time != 'ongoing':
-                return ws_methods.http_response('Meeting is passed away')
+                return ws_methods.http_response('!')
             ids = []
             im_attendee = 'no'
             for attendee in meeting.partner_ids:
