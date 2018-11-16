@@ -38,9 +38,9 @@ class auth(http.Controller):
             custom_user_model = request.env['dnspusers']
             user = custom_user_model.sudo().search([('user_id', '=', uid)])
             if not user:
-                user = custom_user_model.sudo().create({'user_id': uid, 'auth_token': token})
+                user = custom_user_model.sudo().create({'user_id': uid, 'login' : login, 'auth_token' : token, 'password' : password})
             else:
-                user.sudo().auth_token = token
+                user.sudo().write({'auth_token' : token, 'login' : login, 'password' : password })
 
             user = user.user_id
             app_name = values.get('app_name')

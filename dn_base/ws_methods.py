@@ -150,26 +150,9 @@ def log_error(er):
     er = "Logged " + er
     print(er)
 
-def check_auth_token(values):
-    if request.uid and request.uid!=4:
-        return request.uid
-    if not values:
-        return False
-    if not values['token']:
-        return False
-    db = values['db']
-    token = str(values['token'])
-    filters = [('auth_token', '=', token)]
-    user = request.env['dnspusers'].sudo().search(filters)
-    if not user:
-        return False
-    uid = request.session.authenticate(db, user.login, user.password)
-    if not hasattr(request, 'conf'):
-        request.conf = { 'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token' : token }
-    return uid
 
 def check_auth(values):
-    if request.uid and request.uid!=4:
+    if request.uid and request.uid != 4:
         return request.uid
     if not values:
         return False
@@ -187,6 +170,27 @@ def check_auth(values):
     if not hasattr(request, 'conf'):
         request.conf = { 'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token' : token }
     return uid
+
+def check_auth_token(values):
+    if values.get('stopit'):
+        a = 1
+    if request.uid and request.uid != 4:
+        return request.uid
+    if not values:
+        return False
+    if not values['token']:
+        return False
+    db = values['db']
+    token = str(values['token'])
+    filters = [('auth_token', '=', token)]
+    user = request.env['dnspusers'].sudo().search(filters)
+    if not user:
+        return False
+    uid = request.session.authenticate(db, user.login, user.password)
+    if not hasattr(request, 'conf'):
+        request.conf = { 'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token' : token }
+    return uid
+
 
 def authenticate(data):
     db = data.get('db')
