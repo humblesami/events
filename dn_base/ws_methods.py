@@ -16,8 +16,8 @@ def send_mail(mesgtosend):
 
 def mfile_url(model, field, id):
     conf = request.conf
-    res = 'dn/content_file/'+model+'/'+  str(id) + '/'+field+'/' + conf['db'] + '/' + conf['token']
-    res = conf['host_url']  + res
+    res = 'dn/content_file/' + model + '/' +  str(id) + '/' + field + '/' + conf['db'] + '/' + conf['token']
+    res = conf['host_url'] + res
     return res
 
 def execute_upd(query):
@@ -150,6 +150,24 @@ def log_error(er):
     er = "Logged " + er
     print(er)
 
+def check_auth_token(values):
+    if request.uid and request.uid!=4:
+        return request.uid
+    if not values:
+        return False
+    if not values['token']:
+        return False
+    db = values['db']
+    token = str(values['token'])
+    filters = [('auth_token', '=', token)]
+    user = request.env['dnspusers'].sudo().search(filters)
+    if not user:
+        return False
+    uid = request.session.authenticate(db, user.login, user.password)
+    if not hasattr(request, 'conf'):
+        request.conf = { 'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token' : token }
+    return uid
+
 def check_auth(values):
     if request.uid and request.uid!=4:
         return request.uid
@@ -167,9 +185,7 @@ def check_auth(values):
         return False
     uid = request.session.authenticate(db, user.login, user.password)
     if not hasattr(request, 'conf'):
-        request.conf = { 'host_url': request.httprequest.host_url, 'db': request.db, 'token' : token }
-        if '.com' in request.conf['host_url']:
-            request.conf['host_url'] = request.conf['host_url'].replace('http:','https:')
+        request.conf = { 'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token' : token }
     return uid
 
 def authenticate(data):

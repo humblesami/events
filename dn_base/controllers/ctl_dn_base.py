@@ -168,7 +168,7 @@ class MyBinary(Binary):
                        download=None, token=None, db=None, user_token=None, access_token=None, **kw):
 
         values = {'token': user_token, 'db': db}
-        uid = ws_methods.check_auth(values)
+        uid = ws_methods.check_auth_token(values)
         if not uid:
             return request.not_found()
 

@@ -54,9 +54,7 @@ class auth(http.Controller):
                 else:
                     groups.append(group.full_name)
             if not hasattr(request, 'conf'):
-                request.conf = {'host_url': request.httprequest.host_url, 'db': request.db, 'token': token}
-                if '.com' in request.conf['host_url']:
-                    request.conf['host_url'] = request.conf['host_url'].replace('http:', 'https:')
+                request.conf = {'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token': token}
             user_photo = ws_methods.mfile_url('res.users','image_small', uid)
             http_req = request.httprequest
             if uid:
