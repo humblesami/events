@@ -234,7 +234,6 @@ class Cori_form(models.Model):
     cori_sign = fields.Binary("Signature")
     corri_applicant_id = fields.Many2one('foster.applicants')
 
-
 class Applicant(models.Model):
     _name = 'foster.applicants'
     _rec_name = "last_name"

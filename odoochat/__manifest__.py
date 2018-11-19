@@ -27,6 +27,7 @@
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
+        'views/consumer_profile.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
