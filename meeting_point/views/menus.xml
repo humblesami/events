@@ -57,6 +57,14 @@
                 action="action_upcoming_meeting"
         />
 
+        <menuitem
+                name="Chat"
+                id="chat_menu"
+                sequence="100"
+                parent="menu_root"
+                action="action_news_user_home"
+        />
+
         <menuitem name="Meeting Draft" id="menu_meeting_draft"
                   sequence="2"
                   parent="menu_meetings" action="action_draft_meeting"
