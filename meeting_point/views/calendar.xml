@@ -22,10 +22,10 @@
                         <field name="start" string="Starting at" />
                         <field name="stop" string="Ending at" />
                         <field name="duration" widget="float_time" class="oe_inline"/>
-                        <field name="video_call_link" widget="url"/>
-                        <field name="conference_bridge_numbe"  class="conference masked_input"/>
-                        <field name="pin" class="pin masked_input"/>
-                        <field name="company" string="Location"/>
+                        <field name="video_call_link" widget="url" class="oe_read_only"/>
+                        <field name="conference_bridge_numbe"  class="conference masked_input oe_read_only"/>
+                        <field name="pin" class="pin masked_input oe_read_only"/>
+                        <field name="company" string="Location" class="oe_read_only"/>
                     </group>
                     <button type="object" class="btn-primary detail_btn o_hidden" name="go_to_meeting">Details</button>
                     <script src="/meeting_point/static/js/event_popup.js"></script>

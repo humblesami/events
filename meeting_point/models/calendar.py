@@ -222,32 +222,35 @@ class Meeting(models.Model):
 
     @api.model
     def create(self, vals):
-        surveys = vals.get('survey_ids')
-        if surveys:
-            del vals['survey_ids']
-        # start = vals['start'][0:10]
-        # stop = vals['stop'][0:10]
-        # curs = self.env.cr
-        #
-        # sql = "update calendar_event set pin=null where date(stop)<'" + stop + "'"
-        # curs.execute(sql)
-        # sql = " or date(stop)='"+stop+"'"
-        # curs.execute(sql)
-        # results = curs.dictfetchall()
+        try:
+            surveys = vals.get('survey_ids')
+            if surveys:
+                del vals['survey_ids']
+            # start = vals['start'][0:10]
+            # stop = vals['stop'][0:10]
+            # curs = self.env.cr
+            #
+            # sql = "update calendar_event set pin=null where date(stop)<'" + stop + "'"
+            # curs.execute(sql)
+            # sql = " or date(stop)='"+stop+"'"
+            # curs.execute(sql)
+            # results = curs.dictfetchall()
 
-        rint = random.randint(0, len(room_pins)-1)
-        vals['pin'] = room_pins[rint]
+            rint = random.randint(0, len(room_pins)-1)
+            vals['pin'] = room_pins[rint]
 
-        meeting = super(Meeting, self).create(vals)
-        if surveys:
-            meeting_id = meeting.id
-            for survey in surveys:
-                if survey[2] == False:
-                    continue
-                survey[2]['meeting_id'] = meeting_id
-                vals = survey[2]
-                res = self.env['survey.survey'].create(vals)
-        return meeting
+            meeting = super(Meeting, self).create(vals)
+            if surveys:
+                meeting_id = meeting.id
+                for survey in surveys:
+                    if survey[2] == False:
+                        continue
+                    survey[2]['meeting_id'] = meeting_id
+                    vals = survey[2]
+                    res = self.env['survey.survey'].create(vals)
+            return meeting
+        except:
+            raise
 
     @api.multi
     def write(self, vals):
