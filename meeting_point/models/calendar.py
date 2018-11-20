@@ -290,11 +290,22 @@ class Meeting(models.Model):
     @api.multi
     def if_can_conference(self):
         for obj in self:
-            max_stop = dn_dt.addInterval(obj.stop, 'h', 3)
             dt_now = dn_dt.now()
-            min_start = dn_dt.addInterval(obj.start, 'm', 15)
-            if max_stop < dt_now and min_start > dt_now:
+            after_15 = dn_dt.addInterval(dt_now, 'min', 15)
+            after_15 = str(after_15)
+            if after_15 >= obj.start and after_15 <= obj.stop:
                 obj.video_active = True
+
+
+
+            # max_stop = dn_dt.addInterval(obj.stop, 'h', 3)
+            # dt_now = dn_dt.now()
+            # min_start = dn_dt.addInterval(obj.start, 'm', 15)
+            # if max_stop < dt_now and min_start > dt_now:
+            #     obj.video_active = True
+
+
+
 
     @api.multi
     def _compute_seen_by_me(self):
