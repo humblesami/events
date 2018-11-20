@@ -18,7 +18,7 @@ room_pins = [
     {'1598259377':'mvdn127621'},
     {'3588811445':'mvdn100183'},
     {'3415505034':'mvdn190794'},
-];
+]
 
 class MeetingPin(models.Model):
     _name = 'meeting_point.pin'
@@ -217,8 +217,9 @@ class Meeting(models.Model):
     exectime = fields.Char(compute="_compute_archive")
     archived = fields.Boolean(string="Archived")
     im_attendee = fields.Char(compute='look_if_invited')
-    video_active = fields.Boolean(compute='if_can_conference')
+    video_active = fields.Boolean(compute='is_video_active')
     password = fields.Char()
+    moderator = fields.Integer()
 
     @api.model
     def create(self, vals):
@@ -293,8 +294,11 @@ class Meeting(models.Model):
                 obj.video_call_link = 'Meeting Pin not defined'
 
     @api.multi
-    def if_can_conference(self):
+    def is_video_active(self):
         for obj in self:
+            if not obj.moderator or obj.moderator == 0:
+                obj.video_active = False
+                continue
             dt_now = dn_dt.now()
             after_15 = dn_dt.addInterval(dt_now, 'min', 15)
             after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)

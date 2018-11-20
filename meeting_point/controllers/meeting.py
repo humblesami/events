@@ -80,7 +80,16 @@ class meeting(http.Controller):
             if meeting.exectime == "past" or meeting.exectime == "completed":
                 return ws_methods.http_response("Meeting was over at "+str(meeting.stop))
             elif not meeting.video_active:
-                return ws_methods.http_response("Meeting not started yet will start at " + str(meeting.start))
+                if not meeting.moderator or meeting.moderator == 0:
+                    if http.request.env.user.has_group('Meeting Point/Admin'):
+                        meeting.moderator = uid
+                        if not meeting.video_active:
+                            return ws_methods.http_response("Meeting not started yet, it will start at " + str(meeting.start))
+                    else:
+                        return ws_methods.handle('Waiting moderator to join')
+                else:
+                    return ws_methods.http_response("Meeting not started yet, it will start at " + str(meeting.start))
+
             ids = []
             im_attendee = 'no'
             for attendee in meeting.partner_ids:
@@ -89,7 +98,23 @@ class meeting(http.Controller):
                     ids.append(cid)
                 else:
                     im_attendee = 'yes'
-            return ws_methods.http_response('',{ 'ids': ids, 'im_attendee':im_attendee, 'roomName':room_pins_obj[meeting.pin]})
+
+            res = { 'ids': ids, 'im_attendee':im_attendee, 'roomName':room_pins_obj[meeting.pin]}
+            return ws_methods.http_response('',)
+        except:
+            return ws_methods.handle()
+
+    @http.route('/meeting/moderatorleft', type="http", csrf=False, auth='public', cors='*')
+    def moderaorLeft(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            meeting_id = kw.get('meeting_id')
+            meeting = http.request.env['calendar.event'].sudo().search(
+                [('id', '=', meeting_id)])
+            meeting.moderator = 0
+            return ws_methods.http_response('', 'done')
         except:
             return ws_methods.handle()
 
