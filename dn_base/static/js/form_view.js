@@ -17,7 +17,7 @@ $(function(){
 });
 
 
-var dn_masking_values = {'conference':'999-999-9999','zip':'99999'
+var dn_masking_values = {'conference':'+9-999-999-9999','zip':'99999'
 ,'phone':'999-999-9999'
 ,'dn_time_picker':'99:99'}
 
@@ -42,6 +42,8 @@ odoo.define('dn_base.form_view', function (require) {
                     {
                         masking_pattern = dn_masking_values[class_name];
                         $(el).mask(masking_pattern);
+                        if(class_name == 'conference')
+                            $(el).val('+1-512-402-2718');
                         break;
                     }
                 }
