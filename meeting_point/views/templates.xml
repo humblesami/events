@@ -1,11 +1,5 @@
 <odoo>
     <data>
-        <template id="mp_backend" name="Web Custom Assets" inherit_id="web.assets_backend">
-            <xpath expr=".">
-                <div id="chat_box"></div>
-                <script src="/meeting_point/static/js/web.js"/>
-            </xpath>
-        </template>
 
         <record id="calendar_template_meeting_attendee_invitation" model="mail.template">
             <field name="name">Calendar:OdooHQ Meeting Invitation</field>
