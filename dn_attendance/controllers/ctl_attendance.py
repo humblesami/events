@@ -36,8 +36,8 @@ class Attendance(http.Controller):
                 ws_methods.http_response('Not logged in')
             if 'data' in vals:
                 reqBody = vals['data']
-
-            req_env = http.request.env
+            if vals['login'] == 'machine@odoohq.com':
+                req_env = http.request.env
             cursor.autocommit(False)
             for tr in enumerate(reqBody):
                 rec = tr[1]
@@ -45,12 +45,12 @@ class Attendance(http.Controller):
                 time_record = dn_dt.addInterval(time_record, 'h' , -5)
                 time_record_str = dn_dt.dtTostr(time_record)
 
-                employee = req_env['hr.employee'].search([('device_id', '=', rec['PersonId'])])
+                employee = req_env['hr.employee'].sudo().search([('device_id', '=', rec['PersonId'])])
                 if not employee:
-                    employee = req_env['hr.employee'].create({'name': 'emp-'+str(rec['PersonId']), 'device_id': rec['PersonId']})
+                    employee = req_env['hr.employee'].sudo().create({'name': 'emp-'+str(rec['PersonId']), 'device_id': rec['PersonId']})
                 work_date = dn_dt.dtTodatestr(time_record)
                 vals = {'punch_time': time_record_str, 'employee_id': employee.id, 'work_date': work_date}
-                res = req_env['attendance.record'].create(vals)
+                res = req_env['attendance.record'].sudo().create(vals)
             cursor.commit()
             return ws_methods.http_response('', {'message': 'success'})
         except:
