@@ -14,6 +14,10 @@ body
     display:none;
 }
 
+.o_form_editable .o_form_label.o_readonly_modifier
+{
+    display:none;
+}
 
   div[name="user_ids"] img
   {

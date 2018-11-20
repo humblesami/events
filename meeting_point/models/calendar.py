@@ -235,11 +235,14 @@ class Meeting(models.Model):
             # sql = " or date(stop)='"+stop+"'"
             # curs.execute(sql)
             # results = curs.dictfetchall()
+            if not vals.get('pin'):
+                rint = random.randint(0, len(room_pins)-1)
+                pin = room_pins[rint]
+                for pinkey in pin:
+                    vals['pin'] = pinkey
 
-            rint = random.randint(0, len(room_pins)-1)
-            pin = room_pins[rint]
-            for pinkey in pin:
-                vals['pin'] = pinkey
+            if not vals.get('conference_bridge_numbe'):
+                vals['conference_bridge_numbe'] = '+1-512-402-2718'
 
             meeting = super(Meeting, self).create(vals)
             if surveys:
@@ -256,6 +259,8 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, vals):
+        if vals.get('conference_bridge_numbe') and vals['conference_bridge_numbe'] == '':
+            vals['conference_bridge_numbe'] = '+1-512-402-2718'
         if self.env.user.id !=1 and self.exectime == "past":
             changing_the_past = True
             if changing_the_past:
@@ -277,35 +282,26 @@ class Meeting(models.Model):
     def _compute_video_link(self):
         for obj in self:
             if not obj.video_active:
-                obj.video_call_link = ''
+                obj.video_call_link = 'Will be provided 15 minutes before meeting'
                 continue
             if not obj.video_active:
-                obj.video_call_link = ''
+                obj.video_call_link = 'Will be provided 15 minutes before meeting'
                 continue
             if obj.pin:
                 obj.video_call_link = '/conference/'+obj.pin
             else:
-                obj.video_call_link = ''
+                obj.video_call_link = 'Meeting Pin not defined'
 
     @api.multi
     def if_can_conference(self):
         for obj in self:
             dt_now = dn_dt.now()
             after_15 = dn_dt.addInterval(dt_now, 'min', 15)
+            after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)
             after_15 = str(after_15)
-            if after_15 >= obj.start and after_15 <= obj.stop:
+            after_3hours = str(after_3hours)
+            if after_15 >= obj.start and after_3hours <= obj.stop:
                 obj.video_active = True
-
-
-
-            # max_stop = dn_dt.addInterval(obj.stop, 'h', 3)
-            # dt_now = dn_dt.now()
-            # min_start = dn_dt.addInterval(obj.start, 'm', 15)
-            # if max_stop < dt_now and min_start > dt_now:
-            #     obj.video_active = True
-
-
-
 
     @api.multi
     def _compute_seen_by_me(self):

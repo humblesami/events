@@ -1,5 +1,4 @@
 $(function(){
-
     $(document).on('change', '.meetingform .meeting_duration',function(e){
         addTopicIndex();
         meeting_point.meeting.validateDurations(e, this);
@@ -40,7 +39,7 @@ $(function(){
         if(modal_title && modal_title.indexOf('Create') != -1)
             $('.meetingform .topicIndex').val("-1");
     });
-
+    $('input.conference').attr('placeholder','default value = +1-512-402-2718');
 });
 
 var meeting_point = {
