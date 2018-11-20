@@ -237,7 +237,9 @@ class Meeting(models.Model):
             # results = curs.dictfetchall()
 
             rint = random.randint(0, len(room_pins)-1)
-            vals['pin'] = room_pins[rint]
+            pin = room_pins[rint]
+            for pinkey in pin:
+                vals['pin'] = pinkey
 
             meeting = super(Meeting, self).create(vals)
             if surveys:
@@ -274,6 +276,9 @@ class Meeting(models.Model):
     @api.multi
     def _compute_video_link(self):
         for obj in self:
+            if not obj.video_active:
+                obj.video_call_link = ''
+                continue
             if not obj.video_active:
                 obj.video_call_link = ''
                 continue

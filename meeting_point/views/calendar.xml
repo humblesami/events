@@ -178,7 +178,7 @@
                         </group>
 
                         <group readonly="1" >
-                            <field name="video_call_link" class="oe_read_only" widget="url"/>
+                            <field name="video_call_link" attrs="{'invisible':[('video_call_link', '=', 'False')]}" class="oe_read_only" widget="url"/>
                             <field name="conference_bridge_numbe" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="conference masked_input"/>
                             <field name="pin" class="pin masked_input oe_read_only"/>
                             <field name="company" attrs="{'readonly': [('exectime', '=', 'completed')]}" string="Location"/>

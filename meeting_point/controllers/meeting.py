@@ -3,23 +3,6 @@ from odoo import http
 from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 
-ongoing_meetings = {
-
-}
-
-room_pins_ar = [
-    {'3402742788':'mvdn198374'},
-    {'1382256314':'mvdn491712'},
-    {'2427772817':'mvdn321763'},
-    {'1209858678':'mvdn711768'},
-    {'2654131214':'mvdn620675'},
-    {'4275231112':'mvdn110932'},
-    {'3484541378':'mvdn101143'},
-    {'1598259377':'mvdn127621'},
-    {'3588811445':'mvdn100183'},
-    {'3415505034':'mvdn190794'},
-];
-
 room_pins_obj = {
     '3402742788':'mvdn198374',
     '1382256314':'mvdn491712',

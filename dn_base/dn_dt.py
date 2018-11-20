@@ -91,6 +91,8 @@ def strdtTostrdate(time_string):
 
 
 def addInterval(dt, interval_type, amt):
+    if type(dt) is not datetime:
+        dt = strTodt(dt)
     if interval_type == 'y':
         res = dt + relativedelta(years=amt)
     if interval_type == 'm':
