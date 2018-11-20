@@ -3,7 +3,7 @@
 # For copyright and license notices, see __openerp__.py file in root directory
 ##############################################################################
 
-from openerp import fields, models
+from odoo import fields, models
 import requests
 import json
 
@@ -24,8 +24,8 @@ class website(models.Model):
         try:
             response = requests.get(
                 'https://www.google.com/recaptcha/api/siteverify', params=get_res)
-        except Exception, e:
-            assert 0, ('Invalid Data!, %s' % (e))
+        except:
+            raise
         res_con = json.loads(response.content)
         if res_con.has_key('success') and res_con['success']:
             return True

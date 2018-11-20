@@ -1,10 +1,29 @@
 # -*- coding: utf-8 -*-
+import random
 import time
 import threading
 from odoo import models, fields, api
 from odoo.addons.dn_base import dn_dt
 from odoo.exceptions import ValidationError
 
+
+room_pins = [
+    {'3402742788':'mvdn198374'},
+    {'1382256314':'mvdn491712'},
+    {'2427772817':'mvdn321763'},
+    {'1209858678':'mvdn711768'},
+    {'2654131214':'mvdn620675'},
+    {'4275231112':'mvdn110932'},
+    {'3484541378':'mvdn101143'},
+    {'1598259377':'mvdn127621'},
+    {'3588811445':'mvdn100183'},
+    {'3415505034':'mvdn190794'},
+];
+
+class MeetingPin(models.Model):
+    _name = 'meeting_point.pin'
+    pin = fields.Char()
+    room = fields.Char()
 
 class Attendee(models.Model):
     _inherit = 'calendar.attendee'
@@ -150,7 +169,6 @@ class Attendee(models.Model):
             self._cr.close()
 
 
-
 class Meeting(models.Model):
     _inherit = ['calendar.event']#,'dn.seen']
 
@@ -199,12 +217,27 @@ class Meeting(models.Model):
     exectime = fields.Char(compute="_compute_archive")
     archived = fields.Boolean(string="Archived")
     im_attendee = fields.Char(compute='look_if_invited')
+    video_active = fields.Boolean(compute='if_can_conference')
+    password = fields.Char()
 
     @api.model
     def create(self, vals):
         surveys = vals.get('survey_ids')
         if surveys:
             del vals['survey_ids']
+        # start = vals['start'][0:10]
+        # stop = vals['stop'][0:10]
+        # curs = self.env.cr
+        #
+        # sql = "update calendar_event set pin=null where date(stop)<'" + stop + "'"
+        # curs.execute(sql)
+        # sql = " or date(stop)='"+stop+"'"
+        # curs.execute(sql)
+        # results = curs.dictfetchall()
+
+        rint = random.randint(0, len(room_pins)-1)
+        vals['pin'] = room_pins[rint]
+
         meeting = super(Meeting, self).create(vals)
         if surveys:
             meeting_id = meeting.id
@@ -238,11 +271,22 @@ class Meeting(models.Model):
     @api.multi
     def _compute_video_link(self):
         for obj in self:
+            if not obj.video_active:
+                obj.video_call_link = ''
+                continue
             if obj.pin:
                 obj.video_call_link = '/conference/'+obj.pin
             else:
                 obj.video_call_link = ''
 
+    @api.multi
+    def if_can_conference(self):
+        for obj in self:
+            max_stop = dn_dt.addInterval(obj.stop, 'h', 3)
+            dt_now = dn_dt.now()
+            min_start = dn_dt.addInterval(obj.start, 'm', 15)
+            if max_stop < dt_now and min_start > dt_now:
+                obj.video_active = True
 
     @api.multi
     def _compute_seen_by_me(self):

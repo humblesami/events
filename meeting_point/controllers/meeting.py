@@ -3,7 +3,36 @@ from odoo import http
 from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 
-ongoing_meetings = {}
+ongoing_meetings = {
+
+}
+
+room_pins_ar = [
+    {'3402742788':'mvdn198374'},
+    {'1382256314':'mvdn491712'},
+    {'2427772817':'mvdn321763'},
+    {'1209858678':'mvdn711768'},
+    {'2654131214':'mvdn620675'},
+    {'4275231112':'mvdn110932'},
+    {'3484541378':'mvdn101143'},
+    {'1598259377':'mvdn127621'},
+    {'3588811445':'mvdn100183'},
+    {'3415505034':'mvdn190794'},
+];
+
+room_pins_obj = {
+    '3402742788':'mvdn198374',
+    '1382256314':'mvdn491712',
+    '2427772817':'mvdn321763',
+    '1209858678':'mvdn711768',
+    '2654131214':'mvdn620675',
+    '4275231112':'mvdn110932',
+    '3484541378':'mvdn101143',
+    '1598259377':'mvdn127621',
+    '3588811445':'mvdn100183',
+    '3415505034':'mvdn190794',
+};
+
 class meeting(http.Controller):
 
 
@@ -52,8 +81,6 @@ class meeting(http.Controller):
             except:
                 return ws_methods.handle()
 
-
-
     @http.route('/meeting/attendees', type="http", csrf=False, auth='public', cors='*')
     def getMeetingAttendees(self, **kw):
         try:
@@ -61,10 +88,16 @@ class meeting(http.Controller):
             if not uid:
                 return ws_methods.not_logged_in()
             roomPin = kw.get('pin')
-            meeting =  http.request.env['calendar.event'].sudo().search([('pin', '=', roomPin)])
-            exe_time = meeting.exectime
-            if exe_time != 'upcoming' and exe_time != 'ongoing':
-                return ws_methods.http_response('!')
+            meeting_id = kw.get('meeting_id')
+            password = kw.get('password')
+            meeting =  http.request.env['calendar.event'].sudo().search([('id', '=', meeting_id),('password','=',password)])
+
+            if not meeting.pin:
+                return ws_methods.http_response('No pin defined fro meeting')
+            if meeting.exectime == "past" or meeting.exectime == "completed":
+                return ws_methods.http_response("Meeting was over at "+str(meeting.stop))
+            elif not meeting.video_active:
+                return ws_methods.http_response("Meeting not started yet will start at " + str(meeting.start))
             ids = []
             im_attendee = 'no'
             for attendee in meeting.partner_ids:
@@ -73,7 +106,7 @@ class meeting(http.Controller):
                     ids.append(cid)
                 else:
                     im_attendee = 'yes'
-            return ws_methods.http_response('',{ 'ids': ids, 'im_attendee':im_attendee})
+            return ws_methods.http_response('',{ 'ids': ids, 'im_attendee':im_attendee, 'roomName':room_pins_obj[meeting.pin]})
         except:
             return ws_methods.handle()
 
@@ -137,7 +170,7 @@ class meeting(http.Controller):
             filters = [('id', '=', id)]
 
             meeting = req_env['calendar.event'].search(filters, limit=1, order='id')
-            props = ['id', 'start', 'stop', 'duration', 'zip', 'video_call_link', 'conference_bridge_numbe', 'pin', 'exectime',
+            props = ['id', 'start', 'stop','video_active', 'duration', 'zip', 'video_call_link', 'conference_bridge_numbe', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'status', 'company']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
