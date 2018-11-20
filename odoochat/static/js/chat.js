@@ -73,40 +73,43 @@ $(function(){
         'reconnectionAttempts': 2
     });
 
-    socket.emit('verify', {
-        "token": odoo.session_info.token,
-        "name": odoo.session_info.username,
-        "id": odoo.session_info.uid,
-        "db": odoo.session_info.db
-    });
+    socket.on('connect',function(){
+        console.log('Socket server connected...');
 
-    socket.on('online_users', function(online_users){
-        if(!users){
-            users = {};
-        }
-        users = online_users;
-        console.log(users);
+        socket.emit('verify', {
+            "token": odoo.session_info.token,
+            "name": odoo.session_info.username,
+            "id": odoo.session_info.uid,
+            "db": odoo.session_info.db
+        });
 
-        for(user in users){
-            if(user != odoo.session_info.uid)
-                populate_user_list(users[user]);
-        }
-    })
+        socket.on('online_users', function(online_users){
+            if(!users){
+                users = {};
+            }
+            users = online_users;
+            console.log(users);
 
-    socket.on('new_user', function (incoming_user) {
-        if(!users){
-            users = {};
-        }
-        users[incoming_user.id] = incoming_user;
-        console.log(users);
-        populate_user_list(incoming_user);
-    });
+            for(user in users){
+                if(user != odoo.session_info.uid)
+                    populate_user_list(users[user]);
+            }
+        })
 
-    socket.on('message', function (msg) {
-        receiveMessage(msg, msg.sender);
-    });
+        socket.on('new_user', function (incoming_user) {
+            if(!users){
+                users = {};
+            }
+            users[incoming_user.id] = incoming_user;
+            console.log(users);
+            populate_user_list(incoming_user);
+        });
 
-    socket.on('leave', function (going_user) {
+        socket.on('message', function (msg) {
+            receiveMessage(msg, msg.sender);
+        });
+
+        socket.on('leave', function (going_user) {
         try
         {
             if(!going_user)
@@ -133,15 +136,15 @@ $(function(){
         }
     });
 
-    $(document).on('click', '.open-chatbox', function(){
+        $(document).on('click', '.open-chatbox', function(){
         var id = $(this).attr('id');
         active_user = users[id];
         $('.chatbox .chat-text').text(active_user.name);
         $('.chatbox').css('display', 'block');
     });
 
-//    On send message
-    $(document).on('click', '#message-form button', function(){
+        // On send message
+        $(document).on('click', '#message-form button', function(){
         var msg = $('#message-form input:first').val();
         var msg_obj = create_msg_obj(msg);
         var li_obj = '<li class="replies"><p>' + msg + '</p></li>';
@@ -149,5 +152,6 @@ $(function(){
         socket.emit('message', msg_obj);
         $('#message-form input:first').val("");
         $(".smartchatbox").scrollTop($(".smartchatbox")[0].scrollHeight);
+    });
     });
 });
