@@ -1,4 +1,4 @@
-from odoo import models, api, fields,_
+from odoo import models, api, fields
 from odoo.exceptions import UserError, _logger
 from odoo.addons.auth_signup.models.res_partner import now
 
@@ -151,7 +151,7 @@ class Users(models.Model):
 
         for user in self:
             if not user.email:
-                raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
+                raise UserError("Cannot send email: user %s has no email address."+ user.name)
             template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
 
 class Additional_User_Fields(models.Model):
