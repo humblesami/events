@@ -132,10 +132,10 @@
                 sequence="6"
                 action="custom_e_payroll_user_action_employees"
         />
-          <menuitem name="Machine Records" id="mymachinerecords" parent="e_pay_roll.account_root_attendance"
-                  action="dn_attendance.myrecord_action_attendance_record" sequence="3"/>
-        <menuitem name="Daily Records" id="mydailyrecords" parent="e_pay_roll.account_root_attendance"
-                  action="dn_attendance.myaction_attendance_daily" sequence="4"/>
+          <!--<menuitem name="Machine Records" id="mymachinerecords" parent="e_pay_roll.account_root_attendance"-->
+                  <!--action="dn_attendance.myrecord_action_attendance_record" sequence="3"/>-->
+        <!--<menuitem name="Daily Records" id="mydailyrecords" parent="e_pay_roll.account_root_attendance"-->
+                  <!--action="dn_attendance.myaction_attendance_daily" sequence="4"/>-->
     </data>
 
     <!--<menuitem id="hr_attendance.menu_hr_attendance_view_employees_kanban" name="Employees" parent="hr_attendance.menu_hr_attendance_manage_attendances" sequence="15" groups="base.group_erp_manager" action="hr.open_view_employee_list_my"/>-->
