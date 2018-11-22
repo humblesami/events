@@ -58,7 +58,6 @@ class epayroll(models.Model):
     _inherit = 'resource.calendar.attendance'
     break_start = fields.Float(string="Break Start")
     break_end = fields.Float(string="Break End")
-    # thresholdValue = fields.Float(string="Threshold Time Value",help='Time less than this value is considered in the previous day',default=8 )
 
 class payAttendance(models.Model):
     _inherit = "hr.attendance"
@@ -306,8 +305,7 @@ class Provident_Funds(models.Model):
 class Resourcetemp(models.Model):
     #incheriting model and adding fields in it which are to be used to cater breaks
     _inherit = 'resource.calendar'
-    # thresholdtempValue = fields.Float(string="Time Value",
-    #                               help='Time less than this value is considered in the previous day', default=8)
+
 
     def _get_default_attendance_ids(self):
         return [
@@ -321,11 +319,7 @@ class Resourcetemp(models.Model):
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
         copy=True, default=_get_default_attendance_ids)
-    # @api.onchange('thresholdtempValue')
-    # def valueChange(self):
-    #     val = self.thresholdtempValue
-    #     for loop in self.attendance_ids:
-    #         loop.thresholdValue = val
+
 
 
 
