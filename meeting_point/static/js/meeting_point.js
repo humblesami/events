@@ -39,12 +39,10 @@ $(function(){
         if(modal_title && modal_title.indexOf('Create') != -1)
             $('.meetingform .topicIndex').val("-1");
     });
-    if(!$('input.conference').val())
-        $('input.conference').val('+1-512-402-2718').change();
 
     setTimeout(function(){
         var readonly_form = $('.conference_status').closest('.o_form_view').is('.o_form_readonly');
-        console.log($('.conference_status').html(), readonly_form, 1344);
+        //console.log($('.conference_status').html(), readonly_form, 1344);
         if(readonly_form)
         {
             if($('.conference_status').html().trim() == 'active')
@@ -56,6 +54,8 @@ $(function(){
         }
         else
         {
+            if(!$('input.conference').val())
+                $('input.conference').val('+1-512-402-2718').change();
             $('.emeeting_fields').show();
         }
     }, 100)

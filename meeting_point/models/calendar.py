@@ -238,12 +238,6 @@ class Meeting(models.Model):
             # curs.execute(sql)
             # results = curs.dictfetchall()
             vals['moderator'] = 0
-            if not vals.get('pin'):
-                rint = random.randint(0, len(room_pins)-1)
-                pin = room_pins[rint]
-                for pinkey in pin:
-                    vals['pin'] = pinkey
-
             meeting = super(Meeting, self).create(vals)
             if surveys:
                 meeting_id = meeting.id
@@ -384,6 +378,21 @@ class Meeting(models.Model):
                     rec.is_active_yet = rec.publish
         except:
             q=1
+
+    def compute_pin(self):
+        if not self.pin:
+            rint = random.randint(0, len(room_pins) - 1)
+            pin = room_pins[rint]
+            for pinkey in pin:
+                return pinkey
+
+    @api.onchange('conference_bridge_number')
+    def _on_change_conference_bridge_number(self):
+        if not self.pin:
+            rint = random.randint(0, len(room_pins) - 1)
+            pin = room_pins[rint]
+            for pinkey in pin:
+                self.pin = pinkey
 
     @api.onchange('country')
     def filter_states(self):
