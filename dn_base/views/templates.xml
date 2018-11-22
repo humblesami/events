@@ -29,7 +29,7 @@
                 <div class="dn_footer">Copy rights</div>
                 <link rel="stylesheet" href="/dn_base/static/css/dn_login.css" />
                 <script src="/dn_base/static/js/login.js"></script>
-                 <script type="application/javascript" src='https://www.google.com/recaptcha/api.js'/>
+                 <!--<script type="application/javascript" src='https://www.google.com/recaptcha/api.js'/>-->
             </xpath>
         </template>
 
@@ -95,7 +95,7 @@
                         <a t-if="invalid_token" href="/web/login" class="btn btn-link pull-right">Back to Login</a>
                         <button type="submit" id="button1" class="btn btn-primary pull-left">Confirm</button>
                     </div>
-                    <div class = 'o_website_base_recaptcha'></div>
+
                     <!--<div class="g-recaptcha" data-sitekey="6LcwRnQUAAAAAES18xnqMsTI9yvoDkxGFrI0kvnE" data-callback="enableBtn"></div>-->
                 </form>
 
