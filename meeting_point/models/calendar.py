@@ -300,11 +300,10 @@ class Meeting(models.Model):
                 obj.video_active = False
                 continue
             dt_now = dn_dt.now()
-            after_15 = dn_dt.addInterval(dt_now, 'min', 15)
-            after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)
-            after_15 = str(after_15)
-            after_3hours = str(after_3hours)
-            if after_15 >= obj.start and after_3hours <= obj.stop:
+            before_15 = dn_dt.addInterval(dn_dt.strTodt(obj.start), 'min', -15)
+            after_3hours = dn_dt.addInterval(dn_dt.strTodt(obj.stop), 'h', 3)
+
+            if dt_now >= before_15 and dt_now <= after_3hours:
                 obj.video_active = True
 
     @api.multi
