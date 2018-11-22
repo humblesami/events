@@ -249,7 +249,7 @@ class HrPayslip(models.Model):
 
                             temp_leave_hour_total = float(holiday.duration_temp)
                             temp_leave_hour_total = ((customworkhour)/(workvalue/temp_leave_hour_total))*holiday.number_of_days_temp
-                            leave_hour_total +=temp_leave_hour_total
+                            leave_hour_total += temp_leave_hour_total
                             current_leave_struct['number_of_hours'] += float(leave_hour_total)
                             current_leave_struct['number_of_days'] += holiday.number_of_days_temp
                             if (holiday.number_of_days_temp==0.5):

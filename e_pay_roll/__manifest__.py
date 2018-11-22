@@ -40,6 +40,7 @@
         'views/officer.xml',
         'views/staff.xml',
         'views/menus.xml',
+        'views/scheduleTemplate.xml',
         'views/accesscontrol.xml',
         'wizard/hr_attendance_summary_views.xml',
         'report/attendance_report_report.xml',

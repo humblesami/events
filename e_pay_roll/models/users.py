@@ -1,5 +1,35 @@
 from odoo import models, fields, api
 
+def getContractType(self):
+    typ = self.env['hr.contract.type'].search([('name','=','Employee')])
+    if(typ.id):
+        return typ.id
+    else:
+        typ = self.env['hr.contract.type'].create({
+            'name': 'Employee'
+        })
+        return typ.id
+
+def generateSchedule(self,employee_id):
+    self = self.with_context(current_user = employee_id)
+    # self._context['current_user'] =  employee_id
+    # ctx  = self._context
+    resourceId =self.env['resource.calendar'].search([('name','=','Standard DigitalNet Schedule')]).id
+    return  resourceId
+
+def generateContract(self,contractType,scheduleId,employeeId):
+    completeContract = self.env['hr.contract'].create({
+        'type_id' : contractType,
+        'resource_calendar_id': scheduleId,
+        'name' : employeeId.identification_id,
+        'employee_id' : employeeId.id,
+        'date_start' : fields.date.today(),
+        'schedule_pay' : 'monthly',
+        'state'  : 'open',
+        'wage' : 0
+    })
+    return  completeContract
+
 class UserView(models.Model):
     _inherits = {'res.users': 'user_id'}
     _inherit = 'dn.user'
@@ -69,21 +99,26 @@ class UserView(models.Model):
             alpha = vals['login']
             tempEmployee = self.env['hr.employee'].search([('user_id','=', alpha)])
             if not tempEmployee:
-                self.env['hr.employee'].create(
+                employeeContract =self.env['hr.employee'].create(
                     {'name': vals['name'], 'user_id': employee.user_id.id, 'work_email':alpha,'device_id':vals['device_id']})
-            return employee
+            contractType = getContractType(self)
+            scheduleId = generateSchedule(self, employeeContract.id)
+            data = generateContract(self, contractType, scheduleId, employeeContract)
         else:
             employee = super(UserView, self).create(vals)
             employee.user_id.partner_id.user_id = employee.user_id
             tempEmployee = self.env['hr.employee'].search([('user_id', '=', vals['login'])])
+            employeeContract = ''
             if not tempEmployee:
                 if vals.get('device_id'):
-                    self.sudo().env['hr.employee'].create(
+                    employeeContract =  self.sudo().env['hr.employee'].create(
                     {'name': vals['name'],'user_id': employee.user_id.id,'work_email': vals['login'],'device_id':vals['device_id']})
                 else:
-                    self.sudo().env['hr.employee'].create({'name': vals['name'], 'user_id': employee.user_id.id, 'work_email': vals['login']})
-
-            return employee
+                    employeeContract = self.sudo().env['hr.employee'].create({'name': vals['name'], 'user_id': employee.user_id.id, 'work_email': vals['login']})
+            contractType = getContractType(self)
+            scheduleId = generateSchedule(self,employeeContract.id)
+            data = generateContract(self,contractType,scheduleId,employeeContract)
+        return employee
     @api.multi
     def write(self, vals):
         emp =  super(UserView,self).write(vals)
