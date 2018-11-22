@@ -79,16 +79,8 @@ class meeting(http.Controller):
                 return ws_methods.http_response('No pin defined fro meeting')
             if meeting.exectime == "past" or meeting.exectime == "completed":
                 return ws_methods.http_response("Meeting was over at "+str(meeting.stop))
-            elif not meeting.video_active:
-                if not meeting.moderator or meeting.moderator == 0:
-                    if http.request.env.user.has_group('Meeting Point/Admin'):
-                        meeting.moderator = uid
-                        if not meeting.video_active:
-                            return ws_methods.http_response("Meeting not started yet, it will start at " + str(meeting.start))
-                    else:
-                        return ws_methods.handle('Waiting moderator to join')
-                else:
-                    return ws_methods.http_response("Meeting not started yet, it will start at " + str(meeting.start))
+            elif meeting.conference_status != 'active':
+                return ws_methods.http_response(meeting.conference_status)
 
             ids = []
             im_attendee = 'no'
@@ -140,7 +132,7 @@ class meeting(http.Controller):
             if not meeting_id:
                 return ws_methods.http_response('Please provide meeting id')
             meeting = req_env['calendar.event'].sudo().search([('id', '=', int(values["id"]))])
-            props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_numbe', 'pin',
+            props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'status', 'company']
 
@@ -178,7 +170,7 @@ class meeting(http.Controller):
             filters = [('id', '=', id)]
 
             meeting = req_env['calendar.event'].search(filters, limit=1, order='id')
-            props = ['id', 'start', 'stop','video_active', 'duration', 'zip', 'video_call_link', 'conference_bridge_numbe', 'pin', 'exectime',
+            props = ['id', 'start', 'stop','conference_status', 'duration', 'zip', 'video_call_link', 'conference_bridge_number', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'status', 'company']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
@@ -327,7 +319,7 @@ class meeting(http.Controller):
                 filters.append(('archived', '=', True))
             else:
                 filters.append(('stop', '>=', date_value))
-            props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_numbe', 'pin',
+            props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'company', 'status']
 

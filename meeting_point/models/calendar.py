@@ -193,12 +193,9 @@ class Meeting(models.Model):
     address = fields.Char(string="Address")
     customMessage = fields.Char(string="Message")
     street = fields.Char(string="Street")
-    conference_bridge_numbe = fields.Char(string="Conference Bridge No.")
     country = fields.Many2one('res.country', string="Country", default=_defualt_country)
     description = fields.Html()
     publish = fields.Boolean(string="Publish")
-    pin = fields.Char(string="Meeting PIN")
-    video_call_link = fields.Char(compute="_compute_video_link")
     country_state = fields.Many2one('res.country.state',string="Status")#, domain=lambda self:self.filter_states())
     company = fields.Char(string="Company")
     city = fields.Char(string="City")
@@ -217,7 +214,11 @@ class Meeting(models.Model):
     exectime = fields.Char(compute="_compute_archive")
     archived = fields.Boolean(string="Archived")
     im_attendee = fields.Char(compute='look_if_invited')
-    video_active = fields.Boolean(compute='is_video_active')
+
+    pin = fields.Char(string="Meeting PIN")
+    conference_bridge_number = fields.Char(string="Conference Bridge No.")
+    video_call_link = fields.Char(compute="_compute_video_link")
+    conference_status = fields.Char(compute='is_video_active')
     password = fields.Char()
     moderator = fields.Integer()
 
@@ -242,9 +243,6 @@ class Meeting(models.Model):
                 for pinkey in pin:
                     vals['pin'] = pinkey
 
-            if not vals.get('conference_bridge_numbe'):
-                vals['conference_bridge_numbe'] = '+1-512-402-2718'
-
             meeting = super(Meeting, self).create(vals)
             if surveys:
                 meeting_id = meeting.id
@@ -260,8 +258,6 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, vals):
-        if vals.get('conference_bridge_numbe') and vals['conference_bridge_numbe'] == '':
-            vals['conference_bridge_numbe'] = '+1-512-402-2718'
         if self.env.user.id !=1 and self.exectime == "past":
             changing_the_past = True
             if changing_the_past:
@@ -282,30 +278,33 @@ class Meeting(models.Model):
     @api.multi
     def _compute_video_link(self):
         for obj in self:
-            if not obj.video_active:
-                obj.video_call_link = 'Will be provided 15 minutes before meeting'
+            if obj.conference_status != 'active':
+                obj.video_call_link = obj.conference_status
                 continue
-            if not obj.video_active:
-                obj.video_call_link = 'Will be provided 15 minutes before meeting'
-                continue
-            if obj.pin:
-                obj.video_call_link = '/conference/'+obj.pin
+            if obj.pin and obj.conference_bridge_number:
+                obj.video_call_link = '/conference/'+str(obj.id)+'/'+obj.pin
             else:
-                obj.video_call_link = 'Meeting Pin not defined'
+                obj.video_call_link = 'Meeting Pin/Dial-In not defined'
 
     @api.multi
     def is_video_active(self):
         for obj in self:
-            if not obj.moderator or obj.moderator == 0:
-                obj.video_active = False
-                continue
             dt_now = dn_dt.now()
-            after_15 = dn_dt.addInterval(dt_now, 'min', 15)
-            after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)
-            after_15 = str(after_15)
-            after_3hours = str(after_3hours)
-            if after_15 >= obj.start and after_3hours <= obj.stop:
-                obj.video_active = True
+            before_15 = dn_dt.addInterval(obj.start, 'min', -15)
+            if dt_now < before_15:
+                obj.conference_status = 'Will be available at '+ str(before_15)
+            else:
+                after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)
+                if  dt_now > after_3hours:
+                    obj.conference_status = 'Meeting is over'
+                else:
+                    if not obj.moderator or obj.moderator == 0:
+                        if not self.env.user.has_group('meeting_point.group_meeting_admin'):
+                            obj.conference_status = 'Waiting moderator'
+                        else:
+                            obj.conference_status = 'active'
+                    else:
+                        obj.conference_status = 'active'
 
     @api.multi
     def _compute_seen_by_me(self):
@@ -370,16 +369,12 @@ class Meeting(models.Model):
                 # else:
                 #     event.exectime = "completed"
 
-
-
-
-
     @api.multi
     def _compute_active_status(self):
         try:
             for rec in self:
                 rec.is_active_yet = False
-                stop_datetime = dn_dt.dtToStr(self.stop)
+                stop_datetime = dn_dt.dtTostr(self.stop)
                 stop_date = stop_datetime.date()
                 today_date = dn_dt.today()
                 res = stop_date>=today_date
@@ -589,8 +584,3 @@ class MpAlarmManager(models.AbstractModel):
             result = meeting.attendee_ids._send_mail_to_attendees('meeting_point.calendar_template_meeting_attendee_reminder',
                                                                   force_send=True)
         return result
-
-
-
-
-
