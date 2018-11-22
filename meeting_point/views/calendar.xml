@@ -13,7 +13,7 @@
                     <field name="is_attendee" invisible="1"/>
                     <field name="allday" invisible="1"/>
                     <field name="attendee_status" invisible="1"/>
-                    <field name="video_active" invisible="1"/>
+                    <field name="conference_status" class="conference_status o_hidden"/>
                     <field name="id" class="o_hidden meeting_id"/>
                     <field name="im_attendee" class="o_hidden is_attendee"/>
                     <!--<a href="/web#view_type=form&amp;model=calendar.event&amp;action=meeting_point.action_upcoming_meeting"-->
@@ -23,9 +23,9 @@
                         <field name="start" string="Starting at" />
                         <field name="stop" string="Ending at" />
                         <field name="duration" widget="float_time" class="oe_inline"/>
-                        <field name="video_call_link" attrs="{'invisible':['|',('video_call_link', '=', 'False'),('video_active', '=', 'False')]}" widget="url" class="oe_read_only"/>
-                        <field name="conference_bridge_numbe"  class="conference masked_input oe_read_only"/>
-                        <field name="pin" class="pin masked_input oe_read_only"/>
+                        <field name="video_call_link" attrs="{'invisible':[('conference_status', '!=', 'active')]}" widget="url"/>
+                        <field name="conference_bridge_number" attrs="{'invisible':[('conference_status', '!=', 'active')]}" class="conference"/>
+                        <field name="pin" class="pin" attrs="{'invisible':[('conference_status', '!=', 'active')]}"/>
                         <field name="company" string="Location" class="oe_read_only"/>
                     </group>
                     <button type="object" class="btn-primary detail_btn o_hidden" name="go_to_meeting">Details</button>
@@ -166,7 +166,7 @@
                         <field name="state" invisible="1"/>
                         <field name="is_attendee" invisible="1"/>
                         <field name="attendee_status" invisible="1"/>
-                        <field name="video_active" invisible="1"/>
+                        <field name="conference_status" class="conference_status o_hidden"/>
                         <field name="exectime"/>
                         <div name="readonly_completed_1">
                         <group>
@@ -179,10 +179,14 @@
                             <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': True}"/>
                         </group>
 
+                        <group class="emeeting_fields">
+                            <field class="conference" name="conference_bridge_number"/>
+                            <field class="pin" name="pin"/>
+                            <field class="oe_read_only" name="video_call_link" widget="url"/>
+                        </group>
+
                         <group readonly="1" >
-                            <field name="video_call_link" attrs="{'invisible':['|',('video_call_link', '=', 'False'),('video_active', '=', 'False')]}" class="oe_read_only" widget="url"/>
-                            <field name="conference_bridge_numbe" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="conference masked_input"/>
-                            <field name="pin" class="pin masked_input oe_read_only"/>
+
                             <field name="company" attrs="{'readonly': [('exectime', '=', 'completed')]}" string="Location"/>
                             <label for="address"/>
                             <div class="o_address_format">
