@@ -237,12 +237,7 @@ class Meeting(models.Model):
             # sql = " or date(stop)='"+stop+"'"
             # curs.execute(sql)
             # results = curs.dictfetchall()
-            if not vals.get('pin'):
-                rint = random.randint(0, len(room_pins)-1)
-                pin = room_pins[rint]
-                for pinkey in pin:
-                    vals['pin'] = pinkey
-
+            vals['moderator'] = 0
             meeting = super(Meeting, self).create(vals)
             if surveys:
                 meeting_id = meeting.id
@@ -293,16 +288,17 @@ class Meeting(models.Model):
             before_15 = dn_dt.addInterval(obj.start, 'min', -15)
             if dt_now < before_15:
                 obj.conference_status = 'Will be available at '+ str(before_15)
+                if obj.moderator != 0:
+                    obj.moderator = 0
             else:
                 after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)
                 if  dt_now > after_3hours:
                     obj.conference_status = 'Meeting is over'
+                    if obj.moderator != 0:
+                        obj.moderator = 0
                 else:
-                    if not obj.moderator or obj.moderator == 0:
-                        if not self.env.user.has_group('meeting_point.group_meeting_admin'):
-                            obj.conference_status = 'Waiting moderator'
-                        else:
-                            obj.conference_status = 'active'
+                    if obj.moderator == 0:
+                        obj.conference_status = 'active'
                     else:
                         obj.conference_status = 'active'
 
@@ -382,6 +378,21 @@ class Meeting(models.Model):
                     rec.is_active_yet = rec.publish
         except:
             q=1
+
+    def compute_pin(self):
+        if not self.pin:
+            rint = random.randint(0, len(room_pins) - 1)
+            pin = room_pins[rint]
+            for pinkey in pin:
+                return pinkey
+
+    @api.onchange('conference_bridge_number')
+    def _on_change_conference_bridge_number(self):
+        if not self.pin:
+            rint = random.randint(0, len(room_pins) - 1)
+            pin = room_pins[rint]
+            for pinkey in pin:
+                self.pin = pinkey
 
     @api.onchange('country')
     def filter_states(self):

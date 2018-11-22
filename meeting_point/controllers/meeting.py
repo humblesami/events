@@ -4,20 +4,19 @@ from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 
 room_pins_obj = {
-    '3402742788':'mvdn198374',
-    '1382256314':'mvdn491712',
-    '2427772817':'mvdn321763',
-    '1209858678':'mvdn711768',
-    '2654131214':'mvdn620675',
-    '4275231112':'mvdn110932',
-    '3484541378':'mvdn101143',
-    '1598259377':'mvdn127621',
-    '3588811445':'mvdn100183',
-    '3415505034':'mvdn190794',
+    '3402742788': 'mvdn198374',
+    '1382256314': 'mvdn491712',
+    '2427772817': 'mvdn321763',
+    '1209858678': 'mvdn711768',
+    '2654131214': 'mvdn620675',
+    '4275231112': 'mvdn110932',
+    '3484541378': 'mvdn101143',
+    '1598259377': 'mvdn127621',
+    '3588811445': 'mvdn100183',
+    '3415505034': 'mvdn190794',
 };
 
 class meeting(http.Controller):
-
 
     @http.route('/meeting/respond-invitation', type="http", csrf=False, auth='public', cors='*')
     def acceptrejectmeeting(self, **kw):
@@ -70,15 +69,24 @@ class meeting(http.Controller):
             uid = ws_methods.check_auth(kw)
             if not uid:
                 return ws_methods.not_logged_in()
-            roomPin = kw.get('pin')
+
             meeting_id = kw.get('meeting_id')
+            meeting_id = int(meeting_id)
             password = kw.get('password')
-            meeting =  http.request.env['calendar.event'].sudo().search([('id', '=', meeting_id),('password','=',password)])
+            meeting = http.request.env['calendar.event'].search([('id', '=', meeting_id)])
+
+            if meeting.moderator == 0:
+                if http.request.env.user.has_group('meeting_point.group_meeting_admin'):
+                    meeting.moderator = uid
+                else:
+                    return ws_methods.http_response("Waiting moderator")
+            elif meeting.password and meeting.password != password:
+                return ws_methods.http_response('Invalid Password Provided')
 
             if not meeting.pin:
-                return ws_methods.http_response('No pin defined fro meeting')
+                return ws_methods.http_response('No pin defined for meeting')
             if meeting.exectime == "past" or meeting.exectime == "completed":
-                return ws_methods.http_response("Meeting was over at "+str(meeting.stop))
+                return ws_methods.http_response("Meeting was over at " + str(meeting.stop))
             elif meeting.conference_status != 'active':
                 return ws_methods.http_response(meeting.conference_status)
 
@@ -91,8 +99,8 @@ class meeting(http.Controller):
                 else:
                     im_attendee = 'yes'
 
-            res = { 'ids': ids, 'im_attendee':im_attendee, 'roomName':room_pins_obj[meeting.pin]}
-            return ws_methods.http_response('',)
+            res = {'ids': ids, 'im_attendee': im_attendee, 'roomName': room_pins_obj[meeting.pin]}
+            return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
 
@@ -103,8 +111,9 @@ class meeting(http.Controller):
             if not uid:
                 return ws_methods.not_logged_in()
             meeting_id = kw.get('meeting_id')
-            meeting = http.request.env['calendar.event'].sudo().search(
-                [('id', '=', meeting_id)])
+            meeting_id = int(meeting_id)
+            meeting = http.request.env['calendar.event'].search(
+                [('id', '=', meeting_id),('moderator','=',uid)])
             meeting.moderator = 0
             return ws_methods.http_response('', 'done')
         except:
@@ -170,7 +179,8 @@ class meeting(http.Controller):
             filters = [('id', '=', id)]
 
             meeting = req_env['calendar.event'].search(filters, limit=1, order='id')
-            props = ['id', 'start', 'stop','conference_status', 'duration', 'zip', 'video_call_link', 'conference_bridge_number', 'pin', 'exectime',
+            props = ['id', 'start', 'stop', 'conference_status', 'duration', 'zip', 'video_call_link',
+                     'conference_bridge_number', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'status', 'company']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
@@ -195,7 +205,7 @@ class meeting(http.Controller):
             meeting_object['topics'] = topics_arr
             meeting_object['meeting_docs'] = ws_methods.objects_list_to_json_list(meeting.doc_ids, ['id', 'name'])
             docs_to_sign = []
-            props = ['id', 'name','mp_signature_status']
+            props = ['id', 'name', 'mp_signature_status']
             for sign_doc in meeting.document_ids:
                 sign = sign_doc.signature_ids.filtered(lambda r: r.user_id.id == uid)
                 if sign:
@@ -205,7 +215,7 @@ class meeting(http.Controller):
             meeting_object['sign_docs'] = docs_to_sign
             surveys = meeting.survey_ids.filtered(lambda r: r.my_status == 'pending')
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(surveys, ['id', 'title'])
-            props = ['attendance','state','response_by']
+            props = ['attendance', 'state', 'response_by']
             meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
 
             cnt = 0
@@ -226,14 +236,15 @@ class meeting(http.Controller):
                 elif attendee['state'] == 'tentative':
                     attendee['state'] = 'Uncertain'
                 cnt += 1
-            filters = [('res_id', '=', meeting_object['id']), ('parent_id','=',False), ('model', '=', 'calendar.event'),
-                       ('message_type', '=', 'comment'),('create_uid','!=',False)]
+            filters = [('res_id', '=', meeting_object['id']), ('parent_id', '=', False),
+                       ('model', '=', 'calendar.event'),
+                       ('message_type', '=', 'comment'), ('create_uid', '!=', False)]
             if uid != 1:
-                filters.append(('create_uid','!=',1))
-            comments = req_env['mail.message'].search(filters , order='create_date desc')
-            props = ['id', 'body','subtype_id.id', 'create_date']
+                filters.append(('create_uid', '!=', 1))
+            comments = req_env['mail.message'].search(filters, order='create_date desc')
+            props = ['id', 'body', 'subtype_id.id', 'create_date']
             ar_comments = ws_methods.objects_list_to_json_list(comments, props)
-            i= 0
+            i = 0
             for com in comments:
                 user = com.create_uid
                 if not user.mp_user_id.id:
@@ -257,18 +268,18 @@ class meeting(http.Controller):
             if 'meeting_type' in values:
                 if values['meeting_type'] == 'completed':
                     filters.append(('publish', '=', True))
-                    filters.append (('stop', '<', date_value))
+                    filters.append(('stop', '<', date_value))
                 elif values['meeting_type'] == 'archived':
                     filters.append(('archived', '=', True))
                 elif values['meeting_type'] == 'upcoming':
                     filters.append(('publish', '=', True))
-                    filters.append (('stop', '>=', date_value))
+                    filters.append(('stop', '>=', date_value))
             filters.append(('id', '<', id))
             prev = req_env['calendar.event'].search(filters, limit=1, order='id desc')
             if len(prev) > 0:
                 prev = prev[0]
             if len(filters) > 0:
-                filters[len(filters)-1] = ('id', '>', id)
+                filters[len(filters) - 1] = ('id', '>', id)
             else:
                 filters = [('id', '>', id)]
             next = req_env['calendar.event'].search(filters, limit=1, order='id')
@@ -323,11 +334,11 @@ class meeting(http.Controller):
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'company', 'status']
 
-            #total_cnt = len(myModel.search(filters))
+            # total_cnt = len(myModel.search(filters))
             partner = req_env.user.partner_id
-            meetings = myModel.search(filters, offset = offset, limit = limit).filtered(lambda r: partner in r.partner_ids)
+            meetings = myModel.search(filters, offset=offset, limit=limit).filtered(lambda r: partner in r.partner_ids)
             meetings = ws_methods.objects_list_to_json_list(meetings, props)
-            #current_cnt = len(meetings)
+            # current_cnt = len(meetings)
             meetings = {'records': meetings, 'total': 0, 'count': 0}
             return ws_methods.http_response('', meetings)
         except:

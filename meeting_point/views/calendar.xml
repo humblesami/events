@@ -182,6 +182,7 @@
                         <group class="emeeting_fields">
                             <field class="conference" name="conference_bridge_number"/>
                             <field class="pin" name="pin"/>
+                            <field class="password" name="password"/>
                             <field class="oe_read_only" name="video_call_link" widget="url"/>
                         </group>
 
