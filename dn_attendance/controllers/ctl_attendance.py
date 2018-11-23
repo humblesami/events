@@ -50,7 +50,13 @@ class Attendance(http.Controller):
                     employee = req_env['hr.employee'].sudo().create({'name': 'emp-'+str(rec['PersonId']), 'device_id': rec['PersonId']})
                 work_date = dn_dt.dtTodatestr(time_record)
                 vals = {'punch_time': time_record_str, 'employee_id': employee.id, 'work_date': work_date}
-                res = req_env['attendance.record'].sudo().create(vals)
+                employeeCheck   =  req_env['attendance.record'].sudo().search(
+                    ['&', ('punch_time', '=', time_record_str), ('employee_id', '=', employee.id),
+                     ('work_date', '=', work_date)])
+                if employeeCheck.id:
+                    continue
+                else:
+                    res = req_env['attendance.record'].sudo().create(vals)
             cursor.commit()
             return ws_methods.http_response('', {'message': 'success'})
         except:
