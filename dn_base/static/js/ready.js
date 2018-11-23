@@ -1,5 +1,5 @@
 var dn_base_web_url = window.location.origin + '';
-console.log(odoo, 1968);
+//console.log(odoo, 1968);
 function load_dn_assets()
 {
     try

@@ -217,7 +217,7 @@ class Meeting(models.Model):
 
     pin = fields.Char(string="Meeting PIN")
     conference_bridge_number = fields.Char(string="Conference Bridge No.")
-    video_call_link = fields.Char(compute="_compute_video_link")
+    video_call_link = fields.Char()
     conference_status = fields.Char(compute='is_video_active')
     password = fields.Char()
     moderator = fields.Integer()
@@ -239,6 +239,8 @@ class Meeting(models.Model):
             # results = curs.dictfetchall()
             vals['moderator'] = 0
             meeting = super(Meeting, self).create(vals)
+            call_url = '/meeting_point/static/meet.html?meeting_id=' + str(meeting.id)+'&pin=' + vals['pin']
+            meeting.video_call_link = call_url
             if surveys:
                 meeting_id = meeting.id
                 for survey in surveys:
@@ -269,17 +271,6 @@ class Meeting(models.Model):
             self = self.sudo()
         res = super(Meeting, self).write(vals)
         return res
-
-    @api.multi
-    def _compute_video_link(self):
-        for obj in self:
-            if obj.conference_status != 'active':
-                obj.video_call_link = obj.conference_status
-                continue
-            if obj.pin and obj.conference_bridge_number:
-                obj.video_call_link = '/conference/'+str(obj.id)+'/'+obj.pin
-            else:
-                obj.video_call_link = 'Meeting Pin/Dial-In not defined'
 
     @api.multi
     def is_video_active(self):

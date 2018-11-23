@@ -42,22 +42,8 @@ $(function(){
 
     setTimeout(function(){
         var readonly_form = $('.conference_status').closest('.o_form_view').is('.o_form_readonly');
-        //console.log($('.conference_status').html(), readonly_form, 1344);
-        if(readonly_form)
-        {
-            if($('.conference_status').html().trim() == 'active')
-                $('.emeeting_fields').show();
-           else
-           {
-                $('.emeeting_fields').hide();
-           }
-        }
-        else
-        {
-            if(!$('input.conference').val())
-                $('input.conference').val('+1-512-402-2718').change();
-            $('.emeeting_fields').show();
-        }
+        if(!$('input.conference').val())
+            $('input.conference').val('+1-512-402-2718').change();
     }, 100)
 
 });
