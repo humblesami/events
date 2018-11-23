@@ -294,8 +294,5 @@
                 <field name="view_id" ref="my_tree_attendance_record"/>
                <field name="domain">[('employee_id.user_id', '=', uid)]</field>
         </record>
-
-        <menuitem name="Machine Records" action="action_attendance_record" id="menu_attendance_record" parent="menu_root_attendance"/>
-        <menuitem name="Daily Records" action="action_attendance_daily" id="menu_attendance_daily" parent="menu_root_attendance"/>
     </data>
 </odoo>

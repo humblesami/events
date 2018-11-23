@@ -96,5 +96,6 @@ access_to_hr_payslip_line_staff,Generate Payslips,hr_payroll.model_hr_payslip_li
 attendance_log_Access_E_payroll_staff,Access_to_attendance_log,e_pay_roll.model_attendance_log,custom_group_e_payroll_staff,1,0,0,0
 access_to_hr_employee_staff,Employees,dn_hr.model_hr_employee,custom_group_e_payroll_staff,1,0,0,0
 access_to_salary_rule_staff,Salary Rules,hr_payroll.model_hr_salary_rule,custom_group_e_payroll_staff,1,0,0,0
-
+access_to_attendance_daily_staff,Attendance Daily Record staff,dn_attendance.model_attendance_daily,custom_group_e_payroll_staff,1,0,0,0
+access_to_attendance_record_staff,my only Record,dn_attendance.model_attendance_record,custom_group_e_payroll_staff,1,0,0,0
 attendance_log_Access_E_leave_staff,Access_to_attendance_log,e_pay_roll.model_attendance_log,leave_management_custom.group_leave_custom_user,1,0,0,0
