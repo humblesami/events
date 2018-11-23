@@ -124,11 +124,30 @@
         </field>
     </record>
 
+               <record id="dn_attendance__attendnace_record_view_filter" model="ir.ui.view">
+        <field name="name">dn_attendance_view_filter_new</field>
+        <field name="model">attendance.daily</field>
+        <field name="arch" type="xml">
+            <search string="Hr Attendance Search">
+                <field name="employee_id"/>
+                <filter name="today" string="Today" domain="[('punch_time', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('punch_time', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
+                <filter string="Current Month" domain="[('punch_time', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                <separator/>
+                <filter string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                <group expand="0" string="Group By">
+                    <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Month" context="{'group_by':'punch_time'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
         <record model="ir.actions.act_window" id="action_attendance_record">
             <field name="name">Attendance Records</field>
             <field name="res_model">attendance.record</field>
             <field name="view_mode">kanban,tree,form</field>
-             <field name="search_view_id" ref="dn_attendance_view_filter" />
+             <field name="search_view_id" ref="dn_attendance__attendnace_record_view_filter" />
         </record>
 
         <record model="ir.actions.act_window" id="action_attendance_daily">
