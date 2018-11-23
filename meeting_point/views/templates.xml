@@ -218,6 +218,36 @@
 </div>]]></field>
         </record>
 
+
+        <!--Meeting started: template -->
+        <record id="email_template_meeting_start_mp" model="mail.template">
+            <field name="name">Meeting started</field>
+            <field name="model_id" ref="calendar.model_calendar_attendee" />
+            <field name="email_from"><![CDATA["${user.company_id.name}" <${user.company_id.email}>]]></field>
+            <field name="subject">Meeting started:${object.event_id.name or ''} </field>
+            <field name="auto_delete" eval="True" />
+            <field name="body_html">
+                <![CDATA[
+<p>Dear ${object.common_name or ''},</p>
+<p>Meeting:${object.event_id.name or ''} has been started.</p>
+<p>Please click the link below to join the video conference</p>
+<p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="${object.video_call_link}">Join</a></p>
+<p>Best Regards,</p>
+    ${user.name}
+    <p style="font-size: 11px; margin-top: 10px;">
+        <strong>Sent by ${user.company_id.name}  Using <span style="color:#9c4784">O</span><span style="color:#8e8f8f">doo</span><span style="color:#9c4784">HQ</span></strong>
+    </p>
+    <br/>
+    <p>
+    This is an automatically generated system message. Please do not reply to this e-mail.
+    </p>
+                ]]>
+            </field>
+        </record>
+
+
+
+
         <template id="survey_init_dn" name="Survey dn start">
             <div style="text-align:center">
                 <h1>

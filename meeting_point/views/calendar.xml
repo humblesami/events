@@ -24,6 +24,8 @@
                         <field name="stop" string="Ending at" />
                         <field name="duration" widget="float_time" class="oe_inline"/>
                         <field name="video_call_link" widget="url" class="oe_read_only"/>
+                        <button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>
+
                         <field name="conference_bridge_number" class="conference"/>
                         <field name="pin" class="pin" />
                         <field name="company" string="Location" class="oe_read_only"/>
@@ -183,6 +185,7 @@
                             <field class="conference" name="conference_bridge_number"/>
                             <field class="pin" name="pin"/>
                             <field attrs="{'invisible': [('id', '=', False)]}" name="video_call_link" widget="url"/>
+                            <button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>
                             <field class="password" name="password"/>
                         </group>
 
@@ -454,6 +457,33 @@
                 <xpath expr="//div[@name='readonly_completed_3']" position="attributes">
                    <attribute name="class">oe_read_only</attribute>
                 </xpath>
+            </field>
+        </record>
+
+                                <record id="calendar.view_conference" model="ir.ui.view">
+            <field name="name">calendar.conference.form</field>
+            <field name="model">calendar.event</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <form string="Meetings">
+                    <link rel="stylesheet" href="/meeting_point/static/css/conference.css"/>
+                    <div id="jitsi-meet-container" style="text-align:center">
+                        <div id="meeting-info-panel">
+                            <h6 style="padding-top:6px">
+                                <button id='meeting-info-btn'>Show/Hide Meeting Info</button>
+                            </h6>
+                            <h6 id='meeting-info-box'>
+                                <div class="url"></div>
+                                <div class="pin"></div>
+                                <div class="dialin">Dial-in: +1.512.402.2718</div>
+                            </h6>
+                        </div>
+                        <div id="meeting-room">
+                        </div>
+                    </div>
+
+                    <script src="/meeting_point/static/js/conference.js"></script>
+                </form>
             </field>
         </record>
 

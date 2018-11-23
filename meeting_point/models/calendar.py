@@ -562,6 +562,31 @@ class Meeting(models.Model):
             'target': 'current',
         }
 
+    def start_conference(self):
+        qs = str(self.pin)+'&meeting_id='+str(self.id)
+        urll = "/meeting_point/static/meet.html?pin="+qs
+
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Conference",
+            'target': 'new',
+            'url': urll
+        }
+
+
+
+
+        # view_id = self.env.ref('calendar.view_conference').id
+        # return {
+        #     'type': 'ir.actions.act_window',
+        #     'name': 'Conference',
+        #     'view_id': view_id,
+        #     'view_mode': 'form',
+        #     'res_model': self._name,
+        #     'res_id': self.id,
+        #     'target': 'current',
+        # }
+
 
     @api.model
     def search(self, args, offset=0, limit=0, order=None, count=False):

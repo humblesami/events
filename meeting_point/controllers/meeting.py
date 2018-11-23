@@ -1,5 +1,5 @@
 import sys
-from odoo import http
+from odoo import http, api
 from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 
@@ -103,6 +103,48 @@ class meeting(http.Controller):
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
+
+    def run_method(self,template_xmlid,mail_ids,context):
+        with api.Environment.manage():
+            new_cr = self.pool.cursor()
+            self = self.with_env(self.env(cr=new_cr))
+
+            invitation_template = self.env.ref(template_xmlid)
+            if context:
+                rendering_context = context
+            else:
+                rendering_context = self._context
+            rendering_context.update({
+                'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url',
+                                                                             default='http://localhost:8069')
+            })
+            invitation_template = invitation_template.with_context(rendering_context)
+
+            # send email with attachments
+            mails_to_send = self.env['mail.mail']
+            for attendee in self:
+                if attendee.email or attendee.partner_id.email:
+                    mail_id = invitation_template.send_mail(attendee.id)
+
+                    vals = {}
+                    vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
+                    vals['res_id'] = False
+                    current_mail = self.env['mail.mail'].browse(mail_id)
+                    current_mail.mail_message_id.write(vals)
+                    mails_to_send |= current_mail
+
+            # time.sleep(20)
+            self.env['mail.mail'].process_email_queue()
+            self.write({"mail_sent": "True"})
+            failed_mails = self.env['mail.mail'].search([('id','in',mail_ids)])
+            if failed_mails:
+                failed_partners=failed_mails.mapped("recipient_ids")
+                failed_emails = failed_mails.mapped("email_to")
+                failed_attendees=self.filtered(lambda r: r.partner_id in failed_partners or r.email in failed_emails)
+                failed_attendees.write({"mail_sent": "Fail"})
+
+            self._cr.commit()
+            self._cr.close()
 
     @http.route('/meeting/moderatorleft', type="http", csrf=False, auth='public', cors='*')
     def moderaorLeft(self, **kw):
