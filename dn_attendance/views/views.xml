@@ -136,9 +136,10 @@
             <field name="res_model">attendance.daily</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <!--___________________________________________________________________-->
+
+
          <record model="ir.actions.act_window" id="myaction_attendance_daily">
-            <field name="name">Daily Attendance</field>
+            <field name="name">My Daily Attendance</field>
             <field name="res_model">attendance.daily</field>
             <field name="view_mode">tree,form</field>
              <field name="domain">[('employee_id.user_id', '=', uid)]</field>
@@ -238,7 +239,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="form_attendance_record"/>
         </record>
-        <!--______________________________________________________________________-->
+
         <record id="ir_cron_upload attendace" model="ir.cron">
             <field name="name">Create Attendance in HR Attendance</field>
             <field name="model_id" ref="model_attendance_daily"/>
@@ -268,7 +269,7 @@
             </field>
         </record>
            <record model="ir.actions.act_window" id="myrecord_action_attendance_record">
-            <field name="name">Machine Records</field>
+            <field name="name">My Machine Records</field>
             <field name="res_model">attendance.record</field>
             <field name="view_mode">tree</field>
                 <field name="view_id" ref="my_tree_attendance_record"/>
