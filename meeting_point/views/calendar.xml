@@ -181,11 +181,10 @@
                             <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': True}"/>
                         </group>
 
-                        <group>
+                        <group class="emeeting">
                             <field class="conference" name="conference_bridge_number"/>
                             <field class="pin" name="pin"/>
                             <field attrs="{'invisible': [('id', '=', False)]}" name="video_call_link" widget="url"/>
-                            <button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>
                             <field class="password" name="password"/>
                         </group>
 
