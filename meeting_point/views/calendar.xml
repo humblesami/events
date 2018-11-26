@@ -181,7 +181,7 @@
                             <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': True}"/>
                         </group>
 
-                        <group class="emeeting">
+                        <group class="emeeting" attrs="{'invisible': [('exectime', '!=', 'upcoming'),('exectime', '!=', 'ongoing')]}">
                             <field class="conference" name="conference_bridge_number"/>
                             <field class="pin" name="pin"/>
                             <field attrs="{'invisible': [('id', '=', False)]}" name="video_call_link" widget="url"/>

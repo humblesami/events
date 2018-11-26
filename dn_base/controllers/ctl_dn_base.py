@@ -7,8 +7,17 @@ from werkzeug.utils import redirect
 from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 from odoo.addons.web.controllers.main import Binary
-from odoo.addons.web.controllers.main import Session, binary_content
+from odoo.addons.website.controllers.main import Website
+from odoo.addons.web.controllers.main import Session, binary_content, Home
 
+class MyWebsite(Website):
+    @http.route('/', type='http', auth="public", website=True)
+    def index(self):
+        request = http.request
+        if not request.session.uid:
+            return redirect('/web/login')
+        else:
+            return redirect('/web')
 
 class Controller(http.Controller):
 
@@ -150,6 +159,7 @@ class Controller(http.Controller):
             return json.dumps({'error':'','data':'Yes'})
         else:
             return json.dumps({'error': '', 'data': 'Already Added'})
+
 
 class MySession(Session):
     @http.route(auth="none")
