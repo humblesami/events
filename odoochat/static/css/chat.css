@@ -294,3 +294,7 @@ li.showmouseawaybutton
     bottom: 36px;
     left: 22px;
 }
+#online-users-list .list-group-item
+{
+    cursor:pointer;
+}

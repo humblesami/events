@@ -276,7 +276,7 @@ class Meeting(models.Model):
     @api.multi
     def is_video_active(self):
         for obj in self:
-            if obj.moderator == self.env.uid or (obj.moderator == 0 and self.env.user.has_group('meeting_point.group_meeting_admin')):
+            if self.env.user.has_group('meeting_point.group_meeting_admin'):
                 obj.conference_status = 'active'
                 continue
             dt_now = dn_dt.now()
