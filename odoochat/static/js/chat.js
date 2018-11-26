@@ -58,6 +58,12 @@ odoo.define('odoochat.onClientready', function (require) {
             }
         });
 
+        $('#unseen-msg-counter').text(total_unseen);
+        if(total_unseen == 0)
+            $('#unseen-msg-counter').hide();
+        else
+            $('#unseen-msg-counter').show();
+
 
         //console.log($('.o_menu_systray').length, 833);
 
