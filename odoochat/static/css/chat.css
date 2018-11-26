@@ -293,6 +293,7 @@ li.showmouseawaybutton
     position: relative;
     bottom: 36px;
     left: 22px;
+    display:none;
 }
 #online-users-list .list-group-item
 {

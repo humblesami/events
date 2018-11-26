@@ -210,6 +210,7 @@ odoo.define('odoochat.onClientready', function (require) {
         });
 
         socket.on('connect',function(){
+            console.log('Chat server '+chat_server+' connected');
             socket.emit('verify', {
                 "token": odoo.session_info.token,
                 "name": odoo.session_info.username,
@@ -217,7 +218,12 @@ odoo.define('odoochat.onClientready', function (require) {
                 "db": odoo.session_info.db
             });
 
+            socket.on('myerror', function (msg) {
+                console.log("Error from chat "+msg);
+            });
+
             socket.on('online_users', function(online_users){
+                console.log('User is verififed');
                 if(!users){
                     users = {};
                 }
