@@ -77,19 +77,19 @@ class ResUsers(models.Model):
         self.ensure_one()
         is_string = False
         company_id = self.company_id
-        message = []
+        message = ''
         if company_id.password_lower:
-            message.append(' ' + 'Lowercase letter (At least ' + str(
-                company_id.password_lower) + ' character)')
+            message = ''.join(' ' + 'Lowercase letter (At least ' + str(
+                company_id.password_lower) + ' character).')
         if company_id.password_upper:
-            message.append(' ' + 'Uppercase letter (At least ' + str(
-                company_id.password_upper) + ' character)')
+            message += ''.join(' ' + 'Uppercase letter (At least ' + str(
+                company_id.password_upper) + ' character).')
         if company_id.password_numeric:
-            message.append(' ' + 'Numeric digit (At least ' + str(
-                company_id.password_numeric) + ' character)')
+            message += ''.join(' ' + 'Numeric digit (At least ' + str(
+                company_id.password_numeric) + ' character).')
         if company_id.password_special:
-            message.append(' ' + 'Special character (At least ' + str(
-                company_id.password_special) + ' character)')
+            message += ''.join(' ' + 'Special character (At least ' + str(
+                company_id.password_special) + ' character).')
         if message:
             is_string = True
             message = 'Must contain the following:' + str(message)
