@@ -186,6 +186,7 @@
                             <field class="pin" name="pin"/>
                             <field attrs="{'invisible': [('id', '=', False)]}" name="video_call_link" widget="url"/>
                             <button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>
+                            <field class="end_call" name="end_call"/>
                             <field class="password" name="password"/>
                         </group>
 

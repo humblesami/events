@@ -219,6 +219,7 @@ class Meeting(models.Model):
     conference_bridge_number = fields.Char(string="Conference Bridge No.")
     video_call_link = fields.Char()
     conference_status = fields.Char(compute='is_video_active')
+    end_call = fields.Boolean(string="End call if moderator leaves")
     password = fields.Char()
     moderator = fields.Integer()
 

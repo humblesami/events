@@ -99,7 +99,7 @@ class meeting(http.Controller):
                 else:
                     im_attendee = 'yes'
 
-            res = {'ids': ids, 'im_attendee': im_attendee, 'roomName': room_pins_obj[meeting.pin]}
+            res = {'ids': ids, 'end_call':meeting.end_call, 'im_attendee': im_attendee, 'roomName': room_pins_obj[meeting.pin]}
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
