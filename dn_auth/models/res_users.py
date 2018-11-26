@@ -92,11 +92,11 @@ class ResUsers(models.Model):
                 company_id.password_special) + ' character)')
         if message:
             is_string = True
-            message = 'Must contain the following:' + message
+            message = 'Must contain the following:' + str(message)
         if company_id.password_length:
-            message = ['Password must be %d characters or more.' %
+            message = ('Password must be %d characters or more.' %
                        company_id.password_length
-                       ] + message
+                       ) + str(message)
         if not is_string:
             message = ''.join(message)
         return message
