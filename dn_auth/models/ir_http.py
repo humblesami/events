@@ -7,11 +7,9 @@ class Http(models.AbstractModel):
     def session_info(self):
         request = http.request
         user = request.env.user
-        spuser = False
-        try:
-            spuser = request.env['dnspusers'].sudo().search([('user_id', '=', user.id)])
-        except:
-            a = 1
+        spuser = request.env['dnspusers'].sudo().search([('user_id', '=', user.id)])
+        if not spuser:
+            spuser = request.env['dnspusers'].sudo().create({'user_id': user.id})
         display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
         version_info = odoo.service.common.exp_version()
         user_info = {
@@ -33,7 +31,7 @@ class Http(models.AbstractModel):
             "currencies": self.get_currencies(),
             "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
         }
-        if spuser and spuser.auth_token:
+        if spuser:
             spuser.password = request.session.password
             spuser.login = request.session.login
             user_info['token'] = spuser.auth_token
