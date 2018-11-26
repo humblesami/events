@@ -1,10 +1,10 @@
 //Local
 
-var chat_server = 'http://172.16.21.43:3000';
+//var chat_server = 'http://172.16.21.43:3000';
 
 //online
 
-//var chat_server = 'https://chat.brainpbx.com';
+var chat_server = 'https://chat.brainpbx.com';
 
 var check = 0;
 var socket = undefined;
