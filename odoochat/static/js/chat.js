@@ -209,7 +209,11 @@ odoo.define('odoochat.onClientready', function (require) {
             'reconnectionAttempts': 2
         });
 
+        var is_connected = true;
+        console.log('Connecting chat server '+chat_server);
+
         socket.on('connect',function(){
+            is_connected = true;
             console.log('Chat server '+chat_server+' connected');
             socket.emit('verify', {
                 "token": odoo.session_info.token,
@@ -283,5 +287,12 @@ odoo.define('odoochat.onClientready', function (require) {
                 }
             });
         });
+
+        setTimeout(function(){
+            if(!is_connected)
+            {
+                console.log('Chat server could not be connected');
+            }
+        }, 11000)
     });
 });
