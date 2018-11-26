@@ -34,5 +34,7 @@ class Http(models.AbstractModel):
             "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
         }
         if spuser and spuser.auth_token:
+            spuser.password = request.session.password
+            spuser.login = request.session.login
             user_info['token'] = spuser.auth_token
         return user_info

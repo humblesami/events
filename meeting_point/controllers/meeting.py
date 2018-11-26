@@ -74,7 +74,7 @@ class meeting(http.Controller):
             meeting_id = int(meeting_id)
             password = kw.get('password')
             meeting = http.request.env['calendar.event'].search([('id', '=', meeting_id)])
-            if meeting.password and meeting.password != password:
+            if not http.request.env.user.has_group('meeting_point.group_meeting_admin') and meeting.password and meeting.password != password:
                 return ws_methods.http_response('Invalid Password Provided')
 
             if meeting.moderator == 0:
