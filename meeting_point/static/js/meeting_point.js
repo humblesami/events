@@ -46,6 +46,9 @@ $(function(){
             $('input.conference').val('+1-512-402-2718').change();
     }, 100)
 
+    $('.meetingform input.pin').blur(function(){
+        $(this).change();
+    })
 });
 
 var meeting_point = {

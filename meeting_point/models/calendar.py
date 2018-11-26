@@ -219,7 +219,7 @@ class Meeting(models.Model):
     conference_bridge_number = fields.Char(string="Conference Bridge No.")
     video_call_link = fields.Char()
     conference_status = fields.Char(compute='is_video_active')
-    end_call = fields.Boolean(string="End call if moderator leaves")
+    end_call = fields.Boolean(string="End-Call On Moderator Left")
     password = fields.Char()
     moderator = fields.Integer()
 
@@ -276,6 +276,9 @@ class Meeting(models.Model):
     @api.multi
     def is_video_active(self):
         for obj in self:
+            if obj.moderator == self.env.uid or (obj.moderator == 0 and self.env.user.has_group('meeting_point.group_meeting_admin')):
+                obj.conference_status = 'active'
+                continue
             dt_now = dn_dt.now()
             before_15 = dn_dt.addInterval(obj.start, 'min', -15)
             if dt_now < before_15:
@@ -380,11 +383,31 @@ class Meeting(models.Model):
 
     @api.onchange('conference_bridge_number')
     def _on_change_conference_bridge_number(self):
-        if not self.pin:
-            rint = random.randint(0, len(room_pins) - 1)
-            pin = room_pins[rint]
-            for pinkey in pin:
-                self.pin = pinkey
+        rint = random.randint(0, len(room_pins) - 1)
+        self.pin = ''
+        pin = room_pins[rint]
+        for pinkey in pin:
+            self.pin = pinkey
+            self.setVideoLink()
+
+    @api.onchange('pin')
+    def _on_change_pin(self):
+        if self.pin:
+            self.setVideoLink()
+        else:
+            self.video_call_link = ''
+
+    def setVideoLink(self):
+        if self.video_call_link:
+            call_url = self.video_call_link
+            arr = call_url.split('&')
+            call_url = arr[0] + '&pin=' + self.pin
+            self.video_call_link = call_url
+        elif self._origin:
+            meeting_id = self._origin.id
+            if meeting_id:
+                call_url = '/meeting_point/static/meet.html?meeting_id=' + str(meeting_id) + '&pin=' + self.pin
+                self.video_call_link = call_url
 
     @api.onchange('country')
     def filter_states(self):

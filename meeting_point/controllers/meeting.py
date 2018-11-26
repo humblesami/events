@@ -91,7 +91,7 @@ class meeting(http.Controller):
                 return ws_methods.http_response(meeting.conference_status)
 
             ids = []
-            im_attendee = 'no'
+            im_attendee = False
             for attendee in meeting.partner_ids:
                 cid = attendee.user_id.id
                 if cid != uid:
@@ -99,7 +99,13 @@ class meeting(http.Controller):
                 else:
                     im_attendee = 'yes'
 
-            res = {'ids': ids, 'end_call':meeting.end_call, 'im_attendee': im_attendee, 'roomName': room_pins_obj[meeting.pin]}
+            res = {'ids': ids, 'roomName': room_pins_obj[meeting.pin]}
+            if meeting.end_call:
+                res['end_call'] = 1
+            if im_attendee or uid == 1:
+                res['im_attendee'] = 'yes'
+            else:
+                return ws_methods.http_response('Sorry you are not invited')
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()

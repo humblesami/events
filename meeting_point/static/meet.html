@@ -1,7 +1,17 @@
-<html>
+    <html>
 
 <head>
-
+    <style>
+        #meeting-info-panel button {
+            background: #875A7B;
+            color: #ffffff;
+            border: none;
+            outline: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin: 0px 10px 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -12,10 +22,10 @@
         <!--<script src="/dn_base/static/js/libs/bootbox.js" type="text/javascript"></script>-->
         <div id="jitsi-meet-container" style="text-align:center">
             <div id="meeting-info-panel">
-                <h5 style="padding-top:6px">
-                    <a href="javascript:history.go(-1)">Back To Meeting</a>
+                <div>
+                    <button id="back_to_meeting_link">Back To Meeting</button>
                     <button id="meeting-info-btn">Show/Hide Meeting Info</button>
-                </h5>
+                </div>
                 <h5 id="meeting-info-box">
                     <div class="url"></div>
                     <div class="pin"></div>

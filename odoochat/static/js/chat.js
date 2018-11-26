@@ -40,6 +40,7 @@ odoo.define('odoochat.onClientready', function (require) {
 
             if($('.dn-chatter').length > 1){
                 $('.dn-chatter:first').remove();
+                $('.dn-chatter:first').show();
             }
 
             var create_msg_obj = function(msg){

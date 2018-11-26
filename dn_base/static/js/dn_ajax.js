@@ -18,7 +18,7 @@ var dn_json_rpc_object = {
                 this.loaderContainer.hide();
             else
             {
-                var loaderhite = $(window).height() - 40;
+                var loaderhite = $(window).height();
                 this.loaderContainer.css({ 'height':loaderhite,'display': 'block' });
             }
         },
@@ -45,7 +45,7 @@ var dn_json_rpc_object = {
                 dn_json_rpc_object.baseUrl = config.baseUrl;
             initialized = true;
 
-            this.loaderContainer.css({ top: 20 + 'px' });
+            //this.loaderContainer.css({ top: 20 + 'px' });
             this.loaderImage.css('top', '40%');
         },
 

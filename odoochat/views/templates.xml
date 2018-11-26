@@ -2,7 +2,7 @@
     <data>
         <template id="chat_backend" name="Chat Assets Backend" inherit_id="web.assets_backend">
             <xpath expr="//script[@src='/web/static/src/js/report/client_action.js']" position="after">
-                <div class="dn-chatter">
+                <div class="dn-chatter" style="display:none;">
                      <div id="online-users-list" class="hidemouseaway">
                         <ul class="list-group">
                         </ul>

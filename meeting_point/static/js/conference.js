@@ -1,13 +1,9 @@
-console.log(13344);
 $(function() {
-
     //        let roomName = undefined;
-            var curl = window.location.toString();
-            var temp = curl.split('meeting_id=')[1];
-            var meeting_id = temp.split('&')[0];
-            var roomPin = temp.split('pin=')[1];
-
-
+    var curl = window.location.toString();
+    var temp = curl.split('meeting_id=')[1];
+    var meeting_id = temp.split('&')[0];
+    var roomPin = temp.split('pin=')[1];
 
     var verfify_user = function(password) {
         let input_data = {
@@ -19,19 +15,19 @@ $(function() {
         }
         //var attendees_data = {im_attendee :'yes' }
         dn_json_rpc('/meeting/attendees', input_data, function(attendees_data) {
-            if (attendees_data.im_attendee && attendees_data.im_attendee == 'yes') {
+            if (attendees_data.im_attendee) {
                 roomName = attendees_data.roomName;
-                joinCononference(roomName, roomPin, curl, meeting_id);
+                joinCononference(roomName, roomPin, curl, meeting_id, attendees_data.end_call);
             }
         });
     };
     //        bootbox.prompt("Please Enter Password", function(promptValue){
-                verfify_user();
+    verfify_user();
     //            console.log("hhhhhh");
     //        });
 
 
-    function joinCononference(roomName, roomPin, curl, meeting_id) {
+    function joinCononference(roomName, roomPin, curl, meeting_id, end_call) {
         setTimeout(function() {
             $('#loaderContainerajax').show();
         }, 100);
@@ -114,8 +110,8 @@ $(function() {
         };
 
         var api = new JitsiMeetExternalAPI(domain, options);
-//        var joinin_user_name = window['current_user'].cookie.name;
-//        api.executeCommand('displayName', joinin_user_name);
+        //        var joinin_user_name = window['current_user'].cookie.name;
+        //        api.executeCommand('displayName', joinin_user_name);
 
         var is_admin = false;
         var moderator_id = undefined;
@@ -133,8 +129,6 @@ $(function() {
 
                     }
                 }
-
-
             },
             videoConferenceLeft: function(data) {
                 $('#jitsi-meet-container').hide();
@@ -151,10 +145,8 @@ $(function() {
                     console.log("I left");
             },
             participantLeft: function(data) {
-                if (data.id == moderator_id) {
-//                    alert("Moderator left the meeting, please comae back in a minute");
-
-                    //                    obj_this.router.navigate(['/meeting/'+meeting_id]);
+                if (data.id == moderator_id && end_call) {
+                    go_back_meeting()
                 }
             }
         };
@@ -164,6 +156,20 @@ $(function() {
     $('#meeting-info-box .url').html('Link: ' + curl);
     $('#meeting-info-box .pin').html('PIN: ' + roomPin + '#');
     $('#meeting-info-btn').click(function() {
-            $('#meeting-info-box').toggle();
-        });
+        $('#meeting-info-box').toggle();
+    });
+
+    function go_back_meeting()
+    {
+        console.log(34232);
+        var meeting_url = window.location.origin.toString();
+        if(document.referrer)
+            history.go(-1);
+        else
+        {
+            meeting_url = meeting_url +'/web#id='+meeting_id+'&view_type=form&model=calendar.event';
+            window.location = meeting_url;
+        }
+    }
+    $('#back_to_meeting_link').click(go_back_meeting);
 });
