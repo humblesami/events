@@ -126,7 +126,6 @@ $(function() {
                     if (uid == api._myUserID) {
                         if (uid === moderator_id)
                             is_admin = true;
-
                     }
                 }
             },
@@ -136,17 +135,14 @@ $(function() {
                     dn_json_rpc('/meeting/moderatorleft', {
                         meeting_id: meeting_id
                     }, function(data) {
-                        //                        obj_this.router.navigate(['/meeting/'+meeting_id]);
-                        console.log("moderator left");
 
                     });
-                } else
-                    //                    obj_this.router.navigate(['/meeting/'+meeting_id]);
-                    console.log("I left");
+                }
+                go_back_meeting();
             },
             participantLeft: function(data) {
                 if (data.id == moderator_id && end_call) {
-                    go_back_meeting()
+                    go_back_meeting();
                 }
             }
         };
