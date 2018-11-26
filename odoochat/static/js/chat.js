@@ -247,16 +247,23 @@ odoo.define('odoochat.onClientready', function (require) {
                     }
                     if(!going_user.id)
                     {
-                        console.log("undefined leaving user id" , going_user);
-                        return;
+                        if(!isNaN(going_user))
+                        {
+                            console.log("Leaving user does not an have valid id" , going_user);
+                            return;
+                        }
                     }
-                    if(odoo.session_info.id == going_user.id)
+                    else
+                    {
+                        going_user = going_user.id;
+                    }
+                    if(odoo.session_info.id == going_user)
                     {
                         return;
                     }
-                    delete users[going_user.id];
-                    console.log(users);
+                    delete users[going_user];
                     remove_user_from_list(going_user);
+                    $('#'+going_user).remove();
                 }
                 catch(err)
                 {
