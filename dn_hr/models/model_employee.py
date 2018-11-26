@@ -174,5 +174,11 @@ class Employee(models.Model):
         schedule_on_day['check_out'] = work_date + ' ' + dn_dt.decimal2time(schedule.work_to) + ':00'
         return schedule_on_day
 
+class Department(models.Model):
+    _inherit = 'hr.department'
+    _description = 'Department'
+    resource_calendar_id = fields.Many2one(
+        'resource.calendar', 'Working Schedule',
+        default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id.id)
 
 

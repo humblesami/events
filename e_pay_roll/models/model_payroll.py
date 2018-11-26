@@ -22,6 +22,7 @@ class EmployeeField(models.Model):
 
 
 
+
     @api.depends('wage')
     @api.multi
     def _compute_tax_rate(self):
@@ -53,6 +54,15 @@ class EmployeeField(models.Model):
     def _compute_rate(self):
         rate = self.working_days*self.working_hours
         self.rate_hour = self.wage/rate
+
+    @api.multi
+    @api.onchange('department_id')
+    def _compute_total_absent(self):
+        if self.department_id.id:
+            value = self.env["hr.department"].search([('id','=',self.department_id.id)]).resource_calendar_id
+            self.resource_calendar_id = value.id
+        else:
+            return
 class epayroll(models.Model):
     #incheriting model and adding fields in it which are to be used to cater breaks
     _inherit = 'resource.calendar.attendance'

@@ -109,7 +109,7 @@
             </field>
         </record>
 
-<record id="hr.hr_kanban_view_employees" model="ir.ui.view">
+        <record id="hr.hr_kanban_view_employees" model="ir.ui.view">
         <field name="name">hr.employee.kanban</field>
         <field name="model">hr.employee</field>
         <field name="priority">10</field>
@@ -180,6 +180,32 @@
             <field name="view_id" ref="view_employee_form_custom"/>
         </record>
 
+        <record id="hr.view_department_form" model="ir.ui.view">
+            <field name="name">hr.department.form</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <form string="department">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="manager_id"/>
+                            <field name="parent_id"/>
+                            <field name = "resource_calendar_id"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
 
         <menuitem
                 id="hr.menu_hr_root"
