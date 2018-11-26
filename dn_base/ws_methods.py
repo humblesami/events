@@ -156,7 +156,8 @@ def check_auth(values):
         return request.uid
     if not values:
         return False
-    if not values['token']:
+    token = values.get('token')
+    if not token:
         return False
     db = values['db']
     token = str(values['token'])

@@ -29,6 +29,7 @@ odoo.define('odoochat.onClientready', function (require) {
             var chat_menu_item = $('.o_menu_sections:first a[data-menu-xmlid="meeting_point.chat_menu"]:first');
             var notify_div = '<span id="unseen-msg-counter" style="color: white;background: red;border-radius: 25px;width: 20px;text-align: center;font-size: 14px;position: relative;">0</span>';
             $(chat_menu_item).append($(notify_div));
+
             if($('.dn-chatter').length > 1){
                 $('.dn-chatter:first').remove();
             }
@@ -56,25 +57,12 @@ odoo.define('odoochat.onClientready', function (require) {
                 child += '<span style="position:relative;left:90%;" id="unseen-' + user.id + '"></span></li>';
                 $('#online-users-list:first ul:first').append(child);
             }
+
             var remove_user_from_list = function(user){
                 var id = '#'+user.id;
                 $(id).remove();
             }
-            var show_chat = function(){
-                $('#chat_list').empty();
-                socket.on('allMessages', function(messages){
-                    for(var i = 0; i < messages.length; i++){
-                        var msg = messages[i];
-                        append_message(msg);
-                    }
-                })
-                $('.chatbox .chat-text').text(active_user.name);
-                $('.chatbox').css('display', 'block');
-                total_unseen -= notifications[active_user.id];
-                notifications[active_user.id] = 0;
-                $('#unseen-msg-counter').text(total_unseen);
-                $('#unseen-'+active_user.id).text(notifications[active_user.id]);
-            }
+
             var append_message = function(msg){
                 var li_obj = '<li ';
                 if(msg.sender == odoo.session_info.uid)
@@ -86,6 +74,22 @@ odoo.define('odoochat.onClientready', function (require) {
                 $('#chat_list').append(li_obj);
                 $('#message-form input:first').val("");
                 $(".smartchatbox").scrollTop($(".smartchatbox")[0].scrollHeight);
+            }
+
+            var show_chat = function(){
+                socket.on('allMessages', function(messages){
+                    $('#chat_list').empty();
+                    for(var i = 0; i < messages.length; i++){
+                        var msg = messages[i];
+                        append_message(msg);
+                    }
+                })
+                $('.chatbox .chat-text').text(active_user.name);
+                $('.chatbox').css('display', 'block');
+                total_unseen -= notifications[active_user.id];
+                notifications[active_user.id] = 0;
+                $('#unseen-msg-counter').text(total_unseen);
+                $('#unseen-'+active_user.id).text(notifications[active_user.id]);
             }
 
             // On send message
@@ -182,8 +186,6 @@ odoo.define('odoochat.onClientready', function (require) {
                         users = {};
                     }
                     users = online_users;
-                    console.log(users);
-
                     for(var user in users){
                         if(user != odoo.session_info.uid){
                             populate_user_list(users[user]);
