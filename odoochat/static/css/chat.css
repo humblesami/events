@@ -282,3 +282,15 @@ li.showmouseawaybutton
 {
     position:relative;
 }
+#unseen-msg-counter
+{
+    color: white;
+    background: red;
+    border-radius: 5px;
+    padding: 0px 4px;
+    text-align: center;
+    font-size: 14px;
+    position: relative;
+    bottom: 36px;
+    left: 22px;
+}

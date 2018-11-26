@@ -34,7 +34,7 @@ odoo.define('odoochat.onClientready', function (require) {
     var core = require('web.core');
     core.bus.on('web_client_ready', null, function () {
         //var chat_menu_item = $('.o_menu_sections:first a[data-menu-xmlid="meeting_point.chat_menu"]:first');
-        var notify_div = '<span id="unseen-msg-counter" style="color: white;background: red;border-radius: 25px;width: 20px;text-align: center;font-size: 14px;position: relative;display:none;">0</span>';
+        var notify_div = '<span id="unseen-msg-counter">0</span>';
         var chat_menu_item = $('<li class="showmouseawaybutton"><div class="chat"></div></li>');
         $('.o_menu_systray').prepend(chat_menu_item);
         $(chat_menu_item).append($(notify_div));
@@ -228,7 +228,7 @@ odoo.define('odoochat.onClientready', function (require) {
                     users = {};
                 }
                 users[incoming_user.id] = incoming_user;
-                console.log(users);
+                //console.log(users);
                 populate_user_list(incoming_user);
             });
 
