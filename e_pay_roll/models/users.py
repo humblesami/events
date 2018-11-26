@@ -1,3 +1,5 @@
+import random
+
 from odoo import models, fields, api
 
 def getContractType(self):
@@ -18,6 +20,8 @@ def generateSchedule(self,employee_id):
     return  resourceId
 
 def generateContract(self,contractType,scheduleId,employeeId):
+    if employeeId.identification_id == False:
+        employeeId.identification_id = random.randint(999,10000)
     completeContract = self.env['hr.contract'].create({
         'type_id' : contractType,
         'resource_calendar_id': scheduleId,
@@ -108,7 +112,7 @@ class UserView(models.Model):
             employee = super(UserView, self).create(vals)
             employee.user_id.partner_id.user_id = employee.user_id
             tempEmployee = self.env['hr.employee'].search([('user_id', '=', vals['login'])])
-            employeeContract = ''
+            employeeContract = tempEmployee
             if not tempEmployee:
                 if vals.get('device_id'):
                     employeeContract =  self.sudo().env['hr.employee'].create(
