@@ -162,7 +162,7 @@ odoo.define('odoochat.onClientready', function (require) {
                 }
             });
 
-            socket = io('http://172.16.21.43:3000',{
+            socket = io('https://chat.brainpbx.com',{
                 'reconnection': true,
                 'reconnectionDelay': 2000,
                 'reconnectionDelayMax' : 5000,
