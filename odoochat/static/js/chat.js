@@ -1,3 +1,11 @@
+//Local
+
+var chat_server = 'http://172.16.21.43:3000';
+
+//online
+
+//var chat_server = 'https://chat.brainpbx.com';
+
 var check = 0;
 var socket = undefined;
 var users = undefined;
@@ -16,10 +24,10 @@ $('.maxi-chat').css('display', 'none');
 $('.mini-chat').css('display', 'block');
 }
 var minimChatbox = function() {
-        $('.maxi-chat').css('display', 'block');
-        $('.mini-chat').css('display', 'none');
-        $('.chatbox').css('margin', '0 0 -382px 0');
-    }
+    $('.maxi-chat').css('display', 'block');
+    $('.mini-chat').css('display', 'none');
+    $('.chatbox').css('margin', '0 0 -382px 0');
+}
 
 odoo.define('odoochat.onClientready', function (require) {
     "use strict";
@@ -27,7 +35,7 @@ odoo.define('odoochat.onClientready', function (require) {
     core.bus.on('web_client_ready', null, function () {
       $(function(){
             var chat_menu_item = $('.o_menu_sections:first a[data-menu-xmlid="meeting_point.chat_menu"]:first');
-            var notify_div = '<span id="unseen-msg-counter" style="color: white;background: red;border-radius: 25px;width: 20px;text-align: center;font-size: 14px;position: relative;">0</span>';
+            var notify_div = '<span id="unseen-msg-counter" style="color: white;background: red;border-radius: 25px;width: 20px;text-align: center;font-size: 14px;position: relative;display:none;">0</span>';
             $(chat_menu_item).append($(notify_div));
 
             if($('.dn-chatter').length > 1){
@@ -54,7 +62,7 @@ odoo.define('odoochat.onClientready', function (require) {
             var populate_user_list = function(user){
                  notifications[user.id] = 0;
                 var child = '<li id="' + user.id + '" class="open-chatbox list-group-item"><span>'+ user.name + '</span>';
-                child += '<span style="position:relative;left:90%;" id="unseen-' + user.id + '"></span></li>';
+                child += '<span style="position:relative;left:90%;display:none;" id="unseen-' + user.id + '"></span></li>';
                 $('#online-users-list:first ul:first').append(child);
             }
 
@@ -89,6 +97,16 @@ odoo.define('odoochat.onClientready', function (require) {
                 total_unseen -= notifications[active_user.id];
                 notifications[active_user.id] = 0;
                 $('#unseen-msg-counter').text(total_unseen);
+                if(total_unseen == 0)
+                    $('#unseen-msg-counter').hide();
+                else
+                    $('#unseen-msg-counter').show();
+
+                if(notifications[active_user.id] == 0)
+                        $('#unseen-'+active_user.id).hide();
+                else
+                    $('#unseen-'+active_user.id).show();
+
                 $('#unseen-'+active_user.id).text(notifications[active_user.id]);
             }
 
@@ -109,6 +127,15 @@ odoo.define('odoochat.onClientready', function (require) {
                     ++total_unseen;
                     $('#unseen-msg-counter').text(total_unseen);
                     $('#unseen-'+sender_id).text(notifications[sender_id]);
+                    if(total_unseen == 0)
+                        $('#unseen-msg-counter').hide();
+                    else
+                        $('#unseen-msg-counter').show();
+
+                    if(notifications[sender_id] == 0)
+                        $('#unseen-'+sender_id).hide();
+                    else
+                        $('#unseen-'+sender_id).show();
                 }
             }
 
@@ -166,7 +193,7 @@ odoo.define('odoochat.onClientready', function (require) {
                 }
             });
 
-            socket = io('https://chat.brainpbx.com',{
+            socket = io(chat_server, {
                 'reconnection': true,
                 'reconnectionDelay': 2000,
                 'reconnectionDelayMax' : 5000,
