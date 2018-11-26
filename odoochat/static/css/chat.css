@@ -123,6 +123,11 @@
     margin: 20px;
 }
 
+.o_menu_systray .chat
+{
+    margin: 10px;
+}
+
 .chat:before {
     border-width: 10px 11px 0 0;
     border-color: #A8A8A8 transparent transparent;
@@ -272,4 +277,8 @@
 .fa-user-cog, .fas fa-user-circle{
     margin-right: 3px;
     margin-left: 10px;
+}
+li.showmouseawaybutton
+{
+    position:relative;
 }
