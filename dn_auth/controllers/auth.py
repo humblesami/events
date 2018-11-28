@@ -35,14 +35,14 @@ class auth(http.Controller):
                 return ws_methods.http_response('Invalid credentials')
 
             token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
-            custom_user_model = request.env['dnspusers']
-            user = custom_user_model.sudo().search([('user_id', '=', uid)])
-            if not user:
-                user = custom_user_model.sudo().create({'user_id': uid, 'login' : login, 'auth_token' : token, 'password' : password})
+            custom_user_model = request.env['dnspusers'].sudo()
+            sp_user = custom_user_model.search([('user_id', '=', uid)])
+            if not sp_user:
+                sp_user = custom_user_model.create({'user_id': uid, 'login' : login, 'auth_token' : token, 'password' : password})
             else:
-                user.sudo().write({'auth_token' : token, 'login' : login, 'password' : password })
+                sp_user.write({'auth_token' : token, 'login' : login, 'password' : password })
 
-            user = user.user_id
+            user = sp_user.user_id
             app_name = values.get('app_name')
             groups = []
             for group in  user.groups_id:
@@ -61,7 +61,7 @@ class auth(http.Controller):
                 agent = http_req.user_agent
                 # ip = request.httprequest.environ['REMOTE_ADDR']
                 ip = http_req.environ.get('HTTP_X_FORWARDED_FOR') or http_req.environ.get('REMOTE_ADDR')
-                location = self.get_location(ip)
+                location = '' #self.get_location(ip)
                 vals = {
                     'browser': agent.browser,
                     'platform': agent.platform,

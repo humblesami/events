@@ -167,6 +167,11 @@ class Additional_User_Fields(models.Model):
     ('user_id_uniq', 'unique (user_id)', "User already exists !"),
     ]
 
+    @api.multi
+    def write(self, vals):
+        sp_user = super(Additional_User_Fields, self).write(vals)
+        return sp_user
+
 class DNuser(models.Model):
     _name= "dn.user"
     _description = 'DN Users'
