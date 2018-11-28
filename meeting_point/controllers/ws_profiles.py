@@ -127,6 +127,37 @@ class ws_profile(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/get-resume', type="http", csrf=False, auth='none', cors='*')
+    def get_resume_from_userID(self, **kw):
+        return self.get_resume(kw)
+
+    def get_resume(self, values):
+        try:
+            uid = ws_methods.check_auth(values)
+            if not uid:
+                return ws_methods.not_logged_in()
+            req_env = http.request.env
+            mp_user_id = 0
+            if 'data' in  values:
+                values = values['data']
+            if 'id' in values:
+                mp_user_id = values['id']
+
+            if mp_user_id:
+                profile = req_env['meeting_point.users'].search([('id','=',mp_user_id)])
+            else:
+                profile = req_env['meeting_point.users'].search([('user_id', '=', uid)])
+            if not profile:
+                return ws_methods.http_response('User not in meeting point')
+
+            props = ['resume']
+            resume_json = ws_methods.object_to_json_object(profile, props)
+
+            data = {"doc": resume_json['resume']}
+            return ws_methods.http_response('', data)
+        except:
+            return ws_methods.handle()
+
     @http.route('/profile/get_signature', type="http", csrf=False, auth='none', cors='*')
     def profile_signature_http(self, **kw):
         return self.profile_signature_get(kw)
