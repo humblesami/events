@@ -11,6 +11,7 @@ class bulkLeavesAllocation(models.Model):
         help= "Choose 'Allocation Request' if you want to increase the number of leaves available for someone")
     employee_ids = fields.Many2many('hr.employee', string='Impacted Employees',
                                     required=True, ondelete='cascade')
+    company_ids = fields.Many2many('res.company', string='Companies')
 
     fields.Many2many('hr')
     number_of_days = fields.Float('Number of Days', store=True)
@@ -19,6 +20,19 @@ class bulkLeavesAllocation(models.Model):
         ('draft', 'Draft'),
         ('done', 'Done'),
     ], default='draft')
+
+    @api.onchange('company_ids')
+    def _onchange_function(self):
+        domain = []
+        if self.company_ids:
+            domain.append(('company_id', 'in', self.company_ids.ids))
+
+        if domain:
+            employees = self.env['hr.employee'].search(domain)
+
+            self.employee_ids = employees.ids
+        else:
+            self.employee_ids = False
 
 
     @api.multi
