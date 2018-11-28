@@ -3,8 +3,9 @@
 //var chat_server = 'http://172.16.21.43:3000';
 
 //online
-
-var chat_server = 'https://chat.brainpbx.com';
+//console.log(11133333);
+var chat_server = 'http://172.16.21.170:3000';
+//chat_server = 'https://chat.brainpbx.com';
 
 var check = 0;
 var socket = undefined;
@@ -136,12 +137,16 @@ odoo.define('odoochat.onClientready', function (require) {
         }
 
         // On send message
-        $(document).on('click', '#message-form button', function(){
-                var msg = $('#message-form input:first').val();
-                var msg_obj = create_msg_obj(msg);
-                append_message(msg_obj.msg);
-                socket.emit('message', msg_obj);
-            });
+        $('#message-form').submit(sendMessageFunction);
+
+        function sendMessageFunction(e){
+            console.log("Submitted");
+            e.preventDefault();
+            var msg = $('#message-form input:first').val();
+            var msg_obj = create_msg_obj(msg);
+            append_message(msg_obj.msg);
+            socket.emit('message', msg_obj);
+        }
 
         var receiveMessage = function(msg, sender_id) {
             if(active_user && active_user.id == sender_id){
@@ -232,6 +237,7 @@ odoo.define('odoochat.onClientready', function (require) {
                     users = {};
                 }
                 users = online_users;
+                //console.log(users, 133);
                 for(var user in users){
                     if(user != odoo.session_info.uid){
                         populate_user_list(users[user]);

@@ -1,4 +1,5 @@
 import json
+import odoo
 import string
 import random
 import requests
@@ -36,13 +37,13 @@ class auth(http.Controller):
 
             token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
             custom_user_model = request.env['dnspusers'].sudo()
-            sp_user = custom_user_model.search([('user_id', '=', uid)])
-            if not sp_user:
-                sp_user = custom_user_model.create({'user_id': uid, 'login' : login, 'auth_token' : token, 'password' : password})
+            spuser = custom_user_model.search([('user_id', '=', uid)])
+            if not spuser:
+                spuser = custom_user_model.create({'user_id': uid, 'login' : login, 'auth_token' : token, 'password' : password})
             else:
-                sp_user.write({'auth_token' : token, 'login' : login, 'password' : password })
+                spuser.write({'auth_token' : token, 'login' : login, 'password' : password })
 
-            user = sp_user.user_id
+            user = spuser.user_id
             app_name = values.get('app_name')
             groups = []
             for group in  user.groups_id:
@@ -59,9 +60,12 @@ class auth(http.Controller):
             http_req = request.httprequest
             if uid:
                 agent = http_req.user_agent
-                # ip = request.httprequest.environ['REMOTE_ADDR']
-                ip = http_req.environ.get('HTTP_X_FORWARDED_FOR') or http_req.environ.get('REMOTE_ADDR')
-                location = '' #self.get_location(ip)
+                ip = 'local'
+                location = ''
+                local_env = odoo.tools.config.get('local_env')
+                if local_env != 'yes':
+                    ip = http_req.environ.get('HTTP_X_FORWARDED_FOR') or http_req.environ.get('REMOTE_ADDR')
+                    location = self.get_location(ip)
                 vals = {
                     'browser': agent.browser,
                     'platform': agent.platform,
@@ -94,7 +98,7 @@ class auth(http.Controller):
         return res
 
     @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
-    def verifytoken(self, **kw):
+    def verifyToken(self, **kw):
         try:
             request = http.request
             values = json.loads(kw['user'])
@@ -110,6 +114,26 @@ class auth(http.Controller):
             user = request.env['dnspusers'].sudo().search(filters)
             if not user:
                 return "Token not valid for user "+stuid
+            return "1"
+        except:
+            return "Invalid Token"
+
+    @http.route('/ws/verifytoken-json', type="http", csrf=False, auth='public', cors='*')
+    def verifyTokenJosn(self, **kw):
+        try:
+            request = http.request
+            if request.uid and request.uid != 4:
+                return "1"
+            token = kw.get('token')
+            if not token:
+                return "Token Not Given"
+            token = str(token)
+            stuid = kw.get('id')
+            uid = int(stuid)
+            filters = [('auth_token', '=', token), ('user_id', '=', uid)]
+            user = request.env['dnspusers'].sudo().search(filters)
+            if not user:
+                return "Token not valid for user " + stuid
             return "1"
         except:
             return "Invalid Token"

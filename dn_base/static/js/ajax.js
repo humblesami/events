@@ -7,7 +7,53 @@ var utils = require('web.utils');
 var time = require('web.time');
 //var Dialog = require('web.Dialog');
 
+var requests_working = [];
+
+var reqNumber = 0;
+function showLoader(path)
+{
+    if(requests_working.length == 0)
+    {
+        dn_json_rpc_object.showHideLoader(true);
+    }
+    requests_working.push(path);
+    //console.log("added "+ path +"="+ requests_working.length);
+}
+
+function hideLoader(path)
+{
+    var found = false;
+    for(var i=requests_working.length;i>=0;i--)
+    {
+        if(requests_working[i] == path)
+        {
+            found = true;
+            requests_working.splice(i, 1);
+            break;
+        }
+    }
+    if(!found)
+    {
+        console.log("not found "+ path);
+    }
+    else
+    {
+        //console.log("removed "+ path +"="+ requests_working.length);
+    }
+    if(requests_working.length == 0)
+    {
+        dn_json_rpc_object.showHideLoader(false);
+    }
+}
+
 function genericJsonRpc (fct_name, params, fct) {
+    var path = false;
+    if(params.model)
+    {
+        path = params.model + '/'+ params.method;
+        showLoader(path);
+    }
+
     var data = {
         jsonrpc: "2.0",
         method: fct_name,
@@ -17,12 +63,15 @@ function genericJsonRpc (fct_name, params, fct) {
     var xhr = fct(data);
     var result = xhr.pipe(function(result) {
         core.bus.trigger('rpc:result', data, result);
+        if(params.model)
+            hideLoader(path);
         if (result.error !== undefined) {
             return $.Deferred().reject("server", result.error);
         } else {
             return result.result;
         }
     }, function() {
+        console.log(r);
         //console.error("JsonRPC communication error", _.toArray(arguments));
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
