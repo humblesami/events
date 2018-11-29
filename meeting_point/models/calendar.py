@@ -6,19 +6,45 @@ from odoo import models, fields, api
 from odoo.addons.dn_base import dn_dt
 from odoo.exceptions import ValidationError
 
+room_pins_obj = {
+    '3402742788':'mvdn198374',
+    '1382256314':'mvdn491712',
+    '2427772817':'mvdn321763',
+    '1209858678':'mvdn711768',
+    '2654131214':'mvdn620675',
+    '4275231112':'mvdn110932',
+    '3484541378':'mvdn101143',
+    '1598259377':'mvdn127621',
+    '3588811445':'mvdn100183',
+    '3415505034':'mvdn190794',
 
-room_pins = [
-    {'3402742788':'mvdn198374'},
-    {'1382256314':'mvdn491712'},
-    {'2427772817':'mvdn321763'},
-    {'1209858678':'mvdn711768'},
-    {'2654131214':'mvdn620675'},
-    {'4275231112':'mvdn110932'},
-    {'3484541378':'mvdn101143'},
-    {'1598259377':'mvdn127621'},
-    {'3588811445':'mvdn100183'},
-    {'3415505034':'mvdn190794'},
-]
+    '2647278176': 'mvdn4190381',
+    '2133492198': 'mvdn6311061',
+    '3630449303': 'mvdn3257961',
+    '2305493690': 'mvdn4815967',
+    '1134974752': 'mvdn2467711',
+    '3822042166': 'mvdn4514141',
+    '1054906226': 'mvdn6431871',
+    '2183471040': 'mvdn6668961',
+    '2493460320': 'mvdn8548061',
+    '1251875115': 'mvdn1908801',
+    '3516917613': 'mvdn1875453',
+    '2633199354': 'mvdn6761615',
+    '3036254943': 'mvdn8392751',
+    '2557148857': 'mvdn9764861',
+    '1373353879': 'mvdn1408121',
+    '3401574759': 'mvdn4932531',
+    '3965642739': 'mvdn4902161',
+    '2782459091': 'mvdn5008741',
+    '1456035374': 'mvdn5503618',
+    '1104523209': 'mvdn5250951',
+    '3239267006': 'mvdn6621281',
+    '555530737': 'mvdn7668961',
+    '556906545': 'mvdn5877781',
+    '399545852': 'mvdn3381351',
+    '717444724': 'mvdn1546361',
+    '639130039': 'mvdn8684812',
+}
 
 class MeetingPin(models.Model):
     _name = 'meeting_point.pin'
@@ -229,19 +255,8 @@ class Meeting(models.Model):
             surveys = vals.get('survey_ids')
             if surveys:
                 del vals['survey_ids']
-            # start = vals['start'][0:10]
-            # stop = vals['stop'][0:10]
-            # curs = self.env.cr
-            #
-            # sql = "update calendar_event set pin=null where date(stop)<'" + stop + "'"
-            # curs.execute(sql)
-            # sql = " or date(stop)='"+stop+"'"
-            # curs.execute(sql)
-            # results = curs.dictfetchall()
-            vals['moderator'] = 0
             meeting = super(Meeting, self).create(vals)
-            call_url = '/meeting_point/static/meet.html?meeting_id=' + str(meeting.id)+'&pin=' + vals['pin']
-            meeting.video_call_link = call_url
+            self.setVideoLink(meeting, 1)
             if surveys:
                 meeting_id = meeting.id
                 for survey in surveys:
@@ -346,19 +361,22 @@ class Meeting(models.Model):
             start_time = dn_dt.strTodt(start_time)
             timenow = dn_dt.now()
 
-            # event.archived = stop_time < timenow
-
-            if timenow < start_time:
+            if event.archived:
+                event.exectime = "past"
+                if event.pin:
+                    self.disableConference(event)
+            elif timenow < start_time:
                 event.exectime = "upcoming"
-            elif timenow <= stop_time:
+            elif timenow <= dn_dt.addInterval(stop_time, 'h', 3):
                 event.exectime = "ongoing"
-            elif timenow > stop_time:
-                # stop_time = stop_time + timedelta(hours=3)
+            else:
+                self.disableConference(event)
                 event.exectime = "completed"
-                if event.archived:
-                    event.exectime = "past"
-                # else:
-                #     event.exectime = "completed"
+
+    def disableConference(self, event):
+        if event.pin and event.exectime != 'upcoming' and event.exectime != 'ongoing':
+            vals = {'pin': '', 'video_call_link': '', 'moderator': 0, 'video_active': False, 'conference_bridge_number': ''}
+            event.sudo().write(vals)
 
     @api.multi
     def _compute_active_status(self):
@@ -374,40 +392,64 @@ class Meeting(models.Model):
         except:
             q=1
 
-    def compute_pin(self):
-        if not self.pin:
-            rint = random.randint(0, len(room_pins) - 1)
-            pin = room_pins[rint]
-            for pinkey in pin:
-                return pinkey
+    def concurrentMeetings(self, start, stop):
+        start = dn_dt.strTodt(start)
+        start = dn_dt.addInterval(start, 'm', -15)
+        start = dn_dt.dtTostr(start)
 
-    @api.onchange('conference_bridge_number')
-    def _on_change_conference_bridge_number(self):
-        rint = random.randint(0, len(room_pins) - 1)
-        self.pin = ''
-        pin = room_pins[rint]
-        for pinkey in pin:
-            self.pin = pinkey
-            self.setVideoLink()
+        stop = dn_dt.strTodt(stop)
+        stop = dn_dt.addInterval(stop, 'h', 3)
+        stop = dn_dt.dtTostr(stop)
+        meets = self.env['calendar.event'].search([('start', '>=', start), ('stop', '<=', stop)])
+        return meets
 
-    @api.onchange('pin')
-    def _on_change_pin(self):
-        if self.pin:
-            self.setVideoLink()
-        else:
-            self.video_call_link = ''
+    def filteredPins(self,start, stop):
+        meets = self.concurrentMeetings(start, stop)
+        pins = []
+        for meeting in meets:
+            pins.append(meeting.pin)
+        dict = room_pins_obj.keys()
+        arr = []
+        for key in dict:
+            arr.append(key)
+        filtered = set(arr) - set(pins)
+        return filtered
 
-    def setVideoLink(self):
-        if self.video_call_link:
-            call_url = self.video_call_link
+    def getUniquePin(self, start, stop, pin=None):
+        if not pin:
+            dict = room_pins_obj.keys()
+            arr = []
+            for key in dict:
+                arr.append(key)
+            rint = random.randint(0, len(arr) - 1)
+            pin = arr[rint]
+        sql = "select pin from calendar_event where pin='" + pin + "' and date(start)='" + start + "' or date(stop)='" + stop + "'"
+        new_cr = self.pool.cursor()
+        new_cr.execute(sql)
+        pins = new_cr.dictfetchall()
+        if len(pins) > 0:
+            pins = self.filteredPins(start, stop)
+            rint = random.randint(0, len(pins) - 1)
+            pin = arr[rint]
+        return pin
+
+    def setVideoLink(self, event, creating=None, vals=None):
+        if not event.start or not event.stop:
+            return
+        if creating:
+            meeting_id = event.id
+            pin = self.getUniquePin(event.start, event.stop)
+            video_call_link = '/meeting_point/static/meet.html?meeting_id=' + str(meeting_id) + '&pin=' + pin
+            conference_bridge_number = '+1-512-402-2718'
+            vide_vals = {'moderator': 0, 'pin': pin, 'conference_bridge_number': conference_bridge_number, 'video_call_link': video_call_link}
+            event.write(vide_vals)
+        elif vals['pin']:
+            pin = self.getUniquePin(event.start, event.stop, vals['pin'])
+            call_url = event.video_call_link
             arr = call_url.split('&')
-            call_url = arr[0] + '&pin=' + self.pin
-            self.video_call_link = call_url
-        elif self._origin:
-            meeting_id = self._origin.id
-            if meeting_id:
-                call_url = '/meeting_point/static/meet.html?meeting_id=' + str(meeting_id) + '&pin=' + self.pin
-                self.video_call_link = call_url
+            call_url = arr[0] + '&pin=' + pin
+            video_call_link = call_url
+            event.write({'pin':pin, 'video_call_link': video_call_link})
 
     @api.onchange('country')
     def filter_states(self):

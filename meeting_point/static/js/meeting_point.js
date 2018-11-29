@@ -40,15 +40,15 @@ $(function(){
             $('.meetingform .topicIndex').val("-1");
     });
 
-    setTimeout(function(){
-        var readonly_form = $('.conference_status').closest('.o_form_view').is('.o_form_readonly');
-        if(!$('input.conference').val())
-            $('input.conference').val('+1-512-402-2718').change();
-    }, 100)
-
-    $('.meetingform input.pin').blur(function(){
-        $(this).change();
-    })
+//    setTimeout(function(){
+//        var readonly_form = $('.conference_status').closest('.o_form_view').is('.o_form_readonly');
+//        if(!$('input.conference').val())
+//            $('input.conference').val('+1-512-402-2718').change();
+//    }, 100)
+//
+//    $('.meetingform input.pin').blur(function(){
+//        $(this).change();
+//    })
 });
 
 var meeting_point = {

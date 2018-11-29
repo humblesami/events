@@ -4,17 +4,44 @@ from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 
 room_pins_obj = {
-    '3402742788': 'mvdn198374',
-    '1382256314': 'mvdn491712',
-    '2427772817': 'mvdn321763',
-    '1209858678': 'mvdn711768',
-    '2654131214': 'mvdn620675',
-    '4275231112': 'mvdn110932',
-    '3484541378': 'mvdn101143',
-    '1598259377': 'mvdn127621',
-    '3588811445': 'mvdn100183',
-    '3415505034': 'mvdn190794',
-};
+    '3402742788':'mvdn198374',
+    '1382256314':'mvdn491712',
+    '2427772817':'mvdn321763',
+    '1209858678':'mvdn711768',
+    '2654131214':'mvdn620675',
+    '4275231112':'mvdn110932',
+    '3484541378':'mvdn101143',
+    '1598259377':'mvdn127621',
+    '3588811445':'mvdn100183',
+    '3415505034':'mvdn190794',
+
+    '2647278176': 'mvdn4190381',
+    '2133492198': 'mvdn6311061',
+    '3630449303': 'mvdn3257961',
+    '2305493690': 'mvdn4815967',
+    '1134974752': 'mvdn2467711',
+    '3822042166': 'mvdn4514141',
+    '1054906226': 'mvdn6431871',
+    '2183471040': 'mvdn6668961',
+    '2493460320': 'mvdn8548061',
+    '1251875115': 'mvdn1908801',
+    '3516917613': 'mvdn1875453',
+    '2633199354': 'mvdn6761615',
+    '3036254943': 'mvdn8392751',
+    '2557148857': 'mvdn9764861',
+    '1373353879': 'mvdn1408121',
+    '3401574759': 'mvdn4932531',
+    '3965642739': 'mvdn4902161',
+    '2782459091': 'mvdn5008741',
+    '1456035374': 'mvdn5503618',
+    '1104523209': 'mvdn5250951',
+    '3239267006': 'mvdn6621281',
+    '555530737': 'mvdn7668961',
+    '556906545': 'mvdn5877781',
+    '399545852': 'mvdn3381351',
+    '717444724': 'mvdn1546361',
+    '639130039': 'mvdn8684812',
+}
 
 class meeting(http.Controller):
 
@@ -378,9 +405,11 @@ class meeting(http.Controller):
                 filters.append(('archived', '=', True))
             else:
                 filters.append(('stop', '>=', date_value))
-            props = ['id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
-                     'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
-                     'company', 'status']
+            props = [
+                'id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
+                'description', 'name', 'address', 'city', 'country_state.name', 'country.name',
+                'zip', 'street', 'company', 'status'
+            ]
 
             # total_cnt = len(myModel.search(filters))
             partner = req_env.user.partner_id

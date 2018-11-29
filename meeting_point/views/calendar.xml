@@ -182,15 +182,14 @@
                         </group>
 
                         <group class="emeeting" attrs="{'invisible': [('exectime', '!=', 'upcoming'),('exectime', '!=', 'ongoing')]}">
-                            <field class="conference" name="conference_bridge_number"/>
-                            <field class="pin" name="pin"/>
+                            <field attrs="{'invisible': [('id', '=', False)]}" class="conference" name="conference_bridge_number"/>
+                            <field attrs="{'invisible': [('id', '=', False)]}" class="pin" name="pin"/>
                             <field attrs="{'invisible': [('id', '=', False)]}" name="video_call_link" widget="url"/>
                             <field class="end_call" name="end_call"/>
                             <field class="password" name="password"/>
                         </group>
 
                         <group readonly="1" >
-
                             <field name="company" attrs="{'readonly': [('exectime', '=', 'completed')]}" string="Location"/>
                             <label for="address"/>
                             <div class="o_address_format">

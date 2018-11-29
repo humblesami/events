@@ -53,7 +53,7 @@ function hideLoader(path)
 
 function genericJsonRpc (fct_name, params, fct) {
     var path = false;
-    if(params.model)
+    if(params && params.model)
     {
         path = params.model + '/'+ params.method;
         showLoader(path);
@@ -68,7 +68,7 @@ function genericJsonRpc (fct_name, params, fct) {
     var xhr = fct(data);
     var result = xhr.pipe(function(result) {
         core.bus.trigger('rpc:result', data, result);
-        if(params.model)
+        if(params && params.model)
             hideLoader(path);
         if (result.error !== undefined) {
             return $.Deferred().reject("server", result.error);
@@ -76,8 +76,10 @@ function genericJsonRpc (fct_name, params, fct) {
             return result.result;
         }
     }, function() {
-        console.log(r);
-        //console.error("JsonRPC communication error", _.toArray(arguments));
+        requests_working = [];
+        dn_json_rpc_object.showHideLoader(false);
+        console.error("JsonRPC communication error", _.toArray(arguments));
+        console.log("Loader cleared because error above");
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
