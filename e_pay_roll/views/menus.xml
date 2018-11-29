@@ -19,7 +19,7 @@
                 name="My Records" id="account_root_attendance" groups="base.group_user"
                 parent="dn_attendance.menu_root_attendance" sequence="0"
         />
-        <menuitem name="Final Attendance Record" id="myattendance" parent="account_root_attendance"
+        <menuitem name="Attendance Record" id="myattendance" parent="account_root_attendance"
                   action="record_attendance_rule_model_action" sequence="1"/>
         <!--<menuitem name="Mark Attendance" id="markattendance" parent="account_root_attendance" action="hr_attendance.hr_attendance_action_my_attendances" sequence="0"/>-->
 
