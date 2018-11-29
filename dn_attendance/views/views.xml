@@ -186,8 +186,8 @@
                     <field name="employee_id" can_create="false" can_write="true" modifiers="{}"/>
                     <field name="check_in" modifiers="{}"/>
                     <field name="check_out" modifiers="{}"/>
-                    <field name="work_hour" modifiers="{}"/>
-                    <field name="late_minutes" modifiers="{}"/>
+                    <field name="work_hour" widget="float_time" modifiers="{}"/>
+                    <field name="late_minutes"  widget="float_time" modifiers="{}"/>
                     <field name="work_date" modifiers="{'required':true}"/>
                     <field name = "processed"/>
                     <newline modifiers="{}"/>
