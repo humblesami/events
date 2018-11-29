@@ -1,4 +1,3 @@
-
 try
 {
     if (dntoast == undefined)
@@ -25,32 +24,19 @@ var dn_json_rpc_object = {
         baseUrl: dn_base_web_url,
         showLoader: true,
         initialized:false,
+        loaderContainer: undefined,
+        loaderImage: undefined,
         init: function (config) {
-            if ($('#loaderContainerajax').length == 0) {
-                var loaderHtml = '<div id="loaderContainerajax">';
-                loaderHtml += '<img style="position:relative;left:42%" src="/dn_base/static/img/ajax-loader.gif" alt="loading data..." />';
-                loaderHtml += '</div>';
-                $('body').append(loaderHtml);
-                this.loaderImage = $('#loaderContainerajax img');
-                this.loaderContainer = $('#loaderContainerajax').css({
-                    display: 'none',
-                    position: 'fixed',
-                    'z-index': 999999,
-                    top : 0,
-                    width:'100%',
-                    background: 'rgba(0, 0, 0, 0.2)'
-                });
+            if (!this.loaderContainer) {
+                this.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 999999;top : 0;width:100%;background: rgba(0, 0, 0, 0.2)"/>');
+                this.loaderImage = $('<img style="position:relative;left:42%;top:40%" src="/dn_base/static/img/ajax-loader.gif" alt="loading data..." />');
+                this.loaderContainer.append(this.loaderImage);
+                $('body').append(this.loaderContainer);
             }
             if (config && config.baseUrl)
                 dn_json_rpc_object.baseUrl = config.baseUrl;
             initialized = true;
-
-            //this.loaderContainer.css({ top: 20 + 'px' });
-            this.loaderImage.css('top', '40%');
         },
-
-        loaderContainer: null,
-        loaderImage: null,
 
         request: function (reqfun, input_data, callback, failureCallBack) {
             if (!this.initialized)

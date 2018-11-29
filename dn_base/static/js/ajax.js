@@ -6,10 +6,9 @@ var core = require('web.core');
 var utils = require('web.utils');
 var time = require('web.time');
 //var Dialog = require('web.Dialog');
-
 var requests_working = [];
-
 var reqNumber = 0;
+var timeOut = undefined;
 function showLoader(path)
 {
     if(requests_working.length == 0)
@@ -17,7 +16,13 @@ function showLoader(path)
         dn_json_rpc_object.showHideLoader(true);
     }
     requests_working.push(path);
-    //console.log("added "+ path +"="+ requests_working.length);
+//    if(!timeOut)
+//    {
+//        timeOut = setTimeout(function(){
+//            dn_json_rpc_object.showHideLoader(false);
+//        },12000);
+//    }
+//    console.log("added "+ path +"="+ requests_working.length+'-'+new Date().getMilliseconds());
 }
 
 function hideLoader(path)
@@ -38,7 +43,7 @@ function hideLoader(path)
     }
     else
     {
-        //console.log("removed "+ path +"="+ requests_working.length);
+        //console.log("removed "+ path +"="+ requests_working.length+'-'+ new Date().getMilliseconds());
     }
     if(requests_working.length == 0)
     {
