@@ -11,7 +11,6 @@
                     <field name="check_out"/>
                     <field name="lateminutes" widget="float_time"/>
                     <field name ="worked_hours1" widget="float_time" string="Total Hours Worked"/>
-                    <!--<field name="sickLeaves"/>-->
                     <field name="work_date"/>
                     <field name="TotalLeaves"/>
                 </tree>
@@ -26,8 +25,8 @@
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
-                    <field name="lateminutes" widget="float_time"/>
-                    <field name ="worked_hours1"  widget="float_time" string="Total Hours Worked"/>
+                    <field name="lateminutes" widget="float_time" sum="Total Late Minutes"/>
+                    <field name ="worked_hours1"  widget="float_time" string="Total Hours Worked" sum="Total Worked Hours"/>
                 </tree>
             </field>
         </record>

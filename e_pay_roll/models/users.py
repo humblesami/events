@@ -14,8 +14,6 @@ def getContractType(self):
 
 def generateSchedule(self,employee_id):
     self = self.with_context(current_user = employee_id)
-    # self._context['current_user'] =  employee_id
-    # ctx  = self._context
     resourceId =self.env['resource.calendar'].search([('name','=','Standard DigitalNet Schedule')]).id
     return  resourceId
 
@@ -97,7 +95,6 @@ class UserView(models.Model):
                 group_id=self.groups_id
 
             vals['groups_id']=[group_id]
-            # vals['login'] = vals['email']
             employee = super(UserView, self).create(vals)
             employee.user_id.partner_id.user_id = employee.user_id
             alpha = vals['login']
