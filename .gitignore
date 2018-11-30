@@ -2,3 +2,5 @@
 *.po
 /meeting_point/doc_signs/*
 /dn_base/doc_signs/*
+
+custom_base
