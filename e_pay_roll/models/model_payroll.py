@@ -107,7 +107,7 @@ class payAttendance(models.Model):
                 ('holiday_status_id', 'in', val.ids)
             ])
             data_days = val.get_days(data.employee_id.id)
-
+            sickleavecounter = False
             for holiday_status in val:
                 if holiday_status.display_name =='Sick Leaves' :
                     result = data_days.get(holiday_status.id, {})
@@ -121,7 +121,7 @@ class payAttendance(models.Model):
               count +=  data_days[value]['remaining_leaves']
             va = data.employee_id.id
             data.TotalLeaves = count
-            if(sickleavecounter):
+            if sickleavecounter:
                 data.sickLeaves = sickleavecounter
 
     def calc_worked_hours(self, vals):
