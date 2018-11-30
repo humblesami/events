@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, api, fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.dn_base.models.statics import scan_virus
-from odoo.addons.dn_base.statics import raise_dn_model_error
+from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 
 from odoo.addons.mail.models.mail_message import Message
 

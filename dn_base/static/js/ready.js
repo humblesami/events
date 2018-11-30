@@ -4,6 +4,9 @@ function load_dn_assets()
 {
     try
     {
+
+        document.writeln('<script src="/dn_base/static/js/libs/bootbox.js"></script>');
+        document.writeln('<script src="/dn_base/static/config.js"></script>');
         //Libraries
         document.writeln('<script src="/dn_base/static/js/libs/datetime.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/masked_input.js"></script>');

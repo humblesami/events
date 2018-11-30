@@ -1,5 +1,3 @@
-console.log(4433);
-
 $(function(){
     var canvas=document.getElementById('the-canvas'),
 	pdf_binary,

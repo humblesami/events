@@ -1,20 +1,16 @@
+import io
 import os
 import sys
 import base64
-import traceback
-
-import io
 import subprocess
+import traceback
 from random import randint
 from pdfminer.pdfpage import PDFPage
 from pdfminer.layout import LAParams
+from odoo import models, fields, api
 from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-
-from odoo import models, fields, api
-from odoo.exceptions import UserError
-from odoo.addons.dn_base.models.statics import scan_virus
-from odoo.addons.dn_base.statics import raise_dn_model_error
+from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 
 class AllFiles(models.Model):
     _name = 'dn_documents.allfiles'
@@ -38,11 +34,11 @@ class AllFiles(models.Model):
     def validate_file_name_type(self):
         if self.attachment:
             if not self.filename:
-                raise UserError("There is no file")
+                raise raise_dn_model_error("There is no file")
             else:
                 # Check the file's extension
                 if not self.filename.endswith(('ppt', 'pptx', 'doc', 'docx', 'pdf','xls','xlsx')):
-                    raise UserError("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
+                    raise raise_dn_model_error("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
                 else:
                     scan_virus(self.attachment)
     @api.model
@@ -82,16 +78,16 @@ class AllFiles(models.Model):
 
     def vaildate_file(self,values):
         if 'attachment' not in values:
-            raise UserError("Please Upload Attachment")
+            raise raise_dn_model_error("Please Upload Attachment")
         if not values['attachment']:
-            raise UserError("Please Upload Attachment")
+            raise raise_dn_model_error("Please Upload Attachment")
         if 'filename' not in values:
-            raise UserError("Invalid File Name")
+            raise raise_dn_model_error("Invalid File Name")
         if not values['filename']:
-            raise UserError("Invalid File Name")
+            raise raise_dn_model_error("Invalid File Name")
         if not values['filename'].endswith(('pdf','ppt', 'pptx', 'doc', 'docx','xls','xlsx')):
                 #('ppt', 'pptx', 'doc', 'docx',
-                raise UserError("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
+                raise raise_dn_model_error("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
         else:
             scan_virus(self.attachment)
 
@@ -111,7 +107,7 @@ class AllFiles(models.Model):
         if ext == "doc" or ext == "docx" or  ext == "ppt" or ext == "pptx" or ext == "pdf":
             res,content = self.doc2pdf(pth, filename,ext)
             if not res:
-                raise UserError("Could not convert")
+                raise raise_dn_model_error("Could not convert")
             else:
                 read = res.read()
                 # res_encode = base64.encodestring(read)
@@ -121,7 +117,7 @@ class AllFiles(models.Model):
             res = self.excel2xhtml(pth, filename)
             return res
         else:
-            raise UserError("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
+            raise raise_dn_model_error("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
 
     def doc2pdf(self, pth, filename,ext):
         try:
@@ -159,7 +155,7 @@ class AllFiles(models.Model):
             for er in eg:
                 errorMessage += "\n" + er
             print (errorMessage)
-            raise UserError(errorMessage)
+            raise raise_dn_model_error(errorMessage)
             return False
 
     def excel2xhtml(self, pth, filename):
@@ -179,7 +175,7 @@ class AllFiles(models.Model):
             for er in eg:
                 errorMessage += "\n" + er
             print (errorMessage)
-            raise UserError(errorMessage)
+            raise raise_dn_model_error(errorMessage)
             return False
 
     def open_view_doc_form(self):

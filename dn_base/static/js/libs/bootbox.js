@@ -110,6 +110,29 @@
       if (!preserveDialog) {
         dialog.modal("hide");
       }
+
+      afterAlert();
+    }
+
+    var bootBoxTimeOut = undefined;
+
+    function alertTimeOut()
+    {
+        if(bootBoxTimeOut)
+            clearTimeout(bootBoxTimeOut);
+        bootBoxTimeOut = setTimeout(afterAlert,25000);
+    }
+
+    function beforeAlert(){
+        $('.bootbox').remove();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').css('z-index',5).show();
+    }
+
+    function afterAlert(){
+        $('.bootbox').remove();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').hide();
     }
   
     function getKeyLength(obj) {
@@ -292,13 +315,10 @@
       return options;
     }
 
-    var bootBoxTimeOut = undefined;
+
   
     exports.alert = function() {
-        $('.bootbox').remove();
-        $('body').removeClass('modal-open');
       var options;
-  
       options = mergeDialogOptions("alert", ["ok"], ["message", "callback"], arguments);
   
       if (options.callback && !$.isFunction(options.callback)) {
@@ -314,18 +334,10 @@
         }
         return true;
       };
-      if(bootBoxTimeOut)
-        clearTimeout(bootBoxTimeOut);
-        bootBoxTimeOut = setTimeout(function(){
-        $('.bootbox').remove();
-        $('body').removeClass('modal-open');
-      },13000);
       return exports.dialog(options);
     };
   
     exports.confirm = function() {
-        $('.bootbox').remove();
-        $('body').removeClass('modal-open');
       var options;
   
       options = mergeDialogOptions("confirm", ["cancel", "confirm"], ["message", "callback"], arguments);
@@ -345,18 +357,10 @@
       if (!$.isFunction(options.callback)) {
         throw new Error("confirm requires a callback");
       }
-      if(bootBoxTimeOut)
-        clearTimeout(bootBoxTimeOut);
-        bootBoxTimeOut = setTimeout(function(){
-        $('.bootbox').remove();
-        $('body').removeClass('modal-open');
-      },13000);
       return exports.dialog(options);
     };
   
     exports.prompt = function() {
-        $('.bootbox').remove();
-        $('body').removeClass('modal-open');
       var options;
       var defaults;
       var dialog;
@@ -429,7 +433,6 @@
             });
             break;
         }
-  
         return options.callback.call(this, value);
       };
   
@@ -581,13 +584,12 @@
       if (shouldShow === true) {
         dialog.modal("show");
       }
-      if(bootBoxTimeOut)
-        clearTimeout(bootBoxTimeOut);    
-      
       return dialog;
     };
   
     exports.dialog = function(options) {
+
+        beforeAlert();
       options = sanitize(options);
   
       var dialog = $(templates.dialog);
@@ -782,7 +784,7 @@
         }
       };
       */
-  
+      alertTimeOut();
       return dialog;
   
     };

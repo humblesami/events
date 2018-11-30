@@ -78,8 +78,8 @@ function genericJsonRpc (fct_name, params, fct) {
     }, function() {
         requests_working = [];
         dn_json_rpc_object.showHideLoader(false);
-        console.error("JsonRPC communication error", _.toArray(arguments));
-        console.log("Loader cleared because error above");
+        //console.error("JsonRPC communication error", _.toArray(arguments));
+        //console.log("Loader cleared because error above");
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });

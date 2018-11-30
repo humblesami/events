@@ -34,7 +34,6 @@ odoo.define('odoochat.onClientready', function (require) {
     "use strict";
     var core = require('web.core');
     core.bus.on('web_client_ready', null, function () {
-    console.log(4444);
         //var chat_menu_item = $('.o_menu_sections:first a[data-menu-xmlid="meeting_point.chat_menu"]:first');
         var notify_div = '<span id="unseen-msg-counter">0</span>';
         var chat_menu_item = $('<li class="showmouseawaybutton"><div class="chat"></div></li>');

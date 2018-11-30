@@ -249,3 +249,8 @@ table.o_group.o_inner_group tr {
 {
     display:none;
 }
+
+.bootbox.modal.in
+{
+    z-index:1051;
+}
