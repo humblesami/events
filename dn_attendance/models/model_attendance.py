@@ -68,7 +68,7 @@ class AttendaceRecord(models.Model):
                 attendanceLog_checkin = (" %s has changed the punch_time time of %s from %s to %s" % (
                                 self.env.user.display_name, self.employee_id.display_name, checkinTimeStr, changedCheckinTimeStr))
                 self.env['attendance.log'].create(
-                    {'changeInAttendance': attendanceLog_checkin, 'employee_id': self.employee_id.id})
+                    {'changeInAttendance': attendanceLog_checkin, 'em ployee_id': self.employee_id.id})
             res = super(AttendaceRecord, obj).write(vals)
             daily_attendance_object = obj.attendance_id
             if vals.get('employee_id') or vals.get('work_date'):
@@ -149,6 +149,7 @@ class AttendanceDaily(models.Model):
     @api.model
     def create_attendance(self):
         N = 1
+        print('in create attendance')
         date_N_days_ago = datetime.now() - timedelta(days=N)
         date_N_days_ago = date_N_days_ago.date()
         # '&', ('work_date', '=', date_N_days_ago),
@@ -157,11 +158,13 @@ class AttendanceDaily(models.Model):
             tempEmployee = values['employee_id']
             attendanceLength = values.attendance_record_ids._ids.__len__()
             if attendanceLength%2 == 0:
+                print('check cron')
                 finalId = values.attendance_record_ids._ids[attendanceLength-1]
                 attendnaceRecord = self.env['attendance.record'].search([('id', '=', finalId)]).punch_time
                 res = values.write({'check_out': attendnaceRecord})
                 values.processed = 1
             else:
+                print('cron part 2')
                 finalId = values.attendance_record_ids._ids[attendanceLength - 2]
                 attendnaceRecord = self.env['attendance.record'].search([('id','=',finalId)]).punch_time
                 res = values.write({'check_out': attendnaceRecord})
