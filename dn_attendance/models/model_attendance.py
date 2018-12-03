@@ -68,7 +68,7 @@ class AttendaceRecord(models.Model):
                 attendanceLog_checkin = (" %s has changed the punch_time time of %s from %s to %s" % (
                                 self.env.user.display_name, self.employee_id.display_name, checkinTimeStr, changedCheckinTimeStr))
                 self.env['attendance.log'].create(
-                    {'changeInAttendance': attendanceLog_checkin, 'em ployee_id': self.employee_id.id})
+                    {'changeInAttendance': attendanceLog_checkin, 'employee_id': self.employee_id.id})
             res = super(AttendaceRecord, obj).write(vals)
             daily_attendance_object = obj.attendance_id
             if vals.get('employee_id') or vals.get('work_date'):
