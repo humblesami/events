@@ -31,7 +31,7 @@ class AttendaceRecord(models.Model):
         prev_attendance_record = False
         if daily_attendance_object:
             filters = [('attendance_id', '=', daily_attendance_object.id)]
-            prev_attendance_record = req_env['attendance.record'].search(filters, limit=1)
+            prev_attendance_record = req_env['attendance.record'].search(filters)
         else:
             daily_attendance_vals = {'employee_id': vals['employee_id'], 'work_date': vals['work_date'],'check_in':vals['punch_time']}
             daily_attendance_vals['name'] = vals['work_date'] + '-'+employeeName
@@ -39,7 +39,7 @@ class AttendaceRecord(models.Model):
 
         vals['punch_type'] = 'check_in'
         if prev_attendance_record:
-            if prev_attendance_record.punch_type == 'check_in':
+            if prev_attendance_record[-1].punch_type == 'check_in':
                 vals['punch_type'] = 'check_out'
             else:
                 vals['punch_type'] = 'check_in'

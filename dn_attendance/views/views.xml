@@ -172,6 +172,8 @@
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
+                    <field name="late_minutes" widget="float_time" sum="Total Late Minutes"/>
+                    <field name ="work_hour" widget="float_time" string="Total Hours Worked" sum="Total Worked Hours"/>
                 </tree>
             </field>
         </record>
