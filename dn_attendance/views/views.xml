@@ -193,7 +193,13 @@
                     <field name="work_date" modifiers="{'required':true}"/>
                     <field name = "processed"/>
                     <newline modifiers="{}"/>
-                    <field colspan="4" name="attendance_record_ids" modifiers="{}"/>
+                    <field colspan="4" name="attendance_record_ids" modifiers="{}">
+                      <tree default_order='punch_time'>
+                        <field name = "punch_time"/>
+                        <field name = "punch_type"/>
+                        <field name = "work_date"/>
+                      </tree>
+                    </field>
                     <newline modifiers="{}"/>
                     <separator modifiers="{}"/>
 		    </group>
