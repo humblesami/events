@@ -52,6 +52,7 @@
                             <field name="allUser" type="checkbox" />
                         </div>
                         <div class="files">
+                            <!--<span class="o_hidden modal-name" modal_name="meeting_point.all_files"></span>-->
                             <h5>Files:</h5>
                             <field class="kanban_document dn_attatchment_btn" name="file_ids"
                                context="{'kanban_view_ref': 'meeting_point.view_meeting_doc_kanban'

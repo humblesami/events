@@ -79,14 +79,14 @@ $(document).ready(function () {
                 document_id: doc_id,
                 binary_signature: dataURL,
                 type: type
-            };            
+            };                        
             dn_json_rpc({
                 url:signature_url.post, 
                 data:input_data,
                 onSuccess: function (data) {                    
                     if(signature_url.post.indexOf('meeting_point')> -1)
                     {
-                        pdf_js_module.renderWithoutAnnotations(data, 1);
+                        pdf_js_module.render({doc:data.doc, id: doc_id, first_time: 1, type : 'signature'});
                     }
                 }, type:'post'
             });
@@ -144,7 +144,7 @@ $(document).ready(function () {
             };
         }
         else{
-            doc_id = $('.strt_sign').attr('doc_id');            
+            doc_id = $('.strt_sign').attr('doc_id');
             input_data = {
                 document_id: doc_id
             };

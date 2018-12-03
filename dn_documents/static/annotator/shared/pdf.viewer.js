@@ -3129,4 +3129,3 @@ var DownloadManager = (function DownloadManagerClosure() {
   PDFJS.DownloadManager = DownloadManager;
   PDFJS.ProgressBar = ProgressBar;
 }).call((typeof window === 'undefined') ? this : window);
-

@@ -28,13 +28,13 @@ function loadAnnotationnModules(modules) { // webpackBootstrap
     }
 
     // expose the modules object (__webpack_modules__)
-    __webpack_require__['m'] = modules;
+    __webpack_require__.m = modules;
 
     // expose the module cache
-    __webpack_require__['c'] = installedModules;
+    __webpack_require__.c = installedModules;
 
     // __webpack_public_path__
-    __webpack_require__['p'] = "";
+    __webpack_require__.p = "";
 
     // Load entry module and return exports
     return __webpack_require__(0);
@@ -46,5 +46,4 @@ var pdf_js_module = loadAnnotationnModules([
     module3,        
     module4
 ]);
-console.log('hello')
 window['pdf_js_module'] = pdf_js_module;
