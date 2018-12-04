@@ -29,46 +29,39 @@ class AttendaceRecord(models.Model):
         daily_attendance_model = req_env['attendance.daily']
         daily_attendance_object = daily_attendance_model.search(filters, limit=1)
         prev_attendance_record = False
+        next_attendance_record = False
         if daily_attendance_object:
             filters = [('attendance_id', '=', daily_attendance_object.id)]
-            prev_attendance_record = req_env['attendance.record'].search(filters)
-            compare_value = vals['punch_time']
-            for records in prev_attendance_record:
-                if compare_value < records.punch_time:
-                    if records.punch_type == 'check_in':
-                        compare_value = records.punch_time
-                        super(AttendaceRecord,records).write({'punch_type':'check_out'})
-                    elif records.punch_type == 'check_out':
-                        compare_value = records.punch_time
-                        super(AttendaceRecord, records).write({'punch_type': 'check_in'})
-            prev_attendance_record = req_env['attendance.record'].search(filters)
+            next_attendance_record = req_env['attendance.record'].search([('attendance_id', '=', daily_attendance_object.id),
+                                                                          ('punch_time','>',vals['punch_time'])])
+            prev_attendance_record = req_env['attendance.record'].search([('attendance_id', '=', daily_attendance_object.id),
+                                                                          ('punch_time','<',vals['punch_time'])])
+
         else:
             daily_attendance_vals = {'employee_id': vals['employee_id'], 'work_date': vals['work_date'],'check_in':vals['punch_time']}
             daily_attendance_vals['name'] = vals['work_date'] + '-'+employeeName
             daily_attendance_object = daily_attendance_model.create(daily_attendance_vals)
 
         vals['punch_type'] = 'check_in'
-        if prev_attendance_record:
-            for values in prev_attendance_record:
-                if values.punch_time > vals['punch_time']:
-                    if values.punch_type =='check_out':
-                        vals['punch_type'] = 'check_in'
-                        break
-                    else:
-                        vals['punch_type'] = 'check_out'
-                        break
-                elif values.punch_time<vals['punch_time']:
-                    if values.punch_type == 'check_out':
-                        vals['punch_type'] = 'check_in'
-                        break
-                    else:
-                        vals['punch_type'] = 'check_out'
-                        break
-            if prev_attendance_record[-1].punch_type == 'check_in' and prev_attendance_record[-1].punch_time<vals['punch_time']:
+        if prev_attendance_record and next_attendance_record:
+            if prev_attendance_record[-1].punch_type == 'check_in':
                 vals['punch_type'] = 'check_out'
-            elif prev_attendance_record[-1].punch_type == 'check_out' and prev_attendance_record[0].punch_type < vals['punch_time']:
+            else:
                 vals['punch_type'] = 'check_in'
-
+            for data in next_attendance_record:
+                if data.punch_type == 'check_in':
+                    data.write({'punch_type': 'check_out'})
+                else:
+                    data.write({'punch_type': 'check_in'})
+        elif prev_attendance_record:
+            if prev_attendance_record[-1].punch_type == 'check_in':
+                vals['punch_type'] = 'check_out'
+            else:
+                vals['punch_type'] = 'check_in'
+        elif next_attendance_record:
+            if next_attendance_record[-1].punch_type == 'check_in':
+                vals['punch_type'] = 'check_in'
+                next_attendance_record[-1].write({'punch_type': 'check_out'})
 
         vals['attendance_id'] = daily_attendance_object.id
         return vals, daily_attendance_object
