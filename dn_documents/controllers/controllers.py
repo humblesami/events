@@ -4,13 +4,11 @@ from odoo.addons.dn_base import ws_methods
 
 class Document(http.Controller):
 
-    @http.route('/dn_documents/get_pdf',auth='none', csrf=False)
-    def get_pdf(self, **kw):
-        doc_id = kw['document_id']
-        model = kw['model']
-        token = kw.get("token")
+    def get_doc(self, data):
+        doc_id = data['doc_id']
+        model = data['model']
+        token = data["token"]
         pdf = {"doc": "", "type": ""}
-
         try:
             if request.session.uid:
                 doc = request.env[model].sudo().search([('id', '=', doc_id)])
@@ -29,3 +27,28 @@ class Document(http.Controller):
             return ws_methods.http_response('', pdf)
         except:
             return ws_methods.http_response('Document not found', {"pdf_binary": pdf})
+
+    @http.route('/dn_documents/get_pdf',auth='none', csrf=False)
+    def get_pdf(self, **kw):
+        doc_id = kw['document_id']
+        model = kw['model']
+        token = kw.get("token")
+        data = {
+            "doc_id": doc_id,
+            "token": token,
+            "model": model,
+        }
+
+        return self.get_doc(data)
+
+    @http.route('/dn_documents/get_pdf_from_parent_model', auth='none', csrf=False)
+    def get_pdf_from_parent_model(self, **kw):
+        doc_id = kw.get("res_id")
+        token = kw.get("token")
+        model = request.env[kw.get("model")]._fields[kw.get("field_name")]._related_comodel_name
+        data = {
+            "doc_id" : doc_id,
+            "token" : token,
+            "model" :model,
+        }
+        return self.get_doc(data)

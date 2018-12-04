@@ -3473,7 +3473,6 @@ function module2(module, exports, __webpack_require__) {
                 function handleDocumentMouseup32(data_tool_type) {
                     if(typeof data_tool_type != 'string')
                     {
-                        console.log(data_tool_type ,966);                        
                         return;
                     }
 

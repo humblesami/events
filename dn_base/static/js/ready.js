@@ -37,6 +37,28 @@ function load_dn_assets()
             $(document).on('click', 'button.fa-5x', function(){
                 dn_json_rpc_object.showHideLoader(true);
             });
+            $('body').on('click', '.fa-file-text-o', function(){
+
+                var field_name = $(this).closest('.o_field_x2many_kanban').attr('name');
+                var res_id = $('.dn_doc_id').find('span').html();
+
+                var str = window.location.href;
+                var model = str.split('&');
+                var id = model[0].split('#');
+                id = id[id.length -1];
+                model = model[2].split('=');
+                model = model[model.length-1];
+                id = id.split('=');
+                id = id[id.length-1];
+                input_data = {
+                    model_id:id,
+                    model:model,
+                    field_name: field_name,
+                    res_id : res_id
+                };
+                console.log(111, input_data);
+                odoo.doc_to_open = input_data;
+            })
         });
 
     }

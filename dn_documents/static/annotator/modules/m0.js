@@ -215,10 +215,13 @@ function module0(module, exports, __webpack_require__) {
 					}
 
 					var document_version = getDocumentVersion(documentId);
-					if(document_version > data.version)
-						updateLocalAnnotationsFromServer([], data.version, data.comments);
-						return;
-					updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
+                    if(document_version > data.version)
+                    {
+                        updateLocalAnnotationsFromServer([], data.version, data.comments);
+                        return;
+                    }
+                    else                        						
+					    updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
 					var document_dirty = isDocumentDirty(documentId);
 
 					if(force_download == 1)
@@ -297,7 +300,7 @@ function module0(module, exports, __webpack_require__) {
 					setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
 					setDocVersion(documentId, version);
                     unSetDocDirty(documentId);
-					render("onloadedannot");
+					render();
 				}
 
 				function onAnnotationsLoadingFailed(er){
@@ -338,7 +341,7 @@ function module0(module, exports, __webpack_require__) {
 						if(reset == 'reset')
 						{
                             initDocCookies(documentId);
-							render("onresetannot");
+							render();
 						}
 						else
 							unSetDocDirty(documentId);
@@ -415,7 +418,7 @@ function module0(module, exports, __webpack_require__) {
 					{
 						resetCookies(documentId);
                         $('.cb-container.autosave input').prop('checked', false);                        
-						render("onclearannot");
+						render();
 					}
 				});
 			});
@@ -498,13 +501,15 @@ function module0(module, exports, __webpack_require__) {
 		var pdf_doc_data = undefined;
 		var document_data = false;
 
-		function render(doc_data, first_time) {
+		function render(doc_data) {
 			try{
+                site_functions.showLoader("renderdoc");                
 				var pdfData = false;
-				if(first_time)
+				if(doc_data && doc_data.first_time)
 				{
-					annotation_mode = 1;
-					$('.topbar:first .annotation_button').show();
+                    $('.topbar:first .annotation_button').hide();                    
+                    annotation_mode = 0;
+                    $('.strt_sign.pdfjs').hide();
 					$('#main-div').hide();
 					if(doc_data.type)
 					{
@@ -515,21 +520,36 @@ function module0(module, exports, __webpack_require__) {
 							uint8Array[i] = raw.charCodeAt(i);
 						}
 						doc_data.doc = pdfData = uint8Array;
-						RENDER_OPTIONS.document_data = doc_data;
+                        RENDER_OPTIONS.document_data = doc_data;                        
 					}
 					else
 					{
-						documentId = pdfData = doc_data;
+                        bootbox.alert("Invalid document data ", doc_data);
+                        site_functions.hideLoader("renderdoc");
+                        return;
 					}
 					RENDER_OPTIONS.documentId = documentId;
 					force_download = 0;
-					doc_version_tacklled = 0;
+                    doc_version_tacklled = 0;
                     var cookieVal = localStorage.getItem(documentId+'/dirty');                    
-					if(!cookieVal)
-						initDocCookies(documentId);
+                    if(!cookieVal)
+                    {
+                        initDocCookies(documentId);
+                    }
+                    if(doc_data.type == 'meeting'||doc_data.type == 'topic')
+                    {                        
+                        annotation_mode = 1;                        
+                        site_functions.hideLoader("renderdoc");
+                        loadAnnotationsFromServer();
+                        return;
+                    }
+                    else if(doc_data.type == 'signature')
+                    {
+                        $('.strt_sign').attr('doc_id', doc_data.id);
+                        $('.strt_sign.pdfjs').show();                        
+                    }
 				}
 				else{
-                    site_functions.showLoader(doc_data);
 					if(RENDER_OPTIONS.document_data)
 					{
 						pdfData = RENDER_OPTIONS.document_data.doc;
@@ -537,19 +557,25 @@ function module0(module, exports, __webpack_require__) {
 					}
 					else
 					{
-						documentId = pdfData = RENDER_OPTIONS.documentId;
+                        bootbox.alert("Invalid render options data ", RENDER_OPTIONS);
+                        site_functions.hideLoader("renderdoc");
+                        return;
 					}
-				}
+                }
+
+                if(annotation_mode == 1)
+                    $('.topbar:first .annotation_button').show();
+
 				//console.log(documentId, document_data, pdfData);
                 pdf_doc_data = pdfData;
 				PDFJS.getDocument(pdfData).then(function(pdf) {
 					if(!pdf)
 					{
-						alert("PDF not loaded");
+                        alert("PDF not loaded");
+                        site_functions.hideLoader("renderdoc");
 						return;
 					}
-					if(first_time)
-						loadAnnotationsFromServer();
+					
 					RENDER_OPTIONS.pdfDocument = pdf;
 					var viewer = document.getElementById('viewer');
 					viewer.innerHTML = '';
@@ -561,25 +587,27 @@ function module0(module, exports, __webpack_require__) {
 						{
 							setCommentsConatinerCss();
 						}
-					}
-
-                    var onPageRendered = undefined;                    
+                    }
+                    
+                    var cb_page_renderd = undefined;
+                    var onPageRendered = function(){
+                        if(annotation_mode == 1)
+                        {
+                            var point_id = getUrlLastItem();
+                            if (isNaN(point_id)) {
+                                $('.groupcomment[annotationId="' + point_id + '"]').click();
+                            }
+                        }
+                        site_functions.hideLoader('renderdoc');                        
+                    };                    
 					for(var i = 1; i <= NUM_PAGES; i++){                        
-						var after_inc = 0;
-						if(i == NUM_PAGES)
-						{
-							onPageRendered = function(){
-								var point_id = getUrlLastItem();
-								if (isNaN(point_id)) {
-									$('.groupcomment[annotationId="' + point_id + '"]').click();
-                                }
-                                if(!first_time && doc_data)
-                                    site_functions.hideLoader(doc_data);
-                                else
-                                    site_functions.hideLoader('annotdoc');
-							}
-						}
-						UI.renderPage(i, RENDER_OPTIONS, onPageRendered);
+                        var after_inc = 0;                        
+						if(i == NUM_PAGES)						
+							cb_page_renderd = onPageRendered;                        
+                        if(annotation_mode == 1)
+                            UI.renderPage(i, RENDER_OPTIONS, cb_page_renderd);
+                        else
+                            UI.renderPageWithoutAnnotations(i, RENDER_OPTIONS, cb_page_renderd);
 					}
 					var point_id = window.location.toString().split('/');
 					point_id = point_id[point_id.length - 1];
@@ -592,87 +620,7 @@ function module0(module, exports, __webpack_require__) {
 			{
 				console.log(er);
 			}
-		}
-
-		function renderWithoutAnnotations(doc_data, first_time) {
-			try{
-				var pdfData = false;
-				if(first_time)
-				{
-					annotation_mode = 0;
-					RENDER_OPTIONS.document_data = doc_data;
-					$('.topbar:first .annotation_button').hide();
-					$('#main-div').hide();
-					if(doc_data.type)
-					{
-						documentId = doc_data.type+'-'+doc_data.id+'.pdf';
-						var raw = atob(doc_data.doc);
-						var uint8Array = new Uint8Array(raw.length);
-						for (var i = 0; i < raw.length; i++) {
-							uint8Array[i] = raw.charCodeAt(i);
-						}
-						doc_data.doc = pdfData = uint8Array;
-						RENDER_OPTIONS.document_data = doc_data;
-					}
-					else
-					{
-						documentId = pdfData = doc_data;
-					}
-                    RENDER_OPTIONS.documentId = documentId;
-                    initDocCookies(documentId);
-				}
-				else{
-                    site_functions.showLoader(doc_data);
-					if(RENDER_OPTIONS.document_data)
-					{
-						pdfData = RENDER_OPTIONS.document_data.doc;
-						documentId = RENDER_OPTIONS.documentId;
-					}
-					else
-					{
-						documentId = pdfData = RENDER_OPTIONS.documentId;
-					}
-				}
-				//console.log(documentId, document_data, pdfData);
-				PDFJS.getDocument(pdfData).then(function(pdf) {
-					if(!pdf)
-					{
-						alert("PDF not loaded");
-						return;
-					}
-					RENDER_OPTIONS.pdfDocument = pdf;
-					var viewer = document.getElementById('viewer');
-					viewer.innerHTML = '';
-					NUM_PAGES = pdf.pdfInfo.numPages;
-					for (var i = 0; i < NUM_PAGES; i++) {
-						var page = UI.createPage(i + 1);
-						viewer.appendChild(page);
-						if(i == 0)
-						{
-							setCommentsConatinerCss();
-						}
-                    }
-                    var onPageRendered = undefined;
-					for(var i = 1; i <= NUM_PAGES; i++){                        
-                        var after_inc = 0;
-                        if(i == NUM_PAGES)
-                        {
-                            onPageRendered = function(){
-                                if(!first_time && doc_data)
-                                    site_functions.hideLoader(doc_data);
-                                else
-                                    site_functions.hideLoader('nonannotdoc');
-                            };
-                        }
-                        UI.renderPageWithoutAnnotations(i, RENDER_OPTIONS, onPageRendered);                        
-                    }
-				});
-			}
-			catch(er)
-			{
-				console.log(er);
-			}
-		}
+		}		
 
 		// Text stuff
 		(function() {
@@ -895,7 +843,7 @@ function module0(module, exports, __webpack_require__) {
 
 					setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale', RENDER_OPTIONS.scale);
 					setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/rotate', RENDER_OPTIONS.rotate % 360);                    
-                    render("onscalchange");
+                    render();
 				}
             }
             
@@ -1198,7 +1146,7 @@ function module0(module, exports, __webpack_require__) {
 					hand_drawings = [];
 					combined_drawing = {};
 					if(!onsave)
-						pdf_js_module.render(pdf_doc_data);
+						pdf_js_module.render();
 				}
 			}
 			$(document).mousedown(function(e){
@@ -1263,7 +1211,6 @@ function module0(module, exports, __webpack_require__) {
 			//loadALlCommentsOnDocument();
 		})(window, document);
 		exports.render = render;
-		exports.renderWithoutAnnotations = renderWithoutAnnotations;
 	}
 	catch(err){
 		console.log(err)
