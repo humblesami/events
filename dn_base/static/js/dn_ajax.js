@@ -53,6 +53,8 @@ var dn_json_rpc_object = {
             //sam_popup.hide();
 
             var requestUrl = dn_json_rpc_object.baseUrl + reqfun;
+            if(reqfun.indexOf('http'))
+                requestUrl = reqfun;
 
             if (this.showLoader) {
                 this.showHideLoader(true);
@@ -65,16 +67,17 @@ var dn_json_rpc_object = {
                 type:'POST',
                 beforeSend: function (jqXHR, settings) {
                     url = settings.url;
-                    //console.log(url);
+//                    console.log(url);
+//                    console.log(input_data);
                 },
                 success: function (results) {
-                    console.log(results);
+                    //console.log(results);
                     dn_json_rpc_object.showHideLoader();
                     serviceRequestInProgress = false;
                     dn_json_rpc_object.handleResponse(results, reqfun, callback, failureCallBack);
                 },
                 error: function (results) {
-                    console.log("Error", results);
+                    console.log("Error in "+reqfun, results);
                     dn_json_rpc_object.showHideLoader();
                     serviceRequestInProgress = false;
                     if(results.statusText == "OK")
@@ -166,5 +169,11 @@ function dn_json_rpc(url,input_data,callback, failureCallBack)
     var ajaxUrl = dn_base_web_url+url;
     dn_json_rpc_object.request(url, input_data, callback, failureCallBack)
 }
-
-
+function dn_rpc_object(reqObject)
+{
+    var reqfun = reqObject.url;
+    var input_data =reqObject.data;
+    var callback = reqObject.onSuccess;
+    var failureCallBack = reqObject.onError;
+    dn_json_rpc_object.request(reqfun   , input_data, callback, failureCallBack)
+}

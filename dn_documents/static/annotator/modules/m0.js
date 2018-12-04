@@ -19,7 +19,7 @@ function getDocumentVersion(documentId)
 	var res = getCookieStrict(documentId, documentId + '/version');
 	if(isNaN(res))
 	{
-		bootbox.alert("Cookie1 must have been se, plz contact support");
+		/*bootbox.alert*/console.log("Cookie1 must have been se, plz contact support");
 	}
 	return res;
 }
@@ -28,7 +28,7 @@ function isDocumentDirty(documentId)
 	var res = getCookieStrict(documentId, documentId + '/dirty');
 	if(isNaN(res))
 	{
-		bootbox.alert("Cookie2 must have been set for "+documentId+", plz contact support");
+		/*bootbox.alert*/console.log("Cookie2 must have been set for "+documentId+", plz contact support");
 	}
 	return res;
 }
@@ -65,7 +65,7 @@ function setCookieStrict(documentId, key, val)
 	var temp_key = validate_key(documentId, key);
 	if(temp_key == 'dirty' || temp_key == 'version')
 	{
-		bootbox.alert("Should not happend");
+		/*bootbox.alert*/console.log("Should not happend");
 		console.trace();
 	}
 	localStorage.setItem(key, val);
@@ -77,7 +77,7 @@ function validate_key(documentId, key)
 	if(keys.indexOf(temp_key) == -1)
 	{
 		console.trace();
-		bootbox.alert("Please report this issue2 with "+key +" for "+ documentId);
+		/*bootbox.alert*/console.log("Please report this issue2 with "+key +" for "+ documentId);
 	}
 	return temp_key;
 }
@@ -90,7 +90,7 @@ function module0(module, exports, __webpack_require__) {
 		var _initColorPicker = __webpack_require__(4);
 		var _initColorPicker2 = _interopRequireDefault(_initColorPicker);
 
-		var socket_obj = window['current_user'].socket;
+		var socket_obj = window['socket'];
 
 		var save_drawing = function(){};
 		var activeAnnotationId = undefined;
@@ -178,14 +178,14 @@ function module0(module, exports, __webpack_require__) {
 				{
 					if(!documentId)
 					{
-						bootbox.alert("Invalid Document Id");
+						/*bootbox.alert*/console.log("Invalid Document Id");
 						return;
 					}
 					var document_version = getDocumentVersion(documentId);
 					var input_data = {doc_id:documentId, version:document_version};
 					if(force_download == 1)
 						input_data['force'] = 1;
-					dn_json_rpc({
+					dn_rpc_object({
 						url:'/get-annotations',
 						data:input_data,
 						onSuccess: onAnnotationsDownloaded,
@@ -250,7 +250,7 @@ function module0(module, exports, __webpack_require__) {
 						}
 						else
 						{
-							bootbox.alert("Already latest version="+document_version);
+							/*bootbox.alert*/console.log("Already latest version="+document_version);
 						}
 					}
 					else
@@ -294,7 +294,7 @@ function module0(module, exports, __webpack_require__) {
 						annotation_cookie  = JSON.stringify(annotations);
 					else
 					{
-						bootbox.alert("invalid annotations");
+						/*bootbox.alert*/console.log("invalid annotations");
 						return;
 					}
 					setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
@@ -304,7 +304,7 @@ function module0(module, exports, __webpack_require__) {
 				}
 
 				function onAnnotationsLoadingFailed(er){
-					console.log(er);
+					//console.log(er);
 				}
 
 				$('body').on('click','.download-annotations',function(){
@@ -320,7 +320,7 @@ function module0(module, exports, __webpack_require__) {
 					{
 						if(isNaN(data))
 						{
-							bootbox.alert("Could not save:");
+							/*bootbox.alert*/console.log("Could not save:");
 							console.log(data);
 							return;
 						}
@@ -377,14 +377,14 @@ function module0(module, exports, __webpack_require__) {
 						}
 						if(document_version == 0)
 						{
-							bootbox.alert("Upload version can not be zero");
+							/*bootbox.alert*/console.log("Upload version can not be zero");
 							return;
 						}
 						input_data['annotations'] = annotationString;
 						input_data['version'] = document_version;
 					}
 
-					dn_json_rpc({
+					dn_rpc_object({
 						url:'/save-annotations',
 						data:input_data,
 						onSuccess: function(data){
@@ -503,7 +503,7 @@ function module0(module, exports, __webpack_require__) {
 
 		function render(doc_data) {
 			try{
-                site_functions.showLoader("renderdoc");                
+                //site_functions.showLoader("renderdoc");
 				var pdfData = false;
 				if(doc_data && doc_data.first_time)
 				{
@@ -524,8 +524,8 @@ function module0(module, exports, __webpack_require__) {
 					}
 					else
 					{
-                        bootbox.alert("Invalid document data ", doc_data);
-                        site_functions.hideLoader("renderdoc");
+                        /*bootbox.alert*/console.log("Invalid document data ", doc_data);
+                        //site_functions.hideLoader("renderdoc");
                         return;
 					}
 					RENDER_OPTIONS.documentId = documentId;
@@ -539,7 +539,7 @@ function module0(module, exports, __webpack_require__) {
                     if(doc_data.type == 'meeting'||doc_data.type == 'topic')
                     {                        
                         annotation_mode = 1;                        
-                        site_functions.hideLoader("renderdoc");
+                        //site_functions.hideLoader("renderdoc");
                         loadAnnotationsFromServer();
                         return;
                     }
@@ -557,8 +557,8 @@ function module0(module, exports, __webpack_require__) {
 					}
 					else
 					{
-                        bootbox.alert("Invalid render options data ", RENDER_OPTIONS);
-                        site_functions.hideLoader("renderdoc");
+                        /*bootbox.alert*/console.log("Invalid render options data ", RENDER_OPTIONS);
+                        //site_functions.hideLoader("renderdoc");
                         return;
 					}
                 }
@@ -572,7 +572,7 @@ function module0(module, exports, __webpack_require__) {
 					if(!pdf)
 					{
                         alert("PDF not loaded");
-                        site_functions.hideLoader("renderdoc");
+                        //site_functions.hideLoader("renderdoc");
 						return;
 					}
 					
@@ -598,7 +598,7 @@ function module0(module, exports, __webpack_require__) {
                                 $('.groupcomment[annotationId="' + point_id + '"]').click();
                             }
                         }
-                        site_functions.hideLoader('renderdoc');                        
+                        //site_functions.hideLoader('renderdoc');
                     };                    
 					for(var i = 1; i <= NUM_PAGES; i++){                        
                         var after_inc = 0;                        
@@ -748,7 +748,7 @@ function module0(module, exports, __webpack_require__) {
 		(function() {
 			var tooltype = 'cursor';
 			function setActiveToolbarItem(type, button) {
-				var oldButton = $('.toolbar button.active');
+				var oldButton = $('.toolbar div.active');
 				if (oldButton.length > 0) {
 					oldButton.removeClass('active');
 					switch (tooltype) {
@@ -799,7 +799,7 @@ function module0(module, exports, __webpack_require__) {
 			}
 
 			function handleToolbarClick(e) {
-				var active_btn = $('.topbar:first .active');
+			    var active_btn = $('.topbar:first .active');
 				var target = $(e.target);
 				if(target.hasClass('pen') && active_btn.hasClass('pen'))
 				{
@@ -823,7 +823,8 @@ function module0(module, exports, __webpack_require__) {
 				}
 			}
 
-			$('.toolbar button').click(handleToolbarClick);
+//			$('.toolbar button').click(handleToolbarClick);
+			$('.toolbar div').click(handleToolbarClick);
 			$('.toolbar:first .cursor').click();
 		})();
 
@@ -1151,7 +1152,7 @@ function module0(module, exports, __webpack_require__) {
 			}
 			$(document).mousedown(function(e){
 				var $target = $(e.target);
-				if(contextMenuShown && !$target.is('.ContextMenuPopup button') && !$target.is('.ContextMenuPopup .colored'))
+				if(contextMenuShown && !$target.is('.ContextMenuPopup div') && !$target.is('.ContextMenuPopup .colored'))
 					$('.ContextMenuPopup').hide();
 				if($('.topbar:first .pen:first').hasClass('active')){
 					if($target.closest('#viewer').length == 0){

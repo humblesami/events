@@ -7,13 +7,13 @@
       width: 100%;
       height: 100vh;      
       position: relative;
-      top: 45px;
   }
   #content-wrapper {    
     width: 100%;
     overflow: auto;
     display: inline-table;
     background-color: white;
+    margin-top: 50px;
   }
   #comment-wrapper {
     position: fixed;    
@@ -23,6 +23,7 @@
     background: silver;
     border-right: 1px solid #e6e6e6;
     overflow-y: scroll;
+    top: 47px !important;
   }
   
   .pdfViewer .canvasWrapper {
@@ -162,7 +163,7 @@
     
   }
   
-  .ContextMenuPopup >div>button {
+  .ContextMenuPopup >div>div {
     cursor: pointer;
   }
   

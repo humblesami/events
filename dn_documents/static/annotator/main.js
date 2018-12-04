@@ -9,6 +9,11 @@ var annotation_mode = 1;
 
 var sign_lib = 0;
 
+function getUrlLastItem(){
+	var point_id = window.location.toString().split('/');
+	return point_id[point_id.length -1];
+}
+
 $(function(){           
     var comment_to_be_added = false;
     function comment_case()
@@ -41,14 +46,14 @@ $(function(){
     var last_active_was_comment = false;
     $(document).on('mouseup', '#viewer', function(e) {
         if(isdown)
-        {            
-            
+        {
+
         }
         isdown = false;
         if(annotation_mode != 1)
             return;
-        setTimeout(function(){                
-            var selection = window.getSelection();                
+        setTimeout(function(){
+            var selection = window.getSelection();
             if(selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0 ))
             {
                 var ctxMenu = $('.annotation-options.ContextMenuPopup');
@@ -72,9 +77,9 @@ $(function(){
                             $('.toolbar .cursor').click();
                     }
                 }
-                else if(!pen_active && !cursor_active)                
-                    $('.toolbar .cursor').click();                
+                else if(!pen_active && !cursor_active)
+                    $('.toolbar .cursor').click();
             }
         },10);
-    });        
+    });
 });

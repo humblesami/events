@@ -1,0 +1,1 @@
+document.writeln('<script src="/dn_base/static/js/dn_view_manager.js"></script>');

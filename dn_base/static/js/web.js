@@ -17,7 +17,7 @@ odoo.define('dn_base.Abstract', function (require) {
                     var traceback = error ? error.stack : '';
                     console.log(message);
                     console.log(file + ':' + line);
-                    if(odoo.dev_mode)
+                    //if(odoo.dev_mode)
                         console.log("\n\n", traceback);
                     bootbox.confirm("There is a dev issue "+message+". Please click ok to report it", function(dr){
                         if(dr)

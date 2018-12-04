@@ -9,6 +9,9 @@
             <xpath expr="//script[@src='/web/static/src/js/services/crash_manager.js']" position="replace">
                 <script type="text/javascript" src="/dn_base/static/js/crash_manager.js"></script>
             </xpath>
+            <xpath expr="//script[@src='/web/static/src/js/chrome/view_manager.js']" position="replace">
+                <script type="text/javascript" src="/dn_base/static/js/view_manager.js"></script>
+            </xpath>
         </template>
 
         <template id="assets_common" inherit_id="web.assets_common">

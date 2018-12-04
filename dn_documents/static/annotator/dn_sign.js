@@ -51,10 +51,10 @@ $(document).ready(function () {
                 binary_signature: "",
                 type: "auto"
             };
-            dn_json_rpc({
+            dn_rpc_object({
                 url:signature_url.post,
                 data: input_data,
-                onSuccess: load_signature, 
+                onSuccess: load_signature,
                 type:'post'
             });
         });
@@ -63,7 +63,7 @@ $(document).ready(function () {
             var input_data = {
                 document_id: doc_id,
             };
-            dn_json_rpc({
+            dn_rpc_object({
                 url:'/profile/get_signature',data: input_data, onSuccess: load_signature
             });
         })
@@ -80,10 +80,10 @@ $(document).ready(function () {
                 binary_signature: dataURL,
                 type: type
             };                        
-            dn_json_rpc({
-                url:signature_url.post, 
+            dn_rpc_object({
+                url:signature_url.post,
                 data:input_data,
-                onSuccess: function (data) {                    
+                onSuccess: function (data) {
                     if(signature_url.post.indexOf('meeting_point')> -1)
                     {
                         pdf_js_module.render({doc:data.doc, id: doc_id, first_time: 1, type : 'signature'});
@@ -150,8 +150,8 @@ $(document).ready(function () {
             };
         }
 
-        dn_json_rpc({
-            url:signature_url.get, data: input_data, 
+        dn_rpc_object({
+            url:signature_url.get, data: input_data,
             onSuccess: function (d) {
                 $('#signModal').modal('show');
                 setTimeout(function () {

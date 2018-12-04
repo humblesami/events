@@ -1,6 +1,7 @@
 var hand_drawings = [];
 
 function module2(module, exports, __webpack_require__) {
+try{
     var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */
     (function(module) {
         'use strict';
@@ -1159,7 +1160,7 @@ function module2(module, exports, __webpack_require__) {
 
                                     if(!window['current_user'].cookie.id)
                                     {
-                                        bootbox.alert("No user Id given");
+                                        /*bootbox.alert*/console.log("No user Id given");
                                         return;
                                     }
                                     annotation.class = 'Annotation';
@@ -1255,7 +1256,7 @@ function module2(module, exports, __webpack_require__) {
                                     input_data['comment'] = comment;
                                     var is_comment = false;
                                     if(point.sub_type != 'personal'){
-										var user_socket = window['current_user'].socket;
+										var user_socket = window['socket'];
 										if(user_socket && user_socket.connected)
 										{
 											window['current_user'].socket.emit('onCommentPost', input_data);
@@ -1269,7 +1270,7 @@ function module2(module, exports, __webpack_require__) {
                                         }
 
 										is_comment = true;
-										dn_json_rpc({
+										dn_rpc_object({
 											url:'/save-comment-annotation',
 											data:input_data,
 											onSuccess: function(data){
@@ -1294,7 +1295,7 @@ function module2(module, exports, __webpack_require__) {
 											onError: function(err){
 												console.log(err);
 											},
-                                            type:'post',                                            
+                                            type:'post',
 										});
 									}
 									else{
@@ -2757,6 +2758,7 @@ function module2(module, exports, __webpack_require__) {
                  * @param {Event} e The DOM event that needs to be handled
                  */
                 function handleDocumentClick(e) {
+                console.log(2222)
                     if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                         return;
                     } // Remove current overlay
@@ -3978,4 +3980,8 @@ function module2(module, exports, __webpack_require__) {
         });; //# sourceMappingURL=pdf-annotate.js.map
         /* WEBPACK VAR INJECTION */
     }.call(exports, __webpack_require__(3)(module)))
+    }
+    catch(err){
+        console.log(err);
+    }
 }

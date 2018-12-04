@@ -5,11 +5,11 @@ from odoo.addons.dn_base import ws_methods
 class Document(http.Controller):
 
     def get_doc(self, data):
-        doc_id = data['doc_id']
-        model = data['model']
-        token = data["token"]
-        pdf = {"doc": "", "type": ""}
         try:
+            doc_id = data['doc_id']
+            model = data['model']
+            token = data["token"]
+            pdf = {"doc": "", "type": ""}
             if request.session.uid:
                 doc = request.env[model].sudo().search([('id', '=', doc_id)])
                 if doc.pdf_doc:
@@ -45,7 +45,7 @@ class Document(http.Controller):
     def get_pdf_from_parent_model(self, **kw):
         doc_id = kw.get("res_id")
         token = kw.get("token")
-        model = request.env[kw.get("model")]._fields[kw.get("field_name")]._related_comodel_name
+        model = kw.get("model")
         data = {
             "doc_id" : doc_id,
             "token" : token,
