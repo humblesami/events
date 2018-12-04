@@ -165,7 +165,6 @@ class AttendanceDaily(models.Model):
                 raise ValidationError("Only time records are allowed to be modified")
             if calc:
                 obj.calculate_work_hours(daily_attendance_object)
-                obj.create_attendance()
                 updateAttendance = self.sudo().env['hr.attendance'].search(['&',('work_date','=',obj.work_date),('employee_id','=',obj.employee_id.id)])
                 if updateAttendance.id:
                     updatedAttendanceWrite = updateAttendance.sudo().write(
@@ -177,11 +176,7 @@ class AttendanceDaily(models.Model):
     @api.model
     def create_attendance(self):
         N = 1
-        print('in create attendance')
-        date_N_days_ago = datetime.now() - timedelta(days=N)
-        date_N_days_ago = date_N_days_ago.date()
-        # '&', ('work_date', '=', date_N_days_ago),
-        records = self.env['attendance.daily'].search([('processed','=',0)])
+        records = self.env['attendance.daily'].search([('processed','=',0)],limit = 25)
         for values in records:
             tempEmployee = values['employee_id']
             attendanceLength = values.attendance_record_ids._ids.__len__()
