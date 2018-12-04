@@ -258,7 +258,7 @@ class meeting(http.Controller):
             doc.embed_signature(doc)
             doc.notify_signed_mail(signature.id)
             pdf = doc.pdf_doc.decode('utf-8')
-            return ws_methods.http_response('', {"signature":binary_signature,"pdf_binary": pdf})
+            return ws_methods.http_response('', {"signature":binary_signature,"pdf_binary": pdf, "doc":pdf})
         except:
             return ws_methods.handle()
 
