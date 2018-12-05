@@ -14,7 +14,9 @@ def work_minutes_in_span(schedule_on_day, checkIn, checkOut):
     elif checkIn >=expectedCheckInTime and checkOut <= expectedBreakStart:
        work_minutes = dn_dt.timespan_minutes(checkOut,checkIn)
        return work_minutes
-
+    elif checkIn <expectedCheckInTime and checkOut <= expectedBreakStart:
+        work_minutes = dn_dt.timespan_minutes(checkOut,expectedCheckInTime)
+        return  work_minutes
     elif checkIn < expectedCheckInTime and checkOut <= expectedBreakEnd:
         work_minutes = dn_dt.timespan_minutes(expectedBreakStart,expectedCheckInTime)
         return work_minutes
