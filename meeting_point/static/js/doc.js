@@ -1,7 +1,7 @@
 $(function() {
 
         try {
-            var doc_id=$('.dn_doc_id').first().html().trim();
+            var doc_id=$('.o_technical_modal.in').find('.dn_doc_id').html();
             var token=$('.sign_token').val();
 
             $('.strt_sign').click(function(e) {
@@ -155,7 +155,7 @@ $(function() {
         var canvas=document.getElementById('the-canvas'),
 	pdf_binary,
 	req_url,
-	doc_id=$('.dn_doc_id').first().html().trim(),
+	doc_id=$('.o_technical_modal.in').find('.dn_doc_id').html(),
 	model=$('.dn_documents_doc_path').first().html().trim(),
 	input_data = {document_id:doc_id },
 	pdfDoc,
