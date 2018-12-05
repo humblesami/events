@@ -30,7 +30,14 @@ var CrashManager = core.Class.extend({
         this.active = false;
     },
     rpc_error: function(error) {
-        console.log("Some rpc error", error);
+        console.log(error);
+        try{
+            var error_message = error.data.message;
+            if(error_message.endsWith('None'))
+                error_message = error_message.substr(0, error_message.length - 5)
+            bootbox.alert(error_message)
+            return;
+        }catch(er){}
         return;
         var self = this;
         if (!this.active) {
