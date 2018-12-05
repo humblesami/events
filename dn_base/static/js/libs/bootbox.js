@@ -96,6 +96,7 @@
     }
   
     function processCallback(e, dialog, callback) {
+        afterAlert();
       e.stopPropagation();
       e.preventDefault();
   
@@ -110,8 +111,6 @@
       if (!preserveDialog) {
         dialog.modal("hide");
       }
-
-      afterAlert();
     }
 
     var bootBoxTimeOut = undefined;
@@ -132,7 +131,7 @@
     function afterAlert(){
         $('.bootbox').remove();
         $('body').removeClass('modal-open');
-        $('.modal-backdrop').hide();
+        $('.modal-backdrop').remove();
     }
   
     function getKeyLength(obj) {
@@ -713,13 +712,14 @@
           if (e.target !== e.currentTarget) {
             return;
           }
-  
+          afterAlert();
           dialog.trigger("escape.close.bb");
         });
       }
   
       dialog.on("escape.close.bb", function(e) {
         if (callbacks.onEscape) {
+            afterAlert();
           processCallback(e, dialog, callbacks.onEscape);
         }
       });
@@ -731,7 +731,7 @@
   
       dialog.on("click", ".modal-footer button", function(e) {
         var callbackKey = $(this).data("bb-handler");
-  
+        afterAlert();
         processCallback(e, dialog, callbacks[callbackKey]);
       });
   
@@ -739,12 +739,16 @@
         // onEscape might be falsy but that's fine; the fact is
         // if the user has managed to click the close button we
         // have to close the dialog, callback or not
+        afterAlert();
         processCallback(e, dialog, callbacks.onEscape);
       });
   
       dialog.on("keyup", function(e) {
         if (e.which === 27) {
+          {
           dialog.trigger("escape.close.bb");
+          afterAlert();
+          }
         }
       });
   

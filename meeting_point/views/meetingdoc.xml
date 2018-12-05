@@ -15,7 +15,6 @@
                            class="dn_documents_docs_upload oe_edit_only"/>
                     <button type="object" name="open_view_doc_form"
                             class="fa fa-5x fa-file-text-o"/>
-                    <script src="/dn_documents/static/js/doc.js"/>
                 </form>
             </field>
         </record>

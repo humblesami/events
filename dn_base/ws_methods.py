@@ -159,7 +159,9 @@ def check_auth(values):
     token = values.get('token')
     if not token:
         return False
-    db = values['db']
+    db = values.get('db')
+    if not db:
+        return False
     token = str(values['token'])
     stuid = values['uid']
     uid = int(stuid)

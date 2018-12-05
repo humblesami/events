@@ -1,12 +1,20 @@
 from odoo import http
 from odoo.addons.dn_base import ws_methods
 
-doc_types = {
+doc_models = {
     'home': 'meeting_point.news.doc',
     'resource':'meeting_point.files',
     'meeting':'meeting_point.doc',
     'topic':'meeting_point.topicdoc',
     'signature':'meeting_point.document'
+}
+
+doc_types = {
+    'meeting_point.news.doc':'home',
+    'meeting_point.files':'resource',
+    'meeting_point.doc':'meeting',
+    'meeting_point.topicdoc':'topic',
+    'meeting_point.document':'signature'
 }
 
 class ws(http.Controller):
@@ -228,28 +236,34 @@ class ws(http.Controller):
                 return ws_methods.http_response('Could not authenticate')
             if 'data' in values:
                 values = values['data']
-            doc_id = values['doc_id']
+            doc_id = values.get('doc_id')
+            if not doc_id:
+                return ws_methods.http_response('Invalid document id')
             doc_id = int(doc_id)
-            model_name = values['doc_type']
-            model_name = doc_types[model_name]
+            doc_model = values.get('doc_model')
+            if not doc_model:
+                doc_type = values.get('doc_type')
+                model_name = doc_models[doc_type]
+            else:
+                model_name = doc_model
+                doc_type = doc_types[model_name]
+            if not model_name:
+                return ws_methods.http_response('Invalid document model')
             file = http.request.env[model_name].search([('id', '=', doc_id)])
             converted = file['pdf_doc'].decode('utf-8')
-            doc = {'id': doc_id, "doc": converted, 'doc_name': file['name'], 'type': values['doc_type']}
-            obj = {}
-            model_name = values['doc_type']
-            if model_name == 'resource':
+            doc = {'id': doc_id, "doc": converted, 'doc_name': file['name'], 'type': doc_type}
+            if doc_type == 'resource':
                 props = ['parent_folder.name', 'parent_folder.id']
-                obj = ws_methods.object_to_json_object(file, props)
-            elif model_name == 'meeting':
+            elif doc_type == 'meeting':
                 props = ['meeting_id.name', 'meeting_id.id']
-                obj = ws_methods.object_to_json_object(file, props)
-            elif model_name == 'topic':
+            elif doc_type == 'topic':
                 props = ['topic_id.name', 'topic_id.id']
-                obj = ws_methods.object_to_json_object(file, props)
-            elif model_name == 'signature':
+            elif doc_type == 'signature':
                 props = ['meeting_id.name', 'meeting_id.id', 'mp_signature_status']
-                obj = ws_methods.object_to_json_object(file, props)
+            else:
+                return ws_methods.http_response('Invalid document type'+doc_type)
 
+            obj = ws_methods.object_to_json_object(file, props)
             for ke in obj:
                 doc[ke] = obj[ke]
             doc['uid'] = uid

@@ -1,20 +1,5 @@
 <odoo>
     <data>
-
-        <record id="view_dn_doc_form" model="ir.ui.view">
-            <field name="name">dndoc.form</field>
-            <field name="model">dn_documents.allfiles</field>
-            <field name="arch" type="xml">
-                <form>
-                    <group>
-                        <field name="name" string="Title" />
-                        <field name="filename" invisible="1"/>
-                        <field name="attachment" filename="filename" />
-                    </group>
-                </form>
-            </field>
-        </record>
-
         <record id="view_dn_doc_tree" model="ir.ui.view">
             <field name="name">dndoc.tree</field>
             <field name="model">dn_documents.allfiles</field>
@@ -89,9 +74,6 @@
                     <field name="filename" invisible="1"/>
                     <h4>Attachment</h4>
                     <field name="attachment" filename="filename" class="dn_documents_docs_upload oe_edit oe_edit_only"/>
-                    <button type="object" name="open_view_doc_form"
-                            class="fa-5x fa-file-text-o oe_read_only" />
-                    <script src="/dn_documents/static/js/doc.js"/>
                 </form>
             </field>
         </record>
@@ -155,9 +137,25 @@
             </field>
         </record>
 
+        <record id="view_dn_doc_form" model="ir.ui.view">
+            <field name="name">dndoc.form</field>
+            <field name="model">dn_documents.allfiles</field>
+            <field name="priority">3</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name" string="Title" />
+                        <field name="filename" invisible="1"/>
+                        <field name="attachment" filename="filename" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="pdf_doc_view" model="ir.ui.view">
             <field name="name">dn_documents.pdf_doc_view.form</field>
             <field name="model">dn_documents.allfiles</field>
+            <field name="priority">9</field>
             <field name="arch" type="xml">
                 <form create="false" edit="false">
                     <div style="display:none;" class="doc_meta">
@@ -165,7 +163,7 @@
                         <field class="doc_model" name="path"/>
                     </div>
                     <div id="pdf_div"></div>
-                    <script src="dn_documents/static/js/doc.js"></script>
+                    <script id="doc_js" src="/dn_documents/static/js/doc.js"/>
                     <script src="dn_documents/static/annotator/libs.js"></script>
                </form>
             </field>
