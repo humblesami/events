@@ -934,8 +934,8 @@ function module0(module, exports, __webpack_require__) {
 					//console.log(commentValue);
 					var comment = {
 						date_time: new Date(),
-						user_name:window['current_user'].cookie.name,
-						uid:window['current_user'].cookie.id,
+						user_name:odoo.session_info.name,
+						uid:odoo.session_info.uid,
 						content:commentValue
 					};
 					//console.log(commentText.content)

@@ -1124,7 +1124,7 @@ try{
                             getAnnotations: function getAnnotations(documentId, pageNumber) {
                                 return new Promise(function(resolve, reject) {
                                     var annotations = _getAnnotations(documentId).filter(function(i) {
-                                        return i.page === pageNumber && i.class === 'Annotation' && (i.uid == window['current_user'].cookie.id || (i.type=='point' && !i.sub_type));
+                                        return i.page === pageNumber && i.class === 'Annotation' && (i.uid == odoo.session_info.uid || (i.type=='point' && !i.sub_type));
                                     });
                                     resolve({
                                         documentId: documentId,
@@ -1136,7 +1136,7 @@ try{
                             getCommentAnnotations: function(documentId, sub_type) {
                                 return new Promise(function(resolve, reject) {
                                     var annotations = _getAnnotations(documentId).filter(function(i) {                                          
-                                        return i.type=='point' && i.class === 'Annotation' && (i.uid == window['current_user'].cookie.id || !i.sub_type);
+                                        return i.type=='point' && i.class === 'Annotation' && (i.uid == odoo.session_info.uid || !i.sub_type);
 
                                     });
                                     resolve({
@@ -1158,7 +1158,7 @@ try{
                                         return;
                                     }
 
-                                    if(!window['current_user'].cookie.id)
+                                    if(!odoo.session_info.uid)
                                     {
                                         /*bootbox.alert*/console.log("No user Id given");
                                         return;
@@ -1167,12 +1167,12 @@ try{
                                     annotation.uuid = (0, _uuid2.default)();
                                     annotation.page = pageNumber;
                                     annotation.date_time = new Date();                                    
-                                    if(!window['current_user'].cookie.id)
+                                    if(!odoo.session_info.uid)
                                     {
                                         console.log("oops no user id");
                                         return;
                                     }
-                                    annotation.uid = window['current_user'].cookie.id;
+                                    annotation.uid = odoo.session_info.uid;
                                     var annotations = _getAnnotations(documentId);
                                     annotations.push(annotation);
                                     annotation.to_merge = 1;
@@ -1237,8 +1237,7 @@ try{
                                 	var obj_this = this;
 									var input_data = {};
 									input_data['db'] = site_config.server_db;
-									input_data['token'] = window['current_user'].cookie.token;
-									input_data['time_zone'] = window['current_user'].time_zone;
+									input_data['token'] = odoo.session_info.token;
 									var point = findAnnotationObject(documentId, annotationId);
                                     var comment = {
                                         class: 'Comment',
@@ -1259,7 +1258,7 @@ try{
 										var user_socket = window['socket'];
 										if(user_socket && user_socket.connected)
 										{
-											window['current_user'].socket.emit('onCommentPost', input_data);
+											window['socket'].emit('onCommentPost', input_data);
                                         }
 										input_data = {
 											annotations:JSON.stringify({
@@ -3255,7 +3254,7 @@ try{
                             annotation.sub_type = comment_sub_type;
                             //console.log(43333);
                             pdfStoreAdapter.addAnnotation(documentId, pageNumber, annotation).then(function(annotation) {
-                                var values = {content:content, date_time:new Date(), uid:window['current_user'].cookie.id, user_name:window['current_user'].cookie.name}
+                                var values = {content:content, date_time:new Date(), uid:odoo.session_info.uid, user_name:odoo.session_info.name}
                                 pdfStoreAdapter.addComment(documentId, annotation.uuid, values);
                                 (0, _appendChild2.default)(svg, annotation);
                             });
