@@ -147,6 +147,9 @@
         <menuitem name="Daily Records" action="dn_attendance.action_attendance_daily" id="menu_attendance_daily" parent="dn_attendance.menu_root_attendance"
         groups="base.group_erp_manager,custom_group_e_payroll_admin_e,custom_group_e_payroll_manager,custom_group_e_payroll_officer,leave_management_custom.group_leave_custom_admin,leave_management_custom.group_leave_custom_super_user"
         />
+        <menuitem name="Reporting" action="hr_attendance.hr_attendance_action_graph" id="menu_reporting" parent="dn_attendance.menu_root_attendance"
+        groups="base.group_erp_manager,custom_group_e_payroll_admin_e,custom_group_e_payroll_officer,custom_group_e_payroll_manager,leave_management_custom.group_leave_custom_admin,leave_management_custom.group_leave_custom_super_user"
+        />
     </data>
 
     <!--<menuitem id="hr_attendance.menu_hr_attendance_view_employees_kanban" name="Employees" parent="hr_attendance.menu_hr_attendance_manage_attendances" sequence="15" groups="base.group_erp_manager" action="hr.open_view_employee_list_my"/>-->
