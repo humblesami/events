@@ -98,14 +98,12 @@
                         <strong>Signature Status:</strong><field class="my_signature_status" name="mp_signature_status"/>
                     </div>
 
-                    <div id="start_sign" style="min-width:150px;margin:5px" attrs="{'invisible': ['|',('mp_signature_status', '=', 'Not required'),('mp_signature_status', '=', 'Completed')]}" class="btn btn-primary  strt_sign">
-                        Sign
-                    </div>
+                    <div id="sign_btn"></div>
                 </xpath>
 
                 <xpath expr="//div[@name='view_script']" position="replace">
-                    <script src="/meeting_point/static/js/jquery.ui.touch-punch.min.js"/>
-                    <script src="/meeting_point/static/js/doc.js"/>
+                    <script src="/meeting_point/static/js/jquery.ui.touch-punch.min.js"></script>
+                    <script src="/meeting_point/static/js/doc.js"></script>
                 </xpath>
             </field>
         </record>

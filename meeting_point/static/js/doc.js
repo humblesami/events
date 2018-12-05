@@ -1,10 +1,18 @@
 $(function() {
+    var sign_btn_markup = `<div id="start_sign"
+                         style="min-width:150px;margin:5px"
+                         attrs="{'invisible': ['|',('mp_signature_status', '=', 'Not required'),('mp_signature_status', '=', 'Completed')]}"
+                         class="btn btn-primary start_signature">
+                        Sign
+                    </div>`
+
+    $('#sign_btn').append(sign_btn_markup);
 
         try {
             var doc_id=$('.o_technical_modal.in').find('.dn_doc_id').html();
             var token=$('.sign_token').val();
 
-            $('.strt_sign').click(function(e) {
+            $('.start_signature').click(function(e) {
                 doc_preview.image("uuuu");
                 var body = $('.youtubeVideoModal .modal-body:last');
                 var content = $('.youtubeVideoModal .modal-content:last');
@@ -22,7 +30,7 @@ $(function() {
                 var upload_btn = $('<input accept=".jpg,.png,.jpeg" style="display:none" type="file"></input>');
 
                 var auto_sign = $('<span class="btn btn-primary btn-sm DocsBtn">Auto</span>');
-                var top_div = $('<div class="DocsButtonWrapper" />');
+                var top_div = $('<div class="DocsButtonWrapper"></div>');
                 var upload_clicker = '<button class="btn btn-sm btn-primary DocsBtn o_select_file_button"';
                 upload_clicker += ' title="Select" type="button">Upload</button>';
                 upload_clicker = $(upload_clicker);
@@ -67,7 +75,7 @@ $(function() {
                     signature_editor.signature();
                     signature_editor.signature('clear');
                     var signature_value = data.signature;
-                    if (signature_value && signature_value.length > 0) {
+                    if (signature_value && signature_value.length > 0 && data.signature != "") {
                         dataURL = 'data:image/png;base64,' + data.signature;
                         //                    hidden_image.attr('src',dataURL);
                         img.src = dataURL;
