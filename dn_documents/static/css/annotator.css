@@ -1,0 +1,20 @@
+.toolbar a.back
+{
+    display:none;
+}
+.o_technical_modal.in .modal-footer
+{
+    display:none;
+}
+.annotation-options.ContextMenuPopup
+{
+
+}
+.toobar.topar
+{
+    top:0;
+}
+#annotated-doc-conatiner
+{
+    top:42px;
+}

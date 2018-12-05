@@ -13,7 +13,7 @@
   display: flex;  
   justify-content: center;
   position: fixed;
-  top:0;
+  top:50px;
 }
 
 .toolbar .spacer {
@@ -34,7 +34,7 @@
   text-decoration: none;
 }
 
-.toolbar div, .toolbar a {
+.toolbar button, .toolbar a {
   background-color: transparent;
   border: 0px solid transparent;
   position: relative;
@@ -56,16 +56,16 @@
     padding-right: 4px;
 }
 
-.toolbar div:after {
+.toolbar button:after {
   content: ' ';
   display: block;
 }
 
-.toolbar div.active {
+.toolbar button.active {
   background: #f0f0f0;
 }
 
-.toolbar div:hover,
+.toolbar button:hover,
 .toolbar a:hover {
   background: #f0f0f0;
 }
@@ -78,11 +78,11 @@
     font-size: 14px !important;
     font-weight: bold;
 }
-.toolbar div.pen {
+.toolbar button.pen {
   font-size: 16px;
 }
 
-.toolbar div.rectangle:after {
+.toolbar button.rectangle:after {
   width: 15px;
   height: 15px;
   border: 1px solid red;
@@ -91,7 +91,7 @@
   left: 4px;
 }
 /*
-.toolbar div.highlight:after {
+.toolbar button.highlight:after {
   width: 17px;
   height: 17px;
   background: yellow;
@@ -100,7 +100,7 @@
   left: 4px;
 }
 
-.toolbar div.strikeout:after {
+.toolbar button.strikeout:after {
   width: 15px;
   height: 1px;
   background: red;
@@ -109,7 +109,7 @@
   left: 4px;
 }
 
-.toolbar div.underline:after {
+.toolbar button.underline:after {
   width: 20px;
   height: 1px;
   background: green;
@@ -118,7 +118,7 @@
   left: 4px;
 }*/
 
-.toolbar div.text:after {
+.toolbar button.text:after {
   content: 'T';
   font-family: 'Times New Roman';
 }
