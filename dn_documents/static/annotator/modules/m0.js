@@ -612,8 +612,8 @@ function module0(module, exports, __webpack_require__) {
 					var point_id = window.location.toString().split('/');
 					point_id = point_id[point_id.length - 1];
 					if (isNaN(point_id)) {
-						$('.comments-toggler').click();
-                    }                    
+						//$('.comments-toggler').click();
+                    }
 				});
 			}
 			catch(er)
@@ -1059,7 +1059,7 @@ function module0(module, exports, __webpack_require__) {
 				var child = document.createElement('div');
 				child.className = 'comment-list-item';
 				var child_info = '<div>'+ aComment.content+'</div>';
-				aComment.date_time = getTimeString(aComment.date_time);
+				aComment.date_time = getTimeString();
 				child_info += '<div class="user-time-info">';
 				child_info +='<span class"time">'+aComment.date_time+'</span>';
 				//child_info +='<span class="buttons">:</span>';
@@ -1084,7 +1084,6 @@ function module0(module, exports, __webpack_require__) {
 				{
 					activeAnnotationItem = item;
 					if (supportsComments(target)) {
-						window['update_notification_list'](activeAnnotationId);
 						pdfStoreAdapter.getComments(documentId, activeAnnotationId).then(renderComments);
 						if(activeAnnotationItem.sub_type)
 						{

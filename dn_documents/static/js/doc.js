@@ -1,4 +1,3 @@
-{
 var annot_view_markup = `<div class="pdf-annotator" id="annotated-doc-conatiner">
 <div class="toolbar topbar">
     <div class="strt_sign pdfjs" url="/meeting_point/save_signature_doc" style="display: none">Sign</div>
@@ -250,7 +249,7 @@ var annot_view_markup = `<div class="pdf-annotator" id="annotated-doc-conatiner"
     </div>
 </div>
 </div>`
-}
+
 
 if(!odoo.pdf_libs)
 {
@@ -282,14 +281,13 @@ $(function(){
         });
    }
 
-   var req_url = '/dn_documents/get_pdf';
-   var doc_id = $('.doc_meta > .doc_id').html();
-   var doc_model = $('.doc_meta > .doc_model').html();
-   var input_data = {
-       "model":doc_model,
-       "document_id": doc_id,
-       "token": odoo.session_info.token
-   }
+   var req_url = '/doc/binary';
+        var doc_id = $('.doc_meta > .doc_id').html();
+        var doc_model = $('.doc_meta > .doc_model').html();
+        var input_data = {
+            "doc_model":doc_model,
+            "doc_id": doc_id
+        }
 
    var doc_types = {
         'meeting_point.files':'',
@@ -302,10 +300,10 @@ $(function(){
 
    dn_json_rpc(req_url,input_data, function(data)
    {
-       var pdf_binary=data.pdf_binary;
        $('#pdf_div').prepend(annot_view_markup);
-       $('.o_technical_modal.in').append('<script src="/dn_documents/static/annotator/annotator.js"></script>');
+       var pdf_binary=data.pdf_binary;
        var doc_type = doc_types[doc_model];
+       $('.pdf-annotator').append('<script src="/dn_documents/static/annotator/annotator.js"></script>');
        //console.log(doc_types,456,  doc_model);
        pdf_js_module.render({doc:pdf_binary, id: doc_id, first_time: 1, type : doc_type});
    });

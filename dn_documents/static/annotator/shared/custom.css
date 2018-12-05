@@ -145,7 +145,7 @@
 /****** Context Menu *******/
   .ContextMenuPopup {
     display: none;
-    position: fixed;
+    position: fixed !important;
     z-index: 8778995;
     justify-content: center;
     align-items: center;

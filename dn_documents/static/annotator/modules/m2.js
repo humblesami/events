@@ -1236,7 +1236,7 @@ try{
                                 return new Promise(function(resolve, reject) {
                                 	var obj_this = this;
 									var input_data = {};
-									input_data['db'] = site_config.server_db;
+									input_data['db'] = odoo.session_info.db;
 									input_data['token'] = odoo.session_info.token;
 									var point = findAnnotationObject(documentId, annotationId);
                                     var comment = {
@@ -2757,7 +2757,6 @@ try{
                  * @param {Event} e The DOM event that needs to be handled
                  */
                 function handleDocumentClick(e) {
-                console.log(2222)
                     if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                         return;
                     } // Remove current overlay
