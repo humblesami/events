@@ -138,9 +138,11 @@ class Survey(models.Model):
 
     @api.model
     def create(self, values):
-        questions = values['question_ids']
+        questions = values.get('question_ids')
+        if not questions:
+            raise ValidationError("Please provide questions to add survey")
         if len(questions) == 0:
-            raise ValidationError("Survey can not not exist without questions")
+            raise ValidationError("Please provide questions to add survey")
         title = values.get('title')
         if title:
             values['name'] = title

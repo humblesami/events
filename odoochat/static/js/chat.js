@@ -5,7 +5,7 @@
 //online
 //console.log(11133333);
 var chat_server = 'http://172.16.21.170:3000';
-//chat_server = 'https://chat.brainpbx.com';
+chat_server = 'https://chat.brainpbx.com';
 
 var check = 0;
 var socket = undefined;
