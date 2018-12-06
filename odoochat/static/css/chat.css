@@ -299,12 +299,12 @@ li.showmouseawaybutton
 .user_count{
     position: absolute;
     left: 83%;
-    top: 6px;
+    top: 7px;
     display: block;
     background: red;
     border-radius: 30px;
     color: white;
-    padding: 4px;
+    padding: 3px;
 }
 #online-users-list .list-group-item
 {
