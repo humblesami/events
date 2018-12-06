@@ -88,7 +88,7 @@ odoo.define('odoochat.onClientready', function (require) {
         var populate_user_list = function(user){
              notifications[user.id] = 0;
             var child = '<li id="' + user.id + '" class="open-chatbox list-group-item"><span>'+ user.name + '</span>';
-            child += '<span style="position:relative;left:90%;display:none;" id="unseen-' + user.id + '"></span></li>';
+            child += '<span class="user_count"style="position:relative;left:90%;display:none;" id="unseen-' + user.id + '"></span></li>';
             $('#online-users-list:first ul:first').append(child);
         }
 
