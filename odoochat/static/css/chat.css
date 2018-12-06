@@ -297,15 +297,15 @@ li.showmouseawaybutton
 }
 
 .user_count{
-    position: absolute;
+    position: absolute !important;
     left: 83%;
     top: 7px;
-    display: block;
     background: red;
     border-radius: 30px;
     color: white;
     padding: 3px;
 }
+
 #online-users-list .list-group-item
 {
     cursor:pointer;
