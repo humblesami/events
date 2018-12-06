@@ -295,22 +295,25 @@ class meeting(http.Controller):
 
             cnt = 0
             for attendee_partner in meeting.attendee_ids:
-                attendee = meeting_object['attendees'][cnt]
-                attendee_user = attendee_partner.partner_id.user_id
-                attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
-                attendee['uid'] = attendee_user.id
-                attendee['name'] = attendee_user.name
-                if attendee['state'] == 'needsAction':
-                    attendee['state'] = 'No Response'
-                elif attendee['state'] == 'accepted':
-                    attendee['state'] = 'Accepted'
-                elif attendee['state'] == 'rejected':
-                    attendee['state'] = 'Rejected'
-                elif attendee['state'] == 'declined':
-                    attendee['state'] = 'Declined'
-                elif attendee['state'] == 'tentative':
-                    attendee['state'] = 'Uncertain'
-                cnt += 1
+                try:
+                    attendee = meeting_object['attendees'][cnt]
+                    attendee_user = attendee_partner.partner_id.user_id
+                    attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
+                    attendee['uid'] = attendee_user.id
+                    attendee['name'] = attendee_user.name
+                    if attendee['state'] == 'needsAction':
+                        attendee['state'] = 'No Response'
+                    elif attendee['state'] == 'accepted':
+                        attendee['state'] = 'Accepted'
+                    elif attendee['state'] == 'rejected':
+                        attendee['state'] = 'Rejected'
+                    elif attendee['state'] == 'declined':
+                        attendee['state'] = 'Declined'
+                    elif attendee['state'] == 'tentative':
+                        attendee['state'] = 'Uncertain'
+                    cnt += 1
+                except:
+                    continue
             filters = [('res_id', '=', meeting_object['id']), ('parent_id', '=', False),
                        ('model', '=', 'calendar.event'),
                        ('message_type', '=', 'comment'), ('create_uid', '!=', False)]

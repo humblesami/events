@@ -11,12 +11,14 @@
   }
   #content-wrapper {    
     width: 100%;
-    overflow: auto;
-    display: inline-table;
     background-color: white;
+    position: fixed;
+    overflow: auto;
+    height: 100vh;
+    padding-bottom: 200px;
   }
   #comment-wrapper {
-    position: fixed;    
+    position: fixed;
     width: 250px;
     left:2px;
     display: none;

@@ -748,7 +748,7 @@ function module0(module, exports, __webpack_require__) {
 		(function() {
 			var tooltype = 'cursor';
 			function setActiveToolbarItem(type, button) {
-				var oldButton = $('.toolbar div.active');
+				var oldButton = $('.toolbar button.active');
 				if (oldButton.length > 0) {
 					oldButton.removeClass('active');
 					switch (tooltype) {
@@ -824,7 +824,7 @@ function module0(module, exports, __webpack_require__) {
 			}
 
 //			$('.toolbar button').click(handleToolbarClick);
-			$('.toolbar div').click(handleToolbarClick);
+			$('.toolbar button').click(handleToolbarClick);
 			$('.toolbar:first .cursor').click();
 		})();
 

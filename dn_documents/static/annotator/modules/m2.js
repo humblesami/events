@@ -3196,6 +3196,7 @@ try{
                     input.style.position = 'fixed';
                     input.style.top = e.clientY + 'px';
                     input.style.left = e.clientX + 'px';
+                    input.style.zIndex = 1101;
                     input.addEventListener('blur', handleInputBlur);
                     input.addEventListener('keyup', handleInputKeyup);
                     document.body.appendChild(input);

@@ -18,3 +18,11 @@
 {
     top:42px;
 }
+
+.modal.o_technical_modal .modal-dialog {
+    width: 98%;
+}
+
+.modal.o_technical_modal .modal-dialog .modal-content .modal-body {
+    overflow: hidden;
+}

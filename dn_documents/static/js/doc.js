@@ -1,4 +1,3 @@
-console.log(33312);
 (function(){
     var annot_view_markup = `
     <div class="pdf-annotator" id="annotated-doc-conatiner">
@@ -299,9 +298,7 @@ console.log(33312);
            pdf_js_module.render(data);
        });
 
-       console.log(666666);
 
-       $('#pdf_div').html(annot_view_markup);
         if(!odoo.pdf_libs)
         {
             var libs = '';
@@ -309,9 +306,10 @@ console.log(33312);
             libs += '<link href="/dn_documents/static/annotator/shared/custom.css" rel="stylesheet" type="text/css" />';
             libs += '<link href="/dn_documents/static/annotator/shared/pdf.viewer.css" rel="stylesheet" type="text/css" />';
             libs += '<script src="/dn_documents/static/annotator/shared/pdf.viewer.js"></script>';
-            libs += '<link href="/dn_documents/static/css/annotator.css" rel="stylesheet" type="text/css" >';
-            $('#pdf_div').append(libs);
+            libs += '<link href="/dn_documents/static/annotator/annotator.css" rel="stylesheet" type="text/css" >';
+            $('body').append(libs);
             odoo.pdf_libs = 1;
         }
+        $('#pdf_div').html(annot_view_markup);
     });
 })()
