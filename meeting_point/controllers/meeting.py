@@ -316,12 +316,20 @@ class meeting(http.Controller):
             surveys = meeting.survey_ids.filtered(lambda r: r.my_status == 'pending')
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(surveys, ['id', 'title'])
             props = ['attendance', 'state', 'response_by']
-            meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
+            dataz = []
+            for val in meeting.attendee_ids:
+                if val.id ==1:
+                    continue
+                else:
+                    dataz.append(val)
+            meeting_object['attendees'] = ws_methods.objects_list_to_json_list(dataz, props)
 
             cnt = 0
             for attendee_partner in meeting.attendee_ids:
                 attendee = meeting_object['attendees'][cnt]
                 attendee_user = req_env['res.users'].sudo().search([('partner_id', '=',attendee_partner.partner_id.id)])
+                if attendee_user.id ==1:
+                    continue
                 attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
                 attendee['uid'] = attendee_user.id
                 attendee['name'] = attendee_user.name
