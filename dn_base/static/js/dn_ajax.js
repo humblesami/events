@@ -17,10 +17,7 @@ var dn_json_rpc_object = {
                 this.loaderContainer.hide();
             else
             {
-                var loaderhite = $(window).height();
-                this.loaderContainer.css({ 'height':loaderhite,'display': 'block' });
-                var image_left = this.loaderContainer.width() / 2 - this.loaderImage.width() /2;
-                this.loaderImage.css({'top':'40%','left':image_left});
+                this.loaderContainer.show();
             }
         },
         baseUrl: dn_base_web_url,
@@ -30,10 +27,14 @@ var dn_json_rpc_object = {
         loaderImage: undefined,
         init: function (config) {
             if (!this.loaderContainer) {
-                this.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 999999;top : 0;width:100%;background: rgba(0, 0, 0, 0.4)"/>');
-                this.loaderImage = $('<img style="position:relative;animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
-                this.loaderContainer.append(this.loaderImage);
-                $('body').append(this.loaderContainer);
+                if($('body').length > 0)
+                {
+                    this.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 999999;top:47px;height:calc(100vh - 47px);width:100%;background: rgb(0, 0, 0);opacity:0.1"/>');
+                    this.loaderImage = $('<img style="position:relative; top:calc(50vh - 91px);left:calc(50vw - 24px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
+                    this.loaderContainer.append(this.loaderImage);
+                    $('body').append(this.loaderContainer);
+                    console.log($('#loaderContainerajax').length, 1333);
+                }
             }
             if (config && config.baseUrl)
                 dn_json_rpc_object.baseUrl = config.baseUrl;
