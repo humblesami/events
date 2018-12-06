@@ -270,7 +270,7 @@ odoo.define('odoochat.onClientready', function (require) {
                     }
                     if(!going_user.id)
                     {
-                        if(!isNaN(going_user))
+                        if(isNaN(going_user))
                         {
                             console.log("Leaving user does not an have valid id" , going_user);
                             return;

@@ -90,6 +90,32 @@ class meeting(http.Controller):
             except:
                 return ws_methods.handle()
 
+    @http.route('/meeting/peercall', type="http", csrf=False, auth='public', cors='*')
+    def setPeerCall(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            caller_id = kw.get('caller_id')
+            receiver_id = kw.get('receiver_id')
+            return ws_methods.http_response('Error')
+        except:
+            return ws_methods.handle()
+
+    @http.route('/meeting/getroom', type="http", csrf=False, auth='public', cors='*')
+    def getMeetingRoom(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+
+            pin = kw.get('pin')
+            if not pin:
+                return ws_methods.http_response('Invalid pin')
+            return ws_methods.http_response('Error')
+        except:
+            return ws_methods.handle()
+
     @http.route('/meeting/attendees', type="http", csrf=False, auth='public', cors='*')
     def getMeetingAttendees(self, **kw):
         try:
