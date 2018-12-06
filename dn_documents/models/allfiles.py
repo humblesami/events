@@ -14,7 +14,7 @@ from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 
 class AllFiles(models.Model):
     _name = 'dn_documents.allfiles'
-    name = fields.Char(string="Title" ,required=False)
+    name = fields.Char(string="Title" ,required=True)
     filename = fields.Char(string="Filename")
     attachment = fields.Binary(string="Attachment", attachment=True, required=True)
     pdf_doc = fields.Binary(string="View")

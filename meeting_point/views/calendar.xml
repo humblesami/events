@@ -459,7 +459,7 @@
             </field>
         </record>
 
-                                <record id="calendar.view_conference" model="ir.ui.view">
+        <record id="calendar.view_conference" model="ir.ui.view">
             <field name="name">calendar.conference.form</field>
             <field name="model">calendar.event</field>
             <field name="priority" eval="2"/>
@@ -469,7 +469,7 @@
                     <div id="jitsi-meet-container" style="text-align:center">
                         <div id="meeting-info-panel">
                             <h6 style="padding-top:6px">
-                                <button id='meeting-info-btn'>Show/Hide Meeting Info</button>
+                                <div id='meeting-info-btn'>Show/Hide Meeting Info</div>
                             </h6>
                             <h6 id='meeting-info-box'>
                                 <div class="url"></div>
