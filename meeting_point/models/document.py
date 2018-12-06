@@ -20,6 +20,7 @@ class MeetingDoc(models.Model):
 
 class Document(models.Model):
     _name = 'meeting_point.document'
+    _inherit = ['e_sign.document','dn.seen']
 
     meeting_id = fields.Many2one('calendar.event', string="Meeting", ondelete='cascade')
     user_ids = fields.Many2many('res.users', string="Signature(s)")
