@@ -252,7 +252,6 @@ class meeting(http.Controller):
             id = int(values["id"])
             date_value = dn_dt.nowtostr()
             filters = [('id', '=', id)]
-
             meeting = req_env['calendar.event'].search(filters, limit=1, order='id')
             props = ['id', 'start', 'stop', 'conference_status', 'duration', 'zip', 'video_call_link',
                      'conference_bridge_number', 'pin', 'exectime',
@@ -295,25 +294,22 @@ class meeting(http.Controller):
 
             cnt = 0
             for attendee_partner in meeting.attendee_ids:
-                try:
-                    attendee = meeting_object['attendees'][cnt]
-                    attendee_user = attendee_partner.partner_id.user_id
-                    attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
-                    attendee['uid'] = attendee_user.id
-                    attendee['name'] = attendee_user.name
-                    if attendee['state'] == 'needsAction':
-                        attendee['state'] = 'No Response'
-                    elif attendee['state'] == 'accepted':
-                        attendee['state'] = 'Accepted'
-                    elif attendee['state'] == 'rejected':
-                        attendee['state'] = 'Rejected'
-                    elif attendee['state'] == 'declined':
-                        attendee['state'] = 'Declined'
-                    elif attendee['state'] == 'tentative':
-                        attendee['state'] = 'Uncertain'
-                    cnt += 1
-                except:
-                    continue
+                attendee = meeting_object['attendees'][cnt]
+                attendee_user = req_env['res.users'].sudo().search([('partner_id', '=',attendee_partner.partner_id.id)])
+                attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
+                attendee['uid'] = attendee_user.id
+                attendee['name'] = attendee_user.name
+                if attendee['state'] == 'needsAction':
+                    attendee['state'] = 'No Response'
+                elif attendee['state'] == 'accepted':
+                    attendee['state'] = 'Accepted'
+                elif attendee['state'] == 'rejected':
+                    attendee['state'] = 'Rejected'
+                elif attendee['state'] == 'declined':
+                    attendee['state'] = 'Declined'
+                elif attendee['state'] == 'tentative':
+                    attendee['state'] = 'Uncertain'
+                cnt += 1
             filters = [('res_id', '=', meeting_object['id']), ('parent_id', '=', False),
                        ('model', '=', 'calendar.event'),
                        ('message_type', '=', 'comment'), ('create_uid', '!=', False)]
