@@ -25,15 +25,29 @@ var dn_json_rpc_object = {
         initialized:false,
         loaderContainer: undefined,
         loaderImage: undefined,
+        menuHeightToAdd : undefined,
         init: function (config) {
             if (!this.loaderContainer) {
                 if($('body').length > 0)
                 {
-                    this.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 999999;top:47px;height:calc(100vh - 47px);width:100%;background: rgb(0, 0, 0);opacity:0.2ser"/>');
-                    this.loaderImage = $('<img style="position:relative; top:calc(50vh - 110px);left:calc(50vw - 24px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
+                    this.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 9009;top:0;left;0;height:100vh;width:100%;background: rgb(0, 0, 0);opacity:0.2"/>');
+                    this.loaderImage = $('<img style="position:relative; top:calc(50vh - 44px);left:calc(50vw - 22px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
                     this.loaderContainer.append(this.loaderImage);
                     $('body').append(this.loaderContainer);
-                    console.log($('#loaderContainerajax').length, 1333);
+                }
+            }
+            if(!this.menuHeightToAdd)
+            {
+                var menu = $('.o_main_navbar:first');
+                if(menu.length>0)
+                {
+                    if(this.loaderContainer)
+                    {
+                        var newTop =  menu.height() + 22;
+                        newTop = 'calc(50vh - '+newTop+'px)';
+                        this.loaderImage.css('top' , newTop);
+                    }
+                    this.menuHeightToAdd = menu;
                 }
             }
             if (config && config.baseUrl)
@@ -42,8 +56,6 @@ var dn_json_rpc_object = {
         },
 
         request: function (reqfun, input_data, callback, failureCallBack) {
-            if (!this.initialized)
-                this.init();
             var serviceRequestInProgress = false;
             if (serviceRequestInProgress) {
                 //sam_popup.show("Some Request Already In Progress", "ok");
@@ -59,6 +71,9 @@ var dn_json_rpc_object = {
 
             if (this.showLoader) {
                 this.showHideLoader(true);
+                setTtimeout(function(){
+                    this.loaderContainer.hide()
+                }, 6000);
             }
 
             $.ajax({
