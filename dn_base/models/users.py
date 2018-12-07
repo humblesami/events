@@ -1,7 +1,7 @@
-from odoo import models, api, fields
+from odoo import models, api, fields, exceptions
 from odoo.exceptions import UserError, _logger
 from odoo.addons.auth_signup.models.res_partner import now
-
+import re
 class Users(models.Model):
     _inherit = 'res.users'
 
@@ -12,8 +12,16 @@ class Users(models.Model):
             if self.env.user.id== user.user_id.id:
                 user.own_profile=True
 
+    def is_valid_email(self,email):
+        if len(email) > 7:
+            return bool(re.match( "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", email))
+        else:
+            return False
     @api.model
     def create(self, vals):
+        data = self.is_valid_email(vals['login'])
+        if data == False:
+            raise exceptions.ValidationError('Please Enter correct email Id')
         if "creating_child" in self._context:
             user = self.env['res.users'].search([('login', '=', vals['login'])])
             return user
