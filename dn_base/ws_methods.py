@@ -163,7 +163,7 @@ def check_auth(values):
     if not db:
         return False
     token = str(values['token'])
-    stuid = values['uid']
+    stuid = values.get('uid')
     uid = int(stuid)
     filters = [('auth_token', '=', token),('user_id','=', uid)]
     user = request.env['dnspusers'].sudo().search(filters)
