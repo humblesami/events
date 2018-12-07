@@ -101,6 +101,15 @@
     width: 20px;
     background: #fefefe
 }
+.close-button {
+    position: absolute;
+    top: -3px;
+    right: 0px;
+    font-size: 24px;
+    border: 1px solid #dedede;
+    width: 20px;
+    background: #fefefe
+}
 
 .maxi-button {
     position: absolute;
