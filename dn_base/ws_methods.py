@@ -162,7 +162,7 @@ def check_auth(values):
     db = values.get('db')
     if not db:
         return False
-    token = str(values['token'])
+    token = str(token)
     stuid = values.get('uid')
     uid = int(stuid)
     filters = [('auth_token', '=', token),('user_id','=', uid)]
