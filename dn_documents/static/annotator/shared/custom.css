@@ -17,15 +17,16 @@
     padding-bottom: 200px;
   }
   #comment-wrapper {
-    position: fixed;
+    position: absolute;
     width: 250px;
-    left:2px;
+    left: -14px;
     display: none;
     background: silver;
     border-right: 1px solid #e6e6e6;
     overflow-y: scroll;
-    bottom:0;
-    height:auto !important;
+    bottom: 0;
+    height: auto !important;
+    top:0 !important;
      }
   
   .pdfViewer .canvasWrapper {
@@ -74,14 +75,19 @@
 
   /*********** Comments ***********/
 
-  
-  
-  .comment-list-container > div {   
+  .comment-list {
+    padding-top:50px;
+    padding-bottom:220px;
+  }
+
+  .comment-list-container > div {
     border-radius: 5px;
   }
   
   #comment-wrapper h4 {
     margin: 0;
+    position:fixed;
+    width: 250px;
     padding: 12px;
     text-align: center;
     background: #f5f5f5;
@@ -89,6 +95,8 @@
   }
   
   #comment-wrapper .comment-list-item {
+    padding-top: 50px;
+    padding-bottom: 50px;
     border-bottom: 1px solid #f1e9e9;    
     background-color: #f0f4f9;    
     border-radius: 10px;
@@ -120,11 +128,14 @@
 
   #comment-wrapper .comment-list-container {                
     width: 100%;
+    min-height:auto !important;
   }
   
   #comment-wrapper .comment-list-form {
-    padding-top: 7px;
+    position: fixed;
+    width: 250px;
     background: #fff;
+    bottom: 0;
 }
   
   #comment-wrapper.annotation .comment-list-form {
