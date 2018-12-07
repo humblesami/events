@@ -30,7 +30,7 @@ var dn_json_rpc_object = {
                 if($('body').length > 0)
                 {
                     this.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 999999;top:47px;height:calc(100vh - 47px);width:100%;background: rgb(0, 0, 0);opacity:0.2ser"/>');
-                    this.loaderImage = $('<img style="position:relative; top:calc(50vh - 91px);left:calc(50vw - 24px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
+                    this.loaderImage = $('<img style="position:relative; top:calc(50vh - 110px);left:calc(50vw - 24px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
                     this.loaderContainer.append(this.loaderImage);
                     $('body').append(this.loaderContainer);
                     console.log($('#loaderContainerajax').length, 1333);
