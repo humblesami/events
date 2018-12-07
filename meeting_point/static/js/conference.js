@@ -102,7 +102,7 @@ $(function() {
         var options = {
             roomName: roomName,
             width: window.innerWidth - 10,
-            height: window.innerHeight - 100,
+            height: window.innerHeight - 65,
             parentNode: document.querySelector('#meeting-room'),
             configOverwrite: config,
             //jwt: "dnmeetvuemeetingtoken",
@@ -110,8 +110,8 @@ $(function() {
         };
 
         var api = new JitsiMeetExternalAPI(domain, options);
-        //        var joinin_user_name = window['current_user'].cookie.name;
-        //        api.executeCommand('displayName', joinin_user_name);
+        var joinin_user_name = window['current_user'].cookie.name;
+        api.executeCommand('displayName', joinin_user_name);
 
         var is_admin = false;
         var moderator_id = undefined;
