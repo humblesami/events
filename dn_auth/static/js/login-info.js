@@ -48,7 +48,7 @@
         function load_users(users)
         {
             var usersContent = '';
-            console.log(users);
+            //console.log(users);
             var opt_val = '0';
             users.forEach(function(user, i) {
                 if (user.id)
@@ -99,7 +99,7 @@
             $('#user-drop-down option:selected').each(function(el, i){
                 selected_users.push(parseInt($(this).attr("value")));
             });
-            console.log(selected_users);
+            //console.log(selected_users);
 
             data = {
                 interval_type : $('#interval-type option:selected').text(),

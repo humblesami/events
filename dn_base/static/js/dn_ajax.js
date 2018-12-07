@@ -11,13 +11,16 @@ catch(er)
 dn_base_web_url = window.location.origin + '';
 var dn_json_rpc_object = {
         showHideLoader:function(show_it){
-            if (!this.initialized)
-                this.init();
+            if (!dn_json_rpc_object.initialized)
+                dn_json_rpc_object.init();
             if(!show_it)
-                this.loaderContainer.hide();
+                dn_json_rpc_object.loaderContainer.hide();
             else
             {
-                this.loaderContainer.show();
+                dn_json_rpc_object.loaderContainer.show();
+                 setTimeout(function(){
+                    dn_json_rpc_object.loaderContainer.hide();
+                }, 6000);
             }
         },
         baseUrl: dn_base_web_url,
@@ -27,27 +30,27 @@ var dn_json_rpc_object = {
         loaderImage: undefined,
         menuHeightToAdd : undefined,
         init: function (config) {
-            if (!this.loaderContainer) {
+            if (!dn_json_rpc_object.loaderContainer) {
                 if($('body').length > 0)
                 {
-                    this.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 9009;top:0;left;0;height:100vh;width:100%;background: rgb(0, 0, 0);opacity:0.2"/>');
-                    this.loaderImage = $('<img style="position:relative; top:calc(50vh - 44px);left:calc(50vw - 22px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
-                    this.loaderContainer.append(this.loaderImage);
-                    $('body').append(this.loaderContainer);
+                    dn_json_rpc_object.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 9009;top:0;left;0;height:100vh;width:100%;background: rgb(0, 0, 0);opacity:0.2"/>');
+                    dn_json_rpc_object.loaderImage = $('<img style="position:relative; top:calc(50vh - 44px);left:calc(50vw - 22px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
+                    dn_json_rpc_object.loaderContainer.append(dn_json_rpc_object.loaderImage);
+                    $('body').append(dn_json_rpc_object.loaderContainer);
                 }
             }
-            if(!this.menuHeightToAdd)
+            if(!dn_json_rpc_object.menuHeightToAdd)
             {
                 var menu = $('.o_main_navbar:first');
                 if(menu.length>0)
                 {
-                    if(this.loaderContainer)
+                    if(dn_json_rpc_object.loaderContainer)
                     {
                         var newTop =  menu.height() + 22;
                         newTop = 'calc(50vh - '+newTop+'px)';
-                        this.loaderImage.css('top' , newTop);
+                        dn_json_rpc_object.loaderImage.css('top' , newTop);
                     }
-                    this.menuHeightToAdd = menu;
+                    dn_json_rpc_object.menuHeightToAdd = menu;
                 }
             }
             if (config && config.baseUrl)
@@ -69,10 +72,10 @@ var dn_json_rpc_object = {
             if(reqfun.indexOf('http'))
                 requestUrl = reqfun;
 
-            if (this.showLoader) {
-                this.showHideLoader(true);
-                setTtimeout(function(){
-                    this.loaderContainer.hide()
+            if (dn_json_rpc_object.showLoader) {
+                dn_json_rpc_object.showHideLoader(true);
+                setTimeout(function(){
+                    dn_json_rpc_object.loaderContainer.hide()
                 }, 6000);
             }
 
@@ -87,14 +90,11 @@ var dn_json_rpc_object = {
 //                    console.log(input_data);
                 },
                 success: function (results) {
-                    //console.log(results);
-                    dn_json_rpc_object.showHideLoader();
                     serviceRequestInProgress = false;
                     dn_json_rpc_object.handleResponse(results, reqfun, callback, failureCallBack);
                 },
                 error: function (results) {
                     console.log("Error in "+reqfun, results);
-                    dn_json_rpc_object.showHideLoader();
                     serviceRequestInProgress = false;
                     if(results.statusText == "OK")
                     {
@@ -105,6 +105,9 @@ var dn_json_rpc_object = {
                     if(results && results.responseText)
                         results = results.responseText;
                     dn_json_rpc_object.handleError(results, reqfun, failureCallBack);
+                },
+                complete:function(){
+                    dn_json_rpc_object.showHideLoader();
                 }
             });
         },

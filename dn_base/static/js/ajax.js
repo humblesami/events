@@ -42,7 +42,7 @@ function hideLoader(path)
     }
     if(!found)
     {
-        console.log("not found "+ path);
+        //console.log("not found "+ path);
     }
     else
     {
@@ -58,7 +58,9 @@ function genericJsonRpc (fct_name, params, fct) {
     var path = false;
     if(params && params.model)
     {
-        path = params.model + '/'+ params.method;
+        path = params.model;
+        if (params.method)
+            path += '/'+ params.method;
         showLoader(path);
     }
 
