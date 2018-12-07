@@ -150,11 +150,6 @@
                     </svg>
                 </div>
             </a>
-
-            <a class="doc-reseter annotation_button" title="Reset Annotations">
-                <img height="25" src="assets/img/reset.png">
-            </a>
-
         </div>
         <div id="content-wrapper">
             <div id="viewer" class="pdfViewer"></div>
