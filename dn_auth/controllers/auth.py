@@ -31,7 +31,10 @@ class auth(http.Controller):
             password = str(values['password'])
 
             request = http.request
-            uid = request.session.authenticate(db, login, password)
+            try:
+                uid = request.session.authenticate(db, login, password)
+            except:
+                return ws_methods.http_response('Error in config, Database '+db+' does not exist')
             if not uid:
                 return ws_methods.http_response('Invalid credentials')
 

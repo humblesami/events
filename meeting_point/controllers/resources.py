@@ -260,8 +260,10 @@ class ws(http.Controller):
                 props = ['topic_id.name', 'topic_id.id']
             elif doc_type == 'signature':
                 props = ['meeting_id.name', 'meeting_id.id', 'mp_signature_status']
+            elif doc_type == 'home':
+                props = ['name']
             else:
-                return ws_methods.http_response('Invalid document type'+doc_type)
+                return ws_methods.http_response('Invalid document type ' + doc_type)
 
             obj = ws_methods.object_to_json_object(file, props)
             for ke in obj:
