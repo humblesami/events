@@ -18,6 +18,15 @@ class MeetingDoc(models.Model):
     _inherit = 'dn_documents.allfiles'
     meeting_id = fields.Many2one('calendar.event', string="Meeting", ondelete='cascade')
 
+    @api.model
+    def search(self, args, offset=0, limit=0, order=None, count=False):
+        if not self.env.user.has_group('dn_base.group_dn_app_manager') and not self.env.user.has_group('base.group_system'):
+            # list = self.env['calendar.event'].search([('partner_ids', 'in', [self.env.user.partner_id.id])]).ids
+            myargs = [('meeting_id.partner_ids','in',[self.env.user.partner_id.id])]
+            args.extend(myargs)
+        docs = super(MeetingDoc, self).search(args)
+        return docs
+
 class Document(models.Model):
     _name = 'meeting_point.document'
     _inherit = ['e_sign.document','dn.seen']

@@ -98,14 +98,14 @@ display:none !important;
 }
 .o_chatter_button_new_message:before
 {
-       content: "Comment";
+       content: "Comments";
        text-indent: 0px;
        float:left
 }
 
 .o_chatter_button_log_note:before
 {
-       content: "Personal Note";
+       content: "Personal Notes";
        text-indent: 0px;
        float:left
 }

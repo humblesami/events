@@ -6,6 +6,15 @@ class TopicDoc(models.Model):
     _inherit = 'dn_documents.allfiles'
     topic_id = fields.Many2one('meeting_point.topic', string="Meeting Topic")
 
+    @api.model
+    def search(self, args, offset=0, limit=0, order=None, count=False):
+        if not self.env.user.has_group('dn_base.group_dn_app_manager') and not self.env.user.has_group('base.group_system'):
+
+            myargs = [('topic_id.meeting_id.partner_ids','in',[self.env.user.partner_id.id])]
+            args.extend(myargs)
+        docs = super(TopicDoc, self).search(args)
+        return docs
+
 class Topic(models.Model):
     _name="meeting_point.topic"
     _inherit = 'dn_documents.allfiles'
