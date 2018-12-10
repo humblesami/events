@@ -13,10 +13,10 @@
     background-color: white;
     position: fixed;
     overflow: auto;
-    height: 100%;
+    height: 86%;
     padding-bottom: 0px;
     white-space: nowrap;
-    top: 0px;
+    top: 14%;
     bottom: 0px;
   }
   #comment-wrapper {
@@ -235,3 +235,10 @@
     border-bottom: 1px solid #888585;
     margin: 3px 0;
   }
+
+.btn-icon
+{
+    background-color: #ffffff;
+    border-color: #ffffff;
+    font-size: 14px;
+}

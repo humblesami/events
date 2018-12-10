@@ -178,7 +178,7 @@
             </div>
 
             <div class="toolbar annotation-options ContextMenuPopup">
-                <div class="Button icon">
+                <div class="Button btn-icon">
                     <button class="underline" type="button" title="underline" data-tooltype="underline">
                         <div class="Icon">
                             <svg viewBox="0 0 24 24" id="ic_annotation_underline_black_24px" width="100%" height="100%">
@@ -190,7 +190,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="Button icon">
+                <div class="Button btn-icon">
                     <button class="strikeout" type="button" title="strikeout" data-tooltype="strikeout">
                         <div class="Icon">
                             <svg viewBox="0 0 24 24" id="ic_annotation_strikeout_black_24px" width="100%" height="100%">
@@ -202,7 +202,7 @@
                         </div>
                     </button>
                 </div>
-                <div class="Button icon">
+                <div class="Button btn-icon">
                     <button class="highlight" type="button" title="Highlight" data-tooltype="highlight">
                         <div class="Icon">
                             <svg viewBox="0 0 24 24" id="ic_annotation_highlight_black_24px" width="100%" height="100%">
