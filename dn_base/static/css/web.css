@@ -258,3 +258,20 @@ table.o_group.o_inner_group tr {
 {
     z-index:9999;
 }
+.modal-header
+{
+    margin-top: 0;
+    padding: 5px 0px 0 5px;
+}
+.modal-header .close
+{
+    padding:6px;
+}
+.modal.o_technical_modal .modal-dialog
+{
+    padding:1%;
+}
+.modal.in
+{
+    top:46px;
+}

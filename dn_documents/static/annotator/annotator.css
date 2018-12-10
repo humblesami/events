@@ -2,10 +2,7 @@
 {
     display:none;
 }
-.o_technical_modal.in .modal-footer
-{
-    /*display:none;*/
-}
+
 .annotation-options.ContextMenuPopup
 {
 
@@ -14,15 +11,19 @@
 {
     top:0;
 }
-#annotated-doc-conatiner
-{
-    top:42px;
-}
 
-.modal.o_technical_modal .modal-dialog {
+/*.modal.o_technical_modal .modal-dialog {
     width: 98%;
-}
+}*/
 
 .modal.o_technical_modal .modal-dialog .modal-content .modal-body {
     overflow: hidden;
+}
+.o_technical_modal.in .modal-footer
+{
+    display:none;
+}
+.modal-title
+{
+    display:none;
 }

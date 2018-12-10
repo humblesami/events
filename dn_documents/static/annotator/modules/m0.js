@@ -502,6 +502,16 @@ function module0(module, exports, __webpack_require__) {
 		var document_data = false;
 
 		function render(doc_data) {
+		    setTimeout(function(){
+		        render_details(doc_data);
+		    },50);
+		    dn_json_rpc_object.loaderContainer.show();
+		    setTimeout(function(){
+                dn_json_rpc_object.loaderContainer.hide();
+            }, 6000);
+		}
+
+		function render_details(doc_data) {
 			try{
                 //site_functions.showLoader("renderdoc");
 				var pdfData = false;
@@ -598,12 +608,12 @@ function module0(module, exports, __webpack_require__) {
                                 $('.groupcomment[annotationId="' + point_id + '"]').click();
                             }
                         }
-                        //site_functions.hideLoader('renderdoc');
+                        dn_json_rpc_object.loaderContainer.hide();
                     };                    
 					for(var i = 1; i <= NUM_PAGES; i++){                        
                         var after_inc = 0;                        
-						if(i == NUM_PAGES)						
-							cb_page_renderd = onPageRendered;                        
+						if(i == NUM_PAGES)
+						    cb_page_renderd = onPageRendered;
                         if(annotation_mode == 1)
                             UI.renderPage(i, RENDER_OPTIONS, cb_page_renderd);
                         else
