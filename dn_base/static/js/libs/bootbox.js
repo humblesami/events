@@ -328,6 +328,7 @@
        * overrides
        */
       options.buttons.ok.callback = options.onEscape = function() {
+        afterAlert();
         if ($.isFunction(options.callback)) {
           return options.callback.call(this);
         }
@@ -345,10 +346,12 @@
        * overrides; undo anything the user tried to set they shouldn't have
        */
       options.buttons.cancel.callback = options.onEscape = function() {
+      afterAlert();
         return options.callback.call(this, false);
       };
   
       options.buttons.confirm.callback = function() {
+      afterAlert();
         return options.callback.call(this, true);
       };
   
