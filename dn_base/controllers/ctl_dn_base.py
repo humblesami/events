@@ -10,14 +10,14 @@ from odoo.addons.web.controllers.main import Binary
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.web.controllers.main import Session, binary_content, Home
 
-class MyWebsite(Website):
-    @http.route('/', type='http', auth="public", website=True)
-    def index(self):
-        request = http.request
-        if not request.session.uid:
-            return redirect('/web/login')
-        else:
-            return redirect('/web')
+# class MyWebsite(Website):
+#     @http.route('/', type='http', auth="public", website=True)
+#     def index(self):
+#         request = http.request
+#         if not request.session.uid:
+#             return redirect('/web/login')
+#         else:
+#             return redirect('/web')
 
 class Controller(http.Controller):
 

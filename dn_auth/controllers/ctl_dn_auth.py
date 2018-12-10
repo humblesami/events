@@ -55,9 +55,9 @@ class AuthSession(AuthSignupHome):
     def web_login(self, *args, **kw):
         request = http.request
         user_id = request.session.uid
-        if user_id:
-            request.params['login_success'] = True
-            return redirect('/web')
+        # if user_id:
+        #     request.params['login_success'] = True
+        #     return redirect('/web')
         response = super(AuthSession, self).web_login(*args, **kw)
         if request.db:
             uid = request.session.uid

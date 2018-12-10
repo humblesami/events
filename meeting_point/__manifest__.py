@@ -22,6 +22,7 @@
     'depends': [
         'dn_auth','dn_website',
         'dn_documents', 'e_sign', #our base
+        'odoochat',
 		'calendar','survey', #builtin + required
 	    'doc_viewer', #custom + required
         #'inputmask_widget','web_digital_sign', #off the shelf + required

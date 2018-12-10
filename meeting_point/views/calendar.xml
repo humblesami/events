@@ -186,7 +186,7 @@
                             <field attrs="{'invisible': [('id', '=', False)]}" class="pin" name="pin"/>
                             <field attrs="{'invisible': [('id', '=', False)]}" name="video_call_link" widget="url"/>
                             <field class="end_call" name="end_call"/>
-                            <field class="password" name="password"/>
+                            <!--<field class="password" name="password"/>-->
                         </group>
 
                         <group readonly="1" >

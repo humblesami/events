@@ -1,12 +1,9 @@
 //Local
-
 //var chat_server = 'http://172.16.21.43:3000';
-
 //online
-//console.log(11133333);
 var chat_server = 'http://172.16.21.170:3000';
-chat_server = 'https://chat.brainpbx.com';
-
+if(dn_base_web_url.indexOf('localhost') == -1)
+    chat_server = 'https://chat.brainpbx.com';
 var check = 0;
 var socket = undefined;
 var users = undefined;
@@ -253,6 +250,15 @@ odoo.define('odoochat.onClientready', function (require) {
                 users[incoming_user.id] = incoming_user;
                 //console.log(users);
                 populate_user_list(incoming_user);
+            });
+
+            socket.on('forced_logged_out', function (data) {
+                var href = window.location.toString();
+                if(href.indexOf('localhost') == -1)
+                {
+                    alert('You are logged out due to '+data.reason);
+                    window.location = '/web/login';
+                }
             });
 
             socket.on('message', function (msg) {
