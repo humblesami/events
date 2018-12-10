@@ -49,6 +49,20 @@ $(function(){
 //    $('.meetingform input.pin').blur(function(){
 //        $(this).change();
 //    })
+$('.o_chatter_button_new_message').click();
+if(!odoo.mp_comment_js_events){
+    odoo['mp_comment_js_events'] = 1;
+    $('.o_chatter_button_new_message').click(function(){
+        $('.o_thread_message').show()
+        $('.o_thread_message').has('.o_mail_note').hide()
+    })
+
+    $('.o_chatter_button_log_note').click(function(){
+        $('.o_thread_message').hide()
+        $('.o_thread_message').has('.o_mail_note').show()
+    })
+
+}
 });
 
 var meeting_point = {
