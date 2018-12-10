@@ -143,12 +143,13 @@ odoo.define('odoochat.onClientready', function (require) {
         $('#message-form').submit(sendMessageFunction);
 
         function sendMessageFunction(e){
-            console.log("Submitted");
             e.preventDefault();
-            var msg = $('#message-form input:first').val();
-            var msg_obj = create_msg_obj(msg);
-            append_message(msg_obj.msg);
-            socket.emit('message', msg_obj);
+            if(socket && socket.connected){
+                var msg = $('#message-form input:first').val();
+                var msg_obj = create_msg_obj(msg);
+                append_message(msg_obj.msg);
+                socket.emit('message', msg_obj);
+            }
         }
 
         var receiveMessage = function(msg, sender_id) {
