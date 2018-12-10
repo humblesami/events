@@ -1,7 +1,6 @@
 //Local
-//var chat_server = 'http://172.16.21.43:3000';
+var chat_server = 'http://localhost:3000';
 //online
-var chat_server = 'http://172.16.21.170:3000';
 if(dn_base_web_url.indexOf('odoohq') > -1)
     chat_server = 'https://chat.brainpbx.com';
 var check = 0;
@@ -48,6 +47,11 @@ odoo.define('odoochat.onClientready', function (require) {
                 $('.dn-chatter:first').show();
                 $('#online-users-list').show();
                 $(this).addClass('active');
+                for(var user in users){
+                    if(user != odoo.session_info.uid){
+                        add_user_in_list(users[user]);
+                    }
+                }
                 chatter_shown = 1;
             }
             else
@@ -82,7 +86,9 @@ odoo.define('odoochat.onClientready', function (require) {
             return input_data;
         }
 
-        var populate_user_list = function(user){
+
+
+        var add_user_in_list = function(user){
              notifications[user.id] = 0;
             var child = '<li id="' + user.id + '" class="open-chatbox list-group-item"><span>'+ user.name + '</span>';
             child += '<span class="user_count"style="position:relative;left:90%;display:none;" id="unseen-' + user.id + '"></span></li>';
@@ -235,12 +241,6 @@ odoo.define('odoochat.onClientready', function (require) {
                     users = {};
                 }
                 users = online_users;
-                //console.log(users, 133);
-                for(var user in users){
-                    if(user != odoo.session_info.uid){
-                        populate_user_list(users[user]);
-                    }
-                }
             })
 
             socket.on('new_user', function (incoming_user) {
@@ -249,7 +249,7 @@ odoo.define('odoochat.onClientready', function (require) {
                 }
                 users[incoming_user.id] = incoming_user;
                 //console.log(users);
-                populate_user_list(incoming_user);
+                add_user_in_list(incoming_user);
             });
 
             socket.on('forced_logged_out', function (data) {
