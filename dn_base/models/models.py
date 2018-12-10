@@ -9,7 +9,7 @@ class MyMail(Message):
 
     @api.multi
     def unlink(self):
-        if self.env.uid != 1:
+        if self.env.uid != 1 and not self.env.user.has_group('dn_base.group_dn_app_manager'):
             for rec in self:
                 if rec.env.uid == rec.create_uid.id:
                     res = super(Message, rec).sudo().unlink()
