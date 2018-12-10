@@ -102,7 +102,6 @@
                 </xpath>
 
                 <xpath expr="//div[@name='view_script']" position="replace">
-                    <script src="/meeting_point/static/js/jquery.ui.touch-punch.min.js"></script>
                     <script src="/meeting_point/static/js/doc.js"></script>
                 </xpath>
             </field>
@@ -332,8 +331,6 @@
                                 </div>
                             </div>
 
-
-                            <script src="/meeting_point/static/js/jquery.ui.touch-punch.min.js"/>
                             <script src="/e_sign/static/js/pdf.worker.js"/>
                             <script src="/e_sign/static/js/pdf.js"/>
                             <script src="/meeting_point/static/js/doc.js"/>

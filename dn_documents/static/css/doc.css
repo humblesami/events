@@ -30,6 +30,7 @@
 
                         .PdfTopBtnsWrapper {
                         padding: 4px;
+                        margin-bottom:20px;
                         }
 
                         #scaleSelectContainer select#scaleSelect {

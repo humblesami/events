@@ -300,11 +300,7 @@
            dn_json_rpc(req_url,input_data, function(data)
            {
                data = {doc:data.doc, id: doc_id, first_time: 1, type : data.type};
-               if(!odoo.pdf_libs)
-               {
-                    $('.o_technical_modal.in:first').append('<script src="/dn_documents/static/annotator/annotator.js"></script>');
-                    odoo.pdf_libs = 1;
-               }
+               $('#pdf_div').append('<script src="/dn_documents/static/annotator/annotator.js"></script>');
                pdf_js_module.render(data);
            });
 
@@ -314,8 +310,8 @@
                 var libs = '';
                 libs += '<link href="/dn_documents/static/annotator/shared/pdf.viewer.css" rel="stylesheet" type="text/css" />';
                 libs += '<script src="/dn_documents/static/annotator/shared/pdf.viewer.js"></script>';
-
                 $('body').append(libs);
+                odoo.pdf_libs = 1;
             }
             $('#pdf_div').html(annot_view_markup);
             //$('.o_technical_modal.in:first').show();

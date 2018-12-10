@@ -261,7 +261,7 @@ table.o_group.o_inner_group tr {
 .modal-header
 {
     margin-top: 0;
-    padding: 5px 0px 0 5px;
+    padding: 0;
 }
 .modal-header .close
 {

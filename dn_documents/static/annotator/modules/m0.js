@@ -608,10 +608,10 @@ function module0(module, exports, __webpack_require__) {
                                 $('.groupcomment[annotationId="' + point_id + '"]').click();
                             }
                         }
-                        dn_json_rpc_object.loaderContainer.hide();
-                    };                    
+                    };
+                    dn_json_rpc_object.loaderContainer.hide();
 					for(var i = 1; i <= NUM_PAGES; i++){                        
-                        var after_inc = 0;                        
+                        var after_inc = 0;
 						if(i == NUM_PAGES)
 						    cb_page_renderd = onPageRendered;
                         if(annotation_mode == 1)

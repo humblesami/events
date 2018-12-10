@@ -30,6 +30,8 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/dialog.js"></script>');
 
         document.writeln('<script src="/dn_base/static/js/doc_preview.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/jquery.ui.touch.min.js"></script>');
+
 
 //        document.writeln('<script src="/dn_documents/static/annotator/dn_sign.js"></script>');
 //        document.writeln('<script src="/dn_documents/static/annotator/color.js"></script>');

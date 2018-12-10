@@ -39,20 +39,20 @@ var dn_json_rpc_object = {
                     $('body').append(dn_json_rpc_object.loaderContainer);
                 }
             }
-            if(!dn_json_rpc_object.menuHeightToAdd)
-            {
-                var menu = $('.o_main_navbar:first');
-                if(menu.length>0)
-                {
-                    if(dn_json_rpc_object.loaderContainer)
-                    {
-                        var newTop =  menu.height() + 22;
-                        newTop = 'calc(50vh - '+newTop+'px)';
-                        dn_json_rpc_object.loaderImage.css('top' , newTop);
-                    }
-                    dn_json_rpc_object.menuHeightToAdd = menu;
-                }
-            }
+//            if(!dn_json_rpc_object.menuHeightToAdd)
+//            {
+//                var menu = $('.o_main_navbar:first');
+//                if(menu.length>0)
+//                {
+//                    if(dn_json_rpc_object.loaderContainer)
+//                    {
+//                        var newTop =  menu.height() + 22;
+//                        newTop = 'calc(50vh - '+newTop+'px)';
+//                        dn_json_rpc_object.loaderImage.css('top' , newTop);
+//                    }
+//                    dn_json_rpc_object.menuHeightToAdd = menu;
+//                }
+//            }
             if (config && config.baseUrl)
                 dn_json_rpc_object.baseUrl = config.baseUrl;
             initialized = true;
