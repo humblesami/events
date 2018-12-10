@@ -2,7 +2,7 @@
 //var chat_server = 'http://172.16.21.43:3000';
 //online
 var chat_server = 'http://172.16.21.170:3000';
-if(dn_base_web_url.indexOf('localhost') == -1)
+if(dn_base_web_url.indexOf('odoohq') > -1)
     chat_server = 'https://chat.brainpbx.com';
 var check = 0;
 var socket = undefined;
@@ -225,8 +225,8 @@ odoo.define('odoochat.onClientready', function (require) {
                 "db": odoo.session_info.db
             });
 
-            socket.on('myerror', function (msg) {
-                console.log("Error from chat "+msg);
+            socket.on('myerror', function (err) {
+                console.log("Error from chat ", err);
             });
 
             socket.on('online_users', function(online_users){
