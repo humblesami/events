@@ -320,9 +320,9 @@ class meeting(http.Controller):
             meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
 
             cnt = 0
-            for attendee_partner in meeting.attendee_ids:
+            for attendee_object in meeting.attendee_ids:
                 attendee = meeting_object['attendees'][cnt]
-                attendee_user = attendee_partner.user_id
+                attendee_user = attendee_object.partner_id.user_id
                 attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
                 attendee['uid'] = attendee_user.id
                 attendee['name'] = attendee_user.name
