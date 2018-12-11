@@ -53,16 +53,32 @@ $(function(){
     $('.o_chatter_button_new_message').click(function(){
         $('.o_thread_message').show()
         $('.o_thread_message').has('.o_mail_note').hide()
+        hideDates();
     })
 
     $('.o_chatter_button_log_note').click(function(){
         $('.o_thread_message').hide()
         $('.o_thread_message').has('.o_mail_note').show()
+        hideDates();
     })
 setTimeout(function(){
     $('.o_thread_message').show()
-        $('.o_thread_message').has('.o_mail_note').hide()
+        $('.o_thread_message').has('.o_mail_note').hide();
+        hideDates();
     }, 500);
+
+    function hideDates(){
+        $('.o_thread_date_separator').show();
+        date_divs = $('.o_thread_date_separator');
+        $.each(date_divs, function() {
+                var l = $(this).nextUntil( ".o_thread_date_separator",".o_thread_message:visible " ).length;
+                if (l ==0)
+                {
+                    $(this).hide();
+                }
+            });
+        $('.o_thread_date_separator:first').nextUntil( ".o_thread_date_separator",".o_thread_message:visible " )
+    }
 
 
 });
