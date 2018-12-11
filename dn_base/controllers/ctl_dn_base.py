@@ -1,3 +1,4 @@
+import datetime
 import json
 import base64
 import werkzeug
@@ -86,14 +87,15 @@ class Controller(http.Controller):
                     max_comment_id = res[0][0]
 
             create_date = dn_dt.nowStr()
+            table_time = datetime.datetime.now()
             if not parent_id:
                 req_env.cr.execute(
-                    'insert into mail_message(model,res_id,body,message_type,subtype_id,create_uid,create_date) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, uid, create_date))
+                    'insert into mail_message(model,res_id,body,message_type,subtype_id,create_uid,date,create_date,write_date) VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s)',
+                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, uid, table_time,table_time,table_time))
             else:
                 req_env.cr.execute(
-                    'insert into mail_message(model,res_id,body,message_type,subtype_id,parent_id,create_uid,create_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
-                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, parent_id, uid, create_date))
+                    'insert into mail_message(model,res_id,body,message_type,subtype_id,parent_id,create_uid,date,create_date,write_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)',
+                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, parent_id, uid, table_time,table_time,table_time))
 
             str_comment_id = str(max_comment_id)
             query = 'select id,create_date,create_uid from mail_message where id > '+str_comment_id+' and create_uid = '+str_uid
