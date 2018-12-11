@@ -316,11 +316,12 @@ class meeting(http.Controller):
             surveys = meeting.survey_ids.filtered(lambda r: r.my_status == 'pending')
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(surveys, ['id', 'title'])
             props = ['attendance', 'state', 'response_by']
-            meeting.attendee_ids = meeting.attendee_ids.filtered(lambda p: p.partner_id.id != 3)
-            meeting_object['attendees'] = ws_methods.objects_list_to_json_list(meeting.attendee_ids, props)
+            attendees = meeting.attendee_ids
+            attendees =attendees.filtered(lambda p: p.partner_id.id != 3)
+            meeting_object['attendees'] = ws_methods.objects_list_to_json_list(attendees, props)
 
             cnt = 0
-            for attendee_object in meeting.attendee_ids:
+            for attendee_object in attendees:
                 attendee = meeting_object['attendees'][cnt]
                 attendee_user = attendee_object.partner_id.user_id
                 attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
@@ -419,18 +420,22 @@ class meeting(http.Controller):
             date_value = dn_dt.nowtostr()
             if 'data' in values:
                 values = values['data']
-
+            stop_time = dn_dt.dtTostr(dn_dt.addInterval(date_value, 'h', -3))
             myModel = req_env['calendar.event']
             filters = [('publish', '=', True)]
-            if not 'meeting_type' in values:
-                values['meeting_type'] = 'upcoming'
-            if values['meeting_type'] == 'completed':
-                filters.append(('stop', '<', date_value))
-                filters.append(('archived', '=', False))
-            elif values['meeting_type'] == 'archived':
+            if  values['meeting_type'] == 'archived':
                 filters.append(('archived', '=', True))
-            else:
-                filters.append(('stop', '>=', date_value))
+            elif values['meeting_type'] == 'completed':
+               filters.append(('stop', '<', stop_time))
+            elif values['meeting_type'] == 'upcoming':
+                filters.append(('stop', '>=', stop_time))
+            # if values['meeting_type'] == 'completed':
+            #     filters.append(('stop', '>', date_value+3h))
+            #     filters.append(('archived', '=', False))
+            # elif values['meeting_type'] == 'archived':
+            #     filters.append(('archived', '=', True))
+            # else:
+            #     filters.append(('stop', '>=', date_value))
             props = [
                 'id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
                 'description', 'name', 'address', 'city', 'country_state.name', 'country.name',
