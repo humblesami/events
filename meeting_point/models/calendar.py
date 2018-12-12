@@ -660,8 +660,12 @@ class Meeting(models.Model):
             myargs = ['|',('partner_ids', 'in', [self.env.user.partner_id.id]),
                       ('partner_ids', 'in', [c.partner_id.id for c in self.env.user.mp_user_id.committee_ids])]
             args.extend(myargs)
-        meeting=super(Meeting, self).search(args)
-        return meeting
+        meetings=super(Meeting, self).search(args)
+        if 'upcoming' in self._context:
+            meetings=meetings.filtered(lambda r: r.exectime in ['ongoing', 'upcoming'])
+        elif 'completed' in self._context:
+            meetings=meetings.filtered(lambda r: r.exectime in ['completed'])
+        return meetings
 
 class MpAlarmManager(models.AbstractModel):
 

@@ -24,7 +24,7 @@
                         <field name="stop" string="Ending at" />
                         <field name="duration" widget="float_time" class="oe_inline"/>
                         <field name="video_call_link" widget="url" class="oe_read_only"/>
-                        <button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>
+                        <!--<button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>-->
 
                         <field name="conference_bridge_number" class="conference"/>
                         <field name="pin" class="pin" />
@@ -563,7 +563,8 @@
             <field name="res_model">calendar.event</field>
             <field name="view_mode">kanban,calendar,form,tree</field>
             <field name="domain">[]</field>
-            <field name="domain">[('stop','>=', time.strftime('%Y-%m-%d %H:%M:%S')),('publish','=',True)]</field>
+            <field name="domain">[('publish','=',True)]</field>
+            <field name="context">{'upcoming':True}</field>
         </record>
 
         <record id="action_draft_meeting" model="ir.actions.act_window">
@@ -600,8 +601,9 @@
             <field name="res_model">calendar.event</field>
             <field name="view_mode">kanban,calendar,form,tree</field>
             <!--'&gt;='-->
+            <field name="context">{'completed':True}</field>
 
-            <field name="domain">[('stop','&lt;', time.strftime('%Y-%m-%d %H:%M:%S')),('archived','=',False)]</field>
+            <field name="domain">[('archived','=',False)]</field>
         </record>
 
          <record id="action_completed_kanban" model="ir.actions.act_window.view">
