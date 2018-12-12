@@ -22,7 +22,7 @@ class Folder(models.Model):
     def alluser(self):
         val = self.allUser
         if(val):
-            user_ids = self.env['meeting_point.users'].sudo().search([])
+            user_ids = self.env['meeting_point.users'].sudo().search([('user_id', '!=', 1)])
             self.partners = user_ids
         else:
             self.partners = []
