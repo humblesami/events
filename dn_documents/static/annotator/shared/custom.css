@@ -3,28 +3,34 @@
       display: none;
       z-index: 21;
       background: #fff;
-      position: relative;
-      width: 100%;
+      width: 100vw;
       height: 100vh;
       position: relative;
       top: 45px;
   }
   #content-wrapper {
-    width: 100%;
-    overflow: auto;
-    display: inline-table;
+    width: 98%;
     background-color: white;
-
+    position: fixed;
+    overflow: auto;
+    height: 86%;
+    padding-bottom: 0px;
+    white-space: nowrap;
+    top: 14%;
+    bottom: 0px;
   }
   #comment-wrapper {
-    position: fixed;
+    position: absolute;
     width: 250px;
-    left:0;
+    left: -16px;
     display: none;
-    background: #d4d4d4;
+    background: silver;
     border-right: 1px solid #e6e6e6;
     overflow-y: scroll;
-  }
+    bottom: 0;
+    height: auto !important;
+    top:0 !important;
+     }
 
   .pdfViewer .canvasWrapper {
     box-shadow: 0 0 3px #bbb;
@@ -41,6 +47,7 @@
     right: 0;
     bottom: 0;
   }
+
   .comment-header{
     padding: 15px 10px;
     border-bottom: 1px solid #cccccc;
@@ -55,24 +62,24 @@
   .comment-header .title{
     font-weight: 500;
     color: #ffffff;
-    font-size: 0.890rem;
+    font-size: 13px;
   }
+
   .show-all-comments
   {
       float: right;
       cursor: pointer;
       color: #ffffff;
   }
-  .show-all-comments i.far.fa-times-circle {
+
+  .show-all-comments i.fa {
     font-size: 18px;
 }
+
   .annotation .show-all-comments
   {
       display: none;
   }
-  .comment-list {
-    padding: 50px 0 0;
-}
 
   #viewer {
     margin: 0 auto;
@@ -92,6 +99,10 @@
 
   /*********** Comments ***********/
 
+  .comment-list {
+    padding-top:50px;
+    padding-bottom:220px;
+  }
 
   .comment-list-container > div {
     border-radius: 5px;
@@ -99,6 +110,8 @@
 
   #comment-wrapper h4 {
     margin: 0;
+    position:fixed;
+    width: 250px;
     padding: 12px;
     text-align: center;
     background: #f5f5f5;
@@ -106,6 +119,8 @@
   }
 
   #comment-wrapper .comment-list-item {
+    padding-top: 50px;
+    padding-bottom: 50px;
     border-bottom: 1px solid #c5c5c5;
     background-color: #ffffff;
     border-radius: 10px;
@@ -120,12 +135,10 @@
 
   .comment-list-item .user-time-info {
     font-size: 11px;
-    margin-top: 7px;
   }
   .comment-list-item .user-time-info .user
   {
       float: right;
-      font-weight: 500;
   }
   .comment-list-item .user-time-info .buttons
   {
@@ -138,12 +151,14 @@
 
   #comment-wrapper .comment-list-container {
     width: 100%;
-	  padding-bottom: 60px;
+    min-height:auto !important;
   }
 
   #comment-wrapper .comment-list-form {
-    padding-top: 7px;
+    position: fixed;
+    width: 250px;
     background: #fff;
+    bottom: 0;
 }
 
   #comment-wrapper.annotation .comment-list-form {
@@ -151,9 +166,7 @@
   }
 
   #commentText {
-    width: 250px;
-	position: fixed;
-	bottom: 0;
+    width: 100%;
     height: 51px;
     box-sizing: border-box;
     border: 1px solid #cccccc;
@@ -244,25 +257,9 @@
     background: linear-gradient(to bottom,#d2d2d2,#d2d2d2);
   }
 
-
-@media (max-width: 575.98px) {
-  #content-wrapper {
-    display: block;
-    position: absolute;
-    top: 15px;
-    right: 0;
-    left: 0;
-    bottom: 0;
-  }
-}
-
-@media (min-width: 576px) and (max-width: 767.98px) {
-  #content-wrapper {
-    display: block;
-    position: absolute;
-    top: 15px;
-    right: 0;
-    left: 0;
-    bottom: 0;
-  }
+.btn-icon
+{
+    background-color: #ffffff;
+    border-color: #ffffff;
+    font-size: 14px;
 }

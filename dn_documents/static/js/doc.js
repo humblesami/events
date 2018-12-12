@@ -165,10 +165,9 @@
                 <div id="viewer" class="pdfViewer"></div>
             </div>
             <div id="comment-wrapper">
-                <div class="header">
+                <div class="header comment-header">
                     <span class="show-all-comments">
-                        <i class="glyphicon glyphicon-eye-close"></i>
-                        <i class="fa fa-search"></i>
+                       <i class="fa fa-times-circle"></i>
                     </span>
                     <span class="title">Comments</span>
                 </div>
