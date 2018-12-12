@@ -125,7 +125,7 @@ odoo.define('odoochat.onClientready', function (require) {
             $('.chatbox').css('display', 'block');
             total_unseen -= notifications[active_user.id];
             notifications[active_user.id] = 0;
-            $('#unseen-msg-counter').text(total_unseen);
+            $('#unseen-msg-counter').html(total_unseen);
             if(total_unseen == 0)
                 $('#unseen-msg-counter').hide();
             else
@@ -146,6 +146,8 @@ odoo.define('odoochat.onClientready', function (require) {
             e.preventDefault();
             if(socket && socket.connected){
                 var msg = $('#message-form input:first').val();
+                if(!msg)
+                    return;
                 var msg_obj = create_msg_obj(msg);
                 append_message(msg_obj.msg);
                 socket.emit('message', msg_obj);
@@ -157,6 +159,8 @@ odoo.define('odoochat.onClientready', function (require) {
                 append_message(msg);
             }
             else {
+                if(isNaN(notifications[sender_id]))
+                    notifications[sender_id] = 0;
                 ++(notifications[sender_id]);
                 ++total_unseen;
                 $('#unseen-msg-counter').text(total_unseen);

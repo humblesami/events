@@ -469,3 +469,16 @@ span.to_do_items
     height: 18px;
     display:none;
 }
+
+span.to-do-count {
+    background: #dc3545;
+    color: white;
+    border-radius: 20px;
+    padding: 3px 6px 2px;
+    font-weight: bold;
+    font-size: 12px;
+    position: absolute;
+    top: -6px;
+    right: -16px;
+    border: 2px solid #ffffff;
+}
