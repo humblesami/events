@@ -193,8 +193,8 @@ class SurveyQuestion(models.Model):
             # ('textbox', 'Single Line Text Box'),
             ('numerical_box', 'Numerical Value'),
             ('date', 'Date'),
-            ('simple_choice', 'Multiple choice: only one answer'),
-            ('multiple_choice', 'Multiple choice: multiple answers allowed')
+            ('simple_choice', 'Multiple choice: only one answer')
+            # ('multiple_choice', 'Multiple choice: multiple answers allowed')
             # ('matrix', 'Matrix')
     ], string='Type of Question', default='free_text', required=True)
 
