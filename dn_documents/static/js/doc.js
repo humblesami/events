@@ -176,10 +176,10 @@
                     <div class="comment-list-container">
                         <div class="comment-list-item">No comments</div>
                     </div>
-                    <form class="comment-list-form">
-                        <textarea id="commentText" placeholder="Add a Comment"></textarea>
-                    </form>
                 </div>
+                <form class="comment-list-form">
+                    <textarea id="commentText" placeholder="Add a Comment"></textarea>
+                </form>
             </div>
 
             <div class="toolbar annotation-options ContextMenuPopup">

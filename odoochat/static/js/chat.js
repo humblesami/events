@@ -89,10 +89,16 @@ odoo.define('odoochat.onClientready', function (require) {
 
 
         var add_user_in_list = function(user){
-             notifications[user.id] = 0;
             var child = '<li id="' + user.id + '" class="open-chatbox list-group-item"><span>'+ user.name + '</span>';
             child += '<span class="user_count"style="position:relative;left:90%;display:none;" id="unseen-' + user.id + '"></span></li>';
             $('#online-users-list:first ul:first').append(child);
+            if(notifications[user.id] != 0){
+                $('#unseen-'+user.id).text(notifications[user.id]);
+                $('#unseen-'+user.id).show();
+            }
+            else{
+                notifications[user.id] != 0
+            }
         }
 
         var remove_user_from_list = function(user){
