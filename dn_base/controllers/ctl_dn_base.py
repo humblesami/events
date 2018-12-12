@@ -79,6 +79,8 @@ class Controller(http.Controller):
             mesg_body = values['body']
 
             str_uid = str(uid)
+
+            authorId = req_env['res.users'].search([('id','=',uid)]).partner_id.id
             max_comment_id = 0
             query = 'select max(id) from mail_message where create_uid = '+ str_uid
             res = ws_methods.execute_read(query)
@@ -90,12 +92,12 @@ class Controller(http.Controller):
             table_time = datetime.datetime.now()
             if not parent_id:
                 req_env.cr.execute(
-                    'insert into mail_message(model,res_id,body,message_type,subtype_id,create_uid,date,create_date,write_date) VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s)',
-                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, uid, table_time,table_time,table_time))
+                    'insert into mail_message(model,res_id,body,message_type,subtype_id,create_uid,date,create_date,write_date,author_id) VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s,%s)',
+                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, uid, table_time,table_time,table_time,authorId))
             else:
                 req_env.cr.execute(
-                    'insert into mail_message(model,res_id,body,message_type,subtype_id,parent_id,create_uid,date,create_date,write_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s,%s)',
-                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, parent_id, uid, table_time,table_time,table_time))
+                    'insert into mail_message(model,res_id,body,message_type,subtype_id,parent_id,create_uid,date,create_date,write_date,author_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)',
+                    (model_name, meeting_id, mesg_body, 'comment', subtype_id, parent_id, uid, table_time,table_time,table_time,authorId))
 
             str_comment_id = str(max_comment_id)
             query = 'select id,create_date,create_uid from mail_message where id > '+str_comment_id+' and create_uid = '+str_uid
