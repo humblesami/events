@@ -257,7 +257,7 @@ odoo.define('odoochat.onClientready', function (require) {
                 var href = window.location.toString();
                 if(href.indexOf('localhost') == -1)
                 {
-                    alert('You are logged out due to '+data.reason);
+                    bootbox.alert('You are logged out due to '+data.reason);
                     window.location = '/web/login';
                 }
             });

@@ -188,24 +188,25 @@ class annotation(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/save-comment-annotation', type="http", csrf=False, auth='public', cors='*')
+
+    @http.route('/save-comment-point', type="http", csrf=False, auth='public', cors='*')
     def addCommentAnnotation(self, **kw):
         try:
+            data = kw.get('data')
+            kw = json.loads(data)
+
             uid = ws_methods.check_auth(kw)
             if not uid:
                 return ws_methods.not_logged_in()
             req_env = http.request.env
 
-            values = kw.get('annotations')
-            values = json.loads(values)
-
-            point = values.get('point')
-            comment = values.get('comment')
+            point = kw.get('point')
+            comment = point['comment']
 
             modal = types['point']
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
             if not point_id:
-                doc_name = values.get('doc_id')
+                doc_name = kw.get('doc_id')
                 if not doc_name:
                     return ws_methods.http_response('Document id not given')
                 point['doc_name'] = doc_name
@@ -215,41 +216,34 @@ class annotation(http.Controller):
             comment['point_id'] = point_id.id
             req_env[modal].create(comment)
 
-            return ws_methods.http_response('', 'done')
-        except:
-            return ws_methods.handle()
 
-    @http.route('/ws/get-attendees', type="http", csrf=False, auth='public', cors='*')
-    def getAttendees(self, **kw):
-        try:
-            uid = ws_methods.check_auth(kw)
-            if not uid:
-                return ws_methods.not_logged_in()
             doc_type = kw.get('doc_type')
             res_id = kw.get('res_id')
-            env = http.request.env
-            meeting = False
             res_id = int(res_id)
             docname = ''
+            meeting = False
             topic_name = False
             if doc_type == 'topic':
-                topic_doc = env['meeting_point.topicdoc'].search([('id','=',res_id)])
+                topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
                 meeting = topic_doc.topic_id.meeting_id
                 topic_name = topic_doc.topic_id.name
                 docname = topic_doc.name
             elif doc_type == 'meeting':
-                meeting_doc = env['meeting_point.doc'].search([('id', '=', res_id)])
+                meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
                 meeting = meeting_doc.meeting_id
                 docname = meeting_doc.name
             if not meeting:
-                return ws_methods.http_response('Invalid doc type='+str(doc_type)+' or id ='+(res_id))
+                return ws_methods.http_response('Invalid doc type=' + str(doc_type) + ' or id =' + (res_id))
             ids = []
             for attendee in meeting.attendee_ids:
-                cid = attendee.partner_id.user_id.id
+                try:
+                    cid = attendee.partner_id.user_id.id
+                except:
+                    a = 1
                 if cid != uid:
                     ids.append(cid)
 
-            res = { 'meta' : {'meeting':meeting.name, 'doc' : docname }}
+            res = {'meta': {'meeting': meeting.name, 'doc': docname}, 'point_id':point['uuid'], 'res_id' : res_id }
             if topic_name:
                 res['meta']['topic'] = topic_name
             res['attendees'] = ids

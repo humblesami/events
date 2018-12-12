@@ -115,8 +115,6 @@ class ws(http.Controller):
             return ws_methods.handle('Document not found')
 
 
-
-
     @http.route('/meeting-doc', auth='none', csrf=False, cors='*')
     def get_meeting_doc_http(self, **kw):
         return self.get_meeting_doc(kw)
@@ -217,6 +215,44 @@ class ws(http.Controller):
         except:
             return ws_methods.handle('Document not found')
 
+    @http.route('/doc/save-point-comment', type="http", csrf=False, auth='public', cors='*')
+    def getAttendees(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            doc_type = kw.get('doc_type')
+            res_id = kw.get('res_id')
+            env = http.request.env
+            meeting = False
+            res_id = int(res_id)
+            docname = ''
+            topic_name = False
+            if doc_type == 'topic':
+                topic_doc = env['meeting_point.topicdoc'].search([('id', '=', res_id)])
+                meeting = topic_doc.topic_id.meeting_id
+                topic_name = topic_doc.topic_id.name
+                docname = topic_doc.name
+            elif doc_type == 'meeting':
+                meeting_doc = env['meeting_point.doc'].search([('id', '=', res_id)])
+                meeting = meeting_doc.meeting_id
+                docname = meeting_doc.name
+            if not meeting:
+                return ws_methods.http_response('Invalid doc type=' + str(doc_type) + ' or id =' + (res_id))
+            ids = []
+            for attendee in meeting.attendee_ids:
+                cid = attendee.partner_id.user_id.id
+                if cid != uid:
+                    ids.append(cid)
+
+            res = {'meta': {'meeting': meeting.name, 'doc': docname}}
+            if topic_name:
+                res['meta']['topic'] = topic_name
+            res['attendees'] = ids
+
+            return ws_methods.http_response('', res)
+        except:
+            return ws_methods.handle()
 
     @http.route('/doc/binary', auth='public', csrf=False, cors='*')
     def get_document_http(self, **kw):
@@ -251,7 +287,7 @@ class ws(http.Controller):
                 return ws_methods.http_response('Invalid document model')
             file = http.request.env[model_name].search([('id', '=', doc_id)])
             converted = file['pdf_doc'].decode('utf-8')
-            doc = {'id': doc_id, "doc": converted, 'doc_name': file['name'], 'type': doc_type}
+            doc = {'id': doc_id, "doc": converted, 'doc_nget-attendeesame': file['name'], 'type': doc_type}
             if doc_type == 'resource':
                 props = ['parent_folder.name', 'parent_folder.id']
             elif doc_type == 'meeting':
