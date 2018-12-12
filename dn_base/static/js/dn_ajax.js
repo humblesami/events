@@ -218,4 +218,6 @@ var dn_current_site_user = {
         token : odoo.session_info.token,
     }
 }
-console.log(dn_current_site_user);
+var site_config = {
+    server_db : 'demo'
+}
