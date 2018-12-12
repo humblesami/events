@@ -25,7 +25,7 @@ $(function(){
     {
 //    console.log('events',)
         odoo['meeting_point_calendar_js'] = 1;
-        $(document).on("click",".fc-event-container", function(e){
+        $(document).on("click",".fc-event", function(e){
 //            console.log('here the click',e,events)
             var id = $(this).find('.fc-title').text();
 //            console.log('value of id',id)

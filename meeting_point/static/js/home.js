@@ -4,10 +4,10 @@ $(function(){
     $('.slider_div .o_kanban_ghost').remove();
 
     var main_container = $(".o_field_x2many_kanban[name='pending_documents']");
-    if($('.o_form_buttons_view').find(".home_btns").length ==0){
-
-        $('.o_form_buttons_view').append($('.home_btns'));
-    }
+//    if($('.o_form_buttons_view').find(".home_btns").length ==0){
+//
+//        $('.o_form_buttons_view').append($('.home_btns'));
+//    }
 
 
     var items = main_container.find('.owl-item');

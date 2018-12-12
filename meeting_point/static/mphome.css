@@ -106,10 +106,7 @@
  .o_control_panel.o_breadcrumb_full {
      //display: none;
 }
-.o_form_view .home_btns
-{
-    display:none
-}
+
 .o_form_button_edit, .breadcrumb, .o_cp_right, .o_cp_pager, .o_cp_sidebar, .o_form_button_create {
      display: none;
 }
@@ -481,4 +478,8 @@ span.to-do-count {
     top: -6px;
     right: -16px;
     border: 2px solid #ffffff;
+}
+
+.o_control_panel.o_breadcrumb_full{
+padding:0
 }

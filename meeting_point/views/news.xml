@@ -46,7 +46,7 @@
                     <div class="home_btns">
                         <span class="welcome_btn btn bnt-default">Welcome</span>
                         <span class="calendar_btn btn bnt-default">Calendar</span>
-                        <span class="to_do_items btn bnt-default">To-Do Items<field name="to_do_items_count" class="to-do-count"/> <span class="seen_not_seen"/></span>
+                        <span class="to_do_items btn bnt-default">To-Do Items<field name="to_do_items_count" class="to-do-count" attrs="{'invisible': [('to_do_items_count', '=', 0)]}"/> <span class="seen_not_seen"/></span>
                     </div>
                     <div class="mphome_wrapper row">
                         <div class="col-lg-12 welcome">
