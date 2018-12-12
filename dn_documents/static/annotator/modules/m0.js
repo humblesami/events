@@ -1,4 +1,5 @@
 var annot_save_timeout = undefined;
+var loadALlCommentsOnDocument = function(){console.log("Load comment not defined");}
 var saveAnnotationsAtServer = function(){console.log("Save annotation not defined");};
 
 function initDocCookies(documentId)
@@ -24,7 +25,7 @@ function getDocumentVersion(documentId)
 	return res;
 }
 function isDocumentDirty(documentId)
-{    
+{
 	var res = getCookieStrict(documentId, documentId + '/dirty');
 	if(isNaN(res))
 	{
@@ -101,6 +102,13 @@ function module0(module, exports, __webpack_require__) {
 		var comments_wrapper = $('#comment-wrapper');
 		var comment_list = comments_wrapper.find('.comment-list-container:first');
 
+        function hideComments()
+        {
+            comments_wrapper.hide();
+            viewerLeftMargin();
+            comments_shown = false;
+            localStorage.removeItem(documentId+'/comments_shown');
+        }
 		function viewerLeftMargin(vuw)
 		{
 			if(comments_wrapper.is(':visible'))
@@ -220,18 +228,25 @@ function module0(module, exports, __webpack_require__) {
 
                     if(document_dirty == 1)
                     {
-                        message = "Warning: Online version="+data.version+" will overwrite your local version="+document_version;
-                        message += "<br>It will discard your recent changes, Do you still want to download?";
-                        bootbox.confirm(message, function(dr){
-                            if(dr)
-                            {
-                                updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
-                            }
-                            else
-                            {
-                                updateLocalAnnotationsFromServer([], data.version, comments);
-                            }
-                        });
+                        if(data.version > document_version)
+                        {
+                            message = "Warning: Online version="+data.version+" will overwrite your local version="+document_version;
+                            message += "<br>It will discard your recent changes, Do you still want to download?";
+                            bootbox.confirm(message, function(dr){
+                                if(dr)
+                                {
+                                    updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
+                                }
+                                else
+                                {
+                                    updateLocalAnnotationsFromServer([], data.version, comments);
+                                }
+                            });
+                        }
+                        else
+                        {
+                            updateLocalAnnotationsFromServer([], data.version, comments);
+                        }
                     }
                     else
                     {
@@ -485,6 +500,7 @@ function module0(module, exports, __webpack_require__) {
                     annotation_mode = 0;
                     $('.strt_sign.pdfjs').hide();
                     $('#main-div').hide();
+                    hideComments();
 
                     $('#annotated-doc-conatiner').show();
                     comments_wrapper.css({'top':'96px', 'height':'calc(100vh - 96px)'});
@@ -492,9 +508,6 @@ function module0(module, exports, __webpack_require__) {
                     viewerLeftMargin();
                     $('.doc-reseter').hide();
                     $('.toolbar.topbar').show();
-                    comments_to_show = localStorage.getItem(documentId+'/comments_shown');
-                    if(comments_to_show)
-                        showCommentsContainer(comments_to_show);
 
 					if(doc_data.type)
 					{
@@ -585,10 +598,16 @@ function module0(module, exports, __webpack_require__) {
                     var onPageRendered = function(){
                         if(annotation_mode == 1)
                         {
-                            // var point_id = getUrlLastItem();
-                            // if (isNaN(point_id) && point_id != 'resume') {
-                            //     $('.groupcomment[annotationId="' + point_id + '"]').click();
-                            // }
+//                            var point_id = window.location.toString().split('/');
+//                            point_id = point_id[point_id.length - 1];
+//                            if (isNaN(point_id) && point_id != 'resume') {
+//                                setTimeout(function(){
+//                                    comments_to_show = 'comments';
+//                                    showCommentsContainer('comments');
+//                                    loadALlCommentsOnDocument();
+//                                    $('.groupcomment[annotationId="' + point_id + '"]').click();
+//                                }, 1001);
+//                            }
                         }
                         $('#content-wrapper').show();
                     };
@@ -611,8 +630,10 @@ function module0(module, exports, __webpack_require__) {
                     }
 					var point_id = window.location.toString().split('/');
 					point_id = point_id[point_id.length - 1];
-					if (isNaN(point_id)) {
-						$('.comments-toggler').click();
+					if (isNaN(point_id) && point_id != 'resume') {
+                        setTimeout(function(){
+                            showCommentsContainer('comments');
+                        }, 1001);
                     }
 				});
 			}
@@ -751,7 +772,7 @@ function module0(module, exports, __webpack_require__) {
 				if (oldButton.length > 0) {
 					oldButton.removeClass('active');
 					switch (tooltype) {
-						case 'cursor':
+                        case 'cursor':
 							UI.disableEdit();
 							break;
 						case 'draw':
@@ -948,7 +969,7 @@ function module0(module, exports, __webpack_require__) {
 				}
 			});
 
-			function loadALlCommentsOnDocument()
+			loadALlCommentsOnDocument = function ()
 			{
 				comment_list.html('');
                 var point_type = false;
@@ -1086,7 +1107,7 @@ function module0(module, exports, __webpack_require__) {
 						site_functions.update_notification_list(activeAnnotationId);
 						pdfStoreAdapter.getComments(documentId, activeAnnotationId).then(renderComments);
 						if(activeAnnotationItem.sub_type)
-						{                            
+						{
 							showCommentsContainer('notes');
 						}
 						else
@@ -1108,7 +1129,7 @@ function module0(module, exports, __webpack_require__) {
 						var tw = $('#pdf-annotate-edit-overlay:visible').width();
 						var cmw = ctxMenu.width();
 						var left_pos =  pos.left + tw/2 - cmw/2;
-						var color = $(target).attr('fill');						
+						var color = $(target).attr('fill');
 						if(!color){
 							color=$(target).attr('stroke');
 						}
@@ -1159,11 +1180,11 @@ function module0(module, exports, __webpack_require__) {
 					}
                 }
                 else
-                {                    
+                {
                     if(activePointId && $target.closest('#comment-wrapper').length == 0)
                     {
                         activePointId = undefined;
-                        $('.comment-list-form').hide();                        
+                        $('.comment-list-form').hide();
                     }
                     else
                     {
@@ -1179,17 +1200,17 @@ function module0(module, exports, __webpack_require__) {
 			var dh = $(document).height();
 
 			function handleAnnotationBlur(target) {
-                annotationBiengEdited = false;                
-				if (supportsComments(target)) {                    
+                annotationBiengEdited = false;
+				if (supportsComments(target)) {
                     if($(target).children('svg').length > 0)
                         comments_to_show = 'comments';
                     else
                         comments_to_show = 'notes';
 					loadALlCommentsOnDocument();
 				}
-			}            
-            
-            $('.toolbar:first .comment').click(function(){                
+			}
+
+            $('.toolbar:first .comment').click(function(){
                 UI.destroyEditOverlay();
                 if($(this).is('.personal'))
                     comments_to_show = 'notes';
@@ -1210,17 +1231,8 @@ function module0(module, exports, __webpack_require__) {
 				}
 			});
 
-
-			function hideComments()
-			{
-				comments_wrapper.hide();
-				viewerLeftMargin();
-                comments_shown = false;
-                localStorage.removeItem(documentId+'/comments_shown');
-			}
-            
 			UI.addEventListener('annotation:click', handleAnnotationClick);
-			UI.addEventListener('annotation:blur', handleAnnotationBlur);			
+			UI.addEventListener('annotation:blur', handleAnnotationBlur);
 		})(window, document);
 		exports.render = render;
 	}

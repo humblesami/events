@@ -211,6 +211,19 @@ var site_functions = {
     }
 }
 
+var is_mobile_device = undefined;
+(function(){
+    try
+    {
+        document.createEvent("TouchEvent");
+        is_mobile_device = true;
+    }
+    catch(e)
+    {
+         return false;
+    }
+})()
+
 var dn_current_site_user = {
     cookie : {
         name: odoo.session_info.name,

@@ -3037,7 +3037,8 @@ function module2(module, exports, __webpack_require__) {
                  */
                 function handleDocumentMousedown(e) {
                     //console.log(e, 777);
-                    $('body').css('overflow','hidden');
+                    if(is_mobile_device)
+                        $('body').css('overflow','hidden');
                     path = null;
                     lines = [];
 
@@ -3080,7 +3081,8 @@ function module2(module, exports, __webpack_require__) {
 
                     document.removeEventListener('touchmove', handleDocumentMousemove);
                     document.removeEventListener('touchend', handleDocumentMouseup);
-                    $('body').css('overflow','auto');
+                    if(is_mobile_device)
+                        $('body').css('overflow','auto');
                 }
 
 				function saveDrawingAnnotation(){
@@ -3177,6 +3179,8 @@ function module2(module, exports, __webpack_require__) {
                     if (_enabled) {
                         return;
                     }
+                    if(is_mobile_device)
+                        $('body').css('overflow','hidden');
                     _enabled = true;
                     document.addEventListener('mousedown', handleDocumentMousedown);
                     document.addEventListener('touchstart', handleDocumentMousedown);
@@ -3190,6 +3194,8 @@ function module2(module, exports, __webpack_require__) {
                         return;
                     }
                     _enabled = false;
+                    document.removeEventListener('mousedown', handleDocumentMousedown);
+                    document.removeEventListener('touchstart', handleDocumentMousedown);
                     (0, _utils.enableUserSelect)();
                 } /***/
             }, /* 31 */function(module, exports, __webpack_require__) {
@@ -3385,7 +3391,7 @@ function module2(module, exports, __webpack_require__) {
                  *
                  * @param {Event} e The DOM event to handle
                  */
-                function handleDocumentMousedown(e) {                	
+                function handleDocumentMousedown(e) {
                     var svg = void 0;
                     if (_type !== 'area' || !(svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
                         return;
@@ -3418,7 +3424,7 @@ function module2(module, exports, __webpack_require__) {
                         overlay.style.height = e.clientY - originY + 'px';
                     }
                 }
-                
+
                 /**
                  * Handle document.keyup event
                  *
@@ -3442,7 +3448,7 @@ function module2(module, exports, __webpack_require__) {
                  * @param {Array} rects The rects to use for annotation
                  * @param {String} color The color of the rects
                  */
-                function saveRect(type, rects, color) {                     
+                function saveRect(type, rects, color) {
                     var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);
                     var node = void 0;
                     var annotation = void 0;
@@ -3496,7 +3502,7 @@ function module2(module, exports, __webpack_require__) {
                     var documentId = _getMetadata.documentId;
                     var pageNumber = _getMetadata.pageNumber; // Add the annotation
                     var pdfStoreAdapter = _PDFJSAnnotate2.default.getStoreAdapter();
-                    var onAnnotationAdded = function(annotation) {                        
+                    var onAnnotationAdded = function(annotation) {
                         var somefg = (0, _appendChild2.default);
                         somefg(svg, annotation);
                     };
@@ -3517,7 +3523,7 @@ function module2(module, exports, __webpack_require__) {
                     _type = data_tool_type;
                     var rects = void 0;
                     if (_type !== 'area' && (rects = getSelectionRects())) {
-                        var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);                        
+                        var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);
                         var consumableArray = _toConsumableArray(rects);
                         var mappedFun = function(r) {
                             return {
@@ -3528,7 +3534,7 @@ function module2(module, exports, __webpack_require__) {
                             };
                         };
                         consumableArray = [].concat(consumableArray);
-                        var resFun = consumableArray.map(mappedFun);                        
+                        var resFun = consumableArray.map(mappedFun);
                         saveRect(_type, resFun);
                     } else if (_type === 'area' && overlay) {
                         var _svg = overlay.parentNode.querySelector('svg.annotationLayer');
@@ -3549,7 +3555,7 @@ function module2(module, exports, __webpack_require__) {
                 /**
                  * Enable rect behavior
                  */
-                function enableRect(type) {                                                            
+                function enableRect(type) {
                     _type = type;
                     if (_enabled) {
                         return;
@@ -3557,7 +3563,7 @@ function module2(module, exports, __webpack_require__) {
                     _enabled = true;
                     document.addEventListener('mouseup', handleDocumentMouseup32);
                     document.addEventListener('mousedown', handleDocumentMousedown);
-                    document.addEventListener('keyup', handleDocumentKeyup);                    
+                    document.addEventListener('keyup', handleDocumentKeyup);
                     handleDocumentMouseup32(type);
                 }
                 /**
@@ -3605,7 +3611,7 @@ function module2(module, exports, __webpack_require__) {
                  *
                  * @param {Event} e The DOM event to handle
                  */
-                function handleDocumentMouseup(e) {                    
+                function handleDocumentMouseup(e) {
                     if (input || !(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                         return;
                     }
@@ -3800,7 +3806,7 @@ function module2(module, exports, __webpack_require__) {
                  *    - fulfilled: [pdfPage, annotations]
                  *    - rejected: Error
                  */
-                function renderPage(pageNumber, renderOptions, onPageRendered) {                    
+                function renderPage(pageNumber, renderOptions, onPageRendered) {
                     var documentId = renderOptions.documentId;
                     var pdfDocument = renderOptions.pdfDocument;
                     var scale = renderOptions.scale;
@@ -3818,15 +3824,15 @@ function module2(module, exports, __webpack_require__) {
                         var canvasContext = canvas.getContext('2d', {
                             alpha: false
                         });
-                        var viewport = pdfPage.getViewport(scale, rotate);                        
+                        var viewport = pdfPage.getViewport(scale, rotate);
                         //var viewport = pdfPage.getViewport($('#viewer').width() / pdfPage.getViewport(1.0).width);
                         var transform = scalePage(pageNumber, viewport, canvasContext); // Render the page
                         var fun1 = pdfPage.render({
                             canvasContext: canvasContext,
                             viewport: viewport,
                             transform: transform
-                        });                        
-                        var fun2 = _PDFJSAnnotate2.default.render(svg, viewport, annotations);                        
+                        });
+                        var fun2 = _PDFJSAnnotate2.default.render(svg, viewport, annotations);
                         return Promise.all([fun1, fun2]).then(function() { // Text content is needed for a11y, but is also necessary for creating
                             // highlight and strikeout annotations which require selecting text.
                             return pdfPage.getTextContent({
@@ -3858,7 +3864,7 @@ function module2(module, exports, __webpack_require__) {
                     });
                 }
 
-                function renderPageWithoutAnnotations(pageNumber, renderOptions, onPageRendered) {                    
+                function renderPageWithoutAnnotations(pageNumber, renderOptions, onPageRendered) {
                     var documentId = renderOptions.documentId;
                     var pdfDocument = renderOptions.pdfDocument;
                     var scale = renderOptions.scale;
@@ -3876,15 +3882,15 @@ function module2(module, exports, __webpack_require__) {
                         var canvasContext = canvas.getContext('2d', {
                             alpha: false
                         });
-                        var viewport = pdfPage.getViewport(scale, rotate);                        
+                        var viewport = pdfPage.getViewport(scale, rotate);
                         //var viewport = pdfPage.getViewport($('#viewer').width() / pdfPage.getViewport(1.0).width);
                         var transform = scalePage(pageNumber, viewport, canvasContext); // Render the page
                         var fun1 = pdfPage.render({
                             canvasContext: canvasContext,
                             viewport: viewport,
                             transform: transform
-                        });                        
-                        var fun2 = _PDFJSAnnotate2.default.render(svg, viewport, annotations);                        
+                        });
+                        var fun2 = _PDFJSAnnotate2.default.render(svg, viewport, annotations);
                         return Promise.all([fun1, fun2]).then(function() { // Text content is needed for a11y, but is also necessary for creating
                             // highlight and strikeout annotations which require selecting text.
                             return pdfPage.getTextContent({
