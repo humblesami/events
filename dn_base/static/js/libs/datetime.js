@@ -2,6 +2,9 @@ function getDateString(dt)
 {
     if (!dt)
         dt = new Date();
+    else if (typeof dt == 'string')
+        dt = new Date(dt);
+
     var m = dt.getMonth() + 1;
     var y = dt.getFullYear();
     var d = dt.getDate();
@@ -15,6 +18,9 @@ function getTimeString(dt)
 {
     if (!dt)
         dt = new Date();
+    else if (typeof dt == 'string')
+        dt = new Date(dt);
+
     var mm = dt.getMinutes();
     var h = dt.getHours();
     var s = dt.getSeconds();
@@ -29,7 +35,21 @@ function getTimeString(dt)
 function getDateTimeString(dt) {
     if (!dt)
         dt = new Date();
+    else if (typeof dt == 'string')
+        dt = new Date(dt);
     var dat = getDateString(dt);
     var tam = getTimeString(dt);
     return dat + " " + tam;
+}
+function hours_to_hoursNminutes(hours) {
+    var res = parseInt(hours);
+    var minutes = hours % res;
+    minutes = minutes * 60;
+    minutes = Math.round(minutes);
+    if(res < 10)
+        res = "0"+res;
+    if (minutes < 10)
+        minutes = "0"+minutes;
+    res = res +":"+ minutes;
+    return res;
 }

@@ -165,8 +165,13 @@
                 <div id="viewer" class="pdfViewer"></div>
             </div>
             <div id="comment-wrapper">
-                <button class="show-all-comments">Show All</button>
-                <h4>Comments</h4>
+                <div class="header">
+                    <span class="show-all-comments">
+                        <i class="glyphicon glyphicon-eye-close"></i>
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <span class="title">Comments</span>
+                </div>
                 <div class="comment-list">
                     <div class="comment-list-container">
                         <div class="comment-list-item">No comments</div>

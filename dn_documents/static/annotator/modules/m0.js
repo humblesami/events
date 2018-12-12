@@ -19,7 +19,7 @@ function getDocumentVersion(documentId)
 	var res = getCookieStrict(documentId, documentId + '/version');
 	if(isNaN(res))
 	{
-		/*bootbox.alert*/console.log("Cookie1 must have been se, plz contact support");
+		bootbox.alert("Cookie1 must have been se, plz contact support");
 	}
 	return res;
 }
@@ -28,7 +28,7 @@ function isDocumentDirty(documentId)
 	var res = getCookieStrict(documentId, documentId + '/dirty');
 	if(isNaN(res))
 	{
-		/*bootbox.alert*/console.log("Cookie2 must have been set for "+documentId+", plz contact support");
+		bootbox.alert("Cookie2 must have been set for "+documentId+", plz contact support");
 	}
 	return res;
 }
@@ -65,7 +65,7 @@ function setCookieStrict(documentId, key, val)
 	var temp_key = validate_key(documentId, key);
 	if(temp_key == 'dirty' || temp_key == 'version')
 	{
-		/*bootbox.alert*/console.log("Should not happend");
+		bootbox.alert("Should not happend");
 		console.trace();
 	}
 	localStorage.setItem(key, val);
@@ -77,7 +77,7 @@ function validate_key(documentId, key)
 	if(keys.indexOf(temp_key) == -1)
 	{
 		console.trace();
-		/*bootbox.alert*/console.log("Please report this issue2 with "+key +" for "+ documentId);
+		bootbox.alert("Please report this issue2 with "+key +" for "+ documentId);
 	}
 	return temp_key;
 }
@@ -90,10 +90,11 @@ function module0(module, exports, __webpack_require__) {
 		var _initColorPicker = __webpack_require__(4);
 		var _initColorPicker2 = _interopRequireDefault(_initColorPicker);
 
-		var socket_obj = window['socket'];
+		var socket_obj = dn_current_site_user.socket;
 
 		var save_drawing = function(){};
-		var activeAnnotationId = undefined;
+        var activeAnnotationId = undefined;
+        var activePointId = undefined;
 		var documentId = 'a.pdf';
 		var dh = $(document).height();
 		var dw = $(document).width();
@@ -121,41 +122,40 @@ function module0(module, exports, __webpack_require__) {
 		});
 
 		function on_leave_document() {
-			$('#annotated-doc-conatiner').hide();
+            $('#annotated-doc-conatiner').hide();
+            comments_shown = false;
+            comments_wrapper.hide();
 			$('#main-div').show();
 			saveAnnotationsAtServer('Leaving');
 		}
 
-		function setCommentsConatinerCss()
+        function showCommentsContainer(comment_type)        
 		{
-			$('#comment-wrapper').hide();
-			$('#annotated-doc-conatiner').show();
-			var tp = $('#annotated-doc-conatiner').position().top;
-			var res = dh - tp - 2;
-			comments_wrapper.css({'top':tp, 'height':res});
-			res = res - 150;
-			comment_list.css('min-height', res);
-			viewerLeftMargin();
-			$('.doc-reseter').hide();
-			$('.toolbar.topbar').show();
-		}
-
-		function showCommentsContainer(sub_type)
-		{
-			if(sub_type)
+            if (comment_type)
+            {
+                comments_to_show = comment_type;
+            }
+            if(comments_to_show == 'notes')
 			{
-				comments_wrapper.find('h4:first').html('Personal Notes');
+				comments_wrapper.find('.title:first').html('Personal Notes');
 			}
 			else
 			{
-				comments_wrapper.find('h4:first').html('Comments');
-			}
-			if(comments_shown)
-				return;
-			comments_shown = true;
-			//comments_wrapper.show();
-			$('#comment-wrapper').show();
-			viewerLeftMargin();
+				comments_wrapper.find('.title:first').html('Comments');
+            }
+            if(!comments_shown)
+            {
+                comments_wrapper.show();
+                viewerLeftMargin();
+            }
+            if(!activePointId)
+            {
+                $('.comment-list-form').hide();
+            }
+            else
+                $('.comment-list-form').show();
+            comments_shown = comments_to_show;                     
+            localStorage.setItem(documentId+'/comments_shown', comments_shown);
 		}
 
 		var force_download = 0;
@@ -178,7 +178,7 @@ function module0(module, exports, __webpack_require__) {
 				{
 					if(!documentId)
 					{
-						/*bootbox.alert*/console.log("Invalid Document Id");
+						bootbox.alert("Invalid Document Id");
 						return;
 					}
 					var document_version = getDocumentVersion(documentId);
@@ -200,86 +200,50 @@ function module0(module, exports, __webpack_require__) {
 					{
 						comments = [];
 						console.log("Why not comments");
-					}
-					else if(comments.length == 0)
-					{
-						if(data.version == 0)
-							return;
-						if(!data.annotations)
-							return;
-						if(data.annotations.length == 0)
-						{
-							updateLocalAnnotationsFromServer([], 1, []);
-							return;
-						}
-					}
-
-					var document_version = getDocumentVersion(documentId);
-                    if(document_version > data.version)
+                    }
+                    if(!data.annotations)
                     {
-                        updateLocalAnnotationsFromServer([], data.version, data.comments);
+                        data.annotations = [];
+                    }
+                    else if(data.version == 0)
+                    {
+                        data.annotations = [];
+                    }
+                    
+                    var document_version = getDocumentVersion(documentId);
+                    var document_dirty = isDocumentDirty(documentId);
+                    if(data.version < document_version)
+                    {
+                        updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
                         return;
                     }
-                    else                        						
-					    updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
-					var document_dirty = isDocumentDirty(documentId);
-
-					if(force_download == 1)
-					{
-						if(document_dirty == 1)
-						{
-							message = "Warning: Online version="+data.version+" will overwrite your local version="+document_version;
-							message += "<br>It will discard your recent changes, Do you still want to download?";
-							bootbox.confirm(message, function(dr){
-								if(dr)
-									updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
-							});
-						}
-						else if(data.version < document_version)
-						{
-							message = "Warning: Online version="+data.version+" will replace your local version="+document_version;
-							message += "<br>Do you still want to download?"
-							bootbox.confirm(message, function(dr){
-								if(dr)
-									updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
-							});
-						}
-						else if(data.version > document_version)
-						{
-							updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
-						}
-						else
-						{
-							/*bootbox.alert*/console.log("Already latest version="+document_version);
-						}
-					}
-					else
-					{
-						if(document_dirty != 1)
-						{
-							if(data.version > document_version)
-								updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
-						}
-						else if(data.version != 0 && data.version > document_version)
-						{
-							message = "You have latest version="+data.version+" available online, Do you want to download it?";
-							message += "<br>Warning: It will replace your recent local version="+document_version;
-							bootbox.confirm(message, function(dr){
-								if(dr)
-									updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
-							});
-						}
-						else
-						{
-							console.log("No need");
-						}
-					}
+                    
+                    if(document_dirty == 1)
+                    {                        
+                        message = "Warning: Online version="+data.version+" will overwrite your local version="+document_version;
+                        message += "<br>It will discard your recent changes, Do you still want to download?";
+                        bootbox.confirm(message, function(dr){
+                            if(dr)
+                            {
+                                updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
+                            }
+                            else
+                            {
+                                updateLocalAnnotationsFromServer([], data.version, comments);        
+                            }
+                        });
+                    }
+                    else
+                    {
+                        updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
+                    }
 				}
 
 				function updateLocalAnnotationsFromServer(annotations, version, comments) {
 					if(!annotations){
 						annotations = [];
-					}
+                    }
+                    
 					if(annotations.length == 0){
 						annotations = getCookieStrict(documentId, documentId + '/annotations');
 						annotations = JSON.parse(annotations);
@@ -294,7 +258,7 @@ function module0(module, exports, __webpack_require__) {
 						annotation_cookie  = JSON.stringify(annotations);
 					else
 					{
-						/*bootbox.alert*/console.log("invalid annotations");
+						bootbox.alert("invalid annotations");
 						return;
 					}
 					setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
@@ -304,7 +268,7 @@ function module0(module, exports, __webpack_require__) {
 				}
 
 				function onAnnotationsLoadingFailed(er){
-					//console.log(er);
+					console.log(er);
 				}
 
 				$('body').on('click','.download-annotations',function(){
@@ -320,7 +284,7 @@ function module0(module, exports, __webpack_require__) {
 					{
 						if(isNaN(data))
 						{
-							/*bootbox.alert*/console.log("Could not save:");
+							bootbox.alert("Could not save:");
 							console.log(data);
 							return;
 						}
@@ -377,8 +341,8 @@ function module0(module, exports, __webpack_require__) {
 						}
 						if(document_version == 0)
 						{
-							/*bootbox.alert*/console.log("Upload version can not be zero");
-							return;
+                            setDocDirty(documentId);
+							setDocVersion(documentId, 1);
 						}
 						input_data['annotations'] = annotationString;
 						input_data['version'] = document_version;
@@ -501,29 +465,44 @@ function module0(module, exports, __webpack_require__) {
 		var pdf_doc_data = undefined;
 		var document_data = false;
 
-		function render(doc_data) {
+		function render(doc_data) {	
+            $('#content-wrapper').hide();
+            site_functions.showLoader("renderdoc");
 		    setTimeout(function(){
 		        render_details(doc_data);
-		    },50);
-		    dn_json_rpc_object.loaderContainer.show();
-		    setTimeout(function(){
-                dn_json_rpc_object.loaderContainer.hide();
+		    },50);            
+            setTimeout(function(){
+                site_functions.hideLoader("renderdoc");
             }, 6000);
 		}
-
+		
 		function render_details(doc_data) {
 			try{
-                //site_functions.showLoader("renderdoc");
 				var pdfData = false;
 				if(doc_data && doc_data.first_time)
 				{
                     $('.topbar:first .annotation_button').hide();                    
                     annotation_mode = 0;
                     $('.strt_sign.pdfjs').hide();
-					$('#main-div').hide();
+                    $('#main-div').hide();
+                    
+                    $('#annotated-doc-conatiner').show();                    
+                    comments_wrapper.css({'top':'96px', 'height':'calc(100vh - 96px)'});                    
+                    comment_list.css('min-height', 'calc(100vh - 246px)');
+                    viewerLeftMargin();
+                    $('.doc-reseter').hide();
+                    $('.toolbar.topbar').show();
+                    comments_to_show = localStorage.getItem(documentId+'/comments_shown');                    
+                    if(comments_to_show)
+                        showCommentsContainer(comments_to_show);
+
 					if(doc_data.type)
 					{
-						documentId = doc_data.type+'-'+doc_data.id+'.pdf';
+                        documentId = doc_data.type+'-'+doc_data.id+'.pdf';
+                        if(doc_data.doc.startsWith('data:application/pdf;base64,'))
+                        {
+                            doc_data.doc = doc_data.doc.replace('data:application/pdf;base64,', '');
+                        }
 						var raw = atob(doc_data.doc);
 						var uint8Array = new Uint8Array(raw.length);
 						for (var i = 0; i < raw.length; i++) {
@@ -534,8 +513,8 @@ function module0(module, exports, __webpack_require__) {
 					}
 					else
 					{
-                        /*bootbox.alert*/console.log("Invalid document data ", doc_data);
-                        //site_functions.hideLoader("renderdoc");
+                        bootbox.alert("Invalid document data ", doc_data);
+                        site_functions.hideLoader("renderdoc");
                         return;
 					}
 					RENDER_OPTIONS.documentId = documentId;
@@ -549,14 +528,21 @@ function module0(module, exports, __webpack_require__) {
                     if(doc_data.type == 'meeting'||doc_data.type == 'topic')
                     {                        
                         annotation_mode = 1;                        
-                        //site_functions.hideLoader("renderdoc");
+                        site_functions.hideLoader("renderdoc");
                         loadAnnotationsFromServer();
                         return;
                     }
                     else if(doc_data.type == 'signature')
                     {
                         $('.strt_sign').attr('doc_id', doc_data.id);
-                        $('.strt_sign.pdfjs').show();                        
+						if(doc_data.mp_signature_status == "Pending")
+						{
+							$('.strt_sign.pdfjs').show();
+						}
+
+						if(doc_data.mp_signature_status == "Completed") {
+							$('.sign_completed.pdfjs').show();
+						}
                     }
 				}
 				else{
@@ -567,8 +553,8 @@ function module0(module, exports, __webpack_require__) {
 					}
 					else
 					{
-                        /*bootbox.alert*/console.log("Invalid render options data ", RENDER_OPTIONS);
-                        //site_functions.hideLoader("renderdoc");
+                        bootbox.alert("Invalid render options data ", RENDER_OPTIONS);
+                        site_functions.hideLoader("renderdoc");
                         return;
 					}
                 }
@@ -582,21 +568,17 @@ function module0(module, exports, __webpack_require__) {
 					if(!pdf)
 					{
                         alert("PDF not loaded");
-                        //site_functions.hideLoader("renderdoc");
+                        site_functions.hideLoader("renderdoc");
 						return;
 					}
 					
 					RENDER_OPTIONS.pdfDocument = pdf;
 					var viewer = document.getElementById('viewer');
 					viewer.innerHTML = '';
-					NUM_PAGES = pdf.pdfInfo.numPages;
+                    NUM_PAGES = pdf.pdfInfo.numPages;                    
 					for (var i = 0; i < NUM_PAGES; i++) {
 						var page = UI.createPage(i + 1);
-						viewer.appendChild(page);
-						if(i == 0)
-						{
-							setCommentsConatinerCss();
-						}
+						viewer.appendChild(page);						
                     }
                     
                     var cb_page_renderd = undefined;
@@ -604,26 +586,34 @@ function module0(module, exports, __webpack_require__) {
                         if(annotation_mode == 1)
                         {
                             var point_id = getUrlLastItem();
-                            if (isNaN(point_id)) {
+                            if (isNaN(point_id) && point_id != 'resume') {
                                 $('.groupcomment[annotationId="' + point_id + '"]').click();
                             }
                         }
+                        $('#content-wrapper').show();
                     };
-                    dn_json_rpc_object.loaderContainer.hide();
+                    site_functions.hideLoader("renderdoc");
 					for(var i = 1; i <= NUM_PAGES; i++){                        
-                        var after_inc = 0;
+                        var after_inc = 0; 
+                        cb_page_renderd= undefined;
+                        if( i == 1)
+                        {
+                            cb_page_renderd = function(){                                
+                                $('#content-wrapper').show();
+                            }
+                        }
 						if(i == NUM_PAGES)
-						    cb_page_renderd = onPageRendered;
+							cb_page_renderd = onPageRendered;                        
                         if(annotation_mode == 1)
                             UI.renderPage(i, RENDER_OPTIONS, cb_page_renderd);
                         else
                             UI.renderPageWithoutAnnotations(i, RENDER_OPTIONS, cb_page_renderd);
-					}
+                    }                    
 					var point_id = window.location.toString().split('/');
 					point_id = point_id[point_id.length - 1];
 					if (isNaN(point_id)) {
-						//$('.comments-toggler').click();
-                    }
+						$('.comments-toggler').click();
+                    }                    
 				});
 			}
 			catch(er)
@@ -748,7 +738,6 @@ function module0(module, exports, __webpack_require__) {
 			function handlePenSizeChange(e) {
 				setPen(e.target.value, penColor);
 			}
-
 			//document.querySelector('.toolbar .pen-size').addEventListener('change', handlePenSizeChange);
 
 			initPen();
@@ -757,7 +746,7 @@ function module0(module, exports, __webpack_require__) {
 		// Toolbar buttons
 		(function() {
 			var tooltype = 'cursor';
-			function setActiveToolbarItem(type, button) {
+			function setActiveToolbarItem(type, button) {                
 				var oldButton = $('.toolbar button.active');
 				if (oldButton.length > 0) {
 					oldButton.removeClass('active');
@@ -809,7 +798,7 @@ function module0(module, exports, __webpack_require__) {
 			}
 
 			function handleToolbarClick(e) {
-			    var active_btn = $('.topbar:first .active');
+				var active_btn = $('.topbar:first .active');
 				var target = $(e.target);
 				if(target.hasClass('pen') && active_btn.hasClass('pen'))
 				{
@@ -833,7 +822,6 @@ function module0(module, exports, __webpack_require__) {
 				}
 			}
 
-//			$('.toolbar button').click(handleToolbarClick);
 			$('.toolbar button').click(handleToolbarClick);
 			$('.toolbar:first .cursor').click();
 		})();
@@ -932,11 +920,16 @@ function module0(module, exports, __webpack_require__) {
 				commentText.val('');
 				commentText.focus();
 				setTimeout(function(){
-					$('#comment-wrapper').scrollTop(5000);
+					comments_wrapper.scrollTop(5000);
 				},100);
 			};
 
 			commentText.keyup(function(e) {
+                if(!activePointId)
+                {
+                    console.log("Comment not added because, no active annotationId");
+                    return;
+                }
 				if(!e.shiftKey && e.keyCode == 13)
 				{
 					e.preventDefault();
@@ -944,23 +937,25 @@ function module0(module, exports, __webpack_require__) {
 					//console.log(commentValue);
 					var comment = {
 						date_time: new Date(),
-						user_name:odoo.session_info.name,
-						uid:odoo.session_info.uid,
+						user_name:window['current_user'].cookie.name,
+						uid:window['current_user'].cookie.id,
 						content:commentValue
 					};
 					//console.log(commentText.content)
 					if(!comment.content)
 						return false;
-					pdfStoreAdapter.addComment(documentId, activeAnnotationId, comment).then(insertComment).then(onCommentAdded);
+					pdfStoreAdapter.addComment(documentId, activePointId, comment).then(insertComment).then(onCommentAdded);
 				}
 			});
 
 			function loadALlCommentsOnDocument()
 			{
 				comment_list.html('');
-				commet_group_focused = false;
-				pdfStoreAdapter.getCommentAnnotations(documentId).then(function(pointAnnotations) {
-					pointAnnotations = pointAnnotations.annotations;
+                var point_type = false;
+                if(comments_to_show == 'notes')
+                    point_type = 'personal';
+				pdfStoreAdapter.getPointAnnotations(documentId, point_type).then(function(pointAnnotations) {                    
+                    pointAnnotations = pointAnnotations.annotations;                    
 					pointAnnotations.sort(function(a, b) {
 						return a["page"] - b["page"] || a["y"] - b["y"] || a["x"] - b["x"];
 					});
@@ -978,10 +973,9 @@ function module0(module, exports, __webpack_require__) {
 							renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);
 						});
 
-					}
-				});
-
-				comments_wrapper.addClass('annotation');
+                    }
+                    showCommentsContainer(comments_to_show);
+				});				
 			}
 
 			function renderCommentsByAnnotation(comments, annotationId, sub_type){
@@ -993,10 +987,6 @@ function module0(module, exports, __webpack_require__) {
 					var child = makeCommentItem(aComment);
 					group.appendChild(child);
 				}
-				if(sub_type)
-				{
-					group.style.backgroundColor = '#7b7d80';
-				}
 				$(group).attr('annotationId',annotationId);
 				comment_list.append(group);
 			}
@@ -1005,7 +995,6 @@ function module0(module, exports, __webpack_require__) {
 			{
 				comment_list.html('');
 				comments.forEach(insertComment);
-				comments_wrapper.removeClass('annotation');
 			}
 			var selected_comment_item = false;
 			$('body').on('click','#comment-wrapper .buttons',function(e){
@@ -1029,9 +1018,10 @@ function module0(module, exports, __webpack_require__) {
 					contextMenuShown = false;
 					$('.update-comment').hide();
 				});
-			});
+            });
 
-			var commet_group_focused = false;
+            $('body').on('click','.show-all-comments', hideComments);
+            
 			$('body').on('click','#comment-wrapper .groupcomment',function(e){
 				if($(e.target).is('.buttons'))
 				{
@@ -1048,8 +1038,7 @@ function module0(module, exports, __webpack_require__) {
 				{
 					target = target[0];
 					UI.enableEdit(target);
-					handleAnnotationClick(target);
-					commet_group_focused = true;
+					handleAnnotationClick(target);					
 					var rect = target.getBoundingClientRect();
 					var vh = $('#viewer').height();
 					var st = $('#content-wrapper').scrollTop();
@@ -1069,7 +1058,7 @@ function module0(module, exports, __webpack_require__) {
 				var child = document.createElement('div');
 				child.className = 'comment-list-item';
 				var child_info = '<div>'+ aComment.content+'</div>';
-				aComment.date_time = getTimeString();
+				aComment.date_time = getTimeString(aComment.date_time);
 				child_info += '<div class="user-time-info">';
 				child_info +='<span class"time">'+aComment.date_time+'</span>';
 				//child_info +='<span class="buttons">:</span>';
@@ -1094,20 +1083,22 @@ function module0(module, exports, __webpack_require__) {
 				{
 					activeAnnotationItem = item;
 					if (supportsComments(target)) {
+                        activePointId = activeAnnotationId;
+						site_functions.update_notification_list(activeAnnotationId);
 						pdfStoreAdapter.getComments(documentId, activeAnnotationId).then(renderComments);
 						if(activeAnnotationItem.sub_type)
-						{
-							showCommentsContainer('Notes');
+						{                            
+							showCommentsContainer('notes');
 						}
 						else
 						{
 							$('#pdf-annotate-edit-overlay a' ).remove();
-							showCommentsContainer();
+							showCommentsContainer('comments');
 						}
 						setTimeout(function(){
 							$('form.comment-list-form textarea').focus();
 							setTimeout(function(){
-								$('#comment-wrapper').scrollTop(5000);
+								comments_wrapper.scrollTop(5000);
 							},100);
 						},100);
 					}
@@ -1118,8 +1109,7 @@ function module0(module, exports, __webpack_require__) {
 						var tw = $('#pdf-annotate-edit-overlay:visible').width();
 						var cmw = ctxMenu.width();
 						var left_pos =  pos.left + tw/2 - cmw/2;
-						var color = $(target).attr('fill');
-						//console.log(target);
+						var color = $(target).attr('fill');						
 						if(!color){
 							color=$(target).attr('stroke');
 						}
@@ -1161,14 +1151,28 @@ function module0(module, exports, __webpack_require__) {
 			}
 			$(document).mousedown(function(e){
 				var $target = $(e.target);
-				if(contextMenuShown && !$target.is('.ContextMenuPopup div') && !$target.is('.ContextMenuPopup .colored'))
+				if(contextMenuShown && !$target.is('.ContextMenuPopup button') && !$target.is('.ContextMenuPopup .colored'))
 					$('.ContextMenuPopup').hide();
 				if($('.topbar:first .pen:first').hasClass('active')){
 					if($target.closest('#viewer').length == 0){
 						save_drawing();
 						$('.topbar:first .cursor:first').click();
 					}
-				}
+                }
+                else
+                {                    
+                    if(activePointId && $target.closest('#comment-wrapper').length == 0)
+                    {
+                        activePointId = undefined;
+                        $('.comment-list-form').hide();                        
+                    }
+                    else
+                    {
+                        var comment_active = $('.toolbar .comment').hasClass('active');
+                        if(comment_active && $target.closest('#viewer').length == 0)
+                        $('.toolbar .cursor').click();
+                    }
+                }
 			});
 
 			var ww = $(window).width();
@@ -1176,15 +1180,23 @@ function module0(module, exports, __webpack_require__) {
 			var dh = $(document).height();
 
 			function handleAnnotationBlur(target) {
-				annotationBiengEdited = false;
-				if (supportsComments(target)) {
+                annotationBiengEdited = false;                
+				if (supportsComments(target)) {                    
+                    if($(target).children('svg').length > 0)
+                        comments_to_show = 'comments';
+                    else
+                        comments_to_show = 'notes';
 					loadALlCommentsOnDocument();
 				}
-			}
-
-			$('.show-all-comments').click(function(){
-				UI.destroyEditOverlay();
-				loadALlCommentsOnDocument();
+			}            
+            
+            $('.toolbar:first .comment').click(function(){                
+                UI.destroyEditOverlay();
+                if($(this).is('.personal'))
+                    comments_to_show = 'notes';
+                else
+                comments_to_show = 'comments';
+                    loadALlCommentsOnDocument();
 			});
 
 			$('.cell.colored').click(function(){
@@ -1204,21 +1216,12 @@ function module0(module, exports, __webpack_require__) {
 			{
 				comments_wrapper.hide();
 				viewerLeftMargin();
-				comments_shown = false;
+                comments_shown = false;
+                localStorage.removeItem(documentId+'/comments_shown');
 			}
-
-			$('.comments-toggler').click(function(){
-				if(comments_shown)
-					hideComments();
-				else
-				{
-					loadALlCommentsOnDocument();
-					showCommentsContainer();
-				}
-			});
+            
 			UI.addEventListener('annotation:click', handleAnnotationClick);
-			UI.addEventListener('annotation:blur', handleAnnotationBlur);
-			//loadALlCommentsOnDocument();
+			UI.addEventListener('annotation:blur', handleAnnotationBlur);			
 		})(window, document);
 		exports.render = render;
 	}

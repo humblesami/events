@@ -222,7 +222,7 @@ odoo.define('odoochat.onClientready', function (require) {
         console.log('Connecting chat server '+chat_server);
 
         socket.on('connect',function(){
-            window['socket'] = socket;
+            dn_current_site_user.socket = socket;
             is_connected = true;
             console.log('Chat server '+chat_server+' connected');
             socket.emit('verify', {
@@ -300,7 +300,6 @@ odoo.define('odoochat.onClientready', function (require) {
                     console.log("Error for ",going_user);
                 }
             });
-            window['socket']=socket;
         });
 
         setTimeout(function(){

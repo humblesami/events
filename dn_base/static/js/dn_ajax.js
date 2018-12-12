@@ -196,3 +196,26 @@ function dn_rpc_object(reqObject)
     var failureCallBack = reqObject.onError;
     dn_json_rpc_object.request(reqfun   , input_data, callback, failureCallBack)
 }
+
+var site_functions = {
+    showLoader :function(ref)
+    {
+        dn_json_rpc_object.loaderContainer.show();
+    },
+    hideLoader :function(ref)
+    {
+        dn_json_rpc_object.loaderContainer.hide();
+    },
+    update_notification_list:function()
+    {
+    }
+}
+
+var dn_current_site_user = {
+    cookie : {
+        name: odoo.session_info.name,
+        id: odoo.session_info.uid,
+        token : odoo.session_info.token,
+    }
+}
+console.log(dn_current_site_user);

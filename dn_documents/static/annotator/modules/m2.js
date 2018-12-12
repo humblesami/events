@@ -1,7 +1,6 @@
 var hand_drawings = [];
 
 function module2(module, exports, __webpack_require__) {
-try{
     var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */
     (function(module) {
         'use strict';
@@ -229,6 +228,11 @@ try{
                         key: 'getCommentAnnotations',                        
                         value: function getCommentAnnotations(documentId) {
                             (0, _abstractFunction2.default)('getCommentAnnotations');
+                        }
+                    }, {
+                        key: 'getPointAnnotations',                        
+                        value: function getCommentAnnotations(documentId, sub_type) {
+                            (0, _abstractFunction2.default)('getPointAnnotations');
                         }
                     }, {
                         key: '__addAnnotation',
@@ -1124,7 +1128,7 @@ try{
                             getAnnotations: function getAnnotations(documentId, pageNumber) {
                                 return new Promise(function(resolve, reject) {
                                     var annotations = _getAnnotations(documentId).filter(function(i) {
-                                        return i.page === pageNumber && i.class === 'Annotation' && (i.uid == odoo.session_info.uid || (i.type=='point' && !i.sub_type));
+                                        return i.page === pageNumber && i.class === 'Annotation' && (i.uid == dn_current_site_user.cookie.id || (i.type=='point' && !i.sub_type));
                                     });
                                     resolve({
                                         documentId: documentId,
@@ -1135,15 +1139,34 @@ try{
                             },
                             getCommentAnnotations: function(documentId, sub_type) {
                                 return new Promise(function(resolve, reject) {
-                                    var annotations = _getAnnotations(documentId).filter(function(i) {                                          
-                                        return i.type=='point' && i.class === 'Annotation' && (i.uid == odoo.session_info.uid || !i.sub_type);
-
+                                    var annotations = _getAnnotations(documentId).filter(function(i) {
+                                        return i.type=='point' && i.class === 'Annotation' && (i.uid == dn_current_site_user.cookie.id || !i.sub_type);
                                     });
                                     resolve({
-                                        documentId: documentId,                                        
+                                        documentId: documentId,
                                         annotations: annotations
                                     });
                                 });
+                            },
+                            getPointAnnotations: function(documentId, sub_type) {
+                                return new Promise(function(resolve, reject) {
+                                    var annotations = _getAnnotations(documentId).filter(function(i) {
+                                        if (sub_type)
+                                            return i.type=='point' && i.class === 'Annotation' && i.uid == dn_current_site_user.cookie.id && i.sub_type;
+                                        else
+                                            return i.type=='point' && i.class === 'Annotation' && !i.sub_type;
+                                    });
+                                    resolve({
+                                        documentId: documentId,
+                                        annotations: annotations
+                                    });
+                                });
+                            },
+                            getCommentPoints: function(documentId) {
+                                return this.getCommentAnnotations(documentId)
+                            },
+                            getNotePoints: function(documentId) {
+                                return this.getCommentAnnotations(documentId, sub_type)
                             },
                             getAnnotation: function getAnnotation(documentId, annotationId) {
                                 return Promise.resolve(_getAnnotations(documentId)[findAnnotation(documentId, annotationId)]);
@@ -1158,21 +1181,21 @@ try{
                                         return;
                                     }
 
-                                    if(!odoo.session_info.uid)
+                                    if(!dn_current_site_user.cookie.id)
                                     {
-                                        /*bootbox.alert*/console.log("No user Id given");
+                                        bootbox.alert("No user Id given");
                                         return;
                                     }
                                     annotation.class = 'Annotation';
                                     annotation.uuid = (0, _uuid2.default)();
                                     annotation.page = pageNumber;
-                                    annotation.date_time = new Date();                                    
-                                    if(!odoo.session_info.uid)
+                                    annotation.date_time = new Date();
+                                    if(!dn_current_site_user.cookie.id)
                                     {
                                         console.log("oops no user id");
                                         return;
                                     }
-                                    annotation.uid = odoo.session_info.uid;
+                                    annotation.uid = dn_current_site_user.cookie.id;
                                     var annotations = _getAnnotations(documentId);
                                     annotations.push(annotation);
                                     annotation.to_merge = 1;
@@ -1182,11 +1205,11 @@ try{
                                     resolve(annotation);
                                 });
                             },
-                            editAnnotation: function editAnnotation(documentId, annotationId, annotation) {                                
+                            editAnnotation: function editAnnotation(documentId, annotationId, annotation) {
                                 return new Promise(function(resolve, reject) {
                                     var annotations = _getAnnotations(documentId);
-                                    var annotationIndex = findAnnotation(documentId, annotationId);                                    
-                                    annotations[annotationIndex] = annotation;                                    
+                                    var annotationIndex = findAnnotation(documentId, annotationId);
+                                    annotations[annotationIndex] = annotation;
                                     updateAnnotations(documentId, annotations);
                                     updateAnnotationColor(annotationId, annotation.type, annotation.color);
                                     resolve(annotation);
@@ -1205,7 +1228,7 @@ try{
                             },
                             getComments: function getComments(documentId, annotationId) {
                                 return new Promise(function(resolve, reject) {
-                                    var all_annotaions = _getAnnotations(documentId);                                    
+                                    var all_annotaions = _getAnnotations(documentId);
                                     var points = all_annotaions.filter(function(i) {
                                         return i.uuid === annotationId;
                                     });
@@ -1231,91 +1254,86 @@ try{
                                     });
                                     resolve(points || []);
                                 });
-                            },                            
+                            },
                             addComment: function addComment(documentId, annotationId, values) {
                                 return new Promise(function(resolve, reject) {
-                                	var obj_this = this;
-									var input_data = {};
-									input_data['db'] = odoo.session_info.db;
-									input_data['token'] = odoo.session_info.token;
-									var point = findAnnotationObject(documentId, annotationId);
-                                    var comment = {
-                                        class: 'Comment',
-                                        uuid: (0, _uuid2.default)(),
-                                        point_id: annotationId,
-                                        content: values.content,
-                                        uid:values.uid,
-                                        user_name:values.user_name,
-                                        date_time:values.date_time,
-                                    };
 
-									var doc_data = documentId.split('-');
-									input_data['doc_type'] = doc_data[0];
-									input_data['res_id'] = doc_data[1].split('.')[0];
-                                    input_data['comment'] = comment;
-                                    var is_comment = false;
-                                    if(point.sub_type != 'personal'){
-										var user_socket = window['socket'];
-										if(user_socket && user_socket.connected)
-										{
-											window['socket'].emit('onCommentPost', input_data);
-                                        }
-										input_data = {
-											annotations:JSON.stringify({
-												doc_id: documentId,
-												point: point,
-												comment: comment
-											})
+                                    if(annotationId)
+                                    {
+                                        var comment = {
+                                            class: 'Comment',
+                                            uuid: (0, _uuid2.default)(),
+                                            point_id: annotationId,
+                                            content: values.content,
+                                            uid:values.uid,
+                                            user_name:values.user_name,
+                                            date_time:values.date_time,
+                                        };
+                                        var doc_data = documentId.split('-');
+                                        var res_id = doc_data[1].split('.')[0];
+                                        var input_data = {
+                                            doc_type : doc_data[0],
+                                            doc_id : documentId,
+                                            res_id : res_id,
+                                            db : site_config.server_db,
+                                            uid : dn_current_site_user.cookie.id,
+                                            token : dn_current_site_user.cookie.token,
+                                            time_zone : dn_current_site_user.time_zone
                                         }
 
-										is_comment = true;
-										dn_rpc_object({
-											url:'/save-comment-annotation',
-											data:input_data,
-											onSuccess: function(data){
-                                                var annotations = _getAnnotations(documentId);
-                                                var point_an = undefined;
-                                                for(var p in annotations)
+                                        var annotations = _getAnnotations(documentId);
+                                        var point = {};
+
+                                        var index = -1;
+                                        for(var i in annotations)
+                                        {
+                                            if(annotations[i].uuid == annotationId)
+                                            {
+                                                index = i;
+                                                var annotation = annotations[i];
+                                                for(var key in annotation)
                                                 {
-                                                    if(annotations[p].uuid == annotationId)
+                                                    if(key != 'comments')
                                                     {
-                                                        point_an = annotations[p];
-                                                        if(point_an.comments)
-                                                        {
-                                                            point_an.comments.push(comment);
-                                                        }
-                                                        else
-                                                        point_an.comments= [comment];
-                                                        break;
+                                                        point[key] = annotation[key];
                                                     }
                                                 }
-                                                updateAnnotations(documentId, annotations, is_comment);
-											},
-											onError: function(err){
-												console.log(err);
-											},
-                                            type:'post',
-										});
-									}
-									else{
-										var annotations = _getAnnotations(documentId);
-										var point_an = undefined;
-										for(var p in annotations)
-										{
-											if(annotations[p].uuid == annotationId)
-											{
-												point_an = annotations[p];
-												if(point_an.comments)
-												{
-													point_an.comments.push(comment);
-												}
-												else
-													point_an.comments= [comment];
-												break;
-											}
-										}
-										updateAnnotations(documentId, annotations, is_comment);
-									}
+                                                break;
+                                            }
+                                        }
+                                        if(index > -1)
+                                        {
+                                            if(!annotations[index].comments)
+                                            {
+                                                annotations[index].comments = [comment];
+                                            }
+                                            else
+                                            {
+                                                annotations[index].comments.push(comment);
+                                            }
+                                            point.comment = comment;
+
+                                            input_data['point'] = point;
+                                            var is_comment = point.sub_type != 'personal';
+
+                                            if(is_comment){
+                                                var user_socket = dn_current_site_user.socket;
+                                                if(user_socket && user_socket.connected)
+                                                {
+                                                    dn_current_site_user.socket.emit('postcomment', input_data);
+                                                }
+                                            }
+                                            updateAnnotations(documentId, annotations, is_comment);
+                                        }
+                                        else
+                                        {
+                                            console.log("Annotation not found "+annotationId);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        console.log("Comment not added because, no active annotationId");
+                                    }
                                     resolve(comment);
                                 });
                             },
@@ -1365,7 +1383,7 @@ try{
                     return res;
                 }
 
-                function updateAnnotations(documentId, annotations, is_comment) {                    
+                function updateAnnotations(documentId, annotations, is_comment) {
                     var annotation_cookie = "";
                     if(Array.isArray(annotations))
                         annotation_cookie  = JSON.stringify(annotations);
@@ -1514,7 +1532,7 @@ try{
                     var viewport_rotation = viewport.rotation % 360;
                     if(viewport_rotation<0)
                         viewport_rotation += 360;
-                    
+
                     switch (viewport_rotation) {
                         case 0:
                             x = y = 0;
@@ -1571,11 +1589,11 @@ try{
                             arr.push(rects);
                         if(gs)
                             arr.push(gs);
-                    
+
                         var viewport_rotation = viewport.rotation % 360;
                         if(viewport_rotation<0)
                         viewport_rotation += 360;
-                        
+
                         switch (viewport_rotation) {
                             case 90:
                                 node.setAttribute('x', viewport.width - y - width);
@@ -1705,7 +1723,7 @@ try{
                  * @param {Object} a The annotation definition
                  * @return {SVGGElement} A group of all lines to be rendered
                  */
-                function renderLine(a) {                    
+                function renderLine(a) {
                     var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     (0, _setAttributes2.default)(group, {
                         stroke: (0, _normalizeColor2.default)(a.color || '#f00'),
@@ -1796,7 +1814,7 @@ try{
                  * @param {Object} a The annotation definition
                  * @return {SVGPathElement} The path to be rendered
                  */
-                function renderPath(a) {                    
+                function renderPath(a) {
                     var d = [];
                     var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                     for (var i = 0, l = a.lines.length; i < l; i++) {
@@ -1845,7 +1863,7 @@ try{
                     var innerSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                     var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                     var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    
+
                     (0, _setAttributes2.default)(innerSVG, {
                         width: SIZE,
                         height: SIZE,
@@ -1887,7 +1905,7 @@ try{
                         outerSVG.appendChild(rect);
                         outerSVG.appendChild(innerSVG);
                     }
-                    else                    
+                    else
                     outerSVG.innerHTML = `<rect
                     width="26.075428"
                     height="21.096582"
@@ -1917,7 +1935,7 @@ try{
                     height="0.86"
                     x="6"
                     y="18"
-                    style="fill:#000000;fill-opacity:1;stroke:none" />`;                    
+                    style="fill:#000000;fill-opacity:1;stroke:none" />`;
                     return outerSVG;
                 }
                 module.exports = exports['default']; /***/
@@ -1949,7 +1967,7 @@ try{
                  * @param {Object} a The annotation definition
                  * @return {SVGGElement|SVGRectElement} A group of all rects to be rendered
                  */
-                function renderRect(a) {                    
+                function renderRect(a) {
                     if (a.type === 'highlight') {
                         var _ret = function() {
                             var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -2009,7 +2027,7 @@ try{
                  * @param {Object} a The annotation definition
                  * @return {SVGTextElement} A text to be rendered
                  */
-                function renderText(a) {                    
+                function renderText(a) {
                     var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     (0, _setAttributes2.default)(text, {
                         x: a.x,
@@ -2648,8 +2666,8 @@ try{
                     destroyEditOverlay();
                     overlay = document.createElement('div');
                     var anchor = document.createElement('a');
-                    var svgTaret = (0, _utils.findSVGContainer)(target);                    
-                    var parentNode = svgTaret.parentNode;                    
+                    var svgTaret = (0, _utils.findSVGContainer)(target);
+                    var parentNode = svgTaret.parentNode;
                     var id = target.getAttribute('data-pdf-annotate-id');
                     var rect = (0, _utils.getAnnotationRect)(target);
                     var styleLeft = rect.left - OVERLAY_BORDER_SIZE;
@@ -2705,7 +2723,7 @@ try{
                     });
                 }
 
-                
+
                 /**
                  * Destroy the edit overlay if it exists.
                  */
@@ -2957,16 +2975,16 @@ try{
                  *
                  * @param {Element} e The annotation element that was clicked
                  */
-                function handleAnnotationClick(target) {                    
+                function handleAnnotationClick(target) {
                     if(!mouse_dragged)
                     {
                         createEditOverlay(target);
                     }
-                }                
+                }
                 /**
                  * Enable edit mode behavior.
                  */
-                function enableEdit(target) {                    
+                function enableEdit(target) {
                     if(target)
                     {
                         //console.log(target);
@@ -3017,18 +3035,28 @@ try{
                 /**
                  * Handle document.mousedown event
                  */
-                function handleDocumentMousedown() {
+                function handleDocumentMousedown(e) {
+                    //console.log(e, 777);
+                    $('body').css('overflow','hidden');
                     path = null;
                     lines = [];
+
                     document.addEventListener('mousemove', handleDocumentMousemove);
                     document.addEventListener('mouseup', handleDocumentMouseup);
+
+                    document.addEventListener('touchmove', handleDocumentMousemove,{passive: false});
+                    document.addEventListener('touchend', handleDocumentMouseup);
                 }
                 /**
                  * Handle document.mouseup event
                  *
                  * @param {Event} e The DOM event to be handled
                  */
+
                 function handleDocumentMouseup(e) {
+                    //console.log(777);
+                     if(e.changedTouches)
+                        e = e.changedTouches[0];
 					var svg = void 0;
                     if (lines.length > 1 && (svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
                         var _getMetadata = (0, _utils.getMetadata)(svg);
@@ -3049,6 +3077,10 @@ try{
                     }
                     document.removeEventListener('mousemove', handleDocumentMousemove);
                     document.removeEventListener('mouseup', handleDocumentMouseup);
+
+                    document.removeEventListener('touchmove', handleDocumentMousemove);
+                    document.removeEventListener('touchend', handleDocumentMouseup);
+                    $('body').css('overflow','auto');
                 }
 
 				function saveDrawingAnnotation(){
@@ -3072,7 +3104,14 @@ try{
                  *
                  * @param {Event} e The DOM event to be handled
                  */
+
                 function handleDocumentMousemove(e) {
+                    e.preventDefault();
+                    //console.log(e);
+                    if(e.touches)
+                     {
+                         e = e.touches[0];
+                     }
                     savePoint(e.clientX, e.clientY);
                 }
                 /**
@@ -3134,12 +3173,13 @@ try{
                  * Enable the pen behavior
                  */
                 function enablePen() {
+                    //console.log(777);
                     if (_enabled) {
                         return;
                     }
                     _enabled = true;
                     document.addEventListener('mousedown', handleDocumentMousedown);
-                    document.addEventListener('keyup', handleDocumentKeyup);
+                    document.addEventListener('touchstart', handleDocumentMousedown);
                     (0, _utils.disableUserSelect)();
                 }
                 /**
@@ -3150,8 +3190,6 @@ try{
                         return;
                     }
                     _enabled = false;
-                    document.removeEventListener('mousedown', handleDocumentMousedown);
-                    document.removeEventListener('keyup', handleDocumentKeyup);
                     (0, _utils.enableUserSelect)();
                 } /***/
             }, /* 31 */function(module, exports, __webpack_require__) {
@@ -3170,7 +3208,7 @@ try{
                 var _PDFJSAnnotate2 = _interopRequireDefault(_PDFJSAnnotate);
                 var _appendChild = __webpack_require__(11);
                 var _appendChild2 = _interopRequireDefault(_appendChild);
-                var _utils = __webpack_require__(6);                
+                var _utils = __webpack_require__(6);
 
                 function _interopRequireDefault(obj) {
                     return obj && obj.__esModule ? obj : {
@@ -3196,7 +3234,6 @@ try{
                     input.style.position = 'fixed';
                     input.style.top = e.clientY + 'px';
                     input.style.left = e.clientX + 'px';
-                    input.style.zIndex = 1101;
                     input.addEventListener('blur', handleInputBlur);
                     input.addEventListener('keyup', handleInputKeyup);
                     document.body.appendChild(input);
@@ -3226,7 +3263,7 @@ try{
                 function savePoint() {
                     if (input.value.trim().length == 0)
                     {
-                        closeInput();                        
+                        closeInput();
                         return;
                     }
                     if (input.value.trim().length > 0) {
@@ -3254,7 +3291,7 @@ try{
                             annotation.sub_type = comment_sub_type;
                             //console.log(43333);
                             pdfStoreAdapter.addAnnotation(documentId, pageNumber, annotation).then(function(annotation) {
-                                var values = {content:content, date_time:new Date(), uid:odoo.session_info.uid, user_name:odoo.session_info.name}
+                                var values = {content:content, date_time:new Date(), uid:dn_current_site_user.cookie.id, user_name:dn_current_site_user.cookie.name}
                                 pdfStoreAdapter.addComment(documentId, annotation.uuid, values);
                                 (0, _appendChild2.default)(svg, annotation);
                             });
@@ -3979,8 +4016,4 @@ try{
         });; //# sourceMappingURL=pdf-annotate.js.map
         /* WEBPACK VAR INJECTION */
     }.call(exports, __webpack_require__(3)(module)))
-    }
-    catch(err){
-        console.log(err);
-    }
 }
