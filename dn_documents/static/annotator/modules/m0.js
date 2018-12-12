@@ -102,13 +102,6 @@ function module0(module, exports, __webpack_require__) {
 		var comments_wrapper = $('#comment-wrapper');
 		var comment_list = comments_wrapper.find('.comment-list-container:first');
 
-        function hideComments()
-        {
-            comments_wrapper.hide();
-            viewerLeftMargin();
-            comments_shown = false;
-            localStorage.removeItem(documentId+'/comments_shown');
-        }
 		function viewerLeftMargin(vuw)
 		{
 			if(comments_wrapper.is(':visible'))
@@ -1231,6 +1224,15 @@ function module0(module, exports, __webpack_require__) {
 				}
 			});
 
+
+			function hideComments()
+			{
+				comments_wrapper.hide();
+				viewerLeftMargin();
+                comments_shown = false;
+                localStorage.removeItem(documentId+'/comments_shown');
+			}
+            
 			UI.addEventListener('annotation:click', handleAnnotationClick);
 			UI.addEventListener('annotation:blur', handleAnnotationBlur);
 		})(window, document);

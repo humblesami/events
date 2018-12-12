@@ -3081,8 +3081,7 @@ function module2(module, exports, __webpack_require__) {
 
                     document.removeEventListener('touchmove', handleDocumentMousemove);
                     document.removeEventListener('touchend', handleDocumentMouseup);
-                    if(is_mobile_device)
-                        $('body').css('overflow','auto');
+                    $('body').css('overflow','auto');
                 }
 
 				function saveDrawingAnnotation(){
@@ -3523,7 +3522,7 @@ function module2(module, exports, __webpack_require__) {
                     _type = data_tool_type;
                     var rects = void 0;
                     if (_type !== 'area' && (rects = getSelectionRects())) {
-                        var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);
+                        var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);                        
                         var consumableArray = _toConsumableArray(rects);
                         var mappedFun = function(r) {
                             return {
@@ -3555,7 +3554,7 @@ function module2(module, exports, __webpack_require__) {
                 /**
                  * Enable rect behavior
                  */
-                function enableRect(type) {
+                function enableRect(type) {                                                            
                     _type = type;
                     if (_enabled) {
                         return;
@@ -3563,7 +3562,7 @@ function module2(module, exports, __webpack_require__) {
                     _enabled = true;
                     document.addEventListener('mouseup', handleDocumentMouseup32);
                     document.addEventListener('mousedown', handleDocumentMousedown);
-                    document.addEventListener('keyup', handleDocumentKeyup);
+                    document.addEventListener('keyup', handleDocumentKeyup);                    
                     handleDocumentMouseup32(type);
                 }
                 /**
