@@ -73,7 +73,7 @@ $(function(){
         el = $(el.children[0]);
         if(el.html() == "0")
         {
-            el.closest('.o_kanban_record').css('border','2px solid #9c4784');
+            //el.closest('.o_kanban_record').css('border','2px solid #9c4784');
         }
         else
         {
