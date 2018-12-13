@@ -384,9 +384,9 @@ span[name="exectime"]
 
 .home_btns
 {
-    padding: 5px 5px;
-    background-color: #c0c0c0;
-    margin: -24px -16px 0 -16px;
+    padding: 5px 18px;
+    background-color: #ddd;
+    margin: -24px -16px 3px -16px;
 }
 
 .home_btns>span{
