@@ -1018,4 +1018,3 @@
         $('.modal-backdrop').remove();
         console.log(4333);
   });
-  alert(444);
