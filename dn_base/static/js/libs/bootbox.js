@@ -96,7 +96,7 @@
     }
   
     function processCallback(e, dialog, callback) {
-        afterAlert();
+
       e.stopPropagation();
       e.preventDefault();
   
@@ -1011,3 +1011,11 @@
   
     return exports;
   }));
+
+  $(document).on('click', '.bootbox .modal-footer button').click(function(){
+    $('.bootbox').remove();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        console.log(4333);
+  });
+  alert(444);

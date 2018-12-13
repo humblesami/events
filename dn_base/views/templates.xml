@@ -22,7 +22,6 @@
 
         <template id="assets_frontend" inherit_id="web.assets_frontend" name="Front End Inherit">
             <xpath expr=".">
-                <link rel="stylesheet" href="/dn_base/static/css/dn_front.css" />
                 <script src="/dn_base/static/js/frontend.js"></script>
             </xpath>
         </template>

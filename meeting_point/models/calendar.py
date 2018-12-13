@@ -291,19 +291,16 @@ class Meeting(models.Model):
     @api.multi
     def is_video_active(self):
         for obj in self:
-            if self.env.user.has_group('meeting_point.group_meeting_admin'):
-                obj.conference_status = 'active'
-                continue
             dt_now = dn_dt.now()
             before_15 = dn_dt.addInterval(obj.start, 'min', -15)
             if dt_now < before_15:
-                obj.conference_status = 'Will be available at '+ str(before_15)
+                obj.conference_status = 'Not active yet, will be available at '+ str(before_15)
                 if obj.moderator != 0:
                     obj.moderator = 0
             else:
                 after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)
                 if  dt_now > after_3hours:
-                    obj.conference_status = 'Meeting is over'
+                    obj.conference_status = 'over'
                     if obj.moderator != 0:
                         obj.moderator = 0
                 else:

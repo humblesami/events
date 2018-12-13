@@ -77,51 +77,49 @@
                                             <field name="seen_by_me" class="seen_by_me o_hidden"/>
                                             <templates>
                                                 <t t-name="kanban-box">
-                                                    <div class="oe_module_vignette oe_kanban_global_click ">
-                                                        <div class="oe_module_desc">
+                                                    <div class="oe_module_vignette">
+                                                        <a type="object" style="color:#4c4c4c" name="go_to_meeting" class="oe_module_desc">
                                                             <div class="seen_by_me">
                                                                 <field name="seen_by_me"/>
                                                             </div>
-                                                            <a type="object" style="color:#4c4c4c" name="go_to_meeting">
-                                                                <div class="meeting_info">
-                                                                    <div class="date_tam" style="">
-                                                                        <div class="o_day" style="    font-size: 26px;">
-                                                                            <t t-esc="record.start_datetime.raw_value.getDate()"/>
-                                                                        </div>
-                                                                        <div>
-                                                                            <t t-esc="moment(record.start_datetime.raw_value).format('MMM')"/>
-                                                                            <t t-esc="record.start_datetime.raw_value.getFullYear()"/>
-                                                                        </div>
-                                                                        <div>
-                                                                            <t t-esc="moment(record.start_datetime.raw_value).format('LT')"/>
-                                                                        </div>
+                                                            <div class="meeting_info">
+                                                                <div class="date_tam" style="">
+                                                                    <div class="o_day" style="font-size: 26px;">
+                                                                        <t t-esc="record.start_datetime.raw_value.getDate()"/>
                                                                     </div>
-                                                                    <div class="details">
-                                                                        <h3>
-                                                                            <field name="name"/>
-                                                                        </h3>
-                                                                        <!--<field name="start_datetime"/>-->
-                                                                        <p class="oe_module_name">
-                                                                            <p>
-                                                                                <field name="company" string="Location"/>
-                                                                            </p>
-                                                                            <p>
-                                                                                <field name="address" style="margin-right: 4px;"/>
-                                                                                <field name="street"/>
-                                                                            </p>
-                                                                            <p>
-                                                                                <field name="city" style="margin-right: 4px;"/>
-                                                                                <field name="country_state"/>
-                                                                                <field name="zip"/>
-                                                                            </p>
-                                                                        </p>
-                                                                        <div class="current_status">
-                                                                            <field name="attendee_status" invisible="1"/>
-                                                                            <field name="publish" invisible="1"/>
-                                                                        </div>
+                                                                    <div>
+                                                                        <t t-esc="moment(record.start_datetime.raw_value).format('MMM')"/>
+                                                                        <t t-esc="record.start_datetime.raw_value.getFullYear()"/>
+                                                                    </div>
+                                                                    <div>
+                                                                        <t t-esc="moment(record.start_datetime.raw_value).format('LT')"/>
                                                                     </div>
                                                                 </div>
-                                                            </a>
+                                                                <div class="details">
+                                                                    <h3>
+                                                                        <field name="name"/>
+                                                                    </h3>
+                                                                    <!--<field name="start_datetime"/>-->
+                                                                    <p class="oe_module_name">
+                                                                        <p>
+                                                                            <field name="company" string="Location"/>
+                                                                        </p>
+                                                                        <p>
+                                                                            <field name="address" style="margin-right: 4px;"/>
+                                                                            <field name="street"/>
+                                                                        </p>
+                                                                        <p>
+                                                                            <field name="city" style="margin-right: 4px;"/>
+                                                                            <field name="country_state"/>
+                                                                            <field name="zip"/>
+                                                                        </p>
+                                                                    </p>
+                                                                    <div class="current_status">
+                                                                        <field name="attendee_status" invisible="1"/>
+                                                                        <field name="publish" invisible="1"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <t t-if="record.publish.value">
                                                                 <div class="acceptancebuttons">
                                                                     <t t-if="record.attendee_status.value=='Accepted'">
@@ -152,7 +150,7 @@
                                                                     </t>
                                                                 </div>
                                                             </t>
-                                                        </div>
+                                                        </a>
                                                         <script src="/meeting_point/static/js/meeting_kanban.js"/>
                                                     </div>
                                                 </t>

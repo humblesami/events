@@ -103,9 +103,6 @@
  .HeadLogo img {
      width: 100%;
 }
- .o_control_panel.o_breadcrumb_full {
-     //display: none;
-}
 
 .o_form_button_edit, .breadcrumb, .o_cp_right, .o_cp_pager, .o_cp_sidebar, .o_form_button_create {
      display: none;
@@ -385,6 +382,12 @@ span[name="exectime"]
     margin-top: 10px;
 }
 
+.home_btns
+{
+    padding: 5px 5px;
+    background-color: #c0c0c0;
+    margin: -24px -16px 0 -16px;
+}
 
 .home_btns>span{
     margin-right: 10px;
@@ -392,12 +395,10 @@ span[name="exectime"]
     padding: 7px;
     border-radius: 4px;
     font-weight: bold;
-    border-color: #7c7bad;
+    background: #fcfcfc;
 }
-
-.home_btns
-{
-    -10px 0 -25px 0;
+.home_btns>span.btn-primary{
+    background : #00a09d;
 }
 
 .o_kanban_record
@@ -481,5 +482,5 @@ span.to-do-count {
 }
 
 .o_control_panel.o_breadcrumb_full{
-padding:0
+    display:none;
 }
