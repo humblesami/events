@@ -1,3 +1,5 @@
+import werkzeug
+
 from odoo.exceptions import UserError
 from odoo import api, fields, models, tools
 from odoo.addons.auth_signup.models.res_partner import now
@@ -6,6 +8,66 @@ class partner(models.Model):
     _inherit = 'res.partner'
     is_committee=fields.Boolean(string="Is Committee")
     mp_user_id = fields.Many2one('meeting_point.users', string="Related MP.User")
+
+    @api.multi
+    def _compute_signup_url(self):
+        """ proxy for function field towards actual implementation """
+        result = self._get_signup_url_for_action_custom()
+        for partner in self:
+            partner.signup_url = result.get(partner.id, False)
+    @api.multi
+    def _get_signup_url_for_action_custom(self, action=None, view_type=None, menu_id=None, res_id=None, model=None):
+        """ generate a signup url for the given partner ids and action, possibly overriding
+            the url state components (menu_id, id, view_type) """
+
+        res = dict.fromkeys(self.ids, False)
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for partner in self:
+            # when required, make sure the partner has a valid signup token
+            if self.env.context.get('signup_valid') and not partner.user_ids:
+                partner.signup_prepare()
+
+            route = 'login'
+            # the parameters to encode for the query
+            query = dict(db=self.env.cr.dbname)
+            signup_type = self.env.context.get('signup_force_type_in_url', partner.signup_type or '')
+            if signup_type:
+                route = 'reset_password' if signup_type == 'reset' else signup_type
+
+            if partner.signup_token and signup_type:
+                query['token'] = partner.signup_token
+            elif partner.user_ids:
+                query['login'] = partner.user_ids[0].login
+            else:
+                continue  # no signup token, no user, thus no signup url!
+
+            fragment = dict()
+            base = '/web#'
+            if action == '/mail/view':
+                base = '/mail/view?'
+            elif action:
+                fragment['action'] = action
+            if view_type:
+                fragment['view_type'] = view_type
+            if menu_id:
+                fragment['menu_id'] = menu_id
+            if model:
+                fragment['model'] = model
+            if res_id:
+                fragment['res_id'] = res_id
+
+            if fragment:
+                query['redirect'] = base + werkzeug.urls.url_encode(fragment)
+            groupCheck = self.env['res.users'].search([('partner_id', '=', partner.id)]).has_group('meeting_point.group_meeting_director')
+            if groupCheck:
+                route = 'set-password'
+                base_url = 'https://meetvue.com'
+                res[partner.id] = werkzeug.urls.url_join(base_url,
+                                        "/%s?%s" % (route, werkzeug.urls.url_encode(query)))
+            else :
+                res[partner.id] = werkzeug.urls.url_join(base_url,
+                                                         "/web/%s?%s" % (route, werkzeug.urls.url_encode(query)))
+        return res
 
 class MPUser(models.Model):
     _inherits = {'res.users':'user_id'}

@@ -375,7 +375,16 @@
                         <div class="mtopic_tree">
                             <h3>Agenda Topics</h3>
                             <sheet>
-                                <field name="topic_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline"/>
+                               <field name="topic_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline">
+                                  <tree>
+                                  <field name= "sequence" widget="handle"/>
+                                  <field name="name"/>
+                                  <field name= "lead"/>
+                                  <field name="duration"/>
+                                  <field name= "attachments"/>
+                                  <field name = "details"/>
+                                  </tree>
+                                </field>
                             </sheet>
                         </div>
                         </div>
