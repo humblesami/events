@@ -27,7 +27,7 @@ $(function() {
     //        });
 
 
-    function joinCononference(roomName, roomPin, curl, meeting_id, end_call) {
+    function joinCononference(roomName, roomPin, curl, meeting_id, attendees_data) {
         setTimeout(function() {
             $('#loaderContainerajax').show();
         }, 100);
