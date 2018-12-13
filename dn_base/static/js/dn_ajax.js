@@ -83,10 +83,9 @@ var dn_json_rpc_object = {
                 url: requestUrl,
                 data: input_data,
                 dataType: 'JSON',
-                type:'POST',
+                type:'GET',
                 beforeSend: function (jqXHR, settings) {
-                    url = settings.url;
-//                    console.log(url);
+                    console.log(window.location.origin+ settings.url, 99);
 //                    console.log(input_data);
                 },
                 success: function (results) {
@@ -195,42 +194,4 @@ function dn_rpc_object(reqObject)
     var callback = reqObject.onSuccess;
     var failureCallBack = reqObject.onError;
     dn_json_rpc_object.request(reqfun   , input_data, callback, failureCallBack)
-}
-
-var site_functions = {
-    showLoader :function(ref)
-    {
-        dn_json_rpc_object.loaderContainer.show();
-    },
-    hideLoader :function(ref)
-    {
-        dn_json_rpc_object.loaderContainer.hide();
-    },
-    update_notification_list:function()
-    {
-    }
-}
-
-var is_mobile_device = undefined;
-(function(){
-    try
-    {
-        document.createEvent("TouchEvent");
-        is_mobile_device = true;
-    }
-    catch(e)
-    {
-         return false;
-    }
-})()
-
-var dn_current_site_user = {
-    cookie : {
-        name: odoo.session_info.name,
-        id: odoo.session_info.uid,
-        token : odoo.session_info.token,
-    }
-}
-var site_config = {
-    server_db : 'demo'
 }

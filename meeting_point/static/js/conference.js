@@ -17,7 +17,7 @@ $(function() {
         dn_json_rpc('/meeting/attendees', input_data, function(attendees_data) {
             if (attendees_data.im_attendee) {
                 roomName = attendees_data.roomName;
-                joinCononference(roomName, roomPin, curl, meeting_id, attendees_data.end_call);
+                joinCononference(roomName, roomPin, curl, meeting_id, attendees_data);
             }
         });
     };
@@ -35,6 +35,7 @@ $(function() {
             $('#loaderContainerajax').hide();
         }, 20000);
 
+        var end_call = attendees_data.end_call
         var domain = "beta.meet.jit.si";
         var config = {
             enableUserRolesBasedOnToken: true,
@@ -122,7 +123,10 @@ $(function() {
                 for (var uid in api._participants) {
                     ++cnt;
                     if (cnt == 1)
+                    {
                         moderator_id = uid;
+                        console.log(attendees_data);
+                    }
                     if (uid == api._myUserID) {
                         if (uid === moderator_id)
                             is_admin = true;

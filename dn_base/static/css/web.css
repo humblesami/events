@@ -265,7 +265,13 @@ table.o_group.o_inner_group tr {
 }
 .modal-header .close
 {
-    padding:6px;
+    border: 1px solid #e6e6e6;
+    color: white;
+    opacity: 1;
+    padding: 2px 6px 4px 6px;
+    margin: 4px;
+    background: red;
+    border-radius: 9px;
 }
 .modal.o_technical_modal .modal-dialog
 {
@@ -279,7 +285,6 @@ table.o_group.o_inner_group tr {
 }
 
 .modal-title {
-text-align: center;
-margin : 4px  0 0 10px !important;
-
+    text-align: center;
+    margin: 8px 0
 }

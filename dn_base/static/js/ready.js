@@ -1,10 +1,35 @@
 var dn_base_web_url = window.location.origin + '';
+
+var is_mobile_device = undefined;
+(function(){
+    try
+    {
+        document.createEvent("TouchEvent");
+        is_mobile_device = true;
+    }
+    catch(e)
+    {
+         return false;
+    }
+})()
+
+var dn_current_site_user = {
+    cookie : {
+        name: odoo.session_info.name,
+        id: odoo.session_info.uid,
+        token : odoo.session_info.token,
+    }
+}
+//console.log(dn_current_site_user);
+var site_config = {
+    server_db : 'demo'
+}
+
 //console.log(odoo, 1968);
 function load_dn_assets()
 {
     try
     {
-
         document.writeln('<script src="/dn_base/static/js/libs/bootbox.js"></script>');
         document.writeln('<script src="/dn_base/static/config.js"></script>');
         //Libraries
@@ -56,6 +81,20 @@ function load_dn_assets()
     catch(er)
     {
         console.log(er);
+    }
+}
+
+var site_functions = {
+    showLoader :function(ref)
+    {
+        dn_json_rpc_object.loaderContainer.show();
+    },
+    hideLoader :function(ref)
+    {
+        dn_json_rpc_object.loaderContainer.hide();
+    },
+    update_notification_list:function()
+    {
     }
 }
 

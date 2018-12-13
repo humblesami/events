@@ -130,9 +130,12 @@ class meeting(http.Controller):
             if not http.request.env.user.has_group('meeting_point.group_meeting_admin') and meeting.password and meeting.password != password:
                 return ws_methods.http_response('Invalid Password Provided')
 
-            if meeting.moderator == 0:
+            res = {}
+            if uid == 1 or meeting.moderator == 0:
                 if http.request.env.user.has_group('meeting_point.group_meeting_admin'):
                     meeting.moderator = uid
+                    message = 'Meeting ' + meeting.name + ' has started, please click following link to join <a href=/conference/'+str(meeting.id)+'/'+meeting.pin+'>'+meeting.name+'</a>'
+                    res['message'] = message
                 else:
                     return ws_methods.http_response("Waiting moderator")
 
@@ -140,19 +143,21 @@ class meeting(http.Controller):
                 return ws_methods.http_response('No pin defined for meeting')
             if meeting.exectime == "past" or meeting.exectime == "completed":
                 return ws_methods.http_response("Meeting was over at " + str(meeting.stop))
-            elif meeting.conference_status != 'active':
+            elif uid!= 1 and meeting.conference_status != 'active':
                 return ws_methods.http_response(meeting.conference_status)
 
             ids = []
             im_attendee = False
             for attendee in meeting.partner_ids:
                 cid = attendee.user_id.id
-                if cid != uid:
-                    ids.append(cid)
-                else:
-                    im_attendee = 'yes'
+                if cid:
+                    if cid != uid:
+                        ids.append(cid)
+                    else:
+                        im_attendee = 'yes'
 
-            res = {'ids': ids, 'roomName': room_pins_obj[meeting.pin]}
+            res['ids'] = ids
+            res['roomName'] = room_pins_obj[meeting.pin]
             if meeting.end_call:
                 res['end_call'] = 1
             if im_attendee or uid == 1:
