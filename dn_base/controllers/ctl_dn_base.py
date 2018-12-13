@@ -228,3 +228,21 @@ class MyBinary(Binary):
                 return ws_methods.http_response('Invalid Password')
         except:
             return ws_methods.handle()
+
+    @http.route('/user/reset_password', auth='none',cors='*', csrf=False)
+    def reset(self,**kw):
+        try:
+            req_env = http.request.env
+            passwd = kw.get('password')
+            token = kw.get('token')
+            if not token or not passwd:
+                return ws_methods.http_response('Invalid input')
+            filters = [('signup_token', '=', token)]
+            partner = request.env['res.partner'].sudo().search(filters,limit=1)
+            if partner:
+                res = partner.user_id.write({'password': passwd,'signup_token': False})
+                return ws_methods.http_response('','success')
+            else:
+                return ws_methods.http_response('Invalid Token')
+        except:
+            return ws_methods.handle()
