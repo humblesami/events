@@ -41,8 +41,8 @@
             <field name="model">meeting_point.news</field>
             <field name="sequence" eval="3"/>
             <field name="arch" type="xml">
-                <form edit="false">
-                    <link rel="stylesheet" href="/meeting_point/static/mphome.css"/>
+                <form edit="false" class="home_form">
+                    <script src="/meeting_point/static/js/home_include.js"/>
                     <div class="home_btns">
                         <span class="welcome_btn btn bnt-default">Welcome</span>
                         <span class="calendar_btn btn bnt-default">Calendar</span>
@@ -178,20 +178,6 @@
                     </div>
                     <script src="/meeting_point/static/extra.js"/>
                     <script src="/meeting_point/static/js/home.js"/>
-                    <script>
-                        $(".related-products").owlCarousel({
-                        navigation: true,
-                        pagination: false,
-                        autoPlay: 9000, //Set AutoPlay to 5 seconds
-                        navigationText: ['<i class="fa fa - chevron - left "/>', '<i class="fa fa - chevron - right "/>' ],
-                        slideSpeed: 600,
-                        items: 4,
-                        itemsDesktop: [1199, 4],
-                        itemsDesktopSmall: [1190, 3],
-                        itemsTablet: [900, 2],
-                        itemsMobile: [585, 1]
-                        });
-                    </script>
                 </form>
             </field>
         </record>

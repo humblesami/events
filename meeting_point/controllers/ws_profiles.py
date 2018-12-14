@@ -281,36 +281,7 @@ class ws_profile(http.Controller):
             mp_id = req_env.user.mp_user_id.id
             user = req_env['meeting_point.users'].search([('id', '=', mp_id)])
 
-            if 'data' in values:
-                values = values['data']
-
-            # for key in values:
-            #     if key not in ('token','db','id', 'email', 'board_joing_date') and key in user and user[key] != values[key]:
-            #         if not user[key] and values[key] == '':
-            #             donothing = 1
-            #         else:
-            #             val = values[key]
-            #             modified_values[key] = val
-
-            modified_values = {}
-            for field in user._fields:
-                val = values.get(field)
-                if val:
-                    modified_values[field] = val
-
-            image_small = values.get('image_small')
-            if image_small:
-                image_small = image_small.replace('data:image/png;base64,','')
-                modified_values['image_small'] = image_small
-            image_medium = values.get('image_medium')
-            if image_medium:
-                image_medium = image_medium.replace('data:image/png;base64,', '')
-                modified_values['image_medium'] = image_medium
-            admin_image = values.get('admin_image')
-            if admin_image:
-                admin_image = admin_image.replace('data:image/png;base64,', '')
-                modified_values['admin_image'] = admin_image
-            user.write(modified_values)
+            user.write(values)
             return ws_methods.http_response('', 'Success')
         except:
             return ws_methods.handle()

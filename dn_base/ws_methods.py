@@ -152,6 +152,9 @@ def log_error(er):
 
 
 def check_auth(values):
+    for val in values:
+        if val in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo']:
+            values[val] = values[val].split(',')[1]
     if request.uid and request.uid != 4:
         return request.uid
     if not values:

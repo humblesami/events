@@ -114,7 +114,6 @@
     }
 
     function afterAlert() {
-        console.log(4441);
         $('.bootbox').remove();
         $('body').removeClass('modal-open');
         $('.modal-backdrop').remove();

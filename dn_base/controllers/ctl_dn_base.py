@@ -22,11 +22,21 @@ class MyWebsite(Website):
 
 class Controller(http.Controller):
 
-    @http.route('/api-token', type="http", csrf=False, auth='public', cors='*')
+    @http.route('/password/token', type='http', csrf=False, auth='public', cors='*')
+    def password_token(self, **kw):
+        try:
+            login = kw.get('login')
+            request.env['res.users'].sudo().reset_password(login)
+            data = { 'message':"Email has been sent to "+  login}
+            return ws_methods.http_response('',data)
+        except:
+            ws_methods.handle()
+
+    @http.route('/api-token', type='http', csrf=False, auth='public', cors='*')
     def api_token(self, **kw):
         return 'Token service not implemented yet'
 
-    @http.route('/api-endpoint', type="http", csrf=False, auth='public', cors='*')
+    @http.route('/api-endpoint', type='http', csrf=False, auth='public', cors='*')
     def api_get(self, **kw):
         try:
             kw = json.loads(kw['input_data'])
@@ -43,13 +53,13 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/delallcomments', type="http", csrf=False, auth='public', cors='*')
+    @http.route('/delallcomments', type='http', csrf=False, auth='public', cors='*')
     def delcomments(self, **kw):
         #http.request.env['mail.message'].sudo().search([('model', '=', 'calendar.event')]).unlink()
         return ws_methods.http_response('', 'Done')
 
 
-    @http.route('/comment/add', type="http", csrf=False, auth='public', cors='*')
+    @http.route('/comment/add', type='http', csrf=False, auth='public', cors='*')
     def save_comment_http(self, **kw):
         return self.save_comment(kw)
 
@@ -112,7 +122,7 @@ class Controller(http.Controller):
             return ws_methods.handle()
 
 
-    @http.route('/comment/delete', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/comment/delete', type='http', csrf=False, auth='none', cors='*')
     def delete_comment_http(self, **kw):
         return self.delete_comment(kw)
 

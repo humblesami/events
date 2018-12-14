@@ -209,9 +209,7 @@
      display: flex;
      padding:0 10px;
 }
- .owl-controls .owl-page, .owl-controls .owl-buttons div{
-     cursor: pointer;
-}
+
  .owl-controls {
      -webkit-user-select: none;
      -khtml-user-select: none;
@@ -240,29 +238,23 @@
 }
 /* Styling Next and Prev buttons */
  .owl-theme .owl-controls .owl-buttons div{
-     color: #FFF;
-     display: inline-block;
-     zoom: 1;
-     *display: inline;
-    /*IE7 life-saver */
-    /* margin: 5px;
-     */
-     margin: 0px;
-     padding: 10px 10px;
-     font-size: 12px;
-     -webkit-border-radius: 30px;
-     -moz-border-radius: 30px;
-     border-radius: 30px;
-     filter: Alpha(Opacity=50);
-    /*IE7 fix*/
-     opacity: 0.5;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    color: #FFF;
+    zoom: 1;
+    display: inline;
+    padding: 5px 10px;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    filter: Alpha(Opacity=50);
+    cursor: pointer;
+    opacity: 0.5;
 }
 
 /* Clickable class fix problem with hover on touch devices */
 /* Use it for non-touch hover action */
  .owl-theme .owl-controls.clickable .owl-buttons div:hover{
      filter: Alpha(Opacity=100);
-    /*IE7 fix*/
      opacity: 1;
      text-decoration: none;
 }
@@ -338,10 +330,7 @@ span.o_field_widget
 {
     display:block;
 }
-.owl-theme .owl-controls .owl-buttons div
-{
-    background-size:100% !important;
-}
+
 .owl-prev
 {
     background:url('/meeting_point/static/img/prev-button.png');
