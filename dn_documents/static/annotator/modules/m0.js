@@ -500,6 +500,8 @@ function module0(module, exports, __webpack_require__) {
                     annotation_mode = 0;
                     $('.strt_sign.pdfjs').hide();
                     $('#main-div').hide();
+                    $('.toolbar.topbar:first').show();
+                    //$('.toolbar.topbar').show();
                     hideComments();
 
                     $('#annotated-doc-conatiner').show();
@@ -507,7 +509,6 @@ function module0(module, exports, __webpack_require__) {
                     comment_list.css('min-height', 'calc(100vh - 246px)');
                     viewerLeftMargin();
                     $('.doc-reseter').hide();
-                    $('.toolbar.topbar').show();
 
 					if(doc_data.type)
 					{
@@ -598,16 +599,17 @@ function module0(module, exports, __webpack_require__) {
                     var onPageRendered = function(){
                         if(annotation_mode == 1)
                         {
-//                            var point_id = window.location.toString().split('/');
-//                            point_id = point_id[point_id.length - 1];
-//                            if (isNaN(point_id) && point_id != 'resume') {
-//                                setTimeout(function(){
-//                                    comments_to_show = 'comments';
-//                                    showCommentsContainer('comments');
-//                                    loadALlCommentsOnDocument();
-//                                    $('.groupcomment[annotationId="' + point_id + '"]').click();
-//                                }, 1001);
-//                            }
+                            var point_id = window.location.pathname.split('/');
+                            if(point_id.length > 4)
+                            {
+                                point_id = point_id[point_id.length - 1];
+                                setTimeout(function(){
+                                    comments_to_show = 'comments';
+                                    showCommentsContainer('comments');
+                                    loadALlCommentsOnDocument();
+                                    $('.groupcomment[annotationId="' + point_id + '"]').click();
+                                }, 1001);
+                            }
                         }
                         $('#content-wrapper').show();
                     };
@@ -627,13 +629,6 @@ function module0(module, exports, __webpack_require__) {
                             UI.renderPage(i, RENDER_OPTIONS, cb_page_renderd);
                         else
                             UI.renderPageWithoutAnnotations(i, RENDER_OPTIONS, cb_page_renderd);
-                    }
-					var point_id = window.location.toString().split('/');
-					point_id = point_id[point_id.length - 1];
-					if (isNaN(point_id) && point_id != 'resume') {
-                        setTimeout(function(){
-                            showCommentsContainer('comments');
-                        }, 1001);
                     }
 				});
 			}

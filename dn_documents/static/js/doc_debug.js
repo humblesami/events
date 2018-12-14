@@ -16,7 +16,6 @@
                 </a>
 
                 <button class="strt_sign pdfjs" url='/meeting_point/save_signature_doc' style="display: none">Sign</button>
-
                 <button class="cursor annotation_button" type="button" title="Cursor" data-tooltype="cursor">
                     <div class="Icon">
                         <svg viewBox="0 0 24 24" id="ic_select_black_24px" width="100%" height="100%">
@@ -274,6 +273,12 @@
                     </div>
                 </div>
             </div>
+            <style>
+            .modal.o_technical_modal .modal-dialog .modal-content
+             {
+                min-height: 90vh;
+             }
+            </style>
         </div>`;
 
         $(function(){
