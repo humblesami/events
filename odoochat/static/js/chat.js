@@ -16,20 +16,20 @@
     var total_unseen = 0;
     var notifications = {};
 
-    var closeChatbox = function() {
+    $('#chatbox .close-chat').click(function() {
         $('.chatbox').css('display', 'none');
         active_user = undefined;
-    }
-    var maxiChatbox = function(){
+    });
+    $('#chatbox .maxi-chat').click(function(){
         $('.chatbox').css('margin', '0');
         $('.maxi-chat').css('display', 'none');
         $('.mini-chat').css('display', 'block');
-    }
-    var minimChatbox = function() {
+    });
+    $('#chatbox .mini-chat').click(function() {
         $('.maxi-chat').css('display', 'block');
         $('.mini-chat').css('display', 'none');
         $('.chatbox').css('margin', '0 0 -382px 0');
-    }
+    });
     //console.log($('.o_menu_systray').length, 11833);
     odoo.define('odoochat.onClientready', function (require) {
         "use strict";
