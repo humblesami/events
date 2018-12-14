@@ -164,7 +164,6 @@
                     </div>
                     <div id="pdf_div"></div>
                     <script id="doc_js" src="/dn_documents/static/js/doc.js"/>
-                    <script src="dn_documents/static/annotator/libs.js"></script>
                </form>
             </field>
         </record>

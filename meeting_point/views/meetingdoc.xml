@@ -94,11 +94,17 @@
                 </xpath>
                 <xpath expr="//field[@name='html']" position="after">
                     <link rel="stylesheet" href="/meeting_point/static/css/sign.css"/>
-                    <div class="_signature_status" style="display:flex">
-                        <strong>Signature Status:</strong><field class="my_signature_status" name="mp_signature_status"/>
+                    <div class="_signature_status" style="display:flex;padding-left: 10px;padding-bottom:5px;">
+                        <div class="status_div" style="padding-top: 9px;">
+                            <span style="font-weight:bold">Signature Status: </span>
+                            <field class="my_signature_status" name="mp_signature_status"/>
+                        </div>
+                        <span id="start_sign" style="min-width:150px;margin:5px"
+                              attrs="{'invisible': ['|',('mp_signature_status', '=', 'Not required'),('mp_signature_status', '=', 'Completed')]}"
+                              class="btn btn-primary start_signature">
+                        Sign
+                        </span>
                     </div>
-
-                    <div id="sign_btn"></div>
                 </xpath>
 
                 <xpath expr="//div[@name='view_script']" position="replace">

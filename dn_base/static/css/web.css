@@ -56,7 +56,9 @@ z-index : 99999
 
 .o_form_view .o_form_statusbar > .o_statusbar_buttons > .btn
 {
-    padding:6px 5px;
+    padding: 6px 5px;
+    background: cadetblue;
+    color: white;
 }
 .o_form_view .o_form_statusbar
 {

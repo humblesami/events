@@ -955,6 +955,11 @@ function module0(module, exports, __webpack_require__) {
 				{
 					e.preventDefault();
 					var commentValue = commentText[0].value;// commentText.val().trim();
+					commentValue = commentValue.substr(0, commentValue.length-1);
+					if(commentValue == '') {
+						commentText.val('');
+						return;
+					}
 					//console.log(commentValue);
 					var comment = {
 						date_time: new Date(),

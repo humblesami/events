@@ -552,4 +552,5 @@ return ajax;
 
 });
 
-document.writeln('<script src="/dn_base/static/js/dn_ajax.js"></script>');
+var dnow = Date.now();
+document.writeln('<script src="/dn_base/static/js/dn_ajax.js?v='+dnow+'"></script>');

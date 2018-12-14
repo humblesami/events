@@ -58,17 +58,6 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/doc_preview.js?v='+dnow+'"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
-
-//        document.writeln('<script src="/dn_documents/static/annotator/dn_sign.js"></script>');
-//        document.writeln('<script src="/dn_documents/static/annotator/color.js"></script>');
-//        document.writeln('<script src="/dn_documents/static/annotator/jsonlib.js"></script>');
-//        document.writeln('<script src="/dn_documents/static/annotator/main.js"></script>');
-//        document.writeln('<script src="/dn_documents/static/annotator/modules/m0.js"></script>');
-//        document.writeln('<script src="/dn_documents/static/annotator/modules/m1.js"></script>');
-//        document.writeln('<script src="/dn_documents/static/annotator/modules/m2.js"></script>');
-//        document.writeln('<script src="/dn_documents/static/annotator/modules/m3.js"></script>');
-//        document.writeln('<script src="/dn_documents/static/annotator/modules/m4.js"></script>');
-
         $(function(){
             //var rs = new Date().getMilliSeconds();
             $('body').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" /><link rel="stylesheet" href="/dn_base/static/css/kanban.css?v='+dnow+'" />');

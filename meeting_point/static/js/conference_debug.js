@@ -1,10 +1,11 @@
 $(function() {
     //        let roomName = undefined;
     var curl = window.location.toString();
-    var temp = curl.split('meeting_id=')[1];
-    var meeting_id = temp.split('&')[0];
-    var roomPin = temp.split('pin=')[1];
-    //var username = temp.split('pin=')[2];
+    var temp = curl.split('?')[1];
+    var arrr = temp.split('&');
+    var username = arrr[0].split('=')[1];
+    var meeting_id = arrr[1].split('=')[1];
+    var roomPin = arrr[2].split('=')[1];
 
     var verfify_user = function(password) {
         let input_data = {
@@ -112,8 +113,7 @@ $(function() {
         };
 
         var api = new JitsiMeetExternalAPI(domain, options);
-        var joinin_user_name = 'Sami';
-        api.executeCommand('displayName', joinin_user_name);
+        api.executeCommand('displayName', username);
 
         var is_admin = false;
         var moderator_id = undefined;

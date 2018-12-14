@@ -22,15 +22,20 @@ class MyWebsite(Website):
 
 class Controller(http.Controller):
 
-    @http.route('/password/token', type='http', csrf=False, auth='public', cors='*')
+    @http.route('/password-reset-email', type='http', csrf=False, auth='public', cors='*')
     def password_token(self, **kw):
         try:
             login = kw.get('login')
-            request.env['res.users'].sudo().reset_password(login)
+            if  not login:
+                return ws_methods.http_response('Please provide username/email')
+            try:
+                request.env['res.users'].sudo().reset_password(login)
+            except:
+                return ws_methods.http_response('Invalid login '+login)
             data = { 'message':"Email has been sent to "+  login}
             return ws_methods.http_response('',data)
         except:
-            ws_methods.handle()
+            return ws_methods.handle()
 
     @http.route('/api-token', type='http', csrf=False, auth='public', cors='*')
     def api_token(self, **kw):

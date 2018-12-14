@@ -32,7 +32,6 @@ $(function(){
     }
 
     var isdown = false;
-    console.log(443112);
     var last_active_was_comment = false;
     $(document).on('mouseup', '#viewer', function(e) {
         if(annotation_mode != 1)

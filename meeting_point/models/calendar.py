@@ -436,7 +436,7 @@ class Meeting(models.Model):
         if creating:
             meeting_id = event.id
             pin = self.getUniquePin(event.start, event.stop)
-            video_call_link = '/meeting_point/static/meet.html?meeting_id=' + str(meeting_id) + '&pin=' + pin
+            video_call_link = '/meeting_point/static/meet.html?name='+self.env.user.name+'&meeting_id=' + str(meeting_id) + '&pin=' + pin
             conference_bridge_number = '+1-512-402-2718'
             vide_vals = {'moderator': 0, 'pin': pin, 'conference_bridge_number': conference_bridge_number, 'video_call_link': video_call_link}
             event.write(vide_vals)
@@ -444,7 +444,7 @@ class Meeting(models.Model):
             pin = self.getUniquePin(event.start, event.stop, vals['pin'])
             call_url = event.video_call_link
             arr = call_url.split('&')
-            call_url = arr[0] + '&pin=' + pin
+            call_url = arr[0] + '&' + arr[1] + '&pin=' + pin
             video_call_link = call_url
             event.write({'pin':pin, 'video_call_link': video_call_link})
 

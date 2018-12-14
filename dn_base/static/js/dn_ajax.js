@@ -83,9 +83,9 @@ var dn_json_rpc_object = {
                 url: requestUrl,
                 data: input_data,
                 dataType: 'JSON',
-                type:'GET',
+                type:'POST',
                 beforeSend: function (jqXHR, settings) {
-                    console.log(window.location.origin+ settings.url, 99);
+                    //console.log(window.location.origin+ settings.url, 99);
 //                    console.log(input_data);
                 },
                 success: function (results) {
