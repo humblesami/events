@@ -3,9 +3,20 @@ $(function() {
     var curl = window.location.toString();
     var temp = curl.split('?')[1];
     var arrr = temp.split('&');
-    var username = arrr[0].split('=')[1];
-    var meeting_id = arrr[1].split('=')[1];
-    var roomPin = arrr[2].split('=')[1];
+    var username = 'Sami';
+    var meeting_id = false;
+    var roomPin = false;
+    if(arrr.length > 2)
+    {
+        username = arrr[0].split('=')[1];
+        meeting_id = arrr[1].split('=')[1];
+        roomPin = arrr[2].split('=')[1];
+    }
+    else
+    {
+        meeting_id = arrr[0].split('=')[1];
+        roomPin = arrr[1].split('=')[1];
+    }
 
     var verfify_user = function(password) {
         let input_data = {
