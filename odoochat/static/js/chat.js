@@ -37,7 +37,7 @@
         core.bus.on('web_client_ready', null, function () {
             //var chat_menu_item = $('.o_menu_sections:first a[data-menu-xmlid="meeting_point.chat_menu"]:first');
             var notify_div = '<span id="unseen-msg-counter">0</span>';
-            var chat_menu_item = $('<li class="showmouseawaybutton"><div class="chat"></div></li>');
+            var chat_menu_item = $('<li class="showmouseawaybutton"><div class="fa fa-lg fas fa-comments chatt" ></div></li>');
             $('.o_menu_systray').prepend(chat_menu_item);
             $(chat_menu_item).append($(notify_div));
 
