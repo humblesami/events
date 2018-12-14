@@ -23,7 +23,7 @@ class MyWebsite(Website):
 class Controller(http.Controller):
 
     @http.route('/password-reset-email', type='http', csrf=False, auth='public', cors='*')
-    def password_token(self, **kw):
+    def password_reset_emai(self, **kw):
         try:
             login = kw.get('login')
             if  not login:
@@ -38,7 +38,7 @@ class Controller(http.Controller):
             return ws_methods.handle()
 
     @http.route('/reset-password', type='http', csrf=False, auth='public', cors='*')
-    def password_token(self, **kw):
+    def reset_password(self, **kw):
         try:
             passwd = kw.get('password')
             token = kw.get('token')
