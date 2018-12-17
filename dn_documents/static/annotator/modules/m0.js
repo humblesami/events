@@ -225,34 +225,48 @@ function module0(module, exports, __webpack_require__) {
                     {
                         return;
                     }
-
                     var document_version = getDocumentVersion(documentId);
                     var document_dirty = isDocumentDirty(documentId);
                     if(data.version < document_version)
                     {
                         return;
                     }
-                    if(document_dirty == 1)
+                    var message = "Document annotation version="+data.version+" available from server,";
+                    if(data.version == document_version)
                     {
-                        if(data.version >= document_version)
+                        if(document_dirty == 1)
                         {
-                            message = "Annotation version "+data.version+" available from server";
-                            message += "<br>If you download, it will discard your recent changes, Do you still want to download?";
-                            bootbox.confirm(message, function(dr){
-                                if(dr)
-                                {
-                                    updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
-                                }
-                            });
+                            message += "<br>You have same version="+document_version+" at local.";
+                            message += "<br> If you download, it will discard your recent changes,";
+                            message += "<br>Do you still want to download?";
+                        }
+                        else
+                        {
+                            return;
                         }
                     }
                     else
                     {
-                        updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
+                        if(document_dirty == 1)
+                        {
+                            message += "<br>You have older version="+document_version+" at local.";
+                            message += "<br>If you download, it will discard your recent changes,";
+                            message += "<br>Do you still want to download?";
+                        }
+                        else
+                        {
+                            message += "<br>You have older version="+document_version+" at local.";
+                            message += "<br>Please click ok to download latest version of your annotations";
+                        }
                     }
+
+                    bootbox.confirm(message, function(dr){
+                        if(dr)
+                        {
+                            updateLocalAnnotationsFromServer(data.annotations, data.version, comments);
+                        }
+                    });
 				}
-
-
 
 				function updateLocalAnnotationsFromServer(annotations, version, comments) {
 
