@@ -33,6 +33,7 @@ $(function(){
 
     var isdown = false;
     var last_active_was_comment = false;
+    console.log(4222);
     $(document).on('mouseup', '#viewer', function(e) {
         if(annotation_mode != 1)
             return;
@@ -41,7 +42,7 @@ $(function(){
             if(selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0 ))
             {
                 var ctxMenu = $('.annotation-options.ContextMenuPopup');
-                ctxMenu.css({'left':e.pageX - ctxMenu.width()/2, 'top':e.clientY+12}).show();
+                ctxMenu.css({'left':e.pageX - ctxMenu.width()/2, 'top':e.clientY + 12}).show();
                 //console.log(ctxMenu.position());
                 contextMenuShown = true;
             }
