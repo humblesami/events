@@ -6,6 +6,7 @@ import threading
 import traceback
 from odoo.http import request
 from odoo.addons.dn_base import dn_dt
+from socketIO_client import SocketIO
 
 def send_mail(mesgtosend):
     server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -214,3 +215,29 @@ def change_datetime_format(val, format):
 def to_datetime(val):
     dt = parser.parse(val)
     return dt
+
+# Socket Connetion
+
+def on_connect():
+    print("Connected.")
+
+def on_disconnect():
+    print('disconnect')
+
+def on_reconnect():
+    print('reconnect')
+
+def on_aaa_response(*args):
+    print('on_aaa_response', args)
+
+def get_socket():
+    return socketIO
+
+def emit_event(data):
+    socketIO.emit('odoo_event', data)
+
+socketIO = SocketIO('http://localhost', 3000)
+socketIO.on('connect', on_connect)
+socketIO.on('disconnect', on_disconnect)
+socketIO.on('reconnect', on_reconnect)
+socketIO.wait(seconds=1)

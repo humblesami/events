@@ -4,6 +4,7 @@ from odoo.http import request
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.dn_base import ws_methods
 
 
 class Survey(models.Model):
@@ -136,6 +137,26 @@ class Survey(models.Model):
             if responded:
                 survey.my_status = "done"
 
+    def emit_meeting_update(self, survey):
+        attendees = []
+        attendees_list = []
+        if survey.meeting_id:
+            attendees_list = survey.meeting_id.partner_ids
+        else:
+            attendees_list = survey.partner_ids
+
+        for partner in attendees_list:
+            if partner.user_id:
+                attendees.append(partner.user_id.id)
+        data = {
+            'name': 'to_do_item_updated',
+            'data': {
+                'id': survey.id,
+                'attendees': attendees
+            }
+        }
+        ws_methods.emit_event(data)
+
     @api.model
     def create(self, values):
         questions = values.get('question_ids')
@@ -156,6 +177,7 @@ class Survey(models.Model):
         page=page_env.create(vals)
         for q in res.question_ids:
             q.write({'page_id': page.id})
+        self.emit_meeting_update(res)
         return res
 
     #

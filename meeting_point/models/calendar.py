@@ -4,6 +4,7 @@ import time
 import threading
 from odoo import models, fields, api
 from odoo.addons.dn_base import dn_dt
+from odoo.addons.dn_base import ws_methods
 from odoo.exceptions import ValidationError
 
 room_pins_obj = {
@@ -215,7 +216,6 @@ class Meeting(models.Model):
         c = self.env['res.country'].search([('code','=','US')], limit=1)
         return c
 
-
     address = fields.Char(string="Address")
     customMessage = fields.Char(string="Message")
     street = fields.Char(string="Street")
@@ -271,6 +271,10 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, vals):
+        emit = False
+        for val in vals:
+            if val == 'document_ids':
+                emit = True
         if self.env.user.id !=1 and self.exectime == "past":
             changing_the_past = True
             if changing_the_past:
@@ -286,6 +290,8 @@ class Meeting(models.Model):
         if self.env.user.has_group('meeting_point.group_meeting_admin'):
             self = self.sudo()
         res = super(Meeting, self).write(vals)
+        if emit:
+            self.emit_meeting_update()
         return res
 
     @api.multi
@@ -347,7 +353,6 @@ class Meeting(models.Model):
                 my_pid == p.id
                 event.im_attendee = "yes"
                 break
-
 
     @api.multi
     def _compute_archive(self):
@@ -459,7 +464,6 @@ class Meeting(models.Model):
         domain=['|',('user_id.groups_id.category_id','=',category_id),('is_committee','=',True)]
         return domain
 
-
     def do_accept(self):
         """ Marks event invitation as Accepted. """  # for attendee in id_needed:
         #     attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
@@ -507,7 +511,6 @@ class Meeting(models.Model):
     @api.multi
     def action_archive(self):
         super(Meeting, self).write({'archived': True})
-
 
     @api.onchange('start_datetime', 'duration')
     def _onchange_duration(self):
@@ -604,14 +607,30 @@ class Meeting(models.Model):
 
         return True
 
+    def emit_meeting_update(self):
+        attendees = []
+        for partner in self.partner_ids:
+            if partner.user_id:
+                attendees.append(partner.user_id.id)
+        data = {
+            'name': 'to_do_item_updated',
+            'data': {
+                'id': self.id,
+                'attendees': attendees
+            }
+        }
+        ws_methods.emit_event(data)
+
     @api.multi
     def action_publish(self):
         self.action_sendmail()
         super(Meeting, self).write({'publish': True})
+        self.emit_meeting_update()
 
     @api.multi
     def non_publish(self):
         super(Meeting, self).write({'publish': False})
+        # self.emit_meeting_update()
 
     @api.multi
     def go_to_meeting(self):
@@ -649,7 +668,6 @@ class Meeting(models.Model):
         #     'res_id': self.id,
         #     'target': 'current',
         # }
-
 
     @api.model
     def search(self, args, offset=0, limit=0, order=None, count=False):
