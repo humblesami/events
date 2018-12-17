@@ -1,4 +1,10 @@
 (function(){
+      window.emojiPicker = new EmojiPicker({
+              emojiable_selector: '[data-emojiable=true]',
+              assetsPath: '/odoochat/static/img/',
+              popupButtonClasses: 'fa fa-smile-o'
+            });
+            window.emojiPicker.discover();
     if(odoo.session_info.uid == 1)
     {
         return;
@@ -30,6 +36,8 @@
         $('.mini-chat').css('display', 'none');
         $('.chatbox').css('margin', '0 0 -382px 0');
     });
+
+
     //console.log($('.o_menu_systray').length, 11833);
     odoo.define('odoochat.onClientready', function (require) {
         "use strict";
@@ -151,9 +159,11 @@
             $('#message-form').submit(sendMessageFunction);
 
             function sendMessageFunction(e){
+            console.log('msgchat',$('.emoji-wysiwyg-editor .img').length,$('.emoji-wysiwyg-editor').text())
                 e.preventDefault();
                 if(socket && socket.connected){
                     var msg = $('#message-form input:first').val();
+
                     if(!msg)
                         return;
                     var msg_obj = create_msg_obj(msg);
@@ -312,6 +322,13 @@
                         console.log("Error for ",going_user);
                     }
                 });
+
+
+                   $('#send_btn').click(function() {
+         $('.emoji-wysiwyg-editor').html("");
+
+
+    });
             });
 
             setTimeout(function(){

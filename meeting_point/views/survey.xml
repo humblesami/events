@@ -56,7 +56,7 @@
                                             </t>
 
 
-                                            <button type="object" style="width: 100%" class="survey-button btn btn-primary ml4" name="action_send_survey" groups="meeting_point.group_meeting_admin">Share</button>
+                                            <!--<button type="object" style="width: 100%" class="survey-button btn btn-primary ml4" name="action_send_survey" groups="meeting_point.group_meeting_admin">Share</button>-->
 
 
                                             <button class="survey-button btn btn-primary ml4" style="width: 100%" name="action_result_survey" type="object" groups="meeting_point.group_meeting_admin">Analyze</button>
@@ -161,7 +161,7 @@
 
                         <div class="survey_meeting_id" attrs="{'invisible': [('audience', '=', 'partners')]}">
                             <h4>Meeting</h4>
-                            <field name="meeting_id" domain="[('publish','!=',False)]" />
+                            <field name="meeting_id" domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','>=', time.strftime('%Y-%m-%d'))]" />
                         </div>
 
                         <div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">
