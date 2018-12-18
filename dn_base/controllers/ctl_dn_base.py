@@ -93,11 +93,12 @@ class Controller(http.Controller):
 
     def save_comment(self, values):
         try:
+            if 'data' in values:
+                values = json.loads(values['data'])
             uid = ws_methods.check_auth(values)
             if not uid:
                 return ws_methods.http_response('Not authorized')
-            if 'data' in values:
-                values = values['data']
+
             meeting_id = values.get('res_id')
             if not  meeting_id:
                 return ws_methods.http_response('Please provide meeting id')
@@ -135,11 +136,30 @@ class Controller(http.Controller):
             str_comment_id = str(max_comment_id)
             query = 'select id,create_date,create_uid from mail_message where id > '+str_comment_id+' and create_uid = '+str_uid
             res = ws_methods.execute_read(query)
+            attendees = []
+            meeting = req_env['calendar.event'].sudo().search([('id', '=', meeting_id)])
+            partners = meeting.partner_ids
+            for partner in partners:
+                try:
+                    if partner.user_id:
+                        attendees.append(partner.user_id.id)
+                except:
+                    a = 1
             if len(res) == 0:
                 return ws_methods.http_response('Not created')
             comment_id = res[0][0]
             user = req_env.user
-            comment = { 'id':comment_id, 'body': mesg_body,'subtype':subtype_id, 'create_date': create_date, 'user':{'id':user.mp_user_id.id,'name':user.name}, 'children':[]}
+            comment = {
+                'id':comment_id,
+                'body': mesg_body,
+                'subtype':subtype_id,
+                'create_date': create_date,
+                'user':{'id':user.mp_user_id.id,'name':user.name, 'uid': str_uid},
+                'children':[],
+                'meeting' : meeting.name,
+                'res_id': meeting_id,
+                'attendees' : attendees
+            }
             return ws_methods.http_response('', comment)
         except:
             return ws_methods.handle()
