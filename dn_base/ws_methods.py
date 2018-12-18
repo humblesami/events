@@ -219,28 +219,34 @@ def to_datetime(val):
 
 # Socket Connetion
 
+socket_server = {
+    'url':tools.config['socket_url'],
+    'connected': False
+}
 def on_connect():
-    print("Connected.")
+    socket_server['connected'] = True
+    print ('Socket server connected')
 
 def on_disconnect():
-    print('disconnect')
+    socket_server['connected'] = False
 
-def on_reconnect():
-    print('reconnect')
-
-def on_aaa_response(*args):
-    print('on_aaa_response', args)
+# def on_reconnect():
+#     print('reconnect')
+# def on_aaa_response(*args):
+#     print('on_aaa_response', args)
 
 def get_socket():
     return socketIO
 
 def emit_event(data):
-    if socketIO and socketIO.connected:
-        socketIO.emit('odoo_event', data)
+    if socket_server['connected']:
+        if socketIO and socketIO.connected:
+            socketIO.emit('odoo_event', data)
+        else:
+            socket_server['connected'] = False
 
-socket_server_url = tools.config['socket_url']
-socketIO = SocketIO(socket_server_url)
+socketIO = SocketIO(socket_server['url'])
 socketIO.on('connect', on_connect)
 socketIO.on('disconnect', on_disconnect)
-socketIO.on('reconnect', on_reconnect)
+#socketIO.on('reconnect', on_reconnect)
 socketIO.wait(seconds=1)

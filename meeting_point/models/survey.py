@@ -16,7 +16,7 @@ class Survey(models.Model):
     survey_type=fields.Selection([(1,'Survey'),(2,'Approval')],string="Survey Type")
     question_ids=fields.One2many('survey.question','survey_id_custom',string="Question(s)")
     my_status=fields.Char(string="Status",compute="_compute_status")
-    seen_by_me = fields.Integer(compute='_compute_seen_by_me',default=0)
+    #seen_by_me = fields.Integer(compute='_compute_seen_by_me',default=0)
     partner_ids = fields.Many2many('res.partner', 'survey_survey_res_partner_rel',
                                    string='Respondents',
                                    domain=lambda self: self.filter_attendees())

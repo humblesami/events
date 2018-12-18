@@ -36,7 +36,7 @@ class ir_model_seen_registery(models.Model):
 
     res_model = fields.Char(string="Model Name")
     res_id = fields.Integer(string="Record Id")
-    seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
+    #seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
 
     @api.multi
     def _compute_seen_by_me(self):

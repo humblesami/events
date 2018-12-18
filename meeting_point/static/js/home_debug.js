@@ -63,17 +63,17 @@ $(function(){
     showRelatedTab();
 
     $('notification_icon.seen_not_seen').html('18');
-    $('.seen_by_me').each(function(i, el){
-        el = $(el.children[0]);
-        if(el.html() == "0")
-        {
-            //el.closest('.o_kanban_record').css('border','2px solid #9c4784');
-        }
-        else
-        {
-            el.closest('.o_kanban_record').css('border','none');
-        }
-    });
+//    $('.seen_by_me').each(function(i, el){
+//        el = $(el.children[0]);
+//        if(el.html() == "0")
+//        {
+//            //el.closest('.o_kanban_record').css('border','2px solid #9c4784');
+//        }
+//        else
+//        {
+//            el.closest('.o_kanban_record').css('border','none');
+//        }
+//    });
     $('.survey_kanban_reocord').click(function(){
         $(this).css('border','none');
     });

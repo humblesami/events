@@ -239,8 +239,6 @@ class MyBinary(Binary):
         if not uid:
             return request.not_found()
 
-        if field in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo']:
-            uid = 1
         env = request.env(user=uid)
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
@@ -281,5 +279,3 @@ class MyBinary(Binary):
                 return ws_methods.http_response('Invalid Password')
         except:
             return ws_methods.handle()
-
-
