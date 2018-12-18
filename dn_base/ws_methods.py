@@ -4,6 +4,7 @@ import base64
 import smtplib
 import threading
 import traceback
+from  odoo import tools
 from odoo.http import request
 from odoo.addons.dn_base import dn_dt
 from socketIO_client import SocketIO
@@ -234,9 +235,11 @@ def get_socket():
     return socketIO
 
 def emit_event(data):
-    socketIO.emit('odoo_event', data)
+    if socketIO and socketIO.connected:
+        socketIO.emit('odoo_event', data)
 
-socketIO = SocketIO('http://localhost', 3000)
+socket_server_url = tools.config['socket_url']
+socketIO = SocketIO(socket_server_url)
 socketIO.on('connect', on_connect)
 socketIO.on('disconnect', on_disconnect)
 socketIO.on('reconnect', on_reconnect)
