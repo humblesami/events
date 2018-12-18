@@ -1,4 +1,10 @@
 (function(){
+      window.emojiPicker = new EmojiPicker({
+              emojiable_selector: '[data-emojiable=true]',
+              assetsPath: '/odoochat/static/img/',
+              popupButtonClasses: 'fa fa-smile-o'
+            });
+            window.emojiPicker.discover();
     if(odoo.session_info.uid == 1)
     {
         return;
@@ -30,6 +36,8 @@
         $('.mini-chat').css('display', 'none');
         $('.chatbox').css('margin', '0 0 -382px 0');
     });
+
+
     //console.log($('.o_menu_systray').length, 11833);
     odoo.define('odoochat.onClientready', function (require) {
         "use strict";
@@ -128,6 +136,8 @@
                         var msg = messages[i];
                         append_message(msg);
                     }
+                      $('.replies').Emoji();
+                       $('.sent').Emoji();
                 })
                 $('.chatbox .chat-text').text(active_user.name);
                 $('.chatbox').css('display', 'block');
@@ -151,20 +161,28 @@
             $('#message-form').submit(sendMessageFunction);
 
             function sendMessageFunction(e){
+                  $('.replies').Emoji();
+                   $('.sent').Emoji();
                 e.preventDefault();
                 if(socket && socket.connected){
                     var msg = $('#message-form input:first').val();
+
                     if(!msg)
                         return;
                     var msg_obj = create_msg_obj(msg);
                     append_message(msg_obj.msg);
                     socket.emit('message', msg_obj);
+                      $('.replies').Emoji();
+                       $('.sent').Emoji();
                 }
             }
 
             var receiveMessage = function(msg, sender_id) {
+
                 if(active_user && active_user.id == sender_id){
                     append_message(msg);
+                     $('.replies').Emoji();
+                $('.sent').Emoji();
                 }
                 else {
                     if(isNaN(notifications[sender_id]))
@@ -312,6 +330,14 @@
                         console.log("Error for ",going_user);
                     }
                 });
+
+
+     $('#send_btn').click(function() {
+         $('.emoji-wysiwyg-editor').html("");
+          $('.replies').Emoji();
+    $('.sent').Emoji();
+    });
+
             });
 
             setTimeout(function(){
