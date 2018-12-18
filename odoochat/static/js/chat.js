@@ -136,6 +136,8 @@
                         var msg = messages[i];
                         append_message(msg);
                     }
+                      $('.replies').Emoji();
+                       $('.sent').Emoji();
                 })
                 $('.chatbox .chat-text').text(active_user.name);
                 $('.chatbox').css('display', 'block');
@@ -159,7 +161,8 @@
             $('#message-form').submit(sendMessageFunction);
 
             function sendMessageFunction(e){
-            console.log('msgchat',$('.emoji-wysiwyg-editor .img').length,$('.emoji-wysiwyg-editor').text())
+                  $('.replies').Emoji();
+                   $('.sent').Emoji();
                 e.preventDefault();
                 if(socket && socket.connected){
                     var msg = $('#message-form input:first').val();
@@ -169,12 +172,17 @@
                     var msg_obj = create_msg_obj(msg);
                     append_message(msg_obj.msg);
                     socket.emit('message', msg_obj);
+                      $('.replies').Emoji();
+                       $('.sent').Emoji();
                 }
             }
 
             var receiveMessage = function(msg, sender_id) {
+
                 if(active_user && active_user.id == sender_id){
                     append_message(msg);
+                     $('.replies').Emoji();
+                $('.sent').Emoji();
                 }
                 else {
                     if(isNaN(notifications[sender_id]))
@@ -324,11 +332,12 @@
                 });
 
 
-                   $('#send_btn').click(function() {
+     $('#send_btn').click(function() {
          $('.emoji-wysiwyg-editor').html("");
-
-
+          $('.replies').Emoji();
+    $('.sent').Emoji();
     });
+
             });
 
             setTimeout(function(){

@@ -23,8 +23,8 @@ try{
         document.writeln('<script src="/odoochat/static/js//emoji/util.js?a=' + dnow + '"></script>');
         document.writeln('<script src="/odoochat/static/js//emoji/jquery.emojiarea.js?a=' + dnow + '"></script>');
         document.writeln('<script src="/odoochat/static/js//emoji/emoji-picker.js?a=' + dnow + '"></script>');
+        document.writeln('<script src="/odoochat/static/js//emoji/jQueryEmoji.js?a=' + dnow + '"></script>');
         document.writeln('<script src="/odoochat/static/js/chat.js?a=' + dnow + '"></script>');
-
     }
     else{
         console.log(33993)
