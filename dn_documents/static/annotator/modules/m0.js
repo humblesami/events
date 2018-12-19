@@ -204,6 +204,7 @@ function module0(module, exports, __webpack_require__) {
 					dn_rpc_object({
 						url:'/get-annotations',
 						data:input_data,
+						no_loader:1,
 						onSuccess: onAnnotationsDownloaded,
 						onError:onAnnotationsLoadingFailed
 					});
@@ -606,6 +607,7 @@ function module0(module, exports, __webpack_require__) {
                     }
                     var cb_page_renderd = undefined;
 					for(var i = 1; i <= NUM_PAGES; i++){
+					    cb_page_renderd = undefined;
 						if(i == 1)
 						{
                             cb_page_renderd = function(){
@@ -616,23 +618,12 @@ function module0(module, exports, __webpack_require__) {
                                 }
                                 if(RENDER_OPTIONS.showAnnotations && doc_data && doc_data.first_time)
                                 {
-                                    var point_id = window.location.pathname.split('/');
                                     setTimeout(function(){
                                         comments_wrapper.css({'top':'96px', 'height':'calc(100vh - 96px)'});
                                         comment_list.css('min-height', 'calc(100vh - 246px)');
-                                        if(point_id.length > 4)
-                                        {
-                                            comments_to_show = 'comments';
-                                            loadALlCommentsOnDocument();
-                                            showCommentsContainer('comments');
-                                            point_id = point_id[point_id.length - 1];
-                                            $('.groupcomment[annotationId="' + point_id + '"]').click();
-                                            setTimeout(loadAnnotationsFromServer, 8000);
-                                        }
-                                        else
-                                        {
-                                            setTimeout(loadAnnotationsFromServer, 1000);
-                                        }
+                                        setTimeout(function(){
+                                            loadAnnotationsFromServer();
+                                        }, 5000);
                                     }, 1001);
                                 }
                             }

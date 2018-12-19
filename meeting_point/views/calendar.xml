@@ -50,10 +50,6 @@
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click ">
                                 <div class="oe_module_desc">
-                                    <div class="seen_by_me">
-                                        <field name="seen_by_me"/>
-                                    </div>
-
                                     <div class="meeting_info">
                                         <div class="date_tam" style="">
                                             <div class="o_day" style="    font-size: 26px;">
@@ -156,7 +152,6 @@
                 <form string="Meetings" class="meetingform">
                     <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="id" class="meeting_id o_hidden"/>
-                    <field name="seen_by_me" class="meeting_seen o_hidden"/>
                     <sheet>
                         <div class="oe_button_box oe_right publish_btn oe_read_only" groups="meeting_point.group_meeting_admin">
                             <button type="object" class="btn btn-primary" name="non_publish" string="Unpublish" attrs="{'invisible': ['|',('publish','=',False),('exectime','!=','upcoming')]}"/>
@@ -249,7 +244,6 @@
                                         }
                                     </style>
                                     <field name="id" class="survey_id o_hidden"/>
-                                    <field name="seen_by_me" class="survey_seen o_hidden"/>
                                     <field name="tot_start_survey" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
 

@@ -20,9 +20,6 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="survey_kanban_reocord oe_kanban_card oe_kanban_global_click oe_kanban_card oe_kanban_action" groups="meeting_point.group_meeting_admin">
-                                <div class="seen_by_me">
-                                    <field name="seen_by_me"/>
-                                </div>
                                 <div class="kanban_del">
                                     <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
                                 </div>
@@ -67,9 +64,6 @@
 
                             <div t-attf-class="survey_kanban_reocord oe_kanban_card  oe_kanban_card oe_kanban_action" groups="!meeting_point.group_meeting_admin">
                                 <div class="oe_kanban_content" style="text-align: initial;">
-                                    <div class="seen_by_me">
-                                        <field name="seen_by_me"/>
-                                    </div>
                                     <t t-if="record.my_status.raw_value=='done' ">
                                         <h3 class="badge" style="float:right">Completed<i class="fa fa-check fa-lg" style="color:green"/></h3>
                                     </t>
@@ -124,7 +118,6 @@
                 <form string="Survey">
                     <link rel="stylesheet" href="/meeting_point/static/css/survey.css"/>
                     <field name="id" class="survey_id o_hidden"/>
-                    <field name="seen_by_me" class="survey_seen o_hidden"/>
                     <field name="tot_start_survey" invisible="1"/>
                     <field name="is_closed" invisible="1"/>
                     <div class="container">

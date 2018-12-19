@@ -74,14 +74,10 @@
                                             <field name="start_datetime"/>
                                             <field name="publish"/>
                                             <field name="attendee_status"/>
-                                            <field name="seen_by_me" class="seen_by_me o_hidden"/>
                                             <templates>
                                                 <t t-name="kanban-box">
                                                     <div class="oe_module_vignette">
                                                         <a type="object" style="color:#4c4c4c" name="go_to_meeting" class="oe_module_desc">
-                                                            <div class="seen_by_me">
-                                                                <field name="seen_by_me"/>
-                                                            </div>
                                                             <div class="meeting_info">
                                                                 <div class="date_tam" style="">
                                                                     <div class="o_day" style="font-size: 26px;">

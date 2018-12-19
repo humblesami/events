@@ -3,14 +3,22 @@ import os
 import sys
 import base64
 import subprocess
+import threading
+import time
 import traceback
 from random import randint
+
+from PIL import Image
+from fpdf import FPDF
 from pdfminer.pdfpage import PDFPage
 from pdfminer.layout import LAParams
+from pytesseract import pytesseract
+
 from odoo import models, fields, api
 from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
+
 
 class AllFiles(models.Model):
     _name = 'dn_documents.allfiles'
@@ -37,10 +45,35 @@ class AllFiles(models.Model):
                 raise raise_dn_model_error("There is no file")
             else:
                 # Check the file's extension
-                if not self.filename.endswith(('ppt', 'pptx', 'doc', 'docx', 'pdf','xls','xlsx')):
+                if not self.filename.endswith(('ppt', 'pptx', 'doc', 'docx', 'pdf','xls','xlsx','png','jpg','jpeg')):
                     raise raise_dn_model_error("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
                 else:
                     scan_virus(self.attachment)
+
+    def apply_ocr(self):
+        t = threading.Thread(target=self.apply_ocr_thread)
+        t.start()
+        pass
+
+    def apply_ocr_thread(self):
+        with api.Environment.manage():
+            new_cr = self.pool.cursor()
+            self = self.with_env(self.env(cr=new_cr))
+            time.sleep(10)
+            if self.attachment:
+                im = Image.open(io.BytesIO(base64.b64decode(self.attachment)))
+                text = pytesseract.image_to_string(im)
+                pdf=pytesseract.image_to_pdf_or_hocr(im, extension='pdf')
+                res=base64.b64encode(pdf)
+
+                self.content=text
+                self.pdf_doc = res
+
+
+
+            self._cr.commit()
+            self._cr.close()
+
     @api.model
     def create(self, values):
         try:
@@ -54,6 +87,9 @@ class AllFiles(models.Model):
                     values['original_pdf'] = pdf_doc
                     values['content'] = content
             doc = super(AllFiles, self).create(values)
+            if values.get("attachment"):
+                if values['filename'].endswith(('png', 'jpg', 'jpeg')):
+                    doc.apply_ocr()
             return doc
         except:
             raise_dn_model_error()
@@ -72,6 +108,9 @@ class AllFiles(models.Model):
                     values['original_pdf'] = pdf_doc
                     values['content'] = content
             doc = super(AllFiles, self).write(values)
+            if values.get("attachment"):
+                if values['filename'].endswith(('png', 'jpg', 'jpeg')):
+                    self.apply_ocr()
             return doc
         except:
             raise_dn_model_error("Error in file write \n")
@@ -85,7 +124,7 @@ class AllFiles(models.Model):
             raise raise_dn_model_error("Invalid File Name")
         if not values['filename']:
             raise raise_dn_model_error("Invalid File Name")
-        if not values['filename'].endswith(('pdf','ppt', 'pptx', 'doc', 'docx','xls','xlsx')):
+        if not values['filename'].endswith(('pdf','ppt', 'pptx', 'doc', 'docx','xls','xlsx','png','jpg','jpeg')):
                 #('ppt', 'pptx', 'doc', 'docx',
                 raise raise_dn_model_error("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
         else:
@@ -109,13 +148,13 @@ class AllFiles(models.Model):
             if not res:
                 raise raise_dn_model_error("Could not convert")
             else:
-                read = res.read()
-                # res_encode = base64.encodestring(read)
-                res_encode = base64.b64encode(read)
-                return res_encode,content
+                return res,content
         elif ext == "xls" or ext =="xlsx":
             res = self.excel2xhtml(pth, filename)
-            return res
+            return res,''
+        elif ext in ['png','jpg','jpeg']:
+            res = self.img2pdf(pth, filename)
+            return res, ''
         else:
             raise raise_dn_model_error("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")
 
@@ -147,7 +186,10 @@ class AllFiles(models.Model):
                 res = open(pth + '_new.pdf', 'rb')
             else:
                 res = open(pth + filename, 'rb')
-            return res,content
+                read = res.read()
+                # res_encode = base64.encodestring(read)
+                res_encode = base64.b64encode(read)
+            return res_encode,content
 
         except:
             eg = traceback.format_exception(*sys.exc_info())
@@ -177,6 +219,37 @@ class AllFiles(models.Model):
             print (errorMessage)
             raise raise_dn_model_error(errorMessage)
             return False
+
+    def img2pdf(self,pth,filename):
+        try:
+            im = Image.open(pth+filename)
+            width, height = im.size
+            if height >= width:
+                orientation = 'P'
+                w=210
+                h=297
+            else:
+                orientation = 'L'
+                w = 297
+                h = 210
+
+            pdf = FPDF()
+            pdf.add_page(orientation=orientation)
+            pdf.image(pth+filename,x=0,y=0,w=w,h=h)
+            pdf.output(pth+"_new.pdf", "F")
+            res = open(pth + '_new.pdf', 'rb')
+            read = res.read()
+            res_encode = base64.b64encode(read)
+            return res_encode
+        except:
+            eg = traceback.format_exception(*sys.exc_info())
+            errorMessage = ''
+            for er in eg:
+                errorMessage += "\n" + er
+            print(errorMessage)
+            raise raise_dn_model_error(errorMessage)
+            return False
+
 
     def open_view_doc_form(self):
         view_id = self.env.ref('dn_documents.pdf_doc_view').id

@@ -90,7 +90,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='id']" position="replace">
                     <field name="id" class="dn_doc_id o_hidden"/>
-                    <field name="seen_by_me" class="doc_seen o_hidden"/>
                 </xpath>
                 <xpath expr="//field[@name='html']" position="after">
                     <link rel="stylesheet" href="/meeting_point/static/css/sign.css"/>
@@ -146,16 +145,6 @@
             <field name="inherit_id" ref="dn_documents.dn_docs_kanban"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='kanban_del']" position="before">
-                    <div class="o_hidden seen_by_me">
-                        <field name="seen_by_me"/>
-                    </div>
-                </xpath>
-                <xpath expr="//div[@name='kanban_del1']" position="before">
-                    <div class="o_hidden sign-doc">
-                        <field name="seen_by_me"/>
-                    </div>
-                </xpath>
                 <xpath expr="//div[@name='open_sign_doc']" position="replace">
                     <button type="object" name="open_signature_form"
                             class="fa fa-5x fa-file-text-o"/>

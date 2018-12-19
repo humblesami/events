@@ -231,7 +231,7 @@ class Meeting(models.Model):
     status = fields.Char(string="Status")
     zip = fields.Char(string="Zip")
     is_active_yet = fields.Boolean(compute="_compute_active_status")
-    seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
+    #seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
     survey_ids = fields.One2many('survey.survey','meeting_id',string="Survey")
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees',
                                    states={'done': [('readonly', True)]}, default=_default_partners,
@@ -376,7 +376,7 @@ class Meeting(models.Model):
                 event.exectime = "completed"
 
     def disableConference(self, event):
-        if event.pin and event.exectime != 'upcoming' and event.exectime != 'ongoing':
+        if event.conference_status == 'active' and event.exectime != 'upcoming' and event.exectime != 'ongoing':
             vals = {'pin': '', 'video_call_link': '', 'moderator': 0, 'video_active': False, 'conference_bridge_number': ''}
             event.sudo().write(vals)
 

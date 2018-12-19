@@ -63,13 +63,7 @@ class ResUsers(models.Model):
         if vals.get('password'):
             self._check_password_rules(vals['password'])
             vals['password_write_date'] = fields.Datetime.now()
-        Tempvalue = False
-        if self.partner_id.signup_token:
-            partner = self.env['res.partner']._signup_retrieve_partner(self.partner_id.signup_token, check_validity=True,raise_exception=True)
-            Tempvalue = True
         checkValue = super(ResUsers, self).write(vals)
-        if checkValue & Tempvalue:
-            partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
         return checkValue
 
     @api.multi

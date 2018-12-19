@@ -193,5 +193,9 @@ function dn_rpc_object(reqObject)
     var input_data =reqObject.data;
     var callback = reqObject.onSuccess;
     var failureCallBack = reqObject.onError;
+    if(reqObject.no_loader)
+        dn_json_rpc_object.showLoader = false;
+    else
+        dn_json_rpc_object.showLoader = true;
     dn_json_rpc_object.request(reqfun   , input_data, callback, failureCallBack)
 }

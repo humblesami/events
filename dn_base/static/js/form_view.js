@@ -134,7 +134,7 @@ function updateUploadAcceptTypes(fileTypesToUpload)
                     }
                     else
                     {
-                        fileTypesToUpload = '.pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx';
+                        fileTypesToUpload = '.pdf,.ppt,.pptx,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png';
                     }
                     $(obj).attr('accept',fileTypesToUpload);
                 }
