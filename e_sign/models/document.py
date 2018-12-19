@@ -6,7 +6,7 @@ import traceback
 from random import randint
 
 from fpdf import FPDF
-from docx import Document
+# from docx import Document
 from werkzeug import urls
 
 from odoo import models, fields, api, http

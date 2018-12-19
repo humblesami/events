@@ -8,15 +8,17 @@ import time
 import traceback
 from random import randint
 
+import minecart
 from PIL import Image
 from fpdf import FPDF
-from pdfminer.pdfpage import PDFPage
-from pdfminer.layout import LAParams
 from pytesseract import pytesseract
 
-from odoo import models, fields, api
-from pdfminer.converter import TextConverter
+from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.converter import PDFPageAggregator
+from pdfminer.layout import LAParams, LTTextBox, LTTextLine
+
+from odoo import models, fields, api
 from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 
 
@@ -51,11 +53,14 @@ class AllFiles(models.Model):
                     scan_virus(self.attachment)
 
     def apply_ocr(self):
-        t = threading.Thread(target=self.apply_ocr_thread)
+        if self.filename.endswith(('png', 'jpg', 'jpeg')):
+            t = threading.Thread(target=self.apply_ocr_image)
+        # else:
+        #     t = threading.Thread(target=self.apply_ocr_pdf)
         t.start()
         pass
 
-    def apply_ocr_thread(self):
+    def apply_ocr_image(self):
         with api.Environment.manage():
             new_cr = self.pool.cursor()
             self = self.with_env(self.env(cr=new_cr))
@@ -69,6 +74,20 @@ class AllFiles(models.Model):
                 self.content=text
                 self.pdf_doc = res
 
+
+
+            self._cr.commit()
+            self._cr.close()
+
+    def apply_ocr_pdf(self):
+        with api.Environment.manage():
+            new_cr = self.pool.cursor()
+            self = self.with_env(self.env(cr=new_cr))
+            time.sleep(10)
+            if self.pdf_doc:
+                pdffile = io.BytesIO(base64.b64decode(self.pdf_doc))
+                doc = minecart.Document(pdffile)
+                page = doc.get_page(1)
 
 
             self._cr.commit()
@@ -88,8 +107,8 @@ class AllFiles(models.Model):
                     values['content'] = content
             doc = super(AllFiles, self).create(values)
             if values.get("attachment"):
-                if values['filename'].endswith(('png', 'jpg', 'jpeg')):
-                    doc.apply_ocr()
+                # if values['filename'].endswith(('png', 'jpg', 'jpeg')):
+                doc.apply_ocr()
             return doc
         except:
             raise_dn_model_error()
@@ -169,26 +188,34 @@ class AllFiles(models.Model):
                      pth + filename])
                 res = open(pth + '_new.pdf', 'rb')
             content=""
+            parser = PDFParser(res)
+            doc = PDFDocument()
+            parser.set_document(doc)
+            doc.set_parser(parser)
+            doc.initialize('')
             rsrcmgr = PDFResourceManager()
-            retstr = io.StringIO()
-            codec = 'utf-8'
             laparams = LAParams()
-            device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
-            # Create a PDF interpreter object.
+            laparams.char_margin = 1.0
+            laparams.word_margin = 1.0
+            device = PDFPageAggregator(rsrcmgr, laparams=laparams)
             interpreter = PDFPageInterpreter(rsrcmgr, device)
-            # Process each page contained in the document.
+            extracted_text = ''
 
-            for page in PDFPage.get_pages(res):
+            for page in doc.get_pages():
                 interpreter.process_page(page)
-                content = retstr.getvalue()
+                layout = device.get_result()
+                for lt_obj in layout:
+                    if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
+                        extracted_text += lt_obj.get_text()
+
             # print(content)
             if ext != "pdf":
                 res = open(pth + '_new.pdf', 'rb')
             else:
                 res = open(pth + filename, 'rb')
-                read = res.read()
-                # res_encode = base64.encodestring(read)
-                res_encode = base64.b64encode(read)
+            read = res.read()
+            # res_encode = base64.encodestring(read)
+            res_encode = base64.b64encode(read)
             return res_encode,content
 
         except:

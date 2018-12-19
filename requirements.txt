@@ -11,11 +11,13 @@ Jinja2==2.8
 lxml==4.2.4
 Mako==1.0.4
 MarkupSafe==1.0
+minecart==0.3.0
 mock==2.0.0
 num2words==0.5.4
 numpy==1.15.3
 ofxparse==0.16
 passlib==1.6.5
+pdfminer3k==20110515
 Pillow==3.4.1
 psutil==4.3.1
 psycopg2==2.7.3.1
