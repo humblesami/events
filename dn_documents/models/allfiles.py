@@ -57,8 +57,8 @@ class AllFiles(models.Model):
             t = threading.Thread(target=self.apply_ocr_image)
         # else:
         #     t = threading.Thread(target=self.apply_ocr_pdf)
-        t.start()
-        pass
+            t.start()
+
 
     def apply_ocr_image(self):
         with api.Environment.manage():
