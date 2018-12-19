@@ -12,11 +12,13 @@ from PIL import Image
 from fpdf import FPDF
 from pdfminer.pdfpage import PDFPage
 from pdfminer.layout import LAParams
+from pytesseract import pytesseract
+
 from odoo import models, fields, api
 from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
-from odoo.addons.simple_htr.src.recognize import getTextOcr
+
 
 class AllFiles(models.Model):
     _name = 'dn_documents.allfiles'
@@ -59,8 +61,14 @@ class AllFiles(models.Model):
             self = self.with_env(self.env(cr=new_cr))
             time.sleep(10)
             if self.attachment:
-                text=getTextOcr(self.attachment,self.filename)
+                im = Image.open(io.BytesIO(base64.b64decode(self.attachment)))
+                text = pytesseract.image_to_string(im)
+                pdf=pytesseract.image_to_pdf_or_hocr(im, extension='pdf')
+                res=base64.b64encode(pdf)
+
                 self.content=text
+                self.pdf_doc = res
+
 
 
             self._cr.commit()
