@@ -528,7 +528,9 @@ function module0(module, exports, __webpack_require__) {
                         RENDER_OPTIONS.document_data = doc_data;
                         PDFJS.getDocument(doc_data.doc).then(function(pdf_data){
                             pdf_doc_data = pdf_data;
-
+                            $('.page-count').html(pdf_doc_data.numPages);
+                            if(pdf_doc_data.numPages > 1)
+                            	$('.page-next-btn').removeAttr('disabled');
                             force_download = 0;
                             RENDER_OPTIONS.documentId = documentId;
                             var cookieVal = localStorage.getItem(documentId+'/dirty');

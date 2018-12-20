@@ -11,6 +11,20 @@
             <link href="/dn_documents/static/annotator/shared/custom.css" rel="stylesheet" type="text/css" />
             <link href="/dn_documents/static/annotator/annotator.css" rel="stylesheet" type="text/css" >
             <div class="toolbar topbar" style="display:none">
+                <a disabled class="toolbarButton page-prev-btn">
+                    <i class="fas fa-arrow-up"></i>
+                </a>
+                <a disabled class="toolbarButton page-next-btn">
+                    <i class="fas fa-arrow-down"></i>
+                </a>
+
+                <div class="input-number">
+                    <input class="form-control"
+                           type="number" class="page-number"
+                           value="1">
+                    <span>of <span class="page-count">1</span></span>
+                </div>
+
                 <a class="icon back" title="Back">
                     <img style="border:1px solid silver" height="28" src="assets/img/back.png">
                 </a>
@@ -312,6 +326,39 @@
             </style>
         </div>`;
 
+        var changePage = function(pageToMove){
+            var total_pages = $('.page-count').html();
+            var page_num = 1;
+            if(pageToMove < 1 || pageToMove > total_pages)
+                page_num = pageToMove = 1;
+            if(pageToMove == 1)
+                $('.page-prev-btn').attr("disabled", "disabled");
+            else
+                $('.page-prev-btn').removeAttr('disabled');
+
+            if(pageToMove == this.total_pages)
+                $('.page-next-btn').attr("disabled", "disabled");
+            else
+                $('.page-next-btn').removeAttr('disabled');
+
+            $('#content-wrapper').scrollTop(800 * (pageToMove - 1))
+        }
+
+        $('body').on('change', '.input-number input', function(){
+            var curr_page = parseInt($(this).val());
+            changePage(curr_page)
+        });
+
+        $('body').on('click', '.page-prev-btn', function(){
+            var curr_page = parseInt($('.input-number input').val());
+            changePage(curr_page-1)
+        })
+
+        $('body').on('click', '.page-next-btn', function(){
+            var curr_page = parseInt($('.input-number input').val());
+            changePage(curr_page+1)
+        })
+
         $(function(){
            var input=$('input.doc_name');
            if(input){
@@ -364,6 +411,36 @@
             }
             $('#pdf_div').append(annot_view_markup);
             $('.o_technical_modal.in:first').show();
+
+             $('#content-wrapper').scroll(function() {
+                var page_num = 1;
+                var scroll = $(this).scrollTop();
+                if(scroll == 0 )
+                    scroll = 1;
+                page_num = Math.ceil(scroll / 780);
+                $('.input-number input').val(page_num);
+                if(page_num == 1)
+                    $('.page-prev-btn').attr("disabled", "disabled");
+                else
+                    $('.page-prev-btn').removeAttr('disabled');
+
+                if(page_num == $('.page-count').html())
+                    $('.page-next-btn').attr("disabled", "disabled");
+                else
+                    $('.page-next-btn').removeAttr('disabled');
+            });
+
+            $('.input-number input').keyup(function(e){
+                var curr_page = parseInt($(this).val());
+                var total_page = parseInt($('.page-count').html());
+                if(e.keyCode == 13){
+                    if(curr_page < 1 || curr_page > total_page){
+                        curr_page = 1;
+                        $('.input-number input').val(curr_page);
+                    }
+                    changePage(curr_page);
+                }
+            });
         });
     }
 })()
