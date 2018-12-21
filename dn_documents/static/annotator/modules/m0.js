@@ -566,6 +566,9 @@ function module0(module, exports, __webpack_require__) {
                         site_functions.hideLoader("renderdoc");
                         return;
 					}
+					var toolbar_height = $('.topbar:first').height();
+					var height = header_height + toolbar_height;
+					$('#viewer-wrapper').css( { height: 'calc(100vh - ' + height + 'px)' } )
 				}
 				else{
 					if(RENDER_OPTIONS.document_data)

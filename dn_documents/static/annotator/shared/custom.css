@@ -4,10 +4,14 @@
       z-index: 21;
       background: #fff;
       width: 100vw;
-      height: 100vh;
       position: relative;
       top: 45px;
   }
+
+  #viewer-wrapper{
+	overflow: scroll;
+  }
+
   #content-wrapper {
     width: 98%;
     background-color: white;
