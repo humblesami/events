@@ -65,15 +65,11 @@ class meeting(http.Controller):
             meeting_id = values.get('meeting_id')
             if not meeting_id:
                 ws_methods.http_response('Please provide meeting id')
-            status = values['status']
+            response = values.get('response')
+            if not meeting_id:
+                ws_methods.http_response('Please provide response')
             meeting = http.request.env['calendar.event'].search([('id', '=', meeting_id)])
-            res = False
-            if status == 'Accept':
-                res = meeting.do_accept()
-            elif status == 'Decline':
-                res = meeting.do_decline()
-            else:
-                res = meeting.do_tentative()
+            res = meeting.respond_meeting(response)
             return ws_methods.http_response('', "success")
         except:
             try:
@@ -249,7 +245,7 @@ class meeting(http.Controller):
             meeting = req_env['calendar.event'].sudo().search([('id', '=', int(values["id"]))])
             props = ['id', 'start', 'stop', 'duration', 'video_call_link','conference_status', 'conference_bridge_number', 'pin',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
-                     'status', 'company']
+                     'attendee_status', 'company']
 
             meeting_object = ws_methods.object_to_json_object(meeting, props)
             meeting_object['duration'] = dn_dt.hours_to_hoursNminutes(meeting_object['duration'])
@@ -287,7 +283,7 @@ class meeting(http.Controller):
             props = ['id', 'start', 'stop', 'conference_status', 'duration', 'zip', 'video_call_link',
                      'conference_bridge_number', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
-                     'status', 'company']
+                     'attendee_status', 'company']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
             try:
                 duration = float(meeting_object['duration'])
@@ -332,16 +328,6 @@ class meeting(http.Controller):
                 attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
                 attendee['uid'] = attendee_user.id
                 attendee['name'] = attendee_user.name
-                if attendee['state'] == 'needsAction':
-                    attendee['state'] = 'No Response'
-                elif attendee['state'] == 'accepted':
-                    attendee['state'] = 'Accepted'
-                elif attendee['state'] == 'rejected':
-                    attendee['state'] = 'Rejected'
-                elif attendee['state'] == 'declined':
-                    attendee['state'] = 'Declined'
-                elif attendee['state'] == 'tentative':
-                    attendee['state'] = 'Uncertain'
                 cnt += 1
             filters = [('res_id', '=', meeting_object['id']), ('parent_id', '=', False),
                        ('model', '=', 'calendar.event'),
@@ -434,24 +420,17 @@ class meeting(http.Controller):
                filters.append(('stop', '<', stop_time))
             elif values['meeting_type'] == 'upcoming':
                 filters.append(('stop', '>=', stop_time))
-            # if values['meeting_type'] == 'completed':
-            #     filters.append(('stop', '>', date_value+3h))
-            #     filters.append(('archived', '=', False))
-            # elif values['meeting_type'] == 'archived':
-            #     filters.append(('archived', '=', True))
-            # else:
-            #     filters.append(('stop', '>=', date_value))
+
             props = [
                 'id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
                 'description', 'name', 'address', 'city', 'country_state.name', 'country.name',
-                'zip', 'street', 'company', 'status'
+                'zip', 'street', 'company', 'attendee_status'
             ]
 
             # total_cnt = len(myModel.search(filters))
             partner = req_env.user.partner_id
             meetings = myModel.search(filters, offset=offset, limit=limit).filtered(lambda r: partner in r.partner_ids)
             meetings = ws_methods.objects_list_to_json_list(meetings, props)
-            # current_cnt = len(meetings)
             meetings = {'records': meetings, 'total': 0, 'count': 0}
             return ws_methods.http_response('', meetings)
         except:

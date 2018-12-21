@@ -59,8 +59,6 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
         $(function(){
-            //var rs = new Date().getMilliSeconds();
-            $('body').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" /><link rel="stylesheet" href="/dn_base/static/css/kanban.css?v='+dnow+'" />');
             doc_preview.init();
             $(document).on('click', 'button.fa-5x', function(){
                 dn_json_rpc_object.showHideLoader(true);

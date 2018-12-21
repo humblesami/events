@@ -62,8 +62,7 @@ class Attendee(models.Model):
         ('accepted', 'Accepted'),
     ]
 
-    state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
-                             help="Status of the attendee's participation")
+    state = fields.Selection(STATE_SELECTION, string='Attendance_Status', readonly=True, default='needsAction')
 
     mail_sent = fields.Char(string="Mail Sent")
     attendance = fields.Selection([('pending','Pending'),('absent','Absent')
@@ -222,15 +221,14 @@ class Meeting(models.Model):
     country = fields.Many2one('res.country', string="Country", default=_defualt_country)
     description = fields.Html()
     publish = fields.Boolean(string="Publish")
-    country_state = fields.Many2one('res.country.state',string="Status")#, domain=lambda self:self.filter_states())
+    country_state = fields.Many2one('res.country.state',string="State")#, domain=lambda self:self.filter_states())
     company = fields.Char(string="Company")
     city = fields.Char(string="City")
     topic_ids = fields.One2many('meeting_point.topic', 'meeting_id')
     document_ids = fields.One2many('meeting_point.document','meeting_id',string="Document(s) To Sign")
     doc_ids = fields.One2many('meeting_point.doc', 'meeting_id', string="Meeting Document(s)")
-    status = fields.Char(string="Status")
     zip = fields.Char(string="Zip")
-    is_active_yet = fields.Boolean(compute="_compute_active_status")
+    is_active_yet = fields.Boolean(compute="_compute_meeting_status")
     #seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
     survey_ids = fields.One2many('survey.survey','meeting_id',string="Survey")
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees',
@@ -381,7 +379,7 @@ class Meeting(models.Model):
             event.sudo().write(vals)
 
     @api.multi
-    def _compute_active_status(self):
+    def _compute_meeting_status(self):
         try:
             for rec in self:
                 rec.is_active_yet = False
@@ -465,48 +463,25 @@ class Meeting(models.Model):
         return domain
 
     def do_accept(self):
-        """ Marks event invitation as Accepted. """  # for attendee in id_needed:
-        #     attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
-        current_user = self.env.user.id
-        newpartner_id = self.env['res.users'].search([['id', '=', current_user]]).partner_id.id
-        if current_user:
-            attend = self.env['calendar.attendee']
-            attendee = attend.search([['event_id', '=', self.id], ['partner_id', '=', newpartner_id]])
-            # attendee[_uid] = attendee[_uid]._replace(_uid=1)
-            result = attendee.sudo().write({'state': 'accepted'})
-            result = attendee.sudo().write({'response_by': attendee.partner_id.name})
-            super(Meeting, self).sudo().write({'status': 'Going'})
-            return result
+        return self.respond_meeting('accepted')
 
     @api.multi
     def do_decline(self):
-        """ Marks event invitation as Declined. """
-        # obj = self.env['calendar.attendee']
-        # obj.do_decline_overide(self)
-        current_user = self.env.user.id
-        newpartner_id = self.env['res.users'].search([['id', '=', current_user]]).partner_id.id
-        if current_user:
-            attend = self.env['calendar.attendee']
-            attendee = attend.search([['event_id', '=', self.id], ['partner_id', '=', newpartner_id]])
-            # attendee[_uid] = attendee[_uid]._replace(_uid=1)
-            result = attendee.sudo().write({'state': 'declined'})
-            result = attendee.sudo().write({'response_by': attendee.partner_id.name})
-            super(Meeting, self).sudo().write({'status': 'NotGoing'})
-            return result
+        return self.respond_meeting('declined')
 
     @api.multi
     def do_tentative(self):
-        """ Marks event invitation as Accepted. """  # for attendee in attendee:
-        #     attendee.event_id.message_post(body=_("%s has accepted invitation") % (attendee.common_name), subtype="calendar.subtype_invitation")
-        current_user = self.env.user.id
-        newpartner_id = self.env['res.users'].search([['id', '=', current_user]]).partner_id.id
-        if current_user:
-            attend = self.env['calendar.attendee']
-            attendee = attend.search([['event_id', '=', self.id], ['partner_id', '=', newpartner_id]])
-            # attendee[_uid] = attendee[_uid]._replace(_uid=1)
-            result = attendee.sudo().write({'state': 'tentative'})
-            super(Meeting, self).sudo().write({'status': 'MayBe'})
-            return result
+        return self.respond_meeting('tentative')
+
+
+    def respond_meeting(self, response):
+        user = self.env.user
+        response_by = 'Assistant'
+        if user.id != 1 and user.id != 4:
+            response_by = 'Self'
+        attendee = self.env['calendar.attendee'].search([('event_id', '=', self.id), ('partner_id', '=', user.partner_id.id)])
+        result = attendee.sudo().write({'state': response, 'response_by': response_by})
+        return result
 
     @api.multi
     def action_archive(self):

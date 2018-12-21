@@ -434,12 +434,12 @@ class meeting(http.Controller):
             if not sign:
                 return request.render("website.403")
             doc = request.env['meeting_point.document'].sudo().search([('id','=',sign.document_id)])
-            status=self.compute_status(doc,token)
-            data = {'document': doc, 'page': None, 'token': sign.token, 'status': status}
+            sign_status = self.compute_sign_status(doc,token)
+            data = {'document': doc, 'page': None, 'token': sign.token, 'status': sign_status}
             return request.render('meeting_point.meeting_point_sign_page', data)
 
 
-    def compute_status(self,doc,token):
+    def compute_sign_status(self,doc,token):
         pending = False
         found = False
         m_signature_status = "Not required"

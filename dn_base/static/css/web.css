@@ -290,3 +290,7 @@ table.o_group.o_inner_group tr {
     text-align: center;
     margin: 8px 0
 }
+body.o_app_switcher_background nav:first-child
+{
+    display:none;
+}

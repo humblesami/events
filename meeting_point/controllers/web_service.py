@@ -150,7 +150,7 @@ class ws(http.Controller):
                 video['url'] = video['url'].replace('/watch?v=', '/embed/')
             to_do_items = {}
             props = ['id', 'start','stop', 'name', 'address', 'city', 'country_state.name'
-                , 'country.name', 'zip', 'street', 'company', 'status'
+                , 'country.name', 'zip', 'street', 'company', 'attendee_status'
                      ]
             to_do_items['pending_meetings'] = ws_methods.objects_list_to_json_list(home.pending_meetings, props)
 

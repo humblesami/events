@@ -49,6 +49,10 @@
             $('.o_menu_systray').prepend(chat_menu_item);
             $(chat_menu_item).append($(notify_div));
 
+            var dnow = Date();
+            console.log(1566);
+            $('head').append('<link type="text/stylesheet rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'"/>');
+
             if($('.dn-chatter').length > 1){
                 $('.dn-chatter:first').remove();
                 $('.dn-chatter:first').show();

@@ -56,6 +56,7 @@
                 </head>
                 <body t-att-class="body_classname">
                     <t t-raw="0"/>
+                    <script src="/dn_base/static/js/web_layout.js"></script>
                 </body>
             </html>
         </template>
