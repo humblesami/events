@@ -22,6 +22,28 @@ class MyWebsite(Website):
 
 class Controller(http.Controller):
 
+    @http.route('/model/binary', auth='public', csrf=False, cors='*')
+    def model_binary_http(self, **kw):
+        doc = self.model_binary(kw)
+        return doc
+
+    def model_binary(self, values):
+        try:
+            uid = ws_methods.check_auth(values)
+            if not uid:
+                return ws_methods.http_response('Could not authenticate')
+            if 'data' in values:
+                values = values['data']
+            res_id = values.get('res_id')
+            binary_model = values.get('model')
+            binary_field = values.get('field')
+            record = http.request.env[binary_model].search([('id', '=', res_id)])
+            file = record[0][binary_field]
+            res = ws_methods.http_response('', file)
+            return res
+        except:
+            return ws_methods.handle()
+
     @http.route('/password-reset-email', type='http', csrf=False, auth='public', cors='*')
     def password_reset_emai(self, **kw):
         try:

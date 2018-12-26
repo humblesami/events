@@ -7,7 +7,6 @@ import traceback
 from  odoo import tools
 from odoo.http import request
 from odoo.addons.dn_base import dn_dt
-from socketIO_client import SocketIO
 
 def send_mail(mesgtosend):
     server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -248,35 +247,15 @@ def to_datetime(val):
     return dt
 
 # Socket Connetion
-
 socket_server = {
     'url':tools.config['socket_url'],
     'connected': False
 }
-def on_connect():
-    socket_server['connected'] = True
-    print ('Socket server connected')
 
-def on_disconnect():
-    socket_server['connected'] = False
-
-# def on_reconnect():
-#     print('reconnect')
-# def on_aaa_response(*args):
-#     print('on_aaa_response', args)
-
-def get_socket():
-    return socketIO
-
-def emit_event(data):
-    if socket_server['connected']:
-        if socketIO and socketIO.connected:
-            socketIO.emit('odoo_event', data)
-        else:
-            socket_server['connected'] = False
-
-socketIO = SocketIO(socket_server['url'])
-socketIO.on('connect', on_connect)
-socketIO.on('disconnect', on_disconnect)
-#socketIO.on('reconnect', on_reconnect)
-socketIO.wait(seconds=1)
+import requests
+def emit_event(rtc_req):
+    try:
+        rtc_req['data'] = json.dumps(rtc_req['data'])
+        requests.get(socket_server['url']+'/odoo_event', params=rtc_req)
+    except:
+        print('odoo event failed')
