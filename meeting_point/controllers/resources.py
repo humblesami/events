@@ -305,6 +305,7 @@ class ws(http.Controller):
             for ke in obj:
                 doc[ke] = obj[ke]
             doc['uid'] = uid
+            doc['model'] = model_name
             res = ws_methods.http_response('', doc)
             return res
         except:

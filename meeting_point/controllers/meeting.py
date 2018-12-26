@@ -380,6 +380,7 @@ class meeting(http.Controller):
                 next = next[0]
 
             meeting_object['comments'] = ar_comments
+            meeting_object['model'] = "calendar.event"
             data = {"meeting": meeting_object, "next": next.id, "prev": prev.id}
             return ws_methods.http_response('', data)
         except:

@@ -16,6 +16,27 @@ def send_mail(mesgtosend):
     recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
+def addNotification(notify_data, targets):
+    try:
+        req_env = request.env
+        notify_res = req_env['dn_base.notification'].create({
+            "content": notify_data.get('content'),
+            "res_model": notify_data.get('res_model'),
+            "res_id": notify_data.get('res_id'),
+            "client_route": notify_data.get('client_route')
+        })
+
+        for id in targets:
+            if notify_data.get('user_id') != id:
+                res = req_env['dn_base.notification.status'].create({
+                    "notification_id" : notify_res.id,
+                    "user_id" : id
+                })
+    except:
+        return 'error'
+
+    return notify_res
+
 def mfile_url(model, field, id):
     conf = request.conf
     res = 'dn/content_file/' + model + '/' +  str(id) + '/' + field + '/' + conf['db'] + '/' + conf['token']
@@ -102,6 +123,12 @@ def objects_list_to_json_list(objects, props):
         json_obj = object_to_json_object(obj, props)
         json_obj_list.append(json_obj)
     return json_obj_list
+
+def objects_list_to_array(objects, prop):
+    json_obj_list = []
+    for obj in objects:
+        json_obj_list.append(obj[prop])
+    return json_obj_list
 #[{'a':1}, {'b':2}]
 #['partner_id','user_Id','login']
 
@@ -113,7 +140,10 @@ def object_to_json_object(object, props):
         for prop in props:
             obj = object
             ar = prop.split('.')
-            str = ar[0].replace('_id','')
+            if ar[0].endswith('_id') and ar[0] != 'res_id':
+                str = ar[0].replace('_id','')
+            else:
+                str = ar[0]
             i = 0
             for sub_prop in ar:
                 field_type = object._fields[sub_prop].type

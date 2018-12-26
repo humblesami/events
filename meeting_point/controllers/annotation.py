@@ -202,6 +202,7 @@ class annotation(http.Controller):
 
             point = kw.get('point')
             comment = point['comment']
+            notification = kw.get('notification')
 
             modal = types['point']
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
@@ -216,7 +217,6 @@ class annotation(http.Controller):
             comment['point_id'] = point_id.id
             req_env[modal].create(comment)
 
-
             doc_type = kw.get('doc_type')
             res_id = kw.get('res_id')
             res_id = int(res_id)
@@ -224,11 +224,13 @@ class annotation(http.Controller):
             meeting = False
             topic_name = False
             if doc_type == 'topic':
+                notification['res_model'] = 'meeting_point.topicdoc'
                 topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
                 meeting = topic_doc.topic_id.meeting_id
                 topic_name = topic_doc.topic_id.name
                 docname = topic_doc.name
             elif doc_type == 'meeting':
+                notification['res_model'] = 'meeting_point.doc'
                 meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
                 meeting = meeting_doc.meeting_id
                 docname = meeting_doc.name
@@ -243,10 +245,16 @@ class annotation(http.Controller):
                 if cid != uid:
                     ids.append(cid)
 
+            res = ws_methods.addNotification(notification, ids)
+            props = ['id', 'content', 'res_model', 'res_id', 'client_route']
+            notification_object = ws_methods.object_to_json_object(res, props)
+            notification_object['user_id'] = notification.get('user_id')
+
             res = {'meta': {'meeting': meeting.name, 'doc': docname}, 'point_id':point['uuid'], 'res_id' : res_id }
             if topic_name:
                 res['meta']['topic'] = topic_name
             res['attendees'] = ids
+            res['notification'] = notification_object
 
             return ws_methods.http_response('', res)
         except:

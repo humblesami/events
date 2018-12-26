@@ -37,6 +37,29 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/update-notify-status', type='http', auth='public', csrf=False, cors='*')
+    def update_notification_status(self, **kw):
+        try:
+            kw = kw['data']
+            data = json.loads(kw)
+            notification = data['notification']
+            uid = ws_methods.check_auth(data)
+            if not uid:
+                return ws_methods.not_logged_in()
+
+            req_env = http.request.env
+            filter = [('res_model','=',notification['res_model']),('res_id','=',notification['res_id'])]
+            note_list = req_env['dn_base.notification'].search(filter)
+            ids = ws_methods.objects_list_to_array(note_list, 'id')
+
+
+            filter = [('notification_id', 'in',ids), ('user_id', '=', data['uid'])]
+            req_env['dn_base.notification.status'].sudo().search(filter).write({'read_status':True})
+
+            return ws_methods.http_response('Successfully Updated')
+        except:
+            return ws_methods.handle()
+
     @http.route('/reset-password', type='http', csrf=False, auth='public', cors='*')
     def reset_password(self, **kw):
         try:
@@ -53,7 +76,6 @@ class Controller(http.Controller):
                 return ws_methods.http_response('Invalid Token')
         except:
             return ws_methods.handle()
-
 
     @http.route('/api-token', type='http', csrf=False, auth='public', cors='*')
     def api_token(self, **kw):
@@ -81,7 +103,6 @@ class Controller(http.Controller):
         #http.request.env['mail.message'].sudo().search([('model', '=', 'calendar.event')]).unlink()
         return ws_methods.http_response('', 'Done')
 
-
     @http.route('/comment/add', type='http', csrf=False, auth='public', cors='*')
     def save_comment_http(self, **kw):
         return self.save_comment(kw)
@@ -99,6 +120,7 @@ class Controller(http.Controller):
             if not uid:
                 return ws_methods.http_response('Not authorized')
 
+            notification = values.get('notification')
             meeting_id = values.get('res_id')
             if not  meeting_id:
                 return ws_methods.http_response('Please provide meeting id')
@@ -149,21 +171,27 @@ class Controller(http.Controller):
                 return ws_methods.http_response('Not created')
             comment_id = res[0][0]
             user = req_env.user
-            comment = {
-                'id':comment_id,
-                'body': mesg_body,
-                'subtype':subtype_id,
-                'create_date': create_date,
-                'user':{'id':user.mp_user_id.id,'name':user.name, 'uid': str_uid},
-                'children':[],
-                'meeting' : meeting.name,
-                'res_id': meeting_id,
-                'attendees' : attendees
+            res = ws_methods.addNotification(notification, attendees)
+            props = ['id', 'content', 'res_model', 'res_id', 'client_route']
+            notification_object = ws_methods.object_to_json_object(res, props)
+            notification_object['user_id'] = notification.get('user_id')
+            data = {
+                'comment':{
+                    'id':comment_id,
+                    'body': mesg_body,
+                    'subtype':subtype_id,
+                    'create_date': create_date,
+                    'user':{'id':user.mp_user_id.id,'name':user.name, 'uid': str_uid},
+                    'children':[],
+                    'meeting' : meeting.name,
+                    'res_id': meeting_id
+                },
+                'attendees' : attendees,
+                'notification': notification_object
             }
-            return ws_methods.http_response('', comment)
+            return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()
-
 
     @http.route('/comment/delete', type='http', csrf=False, auth='none', cors='*')
     def delete_comment_http(self, **kw):
@@ -199,7 +227,6 @@ class Controller(http.Controller):
                 return ws_methods.http_response(res)
         except:
             return ws_methods.handle()
-
 
     @http.route('/dn_base/update_seen_by', csrf=False)
     def update_seen_by(self, **kw):
@@ -277,5 +304,19 @@ class MyBinary(Binary):
                 return ws_methods.http_response('','success')
             else:
                 return ws_methods.http_response('Invalid Password')
+        except:
+            return ws_methods.handle()
+
+    @http.route('/del-all', type="http", csrf=False, cors='*')
+    def deleteModelRecords(self, **kw):
+        try:
+            uid = http.request.uid
+            if uid !=1:
+                return ws_methods.http_response("You are not allowed to profoem this action.")
+            req_env = http.request.env
+            model = kw.get('model')
+            req_env[model].search([]).unlink()
+
+            return ws_methods.http_response('', 'Successfully saved')
         except:
             return ws_methods.handle()
