@@ -50,7 +50,7 @@ def execute_upd(query):
 def execute_read(query):
     cr = request.env.cr
     cr.execute(query)
-    res = cr.fetchall()
+    res = cr.dictfetchall()
     return res
 
 def http_response(er, data=False):

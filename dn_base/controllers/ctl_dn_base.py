@@ -160,11 +160,10 @@ class Controller(http.Controller):
 
             authorId = req_env['res.users'].search([('id','=',uid)]).partner_id.id
             max_comment_id = 0
-            query = 'select max(id) from mail_message where create_uid = '+ str_uid
+            query = 'select max(id) as comment_id from mail_message where create_uid = '+ str_uid
             res = ws_methods.execute_read(query)
             if len(res) > 0:
-                if res[0][0]:
-                    max_comment_id = res[0][0]
+                max_comment_id = res[0]['comment_id']
 
             create_date = dn_dt.nowStr()
             table_time = datetime.datetime.now()
@@ -178,8 +177,8 @@ class Controller(http.Controller):
                     (model_name, meeting_id, mesg_body, 'comment', subtype_id, parent_id, uid, table_time,table_time,table_time,authorId))
 
             str_comment_id = str(max_comment_id)
-            query = 'select id,create_date,create_uid from mail_message where id > '+str_comment_id+' and create_uid = '+str_uid
-            res = ws_methods.execute_read(query)
+            query = 'select id,create_date,create_uid,parent_id from mail_message where id > '+str_comment_id+' and create_uid = '+str_uid
+            added_comment = ws_methods.execute_read(query)
             attendees = []
             meeting = req_env['calendar.event'].sudo().search([('id', '=', meeting_id)])
             partners = meeting.partner_ids
@@ -189,13 +188,14 @@ class Controller(http.Controller):
                         attendees.append(partner.user_id.id)
                 except:
                     a = 1
-            if len(res) == 0:
+            if len(added_comment) == 0:
                 return ws_methods.http_response('Not created')
-            comment_id = res[0][0]
+            added_comment = added_comment[0]
+            comment_id = added_comment['id']
             user = req_env.user
-            res = ws_methods.addNotification(notification, attendees)
+            note = ws_methods.addNotification(notification, attendees)
             props = ['id', 'content', 'res_model', 'res_id', 'client_route']
-            notification_object = ws_methods.object_to_json_object(res, props)
+            notification_object = ws_methods.object_to_json_object(note, props)
             notification_object['user_id'] = notification.get('user_id')
             data = {
                 'comment':{
@@ -211,6 +211,10 @@ class Controller(http.Controller):
                 'attendees' : attendees,
                 'notification': notification_object
             }
+            if added_comment['parent_id']:
+                data['comment']['parent_id'] = added_comment['parent_id']
+
+
             return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()
