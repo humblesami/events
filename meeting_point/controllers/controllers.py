@@ -423,8 +423,7 @@ class meeting(http.Controller):
         return location
 
     # Public signature
-    @http.route(['/meeting_point/sign/<string:token>'],
-                type='http', auth='public', website=True)
+    @http.route(['/meeting_point/sign/<string:token>'], type='http', auth='public', website=True)
     def start_sign(self,token=None, **post):
         if not token:
             return
@@ -514,3 +513,38 @@ class meeting(http.Controller):
             return ws_methods.http_response('', dataValue[0]['data'])
         except Exception:
             ws_methods.handle()
+
+    @http.route('/get-allusers', type="http", auth='public', csrf=False, cors='*')
+    def fetch_all_users(self,**kw):
+        try:
+            # data = kw.get('data')
+            # kw = json.loads(data)
+            #
+            # uid = ws_methods.check_auth(kw)
+            # if not uid:
+            #     return ws_methods.not_logged_in()
+            # req_env = http.request.env
+            # filter = [('publish', '=', True),('archived', '=', False)]
+            # res = req_env['calendar.event'].search(filter)
+            res = [{
+                "name":'John',
+                "id": 1
+                },
+                {
+                    "name": 'Dav',
+                    "id": 2
+                },
+                {
+                    "name": 'Jim',
+                    "id": 3
+                },
+                {
+                    "name": 'Zack',
+                    "id": 4
+                }
+            ]
+            return ws_methods.http_response('', res)
+        except Exception:
+            ws_methods.handle()
+
+
