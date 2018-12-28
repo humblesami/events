@@ -540,7 +540,7 @@ class meeting(http.Controller):
             for looper in finalData:
                 data = req_env['res.users'].sudo().search([('partner_id', '=', looper)])
                 dataJson['name'] = data.name
-                dataJson['uid'] = data.id
+                dataJson['id'] = data.id
                 dataJson['image'] = base_url + '/dn/content_file/res.users/'+str(data.id)+'/image_small'
                 db_filters = [('sender', '=', data.id), ('to', '=', uid), ('read_status', '=', False)]
                 dataJson['count'] = req_env['odoochat.messages'].search_count(db_filters)
