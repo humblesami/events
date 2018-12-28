@@ -8,3 +8,4 @@ class odoochat(models.Model):
     sender = fields.Integer()
     to = fields.Integer()
     content = fields.Char()
+    read_status = fields.Boolean(default=False)

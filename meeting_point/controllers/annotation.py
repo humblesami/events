@@ -250,7 +250,7 @@ class annotation(http.Controller):
             notification_object = ws_methods.object_to_json_object(res, props)
             notification_object['user_id'] = notification.get('user_id')
 
-            res = {'meta': {'meeting': meeting.name, 'doc': docname}, 'point_id':point['uuid'], 'res_id' : res_id }
+            res = {'meta': {'meeting': meeting.name, 'doc': docname}, 'model':notification['res_model'], 'point_id':point['uuid'], 'res_id' : res_id }
             if topic_name:
                 res['meta']['topic'] = topic_name
             res['attendees'] = ids

@@ -15,6 +15,9 @@ class Oddochat(http.Controller):
             sender = uid
             to = kw.get('target_id')
 
+            filters = [('sender','=',to), ('to','=',sender)]
+            req_env['odoochat.messages'].sudo().search(filters).write({'read_status':True})
+
             db_filters = [('sender', 'in', [sender, to]), ('to', 'in', [to, sender])]
             count = req_env['odoochat.messages'].search_count(db_filters)
             offset = count - 20
@@ -60,6 +63,10 @@ class Oddochat(http.Controller):
             sender = msg.get('sender')
             to = msg.get('to')
             content = msg.get('content')
+            if msg.get('read_status'):
+                read_status = True
+            else:
+                read_status = False
             res = req_env['odoochat.messages'].create({'sender': sender, 'to': to, 'content': content})
 
             return ws_methods.http_response('', '1')
