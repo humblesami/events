@@ -544,7 +544,7 @@ class meeting(http.Controller):
                 dataJson['image'] = base_url + '/dn/content_file/res.users/'+str(data.id)+'/image_small'
 
                 groups = []
-                app_name = kw['appName']
+                app_name = kw['app_name']
                 for group in data.groups_id:
                     if app_name:
                         if app_name not in group.full_name:
