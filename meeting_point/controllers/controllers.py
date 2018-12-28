@@ -517,32 +517,30 @@ class meeting(http.Controller):
     @http.route('/get-allusers', type="http", auth='public', csrf=False, cors='*')
     def fetch_all_users(self,**kw):
         try:
-            # data = kw.get('data')
-            # kw = json.loads(data)
-            #
-            # uid = ws_methods.check_auth(kw)
-            # if not uid:
-            #     return ws_methods.not_logged_in()
-            # req_env = http.request.env
-            # filter = [('publish', '=', True),('archived', '=', False)]
+            data = kw.get('data')
+            kw = json.loads(data)
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+
+            req_env = http.request.env
+            partner  = req_env['res.partner'].search([ ('user_id', '=', uid)])
+            filters = [('publish', '=', True),('archived', '=', False)]
             # res = req_env['calendar.event'].search(filter)
-            res = [{
-                "name":'John',
-                "id": 1
-                },
-                {
-                    "name": 'Dav',
-                    "id": 2
-                },
-                {
-                    "name": 'Jim',
-                    "id": 3
-                },
-                {
-                    "name": 'Zack',
-                    "id": 4
-                }
-            ]
+            meetings = req_env['calendar.event'].search(filters).filtered(lambda r: partner in r.partner_ids)
+            partner_ids = []
+            for value in meetings:
+                partner_ids = partner_ids+value.partner_ids.ids
+            finalData = sorted(set(partner_ids))
+            dataJson ={}
+            res = []
+            for looper in finalData:
+                data = req_env['res.users'].sudo().search([('partner_id', '=', looper)])
+                dataJson['name'] = data.name
+                dataJson['uid'] = data.id
+                json_data = dataJson
+                res.append(json_data)
+            json.dumps(res)
             return ws_methods.http_response('', res)
         except Exception:
             ws_methods.handle()
