@@ -542,6 +542,21 @@ class meeting(http.Controller):
                 dataJson['name'] = data.name
                 dataJson['uid'] = data.id
                 dataJson['image'] = base_url + '/dn/content_file/res.users/'+str(data.id)+'/image_small'
+
+                groups = []
+                app_name = kw['appName']
+                for group in data.groups_id:
+                    if app_name:
+                        if app_name not in group.full_name:
+                            continue
+                        else:
+                            groups.append(group.full_name)
+                            if group.name != 'MeetingPoint':
+                                type  = group.name
+                    else:
+                        groups.append(group.full_name)
+                dataJson['group'] = groups
+                dataJson['type'] = type
                 finaleData.append(dataJson)
                 dataJson = {}
             json.dumps(finaleData)
