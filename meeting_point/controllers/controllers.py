@@ -1,6 +1,9 @@
 import os
 import json
 import base64
+
+import werkzeug
+
 from odoo import http
 import datetime as dateval
 from odoo.http import request
@@ -522,7 +525,6 @@ class meeting(http.Controller):
             uid = ws_methods.check_auth(kw)
             if not uid:
                 return ws_methods.not_logged_in()
-
             req_env = http.request.env
             partner  = req_env['res.partner'].search([ ('user_id', '=', uid)])
             filters = [('publish', '=', True),('archived', '=', False)]
@@ -533,15 +535,17 @@ class meeting(http.Controller):
                 partner_ids = partner_ids+value.partner_ids.ids
             finalData = sorted(set(partner_ids))
             dataJson ={}
-            res = []
+            finaleData = []
+            base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
             for looper in finalData:
                 data = req_env['res.users'].sudo().search([('partner_id', '=', looper)])
                 dataJson['name'] = data.name
                 dataJson['uid'] = data.id
-                json_data = dataJson
-                res.append(json_data)
-            json.dumps(res)
-            return ws_methods.http_response('', res)
+                dataJson['image'] = base_url + '/dn/content_file/res.users/'+str(data.id)+'/image_small'
+                finaleData.append(dataJson)
+                dataJson = {}
+            json.dumps(finaleData)
+            return ws_methods.http_response('', finaleData)
         except Exception:
             ws_methods.handle()
 
