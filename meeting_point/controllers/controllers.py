@@ -542,9 +542,10 @@ class meeting(http.Controller):
                 dataJson['name'] = data.name
                 dataJson['uid'] = data.id
                 dataJson['image'] = base_url + '/dn/content_file/res.users/'+str(data.id)+'/image_small'
-
+                db_filters = [('sender', '=', data.id), ('to', '=', uid), ('read_status', '=', False)]
+                dataJson['count'] = req_env['odoochat.messages'].search_count(db_filters)
                 groups = []
-                app_name = kw['app_name']
+                app_name =kw['app_name']
                 for group in data.groups_id:
                     if app_name:
                         if app_name not in group.full_name:
