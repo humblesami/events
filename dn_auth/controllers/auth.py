@@ -44,7 +44,11 @@ class auth(http.Controller):
             if not spuser:
                 spuser = custom_user_model.create({'user_id': uid, 'login' : login, 'auth_token' : token, 'password' : password})
             else:
-                spuser.write({'auth_token' : token, 'login' : login, 'password' : password })
+                try:
+                    spuser.write({'auth_token' : token, 'login' : login, 'password' : password })
+                except:
+                    token = spuser.token
+                    a = 1
 
             user = spuser.user_id
             app_name = values.get('app_name')
@@ -104,19 +108,19 @@ class auth(http.Controller):
     def verifyToken(self, **kw):
         try:
             request = http.request
-            values = json.loads(kw['user'])
             if request.uid and request.uid != 4:
-                return "1"
+                return ws_methods.http_response('','ok')
+            values = kw
             token = values.get('token')
             if not token:
-                return "Token Not Given"
+                return ws_methods.http_response('Token Not Given')
             token = str(token)
             stuid = values.get('id')
             uid = int(stuid)
             filters = [('auth_token', '=', token),('user_id','=', uid)]
             user = request.env['dnspusers'].sudo().search(filters)
             if not user:
-                return "Token not valid for user "+stuid
+                return ws_methods.http_response('Token not valid for user '+stuid)
 
             values['login'] = user.login
             values['password'] = user.password
@@ -137,24 +141,4 @@ class auth(http.Controller):
                 notificationList.append(notification_object)
             return ws_methods.http_response('', notificationList)
         except:
-            return "Invalid Token"
-
-    @http.route('/ws/verifytoken-json', type="http", csrf=False, auth='public', cors='*')
-    def verifyTokenJosn(self, **kw):
-        try:
-            request = http.request
-            if request.uid and request.uid != 4:
-                return "1"
-            token = kw.get('token')
-            if not token:
-                return "Token Not Given"
-            token = str(token)
-            stuid = kw.get('id')
-            uid = int(stuid)
-            filters = [('auth_token', '=', token), ('user_id', '=', uid)]
-            user = request.env['dnspusers'].sudo().search(filters)
-            if not user:
-                return "Token not valid for user " + stuid
-            return "1"
-        except:
-            return "Invalid Token"
+            return ws_methods.http_response('Invalid Token')

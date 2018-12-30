@@ -22,6 +22,22 @@ class MyWebsite(Website):
 
 class Controller(http.Controller):
 
+    @http.route('/socket_request', type='http', csrf=False, auth='public', cors='*')
+    def socket_request(self, **kw):
+        try:
+            kw = json.loads(kw['input_data'])
+            auth = kw.get('auth')
+            data = kw.get('req_data')
+            time_zone = kw.get('time_zone')
+            forward_url = kw.get('function_url')
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+            res = http.local_redirect(forward_url, data)
+            return res
+        except:
+            return ws_methods.handle()
+
     @http.route('/model/binary', auth='public', csrf=False, cors='*')
     def model_binary_http(self, **kw):
         doc = self.model_binary(kw)
