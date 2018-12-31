@@ -144,8 +144,11 @@ class auth(http.Controller):
             friendIds = []
             friendList = []
             meetingList = []
-            filters = [('im_attendee', '=', 'yes'), ('publish', '=', True), ('archived', '=', False)]
+            partner_id = req_env.user.partner_id.id
+            filters = [('partner_id', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
             meetings = request.env['calendar.event'].search(filters)
+
+            base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
             for obj in meetings:
 
                 attendees = []
@@ -156,7 +159,7 @@ class auth(http.Controller):
                         friend = {
                             'id': friendObj.id,
                             'name' : friendObj.name,
-                            'image': friendObj.image_samll,
+                            'image': base_url + '/dn/content_file/res.users/'+str(friendObj.id)+'/image_small',
                         }
                         if friendObj.has_group('meeting_point.group_meeting_staff'):
                             friend['type'] = 'staff'
@@ -164,7 +167,7 @@ class auth(http.Controller):
                             friend['type'] = 'director'
 
                         db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
-                        friend['unseen'] = req_env['odoochat.messages'].search_count(db_filters)
+                        friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
 
                         friendList.append(friend)
                         friendIds.append(friendObj.id)
@@ -180,4 +183,4 @@ class auth(http.Controller):
 
             return ws_methods.http_response('', {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList})
         except:
-            return ws_methods.http_response('Invalid Token')
+            return ws_methods.handle()
