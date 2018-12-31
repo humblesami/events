@@ -210,7 +210,7 @@ class auth(http.Controller):
 
             uid = ws_methods.authenticate(values)
             if uid:
-                return ws_methods.http_response('', 1)
+                return ws_methods.http_response('', 'ok')
             else:
                 return ws_methods.http_response('Session expired')
         except:
