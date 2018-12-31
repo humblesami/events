@@ -127,6 +127,7 @@ class auth(http.Controller):
             values['password'] = user.password
 
             uid = ws_methods.authenticate(values)
+            req_env = request.env
             filters = [('user_id', '=', uid),('read_status','=',False)]
 
             note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
@@ -145,7 +146,7 @@ class auth(http.Controller):
             friendList = []
             meetingList = []
             partner_id = req_env.user.partner_id.id
-            filters = [('partner_id', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
+            filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
             meetings = request.env['calendar.event'].search(filters)
 
             base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
