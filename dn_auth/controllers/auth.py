@@ -129,7 +129,7 @@ class auth(http.Controller):
             uid = ws_methods.authenticate(values)
             filters = [('user_id', '=', uid),('read_status','=',False)]
 
-            note_statuses = req_env['dn_base.notification.status'].search(filters)
+            note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
             props = ['id', 'read_status', 'user_id', 'notification_id']
             status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
             notificationList = []
@@ -144,12 +144,13 @@ class auth(http.Controller):
             friendIds = []
             friendList = []
             meetingList = []
-            filters = [('im_attendee', '=', 'yes', 'publish', '=', True, 'archived', '=', False)]
+            filters = [('im_attendee', '=', 'yes'), ('publish', '=', True), ('archived', '=', False)]
             meetings = request.env['calendar.event'].search(filters)
             for obj in meetings:
 
                 attendees = []
                 for partner in obj.partner_ids:
+
                     if partner.user_id.id not in friendIds:
                         friendObj = partner.user_id
                         friend = {
@@ -176,6 +177,7 @@ class auth(http.Controller):
                     'attendees' : attendees
                 }
                 meetingList.append(event)
+
             return ws_methods.http_response('', {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList})
         except:
             return ws_methods.http_response('Invalid Token')
