@@ -104,13 +104,13 @@ class auth(http.Controller):
             res = ''
         return res
 
-    @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
-    def verifyToken(self, **kw):
+    @http.route('/ws/verifytoken-socket', type="json", csrf=False,  auth='public', cors='*')
+    def verifyTokenSocket(self, **kw):
         try:
             request = http.request
             if request.uid and request.uid != 4:
                 return ws_methods.http_response('','ok')
-            values = kw
+            values = request.jsonrequest
             token = values.get('token')
             if not token:
                 return ws_methods.http_response('Token Not Given')
@@ -183,5 +183,35 @@ class auth(http.Controller):
                 meetingList.append(event)
 
             return ws_methods.http_response('', {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList})
+        except:
+            return ws_methods.handle()
+
+    @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
+    def verifyToken(self, **kw):
+        try:
+            request = http.request
+            if request.uid and request.uid != 4:
+                return ws_methods.http_response('', 'ok')
+            values = kw
+            token = values.get('token')
+            if not token:
+                return ws_methods.http_response('Token Not Given')
+            token = str(token)
+            stuid = values.get('id')
+            uid = int(stuid)
+            req_env = request.env
+            filters = [('auth_token', '=', token), ('user_id', '=', uid)]
+            user = req_env['dnspusers'].sudo().search(filters)
+            if not user:
+                return ws_methods.http_response('Token not valid for user ' + stuid)
+
+            values['login'] = user.login
+            values['password'] = user.password
+
+            uid = ws_methods.authenticate(values)
+            if uid:
+                return ws_methods.http_response('', 1)
+            else:
+                return ws_methods.http_response('Session expired')
         except:
             return ws_methods.handle()

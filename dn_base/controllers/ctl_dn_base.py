@@ -1,7 +1,8 @@
-import datetime
 import json
 import base64
+import requests
 import werkzeug
+import datetime
 from odoo import http
 from odoo.http import request
 from werkzeug.utils import redirect
@@ -34,6 +35,26 @@ class Controller(http.Controller):
             if not uid:
                 return ws_methods.not_logged_in()
             res = http.local_redirect(forward_url, data)
+            return res
+        except:
+            return ws_methods.handle()
+
+    @http.route('/socket_request-json', type='json', csrf=False, auth='public', cors='*')
+    def socket_request_json(self):
+        try:
+            kw = request.jsonrequest
+            auth = kw.get('auth')
+            data = kw.get('req_data')
+            time_zone = kw.get('time_zone')
+            forward_url = kw.get('function_url')
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+            url = request.httprequest.host_url+forward_url
+            res = requests.post(url, json=data)
+            res = res.content.decode('utf8').replace("'", '"')
+            res = json.loads(res)
+            res = res['result']
             return res
         except:
             return ws_methods.handle()
