@@ -117,8 +117,9 @@ class auth(http.Controller):
             token = str(token)
             stuid = values.get('id')
             uid = int(stuid)
+            req_env = request.env
             filters = [('auth_token', '=', token),('user_id','=', uid)]
-            user = request.env['dnspusers'].sudo().search(filters)
+            user = req_env['dnspusers'].sudo().search(filters)
             if not user:
                 return ws_methods.http_response('Token not valid for user '+stuid)
 
@@ -128,17 +129,53 @@ class auth(http.Controller):
             uid = ws_methods.authenticate(values)
             filters = [('user_id', '=', uid),('read_status','=',False)]
 
-            note_statuses = request.env['dn_base.notification.status'].search(filters)
+            note_statuses = req_env['dn_base.notification.status'].search(filters)
             props = ['id', 'read_status', 'user_id', 'notification_id']
             status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
             notificationList = []
             for note in status_list:
-                note_data = request.env['dn_base.notification'].search([('id','=',note['notification'].id)], order='create_date desc')
+                note_data = req_env['dn_base.notification'].search([('id','=',note['notification'].id)], order='create_date desc')
                 props = ['id', 'content', 'res_model', 'res_id', 'client_route']
                 notification_object = ws_methods.object_to_json_object(note_data[0], props)
                 notification_object['read_status'] = note['read_status']
                 notification_object['user_id'] = note['user'].id
                 notificationList.append(notification_object)
-            return ws_methods.http_response('', notificationList)
+
+            friendIds = []
+            friendList = []
+            meetingList = []
+            filters = [('im_attendee', '=', 'yes', 'publish', '=', True, 'archived', '=', False)]
+            meetings = request.env['calendar.event'].search(filters)
+            for obj in meetings:
+
+                attendees = []
+                for partner in obj.partner_ids:
+                    if partner.user_id.id not in friendIds:
+                        friendObj = partner.user_id
+                        friend = {
+                            'id': friendObj.id,
+                            'name' : friendObj.name,
+                            'image': friendObj.image_samll,
+                        }
+                        if friendObj.has_group('meeting_point.group_meeting_staff'):
+                            friend['type'] = 'staff'
+                        else:
+                            friend['type'] = 'director'
+
+                        db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
+                        friend['unseen'] = req_env['odoochat.messages'].search_count(db_filters)
+
+                        friendList.append(friend)
+                        friendIds.append(friendObj.id)
+
+                    attendees.append(partner.user_id.id)
+
+                event = {
+                    'id' : obj.id,
+                    'name' : obj.name,
+                    'attendees' : attendees
+                }
+                meetingList.append(event)
+            return ws_methods.http_response('', {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList})
         except:
             return ws_methods.http_response('Invalid Token')

@@ -562,7 +562,7 @@ class meeting(http.Controller):
                 dataJson = {}
             json.dumps(finaleData)
             return ws_methods.http_response('', finaleData)
-        except Exception:
+        except:
             ws_methods.handle()
 
 
