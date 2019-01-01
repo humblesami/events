@@ -51,6 +51,8 @@ class Controller(http.Controller):
             if not uid:
                 return ws_methods.not_logged_in()
             data['uid'] = uid
+            data['db'] = auth['db']
+            data['token'] = auth['token']
             url = request.httprequest.host_url+forward_url
             res = requests.post(url, json=data)
             res = res.content.decode('utf8')
@@ -177,9 +179,9 @@ class Controller(http.Controller):
         try:
             if 'data' in values:
                 values = json.loads(values['data'])
-            # uid = ws_methods.check_auth(values)
-            # if not uid:
-            #     return ws_methods.http_response('Not authorized')
+            uid = ws_methods.check_auth(values)
+            if not uid:
+                return ws_methods.http_response('Not authorized')
 
             notification = values.get('notification')
             meeting_id = values.get('res_id')
