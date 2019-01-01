@@ -50,11 +50,13 @@ class Controller(http.Controller):
             uid = ws_methods.check_auth(auth)
             if not uid:
                 return ws_methods.not_logged_in()
+            data['uid'] = uid
             url = request.httprequest.host_url+forward_url
             res = requests.post(url, json=data)
-            res = res.content.decode('utf8').replace("'", '"')
+            res = res.content.decode('utf8')
             res = json.loads(res)
-            res = res['result']
+            if res['result']:
+                res = res['result']
             return res
         except:
             return ws_methods.handle()
@@ -175,9 +177,9 @@ class Controller(http.Controller):
         try:
             if 'data' in values:
                 values = json.loads(values['data'])
-            uid = ws_methods.check_auth(values)
-            if not uid:
-                return ws_methods.http_response('Not authorized')
+            # uid = ws_methods.check_auth(values)
+            # if not uid:
+            #     return ws_methods.http_response('Not authorized')
 
             notification = values.get('notification')
             meeting_id = values.get('res_id')
@@ -192,7 +194,7 @@ class Controller(http.Controller):
             parent_id = values.get('parent_id')
             req_env = http.request.env
             mesg_body = values['body']
-
+            uid = values['uid']
             str_uid = str(uid)
 
             authorId = req_env['res.users'].search([('id','=',uid)]).partner_id.id

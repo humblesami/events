@@ -1,5 +1,6 @@
 import json
 from odoo import http
+from odoo.http import request
 from odoo.addons.dn_base import ws_methods
 
 class Oddochat(http.Controller):
@@ -51,14 +52,11 @@ class Oddochat(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/save-message', type="http", csrf=False, auth='public', cors='*')
+    @http.route('/save-message', type="json", csrf=False, auth='public', cors='*')
     def set(self, **kw):
         try:
-            values = json.loads(kw['user'])
+            values = request.jsonrequest
             msg = values.get('msg')
-            uid = ws_methods.check_auth(values)
-            if not uid:
-                return ws_methods.not_logged_in()
             req_env = http.request.env
             sender = msg.get('sender')
             to = msg.get('to')
@@ -67,7 +65,7 @@ class Oddochat(http.Controller):
                 read_status = True
             else:
                 read_status = False
-            res = req_env['odoochat.messages'].create({'sender': sender, 'to': to, 'content': content})
+            res = req_env['odoochat.messages'].sudo().create({'sender': sender, 'to': to, 'content': content})
 
             return ws_methods.http_response('', '1')
         except:
