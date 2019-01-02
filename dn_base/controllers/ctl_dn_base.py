@@ -100,24 +100,22 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/update-notify-status', type='http', auth='public', csrf=False, cors='*')
+    @http.route('/update-notify-status', type='json', auth='public', csrf=False, cors='*')
     def update_notification_status(self, **kw):
         try:
-            kw = kw['data']
-            data = json.loads(kw)
-            notification = data['notification']
-            uid = ws_methods.check_auth(data)
+            values = http.request.jsonrequest
+            uid = ws_methods.check_auth(values)
             if not uid:
                 return ws_methods.not_logged_in()
 
             req_env = http.request.env
-            filter = [('res_model','=',notification['res_model']),('res_id','=',notification['res_id'])]
+            filter = [('res_model','=',values['res_model']),('res_id','=',values['res_id'])]
             note_list = req_env['dn_base.notification'].search(filter)
             ids = ws_methods.objects_list_to_array(note_list, 'id')
 
 
-            filter = [('notification_id', 'in',ids), ('user_id', '=', data['uid'])]
-            req_env['dn_base.notification.status'].sudo().search(filter).write({'read_status':True})
+            filter = [('notification_id', 'in',ids), ('user_id', '=', values['uid'])]
+            req_env['dn_base.notification.status'].search(filter).write({'read_status':True})
 
             return ws_methods.http_response('Successfully Updated')
         except:
