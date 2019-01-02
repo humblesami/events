@@ -31,6 +31,20 @@ class Oddochat(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/set-message-status', type="http", csrf=False, auth='public', cors='*')
+    def setMessageStatus(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            req_env = http.request.env
+            message_id = kw.get('message_id')
+            filters = [('id', '=', message_id)]
+            req_env['odoochat.messages'].sudo().search(filters).write({'read_status': True})
+            return ws_methods.http_response('', 'ok')
+        except:
+            return ws_methods.handle()
+
     @http.route('/get-messages', type="http", csrf=False, auth='public', cors='*')
     def getFiteredMessages(self, **kw):
         try:
@@ -53,20 +67,14 @@ class Oddochat(http.Controller):
             return ws_methods.handle()
 
     @http.route('/save-message', type="json", csrf=False, auth='public', cors='*')
-    def set(self, **kw):
+    def set(self):
         try:
             values = request.jsonrequest
-            msg = values.get('msg')
             req_env = http.request.env
-            sender = msg.get('sender')
-            to = msg.get('to')
-            content = msg.get('content')
-            if msg.get('read_status'):
-                read_status = True
-            else:
-                read_status = False
-            res = req_env['odoochat.messages'].sudo().create({'sender': sender, 'to': to, 'content': content})
-
-            return ws_methods.http_response('', '1')
+            sender = values.get('sender')
+            to = values.get('to')
+            content = values.get('content')
+            message = req_env['odoochat.messages'].sudo().create({'sender': sender, 'to': to, 'content': content})
+            return ws_methods.http_response('',  message.id)
         except:
             return ws_methods.handle()

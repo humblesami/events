@@ -45,14 +45,22 @@ class Controller(http.Controller):
             kw = request.jsonrequest
             auth = kw.get('auth')
             data = kw.get('req_data')
+            if not data:
+                data = kw
             time_zone = kw.get('time_zone')
             forward_url = kw.get('function_url')
-            uid = ws_methods.check_auth(auth)
+            if auth and auth.get('token'):
+                uid = ws_methods.check_auth(auth)
+                data['uid'] = uid
+                data['db'] = auth['db']
+                data['token'] = auth['token']
+            else:
+                if not data.get('uid'):
+                    data['uid'] = data['id']
+                uid = ws_methods.check_auth(data)
             if not uid:
                 return ws_methods.not_logged_in()
-            data['uid'] = uid
-            data['db'] = auth['db']
-            data['token'] = auth['token']
+
             url = request.httprequest.host_url+forward_url
             res = requests.post(url, json=data)
             res = res.content.decode('utf8')

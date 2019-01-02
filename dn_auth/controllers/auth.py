@@ -1,4 +1,3 @@
-import json
 import odoo
 import string
 import random
@@ -18,17 +17,17 @@ class auth(http.Controller):
 
     def authenticate(self, values):
         try:
-            db = False
+            db = values.get('db')
             if not 'db' in values:
                 return ws_methods.http_response('No database selected')
-            else:
-                db = values['db']
             if 'data' in values:
                 values = values['data']
-            if not 'login' in values or 'password' not in values:
+
+            login = values.get('login')
+            password = values.get('password')
+            if not login or not password:
                 return ws_methods.http_response('Please provide login and password')
-            login = values['login']
-            password = str(values['password'])
+            password = str(password)
 
             request = http.request
             try:
@@ -82,8 +81,7 @@ class auth(http.Controller):
                     'session': request.session.sid
                 }
                 try:
-                    d = request.env['login.info'].create(vals)
-                    d = 1
+                    request.env['login.info'].create(vals)
                 except:
                     return ws_methods.handle()
             return ws_methods.http_response('', {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': user_photo,'groups':groups })
@@ -104,29 +102,37 @@ class auth(http.Controller):
             res = ''
         return res
 
+    def verifyToken(self, values):
+        request = http.request
+        token = values.get('token')
+        uid = values.get('id')
+        if not token or not uid:
+            return 'Token or id Not Given'
+        token = str(token)
+        uid = int(uid)
+
+        req_env = request.env
+        filters = [('auth_token', '=', token), ('user_id', '=', uid)]
+        user = req_env['dnspusers'].sudo().search(filters)
+        if not user:
+            str_uid = str(uid)
+            return 'Token not valid for user ' + str_uid
+
+        values['login'] = user.login
+        values['password'] = user.password
+        uid = ws_methods.authenticate(values)
+        return uid
+
     @http.route('/ws/verifytoken-socket', type="json", csrf=False,  auth='public', cors='*')
     def verifyTokenSocket(self, **kw):
         try:
             request = http.request
-            if request.uid and request.uid != 4:
-                return ws_methods.http_response('','ok')
             values = request.jsonrequest
-            token = values.get('token')
-            if not token:
-                return ws_methods.http_response('Token Not Given')
-            token = str(token)
-            stuid = values.get('id')
-            uid = int(stuid)
-            req_env = request.env
-            filters = [('auth_token', '=', token),('user_id','=', uid)]
-            user = req_env['dnspusers'].sudo().search(filters)
-            if not user:
-                return ws_methods.http_response('Token not valid for user '+stuid)
 
-            values['login'] = user.login
-            values['password'] = user.password
+            uid = self.verifyToken(values)
+            if type(uid) is not int:
+                return ws_methods.http_response(uid)
 
-            uid = ws_methods.authenticate(values)
             req_env = request.env
             filters = [('user_id', '=', uid),('read_status','=',False)]
 
@@ -143,8 +149,9 @@ class auth(http.Controller):
                 notificationList.append(notification_object)
 
             friendIds = []
-            friendList = []
+            friendList = {}
             meetingList = []
+            unseenMessages = 0
             partner_id = req_env.user.partner_id.id
             filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
             meetings = request.env['calendar.event'].search(filters)
@@ -154,8 +161,8 @@ class auth(http.Controller):
 
                 attendees = []
                 for partner in obj.partner_ids:
-
-                    if partner.user_id.id not in friendIds:
+                    obj_id = partner.user_id.id
+                    if obj_id != uid and obj_id not in friendIds:
                         friendObj = partner.user_id
                         friend = {
                             'id': friendObj.id,
@@ -169,8 +176,9 @@ class auth(http.Controller):
 
                         db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
                         friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
+                        unseenMessages += friend['unseen']
 
-                        friendList.append(friend)
+                        friendList[friend['id']] = friend
                         friendIds.append(friendObj.id)
 
                     attendees.append(partner.user_id.id)
@@ -182,36 +190,20 @@ class auth(http.Controller):
                 }
                 meetingList.append(event)
 
-            return ws_methods.http_response('', {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList})
+            res = {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList,
+                   'unseen': unseenMessages}
+            return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
 
     @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
-    def verifyToken(self, **kw):
+    def verifyTokenHttp(self, **kw):
         try:
-            request = http.request
-            if request.uid and request.uid != 4:
-                return ws_methods.http_response('', 'ok')
             values = kw
-            token = values.get('token')
-            if not token:
-                return ws_methods.http_response('Token Not Given')
-            token = str(token)
-            stuid = values.get('id')
-            uid = int(stuid)
-            req_env = request.env
-            filters = [('auth_token', '=', token), ('user_id', '=', uid)]
-            user = req_env['dnspusers'].sudo().search(filters)
-            if not user:
-                return ws_methods.http_response('Token not valid for user ' + stuid)
-
-            values['login'] = user.login
-            values['password'] = user.password
-
-            uid = ws_methods.authenticate(values)
-            if uid:
-                return ws_methods.http_response('', 'ok')
+            uid = self.verifyToken(values)
+            if type(uid) is not int:
+                return ws_methods.http_response(uid)
             else:
-                return ws_methods.http_response('Session expired')
+                return ws_methods.http_response('', 'ok')
         except:
             return ws_methods.handle()
