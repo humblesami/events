@@ -169,7 +169,7 @@ class auth(http.Controller):
                             'name' : friendObj.name,
                             'photo': base_url + '/dn/content_file/res.users/'+str(friendObj.id)+'/image_small',
                         }
-                        if friendObj.has_group('meeting_point.group_meeting_staff'):
+                        if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group('meeting_point.group_meeting_admin'):
                             friend['type'] = 'staff'
                         else:
                             friend['type'] = 'director'

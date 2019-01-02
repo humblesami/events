@@ -40,7 +40,7 @@ class Oddochat(http.Controller):
             req_env = http.request.env
             message_id = kw.get('message_id')
             filters = [('id', '=', message_id)]
-            req_env['odoochat.messages'].sudo().search(filters).write({'read_status': True})
+            res = req_env['odoochat.messages'].sudo().search(filters).write({'read_status': True})
             return ws_methods.http_response('', 'ok')
         except:
             return ws_methods.handle()
