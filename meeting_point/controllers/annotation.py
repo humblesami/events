@@ -2,6 +2,9 @@ import json
 from odoo import http
 from odoo.addons.dn_base import ws_methods
 
+from odoo.http import request
+
+
 class annotation(http.Controller):
 
     @http.route('/get-annotations', type="http", csrf=False, auth='public', cors='*')
@@ -189,25 +192,24 @@ class annotation(http.Controller):
             return ws_methods.handle()
 
 
-    @http.route('/save-comment-point', type="http", csrf=False, auth='public', cors='*')
+    @http.route('/save-comment-point', type="json", csrf=False, auth='public', cors='*')
     def addCommentAnnotation(self, **kw):
         try:
-            data = kw.get('data')
-            kw = json.loads(data)
+            kw = request.jsonrequest
 
             uid = ws_methods.check_auth(kw)
             if not uid:
                 return ws_methods.not_logged_in()
             req_env = http.request.env
 
-            point = kw.get('point')
+            point = kw['point']
             comment = point['comment']
-            notification = kw.get('notification')
+            notification = kw['notification']
 
             modal = types['point']
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
             if not point_id:
-                doc_name = kw.get('doc_id')
+                doc_name = kw['doc_id']
                 if not doc_name:
                     return ws_methods.http_response('Document id not given')
                 point['doc_name'] = doc_name
@@ -217,8 +219,8 @@ class annotation(http.Controller):
             comment['point_id'] = point_id.id
             req_env[modal].create(comment)
 
-            doc_type = kw.get('doc_type')
-            res_id = kw.get('res_id')
+            doc_type = kw['doc_type']
+            res_id = kw['res_id']
             res_id = int(res_id)
             docname = ''
             meeting = False
