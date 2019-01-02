@@ -115,7 +115,7 @@ class Controller(http.Controller):
 
 
             filter = [('notification_id', 'in',ids), ('user_id', '=', values['uid'])]
-            req_env['dn_base.notification.status'].search(filter).write({'read_status':True})
+            req_env['dn_base.notification.status'].sudo().search(filter).write({'read_status':True})
 
             return ws_methods.http_response('Successfully Updated')
         except:
