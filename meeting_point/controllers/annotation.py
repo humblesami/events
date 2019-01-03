@@ -208,12 +208,14 @@ class annotation(http.Controller):
 
             modal = types['point']
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
+            new_point = False
             if not point_id:
                 doc_name = kw['doc_id']
                 if not doc_name:
                     return ws_methods.http_response('Document id not given')
                 point['doc_name'] = doc_name
                 point_id = req_env[modal].create(point)
+                new_point = True
 
             modal = types['comment']
             comment['point_id'] = point_id.id
@@ -252,7 +254,15 @@ class annotation(http.Controller):
             notification_object = ws_methods.object_to_json_object(res, props)
             notification_object['user_id'] = notification.get('user_id')
 
-            res = {'meta': {'meeting': meeting.name, 'doc': docname}, 'model':notification['res_model'], 'point_id':point['uuid'], 'res_id' : res_id }
+            res = {'meta': {'meeting': meeting.name, 'doc': docname},
+                   'model':notification['res_model'],
+                   'point_id':point['uuid'],
+                   'res_id' : res_id,
+                   'x':point['x'],
+                   'y':point['y']
+                   }
+            if new_point:
+                res['new_point'] = 1
             if topic_name:
                 res['meta']['topic'] = topic_name
             res['attendees'] = ids
