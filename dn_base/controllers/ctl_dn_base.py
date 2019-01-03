@@ -87,8 +87,8 @@ class Controller(http.Controller):
             binary_model = values.get('model')
             binary_field = values.get('field')
             record = http.request.env[binary_model].search([('id', '=', res_id)])
-            file = record[0][binary_field]
-            res = ws_methods.http_response('', file)
+            file = record[0][binary_field].decode('utf-8')
+            res = ws_methods.http_response('', {'doc': file})
             return res
         except:
             return ws_methods.handle()
