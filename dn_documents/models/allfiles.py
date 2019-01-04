@@ -1,3 +1,4 @@
+
 import io
 import os
 import sys
@@ -8,7 +9,7 @@ import time
 import traceback
 from random import randint
 
-import minecart
+import pdf2image as pdf2image
 from PIL import Image
 from fpdf import FPDF
 from pytesseract import pytesseract
@@ -55,9 +56,9 @@ class AllFiles(models.Model):
     def apply_ocr(self):
         if self.filename.endswith(('png', 'jpg', 'jpeg')):
             t = threading.Thread(target=self.apply_ocr_image)
-        # else:
-        #     t = threading.Thread(target=self.apply_ocr_pdf)
-            t.start()
+        else:
+            t = threading.Thread(target=self.apply_ocr_pdf)
+        t.start()
 
 
     def apply_ocr_image(self):
@@ -73,9 +74,6 @@ class AllFiles(models.Model):
 
                 self.content=text
                 self.pdf_doc = res
-
-
-
             self._cr.commit()
             self._cr.close()
 
@@ -84,11 +82,12 @@ class AllFiles(models.Model):
             new_cr = self.pool.cursor()
             self = self.with_env(self.env(cr=new_cr))
             time.sleep(10)
-            if self.pdf_doc:
-                pdffile = io.BytesIO(base64.b64decode(self.pdf_doc))
-                doc = minecart.Document(pdffile)
-                page = doc.get_page(1)
-
+            if self.pdf_doc and not self.content:
+                images = pdf2image.convert_from_bytes(base64.b64decode(self.pdf_doc))
+                text = ''
+                for i in images:
+                    text += pytesseract.image_to_string(i)
+                self.content += text
 
             self._cr.commit()
             self._cr.close()
@@ -107,7 +106,6 @@ class AllFiles(models.Model):
                     values['content'] = content
             doc = super(AllFiles, self).create(values)
             if values.get("attachment"):
-                # if values['filename'].endswith(('png', 'jpg', 'jpeg')):
                 doc.apply_ocr()
             return doc
         except:
@@ -128,8 +126,7 @@ class AllFiles(models.Model):
                     values['content'] = content
             doc = super(AllFiles, self).write(values)
             if values.get("attachment"):
-                if values['filename'].endswith(('png', 'jpg', 'jpeg')):
-                    self.apply_ocr()
+                self.apply_ocr()
             return doc
         except:
             raise_dn_model_error("Error in file write \n")
@@ -199,14 +196,13 @@ class AllFiles(models.Model):
             laparams.word_margin = 1.0
             device = PDFPageAggregator(rsrcmgr, laparams=laparams)
             interpreter = PDFPageInterpreter(rsrcmgr, device)
-            extracted_text = ''
 
             for page in doc.get_pages():
                 interpreter.process_page(page)
                 layout = device.get_result()
                 for lt_obj in layout:
                     if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
-                        extracted_text += lt_obj.get_text()
+                        content += lt_obj.get_text()
 
             # print(content)
             if ext != "pdf":
