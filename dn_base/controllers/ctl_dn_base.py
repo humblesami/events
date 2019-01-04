@@ -108,6 +108,38 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/get-record-notifications', type='http', csrf=False, auth='public', cors='*')
+    def get_point_noteifications(self, **kw):
+        try:
+            auth = kw.get('auth')
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+
+            vals = kw.get('req_data')
+            req_env = http.request.env
+            notifications = req_env['dn_base.notification.status'].search([('user_id', '=', vals['user_id'])])
+            point_notifications = []
+
+            parent_id = vals.get('parent_id')
+            parent_model = vals.get('parent_model')
+            filters = []
+            for status in notifications:
+                filters = [('parent_id', '=', parent_id),
+                           ('parent_model', '=', parent_model),
+                           ('id', '=', status.notification_id)]
+                # else:
+                #     filters = [('res_id', '=', vals['res_id'], ('res_model', '=', vals['res_model'])]
+
+                noteList = req_env['dn_base.notification'].search(filters)
+                props = ['res_id']
+                noteObj = ws_methods.object_to_json_object(noteList[0], props)
+                noteObj['count'] = status.count
+                point_notifications.append(noteObj)
+
+        except:
+            return ws_methods.handle()
+
     @http.route('/update-notify-status', type='json', auth='public', csrf=False, cors='*')
     def update_notification_status(self, **kw):
         try:
@@ -123,7 +155,7 @@ class Controller(http.Controller):
 
 
             filter = [('notification_id', 'in',ids), ('user_id', '=', values['uid'])]
-            req_env['dn_base.notification.status'].sudo().search(filter).write({'read_status':True})
+            req_env['dn_base.notification.status'].sudo().search(filter).write({'count': 0})
 
             return ws_methods.http_response('Successfully Updated')
         except:

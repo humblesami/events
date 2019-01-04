@@ -123,6 +123,16 @@ class auth(http.Controller):
         uid = ws_methods.authenticate(values)
         return uid
 
+    @http.route('/ws/note', type="http", csrf=False,  auth='public', cors='*')
+    def note(self, **kw):
+        try:
+            request = http.request
+            res = request.env['dn_base.notification.status'].get_my_notifications()
+            return res
+        except:
+            ws_methods.handle()
+
+
     @http.route('/ws/verifytoken-socket', type="json", csrf=False,  auth='public', cors='*')
     def verifyTokenSocket(self, **kw):
         try:
@@ -134,17 +144,18 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
 
             req_env = request.env
-            filters = [('user_id', '=', uid),('read_status','=',False)]
+            filters = [('user_id', '=', uid),('counter','>',0)]
 
             note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
-            props = ['id', 'read_status', 'user_id', 'notification_id']
+            props = ['counter', 'user_id', 'notification_id']
             status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
             notificationList = []
             for note in status_list:
-                note_data = req_env['dn_base.notification'].search([('id','=',note['notification'].id)], order='create_date desc')
-                props = ['id', 'content', 'res_model', 'res_id', 'client_route']
+                note_data = req_env['dn_base.notification'].search([('id', '=', note['notification'].id)],
+                                                                   order='create_date desc')
+                props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
                 notification_object = ws_methods.object_to_json_object(note_data[0], props)
-                notification_object['read_status'] = note['read_status']
+                notification_object['count'] = note['counter']
                 notification_object['user_id'] = note['user'].id
                 notificationList.append(notification_object)
 

@@ -207,6 +207,7 @@ class annotation(http.Controller):
             notification = kw['notification']
 
             modal = types['point']
+            notification['res_model'] = modal
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
             new_point = False
             if not point_id:
@@ -217,6 +218,7 @@ class annotation(http.Controller):
                 point_id = req_env[modal].create(point)
                 new_point = True
 
+            notification['res_id'] = point_id['id']
             modal = types['comment']
             comment['point_id'] = point_id.id
             req_env[modal].create(comment)
@@ -228,13 +230,13 @@ class annotation(http.Controller):
             meeting = False
             topic_name = False
             if doc_type == 'topic':
-                notification['res_model'] = 'meeting_point.topicdoc'
+                notification['parent_model'] = 'meeting_point.topicdoc'
                 topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
                 meeting = topic_doc.topic_id.meeting_id
                 topic_name = topic_doc.topic_id.name
                 docname = topic_doc.name
             elif doc_type == 'meeting':
-                notification['res_model'] = 'meeting_point.doc'
+                notification['parent_model'] = 'meeting_point.doc'
                 meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
                 meeting = meeting_doc.meeting_id
                 docname = meeting_doc.name

@@ -16,23 +16,31 @@ def send_mail(mesgtosend):
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
 def addNotification(notify_data, targets):
-    try:
-        req_env = request.env
+    req_env = request.env
+    filters = [('res_model','=',notify_data.get('res_model')),('res_id','=',notify_data.get('res_id'))]
+    notify_res = req_env['dn_base.notification'].search(filters)
+
+    if len(notify_res) > 0:
+        for id in targets:
+            filter = [('notification_id','=',notify_res.id),('user_id','=',id)]
+            req_env['dn_base.notification.status'].sudo().search(filter).counter += 1
+    else:
         notify_res = req_env['dn_base.notification'].create({
             "content": notify_data.get('content'),
             "res_model": notify_data.get('res_model'),
             "res_id": notify_data.get('res_id'),
-            "client_route": notify_data.get('client_route')
+            "client_route": notify_data.get('client_route'),
+            "parent_model": notify_data.get('parent_model'),
+            "parent_id": notify_data.get('parent_id')
         })
 
         for id in targets:
             if notify_data.get('user_id') != id:
-                res = req_env['dn_base.notification.status'].create({
+                req_env['dn_base.notification.status'].create({
                     "notification_id" : notify_res.id,
-                    "user_id" : id
+                    "user_id" : id,
+                    "count" : 1
                 })
-    except:
-        return 'error'
 
     return notify_res
 
