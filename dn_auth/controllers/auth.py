@@ -191,7 +191,6 @@ class auth(http.Controller):
 
                         friendList[friend['id']] = friend
                         friendIds.append(friendObj.id)
-
                     attendees.append(partner.user_id.id)
 
                 event = {
