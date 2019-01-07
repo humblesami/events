@@ -1,22 +1,20 @@
 import io
 import os
-import sys
+import time
 import base64
 import subprocess
 import threading
-import time
-import traceback
 from random import randint
 
-import minecart
 from PIL import Image
 from fpdf import FPDF
+import pdf2image as pdf2image
 from pytesseract import pytesseract
 
-from pdfminer.pdfparser import PDFParser, PDFDocument
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
+from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.layout import LAParams, LTTextBox, LTTextLine
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 
 from odoo import models, fields, api
 from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
@@ -55,9 +53,9 @@ class AllFiles(models.Model):
     def apply_ocr(self):
         if self.filename.endswith(('png', 'jpg', 'jpeg')):
             t = threading.Thread(target=self.apply_ocr_image)
-        # else:
-        #     t = threading.Thread(target=self.apply_ocr_pdf)
-            t.start()
+        else:
+            t = threading.Thread(target=self.apply_ocr_pdf)
+        t.start()
 
 
     def apply_ocr_image(self):
@@ -68,14 +66,10 @@ class AllFiles(models.Model):
             if self.attachment:
                 im = Image.open(io.BytesIO(base64.b64decode(self.attachment)))
                 text = pytesseract.image_to_string(im)
-                pdf=pytesseract.image_to_pdf_or_hocr(im, extension='pdf')
-                res=base64.b64encode(pdf)
-
-                self.content=text
+                pdf = pytesseract.image_to_pdf_or_hocr(im, extension='pdf')
+                res = base64.b64encode(pdf)
+                self.content = text
                 self.pdf_doc = res
-
-
-
             self._cr.commit()
             self._cr.close()
 
@@ -84,12 +78,12 @@ class AllFiles(models.Model):
             new_cr = self.pool.cursor()
             self = self.with_env(self.env(cr=new_cr))
             time.sleep(10)
-            if self.pdf_doc:
-                pdffile = io.BytesIO(base64.b64decode(self.pdf_doc))
-                doc = minecart.Document(pdffile)
-                page = doc.get_page(1)
-
-
+            if self.pdf_doc and not self.content:
+                images = pdf2image.convert_from_bytes(base64.b64decode(self.pdf_doc))
+                text = ''
+                for i in images:
+                    text += pytesseract.image_to_string(i)
+                self.content += text
             self._cr.commit()
             self._cr.close()
 
@@ -107,7 +101,6 @@ class AllFiles(models.Model):
                     values['content'] = content
             doc = super(AllFiles, self).create(values)
             if values.get("attachment"):
-                # if values['filename'].endswith(('png', 'jpg', 'jpeg')):
                 doc.apply_ocr()
             return doc
         except:
@@ -128,8 +121,7 @@ class AllFiles(models.Model):
                     values['content'] = content
             doc = super(AllFiles, self).write(values)
             if values.get("attachment"):
-                if values['filename'].endswith(('png', 'jpg', 'jpeg')):
-                    self.apply_ocr()
+                self.apply_ocr()
             return doc
         except:
             raise_dn_model_error("Error in file write \n")
@@ -199,14 +191,13 @@ class AllFiles(models.Model):
             laparams.word_margin = 1.0
             device = PDFPageAggregator(rsrcmgr, laparams=laparams)
             interpreter = PDFPageInterpreter(rsrcmgr, device)
-            extracted_text = ''
 
             for page in doc.get_pages():
                 interpreter.process_page(page)
                 layout = device.get_result()
                 for lt_obj in layout:
                     if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
-                        extracted_text += lt_obj.get_text()
+                        content += lt_obj.get_text()
 
             # print(content)
             if ext != "pdf":
@@ -219,13 +210,7 @@ class AllFiles(models.Model):
             return res_encode,content
 
         except:
-            eg = traceback.format_exception(*sys.exc_info())
-            errorMessage = ''
-            for er in eg:
-                errorMessage += "\n" + er
-            print (errorMessage)
-            raise raise_dn_model_error(errorMessage)
-            return False
+            raise_dn_model_error()
 
     def excel2xhtml(self, pth, filename):
         try:
@@ -238,14 +223,8 @@ class AllFiles(models.Model):
             r=read.decode("utf-8")
             return r
 
-        except Exception:
-            eg = traceback.format_exception(*sys.exc_info())
-            errorMessage = ''
-            for er in eg:
-                errorMessage += "\n" + er
-            print (errorMessage)
-            raise raise_dn_model_error(errorMessage)
-            return False
+        except:
+            raise_dn_model_error()
 
     def img2pdf(self,pth,filename):
         try:
@@ -269,13 +248,7 @@ class AllFiles(models.Model):
             res_encode = base64.b64encode(read)
             return res_encode
         except:
-            eg = traceback.format_exception(*sys.exc_info())
-            errorMessage = ''
-            for er in eg:
-                errorMessage += "\n" + er
-            print(errorMessage)
-            raise raise_dn_model_error(errorMessage)
-            return False
+            raise_dn_model_error()
 
 
     def open_view_doc_form(self):
