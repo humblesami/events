@@ -26,12 +26,12 @@
              <field name="active" eval="False"/>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
-          <record id="hr_holidays.hr_holidays_status_rule_multi_company" model="ir.rule">
+<!--           <record id="hr_holidays.hr_holidays_status_rule_multi_company" model="ir.rule">
         <field name="name">Leaves multi company rule</field>
         <field name="model_id" ref="model_hr_holidays_status"/>
         <field name="global" eval="False"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','in',[user.company_id.id])]</field>
-    </record>
+    </record> -->
         <!--<record id="E-leave_users_access_own_profiles" model="ir.rule">-->
             <!--<field name="name">Edit own profile E-leave users</field>-->
             <!--<field name="model_id" ref="dn_base.model_hr_employee"/>-->
