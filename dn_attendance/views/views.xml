@@ -162,6 +162,7 @@
             <field name="res_model">attendance.daily</field>
             <field name="view_mode">tree,form</field>
              <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+             <field name="context">{'search_default_groupby_name': 1}</field>
         </record>
         <record model="ir.actions.act_window" id="myaction_attendance_daily_current_month">
             <field name="name">Current Month Attendance</field>
