@@ -48,6 +48,16 @@ class PointAnnotation(models.Model):
     y = fields.Integer()
     comments = fields.One2many('annotation.point.comments', 'point_id')
 
+    my_notifications = fields.Integer(compute='compute_my_notifications')
+
+    @api.multi
+    def compute_my_notifications(self):
+        note_model = self.env
+        for obj in self:
+            not_id = note_model['dn_base.notification'].search([('res_model','=','annotation.point'),('res_id','=',obj.id)]).id
+            counter = note_model['dn_base.notification.status'].search([('notification_id','=',not_id),('user_id','=',self.env.user.id)]).counter
+            obj.my_notifications = counter
+
 class CommentAnnotation(models.Model):
     _name = 'annotation.point.comments'
     content = fields.Char()

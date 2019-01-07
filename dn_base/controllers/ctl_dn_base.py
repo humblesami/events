@@ -272,9 +272,8 @@ class Controller(http.Controller):
             added_comment = added_comment[0]
             comment_id = added_comment['id']
             user = req_env.user
-            note = ws_methods.addNotification(notification, attendees)
-            props = ['id', 'content', 'res_model', 'res_id', 'client_route']
-            notification_object = ws_methods.object_to_json_object(note, props)
+            notification['user_id'] = uid
+            notification_object = ws_methods.addNotification(notification, attendees)
             notification_object['user_id'] = notification.get('user_id')
             data = {
                 'comment':{
@@ -292,7 +291,6 @@ class Controller(http.Controller):
             }
             if added_comment['parent_id']:
                 data['comment']['parent_id'] = added_comment['parent_id']
-
 
             return ws_methods.http_response('', data)
         except:

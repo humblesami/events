@@ -26,11 +26,6 @@ class NotificationStatus(models.Model):
     ]
 
     def get_my_notifications(self):
-        # filters = [('user_id', '=', uid), ('counter', '>', 0)]
-        # my = self.env['dn_base.notification.status'].sudo().search(filters)
-        # ids = ws_methods.objects_list_to_array(my, 'id')
-        # filters = [('id', 'in', ids),('parent_id','!=',False)]
-
         cnt = 0
         filters = [('parent_id', '!=', False)]
         notifications = self.env['dn_base.notification'].sudo().search(filters)

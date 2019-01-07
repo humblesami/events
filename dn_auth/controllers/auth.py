@@ -149,15 +149,16 @@ class auth(http.Controller):
             note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
             props = ['counter', 'user_id', 'notification_id']
             status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
-            notificationList = []
+            notificationList = ws_methods.my_notifications_on_record()
             for note in status_list:
-                note_data = req_env['dn_base.notification'].search([('id', '=', note['notification'].id)],
-                                                                   order='create_date desc')
-                props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
-                notification_object = ws_methods.object_to_json_object(note_data[0], props)
-                notification_object['count'] = note['counter']
-                notification_object['user_id'] = note['user'].id
-                notificationList.append(notification_object)
+                filters = [('id', '=', note['notification_id'].id),('parent_id','=',''),('parent_model','=','')]
+                note_data = req_env['dn_base.notification'].search(filters, order='create_date desc')
+                if note_data:
+                    props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
+                    notification_object = ws_methods.object_to_json_object(note_data[0], props)
+                    notification_object['count'] = note['counter']
+                    notification_object['user_id'] = note['user'].id
+                    notificationList.append(notification_object)
 
             friendIds = []
             friendList = {}

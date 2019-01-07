@@ -15,17 +15,37 @@ def send_mail(mesgtosend):
     recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
+def my_notifications_on_record():
+    sql = 'select sum(counter) counter, parent_id, parent_model, client_route, content from dn_base_notification n '
+    sql += 'join dn_base_notification_status s on s.notification_id = n.id '
+    sql += 'where user_id = '+ str(request.env.user.id)
+    sql += ' group by parent_id, parent_model, client_route, content'
+
+    return execute_read(sql)
+
 def addNotification(notify_data, targets):
     req_env = request.env
     filters = [('res_model','=',notify_data.get('res_model')),('res_id','=',notify_data.get('res_id'))]
     notify_res = req_env['dn_base.notification'].search(filters)
-
-    if len(notify_res) > 0:
-        for id in targets:
-            filter = [('notification_id','=',notify_res.id),('user_id','=',id)]
-            req_env['dn_base.notification.status'].sudo().search(filter).counter += 1
+    props = ['id','content', 'res_model', 'res_id', 'client_route', 'parent_model', 'parent_id']
+    notificationList = objects_list_to_json_list(notify_res, props)
+    if len(notificationList) > 0:
+        notification = notificationList[0]
+        if notification:
+            notification['users'] = []
+            for id in targets:
+                filter = [('notification_id', '=', notification['id']), ('user_id', '=', id)]
+                note_status = req_env['dn_base.notification.status'].sudo().search(filter)
+                if not note_status:
+                    req_env['dn_base.notification.status'].create({
+                        "notification_id": notification['id'],
+                        "user_id": id,
+                        "counter": 1
+                    })
+                else:
+                    note_status.counter += 1
     else:
-        notify_res = req_env['dn_base.notification'].create({
+        notification_obj = req_env['dn_base.notification'].create({
             "content": notify_data.get('content'),
             "res_model": notify_data.get('res_model'),
             "res_id": notify_data.get('res_id'),
@@ -34,15 +54,18 @@ def addNotification(notify_data, targets):
             "parent_id": notify_data.get('parent_id')
         })
 
+        props = ['id', 'content', 'res_model', 'res_id', 'client_route', 'parent_model', 'parent_id']
+        notification = object_to_json_object(notification_obj, props)
+
         for id in targets:
             if notify_data.get('user_id') != id:
                 req_env['dn_base.notification.status'].create({
-                    "notification_id" : notify_res.id,
+                    "notification_id" : notification['id'],
                     "user_id" : id,
-                    "count" : 1
+                    "counter" : 1
                 })
 
-    return notify_res
+    return notification
 
 def mfile_url(model, field, id):
     conf = request.conf
@@ -147,7 +170,7 @@ def object_to_json_object(object, props):
         for prop in props:
             obj = object
             ar = prop.split('.')
-            if ar[0].endswith('_id') and ar[0] != 'res_id':
+            if ar[0].endswith('_id') and ar[0] != 'res_id' and ar[0] != 'notification_id' and ar[0] != 'parent_id':
                 str = ar[0].replace('_id','')
             else:
                 str = ar[0]

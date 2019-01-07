@@ -27,7 +27,7 @@ class annotation(http.Controller):
 
             filter = [('doc_name', '=', doc_name)]
             point_objects = req_env['annotation.point'].search(filter)
-            props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
+            props = ['id', 'uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
 
             comments_points = ws_methods.objects_list_to_json_list(point_objects, props)
 
@@ -39,7 +39,7 @@ class annotation(http.Controller):
                 for com in comments:
                     com['point_id'] = comments_points[i]['uuid']
                 comments_points[i]['comments'] = comments
-                comments_points[i]['counter'] = 0
+                comments_points[i]['counter'] = point['my_notifications']
                 i = i + 1
 
             doc = req_env['annotation.document'].search([('name', '=', doc_name),('user_id','=',uid)])
@@ -208,6 +208,7 @@ class annotation(http.Controller):
             notification = kw['notification']
 
             modal = types['point']
+            notification['res_model'] = modal
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
             new_point = False
             if not point_id:
@@ -218,24 +219,26 @@ class annotation(http.Controller):
                 point_id = req_env[modal].create(point)
                 new_point = True
 
+            notification['res_id'] = point_id.id
             modal = types['comment']
             comment['point_id'] = point_id.id
             req_env[modal].create(comment)
 
             doc_type = kw['doc_type']
             res_id = kw['res_id']
+            notification['parent_id'] = res_id
             res_id = int(res_id)
             docname = ''
             meeting = False
             topic_name = False
             if doc_type == 'topic':
-                notification['res_model'] = 'meeting_point.topicdoc'
+                notification['parent_model'] = 'meeting_point.topicdoc'
                 topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
                 meeting = topic_doc.topic_id.meeting_id
                 topic_name = topic_doc.topic_id.name
                 docname = topic_doc.name
             elif doc_type == 'meeting':
-                notification['res_model'] = 'meeting_point.doc'
+                notification['parent_model'] = 'meeting_point.doc'
                 meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
                 meeting = meeting_doc.meeting_id
                 docname = meeting_doc.name
@@ -250,9 +253,7 @@ class annotation(http.Controller):
                 if cid != uid:
                     ids.append(cid)
 
-            res = ws_methods.addNotification(notification, ids)
-            props = ['id', 'content', 'res_model', 'res_id', 'client_route']
-            notification_object = ws_methods.object_to_json_object(res, props)
+            notification_object = ws_methods.addNotification(notification, ids)
             notification_object['user_id'] = notification.get('user_id')
 
             res = {'meta': {'meeting': meeting.name, 'doc': docname},
