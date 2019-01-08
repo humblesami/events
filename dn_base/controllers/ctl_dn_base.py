@@ -149,15 +149,25 @@ class Controller(http.Controller):
                 return ws_methods.not_logged_in()
 
             req_env = http.request.env
-            filter = [('res_model','=',values['res_model']),('res_id','=',values['res_id'])]
+            parent_model = values['parent_model']
+            parent_id = values['parent_id']
+            res_model = values['res_model']
+            res_id = values['res_id']
+
+            filter = [('res_model', '=',res_model), ('res_id', '=',res_id)]
+
+            if parent_id and parent_model:
+                filter.append(('parent_model', '=',parent_model))
+                filter.append(('parent_id', '=',parent_id))
+
             note_list = req_env['dn_base.notification'].search(filter)
             ids = ws_methods.objects_list_to_array(note_list, 'id')
 
 
             filter = [('notification_id', 'in',ids), ('user_id', '=', values['uid'])]
-            req_env['dn_base.notification.status'].sudo().search(filter).write({'count': 0})
+            req_env['dn_base.notification.status'].sudo().search(filter).write({'counter': 0})
 
-            return ws_methods.http_response('Successfully Updated')
+            return ws_methods.http_response('', 'Successfully Updated')
         except:
             return ws_methods.handle()
 
