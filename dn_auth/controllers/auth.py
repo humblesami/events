@@ -151,12 +151,12 @@ class auth(http.Controller):
             status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
             notificationList = ws_methods.my_notifications_on_record()
             for note in status_list:
-                filters = [('id', '=', note['notification_id'].id),('parent_id','=',''),('parent_model','=','')]
+                filters = [('id', '=', note['notification_id'].id),('parent_id','=',False),('parent_model','=',False)]
                 note_data = req_env['dn_base.notification'].search(filters, order='create_date desc')
                 if note_data:
                     props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
                     notification_object = ws_methods.object_to_json_object(note_data[0], props)
-                    notification_object['count'] = note['counter']
+                    notification_object['counter'] = note['counter']
                     notification_object['user_id'] = note['user'].id
                     notificationList.append(notification_object)
 

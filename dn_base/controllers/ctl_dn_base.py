@@ -149,10 +149,10 @@ class Controller(http.Controller):
                 return ws_methods.not_logged_in()
 
             req_env = http.request.env
-            parent_model = values['parent_model']
-            parent_id = values['parent_id']
-            res_model = values['res_model']
-            res_id = values['res_id']
+            parent_model = values.get('parent_model')
+            parent_id = values.get('parent_id')
+            res_model = values.get('res_model')
+            res_id = values.get('res_id')
 
             filter = [('res_model', '=',res_model), ('res_id', '=',res_id)]
 

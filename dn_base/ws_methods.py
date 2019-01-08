@@ -18,7 +18,7 @@ def send_mail(mesgtosend):
 def my_notifications_on_record():
     sql = 'select sum(counter) counter, parent_id, parent_model, client_route, content from dn_base_notification n '
     sql += 'join dn_base_notification_status s on s.notification_id = n.id '
-    sql += 'where user_id = '+ str(request.env.user.id)
+    sql += 'where user_id = '+ str(request.env.user.id)+' AND parent_id is not null AND parent_model is not null'
     sql += ' group by parent_id, parent_model, client_route, content'
 
     return execute_read(sql)
