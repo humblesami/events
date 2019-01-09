@@ -45,31 +45,20 @@ class Oddochat(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/get-messages', type="http", csrf=False, auth='public', cors='*')
-    def getFiteredMessages(self, **kw):
-        try:
-            values = json.loads(kw['user'])
-            filter = values.get('filter')
-            uid = ws_methods.check_auth(values)
-            if not uid:
-                return ws_methods.not_logged_in()
-            req_env = http.request.env
-
-            sender = filter.get('sender')
-            to = filter.get('to')
-
-            db_filters = [('sender', 'in', [sender,to]),('to', 'in', [to,sender])]
-            messages = req_env['odoochat.messages'].search(db_filters)
-            props = ['sender', 'to', 'content']
-            messages_obj = ws_methods.objects_list_to_json_list(messages, props)
-            return ws_methods.http_response('', messages_obj)
-        except:
-            return ws_methods.handle()
-
     @http.route('/save-message', type="json", csrf=False, auth='public', cors='*')
     def set(self):
         try:
-            values = request.jsonrequest
+            kw = request.jsonrequest
+            auth = kw.get('auth')
+            if not auth:
+                auth = kw
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+            values = kw.get('req_data')
+            if not values:
+                values = kw
+
             req_env = http.request.env
             sender = values.get('sender')
             to = values.get('to')

@@ -106,6 +106,8 @@ class auth(http.Controller):
         request = http.request
         token = values.get('token')
         uid = values.get('id')
+        if not uid:
+            uid = values.get('uid')
         if not token or not uid:
             return 'Token or id Not Given'
         token = str(token)
@@ -137,9 +139,11 @@ class auth(http.Controller):
     def verifyTokenSocket(self, **kw):
         try:
             request = http.request
-            values = request.jsonrequest
-
-            uid = self.verifyToken(values)
+            kw = request.jsonrequest
+            auth = kw.get('auth')
+            if not auth:
+                auth = kw
+            uid = self.verifyToken(auth)
             if type(uid) is not int:
                 #If its not number then uid must be an error string
                 return ws_methods.http_response(uid)

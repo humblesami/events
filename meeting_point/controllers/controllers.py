@@ -1,9 +1,6 @@
 import os
 import json
 import base64
-
-import werkzeug
-
 from odoo import http
 import datetime as dateval
 from odoo.http import request
@@ -515,54 +512,6 @@ class meeting(http.Controller):
                 count=dataValue[0]
             return ws_methods.http_response('', dataValue[0]['data'])
         except Exception:
-            ws_methods.handle()
-
-    @http.route('/get-allusers', type="http", auth='public', csrf=False, cors='*')
-    def fetch_all_users(self,**kw):
-        try:
-            data = kw.get('data')
-            kw = json.loads(data)
-            uid = ws_methods.check_auth(kw)
-            if not uid:
-                return ws_methods.not_logged_in()
-            req_env = http.request.env
-            partner  = req_env['res.partner'].search([ ('user_id', '=', uid)])
-            filters = [('publish', '=', True),('archived', '=', False)]
-            # res = req_env['calendar.event'].search(filter)
-            meetings = req_env['calendar.event'].search(filters).filtered(lambda r: partner in r.partner_ids)
-            partner_ids = []
-            for value in meetings:
-                partner_ids = partner_ids+value.partner_ids.ids
-            finalData = sorted(set(partner_ids))
-            dataJson ={}
-            finaleData = []
-            base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
-            for looper in finalData:
-                data = req_env['res.users'].sudo().search([('partner_id', '=', looper)])
-                dataJson['name'] = data.name
-                dataJson['id'] = data.id
-                dataJson['image'] = base_url + '/dn/content_file/res.users/'+str(data.id)+'/image_small'
-                db_filters = [('sender', '=', data.id), ('to', '=', uid), ('read_status', '=', False)]
-                dataJson['unseen'] = req_env['odoochat.messages'].search_count(db_filters)
-                groups = []
-                app_name =kw['app_name']
-                for group in data.groups_id:
-                    if app_name:
-                        if app_name not in group.full_name:
-                            continue
-                        else:
-                            groups.append(group.full_name)
-                            if group.name != 'MeetingPoint':
-                                type  = group.name
-                    else:
-                        groups.append(group.full_name)
-                dataJson['group'] = groups
-                dataJson['type'] = type
-                finaleData.append(dataJson)
-                dataJson = {}
-            json.dumps(finaleData)
-            return ws_methods.http_response('', finaleData)
-        except:
             ws_methods.handle()
 
 

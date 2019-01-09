@@ -197,22 +197,28 @@ class annotation(http.Controller):
     def addCommentAnnotation(self, **kw):
         try:
             kw = request.jsonrequest
-
-            uid = ws_methods.check_auth(kw)
+            auth = kw.get('auth')
+            if not auth:
+                auth = kw
+            uid = ws_methods.check_auth(auth)
             if not uid:
                 return ws_methods.not_logged_in()
+            values = kw.get('req_data')
+            if not values:
+                values = kw
+
             req_env = http.request.env
 
-            point = kw['point']
+            point = values['point']
             comment = point['comment']
-            notification = kw['notification']
+            notification = values['notification']
 
             modal = types['point']
             notification['res_model'] = modal
             point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
             new_point = False
             if not point_id:
-                doc_name = kw['doc_id']
+                doc_name = values['doc_id']
                 if not doc_name:
                     return ws_methods.http_response('Document id not given')
                 point['doc_name'] = doc_name
@@ -224,8 +230,8 @@ class annotation(http.Controller):
             comment['point_id'] = point_id.id
             req_env[modal].create(comment)
 
-            doc_type = kw['doc_type']
-            res_id = kw['res_id']
+            doc_type = values['doc_type']
+            res_id = values['res_id']
             notification['parent_id'] = res_id
             res_id = int(res_id)
             docname = ''
