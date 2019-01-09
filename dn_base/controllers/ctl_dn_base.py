@@ -64,15 +64,17 @@ class Controller(http.Controller):
 
             url = request.httprequest.host_url+forward_url
             res = requests.post(url, json=data)
-            #res = res.content
-            #res = res.decode('utf8')
-            res = res.content.decode('utf8')
+            res = res.content
+            res = res.decode('utf8')
             res = json.loads(res)
-            if res['result']:
-                res = res['result']
+            res = res.get('result')
+            if not res:
+                res = res.get('error')
+            if not res:
+                ws_methods.http_response('Invalid response from '+url)
             return res
         except:
-            return ws_methods.handle(res)
+            return ws_methods.handle()
 
     @http.route('/model/binary', auth='public', csrf=False, cors='*')
     def model_binary_http(self, **kw):
