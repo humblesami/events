@@ -103,14 +103,14 @@ def http_response(er, data=False):
 def not_logged_in():
     return http_response('Session expired, please login')
 
-def handle(er=False):
-    if er:
-        return http_response(er)
+def handle(ero=False):
+
     eg = traceback.format_exception(*sys.exc_info())
     errorMessage = ''
     for er in eg:
         errorMessage += "\n" + er
-    er = eg[1]   + er
+    if ero:
+        errorMessage = ero +'\n'+errorMessage
     return http_response(errorMessage)
 
 
