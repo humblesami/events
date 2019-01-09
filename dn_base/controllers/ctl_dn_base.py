@@ -69,7 +69,7 @@ class Controller(http.Controller):
             try:
                 res = json.loads(res)
             except:
-                ws_methods.http_response('Error\n'+res+ '\n in' + url)
+                return ws_methods.http_response('Error\n'+res+ '\n in' + url)
             res = res.get('result')
             if not res:
                 res = res.get('error')
