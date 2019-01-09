@@ -173,7 +173,7 @@ class Controller(http.Controller):
             ids = ws_methods.objects_list_to_array(note_list, 'id')
 
 
-            filter = [('notification_id', 'in',ids), ('user_id', '=', values['uid'])]
+            filter = [('notification_id', 'in',ids), ('user_id', '=', uid)]
             req_env['dn_base.notification.status'].sudo().search(filter).write({'counter': 0})
 
             return ws_methods.http_response('', 'Successfully Updated')
