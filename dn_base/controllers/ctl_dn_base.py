@@ -63,21 +63,114 @@ class Controller(http.Controller):
                 return ws_methods.not_logged_in()
 
             url = request.httprequest.host_url+forward_url
-            res = requests.post(url, json=data)
-            res = res.content
-            res = res.decode('utf8')
-            try:
-                res = json.loads(res)
-            except:
-                return ws_methods.http_response('Error\n'+res+ '\n in ' + url)
-            res = res.get('result')
-            if not res:
-                res = res.get('error')
-            if not res:
-                ws_methods.http_response('Invalid response from '+url)
+            if forward_url != 'ws/verifytoken-socket':
+                res = requests.post(url, json=data)
+                res = res.content
+                res = res.decode('utf8')
+                try:
+                    res = json.loads(res)
+                except:
+                    return ws_methods.http_response('Error\n'+res+ '\n in ' + url)
+                res = res.get('result')
+                if not res:
+                    res = res.get('error')
+                if not res:
+                    return ws_methods.http_response('Invalid response from '+url)
+            else:
+                res = self.verifySocketToken(data)
             return res
         except:
             return ws_methods.handle()
+
+    def verifyToken(self, values):
+        request = http.request
+        token = values.get('token')
+        uid = values.get('id')
+        if not token or not uid:
+            return 'Token or id Not Given'
+        token = str(token)
+        uid = int(uid)
+
+        req_env = request.env
+        filters = [('auth_token', '=', token), ('user_id', '=', uid)]
+        user = req_env['dnspusers'].sudo().search(filters)
+        if not user:
+            str_uid = str(uid)
+            return 'Token not valid for user ' + str_uid
+
+        values['login'] = user.login
+        values['password'] = user.password
+        uid = ws_methods.authenticate(values)
+        return uid
+
+    def verifySocketToken(self, values):
+        uid = self.verifyToken(values)
+        if type(uid) is not int:
+            # If its not number then uid must be an error string
+            return ws_methods.http_response(uid)
+
+        req_env = request.env
+        filters = [('user_id', '=', uid), ('counter', '>', 0)]
+
+        note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
+        props = ['counter', 'user_id', 'notification_id']
+        status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
+        notificationList = ws_methods.my_notifications_on_record()
+        for note in status_list:
+            filters = [('id', '=', note['notification_id'].id), ('parent_id', '=', False), ('parent_model', '=', False)]
+            note_data = req_env['dn_base.notification'].search(filters, order='create_date desc')
+            if note_data:
+                props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
+                notification_object = ws_methods.object_to_json_object(note_data[0], props)
+                notification_object['counter'] = note['counter']
+                notification_object['user_id'] = note['user'].id
+                notificationList.append(notification_object)
+
+        friendIds = []
+        friendList = {}
+        meetingList = []
+        unseenMessages = 0
+        partner_id = req_env.user.partner_id.id
+        filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
+        meetings = request.env['calendar.event'].search(filters)
+
+        base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for obj in meetings:
+
+            attendees = []
+            for partner in obj.partner_ids:
+                obj_id = partner.user_id.id
+                if obj_id != uid and obj_id not in friendIds:
+                    friendObj = partner.user_id
+                    friend = {
+                        'id': friendObj.id,
+                        'name': friendObj.name,
+                        'photo': base_url + '/dn/content_file/res.users/' + str(friendObj.id) + '/image_small',
+                    }
+                    if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
+                            'meeting_point.group_meeting_admin'):
+                        friend['type'] = 'staff'
+                    else:
+                        friend['type'] = 'director'
+
+                    db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
+                    friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
+                    unseenMessages += friend['unseen']
+
+                    friendList[friend['id']] = friend
+                    friendIds.append(friendObj.id)
+                attendees.append(partner.user_id.id)
+
+            event = {
+                'id': obj.id,
+                'name': obj.name,
+                'attendees': attendees
+            }
+            meetingList.append(event)
+
+        res = {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList,
+               'unseen': unseenMessages}
+        return ws_methods.http_response('', res)
 
     @http.route('/model/binary', auth='public', csrf=False, cors='*')
     def model_binary_http(self, **kw):

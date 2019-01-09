@@ -141,6 +141,7 @@ class auth(http.Controller):
 
             uid = self.verifyToken(values)
             if type(uid) is not int:
+                #If its not number then uid must be an error string
                 return ws_methods.http_response(uid)
 
             req_env = request.env
