@@ -97,8 +97,7 @@ def http_response(er, data=False):
         eg = traceback.format_exception(*sys.exc_info())
         errorMessage = ''
         for er in eg:
-            er = er.replace('\n', '<br>')
-            errorMessage += "<br>" + er
+            errorMessage += "\n" + er
         return http_response(errorMessage)
 
 def not_logged_in():
@@ -110,8 +109,7 @@ def handle(er=False):
     eg = traceback.format_exception(*sys.exc_info())
     errorMessage = ''
     for er in eg:
-        er = er.replace('\n', '<br>')
-        errorMessage += "<br>" + er
+        errorMessage += "\n" + er
     er = eg[1]   + er
     return http_response(errorMessage)
 
@@ -121,8 +119,7 @@ def handle_silently(rec=False):
         eg = traceback.format_exception(*sys.exc_info())
         errorMessage = ''
         for er in eg:
-            er = er.replace('\n', '<br>')
-            errorMessage += "<br>" + er
+            errorMessage += "\n" + er
         er = eg[1]   + er
         mesgtosend = er
     else:

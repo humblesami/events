@@ -41,6 +41,7 @@ class Controller(http.Controller):
 
     @http.route('/socket_request-json', type='json', csrf=False, auth='public', cors='*')
     def socket_request_json(self):
+        res = ''
         try:
             kw = request.jsonrequest
             auth = kw.get('auth')
@@ -63,13 +64,15 @@ class Controller(http.Controller):
 
             url = request.httprequest.host_url+forward_url
             res = requests.post(url, json=data)
+            #res = res.content
+            #res = res.decode('utf8')
             res = res.content.decode('utf8')
             res = json.loads(res)
             if res['result']:
                 res = res['result']
             return res
         except:
-            return ws_methods.handle()
+            return ws_methods.handle(res)
 
     @http.route('/model/binary', auth='public', csrf=False, cors='*')
     def model_binary_http(self, **kw):
