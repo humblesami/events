@@ -262,7 +262,6 @@ class Controller(http.Controller):
             parent_id = values.get('parent_id')
             req_env = http.request.env
             mesg_body = values['body']
-            uid = values['uid']
             str_uid = str(uid)
 
             authorId = req_env['res.users'].search([('id','=',uid)]).partner_id.id
