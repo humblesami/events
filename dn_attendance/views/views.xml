@@ -42,6 +42,7 @@
 
             </field>
         </record>
+        <!--changes to be done for user special view-->
         <record model="ir.ui.view" id="form_attendance_record_custom">
             <field name="name">attendance records form</field>
             <field name="model">attendance.record</field>
@@ -119,6 +120,8 @@
                     <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <separator/>
                     <filter name="groupby_name" string="Month" context="{'group_by':'check_in'}"/>
+                     <separator/>
+                    <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
@@ -138,6 +141,10 @@
                     <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <separator/>
                     <filter name="groupby_name" string="Month" context="{'group_by':'punch_time'}"/>
+                     <separator/>
+                    <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                     <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
@@ -189,18 +196,23 @@
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
            <form>
+               <div class="row">
+                   <header>
+                       <field name="state" widget="statusbar" clickable = "1"/>
+                   </header>
+               </div>
 	    <sheet string="attendance.daily" modifiers="{}">
 		    <group col="4" modifiers="{}">
-                    <field name="name" modifiers="{}"/>
-                    <field name="employee_id" can_create="false" can_write="true" modifiers="{}"/>
-                    <field name="check_in" modifiers="{}"/>
-                    <field name="check_out" modifiers="{}"/>
-                    <field name="work_hour" widget="float_time" modifiers="{}"/>
-                    <field name="late_minutes"  widget="float_time" modifiers="{}"/>
-                    <field name="work_date" modifiers="{'required':true}"/>
-                    <field name = "processed"/>
+                    <field name="name" attrs="{'readonly': [('state','=', 'done' )]}"/>
+                    <field name="employee_id" can_create="false" can_write="true" attrs="{'readonly': [('state','=', 'done' )]}"/>
+                    <field name="check_in" attrs="{'readonly': [('state','=', 'done' )]}"/>
+                    <field name="check_out" attrs="{'readonly': [('state','=', 'done' )]}"/>
+                    <field name="work_hour" widget="float_time" attrs="{'readonly': [('state','=', 'done' )]}"/>
+                    <field name="late_minutes"  widget="float_time" attrs="{'readonly': [('state','=', 'done' )]}"/>
+                    <field name="work_date" modifiers="{'required':true}" attrs="{'readonly': [('state','=', 'done' )]}"/>
+                    <field name = "processed" readonly="1"/>
                     <newline modifiers="{}"/>
-                    <field colspan="4" name="attendance_record_ids" modifiers="{}">
+                    <field colspan="4" name="attendance_record_ids" attrs="{'readonly': [('state','=', 'done' )]}">
                       <tree default_order='punch_time'>
                         <field name = "punch_time"/>
                         <field name = "punch_type"/>
@@ -210,7 +222,7 @@
                     <newline modifiers="{}"/>
                     <separator modifiers="{}"/>
 		    </group>
-	</sheet>
+	        </sheet>
 </form>
             </field>
         </record>
@@ -218,11 +230,12 @@
             <field name="name">attendance_daily_tree</field>
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree  decoration-danger="state=='draft'" decoration-success = "state=='done'" decoration-info = "state=='confirm'">
                   <field name="work_date"/>
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
+                     <field name= "state"/>
                 </tree>
             </field>
         </record>
@@ -242,8 +255,12 @@
             <field name="name">attendance_daily_form_view</field>
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
-           <form create="false" edit="false" delete="false">
-	    <sheet string="attendance.daily" modifiers="{}">
+           <form create="false"  delete="false">
+               <header>
+                   <button name="%(dn_attendance.action_attendance_wizard)d" type="action" string="Request Review" class="oe_highlight " context= "{'current_id': id}" attrs="{'invisible': [('state', '==', 'done')]}"/>
+                   <field name="state" widget="statusbar" readonly="False"/>
+               </header>
+	    <sheet string="attendance.daily">
 		    <group col="4" modifiers="{}">
                     <field name="name" modifiers="{}"/>
                     <field name="employee_id" can_create="true" can_write="true" modifiers="{}"/>
@@ -263,6 +280,7 @@
                     <newline modifiers="{}"/>
                     <separator modifiers="{}"/>
 		    </group>
+
 	</sheet>
 </form>
             </field>

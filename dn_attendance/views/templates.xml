@@ -1,22 +1,46 @@
 <odoo>
     <data>
-        <!-- <template id="listing"> -->
-        <!--   <ul> -->
-        <!--     <li t-foreach="objects" t-as="object"> -->
-        <!--       <a t-attf-href="#{ root }/objects/#{ object.id }"> -->
-        <!--         <t t-esc="object.display_name"/> -->
-        <!--       </a> -->
-        <!--     </li> -->
-        <!--   </ul> -->
-        <!-- </template> -->
-        <!-- <template id="object"> -->
-        <!--   <h1><t t-esc="object.display_name"/></h1> -->
-        <!--   <dl> -->
-        <!--     <t t-foreach="object._fields" t-as="field"> -->
-        <!--       <dt><t t-esc="field"/></dt> -->
-        <!--       <dd><t t-esc="object[field]"/></dd> -->
-        <!--     </t> -->
-        <!--   </dl> -->
-        <!-- </template> -->
+
+                <record id="attendance_daily_wizard_view" model="ir.ui.view">
+            <field name="name">Request for attendance Review</field>
+            <field name="model">attendance.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <label for = "message"/>
+                    <field name="message" string = 'Request Message' modifiers="{'readonly':false}"/>
+
+                    <footer>
+                        <button string="Send Request" name="send_request" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_attendance_wizard" multi="True"
+            name="Request Review" res_model="attendance.wizard" src_model="attendance.wizard"
+            view_mode="form" target="new" view_type="form" />
+
+ <record id="request_review_template" model="mail.template">
+          <field name="name">Request Review Template </field>
+          <field name="email_from">${ctx['emailFrom']|safe}</field>
+          <field name="subject">Attendance Review</field>
+          <field name="email_to">${ctx['emailTo']|safe}</field>
+          <field name="lang">${object.lang}</field>
+          <field name="model_id" ref="dn_attendance.model_attendance_wizard"/>
+          <field name="auto_delete" eval="True"/>
+	  <field name="body_html">
+            <![CDATA[
+	      <p>Dear Sir,<br/><br/>
+	      Kindly have a look at this attendance
+	      ${ctx['message']}
+	      <a href="${'attendance_url' in ctx and ctx['attendance_url'] or ''}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Click Here</a>
+              Regards,<br/>
+              ${ctx['name']}
+	    ]]>
+	  </field>
+       </record>
+
+
     </data>
 </odoo>

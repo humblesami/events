@@ -10,7 +10,11 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 #
 #
-
+def get_years():
+    year_list = []
+    for i in range(2016, 2050):
+        year_list.append((i, str(i)))
+    return year_list
 HOURS_PER_DAY = 8
 class Holidays(models.Model):
     _inherit = "hr.holidays"
@@ -23,7 +27,7 @@ class Holidays(models.Model):
                               track_visibility='onchange')
     duration_temp = fields.Selection([('2','Quarter Day'),('4','Half Day'),('8','Full Day')],default='8')
     auto_approve = fields.Boolean(string="Admin Approval", default="False")
-
+    year = fields.Selection(get_years(), string='Year', default=datetime.now().year)
     @api.onchange('date_only_from','date_only_to','duration_temp','date_from','date_to')
     def _onchange_duration_to(self):
         date_from = False

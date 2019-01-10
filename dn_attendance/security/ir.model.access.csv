@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dn_attendance_dn_attendance,dn_attendance.dn_attendance,model_dn_attendance_dn_attendance,,1,0,0,0
+
+
+access_dn_wizard_attendance_staff,dn_attendance.attendance_wizard,model_attendance_wizard,leave_management_custom.group_leave_custom_user,1,1,0,0

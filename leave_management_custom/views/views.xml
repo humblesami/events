@@ -124,6 +124,7 @@
                 <data>
                     <xpath expr="//field[@name='payslip_status']" position="after">
                         <field name="pending_approver"></field>
+                        <field name="year" invisible="1"/>
                     </xpath>
                 </data>
                 <header position="before">

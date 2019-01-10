@@ -14,10 +14,9 @@
                   groups="base.group_erp_manager,group_leave_custom_admin,group_leave_custom_user,group_leave_custom_user_admin,group_leave_custom_super_user"
         />
         <!-- menu categories -->
-
         <menuitem name="Dashboard" id="leave_management_custom.dashboard" parent="leave_management_custom.menu_root"
 
-                  action="hr_holidays.action_hr_holidays_dashboard"/>
+                  action="hr_holidays.action_hr_holidays_dashboard" sequence="2"/>
         <menuitem name="My Leaves" id="leave_management_custom.my_leave" parent="leave_management_custom.menu_root"/>
 
         <menuitem
@@ -88,11 +87,11 @@
                 name="Leaves Allocation" id="leave_management_custom.to_approve_leaves_allocation"
                 parent="leave_management_custom.to_approve"
                 action="custom_open_department_holidays_allocation_approve"/>
-
+    <!--change-->
         <menuitem
                 name="Leaves Balance" id="leave_management_custom.leave_balance"
-                parent="leave_management_custom.my_leave"
-                action="leave_management_custom.custom_open_company_balance"/>
+                parent="leave_management_custom.menu_root"
+                action="leave_management_custom.custom_open_company_balance" sequence="1"/>
 
             <menuitem
                 name="Users" id="E_leave_menu"
