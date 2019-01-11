@@ -307,7 +307,10 @@ class HrPayslip(models.Model):
             employeeId=self.employee_id.id
 
             self.env['total.providents.fund'].create({'provident_fields': providentFundValue,"provident_employee":employeeName,'provident_month':displayName,'employee_id':employeeId})
-
+            daily_attendance = self.env['attendance.daily'].search(["&",('work_date', '>=', self.date_from),('work_date','<',self.date_to)])
+            for values in daily_attendance:
+                values.sudo().write(
+                    {'state': 'done'})
         return self.write({'state': 'done'})
 
 
