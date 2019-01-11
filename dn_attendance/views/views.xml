@@ -42,22 +42,6 @@
 
             </field>
         </record>
-        <!--changes to be done for user special view-->
-        <record model="ir.ui.view" id="form_attendance_record_custom">
-            <field name="name">attendance records form</field>
-            <field name="model">attendance.record</field>
-            <field name="arch" type="xml">
-                <form>
-                    <group>
-                        <field name="employee_id"/>
-                        <field name="punch_time"/>
-                        <field name="punch_type"/>
-                        <field name="work_date"/>
-                        <field name="attendance_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
-                    </group>
-                </form>
-            </field>
-        </record>
 
         <record model="ir.ui.view" id="tree_attendance_daily">
             <field name="name">attendance daily tree</field>
@@ -71,7 +55,8 @@
                 </tree>
             </field>
         </record>
-    <record id="daily_attendance_user_kanban" model="ir.ui.view">
+
+        <record id="daily_attendance_user_kanban" model="ir.ui.view">
             <field name="name">daily_attendance.kanban</field>
             <field name="model">attendance.daily</field>
             <field name="priority" eval="1"/>
@@ -127,7 +112,7 @@
         </field>
     </record>
 
-               <record id="dn_attendance__attendnace_record_view_filter" model="ir.ui.view">
+        <record id="dn_attendance__attendnace_record_view_filter" model="ir.ui.view">
         <field name="name">dn_attendance_view_filter_new</field>
         <field name="model">attendance.daily</field>
         <field name="arch" type="xml">
@@ -158,9 +143,10 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_attendance_daily">
-            <field name="name">Daily Attendance</field>
+            <field name="name">Attendance Request</field>
             <field name="res_model">attendance.daily</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'confirm')]</field>
         </record>
 
 
@@ -262,15 +248,15 @@
                </header>
 	    <sheet string="attendance.daily">
 		    <group col="4" modifiers="{}">
-                    <field name="name" modifiers="{}"/>
-                    <field name="employee_id" can_create="true" can_write="true" modifiers="{}"/>
-                    <field name="check_in" modifiers="{}"/>
-                    <field name="check_out" modifiers="{}"/>
-                    <field name="work_hour" widget="float_time" modifiers="{}"/>
-                    <field name="late_minutes" widget="float_time" modifiers="{}"/>
-                    <field name="work_date" modifiers="{'required':true}"/>
+                    <field name="name" readonly="1"/>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="check_in" readonly="1"/>
+                    <field name="check_out" readonly="1"/>
+                    <field name="work_hour" widget="float_time" readonly="1"/>
+                    <field name="late_minutes" widget="float_time" readonly="1"/>
+                    <field name="work_date" readonly="1"/>
                     <newline modifiers="{}"/>
-                     <field colspan="4" name="attendance_record_ids" modifiers="{}">
+                     <field colspan="4" name="attendance_record_ids" readonly="1">
                       <tree default_order="punch_time">
                         <field name="punch_time"/>
                         <field name="punch_type"/>
@@ -312,6 +298,28 @@
             <field name="view_id" ref="form_attendance_record"/>
         </record>
 
+
+
+        <!---->
+        <record model="ir.actions.act_window" id="daily_attendance_report_custom">
+            <field name="name">Daily Attendance</field>
+            <field name="res_model">attendance.daily</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="action_e_leave_treae_daily_attendance_employees_unique" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="daily_attendance_report_custom"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="my_daily_attendance_record"/>
+        </record>
+           <record id="action_e_leave_form_daily_attendance_employees_unique" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="daily_attendance_report_custom"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_attendance_record"/>
+        </record>
+
+        <!---->
         <record id="ir_cron_upload attendace" model="ir.cron">
             <field name="name">Create Attendance in HR Attendance</field>
             <field name="model_id" ref="model_attendance_daily"/>
