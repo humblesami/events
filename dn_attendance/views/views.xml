@@ -18,7 +18,7 @@
             <field name="model">attendance.record</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban">
+                <kanban class="o_hr_employee_kanban" create="false" delete = "false">
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click">
@@ -167,13 +167,14 @@
             <field name="name">attendance_daily_tree</field>
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
-                <tree create="false" edit="false" delete="false">
+                <tree create="false" edit="false" delete="false" decoration-danger="state=='draft'" decoration-success = "state=='done'" decoration-info = "state=='confirm'">
                   <field name="work_date"/>
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
                     <field name="late_minutes" widget="float_time" sum="Total Late Minutes"/>
                     <field name ="work_hour" widget="float_time" string="Total Hours Worked" sum="Total Worked Hours"/>
+                    <field name ="state" invisible = "1"/>
                 </tree>
             </field>
         </record>
@@ -340,7 +341,7 @@
             <field name="name">attendance records tree</field>
             <field name="model">attendance.record</field>
             <field name="arch" type="xml">
-                <tree create="false" edit="false" delete="false">
+                <tree create="false" edit="false" delete="false" >
                     <field name="employee_id"/>
                     <field name="punch_time"/>
                     <field name="punch_type"/>
