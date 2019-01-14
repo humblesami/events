@@ -5,7 +5,7 @@
             <field name="name">epay.tree.custom</field>
             <field name="model">hr.attendance</field>
             <field name="arch" type="xml">
-                <tree string="Employee attendances"  >
+                <tree string="Employee attendances"  create="false" edit="false" delete="false"  >
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
