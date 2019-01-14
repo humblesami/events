@@ -286,13 +286,20 @@ class ws(http.Controller):
             if not model_name:
                 return ws_methods.http_response('Invalid document model')
             file = http.request.env[model_name].search([('id', '=', doc_id)])
+            attendees = []
             converted = file['pdf_doc'].decode('utf-8')
             doc = {'id': doc_id, "doc": converted, 'doc_nget-attendeesame': file['name'], 'type': doc_type}
             if doc_type == 'resource':
                 props = ['parent_folder.name', 'parent_folder.id']
             elif doc_type == 'meeting':
+                attendeesList = file['meeting_id']['attendee_ids']
+                for obj in attendeesList:
+                    attendees.append({"name":obj['display_name'],"id":obj['id']})
                 props = ['meeting_id.name', 'meeting_id.id']
             elif doc_type == 'topic':
+                attendeesList = file['topic_id']['meeting_id']['attendee_ids']
+                for obj in attendeesList:
+                    attendees.append({"name": obj['display_name'], "id": obj['id']})
                 props = ['topic_id.name', 'topic_id.id']
             elif doc_type == 'signature':
                 props = ['meeting_id.name', 'meeting_id.id', 'mp_signature_status']
@@ -306,6 +313,7 @@ class ws(http.Controller):
                 doc[ke] = obj[ke]
             doc['uid'] = uid
             doc['model'] = model_name
+            doc['attendees'] = attendees
             res = ws_methods.http_response('', doc)
             return res
         except:
