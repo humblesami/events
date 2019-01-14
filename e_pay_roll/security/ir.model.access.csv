@@ -22,7 +22,7 @@ access_to_res_groups_epayroll_Admin,Groups Access,base.model_res_groups,custom_g
 access_to_ir_ui_view_epayroll_admin,Views,base.model_ir_ui_view,custom_group_e_payroll_admin_e,1,1,1,1
 custom_epayroll_access_partner_admin,base.partner.super_admin,base.model_res_partner,custom_group_e_payroll_admin_e,1,1,1,1
 custom_epayroll_access_hr_job_admin,hr.job.super_admin,hr.model_hr_job,custom_group_e_payroll_admin_e,1,1,1,1
-access_to_attendance_record_admin,All Record,dn_attendance.model_attendance_record,custom_group_e_payroll_admin_e,1,1,1,1
+access_to_attendance_record_admin,All Record,dn_attendance.model_attendance_record,custom_group_e_payroll_admin_e,1,0,1,0
 access_to_attendance_daily_admin,Attendance Daily Record,dn_attendance.model_attendance_daily,custom_group_e_payroll_admin_e,1,1,1,1
 access_to_res_model_admin,Model Acces,base.model_ir_model_access,custom_group_e_payroll_admin_e,1,1,1,1
 

@@ -190,15 +190,15 @@
                </div>
 	    <sheet string="attendance.daily" modifiers="{}">
 		    <group col="4" modifiers="{}">
-                    <field name="name" attrs="{'readonly': [('state','=', 'done' )]}"/>
-                    <field name="employee_id" can_create="false" can_write="true" attrs="{'readonly': [('state','=', 'done' )]}"/>
-                    <field name="check_in" attrs="{'readonly': [('state','=', 'done' )]}"/>
-                    <field name="check_out" attrs="{'readonly': [('state','=', 'done' )]}"/>
-                    <field name="work_hour" widget="float_time" attrs="{'readonly': [('state','=', 'done' )]}"/>
-                    <field name="late_minutes"  widget="float_time" attrs="{'readonly': [('state','=', 'done' )]}"/>
-                    <field name="work_date" modifiers="{'required':true}" attrs="{'readonly': [('state','=', 'done' )]}"/>
-                    <field name = "processed" readonly="1"/>
-                    <newline modifiers="{}"/>
+                    <field name="name" />
+                    <field name="employee_id" can_create="false" readonly="1"/>
+                    <field name="check_in" readonly="1"/>
+                    <field name="check_out" readonly="1"/>
+                    <field name="work_hour" widget="float_time" readonly="1"/>
+                    <field name="late_minutes"  widget="float_time" readonly="1"/>
+                    <field name="work_date" modifiers="{'required':true}" readonly="1"/>
+                        <field name = "processed" readonly="1"/>
+                        <newline modifiers="{}"/>
                     <field colspan="4" name="attendance_record_ids" attrs="{'readonly': [('state','=', 'done' )]}">
                       <tree default_order='punch_time'>
                         <field name = "punch_time"/>
