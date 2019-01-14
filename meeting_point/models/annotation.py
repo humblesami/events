@@ -47,8 +47,14 @@ class PointAnnotation(models.Model):
     x = fields.Integer()
     y = fields.Integer()
     comments = fields.One2many('annotation.point.comments', 'point_id')
-
     my_notifications = fields.Integer(compute='compute_my_notifications')
+
+    @api.multi
+    def unlink(self):
+        for obj in self:
+            self.env['dn_base.notification'].search([('res_model','=','annotation.point'),('res_id','=',obj.id)])
+        res = super(PointAnnotation, self).unlink()
+        return res
 
     @api.multi
     def compute_my_notifications(self):

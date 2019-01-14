@@ -264,7 +264,7 @@ class annotation(http.Controller):
 
             res = {'meta': {'meeting': meeting.name, 'doc': docname},
                    'model':notification['res_model'],
-                   'point_id':point['uuid'],
+                   'point_id':point_id.id,
                    'res_id' : res_id,
                    'x':point['x'],
                    'y':point['y']

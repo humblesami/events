@@ -46,7 +46,7 @@ class auth(http.Controller):
                 try:
                     spuser.write({'auth_token' : token, 'login' : login, 'password' : password })
                 except:
-                    token = spuser.token
+                    token = spuser.auth_token
                     a = 1
 
             user = spuser.user_id

@@ -13,12 +13,11 @@ class Notification(models.Model):
     _sql_constraints = [
         ('notification_uniq', 'unique (res_id,res_model)', "Notification already exists for same record of same model!"),
     ]
-    # notification_status_ids = fields.One2many('meetvue.notification.status','notification_id')
 
 class NotificationStatus(models.Model):
     _name = "dn_base.notification.status"
     counter = fields.Integer(default=0)
-    notification_id = fields.Many2one('meetvue.notification')
+    notification_id = fields.Many2one('dn_base.notification',ondelete='cascade')
     user_id = fields.Many2one('res.users')
     _sql_constraints = [
         (
