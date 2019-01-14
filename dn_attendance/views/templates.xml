@@ -34,7 +34,7 @@
 	      <p>Dear Sir,<br/><br/>
 	      Kindly have a look at this attendance
 	      ${ctx['message']}
-	      <a href="${'attendance_url' in ctx and ctx['attendance_url'] or ''}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Click Here</a>
+	      <a href="${'attendance_url' in ctx and ctx['attendance_url'] or ''}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Click Here</a><br/>
               Regards,<br/>
               ${ctx['name']}
 	    ]]>
