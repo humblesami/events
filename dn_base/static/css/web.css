@@ -294,7 +294,8 @@ body.o_app_switcher_background nav:first-child
 {
     display:none;
 }
+
 .modal-backdrop
 {
-    z-index:3;
+    z-index:21
 }

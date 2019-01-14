@@ -2,21 +2,21 @@ import io
 import os
 import time
 import base64
-import subprocess
 import threading
-from random import randint
+import subprocess
 
 from PIL import Image
 from fpdf import FPDF
+from random import randint
 import pdf2image as pdf2image
 from pytesseract import pytesseract
 
+from odoo import models, fields, api
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.layout import LAParams, LTTextBox, LTTextLine
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 
-from odoo import models, fields, api
 from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 
 

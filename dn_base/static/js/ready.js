@@ -25,7 +25,7 @@ var site_config = {
     server_db : 'demo'
 }
 
-//console.log(odoo, 1968);
+
 function load_dn_assets()
 {
     try
@@ -63,6 +63,7 @@ function load_dn_assets()
             $(document).on('click', 'button.fa-5x', function(){
                 dn_json_rpc_object.showHideLoader(true);
             });
+            $('body').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
         });
 
     }

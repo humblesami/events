@@ -286,6 +286,8 @@ class ws(http.Controller):
             if not model_name:
                 return ws_methods.http_response('Invalid document model')
             file = http.request.env[model_name].search([('id', '=', doc_id)])
+            if not file:
+                return ws_methods.http_response('Document Not Found')
             attendees = []
             converted = file['pdf_doc'].decode('utf-8')
             doc = {'id': doc_id, "doc": converted, 'doc_nget-attendeesame': file['name'], 'type': doc_type}
