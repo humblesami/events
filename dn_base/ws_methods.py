@@ -69,11 +69,11 @@ def addNotification(notify_data, targets):
 
 def mfile_url(model, field, id):
     conf = request.conf
-    res = 'dn/content_file/' + model + '/' +  str(id) + '/' + field + '/' + conf['db'] + '/' + conf['token']
-    res = conf['host_url'] + res
+    res = model + '/' + str(id) + '/' + field + '/' + conf['db'] + '/' + conf['token']
+    res = conf['host_url'] + 'dn/content_file/' + res
     return res
 
-def execute_upd(query):
+def execute_update(query):
     cr = request.env.cr
     res = cr.execute(query)
     return res

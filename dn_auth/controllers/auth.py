@@ -174,8 +174,9 @@ class auth(http.Controller):
             meetings = request.env['calendar.event'].search(filters)
 
             base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
+            res = base_url + '/dn/content_file/res.users/'
+            res2 = '/image_small/' + auth['db'] + '/' + auth['token']
             for obj in meetings:
-
                 attendees = []
                 for partner in obj.partner_ids:
                     obj_id = partner.user_id.id
@@ -183,8 +184,8 @@ class auth(http.Controller):
                         friendObj = partner.user_id
                         friend = {
                             'id': friendObj.id,
-                            'name' : friendObj.name,
-                            'photo': base_url + '/dn/content_file/res.users/'+str(friendObj.id)+'/image_small',
+                            'name': friendObj.name,
+                            'photo': res + str(friendObj.id) + res2
                         }
                         if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group('meeting_point.group_meeting_admin'):
                             friend['type'] = 'staff'

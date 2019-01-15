@@ -218,6 +218,19 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/update_client_rotes', type='http', csrf=False, auth='public', cors='*')
+    def socket_request(self, **kw):
+        try:
+            if request.uid != 1:
+                return "Error"
+            sql = "update dn_base_notification set client_route=CONCAT('/',client_route) where client_route not like '/%'"
+            #sql = "update dn_base_notification set client_route = substring(client_route from 2 for 9999) where client_route like '//%'"
+            ws_methods.execute_update(sql)
+            res = 'done'
+            return res
+        except:
+            return ws_methods.handle()
+
     @http.route('/delallcomments', type='http', csrf=False, auth='public', cors='*')
     def delcomments(self, **kw):
         #http.request.env['mail.message'].sudo().search([('model', '=', 'calendar.event')]).unlink()
