@@ -136,7 +136,7 @@
           <menuitem name="Machine Records" id="mymachinerecords" parent="e_pay_roll.account_root_attendance"
                   action="dn_attendance.myrecord_action_attendance_record" sequence="3"/>
         <menuitem name="Daily Records" id="mydailyrecords" parent="e_pay_roll.account_root_attendance"
-                  action="dn_attendance.myaction_attendance_daily" sequence="4"/>
+                  action="dn_attendance.myaction_attendance_daily" sequence="1"/>
         <menuitem name="Current Month Records" id="mymonthlyrecords" parent="e_pay_roll.account_root_attendance"
                   action="dn_attendance.myaction_attendance_daily_current_month" sequence="5"/>
 
