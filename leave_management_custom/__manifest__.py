@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['dn_hr','hr_holiday_exclude_special_days','dn_attendance_leaves'],
+    'depends': ['dn_hr','hr_holiday_exclude_special_days','dn_attendance_leaves','dn_attendance'],
 
     # always loaded
     'data': [

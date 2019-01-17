@@ -5,7 +5,7 @@ from odoo import models, fields, api, _
 from odoo.addons.dn_base import dn_dt
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.dn_attendance import workhours
-
+import math
 
 class AttendaceRecord(models.Model):
     _name = 'attendance.record'
@@ -104,10 +104,11 @@ class AttendaceRecord(models.Model):
 
     def calculate_work_hours(self, daily_object):
         res, final_schedule = self.get_attendance_schedule_of_employee(daily_object)
-        validated_work_hours, late_minutes = workhours.calc_work_hours(res, final_schedule)
+        validated_work_hours, late_minutes,expectedWorkMinutes = workhours.calc_work_hours(res, final_schedule)
         # vals = {'work_hours':validated_work_hours, 'late_minutes':late_minutes}
-        daily_object.work_hour = validated_work_hours
-        daily_object.late_minutes = late_minutes
+        daily_object.work_hour =validated_work_hours
+        daily_object.late_minutes = math.floor(late_minutes)
+        daily_object.expected_work_hour = math.floor(expectedWorkMinutes/60)
         return res
 
     def get_attendance_schedule_of_employee(self, daily_object):
@@ -140,10 +141,11 @@ class AttendanceDaily(models.Model):
     employee_id = fields.Many2one('hr.employee')
     check_in = fields.Datetime()
     check_out = fields.Datetime()
-    work_hour = fields.Float('Total Work Hour')
+    work_hour = fields.Float('Total Work Hours')
     late_minutes = fields.Float("Late Minutes")
     work_date = fields.Date(required=True)
     processed = fields.Integer(default=0)
+    expected_work_hour = fields.Float("Expected Work Hours")
     attendance_record_ids = fields.One2many('attendance.record', 'attendance_id')
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'In Review'),
@@ -202,10 +204,12 @@ class AttendanceDaily(models.Model):
 
     def calculate_work_hours(self, daily_object):
         res, final_schedule = self.get_attendance_schedule_of_employee(daily_object)
-        validated_work_hours, late_minutes = workhours.calc_work_hours(res, final_schedule)
+        validated_work_hours, late_minutes,expectedWorkMinutes = workhours.calc_work_hours(res, final_schedule)
 
         daily_object.work_hour = validated_work_hours
-        daily_object.late_minutes = late_minutes
+        daily_object.late_minutes = math.floor(late_minutes)
+        daily_object.expected_work_hour = math.floor(expectedWorkMinutes / 60)
+        daily_object.check_out = res['time_records'][-1].values()[-1]
         return res
 
     def get_attendance_schedule_of_employee(self, daily_object):

@@ -110,4 +110,4 @@ def calc_work_hours(obj, finalSchedule):
         validated_work_minutes = validated_work_minutes + workhour
     late_minutes = required_work_minutes - validated_work_minutes
     validated_work_hours = float(validated_work_minutes)/60
-    return validated_work_hours, late_minutes
+    return validated_work_hours, late_minutes,required_work_minutes

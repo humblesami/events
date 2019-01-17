@@ -107,6 +107,8 @@
                     <filter name="groupby_name" string="Month" context="{'group_by':'check_in'}"/>
                      <separator/>
                     <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter name="groupby_work" string="Workdate" context="{'group_by':'work_date'}"/>
                 </group>
             </search>
         </field>
@@ -130,6 +132,8 @@
                     <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
                     <separator/>
                      <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter name="groupby_work" string="Workdate" context="{'group_by':'work_date'}"/>
                 </group>
             </search>
         </field>
@@ -155,7 +159,7 @@
             <field name="res_model">attendance.daily</field>
             <field name="view_mode">tree,form</field>
              <field name="domain">[('employee_id.user_id', '=', uid)]</field>
-             <field name="context">{'search_default_groupby_name': 1}</field>
+             <field name="context">{'search_default_groupby_work': 1}</field>
         </record>
         <record model="ir.actions.act_window" id="myaction_attendance_daily_current_month">
             <field name="name">Current Month Attendance</field>
@@ -167,11 +171,12 @@
             <field name="name">attendance_daily_tree</field>
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
-                <tree create="false" edit="false" delete="false" decoration-danger="state=='draft'" decoration-success = "state=='done'" decoration-info = "state=='confirm'">
+                <tree create="false" edit="false" delete="false" default_order='work_date desc' decoration-danger="state=='draft'" decoration-success = "state=='done'" decoration-info = "state=='confirm'">
                   <field name="work_date"/>
                     <field name="employee_id"/>
                     <field name="check_in"/>
                     <field name="check_out"/>
+                    <field name = "expected_work_hour" widget="float_time"  sum="Total Expected Worked Hours"/>
                     <field name="late_minutes" widget="float_time" sum="Total Late Minutes"/>
                     <field name ="work_hour" widget="float_time" string="Total Hours Worked" sum="Total Worked Hours"/>
                     <field name ="state" invisible = "1"/>
