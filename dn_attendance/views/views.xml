@@ -202,6 +202,7 @@
                     <field name="work_hour" widget="float_time" readonly="1"/>
                     <field name="late_minutes"  widget="float_time" readonly="1"/>
                     <field name="work_date" modifiers="{'required':true}" readonly="1"/>
+                    <field name="request_data" readonly="1"/>
                         <field name = "processed" readonly="1"/>
                         <newline modifiers="{}"/>
                     <field colspan="4" name="attendance_record_ids" attrs="{'readonly': [('state','=', 'done' )]}">

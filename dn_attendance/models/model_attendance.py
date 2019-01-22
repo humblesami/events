@@ -6,7 +6,12 @@ from odoo.addons.dn_base import dn_dt
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.dn_attendance import workhours
 import math
-
+class ScheduleInfo(models.Model):
+    _name = "schedule.info"
+    expected_check_in = fields.Float(string="Expected CheckIn")
+    expected_check_out = fields.Float(string="Expected Checkout")
+    break_start = fields.Float(string="Break Start")
+    break_end = fields.Float(string="Break End")
 class AttendaceRecord(models.Model):
     _name = 'attendance.record'
     _rec_name = 'employee_id'
@@ -147,6 +152,7 @@ class AttendanceDaily(models.Model):
     processed = fields.Integer(default=0)
     expected_work_hour = fields.Float("Expected Work Hours")
     attendance_record_ids = fields.One2many('attendance.record', 'attendance_id')
+    request_data = fields.Many2one('schedule.info',string="Schedule")
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'In Review'),
          ('done', 'Done')],
@@ -168,7 +174,15 @@ class AttendanceDaily(models.Model):
             if vals.get('employee_id') or vals.get('work_date'):
                 raise ValidationError("Only time records are allowed to be modified")
             if calc:
-                obj.calculate_work_hours(daily_attendance_object)
+                res,finalScheule=obj.calculate_work_hours(daily_attendance_object)
+                if self.request_data.id:
+                    updateSchedule = self.request_data.sudo().write(
+                        {'expected_check_in': finalScheule.hour_from, 'expected_check_out': finalScheule.hour_to,
+                         'break_start': finalScheule.break_start, 'break_end': finalScheule.break_end})
+
+                else:
+                    updateSchedule =  self.request_data.sudo().create({'expected_check_in':finalScheule.hour_from,'expected_check_out':finalScheule.hour_to,'break_start':finalScheule.break_start,'break_end':finalScheule.break_end})
+                    self.request_data = updateSchedule.id
                 updateAttendance = self.sudo().env['hr.attendance'].search(
                     ['&', ('work_date', '=', obj.work_date), ('employee_id', '=', obj.employee_id.id)])
                 if updateAttendance.id:
@@ -197,6 +211,7 @@ class AttendanceDaily(models.Model):
                 attendnaceRecord = self.env['attendance.record'].search([('id', '=', finalId)]).punch_time
                 res = values.write({'check_out': attendnaceRecord})
                 values.processed = 1
+                schedule_on_day = workhours.on_date_schedule(finalSchedule, work_date)
             finalResult = self.sudo().env['hr.attendance'].create(
                 {'worked_hours1': values['work_hour'], 'employee_id': tempEmployee.id,
                  'check_in': values['check_in'], 'work_date': values['work_date'],
@@ -205,12 +220,15 @@ class AttendanceDaily(models.Model):
     def calculate_work_hours(self, daily_object):
         res, final_schedule = self.get_attendance_schedule_of_employee(daily_object)
         validated_work_hours, late_minutes,expectedWorkMinutes = workhours.calc_work_hours(res, final_schedule)
-
         daily_object.work_hour = validated_work_hours
         daily_object.late_minutes = math.floor(late_minutes)
         daily_object.expected_work_hour = math.floor(expectedWorkMinutes / 60)
-        daily_object.check_out = res['time_records'][-1].values()[-1]
-        return res
+
+        val = res['time_records'][-1].get('check_out')
+        if val:
+            daily_object.check_out = val
+
+        return res,final_schedule
 
     def get_attendance_schedule_of_employee(self, daily_object):
         objects = self.env['attendance.record'].search([('attendance_id', '=', daily_object.id)], order='punch_time')
@@ -241,8 +259,7 @@ class AttendanceWizard(models.Model):
     _name = "attendance.wizard"
 
     message = fields.Char(string="Request body")
-    name = fields.Char(string="Response")
-
+    # 0
     @api.multi
     def send_request(self):
 
@@ -275,7 +292,7 @@ class AttendanceWizard(models.Model):
 
 
         super(AttendanceDaily, check_state.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).sudo().write(
-            {'state': 'confirm'})
+            {'state': 'confirm','request_data':self.id})
 
         return {
             'name': 'Message',
@@ -299,3 +316,10 @@ class AttendanceWizard(models.Model):
             if not mail_temp == False:
                 users_ids.append(mail_temp)
         return users_ids
+
+class ScheduleInfo(models.Model):
+    _name = "schedule.info"
+    expected_check_in = fields.Float(string="Expected CheckIn")
+    expected_check_out = fields.Float(string="Expected Checkout")
+    break_start = fields.Float(string="Break Start")
+    break_end = fields.Float(string="Break End")
