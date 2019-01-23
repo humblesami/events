@@ -305,6 +305,7 @@
                         <field name="punch_time"/>
                         <field name="punch_type"/>
                         <field name="work_date"/>
+                        <field name = "request_id"/>
                       </tree>
                     </field>
                     <newline modifiers="{}"/>
