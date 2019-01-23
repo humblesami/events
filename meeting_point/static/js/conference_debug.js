@@ -52,7 +52,7 @@ $(function() {
         var domain = "meet.jit.si";
         var config = {
             enableUserRolesBasedOnToken: true,
-            startWithVideoMuted: true,
+//            startWithVideoMuted: true,
             channelLastN: 1,
             // Local Recording
             localRecording: {
