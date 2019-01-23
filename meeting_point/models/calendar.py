@@ -297,21 +297,21 @@ class Meeting(models.Model):
         for obj in self:
             dt_now = dn_dt.now()
             before_15 = dn_dt.addInterval(obj.start, 'min', -15)
-            if dt_now < before_15:
-                obj.conference_status = 'Not active yet, will be available at '+ str(before_15)
+            # if dt_now < before_15:
+            #     obj.conference_status = 'Not active yet, will be available at '+ str(before_15)
+            #     if obj.moderator != 0:
+            #         obj.moderator = 0
+            # else:
+            after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)
+            if  dt_now > after_3hours:
+                obj.conference_status = 'over'
                 if obj.moderator != 0:
                     obj.moderator = 0
             else:
-                after_3hours = dn_dt.addInterval(obj.stop, 'h', 3)
-                if  dt_now > after_3hours:
-                    obj.conference_status = 'over'
-                    if obj.moderator != 0:
-                        obj.moderator = 0
+                if obj.moderator == 0:
+                    obj.conference_status = 'active'
                 else:
-                    if obj.moderator == 0:
-                        obj.conference_status = 'active'
-                    else:
-                        obj.conference_status = 'active'
+                    obj.conference_status = 'active'
 
     @api.multi
     def _compute_seen_by_me(self):

@@ -156,6 +156,7 @@ class meeting(http.Controller):
             res['roomName'] = room_pins_obj[meeting.pin]
             if meeting.end_call:
                 res['end_call'] = 1
+            im_attendee = 1
             if im_attendee or uid == 1:
                 res['im_attendee'] = 'yes'
             else:
