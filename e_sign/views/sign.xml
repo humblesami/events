@@ -6,10 +6,10 @@
             <field name="model">e_sign.signature</field>
             <field name="arch" type="xml">
                 <tree>
-                  <field name="id"></field>
-                  <!--<field name="document_id"></field>-->
-                  <field name="user_id"></field>
-                  <field name="draw_signature"></field>
+                    <field name="id"></field>
+                    <!--<field name="document_id"></field>-->
+                    <field name="user_id"></field>
+                    <field name="draw_signature"></field>
                 </tree>
             </field>
         </record>
@@ -18,34 +18,34 @@
             <field name="name">e_sign.kanban</field>
             <field name="model">e_sign.signature</field>
             <field name="arch" type="xml">
-                      <kanban string="Signature(s)" create="false">
-                            <field name="draw_signature"/>
-                            <field name="id"/>
-                            <field name="showbutton"/>
-                            <templates>
-                                <t t-name="kanban-box">
-                                    <div class="oe_kanban_card oe_kanban_global_click" style="transition: 0.3s">
-                                        <div class="kanban_del">
-                                            <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <t t-if="record.draw_signature.raw_value">
-                                                <img style="width:100%" t-att-src="kanban_image('e_sign.signature', 'draw_signature', record.id.value)"/>
-                                            </t>
-                                            <t t-if="!record.draw_signature.raw_value">
-                                                 <strong style="color:red">Pending...</strong>
-                                             </t>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <strong class="oe_partner_heading">
-                                                <!--<field name="document_id" style="margin-right:10px"/>-->
-                                            </strong>
-                                            <field name="user_id"/>
-                                        </div>
-                                    </div>
-                                </t>
-                            </templates>
-                        </kanban>
+                <kanban string="Signature(s)" create="false">
+                    <field name="draw_signature"/>
+                    <field name="id"/>
+                    <field name="showbutton"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click" style="transition: 0.3s">
+                                <div class="kanban_del">
+                                    <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <t t-if="record.draw_signature.raw_value">
+                                        <img style="width:100%" t-att-src="kanban_image('e_sign.signature', 'draw_signature', record.id.value)"/>
+                                    </t>
+                                    <t t-if="!record.draw_signature.raw_value">
+                                        <strong style="color:red">Pending...</strong>
+                                    </t>
+                                </div>
+                                <div class="col-sm-8">
+                                    <strong class="oe_partner_heading">
+                                        <!--<field name="document_id" style="margin-right:10px"/>-->
+                                    </strong>
+                                    <field name="user_id"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
 
             </field>
         </record>
@@ -67,7 +67,7 @@
             </field>
         </record>
 
-                 <!--Signature send invitation by email: template -->
+        <!--Signature send invitation by email: template -->
         <record id="email_template_signature_e_sign" model="mail.template">
             <field name="name">Signature - OdooHQ Send by Email</field>
             <field name="model_id" ref="model_e_sign_signature" />
@@ -90,102 +90,122 @@
         </record>
 
         <template id="e_sign_sign_page" name="Signature Page">
-        <t t-call="website.layout">
-            <div class="wrap">
-                <div class="oe_structure"/>
-                                <div class="container">
-           <div t-field='document.id' class="e_sign_doc_id" style="display:none"/>
-            <input type="hidden" class="sign_token" t-att-value="token" />
-            <h1 t-field='document.name' />
-            My Signature: <span t-raw="status"/>
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="oe_structure"/>
+                    <div class="container">
+                        <div t-field='document.id' class="e_sign_doc_id" style="display:none"/>
+                        <input type="hidden" class="sign_token" t-att-value="token" />
+                        <h1 t-field='document.name' />
+                        My Signature: <span t-raw="status"/>
 
 
 
-                <form>
-                    <style>
+                        <form>
+                            <style>
 
-                        .top_btns {
-                        background: rgb(50, 54, 57);
-                        padding: 2px;
-                        }
+                                .top_btns {
+                                background: rgb(50, 54, 57);
+                                padding: 2px;
+                                }
 
-                        .pg_no{
-                        color: white;
-                        }
+                                .pg_no{
+                                color: white;
+                                }
 
-                        .doc_btn {
-                        background-color: gray;
-                        color: white;
-                        margin: 2px;
-                        }
-
-
-                        .edit_sign:hover,.del_sign:hover {
-                        background-color: white;
-
-                        }
+                                .doc_btn {
+                                background-color: gray;
+                                color: white;
+                                margin: 2px;
+                                }
 
 
+                                .edit_sign:hover,.del_sign:hover {
+                                background-color: white;
+
+                                }
+
+                                #page_container1{
+                                height: calc(100vh - 117px)!important;
+                                }
+
+                                .container {
+                                width: 100%;
+                                }
+
+                                .navbar.navbar-static-top {
+                                margin-top: 12px;
+                                display: none;
+                                }
+                                @media screen and (max-width: 600px){
+                                #nxxt_sign {
+                                width: 90px!important;
+
+                                height: 25px;
+                                font-size: 0.8em;
+                                }
 
 
-                    </style>
 
 
-                    <field name="id" class="meeting_doc_id" invisible="1"/>
-                    <div class="pstion"/>
+                            </style>
+
+
+                            <field name="id" class="meeting_doc_id" invisible="1"/>
+                            <div class="pstion"/>
 
 
 
-                    <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);" >
-                        <div class="top_btns">
-                            <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev" ></div>
-                            <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next" ></div>
-                            <span class="pg_no"> <span style="font-weight: bold;" id="page_num"></span> / <span id="page_count"></span></span>
-                            <div class="btn btn-sm doc_btn fa fa-minus"  id="zoomOut" title="Zoom Out" ></div>
-                            <div class="btn btn-sm doc_btn fa fa-plus"   id="zoomIn" title="Zoom In" ></div>
-                            <span style="display: inline-block;" id="scaleSelectContainer">
-                                <select  data-style= "btn-primary" id="scaleSelect" title="Zoom" tabindex="23" >
-                                    <option title="" value="0.5" >50%</option>
-                                    <option title="" value="0.75" >75%</option>
-                                    <option title="" value="1">100%</option>
-                                    <option title="" value="1.25">125%</option>
-                                    <option title="" value="1.5">150%</option>
-                                    <option title="" value="2">200%</option>
-                                    <option title="" value="3">300%</option>
-                                    <option title="" value="4">400%</option>
-                                </select>
-                            </span>
+                            <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);" >
+                                <div class="top_btns">
+                                    <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev" ></div>
+                                    <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next" ></div>
+                                    <span class="pg_no"> <span style="font-weight: bold;" id="page_num"></span> / <span id="page_count"></span></span>
+                                    <div class="btn btn-sm doc_btn fa fa-minus"  id="zoomOut" title="Zoom Out" ></div>
+                                    <div class="btn btn-sm doc_btn fa fa-plus"   id="zoomIn" title="Zoom In" ></div>
+                                    <span style="display: inline-block;" id="scaleSelectContainer">
+                                        <select  data-style= "btn-primary" id="scaleSelect" title="Zoom" tabindex="23" >
+                                            <option title="" value="0.5" >50%</option>
+                                            <option title="" value="0.75" >75%</option>
+                                            <option title="" value="1">100%</option>
+                                            <option title="" value="1.25">125%</option>
+                                            <option title="" value="1.5">150%</option>
+                                            <option title="" value="2">200%</option>
+                                            <option title="" value="3">300%</option>
+                                            <option title="" value="4">400%</option>
+                                        </select>
+                                    </span>
 
 
-                        </div>
+                                </div>
 
 
-                        <div id="page_container1" style="height:430px;overflow-y:auto;overflow-x:auto;position:relative;">
-                            <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;top:85px;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING></div>
+                                <div id="page_container1" style="height:430px;overflow-y:auto;overflow-x:auto;position:relative;">
+                                    <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;top:85px;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING></div>
 
 
-                            <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
-                                <canvas id="the-canvas" style="border:1px solid black"></canvas>
+                                    <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
+                                        <canvas id="the-canvas" style="border:1px solid black"></canvas>
 
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <link href="/e_sign/static/signature.css" rel="stylesheet"/>
+                            <script src="/e_sign/static/js/pdf.worker.js"/>
+                            <script src="/e_sign/static/js/pdf.js"/>
+                            <script src="/e_sign/static/js/viewer.js"/>
+                            <script src="/dn_base/static/js/web.js"/>
+                            <script src="/dn_base/static/js/ajax.js"/>
+                            <script src="/dn_base/static/js/ready.js"/>
+
+                        </form>
+
                     </div>
 
-                    <script src="/e_sign/static/js/pdf.worker.js"/>
-                    <script src="/e_sign/static/js/pdf.js"/>
-                    <script src="/e_sign/static/js/viewer.js"/>
-                    <script src="/dn_base/static/js/web.js"/>
-                    <script src="/dn_base/static/js/ajax.js"/>
-                    <script src="/dn_base/static/js/ready.js"/>
-
-                </form>
-
+                    <div class="oe_structure"/>
                 </div>
-
-                <div class="oe_structure"/>
-            </div>
-        </t>
-    </template>
+            </t>
+        </template>
 
         <record id="action_e_sign_doc" model="ir.actions.act_window">
             <field name="name">E-Signature Documents</field>

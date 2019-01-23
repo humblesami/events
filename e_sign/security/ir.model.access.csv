@@ -1,4 +1,6 @@
 "id","name","model_id/id","group_id/id","perm_read","perm_write","perm_create","perm_unlink"
 
-"e_sign_user","E-Sign User","e_sign.model_e_sign_signature","group_sign_user",1,1,0,0
-"e_sign_admin","E-Sign Admin","e_sign.model_e_sign_signature","group_sign_manager",1,1,1,1
+"e_sign_user_sign","E-Sign User","e_sign.model_e_sign_signature","group_sign_user",1,1,0,0
+"e_sign_admin_sign","E-Sign Admin","e_sign.model_e_sign_signature","group_sign_manager",1,1,1,1
+"e_sign_user_doc","E-Sign User","e_sign.model_e_sign_document","group_sign_user",1,1,0,0
+"e_sign_admin_doc","E-Sign Admin","e_sign.model_e_sign_document","group_sign_manager",1,1,1,1

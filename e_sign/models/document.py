@@ -110,7 +110,7 @@ class Document(models.Model):
 
     def send_next_mail(self,sign):
         """ Create one mail by recipients and replace __URL__ by link with identification token """
-        req_env = http.request.env
+        req_env = self.env
         all_signs=req_env['e_sign.signature'].search([('token', '=', sign.token)])
         all_signed=True
         for s in all_signs:
@@ -284,8 +284,8 @@ class Document(models.Model):
             'view_mode': 'form',
             'res_model': self._name,
             'res_id': self.id,
-            'context':self._context,
-            'target': 'new',
+            'context': {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
+            'target': 'current',
         }
 
     @api.model

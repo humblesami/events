@@ -54,6 +54,14 @@
         background: rgb(50, 54, 57);
 
         }
+        @media screen and (max-width: 600px){
+                                #nxxt_sign {
+                                width: 90px!important;
+
+                                height: 25px;
+                                font-size: 0.8em;
+                                }
+
         .position_btns{
          z-index:999
         }
@@ -108,7 +116,7 @@
 
     <field name="id" class="e_sign_doc_id" invisible="1"/>
      <group>
-       <field name="workflow_enabled" groups="dn_base.group_dn_app_manager" class="e_sign_wrk_flow" />
+       <!--<field name="workflow_enabled" groups="dn_base.group_dn_app_manager" class="e_sign_wrk_flow" />-->
     </group>
     <div class="sign-position dev_only"/>
 

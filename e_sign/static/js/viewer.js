@@ -40,7 +40,7 @@ $(function(){
             loadData();
 
 $('#scaleSelect')[0].selectedIndex = 4;
-$('.modal-footer:last').hide();
+//$('.modal-footer:last').hide();
 
 function renderPDF(s) {
 
@@ -306,14 +306,22 @@ function loadSignatures(data){
                // $("#signature-position").css({ background: 'green', color: 'white', cursor: 'move' });
             },
             drag: function (event, ui) {
+            console.log(event,ui);
                 //var st = parseInt($(this).data("startingScrollTop"));
                 //ui.position.top -= $(this).parent().parent().scrollTop() - st;
                 var positionX = $(this).position().left;
-                var positionY = $(this).position().top+$(this).parent().scrollTop();
+                var positionY = $(this).position().top//+$(this).parent().scrollTop();
+                var thresh = $(this).parent().parent().height() - 40;
+                if(positionY-$(this).parent().parent().scrollTop()>thresh){
+                    console.log("yyyyyyyyyyyyyyyyyyy");
+                    $( '#page_container1').animate({scrollTop: $(this).parent().parent().scrollTop()+133}, 7)
+                }
+
+
 
                 var percent_left=(positionX/canvas.width)*100;
                 var percent_top=(positionY/canvas.height)*100;
-                $('.pstion').html('Sign Here - Positions:' + percent_left + "X" + percent_top);
+                $('.sign-position').html('Sign Here - Positions:' + positionX + "X" + ($(this).position().top-$(this).parent().parent().scrollTop())+"-----"+thresh);
             },
             cursor: 'move'
         }).resizable();
@@ -363,14 +371,15 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
 
 		body.html("<h2>Select User</h2>").append(dropdown).append(input_email).append(input_name);
-		if($('.youtubeVideoModal .modal-footer').length == 0){
-            content.append(footer);
-            footer.append(save_btn);
-            }
-            else{
-                $('.youtubeVideoModal .modal-footer').html("");
-                $('.youtubeVideoModal .modal-footer').append(save_btn);
-            }
+		body.append(save_btn);
+//		if($('.youtubeVideoModal .modal-footer').length == 0){
+//            content.append(footer);
+//            footer.append(save_btn);
+//            }
+//            else{
+//                $('.youtubeVideoModal .modal-footer').html("");
+//                $('.youtubeVideoModal .modal-footer').append(save_btn);
+//            }
 
         dropdown.append($("<option />").val(0).text("Select User"));
 		$.each(users, function() {
@@ -382,7 +391,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
         });
         save_btn.click(function(e){
             var arr=[];
-            var work_flow_enabled=$('.e_sign_wrk_flow input')[0].checked;
+//            var work_flow_enabled=$('.e_sign_wrk_flow input')[0].checked;
             var user=dropdown.val();
             var email =input_email[1].value;
             var name =input_name[0].value;
@@ -420,7 +429,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                     req_url = '/e-sign/save_sign_data';
 
 
-                    var input_data={'data':JSON.stringify(arr),document_id:doc_id,url:url,work_flow_enabled:work_flow_enabled};
+                    var input_data={'data':JSON.stringify(arr),document_id:doc_id,url:url,work_flow_enabled:false};
                     dn_json_rpc(req_url,input_data,function(data){
                         doc_data=data.doc_data;
                         renderPage(pageNum);
@@ -452,20 +461,9 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
     var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
     var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
 
-    $('.youtubeVideoModal .modal-footer').html("");
 
-        if($('.youtubeVideoModal .modal-footer').length == 0){
-            content.append(footer);
-            if(my_record=="true"){
-                footer.append(save_btn);
-            }
-        }
-        else{
-            if(my_record=="true"){
-                $('.youtubeVideoModal .modal-footer').append(save_btn);
-            }
 
-        }
+
 
 
 
@@ -494,13 +492,16 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 
                 if(isAdmin){
 //                    signature_editor.before(del_btn);
-                    $('.youtubeVideoModal .modal-footer').append(del_btn);
+                    body.append(del_btn);
 
                 }
+                if(my_record=="true"){
+                body.append(save_btn);
+            }
             }
             else{
                 body.append('<h2>Username:</h2>'+usr_name);
-                $('.youtubeVideoModal .modal-footer').append(del_btn);
+                body.append(del_btn);
             }
             signature_editor.signature();
 
@@ -550,16 +551,19 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 //                    hidden_image.attr('src',dataURL);
                     img.src = dataURL;
                 }
+                $('#loaderContainerajax').hide();
             }
 
 
             var auto_clicked=false;
 
             auto_sign.click(function(e){
+                 $('#loaderContainerajax').show();
                 auto_clicked=true;
                 req_url = '/e-sign/save_signature';
                 input_data = {signature_id:signature_id,document_id:doc_id,token:token, binary_signature :"", type:"auto",url:url};
                 dn_json_rpc(req_url,input_data, load_signature);
+
             });
 
 
@@ -591,7 +595,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
             });
 
             save_btn.click(function(e){
-
+                 $('#loaderContainerajax').show();
                 var type="draw";
                 dataURL = myCanvas.toDataURL();
                 var empty_url="data:image/png;base64,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"
@@ -609,6 +613,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                     doc_data=data.doc_data;
                     renderPDF(data.pdf_binary);
                     $('.youtubeVideoModal').modal('hide');
+                     $('#loaderContainerajax').hide();
                 });
 
             });
@@ -655,21 +660,14 @@ $(document).on("click",".saved_sign.is_date", function(e){
 
         input_date.val($.datepicker.formatDate('dd/mm/yy', new Date()));
 		body.html("<h2>Username:</h2>"+usr_name+"<h2>Date:</h2>").append(input_date);
-		$('.youtubeVideoModal .modal-footer').html("");
 
-        if($('.youtubeVideoModal .modal-footer').length == 0){
-            content.append(footer);
+
             if(my_record=="true"){
-                footer.append(save_btn);
+                body.append(save_btn);
             }
-        }
-        else{
-            if(my_record=="true"){
-                $('.youtubeVideoModal .modal-footer').append(save_btn);
-            }
-        }
+
         if(isAdmin){
-            $('.youtubeVideoModal .modal-footer').append(del_btn);
+            body.append(del_btn);
 
         }
 

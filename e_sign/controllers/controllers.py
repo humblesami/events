@@ -13,7 +13,7 @@ from PIL import Image, ImageFont, ImageDraw
 
 class Signature(http.Controller):
 
-    @http.route('/e-sign/get_signature', csrf=False,auth='none')
+    @http.route('/e-sign/get_signature', csrf=False,auth='public')
     def get_signature(self, **kw):
         try:
             if not kw:
@@ -39,7 +39,7 @@ class Signature(http.Controller):
         except:
             return ws_methods.handle
 
-    @http.route('/e-sign/save_signature', csrf=False,auth='none')
+    @http.route('/e-sign/save_signature', csrf=False,auth='public')
     def save_signature(self, **kw):
         doc = False
         try:
@@ -58,8 +58,11 @@ class Signature(http.Controller):
             signature_id = kw['signature_id']
             token = kw.get('token')
             sign = http.request.env['e_sign.signature'].sudo().search([('id', '=', signature_id)])
-            if token:
+            if http.request.uid ==4:
                 if token!=sign.token:
+                    raise UserError(("Unauthorized"))
+            else:
+                if http.request.uid !=sign.user_id.id:
                     raise UserError(("Unauthorized"))
             binary_signature = ""
             if kw['type'] == "upload":
@@ -90,7 +93,7 @@ class Signature(http.Controller):
         except:
             return ws_methods.handle
 
-    @http.route('/e-sign/delete_signature', csrf=False,auth='none')
+    @http.route('/e-sign/delete_signature', csrf=False,auth='public')
     def delete_signature(self, **kw):
         doc = False
         try:
@@ -121,7 +124,7 @@ class Signature(http.Controller):
             return ws_methods.handle
 
 
-    @http.route('/e-sign/get_doc_data', csrf=False,auth='none')
+    @http.route('/e-sign/get_doc_data', csrf=False,auth='public')
     def get_docc_data(self, **kw):
         try:
             if not kw:
@@ -152,7 +155,7 @@ class Signature(http.Controller):
         except:
             return ws_methods.handle
 
-    @http.route('/e-sign/save_sign_data', csrf=False,auth='none')
+    @http.route('/e-sign/save_sign_data', csrf=False,auth='public')
     def save_sign_data(self, **kw):
         try:
             if not kw:
@@ -210,7 +213,7 @@ class Signature(http.Controller):
 
     # Public signature
     @http.route(['/e_sign/sign/<string:model>/<string:token>'],
-                type='http', auth='none', website=True)
+                type='http', auth='public', website=True)
     def start_sign(self,model=None, token=None, **post):
         if not token:
             return
@@ -326,12 +329,13 @@ class Signature(http.Controller):
             'email_from': '"OdooHQ" <a@a.com>',
             'auto_delete': True,
         }
-        if user_email:
-            u=req_env['res.users'].search([('email','=',user_email)])
-            values['recipient_ids'] = [(4, u.partner_id.id)]
-        if email:
-            values['email_to'] = email
-        Mail.create(values).send()
+        if user_email or email:
+            if user_email:
+                u=req_env['res.users'].search([('login','=',user_email)])
+                values['recipient_ids'] = [(4, u.partner_id.id)]
+            if email:
+                values['email_to'] = email
+            Mail.create(values).send()
 
     def get_users(self,doc):
         usrs=request.env['res.users'].sudo().search([])

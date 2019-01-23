@@ -14,7 +14,9 @@
          <record model="res.groups" id="group_meeting_director">
             <field name="name">Director</field>
             <field name="category_id" ref="module_category_meeting"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user')),(4, ref('group_meeting_base'))
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))
+            ,(4, ref('group_meeting_base')),
+            (4, ref('e_sign.group_sign_user'))
             ,(4, ref('survey.group_survey_user'))]"/>
             <field name="user_model_ids" eval="[(4, ref('meeting_point.model_meeting_point_users'))]"/>
         </record>
