@@ -5,7 +5,7 @@
             <field name="name">attendance records tree</field>
             <field name="model">attendance.record</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree edit="false">
                     <field name="employee_id"/>
                     <field name="punch_time"/>
                     <field name="punch_type"/>
@@ -13,12 +13,48 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="schedule_form_view">
+            <field name="name">Schedule form view</field>
+            <field name="model">schedule.info</field>
+            <field name="arch" type="xml">
+                <form modifiers="{}" create="false" edit="false">
+                    <sheet string="schedule" modifiers="{}">
+                        <group col="4" modifiers="{}">
+                            <field name="expected_check_in" modifiers="{}"/>
+                            <field name="expected_check_out" modifiers="{}"/>
+                            <field name="break_start" modifiers="{}"/>
+                            <field name="break_end" modifiers="{}"/>
+                            <separator modifiers="{}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+             <record model="ir.ui.view" id="customform_attendance_record">
+            <field name="name">attendance records form</field>
+            <field name="model">attendance.record</field>
+            <field name="arch" type="xml">
+             <form modifiers="{}" edit="false">
+                <sheet string="attendance.record" modifiers="{}">
+                    <group col="4" modifiers="{}">
+                        <field name="employee_id" can_create="true" can_write="true" modifiers="{'required':true}"/>
+                        <field name="punch_time" modifiers="{'required':true}"/>
+                        <field name="punch_type" modifiers="{}"/>
+                        <field name="work_date" modifiers="{}"/>
+                        <field name="request_id" can_create="false" can_write="false" class = "oe_read_only" modifiers="{}"/>
+                        <field name="attendance_id" can_create="false" can_write="false" modifiers="{}"/>
+                        <separator modifiers="{}"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
           <record id="record_attendance_user_kanban" model="ir.ui.view">
             <field name="name">attendance_record.kanban</field>
             <field name="model">attendance.record</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban" create="false" delete = "false">
+                <kanban class="o_hr_employee_kanban" edit="false" delete = "false">
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click">
@@ -187,7 +223,7 @@
             <field name="name">attendance_daily_form_view</field>
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
-           <form>
+           <form edit="false" create="false">
                <div class="row">
                    <header>
                        <field name="state" widget="statusbar" clickable = "1"/>
@@ -248,9 +284,9 @@
             <field name="name">attendance_daily_form_view</field>
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
-           <form create="false"  delete="false">
+           <form create="false"  delete="false" edit="false">
                <header>
-                   <button name="%(dn_attendance.action_attendance_wizard)d" type="action" string="Request Review" class="oe_highlight " context= "{'current_id': id}" attrs="{'invisible': [('state', '==', 'done')]}"/>
+                   <button name="%(dn_attendance.action_attendance_wizard)d" type="action" string="Request Review" class="oe_highlight " context= "{'current_id': id,'work_date':work_date}" attrs="{'invisible': ['|',('state', '==', 'done'),('state','==','confirm')]}"/>
                    <field name="state" widget="statusbar" readonly="False"/>
                </header>
 	    <sheet string="attendance.daily">
@@ -262,6 +298,7 @@
                     <field name="work_hour" widget="float_time" readonly="1"/>
                     <field name="late_minutes" widget="float_time" readonly="1"/>
                     <field name="work_date" readonly="1"/>
+                    <field name = "request_data" readonly="1"/>
                     <newline modifiers="{}"/>
                      <field colspan="4" name="attendance_record_ids" readonly="1">
                       <tree default_order="punch_time">

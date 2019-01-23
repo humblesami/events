@@ -5,13 +5,19 @@
             <field name="name">Request for attendance Review</field>
             <field name="model">attendance.wizard</field>
             <field name="arch" type="xml">
-                <form>
-                    <label for = "message"/>
-                    <field name="message" string = 'Request Message' modifiers="{'readonly':false}"/>
-
+            <form edit="false">
+                <group col="2" modifiers="{}">
+                    <field name="message" string="Request Message" modifiers="{'readonly':false}"/>
+                    <newline modifiers="{}"/>
+                    <field name="work_date" readonly="1"/>
+                    <newline modifiers="{}"/>
+                    <field name="employee_id" readonly="1"/>
+                    <field name = "create_date" readonly="1"/>
+                    <field name = "create_uid" readonly="1"/>
+                </group>
                     <footer>
-                        <button string="Send Request" name="send_request" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Send Request" name="send_request" type="object" class="btn-primary oe_edit_only" />
+                        <button string="Cancel" class="btn-default oe_edit_only" special="cancel"/>
                     </footer>
                 </form>
             </field>

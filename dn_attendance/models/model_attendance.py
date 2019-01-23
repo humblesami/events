@@ -22,6 +22,7 @@ class AttendaceRecord(models.Model):
         ('check_out', 'check_out')
     ])
     work_date = fields.Date()
+    request_id = fields.Many2one("attendance.wizard","Request Id")
     attendance_id = fields.Many2one('attendance.daily', ondelete='cascade')
     _sql_constraints = [
         ('attendance_employee_id_punch_time', 'unique(employee_id,punch_time)',
@@ -79,6 +80,14 @@ class AttendaceRecord(models.Model):
     def create(self, vals):
         work_date = dn_dt.strdtTostrdate(vals['punch_time'])
         vals['work_date'] = work_date
+        request_id =self.env['attendance.wizard'].search([('work_date','=',work_date)])
+        create_uid = self.env['res.users'].search([('id', '=',self._uid )]).login
+        if (request_id ):
+            vals['request_id'] = request_id.id
+        elif(create_uid == 'machine@odoohq.com'):
+            a=1
+        elif((request_id.id == False)  & (create_uid != 'machine@odoohq.com')):
+            raise Warning('You cannot create a record with out a request from user for its review')
         vals, daily_attendance_object = self.find_create_daily_attendance(vals)
         res = super(AttendaceRecord, self).create(vals)
         if daily_attendance_object.processed > 0:
@@ -176,9 +185,10 @@ class AttendanceDaily(models.Model):
             if calc:
                 res,finalScheule=obj.calculate_work_hours(daily_attendance_object)
                 if self.request_data.id:
-                    updateSchedule = self.request_data.sudo().write(
-                        {'expected_check_in': finalScheule.hour_from, 'expected_check_out': finalScheule.hour_to,
-                         'break_start': finalScheule.break_start, 'break_end': finalScheule.break_end})
+                    # updateSchedule = self.request_data.sudo().write(
+                    #     {'expected_check_in': finalScheule.hour_from, 'expected_check_out': finalScheule.hour_to,
+                    #      'break_start': finalScheule.break_start, 'break_end': finalScheule.break_end})
+                    tempVal = 1
 
                 else:
                     updateSchedule =  self.request_data.sudo().create({'expected_check_in':finalScheule.hour_from,'expected_check_out':finalScheule.hour_to,'break_start':finalScheule.break_start,'break_end':finalScheule.break_end})
@@ -200,18 +210,16 @@ class AttendanceDaily(models.Model):
             tempEmployee = values['employee_id']
             attendanceLength = values.attendance_record_ids._ids.__len__()
             if attendanceLength % 2 == 0:
-                print('check cron')
                 finalId = values.attendance_record_ids._ids[attendanceLength - 1]
                 attendnaceRecord = self.env['attendance.record'].search([('id', '=', finalId)]).punch_time
                 res = values.write({'check_out': attendnaceRecord})
                 values.processed = 1
             else:
-                print('cron part 2')
                 finalId = values.attendance_record_ids._ids[attendanceLength - 2]
                 attendnaceRecord = self.env['attendance.record'].search([('id', '=', finalId)]).punch_time
                 res = values.write({'check_out': attendnaceRecord})
                 values.processed = 1
-                schedule_on_day = workhours.on_date_schedule(finalSchedule, work_date)
+                # schedule_on_day = workhours.on_date_schedule(finalSchedule, work_date)
             finalResult = self.sudo().env['hr.attendance'].create(
                 {'worked_hours1': values['work_hour'], 'employee_id': tempEmployee.id,
                  'check_in': values['check_in'], 'work_date': values['work_date'],
@@ -259,6 +267,8 @@ class AttendanceWizard(models.Model):
     _name = "attendance.wizard"
 
     message = fields.Char(string="Request body")
+    work_date = fields.Date()
+    employee_id = fields.Many2one("hr.employee")
     # 0
     @api.multi
     def send_request(self):
@@ -267,7 +277,11 @@ class AttendanceWizard(models.Model):
         data_id = self._context.get('current_id')
         check_state = self.env['attendance.daily'].search([('id', '=', data_id)])
         if check_state.state == 'confirm':
+            wizard_deletion =self.unlink()
             raise Warning(_('This attendance is already in Review'))
+        elif check_state.state == False:
+            raise Warning(_('This Request was already generated'))
+        self.write({"work_date": self._context['work_date'], "employee_id": check_state.employee_id.id})
         modeled = self._context.get('active_model')
         action_id = self.env['ir.model.data'].get_object_reference('dn_attendance', 'action_attendance_daily')
         base_url = self.sudo().env['ir.config_parameter'].get_param('web.base.url')
@@ -292,7 +306,7 @@ class AttendanceWizard(models.Model):
 
 
         super(AttendanceDaily, check_state.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).sudo().write(
-            {'state': 'confirm','request_data':self.id})
+            {'state': 'confirm'})
 
         return {
             'name': 'Message',
@@ -317,9 +331,3 @@ class AttendanceWizard(models.Model):
                 users_ids.append(mail_temp)
         return users_ids
 
-class ScheduleInfo(models.Model):
-    _name = "schedule.info"
-    expected_check_in = fields.Float(string="Expected CheckIn")
-    expected_check_out = fields.Float(string="Expected Checkout")
-    break_start = fields.Float(string="Break Start")
-    break_end = fields.Float(string="Break End")
