@@ -52,8 +52,6 @@ $(function() {
         var domain = "meet.jit.si";
         var config = {
             enableUserRolesBasedOnToken: true,
-            startWithVideoMuted: true,
-            channelLastN: 1,
             // Local Recording
             localRecording: {
                 //Enables local recording.
@@ -65,7 +63,6 @@ $(function() {
         };
 
         var interfaceConfig = {
-
             SHOW_JITSI_WATERMARK: false,
             //JITSI_WATERMARK_LINK: 'https://jitsi.org',
             JITSI_WATERMARK_LINK: '',
@@ -88,7 +85,7 @@ $(function() {
              */
             TOOLBAR_BUTTONS: [
                 'microphone',
-//                'camera',
+                'camera',
                 //'closedcaptions',
                 'desktop',
                 'fullscreen',
@@ -118,8 +115,8 @@ $(function() {
 
         var options = {
             roomName: roomName,
-            width: "100%",//window.innerWidth - 10,
-            height: "90%",//window.innerHeight - 65,
+            width: window.innerWidth - 10,
+            height: window.innerHeight - 65,
             parentNode: document.querySelector('#meeting-room'),
             configOverwrite: config,
             //jwt: "dnmeetvuemeetingtoken",
@@ -150,13 +147,13 @@ $(function() {
             },
             videoConferenceLeft: function(data) {
                 $('#jitsi-meet-container').hide();
-//                if (is_admin) {
-//                    dn_json_rpc('/meeting/moderatorleft', {
-//                        meeting_id: meeting_id
-//                    }, function(data) {
-//
-//                    });
-//                }
+                if (is_admin) {
+                    dn_json_rpc('/meeting/moderatorleft', {
+                        meeting_id: meeting_id
+                    }, function(data) {
+
+                    });
+                }
                 go_back_meeting();
             },
             participantLeft: function(data) {

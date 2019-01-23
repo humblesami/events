@@ -106,6 +106,7 @@ var dn_json_rpc_object = {
                     dn_json_rpc_object.handleError(results, reqfun, failureCallBack);
                 },
                 complete:function(){
+                    $('#loaderContainerajax').hide();
                     dn_json_rpc_object.showHideLoader();
                 }
             });

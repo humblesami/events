@@ -127,13 +127,13 @@ class meeting(http.Controller):
                 return ws_methods.http_response('Invalid Password Provided')
 
             res = {}
-            if uid == 1 or meeting.moderator == 0:
-                if http.request.env.user.has_group('meeting_point.group_meeting_admin'):
-                    meeting.moderator = uid
-                    message = 'Meeting ' + meeting.name + ' has started, please click following link to join <a href=/conference/'+str(meeting.id)+'/'+meeting.pin+'>'+meeting.name+'</a>'
-                    res['message'] = message
-                else:
-                    return ws_methods.http_response("Waiting moderator")
+            # if uid == 1 or meeting.moderator == 0:
+            #     if http.request.env.user.has_group('meeting_point.group_meeting_admin'):
+            #         meeting.moderator = uid
+            #         message = 'Meeting ' + meeting.name + ' has started, please click following link to join <a href=/conference/'+str(meeting.id)+'/'+meeting.pin+'>'+meeting.name+'</a>'
+            #         res['message'] = message
+            #     else:
+            #         return ws_methods.http_response("Waiting moderator")
 
             if not meeting.pin:
                 return ws_methods.http_response('No pin defined for meeting')
