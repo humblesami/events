@@ -241,9 +241,11 @@ class meeting(http.Controller):
             if 'data' in values:
                 values = values['data']
             meeting_id = values.get('id')
+            meeting_id = int(meeting_id)
             if not meeting_id:
                 return ws_methods.http_response('Please provide meeting id')
-            meeting = req_env['calendar.event'].sudo().search([('id', '=', int(values["id"]))])
+            filters = [('id', '=', meeting_id)]
+            meeting = req_env['calendar.event'].search(filters)
             props = ['id', 'start', 'stop', 'duration', 'video_call_link','conference_status', 'conference_bridge_number', 'pin',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'attendee_status', 'company']
@@ -280,7 +282,7 @@ class meeting(http.Controller):
             id = int(values["id"])
             date_value = dn_dt.nowtostr()
             filters = [('id', '=', id)]
-            meeting = req_env['calendar.event'].search(filters, limit=1, order='id')
+            meeting = req_env['calendar.event'].search(filters)
             props = ['id', 'start', 'stop', 'conference_status', 'duration', 'zip', 'video_call_link',
                      'conference_bridge_number', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
