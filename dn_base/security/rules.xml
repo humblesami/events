@@ -1,39 +1,42 @@
 <odoo>
     <data>
 
-        <record id="dn_base_comments_rule" model="ir.rule">
-            <field name="name">Read All comments and Own Notes</field>
+        <record id="dn_base_comments_restrict_rule" model="ir.rule">
+            <field name="name">Restrict comment notes read update</field>
             <field name="model_id" ref="mail.model_mail_message"/>
-            <field name="domain_force">['|',('subtype_id.name','!=','Note'),"&amp;",('subtype_id.name','=','Note'),('create_uid','=',user.id)]</field>
+            <field name="domain_force">[('create_uid','=',0)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+        <record id="dn_base_comments_allow_rule" model="ir.rule">
+            <field name="name">Read update my comments notes</field>
+            <field name="model_id" ref="mail.model_mail_message"/>
+            <field name="domain_force">[('create_uid','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+
+        <record id="dn_base_comments_allow_read_ruel" model="ir.rule">
+            <field name="name">Allow all comment read</field>
+            <field name="model_id" ref="mail.model_mail_message"/>
+            <field name="domain_force">[('subtype_id.name','!=','Note')]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field eval="0" name="perm_unlink"/>
             <field eval="0" name="perm_write"/>
             <field eval="1" name="perm_read"/>
-            <field eval="1" name="perm_create"/>
+            <field eval="0" name="perm_create"/>
         </record>
 
-        <!--Above rule dnt give access if subtype_id is False-->
-        <!--<record id="dn_base_message_" model="ir.rule">-->
-            <!--<field name="name">Message rule admin</field>-->
-            <!--<field name="model_id" ref="mail.model_mail_message"/>-->
-            <!--<field name="domain_force">[('message_type','!=','note')] </field>-->
-            <!--<field name="groups" eval="[(4, ref('base.group_user'))]"/>-->
-            <!--<field eval="0" name="perm_unlink"/>-->
-            <!--<field eval="0" name="perm_write"/>-->
-            <!--<field eval="1" name="perm_read"/>-->
-            <!--<field eval="0" name="perm_create"/>-->
-        <!--</record>-->
 
-         <!--<record id="dn_base_message_read_rule_admin" model="ir.rule">-->
-            <!--<field name="name">Message update rule</field>-->
-            <!--<field name="model_id" ref="mail.model_mail_message"/>-->
-            <!--<field name="domain_force">[('create_uid','=',user.id)] </field>-->
-            <!--<field name="groups" eval="[(4, ref('base.group_user')),(4, ref('base.group_portal'))]"/>-->
-            <!--<field eval="1" name="perm_unlink"/>-->
-            <!--<field eval="1" name="perm_write"/>-->
-            <!--<field eval="0" name="perm_read"/>-->
-            <!--<field eval="0" name="perm_create"/>-->
-        <!--</record>-->
+
 
         <record id="access_base_user_profile" model="ir.rule">
             <field name="name">Limiting access to user own profile</field>

@@ -45,14 +45,21 @@ def addNotification(notify_data, targets):
                 else:
                     note_status.counter += 1
     else:
-        notification_obj = req_env['dn_base.notification'].create({
+        notification_data = {
             "content": notify_data.get('content'),
             "res_model": notify_data.get('res_model'),
             "res_id": notify_data.get('res_id'),
             "client_route": notify_data.get('client_route'),
-            "parent_model": notify_data.get('parent_model'),
-            "parent_id": notify_data.get('parent_id')
-        })
+        }
+        parent_model = notify_data.get('parent_model')
+        if parent_model:
+            notification_data['parent_model'] = notify_data.get('parent_model')
+
+        parent_id = notify_data.get('parent_id')
+        if parent_id:
+            notification_data['parent_id'] = notify_data.get('parent_id')
+
+        notification_obj = req_env['dn_base.notification'].create(notification_data)
 
         props = ['id', 'content', 'res_model', 'res_id', 'client_route', 'parent_model', 'parent_id']
         notification = object_to_json_object(notification_obj, props)
