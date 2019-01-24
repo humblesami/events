@@ -321,7 +321,8 @@ function loadSignatures(data){
 
                 var percent_left=(positionX/canvas.width)*100;
                 var percent_top=(positionY/canvas.height)*100;
-                $('.sign-position').html('Sign Here - Positions:' + positionX + "X" + ($(this).position().top-$(this).parent().parent().scrollTop())+"-----"+thresh);
+//                $('.sign-position').html('Sign Here - Positions:' + positionX + "X" + ($(this).position().top-$(this).parent().parent().scrollTop())+"-----"+thresh);
+
             },
             cursor: 'move'
         }).resizable();
@@ -334,9 +335,9 @@ function loadSignatures(data){
             var top=parseFloat(new_signature[0].style.top)-$(this).parent().position().top+$(this).parent().scrollTop();
             var percent_left=(left/canvas.width)*100;
             var percent_top=(top/canvas.height)*100;
-           new_signature.css({position:'absolute',left:percent_left+"%",top:percent_top+"%"});
+           new_signature.css({position:'absolute',left:percent_left+"%",top:percent_top+"%",overflow:'hidden'});
 //           new_signature.append('<i class="fa fa-pencil  fa-lg  edit_sign" style="color:black;float:right;margin-right:10px;" aria-hidden="true"/>');
-           new_signature.append('<i class="fa fa-times  fa-lg del_sign" style="margin-top:-6px;color:black;float:right" aria-hidden="true"/>');
+           new_signature.prepend('<i class="fa fa-times  fa-lg del_sign" style="margin-top:-6px;color:black;float:left" aria-hidden="true"/>');
            new_signature.attr({"page":pageNum});
             $(this).append(new_signature);
             $(".save_doc_data").removeAttr('disabled');
