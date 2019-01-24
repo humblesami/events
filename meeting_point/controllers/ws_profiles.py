@@ -1,9 +1,11 @@
 import base64
+import os
 
 import requests
 from odoo import http
 from dateutil import parser
 from odoo.addons.dn_base import ws_methods
+from PIL import Image, ImageFont, ImageDraw
 from dateutil.relativedelta import relativedelta
 
 
@@ -201,8 +203,30 @@ class ws_profile(http.Controller):
                 return ws_methods.not_logged_in()
             if 'data' in values:
                 values = values['data']
-
             req_env = http.request.env
+            if values['type'] == "auto":
+                curr_dir = os.path.dirname(__file__)
+                pth = curr_dir.replace('controllers', 'doc_signs')
+                font_dir = curr_dir.replace('controllers', 'static')
+                user=req_env['res.users'].search([('user_id', '=', uid)])
+
+                font = ImageFont.truetype(font_dir + "/FREESCPT.TTF", 200)
+                sz = font.getsize(user.name)
+                sz = (sz[0] + 50, sz[1])
+                img = Image.new('RGB', sz, (255, 255, 255))
+                d = ImageDraw.Draw(img)
+                d.text((40, 0), user.name, (0, 0, 0), font=font)
+                uid = http.request.env.user.id
+                img_path = pth + "/" + str(uid) + "piic.png"
+                img.save(img_path)
+
+                res = open(img_path, 'rb')
+                read = res.read()
+                binary_signature = base64.encodebytes(read)
+                binary_signature = binary_signature.decode('utf-8')
+                return ws_methods.http_response('', {"signature": binary_signature})
+
+
             user = req_env['dnspusers'].search([('user_id', '=', uid)])
             user.signature = values['binary_signature']
             return ws_methods.http_response('', "ok")
