@@ -150,6 +150,8 @@ class Signature(http.Controller):
 
             pdf=doc.pdf_doc.decode('utf-8')
             is_admin = req_env.user.has_group('dn_base.group_dn_app_manager')
+            if token:
+                is_admin=False
             return ws_methods.http_response('', {"pdf_binary": pdf,"users":users,"doc_data":doc_data,"isAdmin":is_admin})
 
         except:
