@@ -56,14 +56,12 @@ class Holidays(models.Model):
                         dayLocation = int(val.dayofweek)
                         day[dayLocation] = '1'
                 self.duration_temp = '8'
-                x = np.asarray(day)
-                x = ''.join(x)
-                days = int(np.busday_count(date_from, date_to,weekmask=x))
+                date_mask_array = np.asarray(day)
+                date_mask_array = ''.join(date_mask_array)
+                days = int(np.busday_count(str(date_from.date()), str(date_to.date()),weekmask=date_mask_array))
                 tempValue = float((int(self.duration_temp)/HOURS_PER_DAY)*(days+1))
 
             self.number_of_days_temp = tempValue
-
-            # super(superHolidays, self)._onchange_date_to(self)
         else:
             self.number_of_days_temp = 0
 

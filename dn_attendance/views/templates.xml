@@ -5,7 +5,7 @@
             <field name="name">Request for attendance Review</field>
             <field name="model">attendance.wizard</field>
             <field name="arch" type="xml">
-            <form edit="false">
+            <form edit="false" create="false" delete ="false">
                 <group col="2" modifiers="{}">
                     <field name="message" string="Request Message" modifiers="{'readonly':false}"/>
                     <newline modifiers="{}"/>

@@ -246,6 +246,7 @@
                         <field name = "punch_time"/>
                         <field name = "punch_type"/>
                         <field name = "work_date"/>
+                        <field name="request_id"/>
                       </tree>
                     </field>
                     <newline modifiers="{}"/>
@@ -259,7 +260,7 @@
             <field name="name">attendance_daily_tree</field>
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
-                <tree  decoration-danger="state=='draft'" decoration-success = "state=='done'" decoration-info = "state=='confirm'">
+                <tree  decoration-danger="state=='draft'" decoration-success = "state=='done'" decoration-info = "state=='confirm'" create="false" edit="false" delete="false">
                   <field name="work_date"/>
                     <field name="employee_id"/>
                     <field name="check_in"/>

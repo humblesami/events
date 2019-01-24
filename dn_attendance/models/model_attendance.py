@@ -80,8 +80,8 @@ class AttendaceRecord(models.Model):
     def create(self, vals):
         work_date = dn_dt.strdtTostrdate(vals['punch_time'])
         vals['work_date'] = work_date
-        request_id =self.env['attendance.wizard'].search([('work_date','=',work_date)])
-        create_uid = self.env['res.users'].search([('id', '=',self._uid )]).login
+        request_id =self.env['attendance.wizard'].search([('work_date','=',work_date)],limit=1)
+        create_uid = self.env['res.users'].search([('id', '=',self._uid )] , limit=1).login
         if (request_id ):
             vals['request_id'] = request_id.id
         elif(create_uid == 'machine@odoohq.com'):
@@ -277,11 +277,12 @@ class AttendanceWizard(models.Model):
         data_id = self._context.get('current_id')
         check_state = self.env['attendance.daily'].search([('id', '=', data_id)])
         if check_state.state == 'confirm':
-            wizard_deletion =self.unlink()
+            wizard_deletion =self.sudo().unlink()
             raise Warning(_('This attendance is already in Review'))
         elif check_state.state == False:
             raise Warning(_('This Request was already generated'))
         self.write({"work_date": self._context['work_date'], "employee_id": check_state.employee_id.id})
+
         modeled = self._context.get('active_model')
         action_id = self.env['ir.model.data'].get_object_reference('dn_attendance', 'action_attendance_daily')
         base_url = self.sudo().env['ir.config_parameter'].get_param('web.base.url')
