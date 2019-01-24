@@ -139,7 +139,9 @@
         <menuitem id="schedule_actions_custom" action="cron_action_view"
                   parent="dn_attendance.menu_root_attendance"
                   name="Schedule Actions"
-                  groups="group_leave_custom_admin,group_leave_custom_super_user"/>
+                  groups="group_leave_custom_admin,group_leave_custom_super_user"
+                  sequence="100"
+        />
 
     </data>
 </odoo>
