@@ -12,14 +12,12 @@
             <field eval="1" name="perm_create"/>
         </record>
 
-        
-
         <!--Above rule dnt give access if subtype_id is False-->
         <!--<record id="dn_base_message_" model="ir.rule">-->
             <!--<field name="name">Message rule admin</field>-->
             <!--<field name="model_id" ref="mail.model_mail_message"/>-->
             <!--<field name="domain_force">[('message_type','!=','note')] </field>-->
-            <!--<field name="groups" eval="[(4, ref('dn_base.group_user'))]"/>-->
+            <!--<field name="groups" eval="[(4, ref('base.group_user'))]"/>-->
             <!--<field eval="0" name="perm_unlink"/>-->
             <!--<field eval="0" name="perm_write"/>-->
             <!--<field eval="1" name="perm_read"/>-->
@@ -36,8 +34,6 @@
             <!--<field eval="0" name="perm_read"/>-->
             <!--<field eval="0" name="perm_create"/>-->
         <!--</record>-->
-
-
 
         <record id="access_base_user_profile" model="ir.rule">
             <field name="name">Limiting access to user own profile</field>
