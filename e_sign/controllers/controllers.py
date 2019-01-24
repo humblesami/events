@@ -62,7 +62,7 @@ class Signature(http.Controller):
                 if token!=sign.token:
                     raise UserError(("Unauthorized"))
             else:
-                if http.request.uid !=sign.user_id.id:
+                if http.request.uid !=sign.user_id.id and token!=sign.token:
                     raise UserError(("Unauthorized"))
             binary_signature = ""
             if kw['type'] == "upload":
