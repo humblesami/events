@@ -102,53 +102,6 @@
 
 
                         <form>
-                            <style>
-
-                                .top_btns {
-                                background: rgb(50, 54, 57);
-                                padding: 2px;
-                                }
-
-                                .pg_no{
-                                color: white;
-                                }
-
-                                .doc_btn {
-                                background-color: gray;
-                                color: white;
-                                margin: 2px;
-                                }
-
-
-                                .edit_sign:hover,.del_sign:hover {
-                                background-color: white;
-
-                                }
-
-                                #page_container1{
-                                height: calc(100vh - 117px)!important;
-                                }
-
-                                .container {
-                                width: 100%;
-                                }
-
-                                .navbar.navbar-static-top {
-                                margin-top: 12px;
-                                display: none;
-                                }
-                                @media screen and (max-width: 600px){
-                                #nxxt_sign {
-                                width: 90px!important;
-
-                                height: 25px;
-                                font-size: 0.8em;
-                                }
-
-
-
-
-                            </style>
 
 
                             <field name="id" class="meeting_doc_id" invisible="1"/>
@@ -191,6 +144,7 @@
                                 </div>
                             </div>
                             <link href="/e_sign/static/signature.css" rel="stylesheet"/>
+                            <link href="/e_sign/static/signature_website.css" rel="stylesheet"/>
                             <script src="/e_sign/static/js/pdf.worker.js"/>
                             <script src="/e_sign/static/js/pdf.js"/>
                             <script src="/e_sign/static/js/viewer.js"/>

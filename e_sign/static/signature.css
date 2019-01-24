@@ -1,18 +1,49 @@
 .position_btns
 {
+z-index:999
+}
+.top_btns {
+background: rgb(50, 54, 57);
+padding: 2px;
+}
+.pg_no{
+color: white;
+}
+.doc_btn {
+background-color: gray;
+color: white;
+margin: 2px;
+}
+
+.edit_sign:hover,.del_sign:hover {
+background-color: white;
+color:red!important
 
 }
-.drag.btn
-{
-}
+
+#scaleSelectContainer select#scaleSelect {
+             background: white;
+             margin-left: 3px;
+             border: navajowhite;
+             padding: 5px 10px;
+             font-size: 12px;
+             border-radius: 3px;
+             height: 29px;
+         }
+         .PdfButtonWrapper {
+            background: #ffffff;
+            padding: 5px;
+         }
+         .PdfButtonWrapper .btn {
+              min-width: 130px;
+              margin:3px;
+          }
+
 .sign-box.fa-lg
 {
     margin-left:10px;
 }
-.new_sign
-{
 
-}
 
 
 #signature_editor{ width: 459px; height: 198px; margin-top:5px; margin-bottom:5px;}
@@ -85,7 +116,7 @@ display:none!important
 }
 
 #page_container1{
-    height: calc(100vh - 178px)!important;
+    height: calc(100vh - 178px);
 }
 
 @media screen and (max-width: 600px){

@@ -389,7 +389,8 @@
                         <div name="readonly_completed_3">
                         <div class="o2m_kanban">
                             <h4>Documents For Signatures</h4>
-                            <field name="document_ids"
+                            <field name="document_ids" context="{'kanban_view_ref': 'e_sign.e_sign_doc_kanban'
+                               }"
                                    attrs="{'readonly': [('exectime', '=', 'completed')]}"
                                    class="kanban_document"
                                    mode="kanban"

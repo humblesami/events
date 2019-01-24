@@ -1,0 +1,21 @@
+
+
+#page_container1{
+height: calc(100vh - 117px)!important;
+}
+
+.container {
+width: 100%;
+}
+
+.navbar.navbar-static-top {
+margin-top: 12px;
+display: none;
+}
+@media screen and (max-width: 600px){
+#nxxt_sign {
+width: 90px!important;
+
+height: 25px;
+font-size: 0.8em;
+}

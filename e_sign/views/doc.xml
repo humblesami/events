@@ -48,71 +48,7 @@
             <field name="model">e_sign.document</field>
             <field name="arch" type="xml">
          <form create="false" edit="false">
-    <style>
 
-        .top_btns {
-        background: rgb(50, 54, 57);
-
-        }
-        @media screen and (max-width: 600px){
-                                #nxxt_sign {
-                                width: 90px!important;
-
-                                height: 25px;
-                                font-size: 0.8em;
-                                }
-
-        .position_btns{
-         z-index:999
-        }
-
-        .pg_no{
-        color: white;
-        }
-
-        .doc_btn {
-        background-color: gray;
-        color: white;
-        margin: 2px;
-        }
-
-
-        .edit_sign:hover,.del_sign:hover {
-        background-color: white;
-        color:red!important
-
-        }
-
-        .PdfTopBtnsWrapper {
-             padding: 4px;
-         }
-
-         #scaleSelectContainer select#scaleSelect {
-             background: white;
-             margin-left: 3px;
-             border: navajowhite;
-             padding: 5px 10px;
-             font-size: 12px;
-             border-radius: 3px;
-             height: 29px;
-         }
-
-         .PdfButtonWrapper {
-            background: #ffffff;
-            padding: 5px;
-         }
-         .PdfButtonWrapper .btn {
-              min-width: 130px;
-              margin:3px;
-          }
-          #the-canvas{
-          border-left:1px solid #000000;
-          border-top:1px solid #cacaca;
-          border-right:1px solid #000000;
-          border-bottom:1px solid #000000;
-          }
-
-    </style>
 
     <field name="id" class="e_sign_doc_id" invisible="1"/>
      <group>
@@ -159,7 +95,7 @@
 
         </div>
 
-        <div id="page_container1" style="height:430px;overflow-y:auto;overflow-x:auto;position:relative;">
+        <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
             <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;top:85px;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING></div>
 
             <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
