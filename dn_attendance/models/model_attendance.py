@@ -8,6 +8,8 @@ from odoo.addons.dn_attendance import workhours
 import math
 class ScheduleInfo(models.Model):
     _name = "schedule.info"
+
+    name = fields.Char(string="Schedule Entry")
     expected_check_in = fields.Float(string="Expected CheckIn")
     expected_check_out = fields.Float(string="Expected Checkout")
     break_start = fields.Float(string="Break Start")
@@ -224,6 +226,24 @@ class AttendanceDaily(models.Model):
                 {'worked_hours1': values['work_hour'], 'employee_id': tempEmployee.id,
                  'check_in': values['check_in'], 'work_date': values['work_date'],
                  'check_out': values['check_out'], 'lateminutes': values['late_minutes']})
+    @api.model
+    def create_schedule(self):
+        schedule_data =  self.env['attendance.daily'].search([('request_data', '=', False)])
+        for data in schedule_data:
+            day_of_week = int(datetime.strptime(data.work_date, '%Y-%m-%d').date().strftime('%w'))-1
+            val = datetime.strptime(data.work_date, '%Y-%m-%d').date().strftime('%A')
+            if day_of_week == -1:
+                day_of_week = str(6)
+            else:
+                day_of_week = str(day_of_week)
+            # self.env['hr.contract'].search([('employee_id', '=',data.employee_id.id), ('state', '=', 'open')])
+            MainSchedule = self.env['hr.contract'].search(
+                [('employee_id', '=', data.employee_id.id), ('state', '=', 'open')]).resource_calendar_id.id
+            day  = self.env['resource.calendar.attendance'].search([('dayofweek', '=', day_of_week),('calendar_id','=',MainSchedule)])
+            updateSchedule = self.env['schedule.info'].sudo().create(
+                {'expected_check_in': day.hour_from, 'expected_check_out': day.hour_to,
+                 'break_start': day.break_start, 'break_end': day.break_end,'name':val})
+            write_flag = data.sudo().write({'request_data': updateSchedule.id})
 
     def calculate_work_hours(self, daily_object):
         res, final_schedule = self.get_attendance_schedule_of_employee(daily_object)

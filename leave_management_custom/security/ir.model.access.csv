@@ -22,7 +22,7 @@ access_to_analytic_line_admin,Analytic Line,analytic.model_account_analytic_line
 access_to_res_groups_Admin,Groups Access,base.model_res_groups,group_leave_custom_admin,1,1,1,1
 access_to_ir_ui_view_admin,Views,base.model_ir_ui_view,group_leave_custom_admin,1,1,1,1
 access_to_hr_job_admin,hr.job,hr.model_hr_job,group_leave_custom_admin,1,1,1,1
-access_to_attendance_record_leave_admin,All Record,dn_attendance.model_attendance_record,group_leave_custom_admin,1,0,1,0
+access_to_attendance_record_leave_admin,All Record,dn_attendance.model_attendance_record,group_leave_custom_admin,1,1,1,0
 access_to_attendance_daily_leave_admin,Attendance Daily Record,dn_attendance.model_attendance_daily,group_leave_custom_admin,1,1,1,1
 
 
@@ -46,7 +46,7 @@ custom_leave_access_calendar_attendee_hr_new_admin,calendar_super.attendee.hr.us
 custom_leave_access_module_new_admin,base.module.super_admin,base.model_ir_module_module,group_leave_custom_super_user,1,0,0,0
 custom_leave_access_module_dependency_new_admin,base.module.dependency.super_admin,base.model_ir_module_module_dependency,group_leave_custom_super_user,1,0,0,0
 custom_leave_access_partner_new_admin,base.partner.super_admin,base.model_res_partner,group_leave_custom_super_user,1,1,1,1
-access_to_attendance_record_leave_new_admin,All Record,dn_attendance.model_attendance_record,group_leave_custom_super_user,1,0,1,0
+access_to_attendance_record_leave_new_admin,All Record,dn_attendance.model_attendance_record,group_leave_custom_super_user,1,1,1,0
 access_to_attendance_daily_leave_new_admin,Attendance Daily Record,dn_attendance.model_attendance_daily,group_leave_custom_super_user,1,1,1,1
 access_leave_allocation_holidays_new_admin,dn_attendance_leaves.hr_allocate_holiday,dn_attendance_leaves.model_hr_allocate_holiday,group_leave_custom_super_user,1,1,1,0
 
@@ -62,7 +62,7 @@ access_to_e_leave_users_officer,E-Leave Users,model_e_leave_users,group_leave_cu
 access_to_categories_officer_e_leave,Categories,base.model_ir_module_category,group_leave_custom_user_admin,1,0,0,0
 access_to_resusers_e_leave_officer,Users,base.model_res_users,group_leave_custom_user_admin,1,0,0,0
 access_to_attendance_daily_leave_new_officer,Attendance Daily Record,dn_attendance.model_attendance_daily,group_leave_custom_user_admin,1,1,1,0
-access_to_attendance_record_leave_new_officer,All Record,dn_attendance.model_attendance_record,group_leave_custom_user_admin,1,0,1,0
+access_to_attendance_record_leave_new_officer,All Record,dn_attendance.model_attendance_record,group_leave_custom_user_admin,1,1,1,0
 
 access_leave_management_authorization_staff,leave_management_custom.authorization,model_custom_leave_management_rule_authorization,group_leave_custom_user,1,1,1,1
 access_leave_management_approval_rule_staff,leave_management_custom.approval_rule,model_custom_leave_management_approval_rules,group_leave_custom_user,1,0,0,0
@@ -106,3 +106,14 @@ access_dn_wizard_manager,Attendance wizard,dn_attendance.model_attendance_wizard
 access_dn_wizard_officer,Attendance wizard,dn_attendance.model_attendance_wizard,leave_management_custom.group_leave_custom_user_admin,1,1,1,0
 
 access_dn_wizard_staff,Attendance wizard,dn_attendance.model_attendance_wizard,leave_management_custom.group_leave_custom_user,1,1,1,0
+
+
+
+
+access_res_user_admin,res user access,base.model_res_users,leave_management_custom.group_leave_custom_admin,1,1,1,0
+
+access_res_user_manager,res user access,base.model_res_users,leave_management_custom.group_leave_custom_super_user,1,1,1,0
+
+access_res_user_officer,res user access,base.model_res_users,leave_management_custom.group_leave_custom_user_admin,1,1,1,0
+
+access_res_user_staff,res user access,base.model_res_users,leave_management_custom.group_leave_custom_user,1,1,1,0

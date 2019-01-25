@@ -17,7 +17,7 @@
             <field name="name">Schedule form view</field>
             <field name="model">schedule.info</field>
             <field name="arch" type="xml">
-                <form modifiers="{}" create="false" edit="false">
+                <form modifiers="{}" create="false" edit="false" delete="false">
                     <sheet string="schedule" modifiers="{}">
                         <group col="4" modifiers="{}">
                             <field name="expected_check_in" modifiers="{}"/>
@@ -165,8 +165,6 @@
                     <separator/>
                     <filter name="groupby_name" string="Month" context="{'group_by':'punch_time'}"/>
                      <separator/>
-                    <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
-                    <separator/>
                      <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
                     <separator/>
                     <filter name="groupby_work" string="Workdate" context="{'group_by':'work_date'}"/>
@@ -223,7 +221,7 @@
             <field name="name">attendance_daily_form_view</field>
             <field name="model">attendance.daily</field>
             <field name="arch" type="xml">
-           <form edit="false" create="false">
+           <form edit="false" create="false" delete="false">
                <div class="row">
                    <header>
                        <field name="state" widget="statusbar" clickable = "1"/>
@@ -372,6 +370,19 @@
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="code">model.create_attendance()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+
+        <!--cron job for -->
+          <record id="ir_cron_upload schedule" model="ir.cron">
+            <field name="name">Create Schedule</field>
+            <field name="model_id" ref="model_attendance_daily"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.create_schedule()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
