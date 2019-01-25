@@ -7,13 +7,12 @@
 
 #online-users-list{
     display:none;
-    padding-right: 10px;
     position: fixed;
     min-width: 350px;
     height: 100vh;
     top: 46px;
     right: 0;
-    background: silver;
+    background: white;
     overflow-y: scroll;
     overflow-x: hidden;
     z-index: 999;
@@ -298,21 +297,27 @@ li.showmouseawaybutton
     border-radius: 25px;
     padding: 0px 4px;
     text-align: center;
-    font-size: 14px;
+    font-size: 10px;
     position: absolute;
-    bottom: 20px;
-    left: 19px;
+    bottom: 25px;
+    left: 25px;
     display:none;
 }
 
+.image-circular{
+    width:25px;
+    height:25px;
+    border-radius:25px;
+    margin-right:10px;
+}
+
 .user_count{
-    position: absolute !important;
-    left: 83%;
-    top: 7px;
+    left: 50%;
     background: red;
-    border-radius: 30px;
+    border-radius: 50px;
     color: white;
-    padding: 3px;
+    font-weight: bolder;
+    padding: 3px 8px;
 }
 
 #online-users-list .list-group-item

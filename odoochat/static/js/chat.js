@@ -1,19 +1,23 @@
 (function(){
-      window.emojiPicker = new EmojiPicker({
-              emojiable_selector: '[data-emojiable=true]',
-              assetsPath: '/odoochat/static/img/',
-              popupButtonClasses: 'fa fa-smile-o'
-            });
-            window.emojiPicker.discover();
-    if(odoo.session_info.uid == 1)
-    {
+
+    window.emojiPicker = new EmojiPicker({
+      emojiable_selector: '[data-emojiable=true]',
+      assetsPath: '/odoochat/static/img/',
+      popupButtonClasses: 'fa fa-smile-o'
+    });
+    window.emojiPicker.discover();
+
+    if(odoo.session_info.uid == 1){
+
         return;
     }
+
     //Local
-    var chat_server = 'http://localhost:3000';
+    var chat_server = 'http://localhost:4000';
     //online
     if(dn_base_web_url.indexOf('odoohq') > -1)
         chat_server = 'https://chat.brainpbx.com';
+
     var check = 0;
     var socket = undefined;
     var users = undefined;
@@ -37,7 +41,6 @@
         $('.chatbox').css('margin', '0 0 -382px 0');
     });
 
-
     //console.log($('.o_menu_systray').length, 11833);
     odoo.define('odoochat.onClientready', function (require) {
         "use strict";
@@ -50,6 +53,56 @@
             $(chat_menu_item).append($(notify_div));
 
             var dnow = Date();
+
+            // Open Chat Box Click
+            $(document).on('click', '.open-chatbox', function(){
+                var id = $(this).attr('id');
+                active_user = users[id];
+                console.log(active_user )
+                var input_data = {
+                    "name" : 'getMessages',
+                    "auth" : {
+                        "token": odoo.session_info.token,
+                        "name": odoo.session_info.username,
+                        "id": odoo.session_info.uid,
+                        "uid": odoo.session_info.uid,
+                        "db": odoo.session_info.db,
+                        'sender':odoo.session_info.uid,
+                        'target_id':active_user.id
+                    },
+                    "req_data": {}
+                }
+                socket.emit('client_event', input_data);
+                show_chat();
+            });
+
+            // On Body Click Anywhere
+            $(document).on('mouseup touchstart', function(e){
+                var target = e.target;
+                var showbtn = $(target).closest('.showmouseawaybutton');
+                if(showbtn && showbtn.length > 0)
+                {
+                    return;
+                }
+                else
+                {
+                    var shownpanel = $(target).closest('.hidemouseaway');
+                    if(shownpanel  && shownpanel.length > 0)
+                        return;
+                    else
+                    {
+                        $('.showmouseawaybutton').removeClass('active');
+                        $('.hidemouseaway').hide();
+                    }
+                }
+            });
+
+            socket = io(chat_server, {
+                'reconnection': true,
+                'reconnectionDelay': 2000,
+                'reconnectionDelayMax' : 5000,
+                'reconnectionAttempts': 2
+            });
 
             if($('.dn-chatter').length > 1){
                 $('.dn-chatter:first').remove();
@@ -75,7 +128,6 @@
                 }
             });
 
-            $('#unseen-msg-counter').text(total_unseen);
             if(total_unseen == 0)
                 $('#unseen-msg-counter').hide();
             else
@@ -83,14 +135,17 @@
 
             var create_msg_obj = function(msg){
                 var input_data = {
-                    "token": odoo.session_info.token,
-                    "name": odoo.session_info.username,
-                    "id": odoo.session_info.uid,
-                    "uid": odoo.session_info.uid,
-                    "db": odoo.session_info.db
+                    "name" : 'message',
+                    "auth": {
+                        "token": odoo.session_info.token,
+                        "name": odoo.session_info.username,
+                        "id": odoo.session_info.uid,
+                        "uid": odoo.session_info.uid,
+                        "db": odoo.session_info.db
+                    }
                 }
 
-                input_data['msg'] = {
+                input_data['req_data'] = {
                     content : msg,
                     sender : odoo.session_info.uid,
                     to : active_user.id
@@ -98,13 +153,30 @@
                 return input_data;
             }
 
-
-
             var add_user_in_list = function(user){
-                var child = '<li id="' + user.id + '" class="open-chatbox list-group-item"><span>'+ user.name + '</span>';
-                child += '<span class="user_count"style="position:relative;left:90%;display:none;" id="unseen-' + user.id + '"></span></li>';
+                var child = '<li id="' + user.id + '" class="open-chatbox list-group-item">';
+                child += '<img class="image-circular" src=' + user.photo + '/>'
+                child += '<span>'+ user.name + '</span>';
+                child += '<span class="user_count"style="position:relative;';
+                if(user.unseen <= 0)
+                    child += 'display:none;';
+
+                child += '" id="unseen-' + user.id + '">' + user.unseen + '</span>';
+                child += '<span style="right: 10px;position: absolute;';
+                if(!user.online){
+                    child += 'display:none;';
+                }
+                child += '" class="badge badge-success online">online</span><span style="right: 10px;position: absolute;';
+                if(user.online){
+                    child += 'display:none;';
+                }
+
+                child += '" class="badge badge-warning offline">offline</span>';
+
+
+                child += '</li>';
                 $('#online-users-list:first ul:first').append(child);
-                if(notifications[user.id] != 0){
+                if(notifications[user.id] && notifications[user.id] > 0){
                     $('#unseen-'+user.id).text(notifications[user.id]);
                     $('#unseen-'+user.id).show();
                 }
@@ -131,8 +203,51 @@
                 $(".smartchatbox").scrollTop($(".smartchatbox")[0].scrollHeight);
             }
 
-            var show_chat = function(){
-                socket.on('allMessages', function(messages){
+            var updateUserStatus = function(user){
+                //console.log(user);
+                if(!users[user.id])
+                {
+                    console.log(users, user.id, user.online);
+                }
+                else
+                {
+                    if(users[user.id].online != user.online)
+                    {
+                        users[user.id].online = user.online;
+                        //console.log("Changed "+user.online+" for ", user );
+                    }
+                    else
+                    {
+                        //console.log("Not changed "+user.online+" for ", user );
+                    }
+                }
+                var list_id = '#'+user.id;
+                $(list_id).find('.online').toggle();
+                $(list_id).find('.offline').toggle();
+            }
+
+
+
+            var server_events = {
+                error : function (err) {
+                    console.log("Error from chat ", err);
+
+                },
+                new_user : updateUserStatus,
+                user_left : updateUserStatus,
+                forced_logged_out : function (data) {
+                    var href = window.location.toString();
+                    if(href.indexOf('localhost') == -1)
+                    {
+                        bootbox.alert('You are logged out due to '+data.reason);
+                        window.location = '/web/login';
+                    }
+                },
+                message : function (msg) {
+
+                    receiveMessage(msg, msg.sender);
+                },
+                allMessages : function(messages){
                     $('#chat_list').empty();
                     for(var i = 0; i < messages.length; i++){
                         var msg = messages[i];
@@ -140,7 +255,10 @@
                     }
                       $('.replies').Emoji();
                        $('.sent').Emoji();
-                })
+                }
+            }
+
+            var show_chat = function(){
                 $('.chatbox .chat-text').text(active_user.name);
                 $('.chatbox').css('display', 'block');
                 total_unseen -= notifications[active_user.id];
@@ -172,24 +290,26 @@
                     if(!msg)
                         return;
                     var msg_obj = create_msg_obj(msg);
-                    append_message(msg_obj.msg);
-                    socket.emit('message', msg_obj);
+                    append_message(msg_obj.req_data);
+                    socket.emit('client_event', msg_obj);
                       $('.replies').Emoji();
                        $('.sent').Emoji();
                 }
             }
 
             var receiveMessage = function(msg, sender_id) {
-
                 if(active_user && active_user.id == sender_id){
                     append_message(msg);
-                     $('.replies').Emoji();
-                $('.sent').Emoji();
+                    $('.replies').Emoji();
+                    $('.sent').Emoji();
                 }
                 else {
                     if(isNaN(notifications[sender_id]))
                         notifications[sender_id] = 0;
                     ++(notifications[sender_id]);
+
+                    if(isNaN(total_unseen))
+                        total_unseen = 0;
                     ++total_unseen;
                     $('#unseen-msg-counter').text(total_unseen);
                     $('#unseen-'+sender_id).text(notifications[sender_id]);
@@ -205,51 +325,6 @@
                 }
             }
 
-
-            // Open Chat Box Click
-            $(document).on('click', '.open-chatbox', function(){
-                    var id = $(this).attr('id');
-                    active_user = users[id];
-                    var input_data = {
-                        "token": odoo.session_info.token,
-                        "name": odoo.session_info.username,
-                        "id": odoo.session_info.uid,
-                        "uid": odoo.session_info.uid,
-                        "db": odoo.session_info.db,
-                        "filter" : {'sender':odoo.session_info.uid, 'to':active_user.id}
-                    }
-                    socket.emit('getMessages', input_data);
-                    show_chat();
-                });
-
-            // On Body Click Anywhere
-            $(document).on('mouseup touchstart', function(e){
-                var target = e.target;
-                var showbtn = $(target).closest('.showmouseawaybutton');
-                if(showbtn && showbtn.length > 0)
-                {
-                    return;
-                }
-                else
-                {
-                    var shownpanel = $(target).closest('.hidemouseaway');
-                    if(shownpanel  && shownpanel.length > 0)
-                        return;
-                    else
-                    {
-                        $('.showmouseawaybutton').removeClass('active');
-                        $('.hidemouseaway').hide();
-                    }
-                }
-            });
-
-            socket = io(chat_server, {
-                'reconnection': true,
-                'reconnectionDelay': 2000,
-                'reconnectionDelayMax' : 5000,
-                'reconnectionAttempts': 2
-            });
-
             var is_connected = true;
             console.log('Connecting chat server '+chat_server);
 
@@ -257,79 +332,43 @@
                 dn_current_site_user.socket = socket;
                 is_connected = true;
                 console.log('Chat server '+chat_server+' connected');
-                socket.emit('verify', {
-                    "token": odoo.session_info.token,
-                    "name": odoo.session_info.username,
-                    "id": odoo.session_info.uid,
-                    "db": odoo.session_info.db
+
+                socket.emit('client_event', {
+                    "name" : 'verify',
+                    "auth" : {
+                        "token": odoo.session_info.token,
+                        "name": odoo.session_info.username,
+                        "uid": odoo.session_info.uid,
+                        "db": odoo.session_info.db
+                    },
+                    "req_data" : {
+                        "token": odoo.session_info.token,
+                        "name": odoo.session_info.username,
+                        "id": odoo.session_info.uid,
+                        "db": odoo.session_info.db
+                    }
                 });
 
-                socket.on('myerror', function (err) {
-                    console.log("Error from chat ", err);
-                });
-
-                socket.on('online_users', function(online_users){
+                socket.on('verified', function(res){
                     console.log('User is verififed');
                     if(!users){
                         users = {};
                     }
-                    users = online_users;
-                })
+                    users = res.friends;
+                    if(res.unseen > 0)
+                        $('#unseen-msg-counter').text(res.unseen).show();
+                },)
 
-                socket.on('new_user', function (incoming_user) {
-                    if(!users){
-                        users = {};
-                    }
-                    users[incoming_user.id] = incoming_user;
-                    //console.log(users);
-                    add_user_in_list(incoming_user);
-                });
-
-                socket.on('forced_logged_out', function (data) {
-                    var href = window.location.toString();
-                    if(href.indexOf('localhost') == -1)
-                    {
-                        bootbox.alert('You are logged out due to '+data.reason);
-                        window.location = '/web/login';
-                    }
-                });
-
-                socket.on('message', function (msg) {
-                    receiveMessage(msg, msg.sender);
-
-                });
-
-                socket.on('leave', function (going_user) {
-                    try
-                    {
-                        if(!going_user)
-                        {
-                            console.log("undefined leaving user", going_user);
-                            return;
-                        }
-                        if(!going_user.id)
-                        {
-                            if(isNaN(going_user))
-                            {
-                                console.log("Leaving user does not an have valid id" , going_user);
-                                return;
-                            }
-                        }
+                socket.on('server_event',function(res){
+                    try{
+                        if(!server_events[res.name])
+                            console.log('Not handeled ' ,res);
                         else
-                        {
-                            going_user = going_user.id;
-                        }
-                        if(odoo.session_info.id == going_user)
-                        {
-                            return;
-                        }
-                        delete users[going_user];
-                        remove_user_from_list(going_user);
-                        $('#'+going_user).remove();
+                            server_events[res.name](res.data);
                     }
-                    catch(err)
+                    catch(er)
                     {
-                        console.log("Error for ",going_user);
+                        console.log(er.message, ' in '+res.name+' with data ', res);
                     }
                 });
 

@@ -5,9 +5,21 @@ from odoo.addons.dn_base import ws_methods
 
 class Oddochat(http.Controller):
 
+    @http.route('/active-user-messages-json', type="json", csrf=False, auth='public', cors='*')
+    def getActiveUserMessage_json_request(self, **kw):
+        kw = request.jsonrequest
+        res = self.getActiveUserMessage(kw)
+        return res
+
     @http.route('/active-user-messages', type="http", csrf=False, auth='public', cors='*')
-    def getActiveUserMessage(self, **kw):
+    def getActiveUserMessage_http_request(self, **kw):
+        res = self.getActiveUserMessage(kw)
+        return res
+
+    def getActiveUserMessage(self, kw):
         try:
+            if (kw.get('user')):
+                kw = json.loads(kw.get('user'))
             uid = ws_methods.check_auth(kw)
             if not uid:
                 return ws_methods.not_logged_in()
