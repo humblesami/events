@@ -181,13 +181,19 @@ class Signature(http.Controller):
             user_email=""
             email = ""
             for s in signatures:
+                zoom = s.get('zoom')
+                if not zoom:
+                    return ws_methods.http_response('Invalid Scale')
+                zoom = float(zoom)
+                if zoom == 0:
+                    return ws_methods.http_response('Invalid Zoom')
                 if not (s['user_id']!="0" or (s['email']!="" and s['name']!="")):
                     return ws_methods.http_response("Select user or enter email and name")
 
                 obj={'document_id':s['document_id'],'user_id':s['user_id'],
                                  'email': s['email'],'name': s['name'],
                                  'left':s['left'],'top':s['top'],'page':s['page'],
-                                 'height':s['height'],'width':s['width'],'zoom': s['zoom'],'type': s['type'],'token':token}
+                                 'height':s['height'],'width':s['width'],'zoom': zoom,'type': s['type'],'token':token}
                 doc.signature_ids=[(0,0,obj)]
             if doc.signature_ids:
                 user_email = doc.signature_ids[-1].user_id.email
@@ -349,16 +355,20 @@ class Signature(http.Controller):
     def get_model(self,model):
         return "e_sign.document"
 
-    @http.route('/get-sign-token', type='http', auth='public', cors='*')
+    @http.route('/get-sign-token', type='http', auth='none', cors='*')
     def get_sign_token(self, **kw):
-        uid = ws_methods.check_auth(kw)
-        if not uid:
-            return ws_methods.not_logged_in()
-        doc_id = kw.get('doc_id')
-        doc_id = int(doc_id)
-        if not doc_id:
-            return ws_methods.http_response('Invalid document id')
-        else:
-            doc = request.env['meeting_point.document'].search([('id', '=', doc_id)])
-            sign = doc.signature_ids.filtered(lambda r: r.user_id.id == uid)
-        return ws_methods.http_response('', {'token': sign.token})
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            doc_id = kw.get('doc_id')
+            doc_id = int(doc_id)
+            if not doc_id:
+                return ws_methods.http_response('Invalid document id')
+            else:
+                doc = request.env['meeting_point.document'].search([('id', '=', doc_id)])
+                sign = doc.signature_ids.filtered(lambda r: r.user_id.id == uid)
+                sign = sign[0]
+            return ws_methods.http_response('', {'token': sign.token})
+        except:
+            ws_methods.handle()
