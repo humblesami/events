@@ -348,3 +348,17 @@ class Signature(http.Controller):
 
     def get_model(self,model):
         return "e_sign.document"
+
+    @http.route('/get-sign-token', type='http', auth='public', cors='*')
+    def get_sign_token(self, **kw):
+        uid = ws_methods.check_auth(kw)
+        if not uid:
+            return ws_methods.not_logged_in()
+        doc_id = kw.get('doc_id')
+        doc_id = int(doc_id)
+        if not doc_id:
+            return ws_methods.http_response('Invalid document id')
+        else:
+            doc = request.env['meeting_point.document'].search([('id', '=', doc_id)])
+            sign = doc.signature_ids.filtered(lambda r: r.user_id.id == uid)
+        return ws_methods.http_response('', {'token': sign.token})
