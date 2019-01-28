@@ -150,6 +150,11 @@
             <field name="priority" eval="0"/>
             <field name="arch" type="xml">
                 <form string="Meetings" class="meetingform">
+                     <header>
+                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Accept" name="do_accept"/>
+                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>
+                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Tentative" name="do_tentative"/>
+                    </header>
                     <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="id" class="meeting_id o_hidden"/>
                     <sheet>
