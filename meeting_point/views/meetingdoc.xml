@@ -169,18 +169,21 @@
                     <div class="sign_info">
                         <strong class="mr4">My Signature:</strong>
                         <field name="mp_signature_status"/>
+                        <div class = "font_hide">
+                         <p style="font-size:14px;"><span>Meeting : </span><field name="meeting_id"/></p>
+                         </div>
                         <div groups="meeting_point.group_meeting_admin">
                             <strong>Pending Signatures:</strong>
                             <field name="pending_signatures"/>
                         </div>
                     </div>
                 </xpath>
-                <xpath expr="//field[@name='name']" position="after">
-                    <br/>
-                    <div class="font_hide">
-                        <p style="font-size:14px;"><span>Meeting : </span><field name="meeting_id"/></p>
-                    </div>
-                </xpath>
+                <!--<xpath expr="//field[@name='name']" position="after">-->
+                    <!--<br/>-->
+                    <!--<div class="font_hide">-->
+                        <!--<p style="font-size:14px;"><span>Meeting : </span><field name="meeting_id"/></p>-->
+                    <!--</div>-->
+                <!--</xpath>-->
             </field>
 
             <!--<field name="arch" type="xml">-->

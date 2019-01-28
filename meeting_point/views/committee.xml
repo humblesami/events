@@ -37,8 +37,25 @@
                             <field name="name" modifiers="{'required': true}" string="Committee Name"/>
                             <field name="summary" string="Charter"></field>
                             <field name="allUser" type="checkbox" />
-                            <field name="user_ids" string="Members" domain="[('is_committee','=',False),('is_company','=',False)]" widget="many2many_tags"
-                                   modifiers="{}" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                           <field name="user_ids" widget="many2many_kanban">
+                             <kanban quick_create="false" create="false" delete="true">
+                                 <field name="name"/>
+                                 <field name="image_small"/>
+                                 <templates>
+                                     <t t-name="kanban-box">
+                                         <div class="oe_kanban_global_click" style="position: relative;width:100px">
+                                             <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                             <div class="oe_module_vignette">
+                                                 <img t-att-src="kanban_image('meeting_point.users', 'image_small', record.image_small.value)" class=" oe_avatar  oe_kanban_avatar_smallbox oe_kanban_image"/>
+                                                 <div class="oe_module_desc">
+                                                     <field name="name"/>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </t>
+                                 </templates>
+                             </kanban>
+                        </field>
                         </group>
                     </sheet>
                 </form>
