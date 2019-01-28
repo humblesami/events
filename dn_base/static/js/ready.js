@@ -1,5 +1,5 @@
 var dn_base_web_url = window.location.origin + '';
-
+window['server_events'] = {};
 var is_mobile_device = undefined;
 (function(){
     try
