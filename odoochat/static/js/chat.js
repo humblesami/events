@@ -24,7 +24,8 @@
     var active_user = undefined;
     var sendMessage = undefined;
     var total_unseen = 0;
-    var notifications = {};
+    var msg_notes = {};
+    var notifications = [];
     var is_mini = false;
 
     $('#chatbox .close-chat').click(function() {
@@ -50,10 +51,16 @@
         var core = require('web.core');
         core.bus.on('web_client_ready', null, function () {
             //var chat_menu_item = $('.o_menu_sections:first a[data-menu-xmlid="meeting_point.chat_menu"]:first');
-            var notify_div = '<span id="unseen-msg-counter">0</span>';
-            var chat_menu_item = $('<li class="showmouseawaybutton"><div class="fa fa-lg fas fa-comments chatt" ></div></li>');
-            $('.o_menu_systray').prepend(chat_menu_item);
-            $(chat_menu_item).append($(notify_div));
+
+            var chatter_div = '<span id="unseen-msg-counter">0</span>';
+            var chat_menu_chatter_item = $('<li class="showmouseawaybutton"><div class="fa fa-lg fas fa-comments chatt" ></div></li>');
+            $('.o_menu_systray').prepend(chat_menu_chatter_item);
+            $(chat_menu_chatter_item).append($(chatter_div));
+
+            var notify_div = '<span id="unseen-note-counter">0</span>';
+            var chat_menu_note_item = $('<li class="showmouseawaybutton"><div class="fa fa-lg fas fa-bell chatt" ></div></li>');
+            $('.o_menu_systray').prepend(chat_menu_note_item);
+            $(chat_menu_note_item).append($(notify_div));
 
             var dnow = Date();
 
@@ -78,6 +85,17 @@
                 socket.emit('client_event', input_data);
                 show_chat();
             });
+
+            $(document).on('click', '#notifications-list .list-group .list-group-item', function(e){
+//                var notification_id = e.target.id;
+//                var index = notifications.findIndex(x => x.id === notification_id);
+//                notifications.splice(index, 1);
+//                if(notifications.length > 0)
+//                    $('#unseen-note-counter').text(notifications.length).show();
+//                else
+//                    $('#unseen-note-counter').hide();
+//                $(e.target).closest('li').remove();
+            })
 
             // On Body Click Anywhere
             $(document).on('mouseup touchstart', function(e){
@@ -113,8 +131,10 @@
             }
 
             var chatter_shown = 0;
+            var note_shown = 0;
 
-            chat_menu_item.click(function(){
+            chat_menu_chatter_item.click(function(){
+                $('#notifications-list:first').hide();
                 if(chatter_shown != 1)
                 {
                     $('.dn-chatter:first').show();
@@ -130,6 +150,25 @@
                 else
                 {
                     $('#online-users-list').toggle();
+                }
+            });
+
+            chat_menu_note_item.click(function(){
+                $('#online-users-list').hide();
+                if(note_shown != 1)
+                {
+                    $('.dn-chatter:first').show();
+                    $('#notifications-list:first').show();
+                    $('#notifications-list').show();
+                    $(this).addClass('active');
+                    for(var note in notifications){
+                        add_notifications_in_list(notifications[note]);
+                    }
+                    note_shown = 1;
+                }
+                else
+                {
+                    $('#notifications-list').toggle();
                 }
             });
 
@@ -181,13 +220,30 @@
 
                 child += '</li>';
                 $('#online-users-list:first ul:first').append(child);
-                if(notifications[user.id] && notifications[user.id] > 0){
-                    $('#unseen-'+user.id).text(notifications[user.id]);
+                if(msg_notes[user.id] && msg_notes[user.id] > 0){
+                    $('#unseen-'+user.id).text(msg_notes[user.id]);
                     $('#unseen-'+user.id).show();
                 }
                 else{
-                    notifications[user.id] != 0
+                    msg_notes[user.id] != 0
                 }
+            }
+
+            var add_notifications_in_list = function(notification){
+                var child = '<li id="note-' + notification.id + '" class="list-group-item" ';
+                if(notification.counter <= 0)
+                    child += 'style="display:none;"';
+//                child += '<img class="image-circular" src=' + user.photo + '/>'
+                child += '><span>'+ notification.content + '</span>';
+                child += '</li>';
+                $('#notifications-list:first ul:first').append(child);
+//                if(msg_notes[user.id] && msg_notes[user.id] > 0){
+//                    $('#unseen-'+user.id).text(msg_notes[user.id]);
+//                    $('#unseen-'+user.id).show();
+//                }
+//                else{
+//                    msg_notes[user.id] != 0
+//                }
             }
 
             var append_message = function(msg){
@@ -252,6 +308,9 @@
                     }
                       $('.replies').Emoji();
                        $('.sent').Emoji();
+                },
+                newNotification : function(){
+
                 }
             }
 
@@ -260,20 +319,20 @@
                     $('#chatbox .maxi-chat').click();
                 $('.chatbox .chat-text p').text(active_user.name);
                 $('.chatbox').css('display', 'block');
-                total_unseen -= notifications[active_user.id];
-                notifications[active_user.id] = 0;
+                total_unseen -= msg_notes[active_user.id];
+                msg_notes[active_user.id] = 0;
                 $('#unseen-msg-counter').html(total_unseen);
                 if(total_unseen == 0)
                     $('#unseen-msg-counter').hide();
                 else
                     $('#unseen-msg-counter').show();
 
-                if(notifications[active_user.id] == 0)
+                if(msg_notes[active_user.id] == 0)
                     $('#unseen-'+active_user.id).hide();
                 else
                     $('#unseen-'+active_user.id).show();
 
-                $('#unseen-'+active_user.id).text(notifications[active_user.id]);
+                $('#unseen-'+active_user.id).text(msg_notes[active_user.id]);
                 $('.user_count').hide();
             }
 
@@ -305,27 +364,27 @@
                     $('.sent').Emoji();
                 }
                 else {
-                    if(isNaN(notifications[sender_id]))
-                        notifications[sender_id] = 0;
-                    ++(notifications[sender_id]);
+                    if(isNaN(msg_notes[sender_id]))
+                        msg_notes[sender_id] = 0;
+                    ++(msg_notes[sender_id]);
 
                     if(isNaN(total_unseen))
                         total_unseen = 0;
                     ++total_unseen;
                     $('#unseen-msg-counter').text(total_unseen);
-                    $('#unseen-'+sender_id).text(notifications[sender_id]);
-                    $('.chatbox .chat-text .user_count').text(notifications[sender_id]);
+                    $('#unseen-'+sender_id).text(msg_notes[sender_id]);
+                    $('.chatbox .chat-text .user_count').text(msg_notes[sender_id]);
                     if(total_unseen == 0)
                         $('#unseen-msg-counter').hide();
                     else
                         $('#unseen-msg-counter').show();
 
-                    if(notifications[sender_id] == 0)
+                    if(msg_notes[sender_id] == 0)
                         $('#unseen-'+sender_id).hide();
                     else
                         $('#unseen-'+sender_id).show();
 
-                    if(notifications[sender_id] == 0)
+                    if(msg_notes[sender_id] == 0)
                         $('.chatbox .chat-text .user_count').hide();
                     else
                         $('.chatbox .chat-text .user_count').show();
@@ -362,6 +421,12 @@
                         users = {};
                     }
                     users = res.friends;
+                    notifications = res.notifications;
+
+                    if(notifications.length > 0)
+                        $('#unseen-note-counter').text(notifications.length).show();
+
+
                     if(res.unseen > 0)
                         $('#unseen-msg-counter').text(res.unseen).show();
                 },)

@@ -5,7 +5,7 @@
     display:none;
 }
 
-#online-users-list{
+#online-users-list, #notifications-list{
     display:none;
     position: fixed;
     min-width: 350px;
@@ -292,7 +292,7 @@ li.showmouseawaybutton
 {
     position:relative;
 }
-#unseen-msg-counter
+#unseen-msg-counter, #unseen-note-counter
 {
     color: white;
     background: red;
@@ -326,6 +326,12 @@ li.showmouseawaybutton
 {
     cursor:pointer;
 }
+
+#notifications-list .list-group-item
+{
+    cursor:pointer;
+}
+
 .chatt{
 margin:16px;
 cursor:pointer;
