@@ -76,6 +76,8 @@ class Oddochat(http.Controller):
             to = values.get('to')
             content = values.get('content')
             message = req_env['odoochat.messages'].sudo().create({'sender': sender, 'to': to, 'content': content})
-            return ws_methods.http_response('',  message.id)
+            props = ['content', 'id', 'create_date', 'read_status','sender', 'to']
+            message = ws_methods.object_to_json_object(message, props)
+            return ws_methods.http_response('',  message)
         except:
             return ws_methods.handle()

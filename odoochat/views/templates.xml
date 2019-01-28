@@ -8,7 +8,10 @@
                         </ul>
                     </div>
                     <div class="chatbox" id="chatbox">
-                        <span class="chat-text"></span>
+                        <span class="chat-text">
+                            <p></p>
+                            <span class="user_count"></span>
+                        </span>
                         <hr></hr>
                         <div class="smartchatbox" >
                             <div class="messages" id="messages" >

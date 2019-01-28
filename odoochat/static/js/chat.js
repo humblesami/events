@@ -25,17 +25,20 @@
     var sendMessage = undefined;
     var total_unseen = 0;
     var notifications = {};
+    var is_mini = false;
 
     $('#chatbox .close-chat').click(function() {
         $('.chatbox').css('display', 'none');
         active_user = undefined;
     });
     $('#chatbox .maxi-chat').click(function(){
+        is_mini = false
         $('.chatbox').css('margin', '0');
         $('.maxi-chat').css('display', 'none');
         $('.mini-chat').css('display', 'block');
     });
     $('#chatbox .mini-chat').click(function() {
+        is_mini = true;
         $('.maxi-chat').css('display', 'block');
         $('.mini-chat').css('display', 'none');
         $('.chatbox').css('margin', '0 0 -382px 0');
@@ -108,7 +111,9 @@
                 $('.dn-chatter:first').remove();
                 $('.dn-chatter:first').show();
             }
+
             var chatter_shown = 0;
+
             chat_menu_item.click(function(){
                 if(chatter_shown != 1)
                 {
@@ -185,11 +190,6 @@
                 }
             }
 
-            var remove_user_from_list = function(user){
-                var id = '#'+user.id;
-                $(id).remove();
-            }
-
             var append_message = function(msg){
                 var li_obj = '<li ';
                 if(msg.sender == odoo.session_info.uid)
@@ -197,7 +197,7 @@
                 else
                     li_obj += 'class="sent"';
 
-                li_obj += ' ><p>' + msg.content + '</p></li>';
+                li_obj += ' ><div><p>' + msg.content + '</p><p>'+ msg.create_date +'</p></div></li>';
                 $('#chat_list').append(li_obj);
                 $('#message-form input:first').val("");
                 $(".smartchatbox").scrollTop($(".smartchatbox")[0].scrollHeight);
@@ -226,8 +226,6 @@
                 $(list_id).find('.offline').toggle();
             }
 
-
-
             var server_events = {
                 error : function (err) {
                     console.log("Error from chat ", err);
@@ -244,7 +242,6 @@
                     }
                 },
                 message : function (msg) {
-
                     receiveMessage(msg, msg.sender);
                 },
                 allMessages : function(messages){
@@ -259,7 +256,9 @@
             }
 
             var show_chat = function(){
-                $('.chatbox .chat-text').text(active_user.name);
+                if(is_mini)
+                    $('#chatbox .maxi-chat').click();
+                $('.chatbox .chat-text p').text(active_user.name);
                 $('.chatbox').css('display', 'block');
                 total_unseen -= notifications[active_user.id];
                 notifications[active_user.id] = 0;
@@ -270,11 +269,12 @@
                     $('#unseen-msg-counter').show();
 
                 if(notifications[active_user.id] == 0)
-                        $('#unseen-'+active_user.id).hide();
+                    $('#unseen-'+active_user.id).hide();
                 else
                     $('#unseen-'+active_user.id).show();
 
                 $('#unseen-'+active_user.id).text(notifications[active_user.id]);
+                $('.user_count').hide();
             }
 
             // On send message
@@ -298,7 +298,8 @@
             }
 
             var receiveMessage = function(msg, sender_id) {
-                if(active_user && active_user.id == sender_id){
+                console.log(sender_id, active_user);
+                if(active_user && active_user.id == sender_id && !is_mini){
                     append_message(msg);
                     $('.replies').Emoji();
                     $('.sent').Emoji();
@@ -313,6 +314,7 @@
                     ++total_unseen;
                     $('#unseen-msg-counter').text(total_unseen);
                     $('#unseen-'+sender_id).text(notifications[sender_id]);
+                    $('.chatbox .chat-text .user_count').text(notifications[sender_id]);
                     if(total_unseen == 0)
                         $('#unseen-msg-counter').hide();
                     else
@@ -322,6 +324,11 @@
                         $('#unseen-'+sender_id).hide();
                     else
                         $('#unseen-'+sender_id).show();
+
+                    if(notifications[sender_id] == 0)
+                        $('.chatbox .chat-text .user_count').hide();
+                    else
+                        $('.chatbox .chat-text .user_count').show();
                 }
             }
 
