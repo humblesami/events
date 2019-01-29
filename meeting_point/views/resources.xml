@@ -47,7 +47,7 @@
                             <h5>Access Rights:</h5>
                             <field name="partners" groups="meeting_point.group_meeting_admin" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                         </div>
-                        <div>
+                        <div class="oe_edit_only">
                             <h6>All Users:</h6>
                             <field name="allUser" type="checkbox" />
                         </div>

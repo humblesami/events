@@ -70,7 +70,6 @@
                                                  <div class="o_hidden pblic_evnt_id">
                                             <field name="id" class="o_hidden" />
                                             </div>
-                                            <!--<field name="start_datetime"></field>-->
                                             <p class="oe_module_name">
                                                 <p>
                                                     <field name="company" string="Location"/>
@@ -130,19 +129,83 @@
             </field>
         </record>
 
-         <record id="meeting_point_event_kanban_archive" model="ir.ui.view">
+        <!---->
+
+        <record id="meeting_point_event_kanban_archive" model="ir.ui.view">
             <field name="name">meeting.point.event.kanban.archive</field>
             <field name="model">calendar.event</field>
-            <field name="inherit_id" ref="meeting_point.meeting_point_kanban"/>
-            <field name="mode">primary</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <xpath expr="//kanban" position="attributes">
-                    <attribute name="create">false</attribute>
+            <kanban default_order="start_datetime" create="false">
+                    <field name="start_datetime"/>
+                    <field name="publish"/>
+                    <field name="attendee_status"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click ">
+                                <div class="oe_module_desc">
+                                    <div class="meeting_info">
+                                        <div class="date_tam" style="">
+                                            <div class="o_day" style="    font-size: 26px;">
+                                                <t t-esc="record.start_datetime.raw_value.getDate()"/>
+                                            </div>
+                                            <div>
+                                                <t t-esc="moment(record.start_datetime.raw_value).format('MMM')"/>
+                                                <t t-esc="record.start_datetime.raw_value.getFullYear()"/>
+                                            </div>
+                                            <div>
+                                                <t t-esc="moment(record.start_datetime.raw_value).format('LT')"/>
+                                            </div>
+                                        </div>
+                                        <div class="details">
+                                            <h2>
+                                                <field name="name"/>
+                                            </h2>
+                                                 <div class="o_hidden pblic_evnt_id">
+                                            <field name="id" class="o_hidden" />
+                                            </div>
+                                            <p class="oe_module_name">
+                                                <p>
+                                                    <field name="company" string="Location"/>
+                                                </p>
+                                                <p><field name="address" style="margin-right: 4px;"/>
+                                                    <field name="street"/>
+                                                </p>
+                                                <p><field name="city" style="margin-right: 4px;"/>
+                                                    <field name="country_state"/>
+                                                    <field name="zip"/>
+                                                </p>
+                                            </p>
 
-                </xpath>
+                                            <div class="current_status">
+                                                <field name="attendee_status" invisible="1"/>
+                                                <field name="publish" invisible="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <script src="/meeting_point/static/js/meeting_kanban.js" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
+<!---->
+         <!--<record id="meeting_point_event_kanban_archive" model="ir.ui.view">-->
+            <!--<field name="name">meeting.point.event.kanban.archive</field>-->
+            <!--<field name="model">calendar.event</field>-->
+            <!--<field name="inherit_id" ref="meeting_point.meeting_point_kanban"/>-->
+            <!--<field name="mode">primary</field>-->
+            <!--<field name="priority" eval="2"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<xpath expr="//kanban" position="attributes">-->
+                    <!--<attribute name="create">false</attribute>-->
+
+                <!--</xpath>-->
+            <!--</field>-->
+        <!--</record>-->
 
         <record id="meeting_point_event_form" model="ir.ui.view">
             <field name="name">meeting.point.form</field>
@@ -450,6 +513,7 @@
                     <attribute name="delete">false</attribute>
                 </xpath>
 
+
                 <xpath expr="//div[@name='mp_roster']" position="attributes">
                    <attribute name="class">o2m_kanban roster-item</attribute>
                 </xpath>
@@ -464,6 +528,16 @@
 
                 <xpath expr="//div[@name='readonly_completed_3']" position="attributes">
                    <attribute name="class">oe_read_only</attribute>
+                </xpath>
+
+                 <xpath expr="//button[@name='do_accept']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+                  <xpath expr="//button[@name='do_decline']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+                  <xpath expr="//button[@name='do_tentative']" position="attributes">
+                        <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
         </record>

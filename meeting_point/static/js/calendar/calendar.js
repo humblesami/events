@@ -8,7 +8,7 @@ $(function(){
         header: {
             left: 'prevYear,prev,next,nextYear, today',
             center: 'title',
-            right: 'month,basicWeek,basicDay,year'
+            right: 'year,month,agendaWeek,agendaDay'
         },
 
         //defaultDate: '2018-03-12',
