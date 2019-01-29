@@ -158,10 +158,6 @@
             <field name="priority">9</field>
             <field name="arch" type="xml">
                 <form create="false" edit="false">
-                    <div style="display:none;" class="doc_meta">
-                        <field class="doc_id" name="id"/>
-                        <field class="doc_model" name="path"/>
-                    </div>
                     <div id="pdf_div"></div>
                     <script id="doc_js" src="/dn_documents/static/js/doc.js"/>
                </form>
