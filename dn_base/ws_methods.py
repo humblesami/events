@@ -294,6 +294,7 @@ socket_server = {
 import requests
 def emit_event(rtc_req):
     try:
+        # res = {'data':3, 'audience':[], 'client_event'}
         rtc_req['data'] = json.dumps(rtc_req['data'])
         requests.get(socket_server['url']+'/odoo_event', params=rtc_req)
     except:

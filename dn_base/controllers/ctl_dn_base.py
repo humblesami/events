@@ -21,21 +21,29 @@ class MyWebsite(Website):
         else:
             return redirect('/web')
 
+from odoo.addons.meeting_point.controllers import controllers as meetingController
+from odoo.addons.odoochat.controllers import controllers as chatController
+
+socket_events = {
+    'save_message': chatController.save_messages
+}
+
 class Controller(http.Controller):
 
-    @http.route('/socket_request', type='http', csrf=False, auth='public', cors='*')
-    def socket_request(self, **kw):
+    @http.route('/socket_server_request', type='json', csrf=False, auth='public', cors='*')
+    def socket_request_http(self, **kw):
+        kw = request.jsonrequest
         try:
-            kw = json.loads(kw['input_data'])
             auth = kw.get('auth')
-            data = kw.get('req_data')
-            time_zone = kw.get('time_zone')
-            forward_url = kw.get('function_url')
+            if not auth:
+                auth = kw
             uid = ws_methods.check_auth(auth)
             if not uid:
                 return ws_methods.not_logged_in()
-            res = http.local_redirect(forward_url, data)
-            return res
+            values = kw.get('req_data')
+            if not values:
+                values = kw
+            return socket_events[kw.get('event')](values)
         except:
             return ws_methods.handle()
 
@@ -228,6 +236,53 @@ class Controller(http.Controller):
             ws_methods.execute_update(sql)
             res = 'done'
             return res
+        except:
+            return ws_methods.handle()
+
+    @http.route('/get-comments', type='http', csrf=False, auth='none', cors='*')
+    def get_comments_http(self, **kw):
+        temp = self.get_comments(kw)
+        return temp
+
+    @http.route('/get-comments-nonhttp', type="json", csrf=False, auth='none', cors='*')
+    def get_comments_json(self, **kw):
+        req_body = http.request.jsonrequest
+        return self.get_comment(req_body)
+
+    def get_comments(self, values):
+        try:
+            uid = ws_methods.check_auth(values)
+            if not uid:
+                return ws_methods.not_logged_in()
+            req_env = http.request.env
+            if 'data' in values:
+                values = values['data']
+            filters = [('res_id', '=', values['res_id']), ('parent_id', '=', False),
+                       ('model', '=', values['res_model']), ('create_uid', '!=', False)]
+            if uid != 1:
+                filters.append(('create_uid', '!=', 1))
+            comments = req_env['mail.message'].search(filters, order='create_date desc')
+            props = ['id', 'body', 'subtype_id.id', 'create_date']
+            ar_comments = ws_methods.objects_list_to_json_list(comments, props)
+            i = 0
+            for com in comments:
+                user = com.create_uid
+                if not user.mp_user_id.id:
+                    ar_comments[i]['is_own'] = 1
+
+                ar_comments[i]['user'] = {'name': user.name, 'id': user.mp_user_id.id}
+                ar_children = []
+                if com.child_ids:
+                    child_ids = com.child_ids.sorted(key=lambda p: (p.create_date))
+                    ar_children = ws_methods.objects_list_to_json_list(child_ids, props)
+                    j = 0
+                    for child_com in child_ids:
+                        user1 = child_com.create_uid
+                        ar_children[j]['user'] = {'name': user1.name, 'id': user1.mp_user_id.id}
+                        j = j + 1
+                ar_comments[i]["children"] = ar_children
+                i = i + 1
+            return ws_methods.http_response('', ar_comments)
         except:
             return ws_methods.handle()
 

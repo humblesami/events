@@ -70,14 +70,19 @@ class Oddochat(http.Controller):
             values = kw.get('req_data')
             if not values:
                 values = kw
-
-            req_env = http.request.env
-            sender = values.get('sender')
-            to = values.get('to')
-            content = values.get('content')
-            message = req_env['odoochat.messages'].sudo().create({'sender': sender, 'to': to, 'content': content})
-            props = ['content', 'id', 'create_date', 'read_status','sender', 'to']
-            message = ws_methods.object_to_json_object(message, props)
-            return ws_methods.http_response('',  message)
+            return save_messages(values)
         except:
             return ws_methods.handle()
+
+def save_messages(values):
+    try:
+        req_env = http.request.env
+        sender = values.get('sender')
+        to = values.get('to')
+        content = values.get('content')
+        message = req_env['odoochat.messages'].sudo().create({'sender': sender, 'to': to, 'content': content})
+        props = ['content', 'id', 'create_date', 'read_status', 'sender', 'to']
+        message = ws_methods.object_to_json_object(message, props)
+        return ws_methods.http_response('', message)
+    except:
+        return ws_methods.handle()
