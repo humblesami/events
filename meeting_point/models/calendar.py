@@ -383,6 +383,8 @@ class Meeting(models.Model):
         try:
             for rec in self:
                 rec.is_active_yet = False
+                if not rec.im_attendee:
+                    continue
                 stop_datetime = dn_dt.dtTostr(self.stop)
                 stop_date = stop_datetime.date()
                 today_date = dn_dt.today()
