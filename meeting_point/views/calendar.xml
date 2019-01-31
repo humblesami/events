@@ -43,8 +43,8 @@
             <field name="arch" type="xml">
                 <kanban default_order="start_datetime">
                     <field name="start_datetime"/>
-                    <field name="publish"/>
                     <field name="attendee_status"/>
+                    <field name="is_active_yet"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click ">
@@ -84,7 +84,6 @@
 
                                             <div class="current_status">
                                                 <field name="attendee_status" invisible="1"/>
-                                                <field name="publish" invisible="1"/>
                                             </div>
                                         </div>
                                     </div>
@@ -135,7 +134,7 @@
             <field name="arch" type="xml">
                 <kanban default_order="start_datetime">
                     <field name="start_datetime"/>
-                    <field name="publish"/>
+                    <field name="is_active_yet"/>
                     <field name="attendee_status"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -176,7 +175,6 @@
 
                                             <div class="current_status">
                                                 <field name="attendee_status" invisible="1"/>
-                                                <field name="publish" invisible="1"/>
                                             </div>
                                         </div>
                                     </div>
@@ -210,6 +208,7 @@
             <field name="priority" eval="0"/>
             <field name="arch" type="xml">
                 <form string="Meetings" class="meetingform">
+                     <field name="is_active_yet" class="o_hidden"/>
                      <header attrs="{'invisible': [('is_active_yet','=',False)]}">
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Accept" name="do_accept"/>
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>
