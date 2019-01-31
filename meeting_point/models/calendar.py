@@ -228,24 +228,25 @@ class Meeting(models.Model):
     document_ids = fields.One2many('meeting_point.document','meeting_id',string="Document(s) To Sign")
     doc_ids = fields.One2many('meeting_point.doc', 'meeting_id', string="Meeting Document(s)")
     zip = fields.Char(string="Zip")
-    is_active_yet = fields.Boolean(compute="_compute_meeting_status")
     #seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
     survey_ids = fields.One2many('survey.survey','meeting_id',string="Survey")
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees',
                                    states={'done': [('readonly', True)]}, default=_default_partners,
                                    domain=lambda self:self.filter_attendees(), ondelete="cascade")
-    #message_ids = fields.One2many("mail.message",'res_id',write=['meeting_point.director'])
-    exectime = fields.Char(compute="_compute_archive")
     archived = fields.Boolean(string="Archived")
-    im_attendee = fields.Char(compute='look_if_invited')
+    #message_ids = fields.One2many("mail.message",'res_id',write=['meeting_point.director'])
 
     pin = fields.Char(string="Meeting PIN")
     conference_bridge_number = fields.Char(string="Conference Bridge No.")
     video_call_link = fields.Char()
-    conference_status = fields.Char(compute='is_video_active')
     end_call = fields.Boolean(string="End-Call On Moderator Left")
     password = fields.Char()
     moderator = fields.Integer()
+
+    exectime = fields.Char(compute="_compute_archive")
+    im_attendee = fields.Char(compute='look_if_invited')
+    is_active_yet = fields.Char(compute="_compute_meeting_status")
+    conference_status = fields.Char(compute='is_video_active')
 
     @api.model
     def create(self, vals):
@@ -348,8 +349,8 @@ class Meeting(models.Model):
         for event in self:
             event.im_attendee = "no"
             for p in event.partner_ids:
-                my_pid == p.id
-                event.im_attendee = "yes"
+                if my_pid == p.id:
+                    event.im_attendee = "yes"
                 break
 
     @api.multi
@@ -382,15 +383,15 @@ class Meeting(models.Model):
     def _compute_meeting_status(self):
         try:
             for rec in self:
-                rec.is_active_yet = False
-                if not rec.im_attendee:
+                rec.is_active_yet = 'no'
+                if rec.im_attendee != 'yes':
                     continue
-                stop_datetime = dn_dt.dtTostr(self.stop)
-                stop_date = stop_datetime.date()
-                today_date = dn_dt.today()
-                res = stop_date>=today_date
-                if res:
-                    rec.is_active_yet = rec.publish
+                if not rec.publish:
+                    continue
+                if rec.archived:
+                    continue
+                res = rec.exectime != 'completed'
+                rec.is_active_yet = 'yes'
         except:
             q=1
 

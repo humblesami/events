@@ -88,7 +88,7 @@
                                         </div>
                                     </div>
 
-                                    <t t-if="record.is_active_yet">
+                                    <t t-if="record.is_active_yet=='yes'">
                                         <div class="acceptancebuttons">
                                             <t t-if="record.attendee_status.value=='Accepted'">
                                                 <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept"><i class="fa fa-check fa-lg" style="color:white"/>Accept
@@ -209,7 +209,7 @@
             <field name="arch" type="xml">
                 <form string="Meetings" class="meetingform">
                      <field name="is_active_yet" class="o_hidden"/>
-                     <header attrs="{'invisible': [('is_active_yet','=',False)]}">
+                     <header attrs="{'invisible': [('is_active_yet','=','no')]}">
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Accept" name="do_accept"/>
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Tentative" name="do_tentative"/>

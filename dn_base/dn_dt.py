@@ -45,6 +45,8 @@ def strdateTostrtime(str_date_time):
     return res
 
 def dtTostrtime(dt):
+    if type(dt) is str:
+        return dt
     res = dt.strftime('%H:%M:%S')
     return res
 

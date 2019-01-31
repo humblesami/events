@@ -1,0 +1,13 @@
+html .o_web_client .o_content
+{
+    overflow:hidden;
+}
+.o_form_view.o_form_nosheet:first
+{
+    padding : 0;
+    overflow:hidden;
+}
+.doc_iframe:first
+{
+    width: 100%;height: calc(100vh - 126px);
+}

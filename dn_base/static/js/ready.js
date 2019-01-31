@@ -31,8 +31,10 @@ function load_dn_assets()
     try
     {
         var dnow = Date.now();
+        $('body').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
+
         document.writeln('<script src="/dn_base/static/js/libs/bootbox.js?v='+dnow+'"></script>');
-        document.writeln('<script src="/dn_base/static/config.js"></script>');
+        document.writeln('<script src="/dn_base/static/config.js?v='+dnow+'"></script>');
         //Libraries
         document.writeln('<script src="/dn_base/static/js/libs/datetime.js?v='+dnow+'"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/masked_input.js"></script>');
@@ -63,9 +65,7 @@ function load_dn_assets()
             $(document).on('click', 'button.fa-5x', function(){
                 dn_json_rpc_object.showHideLoader(true);
             });
-            $('body').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
         });
-
     }
     catch(er)
     {
