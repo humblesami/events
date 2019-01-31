@@ -94,12 +94,7 @@ class auth(http.Controller):
                 'groups': groups,
                 'uid': user.id
             }
-            user_data = verify(res)
-            data = {}
-            data['name'] = 'to_be_verified'
-            data['data'] = user_data
-            ws_methods.add_user_to_socket_list(data)
-            return ws_methods.http_response('', data)
+            return verify(res)
         except:
             return ws_methods.handle()
 
@@ -149,28 +144,6 @@ class auth(http.Controller):
         except:
             ws_methods.handle()
 
-    @http.route('/ws/verifytoken-socket', type="json", csrf=False,  auth='public', cors='*')
-    def verifyTokenSocket(self, **kw):
-        try:
-            request = http.request
-            kw = request.jsonrequest
-            auth = kw.get('auth')
-            if not auth:
-                auth = kw
-            uid = self.verifyToken(auth)
-            if type(uid) is not int:
-                #If its not number then uid must be an error string
-                return ws_methods.http_response(uid)
-            auth['uid'] = uid
-            res = verify(auth)
-            data = {}
-            data['name'] = 'to_be_verified'
-            data['data'] = res
-            ws_methods.add_user_to_socket_list(data)
-            return ws_methods.http_response('', data)
-        except:
-            return ws_methods.handle()
-
     @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
     def verifyTokenHttp(self, **kw):
         try:
@@ -180,8 +153,7 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
-                res = verify(values)
-                return ws_methods.http_response('', res)
+                return verify(values)
         except:
             return ws_methods.handle()
 
@@ -250,6 +222,11 @@ def verify(values):
 
         res = {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList,
                'unseen': unseenMessages, 'user': values}
-        return ws_methods.http_response('', res)
+        res = {'event':'verified', 'audience': [values['uid']], 'data':res}
+        res = ws_methods.emit_event(res)
+        if res == 'done':
+            return ws_methods.http_response('', 'done')
+        else:
+            return ws_methods.http_response(res)
     except:
-        return ws_methods.handle()
+        raise
