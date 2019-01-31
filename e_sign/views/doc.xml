@@ -47,7 +47,7 @@
             <field name="name">e_sign.document.assign_signatures.form</field>
             <field name="model">e_sign.document</field>
             <field name="arch" type="xml">
-         <form create="false" edit="false">
+         <form create="false" edit="false" class="sign_doc_form">
 
 
     <field name="id" class="e_sign_doc_id" invisible="1"/>
