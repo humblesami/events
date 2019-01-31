@@ -84,7 +84,22 @@ class auth(http.Controller):
                     request.env['login.info'].create(vals)
                 except:
                     return ws_methods.handle()
-            return ws_methods.http_response('', {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': user_photo,'groups':groups })
+
+            res = {
+                'db': db,
+                'token': token,
+                'name': user.name,
+                'id': user.id,
+                'photo': user_photo,
+                'groups': groups,
+                'uid': user.id
+            }
+            user_data = verify(res)
+            data = {}
+            data['name'] = 'to_be_verified'
+            data['data'] = user_data
+            ws_methods.add_user_to_socket_list(data)
+            return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()
 
@@ -134,7 +149,6 @@ class auth(http.Controller):
         except:
             ws_methods.handle()
 
-
     @http.route('/ws/verifytoken-socket', type="json", csrf=False,  auth='public', cors='*')
     def verifyTokenSocket(self, **kw):
         try:
@@ -147,69 +161,13 @@ class auth(http.Controller):
             if type(uid) is not int:
                 #If its not number then uid must be an error string
                 return ws_methods.http_response(uid)
-
-            req_env = request.env
-            filters = [('user_id', '=', uid),('counter','>',0)]
-
-            note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
-            props = ['counter', 'user_id', 'notification_id']
-            status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
-            notificationList = ws_methods.my_notifications_on_record()
-            for note in status_list:
-                filters = [('id', '=', note['notification_id'].id),('parent_id','=',False),('parent_model','=',False)]
-                note_data = req_env['dn_base.notification'].search(filters, order='create_date desc')
-                if note_data:
-                    props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
-                    notification_object = ws_methods.object_to_json_object(note_data[0], props)
-                    notification_object['counter'] = note['counter']
-                    notification_object['user_id'] = note['user'].id
-                    notificationList.append(notification_object)
-
-            friendIds = []
-            friendList = {}
-            meetingList = []
-            unseenMessages = 0
-            partner_id = req_env.user.partner_id.id
-            filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
-            meetings = request.env['calendar.event'].search(filters)
-
-            base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
-            res = base_url + '/dn/content_file/res.users/'
-            res2 = '/image_small/' + auth['db'] + '/' + auth['token']
-            for obj in meetings:
-                attendees = []
-                for partner in obj.partner_ids:
-                    obj_id = partner.user_id.id
-                    if obj_id != uid and obj_id not in friendIds:
-                        friendObj = partner.user_id
-                        friend = {
-                            'id': friendObj.id,
-                            'name': friendObj.name,
-                            'photo': res + str(friendObj.id) + res2
-                        }
-                        if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group('meeting_point.group_meeting_admin'):
-                            friend['type'] = 'staff'
-                        else:
-                            friend['type'] = 'director'
-
-                        db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
-                        friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
-                        unseenMessages += friend['unseen']
-
-                        friendList[friend['id']] = friend
-                        friendIds.append(friendObj.id)
-                    attendees.append(partner.user_id.id)
-
-                event = {
-                    'id' : obj.id,
-                    'name' : obj.name,
-                    'attendees' : attendees
-                }
-                meetingList.append(event)
-
-            res = {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList,
-                   'unseen': unseenMessages}
-            return ws_methods.http_response('', res)
+            auth['uid'] = uid
+            res = verify(auth)
+            data = {}
+            data['name'] = 'to_be_verified'
+            data['data'] = res
+            ws_methods.add_user_to_socket_list(data)
+            return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()
 
@@ -221,6 +179,77 @@ class auth(http.Controller):
             if type(uid) is not int:
                 return ws_methods.http_response(uid)
             else:
-                return ws_methods.http_response('', 'ok')
+                values['uid'] = uid
+                res = verify(values)
+                return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
+
+def verify(values):
+    try:
+        request = http.request
+        req_env = request.env
+        filters = [('user_id', '=', values['uid']), ('counter', '>', 0)]
+
+        note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
+        props = ['counter', 'user_id', 'notification_id']
+        status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
+        notificationList = ws_methods.my_notifications_on_record()
+        for note in status_list:
+            filters = [('id', '=', note['notification_id'].id), ('parent_id', '=', False), ('parent_model', '=', False)]
+            note_data = req_env['dn_base.notification'].search(filters, order='create_date desc')
+            if note_data:
+                props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
+                notification_object = ws_methods.object_to_json_object(note_data[0], props)
+                notification_object['counter'] = note['counter']
+                notification_object['user_id'] = note['user'].id
+                notificationList.append(notification_object)
+
+        friendIds = []
+        friendList = {}
+        meetingList = []
+        unseenMessages = 0
+        partner_id = req_env.user.partner_id.id
+        filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
+        meetings = request.env['calendar.event'].search(filters)
+
+        base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
+        res = base_url + '/dn/content_file/res.users/'
+        res2 = '/image_small/' + values['db'] + '/' + values['token']
+        for obj in meetings:
+            attendees = []
+            for partner in obj.partner_ids:
+                obj_id = partner.user_id.id
+                if obj_id != values['uid'] and obj_id not in friendIds:
+                    friendObj = partner.user_id
+                    friend = {
+                        'id': friendObj.id,
+                        'name': friendObj.name,
+                        'photo': res + str(friendObj.id) + res2
+                    }
+                    if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
+                            'meeting_point.group_meeting_admin'):
+                        friend['type'] = 'staff'
+                    else:
+                        friend['type'] = 'director'
+
+                    db_filters = [('sender', '=', friend['id']), ('to', '=', values['uid']), ('read_status', '=', False)]
+                    friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
+                    unseenMessages += friend['unseen']
+
+                    friendList[friend['id']] = friend
+                    friendIds.append(friendObj.id)
+                attendees.append(partner.user_id.id)
+
+            event = {
+                'id': obj.id,
+                'name': obj.name,
+                'attendees': attendees
+            }
+            meetingList.append(event)
+
+        res = {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList,
+               'unseen': unseenMessages, 'user': values}
+        return ws_methods.http_response('', res)
+    except:
+        return ws_methods.handle()

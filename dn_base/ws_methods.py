@@ -296,6 +296,14 @@ def emit_event(rtc_req):
     try:
         # res = {'data':3, 'audience':[], 'client_event'}
         rtc_req['data'] = json.dumps(rtc_req['data'])
-        requests.get(socket_server['url']+'/odoo_event', params=rtc_req)
+        res = requests.get(socket_server['url']+'/odoo_event', params=rtc_req)
+        return res
+    except:
+        handle()
+
+def add_user_to_socket_list(user_data):
+    try:
+        # user_data = json.dumps(user_data)
+        requests.get(socket_server['url']+'/odoo_event', params=user_data)
     except:
         print('odoo event failed')

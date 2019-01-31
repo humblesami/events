@@ -12,6 +12,115 @@ from odoo.addons.web.controllers.main import Binary
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.web.controllers.main import Session, binary_content, Home
 
+def save_comment(values):
+    try:
+        if 'data' in values:
+            values = json.loads(values['data'])
+        uid = ws_methods.check_auth(values)
+        if not uid:
+            return ws_methods.http_response('Not authorized')
+        res_id = values.get('res_id')
+        if not  res_id:
+            return ws_methods.http_response('Please provide meeting id')
+        res_model = values.get('model_name')
+        if not res_id:
+            return ws_methods.http_response('Please provide related model')
+        subtype_id = values.get('subtype')
+        if not subtype_id:
+            subtype_id = 2
+        parent_id = values.get('parent_id')
+        req_env = http.request.env
+        mesg_body = values['body']
+        str_uid = str(uid)
+
+        authorId = req_env['res.users'].search([('id','=',uid)]).partner_id.id
+        max_comment_id = 0
+        query = 'select max(id) as comment_id from mail_message where create_uid = '+ str_uid
+        res = ws_methods.execute_read(query)
+        if len(res) > 0:
+            if res[0]['comment_id']:
+                max_comment_id = res[0]['comment_id']
+
+        create_date = dn_dt.nowStr()
+        table_time = datetime.datetime.now()
+        if not parent_id:
+            req_env.cr.execute(
+                'insert into mail_message(model,res_id,body,message_type,subtype_id,create_uid,date,create_date,write_date,author_id) VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s,%s)',
+                (res_model, res_id, mesg_body, 'comment', subtype_id, uid, table_time,table_time,table_time,authorId))
+        else:
+            req_env.cr.execute(
+                'insert into mail_message(model,res_id,body,message_type,subtype_id,parent_id,create_uid,date,create_date,write_date,author_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)',
+                (res_model, res_id, mesg_body, 'comment', subtype_id, parent_id, uid, table_time,table_time,table_time,authorId))
+
+        str_comment_id = str(max_comment_id)
+        query = 'select id,create_date,create_uid,parent_id from mail_message where id > '+str_comment_id+' and create_uid = '+str_uid
+        added_comment = ws_methods.execute_read(query)
+        attendees = []
+        meeting = req_env['calendar.event'].sudo().search([('id', '=', res_id)])
+        partners = meeting.partner_ids
+        for partner in partners:
+            try:
+                if partner.user_id:
+                    attendees.append(partner.user_id.id)
+            except:
+                a = 1
+        if len(added_comment) == 0:
+            return ws_methods.http_response('Not created')
+        added_comment = added_comment[0]
+        comment_id = added_comment['id']
+        user = req_env.user
+        data = {
+            'comment': {
+                'id': comment_id,
+                'body': mesg_body,
+                'subtype': subtype_id,
+                'create_date': create_date,
+                'user': {'id': user.mp_user_id.id, 'name': user.name, 'uid': str_uid},
+                'children': [],
+                'meeting': meeting.name,
+                'res_id': res_id
+            },
+            'attendees': attendees,
+        }
+
+
+        if subtype_id == 1:
+            notification = {'res_id':res_id, 'res_model': res_model, 'content':'new comment added on a meeting' }
+            notification['user_id'] = uid
+            notification_object = ws_methods.addNotification(notification, attendees)
+            data['notification'] = notification_object
+
+        if added_comment['parent_id']:
+            data['comment']['parent_id'] = added_comment['parent_id']
+
+        return ws_methods.http_response('', data)
+    except:
+        return ws_methods.handle()
+
+def update_notification(values):
+    try:
+        req_env = http.request.env
+        parent_model = values.get('parent_model')
+        parent_id = values.get('parent_id')
+        res_model = values.get('res_model')
+        res_id = values.get('res_id')
+
+        filter = [('res_model', '=', res_model), ('res_id', '=', res_id)]
+
+        if parent_id and parent_model:
+            filter.append(('parent_model', '=', parent_model))
+            filter.append(('parent_id', '=', parent_id))
+
+        note_list = req_env['dn_base.notification'].search(filter)
+        ids = ws_methods.objects_list_to_array(note_list, 'id')
+
+        filter = [('notification_id', 'in', ids), ('user_id', '=', values['uid'])]
+        req_env['dn_base.notification.status'].sudo().search(filter).write({'counter': 0})
+
+        return ws_methods.http_response('', 'Successfully Updated')
+    except:
+        return ws_methods.handle()
+
 class MyWebsite(Website):
     @http.route('/', type='http', auth="public", website=True)
     def index(self):
@@ -21,11 +130,17 @@ class MyWebsite(Website):
         else:
             return redirect('/web')
 
-from odoo.addons.meeting_point.controllers import controllers as meetingController
+from odoo.addons.meeting_point.controllers import annotation as annotationController
 from odoo.addons.odoochat.controllers import controllers as chatController
+from odoo.addons.dn_auth.controllers import auth as authController
 
 socket_events = {
-    'save_message': chatController.save_messages
+    'save_message': chatController.save_messages,
+    'get_active_user_message': chatController.getActiveUserMessage,
+    'save_comment_point': annotationController.save_comment_point,
+    'save_comment': save_comment,
+    'update_notification': update_notification,
+    # 'verify': authController.verify
 }
 
 class Controller(http.Controller):
@@ -43,6 +158,7 @@ class Controller(http.Controller):
             values = kw.get('req_data')
             if not values:
                 values = kw
+            values['uid'] = uid
             return socket_events[kw.get('event')](values)
         except:
             return ws_methods.handle()
@@ -164,26 +280,8 @@ class Controller(http.Controller):
             values = kw.get('req_data')
             if not values:
                 values = kw
-
-            req_env = http.request.env
-            parent_model = values.get('parent_model')
-            parent_id = values.get('parent_id')
-            res_model = values.get('res_model')
-            res_id = values.get('res_id')
-
-            filter = [('res_model', '=',res_model), ('res_id', '=',res_id)]
-
-            if parent_id and parent_model:
-                filter.append(('parent_model', '=',parent_model))
-                filter.append(('parent_id', '=',parent_id))
-
-            note_list = req_env['dn_base.notification'].search(filter)
-            ids = ws_methods.objects_list_to_array(note_list, 'id')
-
-
-            filter = [('notification_id', 'in',ids), ('user_id', '=', uid)]
-            req_env['dn_base.notification.status'].sudo().search(filter).write({'counter': 0})
-
+            values['uid'] = uid
+            update_notification(values)
             return ws_methods.http_response('', 'Successfully Updated')
         except:
             return ws_methods.handle()
@@ -293,7 +391,7 @@ class Controller(http.Controller):
 
     @http.route('/comment/add', type='http', csrf=False, auth='public', cors='*')
     def save_comment_http(self, **kw):
-        return self.save_comment(kw)
+        return save_comment(kw)
 
     @http.route('/comment/add-json', type="json", csrf=False, auth='public', cors='*')
     def save_comment_json(self, **kw):
@@ -307,92 +405,7 @@ class Controller(http.Controller):
         values = kw.get('req_data')
         if not values:
             values = kw
-        return self.save_comment(values)
-
-    def save_comment(self, values):
-        try:
-            if 'data' in values:
-                values = json.loads(values['data'])
-            uid = ws_methods.check_auth(values)
-            if not uid:
-                return ws_methods.http_response('Not authorized')
-            res_id = values.get('res_id')
-            if not  res_id:
-                return ws_methods.http_response('Please provide meeting id')
-            res_model = values.get('model_name')
-            if not res_id:
-                return ws_methods.http_response('Please provide related model')
-            subtype_id = values.get('subtype')
-            if not subtype_id:
-                subtype_id = 2
-            parent_id = values.get('parent_id')
-            req_env = http.request.env
-            mesg_body = values['body']
-            str_uid = str(uid)
-
-            authorId = req_env['res.users'].search([('id','=',uid)]).partner_id.id
-            max_comment_id = 0
-            query = 'select max(id) as comment_id from mail_message where create_uid = '+ str_uid
-            res = ws_methods.execute_read(query)
-            if len(res) > 0:
-                if res[0]['comment_id']:
-                    max_comment_id = res[0]['comment_id']
-
-            create_date = dn_dt.nowStr()
-            table_time = datetime.datetime.now()
-            if not parent_id:
-                req_env.cr.execute(
-                    'insert into mail_message(model,res_id,body,message_type,subtype_id,create_uid,date,create_date,write_date,author_id) VALUES (%s, %s, %s, %s, %s, %s, %s,%s,%s,%s)',
-                    (res_model, res_id, mesg_body, 'comment', subtype_id, uid, table_time,table_time,table_time,authorId))
-            else:
-                req_env.cr.execute(
-                    'insert into mail_message(model,res_id,body,message_type,subtype_id,parent_id,create_uid,date,create_date,write_date,author_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s)',
-                    (res_model, res_id, mesg_body, 'comment', subtype_id, parent_id, uid, table_time,table_time,table_time,authorId))
-
-            str_comment_id = str(max_comment_id)
-            query = 'select id,create_date,create_uid,parent_id from mail_message where id > '+str_comment_id+' and create_uid = '+str_uid
-            added_comment = ws_methods.execute_read(query)
-            attendees = []
-            meeting = req_env['calendar.event'].sudo().search([('id', '=', res_id)])
-            partners = meeting.partner_ids
-            for partner in partners:
-                try:
-                    if partner.user_id:
-                        attendees.append(partner.user_id.id)
-                except:
-                    a = 1
-            if len(added_comment) == 0:
-                return ws_methods.http_response('Not created')
-            added_comment = added_comment[0]
-            comment_id = added_comment['id']
-            user = req_env.user
-            data = {
-                'comment': {
-                    'id': comment_id,
-                    'body': mesg_body,
-                    'subtype': subtype_id,
-                    'create_date': create_date,
-                    'user': {'id': user.mp_user_id.id, 'name': user.name, 'uid': str_uid},
-                    'children': [],
-                    'meeting': meeting.name,
-                    'res_id': res_id
-                },
-                'attendees': attendees,
-            }
-
-
-            if subtype_id == 1:
-                notification = {'res_id':res_id, 'res_model': res_model, 'content':'new comment added on a meeting' }
-                notification['user_id'] = uid
-                notification_object = ws_methods.addNotification(notification, attendees)
-                data['notification'] = notification_object
-
-            if added_comment['parent_id']:
-                data['comment']['parent_id'] = added_comment['parent_id']
-
-            return ws_methods.http_response('', data)
-        except:
-            return ws_methods.handle()
+        return save_comment(values)
 
     @http.route('/comment/delete', type='http', csrf=False, auth='none', cors='*')
     def delete_comment_http(self, **kw):

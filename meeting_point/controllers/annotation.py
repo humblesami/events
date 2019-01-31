@@ -206,79 +206,87 @@ class annotation(http.Controller):
             values = kw.get('req_data')
             if not values:
                 values = kw
-
-            req_env = http.request.env
-
-            point = values['point']
-            comment = point['comment']
-            notification = values['notification']
-
-            modal = types['point']
-            notification['res_model'] = modal
-            point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
-            new_point = False
-            if not point_id:
-                doc_name = values['doc_id']
-                if not doc_name:
-                    return ws_methods.http_response('Document id not given')
-                point['doc_name'] = doc_name
-                point_id = req_env[modal].create(point)
-                new_point = True
-
-            notification['res_id'] = point_id.id
-            modal = types['comment']
-            comment['point_id'] = point_id.id
-            req_env[modal].create(comment)
-
-            doc_type = values['doc_type']
-            res_id = values['res_id']
-            notification['parent_id'] = res_id
-            res_id = int(res_id)
-            docname = ''
-            meeting = False
-            topic_name = False
-            if doc_type == 'topic':
-                notification['parent_model'] = 'meeting_point.topicdoc'
-                topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
-                meeting = topic_doc.topic_id.meeting_id
-                topic_name = topic_doc.topic_id.name
-                docname = topic_doc.name
-            elif doc_type == 'meeting':
-                notification['parent_model'] = 'meeting_point.doc'
-                meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
-                meeting = meeting_doc.meeting_id
-                docname = meeting_doc.name
-            if not meeting:
-                return ws_methods.http_response('Invalid doc type=' + str(doc_type) + ' or id =' + (res_id))
-            ids = []
-            for attendee in meeting.attendee_ids:
-                try:
-                    cid = attendee.partner_id.user_id.id
-                except:
-                    a = 1
-                if cid != uid:
-                    ids.append(cid)
-
-            notification_object = ws_methods.addNotification(notification, ids)
-            notification_object['user_id'] = notification.get('user_id')
-
-            res = {'meta': {'meeting': meeting.name, 'doc': docname},
-                   'model':notification['res_model'],
-                   'point_id':point_id.id,
-                   'res_id' : res_id,
-                   'x':point['x'],
-                   'y':point['y']
-                   }
-            if new_point:
-                res['new_point'] = 1
-            if topic_name:
-                res['meta']['topic'] = topic_name
-            res['attendees'] = ids
-            res['notification'] = notification_object
-
+            values['uid'] = uid
+            res = save_comment_point(values)
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
+
+def save_comment_point(values):
+    try:
+        req_env = http.request.env
+
+        point = values['point']
+        comment = point['comment']
+        notification = values['notification']
+
+        modal = types['point']
+        notification['res_model'] = modal
+        point_id = req_env[modal].search([('uuid', '=', point['uuid'])])
+        new_point = False
+        if not point_id:
+            doc_name = values['doc_id']
+            if not doc_name:
+                return ws_methods.http_response('Document id not given')
+            point['doc_name'] = doc_name
+            point_id = req_env[modal].create(point)
+            new_point = True
+
+        notification['res_id'] = point_id.id
+        modal = types['comment']
+        comment['point_id'] = point_id.id
+        req_env[modal].create(comment)
+
+        doc_type = values['doc_type']
+        res_id = values['res_id']
+        notification['parent_id'] = res_id
+        res_id = int(res_id)
+        docname = ''
+        meeting = False
+        topic_name = False
+        if doc_type == 'topic':
+            notification['parent_model'] = 'meeting_point.topicdoc'
+            topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
+            meeting = topic_doc.topic_id.meeting_id
+            topic_name = topic_doc.topic_id.name
+            docname = topic_doc.name
+        elif doc_type == 'meeting':
+            notification['parent_model'] = 'meeting_point.doc'
+            meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
+            meeting = meeting_doc.meeting_id
+            docname = meeting_doc.name
+        if not meeting:
+            return ws_methods.http_response('Invalid doc type=' + str(doc_type) + ' or id =' + (res_id))
+        ids = []
+        for attendee in meeting.attendee_ids:
+            try:
+                cid = attendee.partner_id.user_id.id
+            except:
+                a = 1
+            if cid != values['uid']:
+                ids.append(cid)
+
+        notification_object = ws_methods.addNotification(notification, ids)
+        notification_object['user_id'] = notification.get('user_id')
+
+        res = {'meta': {'meeting': meeting.name, 'doc': docname},
+               'model': notification['res_model'],
+               'point_id': point_id.id,
+               'res_id': res_id,
+               'x': point['x'],
+               'y': point['y']
+               }
+        if new_point:
+            res['new_point'] = 1
+        if topic_name:
+            res['meta']['topic'] = topic_name
+        res['attendees'] = ids
+        res['notification'] = notification_object
+
+        return ws_methods.http_response('', res)
+
+    except:
+        return ws_methods.handle()
 
     # @http.route('/del-all', type="http", csrf=False, auth='public', cors='*')
     # def delallannotations(self, **kw):
