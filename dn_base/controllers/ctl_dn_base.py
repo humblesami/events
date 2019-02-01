@@ -167,7 +167,6 @@ class Controller(http.Controller):
 
     @http.route('/socket_server_request', type='http', csrf=False, auth='public', cors='*')
     def socket_request_http(self, **kw):
-        kw = request.jsonrequest
         try:
             auth = kw.get('auth')
             if not auth:
@@ -180,6 +179,8 @@ class Controller(http.Controller):
                 values = kw
             values['uid'] = uid
             event_name = kw.get('event')
+            if not event_name:
+                return ws_methods.http_response('No event name given')
             res = socket_events[event_name](values)
             if not res['events']:
                 return res
