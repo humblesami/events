@@ -284,7 +284,6 @@ def change_datetime_format(val, format):
 def to_datetime(val):
     dt = parser.parse(val)
     return dt
-
 # Socket Connetion
 socket_server = {
     'url':tools.config['socket_url'],
@@ -307,3 +306,4 @@ def add_user_to_socket_list(user_data):
         requests.get(socket_server['url']+'/odoo_event', params=user_data)
     except:
         print('odoo event failed')
+

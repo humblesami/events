@@ -39,7 +39,9 @@
         #'demo/demo.xml',
     ],
     'qweb': [
-            'views/notifications.xml'],
+            'views/notifications.xml',
+            'views/icon.xml'
+    ],
     'application':True,
     #'post_init_hook': '_auto_update_lang_en',
 }
