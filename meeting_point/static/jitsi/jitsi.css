@@ -1,0 +1,57 @@
+#remote_container video {
+  width: 120px;
+  border-radius: 5%;
+}
+
+#remote_container {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+#jitsi-meet-container{
+    position: relative;
+    background: #2b2a2a;
+}
+
+#large-video video{
+    height: calc(100vh - 49px);
+    width: 95vw;
+}
+#large-video{
+    height: calc(100vh - 49px);
+}
+
+#toolbar-buttons{
+    text-align: center;
+    margin: 10px;
+}
+
+.remote_video{
+    width: 120px;
+    height: 67px;
+    background: black;
+    position: relative;
+
+}
+.remote_controlls{
+   position: absolute;
+   display:none;
+   z-index:99
+}
+
+.remote_video:hover .remote_controlls{
+    display: block;
+
+}
+.local_video{
+margin-bottom: 20px
+}
+.display_name{
+    position: absolute;
+    color: white;
+    bottom: 1px;
+    background: #312e2e;
+
+}
+

@@ -1,0 +1,432 @@
+<div id="react">
+  <div class="AtlaskitThemeProvider__LegacyReset-sc-431dkp-0 tOoji">
+    <div class="vertical-filmstrip" id="videoconference_page">
+      <div id="videospace">
+        <div
+          class="videocontainer"
+          id="largeVideoContainer"
+          style="display: inline-block; background: rgb(71, 71, 71);"
+        >
+          <div id="sharedVideo"><div id="sharedVideoIFrame"></div></div>
+          <div id="etherpad"></div>
+          <div>
+            <a href="https://jitsi.org" target="_new"
+              ><div
+                class="watermark leftwatermark"
+                style="visibility: visible;"
+              ></div
+            ></a>
+          </div>
+          <div
+            id="dominantSpeaker"
+            style="top: -75px; visibility: visible;"
+            class=""
+          >
+            <div
+              class="dynamic-shadow"
+              style="box-shadow: rgba(255, 255, 255, 0.4) 0px 0px 0px 0px, rgba(255, 255, 255, 0.2) 0px 0px 6px 0px;"
+            ></div>
+            <img
+              id="dominantSpeakerAvatar"
+              src="https://abotars.jitsi.net/meeple/9c6bc6e0b14a8814952788f09d3e6c3b"
+            />
+          </div>
+          <div id="remotePresenceMessage" style="top: 185px;"></div>
+          <span
+            id="remoteConnectionMessage"
+            style="top: 185px; display: none;"
+            data-i18n="connection.USER_CONNECTION_INTERRUPTED"
+            data-i18n-options='{"displayName":"Administrator"}'
+            >Administrator is having connectivity issues...</span
+          >
+          <div
+            id="largeVideoElementsContainer"
+            style="opacity: 0; visibility: hidden;"
+          >
+            <div id="largeVideoBackgroundContainer">
+              <div class="large-video-background  invisible fit-full-width  ">
+                <canvas id="largeVideoBackground"></canvas>
+              </div>
+            </div>
+            <div
+              id="largeVideoWrapper"
+              style="width: 1311px; left: 0px; right: 0px; height: 548.6px; top: -63.3px; bottom: -63.3px; overflow: hidden;"
+            >
+              <video
+                autoplay=""
+                id="largeVideo"
+                style="transform: none;"
+                class=""
+              ></video>
+            </div>
+          </div>
+          <span id="localConnectionMessage" class="hide"></span>
+          <div class="large-video-labels opening with-filmstrip">
+            <div>
+              <div class="circular-label no-video" id="videoResolutionLabel">
+                AUD
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="filmstrip hide-videos">
+          <div class="filmstrip__toolbar">
+            <button id="toggleFilmstripButton">
+              <i class="icon-menu-down"></i>
+            </button>
+          </div>
+          <div class="filmstrip__videos" id="remoteVideos">
+            <div
+              class="filmstrip__videos"
+              id="filmstripLocalVideo"
+              style="width: 124px;"
+            >
+              <div id="filmstripLocalVideoThumbnail">
+                <span
+                  class="videocontainer active-speaker display-avatar-only"
+                  id="localVideoContainer"
+                  style="display: inline-block; height: 67.5px; min-height: 67.5px; min-width: 120px; width: 120px;"
+                >
+                  <div class="videocontainer__background"></div>
+                  <span id="localVideoWrapper"
+                    ><video
+                      autoplay=""
+                      class="flipVideoX"
+                      id="localVideo_container"
+                    ></video
+                  ></span>
+                  <div class="videocontainer__toolbar">
+                    <div>
+                      <div class="indicator-container">
+                        <div>
+                          <span
+                            class="indicator-icon-container videoMuted toolbar-icon"
+                            id=""
+                            ><i class="icon-camera-disabled"></i
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="videocontainer__toptoolbar">
+                    <div>
+                      <div
+                        class="AtlaskitThemeProvider__LegacyReset-sc-431dkp-0 tOoji"
+                      >
+                        <div
+                          class="indicator-container hide-connection-indicator"
+                          id=""
+                        >
+                          <div>
+                            <div>
+                              <div>
+                                <div class="popover-trigger">
+                                  <div
+                                    class="connection-indicator indicator status-high"
+                                    style="font-size: 6px;"
+                                  >
+                                    <div class="connection indicatoricon">
+                                      <span class="connection_empty"
+                                        ><i class="icon-gsm-bars"></i></span
+                                      ><span
+                                        class="connection_full"
+                                        style="width: 100%;"
+                                        ><i class="icon-gsm-bars"></i
+                                      ></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="sc-ifAKCX fqtRUK">
+                              <div
+                                style="top: 0px; left: 0px; position: absolute; z-index: 400; opacity: 0;"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="indicator-container">
+                          <div>
+                            <span
+                              class="indicator-icon-container indicator show-inline"
+                              id="dominantspeakerindicator"
+                              ><i
+                                class="indicatoricon icon-dominant-speaker"
+                                style="font-size: 6px;"
+                              ></i
+                            ></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="videocontainer__hoverOverlay"></div>
+                  <div class="displayNameContainer">
+                    <span class="displayname" id="localDisplayName"
+                      >Administrator (me)</span
+                    >
+                  </div>
+                  <div class="avatar-container">
+                    <img
+                      class="userAvatar"
+                      src="https://abotars.jitsi.net/meeple/9c6bc6e0b14a8814952788f09d3e6c3b"
+                    />
+                  </div>
+                  <span class="audioindicator-container"
+                    ><span class="audioindicator in-react"
+                      ><span class="audiodot-bottom" style="opacity: 0;"></span
+                      ><span class="audiodot-bottom" style="opacity: 0;"></span
+                      ><span
+                        class="audiodot-middle"
+                        style="opacity: 0.131474;"
+                      ></span
+                      ><span class="audiodot-top" style="opacity: 0;"></span
+                      ><span
+                        class="audiodot-top"
+                        style="opacity: 0;"
+                      ></span></span></span
+                ></span>
+              </div>
+            </div>
+            <div class="filmstrip__videos" id="filmstripRemoteVideos">
+              <div
+                class="remote-videos-container"
+                id="filmstripRemoteVideosContainer"
+              >
+                <span
+                  id="participant_70ba0297"
+                  class="videocontainer display-avatar-with-name"
+                  style="display: inline-block; height: 120px; min-height: 120px; min-width: 120px; width: 120px;"
+                  ><video
+                    muted="true"
+                    autoplay=""
+                    id="remoteVideo_aaacb296-fb00-482d-a3b2-4375a038ff45-3"
+                    style="display: none;"
+                  ></video
+                  ><audio
+                    autoplay=""
+                    id="remoteAudio_99d6b6fb-21c9-4334-926e-be812677ff90-3"
+                    style="display: none;"
+                  ></audio>
+                  <div class="videocontainer__background"></div>
+                  <div class="videocontainer__toptoolbar">
+                    <div>
+                      <div
+                        class="AtlaskitThemeProvider__LegacyReset-sc-431dkp-0 tOoji"
+                      >
+                        <div
+                          class="indicator-container hide-connection-indicator"
+                          id=""
+                        >
+                          <div>
+                            <div>
+                              <div>
+                                <div class="popover-trigger">
+                                  <div
+                                    class="connection-indicator indicator status-high"
+                                    style="font-size: 6px;"
+                                  >
+                                    <div class="connection indicatoricon">
+                                      <span class="connection_empty"
+                                        ><i class="icon-gsm-bars"></i></span
+                                      ><span
+                                        class="connection_full"
+                                        style="width: 100%;"
+                                        ><i class="icon-gsm-bars"></i
+                                      ></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="sc-ifAKCX fqtRUK">
+                              <div
+                                style="top: 0px; left: 0px; position: absolute; z-index: 400; opacity: 0;"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="videocontainer__toolbar">
+                    <div>
+                      <div class="indicator-container">
+                        <div>
+                          <span
+                            class="indicator-icon-container videoMuted toolbar-icon"
+                            id=""
+                            ><i class="icon-camera-disabled"></i
+                          ></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="videocontainer__hoverOverlay"></div>
+                  <div class="displayNameContainer">
+                    <span class="displayname" id="participant_70ba0297_name"
+                      >Administrator</span
+                    >
+                  </div>
+                  <div class="avatar-container">
+                    <img
+                      class="userAvatar"
+                      src="https://abotars.jitsi.net/meeple/9c6bc6e0b14a8814952788f09d3e6c3b"
+                    />
+                  </div>
+                  <div class="presence-label-container"></div>
+                  <span class="remotevideomenu"
+                    ><div
+                      class="AtlaskitThemeProvider__LegacyReset-sc-431dkp-0 tOoji"
+                    >
+                      <div class="" id="">
+                        <div>
+                          <div>
+                            <div>
+                              <span
+                                class="popover-trigger remote-video-menu-trigger"
+                                ><i
+                                  class="icon-thumb-menu"
+                                  title="Remote user controls"
+                                ></i
+                              ></span>
+                            </div>
+                          </div>
+                          <div class="sc-ifAKCX fqtRUK">
+                            <div
+                              style="top: 0px; left: 0px; position: absolute; z-index: 400; opacity: 0;"
+                            ></div>
+                          </div>
+                        </div>
+                      </div></div></span
+                  ><span class="audioindicator-container"
+                    ><span class="audioindicator in-react"
+                      ><span class="audiodot-bottom" style="opacity: 0;"></span
+                      ><span class="audiodot-bottom" style="opacity: 0;"></span
+                      ><span
+                        class="audiodot-middle"
+                        style="opacity: 0.0653706;"
+                      ></span
+                      ><span class="audiodot-top" style="opacity: 0;"></span
+                      ><span
+                        class="audiodot-top"
+                        style="opacity: 0;"
+                      ></span></span></span
+                ></span>
+                <div id="localVideoTileViewContainer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="new-toolbox  " id="new-toolbox">
+        <div class="button-group-left">
+          <div aria-label="Toggle screenshare" class="toolbox-button">
+            <div>
+              <div class="toolbox-icon">
+                <i class="icon-share-desktop  "></i>
+              </div>
+            </div>
+          </div>
+          <div aria-label="Toggle raise hand" class="toolbox-button">
+            <div>
+              <div class="toolbox-icon"><i class="icon-raised-hand"></i></div>
+            </div>
+          </div>
+          <div class="toolbar-button-with-badge">
+            <div aria-label="Toggle chat window" class="toolbox-button">
+              <div>
+                <div class="toolbox-icon"><i class="icon-chat"></i></div>
+              </div>
+            </div>
+            <span class="badge-round"><span></span></span>
+          </div>
+        </div>
+        <div class="button-group-center">
+          <div aria-label="Toggle mute audio" class="toolbox-button">
+            <div>
+              <div class="toolbox-icon"><i class="icon-microphone"></i></div>
+            </div>
+          </div>
+          <div aria-label="Leave the call" class="toolbox-button">
+            <div>
+              <div class="toolbox-icon"><i class="icon-hangup"></i></div>
+            </div>
+          </div>
+          <div aria-label="Toggle mute video" class="toolbox-button">
+            <div>
+              <div class="toolbox-icon">
+                <i class="icon-camera-disabled toggled"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="button-group-right">
+          <div aria-label="Toggle tile view" class="toolbox-button">
+            <div>
+              <div class="toolbox-icon"><i class="icon-tiles-many"></i></div>
+            </div>
+          </div>
+          <div aria-label="Invite people" class="toolbox-button">
+            <div>
+              <div class="toolbox-icon"><i class="icon-add"></i></div>
+            </div>
+          </div>
+          <div class="toolbox-button-wth-dialog">
+            <div>
+              <div>
+                <div>
+                  <div aria-label="Show info" class="toolbox-button">
+                    <div>
+                      <div class="toolbox-icon"><i class="icon-info "></i></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="sc-ifAKCX fqtRUK">
+                <div
+                  style="top: 0px; left: 0px; position: absolute; z-index: 400; opacity: 0;"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="toolbox-button-wth-dialog">
+            <div>
+              <div>
+                <div>
+                  <div
+                    aria-label="Toggle more actions menu"
+                    class="toolbox-button"
+                  >
+                    <div>
+                      <div class="toolbox-icon">
+                        <i class="icon-thumb-menu "></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="sc-ifAKCX fqtRUK">
+                <div
+                  style="top: 0px; left: 0px; position: absolute; z-index: 400; opacity: 0;"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="invisible" id="sideToolbarContainer"></div>
+    </div>
+  </div>
+  <audio preload="auto" src="sounds/joined.wav"></audio
+  ><audio preload="auto" src="sounds/left.wav"></audio
+  ><audio preload="auto" src="sounds/incomingMessage.wav"></audio
+  ><audio preload="auto" src="sounds/rejected.wav"></audio
+  ><audio preload="auto" src="sounds/rejected.wav"></audio
+  ><audio loop="" preload="auto" src="sounds/outgoingRinging.wav"></audio
+  ><audio preload="auto" src="sounds/outgoingStart.wav"></audio
+  ><audio preload="auto" src="sounds/recordingOff.mp3"></audio
+  ><audio preload="auto" src="sounds/recordingOn.mp3"></audio>
+  <div class="AtlaskitThemeProvider__LegacyReset-sc-431dkp-0 tOoji"></div>
+</div>
+<link rel="stylesheet" href="all.css?v=3192.61">
