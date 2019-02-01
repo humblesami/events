@@ -218,7 +218,14 @@ def save_comment_point(values):
 
         point = values['point']
         comment = point['comment']
-        notification = values['notification']
+        parent_id = values['doc_id'].split('.')[0].split('-')[1]
+        notification = {
+            "content" : ' comments on a document in your meeting.',
+            "parent_id" : parent_model[values['doc_type']],
+            "res_id" :parent_id,
+            "user_id" : values['uid'],
+            "client_route" : ''
+        };
 
         modal = types['point']
         notification['res_model'] = modal
@@ -324,4 +331,9 @@ types = {
     'rectangle': 'annotation.rectangle.dimensions',
     'line':'annotation.drawing.lines',
     'comment':'annotation.point.comments'
+}
+
+parent_model = {
+    'meeting': 'meeting.doc',
+    'topic': 'topic.doc'
 }
