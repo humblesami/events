@@ -1,6 +1,56 @@
 /* global $, JitsiMeetJS */
 $(function(){
 
+var curl = window.location.toString();
+    var temp = curl.split('?')[1];
+    var arrr = temp.split('&');
+    var username = 'Sami';
+    var meeting_id = false;
+    var roomPin = false;
+    if(arrr.length > 2)
+    {
+        username = arrr[0].split('=')[1];
+        meeting_id = arrr[1].split('=')[1];
+        roomPin = arrr[2].split('=')[1];
+    }
+    else
+    {
+        meeting_id = arrr[0].split('=')[1];
+        roomPin = arrr[1].split('=')[1];
+    }
+
+    var verfify_user = function(password) {
+        let input_data = {
+            pin: roomPin,
+            meeting_id: meeting_id,
+        };
+        if (password) {
+            input_data['password'] = password;
+        }
+        //var attendees_data = {im_attendee :'yes' }
+        dn_json_rpc('/meeting/attendees', input_data, function(attendees_data) {
+            if (attendees_data.im_attendee) {
+                roomName = attendees_data.roomName;
+                joinCononference(roomName);
+            }
+        });
+    };
+    //        bootbox.prompt("Please Enter Password", function(promptValue){
+    verfify_user();
+
+
+
+
+
+
+
+
+
+
+
+function joinCononference(roomName){
+
+
     const options = {
         hosts: {
             domain: 'meet.jit.si',
@@ -159,7 +209,7 @@ $(function(){
      * That function is called when connection is established successfully
      */
     function onConnectionSuccess() {
-        room = connection.initJitsiConference('dn_meetings', confOptions);
+        room = connection.initJitsiConference(roomName, confOptions);
         room.on(JitsiMeetJS.events.conference.TRACK_ADDED, onRemoteTrack);
         room.on(JitsiMeetJS.events.conference.TRACK_REMOVED, onRemoteTrackRemove)
         room.on(
@@ -354,5 +404,6 @@ $(function(){
         });
     }
     
+}
 
 })
