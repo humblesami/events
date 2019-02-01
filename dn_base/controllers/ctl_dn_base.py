@@ -151,6 +151,7 @@ class MyWebsite(Website):
 
 socket_events = {
     'save_message': chatController.save_messages,
+    'set_message_status': chatController.set_message_status,
     'get_active_user_message': chatController.getActiveUserMessage,
     'save_comment_point': annotationController.save_comment_point,
     'save_comment': save_comment,
@@ -168,6 +169,7 @@ class Controller(http.Controller):
     @http.route('/socket_server_request', type='http', csrf=False, auth='public', cors='*')
     def socket_request_http(self, **kw):
         try:
+            kw = json.loads(kw['data'])
             auth = kw.get('auth')
             if not auth:
                 auth = kw

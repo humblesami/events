@@ -13,7 +13,7 @@
     }
 
     //Local
-    var chat_server = 'http://localhost:4000';
+    var chat_server = 'http://localhost:3000';
     //online
     if(dn_base_web_url.indexOf('odoohq') > -1)
         chat_server = 'https://chat.brainpbx.com';

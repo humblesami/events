@@ -22,11 +22,9 @@ class Oddochat(http.Controller):
             uid = ws_methods.check_auth(kw)
             if not uid:
                 return ws_methods.not_logged_in()
-            req_env = http.request.env
-            message_id = kw.get('message_id')
-            filters = [('id', '=', message_id)]
-            res = req_env['odoochat.messages'].sudo().search(filters).write({'read_status': True})
-            return ws_methods.http_response('', 'ok')
+            kw['uid'] = uid
+            res = set_message_status(kw)
+            return ws_methods.http_response('', res['data'])
         except:
             return ws_methods.handle()
 
@@ -60,7 +58,24 @@ def save_messages(values):
         res = ws_methods.http_response('', message)
         res = {
             'events': [
-                {'data': res, 'event': 'message', 'audience': [message['to']]}
+                {'data': res, 'name': 'message', 'audience': [message['to']]}
+            ],
+            'data': res
+        }
+        return res
+    except:
+        return ws_methods.handle()
+
+def set_message_status(values):
+    try:
+        req_env = http.request.env
+        message_id = values.get('message_id')
+        filters = [('id', '=', message_id)]
+        req_env['odoochat.messages'].sudo().search(filters).write({'read_status': True})
+        res = ws_methods.http_response('', 'ok')
+        res = {
+            'events': [
+                {'data': res, 'name': 'set_message_status', 'audience': [values['uid']]}
             ],
             'data': res
         }
@@ -94,7 +109,7 @@ def getActiveUserMessage(kw):
         res = ws_methods.http_response('', messages_obj)
         res = {
             'events': [
-                {'data': res, 'event': 'allMessages', 'audience': [sender]}
+                {'data': res, 'name': 'allMessages', 'audience': [sender]}
             ],
             'data': res
         }
