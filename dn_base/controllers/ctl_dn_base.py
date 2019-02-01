@@ -152,7 +152,6 @@ class MyWebsite(Website):
 socket_events = {
     'save_message': chatController.save_messages,
     'set_message_status': chatController.set_message_status,
-    'get_active_user_message': chatController.getActiveUserMessage,
     'save_comment_point': annotationController.save_comment_point,
     'save_comment': save_comment,
     'update_notification': update_notification,

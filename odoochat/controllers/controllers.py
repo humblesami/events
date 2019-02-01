@@ -9,12 +9,12 @@ class Oddochat(http.Controller):
     def getActiveUserMessage_json_request(self, **kw):
         kw = request.jsonrequest
         res = getActiveUserMessage(kw)
-        return res['data']
+        return res
 
     @http.route('/active-user-messages', type="http", csrf=False, auth='public', cors='*')
     def getActiveUserMessage_http_request(self, **kw):
         res = getActiveUserMessage(kw)
-        return res['data']
+        return res
 
     @http.route('/set-message-status', type="http", csrf=False, auth='public', cors='*')
     def setMessageStatus(self, **kw):
@@ -107,12 +107,6 @@ def getActiveUserMessage(kw):
         props = ['sender', 'to', 'content', 'create_date']
         messages_obj = ws_methods.objects_list_to_json_list(messages, props)
         res = ws_methods.http_response('', messages_obj)
-        res = {
-            'events': [
-                {'data': res, 'name': 'allMessages', 'audience': [sender]}
-            ],
-            'data': res
-        }
         return res
     except:
         return ws_methods.handle()
