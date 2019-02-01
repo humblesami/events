@@ -291,14 +291,19 @@ socket_server = {
 }
 
 import requests
-def emit_event(rtc_req):
+def emit_event(data, req_url=None):
     try:
-        # res = {'data':3, 'audience':[], 'client_event'}
-        rtc_req = json.dumps(rtc_req)
-        res = requests.get(socket_server['url']+'/odoo_event', params=rtc_req)
+        if not data:
+            data = []
+        data = json.dumps(data)
+        if not req_url:
+            req_url = '/odoo_event'
+        url = socket_server['url']+req_url+'?data='+data
+        res = requests.get(url)
+        res = res._content.decode("utf-8")
         return res
     except:
-        handle()
+        raise
 
 def add_user_to_socket_list(user_data):
     try:

@@ -64,37 +64,31 @@ class auth(http.Controller):
                 request.conf = {'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token': token}
             user_photo = ws_methods.mfile_url('res.users','image_small', uid)
             http_req = request.httprequest
-            if uid:
-                agent = http_req.user_agent
-                ip = 'local'
-                location = ''
-                local_env = odoo.tools.config.get('local_env')
-                if local_env != 'yes':
-                    ip = http_req.environ.get('HTTP_X_FORWARDED_FOR') or http_req.environ.get('REMOTE_ADDR')
-                    location = self.get_location(ip)
-                vals = {
-                    'browser': agent.browser,
-                    'platform': agent.platform,
-                    'user_id': uid,
-                    'ip': ip,
-                    'location': location,
-                    'session': request.session.sid
-                }
-                try:
-                    request.env['login.info'].create(vals)
-                except:
-                    return ws_methods.handle()
-
-            res = {
-                'db': db,
-                'token': token,
-                'name': user.name,
-                'id': user.id,
-                'photo': user_photo,
-                'groups': groups,
-                'uid': user.id
+            agent = http_req.user_agent
+            ip = 'local'
+            location = ''
+            local_env = odoo.tools.config.get('local_env')
+            if local_env != 'yes':
+                ip = http_req.environ.get('HTTP_X_FORWARDED_FOR') or http_req.environ.get('REMOTE_ADDR')
+                location = self.get_location(ip)
+            vals = {
+                'browser': agent.browser,
+                'platform': agent.platform,
+                'user_id': uid,
+                'ip': ip,
+                'location': location,
+                'session': request.session.sid
             }
-            return verify(res)
+            try:
+                request.env['login.info'].create(vals)
+            except:
+                return ws_methods.handle()
+            data = {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': user_photo,'groups':groups }
+            res = get_user_data(data)
+            if type(res) is str:
+                return ws_methods.http_response(res)
+            else:
+                return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()
 
@@ -153,16 +147,21 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
-                return verify(values)
+                res = get_user_data(values)
+                if type(res) is str:
+                    return ws_methods.http_response(res)
+                else:
+                    return ws_methods.http_response('', 'done')
         except:
             return ws_methods.handle()
 
-def verify(values):
+def get_user_data(values):
     try:
         request = http.request
         req_env = request.env
-        filters = [('user_id', '=', values['uid']), ('counter', '>', 0)]
+        uid = values['id']
 
+        filters = [('user_id', '=', uid), ('counter', '>', 0)]
         note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
         props = ['counter', 'user_id', 'notification_id']
         status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
@@ -179,25 +178,26 @@ def verify(values):
 
         friendIds = []
         friendList = {}
-        meetingList = []
         unseenMessages = 0
         partner_id = req_env.user.partner_id.id
         filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
         meetings = request.env['calendar.event'].search(filters)
 
         base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
-        res = base_url + '/dn/content_file/res.users/'
-        res2 = '/image_small/' + values['db'] + '/' + values['token']
+        image_path1 = base_url + '/dn/content_file/res.users/'
+        image_path2 = '/image_small/' + values['db'] + '/' + values['token']
+
+        # meetingList = []
         for obj in meetings:
             attendees = []
             for partner in obj.partner_ids:
                 obj_id = partner.user_id.id
-                if obj_id != values['uid'] and obj_id not in friendIds:
+                if obj_id != uid and obj_id not in friendIds:
                     friendObj = partner.user_id
                     friend = {
                         'id': friendObj.id,
                         'name': friendObj.name,
-                        'photo': res + str(friendObj.id) + res2
+                        'photo': image_path1 + str(friendObj.id) + image_path2
                     }
                     if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
                             'meeting_point.group_meeting_admin'):
@@ -205,7 +205,7 @@ def verify(values):
                     else:
                         friend['type'] = 'director'
 
-                    db_filters = [('sender', '=', friend['id']), ('to', '=', values['uid']), ('read_status', '=', False)]
+                    db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
                     friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
                     unseenMessages += friend['unseen']
 
@@ -213,20 +213,20 @@ def verify(values):
                     friendIds.append(friendObj.id)
                 attendees.append(partner.user_id.id)
 
-            event = {
-                'id': obj.id,
-                'name': obj.name,
-                'attendees': attendees
-            }
-            meetingList.append(event)
+            # event = {
+            #     'id': obj.id,
+            #     'name': obj.name,
+            #     'attendees': attendees
+            # }
+            # meetingList.append(event)
 
-        res = {'notifications': notificationList, 'meetings': meetingList, 'friends': friendList,
-               'unseen': unseenMessages, 'user': values}
-        res = {'event':'verified', 'audience': [values['uid']], 'data':res}
-        res = ws_methods.emit_event(res)
+        data_for_ws = {'notifications': notificationList, 'friends': friendList, 'unseen': unseenMessages, 'user': values}
+        data_for_socket = [{'name': 'verified', 'audience': [uid], 'data': data_for_ws}]
+
+        res = ws_methods.emit_event(data_for_socket)
         if res == 'done':
-            return ws_methods.http_response('', 'done')
+            return data_for_ws
         else:
-            return ws_methods.http_response(res)
+            return res
     except:
         raise
