@@ -3,7 +3,7 @@ import base64
 import requests
 import werkzeug
 import datetime
-from odoo import http
+from odoo import http, tools
 from odoo.http import request
 from werkzeug.utils import redirect
 from odoo.addons.dn_base import dn_dt
@@ -11,6 +11,9 @@ from odoo.addons.dn_base import ws_methods
 from odoo.addons.web.controllers.main import Binary
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.web.controllers.main import Session, binary_content, Home
+
+from odoo.addons.meeting_point.controllers import annotation as annotationController
+from odoo.addons.odoochat.controllers import controllers as chatController
 
 def save_comment(values):
     try:
@@ -79,8 +82,7 @@ def save_comment(values):
                 'children': [],
                 'meeting': meeting.name,
                 'res_id': res_id
-            },
-            'attendees': attendees,
+            }
         }
 
 
@@ -88,12 +90,19 @@ def save_comment(values):
             notification = {'res_id':res_id, 'res_model': res_model, 'content':'new comment added on a meeting' }
             notification['user_id'] = uid
             notification_object = ws_methods.addNotification(notification, attendees)
-            data['notification'] = notification_object
 
         if added_comment['parent_id']:
             data['comment']['parent_id'] = added_comment['parent_id']
 
-        return ws_methods.http_response('', data)
+        res = ws_methods.http_response('', data)
+        res = {
+            'events': [
+                {'data': notification_object, 'name': 'newNotification', 'audience': attendees},
+                {'data': res, 'name': 'meetCommentRecieve', 'audience': attendees}
+            ],
+            'data': res
+        }
+        return res
     except:
         return ws_methods.handle()
 
@@ -117,7 +126,15 @@ def update_notification(values):
         filter = [('notification_id', 'in', ids), ('user_id', '=', values['uid'])]
         req_env['dn_base.notification.status'].sudo().search(filter).write({'counter': 0})
 
-        return ws_methods.http_response('', 'Successfully Updated')
+        res = ws_methods.http_response('', 'Successfully Updated')
+
+        res = {
+            'events': [
+                {'data': res, 'name': 'notification_updated', 'audience': [values['uid']]}
+            ],
+            'data': res
+        }
+        return res
     except:
         return ws_methods.handle()
 
@@ -130,9 +147,7 @@ class MyWebsite(Website):
         else:
             return redirect('/web')
 
-from odoo.addons.meeting_point.controllers import annotation as annotationController
-from odoo.addons.odoochat.controllers import controllers as chatController
-from odoo.addons.dn_auth.controllers import auth as authController
+
 
 socket_events = {
     'save_message': chatController.save_messages,
@@ -143,9 +158,14 @@ socket_events = {
     # 'verify': authController.verify
 }
 
+socket_server = {
+    'url':tools.config['socket_url'],
+    'connected': False
+}
+
 class Controller(http.Controller):
 
-    @http.route('/socket_server_request', type='json', csrf=False, auth='public', cors='*')
+    @http.route('/socket_server_request', type='http', csrf=False, auth='public', cors='*')
     def socket_request_http(self, **kw):
         kw = request.jsonrequest
         try:
@@ -159,7 +179,16 @@ class Controller(http.Controller):
             if not values:
                 values = kw
             values['uid'] = uid
-            return socket_events[kw.get('event')](values)
+            event_name = kw.get('event')
+            res = socket_events[event_name](values)
+            if not res['events']:
+                return res
+
+            res = ws_methods.emit_event(res['events'])
+            if res == 'done':
+                return  ws_methods.http_response('', 'done')
+            else:
+                return ws_methods.http_response(event_name + ' processed by Odoo server but '+ res)
         except:
             return ws_methods.handle()
 
@@ -281,8 +310,8 @@ class Controller(http.Controller):
             if not values:
                 values = kw
             values['uid'] = uid
-            update_notification(values)
-            return ws_methods.http_response('', 'Successfully Updated')
+            res = update_notification(values)
+            return res['data']
         except:
             return ws_methods.handle()
 
@@ -391,7 +420,8 @@ class Controller(http.Controller):
 
     @http.route('/comment/add', type='http', csrf=False, auth='public', cors='*')
     def save_comment_http(self, **kw):
-        return save_comment(kw)
+        res = save_comment(kw)
+        return res['data']
 
     @http.route('/comment/add-json', type="json", csrf=False, auth='public', cors='*')
     def save_comment_json(self, **kw):
@@ -405,7 +435,8 @@ class Controller(http.Controller):
         values = kw.get('req_data')
         if not values:
             values = kw
-        return save_comment(values)
+        res = save_comment(kw)
+        return res['data']
 
     @http.route('/comment/delete', type='http', csrf=False, auth='none', cors='*')
     def delete_comment_http(self, **kw):

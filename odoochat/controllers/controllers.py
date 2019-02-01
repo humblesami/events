@@ -9,12 +9,12 @@ class Oddochat(http.Controller):
     def getActiveUserMessage_json_request(self, **kw):
         kw = request.jsonrequest
         res = getActiveUserMessage(kw)
-        return res
+        return res['data']
 
     @http.route('/active-user-messages', type="http", csrf=False, auth='public', cors='*')
     def getActiveUserMessage_http_request(self, **kw):
         res = getActiveUserMessage(kw)
-        return res
+        return res['data']
 
     @http.route('/set-message-status', type="http", csrf=False, auth='public', cors='*')
     def setMessageStatus(self, **kw):
@@ -43,7 +43,8 @@ class Oddochat(http.Controller):
             values = kw.get('req_data')
             if not values:
                 values = kw
-            return save_messages(values)
+            res = save_messages(values)
+            return res['data']
         except:
             return ws_methods.handle()
 
@@ -56,7 +57,14 @@ def save_messages(values):
         message = req_env['odoochat.messages'].sudo().create({'sender': sender, 'to': to, 'content': content})
         props = ['content', 'id', 'create_date', 'read_status', 'sender', 'to']
         message = ws_methods.object_to_json_object(message, props)
-        return ws_methods.http_response('', message)
+        res = ws_methods.http_response('', message)
+        res = {
+            'events': [
+                {'data': res, 'event': 'message', 'audience': [message['to']]}
+            ],
+            'data': res
+        }
+        return res
     except:
         return ws_methods.handle()
 
@@ -83,6 +91,13 @@ def getActiveUserMessage(kw):
         messages = req_env['odoochat.messages'].search(db_filters, offset=offset)
         props = ['sender', 'to', 'content', 'create_date']
         messages_obj = ws_methods.objects_list_to_json_list(messages, props)
-        return ws_methods.http_response('', messages_obj)
+        res = ws_methods.http_response('', messages_obj)
+        res = {
+            'events': [
+                {'data': res, 'event': 'allMessages', 'audience': [sender]}
+            ],
+            'data': res
+        }
+        return res
     except:
         return ws_methods.handle()

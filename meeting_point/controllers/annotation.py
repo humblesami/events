@@ -208,7 +208,7 @@ class annotation(http.Controller):
                 values = kw
             values['uid'] = uid
             res = save_comment_point(values)
-            return ws_methods.http_response('', res)
+            return res['data']
         except:
             return ws_methods.handle()
 
@@ -280,11 +280,15 @@ def save_comment_point(values):
             res['new_point'] = 1
         if topic_name:
             res['meta']['topic'] = topic_name
-        res['attendees'] = ids
-        res['notification'] = notification_object
-
-        return ws_methods.http_response('', res)
-
+        res = ws_methods.http_response('', res)
+        res = {
+            'events': [
+                {'data': notification_object, 'name': 'newNotification', 'audience': ids},
+                {'data': res, 'name': 'message', 'audience': ids}
+            ],
+            'data': res
+        }
+        return res
     except:
         return ws_methods.handle()
 
