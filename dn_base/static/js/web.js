@@ -37,4 +37,39 @@ odoo.define('dn_base.Abstract', function (require) {
     });
     return abstract_wc;
 });
+
+odoo.define('dn_base.icons', function (require) {
+    var SystrayMenu = require('web.SystrayMenu');
+    var Widget = require('web.Widget');
+
+    // Appends Icon template in system tray (navbar)
+    var IconMenu = Widget.extend({
+        template:'Icon',
+          events: {
+        'click': 'laser_pointer',
+             },
+        laser_pointer:function change_cursor(){
+                        if(document.documentElement.style.cursor == '')
+                        {
+                        var myCanvas = document.getElementById("myCanvas");
+                        var ctx = myCanvas.getContext("2d");
+                        ctx.beginPath();
+                        ctx.arc(5, 5, 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = "red";
+                        ctx.fill();
+
+                        var url = myCanvas.toDataURL();
+                        url = 'url(' +url + ') 64 64, auto';
+                        document.documentElement.style.cursor = url;
+                        }
+                        else
+                        document.documentElement.style.cursor = '';
+}
+
+
+
+    });
+SystrayMenu.Items.push(IconMenu);
+});
+
 document.writeln('<script src="/dn_base/static/js/ready.js"></script>');

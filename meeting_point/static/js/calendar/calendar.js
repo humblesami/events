@@ -8,9 +8,15 @@ $(function(){
         header: {
             left: 'prevYear,prev,next,nextYear, today',
             center: 'title',
-            right: 'year,month,agendaWeek,agendaDay'
+            right: 'year,month,agendaWeek,agendaDay,agendaFourDay'
         },
-
+          views: {
+    agendaFourDay: {
+      type: 'agenda',
+      duration: { days: 4 },
+      buttonText: 'Schedule'
+    }
+  },
         //defaultDate: '2018-03-12',
         navLinks: true, // can click day/week names to navigate views
         yearColumns: 3,
