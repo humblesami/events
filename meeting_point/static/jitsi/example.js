@@ -377,7 +377,7 @@ function joinCononference(roomName){
     JitsiMeetJS.mediaDevices.addEventListener(
         JitsiMeetJS.events.mediaDevices.DEVICE_LIST_CHANGED,
         onDeviceListChanged);
-    
+    JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.ERROR);
     connection.connect();
     
     JitsiMeetJS.createLocalTracks({ devices: [ 'audio', 'video' ] })
