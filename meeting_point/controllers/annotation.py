@@ -219,6 +219,8 @@ def save_comment_point(values):
         point = values['point']
         comment = point['comment']
         parent_id = values['doc_id'].split('.')[0].split('-')[1]
+
+        req_env['calendar.event'].search
         notification = {
             "content" : ' comments on a document in your meeting.',
             "parent_id" : parent_model[values['doc_type']],

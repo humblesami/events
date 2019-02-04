@@ -161,20 +161,8 @@ def get_user_data(values):
         req_env = request.env
         uid = values['id']
 
-        filters = [('user_id', '=', uid), ('counter', '>', 0)]
-        note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
-        props = ['counter', 'user_id', 'notification_id']
-        status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
-        notificationList = ws_methods.my_notifications_on_record()
-        for note in status_list:
-            filters = [('id', '=', note['notification_id'].id), ('parent_id', '=', False), ('parent_model', '=', False)]
-            note_data = req_env['dn_base.notification'].search(filters, order='create_date desc')
-            if note_data:
-                props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
-                notification_object = ws_methods.object_to_json_object(note_data[0], props)
-                notification_object['counter'] = note['counter']
-                notification_object['user_id'] = note['user'].id
-                notificationList.append(notification_object)
+
+        notificationList = request.env['dn_base.notification'].getMyNotifications()
 
         friendIds = []
         friendList = {}

@@ -32,6 +32,7 @@
         'views/user.xml',
         'views/templates.xml',
         'views/mail.xml',
+        'views/notification.xml',
         'views/menus.xml'
     ],
     # only loaded in demonstration mode

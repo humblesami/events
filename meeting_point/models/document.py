@@ -27,6 +27,12 @@ class MeetingDoc(models.Model):
         docs = super(MeetingDoc, self).search(args)
         return docs
 
+    def get_audience(self):
+        ids = []
+        for partner in self.meeting_id.partner_ids:
+            ids.append(partner.user_id.id)
+        return ids
+
 class Document(models.Model):
     _name = 'meeting_point.document'
     _inherit = ['e_sign.document']#,'dn.seen'

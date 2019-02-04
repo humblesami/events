@@ -216,6 +216,12 @@ action = {
         />
 
         <menuitem
+                name="Notification Types" id="notification_type"
+                parent="devmenu"
+                action="action_notification_types"
+        />
+
+        <menuitem
                 name="Meeting Topics" id="topic_menu"
                 parent="devmenu"
                 action="action_topic_meeting"

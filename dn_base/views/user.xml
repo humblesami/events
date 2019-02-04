@@ -92,15 +92,15 @@
                 </form>
             </field>
         </record>
-        <record id="res_users_form_style" model="ir.ui.view">
-        <field name="name">res.users.form</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="base.view_users_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='image']" position="replace">
-                <field name="image" widget='image' class="oe_avatar" style="margin-top: -63px" options='{"preview_image": "image_medium"}'/>
-            </xpath>
-        </field>
-    </record>
+            <record id="res_users_form_style" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='image']" position="replace">
+                    <field name="image" widget='image' class="oe_avatar" style="margin-top: -63px" options='{"preview_image": "image_medium"}'/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

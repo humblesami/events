@@ -1,5 +1,9 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
+doc_type_models = {
+    'meeting':'calendar.event'
+}
 class Document(models.Model):
     _name = 'annotation.document'
     name = fields.Char()
@@ -9,6 +13,7 @@ class Document(models.Model):
         ('unique document against user', 'unique(user_id,name)',
          'Can not have duplicate document for same user'),
     ]
+
 
 class Annotation(models.Model):
     _name = 'annotation.annotation'
@@ -48,6 +53,87 @@ class PointAnnotation(models.Model):
     y = fields.Integer()
     comments = fields.One2many('annotation.point.comments', 'point_id')
     my_notifications = fields.Integer(compute='compute_my_notifications')
+
+    def save_comment_point(self, values):
+        try:
+
+            req_env = self.env
+            uid = req_env.user.id
+            point = values.get('point')
+            comment = values.get('comment')
+            doc_name = values.get('doc_id')
+            arr = doc_name.split('.')[0]
+            doc_id = arr.split('-')[1]
+            parent_id = int(doc_id)
+
+            point_id = req_env.search([('uuid', '=', point['uuid'])])
+            new_point = False
+            if not point_id:
+                doc_name = values['doc_id']
+                if not doc_name:
+                    raise ValidationError('Invalid Document Id')
+                point['doc_name'] = doc_name
+                point_id = req_env['annotation.point.comments'].create(point)
+                new_point = True
+
+
+            comment['point_id'] = point_id.id
+            req_env['annotation.point.comments'].create(comment)
+
+            doc_type = values['doc_type']
+            res_id = values['res_id']
+
+            res_id = int(res_id)
+            docname = ''
+            meeting = False
+            topic_name = False
+            if doc_type == 'topic':
+                notification['parent_model'] = 'meeting_point.topicdoc'
+                topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
+                meeting = topic_doc.topic_id.meeting_id
+                topic_name = topic_doc.topic_id.name
+                docname = topic_doc.name
+            elif doc_type == 'meeting':
+                notification['parent_model'] = 'meeting_point.doc'
+                meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
+                meeting = meeting_doc.meeting_id
+                docname = meeting_doc.name
+            if not meeting:
+                return ws_methods.http_response('Invalid doc type=' + str(doc_type) + ' or id =' + (res_id))
+            ids = []
+            for attendee in meeting.attendee_ids:
+                try:
+                    cid = attendee.partner_id.user_id.id
+                except:
+                    a = 1
+                if cid != values['uid']:
+                    ids.append(cid)
+
+            notification_object = ws_methods.addNotification(notification, ids)
+            notification_object['user_id'] = notification.get('user_id')
+
+            res = {'meta': {'meeting': meeting.name, 'doc': docname},
+                   'model': notification['res_model'],
+                   'point_id': point_id.id,
+                   'res_id': res_id,
+                   'x': point['x'],
+                   'y': point['y']
+                   }
+            if new_point:
+                res['new_point'] = 1
+            if topic_name:
+                res['meta']['topic'] = topic_name
+            res = ws_methods.http_response('', res)
+            res = {
+                'events': [
+                    {'data': notification_object, 'name': 'newNotification', 'audience': ids},
+                    {'data': res, 'name': 'message', 'audience': ids}
+                ],
+                'data': res
+            }
+            return res
+        except:
+            return ws_methods.handle()
 
     @api.multi
     def unlink(self):
