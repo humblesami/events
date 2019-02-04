@@ -55,3 +55,11 @@ margin-bottom: 20px
 
 }
 
+.remote_controlls
+{
+    position:absolute;
+}
+#jitsi-meet-container button
+{
+    cursor:pointer;
+}
