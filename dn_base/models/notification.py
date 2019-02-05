@@ -1,5 +1,5 @@
-from odoo import models, fields, api
-from odoo.addons.dn_base import ws_methods
+from odoo import models, fields
+from odoo.exceptions import ValidationError
 
 
 class NotificationType(models.Model):
@@ -8,87 +8,108 @@ class NotificationType(models.Model):
     res_model = fields.Char()
     client_route = fields.Char()
     parent_type = fields.Many2one('dn_base.notification_type', ondelete='cascade')
-
     _sql_constraints = [
         (
-        'notification_type_uniq', 'unique (res_model, parent_type)', "Notification type already exists for same model!"),
+        'notification_type_uniq', 'unique (res_model)', "Notification type already exists for same model!"),
     ]
 
 class Notification(models.Model):
     _name = 'dn_base.notification'
-
     notification_type_id = fields.Many2one('dn_base.notification_type', ondelete='cascade')
-    user_id = fields.Many2one('res.users')
     res_id = fields.Integer()
-    counter = fields.Integer(default=0)
     parent_id = fields.Many2one('dn_base.notification', ondelete='cascade')
 
     _sql_constraints = [
         (
-        'notification_uniq', 'unique (notification_type_id,res_id,user_id)', "Notification already exists for same record of same model!"),
+        'notification_uniq', 'unique (notification_type_id,res_id)', "Notification already exists for same record of same model!"),
     ]
 
     def getMyNotifications(self):
-        sql = ' select sum(counter) counter, res_model, res_id, client_route, content'
-        sql += ' from dn_base_notification_type t'
-        sql += ' join dn_base_notification n on n.notification_type_id = t.id'
-        sql += ' where'
-        sql += ' user_id = ' + str(self.env.user.id) + ' AND t.parent_type is null'
-        sql += ' group by notification_type_id, res_id client_route, content'
-        sql += ' having sum(counter) >0'
-        res = ws_methods.execute_read(sql)
+        uid = self.env.user
+        counters = self.env['dn_base.notification.counter'].search([('user_id','=',uid,'counter','>',0)])
+        res = []
+        for obj in counters:
+            notification = obj.notification_id
+            if not notification.notification_type_id.parent_type:
+                item = {'counter':obj.counter,'res_id':notification.res_id, 'res_model':notification.notification_type_id.res_model}
+                res.append(item)
         return res
 
     def add_notification(self, res_model, res_id, parent_id=None):
         req_env = self.env
         targets = []
-        notification_type = req_env['dn_base.notification_type'].search([('res_model', '=', res_model),('parent_type', '=', res_model)])
+        notification_type = req_env['dn_base.notification_type'].search([('res_model', '=', res_model)])
         notification_type = notification_type[0]
-        if notification_type.parent_type:
-            parent_model = notification_type.parent_type.res_model
-            targets = req_env[parent_model].search([('id', '=', parent_id)]).get_audience()
-            type_id = notification_type.parent_type.id
-            for uid in targets:
-                filters = [('notification_type_id', '=', type_id),('res_id','=',parent_id), ('user_id','=', uid)]
-                obj = req_env['dn_base.notification'].search(filters)
-                if obj:
-                    obj.counter += 1
-                else:
-                    notify_data = {
-                        'notification_type_id': notification_type.parent_type.id,
-                        'res_id': parent_id,
-                        'user_id': uid,
-                        'counter': 1
-                    }
-                    obj = req_env['dn_base.notification'].create(notify_data, targets)
-                    filters = [('notification_type_id', '=', type_id), ('res_id', '=', res_id),
-                               ('user_id', '=', uid)]
-                    obj = req_env['dn_base.notification'].search(filters)
-                    if obj:
-                        obj.counter += 1
-                    else:
-                        notify_data = {
-                            'notification_type_id': notification_type.parent_type.id,
-                            'res_id': res_id,
-                            'user_id': uid,
-                            'counter': 1
-                        }
-                        obj = req_env['dn_base.notification'].create(notify_data, targets)
-        else:
-            targets = req_env[res_model].search([('id', '=', res_id)]).get_audience()
-
-        type_id = notification_type.id
-        for uid in targets:
-            filters = [('notification_type_id', '=', type_id), ('res_id', '=', parent_id), ('user_id', '=', uid)]
-            obj = req_env['dn_base.notification'].search(filters)
-            if obj:
-                obj.counter += 1
+        if parent_id:
+            if not notification_type.parent_type:
+                raise ValidationError('Invalid parent type for '+res_model)
+            notification = req_env['dn_base.notification'].search([('res_model', '=', res_model),('res_id', '=', res_id)])
+            if notification:
+                notification = notification[0]
+                parent_item = notification.parent_id
+                if not parent_item:
+                    raise ValidationError('Item could not be created without parent')
+                audience = parent_item.get_audience()
             else:
-                notify_data = {
-                    'notification_type_id': notification_type.parent_type.id,
-                    'res_id': res_id,
-                    'user_id': uid,
-                    'counter': 1
+                values = {
+                    'res_id': 1,
+                    'notification_type_id': notification_type.id
                 }
-                obj = req_env['dn_base.notification'].create(notify_data, targets)
-        return 'done'
+                notification = req_env['dn_base.notification'].create(values)
+        else:
+            item = req_env[notification_type.res_model].search([('id','=',res_id)])
+            audience = item.get_audience()
+            filters = [('res_id','=',res_id), ('notification_type_id','=',notification_type.id)]
+            notification = req_env['dn_base.notification'].search(filters)
+            if not notification:
+                values = {
+                    'res_id': res_id,
+                    'notification_type_id': notification_type.id
+                }
+                notification = req_env['dn_base.notification'].create(values)
+            else:
+                notification = notification[0]
+            self.add_counter_item(notification, audience)
+
+    def add_notification_item(self, res_id, notification_type, audience):
+        req_env = self.env
+        filters = [('res_id', '=', res_id), ('notification_type_id', '=', notification_type.id)]
+        notification = req_env['dn_base.notification'].search(filters)
+        if not notification:
+            values = {
+                'res_id': res_id,
+                'notification_type_id': notification_type.id
+            }
+            notification = req_env['dn_base.notification'].create(values)
+        else:
+            notification = notification[0]
+        self.add_counter_item(notification, audience)
+
+
+    def add_counter_item(self, notification, audience):
+        req_env = self.env
+        for uid in audience:
+            notification_counter = req_env['dn_base.notification.counter'].search(
+                [('user_id', '=', uid), ('notification_id', '=', notification.id)])
+            if notification_counter:
+                notification_counter = notification_counter[0]
+                notification_counter.counter += 1
+            else:
+                values = {
+                    'counter': 1,
+                    'user_id': uid,
+                    'notification_id': notification.id
+                }
+                req_env['dn_base.notification.counter'].create(values)
+
+class NotificationCounter(models.Model):
+    _name = 'dn_base.notification.counter'
+    notification_id = fields.Many2one('dn_base.notification', ondelete='cascade')
+    user_id = fields.Many2one('res.users')
+    counter = fields.Integer(default=0)
+
+    _sql_constraints = [
+        (
+            'notification_uniq', 'unique (notification_id,user_id)',
+            "Notification already exists for same record of same user!"),
+    ]
