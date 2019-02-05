@@ -33,10 +33,17 @@ var dn_json_rpc_object = {
             if (!dn_json_rpc_object.loaderContainer) {
                 if($('body').length > 0)
                 {
-                    dn_json_rpc_object.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 9009;top:0;left;0;height:100vh;width:100%;background: rgb(0, 0, 0);opacity:0.2"/>');
-                    dn_json_rpc_object.loaderImage = $('<img style="position:relative; top:calc(50vh - 44px);left:calc(50vw - 22px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
-                    dn_json_rpc_object.loaderContainer.append(dn_json_rpc_object.loaderImage);
-                    $('body').append(dn_json_rpc_object.loaderContainer);
+                    if($('#loaderContainerajax').length == 0)
+                    {
+                        dn_json_rpc_object.loaderContainer = $('<div id="loaderContainerajax" style="position: fixed;z-index: 9009;top:0;left;0;height:100vh;width:100%;background: rgb(0, 0, 0);opacity:0.2"/>');
+                        dn_json_rpc_object.loaderImage = $('<img style="position:relative; top:calc(50vh - 44px);left:calc(50vw - 22px);   animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />');
+                        dn_json_rpc_object.loaderContainer.append(dn_json_rpc_object.loaderImage);
+                        $('body').append(dn_json_rpc_object.loaderContainer);
+                    }
+                    else
+                    {
+                        dn_json_rpc_object.loaderContainer = $('#loaderContainerajax');
+                    }
                 }
             }
 //            if(!dn_json_rpc_object.menuHeightToAdd)
