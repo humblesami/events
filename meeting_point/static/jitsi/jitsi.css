@@ -37,7 +37,8 @@
 .remote_controlls{
 
    display:none;
-   z-index:99
+   z-index:99;
+   position:absolute;
 }
 
 .remote_video:hover .remote_controlls{
@@ -55,11 +56,34 @@ margin-bottom: 20px
 
 }
 
-.remote_controlls
+.remote_controlls button
 {
-    position:absolute;
+    width:45%;
 }
 #jitsi-meet-container button
 {
     cursor:pointer;
 }
+
+#toolbar-buttons .fa{
+    color:white;
+    margin-left:20px;
+    cursor:pointer;
+    border-radius: 5%;
+    padding: 10px;
+
+
+}
+
+#toolbar-buttons .fa:hover{
+    color:purple;
+
+}
+
+#end_call{
+color:red!important;
+}
+#share_screen{
+    float: left;
+}
+

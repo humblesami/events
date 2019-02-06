@@ -12,14 +12,18 @@
         </div>
         <div id="remote_container"></div>
         <div id="toolbar-buttons">
-            <button id='leave-room'>Leave Room</button>
-            <button id='switch_screen'>SwitchScreen</button>
+            <i id='share_screen' class="fa fas fa-lg fa-desktop"></i>
+
+            <i id='mute_audio' class="fa fas fa-lg fa-microphone-slash"></i>
+            <i id='leave-room' class="fa fas fa-lg fa-phone"></i>
+            <i id='share_video' class="fa fas fa-lg fa-video"></i>
         </div>    
     </div>
     <div>
         <div id="loaderContainerajax" style="position: fixed;z-index: 9009;top:0;left;0;height:100vh;width:100%;background: rgb(0, 0, 0);opacity:0.2">
             <img style="position:relative; top:calc(50vh - 44px);left:calc(50vw - 22px); animation: fa-spin 1s infinite steps(12);" src="/web/static/src/img/spin.png" alt="loading data..." />
         </div>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel="stylesheet" href="/meeting_point/static/jitsi/jitsi.css?v=3192.61">
         <script src="/meeting_point/static/jitsi/libs/jquery-2.1.1.min.js"></script>
         <script src="/meeting_point/static/jitsi/libs/strophe/strophe.js"></script>

@@ -35,6 +35,7 @@ $(function(){
             dn_json_rpc('/meeting/attendees', input_data, function(attendees_data) {
                 if (attendees_data.im_attendee) {
                     roomName = attendees_data.roomName;
+                    console.log(roomName);
                     joinCononference(roomName);
                 }
             });
@@ -76,6 +77,10 @@ $(function(){
          * @param tracks Array with JitsiTrack objects
          */
         function onLocalTracks(tracks) {
+            sharingVideo=true;
+            sharingAudio=true;
+            sharingScreen=false;
+            $('#share_video').css("color", "purple");
             localTracks = tracks;
             for (let i = 0; i < localTracks.length; i++) {
                 localTracks[i].addEventListener(
@@ -93,11 +98,12 @@ $(function(){
                         console.log(
                             `track audio output device was changed to ${deviceId}`));
                 if (localTracks[i].getType() === 'video') {
-                    $('#remote_container').append(
+                    $('#remote_container').prepend(
                         `<div class='local_video'><video autoplay='1' id='localVideo${i}' /></div>`);
                     localTracks[i].attach($(`#localVideo${i}`)[0]);
+                    $('#remote_container video:last').click();
                 } else {
-                    $('#remote_container').append(
+                    $('#remote_container').prepend(
                         `<div class='local_audio'><audio autoplay='1' muted='true' id='localAudio${i}' /></div>`);
                     localTracks[i].attach($(`#localAudio${i}`)[0]);
                 }
@@ -160,6 +166,7 @@ $(function(){
                 }
             }
             track.attach($(`#${id}`)[0]);
+            $('#remote_container video:last').click();
         }
 
         function onRemoteTrackRemove(track) {
@@ -268,21 +275,26 @@ $(function(){
             connection.disconnect();
         }
 
-        let isVideo = true;
+        let sharingVideo = false;
+        let sharingScreen = false;
+        let sharingAudio = false;
 
-        /**
-         *
-         */
-        function switchVideo() { // eslint-disable-line no-unused-vars
-            isVideo = !isVideo;
+
+        function shareVideo() { // eslint-disable-line no-unused-vars
             if (localTracks[1]) {
                 localTracks[1].dispose();
                 localTracks.pop();
             }
-            JitsiMeetJS.createLocalTracks({
-                devices: [ isVideo ? 'video' : 'desktop' ]
+            if(!sharingVideo){
+
+                JitsiMeetJS.createLocalTracks({
+                devices: ['video' ]
             })
                 .then(tracks => {
+                    sharingVideo=true;
+                    sharingScreen=false;
+                    $(this).css("color", "purple");
+                    $('#share_screen').css("color", "white");
                     localTracks.push(tracks[0]);
                     localTracks[1].addEventListener(
                         JitsiMeetJS.events.track.TRACK_MUTE_CHANGED,
@@ -290,10 +302,94 @@ $(function(){
                     localTracks[1].addEventListener(
                         JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
                         () => console.log('local track stoped'));
+                    if ($('.local_video').length==0) {
+                    $('#remote_container').prepend(
+                        `<div class='local_video'><video autoplay='1' id='localVideo1' /></div>`);
+
+                    }
                     localTracks[1].attach($('#localVideo1')[0]);
                     room.addTrack(localTracks[1]);
                 })
                 .catch(error => console.log(error));
+
+            }else{
+                sharingVideo=false;
+                $(this).css("color", "white");
+            }
+
+        }
+
+        function shareScreen() { // eslint-disable-line no-unused-vars
+            if (localTracks[1]) {
+                localTracks[1].dispose();
+                localTracks.pop();
+            }
+            if(!sharingScreen){
+
+                JitsiMeetJS.createLocalTracks({
+                devices: ['desktop' ]
+            })
+                .then(tracks => {
+                    $(this).css("color", "purple");
+                    $('#share_video').css("color", "white");
+                    sharingScreen=true;
+                    sharingVideo=false;
+                    localTracks.push(tracks[0]);
+                    localTracks[1].addEventListener(
+                        JitsiMeetJS.events.track.TRACK_MUTE_CHANGED,
+                        () => console.log('local track muted'));
+                    localTracks[1].addEventListener(
+                        JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
+                        () => console.log('local track stoped'));
+                    if ($('.local_video').length==0) {
+                        $('#remote_container').prepend(
+                        `<div class='local_video'><video autoplay='1' id='localVideo1' /></div>`);
+
+                    }
+                    localTracks[1].attach($('#localVideo1')[0]);
+                    room.addTrack(localTracks[1]);
+                })
+                .catch(error => console.log(error));
+
+            }else{
+                sharingScreen=false;
+                $(this).css("color", "white");
+            }
+        }
+
+        function shareAudio() { // eslint-disable-line no-unused-vars
+            if (localTracks[0]) {
+                localTracks[0].dispose();
+            }
+            if(!sharingScreen){
+
+                JitsiMeetJS.createLocalTracks({
+                devices: ['audio' ]
+            })
+                .then(tracks => {
+                    $(this).css("color", "white");
+                    sharingAudio=true;
+                    localTracks[0]=tracks[0];
+                    localTracks[0].addEventListener(
+                        JitsiMeetJS.events.track.TRACK_MUTE_CHANGED,
+                        () => console.log('local track muted'));
+                    localTracks[0].addEventListener(
+                        JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
+                        () => console.log('local track stoped'));
+                    if ($('.local_audio').length==0) {
+                        $('#remote_container').prepend(
+                        `<div class='local_audio'><audio autoplay='1' muted='true' id='localAudio1' /></div>`);
+
+                    }
+                    localTracks[0].attach($('#localAudio1')[0]);
+                    room.addTrack(localTracks[0]);
+                })
+                .catch(error => console.log(error));
+
+            }else{
+                sharingAudio=false;
+                $(this).css("color", "purple");
+            }
         }
 
         function showAsMainVideo(videoSource)
@@ -304,7 +400,8 @@ $(function(){
             }
 
         $('#leave-room').click(unload);
-        $('#switch_screen').click(switchVideo);
+        $('#share_screen').click(shareScreen);
+        $('#share_video').click(shareVideo);
         $('body').on('click', '#remote_container video', function(){
             showAsMainVideo(this.srcObject);
         });
