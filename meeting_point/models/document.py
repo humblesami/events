@@ -6,7 +6,6 @@ import uuid
 from fpdf import FPDF
 from docx import Document
 from odoo import models, fields, api, http
-from odoo.exceptions import UserError
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from odoo.addons.dn_base.statics import raise_dn_model_error
 

@@ -161,7 +161,6 @@ def get_user_data(values):
         req_env = request.env
         uid = values['id']
 
-
         notificationList = request.env['dn_base.notification'].getMyNotifications()
 
         friendIds = []

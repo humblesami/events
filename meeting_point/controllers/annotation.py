@@ -1,8 +1,7 @@
 import json
 from odoo import http
-from odoo.addons.dn_base import ws_methods
-
 from odoo.http import request
+from odoo.addons.dn_base import ws_methods
 
 
 class annotation(http.Controller):

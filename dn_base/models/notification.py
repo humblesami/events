@@ -1,5 +1,5 @@
 from odoo import models, fields
-from odoo.exceptions import ValidationError
+from odoo.addons.dn_base import ws_methods
 
 
 class NotificationType(models.Model):
@@ -24,70 +24,47 @@ class Notification(models.Model):
         'notification_uniq', 'unique (notification_type_id,res_id)', "Notification already exists for same record of same model!"),
     ]
 
-    def getMyNotifications(self):
+    def getMyNotifications(self, res_model=None, res_id=None):
         uid = self.env.user
-        counters = self.env['dn_base.notification.counter'].search([('user_id','=',uid,'counter','>',0)])
-        res = []
-        for obj in counters:
-            notification = obj.notification_id
-            if not notification.notification_type_id.parent_type:
-                item = {'counter':obj.counter,'res_id':notification.res_id, 'res_model':notification.notification_type_id.res_model}
-                res.append(item)
+        sql = 'select res_model, content, res_id, counter from dn_base_notification_type t'
+        sql += 'join dn_base_notification n on n.notification_type_id=t.id'
+        sql += 'join dn_base_notification_counter c on c.notification_id=n.id'
+        sql += ' where counter>0 and user_id='+uid
+        if res_model:
+            sql += " and res_model='"+res_model+"'"
+        if res_id:
+            sql += " and res_model='"+res_id+"'"
+        res = ws_methods.execute_read(sql)
         return res
 
     def add_notification(self, res_model, res_id, parent_id=None):
         req_env = self.env
-        targets = []
         notification_type = req_env['dn_base.notification_type'].search([('res_model', '=', res_model)])
-        notification_type = notification_type[0]
-        if parent_id:
-            if not notification_type.parent_type:
-                raise ValidationError('Invalid parent type for '+res_model)
-            notification = req_env['dn_base.notification'].search([('res_model', '=', res_model),('res_id', '=', res_id)])
-            if notification:
-                notification = notification[0]
-                parent_item = notification.parent_id
-                if not parent_item:
-                    raise ValidationError('Item could not be created without parent')
-                audience = parent_item.get_audience()
-            else:
-                values = {
-                    'res_id': 1,
-                    'notification_type_id': notification_type.id
-                }
-                notification = req_env['dn_base.notification'].create(values)
-        else:
-            item = req_env[notification_type.res_model].search([('id','=',res_id)])
-            audience = item.get_audience()
-            filters = [('res_id','=',res_id), ('notification_type_id','=',notification_type.id)]
-            notification = req_env['dn_base.notification'].search(filters)
-            if not notification:
-                values = {
-                    'res_id': res_id,
-                    'notification_type_id': notification_type.id
-                }
-                notification = req_env['dn_base.notification'].create(values)
-            else:
-                notification = notification[0]
-            self.add_counter_item(notification, audience)
+        notification_type_id = notification_type[0].id
+        current_object = req_env[notification_type.model].search([('id', '=', res_id)])
 
-    def add_notification_item(self, res_id, notification_type, audience):
+        if parent_id:
+            parent_object = req_env[notification_type.parent_type.model].search([('id', '=', res_id)])
+            parent_notification_type_id = notification_type[0].parent_type.id
+            self.add_notification_item(parent_id, parent_object, parent_notification_type_id)
+            self.add_notification_item(res_id, current_object, notification_type_id)
+        else:
+            self.add_counter_item(res_id, current_object, notification_type_id)
+
+    def add_notification_item(self, res_id, item, notification_type_id):
         req_env = self.env
-        filters = [('res_id', '=', res_id), ('notification_type_id', '=', notification_type.id)]
+        audience = item.get_audience()
+        filters = [('res_id', '=', res_id), ('notification_type_id', '=', notification_type_id)]
         notification = req_env['dn_base.notification'].search(filters)
         if not notification:
             values = {
                 'res_id': res_id,
-                'notification_type_id': notification_type.id
+                'notification_type_id': notification_type_id
             }
             notification = req_env['dn_base.notification'].create(values)
         else:
             notification = notification[0]
-        self.add_counter_item(notification, audience)
 
-
-    def add_counter_item(self, notification, audience):
-        req_env = self.env
         for uid in audience:
             notification_counter = req_env['dn_base.notification.counter'].search(
                 [('user_id', '=', uid), ('notification_id', '=', notification.id)])
