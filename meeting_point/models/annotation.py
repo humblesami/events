@@ -87,7 +87,12 @@ class PointAnnotation(models.Model):
         topic_name = False
         if doc_type == 'topic':
             res_model = 'meeting_point.topicdoc'
-            req_env['dn_base.notification'].add_notification(res_model, res_id, parent_id)
+            params = {
+                'name':res_model,
+                'res_id': res_id,
+                'parent_id':parent_id
+            }
+            req_env['notification'].add_notification(params)
             topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
             meeting = topic_doc.topic_id.meeting_id
             topic_name = topic_doc.topic_id.name

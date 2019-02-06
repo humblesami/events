@@ -129,15 +129,6 @@ class auth(http.Controller):
         uid = ws_methods.authenticate(values)
         return uid
 
-    @http.route('/ws/note', type="http", csrf=False,  auth='public', cors='*')
-    def note(self, **kw):
-        try:
-            request = http.request
-            res = request.env['dn_base.notification.status'].get_my_notifications()
-            return res
-        except:
-            ws_methods.handle()
-
     @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
     def verifyTokenHttp(self, **kw):
         try:
@@ -161,7 +152,8 @@ def get_user_data(values):
         req_env = request.env
         uid = values['id']
 
-        notificationList = request.env['dn_base.notification'].getMyNotifications()
+        method_to_call = getattr(req_env['notification'], 'getMyNotifications')
+        notificationList = method_to_call(values)
 
         friendIds = []
         friendList = {}

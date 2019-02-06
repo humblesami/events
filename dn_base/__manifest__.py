@@ -32,7 +32,6 @@
         'views/user.xml',
         'views/templates.xml',
         'views/mail.xml',
-        'views/notification.xml',
         'views/menus.xml'
     ],
     # only loaded in demonstration mode
@@ -40,8 +39,7 @@
         #'demo/demo.xml',
     ],
     'qweb': [
-            'views/notifications.xml',
-            'views/icon.xml'
+        'views/icon.xml'
     ],
     'application':True,
     #'post_init_hook': '_auto_update_lang_en',

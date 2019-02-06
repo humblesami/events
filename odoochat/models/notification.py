@@ -3,43 +3,48 @@ from odoo.addons.dn_base import ws_methods
 
 
 class NotificationType(models.Model):
-    _name = 'dn_base.notification_type'
+    _name = 'notification.type'
+    name = fields.Char()
     content = fields.Char()
-    res_model = fields.Char()
     client_route = fields.Char()
-    parent_type = fields.Many2one('dn_base.notification_type', ondelete='cascade')
+    parent_type = fields.Many2one('notification_type', ondelete='cascade')
     _sql_constraints = [
         (
-        'notification_type_uniq', 'unique (res_model)', "Notification type already exists for same model!"),
+        'notification_type_uniq', 'unique (name)', "Notification type already exists for same model!"),
     ]
 
 class Notification(models.Model):
-    _name = 'dn_base.notification'
-    notification_type_id = fields.Many2one('dn_base.notification_type', ondelete='cascade')
+    _name = 'notification'
+    notification_type_id = fields.Many2one('notification_type', ondelete='cascade')
     res_id = fields.Integer()
-    parent_id = fields.Many2one('dn_base.notification', ondelete='cascade')
+    parent_id = fields.Many2one('notification', ondelete='cascade')
 
     _sql_constraints = [
         (
         'notification_uniq', 'unique (notification_type_id,res_id)', "Notification already exists for same record of same model!"),
     ]
 
-    def getMyNotifications(self, res_model=None, res_id=None):
-        uid = self.env.user
-        sql = 'select res_model, content, res_id, counter from dn_base_notification_type t'
-        sql += 'join dn_base_notification n on n.notification_type_id=t.id'
-        sql += 'join dn_base_notification_counter c on c.notification_id=n.id'
-        sql += ' where counter>0 and user_id='+uid
-        if res_model:
-            sql += " and res_model='"+res_model+"'"
+    def getMyNotifications(self, params):
+        uid = self.env.user.id
+        name = params.get('res_model')
+        res_id = params.get('res_id')
+        sql = 'select name, content, res_id, counter from notification_type t'
+        sql += ' join notification n on n.notification_type_id=t.id'
+        sql += ' join notification_counter c on c.notification_id=n.id'
+        sql += ' where counter>0 and user_id='+str(uid)
+        if name:
+            sql += " and name='"+name+"'"
         if res_id:
-            sql += " and res_model='"+res_id+"'"
+            sql += " and res_id="+str(res_id)
         res = ws_methods.execute_read(sql)
         return res
 
-    def add_notification(self, res_model, res_id, parent_id=None):
+    def add_notification(self, params):
         req_env = self.env
-        notification_type = req_env['dn_base.notification_type'].search([('res_model', '=', res_model)])
+        name = params.get('res_model')
+        res_id = params.get('res_id')
+        parent_id = params.get('parent_id')
+        notification_type = req_env['notification_type'].search([('name', '=', name)])
         notification_type_id = notification_type[0].id
         current_object = req_env[notification_type.model].search([('id', '=', res_id)])
 
@@ -55,18 +60,18 @@ class Notification(models.Model):
         req_env = self.env
         audience = item.get_audience()
         filters = [('res_id', '=', res_id), ('notification_type_id', '=', notification_type_id)]
-        notification = req_env['dn_base.notification'].search(filters)
+        notification = req_env['notification'].search(filters)
         if not notification:
             values = {
                 'res_id': res_id,
                 'notification_type_id': notification_type_id
             }
-            notification = req_env['dn_base.notification'].create(values)
+            notification = req_env['notification'].create(values)
         else:
             notification = notification[0]
 
         for uid in audience:
-            notification_counter = req_env['dn_base.notification.counter'].search(
+            notification_counter = req_env['notification.counter'].search(
                 [('user_id', '=', uid), ('notification_id', '=', notification.id)])
             if notification_counter:
                 notification_counter = notification_counter[0]
@@ -77,11 +82,11 @@ class Notification(models.Model):
                     'user_id': uid,
                     'notification_id': notification.id
                 }
-                req_env['dn_base.notification.counter'].create(values)
+                req_env['notification.counter'].create(values)
 
 class NotificationCounter(models.Model):
-    _name = 'dn_base.notification.counter'
-    notification_id = fields.Many2one('dn_base.notification', ondelete='cascade')
+    _name = 'notification.counter'
+    notification_id = fields.Many2one('notification', ondelete='cascade')
     user_id = fields.Many2one('res.users')
     counter = fields.Integer(default=0)
 
