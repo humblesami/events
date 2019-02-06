@@ -38,6 +38,7 @@ $(function(){
                     console.log(roomName);
                     joinCononference(roomName);
                 }
+                $('#loaderContainerajax').hide();
             });
         };
         verfify_user();
@@ -494,6 +495,4 @@ $(function(){
         }
 
     }
-    $('#loaderContainerajax').hide();
-
 })
