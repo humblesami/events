@@ -9,7 +9,6 @@
                     <field name="name" />
                     <field name="content" />
                     <field name="client_route" />
-                    <field name="parent_type" />
                 </tree>
             </field>
         </record>
@@ -21,6 +20,7 @@
                 <tree>
                     <field name="notification_type_id" />
                     <field name="res_id" />
+                    <field name="parent_id" />
                 </tree>
             </field>
         </record>

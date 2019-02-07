@@ -7,5 +7,3 @@
 "access","aa access","base.model_ir_model_access","group_dn_app_manager",1,1,0,0
 "custom_user","custom own access","model_dnspusers","base.group_user",1,1,1,0
 "seen_by_employee","employee seen by","model_dn_seen","base.group_user",1,0,1,0
-"notification","notification","model_dn_base_notification","base.group_user",1,0,1,0
-"notification_type","notification type","model_dn_base_notification_type","base.group_user",1,0,1,0
