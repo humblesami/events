@@ -39,6 +39,10 @@ class Notification(models.Model):
         res = ws_methods.execute_read(sql)
         return res
 
+    def update_counter(self, params):
+        res_id = params.get('res_id')
+        res_model = params.get('res_model')
+
     def add_notification(self, params):
         req_env = self.env
         name = params.get('res_model')
