@@ -146,7 +146,7 @@ class auth(http.Controller):
         except:
             return ws_methods.handle()
 
-    def get_user_data(values):
+    def get_user_data(self, values):
         try:
             request = http.request
             req_env = request.env
