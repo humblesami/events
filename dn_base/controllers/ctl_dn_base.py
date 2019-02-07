@@ -140,10 +140,10 @@ class Controller(http.Controller):
                 values = kw
             values['uid'] = uid
             args = kw.get('args')
-            model = args['model']
-            method = args['method']
-            if not args:
-                return ws_methods.http_response('No args given')
+            model = args.get('model')
+            method = args.get('method')
+            if not model or not method:
+                return ws_methods.http_response('Please provide valid args')
             method_to_call = getattr(req_env[model], method)
             res = method_to_call(values)
             if not res['events']:

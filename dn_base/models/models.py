@@ -6,7 +6,6 @@ from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 from odoo.addons.mail.models.mail_message import Message
 
 class MyMail(Message):
-
     def post_comment(self, values):
         req_env = self.env
         partner = req_env.user.partner_id
