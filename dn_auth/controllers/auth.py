@@ -84,7 +84,7 @@ class auth(http.Controller):
             except:
                 return ws_methods.handle()
             data = {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': user_photo,'groups':groups }
-            res = get_user_data(data)
+            res = self.get_user_data(data)
             if type(res) is str:
                 return ws_methods.http_response(res)
             else:
@@ -138,7 +138,7 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
-                res = get_user_data(values)
+                res = self.get_user_data(values)
                 if type(res) is str:
                     return ws_methods.http_response(res)
                 else:
@@ -146,66 +146,66 @@ class auth(http.Controller):
         except:
             return ws_methods.handle()
 
-def get_user_data(values):
-    try:
-        request = http.request
-        req_env = request.env
-        uid = values['id']
+    def get_user_data(values):
+        try:
+            request = http.request
+            req_env = request.env
+            uid = values['id']
 
-        method_to_call = getattr(req_env['notification'], 'getMyNotifications')
-        notificationList = method_to_call(values)
+            method_to_call = getattr(req_env['notification'], 'getMyNotifications')
+            notificationList = method_to_call(values)
 
-        friendIds = []
-        friendList = {}
-        unseenMessages = 0
-        partner_id = req_env.user.partner_id.id
-        filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
-        meetings = request.env['calendar.event'].search(filters)
+            friendIds = []
+            friendList = {}
+            unseenMessages = 0
+            partner_id = req_env.user.partner_id.id
+            filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
+            meetings = request.env['calendar.event'].search(filters)
 
-        base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
-        image_path1 = base_url + '/dn/content_file/res.users/'
-        image_path2 = '/image_small/' + values['db'] + '/' + values['token']
+            base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
+            image_path1 = base_url + '/dn/content_file/res.users/'
+            image_path2 = '/image_small/' + values['db'] + '/' + values['token']
 
-        # meetingList = []
-        for obj in meetings:
-            attendees = []
-            for partner in obj.partner_ids:
-                obj_id = partner.user_id.id
-                if obj_id != uid and obj_id not in friendIds:
-                    friendObj = partner.user_id
-                    friend = {
-                        'id': friendObj.id,
-                        'name': friendObj.name,
-                        'photo': image_path1 + str(friendObj.id) + image_path2
-                    }
-                    if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
-                            'meeting_point.group_meeting_admin'):
-                        friend['type'] = 'staff'
-                    else:
-                        friend['type'] = 'director'
+            # meetingList = []
+            for obj in meetings:
+                attendees = []
+                for partner in obj.partner_ids:
+                    obj_id = partner.user_id.id
+                    if obj_id != uid and obj_id not in friendIds:
+                        friendObj = partner.user_id
+                        friend = {
+                            'id': friendObj.id,
+                            'name': friendObj.name,
+                            'photo': image_path1 + str(friendObj.id) + image_path2
+                        }
+                        if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
+                                'meeting_point.group_meeting_admin'):
+                            friend['type'] = 'staff'
+                        else:
+                            friend['type'] = 'director'
 
-                    db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
-                    friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
-                    unseenMessages += friend['unseen']
+                        db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
+                        friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
+                        unseenMessages += friend['unseen']
 
-                    friendList[friend['id']] = friend
-                    friendIds.append(friendObj.id)
-                attendees.append(partner.user_id.id)
+                        friendList[friend['id']] = friend
+                        friendIds.append(friendObj.id)
+                    attendees.append(partner.user_id.id)
 
-            # event = {
-            #     'id': obj.id,
-            #     'name': obj.name,
-            #     'attendees': attendees
-            # }
-            # meetingList.append(event)
+                # event = {
+                #     'id': obj.id,
+                #     'name': obj.name,
+                #     'attendees': attendees
+                # }
+                # meetingList.append(event)
 
-        data_for_ws = {'notifications': notificationList, 'friends': friendList, 'unseen': unseenMessages, 'user': values}
-        data_for_socket = [{'name': 'verified', 'audience': [uid], 'data': data_for_ws}]
+            data_for_ws = {'notifications': notificationList, 'friends': friendList, 'unseen': unseenMessages, 'user': values}
+            data_for_socket = [{'name': 'verified', 'audience': [uid], 'data': data_for_ws}]
 
-        res = ws_methods.emit_event(data_for_socket)
-        if res == 'done':
-            return data_for_ws
-        else:
-            return res
-    except:
-        raise
+            res = ws_methods.emit_event(data_for_socket)
+            if res == 'done':
+                return data_for_ws
+            else:
+                return res
+        except:
+            raise

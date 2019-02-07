@@ -239,12 +239,26 @@ def emit_event(data, req_url=None):
         data = json.dumps(data)
         if not req_url:
             req_url = '/odoo_event'
-        url = socket_server['url']+req_url+'?data='+data
-        res = requests.get(url)
-        res = res._content.decode("utf-8")
+        url = socket_server['url'] + req_url + '?data=' + data
+        try:
+            r = requests.get(socket_server['url'])
+            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            res = socket_server['url'] + " is not available"
+            print(res)
+        except requests.exceptions.HTTPError:
+            res = 'httperror'
+            print(res)
+        else:
+            res = requests.get(url)
+            res = res._content.decode("utf-8")
+            return res
         return res
+
     except:
-        raise
+        res = 'socket request failed because ' + sys.exc_info()
+        print(res)
+        return res
 
 def add_user_to_socket_list(user_data):
     try:
