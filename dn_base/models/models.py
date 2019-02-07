@@ -19,7 +19,7 @@ class MyMail(Message):
             model = 'calendar.event'
         comment_model = req_env['mail.message']
         res = comment_model.create(
-            {'body': values['body'], 'parent_id': values['parent_id'], 'model': model, 'author_id': partner.id,
+            {'body': values['body'], 'model': model, 'author_id': partner.id,
              'res_id': values['res_id'], 'message_type': datMessage, 'subtype_id': values['subtype_id']})
     @api.multi
     def unlink(self):
