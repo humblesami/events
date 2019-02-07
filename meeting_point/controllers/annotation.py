@@ -1,8 +1,7 @@
 import json
 from odoo import http
-from odoo.addons.dn_base import ws_methods
-
 from odoo.http import request
+from odoo.addons.dn_base import ws_methods
 
 
 class annotation(http.Controller):
@@ -219,6 +218,8 @@ def save_comment_point(values):
         point = values['point']
         comment = point['comment']
         parent_id = values['doc_id'].split('.')[0].split('-')[1]
+
+        req_env['calendar.event'].search
         notification = {
             "content" : ' comments on a document in your meeting.',
             "parent_id" : parent_model[values['doc_type']],

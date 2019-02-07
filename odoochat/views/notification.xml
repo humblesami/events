@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="notification_types_tree" model="ir.ui.view">
+            <field name="name">Notification Types</field>
+            <field name="model">notification.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="content" />
+                    <field name="client_route" />
+                    <field name="parent_type" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="notifications_tree" model="ir.ui.view">
+            <field name="name">Notifications</field>
+            <field name="model">notification</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="notification_type_id" />
+                    <field name="res_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="notification_counters_tree" model="ir.ui.view">
+            <field name="name">Notification Counters</field>
+            <field name="model">notification.counter</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="counter" />
+                    <field name="user_id" />
+                    <field name="notification_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_notification_type" model="ir.actions.act_window">
+            <field name="name">Notification Types</field>
+            <field name="res_model">notification.type</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <record id="action_notification" model="ir.actions.act_window">
+            <field name="name">Notifications</field>
+            <field name="res_model">notification</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <record id="action_notification_counter" model="ir.actions.act_window">
+            <field name="name">Notification Counter</field>
+            <field name="res_model">notification.counter</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <menuitem
+            name="Notifications" id="mnu_notification"
+            action="action_notification"
+        />
+        <menuitem
+            name="Notification Types" id="mnu_notification_type"
+            parent="mnu_notification"
+            action="action_notification_type"
+        />
+        <menuitem
+            name="Notification Records" id="mnu_notification_record"
+            parent="mnu_notification"
+            action="action_notification"
+        />
+        <menuitem
+            name="Notification Counter" id="mnu_notification_counter"
+            parent="mnu_notification"
+            action="action_notification_counter"
+        />
+    </data>
+</odoo>

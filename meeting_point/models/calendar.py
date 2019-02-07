@@ -374,11 +374,6 @@ class Meeting(models.Model):
                 self.disableConference(event)
                 event.exectime = "completed"
 
-    def disableConference(self, event):
-        if event.conference_status == 'active' and event.exectime != 'upcoming' and event.exectime != 'ongoing':
-            vals = {'pin': '', 'video_call_link': '', 'moderator': 0, 'video_active': False, 'conference_bridge_number': ''}
-            event.sudo().write(vals)
-
     @api.multi
     def _compute_meeting_status(self):
         try:
@@ -394,6 +389,13 @@ class Meeting(models.Model):
                 rec.is_active_yet = 'yes'
         except:
             q=1
+
+
+    def get_audience(self):
+        ids = []
+        for partner in self.partner_ids:
+            ids.append(partner.user_id.id)
+        return ids
 
     def concurrentMeetings(self, start, stop):
         start = dn_dt.strTodt(start)
@@ -453,6 +455,11 @@ class Meeting(models.Model):
             call_url = arr[0] + '&' + arr[1] + '&pin=' + pin
             video_call_link = call_url
             event.write({'pin':pin, 'video_call_link': video_call_link})
+
+    def disableConference(self, event):
+        if event.conference_status == 'active' and event.exectime != 'upcoming' and event.exectime != 'ongoing':
+            vals = {'pin': '', 'video_call_link': '', 'moderator': 0, 'video_active': False, 'conference_bridge_number': ''}
+            event.sudo().write(vals)
 
     @api.onchange('country')
     def filter_states(self):

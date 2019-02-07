@@ -7,6 +7,21 @@ from odoo.addons.mail.models.mail_message import Message
 
 class MyMail(Message):
 
+    def post_comment(self, values):
+        req_env = self.env
+        partner = req_env.user.partner_id
+        if 'message_type' in values:
+            datMessage = values['message_type']
+        else:
+            datMessage = 'comment'
+        if 'model' in values:
+            model = values['model']
+        else:
+            model = 'calendar.event'
+        comment_model = req_env['mail.message']
+        res = comment_model.create(
+            {'body': values['body'], 'parent_id': values['parent_id'], 'model': model, 'author_id': partner.id,
+             'res_id': values['res_id'], 'message_type': datMessage, 'subtype_id': values['subtype_id']})
     @api.multi
     def unlink(self):
         if self.env.uid != 1 and not self.env.user.has_group('dn_base.group_dn_app_manager'):

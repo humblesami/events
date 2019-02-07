@@ -19,7 +19,7 @@
     var model_name = dict['model'];
     var doc_type = model_dict[model_name];
 
-    var doc_iframe_base_path = 'http://localhost:4200/';
+    var doc_iframe_base_path = window.location.origin+'/meetvue/';
     var doc_src = doc_iframe_base_path + doc_type+'/iframe/'+res_id+'/demo/token';
 
     var iframe = '<iframe class="doc_iframe" src="'+doc_src+'" style="width: 100%;height: calc(100vh - 130px);"></iframe>';

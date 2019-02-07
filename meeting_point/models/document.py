@@ -6,7 +6,6 @@ import uuid
 from fpdf import FPDF
 from docx import Document
 from odoo import models, fields, api, http
-from odoo.exceptions import UserError
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from odoo.addons.dn_base.statics import raise_dn_model_error
 
@@ -26,6 +25,12 @@ class MeetingDoc(models.Model):
             args.extend(myargs)
         docs = super(MeetingDoc, self).search(args)
         return docs
+
+    def get_audience(self):
+        ids = []
+        for partner in self.meeting_id.partner_ids:
+            ids.append(partner.user_id.id)
+        return ids
 
 class Document(models.Model):
     _name = 'meeting_point.document'

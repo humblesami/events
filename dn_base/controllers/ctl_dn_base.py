@@ -106,38 +106,6 @@ def save_comment(values):
     except:
         return ws_methods.handle()
 
-def update_notification(values):
-    try:
-        req_env = http.request.env
-        parent_model = values.get('parent_model')
-        parent_id = values.get('parent_id')
-        res_model = values.get('res_model')
-        res_id = values.get('res_id')
-
-        filter = [('res_model', '=', res_model), ('res_id', '=', res_id)]
-
-        if parent_id and parent_model:
-            filter.append(('parent_model', '=', parent_model))
-            filter.append(('parent_id', '=', parent_id))
-
-        note_list = req_env['dn_base.notification'].search(filter)
-        ids = ws_methods.objects_list_to_array(note_list, 'id')
-
-        filter = [('notification_id', 'in', ids), ('user_id', '=', values['uid'])]
-        req_env['dn_base.notification.status'].sudo().search(filter).write({'counter': 0})
-
-        res = ws_methods.http_response('', 'Successfully Updated')
-
-        res = {
-            'events': [
-                {'data': res, 'name': 'notification_updated', 'audience': [values['uid']]}
-            ],
-            'data': res
-        }
-        return res
-    except:
-        return ws_methods.handle()
-
 class MyWebsite(Website):
     @http.route('/', type='http', auth="public", website=True)
     def index(self):
@@ -148,15 +116,6 @@ class MyWebsite(Website):
             return redirect('/web')
 
 
-
-socket_events = {
-    'save_message': chatController.save_messages,
-    'set_message_status': chatController.set_message_status,
-    'save_comment_point': annotationController.save_comment_point,
-    'save_comment': save_comment,
-    'update_notification': update_notification,
-    # 'verify': authController.verify
-}
 
 socket_server = {
     'url':tools.config['socket_url'],
@@ -170,6 +129,7 @@ class Controller(http.Controller):
         try:
             kw = json.loads(kw['data'])
             auth = kw.get('auth')
+            req_env = http.request.env
             if not auth:
                 auth = kw
             uid = ws_methods.check_auth(auth)
@@ -179,10 +139,13 @@ class Controller(http.Controller):
             if not values:
                 values = kw
             values['uid'] = uid
-            event_name = kw.get('event')
-            if not event_name:
-                return ws_methods.http_response('No event name given')
-            res = socket_events[event_name](values)
+            args = kw.get('args')
+            model = args['model']
+            method = args['method']
+            if not args:
+                return ws_methods.http_response('No args given')
+            method_to_call = getattr(req_env[model], method)
+            res = method_to_call(values)
             if not res['events']:
                 return res
 
@@ -190,7 +153,7 @@ class Controller(http.Controller):
             if res == 'done':
                 return  ws_methods.http_response('', 'done')
             else:
-                return ws_methods.http_response(event_name + ' processed by Odoo server but '+ res)
+                return ws_methods.http_response(model + '.'+method+' processed by Odoo server but '+ res)
         except:
             return ws_methods.handle()
 
@@ -266,57 +229,6 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/get-record-notifications', type='http', csrf=False, auth='public', cors='*')
-    def get_point_noteifications(self, **kw):
-        try:
-            auth = kw.get('auth')
-            uid = ws_methods.check_auth(auth)
-            if not uid:
-                return ws_methods.not_logged_in()
-
-            vals = kw.get('req_data')
-            req_env = http.request.env
-            notifications = req_env['dn_base.notification.status'].search([('user_id', '=', vals['user_id'])])
-            point_notifications = []
-
-            parent_id = vals.get('parent_id')
-            parent_model = vals.get('parent_model')
-            filters = []
-            for status in notifications:
-                filters = [('parent_id', '=', parent_id),
-                           ('parent_model', '=', parent_model),
-                           ('id', '=', status.notification_id)]
-                # else:
-                #     filters = [('res_id', '=', vals['res_id'], ('res_model', '=', vals['res_model'])]
-
-                noteList = req_env['dn_base.notification'].search(filters)
-                props = ['res_id']
-                noteObj = ws_methods.object_to_json_object(noteList[0], props)
-                noteObj['count'] = status.count
-                point_notifications.append(noteObj)
-
-        except:
-            return ws_methods.handle()
-
-    @http.route('/update-notify-status', type='json', auth='public', csrf=False, cors='*')
-    def update_notification_status(self):
-        try:
-            kw = request.jsonrequest
-            auth = kw.get('auth')
-            if not auth:
-                auth = kw
-            uid = ws_methods.check_auth(auth)
-            if not uid:
-                return ws_methods.not_logged_in()
-            values = kw.get('req_data')
-            if not values:
-                values = kw
-            values['uid'] = uid
-            res = update_notification(values)
-            return res['data']
-        except:
-            return ws_methods.handle()
-
     @http.route('/reset-password', type='http', csrf=False, auth='public', cors='*')
     def reset_password(self, **kw):
         try:
@@ -351,19 +263,6 @@ class Controller(http.Controller):
                 return ws_methods.not_logged_in()
             res = http.local_redirect(forward_url, data)
             #res = werkzeug.utils.redirect(forward_url, data)
-            return res
-        except:
-            return ws_methods.handle()
-
-    @http.route('/update_client_rotes', type='http', csrf=False, auth='public', cors='*')
-    def socket_request(self, **kw):
-        try:
-            if request.uid != 1:
-                return "Error"
-            sql = "update dn_base_notification set client_route=CONCAT('/',client_route) where client_route not like '/%'"
-            #sql = "update dn_base_notification set client_route = substring(client_route from 2 for 9999) where client_route like '//%'"
-            ws_methods.execute_update(sql)
-            res = 'done'
             return res
         except:
             return ws_methods.handle()
