@@ -6,6 +6,7 @@ $(function(){
     var username = 'Sami';
     var meeting_id = false;
     var roomPin = false;
+    var isAdmin = false;
 
     if(Array.isArray(temp) && temp.length > 1)
     {
@@ -35,8 +36,9 @@ $(function(){
             dn_json_rpc('/meeting/attendees', input_data, function(attendees_data) {
                 if (attendees_data.im_attendee) {
                     roomName = attendees_data.roomName;
+                    isAdmin =attendees_data.isAdmin;
                     console.log(roomName);
-                    joinCononference(roomName);
+                    joinCononference(roomName,isAdmin);
                 }
                 $('#loaderContainerajax').hide();
             });
@@ -47,10 +49,11 @@ $(function(){
     {
         meeting_id = 1;
         roomPin = 'marziii';
-        joinCononference('samig');
+        isAdmin=true;
+        joinCononference('samig',isAdmin);
     }
 
-    function joinCononference(roomName){
+    function joinCononference(roomName,isAdmin){
         const options = {
             hosts: {
                 domain: 'meet.jit.si',
@@ -63,14 +66,15 @@ $(function(){
         };
 
         const confOptions = {
-            openBridgeChannel: true
+            openBridgeChannel: true,
+            channelLastN: 1
         };
 
         let connection = null;
         let isJoined = false;
-        let room = null;
+         let room = null;
 
-        let localTracks = [];
+         let localTracks = [];
         const remoteTracks = {};
 
         /**
@@ -79,10 +83,9 @@ $(function(){
          */
         function onLocalTracks(tracks) {
             sharingVideo=true;
-            sharingAudio=true;
             sharingScreen=false;
             $('#share_video').css("color", "purple");
-            localTracks = tracks;
+            localTracks.push(tracks[0]);
             for (let i = 0; i < localTracks.length; i++) {
                 localTracks[i].addEventListener(
                     JitsiMeetJS.events.track.TRACK_AUDIO_LEVEL_CHANGED,
@@ -99,24 +102,16 @@ $(function(){
                         console.log(
                             `track audio output device was changed to ${deviceId}`));
                 if (localTracks[i].getType() === 'video') {
-                    $('#remote_container').prepend(
-                        `<div class='local_video'><video autoplay='1' id='localVideo${i}' /></div>`);
+
                     localTracks[i].attach($(`#localVideo${i}`)[0]);
                     $('#remote_container video:last').click();
                 } else {
-                    $('#remote_container').prepend(
-                        `<div class='local_audio'><audio autoplay='1' muted='true' id='localAudio${i}' /></div>`);
+
                     localTracks[i].attach($(`#localAudio${i}`)[0]);
                 }
             }
         }
-        let remote_controlls=`<div class='remote_controlls'>
-        <button class='kick_out'>Kick</button>
-        <button class='mute_this'>Mute</button>
-        </div>`
-            if((Math.floor(Math.random() * 10) + 1) %2==0){
-                remote_controlls="";
-            }
+
 
         /**
          * Handles remote tracks
@@ -183,6 +178,11 @@ $(function(){
         function onConferenceJoined() {
             console.log('conference joined!');
             isJoined = true;
+            if(isAdmin){
+                localTracks[0].unmute();
+                sharingAudio=true;
+                $('#mute_audio').css("color", "white");
+            }
             for (let i = 0; i < localTracks.length; i++) {
                 room.addTrack(localTracks[i]);
             }
@@ -303,11 +303,8 @@ $(function(){
                     localTracks[1].addEventListener(
                         JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
                         () => console.log('local track stoped'));
-                    if ($('.local_video').length==0) {
-                    $('#remote_container').prepend(
-                        `<div class='local_video'><video autoplay='1' id='localVideo1' /></div>`);
 
-                    }
+
                     localTracks[1].attach($('#localVideo1')[0]);
                     room.addTrack(localTracks[1]);
                 })
@@ -323,6 +320,7 @@ $(function(){
         function shareScreen() { // eslint-disable-line no-unused-vars
             if (localTracks[1]) {
                 localTracks[1].dispose();
+
                 localTracks.pop();
             }
             if(!sharingScreen){
@@ -342,11 +340,7 @@ $(function(){
                     localTracks[1].addEventListener(
                         JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
                         () => console.log('local track stoped'));
-                    if ($('.local_video').length==0) {
-                        $('#remote_container').prepend(
-                        `<div class='local_video'><video autoplay='1' id='localVideo1' /></div>`);
 
-                    }
                     localTracks[1].attach($('#localVideo1')[0]);
                     room.addTrack(localTracks[1]);
                 })
@@ -358,36 +352,15 @@ $(function(){
             }
         }
 
-        function shareAudio() { // eslint-disable-line no-unused-vars
-            if (localTracks[0]) {
-                localTracks[0].dispose();
-            }
-            if(!sharingScreen){
+        function toggleAudio() { // eslint-disable-line no-unused-vars
 
-                JitsiMeetJS.createLocalTracks({
-                devices: ['audio' ]
-            })
-                .then(tracks => {
-                    $(this).css("color", "white");
-                    sharingAudio=true;
-                    localTracks[0]=tracks[0];
-                    localTracks[0].addEventListener(
-                        JitsiMeetJS.events.track.TRACK_MUTE_CHANGED,
-                        () => console.log('local track muted'));
-                    localTracks[0].addEventListener(
-                        JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
-                        () => console.log('local track stoped'));
-                    if ($('.local_audio').length==0) {
-                        $('#remote_container').prepend(
-                        `<div class='local_audio'><audio autoplay='1' muted='true' id='localAudio1' /></div>`);
-
-                    }
-                    localTracks[0].attach($('#localAudio1')[0]);
-                    room.addTrack(localTracks[0]);
-                })
-                .catch(error => console.log(error));
+            if(!sharingAudio){
+                localTracks[0].unmute();
+                sharingAudio = true;
+                $(this).css("color", "white");
 
             }else{
+                localTracks[0].mute();
                 sharingAudio=false;
                 $(this).css("color", "purple");
             }
@@ -403,8 +376,14 @@ $(function(){
         $('#leave-room').click(unload);
         $('#share_screen').click(shareScreen);
         $('#share_video').click(shareVideo);
+        $('#mute_audio').click(toggleAudio);
         $('body').on('click', '#remote_container video', function(){
+            let id = $(this).parent()[0].classList[0];
             showAsMainVideo(this.srcObject);
+            if(room && id !="local_video"){
+                room.selectParticipant(id);
+            }
+
         });
         $('body').on('click', '#remote_container .kick_out', function(){
             let id =this.closest('.remote_video').classList[0]
@@ -470,11 +449,52 @@ $(function(){
         JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.ERROR);
         connection.connect();
 
-        JitsiMeetJS.createLocalTracks({ devices: [ 'audio', 'video' ] })
+        let remote_controlls="";
+
+        JitsiMeetJS.createLocalTracks({
+                devices: ['audio' ]
+            })
+                .then(tracks => {
+                    $(this).css("color", "white");
+                    sharingAudio=true;
+                    localTracks.push(tracks[0]);
+                    localTracks[0].addEventListener(
+                        JitsiMeetJS.events.track.TRACK_MUTE_CHANGED,
+                        () => console.log('local track muted'));
+                    localTracks[0].addEventListener(
+                        JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED,
+                        () => console.log('local track stoped'));
+
+                    localTracks[0].attach($('#localAudio1')[0]);
+                    localTracks[0].mute();
+                    sharingAudio=false;
+                    $('#mute_audio').css("color", "purple");
+//                    room.addTrack(localTracks[0]);
+                })
+                .catch(error => console.log(error));
+
+        if(isAdmin){
+            $('#mute_audio').css("color", "white");
+            remote_controlls=`<div class='remote_controlls'>
+                        <button class='kick_out'>Kick</button>
+                        <button class='mute_this'>Mute</button>
+                        </div>`
+
+            JitsiMeetJS.createLocalTracks({ devices: ['video' ] })
             .then(onLocalTracks)
             .catch(error => {
                 throw error;
             });
+         $('#share_screen').show();
+         $('#share_video').show();
+
+        }
+        else{
+
+
+        }
+
+
 
         if (JitsiMeetJS.mediaDevices.isDeviceChangeAvailable('output')) {
             JitsiMeetJS.mediaDevices.enumerateDevices(devices => {

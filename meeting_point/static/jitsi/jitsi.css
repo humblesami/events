@@ -1,6 +1,7 @@
 #remote_container video {
   width: 120px;
   border-radius: 5%;
+
 }
 
 #remote_container {
@@ -15,11 +16,11 @@
 }
 
 #large-video video{
-    height: calc(100vh - 49px);
+    height: calc(100vh - 64px);
     width: 95vw;
 }
 #large-video{
-    height: calc(100vh - 49px);
+    height: calc(100vh - 64px);
 }
 
 #toolbar-buttons{
@@ -87,3 +88,6 @@ color:red!important;
     float: left;
 }
 
+#share_screen,#share_video{
+display:none;
+}

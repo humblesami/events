@@ -154,6 +154,9 @@ class meeting(http.Controller):
 
             res['ids'] = ids
             res['roomName'] = room_pins_obj[meeting.pin]
+            res['isAdmin'] = False
+            if http.request.env.user.has_group('meeting_point.group_meeting_admin'):
+                res['isAdmin'] = True
             if meeting.end_call:
                 res['end_call'] = 1
 
