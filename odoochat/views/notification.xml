@@ -37,6 +37,30 @@
             </field>
         </record>
 
+        <record id="messages_tree" model="ir.ui.view">
+            <field name="name">Message Tree</field>
+            <field name="model">odoochat.message</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="content" />
+                    <field name="sender" />
+                    <field name="to" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="comments_tree" model="ir.ui.view">
+            <field name="name">Comments Tree</field>
+            <field name="model">mail.message</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="model" />
+                    <field name="res_id" />
+                    <field name="body" />
+                </tree>
+            </field>
+        </record>
+
         <record id="action_notification_type" model="ir.actions.act_window">
             <field name="name">Notification Types</field>
             <field name="res_model">notification.type</field>
@@ -55,23 +79,46 @@
             <field name="view_mode">tree,kanban,form</field>
         </record>
 
+        <record id="action_comment" model="ir.actions.act_window">
+            <field name="name">Comments</field>
+            <field name="res_model">mail.message</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <record id="action_message" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">odoochat.message</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
         <menuitem
-            name="Notifications" id="mnu_notification"
+            name="Notifications" id="menu_notification"
             action="action_notification"
+            parent="dn_base.dev_menu"
         />
         <menuitem
-            name="Notification Types" id="mnu_notification_type"
-            parent="mnu_notification"
+            name="Comments" id="menu_notification_type"
+            parent="menu_notification"
+            action="action_message"
+        />
+        <menuitem
+            name="Messages" id="menu_message"
+            parent="menu_notification"
+            action="action_comment"
+        />
+        <menuitem
+            name="Notification Types" id="menu_notification_type"
+            parent="menu_notification"
             action="action_notification_type"
         />
         <menuitem
-            name="Notification Records" id="mnu_notification_record"
-            parent="mnu_notification"
+            name="Notification Records" id="menu_notification_record"
+            parent="menu_notification"
             action="action_notification"
         />
         <menuitem
-            name="Notification Counter" id="mnu_notification_counter"
-            parent="mnu_notification"
+            name="Notification Counter" id="menu_notification_counter"
+            parent="menu_notification"
             action="action_notification_counter"
         />
     </data>

@@ -2,7 +2,7 @@
 from odoo import models, fields
 
 class odoochat(models.Model):
-    _name = 'odoochat.messages'
+    _name = 'odoochat.message'
 
     sender = fields.Integer()
     to = fields.Integer()

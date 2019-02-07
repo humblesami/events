@@ -8,6 +8,12 @@
                 web_icon="dn_base,static/menu_icons/dev.jpg"
                 groups="base.group_system"
         />
+        <menuitem
+                id="dev_menu"
+                name="Dev Records"
+                sequence="-1"
+                groups="base.group_system"
+        />
 
         <!--<menuitem-->
                 <!--id="menu_seen_by"-->

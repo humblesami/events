@@ -117,10 +117,11 @@ class NotificationCounter(models.Model):
     _name = 'notification.counter'
     notification_id = fields.Many2one('notification', ondelete='cascade')
     user_id = fields.Many2one('res.users')
-    counter = fields.Integer(default=0)
+    counter = fields.Integer(default = 0)
 
     _sql_constraints = [
         (
             'notification_uniq', 'unique (notification_id,user_id)',
-            "Notification already exists for same record of same user!"),
+            "Notification already exists for same record of same user!"
+        )
     ]

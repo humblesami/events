@@ -256,7 +256,7 @@ def emit_event(data, req_url=None):
         return res
 
     except:
-        res = 'socket request failed because ' + sys.exc_info()
+        res = 'socket request failed because ' + str(sys.exc_info())
         print(res)
         return res
 
