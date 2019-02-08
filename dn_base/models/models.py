@@ -13,13 +13,18 @@ class MyMail(models.Model):
             datMessage = 'comment'
         comment_model = req_env['mail.message']
         #with_context(message_create_from_mail_mail=True).
-        values = {
+        comment_vals = {
             'body': values['body'], 'model': values['model'],
             'res_id': values['res_id'], 'message_type': datMessage,
             'subtype_id': values['subtype_id'],
             'email_from': 'admin@example.com'
         }
-        res = comment_model.create(values)
+        res = comment_model.create(comment_vals)
+        note_vals = {
+            'res_model': values['model'],
+            'res_id': values['res_id']
+        }
+        note = req_env['notification'].add_notification(note_vals)
         values['create_date'] = res.create_date
         values['user'] = {'name': req_env.user.name, 'id':req_env.user.id}
         record = req_env[values['model']].search([('id', '=', values['res_id'])])

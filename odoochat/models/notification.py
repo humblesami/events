@@ -48,8 +48,14 @@ class Notification(models.Model):
         parent_res_id = params.get('parent_res_id')
         parent_res_model = params.get('parent_res_model')
 
-        notification_type = req_env['notification_type'].search([('name', '=', res_model)])
-        notification_type_id = notification_type[0].id
+        notification_type = req_env['notification.type'].search([('name', '=', res_model)])
+
+        if not notification_type:
+            notification_type = req_env['notification.type'].create({"name":res_model})
+        else:
+            notification_type = notification_type[0]
+
+        notification_type_id = notification_type.id
 
         if parent_res_id:
             parent_notification_type_id = req_env['notification.type'].search([('name', '=', parent_res_model)])
@@ -60,9 +66,9 @@ class Notification(models.Model):
             parent_notification_id = self.add_notification_item(parent_res_id, audience, parent_notification_type_id)
             self.add_notification_item(res_id, audience, notification_type_id, parent_notification_id)
         else:
-            current_object = req_env[notification_type.model].search([('id', '=', res_id)])
+            current_object = req_env[notification_type.name].search([('id', '=', res_id)])
             audience = current_object.get_audience()
-            self.add_counter_item(res_id, audience, notification_type_id)
+            self.add_notification_item(res_id, audience, notification_type_id)
 
     def add_notification_item(self, res_id, audience, notification_type_id, parent_id=None):
         req_env = self.env
