@@ -94,7 +94,6 @@
         <menuitem
             name="Notifications" id="menu_notification"
             action="action_notification"
-            parent="dn_base.dev_menu"
         />
         <menuitem
             name="Comments" id="menu_notification_type"
