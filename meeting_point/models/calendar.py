@@ -394,7 +394,8 @@ class Meeting(models.Model):
     def get_audience(self):
         ids = []
         for partner in self.partner_ids:
-            ids.append(partner.user_id.id)
+            if partner.id != self.env.user.partner_id.id:
+                ids.append(partner.user_id.id)
         return ids
 
     def concurrentMeetings(self, start, stop):

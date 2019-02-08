@@ -185,7 +185,7 @@ class auth(http.Controller):
                             friend['type'] = 'director'
 
                         db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
-                        friend['unseen'] = req_env['odoochat.message'].sudo().search_count(db_filters)
+                        friend['unseen'] = req_env['odoochat.message'].search_count(db_filters)
                         unseenMessages += friend['unseen']
 
                         friendList[friend['id']] = friend

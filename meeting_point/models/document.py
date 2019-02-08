@@ -29,7 +29,8 @@ class MeetingDoc(models.Model):
     def get_audience(self):
         ids = []
         for partner in self.meeting_id.partner_ids:
-            ids.append(partner.user_id.id)
+            if partner.id != self.env.user.partner_id.id:
+                ids.append(partner.user_id.id)
         return ids
 
 class Document(models.Model):

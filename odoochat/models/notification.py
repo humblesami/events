@@ -5,8 +5,8 @@ from odoo.addons.dn_base import ws_methods
 class NotificationType(models.Model):
     _name = 'notification.type'
     name = fields.Char()
-    content = fields.Char()
-    client_route = fields.Char()
+    content = fields.Char(default='notifications on')
+    client_route = fields.Char(default='/')
     _sql_constraints = [
         (
         'notification_type_uniq', 'unique (name)', "Notification type already exists for same model!"),
