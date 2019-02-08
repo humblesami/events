@@ -99,7 +99,7 @@ class PointAnnotation(models.Model):
             docname = topic_doc.name
         elif doc_type == 'meeting':
             res_model = 'meeting_point.doc'
-            req_env['dn_base.notification'].add_notification(res_model, res_id, parent_id)
+            req_env['notification'].add_notification(res_model, res_id, parent_id)
             meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
             meeting = meeting_doc.meeting_id
             docname = meeting_doc.name
@@ -122,7 +122,7 @@ class PointAnnotation(models.Model):
     @api.multi
     def unlink(self):
         for obj in self:
-            self.env['dn_base.notification'].search([('res_model','=','annotation.point'),('res_id','=',obj.id)])
+            self.env['notification'].search([('res_model','=','annotation.point'),('res_id','=',obj.id)])
         res = super(PointAnnotation, self).unlink()
         return res
 
@@ -130,7 +130,8 @@ class PointAnnotation(models.Model):
     def compute_my_notifications(self):
         req_env = self.env
         for obj in self:
-            res = req_env['dn_base.notification'].getMyNotifications(self._name, obj.id)
+            params = {'res_model':self._name, 'res_id':obj.id}
+            res = req_env['notification'].getMyNotifications(params)
             obj.my_notifications = res
 
 class CommentAnnotation(models.Model):
