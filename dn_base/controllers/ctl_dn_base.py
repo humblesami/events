@@ -67,26 +67,6 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/on_socket_server_restart', type='http', csrf=False, auth='public', cors='*')
-    def socket_request_http(self, **kw):
-        try:
-            kw = json.loads(kw['data'])
-            auth = kw.get('auth')
-            if not auth:
-                auth = kw
-            uid = ws_methods.check_auth(auth)
-            if not uid:
-                return ws_methods.not_logged_in()
-            req_env = http.request.env
-
-            res = ws_methods.emit_event(events)
-            if res == 'done':
-                return ws_methods.http_response('', 'done')
-            else:
-                return ws_methods.http_response(' processed by Odoo server but ' + res)
-        except:
-            return ws_methods.handle()
-
     @http.route('/socket_request-json', type='json', csrf=False, auth='public', cors='*')
     def socket_request_json(self):
         res = ''

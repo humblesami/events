@@ -1,3 +1,5 @@
+import json
+
 import odoo
 import string
 import random
@@ -146,6 +148,21 @@ class auth(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/on_socket_server_restart', type='http', csrf=False, auth='public', cors='*')
+    def socket_request_http(self, **kw):
+        try:
+            values = json.loads(kw['data'])
+            uid = self.verifyToken(values)
+            if type(uid) is not int:
+                return ws_methods.http_response(uid)
+            else:
+                values['uid'] = uid
+                values['avoid_emit'] = 1
+                res = self.get_user_data(values)
+                return ws_methods.http_response('', res)
+        except:
+            return ws_methods.handle()
+
     def get_user_data(self, values):
         try:
             request = http.request
@@ -202,6 +219,8 @@ class auth(http.Controller):
             data_for_ws = {'notifications': notificationList, 'friends': friendList, 'unseen': unseenMessages, 'user': values}
             data_for_socket = [{'name': 'verified', 'audience': [uid], 'data': data_for_ws}]
 
+            if values.get('avoid_emit'):
+                return data_for_ws
             res = ws_methods.emit_event(data_for_socket)
             if res == 'done':
                 return data_for_ws
