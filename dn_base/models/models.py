@@ -16,22 +16,24 @@ class MyMail(models.Model):
         model = values.get('model')
         if not model:
             model = values.get('res_model')
-
+        res_id = values['res_id']
+        if not model or not res_id:
+            raise ValidationError('Invalid model, id')
         comment_vals = {
             'body': values['body'], 'model': model,
-            'res_id': values['res_id'], 'message_type': datMessage,
+            'res_id': res_id, 'message_type': datMessage,
             'subtype_id': values['subtype_id'],
             'email_from': 'admin@example.com'
         }
         res = comment_model.create(comment_vals)
         note_vals = {
             'res_model': model,
-            'res_id': values['res_id']
+            'res_id': res_id
         }
         note = req_env['notification'].add_notification(note_vals)
         values['create_date'] = res.create_date
         values['user'] = {'name': req_env.user.name, 'id':req_env.user.id}
-        record = req_env[model].search([('id', '=', values['res_id'])])
+        record = req_env[model].search([('id', '=', res_id)])
         audience = record.get_audience()
         res = {
             'data':values,
