@@ -332,33 +332,6 @@ class meeting(http.Controller):
                 attendee['uid'] = attendee_user.id
                 attendee['name'] = attendee_user.name
                 cnt += 1
-            filters = [('res_id', '=', meeting_object['id']), ('parent_id', '=', False),
-                       ('model', '=', 'calendar.event'),
-                       ('message_type', '=', 'comment'), ('create_uid', '!=', False)]
-            if uid != 1:
-                filters.append(('create_uid', '!=', 1))
-            comments = req_env['mail.message'].search(filters, order='create_date desc')
-            props = ['id', 'body', 'subtype_id.id', 'create_date']
-            ar_comments = ws_methods.objects_list_to_json_list(comments, props)
-            i = 0
-            for com in comments:
-                user = com.create_uid
-                if not user.mp_user_id.id:
-                    ar_comments[i]['is_own'] = 1
-
-                ar_comments[i]['user'] = {'name': user.name, 'id': user.mp_user_id.id}
-                ar_children = []
-                if com.child_ids:
-                    child_ids = com.child_ids.sorted(key=lambda p: (p.create_date))
-                    ar_children = ws_methods.objects_list_to_json_list(child_ids, props)
-                    j = 0
-                    for child_com in child_ids:
-                        user1 = child_com.create_uid
-                        ar_children[j]['user'] = {'name': user1.name, 'id': user1.mp_user_id.id}
-                        j = j + 1
-                ar_comments[i]["children"] = ar_children
-                i = i + 1
-
             id = int(values['id'])
             filters = []
             if 'meeting_type' in values:
@@ -381,8 +354,6 @@ class meeting(http.Controller):
             next = req_env['calendar.event'].search(filters, limit=1, order='id')
             if len(next) > 0:
                 next = next[0]
-
-            meeting_object['comments'] = ar_comments
             meeting_object['model'] = "calendar.event"
             data = {"meeting": meeting_object, "next": next.id, "prev": prev.id}
             return ws_methods.http_response('', data)

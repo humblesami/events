@@ -11,7 +11,6 @@ odoo.define('dn_base.Abstract', function (require) {
         },
         bind_events: function () {
             this._super.apply(this, arguments);
-            console.log(3333);
 //            window.onerror = function (message, file, line, col, error) {
 //                try
 //                {

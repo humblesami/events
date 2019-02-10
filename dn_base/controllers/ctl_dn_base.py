@@ -182,11 +182,6 @@ class Controller(http.Controller):
         temp = self.get_comments(kw)
         return temp
 
-    @http.route('/get-comments-nonhttp', type="json", csrf=False, auth='none', cors='*')
-    def get_comments_json(self, **kw):
-        req_body = http.request.jsonrequest
-        return self.get_comment(req_body)
-
     def get_comments(self, values):
         try:
             uid = ws_methods.check_auth(values)
@@ -195,8 +190,13 @@ class Controller(http.Controller):
             req_env = http.request.env
             if 'data' in values:
                 values = values['data']
-            filters = [('res_id', '=', values['res_id']), ('parent_id', '=', False),
-                       ('model', '=', values['model']), ('create_uid', '!=', False)]
+            res_id = values.get('res_id')
+            model = values.get('res_model')
+            if not model:
+                model = values.get('model')
+            if not res_id or not model:
+                return ws_methods.http_response('Invalid model or id')
+            filters = [('res_id', '=', res_id), ('model', '=', model), ('parent_id', '=', False), ('create_uid', '!=', False)]
             if uid != 1:
                 filters.append(('create_uid', '!=', 1))
             comments = req_env['mail.message'].search(filters, order='create_date desc')
@@ -231,7 +231,7 @@ class Controller(http.Controller):
 
     @http.route('/comment/add', type='http', csrf=False, auth='public', cors='*')
     def save_comment_http(self, **kw):
-        res = save_comment(kw)
+        res = self.save_comment(kw)
         return res['data']
 
     @http.route('/comment/add-json', type="json", csrf=False, auth='public', cors='*')
@@ -246,7 +246,7 @@ class Controller(http.Controller):
         values = kw.get('req_data')
         if not values:
             values = kw
-        res = save_comment(kw)
+        res = self.save_comment(values)
         return res['data']
 
     @http.route('/comment/delete', type='http', csrf=False, auth='none', cors='*')
