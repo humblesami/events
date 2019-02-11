@@ -52,11 +52,28 @@ class Controller(http.Controller):
             args = kw.get('args')
             model = args.get('model')
             method = args.get('method')
+
             if not model or not method:
                 return ws_methods.http_response('Please provide valid args')
+
+            res_model = values['res_model']
+            res_id = values['res_id'] = int(values['res_id'])
             method_to_call = getattr(req_env[model], method)
             res = method_to_call(values)
+            if values.get('no_notify'):
+                return ws_methods.http_response('', 'done')
+
+            audience = req_env[res_model].search([('id', '=', res_id)]).get_audience()
+            notification_values = {
+                'res_model': res_model,
+                'res_id': res_id,
+                'audience': audience
+            }
+            req_env['notification'].add_notification(notification_values)
+
             events = res.get('events')
+            for event in events:
+                event['audience'] = audience
             if not events:
                 raise ValidationError('Invalid events')
             res = ws_methods.emit_event(events)

@@ -13,34 +13,28 @@ class MyMail(models.Model):
             datMessage = 'comment'
         comment_model = req_env['mail.message']
         #with_context(message_create_from_mail_mail=True).
-        model = values.get('model')
-        if not model:
-            model = values.get('res_model')
-        res_id = values['res_id']
-        if not model or not res_id:
-            raise ValidationError('Invalid model, id')
         comment_vals = {
-            'body': values['body'], 'model': model,
-            'res_id': res_id, 'message_type': datMessage,
-            'subtype_id': values['subtype_id'],
+            'body': values['body'],
+            'model': values['res_model'],
+            'res_id': values['res_id'],
+            'message_type': datMessage,
             'email_from': 'admin@example.com'
         }
+        parent_id = values.get('parent_id')
+        if not parent_id:
+            comment_vals['subtype_id'] = values['subtype_id']
+        else:
+            parent_id = int(parent_id)
+            comment_vals['parent_id'] = parent_id
         res = comment_model.create(comment_vals)
-        note_vals = {
-            'res_model': model,
-            'res_id': res_id
-        }
-        note = req_env['notification'].add_notification(note_vals)
         values['create_date'] = res.create_date
-        values['user'] = {'name': req_env.user.name, 'id':req_env.user.id}
-        record = req_env[model].search([('id', '=', res_id)])
-        audience = record.get_audience()
+        values['user'] = {'name': req_env.user.name, 'id': req_env.user.id}
+
         res = {
-            'data':values,
-            'events':[{
+            'data': values,
+            'events': [{
                 'name': 'comment_received',
                 'data': values,
-                'audience': audience
             }]
         }
         return res
