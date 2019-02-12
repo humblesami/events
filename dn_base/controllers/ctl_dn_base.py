@@ -69,11 +69,16 @@ class Controller(http.Controller):
                 'res_id': res_id,
                 'audience': audience
             }
-            req_env['notification'].add_notification(notification_values)
 
-            events = res.get('events')
-            for event in events:
-                event['audience'] = audience
+            notification = req_env['notification'].add_notification(notification_values)
+            notification_values['content'] = notification.notification_type_id.content
+
+            if notification.is_parent:
+                notification_values['is_parent'] = notification.is_parent
+            events = [
+                {'name': res['name'], 'data': res['data'], 'audience': audience },
+                {'name':'notification_received', 'data':notification_values, 'audience': audience}
+            ]
             if not events:
                 raise ValidationError('Invalid events')
             res = ws_methods.emit_event(events)
@@ -222,10 +227,10 @@ class Controller(http.Controller):
             i = 0
             for com in comments:
                 user = com.create_uid
-                if not user.mp_user_id.id:
+                if not user.id:
                     ar_comments[i]['is_own'] = 1
 
-                ar_comments[i]['user'] = {'name': user.name, 'id': user.mp_user_id.id}
+                ar_comments[i]['user'] = {'name': user.name, 'id': user.id}
                 ar_children = []
                 if com.child_ids:
                     child_ids = com.child_ids.sorted(key=lambda p: (p.create_date))
@@ -233,7 +238,7 @@ class Controller(http.Controller):
                     j = 0
                     for child_com in child_ids:
                         user1 = child_com.create_uid
-                        ar_children[j]['user'] = {'name': user1.name, 'id': user1.mp_user_id.id}
+                        ar_children[j]['user'] = {'name': user1.name, 'id': user1.id}
                         j = j + 1
                 ar_comments[i]["children"] = ar_children
                 i = i + 1

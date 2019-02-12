@@ -111,13 +111,9 @@ class PointAnnotation(models.Model):
         if topic_name:
             res['meta']['topic'] = topic_name
         res = {
-            'events':[
-                {
-                    'name':'point_comment_received',
-                    'data':res,
-                    'audience':meeting.get_audience()
-                }
-            ]
+            'name':'point_comment_received',
+            'data':res,
+            'audience':meeting.get_audience()
         }
         return res
 

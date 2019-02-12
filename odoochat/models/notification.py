@@ -14,7 +14,7 @@ class NotificationType(models.Model):
 
 class Notification(models.Model):
     _name = 'notification'
-    notification_type_id = fields.Many2one('notification_type', ondelete='cascade')
+    notification_type_id = fields.Many2one('notification.type', ondelete='cascade')
     res_id = fields.Integer()
     parent_id = fields.Many2one('notification', ondelete='cascade')
     is_parent = fields.Integer()
@@ -56,6 +56,7 @@ class Notification(models.Model):
 
         notification_type_id = notification_type.id
 
+        notification = False
         if parent_res_id:
             parent_notification_type_id = req_env['notification.type'].search([('name', '=', parent_res_model)])
             if parent_notification_type_id:
@@ -63,9 +64,10 @@ class Notification(models.Model):
                 notification_type_id = parent_notification_type.id
             parent_notification_id = self.add_notification_item(parent_res_id, audience, parent_notification_type_id)
             parent_notification_id.is_parent = 1
-            self.add_notification_item(res_id, audience, notification_type_id, parent_notification_id)
+            notification = self.add_notification_item(res_id, audience, notification_type_id, parent_notification_id)
         else:
-            self.add_notification_item(res_id, audience, notification_type_id)
+            notification = self.add_notification_item(res_id, audience, notification_type_id)
+        return notification
 
     def add_notification_item(self, res_id, audience, notification_type_id, parent_id=None):
         req_env = self.env
@@ -95,7 +97,7 @@ class Notification(models.Model):
                     'notification_id': notification.id
                 }
                 req_env['notification.counter'].create(values)
-        return notification.id
+        return notification
 
     def update_counter(self, params):
         req_env = self.env

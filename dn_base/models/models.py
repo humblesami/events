@@ -31,11 +31,8 @@ class MyMail(models.Model):
         values['user'] = {'name': req_env.user.name, 'id': req_env.user.id}
 
         res = {
+            'name': 'comment_received',
             'data': values,
-            'events': [{
-                'name': 'comment_received',
-                'data': values,
-            }]
         }
         return res
 
