@@ -37,7 +37,7 @@ class Signature(http.Controller):
                     draw_signature=self.get_auto_sign(sign)
             return ws_methods.http_response('', {"signature": draw_signature})
         except:
-            return ws_methods.handle
+            return ws_methods.handle()
 
     @http.route('/e-sign/save_signature', csrf=False,auth='public')
     def save_signature(self, **kw):
@@ -81,6 +81,12 @@ class Signature(http.Controller):
                     dt=kw['date']
                     binary_signature = self.get_auto_sign(sign,dt)
                     sign.with_context({"doc": doc}).write({'draw_signature': binary_signature})
+                if kw['type'] == "text":
+                    text=kw['text']
+                    binary_signature = self.get_sign_text(sign,text)
+                    sign.with_context({"doc": doc}).write({'draw_signature': binary_signature})
+
+
 
             doc.embed_signatures()
             if not doc:
@@ -91,7 +97,7 @@ class Signature(http.Controller):
 
             return ws_methods.http_response('', {"pdf_binary": pdf,"signature":binary_signature, "doc_data":doc_data})
         except:
-            return ws_methods.handle
+            return ws_methods.handle()
 
     @http.route('/e-sign/delete_signature', csrf=False,auth='public')
     def delete_signature(self, **kw):
@@ -121,7 +127,7 @@ class Signature(http.Controller):
 
             return ws_methods.http_response('', {"pdf_binary": pdf,"doc_data":doc_data})
         except:
-            return ws_methods.handle
+            return ws_methods.handle()
 
 
     @http.route('/e-sign/get_doc_data', csrf=False,auth='public')
@@ -155,7 +161,7 @@ class Signature(http.Controller):
             return ws_methods.http_response('', {"pdf_binary": pdf,"users":users,"doc_data":doc_data,"isAdmin":is_admin})
 
         except:
-            return ws_methods.handle
+            return ws_methods.handle()
 
     @http.route('/e-sign/save_sign_data', csrf=False,auth='public')
     def save_sign_data(self, **kw):
@@ -191,7 +197,7 @@ class Signature(http.Controller):
                     return ws_methods.http_response("Select user or enter email and name")
 
                 obj={'document_id':s['document_id'],'user_id':s['user_id'],
-                                 'email': s['email'],'name': s['name'],
+                                 'email': s['email'],'name': s['name'],'field_name': s['field_name'],
                                  'left':s['left'],'top':s['top'],'page':s['page'],
                                  'height':s['height'],'width':s['width'],'zoom': zoom,'type': s['type'],'token':token}
                 doc.signature_ids=[(0,0,obj)]
@@ -217,7 +223,7 @@ class Signature(http.Controller):
             return ws_methods.http_response('', {"pdf_binary": pdf,"doc_data":doc_data})
 
         except:
-            return ws_methods.handle
+            return ws_methods.handle()
 
     # Public signature
     @http.route(['/e_sign/sign/<string:model>/<string:token>'],
@@ -294,6 +300,31 @@ class Signature(http.Controller):
         binary_signature = binary_signature.decode('utf-8')
         return  binary_signature
 
+    def get_sign_text(self,sign,text):
+        curr_dir = os.path.dirname(__file__)
+        pth = curr_dir.replace('controllers', 'doc_signs')
+        font_dir = curr_dir.replace('controllers', 'static')
+        font = ImageFont.truetype(font_dir + "/FREESCPT.TTF", 200)
+
+
+        sz = font.getsize(text)
+        sz = (sz[0]+50, sz[1])
+        # if sz[0] < 100:
+        #     sz=(150,50)
+        img = Image.new('RGB', sz, (255, 255, 255))
+        d = ImageDraw.Draw(img)
+
+        d.text((40, 0), text, (0, 0, 0), font=font)
+
+        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+        img.save(img_path)
+
+        res = open(img_path, 'rb')
+        read = res.read()
+        binary_signature = base64.encodebytes(read)
+        binary_signature = binary_signature.decode('utf-8')
+        return  binary_signature
+
     def get_doc_data(self, doc, token=False):
         doc_data = []
         req_env = http.request.env
@@ -308,7 +339,8 @@ class Signature(http.Controller):
             doc_data.append(
                 {"id": s.id, "name": s.user_id.name or s.name, "left": s.left, "top": s.top, "page": s.page,
                  "signed": signed, "zoom": s.zoom, "width": s.width, "height": s.height, "my_record": my_record,
-                 "type": s.type})
+                 "type": s.type,"field_name": s.field_name})
+
 
 
         return doc_data

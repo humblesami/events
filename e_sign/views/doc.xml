@@ -79,7 +79,7 @@
                 </div>
             <div class="PdfButtonWrapper" >
               <div id="save-doc-data" groups="dn_base.group_dn_app_manager" style="float:left" disabled="true" class="btn btn-primary  save_doc_data">
-                Save
+                Select User
             </div>
             <div id="signature-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns sign_psition">
                 Signature
@@ -90,6 +90,9 @@
 
             <div id="date-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns date_psition">
                 Date
+            </div>
+                <div id="text-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns text_psition">
+                Text
             </div>
             </div>
 

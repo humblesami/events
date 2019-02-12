@@ -39,6 +39,9 @@ class Signature(models.Model):
     token = fields.Char(string="Token", readonly=True)
     email = fields.Char(string="Email")
     type = fields.Char(string="Type")
+    field_name = fields.Char(string="Field Name")
+    text = fields.Char(string="text")
+
 
     def get_image_path(self):
         return  ''
