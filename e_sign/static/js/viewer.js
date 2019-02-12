@@ -410,6 +410,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
         });
         save_btn.click(function(e){
             var arr=[];
+            var isEmpty=false;
 //            var work_flow_enabled=$('.e_sign_wrk_flow input')[0].checked;
             var user=dropdown.val();
             var email =input_email[1].value;
@@ -445,7 +446,8 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                     type="text";
                     field_name=sign.find('input').val();
                     if(field_name==""){
-                        alert("Field name is empty!!!");
+                        isEmpty=true;
+
                         return;
                     }
                 }
@@ -453,6 +455,10 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                 var obj = {document_id:doc_id,token:token, user_id:user,field_name:field_name, email:email, name:name, left:percent_left,top:percent_top,page:pg,height:h,width:w,zoom:canvas.width,type:type };
                 arr.push(obj);
                 });
+                if(isEmpty){
+                    alert("Field name is empty!!!");
+                    return;
+                }
                 if(arr.length!=0){
                     req_url = '/e-sign/save_sign_data';
 
