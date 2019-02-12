@@ -52,11 +52,28 @@ class Controller(http.Controller):
             args = kw.get('args')
             model = args.get('model')
             method = args.get('method')
+
             if not model or not method:
                 return ws_methods.http_response('Please provide valid args')
+
+            res_model = values['res_model']
+            res_id = values['res_id'] = int(values['res_id'])
             method_to_call = getattr(req_env[model], method)
             res = method_to_call(values)
+            if values.get('no_notify'):
+                return ws_methods.http_response('', 'done')
+
+            audience = req_env[res_model].search([('id', '=', res_id)]).get_audience()
+            notification_values = {
+                'res_model': res_model,
+                'res_id': res_id,
+                'audience': audience
+            }
+            req_env['notification'].add_notification(notification_values)
+
             events = res.get('events')
+            for event in events:
+                event['audience'] = audience
             if not events:
                 raise ValidationError('Invalid events')
             res = ws_methods.emit_event(events)
@@ -64,26 +81,6 @@ class Controller(http.Controller):
                 return  ws_methods.http_response('', 'done')
             else:
                 return ws_methods.http_response(model + '.'+method+' processed by Odoo server but '+ res)
-        except:
-            return ws_methods.handle()
-
-    @http.route('/on_socket_server_restart', type='http', csrf=False, auth='public', cors='*')
-    def socket_request_http(self, **kw):
-        try:
-            kw = json.loads(kw['data'])
-            auth = kw.get('auth')
-            if not auth:
-                auth = kw
-            uid = ws_methods.check_auth(auth)
-            if not uid:
-                return ws_methods.not_logged_in()
-            req_env = http.request.env
-
-            res = ws_methods.emit_event(events)
-            if res == 'done':
-                return ws_methods.http_response('', 'done')
-            else:
-                return ws_methods.http_response(' processed by Odoo server but ' + res)
         except:
             return ws_methods.handle()
 
@@ -202,11 +199,6 @@ class Controller(http.Controller):
         temp = self.get_comments(kw)
         return temp
 
-    @http.route('/get-comments-nonhttp', type="json", csrf=False, auth='none', cors='*')
-    def get_comments_json(self, **kw):
-        req_body = http.request.jsonrequest
-        return self.get_comment(req_body)
-
     def get_comments(self, values):
         try:
             uid = ws_methods.check_auth(values)
@@ -215,8 +207,13 @@ class Controller(http.Controller):
             req_env = http.request.env
             if 'data' in values:
                 values = values['data']
-            filters = [('res_id', '=', values['res_id']), ('parent_id', '=', False),
-                       ('model', '=', values['model']), ('create_uid', '!=', False)]
+            res_id = values.get('res_id')
+            model = values.get('res_model')
+            if not model:
+                model = values.get('model')
+            if not res_id or not model:
+                return ws_methods.http_response('Invalid model or id')
+            filters = [('res_id', '=', res_id), ('model', '=', model), ('parent_id', '=', False), ('create_uid', '!=', False)]
             if uid != 1:
                 filters.append(('create_uid', '!=', 1))
             comments = req_env['mail.message'].search(filters, order='create_date desc')
@@ -251,7 +248,7 @@ class Controller(http.Controller):
 
     @http.route('/comment/add', type='http', csrf=False, auth='public', cors='*')
     def save_comment_http(self, **kw):
-        res = save_comment(kw)
+        res = self.save_comment(kw)
         return res['data']
 
     @http.route('/comment/add-json', type="json", csrf=False, auth='public', cors='*')
@@ -266,7 +263,7 @@ class Controller(http.Controller):
         values = kw.get('req_data')
         if not values:
             values = kw
-        res = save_comment(kw)
+        res = self.save_comment(values)
         return res['data']
 
     @http.route('/comment/delete', type='http', csrf=False, auth='none', cors='*')
