@@ -1,6 +1,7 @@
 $('.modal-dialog:last').removeClass('modal-lg');
 $('.modal-footer:last').find('button:not(:last)').remove();
 $(function(){
+
     var detail_btn = $('.detail_btn:first');
     var is_attendee = $('.is_attendee:first').html();
     if(is_attendee && is_attendee == 'yes')
@@ -13,7 +14,7 @@ $(function(){
     }
     else
     {
-        meeting_link.remove();
+        detail_btn.remove();
     }
 
     detail_btn.click(function(){

@@ -61,8 +61,6 @@ odoo.define('dn_base.dialog', function (require) {
 odoo.define('dn_base.messages', function (require) {
     var SystrayMenu = require('web.SystrayMenu');
     var Widget = require('web.Widget');
-    var web_client = require('web.web_client');
-
 
      var IconMenu = Widget.extend({
         template:'dnbase.icon.message',
