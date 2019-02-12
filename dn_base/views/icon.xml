@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-   <templates>
-            <t t-name="Icon">
-                <li>
-                    <a class="customClick" data-action="laser_pointer" aria-expanded="false" title="Laser Pointer">
-                        <i class="fa fa-crosshairs"/>
-                    </a>
-                    <!--<img id='cursor_chooser'   src='cursor.png' style='cursor:pointer;height:20px;width:20px'/>-->
-                    <canvas id="myCanvas" width="10" height="10" style='display:none' />
-                </li>
-            </t>
-        </templates>
+<templates>
+    <t t-name="Icon">
+        <li>
+            <a class="customClick" data-action="laser_pointer" aria-expanded="false" title="Laser Pointer">
+                <i class="fa fa-crosshairs"/>
+            </a>
+            <!--<img id='cursor_chooser'   src='cursor.png' style='cursor:pointer;height:20px;width:20px'/>-->
+            <canvas id="myCanvas" width="10" height="10" style='display:none' />
+        </li>
+    </t>
+
+
+    <t t-name="dnbase.icon.message">
+        <li>
+            <a class="customClick" data-action="open_messages" aria-expanded="false" title="Messages">
+                <i class="fa fa-comments"/>
+            </a>
+
+        </li>
+    </t>
+</templates>
