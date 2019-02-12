@@ -243,7 +243,7 @@ class Controller(http.Controller):
 
     @http.route('/delallcomments', type='http', csrf=False, auth='public', cors='*')
     def delcomments(self, **kw):
-        #http.request.env['mail.message'].sudo().search([('model', '=', 'calendar.event')]).unlink()
+        http.request.env['mail.message'].sudo().search([('model', '=', 'calendar.event')]).unlink()
         return ws_methods.http_response('', 'Done')
 
     @http.route('/comment/add', type='http', csrf=False, auth='public', cors='*')

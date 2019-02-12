@@ -27,7 +27,7 @@ class Notification(models.Model):
         uid = self.env.user.id
         name = params.get('res_model')
         res_id = params.get('res_id')
-        sql = 'select name res_model,content,res_id,n.id,counter from notification_type t'
+        sql = 'select name res_model,content,res_id,n.id,is_parent,counter from notification_type t'
         sql += ' join notification n on n.notification_type_id=t.id'
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and n.parent_id is null and user_id='+str(uid)
@@ -102,19 +102,19 @@ class Notification(models.Model):
         uid = req_env.user.id
         res_id = params.get('res_id')
         res_model = params.get('res_model')
-        notification_type = req_env['notification_type'].search([('name', '=', res_model)])
+        notification_type = req_env['notification.type'].search([('name', '=', res_model)])
         notification_type_id = notification_type[0].id
         filters = [('res_id', '=', res_id), ('notification_type_id', '=', notification_type_id)]
         notification = req_env['notification'].search(filters)[0]
         filters = [('user_id', '=', uid), ('notification_id', '=', notification.id)]
-        notification_counter = req_env['notification'].search(filters)
+        notification_counter = req_env['notification.counter'].search(filters)
         counter = notification_counter.counter
         notification_counter.counter = 0
 
         if notification.parent_id:
             notification = notification.parent_id
             filters = [('user_id', '=', uid), ('notification_id', '=', notification.id)]
-            notification_counter = req_env['notification'].search(filters)
+            notification_counter = req_env['notification.counter'].search(filters)
             notification_counter.counter -= counter
 
 class NotificationCounter(models.Model):

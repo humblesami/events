@@ -284,8 +284,12 @@ class meeting(http.Controller):
 
             id = int(values["id"])
             date_value = dn_dt.nowtostr()
-            filters = [('id', '=', id), ('publish', '=', True)]
+            filters = [('id', '=', id)]
             meeting = req_env['calendar.event'].search(filters)
+            if not meeting:
+                return ws_methods.http_response('', {'message': 'Meeting exists no more'})
+            if not meeting.publish:
+                return ws_methods.http_response('',{'message':'Meeting has been unpublished'})
             props = ['id', 'start', 'stop', 'conference_status', 'duration', 'zip', 'video_call_link',
                      'conference_bridge_number', 'pin', 'exectime',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
