@@ -34,6 +34,40 @@ socket_server = {
 
 class Controller(http.Controller):
 
+    @http.route('/messege_request', type='http', csrf=False, auth='public', cors='*')
+    def messege_request(self, **kw):
+        try:
+            kw = json.loads(kw['data'])
+            auth = kw.get('auth')
+            if not auth:
+                auth = kw
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+            req_env = http.request.env
+            values = kw.get('req_data')
+            if not values:
+                values = kw
+            values['uid'] = uid
+            args = kw.get('args')
+            model = args.get('model')
+            method = args.get('method')
+
+            if not model or not method:
+                return ws_methods.http_response('Please provide valid args')
+
+            method_to_call = getattr(req_env[model], method)
+            res = method_to_call(values)
+
+            events = res.get('events')
+            res = ws_methods.emit_event(events)
+            if res == 'done':
+                return ws_methods.http_response('', 'done')
+            else:
+                return ws_methods.http_response(model + '.' + method + ' processed by Odoo server but ' + res)
+        except:
+            return ws_methods.handle()
+
     @http.route('/socket_server_request', type='http', csrf=False, auth='public', cors='*')
     def socket_request_http(self, **kw):
         try:
@@ -248,7 +282,7 @@ class Controller(http.Controller):
 
     @http.route('/delallcomments', type='http', csrf=False, auth='public', cors='*')
     def delcomments(self, **kw):
-        http.request.env['mail.message'].sudo().search([('model', '=', 'calendar.event')]).unlink()
+        #http.request.env['mail.message'].sudo().search([('model', '=', 'calendar.event')]).unlink()
         return ws_methods.http_response('', 'Done')
 
     @http.route('/comment/add', type='http', csrf=False, auth='public', cors='*')
