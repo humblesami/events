@@ -1,3 +1,5 @@
+import json
+
 import odoo
 import string
 import random
@@ -84,7 +86,7 @@ class auth(http.Controller):
             except:
                 return ws_methods.handle()
             data = {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': user_photo,'groups':groups }
-            res = get_user_data(data)
+            res = self.get_user_data(data)
             if type(res) is str:
                 return ws_methods.http_response(res)
             else:
@@ -129,15 +131,6 @@ class auth(http.Controller):
         uid = ws_methods.authenticate(values)
         return uid
 
-    @http.route('/ws/note', type="http", csrf=False,  auth='public', cors='*')
-    def note(self, **kw):
-        try:
-            request = http.request
-            res = request.env['dn_base.notification.status'].get_my_notifications()
-            return res
-        except:
-            ws_methods.handle()
-
     @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
     def verifyTokenHttp(self, **kw):
         try:
@@ -147,7 +140,7 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
-                res = get_user_data(values)
+                res = self.get_user_data(values)
                 if type(res) is str:
                     return ws_methods.http_response(res)
                 else:
@@ -155,78 +148,83 @@ class auth(http.Controller):
         except:
             return ws_methods.handle()
 
-def get_user_data(values):
-    try:
-        request = http.request
-        req_env = request.env
-        uid = values['id']
+    @http.route('/on_socket_server_restart', type='http', csrf=False, auth='public', cors='*')
+    def socket_request_http(self, **kw):
+        try:
+            values = json.loads(kw['data'])
+            uid = self.verifyToken(values)
+            if type(uid) is not int:
+                return ws_methods.http_response(uid)
+            else:
+                values['uid'] = uid
+                values['avoid_emit'] = 1
+                res = self.get_user_data(values)
+                return ws_methods.http_response('', res)
+        except:
+            return ws_methods.handle()
 
-        filters = [('user_id', '=', uid), ('counter', '>', 0)]
-        note_statuses = req_env['dn_base.notification.status'].sudo().search(filters)
-        props = ['counter', 'user_id', 'notification_id']
-        status_list = ws_methods.objects_list_to_json_list(note_statuses, props)
-        notificationList = ws_methods.my_notifications_on_record()
-        for note in status_list:
-            filters = [('id', '=', note['notification_id'].id), ('parent_id', '=', False), ('parent_model', '=', False)]
-            note_data = req_env['dn_base.notification'].search(filters, order='create_date desc')
-            if note_data:
-                props = ['id', 'content', 'res_model', 'res_id', 'parent_model', 'parent_id', 'client_route']
-                notification_object = ws_methods.object_to_json_object(note_data[0], props)
-                notification_object['counter'] = note['counter']
-                notification_object['user_id'] = note['user'].id
-                notificationList.append(notification_object)
+    def get_user_data(self, values):
+        try:
+            request = http.request
+            req_env = request.env
+            uid = values['id']
 
-        friendIds = []
-        friendList = {}
-        unseenMessages = 0
-        partner_id = req_env.user.partner_id.id
-        filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
-        meetings = request.env['calendar.event'].search(filters)
+            method_to_call = getattr(req_env['notification'], 'getMyNotifications')
+            notificationList = method_to_call(values)
 
-        base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
-        image_path1 = base_url + '/dn/content_file/res.users/'
-        image_path2 = '/image_small/' + values['db'] + '/' + values['token']
+            friendIds = []
+            friendList = {}
+            unseenMessages = 0
+            partner_id = req_env.user.partner_id.id
+            filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
+            meetings = request.env['calendar.event'].search(filters)
 
-        # meetingList = []
-        for obj in meetings:
-            attendees = []
-            for partner in obj.partner_ids:
-                obj_id = partner.user_id.id
-                if obj_id != uid and obj_id not in friendIds:
-                    friendObj = partner.user_id
-                    friend = {
-                        'id': friendObj.id,
-                        'name': friendObj.name,
-                        'photo': image_path1 + str(friendObj.id) + image_path2
-                    }
-                    if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
-                            'meeting_point.group_meeting_admin'):
-                        friend['type'] = 'staff'
-                    else:
-                        friend['type'] = 'director'
+            base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
+            image_path1 = base_url + '/dn/content_file/res.users/'
+            image_path2 = '/image_small/' + values['db'] + '/' + values['token']
 
-                    db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
-                    friend['unseen'] = req_env['odoochat.messages'].sudo().search_count(db_filters)
-                    unseenMessages += friend['unseen']
+            # meetingList = []
+            for obj in meetings:
+                attendees = []
+                for partner in obj.partner_ids:
+                    obj_id = partner.user_id.id
+                    if obj_id != uid and obj_id not in friendIds:
+                        friendObj = partner.user_id
+                        friend = {
+                            'id': friendObj.id,
+                            'name': friendObj.name,
+                            'photo': image_path1 + str(friendObj.id) + image_path2
+                        }
+                        if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
+                                'meeting_point.group_meeting_admin'):
+                            friend['type'] = 'staff'
+                        else:
+                            friend['type'] = 'director'
 
-                    friendList[friend['id']] = friend
-                    friendIds.append(friendObj.id)
-                attendees.append(partner.user_id.id)
+                        db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
+                        friend['unseen'] = req_env['odoochat.message'].search_count(db_filters)
+                        unseenMessages += friend['unseen']
 
-            # event = {
-            #     'id': obj.id,
-            #     'name': obj.name,
-            #     'attendees': attendees
-            # }
-            # meetingList.append(event)
+                        friendList[friend['id']] = friend
+                        friendIds.append(friendObj.id)
+                    attendees.append(partner.user_id.id)
 
-        data_for_ws = {'notifications': notificationList, 'friends': friendList, 'unseen': unseenMessages, 'user': values}
-        data_for_socket = [{'name': 'verified', 'audience': [uid], 'data': data_for_ws}]
+                # event = {
+                #     'id': obj.id,
+                #     'name': obj.name,
+                #     'attendees': attendees
+                # }
+                # meetingList.append(event)
 
-        res = ws_methods.emit_event(data_for_socket)
-        if res == 'done':
-            return data_for_ws
-        else:
-            return res
-    except:
-        raise
+            data_for_ws = {'notifications': notificationList, 'friends': friendList, 'unseen': unseenMessages, 'user': values}
+            data_for_socket = [{'name': 'verified', 'audience': [uid], 'data': data_for_ws}]
+
+            if values.get('avoid_emit'):
+                return data_for_ws
+            res = ws_methods.emit_event(data_for_socket)
+            if res == 'done':
+                return data_for_ws
+            else:
+                return res
+        except:
+            raise

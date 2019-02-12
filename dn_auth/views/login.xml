@@ -32,6 +32,7 @@
         <menuitem
                 id="menu_login_info"
                 name="Login Info"
+                parent="dn_base.dev_menu"
                 action="action_login_info"
                 groups="base.group_system"
         />

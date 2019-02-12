@@ -11,27 +11,27 @@ odoo.define('dn_base.Abstract', function (require) {
         },
         bind_events: function () {
             this._super.apply(this, arguments);
-            window.onerror = function (message, file, line, col, error) {
-                try
-                {
-                    var traceback = error ? error.stack : '';
-                    console.log(message);
-                    console.log(file + ':' + line);
-                    //if(odoo.dev_mode)
-                        console.log("\n\n", traceback);
-                    bootbox.confirm("There is a dev issue "+message+". Please click ok to report it", function(dr){
-                        if(dr)
-                        {
-                            console.log("Reported");
-                        }
-                    });
-                }
-                catch(er)
-                {
-                    console.log(er);
-                }
-                return true;
-            };
+//            window.onerror = function (message, file, line, col, error) {
+//                try
+//                {
+//                    var traceback = error ? error.stack : '';
+//                    console.log(message);
+//                    console.log(file + ':' + line);
+//                    //if(odoo.dev_mode)
+//                        console.log("\n\n", traceback);
+//                    bootbox.confirm("There is a dev issue "+message+". Please click ok to report it", function(dr){
+//                        if(dr)
+//                        {
+//                            console.log("Reported");
+//                        }
+//                    });
+//                }
+//                catch(er)
+//                {
+//                    console.log(er);
+//                }
+//                return true;
+//            };
         }
 
     });

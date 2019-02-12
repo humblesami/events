@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-odoochat_messages,odoochat messages,model_odoochat_messages,base.group_user,1,1,1,1
+odoochat_messages,odoochat messages,model_odoochat_message,base.group_user,1,0,1,0
+"notification","notification","model_notification","base.group_user",1,0,1,0
+"notification_type","notification type","model_notification_type","base.group_user",1,0,1,0
+"notification_counter","notification type","model_notification_counter","base.group_user",1,1,1,0

@@ -3,24 +3,41 @@ from odoo import models, api, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 
-from odoo.addons.mail.models.mail_message import Message
-
-class MyMail(Message):
-
-    @api.multi
-    def unlink(self):
-        if self.env.uid != 1 and not self.env.user.has_group('dn_base.group_dn_app_manager'):
-            for rec in self:
-                if rec.env.uid == rec.create_uid.id:
-                    res = super(Message, rec).sudo().unlink()
-                else:
-                    raise ValidationError("Can delete own comments only")
-            if not res:
-                raise ValidationError("Comments not found")
-            return res
+class MyMail(models.Model):
+    _inherit = 'mail.message'
+    def post_comment(self, values):
+        req_env = self.env
+        if 'message_type' in values:
+            datMessage = values['message_type']
         else:
-            res = super(Message, self).unlink()
-            return res
+            datMessage = 'comment'
+        comment_model = req_env['mail.message']
+        #with_context(message_create_from_mail_mail=True).
+        comment_vals = {
+            'body': values['body'],
+            'model': values['res_model'],
+            'res_id': values['res_id'],
+            'message_type': datMessage,
+            'email_from': 'admin@example.com'
+        }
+        parent_id = values.get('parent_id')
+        if not parent_id:
+            comment_vals['subtype_id'] = values['subtype_id']
+        else:
+            parent_id = int(parent_id)
+            comment_vals['parent_id'] = parent_id
+        res = comment_model.create(comment_vals)
+        values['create_date'] = res.create_date
+        values['user'] = {'name': req_env.user.name, 'id': req_env.user.id}
+
+        res = {
+            'data': values,
+            'events': [{
+                'name': 'comment_received',
+                'data': values,
+            }]
+        }
+        return res
 
 class Empty(models.Model):
     _name = "dn_base.empty"

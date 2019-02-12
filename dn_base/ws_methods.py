@@ -15,65 +15,6 @@ def send_mail(mesgtosend):
     recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
-def my_notifications_on_record():
-    sql = 'select sum(counter) counter, parent_id, parent_model, client_route, content from dn_base_notification n '
-    sql += 'join dn_base_notification_status s on s.notification_id = n.id '
-    sql += 'where user_id = '+ str(request.env.user.id)+' AND parent_id is not null AND parent_model is not null'
-    sql += ' group by parent_id, parent_model, client_route, content having sum(counter) >0'
-    res = execute_read(sql)
-    return res
-
-def addNotification(notify_data, targets):
-    req_env = request.env
-    filters = [('res_model','=',notify_data.get('res_model')),('res_id','=',notify_data.get('res_id'))]
-    notify_res = req_env['dn_base.notification'].search(filters)
-    props = ['id','content', 'res_model', 'res_id', 'client_route', 'parent_model', 'parent_id']
-    notificationList = objects_list_to_json_list(notify_res, props)
-    if len(notificationList) > 0:
-        notification = notificationList[0]
-        if notification:
-            notification['users'] = []
-            for id in targets:
-                filter = [('notification_id', '=', notification['id']), ('user_id', '=', id)]
-                note_status = req_env['dn_base.notification.status'].sudo().search(filter)
-                if not note_status:
-                    req_env['dn_base.notification.status'].create({
-                        "notification_id": notification['id'],
-                        "user_id": id,
-                        "counter": 1
-                    })
-                else:
-                    note_status.counter += 1
-    else:
-        notification_data = {
-            "content": notify_data.get('content'),
-            "res_model": notify_data.get('res_model'),
-            "res_id": notify_data.get('res_id'),
-            "client_route": notify_data.get('client_route'),
-        }
-        parent_model = notify_data.get('parent_model')
-        if parent_model:
-            notification_data['parent_model'] = notify_data.get('parent_model')
-
-        parent_id = notify_data.get('parent_id')
-        if parent_id:
-            notification_data['parent_id'] = notify_data.get('parent_id')
-
-        notification_obj = req_env['dn_base.notification'].create(notification_data)
-
-        props = ['id', 'content', 'res_model', 'res_id', 'client_route', 'parent_model', 'parent_id']
-        notification = object_to_json_object(notification_obj, props)
-
-        for id in targets:
-            if notify_data.get('user_id') != id:
-                req_env['dn_base.notification.status'].create({
-                    "notification_id" : notification['id'],
-                    "user_id" : id,
-                    "counter" : 1
-                })
-
-    return notification
-
 def mfile_url(model, field, id):
     conf = request.conf
     res = model + '/' + str(id) + '/' + field + '/' + conf['db'] + '/' + conf['token']
@@ -298,12 +239,26 @@ def emit_event(data, req_url=None):
         data = json.dumps(data)
         if not req_url:
             req_url = '/odoo_event'
-        url = socket_server['url']+req_url+'?data='+data
-        res = requests.get(url)
-        res = res._content.decode("utf-8")
+        url = socket_server['url'] + req_url + '?data=' + data
+        try:
+            r = requests.get(socket_server['url'])
+            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            res = socket_server['url'] + " is not available"
+            print(res)
+        except requests.exceptions.HTTPError:
+            res = 'httperror'
+            print(res)
+        else:
+            res = requests.get(url)
+            res = res._content.decode("utf-8")
+            return res
         return res
+
     except:
-        raise
+        res = 'socket request failed because ' + str(sys.exc_info())
+        print(res)
+        return res
 
 def add_user_to_socket_list(user_data):
     try:
