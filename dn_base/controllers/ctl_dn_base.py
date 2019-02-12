@@ -96,8 +96,9 @@ class Controller(http.Controller):
             res = method_to_call(values)
             if values.get('no_notify'):
                 return ws_methods.http_response('', 'done')
-
-            audience = req_env[res_model].search([('id', '=', res_id)]).get_audience()
+            audience = res.get('audience')
+            if not audience:
+                audience = req_env[res_model].search([('id', '=', res_id)]).get_audience()
             notification_values = {
                 'res_model': res_model,
                 'res_id': res_id,

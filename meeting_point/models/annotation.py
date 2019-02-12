@@ -56,24 +56,21 @@ class PointAnnotation(models.Model):
 
     def save_comment_point(self, values):
         req_env = self.env
-        uid = req_env.user.id
         point = values.get('point')
-        comment = values.get('comment')
+        comment = point.get('comment')
+        if not point or not comment:
+            raise raise_dn_model_error('Please provide comment and point')
         doc_name = values.get('doc_id')
-        arr = doc_name.split('.')[0]
-        doc_id = arr.split('-')[1]
-        parent_id = int(doc_id)
+        #arr = doc_name.split('.')[0]
 
-        point_id = req_env.search([('uuid', '=', point['uuid'])])
+        point_id = req_env['annotation.point'].search([('uuid', '=', point['uuid'])])
         new_point = False
         if not point_id:
-            doc_name = values['doc_id']
             if not doc_name:
                 raise raise_dn_model_error('Invalid Document Id')
             point['doc_name'] = doc_name
-            point_id = req_env['annotation.point.comments'].create(point)
+            point_id = req_env['annotation.point'].create(point)
             new_point = True
-
 
         comment['point_id'] = point_id.id
         req_env['annotation.point.comments'].create(comment)
@@ -113,7 +110,7 @@ class PointAnnotation(models.Model):
         res = {
             'name':'point_comment_received',
             'data':res,
-            'audience':meeting.get_audience()
+            'audience': meeting.get_audience()
         }
         return res
 
