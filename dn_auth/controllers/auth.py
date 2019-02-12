@@ -204,9 +204,9 @@ class auth(http.Controller):
                         db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
                         friend['unseen'] = req_env['odoochat.message'].search_count(db_filters)
                         unseenMessages += friend['unseen']
-
-                        friendList[friend['id']] = friend
-                        friendIds.append(friendObj.id)
+                        if friend['id'] is not int(uid):
+                            friendList[friend['id']] = friend
+                            friendIds.append(friendObj.id)
                     attendees.append(partner.user_id.id)
 
                 # event = {
