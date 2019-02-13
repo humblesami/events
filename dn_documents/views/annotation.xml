@@ -1,0 +1,131 @@
+<odoo>
+    <data>
+        <record id="view_annotation_doc" model="ir.ui.view">
+            <field name="name">annotation.doc.tree</field>
+            <field name="model">annotation.document</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="version"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_annotation_annotation" model="ir.ui.view">
+            <field name="name">annotation.annotation.tree</field>
+            <field name="model">annotation.annotation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="document_id"/>
+                    <field name="uid"/>
+                    <field name="type"/>
+                    <field name="page"/>
+                    <field name="uuid"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_annotation_rectangle" model="ir.ui.view">
+            <field name="name">annotation.rectangle.tree</field>
+            <field name="model">annotation.rectangle</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="document_id"/>
+                    <field name="uid"/>
+                    <field name="type"/>
+                    <field name="page"/>
+                    <field name="uuid"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_annotation_point" model="ir.ui.view">
+            <field name="name">annotation.point.tree</field>
+            <field name="model">annotation.point</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="document_id"/>
+                    <field name="uid"/>
+                    <field name="type"/>
+                    <field name="page"/>
+                    <field name="uuid"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_annotation_drawing" model="ir.ui.view">
+            <field name="name">annotation.drawing.tree</field>
+            <field name="model">annotation.drawing</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="document_id"/>
+                    <field name="uid"/>
+                    <field name="type"/>
+                    <field name="page"/>
+                    <field name="uuid"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_annotation_annotation" model="ir.actions.act_window">
+            <field name="name">Annotations</field>
+            <field name="res_model">annotation.annotation</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+        <record id="action_annotation_doc" model="ir.actions.act_window">
+            <field name="name">Documents</field>
+            <field name="res_model">annotation.document</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+        <record id="action_annotation_point" model="ir.actions.act_window">
+            <field name="name">Points</field>
+            <field name="res_model">annotation.point</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+        <record id="action_annotation_rectangle" model="ir.actions.act_window">
+            <field name="name">Rectangles</field>
+            <field name="res_model">annotation.rectangle</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+        <record id="action_annotation_drawing" model="ir.actions.act_window">
+            <field name="name">Drawings</field>
+            <field name="res_model">annotation.drawing</field>
+            <field name="view_mode">tree,kanban,form</field>
+        </record>
+
+        <menuitem
+                id="menu_annotation"
+                name="Annotations"
+                web_icon="dn_documents,static/menu_icons/icon.png"
+                groups="base.group_system"
+                action="action_annotation_annotation"
+        />
+
+        <menuitem
+                id="menu_annotation_doc"
+                name="Annotation Documents"
+                action="action_annotation_doc"
+                parent="menu_annotation"
+        />
+        <menuitem
+                id="menu_annotation_point"
+                name="Point Annotations"
+                action="action_annotation_point"
+                parent="menu_annotation"
+        />
+        <menuitem
+                id="menu_annotation_rectangle"
+                name="Rectangle Annotations"
+                action="action_annotation_rectangle"
+                parent="menu_annotation"
+        />
+        <menuitem
+                id="menu_annotation_drawing"
+                name="Drawing Annotations"
+                action="action_annotation_drawing"
+                parent="menu_annotation"
+        />
+    </data>
+</odoo>

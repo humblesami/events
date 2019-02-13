@@ -14,9 +14,10 @@ class NotificationType(models.Model):
 
 class Notification(models.Model):
     _name = 'notification'
-    notification_type_id = fields.Many2one('notification_type', ondelete='cascade')
+    notification_type_id = fields.Many2one('notification.type', ondelete='cascade')
     res_id = fields.Integer()
     parent_id = fields.Many2one('notification', ondelete='cascade')
+    parent_res_id = fields.Integer()
     is_parent = fields.Integer()
     _sql_constraints = [
         (
@@ -31,6 +32,40 @@ class Notification(models.Model):
         sql += ' join notification n on n.notification_type_id=t.id'
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and n.parent_id is null and user_id='+str(uid)
+        if name:
+            sql += " and name='"+name+"'"
+        if res_id:
+            sql += " and res_id="+str(res_id)
+        res = ws_methods.execute_read(sql)
+        return res
+
+    def getNotificationCount(self, params):
+        uid = self.env.user.id
+        name = params.get('res_model')
+        res_id = params.get('res_id')
+        sql = 'select counter from notification_type t'
+        sql += ' join notification n on n.notification_type_id=t.id'
+        sql += ' join notification_counter c on c.notification_id=n.id'
+        sql += ' where counter>0 and user_id='+str(uid)
+        if name:
+            sql += " and name='"+name+"'"
+        if res_id:
+            sql += " and res_id="+str(res_id)
+        res = ws_methods.execute_read(sql)
+        if len(res) > 0:
+            res = res[0]['counter']
+        else:
+            res = 0
+        return res
+
+    def getMyNotificationsOnRecord(self, params):
+        uid = self.env.user.id
+        name = params.get('res_model')
+        res_id = params.get('res_id')
+        sql = 'select name res_model,content,res_id,n.id,is_parent,counter from notification_type t'
+        sql += ' join notification n on n.notification_type_id=t.id'
+        sql += ' join notification_counter c on c.notification_id=n.id'
+        sql += ' where counter>0 and user_id='+str(uid)
         if name:
             sql += " and name='"+name+"'"
         if res_id:
@@ -56,18 +91,21 @@ class Notification(models.Model):
 
         notification_type_id = notification_type.id
 
+        notification = False
         if parent_res_id:
-            parent_notification_type_id = req_env['notification.type'].search([('name', '=', parent_res_model)])
-            if parent_notification_type_id:
-                parent_notification_type = req_env['notification.type'].create({"name": res_model})
-                notification_type_id = parent_notification_type.id
-            parent_notification_id = self.add_notification_item(parent_res_id, audience, parent_notification_type_id)
-            parent_notification_id.is_parent = 1
-            self.add_notification_item(res_id, audience, notification_type_id, parent_notification_id)
+            parent_notification_type = req_env['notification.type'].search([('name', '=', parent_res_model)])
+            if not parent_notification_type:
+                parent_notification_type = req_env['notification.type'].create({"name": parent_res_model})
+                parent_notification_type_id = parent_notification_type.id
+            else:
+                parent_notification_type_id = parent_notification_type[0].id
+            parent_notification = self.add_notification_item(parent_res_id, audience, parent_notification_type_id, 1)
+            notification = self.add_notification_item(res_id, audience, notification_type_id, parent_notification.id, parent_res_id)
         else:
-            self.add_notification_item(res_id, audience, notification_type_id)
+            notification = self.add_notification_item(res_id, audience, notification_type_id)
+        return notification
 
-    def add_notification_item(self, res_id, audience, notification_type_id, parent_id=None):
+    def add_notification_item(self, res_id, audience, notification_type_id, parent_notification_id=None, parent_res_id=None):
         req_env = self.env
         filters = [('res_id', '=', res_id), ('notification_type_id', '=', notification_type_id)]
         notification = req_env['notification'].search(filters)
@@ -76,8 +114,11 @@ class Notification(models.Model):
                 'res_id': res_id,
                 'notification_type_id': notification_type_id
             }
-            if parent_id:
-                values['parent_id'] = parent_id
+            if parent_res_id:
+                values['parent_id'] = parent_notification_id
+                values['parent_res_id'] = parent_res_id
+            elif parent_notification_id:
+                values['is_parent'] = 1
             notification = req_env['notification'].create(values)
         else:
             notification = notification[0]
@@ -95,7 +136,7 @@ class Notification(models.Model):
                     'notification_id': notification.id
                 }
                 req_env['notification.counter'].create(values)
-        return notification.id
+        return notification
 
     def update_counter(self, params):
         req_env = self.env

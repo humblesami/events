@@ -52,7 +52,6 @@
         'views/news.xml',
         'views/dashboard.xml',
         'views/menus.xml',
-        'views/empty.xml',
         'security/rules.xml',
     ],
     # only loaded in demonstration mode

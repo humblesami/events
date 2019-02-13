@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.addons.dn_base import ws_methods
 from odoo.addons.dn_base.statics import raise_dn_model_error
 
 doc_type_models = {
@@ -56,76 +57,67 @@ class PointAnnotation(models.Model):
 
     def save_comment_point(self, values):
         req_env = self.env
-        uid = req_env.user.id
         point = values.get('point')
-        comment = values.get('comment')
+        comment = point.get('comment')
+        if not point or not comment:
+            raise raise_dn_model_error('Please provide comment and point')
         doc_name = values.get('doc_id')
-        arr = doc_name.split('.')[0]
-        doc_id = arr.split('-')[1]
-        parent_id = int(doc_id)
+        #arr = doc_name.split('.')[0]
 
-        point_id = req_env.search([('uuid', '=', point['uuid'])])
+        point_id = req_env['annotation.point'].search([('uuid', '=', point['uuid'])])
         new_point = False
         if not point_id:
-            doc_name = values['doc_id']
             if not doc_name:
                 raise raise_dn_model_error('Invalid Document Id')
             point['doc_name'] = doc_name
-            point_id = req_env['annotation.point.comments'].create(point)
+            point_id = req_env['annotation.point'].create(point)
             new_point = True
-
 
         comment['point_id'] = point_id.id
         req_env['annotation.point.comments'].create(comment)
 
-        doc_type = values['doc_type']
-        res_id = values['res_id']
+        point['counter'] = point_id.my_notifications + 1
 
-        res_id = int(res_id)
+        doc_type = values['doc_type']
+        document_id = values['parent_res_id']
+
+        document_id = int(document_id)
         docname = ''
         meeting = False
         topic_name = False
         if doc_type == 'topic':
             res_model = 'meeting_point.topicdoc'
-            topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', res_id)])
+            topic_doc = req_env['meeting_point.topicdoc'].search([('id', '=', document_id)])
             meeting = topic_doc.topic_id.meeting_id
             topic_name = topic_doc.topic_id.name
             docname = topic_doc.name
         elif doc_type == 'meeting':
             res_model = 'meeting_point.doc'
-            meeting_doc = req_env['meeting_point.doc'].search([('id', '=', res_id)])
+            meeting_doc = req_env['meeting_point.doc'].search([('id', '=', document_id)])
             meeting = meeting_doc.meeting_id
             docname = meeting_doc.name
         if not meeting:
-            raise raise_dn_model_error('Invalid doc type=' + str(doc_type) + ' or id =' + (res_id))
+            raise raise_dn_model_error('Invalid doc type=' + str(doc_type) + ' or id =' + (document_id))
 
-        res = {'meta': {'meeting': meeting.name, 'doc': docname},
-               'model': res_model,
-               'point_id': point_id.id,
-               'res_id': res_id,
-               'x': point['x'],
-               'y': point['y']
-               }
+        res = {
+            'meta': {'meeting': meeting.name, 'doc': docname },
+            'model': res_model,
+            'point_id': point_id.id,
+            'res_id': document_id,
+            'x': point['x'],
+            'y': point['y']
+        }
+        res['point'] = point
         if new_point:
             res['new_point'] = 1
         if topic_name:
             res['meta']['topic'] = topic_name
         res = {
-            'events':[
-                {
-                    'name':'point_comment_received',
-                    'data':res,
-                    'audience':meeting.get_audience()
-                }
-            ]
+            'name':'point_comment_received',
+            'data':res,
+            'audience': meeting.get_audience(),
+            'id': point_id.id
         }
-        return res
-
-    @api.multi
-    def unlink(self):
-        for obj in self:
-            self.env['notification'].search([('res_model','=','annotation.point'),('res_id','=',obj.id)])
-        res = super(PointAnnotation, self).unlink()
         return res
 
     @api.multi
@@ -133,7 +125,7 @@ class PointAnnotation(models.Model):
         req_env = self.env
         for obj in self:
             params = {'res_model':self._name, 'res_id':obj.id}
-            res = req_env['notification'].getMyNotifications(params)
+            res = req_env['notification'].getNotificationCount(params)
             obj.my_notifications = res
 
 class CommentAnnotation(models.Model):
