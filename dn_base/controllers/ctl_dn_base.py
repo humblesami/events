@@ -58,8 +58,9 @@ class Controller(http.Controller):
 
             method_to_call = getattr(req_env[model], method)
             res = method_to_call(values)
-
-            events = res.get('events')
+            events = [
+                {'name': res['name'], 'data': res['data'], 'audience': [res['data']['sender']]}
+            ]
             res = ws_methods.emit_event(events)
             if res == 'done':
                 return ws_methods.http_response('', 'done')
