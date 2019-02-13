@@ -99,7 +99,7 @@ class Signature(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/e-sign/delete_signature', csrf=False,auth='public')
+    @http.route('/e-sign/delete_signature', csrf=False,auth='user')
     def delete_signature(self, **kw):
         doc = False
         try:
@@ -113,10 +113,10 @@ class Signature(http.Controller):
                 return ws_methods.http_response("Invalid Input")
 
             signature_id = kw['signature_id']
-            sign = http.request.env['e_sign.signature'].sudo().search([('id', '=', signature_id)])
+            sign = http.request.env['e_sign.signature'].search([('id', '=', signature_id)])
             sign.unlink()
             doc_id = kw['document_id']
-            doc = my_model.sudo().search([('id', '=', doc_id)])
+            doc = my_model.search([('id', '=', doc_id)])
             if not doc:
                 return ws_methods.http_response("Document : " + doc_id + " does not exist")
             doc.pdf_doc=doc.original_pdf
