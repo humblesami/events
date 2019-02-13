@@ -11,6 +11,7 @@
         'security/groups.xml',
         'security/ir.model.access.csv',
         'views/doc.xml',
+        'views/annotation.xml',
     ],
     'depends': [
         'dn_base'

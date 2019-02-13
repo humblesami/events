@@ -90,20 +90,39 @@ class Controller(http.Controller):
             if not model or not method:
                 return ws_methods.http_response('Please provide valid args')
 
-            res_model = values['res_model']
-            res_id = values['res_id'] = int(values['res_id'])
             method_to_call = getattr(req_env[model], method)
             res = method_to_call(values)
+
             if values.get('no_notify'):
                 return ws_methods.http_response('', 'done')
+
+            res_model = values['res_model']
+            parent_res_model = values.get('parent_res_model')
+            parent_res_id = values.get('parent_res_id')
+            if parent_res_id:
+                parent_res_id = int(parent_res_id)
+                parent_res_model = values['parent_res_model']  # repeated to raise exception if not found
+            res_id = values.get('res_id')
+            if res_id:
+                res_id = int(res_id)
+            else:
+                res_id = res['id']
+
             audience = res.get('audience')
             if not audience:
-                audience = req_env[res_model].search([('id', '=', res_id)]).get_audience()
+                if parent_res_id:
+                    audience = req_env[parent_res_model].search([('id', '=', parent_res_id)]).get_audience()
+                else:
+                    audience = req_env[res_model].search([('id', '=', res_id)]).get_audience()
+
             notification_values = {
                 'res_model': res_model,
                 'res_id': res_id,
                 'audience': audience
             }
+            if parent_res_id:
+                notification_values['parent_res_id'] = parent_res_id
+                notification_values['parent_res_model'] = parent_res_model
 
             notification = req_env['notification'].add_notification(notification_values)
             notification_values['content'] = notification.notification_type_id.content

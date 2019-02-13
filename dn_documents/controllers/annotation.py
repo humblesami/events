@@ -1,6 +1,5 @@
 import json
 from odoo import http
-from odoo.http import request
 from odoo.addons.dn_base import ws_methods
 
 
@@ -38,7 +37,10 @@ class annotation(http.Controller):
                 for com in comments:
                     com['point_id'] = comments_points[i]['uuid']
                 comments_points[i]['comments'] = comments
-                comments_points[i]['counter'] = point['my_notifications']
+                note_counter = point['my_notifications']
+                if note_counter > 0:
+                    a = 1
+                comments_points[i]['counter'] = note_counter
                 i = i + 1
 
             doc = req_env['annotation.document'].search([('name', '=', doc_name),('user_id','=',uid)])
@@ -201,9 +203,4 @@ types = {
     'rectangle': 'annotation.rectangle.dimensions',
     'line':'annotation.drawing.lines',
     'comment':'annotation.point.comments'
-}
-
-parent_model = {
-    'meeting': 'meeting.doc',
-    'topic': 'topic.doc'
 }

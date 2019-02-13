@@ -10,4 +10,3 @@ from . import roles
 from . import committee
 from . import home
 from . import signature
-from . import annotation
