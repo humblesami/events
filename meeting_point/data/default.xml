@@ -5,6 +5,9 @@
             <field name="description">Please Request Admin to update the message</field>
         </record>
         <record id="record_empty_row1" model="meeting_point.empty" >
+            <field name="name">Messages</field>
+        </record>
+        <record id="record_empty_row2" model="meeting_point.empty" >
             <field name="name">Committees</field>
         </record>
     </data>

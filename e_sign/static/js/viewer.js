@@ -1,4 +1,6 @@
+
 $(function(){
+
     var canvas=document.getElementById('the-canvas'),
 	pdf_binary,
 	users,
@@ -201,6 +203,7 @@ function loadSignatures(data){
                         my_record:this.my_record,
                         //zoom:this.zoom,
                         page:this.page,
+                        field_name:this.field_name,
                         //w:this.width,
                         //h:this.height,
                         class:"saved_sign",
@@ -219,6 +222,10 @@ function loadSignatures(data){
              {
               div.html("Date:"+this.name)
              }
+             if(this.type=='text' && !this.signed)
+             {
+              div.html(this.field_name+":"+this.name)
+             }
 
 
              if(this.type=='sign')
@@ -232,6 +239,10 @@ function loadSignatures(data){
              if(this.type=='date')
              {
               div.addClass("is_date");
+             }
+             if(this.type=='text')
+             {
+              div.addClass("is_text");
              }
 
 
@@ -325,7 +336,7 @@ function loadSignatures(data){
 
             },
             cursor: 'move'
-        }).resizable();
+        });
 
 
             if(parseFloat(new_signature[0].style.top)-$(this).parent().position().top<0){
@@ -337,8 +348,15 @@ function loadSignatures(data){
             var percent_top=(top/canvas.height)*100;
            new_signature.css({position:'absolute',left:percent_left+"%",top:percent_top+"%",overflow:'hidden'});
 //           new_signature.append('<i class="fa fa-pencil  fa-lg  edit_sign" style="color:black;float:right;margin-right:10px;" aria-hidden="true"/>');
+           if (new_signature.hasClass("text_psition")){
+
+                    new_signature.html('<input style="display:inline;width:90%" type="text" placeholder="Field Name"/>');
+
+                }
            new_signature.prepend('<i class="fa fa-times  fa-lg del_sign" style="margin-top:-6px;color:black;float:left" aria-hidden="true"/>');
-           new_signature.attr({"page":pageNum});
+           new_signature.attr({"page":pageNum}).resizable();
+
+
             $(this).append(new_signature);
             $(".save_doc_data").removeAttr('disabled');
         }
@@ -392,6 +410,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
         });
         save_btn.click(function(e){
             var arr=[];
+            var isEmpty=false;
 //            var work_flow_enabled=$('.e_sign_wrk_flow input')[0].checked;
             var user=dropdown.val();
             var email =input_email[1].value;
@@ -413,6 +432,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                 w=parseFloat(w);
                 var pg=sign.attr("page");
                 var type;
+                var field_name="";
                 if (sign.hasClass("sign_psition")){
                     type="sign"
                 }
@@ -422,10 +442,23 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                 if (sign.hasClass("date_psition")){
                     type="date"
                 }
+                if (sign.hasClass("text_psition")){
+                    type="text";
+                    field_name=sign.find('input').val();
+                    if(field_name==""){
+                        isEmpty=true;
 
-                var obj = {document_id:doc_id,token:token, user_id:user, email:email, name:name, left:percent_left,top:percent_top,page:pg,height:h,width:w,zoom:canvas.width,type:type };
+                        return;
+                    }
+                }
+
+                var obj = {document_id:doc_id,token:token, user_id:user,field_name:field_name, email:email, name:name, left:percent_left,top:percent_top,page:pg,height:h,width:w,zoom:canvas.width,type:type };
                 arr.push(obj);
                 });
+                if(isEmpty){
+                    alert("Field name is empty!!!");
+                    return;
+                }
                 if(arr.length!=0){
                     req_url = '/e-sign/save_sign_data';
 
@@ -676,6 +709,66 @@ $(document).on("click",".saved_sign.is_date", function(e){
                 var date=input_date.val();
                 req_url = '/e-sign/save_signature';
                 input_data = {signature_id:signature_id,document_id:doc_id,token:token, date :date,type:"date",url:url };
+                dn_json_rpc(req_url,input_data, function(data){
+                    doc_data=data.doc_data;
+                    renderPDF(data.pdf_binary);
+                });
+                $('.youtubeVideoModal').modal('hide');
+            });
+
+        del_btn.click(function(e){
+            if (confirm('Delete it permanently?')) {
+                req_url = '/e-sign/delete_signature';
+                input_data = {signature_id:signature_id,document_id:doc_id,url:url};
+                dn_json_rpc(req_url,input_data, function(data){
+                    doc_data=data.doc_data;
+                    renderPDF(data.pdf_binary);
+                });
+                $('.youtubeVideoModal').modal('hide');
+            }
+
+
+            });
+
+});
+
+$(document).on("click",".saved_sign.is_text", function(e){
+        var my_record=$(this).attr("my_record");
+        if(my_record=="false" && !isAdmin){
+            return;
+        }
+        var signature_id=$(this).attr("id");
+        var usr_name=$(this).attr("name");
+        var field_name=$(this).attr("field_name");
+		doc_preview.image("uuuu");
+        var body=$('.youtubeVideoModal .modal-body:last');
+        var content=$('.youtubeVideoModal .modal-content:last');
+		var input_text = `<input id="text"  placeholder=${field_name} style="width:50%"/>`;
+		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
+		var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
+
+		body.html(`<h2>Username:</h2>${usr_name}`);
+
+
+            if(my_record=="true"){
+
+                body.append(`<h2>${field_name}:</h2>`+input_text);
+                body.append(save_btn);
+            }
+
+        if(isAdmin){
+            body.append(del_btn);
+
+        }
+
+        save_btn.click(function(e){
+                var text=input_text.val();
+                if(text==""){
+                    alert("Enter text")
+                    return;
+                }
+                req_url = '/e-sign/save_signature';
+                input_data = {signature_id:signature_id,document_id:doc_id,token:token, text :text,type:"text",url:url };
                 dn_json_rpc(req_url,input_data, function(data){
                     doc_data=data.doc_data;
                     renderPDF(data.pdf_binary);

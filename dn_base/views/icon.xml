@@ -9,4 +9,14 @@
             <canvas id="myCanvas" width="10" height="10" style='display:none' />
         </li>
     </t>
+
+
+    <t t-name="dnbase.icon.message">
+        <li>
+            <a class="customClick" data-action="open_messages" aria-expanded="false" title="Messages">
+                <i class="fa fa-comments"/>
+            </a>
+
+        </li>
+    </t>
 </templates>

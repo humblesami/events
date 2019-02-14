@@ -601,7 +601,7 @@
                                             <field name="response_by"/> </span>
                                         </div>
                                     </div>
-                                    <div t-if="record.exectime.value=='ongoing' or record.exectime.value=='completed'" class="roster-buttons" groups="meeting_point.group_meeting_admin">
+                                    <div t-if="record.exectime.value=='ongoing' or record.exectime.value=='completed'" class="roster-buttons oe_read_only" groups="meeting_point.group_meeting_admin">
                                         <t>
                                            <button type="object" name="action_absent" class="btn btn-primary btn-sm">
                                                <t t-if="record.attendance.value=='Absent'">

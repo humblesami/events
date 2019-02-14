@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+
+        <record id="view_meeting_point_messages_form" model="ir.ui.view">
+            <field name="name">meeting_point.messages.form</field>
+            <field name="model">meeting_point.empty</field>
+            <field name="sequence" eval="2"/>
+            <field name="arch" type="xml">
+                <form>
+                    <style>
+                        .o_control_panel{
+                        display:none!important;
+                        }
+                    </style>
+
+                    <!--<script src="/meeting_point/static/js/messages.js"/>-->
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
