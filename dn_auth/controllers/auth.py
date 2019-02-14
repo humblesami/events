@@ -223,18 +223,11 @@ class auth(http.Controller):
                             friendIds.append(friendObj.id)
                     attendees.append(partner.user_id.id)
 
-                # event = {
-                #     'id': obj.id,
-                #     'name': obj.name,
-                #     'attendees': attendees
-                # }
-                # meetingList.append(event)
-
             data_for_ws = {'notifications': notificationList, 'friends': friendList, 'unseen': unseenMessages, 'user': values}
-            data_for_socket = [{'name': 'verified', 'audience': [uid], 'data': data_for_ws}]
-
             if values.get('avoid_emit'):
                 return data_for_ws
+
+            data_for_socket = [{'name': 'add_user_in_list', 'audience': [uid], 'data': data_for_ws}]
             res = ws_methods.emit_event(data_for_socket)
             if res == 'done':
                 return data_for_ws
