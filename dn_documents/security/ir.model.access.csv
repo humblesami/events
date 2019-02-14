@@ -2,3 +2,12 @@
 
 "document_user","Documents User","dn_documents.model_dn_documents_allfiles","group_doc_user",1,0,0,0
 "document_admin","Documents Admin","dn_documents.model_dn_documents_allfiles","group_doc_manager",1,1,1,1
+
+"employee_annotation_document","Employee Annotation Document","model_annotation_document","base.group_user",1,1,1,1
+"employee_annotation_point","Employee Annotation Point","model_annotation_point","base.group_user",1,1,1,1
+"employee_annotation_rectangle","Employee Annotation Rectangle","model_annotation_rectangle","base.group_user",1,1,1,1
+"employee_annotation_annotation","Employee Annotation ","model_annotation_annotation","base.group_user",1,1,1,1
+"employee_annotation_lines","Employee Annotation Lines ","model_annotation_drawing_lines","base.group_user",1,1,1,1
+"employee_annotation_rectangle_dimensions","Employee Annotation Rectangle Dimensions ","model_annotation_rectangle_dimensions","base.group_user",1,1,1,1
+"employee_annotation__comment_points","Employee Annotation Comment Points ","model_annotation_point_comments","base.group_user",1,1,1,1
+"employee_annotation_drawing","Director Employee Drawing ","model_annotation_drawing","base.group_user",1,1,1,1
