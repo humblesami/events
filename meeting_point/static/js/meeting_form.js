@@ -7,16 +7,13 @@
     arr = arr[0].split('=');
     var id = arr[1];
 
-    var iFrame = $('iframe.comments-container');
-    function resizeIFame() {
-        setTimeout(function(){
-            var o_height = iFrame[0].scrollHeight + 20;
-            iFrame.height(o_height);
-            console.log(111, o_height, iFrame.height());
-        }, 1000);
+    var page_url = 'iframe/comments/calendar.event/'+id+'/'+odoo.session_info.token;
+    var iframe_base_path = window.location.origin+'/meetvue/';
+    var iframe_src = iframe_base_path+page_url;
+    if(iframe_base_path == 'http://localhost:8000/meetvue/')
+    {
+        iframe_src = 'http://localhost:4200/'+page_url;
     }
-
-    var iframe_src = 'http://localhost:4200/iframe/comments/calendar.event/'+id+'/'+odoo.session_info.token;
     console.log(iframe_src);
-    iFrame.ready(resizeIFame).attr('src', iframe_src);
+    $('iframe.comments-container').attr('src', iframe_src);
 })()
