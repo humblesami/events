@@ -57,10 +57,7 @@ class Controller(http.Controller):
                 return ws_methods.http_response('Please provide valid args')
 
             method_to_call = getattr(req_env[model], method)
-            res = method_to_call(values)
-            events = [
-                {'name': res['name'], 'data': res['data'], 'audience': [res['data']['sender']]}
-            ]
+            events = method_to_call(values)
             res = ws_methods.emit_event(events)
             if res == 'done':
                 return ws_methods.http_response('', 'done')
