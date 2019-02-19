@@ -148,20 +148,6 @@ class auth(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/ws/verify-user', type="http", csrf=False, auth='public', cors='*')
-    def verifyUserHttp(self, **kw):
-        try:
-            values = kw
-            uid = self.verifyToken(values)
-            if type(uid) is not int:
-                return ws_methods.http_response(uid)
-            else:
-                values['uid'] = uid
-                res = self.get_user_data_min(values)
-                return ws_methods.http_response('', res)
-        except:
-            return ws_methods.handle()
-
     @http.route('/on_socket_server_restart', type='http', csrf=False, auth='public', cors='*')
     def socket_request_http(self, **kw):
         try:

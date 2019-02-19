@@ -1,35 +1,24 @@
 from odoo import models, fields
 from odoo.addons.dn_base import ws_methods
 
-
-class NotificationType(models.Model):
-    _name = 'notification.type'
-    name = fields.Char()
-    content = fields.Char(default='notifications on')
-    client_route = fields.Char(default='/')
-    _sql_constraints = [
-        (
-        'notification_type_uniq', 'unique (name)', "Notification type already exists for same model!"),
-    ]
-
 class Notification(models.Model):
     _name = 'notification'
-    notification_type_id = fields.Many2one('notification.type', ondelete='cascade')
     res_id = fields.Integer()
+    res_model = fields.Char()
     parent_id = fields.Many2one('notification', ondelete='cascade')
     parent_res_id = fields.Integer()
-    is_parent = fields.Integer()
+    content = fields.Char()
     _sql_constraints = [
         (
-        'notification_uniq', 'unique (notification_type_id,res_id)', "Notification already exists for same record of same model!"),
+        'notification_uniq', 'unique (res_model,res_id)', "Notification already exists for same record of same model!"),
     ]
 
     def getMyNotifications(self, params):
         uid = self.env.user.id
         name = params.get('res_model')
         res_id = params.get('res_id')
-        sql = 'select name res_model,content,res_id,n.id,is_parent,counter from notification_type t'
-        sql += ' join notification n on n.notification_type_id=t.id'
+        sql = 'select res_model,content,res_id,n.id,counter from'
+        sql += ' notification n '
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and n.parent_id is null and user_id='+str(uid)
         if name:
@@ -43,8 +32,8 @@ class Notification(models.Model):
         uid = self.env.user.id
         name = params.get('res_model')
         res_id = params.get('res_id')
-        sql = 'select counter from notification_type t'
-        sql += ' join notification n on n.notification_type_id=t.id'
+        sql = 'select counter from '
+        sql += ' notification n '
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and user_id='+str(uid)
         if name:
@@ -62,8 +51,8 @@ class Notification(models.Model):
         uid = self.env.user.id
         name = params.get('res_model')
         res_id = params.get('res_id')
-        sql = 'select name res_model,content,res_id,n.id,is_parent,counter from notification_type t'
-        sql += ' join notification n on n.notification_type_id=t.id'
+        sql = 'select res_model,content,res_id,n.id,counter from '
+        sql += ' notification n'
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and user_id='+str(uid)
         if name:
@@ -74,51 +63,41 @@ class Notification(models.Model):
         return res
 
     def add_notification(self, params):
-        req_env = self.env
-
         res_model = params.get('res_model')
         res_id = params.get('res_id')
 
         parent_res_id = params.get('parent_res_id')
         parent_res_model = params.get('parent_res_model')
-
-        notification_type = req_env['notification.type'].search([('name', '=', res_model)])
         audience = params['audience']
-        if not notification_type:
-            notification_type = req_env['notification.type'].create({"name":res_model})
-        else:
-            notification_type = notification_type[0]
-
-        notification_type_id = notification_type.id
 
         notification = False
         if parent_res_id:
-            parent_notification_type = req_env['notification.type'].search([('name', '=', parent_res_model)])
-            if not parent_notification_type:
-                parent_notification_type = req_env['notification.type'].create({"name": parent_res_model})
-                parent_notification_type_id = parent_notification_type.id
-            else:
-                parent_notification_type_id = parent_notification_type[0].id
-            parent_notification = self.add_notification_item(parent_res_id, audience, parent_notification_type_id, 1)
-            notification = self.add_notification_item(res_id, audience, notification_type_id, parent_notification.id, parent_res_id)
+
+            parent_notification = self.add_notification_item(parent_res_model, parent_res_id, audience)
+            notification = self.add_notification_item(res_model, res_id, audience, parent_notification)
         else:
-            notification = self.add_notification_item(res_id, audience, notification_type_id)
+            notification = self.add_notification_item(res_model, res_id, audience)
         return notification
 
-    def add_notification_item(self, res_id, audience, notification_type_id, parent_notification_id=None, parent_res_id=None):
+    def add_notification_item(self, res_model, res_id, audience, parent_notification=None):
         req_env = self.env
-        filters = [('res_id', '=', res_id), ('notification_type_id', '=', notification_type_id)]
+        filters = [('res_id', '=', res_id), ('res_model', '=', res_model)]
         notification = req_env['notification'].search(filters)
         if not notification:
             values = {
                 'res_id': res_id,
-                'notification_type_id': notification_type_id
+                'res_model': res_model
             }
-            if parent_res_id:
-                values['parent_id'] = parent_notification_id
-                values['parent_res_id'] = parent_res_id
-            elif parent_notification_id:
-                values['is_parent'] = 1
+            record_name = 'Unknown notification type'
+            if parent_notification:
+                values['parent_id'] = parent_notification.id
+                values['parent_res_id'] = parent_notification.res_id
+                values['parent_res_model'] = parent_notification.res_model
+                record_name = req_env[parent_notification.res_model].search([('id', '=', parent_notification.res_id)]).name
+            else:
+                record_name = req_env[res_model].search([('id', '=', res_id)]).name
+
+            values['content'] = ' comment(s) on ' + record_name
             notification = req_env['notification'].create(values)
         else:
             notification = notification[0]
@@ -143,9 +122,7 @@ class Notification(models.Model):
         uid = req_env.user.id
         res_id = params.get('res_id')
         res_model = params.get('res_model')
-        notification_type = req_env['notification.type'].search([('name', '=', res_model)])
-        notification_type_id = notification_type[0].id
-        filters = [('res_id', '=', res_id), ('notification_type_id', '=', notification_type_id)]
+        filters = [('res_id', '=', res_id), ('res_model', '=', res_model)]
         notification = req_env['notification'].search(filters)[0]
         filters = [('user_id', '=', uid), ('notification_id', '=', notification.id)]
         notification_counter = req_env['notification.counter'].search(filters)

@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
-        <record id="notification_types_tree" model="ir.ui.view">
-            <field name="name">Notification Types</field>
-            <field name="model">notification.type</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name" />
-                    <field name="content" />
-                    <field name="client_route" />
-                </tree>
-            </field>
-        </record>
 
         <record id="notifications_tree" model="ir.ui.view">
             <field name="name">Notifications</field>
             <field name="model">notification</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="notification_type_id" />
+                    <field name="res_model" />
                     <field name="res_id" />
                     <field name="parent_id" />
                 </tree>
@@ -61,12 +50,6 @@
             </field>
         </record>
 
-        <record id="action_notification_type" model="ir.actions.act_window">
-            <field name="name">Notification Types</field>
-            <field name="res_model">notification.type</field>
-            <field name="view_mode">tree,kanban,form</field>
-        </record>
-
         <record id="action_notification" model="ir.actions.act_window">
             <field name="name">Notifications</field>
             <field name="res_model">notification</field>
@@ -96,20 +79,16 @@
             action="action_notification"
         />
         <menuitem
-            name="Comments" id="menu_notification_type"
-            parent="menu_notification"
-            action="action_message"
-        />
-        <menuitem
-            name="Messages" id="menu_message"
+            name="Comments" id="menu_comment"
             parent="menu_notification"
             action="action_comment"
         />
         <menuitem
-            name="Notification Types" id="menu_notification_type"
+            name="Messages" id="menu_message"
             parent="menu_notification"
-            action="action_notification_type"
+            action="action_message"
         />
+
         <menuitem
             name="Notification Records" id="menu_notification_record"
             parent="menu_notification"
