@@ -126,10 +126,10 @@ class Controller(http.Controller):
                 notification_values['parent_res_model'] = parent_res_model
 
             notification = req_env['notification'].add_notification(notification_values)
-            notification_values['content'] = notification.notification_type_id.content
+            notification_values['content'] = notification.content
 
-            if notification.is_parent:
-                notification_values['is_parent'] = notification.is_parent
+            if notification.parent_res_id:
+                notification_values['is_parent'] = 1
             events = [
                 {'name': res['name'], 'data': res['data'], 'audience': audience },
                 {'name':'notification_received', 'data':notification_values, 'audience': audience}
