@@ -140,8 +140,14 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
-                res = self.get_user_data_min(values)
-                return ws_methods.http_response('', res)
+                data_for_socket = self.get_user_data(values)
+                res = ws_methods.emit_event(data_for_socket)
+                if res == 'done':
+                    res = data_for_socket[0]['data']['user']
+                    return ws_methods.http_response('', res)
+                else:
+                    return ws_methods.http_response('', res)
+
         except:
             return ws_methods.handle()
 
@@ -154,7 +160,6 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
-                values['avoid_emit'] = 1
                 res = self.get_user_data(values)
                 return ws_methods.http_response('', res)
         except:
@@ -211,41 +216,6 @@ class auth(http.Controller):
                 return data_for_ws
 
             data_for_socket = [{'name': 'add_user_in_list', 'audience': [uid], 'data': data_for_ws}]
-            res = ws_methods.emit_event(data_for_socket)
-            if res == 'done':
-                return data_for_ws
-            else:
-                return res
-        except:
-            raise
-
-    def get_user_data_min(self, values):
-        try:
-            request = http.request
-            req_env = request.env
-            uid = values['uid']
-            app_name = values['app_name']
-            user = req_env['res.users'].search([('id','=',uid)])
-            groups = []
-            for group in user.groups_id:
-                if app_name:
-                    if app_name not in group.full_name:
-                        continue
-                    else:
-                        groups.append(group.full_name)
-                else:
-                    groups.append(group.full_name)
-            host_url = http.request.httprequest.host_url
-            res = {
-                'db': "demo",
-                'groups': groups,
-                'id': uid,
-                'name': user.name,
-                'photo': host_url + "dn/content_file/res.users/" + str(uid) + "/image_small/" + values['db'] + "/" +
-                         values['token'],
-                'token': values['token'],
-                'uid': uid,
-            }
-            return res
+            return data_for_socket
         except:
             raise

@@ -11,5 +11,5 @@ class odoochat(models.Model):
 
     def save(self, vals):
         super(odoochat, self).create(vals)
-        res = {'name': 'message', 'data':vals, 'audience': vals['to'] }
+        res = {'name': 'chat_message_received', 'data':vals, 'audience': vals['to'] }
         return res
