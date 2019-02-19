@@ -140,11 +140,8 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
-                res = self.get_user_data(values)
-                if type(res) is str:
-                    return ws_methods.http_response(res)
-                else:
-                    return ws_methods.http_response('', res)
+                res = self.get_user_data_min(values)
+                return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
 
