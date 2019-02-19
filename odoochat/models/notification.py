@@ -22,7 +22,7 @@ class Notification(models.Model):
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and n.parent_id is null and user_id='+str(uid)
         if name:
-            sql += " and name='"+name+"'"
+            sql += " and res_model='"+name+"'"
         if res_id:
             sql += " and res_id="+str(res_id)
         res = ws_methods.execute_read(sql)
@@ -37,7 +37,7 @@ class Notification(models.Model):
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and user_id='+str(uid)
         if name:
-            sql += " and name='"+name+"'"
+            sql += " and res_model='"+name+"'"
         if res_id:
             sql += " and res_id="+str(res_id)
         res = ws_methods.execute_read(sql)
@@ -56,7 +56,7 @@ class Notification(models.Model):
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and user_id='+str(uid)
         if name:
-            sql += " and name='"+name+"'"
+            sql += " and res_model='"+name+"'"
         if res_id:
             sql += " and res_id="+str(res_id)
         res = ws_methods.execute_read(sql)
