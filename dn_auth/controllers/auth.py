@@ -6,6 +6,8 @@ import random
 import requests
 from odoo import http
 from odoo.addons.dn_base import ws_methods
+from odoo.exceptions import ValidationError
+
 
 class auth(http.Controller):
     @http.route('/ws/authenticate', type="http", csrf=False, auth='none', cors='*')
@@ -86,11 +88,9 @@ class auth(http.Controller):
             except:
                 return ws_methods.handle()
             data = {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': user_photo,'groups':groups }
+            # authenticate
             res = self.get_user_data(data)
-            if type(res) is str:
-                return ws_methods.http_response(res)
-            else:
-                return ws_methods.http_response('', data)
+            return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
 
@@ -140,14 +140,10 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
-                data_for_socket = self.get_user_data(values)
-                res = ws_methods.emit_event(data_for_socket)
-                if res == 'done':
-                    res = data_for_socket[0]['data']['user']
-                    return ws_methods.http_response('', res)
-                else:
-                    return ws_methods.http_response('', res)
-
+                values['verify_token'] = 1
+                # verify-token
+                res = self.get_user_data(values)
+                return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
 
@@ -160,6 +156,8 @@ class auth(http.Controller):
                 return ws_methods.http_response(uid)
             else:
                 values['uid'] = uid
+                values['on_restart'] = 1
+                #on-restart
                 res = self.get_user_data(values)
                 return ws_methods.http_response('', res)
         except:
@@ -169,7 +167,7 @@ class auth(http.Controller):
         try:
             request = http.request
             req_env = request.env
-            uid = values['id']
+            uid = int(values['id'])
 
             method_to_call = getattr(req_env['notification'], 'getMyNotifications')
             notificationList = method_to_call(values)
@@ -187,7 +185,6 @@ class auth(http.Controller):
 
             # meetingList = []
             for obj in meetings:
-                attendees = []
                 for partner in obj.partner_ids:
                     obj_id = partner.user_id.id
                     if obj_id != uid and obj_id not in friendIds:
@@ -206,16 +203,19 @@ class auth(http.Controller):
                         db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
                         friend['unseen'] = req_env['odoochat.message'].search_count(db_filters)
                         unseenMessages += friend['unseen']
-                        if friend['id'] is not int(uid):
-                            friendList[friend['id']] = friend
-                            friendIds.append(friendObj.id)
-                    attendees.append(partner.user_id.id)
+                        friendList[friend['id']] = friend
+                        friendIds.append(friend['id'])
 
-            data_for_ws = {'notifications': notificationList, 'friends': friendList, 'unseen': unseenMessages, 'user': values}
-            if values.get('avoid_emit'):
-                return data_for_ws
-
-            data_for_socket = [{'name': 'add_user_in_list', 'audience': [uid], 'data': data_for_ws}]
-            return data_for_socket
+            user_data = {'notifications': notificationList, 'friends': friendList, 'friendIds': friendIds,
+                         'unseen': unseenMessages, 'user': values}
+            res = user_data
+            if not values.get('on_restart'):
+                data_for_socket = [{'name': 'add_user_in_list', 'audience': friendIds, 'data': user_data}]
+                res = ws_methods.emit_event(data_for_socket)
+                if res != 'done':
+                    raise ValidationError(res)
+                else:
+                    res = values
+            return res
         except:
             raise
