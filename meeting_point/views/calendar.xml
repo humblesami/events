@@ -29,8 +29,15 @@
                         <field name="conference_bridge_number" class="conference"/>
                         <field name="pin" class="pin" />
                         <field name="company" string="Location" class="oe_read_only"/>
+
                     </group>
-                    <button type="object" class="btn-primary detail_btn o_hidden" name="go_to_meeting">Details</button>
+                    <div class="detail_btn o_hidden">
+                        <button type="object" class="btn btn-primary btn-sm acceptancebtn " string ="Accept" name="do_accept"/>
+                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>
+                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Tentative" name="do_tentative"/>
+                        <button type="object" class="btn-primary" name="go_to_meeting">Details</button>
+                    </div>
+
                     <script src="/meeting_point/static/js/event_popup.js"></script>
                 </form>
             </field>
