@@ -601,13 +601,13 @@ class Meeting(models.Model):
         for partner in self.partner_ids:
             if partner.user_id:
                 attendees.append(partner.user_id.id)
-        data = {
+        data = [{
             'name': 'to_do_item_updated',
             'data': {
                 'id': self.id,
                 'attendees': attendees
             }
-        }
+        }]
         ws_methods.emit_event(data)
 
     @api.multi
