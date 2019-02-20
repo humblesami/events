@@ -31,6 +31,18 @@ class Survey(models.Model):
             else:
                 ad.audience = False
 
+    def get_audience(self):
+        ids = []
+        if self.meeting_id:
+            for partner in self.meeting_id.partner_ids:
+                if partner.id != self.env.user.partner_id.id:
+                    ids.append(partner.user_id.id)
+        else:
+            for partner in self.partner_ids:
+                if partner.id != self.env.user.partner_id.id:
+                    ids.append(partner.user_id.id)
+        return ids
+
     def _compute_survey_url(self):
 
         """ Computes a public URL for the survey """
@@ -150,13 +162,13 @@ class Survey(models.Model):
         for partner in attendees_list:
             if partner.user_id:
                 attendees.append(partner.user_id.id)
-        data = {
+        data = [{
             'name': 'to_do_item_updated',
             'data': {
                 'id': survey.id,
                 'attendees': attendees
             }
-        }
+        }]
         ws_methods.emit_event(data)
 
     @api.model
@@ -204,6 +216,8 @@ class Survey(models.Model):
             for q in self.question_ids:
                 question = question_model.search([('id', '=',q.id)])
                 question.write({'page_id': page.id})
+
+        self.emit_meeting_update(res)
         return True
 
 class SurveyQuestion(models.Model):
