@@ -251,7 +251,7 @@ class meeting(http.Controller):
             filters = [('id', '=', meeting_id)]
             meeting = req_env['calendar.event'].search(filters)
             props = ['id', 'start', 'stop', 'duration', 'video_call_link','conference_status', 'conference_bridge_number', 'pin',
-                     'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
+                     'description', 'name', 'location', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'attendee_status', 'company']
 
             meeting_object = ws_methods.object_to_json_object(meeting, props)
@@ -303,7 +303,7 @@ class meeting(http.Controller):
             if not meeting.publish:
                 return ws_methods.http_response('',{'message':'Meeting has been unpublished'})
             props = ['id', 'start', 'stop', 'conference_status', 'duration', 'zip', 'video_call_link',
-                     'conference_bridge_number', 'pin', 'exectime',
+                     'conference_bridge_number', 'pin', 'exectime', 'location',
                      'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
                      'attendee_status', 'company']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
