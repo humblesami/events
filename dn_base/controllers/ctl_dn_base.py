@@ -145,8 +145,8 @@ class Controller(http.Controller):
             if notification.parent_res_id:
                 notification_values['is_parent'] = 1
             events = [
-                {'name': res['name'], 'data': res['data'], 'audience': audience },
-                {'name':'notification_received', 'data':notification_values, 'audience': audience}
+                {'name': 'notification_received', 'data': notification_values, 'audience': audience},
+                {'name': res['name'], 'data': res['data'], 'audience': audience}
             ]
             if not events:
                 raise ValidationError('Invalid events')
@@ -268,7 +268,7 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/get-comments', type='http', csrf=False, auth='public', cors='*')
+    @http.route('/get-comments', type='http', csrf=False, auth='none', cors='*')
     def get_comments_http(self, **kw):
         temp = self.get_comments(kw)
         return temp
@@ -340,11 +340,11 @@ class Controller(http.Controller):
         res = self.save_comment(values)
         return res['data']
 
-    @http.route('/comment/delete', type='http', csrf=False, auth='public', cors='*')
+    @http.route('/comment/delete', type='http', csrf=False, auth='none', cors='*')
     def delete_comment_http(self, **kw):
         return self.delete_comment(kw)
 
-    @http.route('/comment/delete-json', type="json", csrf=False, auth='public', cors='*')
+    @http.route('/comment/delete-json', type="json", csrf=False, auth='none', cors='*')
     def delete_comment_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.delete_comment(req_body)
@@ -428,7 +428,7 @@ class MyBinary(Binary):
             response.set_cookie('fileToken', token)
         return response
 
-    @http.route('/dn_base/change_password', auth='public',cors='*', csrf=False)
+    @http.route('/dn_base/change_password', auth='none',cors='*', csrf=False)
     def change(self,**kw):
         try:
             req_env = http.request.env
