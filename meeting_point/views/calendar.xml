@@ -530,6 +530,26 @@
                   <xpath expr="//button[@name='do_tentative']" position="attributes">
                         <attribute name="invisible">1</attribute>
                 </xpath>
+                <xpath expr="//field[@name='doc_ids']" position= "replace">
+                       <field name="doc_ids">
+                             <kanban quick_create="false" edit="false" delete="true">
+                                 <field name="name"/>
+                                 <templates>
+                                     <t t-name="kanban-box">
+                                         <div style="position: relative;width:100px">
+                                             <div class="oe_module_vignette">
+                                                 <div class="oe_module_desc">
+
+                                                    <button type="object" name="open_view_doc_form" class = "fa fa-2x fa-file-text-o"/>
+                                                    <field name="name"/>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </t>
+                                 </templates>
+                             </kanban>
+                        </field>
+                </xpath>
             </field>
         </record>
 

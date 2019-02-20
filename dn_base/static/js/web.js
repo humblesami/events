@@ -32,7 +32,7 @@ odoo.define('dn_base.icons', function(require) {
         laser_pointer:function change_cursor(){
                         if(document.documentElement.style.cursor == '')
                         {
-                        var myCanvas = document.getElementById("myCanvas");
+                      var myCanvas = document.getElementById("laser_canvas");
 //                        myCanvas.style.zindex = 5000
 //                        myCanvas.style.position = 'absolute';
                         var ctx = myCanvas.getContext("2d");
