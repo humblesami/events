@@ -58,12 +58,12 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/doc_preview.js?v='+dnow+'"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
-                	document.writeln(`
-
-<script type="text/javascript" src="/meeting_point/static/meetvue/polyfills.js"></script>
-<script type="text/javascript" src="/meeting_point/static/meetvue/vendor.js"></script>
-<script type="text/javascript" src="/meeting_point/static/meetvue/main.js"></script>
-`);
+//                	document.writeln(`
+//
+//<script type="text/javascript" src="/meeting_point/static/meetvue/polyfills.js"></script>
+//<script type="text/javascript" src="/meeting_point/static/meetvue/vendor.js"></script>
+//<script type="text/javascript" src="/meeting_point/static/meetvue/main.js"></script>
+//`);
 
         $(function(){
             doc_preview.init();
