@@ -365,9 +365,9 @@ class Meeting(models.Model):
             if event.city:
                 val = val + event.city + ', '
             if event.country_state.name:
-                val = val + event.country_state + ', '
+                val = val + event.country_state.name + ', '
             if event.zip:
-                val = val +event.zip + ','
+                val = val + event.zip + ','
             if event.country.name:
                 val = val +event.country.name
             last_character = val[len(val) - 1]
