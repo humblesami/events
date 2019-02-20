@@ -12,6 +12,7 @@
                     <field name="state" invisible="1"/>
                     <field name="is_attendee" invisible="1"/>
                     <field name="allday" invisible="1"/>
+                    <field name="is_active_yet" invisible="1"/>
                     <field name="attendee_status" invisible="1"/>
                     <field name="conference_status" class="conference_status o_hidden"/>
                     <field name="id" class="o_hidden meeting_id"/>
@@ -23,14 +24,14 @@
                         <field name="start" string="Starting at" />
                         <field name="stop" string="Ending at" />
                         <field name="duration" widget="float_time" class="oe_inline"/>
-                        <field name="video_call_link" widget="url" class="oe_read_only"/>
+                        <field name="company" string="Location" class="oe_read_only"/>
+                    </group>
+                     <group attrs="{'invisible': [('is_active_yet','=','no')]}">
+                            <field name="video_call_link" widget="url" class="oe_read_only"/>
                         <!--<button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>-->
-
                         <field name="conference_bridge_number" class="conference"/>
                         <field name="pin" class="pin" />
-                        <field name="company" string="Location" class="oe_read_only"/>
-
-                    </group>
+                        </group>
                     <div class="detail_btn o_hidden">
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn " string ="Accept" name="do_accept"/>
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>
