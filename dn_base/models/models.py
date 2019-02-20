@@ -22,6 +22,7 @@ class MyMail(models.Model):
             'body': values['body'],
             'model': values['res_model'],
             'res_id': values['res_id'],
+            'subtype_id': values['subtype_id'],
             'message_type': datMessage,
             'email_from': 'admin@example.com'
         }
