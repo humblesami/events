@@ -1,0 +1,9 @@
+<odoo>
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend" name="Chat Custom Assets" >
+            <xpath expr=".">
+                <script type="application/javascript" src="/odoochat/static/js/web.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,9 +1,5 @@
 from odoo import models, fields, api
 
-class Empty(models.Model):
-    _name = "meeting_point.empty"
-    name = fields.Char()
-
 class Committee(models.Model):
     _name = 'meeting_point.committee'
     _inherits = {'res.partner': 'partner_id'}

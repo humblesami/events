@@ -3,6 +3,11 @@ from odoo import models, api, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 
+
+class Empty(models.Model):
+    _name = "dn_base.empty"
+    name = fields.Char()
+
 class MyMail(models.Model):
     _inherit = 'mail.message'
     def post_comment(self, values):

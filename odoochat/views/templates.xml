@@ -1,7 +1,0 @@
-<odoo>
-    <data>
-        <template id="chat_backend" name="Chat Assets Backend" inherit_id="web.assets_backend">
-
-        </template>
-    </data>
-</odoo>

@@ -302,6 +302,10 @@ body.o_app_switcher_background nav:first-child
 .crossdefal:hover {
     cursor: none;
 }
+.customClick
+{
+    cursor:pointer;
+}
 .customClick:focus{
         background: red !important;
     }

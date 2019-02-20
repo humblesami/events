@@ -31,8 +31,6 @@ function load_dn_assets()
     try
     {
         var dnow = Date.now();
-//        $('body').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
-        document.writeln('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
         document.writeln('<script src="/dn_base/static/js/libs/bootbox.js?v='+dnow+'"></script>');
         document.writeln('<script src="/dn_base/static/config.js?v='+dnow+'"></script>');
         //Libraries
@@ -72,6 +70,10 @@ function load_dn_assets()
         console.log(er);
     }
 }
+
+$(function(){
+    $('body').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
+});
 
 var site_functions = {
     showLoader :function(ref)

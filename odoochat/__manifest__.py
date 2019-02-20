@@ -24,12 +24,14 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'views/default.xml',
         'security/rules.xml',
-        'views/templates.xml',
+        'views/assets.xml',
         'views/notification.xml',
+        'views/messenger.xml',
     ],
     # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
+    'qweb': [
+        'views/qweb_templates.xml'
     ],
 }

@@ -1,0 +1,11 @@
+<templates>
+     <t t-name="message.icon">
+        <li>
+            <a class="customClick" data-action="open_messages" aria-expanded="false" title="Messages">
+                <i class="fa fa-comments"/>
+            </a>
+        </li>
+    </t>
+    <t t-name="mail.chat.MessagingMenu"></t>
+    <t t-name="mail.chat.ActivityMenu"></t>
+</templates>
