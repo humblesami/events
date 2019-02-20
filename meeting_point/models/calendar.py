@@ -370,8 +370,11 @@ class Meeting(models.Model):
                 val = val +event.zip + ','
             if event.country.name:
                 val = val +event.country.name
+            last_character = val[len(val) - 1]
+            if last_character != ',':
+                val = val[:-1]
+            val = val.trim()
             event.location = val
-            print(event.location)
 
     @api.multi
     def _compute_archive(self):
