@@ -178,9 +178,10 @@ class meeting(http.Controller):
                 rendering_context = context
             else:
                 rendering_context = self._context
+            base_url = http.request.httprequest.host_url
+            base_url = base_url[:-1]
             rendering_context.update({
-                'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url',
-                                                                             default='http://localhost:8069')
+                'base_url': base_url
             })
             invitation_template = invitation_template.with_context(rendering_context)
 

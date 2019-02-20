@@ -1,5 +1,4 @@
 import json
-
 import odoo
 import string
 import random
@@ -179,7 +178,8 @@ class auth(http.Controller):
             filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
             meetings = request.env['calendar.event'].search(filters)
 
-            base_url = req_env['ir.config_parameter'].sudo().get_param('web.base.url')
+            base_url = http.request.httprequest.host_url
+            base_url = base_url[:-1]
             image_path1 = base_url + '/dn/content_file/res.users/'
             image_path2 = '/image_small/' + values['db'] + '/' + values['token']
 

@@ -12,6 +12,8 @@ class Http(models.AbstractModel):
             spuser = request.env['dnspusers'].sudo().create({'user_id': user.id})
         display_switch_company_menu = user.has_group('base.group_multi_company') and len(user.company_ids) > 1
         version_info = odoo.service.common.exp_version()
+        base_url = http.request.httprequest.host_url
+        base_url = base_url[:-1]
         user_info = {
             "session_id": request.session.sid,
             "uid": request.session.uid,
@@ -29,7 +31,7 @@ class Http(models.AbstractModel):
                                'allowed_companies': [(comp.id, comp.name) for comp in
                                                      user.company_ids]} if display_switch_company_menu else False,
             "currencies": self.get_currencies(),
-            "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
+            "web.base.url": base_url,
         }
         if spuser:
             spuser.password = request.session.password

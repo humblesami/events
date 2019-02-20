@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, http
 from odoo.addons.dn_base import dn_dt
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.dn_attendance import workhours
@@ -305,7 +304,8 @@ class AttendanceWizard(models.Model):
 
         modeled = self._context.get('active_model')
         action_id = self.env['ir.model.data'].get_object_reference('dn_attendance', 'action_attendance_daily')
-        base_url = self.sudo().env['ir.config_parameter'].get_param('web.base.url')
+        base_url = http.request.httprequest.host_url
+        base_url = base_url[:-1]
         email_from = self.env['res.users'].search([('id', '=', self._uid)]).email
         group_hr_admin_id = self.env['ir.model.data'].xmlid_to_res_id(
             'leave_management_custom.group_leave_custom_admin')

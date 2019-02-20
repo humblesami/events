@@ -1,7 +1,7 @@
 import uuid
 from werkzeug import urls
 from odoo.http import request
-from odoo import models, fields, api
+from odoo import models, fields, api, http
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.dn_base import ws_methods
@@ -34,8 +34,10 @@ class Survey(models.Model):
     def _compute_survey_url(self):
 
         """ Computes a public URL for the survey """
+        base_url = http.request.httprequest.host_url
+        base_url = base_url[:-1]
         base_url = '/' if self.env.context.get('relative_url') else \
-                   self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                   base_url
         for survey in self:
             try:
                 survey_id = int(survey.id)

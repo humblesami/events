@@ -349,8 +349,10 @@ class Signature(http.Controller):
         """ Create one mail by recipients and replace __URL__ by link with identification token """
         # set url
         req_env = http.request.env
+        base_url = http.request.httprequest.host_url
+        base_url = base_url[:-1]
         base_url = '/' if req_env.context.get('relative_url') else \
-            req_env['ir.config_parameter'].sudo().get_param('web.base.url')
+            base_url
         Mail = req_env['mail.mail']
         url = urls.url_join(base_url, "e_sign/sign")
         # url = urls.url_parse(url).path[1:]  # dirty hack to avoid incorrect urls

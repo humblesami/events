@@ -2,7 +2,7 @@
 import random
 import time
 import threading
-from odoo import models, fields, api
+from odoo import models, fields, api, http
 from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 from odoo.exceptions import ValidationError
@@ -134,11 +134,13 @@ class Attendee(models.Model):
             'declined': 'red'
         }
         rendering_context = dict(self._context)
+        base_url = http.request.httprequest.host_url
+        base_url = base_url[:-1]
         rendering_context.update({
             'color': colors,
             'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
-            'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069')
+            'base_url': base_url
         })
         invitation_template = invitation_template.with_context(rendering_context)
 

@@ -1,8 +1,6 @@
 import os
-import sys
 import base64
 import tempfile
-import traceback
 from random import randint
 
 from fpdf import FPDF
@@ -13,8 +11,6 @@ from odoo import models, fields, api, http
 from odoo.exceptions import UserError
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from odoo.addons.dn_base.statics import raise_dn_model_error
-
-from odoo.http import request
 
 
 class Document(models.Model):
@@ -120,8 +116,10 @@ class Document(models.Model):
             return
         # set url
 
+        base_url = http.request.httprequest.host_url
+        base_url = base_url[:-1]
         base_url = '/' if req_env.context.get('relative_url') else \
-            req_env['ir.config_parameter'].sudo().get_param('web.base.url')
+            base_url
         Mail = req_env['mail.mail']
         url = urls.url_join(base_url, "e_sign/sign")
         # url = urls.url_parse(url).path[1:]  # dirty hack to avoid incorrect urls
@@ -295,13 +293,14 @@ class Document(models.Model):
             myargs = ['|',('signature_ids','=',False),('signature_ids','in',list)]
             args.extend(myargs)
             docs = super(Document, self).search(args)
-            remove_ids=[]
+            remove_ids = []
+            user_mail = http.request.env.user.email
             for d in docs:
                 if d.workflow_enabled:
-                    my_signs= d.signature_ids.sudo().filtered(lambda r: r.user_id.email==request.env.user.email)
+                    my_signs= d.signature_ids.sudo().filtered(lambda r: r.user_id.email == user_mail)
                     if my_signs:
                         my_sign=my_signs[0]
-                        prev_signs= d.signature_ids.sudo().filtered(lambda r: r.id<my_sign.id and r.user_id.email!=my_sign.user_id.email)
+                        prev_signs= d.signature_ids.sudo().filtered(lambda r: r.id< my_sign.id and r.user_id.email != my_sign.user_id.email)
                         if prev_signs:
                             prev_sign=prev_signs[-1]
                             all_signed=True
