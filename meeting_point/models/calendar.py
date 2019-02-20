@@ -373,7 +373,7 @@ class Meeting(models.Model):
             last_character = val[len(val) - 1]
             if last_character != ',':
                 val = val[:-1]
-            val = val.trim()
+            val = val.strip()
             event.location = val
 
     @api.multi
