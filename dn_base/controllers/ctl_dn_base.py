@@ -66,6 +66,23 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route('/get-action-id', type='http', csrf=False, auth='public', cors='*')
+    def get_action_id(self, **kw):
+        try:
+            auth = kw.get('auth')
+            if not auth:
+                auth = kw
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+            req_env = http.request.env
+            xml_id = kw['xml_id']
+            res = req_env.ref(xml_id).id
+            return ws_methods.http_response('', res)
+        except:
+            ws_methods.handle()
+
+
     @http.route('/socket_server_request', type='http', csrf=False, auth='public', cors='*')
     def socket_request_http(self, **kw):
         try:

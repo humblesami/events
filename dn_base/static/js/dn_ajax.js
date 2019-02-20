@@ -65,7 +65,7 @@ var dn_json_rpc_object = {
             initialized = true;
         },
 
-        request: function (reqfun, input_data, callback, failureCallBack) {
+            request: function (reqfun, input_data, callback, failureCallBack) {
             var serviceRequestInProgress = false;
             if (serviceRequestInProgress) {
                 //sam_popup.show("Some Request Already In Progress", "ok");

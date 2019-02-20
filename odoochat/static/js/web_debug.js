@@ -1,4 +1,3 @@
-console.log(111, ' 64 chat open')
 odoo.define('odoochat.messages', function (require) {
     var SystrayMenu = require('web.SystrayMenu');
     var Widget = require('web.Widget');
@@ -10,23 +9,22 @@ odoo.define('odoochat.messages', function (require) {
         },
         open_messages:function open_messages()
         {
-            var web_client = require('web.web_client');
-            var rpc = require('web.rpc');
-            rpc.query({
-                model: 'ir.model.data',
-                method: 'get_object_reference',
-                args: ["odoochat","view_message_form"]
-            }).then(function (returned_value) {
-                var view_id = returned_value[1];
-                web_client.do_action({
-                    type: 'ir.actions.act_window',
-                    res_model: 'dn_base.empty',
-                    res_id: 1,
-                    view_mode: 'form',
-                    views: [[view_id, 'form']],
-                    target: 'main'
-                });
-            });
+            var reqObject = {
+                url:'get-action-id',
+                data:{xml_id : 'odoochat.action_messenger', db: odoo.session_info.db, token: odoo.session_info.token},
+                onSuccess: function(action_id)
+                {
+                    var action_url = '/web#action='+action_id;
+                    var debug_in_url = window.location.toString().indexOf('debug');
+                    if(debug_in_url > -1)
+                    {
+                        action_url = '/web?debug=1#action='+action_id;
+                    }
+                    //console.log(odoo.session_info.uid, action_url, debug_in_url);
+                    window.location = action_url;
+                }
+            };
+            dn_rpc_object(reqObject);
         }
     });
     SystrayMenu.Items.push(IconMenu);

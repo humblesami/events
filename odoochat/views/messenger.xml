@@ -15,5 +15,14 @@
                 </form>
             </field>
         </record>
+
+
+        <record id="action_messenger" model="ir.actions.act_window">
+            <field name="name">Messenger</field>
+            <field name="res_model">dn_base.empty</field>
+            <field name="view_id" ref="view_message_form" />
+            <field name="res_id" ref="record_empty_row1"/>
+        </record>
+
     </data>
 </odoo>
