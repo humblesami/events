@@ -225,6 +225,7 @@ class Meeting(models.Model):
     publish = fields.Boolean(string="Publish")
     country_state = fields.Many2one('res.country.state',string="State")#, domain=lambda self:self.filter_states())
     company = fields.Char(string="Company")
+    location = fields.Char(string="Location",compute = "_compute_address")
     city = fields.Char(string="City")
     topic_ids = fields.One2many('meeting_point.topic', 'meeting_id')
     document_ids = fields.One2many('meeting_point.document','meeting_id',string="Document(s) To Sign")
@@ -355,6 +356,22 @@ class Meeting(models.Model):
                     event.im_attendee = "yes"
                     break
                 continue
+    @api.multi
+    def _compute_address(self):
+        val = ''
+        for event in self:
+            if event.street:
+               val = val + event.street + ', '
+            if event.city:
+                val = val + event.city + ', '
+            if event.country_state.name:
+                val = val + event.country_state + ', '
+            if event.zip:
+                val = val +event.zip + ','
+            if event.country.name:
+                val = val +event.country.name
+            event.location = val
+            print(event.location)
 
     @api.multi
     def _compute_archive(self):

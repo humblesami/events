@@ -14,6 +14,7 @@
                     <field name="allday" invisible="1"/>
                     <field name="is_active_yet" invisible="1"/>
                     <field name="attendee_status" invisible="1"/>
+                    <field name ="location" invisible="1"/>
                     <field name="conference_status" class="conference_status o_hidden"/>
                     <field name="id" class="o_hidden meeting_id"/>
                     <field name="im_attendee" class="o_hidden is_attendee"/>
@@ -24,7 +25,7 @@
                         <field name="start" string="Starting at" />
                         <field name="stop" string="Ending at" />
                         <field name="duration" widget="float_time" class="oe_inline"/>
-                        <field name="company" string="Location" class="oe_read_only"/>
+                        <field name="company" string="Company" class="oe_read_only"/>
                     </group>
                      <group attrs="{'invisible': [('is_active_yet','=','no')]}">
                             <field name="video_call_link" widget="url" class="oe_read_only"/>
