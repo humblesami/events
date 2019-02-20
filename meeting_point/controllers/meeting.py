@@ -267,7 +267,7 @@ class meeting(http.Controller):
                     'duration': meeting_object['duration'],
                     'address': meeting_object['address'],
                     'city': meeting_object['city'],
-                    'country_state_name': meeting_object['country_state_name'],
+                    'location': meeting_object['location'],
                     'country_name' : meeting_object['country_name']
                 }
 
