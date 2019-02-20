@@ -371,7 +371,7 @@ class Meeting(models.Model):
             if event.country.name:
                 val = val +event.country.name
             last_character = val[len(val) - 1]
-            if last_character != ',':
+            if last_character == ',':
                 val = val[:-1]
             val = val.strip()
             event.location = val
