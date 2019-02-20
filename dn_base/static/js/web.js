@@ -25,25 +25,38 @@ odoo.define('dn_base.icons', function(require) {
 
     // Appends Icon template in system tray (navbar)
     var IconMenu = Widget.extend({
-        template: 'Icon',
-        events: {
-            'click': 'laser_pointer',
-        },
-        laser_pointer: function change_cursor() {
-            if (document.documentElement.style.cursor == '') {
-                var myCanvas = document.getElementById("laser_canvas");
-                var ctx = myCanvas.getContext("2d");
-                ctx.beginPath();
-                ctx.arc(5, 5, 5, 0, 2 * Math.PI);
-                ctx.fillStyle = "red";
-                ctx.fill();
+        template:'Icon',
+          events: {
+        'click': 'laser_pointer',
+             },
+        laser_pointer:function change_cursor(){
+                        if(document.documentElement.style.cursor == '')
+                        {
+                        var myCanvas = document.getElementById("myCanvas");
+//                        myCanvas.style.zindex = 5000
+//                        myCanvas.style.position = 'absolute';
+                        var ctx = myCanvas.getContext("2d");
+                        ctx.beginPath();
+                        ctx.arc(5, 5, 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = "red";
+                        ctx.fill();
 
-                var url = myCanvas.toDataURL();
-                url = 'url(' + url + ') 64 64, auto';
-                document.documentElement.style.cursor = url;
-            } else
-                document.documentElement.style.cursor = '';
-        }
+                        var url = myCanvas.toDataURL();
+                        url = 'url(' +url + ') 64 64, auto';
+                        document.documentElement.style.cursor = url;
+//                        data = document.querySelector('body')
+//                        data.style.cursor = url;
+                           console.log('100');
+                          $('*').css('cursor',url);
+                        }
+                        else{
+                         $('*').css('cursor','');
+
+                        }
+
+}
+
+
     });
     SystrayMenu.Items.push(IconMenu);
 });

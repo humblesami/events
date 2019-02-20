@@ -88,7 +88,7 @@
                                         </div>
                                     </div>
 
-                                    <t t-if="record.is_active_yet=='yes'">
+                                    <t t-if="record.is_active_yet.value =='yes'">
                                         <div class="acceptancebuttons">
                                             <t t-if="record.attendee_status.value=='Accepted'">
                                                 <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept"><i class="fa fa-check fa-lg" style="color:white"/>Accept

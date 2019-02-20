@@ -351,7 +351,8 @@ class Meeting(models.Model):
             for p in event.partner_ids:
                 if my_pid == p.id:
                     event.im_attendee = "yes"
-                break
+                    break
+                continue
 
     @api.multi
     def _compute_archive(self):
