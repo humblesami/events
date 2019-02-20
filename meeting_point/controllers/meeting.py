@@ -258,6 +258,17 @@ class meeting(http.Controller):
 
             if req_env.user.partner_id in meeting.partner_ids:
                 meeting_object["my_event"] = 1
+            else:
+                meeting_object = {
+                    'name': meeting_object['name'],
+                    'start': meeting_object['start'],
+                    'stop': meeting_object['stop'],
+                    'duration': meeting_object['duration'],
+                    'address': meeting_object['address'],
+                    'city': meeting_object['city'],
+                    'country_state_name': meeting_object['country_state_name'],
+                    'country_name' : meeting_object['country_name']
+                }
 
             return ws_methods.http_response('', meeting_object)
         except:
