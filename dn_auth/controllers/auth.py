@@ -175,7 +175,7 @@ class auth(http.Controller):
             friendList = {}
             unseenMessages = 0
             partner_id = req_env.user.partner_id.id
-            filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True), ('archived', '=', False)]
+            filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True)]
             meetings = request.env['calendar.event'].search(filters)
 
             base_url = http.request.httprequest.host_url

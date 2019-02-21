@@ -16,6 +16,24 @@ class Oddochat(http.Controller):
         res = getActiveUserMessage(kw)
         return res
 
+    @http.route('/set_message_status', type="http", csrf=False, auth='public', cors='*')
+    def set_message_status(self, **kw):
+        try:
+            if (kw.get('user')):
+                kw = json.loads(kw.get('user'))
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            req_env = http.request.env
+            message_id = kw.get('message_id')
+            filters = [('id', '=', message_id)]
+            req_env['odoochat.message'].sudo().search(filters).write({'read_status': True})
+            return ws_methods.http_response('', 'done')
+        except:
+            ws_methods.handle()
+
+
+
 
 def getActiveUserMessage(kw):
     try:
