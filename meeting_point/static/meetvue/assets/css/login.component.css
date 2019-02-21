@@ -1,0 +1,8 @@
+body{
+    padding-top: 0px;
+}
+.login-form-div {
+    padding: 30vh 5vw 0 5vw;
+    box-shadow: 5px 10px 18px #000000;
+    background: rgba(255,255,255,0.5);
+}
