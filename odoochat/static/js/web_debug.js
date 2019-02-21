@@ -10,7 +10,7 @@ odoo.define('odoochat.messages', function (require) {
         open_messages:function open_messages()
         {
             var reqObject = {
-                url:'get-action-id',
+                url:'/get-action-id',
                 data:{xml_id : 'odoochat.action_messenger', db: odoo.session_info.db, token: odoo.session_info.token},
                 onSuccess: function(action_id)
                 {
@@ -24,6 +24,7 @@ odoo.define('odoochat.messages', function (require) {
                     window.location = action_url;
                 }
             };
+            console.log(reqObject);
             dn_rpc_object(reqObject);
         }
     });
