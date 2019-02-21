@@ -136,7 +136,6 @@ class auth(http.Controller):
             values = kw
             if http.request.uid and http.request.uid!=4:
                 uid = http.request.uid
-                values['token'] = ""
             else:
                 uid = self.verifyToken(values)
             if type(uid) is not int:
