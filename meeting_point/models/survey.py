@@ -12,7 +12,7 @@ class Survey(models.Model):
 
     meeting_id=fields.Many2one('calendar.event',string="Meeting", ondelete='cascade')
     date=fields.Datetime(string="Meeting Date")
-    name = fields.Char()
+    name = fields.Char(required=True)
     survey_type=fields.Selection([(1,'Survey'),(2,'Approval')],string="Survey Type")
     question_ids=fields.One2many('survey.question','survey_id_custom',string="Question(s)")
     my_status=fields.Char(string="Status",compute="_compute_status")

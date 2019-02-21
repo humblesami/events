@@ -20,7 +20,7 @@ class Topic(models.Model):
     _inherit = 'dn_documents.allfiles'
     _order = "sequence"
 
-    name = fields.Char(string="Title")
+    name = fields.Char(string="Title", required=True)
     meeting_id = fields.Many2one('calendar.event', string="Meeting", ondelete='cascade')
     content = fields.Text(string="Description", ondelete='cascade')
     lead = fields.Char(string="Lead")
