@@ -360,6 +360,8 @@ class Meeting(models.Model):
     def _compute_address(self):
         val = ''
         for event in self:
+            if event.address:
+               val = val + event.address + ', '
             if event.street:
                val = val + event.street + ', '
             if event.city:
