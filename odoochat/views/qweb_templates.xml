@@ -6,6 +6,14 @@
             </a>
         </li>
     </t>
+
+    <t t-name="notification.icon">
+        <li>
+            <a class="customClick fa" data-action="open_notifications" aria-expanded="false" title="Notifications">
+                <app-chat></app-chat>
+            </a>
+        </li>
+    </t>
     <t t-name="mail.chat.MessagingMenu"></t>
     <t t-name="mail.chat.ActivityMenu"></t>
 </templates>

@@ -6,12 +6,14 @@
             <field name="sequence" eval="2"/>
             <field name="arch" type="xml">
                 <form>
+                    	<app-messenger></app-messenger>
                     <style>
                         .o_control_panel{
                             display:none!important;
                         }
                     </style>
-                    <!--<script src="/meeting_point/static/js/messages.js"/>-->
+                    <script src="/odoochat/static/js/messages.js"/>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
                 </form>
             </field>
         </record>

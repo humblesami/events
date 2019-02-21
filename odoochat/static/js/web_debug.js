@@ -1,3 +1,22 @@
+console.log("aaaaaaaaaaaaaaaaaaaa")
+document.writeln(`
+
+   <base href=${window.location.origin} />
+	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/config.js"></script>
+	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/json.js"></script>
+    <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/simple_ajax.js"></script>
+	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/main.js"></script>
+	    <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/datetime.js"></script>
+
+    <script src="/meeting_point/static/meetvue/assets/chat/notification.js"></script>
+	<script src="/meeting_point/static/meetvue/assets/chat/note_routes.js"></script>
+<script type="text/javascript" src="/meeting_point/static/meetvue/polyfills.js"></script>
+<script type="text/javascript" src="/meeting_point/static/meetvue/vendor.js"></script>
+<script type="text/javascript" src="/meeting_point/static/meetvue/main.js"></script>
+`);
+
+
+
 odoo.define('odoochat.messages', function (require) {
     var SystrayMenu = require('web.SystrayMenu');
     var Widget = require('web.Widget');
@@ -29,4 +48,24 @@ odoo.define('odoochat.messages', function (require) {
         }
     });
     SystrayMenu.Items.push(IconMenu);
+});
+
+odoo.define('odoochat.notifications', function (require) {
+    var SystrayMenu = require('web.SystrayMenu');
+    var Widget = require('web.Widget');
+
+    var IconMenu = Widget.extend({
+        template:'notification.icon'
+
+    });
+
+    SystrayMenu.Items.push(IconMenu);
+setTimeout(function(){
+console.log("aaaaaaaaaaaaaaaaaaaaa",$('body'));
+    $('body').append(`<div style="display:none"><app-root></app-root>		<app-comments></app-comments><app-messenger></app-messenger>
+    	<app-chat></app-chat></div>
+    	<script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
+    	`);
+
+}, 2000);
 });

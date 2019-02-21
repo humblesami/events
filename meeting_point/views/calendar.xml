@@ -455,12 +455,34 @@
                             />
                         </div>
                         </div>
-                        <h2>Comments</h2>
-                        <iframe class="comments-container"></iframe>
+
                         <script src="/meeting_point/static/js/meeting_form.js"/>
                     </sheet>
                     <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>
+
+
+
+  	<meta charset="utf-8" />
+    <title>MeetVUE</title>
+    <base href="http://localhost:8000" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1">
+	</div>
+
+	<script>
+		window["io"] = io;
+	</script>
+
+	<app-comments></app-comments>
+                    <script src="/odoochat/static/js/messages.js"/>
+
+
+
+<script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
+
+
+
                 </form>
             </field>
         </record>

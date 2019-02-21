@@ -81,3 +81,8 @@ iframe.comments-container
     width:100%;
     min-height: 40vh;
 }
+
+app-comments .btn-group{
+display:flex
+
+}

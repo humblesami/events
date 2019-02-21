@@ -9,7 +9,7 @@ var site_config = {
 };
 var site_config_local = {
 	server_base_url:'http://localhost:8000',
-	server_db : 'demo',
+	server_db : 'erp',
 	live : false,
 	site_url: '',
     chat_server : 'http://localhost:3000',
@@ -21,8 +21,10 @@ var site_config_local = {
 site_config.site_url = window.location.origin.toString();
 if(site_config.site_url.indexOf('meetvue.com') == -1 && site_config.site_url.indexOf('odoohq.com') == -1)
 {
-	site_config = site_config_local;    
+	site_config = site_config_local;
+    site_config.site_url += '/meetvue';
 }
+
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;
 //console.log(site_config);
