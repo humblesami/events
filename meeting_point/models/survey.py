@@ -12,7 +12,7 @@ class Survey(models.Model):
 
     meeting_id=fields.Many2one('calendar.event',string="Meeting", ondelete='cascade')
     date=fields.Datetime(string="Meeting Date")
-    name = fields.Char(required=True)
+    name = fields.Char()
     survey_type=fields.Selection([(1,'Survey'),(2,'Approval')],string="Survey Type")
     question_ids=fields.One2many('survey.question','survey_id_custom',string="Question(s)")
     my_status=fields.Char(string="Status",compute="_compute_status")
@@ -153,7 +153,6 @@ class Survey(models.Model):
 
     def emit_meeting_update(self, survey):
         attendees = []
-        attendees_list = []
         if survey.meeting_id:
             attendees_list = survey.meeting_id.partner_ids
         else:
@@ -188,7 +187,7 @@ class Survey(models.Model):
         res = super(Survey, self).create(values)
         page_env = self.env['survey.page']
         vals = {'title': res.title, 'survey_id': res.id, 'question_ids': res.question_ids, 'sequence': 1}
-        page=page_env.create(vals)
+        page = page_env.create(vals)
         for q in res.question_ids:
             q.write({'page_id': page.id})
         self.emit_meeting_update(res)
@@ -197,9 +196,7 @@ class Survey(models.Model):
     #
     @api.multi
     def write(self, values):
-        questions = values['question_ids']
-        if len(questions) == 0:
-            raise ValidationError("Survey can not not exist without questions")
+
         title = values.get('title')
         if title:
             values['name'] = title
@@ -208,6 +205,7 @@ class Survey(models.Model):
             if name:
                 values['title'] = name
         res = super(Survey, self).write(values)
+
         if not res:
             return False
         if 'question_ids' in values:
@@ -217,7 +215,7 @@ class Survey(models.Model):
                 question = question_model.search([('id', '=',q.id)])
                 question.write({'page_id': page.id})
 
-        self.emit_meeting_update(res)
+        self.emit_meeting_update(self)
         return True
 
 class SurveyQuestion(models.Model):
