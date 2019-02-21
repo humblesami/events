@@ -250,7 +250,7 @@ class meeting(http.Controller):
                 return ws_methods.http_response('Please provide meeting id')
             filters = [('id', '=', meeting_id)]
             meeting = req_env['calendar.event'].search(filters)
-            props = ['id', 'start', 'stop', 'duration', 'video_call_link','conference_status', 'conference_bridge_number', 'pin',
+            props = ['id', 'start_datetime', 'stop_datetime', 'duration', 'video_call_link','conference_status', 'conference_bridge_number', 'pin',
                      'description', 'name', 'location', 'attendee_status', 'company']
 
             meeting_object = ws_methods.object_to_json_object(meeting, props)
@@ -261,12 +261,11 @@ class meeting(http.Controller):
             else:
                 meeting_object = {
                     'name': meeting_object['name'],
-                    'start': meeting_object['start'],
-                    'stop': meeting_object['stop'],
                     'duration': meeting_object['duration'],
                     'location': meeting_object['location']
                 }
-
+            meeting_object['start'] = meeting_object['start_datetime']
+            meeting_object['stop'] = meeting_object['stop_datetime']
             return ws_methods.http_response('', meeting_object)
         except:
             return ws_methods.handle()
@@ -298,7 +297,7 @@ class meeting(http.Controller):
                 return ws_methods.http_response('', {'message': 'Meeting exists no more'})
             if not meeting.publish:
                 return ws_methods.http_response('',{'message':'Meeting has been unpublished'})
-            props = ['id', 'start', 'stop', 'conference_status', 'duration', 'zip', 'video_call_link',
+            props = ['id', 'start_datetime', 'stop_datetime', 'conference_status', 'duration', 'zip', 'video_call_link',
                      'conference_bridge_number', 'pin', 'exectime', 'location',
                      'description', 'name', 'attendee_status']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
@@ -369,10 +368,10 @@ class meeting(http.Controller):
             if len(next) > 0:
                 next = next[0]
             meeting_object['model'] = "calendar.event"
+            meeting_object['start'] = meeting_object['start_datetime']
+            meeting_object['stop'] = meeting_object['stop_datetime']
             data = {"meeting": meeting_object, "next": next.id, "prev": prev.id}
-
             filters = [('res_model', '=', 'calendar.event'),('res_id', '=', meeting_object['id'])]
-
             rec = req_env['notification'].search(filters)
             filters = [('notification_id', '=', rec.id), ('user_id', '=', uid)]
             rec = req_env['notification.counter'].search(filters)
@@ -419,7 +418,7 @@ class meeting(http.Controller):
                 filters.append(('stop', '>=', stop_time))
 
             props = [
-                'id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
+                'id', 'start_datetime','stop_datetime' 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
                 'description', 'name', 'address', 'city', 'location', 'attendee_status'
             ]
 
@@ -427,6 +426,9 @@ class meeting(http.Controller):
             partner = req_env.user.partner_id
             meetings = myModel.search(filters, offset=offset, limit=limit).filtered(lambda r: partner in r.partner_ids)
             meetings = ws_methods.objects_list_to_json_list(meetings, props)
+            for obj in meetings:
+                obj['start'] = obj['start_datetime']
+                obj['start'] = obj['stop_datetime']
             meetings = {'records': meetings, 'total': 0, 'count': 0}
             return ws_methods.http_response('', meetings)
         except:
