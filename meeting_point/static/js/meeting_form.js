@@ -1,3 +1,10 @@
+$(function(){
+    console.log($('div[name="country"] .o_input').length, 1222);
+    $('div[name="country"] .o_input').focus(function(){
+        this.select();
+    });
+})
+
 //(function(){
 //    var dnow = Date.now();
 //    //document.writeln('<script src="/meeting_point/static/js/meeting_form_debug.js"></script>');
