@@ -375,6 +375,14 @@ class meeting(http.Controller):
                 next = next[0]
             meeting_object['model'] = "calendar.event"
             data = {"meeting": meeting_object, "next": next.id, "prev": prev.id}
+
+            filters = [('res_model', '=', 'calendar.event'),('res_id', '=', meeting_object['id'])]
+
+            rec = req_env['notification'].search(filters)
+            filters = [('notification_id', '=', rec.id), ('user_id', '=', uid)]
+            rec = req_env['notification.counter'].search(filters)
+            if rec:
+                rec.counter = 0
             return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()
