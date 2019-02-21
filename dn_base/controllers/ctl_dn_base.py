@@ -288,8 +288,6 @@ class Controller(http.Controller):
             if not res_id or not model:
                 return ws_methods.http_response('Invalid model or id')
             filters = [('res_id', '=', res_id), ('model', '=', model), ('parent_id', '=', False), ('create_uid', '!=', False)]
-            if uid != 1:
-                filters.append(('create_uid', '!=', 1))
             comments = req_env['mail.message'].search(filters, order='create_date desc')
             props = ['id', 'body', 'subtype_id.id', 'create_date']
             ar_comments = ws_methods.objects_list_to_json_list(comments, props)
