@@ -251,8 +251,7 @@ class meeting(http.Controller):
             filters = [('id', '=', meeting_id)]
             meeting = req_env['calendar.event'].search(filters)
             props = ['id', 'start', 'stop', 'duration', 'video_call_link','conference_status', 'conference_bridge_number', 'pin',
-                     'description', 'name', 'location', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
-                     'attendee_status', 'company']
+                     'description', 'name', 'location', 'attendee_status', 'company']
 
             meeting_object = ws_methods.object_to_json_object(meeting, props)
             meeting_object['duration'] = dn_dt.hours_to_hoursNminutes(meeting_object['duration'])
@@ -265,10 +264,7 @@ class meeting(http.Controller):
                     'start': meeting_object['start'],
                     'stop': meeting_object['stop'],
                     'duration': meeting_object['duration'],
-                    'address': meeting_object['address'],
-                    'city': meeting_object['city'],
-                    'location': meeting_object['location'],
-                    'country_name' : meeting_object['country_name']
+                    'location': meeting_object['location']
                 }
 
             return ws_methods.http_response('', meeting_object)
@@ -304,8 +300,7 @@ class meeting(http.Controller):
                 return ws_methods.http_response('',{'message':'Meeting has been unpublished'})
             props = ['id', 'start', 'stop', 'conference_status', 'duration', 'zip', 'video_call_link',
                      'conference_bridge_number', 'pin', 'exectime', 'location',
-                     'description', 'name', 'address', 'city', 'country_state.name', 'country.name', 'zip', 'street',
-                     'attendee_status', 'company']
+                     'description', 'name', 'attendee_status']
             meeting_object = ws_methods.object_to_json_object(meeting, props)
             try:
                 duration = float(meeting_object['duration'])
@@ -425,8 +420,7 @@ class meeting(http.Controller):
 
             props = [
                 'id', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
-                'description', 'name', 'address', 'city', 'country_state.name', 'country.name',
-                'zip', 'street', 'company', 'attendee_status'
+                'description', 'name', 'address', 'city', 'location', 'attendee_status'
             ]
 
             # total_cnt = len(myModel.search(filters))
