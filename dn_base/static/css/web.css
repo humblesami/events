@@ -307,5 +307,5 @@ body.o_app_switcher_background nav:first-child
     cursor:pointer;
 }
 .customClick:focus{
-        background: red !important;
-    }
+    background: red !important;
+}
