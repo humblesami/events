@@ -23,10 +23,10 @@ if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -
     site_config.site_url = window.location.origin+'/web';
 }
 
-if(site_config.site_url.indexOf('meetvue.com') == -1 && site_config.site_url.indexOf('odoohq.com') == -1)
-{
-	site_config = site_config_local;
-}
+// if(site_config.site_url.indexOf('meetvue.com') == -1 && site_config.site_url.indexOf('odoohq.com') == -1)
+// {
+// 	site_config = site_config_local;
+// }
 // console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;
