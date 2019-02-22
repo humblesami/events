@@ -10,7 +10,8 @@ document.writeln(`
 	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/main.js"></script>
 	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/datetime.js"></script>
 
-	<script src="/meeting_point/static/meetvue/assets/chat/note_routes.js"></script>
+	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/chat/notification.js"></script>
+	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/chat/note_routes.js"></script>
     <script type="text/javascript" src="/meeting_point/static/meetvue/polyfills.js"></script>
     <script type="text/javascript" src="/meeting_point/static/meetvue/vendor.js"></script>
     <script type="text/javascript" src="/meeting_point/static/meetvue/main.js?v="+dnow></script>
