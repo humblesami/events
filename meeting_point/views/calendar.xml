@@ -432,8 +432,8 @@
                                   <field name="name"/>
                                   <field name= "lead"/>
                                   <field name="duration" widget="float_time"/>
-                                  <field name= "attachments"/>
-                                  <field name = "details"/>
+                                  <field name= "document_ids"/>
+                                  <field name = "content"/>
                                   </tree>
                                 </field>
                             </sheet>
