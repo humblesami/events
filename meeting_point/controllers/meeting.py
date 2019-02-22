@@ -250,6 +250,8 @@ class meeting(http.Controller):
                 return ws_methods.http_response('Please provide meeting id')
             filters = [('id', '=', meeting_id)]
             meeting = req_env['calendar.event'].search(filters)
+            if not meeting:
+                return ws_methods.http_response('', 'Invalid meeting id requested')
             props = ['id', 'start_datetime', 'stop_datetime', 'duration', 'video_call_link','conference_status', 'conference_bridge_number', 'pin',
                      'description', 'name', 'location', 'attendee_status', 'company']
 
@@ -259,11 +261,10 @@ class meeting(http.Controller):
             if req_env.user.partner_id in meeting.partner_ids:
                 meeting_object["my_event"] = 1
             else:
-                meeting_object = {
-                    'name': meeting_object['name'],
-                    'duration': meeting_object['duration'],
-                    'location': meeting_object['location']
-                }
+                meeting_object['name'] = meeting_object['name'],
+                meeting_object['duration'] = meeting_object['duration'],
+                meeting_object['location'] = meeting_object['location']
+
             meeting_object['start'] = meeting_object['start_datetime']
             meeting_object['stop'] = meeting_object['stop_datetime']
             return ws_methods.http_response('', meeting_object)
@@ -294,7 +295,7 @@ class meeting(http.Controller):
             filters = [('id', '=', id)]
             meeting = req_env['calendar.event'].search(filters)
             if not meeting:
-                return ws_methods.http_response('', {'message': 'Meeting exists no more'})
+                return ws_methods.http_response('', {'message': 'Meeting with id'+str(id)+' exists no more'})
             if not meeting.publish:
                 return ws_methods.http_response('',{'message':'Meeting has been unpublished'})
             props = ['id', 'start_datetime', 'stop_datetime', 'conference_status', 'duration', 'zip', 'video_call_link',
@@ -418,7 +419,7 @@ class meeting(http.Controller):
                 filters.append(('stop', '>=', stop_time))
 
             props = [
-                'id', 'start_datetime','stop_datetime' 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
+                'id', 'start_datetime', 'stop_datetime', 'start', 'stop', 'duration', 'video_call_link', 'conference_bridge_number', 'pin',
                 'description', 'name', 'address', 'city', 'location', 'attendee_status'
             ]
 
