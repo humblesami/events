@@ -252,7 +252,7 @@ class AllFiles(models.Model):
 
 
     def open_view_doc_form(self):
-        view_id = self.env.ref('dn_documents.pdf_doc_view').id
+        view_id = self.env.ref('dn_documents.doc_view_only_form').id
         if self:
             return {
                 'type': 'ir.actions.act_window',
@@ -261,5 +261,5 @@ class AllFiles(models.Model):
                 'view_mode': 'form',
                 'res_model': self._name,
                 'res_id': self.id,
-                'target': 'current',
+                'target': 'new',
             }

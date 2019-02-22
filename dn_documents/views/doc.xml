@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="oe_module_desc">
                                     <div name="open_sign_doc">
-                                        <button type="object" class="fa fa-5x fa-file-text-o" name="open_view_doc_form">
+                                        <button type="object" class="fa fa-5x fa-file" name="open_view_doc_form">
                                                 </button>
                                     </div>
 
@@ -47,7 +47,7 @@
                                 </div>
                                 <div class="oe_module_desc">
                                     <div name="open_sign_doc1">
-                                        <button type="object" t-att-myatr="open_doc" class="fa fa-5x fa-file-text-o" name="open_view_doc_form">
+                                        <button type="object" t-att-myatr="open_doc" class="fa fa-5x fa-file" name="open_view_doc_form">
                                                 </button>
                                     </div>
                                     <div t-attf-class="oe_kanban_content">
@@ -171,7 +171,7 @@
                 <tree>
                     <field name="name" string="Doc Title" />
                     <button type="object" name="open_view_doc_form"
-                            class="fa fa-5x fa-file-text-o" />
+                            class="fa fa-5x fa-file" />
                 </tree>
             </field>
         </record>

@@ -560,7 +560,7 @@
                                              <div class="oe_module_vignette">
                                                  <div class="oe_module_desc">
 
-                                                    <button type="object" name="open_view_doc_form" class = "fa fa-2x fa-file-text-o"/>
+                                                    <button type="object" name="open_view_doc_form" class = "fa fa-2x fa-file"/>
                                                     <field name="name"/>
                                                  </div>
                                              </div>
