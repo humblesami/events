@@ -63,10 +63,6 @@
                         <div id="calendar" class="col-lg-12"/>
                         <div class="col-lg-12 to-do-items">
                             <div class="ToDoitemWrapper">
-                                <h3 class="titletodo">
-                                    <span>To-Do Items</span>
-                                </h3>
-                                <!--<div class="meeting_container"></div>-->
                                 <h5>Upcoming Meetings</h5>
                                 <div class="slider_div">
                                     <field name="pending_meetings" mode="kanban">

@@ -212,9 +212,9 @@
                     <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="id" class="meeting_id o_hidden"/>
                     <sheet>
-                        <div class="oe_button_box oe_right publish_btn oe_read_only" groups="meeting_point.group_meeting_admin">
-                            <button type="object" class="btn btn-primary" name="non_publish" string="Unpublish" attrs="{'invisible': ['|',('publish','=',False),('exectime','!=','upcoming')]}"/>
-                            <button type="object" class="btn btn-primary" name="action_publish" string="Publish" attrs="{'invisible': ['|',('publish','=',True),('exectime','!=','upcoming')]}"/>
+                        <div class="publish_btn oe_read_only" groups="meeting_point.group_meeting_admin">
+                            <button type="object" class="btn btn-primary" name="non_publish" string="Unpublish Meeting" attrs="{'invisible': ['|',('publish','=',False),('exectime','!=','upcoming')]}"/>
+                            <button type="object" class="btn btn-primary" name="action_publish" string="Publish Meeting" attrs="{'invisible': ['|',('publish','=',True),('exectime','!=','upcoming')]}"/>
                             <button type="object" class="btn btn-primary" name="action_archive" string="Move to Archive" attrs="{'invisible': [('exectime','!=','completed')]}"/>
                             <field name="archived" invisible="1"/>
                             <field name="publish" invisible="1"/>

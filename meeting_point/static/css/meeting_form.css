@@ -86,3 +86,9 @@ app-comments .btn-group{
 display:flex
 
 }
+.publish_btn .btn
+{
+    min-width: 100px;
+    height: 35px;
+    margin-top: -10px;
+}
