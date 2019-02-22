@@ -1027,6 +1027,8 @@ var SocketService = /** @class */ (function () {
             console.log(route, item.res_model, item.parent_res_model);
             item.client_route = route;
         };
+        if (window['socket_manager'])
+            return;
         this.io = window['io'];
         var obj_this = this;
         window['socket_manager'] = obj_this;
