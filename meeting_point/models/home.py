@@ -69,7 +69,7 @@ class News(models.Model):
         try:
             environment = self.env
             for obj in self:
-                surveys = environment['survey.survey'].search([]).filtered(lambda r: r.my_status == "pending")
+                surveys = environment['survey.survey'].search([])
                 obj.pending_surveys = surveys
         except:
             raise ValidationError(sys.exc_info() + " while getting surveys")
