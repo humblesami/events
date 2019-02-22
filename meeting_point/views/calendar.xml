@@ -247,7 +247,6 @@
                         </group>
 
                         <group readonly="1" class = 'oe_edit_only'>
-                            <field name="company" attrs="{'readonly': [('exectime', '=', 'completed')]}" string="Location"/>
                             <label for="address"/>
                             <div class="o_address_format">
                                 <field name="address" placeholder="Street 1" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="resize:none"/>
