@@ -65,7 +65,6 @@ odoo.define('odoochat.notifications', function (require) {
 });
 
 $(function(){
-    console.log(111, 'body length', $('body').length);
     var dnow = Date();
     setTimeout(function(){
         $('body').append(`<div style="display:none"><app-root></app-root><app-comments></app-comments><app-messenger></app-messenger>
