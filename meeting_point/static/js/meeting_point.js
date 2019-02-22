@@ -1,3 +1,4 @@
+console.log('running in meeting')
 $(function(){
     $(document).on('change', '.meetingform .meeting_duration',function(e){
         addTopicIndex();
@@ -147,7 +148,16 @@ var meeting_point = {
         },
         setStartTime:function(el){
             if (!el.value) {
+                 var monthNames = [
+                        "Jan", "Feb", "Mar",
+                        "Apr", "May", "Jun", "Jul",
+                        "Aug", "Sep", "Oct",
+                        "Nov", "Dec"
+                    ];
+                 monthIndex = new Date().getMonth()
+                 var monthName = monthNames[monthIndex]
                 var stop_time = $('input.o_datepicker_input[name="stop_datetime"]').val();
+                    console.log('stop time', stop_time)
                 if (stop_time) {
                     el.value = stop_time;
                     $(el).trigger('change');
@@ -155,7 +165,7 @@ var meeting_point = {
                 else {
                     var dtnow = new Date();
                     dtnow.setDate(dtnow.getDate() + 1);
-                    dtnow = addZeroToUnder10(dtnow.getMonth() + 1) + '/' + addZeroToUnder10(dtnow.getDate()) + '/' + dtnow.getFullYear() + ' 08:00:00';
+                    dtnow = monthName + ' ' + addZeroToUnder10(dtnow.getDate()) + ', ' + dtnow.getFullYear() + ' 08:00:00';
                     setTimeout(function () {
                         el.value = dtnow;
                         $(el).trigger('change');
@@ -165,15 +175,17 @@ var meeting_point = {
         },
         setStopTime:function(el){
             if (!el.value) {
+                console.log('142')
                 var start_time = $('input.o_datepicker_input[name="start_datetime"]').val();
                 if (start_time) {
                     el.value = start_time;
                     $(el).trigger('change');
                 }
                 else {
+
                     var dtnow = new Date();
                     dtnow.setDate(dtnow.getDate() + 1);
-                    dtnow = addZeroToUnder10(dtnow.getMonth() + 1) + '/' + addZeroToUnder10(dtnow.getDate()) + '/' + dtnow.getFullYear() + ' 08:00:00';
+                    dtnow = addZeroToUnder10(dtnow.getMonth() + 1) + ' ' + addZeroToUnder10(dtnow.getDate()) + ', ' + dtnow.getFullYear() + ' 08:00:00';
                     setTimeout(function () {
                         el.value = dtnow;
                         $(el).trigger('change');

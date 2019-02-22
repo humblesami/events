@@ -431,9 +431,9 @@
                                   <field name= "sequence" widget="handle"/>
                                   <field name="name"/>
                                   <field name= "lead"/>
-                                  <field name="duration"/>
-                                  <field name= "attachments"/>
-                                  <field name = "details"/>
+                                  <field name="duration" widget="float_time"/>
+                                  <field name= "document_ids"/>
+                                  <field name = "content"/>
                                   </tree>
                                 </field>
                             </sheet>
