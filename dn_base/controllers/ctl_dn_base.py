@@ -130,6 +130,14 @@ class Controller(http.Controller):
                 else:
                     audience = req_env[res_model].search([('id', '=', res_id)]).get_audience()
 
+
+            data_audience = []
+            if method == 'post_comment':
+                data_audience.append(uid)
+                for id in audience:
+                    data_audience.append(id)
+            else:
+                data_audience = audience
             notification_values = {
                 'res_model': res_model,
                 'res_id': res_id,
@@ -146,7 +154,7 @@ class Controller(http.Controller):
                 notification_values['is_parent'] = 1
             events = [
                 {'name': 'notification_received', 'data': notification_values, 'audience': audience},
-                {'name': res['name'], 'data': res['data'], 'audience': audience}
+                {'name': res['name'], 'data': res['data'], 'audience': data_audience}
             ]
             if not events:
                 raise ValidationError('Invalid events')
