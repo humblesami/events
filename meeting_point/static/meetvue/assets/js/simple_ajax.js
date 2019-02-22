@@ -19,7 +19,7 @@ function dn_rpc_object(options) {
     input_data['db'] = site_config.server_db;
     if (!input_data.token)
         input_data['token'] = dn_current_site_user.cookie.token;
-    if (!input_data['token'] && req_url.indexOf('authenticate') == -1 && typeof window["odoo"] == "undefined") {
+    if (!input_data['token'] && req_url.indexOf('authenticate') == -1 && !window['odoo']) {
         console.log("No token found");
         return;
     }

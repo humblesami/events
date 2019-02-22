@@ -57,7 +57,7 @@ var dn_current_site_user = {
         dn_current_site_user.cookie = false;
         dn_current_site_user.verified = 0;
         if (navigate) {
-            if (typeof window["odoo"] == "undefined") {
+            if (!window['odoo']) {
                 window.location = site_config.site_url + "/login";
             }
 
