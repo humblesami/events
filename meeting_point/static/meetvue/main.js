@@ -1117,7 +1117,8 @@ var SocketService = /** @class */ (function () {
             obj_this.socket.emit('verify', authorized_user);
             obj_this.socket.on('authenticated', function (data) {
                 window['current_user'].cookie = data.user;
-                if (site_config.show_logs.includes('socket')) {
+                // if(site_config.show_logs.includes('socket'))
+                {
                     console.log("Authenticated\n\n");
                 }
                 obj_this.verified = true;
@@ -1168,7 +1169,7 @@ var SocketService = /** @class */ (function () {
                 else
                     console.log("Socket connection not established at " + window['site_config'].chat_server);
             }
-        }, 10000);
+        }, 11000);
     };
     SocketService.prototype.update_unseen_message_count = function (inc) {
         var obj_this = this;
@@ -3735,6 +3736,7 @@ var MessengerComponent = /** @class */ (function () {
         this.is_minimize = true;
         this.chat_initilized = 0;
         this.searchVal = '';
+        this.is_request_sent = true;
         var obj_this = this;
         obj_this.socketService = ss;
         var socketService = ss;
@@ -3794,6 +3796,7 @@ var MessengerComponent = /** @class */ (function () {
         //console.log(111, obj_this.active_chat_user.id, obj_this.user_data.id, 2);
         this.is_minimize = false;
         obj_this.httpService.call_post_http('/active-user-messages', { target_id: target_id }, function (data) {
+            obj_this.is_request_sent = false;
             obj_this.onUserSelected(data);
         }, null);
     };
@@ -3814,6 +3817,19 @@ var MessengerComponent = /** @class */ (function () {
             $('.msg-item').Emoji();
         }, 100);
         obj_this.scrollToEnd();
+        $(".msg_card_body").unbind("scroll");
+        $(".msg_card_body").scroll(function () {
+            var height = Math.floor((0.25 * $(".msg_card_body").height()));
+            if (!obj_this.is_request_sent && $(".msg_card_body").scrollTop() <= height) {
+                obj_this.is_request_sent = true;
+                obj_this.httpService.call_post_http('/active-user-messages', { target_id: obj_this.active_chat_user.id, offset: obj_this.active_chat_user.messages.length }, function (data) {
+                    if (data.length > 0) {
+                        obj_this.is_request_sent = false;
+                        obj_this.active_chat_user.messages = obj_this.active_chat_user.messages.concat(data);
+                    }
+                }, null);
+            }
+        });
     };
     MessengerComponent.prototype.send_message_request = function (input_data, model, method) {
         try {
