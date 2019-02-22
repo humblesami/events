@@ -6,7 +6,7 @@ from odoo import models, fields, api, http
 from odoo.addons.dn_base import dn_dt
 from odoo.addons.dn_base import ws_methods
 from odoo.exceptions import ValidationError
-from datetime import datetime
+
 room_pins_obj = {
     '3402742788':'mvdn198374',
     '1382256314':'mvdn491712',
@@ -72,7 +72,6 @@ class Attendee(models.Model):
     email = fields.Char('Email', help="Email of Invited Person", related='partner_id.email')
     exectime = fields.Char(related="event_id.exectime")
     response_by = fields.Char(string="Response By")
-
 
 
     @api.multi
@@ -200,6 +199,7 @@ class Attendee(models.Model):
 
 class Meeting(models.Model):
     _inherit = ['calendar.event']#,'dn.seen']
+
     @api.model
     def _default_partners(self):
         """ When active_model is res.partner, the current partners should be attendees """
@@ -528,9 +528,6 @@ class Meeting(models.Model):
     @api.onchange('start_datetime', 'duration')
     def _onchange_duration(self):
         if self.start_datetime:
-            data =  dn_dt.dtTostr(datetime.today() )
-            if self.start_datetime < data:
-                self.start_datetime = data
             start = fields.Datetime.from_string(self.start_datetime)
             self.start = self.start_datetime
             if self.duration != 0.0:
