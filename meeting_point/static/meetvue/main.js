@@ -202,7 +202,7 @@ var AppRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <app-header></app-header>\n<router-outlet></router-outlet>\n<button (click)=\"topFunction()\" id=\"backTop\" title=\"Go to top\"><i class=\"fa fa-arrow-up\"></i></button> -->\n"
+module.exports = "<div *ngIf=\"not_export_build\">\n    <app-header></app-header>\n    <router-outlet></router-outlet>\n    <button (click)=\"topFunction()\" id=\"backTop\" title=\"Go to top\"><i class=\"fa fa-arrow-up\"></i></button>\n</div>\n"
 
 /***/ }),
 
@@ -232,6 +232,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var AppComponent = /** @class */ (function () {
     function AppComponent(ss) {
         this.ss = ss;
+        this.not_export_build = undefined;
         this.socketService = ss;
     }
     AppComponent.prototype.topFunction = function () {
@@ -248,6 +249,7 @@ var AppComponent = /** @class */ (function () {
     };
     AppComponent.prototype.ngOnInit = function () {
         var obj_this = this;
+        this.not_export_build = window['not_export_build'];
         window.onscroll = function () { obj_this.scrollFunction(); };
     };
     AppComponent = __decorate([
@@ -353,6 +355,18 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+var bootstrap_Components = undefined;
+(function () {
+    var site_url = window['site_config'].site_url;
+    if (site_url.indexOf('8000') > 1 || site_url.indexOf('odoohq.com') > -1) {
+        console.log("Is export build");
+        bootstrap_Components = [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"], _components_messenger_messenger_component__WEBPACK_IMPORTED_MODULE_35__["MessengerComponent"], _components_chat_chat_component__WEBPACK_IMPORTED_MODULE_15__["ChatComponent"], _components_comments_comments_component__WEBPACK_IMPORTED_MODULE_34__["CommentsComponent"]];
+    }
+    else {
+        window['not_export_build'] = 1;
+        bootstrap_Components = [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"]];
+    }
+})();
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -400,8 +414,7 @@ var AppModule = /** @class */ (function () {
                 _socket_service__WEBPACK_IMPORTED_MODULE_6__["SocketService"],
                 _http_service__WEBPACK_IMPORTED_MODULE_7__["HttpService"]
             ],
-            // bootstrap: [ AppComponent ]
-            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"], _components_messenger_messenger_component__WEBPACK_IMPORTED_MODULE_35__["MessengerComponent"], _components_chat_chat_component__WEBPACK_IMPORTED_MODULE_15__["ChatComponent"], _components_comments_comments_component__WEBPACK_IMPORTED_MODULE_34__["CommentsComponent"]]
+            bootstrap: bootstrap_Components
         })
     ], AppModule);
     return AppModule;
@@ -5289,7 +5302,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/faizan/meetvue (another copy)/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/sami/meetvue/src/main.ts */"./src/main.ts");
 
 
 /***/ })

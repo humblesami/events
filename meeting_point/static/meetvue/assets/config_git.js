@@ -27,7 +27,6 @@ if(site_config.site_url.indexOf('meetvue.com') == -1 && site_config.site_url.ind
 {
 	site_config = site_config_local;
 }
-console.log(site_config);
+// console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;
-// console.log(site_config);
