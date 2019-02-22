@@ -127,6 +127,7 @@
      border-bottom: 2px solid #20a8d8;
 }
  .ToDoitemWrapper h5 {
+     font-weight : bold;
      background-color: #f3f1f1;
      border-right: 0px solid #8BC34A;
      padding: 23px 25px 18px;
