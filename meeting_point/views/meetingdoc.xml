@@ -14,7 +14,7 @@
                     <field name="attachment" filename="filename"
                            class="dn_documents_docs_upload oe_edit_only"/>
                     <button type="object" name="open_view_doc_form"
-                            class="fa fa-5x fa-file-text-o"/>
+                            class="fa fa-5x fa-file"/>
                 </form>
             </field>
         </record>
@@ -134,7 +134,7 @@
                 <tree>
                     <field name="name" string="Title" />
                     <button type="object" name="open_view_doc_form"
-                            class = "fa fa-2x" icon = "fa-file-text-o"/>
+                            class = "fa fa-2x fa-file" />
                 </tree>
             </field>
         </record>
