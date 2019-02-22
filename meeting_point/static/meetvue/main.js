@@ -603,7 +603,10 @@ function scheduleDetails()
         url:req_url,
         data: input_data,
         onSuccess: function (data) {
-            showCalendarEvnetPopup(data);
+            if(data)
+            if(typeof(data) !="string"){
+                showCalendarEvnetPopup(data);
+            }
         }
     });
 };
@@ -626,8 +629,10 @@ function showCalendar(events) {
                 url:req_url,
                 data: input_data,
                 onSuccess: function (data) {
-                    //console.log(data);
-                    showCalendarEvnetPopup(data);
+                    if(data)
+                    if(typeof(data) != "string"){
+                        showCalendarEvnetPopup(data);
+                    }
                 }
             });
         },
@@ -1094,62 +1099,55 @@ var SocketService = /** @class */ (function () {
         });
         var site_config = window['site_config'];
         obj_this.socket.on('connect', function () {
-            setTimeout(function () {
-                if (obj_this.socket.connected) {
-                    obj_this.socket.off('test');
-                    obj_this.socket.off('authenticated');
-                    obj_this.socket.off('server_event');
-                    obj_this.socket.emit('verify', authorized_user);
-                    obj_this.socket.on('verified', function (data) {
-                        window['current_user'].cookie = data.user;
-                        if (site_config.show_logs.includes('socket')) {
-                            console.log("Authenticated\n\n");
-                        }
-                        obj_this.verified = true;
-                        obj_this.unseen_messages = data.unseen;
-                        obj_this.friends = data.friends;
-                        //console.log(data.friends);
-                        obj_this.notificationList = [];
-                        for (var i in data.notifications) {
-                            obj_this.add_item_in_notification_list(data.notifications[i]);
-                        }
-                        // console.log(1111, obj_this.notificationList);
-                        obj_this.notificationList = obj_this.notificationList.reverse();
-                        obj_this.registerEventListeners();
-                        for (var i in obj_this.on_verified) {
-                            obj_this.on_verified[i]();
-                        }
-                        obj_this.on_verified = [];
-                    });
-                    obj_this.socket.on('test', function (res) {
-                        console.log(res, ': in test event...\n\n');
-                    });
-                    obj_this.socket.on('server_event', function (res) {
-                        try {
-                            if (!obj_this.server_events[res.name]) {
-                                if (!obj_this.verified) {
-                                    obj_this.execute_on_verified(function () {
-                                        obj_this.server_events[res.name](res.data);
-                                    });
-                                }
-                                else
-                                    console.log('Not handeled ', res.name);
-                            }
-                            else
+            if (!obj_this.socket.connected) {
+                console.log("Socket could not be connected");
+                console.log(obj_this.socket);
+                return;
+            }
+            obj_this.socket.off('authenticated');
+            obj_this.socket.off('server_event');
+            obj_this.socket.emit('verify', authorized_user);
+            obj_this.socket.on('authenticated', function (data) {
+                window['current_user'].cookie = data.user;
+                if (site_config.show_logs.includes('socket')) {
+                    console.log("Authenticated\n\n");
+                }
+                obj_this.verified = true;
+                obj_this.unseen_messages = data.unseen;
+                obj_this.friends = data.friends;
+                //console.log(data.friends);
+                obj_this.notificationList = [];
+                for (var i in data.notifications) {
+                    obj_this.add_item_in_notification_list(data.notifications[i]);
+                }
+                // console.log(1111, obj_this.notificationList);
+                obj_this.notificationList = obj_this.notificationList.reverse();
+                obj_this.registerEventListeners();
+                for (var i in obj_this.on_verified) {
+                    obj_this.on_verified[i]();
+                }
+                obj_this.on_verified = [];
+            });
+            obj_this.socket.on('server_event', function (res) {
+                try {
+                    if (!obj_this.server_events[res.name]) {
+                        if (!obj_this.verified) {
+                            obj_this.execute_on_verified(function () {
                                 obj_this.server_events[res.name](res.data);
+                            });
                         }
-                        catch (er) {
-                            console.log(er.message, ' in ' + res.name + ' with data ', res);
-                        }
-                    });
-                    if (site_config.show_logs.includes('socket'))
-                        console.log('Socket server connected.. at ' + Date());
+                        else
+                            console.log('Not handeled ', res.name);
+                    }
+                    else
+                        obj_this.server_events[res.name](res.data);
                 }
-                else {
-                    console.log("Socket could not be connected");
-                    console.log(obj_this.socket);
+                catch (er) {
+                    console.log(er.message, ' in ' + res.name + ' with data ', res);
                 }
-            }, 100);
+            });
+            if (site_config.show_logs.includes('socket'))
+                console.log('Socket server connected.. at ' + Date());
         });
         setTimeout(function () {
             if (obj_this.socket && obj_this.socket.connected) { }
