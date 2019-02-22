@@ -172,12 +172,12 @@ var site_functions = {
             var myCanvas = document.getElementById("cursor_canvas");
             var ctx = myCanvas.getContext("2d");
             ctx.beginPath();
-            ctx.arc(5, 5, 5, 0, 2 * Math.PI);
+            ctx.arc(20, 20, 80, 0, 2 * Math.PI);
             ctx.fillStyle = "red";
             ctx.fill();
 
             var url = myCanvas.toDataURL();
-            url = 'url(' + url + ') 64 64, auto';
+            url = 'url(' + url + ') , auto';
             document.documentElement.style.cursor = url;
             $('*').css('cursor', url);
         } else {

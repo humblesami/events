@@ -10,7 +10,7 @@ body{
 	justify-content: center;    
     height: 100vh;
     overflow: auto;
-    background-image: url("../img/login-bg.jpg");
+    /* background-image: url("../img/login-bg.jpg"); */
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
