@@ -809,6 +809,12 @@ function module0(module, exports, __webpack_require__) {
                 var pages_rendered = 0;
 				if(doc_data && doc_data.first_time)
 				{
+					if(doc_data.type == 'meeting'|| doc_data.type == 'topic'){
+						window['show_annotation'] = true;
+					}
+					else{
+						window['show_annotation'] = false
+					}
                     $('.topbar:first .annotation_button').hide();
                     $('#content-wrapper').hide();
                     $('.strt_sign.pdfjs').hide();

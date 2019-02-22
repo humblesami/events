@@ -35,7 +35,6 @@ class MyMail(models.Model):
         res = comment_model.create(comment_vals)
         values['create_date'] = res.create_date
         values['user'] = {'name': req_env.user.name, 'id': req_env.user.id}
-
         res = {
             'name': 'comment_received',
             'data': values,

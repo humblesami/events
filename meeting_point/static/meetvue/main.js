@@ -1403,7 +1403,7 @@ var SocketService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "body{\n    padding-top: 0px;    \n}\n#main-div.Login-form-wrapper{\n    padding-top:10px;\n    padding-bottom:10px; \n}\n.Login-form-wrapper{\n    display: flex;\n\tjustify-content: flex-end;    \n    height: 100vh;\n    overflow: auto;\n    background-image: url('login-bg.jpg');\n    background-repeat: no-repeat;\n    background-size: cover;\n    padding: 0 7vw;\n    position: relative;\n}\n.Login-form-wrapper:before{\n    content: \"\";\n    display: none;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    background-color:rgba(0, 0, 0, 0.33);\n}\n.login-form-div {\n    max-width: 360px;\n    height: 100%;\n    display: table;\n    position: relative;\n    z-index: 200;\n}\n.login-form-div form{\n    padding: 30px 0;\n    display: table-cell;\n    vertical-align: middle;\n}\n.meet-logo{\n    text-align: center;\n    margin-bottom: 1.5rem;\n    /* display: none; */\n}\n.meet-logo img{ max-width: 100%; }\n.login-form-div .form-control{\n    height: 40px;\n    line-height:40px;\n\tborder-radius: 31px 32px 32px 31px/31px 31px 32px 32px;\n\tbackground-color: transparent;\n    border: solid 2px #fff;\n    padding: 0 20px;\n    color: #ffffff;\n    background:rgba(0, 0, 0, 0.40);\n}\n.form-control::-webkit-input-placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::-ms-input-placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::-webkit-input-placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::-ms-input-placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.login-form-div .form-group {\n    margin-bottom: 7%;\n}\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active {\n-webkit-box-shadow: 0 0 0px 1000px white inset !important;\n}\n.login-btn{\n    min-width: 160px;\n\theight: 40px;\n\tborder-radius: 33px 32px 32px 33px/32px;\n    background-color: #875a7b;\n\n    border:transparent;\n    color: #ffffff;\n\n    font-size: 16px;\n    font-weight: 400;\n}\n@media (min-width: 800px) and (max-width: 1200px) {\n    .Login-form-wrapper:before{\n        display: block;\n    }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n    .Login-form-wrapper{justify-content: center;}\n    .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }\n    .Login-form-wrapper{ padding: 0 10vw; }\n    \n}\n@media (max-width: 767px) { \n        .Login-form-wrapper{justify-content: center;}\n        .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }\n        .Login-form-wrapper{ padding: 0 10vw; }\n        .meet-logo img{ max-width: 60%; }\n}"
+module.exports = "body{\n    padding-top: 0px;    \n}\n#main-div.Login-form-wrapper{\n    padding-top:10px;\n    padding-bottom:10px; \n}\n.Login-form-wrapper{\n    display: flex;\n\tjustify-content: center;    \n    height: 100vh;\n    overflow: auto;\n    background-image: url('login-bg.jpg');\n    background-repeat: no-repeat;\n    background-size: cover;\n    position: relative;\n}\n.Login-form-wrapper:before{\n    content: \"\";\n    display: none;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    background-color:rgba(0, 0, 0, 0.33);\n}\n.login-form-div {\n    min-width: 300px;\n    height: 100%;\n    display: table;\n    position: relative;\n    z-index: 200;\n}\n.login-form-div form{\n    padding: 30px 0 100px;\n    display: table-cell;\n    vertical-align: middle;\n}\n.meet-logo{\n    text-align: center;\n    margin-bottom: 1.5rem;\n    /* display: none; */\n}\n.meet-logo-text {\n    text-align: center;\n}\n.meet-logo-text h1 {\n    color: #875a7b;\n    font-size: 56px;\n    font-weight: 600;\n    margin-bottom: 0;\n    line-height: 1;\n}\n.meet-logo-text  span {\n    font-size: 16px;\n    display: block;\n    font-weight: 500;\n    margin-bottom: 15px;\n}\n.meet-logo img{ max-width: 100%; }\n.login-form-div .form-control{\n    height: 35px;\n    line-height:35px;\n\tborder-radius: 0;\n\tbackground-color: transparent;\n    border: solid 1px #875a7b;\n    padding: 0 20px 0 30px;\n    color: #ffffff;\n    background:rgba(0, 0, 0, 0.40);\n    font-size: 14px;\n}\n.form-control::-webkit-input-placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::-ms-input-placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::-webkit-input-placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::-ms-input-placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.form-control::placeholder {\n    color: #FFFFFF !important;\n    opacity: 1;\n}\n.login-form-div .form-group {\n    margin-bottom: 10px;\n}\ninput:-webkit-autofill,\ninput:-webkit-autofill:hover,\ninput:-webkit-autofill:focus,\ninput:-webkit-autofill:active {\n-webkit-box-shadow: 0 0 0px 1000px white inset !important;\n}\n.login-btn{\n    width: 100%;\n    display: block;\n    height: 35px;\n    line-height: 35px;\n\tborder-radius: 0;\n    background-color: #875a7b;\n\n    border:transparent;\n    color: #ffffff;\n\n    font-size: 14px;\n    font-weight: 400;\n    margin-bottom:10px; \n}\n.forgot{\n    display: block;\n    width: 100%;\n    color:#875a7b; \n    font-size: 11px;\n    font-weight: 600;\n    text-align: left;\n}\n.forgot:hover{\n    text-decoration: underline;\n}\n.input-label-icon{ position: relative;}\n.input-label-icon i{\n    font-size: 12px;\n    color: #875a7b;\n    display: block;\n    position: absolute;\n    top: 50%;\n    left: 10px;\n    -webkit-transform: translateY(-50%);\n            transform: translateY(-50%);\n}\n.\n@media (min-width: 800px) and (max-width: 1200px) {\n    .Login-form-wrapper:before{\n        display: block;\n    }\n}\n@media (min-width: 768px) and (max-width: 991px) {\n    .Login-form-wrapper{justify-content: center;}\n    .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }\n    .Login-form-wrapper{ padding: 0 10vw; }\n    \n}\n@media (max-width: 767px) { \n        .Login-form-wrapper{justify-content: center;}\n        .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }\n        .Login-form-wrapper{ padding: 0 10vw; }\n        .meet-logo img{ max-width: 60%; }\n}"
 
 /***/ }),
 
@@ -1641,24 +1641,26 @@ var CommentsComponent = /** @class */ (function () {
         if (parent_item) {
             item['parent_id'] = parent_item.id;
             item['body'] = obj_this.new_reply;
-            if (!Array.isArray(parent_item.children))
-                parent_item.children = [item];
-            else
-                parent_item.children.push(item);
+            // if(!Array.isArray(parent_item.children))
+            //     parent_item.children = [item]
+            // else
+            //     parent_item.children.push(item);
             this.new_reply = '';
+            item['reply'] = 1;
         }
         else {
             item['body'] = obj_this.new_comment;
-            if (obj_this.comment_subtype == 2) {
-                item['no_notify'] = 1;
-                obj_this.notes.splice(0, 0, item);
-            }
-            else {
-                obj_this.comments.splice(0, 0, item);
-            }
+            // if(obj_this.comment_subtype == 2)
+            // {
+            // 	item['no_notify'] = 1;
+            // 	obj_this.notes.splice(0, 0, item);
+            // }
+            // else {
+            // 	obj_this.comments.splice(0, 0, item);
+            // }
             this.new_comment = '';
+            item['reply'] = false;
         }
-        item['reply'] = false;
         this.socketService.emit_server_event(item, 'mail.message', 'post_comment');
     };
     CommentsComponent.prototype.deleteComment = function (id, type) {
@@ -2074,7 +2076,7 @@ var DocumentComponent = /** @class */ (function () {
     };
     DocumentComponent.prototype.loadDoc = function () {
         var obj_this = this;
-        window['show_annotation'] = true;
+        window['show_annotation'] = false;
         window['functions'].showLoader('loaddocwaiter');
         setTimeout(function () {
             var libs_container = $('#pdf-libs-conatiner');
@@ -3226,7 +3228,7 @@ var JitsiComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"main-div\" style=\"display:none\" class=\"Login-form-wrapper\" *ngIf=\"page_loaded\">\n    <div class=\"login-form-div\">\n        \n        <!--<div class=\"img-thumbnail\" id='output'></div>-->\n        <form [formGroup]=\"loginForm\" (ngSubmit)=\"onSubmit()\">\n            <div class=\"meet-logo\">\n                <img src=\"assets/img/login-logo.png\">\n            </div>\n            <div class=\"form-group\">\n                <input id=\"username\" placeholder=\"Username\" type=\"text\" formControlName=\"username\" class=\"form-control\" [ngClass]=\"{ 'is-invalid': submitted && f.username.errors }\" />\n                <div *ngIf=\"submitted && f.username.errors\" class=\"invalid-feedback\">\n                    <div *ngIf=\"f.username.errors.required\">Username is required</div>\n                </div>\n            </div>\n            <div class=\"form-group\">\n                <input id=\"password\" placeholder=\"Password\" type=\"password\" formControlName=\"password\" class=\"form-control\" [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\" />\n                <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n                    <div *ngIf=\"f.password.errors.required\">Password is required</div>\n                </div>\n            </div>\n            <div class=\"form-group text-left\">\n                <button class=\"login-btn\">Login</button>\n                <a style=\"color: white;font-size: 14px;font-weight: bold;margin-left: 10px;\" routerLink=\"/forgot-password\">Forogt Password?</a>\n            </div>\n            <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n        </form>\n    </div>\n</div>"
+module.exports = "<div id=\"main-div\" style=\"display:none\" class=\"Login-form-wrapper\" *ngIf=\"page_loaded\">\n    <div class=\"login-form-div\">\n        \n        <!--<div class=\"img-thumbnail\" id='output'></div>-->\n        <form [formGroup]=\"loginForm\" (ngSubmit)=\"onSubmit()\">\n            <div class=\"meet-logo-text\">\n                <h1>MeetVUE</h1>\n                <span>Welcome to Login</span>\n            </div>\n            <div class=\"form-group input-label-icon\">\n                <i class=\"fas fa-user\"></i>\n                <input id=\"username\" placeholder=\"Username\" type=\"text\" formControlName=\"username\" class=\"form-control\" [ngClass]=\"{ 'is-invalid': submitted && f.username.errors }\" />\n                <div *ngIf=\"submitted && f.username.errors\" class=\"invalid-feedback\">\n                    <div *ngIf=\"f.username.errors.required\">Username is required</div>\n                </div>\n            </div>\n            <div class=\"form-group input-label-icon\">\n                <i class=\"fas fa-key\"></i>\n                <input id=\"password\" placeholder=\"Password\" type=\"password\" formControlName=\"password\" class=\"form-control\" [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\" />\n                <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n                    <div *ngIf=\"f.password.errors.required\">Password is required</div>\n                </div>\n            </div>\n            <div class=\"form-group text-left\">\n                <button class=\"login-btn\">Login</button>\n                <a class=\"forgot\" routerLink=\"/forgot-password\">Forogt Password?</a>\n            </div>\n            <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n        </form>\n    </div>\n</div>"
 
 /***/ }),
 
