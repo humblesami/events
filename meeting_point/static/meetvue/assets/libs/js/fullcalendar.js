@@ -4396,7 +4396,7 @@ var DayGrid = Grid.extend({
 		var segFirst, segLast; // inclusive cell-offset range for segment
         var seg;
         
-        console.log("Here we miss  events some time");
+        //console.log("Here we miss  events some time");
 
 		range = this.view.computeDayRange(range); // make whole-day range, considering nextDayThreshold
 		first = this.dateToCellOffset(range.start);

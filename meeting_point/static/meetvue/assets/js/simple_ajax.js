@@ -57,8 +57,8 @@ function dn_rpc_object(options) {
                 console.log(url_with_params);
             }
             if (options.onSuccess) {
-                if (response.error) {
-                    if (response.error.indexOf('please login') > -1) {
+                if (response.error) {                    
+                    if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {
                         bootbox.alert('Session expired, please login again');
                         dn_current_site_user.logout(1);
                     } else if (response.error.indexOf('not allowed to access') > -1) {
