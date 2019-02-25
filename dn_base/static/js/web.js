@@ -26,36 +26,27 @@ odoo.define('dn_base.icons', function(require) {
     // Appends Icon template in system tray (navbar)
     var IconMenu = Widget.extend({
         template:'Icon',
-          events: {
-        'click': 'laser_pointer',
-             },
-        laser_pointer:function change_cursor(){
-                        if(document.documentElement.style.cursor == '')
-                        {
-                      var myCanvas = document.getElementById("laser_canvas");
-//                        myCanvas.style.zindex = 5000
-//                        myCanvas.style.position = 'absolute';
-                        var ctx = myCanvas.getContext("2d");
-                        ctx.beginPath();
-                        ctx.arc(20, 20, 80, 0, 2 * Math.PI);
-                        ctx.fillStyle = "red";
-                        ctx.fill();
+        events: {
+            'click': 'laser_pointer',
+        },
+        laser_pointer: function change_cursor(){
+            if (document.documentElement.style.cursor == '') {
+                var myCanvas = document.getElementById("laser_canvas");
+                var ctx = myCanvas.getContext("2d");
+                ctx.beginPath();
+                ctx.arc(10, 10, 10, 0, 2 * Math.PI);
+                ctx.fillStyle = "red";
+                ctx.fill();
 
-                        var url = myCanvas.toDataURL();
-                        url = 'url(' +url + '), auto';
-                        document.documentElement.style.cursor = url;
-//                        data = document.querySelector('body')
-//                        data.style.cursor = url;
-                          $('*').css('cursor',url);
-                        }
-                        else{
-                         $('*').css('cursor','');
+                var url = myCanvas.toDataURL();
+                url = 'url(' + url + ') , auto';
+                document.documentElement.style.cursor = url;
+                $('*').css('cursor', url);
+            } else {
+                $('*').css('cursor', '');
 
-                        }
-
-}
-
-
+            }
+        }
     });
     SystrayMenu.Items.push(IconMenu);
 });
