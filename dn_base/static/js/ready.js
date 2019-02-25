@@ -75,6 +75,23 @@ function load_dn_assets()
 
 $(function(){
     $('head').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
+    setTimeout(function(){
+        $('.o_mobile_menu_toggle').mousedown(function(){
+            if(!$('.o_in_appswitcher:first').hasClass('o_hidden'))
+            {
+                setTimeout(function(){
+                    $('.o_in_appswitcher:first').addClass('o_hidden');
+                },500);
+            }
+            else
+            {
+                setTimeout(function(){
+                    $('.o_in_appswitcher:first').removeClass('o_hidden');
+                },10);
+            }
+        })
+    },1500)
+
 });
 
 var site_functions = {

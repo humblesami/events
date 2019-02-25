@@ -9,10 +9,16 @@
 
     <t t-name="notification.icon">
         <li>
-            <a class="customClick fa" data-action="open_notifications" aria-expanded="false" title="Notifications">
+            <a style="cursor:pointer" class="showmouseawaybutton toggle_notification_btn fa" aria-expanded="false" title="Notifications">
                 <app-chat></app-chat>
             </a>
         </li>
+        <style>
+            .container.notification-list
+            {
+                top:45px;
+            }
+        </style>
     </t>
     <t t-name="mail.chat.MessagingMenu"></t>
     <t t-name="mail.chat.ActivityMenu"></t>
