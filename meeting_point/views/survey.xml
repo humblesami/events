@@ -110,70 +110,137 @@
             </field>
         </record>
 
-        <record id="meeting_point_survey_form" model="ir.ui.view">
-            <field name="name">meeting.point.survey.form</field>
+        <!--<record id="meeting_point_survey_form" model="ir.ui.view">-->
+            <!--<field name="name">meeting.point.survey.form</field>-->
+            <!--<field name="model">survey.survey</field>-->
+            <!--<field name="priority" eval="1"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<form string="Survey">-->
+                    <!--<link rel="stylesheet" href="/meeting_point/static/css/survey.css"/>-->
+                    <!--<field name="id" class="survey_id o_hidden"/>-->
+                    <!--<field name="tot_start_survey" invisible="1"/>-->
+                    <!--<field name="is_closed" invisible="1"/>-->
+                    <!--<div class="container">-->
+                        <!--<div class="row">-->
+                            <!--<header groups="meeting_point.group_meeting_admin">-->
+                                <!--<button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight" invisible="1"/>-->
+                                <!--<button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>-->
+                                <!--&lt;!&ndash;<button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight" attrs="{'invisible': [('id', '=', False)]}"/>&ndash;&gt;-->
+                                <!--<button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>-->
+                                <!--<button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>-->
+                                <!--<field name="stage_id" widget="statusbar" clickable="True"/>-->
+                            <!--</header>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<sheet>-->
+                        <!--<div class="oe_button_box" name="button_box">-->
+                            <!--<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">-->
+                                <!--<field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>-->
+                            <!--</button>-->
+                            <!--<button name="action_survey_user_input" type="object" class="oe_stat_button" icon="fa-pencil-square-o">-->
+                                <!--<field string="Answers" name="tot_comp_survey" widget="statinfo"/>-->
+                            <!--</button>-->
+                        <!--</div>-->
+
+                        <!--<h4>Survey Title</h4>-->
+                        <!--<field name="title" placeholder="Title"/>-->
+
+                        <!--<h4>Survey Type</h4>-->
+                        <!--<field name="survey_type" class="survey_type"/>-->
+
+                        <!--<field name="audience" class="o_hidden"></field>-->
+
+                        <!--<div class="survey_meeting_id" attrs="{'invisible': [('audience', '=', 'partners')]}">-->
+                            <!--<h4>Meeting</h4>-->
+                            <!--<field name="meeting_id" domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','>=', time.strftime('%Y-%m-%d'))]" />-->
+                        <!--</div>-->
+
+                        <!--<div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">-->
+                            <!--<h4>Respondents</h4>-->
+                            <!--<field name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"-->
+                                   <!--placeholder="Select respondents..." context="{'force_email':True}" class="oe_inline"/>-->
+                        <!--</div>-->
+
+                        <!--<notebook class="survey_questions">-->
+                            <!--<page string="Edit Questions">-->
+                                <!--<field name="question_ids" mode="tree" nolabel="1">-->
+                                    <!--<tree>-->
+                                        <!--<field name="sequence" widget="handle"/>-->
+                                        <!--<field name="question"/>-->
+                                        <!--<field name="type"/>-->
+                                    <!--</tree>-->
+                                <!--</field>-->
+                            <!--</page>-->
+                            <!--<page string="Options" invisible="1">-->
+                                <!--<group class="o_label_nowrap">-->
+                                    <!--<field name="users_can_go_back" string="User can come back in the previous page"/>-->
+                                    <!--<field name="auth_required"/>-->
+                                    <!--<field name="quizz_mode" groups="base.group_no_one"/>-->
+                                <!--</group>-->
+                            <!--</page>-->
+                        <!--</notebook>-->
+                    <!--</sheet>-->
+                    <!--<div class="oe_chatter">-->
+                        <!--<field name="message_follower_ids" widget="mail_followers"/>-->
+                        <!--<field name="message_ids" widget="mail_thread"/>-->
+                    <!--</div>-->
+                    <!--<script src="/meeting_point/static/js/survey_common.js"/>-->
+                    <!--<script src="/meeting_point/static/js/survey.js"/>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
+
+         <record model="ir.ui.view" id="survey_form_modified">
+            <field name="name">Form view for survey modified</field>
             <field name="model">survey.survey</field>
-            <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Survey">
-                    <link rel="stylesheet" href="/meeting_point/static/css/survey.css"/>
-                    <field name="id" class="survey_id o_hidden"/>
+                    <field name="id" invisible="1"/>
                     <field name="tot_start_survey" invisible="1"/>
                     <field name="is_closed" invisible="1"/>
-                    <div class="container">
-                        <div class="row">
-                            <header groups="meeting_point.group_meeting_admin">
-                                <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight" invisible="1"/>
-                                <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                                <!--<button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>-->
-                                <!--<button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight" attrs="{'invisible': [('id', '=', False)]}"/>-->
-                                <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
-                                <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
-                                <field name="stage_id" widget="statusbar" clickable="True"/>
-                            </header>
-                        </div>
-                    </div>
-
+                    <header groups="survey.group_survey_manager">
+                        <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
+                        <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
+                        <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
+                        <field name="stage_id" widget="statusbar" clickable="True" />
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
-                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
-                            </button>
-                            <button name="action_survey_user_input" type="object" class="oe_stat_button" icon="fa-pencil-square-o">
+                            <button name="action_survey_user_input"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o">
                                 <field string="Answers" name="tot_comp_survey" widget="statinfo"/>
                             </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                         </div>
-
-                        <h4>Survey Title</h4>
-                        <field name="title" placeholder="Title"/>
-
-                        <h4>Survey Type</h4>
-                        <field name="survey_type" class="survey_type"/>
-
+                        <div class="oe_title" style="width: 100%;">
+                            <label for="title" class="oe_edit_only"/>
+                            <h1><field name="title" placeholder="Survey Title"/></h1>
+                        </div>
                         <field name="audience" class="o_hidden"></field>
-
-                        <div class="survey_meeting_id" attrs="{'invisible': [('audience', '=', 'partners')]}">
+                          <div class="survey_meeting_id" attrs="{'invisible': [('audience', '=', 'partners')]}">
                             <h4>Meeting</h4>
-                            <field name="meeting_id" domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','>=', time.strftime('%Y-%m-%d'))]" />
+                            <field name="meeting_id" domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','>=', time.strftime('%Y-%m-%d'))]  " />
                         </div>
-
-                        <div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">
-                            <h4>Respondents</h4>
-                            <field name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
-                                   placeholder="Select respondents..." context="{'force_email':True}" class="oe_inline"/>
-                        </div>
-
-                        <notebook class="survey_questions">
-                            <page string="Edit Questions">
-                                <field name="question_ids" mode="tree" nolabel="1">
+                        <notebook>
+                            <page string="Edit Pages and Questions">
+                                <field name="page_ids" mode="tree" context="{'default_survey_id': active_id}" nolabel="1">
                                     <tree>
                                         <field name="sequence" widget="handle"/>
-                                        <field name="question"/>
-                                        <field name="type"/>
+                                        <field name="title"/>
+                                        <field name="question_ids"/>
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Options" invisible="1">
+                            <page string="Options">
                                 <group class="o_label_nowrap">
                                     <field name="users_can_go_back" string="User can come back in the previous page"/>
                                     <field name="auth_required"/>
@@ -184,14 +251,12 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
-                    <script src="/meeting_point/static/js/survey_common.js"/>
-                    <script src="/meeting_point/static/js/survey.js"/>
                 </form>
             </field>
         </record>
-
         <record model="ir.ui.view" id="survey_question_form">
             <field name="name">Form view for survey question</field>
             <field name="model">survey.question</field>
@@ -343,7 +408,18 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="meeting_point_survey_kanban"/>
         </record>
-
+           <record id="action_attendance_kanban_esurvey" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_survey_admin"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="meeting_point_survey_kanban"/>
+        </record>
+        <record id="action_attendance_form_survey" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_survey_admin"/>
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="survey_form_modified"/>
+        </record>
         <record id="action_survey_question_dev" model="ir.actions.act_window">
             <field name="name">Survey Questions</field>
             <field name="res_model">survey.question</field>
@@ -455,6 +531,11 @@
                 <link rel="stylesheet" href="/meeting_point/static/css/survey.css"/>
             </xpath>
         </template>
+
+
+
+
+
 
     </data>
 </odoo>
