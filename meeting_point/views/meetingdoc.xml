@@ -44,10 +44,10 @@
                     <h4>Attachment</h4>
                     <field name="attachment" filename="filename" class="mp_meeting_docs_upload e_sign_docs oe_edit oe_edit_only"/>
                     <button type="object" name="open_signature_assign_form"
-                            class="fa fa-5x fa-file"/>
-                    <h4 groups="meeting_point.group_meeting_admin">Signatures(s)</h4>
+                            class="fa fa-5x fa-file oe_read_only"/>
+                    <h4 class="oe_read_only"  groups="meeting_point.group_meeting_admin" attrs="{'invisible': [('signature_ids', '=', False)]}">Signatures(s)</h4>
                     <!--<field name="user_ids" groups="meeting_point.group_meeting_admin" string="Signature(s) " widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select signaturee..." class="oe_inline"/>-->
-                    <field name="signature_ids" groups="meeting_point.group_meeting_admin" string=" " mode="kanban" widget='one2many'>
+                    <field class="oe_read_only" name="signature_ids" groups="meeting_point.group_meeting_admin" string=" " mode="kanban" widget='one2many'>
                         <kanban string="Signature(s)" create="false">
                             <field name="draw_signature"/>
                             <field name="id"/>
@@ -147,17 +147,20 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='open_sign_doc']" position="replace">
                     <button type="object" name="open_signature_assign_form"
-                            class="fa fa-5x fa-file pull-left"/>
+                            class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
                 </xpath>
                 <xpath expr="//div[@name='open_sign_doc1']" position="replace">
                     <button type="object" name="open_signature_assign_form"
-                            class="fa fa-5x fa-file pull-left"/>
+                            class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
                 </xpath>
 
                 <xpath expr="//h2[@name='name']" position="after">
                     <div class="sign_info">
                         <strong class="mr4">My Signature:</strong>
                         <field name="mp_signature_status"/>
+                        <div class = "font_hide">
+                        <strong>Meeting : </strong><field name="meeting_id"/>
+                         </div>
                         <div groups="meeting_point.group_meeting_admin">
                             <strong>Pending Signatures:</strong>
                             <field name="pending_signatures"/>
@@ -170,7 +173,7 @@
                         <strong class="mr4">My Signature:</strong>
                         <field name="mp_signature_status"/>
                         <div class = "font_hide">
-                         <p style="font-size:14px;"><span>Meeting : </span><field name="meeting_id"/></p>
+                        <strong>Meeting : </strong><field name="meeting_id"/>
                          </div>
                         <div groups="meeting_point.group_meeting_admin">
                             <strong>Pending Signatures:</strong>
