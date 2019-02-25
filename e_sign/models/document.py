@@ -43,7 +43,7 @@ class Document(models.Model):
             found=False
             doc.my_signature_status = "Not required"
             for signature in doc.signature_ids:
-                if signature.user_id == self.env.user and signature.type=="sign":
+                if signature.user_id == self.env.user:
                     found=True
                     if not signature.draw_signature:
                         pending=True

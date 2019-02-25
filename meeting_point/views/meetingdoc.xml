@@ -46,7 +46,7 @@
                     <button type="object" name="open_signature_form"
                             class="fa fa-5x fa-file-text-o"/>
                     <h4 groups="meeting_point.group_meeting_admin">Signatures(s)</h4>
-                    <field name="user_ids" groups="meeting_point.group_meeting_admin" string="Signature(s) " widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select signaturee..." class="oe_inline"/>
+                    <!--<field name="user_ids" groups="meeting_point.group_meeting_admin" string="Signature(s) " widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select signaturee..." class="oe_inline"/>-->
                     <field name="signature_ids" groups="meeting_point.group_meeting_admin" string=" " mode="kanban" widget='one2many'>
                         <kanban string="Signature(s)" create="false">
                             <field name="draw_signature"/>
@@ -146,15 +146,15 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='open_sign_doc']" position="replace">
-                    <button type="object" name="open_signature_form"
-                            class="fa fa-5x fa-file-text-o"/>
+                    <button type="object" name="open_signature_assign_form"
+                            class="fa fa-5x fa-file pull-left"/>
                 </xpath>
                 <xpath expr="//div[@name='open_sign_doc1']" position="replace">
-                    <button type="object" name="open_signature_form"
-                            class="fa fa-5x fa-file-text-o"/>
+                    <button type="object" name="open_signature_assign_form"
+                            class="fa fa-5x fa-file pull-left"/>
                 </xpath>
 
-                <xpath expr="//h2[@name='name']" position="before">
+                <xpath expr="//h2[@name='name']" position="after">
                     <div class="sign_info">
                         <strong class="mr4">My Signature:</strong>
                         <field name="mp_signature_status"/>
@@ -165,7 +165,7 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//h2[@name='name1']" position="before">
+                <xpath expr="//h2[@name='name1']" position="after">
                     <div class="sign_info">
                         <strong class="mr4">My Signature:</strong>
                         <field name="mp_signature_status"/>
