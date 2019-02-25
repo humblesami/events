@@ -1,7 +1,7 @@
 $(function(){
     $('.slider_div .o_kanban_ungrouped').addClass('related-products');
     $('.related-products .o_kanban_record').addClass('item');
-    $('.slider_div .o_kanban_ghost').remove();
+    $('.slider_div .o_kanban_ghost,.oe_edit_only').remove();
 
     var main_container = $(".o_field_x2many_kanban[name='pending_documents']");
     var items = main_container.find('.owl-item');
