@@ -102,7 +102,7 @@ function process_form_view() {
                         o2m_kanban.parent().show();
                     }
                     else if(read_only)
-                        o2m_kanban.parent().hide();
+                        o2m_kanban.closest('.o2m_kanban').hide();
                 }
             });
         }

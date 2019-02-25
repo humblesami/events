@@ -43,8 +43,8 @@
                     <field name="filename" invisible="1"/>
                     <h4>Attachment</h4>
                     <field name="attachment" filename="filename" class="mp_meeting_docs_upload e_sign_docs oe_edit oe_edit_only"/>
-                    <button type="object" name="open_signature_form"
-                            class="fa fa-5x fa-file-text-o"/>
+                    <button type="object" name="open_signature_assign_form"
+                            class="fa fa-5x fa-file"/>
                     <h4 groups="meeting_point.group_meeting_admin">Signatures(s)</h4>
                     <!--<field name="user_ids" groups="meeting_point.group_meeting_admin" string="Signature(s) " widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select signaturee..." class="oe_inline"/>-->
                     <field name="signature_ids" groups="meeting_point.group_meeting_admin" string=" " mode="kanban" widget='one2many'>
@@ -121,8 +121,8 @@
                     <field name="mp_signature_status" />
                     <field name="pending_signatures" type="string"/>
                     <field name="meeting_id"/>
-                    <button type="object" name="open_signature_form"
-                            class = "fa fa-2x" icon = "fa-file-text-o"/>
+                    <button type="object" name="open_signature_assign_form"
+                            class = "fa fa-2x" icon = "fa-file"/>
                 </tree>
             </field>
         </record>
