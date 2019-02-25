@@ -172,7 +172,7 @@ var site_functions = {
             var myCanvas = document.getElementById("cursor_canvas");
             var ctx = myCanvas.getContext("2d");
             ctx.beginPath();
-            ctx.arc(20, 20, 80, 0, 2 * Math.PI);
+            ctx.arc(10, 10, 10, 0, 2 * Math.PI);
             ctx.fillStyle = "red";
             ctx.fill();
 

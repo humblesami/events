@@ -2,6 +2,13 @@ $(function(){
     $('div[name="country"] .o_input').focus(function(){
         this.select();
     });
+
+    setTimeout(function(){
+        var form_sheet = $('.o_form_sheet:first');
+        var width = form_sheet.width() + parseFloat(form_sheet.css('padding-left')) + parseFloat(form_sheet.css('padding-left'));
+        $('.comments.oe_readonly').width(width);
+    }, 15);
+
 })
 
 //(function(){
