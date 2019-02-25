@@ -74,7 +74,7 @@ function load_dn_assets()
 }
 
 $(function(){
-    $('body').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
+    $('head').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
 });
 
 var site_functions = {
