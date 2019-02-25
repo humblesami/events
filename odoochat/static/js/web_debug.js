@@ -62,13 +62,12 @@ odoo.define('odoochat.notifications', function (require) {
 
     });
     SystrayMenu.Items.push(IconMenu);
-});
-
-$(function(){
     var dnow = Date();
     setTimeout(function(){
-        $('body').append(`<div style="display:none"><app-root></app-root><app-comments></app-comments><app-messenger></app-messenger>
-            <app-chat></app-chat></div>
+        $('body').append(`
+        <div style="display:none">
+        <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger>
+        </div>
             <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js?v="+dnow></script>
         `);
     }, 1000);

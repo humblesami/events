@@ -9,7 +9,6 @@ $(function(){
         var width = form_sheet.width() + parseFloat(form_sheet.css('padding-left')) + parseFloat(form_sheet.css('padding-left'));
         $('.comments.oe_read_only').width(width);
     }, 15);
-
 })
 
 //(function(){
