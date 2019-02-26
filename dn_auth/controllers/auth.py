@@ -172,43 +172,48 @@ class auth(http.Controller):
             req_env = request.env
             uid = int(values['id'])
 
-            method_to_call = getattr(req_env['notification'], 'getMyNotifications')
-            notificationList = method_to_call(values)
+            notificationList = []
+            try:
+                method_to_call = getattr(req_env['notification'], 'getMyNotifications')
+                notificationList = method_to_call(values)
+            except:
+                a = 1
 
             friendIds = []
             friendList = {}
             unseenMessages = 0
             partner_id = req_env.user.partner_id.id
-            filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True)]
-            meetings = request.env['calendar.event'].search(filters)
 
-            base_url = http.request.httprequest.host_url
-            base_url = base_url[:-1]
-            image_path1 = base_url + '/dn/content_file/res.users/'
-            image_path2 = '/image_small/' + values['db'] + '/' + values['token']
+            try:
+                filters = [('partner_ids', 'in', [partner_id]), ('publish', '=', True)]
+                meetings = request.env['calendar.event'].search(filters)
+                base_url = http.request.httprequest.host_url
+                base_url = base_url[:-1]
+                image_path1 = base_url + '/dn/content_file/res.users/'
+                image_path2 = '/image_small/' + values['db'] + '/' + values['token']
+                for obj in meetings:
+                    for partner in obj.partner_ids:
+                        obj_id = partner.user_id.id
+                        if obj_id != uid and obj_id not in friendIds:
+                            friendObj = partner.user_id
+                            friend = {
+                                'id': friendObj.id,
+                                'name': friendObj.name,
+                                'photo': image_path1 + str(friendObj.id) + image_path2
+                            }
+                            if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
+                                    'meeting_point.group_meeting_admin'):
+                                friend['type'] = 'staff'
+                            else:
+                                friend['type'] = 'director'
 
-            # meetingList = []
-            for obj in meetings:
-                for partner in obj.partner_ids:
-                    obj_id = partner.user_id.id
-                    if obj_id != uid and obj_id not in friendIds:
-                        friendObj = partner.user_id
-                        friend = {
-                            'id': friendObj.id,
-                            'name': friendObj.name,
-                            'photo': image_path1 + str(friendObj.id) + image_path2
-                        }
-                        if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
-                                'meeting_point.group_meeting_admin'):
-                            friend['type'] = 'staff'
-                        else:
-                            friend['type'] = 'director'
-
-                        db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
-                        friend['unseen'] = req_env['odoochat.message'].search_count(db_filters)
-                        unseenMessages += friend['unseen']
-                        friendList[friend['id']] = friend
-                        friendIds.append(friend['id'])
+                            db_filters = [('sender', '=', friend['id']), ('to', '=', uid), ('read_status', '=', False)]
+                            friend['unseen'] = req_env['odoochat.message'].search_count(db_filters)
+                            unseenMessages += friend['unseen']
+                            friendList[friend['id']] = friend
+                            friendIds.append(friend['id'])
+            except:
+                a = 1
 
             user_data = {'notifications': notificationList, 'friends': friendList, 'friendIds': friendIds,
                          'unseen': unseenMessages, 'user': values}

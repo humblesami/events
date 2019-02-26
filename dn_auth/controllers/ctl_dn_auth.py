@@ -8,12 +8,9 @@ import traceback
 from odoo import http
 from dateutil import parser
 from datetime import datetime
-from werkzeug.utils import redirect
 from odoo.addons.dn_base import ws_methods
 from odoo.addons.dn_auth import dn_auth_vars
 from dateutil.relativedelta import relativedelta
-#from odoo.ir_http import Http
-from odoo import models
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 
 class AuthSession(AuthSignupHome):

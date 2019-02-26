@@ -5,8 +5,8 @@ $(function(){
 
     setTimeout(function(){
         var form_sheet = $('.o_form_sheet:first');
-        console.log(form_sheet.width(), 111);
-        var width = form_sheet.width() + parseFloat(form_sheet.css('padding-left')) + parseFloat(form_sheet.css('padding-left'));
+        var padding = parseFloat(form_sheet.css('padding-left')) + parseFloat(form_sheet.css('padding-left'));
+        var width = form_sheet.width() + padding;
         $('.comments.oe_read_only').width(width);
     }, 15);
 })

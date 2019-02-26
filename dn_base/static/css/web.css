@@ -94,17 +94,18 @@ z-index : 99999
     margin-right: 5px;
 }
 
+
 .panel-heading.note-toolbar .note-color
 {
     display:none;
 }
-/*
+
 .o_form_editable .note-editor.panel .note-toolbar button[data-name="picture"],
 .o_form_editable .note-editor.panel .note-toolbar div[data-name="fontsize"]
 {
     display:none
 }
-*/
+
 
 h1, .h1, h2, .h2, h3, .h3
 {

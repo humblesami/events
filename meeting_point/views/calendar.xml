@@ -292,9 +292,99 @@
 
                         <div name="readonly_completed_2">
                             <group groups="meeting_point.group_meeting_admin">
-                            <field name="alarm_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" widget="many2many_tags"/>
-                        </group>
+                                <field name="alarm_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" widget="many2many_tags"/>
+                            </group>
+
+                            <notebook invisible="1">
+                            <page string="Options" attrs="{'invisible':True}">
+                                <group>
+                                    <div>
+                                        <group>
+                                            <field name="recurrency" invisible="1" options="{'no_create': True,'no_open ': True,'no_quick_create': True, 'no_create_edit' : True}"/>
+                                        </group>
+                                        <div attrs="{'invisible': [('recurrency', '=', False)]}">
+                                            <group>
+                                                <label for="interval"/>
+                                                <div class="o_row">
+                                                    <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                    <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                </div>
+                                                <label string="Until" for="end_type"/>
+                                                <div class="o_row">
+                                                    <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                    <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
+                                                    <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                                </div>
+                                            </group>
+                                            <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
+                                                <field name="mo"/>
+                                                <field name="tu"/>
+                                                <field name="we"/>
+                                                <field name="th"/>
+                                                <field name="fr"/>
+                                                <field name="sa"/>
+                                                <field name="su"/>
+                                            </group>
+                                            <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
+                                                <label string="Day of Month" for="month_by"/>
+                                                <div class="o_row">
+                                                    <field name="month_by"/>
+                                                    <field name="day" attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'date')]}"/>
+                                                    <field name="byday" string="The" attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>
+                                                    <field name="week_list" nolabel="1" attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>
+                                                </div>
+                                            </group>
+                                        </div>
+                                    </div>
+                                    <group>
+                                        <field name="privacy" invisible="1"/>
+                                        <field name="show_as" invisible="1"/>
+                                        <field name="rrule" invisible="1" readonly="0"/>
+                                        <field name="recurrent_id" invisible="1"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page invisible="1" string="Misc" groups="base.group_no_one">
+                                <group>
+                                    <label for="user_id" string="Owner"/>
+                                    <field name="user_id" nolabel="1"/>
+                                </group>
+                            </page>
+
+                        </notebook>
+
+                            <div class="mtopic_tree">
+                                <h3>Agenda Topics</h3>
+                                <sheet>
+                                   <field name="topic_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline">
+                                      <tree>
+                                      <field name= "sequence" widget="handle"/>
+                                      <field name="name"/>
+                                      <field name= "lead"/>
+                                      <field name="duration" widget="float_time"/>
+                                      <field name= "document_ids"/>
+                                      <field name = "content"/>
+                                      </tree>
+                                    </field>
+                                </sheet>
+                            </div>
+                        </div>
                         <div class="o2m_kanban">
+                            <h4>Meeting Documents</h4>
+                            <field name="doc_ids" class="kanban_document" mode="kanban"/>
+                        </div>
+                        <div class="oe_read_only" name="readonly_completed_3">
+                            <div class="o2m_kanban">
+                                <h4>Documents For Signatures</h4>
+                                <field name="document_ids"
+                                       attrs="{'readonly': [('exectime', '=', 'completed')]}"
+                                       class="kanban_document"
+                                       mode="kanban"
+                                />
+                            </div>
+                        </div>
+                        <div class="oe_read_only o2m_kanban">
                             <h4>Surveys</h4>
                             <field name="survey_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" string=" " mode="kanban">
                                 <form string="Survey">
@@ -364,123 +454,19 @@
                             </field>
                         </div>
 
-                        <notebook invisible="1">
-                            <page string="Options" attrs="{'invisible':True}">
-                                <group>
-                                    <div>
-                                        <group>
-                                            <field name="recurrency" invisible="1" options="{'no_create': True,'no_open ': True,'no_quick_create': True, 'no_create_edit' : True}"/>
-                                        </group>
-                                        <div attrs="{'invisible': [('recurrency', '=', False)]}">
-                                            <group>
-                                                <label for="interval"/>
-                                                <div class="o_row">
-                                                    <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                    <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                </div>
-                                                <label string="Until" for="end_type"/>
-                                                <div class="o_row">
-                                                    <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                    <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
-                                                    <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
-                                                </div>
-                                            </group>
-                                            <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
-                                                <field name="mo"/>
-                                                <field name="tu"/>
-                                                <field name="we"/>
-                                                <field name="th"/>
-                                                <field name="fr"/>
-                                                <field name="sa"/>
-                                                <field name="su"/>
-                                            </group>
-                                            <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
-                                                <label string="Day of Month" for="month_by"/>
-                                                <div class="o_row">
-                                                    <field name="month_by"/>
-                                                    <field name="day" attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'date')]}"/>
-                                                    <field name="byday" string="The" attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>
-                                                    <field name="week_list" nolabel="1" attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>
-                                                </div>
-                                            </group>
-                                        </div>
-                                    </div>
-                                    <group>
-                                        <field name="privacy" invisible="1"/>
-                                        <field name="show_as" invisible="1"/>
-                                        <field name="rrule" invisible="1" readonly="0"/>
-                                        <field name="recurrent_id" invisible="1"/>
-                                    </group>
-                                </group>
-                            </page>
-
-                            <page invisible="1" string="Misc" groups="base.group_no_one">
-                                <group>
-                                    <label for="user_id" string="Owner"/>
-                                    <field name="user_id" nolabel="1"/>
-                                </group>
-                            </page>
-
-                        </notebook>
-
-                        <div class="mtopic_tree">
-                            <h3>Agenda Topics</h3>
-                            <sheet>
-                               <field name="topic_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline">
-                                  <tree>
-                                  <field name= "sequence" widget="handle"/>
-                                  <field name="name"/>
-                                  <field name= "lead"/>
-                                  <field name="duration" widget="float_time"/>
-                                  <field name= "document_ids"/>
-                                  <field name = "content"/>
-                                  </tree>
-                                </field>
-                            </sheet>
-                        </div>
-                        </div>
-                        <div class="o2m_kanban">
-                            <h4>Meeting Documents</h4>
-                            <field name="doc_ids" class="kanban_document" mode="kanban"/>
-                        </div>
-                        <div name="readonly_completed_3">
-                        <div class="o2m_kanban">
-                            <h4>Documents For Signatures</h4>
-                            <field name="document_ids"
-                                   attrs="{'readonly': [('exectime', '=', 'completed')]}"
-                                   class="kanban_document"
-                                   mode="kanban"
-                            />
-                        </div>
-                        </div>
-
                         <script src="/meeting_point/static/js/meeting_form.js"/>
                     </sheet>
                     <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>
 
 
-
-  	<meta charset="utf-8" />
-    <title>MeetVUE</title>
-    <base href="http://localhost:8000" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1">
-	</div>
-
-	<script>
-		window["io"] = io;
-	</script>
-
-	<app-comments></app-comments>
+                    <base href="http://localhost:8000" />
+                    <script>
+                        window["io"] = io;
+                    </script>
+                    <app-comments></app-comments>
                     <script src="/odoochat/static/js/messages.js"/>
-
-
-
-<script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
-
-
-
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
                 </form>
             </field>
         </record>
