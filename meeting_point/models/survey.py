@@ -226,12 +226,12 @@ class SurveyQuestion(models.Model):
                               ondelete='cascade', required=False, default=lambda self: self.env.context.get('page_id'))
     type = fields.Selection([
             ('free_text', 'Multiple Lines Text Box'),
-            # ('textbox', 'Single Line Text Box'),
+             ('textbox', 'Single Line Text Box'),
             ('numerical_box', 'Numerical Value'),
             ('date', 'Date'),
-            ('simple_choice', 'Multiple choice: only one answer')
-            # ('multiple_choice', 'Multiple choice: multiple answers allowed')
-            # ('matrix', 'Matrix')
+            ('simple_choice', 'Multiple choice: only one answer'),
+             ('multiple_choice', 'Multiple choice: multiple answers allowed'),
+             ('matrix', 'Matrix')
     ], string='Type of Question', default='free_text', required=True)
 
     @api.onchange('question')

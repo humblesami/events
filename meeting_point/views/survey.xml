@@ -408,7 +408,7 @@
         <!--</record>-->
         <record model="ir.ui.view" id="survey_question_form">
             <field name="name">Form view for survey question</field>
-            <field name="model">survey.question</field>
+             <field name="model">survey.question</field>
             <field name="arch" type="xml">
                 <form string="Survey Question" create="false">
                     <sheet>
