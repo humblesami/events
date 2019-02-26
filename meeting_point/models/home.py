@@ -48,7 +48,15 @@ class News(models.Model):
             obj.public_events = meetings
             events_list = []
             for m in meetings:
-                event = {'id':m.id,'title':m.name,'start':m.start.split(" ")[0]}
+                hour = str(int(m.start.split(" ")[1].split(":")[0]) + 5)
+                hourEnd = str(int(m.stop_datetime.split(" ")[1].split(":")[0]) + 5)
+                if int(hour)<10:
+                    hour = '0'+str(hour)
+                if int(hourEnd) < 10:
+                    hourEnd = '0' + str(hourEnd)
+                timeHour = m.start.split(" ")[0] +'T'+hour+':'+m.start.split(" ")[1].split(":")[1]+ ':'+m.start.split(" ")[1].split(":")[2]+'Z'
+                timeHourEnd = m.stop_datetime.split(" ")[0] + 'T' + hourEnd + ':' + m.stop_datetime.split(" ")[1].split(":")[1] + ':' + m.stop_datetime.split(" ")[1].split(":")[2] + 'Z'
+                event = {'id':m.id,'title':m.name,'start':timeHour,'end':timeHourEnd}
                 events_list.append(event)
             obj.public_event=json.dumps(events_list)
 
