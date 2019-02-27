@@ -1400,3 +1400,14 @@ background-size: contain;
     min-height: calc(100vh - 232px);
     border: 1px solid silver;
 }
+
+
+.fc-week .fc-content-skeleton tbody
+{
+	position: absolute;
+	top:-4px;
+}
+a.fc-time-grid-event.fc-event
+{
+	margin-top:-4px;
+}

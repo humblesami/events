@@ -7,8 +7,14 @@ from odoo.addons.survey.controllers.main import WebsiteSurvey
 
 class website_survey(WebsiteSurvey):
 
+
     @http.route('/survey-questions', type="http", csrf=False, auth='none', cors='*')
     def get_survey_http(self, **kw):
+        # survey_title = val['title'].replace(' ', '-')
+        # survey_title = survey_title.replace("'", '-')
+        # start_url = http.request.conf['host_url'] + 'survey/start/' + survey_title + '-' + str(
+        #     val['id']) + '/phantom/' + values['db'] + '/' + values['token']
+        # val['start_url'] = start_url
         return self.get_survey_questions(kw)
 
     @http.route('/survey-questions-json', type="json", csrf=False, auth='none', cors='*')
@@ -56,6 +62,23 @@ class website_survey(WebsiteSurvey):
             return ws_methods.http_response('', survey_object)
         except:
             return ws_methods.handle()
+
+    @http.route('/survey-details', type="http", csrf=False, auth='none', cors='*')
+    def get_survey_http(self, **kw):
+        try:
+            uid = ws_methods.check_auth(kw)
+            if not uid:
+                return ws_methods.not_logged_in()
+            survey_id = kw.get('survey_id')
+            survey_id = int(survey_id)
+            survey = request.env['survey.survey'].search([('id','=', survey_id)])
+            data = { 'url': survey.url}
+            if survey.meeting_id:
+                data['meeting_name'] = survey.meeting_id.name
+                data['meeting_id'] = survey.meeting_id.id
+            return ws_methods.http_response('', data)
+        except:
+            ws_methods.handle()
 
     @http.route('/survey-user-response', type="http", csrf=False, auth='none', cors='*')
     def submit_dn_survey_http(self, **kw):

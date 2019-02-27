@@ -26,17 +26,19 @@ var network_config = {
     app_name : 'MeetingPoint',
 	show_logs : ['socket','ajax_before','ajax_success']
 };
+
+if(site_config.site_url.indexOf('meetvue.com') == -1 && site_config.site_url.indexOf('odoohq.com') == -1)
+{
+	site_config = site_config_local;
+}
 site_config = network_config;
+console.log(site_config);
 site_config.site_url = window.location.origin.toString();
 if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -1)
 {
     site_config.site_url = window.location.origin+'/web';
 }
 
-if(site_config.site_url.indexOf('meetvue.com') == -1 && site_config.site_url.indexOf('odoohq.com') == -1)
-{
-	site_config = site_config_local;
-}
 // console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;

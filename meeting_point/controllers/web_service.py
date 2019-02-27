@@ -157,11 +157,11 @@ class ws(http.Controller):
             props = ['id', 'title', 'meeting_id.name']
             to_do_items['pending_surveys'] = ws_methods.objects_list_to_json_list(home.pending_surveys, props)
 
-            for val in to_do_items['pending_surveys']:
-                survey_title = val['title'].replace(' ','-')
-                survey_title = survey_title.replace("'", '-')
-                start_url = http.request.conf['host_url'] + 'survey/start/' + survey_title + '-' + str(val['id']) + '/phantom/' + values['db'] + '/' + values['token']
-                val['start_url'] = start_url
+            # for val in to_do_items['pending_surveys']:
+            #     survey_title = val['title'].replace(' ','-')
+            #     survey_title = survey_title.replace("'", '-')
+            #     start_url = http.request.conf['host_url'] + 'survey/start/' + survey_title + '-' + str(val['id']) + '/phantom/' + values['db'] + '/' + values['token']
+            #     val['start_url'] = start_url
             props = ['id','name', 'mp_signature_status', 'meeting_id.name']
             to_do_items['pending_documents'] = ws_methods.objects_list_to_json_list(home.pending_documents, props)
 
