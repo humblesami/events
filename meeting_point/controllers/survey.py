@@ -308,3 +308,69 @@ class website_survey(WebsiteSurvey):
                                        'token': token,
                                        'page_nr': 0,
                                        'quizz_correction': True if survey.quizz_mode and token else False})
+
+    @http.route(['/survey/meet/results/<model("survey.survey"):survey>'],
+                type='http', auth='user', website=True)
+    def survey_reporting_new(self, survey, token=None, **post):
+        '''Display survey Results & Statistics for given survey.'''
+        result_template = 'meeting_point.resultnew'
+        current_filters = []
+        filter_display_data = []
+        filter_finish = False
+
+        if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if
+                                             input_id.state != 'new']:
+            result_template = 'meeting_point.no_result_new'
+        if 'finished' in post:
+            post.pop('finished')
+            filter_finish = True
+        if post or filter_finish:
+            filter_data = self.get_filter_data(post)
+            current_filters = survey.filter_input_ids(filter_data, filter_finish)
+            filter_display_data = survey.get_filter_display_data(filter_data)
+        return request.render(result_template,
+                              {'survey': survey,
+                               'survey_dict': self.prepare_result_dict(survey, current_filters),
+                               'page_range': self.page_range,
+                               'current_filters': current_filters,
+                               'filter_display_data': filter_display_data,
+                               'filter_finish': filter_finish
+                               })
+        # Quick retroengineering of what is injected into the template for now:
+        # (TODO: flatten and simplify this)
+        #
+        #     survey: a browse record of the survey
+        #     survey_dict: very messy dict containing all the info to display answers
+        #         {'page_ids': [
+        #
+        #             ...
+        #
+        #                 {'page': browse record of the page,
+        #                  'question_ids': [
+        #
+        #                     ...
+        #
+        #                     {'graph_data': data to be displayed on the graph
+        #                      'input_summary': number of answered, skipped...
+        #                      'prepare_result': {
+        #                                         answers displayed in the tables
+        #                                         }
+        #                      'question': browse record of the question_ids
+        #                     }
+        #
+        #                     ...
+        #
+        #                     ]
+        #                 }
+        #
+        #             ...
+        #
+        #             ]
+        #         }
+        #
+        #     page_range: pager helper function
+        #     current_filters: a list of ids
+        #     filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
+        #     filter_finish: boolean => only finished surveys or not
+        #
+
