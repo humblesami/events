@@ -459,11 +459,6 @@
                     <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>
 
-
-                    <base href="http://localhost:8000" />
-                    <script>
-                        window["io"] = io;
-                    </script>
                     <app-comments></app-comments>
                     <script src="/odoochat/static/js/messages.js"/>
                     <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>

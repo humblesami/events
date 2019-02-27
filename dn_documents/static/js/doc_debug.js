@@ -23,10 +23,6 @@
 //
 //    var iframe_base_path = window.location.origin+'/meetvue/';
 //    var iframe_src = iframe_base_path+page_url;
-//    if(iframe_base_path == 'http://localhost:8000/meetvue/')
-//    {
-//        iframe_src = 'http://localhost:4200/'+page_url;
-//    }
 
 //    var height_to_minus = $('.o_content').css('overflow','hidden').position().top - 139 + 'px';
 //    console.log(iframe_src, height_to_minus);
