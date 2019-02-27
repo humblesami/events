@@ -1427,7 +1427,7 @@ module.exports = ".mobile-chatroom button, .navbar-profile-menu button{\n\tbackg
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"main-user-navbar\">\n\t<div class=\"mobile-chatroom nav-icon dropdown\">\n        <button *ngIf=\"not_export_build\" (click)=\"toggle_notification_list($event)\"\n        class=\"toggle_notification_btn showmouseawaybutton notification-icon\">\n\t\t\t<i class=\"fas fa-bell\"></i>\n        </button>\n        <span *ngIf=\"!not_export_build\">\n\t\t\t<i class=\"fas fa-bell\"></i>\n\t\t</span>\n\t\t<span class=\"un-read-msg\" *ngIf=\"socketService.notificationList.length > 0\">{{socketService.notificationList.length}}</span>\n\t</div>\n</div>\n\n<div class=\"container right-panel notification-list hidemouseaway\">\n    <div (click)=\"close_right_panel()\" class=\"chat-list-close\">\n        <i class=\"fas fa-times\"></i>\n    </div>\n\t<ul class=\"chat-items list-group\">\n\t\t<li *ngFor=\"let note of socketService.notificationList\">\n\t\t\t<a *ngIf=\"note.counter > 0\"  class=\"list-group-item contact\"\n                [ngClass]=\"[note.active ? 'online': '']\"\n\t\t\t\trouterLink=\"{{note.client_route}}\">\n\t\t\t\t<div style=\"display: contents;\" class=\"wrap\">\n\t\t\t\t\t{{ note.counter +' '+ note.content }}\n\t\t\t\t</div>\n\t\t\t\t<span style=\"right: 10px;position: absolute;\" *ngIf=\"socketService.active_parent_notification && socketService.active_parent_notification.id == note.id\" class=\"badge badge-success\">Opened</span>\n\t\t\t</a>\n\t\t</li>\n\t\t<li *ngIf=\"socketService.notificationList == 0\" class=\"list-group-item contact\">\n\t\t\tNo New Notifications\n\t\t</li>\n\t</ul>\n</div>\n"
+module.exports = "<div class=\"main-user-navbar\">\n\t<div class=\"mobile-chatroom nav-icon dropdown\">\n        <button *ngIf=\"not_export_build\"\n        class=\"toggle_notification_btn showmouseawaybutton notification-icon\">\n\t\t\t<i class=\"fas fa-bell\"></i>\n        </button>\n        <span *ngIf=\"!not_export_build\">\n\t\t\t<i class=\"fas fa-bell\"></i>\n\t\t</span>\n\t\t<span class=\"un-read-msg\" *ngIf=\"socketService.notificationList.length > 0\">{{socketService.notificationList.length}}</span>\n\t</div>\n</div>\n\n<div class=\"container right-panel notification-list hidemouseaway\">\n    <div (click)=\"close_right_panel()\" class=\"chat-list-close\">\n        <i class=\"fas fa-times\"></i>\n    </div>\n\t<ul class=\"chat-items list-group\">\n\t\t<li *ngFor=\"let note of socketService.notificationList\">\n\t\t\t<a *ngIf=\"note.counter > 0\"  class=\"list-group-item contact\"\n                [ngClass]=\"[note.active ? 'online': '']\"\n\t\t\t\trouterLink=\"{{note.client_route}}\">\n\t\t\t\t<div style=\"display: contents;\" class=\"wrap\">\n\t\t\t\t\t{{ note.counter +' '+ note.content }}\n\t\t\t\t</div>\n\t\t\t\t<span style=\"right: 10px;position: absolute;\" *ngIf=\"socketService.active_parent_notification && socketService.active_parent_notification.id == note.id\" class=\"badge badge-success\">Opened</span>\n\t\t\t</a>\n\t\t</li>\n\t\t<li *ngIf=\"socketService.notificationList == 0\" class=\"list-group-item contact\">\n\t\t\tNo New Notifications\n\t\t</li>\n\t</ul>\n</div>\n"
 
 /***/ }),
 
@@ -1472,11 +1472,12 @@ var ChatComponent = /** @class */ (function () {
     ChatComponent.prototype.close_right_panel = function () {
         $(".right-panel").hide();
     };
-    ChatComponent.prototype.toggle_notification_list = function (e) {
-        var togglerelated = window['functions'].togglerelated;
-        togglerelated(e, e.target, '.container.notification-list');
-    };
     ChatComponent.prototype.ngOnInit = function () {
+        $('.toggle_notification_btn').unbind('click');
+        $('.toggle_notification_btn').click(function (e) {
+            var togglerelated = window['functions'].togglerelated;
+            togglerelated(e, e.target, '.container.notification-list');
+        });
         var obj_this = this;
         var route = window['pathname'];
         if (route == '/chat') {

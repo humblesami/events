@@ -32,7 +32,7 @@ if(site_config.site_url.indexOf('meetvue.com') == -1 && site_config.site_url.ind
 	site_config = site_config_local;
 }
 site_config = network_config;
-console.log(site_config);
+//console.log(site_config);
 site_config.site_url = window.location.origin.toString();
 if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -1)
 {

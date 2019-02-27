@@ -84,6 +84,18 @@ var dn_json_rpc_object = {
         $.ajax({
             url: requestUrl,
             data: input_data,
+            beforeSend: function (jqXHR, settings) {
+                var this_req_url = settings.url;
+                if(!this_req_url.startsWith(dn_json_rpc_object.baseUrl))
+                    this_req_url = dn_json_rpc_object.baseUrl + this_req_url;
+                console.log(this_req_url);
+                jqXHR.abort();
+            }
+        });
+
+        $.ajax({
+            url: requestUrl,
+            data: input_data,
             dataType: 'JSON',
             type:'POST',
             beforeSend: function (jqXHR, settings) {

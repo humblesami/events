@@ -25,6 +25,21 @@ var site_config = {
     server_db : 'demo'
 }
 
+function get_param_value(name, url)
+{
+    try{
+        if (!url) url = location.href;
+        name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+        var regexS = "[\\?&]"+name+"=([^&#]*)";
+        var regex = new RegExp( regexS );
+        var results = regex.exec( url );
+        results = results[1];
+        return results;
+    }
+    catch(er){
+        return '';
+    }
+}
 
 function load_dn_assets()
 {

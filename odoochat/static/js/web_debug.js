@@ -27,7 +27,7 @@ odoo.define('odoochat.messages', function (require) {
         {
             var reqObject = {
                 url:'/get-action-id',
-                data:{xml_id : 'odoochat.action_messenger', db: odoo.session_info.db, token: odoo.session_info.token},
+                data:{ xml_id : 'odoochat.action_messenger', db: odoo.session_info.db, token: odoo.session_info.token},
                 onSuccess: function(action_id)
                 {
                     var action_url = '/web#action='+action_id;
@@ -36,7 +36,7 @@ odoo.define('odoochat.messages', function (require) {
                     {
                         action_url = '/web?debug=1#action='+action_id;
                     }
-                    //console.log(odoo.session_info.uid, action_url, debug_in_url);
+                    action_url += '&menu_id='+get_param_value('menu_id');
                     window.location = action_url;
                 }
             };

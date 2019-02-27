@@ -80,7 +80,7 @@ class Controller(http.Controller):
             res = req_env.ref(xml_id).id
             return ws_methods.http_response('', res)
         except:
-            ws_methods.handle()
+            return ws_methods.handle()
 
 
     @http.route('/socket_server_request', type='http', csrf=False, auth='public', cors='*')
