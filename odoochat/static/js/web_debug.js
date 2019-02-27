@@ -1,22 +1,18 @@
 (function(){
+    var dnow = Date();
+    document.writeln(
+        `<base href=${window.location.origin} />
+        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/config.js"></script>
+        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/json.js"></script>
+        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/simple_ajax.js"></script>
+        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/main.js"></script>
+        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/datetime.js"></script>
 
-var dnow = Date();
-document.writeln(`
-
-    <base href=${window.location.origin} />
-	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/config.js"></script>
-	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/json.js"></script>
-    <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/simple_ajax.js"></script>
-	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/main.js"></script>
-	<script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/datetime.js"></script>
-
-    <script type="text/javascript" src="/meeting_point/static/meetvue/polyfills.js"></script>
-    <script type="text/javascript" src="/meeting_point/static/meetvue/vendor.js"></script>
-    <script type="text/javascript" src="/meeting_point/static/meetvue/main.js?v="+dnow></script>
-`);
-
+        <script type="text/javascript" src="/meeting_point/static/meetvue/polyfills.js"></script>
+        <script type="text/javascript" src="/meeting_point/static/meetvue/vendor.js"></script>
+        <script type="text/javascript" src="/meeting_point/static/meetvue/main.js?v="+dnow></script>`
+    );
 })();
-
 
 odoo.define('odoochat.messages', function (require) {
     var SystrayMenu = require('web.SystrayMenu');
@@ -57,24 +53,17 @@ odoo.define('odoochat.notifications', function (require) {
 
     var IconMenu = Widget.extend({
         template:'notification.icon'
-
     });
     SystrayMenu.Items.push(IconMenu);
     var dnow = Date();
-$(function(){
-    setTimeout(function(){
-
-            $('body').append(`
-            <div style="display:none">
-            <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger>
-            </div>
-                <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js?v="+dnow></script>
-            `);
-
-
-    }, 1000);
-
-     })
-
-
+    $(function(){
+        setTimeout(function(){
+            $('body').append(
+                `<div style="display:none">
+                    <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger>
+                </div>
+                <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js?v="+dnow></script>`
+            );
+        }, 3500);
+    });
 });

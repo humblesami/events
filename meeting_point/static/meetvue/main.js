@@ -3798,7 +3798,9 @@ var MessengerComponent = /** @class */ (function () {
         ss.execute_on_verified(registerChatEventListeners);
     }
     MessengerComponent.prototype.select_chat_user = function (target_id) {
-        if (window.screen.availWidth <= 767) {
+        var ww = $(window).width();
+        // .screen.availWidth <= 767
+        if (ww <= 767) {
             $('.chat-container-wrppaer').attr("id", "mobi-active-chat");
         }
         var obj_this = this;

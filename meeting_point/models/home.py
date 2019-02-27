@@ -75,9 +75,10 @@ class News(models.Model):
     @api.multi
     def compute_surveys(self):
         try:
-            environment = self.env
+            env = self.env
             for obj in self:
-                surveys = environment['survey.survey'].search([])
+                surveys = env['survey.survey'].search([])
+                surveys = surveys.filtered(lambda x: x.my_status != 'not invited')
                 obj.pending_surveys = surveys
         except:
             raise ValidationError(sys.exc_info() + " while getting surveys")
