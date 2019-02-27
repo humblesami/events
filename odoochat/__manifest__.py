@@ -27,8 +27,7 @@
         'views/default.xml',
         'security/rules.xml',
         'views/assets.xml',
-        'views/notification.xml',
-        'views/signature_requests.xml',
+        'views/notification.xml'
     ],
     # only loaded in demonstration mode
     'qweb': [
