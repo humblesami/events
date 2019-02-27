@@ -27,11 +27,12 @@ var network_config = {
 	show_logs : ['socket','ajax_before','ajax_success']
 };
 
-if(site_config.site_url.indexOf('meetvue.com') == -1 && site_config.site_url.indexOf('odoohq.com') == -1)
+if(window.location.origin.indexOf('meetvue.com') == -1 && window.location.origin.indexOf('odoohq.com') == -1)
 {
 	site_config = site_config_local;
+	site_config.server_db=window["odoo"].session_info.db
 }
-site_config = network_config;
+//site_config = network_config;
 //console.log(site_config);
 site_config.site_url = window.location.origin.toString();
 if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -1)
