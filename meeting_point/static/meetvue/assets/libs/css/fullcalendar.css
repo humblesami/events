@@ -1402,12 +1402,12 @@ background-size: contain;
 }
 
 
-.fc-week .fc-content-skeleton tbody
+.fc-year-main-table .fc-week .fc-content-skeleton tbody
 {
 	position: absolute;
 	top:-4px;
 }
-a.fc-time-grid-event.fc-event
+.fc-year-main-table a.fc-time-grid-event.fc-event
 {
 	margin-top:-4px;
 }

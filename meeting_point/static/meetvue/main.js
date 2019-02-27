@@ -1026,7 +1026,7 @@ var SocketService = /** @class */ (function () {
                     route = '/topic/doc/' + item.res_id;
                     break;
             }
-            console.log(route, item.res_model, item.parent_res_model);
+            //console.log(route, item.res_model, item.parent_res_model);
             item.client_route = route;
         };
         if (window['socket_manager'])
@@ -1128,7 +1128,7 @@ var SocketService = /** @class */ (function () {
                 obj_this.verified = true;
                 obj_this.unseen_messages = data.unseen;
                 obj_this.friends = data.friends;
-                //console.log(data.friends);
+                console.log(data.friends);
                 obj_this.notificationList = [];
                 for (var i in data.notifications) {
                     obj_this.add_item_in_notification_list(data.notifications[i]);
@@ -1568,6 +1568,9 @@ var CommentsComponent = /** @class */ (function () {
     }
     CommentsComponent.prototype.get_data = function (input_data) {
         var obj_this = this;
+        var valid_models = ['calendar.event'];
+        if (!valid_models.includes(input_data.res_model))
+            return;
         obj_this.socketService.server_events['comment_received'] = function (data) {
             console.log(444, data);
             if (obj_this.res_id != data.res_id || obj_this.res_model != data.res_model) {
@@ -2448,12 +2451,12 @@ var HeaderComponent = /** @class */ (function () {
         this.route = route;
         this.httpService = httpService;
         this.search_bar = false;
+        this.show_search_results = false;
         this.searchAble = true;
         this.is_content_search = false;
         this.content_search = false;
         this.search_key_word = '';
         this.global_search = true;
-        this.show_search_results = false;
         this.search_results = {
             meetings: [],
             resources: [],
@@ -2624,6 +2627,12 @@ var HeaderComponent = /** @class */ (function () {
         togglerelated(e, this, '.profile-menu.dropdown-menu');
     };
     HeaderComponent.prototype.ngOnInit = function () {
+        var obj_this = this;
+        $(document).click(function (event) {
+            if (obj_this.show_search_results && !$(event).closest('.show_search_results').length) {
+                obj_this.show_search_results = false;
+            }
+        });
     };
     HeaderComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -5105,7 +5114,7 @@ var SigndocComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".survey-form-wrap{\n    border-left: 5px solid #7c7bad;\n    background: #f3f3f3;\n    padding:15px;\n}\n.survey-form-container textarea.form-control{\n    margin-bottom: 20px;\n    min-height: 150px;\n    resize: none;\n}\n.survey-form-container .form-control{\n    margin-bottom: 20px;\n}\n.cancelbtn, .signupbtn{\n    min-width: 130px;\n    font-size: 0.859em;\n    margin-right: 5px;\n}\n.home-survey-title .title{\n    font-size: 1.500em;\n    margin-bottom: 15px;\n}\na.fc-more{\n    background-color: blue !important;\n    color: white !important;\n}\n.radio-wrap{\n    margin-bottom:15px; \n}\n.row.submit\n{\n    padding-top: 30px;\n}"
+module.exports = "main-div.survey-form-wrap{\n    border-left: 5px solid #7c7bad;\n    background: #f3f3f3;\n    padding:15px;\n}\n.survey-form-container textarea.form-control{\n    margin-bottom: 20px;\n    min-height: 150px;\n    resize: none;\n}\n.survey-form-container .form-control{\n    margin-bottom: 20px;\n}\n.cancelbtn, .signupbtn{\n    min-width: 130px;\n    font-size: 0.859em;\n    margin-right: 5px;\n}\n.home-survey-title .title{\n    font-size: 1.500em;\n    margin-bottom: 15px;\n}\na.fc-more{\n    background-color: blue !important;\n    color: white !important;\n}\n.radio-wrap{\n    margin-bottom:15px; \n}\n.row.submit\n{\n    padding-top: 30px;\n}\n"
 
 /***/ }),
 
@@ -5116,7 +5125,7 @@ module.exports = ".survey-form-wrap{\n    border-left: 5px solid #7c7bad;\n    b
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"main-div\">\n\t<div class=\" breadcrumbSection\">\n\t\t<div class=\"container\">\n\t\t\t<div class=\"row\">\n\t\t\t\t<div class=\"col-sm-12\">\n\t\t\t\t\t<ol class=\"breadcrumb\">\n\t\t\t\t\t\t<li class=\"breadcrumb-item\" *ngFor=\"let item of bread_crumb.items\">\n\t\t\t\t\t\t\t<a routerLink=\"{{item.link}}\">\n\t\t\t\t\t\t\t\t{{item.title}}\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li class=\"breadcrumb-item\">{{bread_crumb.title}}</li>\n\t\t\t\t\t</ol>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div *ngIf=\"surveyDetails.pending\">\n\t\t<div class=\"container\">\n\t\t\t<form (ngSubmit)=\"submit_survey()\" validate>\n\t\t\t\t<div class=\"survey-form-container survey-form-wrap\">\n\t\t\t\t\t<div class=\"row\" *ngFor=\"let ques of surveyDetails.questions\">\n\t\t\t\t\t\t<div class=\"col-sm-12\">\n\n\t\t\t\t\t\t\t<label for=\"name\">\n\t\t\t\t\t\t\t\t<b>{{ques.question}}</b>\n\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t<textarea class=\"form-control\" *ngIf=\"ques.type === 'free_text'\" type=\"text\" [(ngModel)]=\"ques.answer\" placeholder=\"Write your answer\" id=\"name\" name=\"name\"></textarea>\n\n\t\t\t\t\t\t\t<div class=\"radio-wrap\" *ngIf=\"ques.type === 'simple_choice'\">\n\t\t\t\t\t\t\t\t<div class=\"form-check\" *ngFor=\"let ans of ques.valid_answers\">\n\t\t\t\t\t\t\t\t\t<label class=\"form-check-label\">\n\t\t\t\t\t\t\t\t\t\t<input type=\"radio\" (change)=\"onSelectionChange(ans.id, ques)\" class=\"form-check-input\" name=\"options\">\n\t\t\t\t\t\t\t\t\t\t{{ans.val}}\n\t\t\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<input *ngIf=\"ques.type === 'numerical_box'\" type=\"number\" [(ngModel)]=\"ques.answer\" name=\"name\" />\n\t\t\t\t\t\t\t<input class=\"form-control\" *ngIf=\"ques.type === 'date'\" type=\"date\" [(ngModel)]=\"ques.answer\" name=\"name\" />\n\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"row submit\">\n\t\t\t\t\t\t<div class=\"col-sm-12\">\n\t\t\t\t\t\t\t<button type=\"submit\" class=\"btn btn-primary signupbtn\">Save</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t</div>\n\t\t\t</form>\n\t\t</div>\n\t</div>\n\n\t<div *ngIf=\"surveyDetails.completed\">\n\t\t<div class=\"container\">\n\t\t\t<div class=\"survey-form-container survey-form-wrap\">\n\t\t\t\t<div class=\"row\" *ngFor=\"let ques of surveyDetails.questions\">\n\t\t\t\t\t<div class=\"col-sm-12\">\n\t\t\t\t\t\t<h5>{{ques.question}}</h5>\n\t\t\t\t\t\t<p>{{ques.answer}}</p>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<!--<div class=\"jumbotron text-center\" *ngIf=\"submitted\">-->\n\t\t<!--<h1>Congratulations! <br> Your response is submitted successfully :)</h1>-->\n\t\t<!--<hr>-->\n\t<!--</div>-->\n</div>\n"
+module.exports = "<div id=\"main-div\">\n\t<div class=\" breadcrumbSection\">\n\t\t<div class=\"container\">\n\t\t\t<div class=\"row\">\n\t\t\t\t<div class=\"col-sm-12\">\n\t\t\t\t\t<ol class=\"breadcrumb\">\n\t\t\t\t\t\t<li class=\"breadcrumb-item\" *ngFor=\"let item of bread_crumb.items\">\n\t\t\t\t\t\t\t<a routerLink=\"{{item.link}}\">\n\t\t\t\t\t\t\t\t{{item.title}}\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li class=\"breadcrumb-item\">{{bread_crumb.title}}</li>\n\t\t\t\t\t</ol>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div class=\"dociframecontaine\"style=\"width: calc(100vw + 30px);top: 94px;margin-left: -15px;position: fixed;height: calc(100vh - 32px)\">\n\t\t<iframe id='survey-iframe' style=\"width: 100%;height: 100%;\">\n\t\t</iframe>\n\t</div>\n</div>\n\n\n<!--<div *ngIf=\"surveyDetails.pending\">-->\n<!--<div class=\"container\">-->\n<!--<form (ngSubmit)=\"submit_survey()\" validate>-->\n<!--<div class=\"survey-form-container survey-form-wrap\">-->\n<!--<div class=\"row\" *ngFor=\"let ques of surveyDetails.questions\">-->\n<!--<div class=\"col-sm-12\">-->\n\n<!--<label for=\"name\">-->\n<!--<b>{{ques.question}}</b>-->\n<!--</label>-->\n<!--<textarea class=\"form-control\" *ngIf=\"ques.type === 'free_text'\" type=\"text\" [(ngModel)]=\"ques.answer\" placeholder=\"Write your answer\" id=\"name\" name=\"name\"></textarea>-->\n\n<!--<div class=\"radio-wrap\" *ngIf=\"ques.type === 'simple_choice'\">-->\n<!--<div class=\"form-check\" *ngFor=\"let ans of ques.valid_answers\">-->\n<!--<label class=\"form-check-label\">-->\n<!--<input type=\"radio\" (change)=\"onSelectionChange(ans.id, ques)\" class=\"form-check-input\" name=\"options\">-->\n<!--{{ans.val}}-->\n<!--</label>-->\n<!--</div>-->\n<!--</div>-->\n<!--<input *ngIf=\"ques.type === 'numerical_box'\" type=\"number\" [(ngModel)]=\"ques.answer\" name=\"name\" />-->\n<!--<input class=\"form-control\" *ngIf=\"ques.type === 'date'\" type=\"date\" [(ngModel)]=\"ques.answer\" name=\"name\" />-->\n\n<!--</div>-->\n<!--</div>-->\n<!--<div class=\"row submit\">-->\n<!--<div class=\"col-sm-12\">-->\n<!--<button type=\"submit\" class=\"btn btn-primary signupbtn\">Save</button>-->\n<!--</div>-->\n<!--</div>-->\n\n<!--</div>-->\n<!--</form>-->\n<!--</div>-->\n<!--</div>-->\n<!--<div *ngIf=\"surveyDetails.completed\">-->\n<!--<div class=\"container\">-->\n<!--<div class=\"survey-form-container survey-form-wrap\">-->\n<!--<div class=\"row\" *ngFor=\"let ques of surveyDetails.questions\">-->\n<!--<div class=\"col-sm-12\">-->\n<!--<h5>{{ques.question}}</h5>-->\n<!--<p>{{ques.answer}}</p>-->\n<!--</div>-->\n<!--</div>-->\n\n<!--</div>-->\n<!--</div>-->\n<!--</div>-->\n"
 
 /***/ }),
 
@@ -5149,44 +5158,20 @@ var SurveyComponent = /** @class */ (function () {
     function SurveyComponent(httpService, route) {
         this.httpService = httpService;
         this.route = route;
-        this.surveyDetails = {
-            questions: [],
-            pending: 1,
-            completed: 0
-        };
-        this.submitted = false;
         this.bread_crumb = {
             items: [],
             title: ''
         };
     }
-    SurveyComponent.prototype.submit_survey = function () {
-        var obj_this = this;
-        var questions = obj_this.surveyDetails['questions'];
-        var questions_response = JSON.stringify(questions);
-        var input_data = {
-            survey_id: obj_this.surveyDetails['id'],
-            questions: questions_response
-        };
-        this.httpService.call_post_http('/survey-user-response', input_data, function (data) {
-            obj_this.surveyDetails['completed'] = 1;
-            obj_this.surveyDetails['pending'] = 0;
-        }, function (error) {
-        });
-    };
-    SurveyComponent.prototype.onSelectionChange = function (entry, question) {
-        this.surveyDetails['questions'].forEach(function (ques) {
-            if (ques.id === question.id) {
-                ques['answer'] = entry;
-            }
-        });
-    };
     SurveyComponent.prototype.ngOnInit = function () {
         var _this = this;
         var obj_this = this;
         var page_url = window.location + '';
-        this.httpService.call_post_http('/survey-questions-json', { survey_id: obj_this.route.snapshot.params.id }, function (result) {
+        this.httpService.call_post_http('/survey-details-json', { survey_id: obj_this.route.snapshot.params.id }, function (result) {
             obj_this.surveyDetails = result;
+            if (obj_this.surveyDetails['url']) {
+                $('#survey-iframe').attr('src', obj_this.surveyDetails['url']);
+            }
             _this.bread_crumb.title = _this.surveyDetails['title'];
             if (page_url.indexOf('home') !== -1) {
                 _this.bread_crumb.items.push({ title: 'Home', link: '/' });
