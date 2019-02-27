@@ -46,16 +46,23 @@ def getActiveUserMessage(kw):
 
         sender = uid
         to = kw.get('target_id')
+        offset = kw.get('offset')
 
         filters = [('sender','=',to), ('to','=',sender)]
         req_env['odoochat.message'].sudo().search(filters).write({'read_status':True})
 
         db_filters = [('sender', 'in', [sender, to]), ('to', 'in', [to, sender])]
         count = req_env['odoochat.message'].search_count(db_filters)
-        offset = count - 20
+        if not offset:
+            offset = 20
+        elif int(offset) < count:
+            offset = int(offset)
+        else:
+            return ws_methods.http_response('', {})
+        offset = count - offset
         if offset < 0:
             offset = 0
-        messages = req_env['odoochat.message'].search(db_filters, offset=offset)
+        messages = req_env['odoochat.message'].search(db_filters, offset=offset, limit=20)
         props = ['sender', 'to', 'content', 'create_date']
         messages_obj = ws_methods.objects_list_to_json_list(messages, props)
         res = ws_methods.http_response('', messages_obj)
