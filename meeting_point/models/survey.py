@@ -47,9 +47,9 @@ class Survey(models.Model):
                 if survey.my_status != 'not invited':
                     base_url = request.httprequest.host_url
                     if survey.my_status == 'done':
-                        survey.url = urls.url_join(base_url, "survey/results/%s" % (slug(survey)))
+                        survey.url = urls.url_join(base_url, "survey/meet/results/%s" % (slug(survey)))
                     elif survey.my_status == 'pending':
-                        survey.url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
+                        survey.url = urls.url_join(base_url, "survey/meet/start/%s" % (slug(survey)))
             except:
                 a = 1
 
