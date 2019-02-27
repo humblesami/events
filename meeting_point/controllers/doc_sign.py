@@ -109,3 +109,10 @@ class DocumentSign(http.Controller):
             return ws_methods.http_response('', {"signature": binary_signature, "pdf_binary": pdf})
         except:
             return ws_methods.handle()
+
+    @http.route('/document/mp/save_doc', auth='public', csrf=False, cors='*')
+    def save_doc_esign(self, **kw):
+        vals=kw
+        doc = http.request.env['meeting_point.document'].create(vals)
+        view_id = http.request.env.ref('meeting_point.view_meeting_assign_sign_form').id
+        return ws_methods.http_response('', {"doc_id": doc.id,"view_id":view_id})

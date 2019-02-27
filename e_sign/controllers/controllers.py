@@ -177,11 +177,17 @@ class Signature(http.Controller):
                 return ws_methods.http_response("Invalid Document Id")
             doc_id = kw['document_id']
             work_flow_enabled=kw['work_flow_enabled']
+            meeting_id = kw['meeting_id']
             doc = my_model.sudo().search([('id', '=', doc_id)])
             if work_flow_enabled=='true':
                 doc.sudo().write({'workflow_enabled':True})
             if work_flow_enabled=='false':
                 doc.sudo().write({'workflow_enabled': False})
+            if meeting_id not in ['False','false']:
+                meeting_id=int(meeting_id)
+                doc.sudo().write({'meeting_id': meeting_id})
+            if meeting_id in ['False','false']:
+                doc.sudo().write({'meeting_id': False})
             signatures=json.loads(kw['data'])
             token = pycompat.text_type(uuid.uuid4())
             user_email=""

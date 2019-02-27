@@ -23,7 +23,7 @@
             <field name="name">e_sign.document.view_sign.form</field>
             <field name="model">e_sign.document</field>
             <field name="arch" type="xml">
-               <form>
+                <form>
                     <field name="path" class="e_sign_doc_path" invisible="1"/>
                     <field name="id" class="e_sign_doc_id" invisible="1"/>
                     <!--<field name="partner_ids"/>-->
@@ -37,8 +37,8 @@
             <field name="model">e_sign.document</field>
             <field name="arch" type="xml">
                 <form>
-                      <field name="path" class="e_sign_doc_path" invisible="1"/>
-                      <script src="/e_sign/static/js/doc_view.js"></script>
+                    <field name="path" class="e_sign_doc_path" invisible="1"/>
+                    <script src="/e_sign/static/js/doc_view.js"></script>
                 </form>
             </field>
         </record>
@@ -47,71 +47,71 @@
             <field name="name">e_sign.document.assign_signatures.form</field>
             <field name="model">e_sign.document</field>
             <field name="arch" type="xml">
-         <form create="false" edit="false" class="sign_doc_form">
+                <form create="false" class="sign_doc_form">
 
 
-    <field name="id" class="e_sign_doc_id" invisible="1"/>
-     <group>
-       <!--<field name="workflow_enabled" groups="dn_base.group_dn_app_manager" class="e_sign_wrk_flow" />-->
-    </group>
-    <div class="sign-position dev_only"/>
+                    <field name="id" class="e_sign_doc_id" invisible="1"/>
+                    <group>
+                        <!--<field name="workflow_enabled" groups="dn_base.group_dn_app_manager" class="e_sign_wrk_flow" />-->
+                    </group>
+                    <div class="sign-position dev_only"/>
 
-    <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);">
-        <div class="top_btns">
-            <div class="PdfTopBtnsWrapper">
-                <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev"/>
-                <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next"/>
-                <span class="pg_no"> <span style="font-weight: bold;" id="page_num"/> / <span id="page_count"/></span>
-                <div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out"/>
-                <div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In"/>
-                <span style="display: inline-block;" id="scaleSelectContainer">
-                    <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
-                        <option title="" value="0.5">50%</option>
-                        <option title="" value="0.75">75%</option>
-                        <option title="" value="1">100%</option>
-                        <option title="" value="1.25">125%</option>
-                        <option title="" value="1.5">150%</option>
-                        <option title="" value="2">200%</option>
-                        <option title="" value="3">300%</option>
-                        <option title="" value="4">400%</option>
-                    </select>
-                </span>
-                </div>
-            <div class="PdfButtonWrapper" >
-              <div id="save-doc-data" groups="dn_base.group_dn_app_manager" style="float:left" disabled="true" class="btn btn-primary  save_doc_data">
-                Select User
-            </div>
-            <div id="signature-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns sign_psition">
-                Signature
-            </div>
-            <div id="initial-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns initial_psition">
-                Initials
-            </div>
+                    <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);">
+                        <div class="top_btns">
+                            <div class="PdfTopBtnsWrapper">
+                                <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev"/>
+                                <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next"/>
+                                <span class="pg_no"> <span style="font-weight: bold;" id="page_num"/> / <span id="page_count"/></span>
+                                <div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out"/>
+                                <div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In"/>
+                                <span style="display: inline-block;" id="scaleSelectContainer">
+                                    <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
+                                        <option title="" value="0.5">50%</option>
+                                        <option title="" value="0.75">75%</option>
+                                        <option title="" value="1">100%</option>
+                                        <option title="" value="1.25">125%</option>
+                                        <option title="" value="1.5">150%</option>
+                                        <option title="" value="2">200%</option>
+                                        <option title="" value="3">300%</option>
+                                        <option title="" value="4">400%</option>
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="PdfButtonWrapper" >
+                                <div id="save-doc-data" groups="dn_base.group_dn_app_manager" style="float:left" disabled="true" class="btn btn-primary  save_doc_data">
+                                    Select User
+                                </div>
+                                <div id="signature-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns sign_psition">
+                                    Signature
+                                </div>
+                                <div id="initial-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns initial_psition">
+                                    Initials
+                                </div>
 
-            <div id="date-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns date_psition">
-                Date
-            </div>
-                <div id="text-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns text_psition">
-                Text
-            </div>
-            </div>
+                                <div id="date-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns date_psition">
+                                    Date
+                                </div>
+                                <div id="text-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns text_psition">
+                                    Text
+                                </div>
+                            </div>
 
-        </div>
+                        </div>
 
-        <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
-            <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;top:85px;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING></div>
+                        <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
+                            <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;top:85px;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING></div>
 
-            <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
-                <canvas id="the-canvas"/>
-            </div>
-        </div>
-    </div>
+                            <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
+                                <canvas id="the-canvas"/>
+                            </div>
+                        </div>
+                    </div>
 
-    <script src="/e_sign/static/js/pdf.worker.js"/>
-    <script src="/e_sign/static/js/pdf.js"/>
-    <script src="/e_sign/static/js/viewer.js"/>
-    <link href="/e_sign/static/signature.css" rel="stylesheet"/>
-</form>
+                    <script src="/e_sign/static/js/pdf.worker.js"/>
+                    <script src="/e_sign/static/js/pdf.js"/>
+                   <div name="esign_script"><script src="/e_sign/static/js/viewer.js"/></div>
+                    <link href="/e_sign/static/signature.css" rel="stylesheet"/>
+                </form>
             </field>
         </record>
 
@@ -124,7 +124,7 @@
                     <field name="my_signature_status" />
                     <field name="pending_signatures" type="string"/>
                     <!--<button type="object" name="open_signature_form" class="btn btn-primary btn-sm" string="View"/>-->
-                     <button type="object" name="open_signature_assign_form" class="btn btn-primary btn-sm" string="View"/>
+                    <button type="object" name="open_signature_assign_form" class="btn btn-primary btn-sm" string="View"/>
                 </tree>
             </field>
         </record>

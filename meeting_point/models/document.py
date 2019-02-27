@@ -41,6 +41,7 @@ class Document(models.Model):
     user_ids = fields.Many2many('res.users', string="Signature(s)")
     # seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
     mp_signature_status = fields.Char(string='My Signature', compute="_compute_signature_status")
+    meet_id = fields.Char(string='Meeting', compute="_compute_meet_id")
 
     @api.multi
     def _compute_signature_status(self):
@@ -62,6 +63,14 @@ class Document(models.Model):
                 if found:
                     doc.mp_signature_status = "Completed"
 
+    @api.multi
+    def _compute_meet_id(self):
+        for doc in self:
+            doc.meet_id=str(doc.meeting_id.id)
+
+    @api.onchange('meeting_id')
+    def change_meet_id(self):
+        self.meet_id=self.meeting_id.id
 
     @api.onchange('name')
     def filter_users(self):
@@ -261,6 +270,21 @@ class Document(models.Model):
         ar = filename.split('.')
         return ar[len(ar)-1]
 
+    def open_signature_assign_form_mp(self):
+
+        view_id = self.env.ref('meeting_point.view_meeting_assign_sign_form').id
+        if self:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': self.name,
+                'view_id': view_id,
+                'view_mode': 'form',
+                'res_model': self._name,
+                'res_id': self.id,
+                'context': {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
+                'target': 'current',
+            }
+
     def open_signature_form(self):
 
         view_id = self.env.ref('meeting_point.view_meeting_doc_view_sign_form').id
@@ -295,3 +319,14 @@ class Document(models.Model):
             args.extend(myargs)
         docs = super(Document, self).search(args)
         return docs
+
+
+class Empty(models.Model):
+    _inherit = ['dn_base.empty']
+
+    doc_ids = fields.Many2many('meeting_point.document', string="Signatures",compute="_compute_signature_docs")
+
+    @api.multi
+    def _compute_signature_docs(self):
+        for rec in self:
+            rec.doc_ids=self.env['meeting_point.document'].search([])

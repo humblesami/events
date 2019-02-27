@@ -161,20 +161,8 @@
             </t>
         </template>
 
-        <record id="action_e_sign_doc" model="ir.actions.act_window">
-            <field name="name">E-Signature Documents</field>
-            <field name="res_model">e_sign.document</field>
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">kanban,tree,form</field>
-        </record>
 
-        <menuitem
-                id="menu_e_sign"
-                name="E-Signature"
-                web_icon="e_sign,static/menu_icons/icons.png"
-                action="action_e_sign_doc"
-                groups="group_sign_specialist"
-        />
+
 
     </data>
 </odoo>

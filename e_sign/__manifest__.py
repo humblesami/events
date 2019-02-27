@@ -12,6 +12,9 @@
         'security/ir.model.access.csv',
         'views/doc.xml',
         'views/sign.xml',
+        'views/default.xml',
+        'views/signature_requests.xml',
+        'views/menus.xml',
 
     ],
     'depends': [

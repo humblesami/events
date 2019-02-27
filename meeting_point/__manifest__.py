@@ -23,13 +23,13 @@
         'dn_auth','dn_website',
         'dn_documents', 'e_sign', #our base
         'odoochat',
-		'calendar','survey', #builtin + required
-	    'doc_viewer', #custom + required
+        'calendar','survey', #builtin + required
+        'doc_viewer', #custom + required
         #'inputmask_widget','web_digital_sign', #off the shelf + required
         #'odoo_web_login',#off the shelf + luxries incompatible with odoo-11
         # ,'web_widget_timepicker',
         #'web_tree_many2one_clickable', #off the shelf + luxries
-	],
+    ],
 
     # always loaded
     'data': [
@@ -51,6 +51,7 @@
         'views/meetingtopic.xml',
         'views/news.xml',
         'views/dashboard.xml',
+        'views/signature_requests.xml',
         'views/menus.xml',
         'security/rules.xml',
     ],

@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record id="view_signature_requests_form" model="ir.ui.view">
+            <field name="name">odoochat.signature.requests.form</field>
+            <field name="model">dn_base.empty</field>
+            <field name="sequence" eval="2"/>
+            <field name="arch" type="xml">
+                <form>
+                    <a class="btn btn-primary request_sign">Request a Signature</a>
+                    <field name="doc_ids" mode="kanban" />
+                    <style>
+                        .o_control_panel{
+                            display:none!important;
+                        }
+                    </style>
+                    <input type="file" class="upload_file_esign o_hidden"></input>
+                    <script src="/meeting_point/static/js/sign_requests.js"/>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_sign_requests" model="ir.actions.act_window">
+            <field name="name">Signature Requests</field>
+            <field name="res_model">dn_base.empty</field>
+            <field name="view_id" ref="view_signature_requests_form" />
+            <field name="res_id" ref="e_sign.record_empty_signature_requests"/>
+        </record>
+
+    </data>
+</odoo>

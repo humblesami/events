@@ -111,12 +111,12 @@ height:390px;
 margin:5px;
 }
 
-.sign_doc_form .o_inner_group,.o_cp_left,.o_cp_right{
+.sign_doc_form .o_inner_groupp,.o_cp_left,.o_cp_right{
 display:none!important
 }
 
 #page_container1{
-    height: calc(100vh - 178px);
+    height: calc(100vh - 275px);
 }
 
 @media screen and (max-width: 600px){
