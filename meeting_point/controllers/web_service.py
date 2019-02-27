@@ -154,7 +154,7 @@ class ws(http.Controller):
                      ]
             to_do_items['pending_meetings'] = ws_methods.objects_list_to_json_list(home.pending_meetings, props)
 
-            props = ['id', 'title', 'meeting_id.name']
+            props = ['id', 'title', 'meeting_id.name', 'my_status']
             to_do_items['pending_surveys'] = ws_methods.objects_list_to_json_list(home.pending_surveys, props)
 
             # for val in to_do_items['pending_surveys']:
