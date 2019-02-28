@@ -14,56 +14,34 @@
     );
 })();
 
-odoo.define('odoochat.messages', function (require) {
-    var SystrayMenu = require('web.SystrayMenu');
-    var Widget = require('web.Widget');
-
-    var IconMenu = Widget.extend({
-        template:'message.icon',
-        events: {
-            'click': 'open_messages',
-        },
-        open_messages:function open_messages()
-        {
-            var reqObject = {
-                url:'/get-action-id',
-                data:{ xml_id : 'odoochat.action_messenger', db: odoo.session_info.db, token: odoo.session_info.token},
-                onSuccess: function(action_id)
-                {
-                    var action_url = '/web#action='+action_id;
-                    var debug_in_url = window.location.toString().indexOf('debug');
-                    if(debug_in_url > -1)
-                    {
-                        action_url = '/web?debug=1#action='+action_id;
-                    }
-                    action_url += '&menu_id='+get_param_value('menu_id');
-                    window.location = action_url;
-                }
-            };
-            console.log(reqObject);
-            dn_rpc_object(reqObject);
-        }
-    });
-    SystrayMenu.Items.push(IconMenu);
-});
-
 odoo.define('odoochat.notifications', function (require) {
     var SystrayMenu = require('web.SystrayMenu');
     var Widget = require('web.Widget');
 
     var IconMenu = Widget.extend({
-        template:'notification.icon'
+        template:'notification_message.icons'
     });
     SystrayMenu.Items.push(IconMenu);
-    var dnow = Date();
+
     $(function(){
         setTimeout(function(){
-            $('body').append(
-                `<div style="display:none">
-                    <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger>
+            $('body').append(`
+                <div style="display:none">
+                    <app-root></app-root><app-comments></app-comments>
                 </div>
-                <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js?v="+dnow></script>`
-            );
-        }, 3500);
+                <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js?v="+dnow></script>
+            `);
+
+            $('body').append(`
+                <style>
+                    .messenger-container
+                    {
+                        background-color: white;
+                        left:-77vw !important;
+                        width: 98.5vw !important;
+                    }
+                </style>
+            `);
+        }, 2000);
     });
 });

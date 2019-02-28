@@ -29,7 +29,8 @@ var dn_json_rpc_object = {
             }
 
             setTimeout(function(){
-                site_loaderContainer.hide();
+                if(site_loaderContainer)
+                    site_loaderContainer.hide();
             }, 6000);
         }
     },
