@@ -7,9 +7,11 @@ $('.request_sign').click(function()
 })
 
 
+if(!odoo.dn_esign_request_page){
+odoo.dn_esign_request_page=1;
 
-
-odoo.define('dn.esign', function (require) {
+odoo.define('dn.esign', function (require)
+{
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -22,16 +24,13 @@ function getBase64(file) {
 
 
 
-
-$('.upload_file_esign').change(function()
-{
+$(document).on("change",".upload_file_esign", function(){
     var file = this.files[0];
     if(!file){
         return
     }
     getBase64(file).then(
     data => {
-        console.log(data)
         var req_url = '/document/mp/save_doc';
         var base64 = data.split(",")[1]
         var input_data = {name:file.name,filename:file.name,attachment:base64};
@@ -50,21 +49,17 @@ $('.upload_file_esign').change(function()
         });
     }
     );
+});
 
-
-
-
-
-
-
-
-})
 
 
 
 
 
 });
+}
+
+
 
 
 

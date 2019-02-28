@@ -1,6 +1,6 @@
 
 $(function(){
-
+console.log(777);
     var canvas=document.getElementById('the-canvas'),
 	pdf_binary,
 	users,
@@ -389,7 +389,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 		var input_name = $('<input id="email" placeholder="Name" style="width:50%"/>');
 		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
 		var meeting_id=$('.esign_doc_meet_id').html()
-            if(!meeting_id){
+            if(!meeting_id || meeting_id=="False"){
                 meeting_id=false
             }
             else{

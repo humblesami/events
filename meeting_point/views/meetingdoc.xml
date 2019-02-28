@@ -119,7 +119,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='id']" position="after">
-                    <group><field groups="meeting_point.group_meeting_admin" string="Select meeting(Optional)" name="meeting_id"/></group>
+                    <group><field groups="meeting_point.group_meeting_admin" string="Attach to meeting(Optional)" name="meeting_id"/></group>
                     <field name="meet_id" class="esign_doc_meet_id o_hidden"/>
                     <field name="meeting_users" class="esign_doc_meet_users o_hidden"/>
                 </xpath>
