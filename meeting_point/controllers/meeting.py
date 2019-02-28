@@ -415,6 +415,7 @@ class meeting(http.Controller):
                 filters.append(('archived', '=', True))
             elif values['meeting_type'] == 'completed':
                filters.append(('stop', '<', stop_time))
+               filters.append(('archived', '=', False))
             elif values['meeting_type'] == 'upcoming':
                 filters.append(('stop', '>=', stop_time))
 
