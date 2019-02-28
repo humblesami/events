@@ -4746,7 +4746,7 @@ DayGrid.mixin({
 					''
 					) +
 			'>' +
-				'<div class="fc-content">' +
+				'<div class="fc-content" event_id="'+ event.id+'">'+
 					(this.isRTL ?
 						titleHtml + ' ' + timeHtml : // put a natural space in between
 						timeHtml + ' ' + titleHtml   //
@@ -7290,7 +7290,7 @@ function Calendar(element, instanceOptions) {
 		ignoreWindowResize++;
 
 		// if viewType is changing, destroy the old view
-		if (currentView && viewType && currentView.type !== viewType) {
+		if (currentView && viewType && (currentView.type !== viewType  || $('.fc-schedule-button').hasClass('fc-state-active'))) {
 			header.deactivateButton(currentView.type);
 			freezeContentHeight(); // prevent a scroll jump when view element is removed
 			if (currentView.start) { // rendered before?
@@ -7873,7 +7873,13 @@ function Header(calendar, options) {
 								'</button>'
 								)
 								.click(function() {
-									// don't process clicks for disabled buttons
+
+									$('.schedule-container').hide();
+                                    $('.fc-prev-button').show();
+                                    $('.fc-next-button').show();
+                                    $('.fc-center').show();
+                                    $('.fc-today-button').show();
+                                    // don't process clicks for disabled buttons
 									if (!button.hasClass(tm + '-state-disabled')) {
 
 										buttonClick();
@@ -7887,6 +7893,7 @@ function Header(calendar, options) {
 											button.removeClass(tm + '-state-hover');
 										}
 									}
+									$('.fc-schedule-button').removeClass('fc-state-active');
 								})
 								.mousedown(function() {
 									// the *down* effect (mouse pressed in).

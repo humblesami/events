@@ -54,9 +54,19 @@ class News(models.Model):
                     hour = '0'+str(hour)
                 if int(hourEnd) < 10:
                     hourEnd = '0' + str(hourEnd)
-                timeHour = m.start.split(" ")[0] +'T'+hour+':'+m.start.split(" ")[1].split(":")[1]+ ':'+m.start.split(" ")[1].split(":")[2]+'Z'
-                timeHourEnd = m.stop_datetime.split(" ")[0] + 'T' + hourEnd + ':' + m.stop_datetime.split(" ")[1].split(":")[1] + ':' + m.stop_datetime.split(" ")[1].split(":")[2] + 'Z'
-                event = {'id':m.id,'title':m.name,'start':timeHour,'end':timeHourEnd}
+                hourStartfinal = hour+':'+m.start.split(" ")[1].split(":")[1]+ ':'+m.start.split(" ")[1].split(":")[2]
+                hourEndfinal = hourEnd + ':' + m.stop_datetime.split(" ")[1].split(":")[1] + ':' + m.stop_datetime.split(" ")[1].split(":")[2]
+                timeHour = m.start.split(" ")[0] +'T'+hourStartfinal+'Z'
+                timeHourEnd = m.stop_datetime.split(" ")[0] + 'T' + hourEndfinal + 'Z'
+                event = {'id':m.id,'title':m.name,
+                         'start':timeHour,
+                         'end':timeHourEnd,
+                         'datestart':m.start.split(" ")[0],
+                         'dateend': m.stop_datetime.split(" ")[0],
+                        'startSchedule': m.start_datetime,
+                         'endSchedule':m.stop_datetime
+
+                         }
                 events_list.append(event)
             obj.public_event=json.dumps(events_list)
 
