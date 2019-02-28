@@ -73,6 +73,12 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/doc_preview.js?v='+dnow+'"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/config.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/emoji-picker.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/jquery.emojiarea.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/util.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/jQueryEmoji.js"></script>');
+
         $(function(){
             doc_preview.init();
             $(document).on('click', 'button.fa-5x', function(){

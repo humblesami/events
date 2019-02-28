@@ -3814,11 +3814,14 @@ var MessengerComponent = /** @class */ (function () {
         if (obj_this.chat_initilized != 1) {
             var emoji_libs = '';
             obj_this.chat_initilized = 1;
-            emoji_libs += '<script src="assets/js/emoji/config.js"></script>';
-            emoji_libs += '<script src="assets/js/emoji/emoji-picker.js"></script>';
-            emoji_libs += '<script src="assets/js/emoji/jquery.emojiarea.js"></script>';
-            emoji_libs += '<script src="assets/js/emoji/util.js"></script>';
-            emoji_libs += '<script src="assets/js/emoji/jQueryEmoji.js"></script>';
+            var prefix = '';
+            if (!window['odoo']) {
+                emoji_libs += '<script src="assets/js/emoji/config.js"></script>';
+                emoji_libs += '<script src="assets/js/emoji/emoji-picker.js"></script>';
+                emoji_libs += '<script src="assets/js/emoji/jquery.emojiarea.js"></script>';
+                emoji_libs += '<script src="assets/js/emoji/util.js"></script>';
+                emoji_libs += '<script src="assets/js/emoji/jQueryEmoji.js"></script>';
+            }
             $('body').append(emoji_libs);
             $('body').on('keyup', '.emoji-wysiwyg-editor', function (e) {
                 if (e.keyCode == 13 && !e.shiftKey) {
