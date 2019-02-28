@@ -29,8 +29,8 @@
                                 </div>
                                 <div class="oe_module_desc">
                                     <div name="open_sign_doc">
-                                        <button style="pointer-events:all" type="object" class="fa fa-5x fa-file pull-left" name="open_view_doc_form">
-                                                </button>
+                                        <a style="pointer-events:all" type="object" class="fa fa-5x fa-file pull-left" name="open_view_doc_form">
+                                                </a>
                                     </div>
 
                                     <div style="overflow:hidden">
@@ -52,8 +52,8 @@
                                 </div>
                                 <div class="oe_module_desc">
                                     <div name="open_sign_doc1">
-                                        <button style="pointer-events:all" type="object" t-att-myatr="open_doc" class="fa fa-5x fa-file pull-left" name="open_view_doc_form">
-                                                </button>
+                                        <a style="pointer-events:all" type="object" t-att-myatr="open_doc" class="fa fa-5x fa-file pull-left" name="open_view_doc_form">
+                                                </a>
                                     </div>
                                     <div style="overflow:hidden">
                                         <h2 name="name1">

@@ -744,16 +744,16 @@ $(document).on("click",".saved_sign.is_text", function(e){
 		doc_preview.image("uuuu");
         var body=$('.youtubeVideoModal .modal-body:last');
         var content=$('.youtubeVideoModal .modal-content:last');
-		var input_text = `<input id="text"  placeholder=${field_name} style="width:50%"/>`;
+		var input_text = $(`<input id="text"  placeholder=${field_name} style="width:50%"/>`);
 		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
 		var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
 
-		body.html(`<h2>Username:</h2>${usr_name}`);
+		body.html(`<h3>Username:</h3>${usr_name}`);
 
 
             if(my_record=="true"){
 
-                body.append(`<h2>${field_name}:</h2>`+input_text);
+                body.append(`<h3>${field_name}:</h3>`).append(input_text);
                 body.append(save_btn);
             }
 

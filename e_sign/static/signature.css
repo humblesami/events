@@ -116,7 +116,7 @@ display:none!important
 }
 
 #page_container1{
-    height: calc(100vh - 275px);
+    height: calc(100vh - 190px);
 }
 
 @media screen and (max-width: 600px){

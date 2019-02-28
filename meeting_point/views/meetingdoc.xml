@@ -13,7 +13,7 @@
                     <h4>Attachment</h4>
                     <field name="attachment" filename="filename"
                            class="dn_documents_docs_upload oe_edit_only"/>
-                    <button type="object" name="open_view_doc_form"
+                    <a type="object" name="open_view_doc_form"
                             class="fa fa-5x fa-file"/>
                 </form>
             </field>
@@ -43,7 +43,7 @@
                     <field name="filename" invisible="1"/>
                     <h4>Attachment</h4>
                     <field name="attachment" filename="filename" class="mp_meeting_docs_upload e_sign_docs oe_edit oe_edit_only"/>
-                    <button type="object" name="open_signature_assign_form_mp"
+                    <a type="object" name="open_signature_assign_form_mp"
                             class="fa fa-5x fa-file oe_read_only"/>
                     <h4 class="oe_read_only"  groups="meeting_point.group_meeting_admin" attrs="{'invisible': [('signature_ids', '=', False)]}">Signatures(s)</h4>
                     <!--<field name="user_ids" groups="meeting_point.group_meeting_admin" string="Signature(s) " widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select signaturee..." class="oe_inline"/>-->
@@ -164,11 +164,11 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='open_sign_doc']" position="replace">
-                    <button type="object" name="open_signature_assign_form_mp"
+                    <a type="object" name="open_signature_assign_form_mp"
                             class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
                 </xpath>
                 <xpath expr="//div[@name='open_sign_doc1']" position="replace">
-                    <button type="object" name="open_signature_assign_form_mp"
+                    <a type="object" name="open_signature_assign_form_mp"
                             class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
                 </xpath>
 
