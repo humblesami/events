@@ -1,5 +1,17 @@
 from odoo import models, fields
 from odoo.addons.dn_base import ws_methods
+from odoo.exceptions import ValidationError
+
+
+class NotificationType(models.Model):
+    _name = 'notification.type'
+    name = fields.Char()
+    action_id = fields.Many2one('ir.actions.act_window', required=True)
+    _sql_constraints = [
+        (
+            'notification_type_unique', 'unique (res_model)',
+            "Notification type already exists for same model!"),
+    ]
 
 class Notification(models.Model):
     _name = 'notification'
@@ -7,6 +19,7 @@ class Notification(models.Model):
     res_model = fields.Char()
     parent_id = fields.Many2one('notification', ondelete='cascade')
     parent_res_id = fields.Integer()
+    notification_type_id = fields.Many2one('notification.type')
     content = fields.Char()
     _sql_constraints = [
         (
@@ -17,8 +30,12 @@ class Notification(models.Model):
         uid = self.env.user.id
         name = params.get('res_model')
         res_id = params.get('res_id')
-        sql = 'select res_model,content,res_id,n.id,counter from'
+        sql = 'select distinct '
+        sql += ' res_model,content,res_id,n.id,counter'
+        #sql += 'nt.action_id'
+        sql += ' from'
         sql += ' notification n '
+        #sql += ' join notification_type nt on nt.name=n.res_model'
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and n.parent_id is null and user_id='+str(uid)
         if name:
@@ -98,6 +115,11 @@ class Notification(models.Model):
                 record_name = req_env[res_model].search([('id', '=', res_id)]).name
 
             values['content'] = ' comment(s) on ' + record_name
+            notification_type = req_env['notification'].search([('name', '=', res_model)])
+            if not notification_type and not parent_notification:
+                raise ValidationError('Please ask support to add notification type '+res_model)
+            values['notification_type_id'] = notification_type.id
+
             notification = req_env['notification'].create(values)
         else:
             notification = notification[0]
