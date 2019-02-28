@@ -42,6 +42,6 @@ odoo.define('odoochat.notifications', function (require) {
                     }
                 </style>
             `);
-        }, 2000);
+        }, 4000);
     });
 });
