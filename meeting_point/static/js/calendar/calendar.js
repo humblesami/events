@@ -58,7 +58,6 @@ $(function(){
                 schedule += '<div class="col">'+ hour_minutes(new Date(events[i].startSchedule)) + ' - ' + hour_minutes(new Date(events[i].endSchedule)) + '</div>';
                 schedule += '<div class="col fc-title">' + events[i].title + '</div>';
                 schedule += '</div>'
-                schedule += '<br>'
             }
         }
         schedule += '</div>';

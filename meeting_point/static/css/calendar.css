@@ -1124,3 +1124,31 @@ a.fc-time-grid-event.fc-event
     margin-top:-4px;
 
 }
+
+.schedule-wrap {
+    border: 1px solid #dddddd;
+    width: auto;
+}
+
+.scheduleDetailOpener.row.fc-event{
+        display: flex;
+    border: 0px solid #dddddd;
+    padding: 20px 15px;
+    color: #666666;
+    background-color: #ffffff;
+    border-radius: 0;
+    border-top: 1px solid #dddddd;
+ }
+
+.scheduleDetailOpener.row.fc-event:nth-child(1){
+    border-top: 0px solid #dddddd;
+    }
+
+.scheduleDetailOpener span {
+    padding-right: 10px;
+}
+
+.scheduleDetailOpener.row.fc-event:hover {
+    background: #f3f3f3;
+    cursor: pointer;
+}
