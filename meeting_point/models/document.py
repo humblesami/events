@@ -1,3 +1,4 @@
+import json
 import os
 import base64
 import tempfile
@@ -42,6 +43,7 @@ class Document(models.Model):
     # seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
     mp_signature_status = fields.Char(string='My Signature', compute="_compute_signature_status")
     meet_id = fields.Char(string='Meeting', compute="_compute_meet_id")
+    meeting_users = fields.Char(string='Users', compute="_compute_meet_id")
 
     @api.multi
     def _compute_signature_status(self):
@@ -67,10 +69,20 @@ class Document(models.Model):
     def _compute_meet_id(self):
         for doc in self:
             doc.meet_id=str(doc.meeting_id.id)
+            users=[]
+            for p in doc.meeting_id.partner_ids:
+                if p.user_id:
+                    users.append({"id": p.user_id.id, "name": p.user_id.name})
+            doc.meeting_users = json.dumps(users)
 
     @api.onchange('meeting_id')
     def change_meet_id(self):
         self.meet_id=self.meeting_id.id
+        users = []
+        for p in self.meeting_id.partner_ids:
+            if p.user_id:
+                users.append({"id": p.user_id.id, "name": p.user_id.name})
+        self.meeting_users = json.dumps(users)
 
     @api.onchange('name')
     def filter_users(self):

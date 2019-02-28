@@ -27,7 +27,8 @@
         'views/default.xml',
         'security/rules.xml',
         'views/assets.xml',
-        'views/notification.xml'
+        'views/notification.xml',
+        'views/messenger.xml'
     ],
     # only loaded in demonstration mode
     'qweb': [

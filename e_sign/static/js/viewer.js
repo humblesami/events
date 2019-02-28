@@ -388,19 +388,20 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 		var input_email = $('<h2>Send by Email:</h2><input id="email" placeholder="Email" style="width:50%"/>');
 		var input_name = $('<input id="email" placeholder="Name" style="width:50%"/>');
 		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
+		var meeting_id=$('.esign_doc_meet_id').html()
+            if(!meeting_id){
+                meeting_id=false
+            }
+            else{
+                var meet_users = JSON.parse($('.esign_doc_meet_users').html());
+                users=meet_users;
+            }
 
 		body.html("<h2>Select User</h2>").append(dropdown) //.append(input_email).append(input_name);
 		body.append(save_btn);
-//		if($('.youtubeVideoModal .modal-footer').length == 0){
-//            content.append(footer);
-//            footer.append(save_btn);
-//            }
-//            else{
-//                $('.youtubeVideoModal .modal-footer').html("");
-//                $('.youtubeVideoModal .modal-footer').append(save_btn);
-//            }
 
         dropdown.append($("<option />").val(0).text("Select User"));
+
 		$.each(users, function() {
          dropdown.append($("<option />").val(this.id).text(this.name));
         });
@@ -412,7 +413,6 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
             var arr=[];
             var isEmpty=false;
 //            var work_flow_enabled=$('.e_sign_wrk_flow input')[0].checked;
-            var meeting_id=$('.esign_doc_meet_id').html()
             var user=dropdown.val();
             var email =input_email[1].value;
             var name =input_name[0].value;
