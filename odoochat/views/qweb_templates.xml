@@ -1,14 +1,16 @@
 <templates>
 
-    <t t-name="notification_message.icons">
+    <t t-name="notification.dom">
         <li>
             <a style="cursor:pointer" class="showmouseawaybutton fa" aria-expanded="false" title="Notifications">
                 <app-chat></app-chat>
             </a>
         </li>
+    </t>
+    <t t-name="message.icon">
         <li>
             <a style="cursor:pointer" class="showmouseawaybutton fa" aria-expanded="false" title="Messages">
-                <app-messenger></app-messenger>
+                <app-messageicon></app-messageicon>
             </a>
         </li>
     </t>
