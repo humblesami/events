@@ -185,7 +185,7 @@ var site_functions = {
 
         }
     },
-    togglerelated: function(e, el, selector) {
+    togglerelated: function(e, el, selector) {        
         if ($(el).hasClass('active')) {
             $(el).removeClass('active');
             $(selector).hide();
@@ -207,7 +207,7 @@ function getUrlLastItem() {
 }
 
 function addMainEventListeners() {
-    $(document).on('mouseup touchstart', function(e) {
+    $(document).on('mousedown touchstart', function(e) {
         //console.log(2222111);
         var target = e.target;
         var showbtn = $(target).closest('.showmouseawaybutton');
@@ -223,6 +223,7 @@ function addMainEventListeners() {
             }
         }
     });
+
     $('body').on('mouseup', '.navbar-toggler', function(e) {
         togglerelated = site_functions.togglerelated;
         togglerelated(e, this, '.navbarNavDropdown');

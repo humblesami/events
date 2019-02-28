@@ -73,6 +73,11 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/doc_preview.js?v='+dnow+'"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/config.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/emoji-picker.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/jquery.emojiarea.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/util.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/emoji/jQueryEmoji.js"></script>');
 
         $(function(){
             doc_preview.init();
@@ -80,7 +85,7 @@ function load_dn_assets()
                 dn_json_rpc_object.showHideLoader(true);
             });
             $('head').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
-            $('head').prepend('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">');
+             $('head').prepend('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">');
             setTimeout(function(){
                 $('.o_mobile_menu_toggle').mousedown(function(){
                     if(!$('.o_in_appswitcher:first').hasClass('o_hidden'))

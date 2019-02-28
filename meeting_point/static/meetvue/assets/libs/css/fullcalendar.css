@@ -1411,3 +1411,6 @@ background-size: contain;
 {
 	margin-top:-4px;
 }
+.fc-year-main-table .fc-week .fc-content-skeleton tbody td {
+	width: 34px;
+}

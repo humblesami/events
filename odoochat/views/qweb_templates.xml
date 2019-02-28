@@ -1,24 +1,16 @@
 <templates>
-     <t t-name="message.icon">
-        <li>
-            <a class="customClick" data-action="open_messages" aria-expanded="false" title="Messages">
-                <i class="fa fa-comments"/>
-            </a>
-        </li>
-    </t>
 
-    <t t-name="notification.icon">
+    <t t-name="notification_message.icons">
         <li>
-            <a style="cursor:pointer" class="showmouseawaybutton toggle_notification_btn fa" aria-expanded="false" title="Notifications">
+            <a style="cursor:pointer" class="showmouseawaybutton fa" aria-expanded="false" title="Notifications">
                 <app-chat></app-chat>
             </a>
         </li>
-        <style>
-            .container.notification-list
-            {
-                top:45px;
-            }
-        </style>
+        <li>
+            <a style="cursor:pointer" class="showmouseawaybutton fa" aria-expanded="false" title="Messages">
+                <app-messenger></app-messenger>
+            </a>
+        </li>
     </t>
     <t t-name="mail.chat.MessagingMenu"></t>
     <t t-name="mail.chat.ActivityMenu"></t>
