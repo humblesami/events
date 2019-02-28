@@ -51,7 +51,7 @@ $(function(){
         var schedule = '<div class="container-fluid schedule-container schedule-wrap">';
         for (var i = 0; i < events.length; i++) {
                 console.log('events',events[i])
-                if (events[i]) {
+                if (events[i].attendee) {
                 console.log('11')
                 schedule += '<div event_id='+events[i].id+' class="scheduleDetailOpener row fc-event">';
                 schedule += '<div class="col"> <span>' + events[i].datestart + '</span></div>';

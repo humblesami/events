@@ -47,6 +47,7 @@ class News(models.Model):
             meetings = environment['calendar.event'].sudo().search(filter)
             obj.public_events = meetings
             events_list = []
+
             for m in meetings:
                 hour = str(int(m.start.split(" ")[1].split(":")[0]) + 5)
                 hourEnd = str(int(m.stop_datetime.split(" ")[1].split(":")[0]) + 5)
@@ -58,13 +59,15 @@ class News(models.Model):
                 hourEndfinal = hourEnd + ':' + m.stop_datetime.split(" ")[1].split(":")[1] + ':' + m.stop_datetime.split(" ")[1].split(":")[2]
                 timeHour = m.start.split(" ")[0] +'T'+hourStartfinal+'Z'
                 timeHourEnd = m.stop_datetime.split(" ")[0] + 'T' + hourEndfinal + 'Z'
+                attendeeFlag = environment.user.partner_id.id in m.partner_ids.ids
                 event = {'id':m.id,'title':m.name,
                          'start':timeHour,
                          'end':timeHourEnd,
                          'datestart':m.start.split(" ")[0],
                          'dateend': m.stop_datetime.split(" ")[0],
                         'startSchedule': m.start_datetime,
-                         'endSchedule':m.stop_datetime
+                         'endSchedule':m.stop_datetime,
+                         'attendee' : attendeeFlag
 
                          }
                 events_list.append(event)
