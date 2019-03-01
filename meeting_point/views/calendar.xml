@@ -452,15 +452,12 @@
                                     <!--&lt;!&ndash;<script src="/meeting_point/static/js/survey_common.js"/>&ndash;&gt;-->
                                 <!--</form>-->
                             </field>
-                        </div>
-
-                        <script src="/meeting_point/static/js/meeting_form.js"/>
-                    </sheet>
-                    <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
-                    <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>
-
+                        </div>                        
+                    </sheet>                    
                     <app-comments></app-comments>
-                    <script src="/odoochat/static/js/messages.js"/>
+                    <script src="/meeting_point/static/js/meeting_form.js"/>
+                    <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
+                    <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>                    
                     <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
                 </form>
             </field>

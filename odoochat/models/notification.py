@@ -115,7 +115,7 @@ class Notification(models.Model):
                 record_name = req_env[res_model].search([('id', '=', res_id)]).name
 
             values['content'] = ' comment(s) on ' + record_name
-            notification_type = req_env['notification'].search([('name', '=', res_model)])
+            notification_type = req_env['notification.type'].search([('name', '=', res_model)])
             if not notification_type and not parent_notification:
                 raise ValidationError('Please ask support to add notification type '+res_model)
             values['notification_type_id'] = notification_type.id
