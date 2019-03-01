@@ -54,6 +54,7 @@
         'views/signature_requests.xml',
         'views/menus.xml',
         'security/rules.xml',
+        'demo/demo.xml',
     ],
     # only loaded in demonstration mode
     'installable': True,
