@@ -7,9 +7,20 @@
             <field name="arch" type="xml">
                 <form>
                     <app-messenger></app-messenger>
+<<<<<<< HEAD
                     <div "messnger_libs">
                         <script src="/odoochat/static/js/message.js"></script>
                     </div>                    
+=======
+                    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/>-->
+                    <style>
+                        .o_control_panel{
+                            display:none!important;
+                        }
+                    </style>
+                    <script src="/odoochat/static/js/messages.js"/>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
+>>>>>>> 9a796891cd0d8e6de9355026f759e35600ee5b92
                 </form>
             </field>
         </record>

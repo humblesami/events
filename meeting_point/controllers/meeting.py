@@ -333,17 +333,19 @@ class meeting(http.Controller):
             meeting_object['sign_docs'] = docs_to_sign
             surveys = meeting.survey_ids
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(surveys, ['id', 'title', 'my_status'])
-            props = ['attendance', 'state', 'response_by']
-            attendees = meeting.attendee_ids
-            attendees =attendees.filtered(lambda p: p.partner_id.id != 3)
-            meeting_object['attendees'] = ws_methods.objects_list_to_json_list(attendees, props)
 
+            attendees = meeting.attendee_ids
+            attendees = attendees.filtered(lambda p: p.partner_id.id != 3)
+            props = ['attendance', 'state', 'response_by']
+            meeting_object['attendees'] = ws_methods.objects_list_to_json_list(attendees, props)
             cnt = 0
             for attendee_object in attendees:
                 attendee = meeting_object['attendees'][cnt]
                 attendee_user = attendee_object.partner_id.user_id
                 attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
                 attendee['uid'] = attendee_user.id
+                ourd = dict((x, y) for x, y in attendee_object.STATE_SELECTION)
+                attendee['state'] = ourd[attendee_object['state']]
                 attendee['name'] = attendee_user.name
                 cnt += 1
             id = int(values['id'])
