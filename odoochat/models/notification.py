@@ -9,7 +9,7 @@ class NotificationType(models.Model):
     action_id = fields.Many2one('ir.actions.act_window', required=True)
     _sql_constraints = [
         (
-            'notification_type_unique', 'unique (res_model)',
+            'notification_type_unique', 'unique (name)',
             "Notification type already exists for same model!"),
     ]
 
