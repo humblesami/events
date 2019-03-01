@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form>
                     <app-messenger></app-messenger>
-                    <div id="messnger_libs">
+                    <div id="messenger_libs">
                         <script src="/odoochat/static/js/message.js"></script>
                     </div>                    
                 </form>
