@@ -1009,8 +1009,29 @@ var SocketService = /** @class */ (function () {
             }
         };
         this.make_route = function (item) {
+            window['site_functions']['get_odoo_param_value'] = function (name, url) {
+                try {
+                    if (!url)
+                        url = location.href;
+                    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+                    var regexS = "[\\?&]" + name + "=([^&#]*)";
+                    var regex = new RegExp(regexS);
+                    var results = regex.exec(url);
+                    var result = results[1];
+                    return result;
+                }
+                catch (er) {
+                    return '';
+                }
+            };
             var route = '';
             var obj_this = this;
+            if (window['odoo']) {
+                var action_url = '/web#action=' + item.action_id;
+                action_url += '&view_type=form&model=dn_base.empty';
+                action_url += '&menu_id=' + window['site_functions']['get_odoo_param_value']('menu_id');
+                obj_this.router.navigate([action_url]);
+            }
             switch (item.res_model) {
                 case 'calendar.event':
                     route = '/meeting/' + item.res_id;
@@ -5439,7 +5460,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sami/meetvue/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/wasif/Desktop/Projects/events/src/main.ts */"./src/main.ts");
 
 
 /***/ })
