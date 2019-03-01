@@ -319,3 +319,18 @@ body.o_app_switcher_background nav:first-child
 
     cursor:pointer;
 }
+
+.un-read-msg
+{
+    background: #dc3545;
+    color: white;
+    border-radius: 20px;
+    padding: 0 5px;
+    padding-top: 2px;
+    font-weight: bold;
+    font-size: 12px;
+    position: absolute;
+    top: 0px;
+    right: -2px;
+    z-index: 200;
+}

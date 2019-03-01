@@ -1027,7 +1027,10 @@ var SocketService = /** @class */ (function () {
             var route = '';
             var obj_this = this;
             if (window['odoo']) {
-                var action_url = '/web#action=' + item.action_id;
+                var item_id = item.res_id;
+                if (item.parent_res_id)
+                    item_id = item.parent_res_id;
+                var action_url = '/web#id=' + item_id + '&action=' + item.action_id;
                 action_url += '&view_type=form';
                 action_url += '&menu_id=' + window['site_functions']['get_odoo_param_value']('menu_id');
                 route = action_url;
