@@ -6,10 +6,10 @@ import datetime as dateval
 from odoo.http import request
 from odoo import SUPERUSER_ID
 from odoo.api import Environment
-from odoo.addons.dn_base import ws_methods
 from odoo import registry as registry_get
+from odoo.addons.dn_base import ws_methods
 from PIL import Image, ImageFont, ImageDraw
-from odoo.addons.dn_auth.controllers.ctl_dn_auth import AuthSession
+from odoo.addons.dn_auth.controllers.ctl_auth import AuthSession
 
 class dn_auth(AuthSession):
 

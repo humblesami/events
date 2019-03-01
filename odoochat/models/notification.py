@@ -31,7 +31,7 @@ class Notification(models.Model):
         name = params.get('res_model')
         res_id = params.get('res_id')
         sql = 'select distinct '
-        sql += ' res_model,content,res_id,n.id,counter '
+        sql += ' res_model,n.content,res_id,n.id,counter '
         sql += ' ,nt.action_id'
         sql += ' from'
         sql += ' notification n '
@@ -68,7 +68,7 @@ class Notification(models.Model):
         uid = self.env.user.id
         name = params.get('res_model')
         res_id = params.get('res_id')
-        sql = 'select res_model,content,res_id,n.id,counter from '
+        sql = 'select res_model,n.content,res_id,n.id,counter from '
         sql += ' notification n'
         sql += ' join notification_counter c on c.notification_id=n.id'
         sql += ' where counter>0 and user_id='+str(uid)

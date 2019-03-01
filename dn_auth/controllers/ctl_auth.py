@@ -13,6 +13,167 @@ from odoo.addons.dn_auth import dn_auth_vars
 from dateutil.relativedelta import relativedelta
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 
+class auth(http.Controller):
+    @http.route('/ws/authenticate', type="http", csrf=False, auth='none', cors='*')
+    def authenticate_http(self, **kw):
+        return self.authenticate(kw)
+
+    @http.route('/ws/authenticate-json', type="json", csrf=False, auth='none', cors='*')
+    def authenticate_json(self, **kw):
+        req_body = http.request.jsonrequest
+        return self.authenticate(req_body)
+
+    def authenticate(self, values):
+        try:
+            db = values.get('db')
+            if not 'db' in values:
+                return ws_methods.http_response('No database selected')
+            if 'data' in values:
+                values = values['data']
+
+            login = values.get('login')
+            password = values.get('password')
+            if not login or not password:
+                return ws_methods.http_response('Please provide login and password')
+            password = str(password)
+
+            request = http.request
+            try:
+                uid = request.session.authenticate(db, login, password)
+            except:
+                return ws_methods.http_response('Error in config, Database '+db+' does not exist')
+            if not uid:
+                return ws_methods.http_response('Invalid credentials')
+
+            token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
+            custom_user_model = request.env['dnspusers'].sudo()
+            spuser = custom_user_model.search([('user_id', '=', uid)])
+            if not spuser:
+                spuser = custom_user_model.create({'user_id': uid, 'login' : login, 'auth_token' : token, 'password' : password})
+            else:
+                try:
+                    spuser.write({'auth_token' : token, 'login' : login, 'password' : password })
+                except:
+                    token = spuser.auth_token
+                    a = 1
+
+            user = spuser.user_id
+            app_name = values.get('app_name')
+            groups = []
+            for group in  user.groups_id:
+                if app_name:
+                    if app_name not in group.full_name:
+                        continue
+                    else:
+                        groups.append(group.full_name)
+                else:
+                    groups.append(group.full_name)
+            if not hasattr(request, 'conf'):
+                request.conf = {'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token': token}
+            user_photo = ws_methods.mfile_url('res.users','image_small', uid)
+            http_req = request.httprequest
+            agent = http_req.user_agent
+            ip = 'local'
+            location = ''
+            local_env = odoo.tools.config.get('local_env')
+            if local_env != 'yes':
+                ip = http_req.environ.get('HTTP_X_FORWARDED_FOR') or http_req.environ.get('REMOTE_ADDR')
+                location = self.get_location(ip)
+            vals = {
+                'browser': agent.browser,
+                'platform': agent.platform,
+                'user_id': uid,
+                'ip': ip,
+                'location': location,
+                'session': request.session.sid
+            }
+            try:
+                request.env['login.info'].create(vals)
+            except:
+                return ws_methods.handle()
+            data = {'db': db, 'token': token, 'name': user.name, 'id':user.id, 'photo': user_photo,'groups':groups }
+            # authenticate
+            res = self.get_user_data(data)
+            return ws_methods.http_response('', res)
+        except:
+            return ws_methods.handle()
+
+    def get_location(self, ip):
+        url = "https://ipapi.co/" + ip + '/json'
+        res = ''
+        try:
+            data = requests.get(url).json()
+
+            city = data['city']
+            region = data['region']
+            #country = data['country']
+            res = region +" " +city # +"," + country
+        except:
+            res = ''
+        return res
+
+    def verifyToken(self, values):
+        request = http.request
+        token = values.get('token')
+        uid = values.get('id')
+        if not uid:
+            uid = values.get('uid')
+        if not token or not uid:
+            return 'Token or id Not Given'
+        token = str(token)
+        uid = int(uid)
+
+        req_env = request.env
+        filters = [('auth_token', '=', token), ('user_id', '=', uid)]
+        user = req_env['dnspusers'].sudo().search(filters)
+        if not user:
+            str_uid = str(uid)
+            return 'Token not valid for user ' + str_uid
+
+        values['login'] = user.login
+        values['password'] = user.password
+        uid = ws_methods.authenticate(values)
+        return uid
+
+    @http.route('/ws/verifytoken', type="http", csrf=False, auth='public', cors='*')
+    def verifyTokenHttp(self, **kw):
+        try:
+            values = kw
+            if http.request.uid and http.request.uid!=4:
+                uid = http.request.uid
+            else:
+                uid = self.verifyToken(values)
+            if type(uid) is not int:
+                return ws_methods.http_response(uid)
+            else:
+                values['uid'] = uid
+                values['id'] = uid
+                values['verify_token'] = 1
+                # verify-token
+                res = self.get_user_data(values)
+                return ws_methods.http_response('', res)
+        except:
+            return ws_methods.handle()
+
+    @http.route('/on_socket_server_restart', type='http', csrf=False, auth='public', cors='*')
+    def socket_request_http(self, **kw):
+        try:
+            values = json.loads(kw['data'])
+            uid = self.verifyToken(values)
+            if type(uid) is not int:
+                return ws_methods.http_response(uid)
+            else:
+                values['uid'] = uid
+                values['on_restart'] = 1
+                #on-restart
+                res = self.get_user_data(values)
+                return ws_methods.http_response('', res)
+        except:
+            return ws_methods.handle()
+
+    def get_user_data(self, values):
+        return {'user' : values}
+
 class AuthSession(AuthSignupHome):
 
     def login_info_to_json(self, login, gmt):

@@ -58,19 +58,17 @@ $(function(){
 
 
         var myinter = setInterval(function(){
-            console.log(new Date().getMilliseconds());
             if($('app-messageicon').length > 0)
             {
                 $('body').append(`
-        <div style="display:none">
-            <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger>
-        </div>
-    `);
-
+                    <div style="display:none">
+                        <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger>
+                    </div>
+                `);
                 $('body').append('<script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js?v="+dnow></script>');
                 clearInterval(myinter);
             }
-        },20);
+        },50);
 
         setTimeout(function(){
             clearInterval(myinter);
