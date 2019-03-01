@@ -738,10 +738,10 @@
                 <div class="survey_back_btn_container">
                 </div>
             </xpath>
-                  <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
-                <a href="/" class="navbar-brand logo">
-                </a>
-    </xpath>
+                  <!--<xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">-->
+                <!--<a href="/" class="navbar-brand logo">-->
+                <!--</a>-->
+    <!--</xpath>-->
         </template>
 
         <template id="no_result_new" name="Survey Result modified">
