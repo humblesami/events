@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form>
                     <app-messenger></app-messenger>
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/>
+                    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/>-->
                     <style>
                         .o_control_panel{
                             display:none!important;
