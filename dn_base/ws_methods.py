@@ -49,7 +49,7 @@ def http_response(er, data=False):
         return http_response(errorMessage)
 
 def not_logged_in():
-    return http_response('Session expired, please login')
+    return http_response('Session expired, please login and join again')
 
 def handle(ero=False):
 
