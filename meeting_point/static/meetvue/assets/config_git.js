@@ -28,7 +28,7 @@ var network_config = {
 };
 
 
-if(window.location.origin.toString().indexOf('localhost'))
+if(window.location.toString().startsWith('http://localhost'))
 {
     site_config = site_config_local;
 }
