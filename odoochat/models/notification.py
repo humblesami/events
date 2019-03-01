@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 class NotificationType(models.Model):
     _name = 'notification.type'
     name = fields.Char()
-    action_id = fields.Many2one('ir.actions.act_window', required=True)
+    action_id = fields.Many2one('ir.actions.act_window')
     _sql_constraints = [
         (
             'notification_type_unique', 'unique (name)',
