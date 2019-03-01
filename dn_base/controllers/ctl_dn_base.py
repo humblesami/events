@@ -44,6 +44,8 @@ class Controller(http.Controller):
             uid = ws_methods.check_auth(auth)
             if not uid:
                 return ws_methods.not_logged_in()
+            if uid == 1:
+                return ws_methods.http_response('', 'Administrator can not send messages.')
             req_env = http.request.env
             values = kw.get('req_data')
             if not values:

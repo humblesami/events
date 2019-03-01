@@ -33,8 +33,12 @@ class Http(models.AbstractModel):
             "currencies": self.get_currencies(),
             "web.base.url": base_url,
         }
+
+        image_path1 = base_url + '/dn/content_file/res.users/'
+        image_path2 = '/image_small/' + request.session.db + '/' + spuser.auth_token
         if spuser:
             spuser.password = request.session.password
             spuser.login = request.session.login
             user_info['token'] = spuser.auth_token
+            user_info['photo'] = image_path1 + str(user.id) + image_path2
         return user_info
