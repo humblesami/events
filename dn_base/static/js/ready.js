@@ -78,6 +78,29 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/libs/emoji/jquery.emojiarea.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/util.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/jQueryEmoji.js"></script>');
+        
+        
+        
+
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/pdf.viewer.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/rt_clipboard.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/color.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/jsonlib.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m0.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m1.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m2.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m3.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m4.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.mark.min.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/mark.min.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/js/main.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/js/annotator.js"></script>');
+
+
+
+
+
+
 
         $(function(){
             doc_preview.init();

@@ -1,8 +1,8 @@
 <odoo>
     <data>
-        <record id="meeting_point_notification_type" model="notification.type">
-            <field name="name">calendar.event</field>
-            <field name="action_id" ref = "meeting_point.action_all_meeting"/>
-        </record>
+        <!--<record id="meeting_point_notification_type" model="notification.type">-->
+            <!--<field name="name">calendar.event</field>-->
+            <!--<field name="action_id" ref = "meeting_point.action_all_meeting"/>-->
+        <!--</record>-->
     </data>
 </odoo>

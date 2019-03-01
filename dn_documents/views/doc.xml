@@ -25,12 +25,12 @@
                                     <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
                                 </div>
                                 <div style="display:none;" class="dn_doc_id">
-                                   <field name="id"/>
+                                    <field name="id"/>
                                 </div>
                                 <div class="oe_module_desc">
                                     <div name="open_sign_doc">
                                         <a style="pointer-events:all" type="object" class="fa fa-5x fa-file pull-left" name="open_view_doc_form">
-                                                </a>
+                                        </a>
                                     </div>
 
                                     <div style="overflow:hidden">
@@ -48,12 +48,12 @@
                                     <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
                                 </div>
                                 <div style="display:none;" class="dn_doc_id">
-                                   <field name="id"/>
+                                    <field name="id"/>
                                 </div>
                                 <div class="oe_module_desc">
                                     <div name="open_sign_doc1">
                                         <a style="pointer-events:all" type="object" t-att-myatr="open_doc" class="fa fa-5x fa-file pull-left" name="open_view_doc_form">
-                                                </a>
+                                        </a>
                                     </div>
                                     <div style="overflow:hidden">
                                         <h2 name="name1">
@@ -88,56 +88,63 @@
             <field name="model">dn_documents.allfiles</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-               <form create="false" class="doc_view_form" edit="false">
+                <form create="false" class="doc_view_form" edit="false">
                     <link rel="stylesheet" href="/dn_documents/static/css/doc.css"/>
-                   <field name="id" class="dn_doc_id o_hidden"/>
+                    <link href="/dn_base/static/js/libs/annotator/shared/pdf.viewer.css" rel="stylesheet" type="text/css"  />
+                    <link href="/dn_base/static/js/libs/annotator/css/toolbar.css" rel="stylesheet" type="text/css" />
+                    <link href="/dn_base/static/js/libs/annotator/css/custom.css" rel="stylesheet" type="text/css" />
+
+                    <field name="id" class="dn_doc_id o_hidden"/>
                     <field name="attachment" filename="filename" readonly="1" class="doc_download"/>
                     <field name="path" class="dn_documents_doc_path" invisible="1"/>
                     <field name="filename" invisible="1"/>
                     <field name="html" class="meeting_doc_html" readonly="1" invisible="1"/>
 
-                    <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);">
-                        <div class="top_btns">
-                            <div class="PdfTopBtnsWrapper">
-                                <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev"/>
-                                <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next"/>
-                                <span class="pg_no"> <span style="font-weight: bold;" id="page_num"/> / <span id="page_count"/></span>
-                                <div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out"/>
-                                <div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In"/>
-                                <span style="display: inline-block;" id="scaleSelectContainer">
-                                    <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
-                                        <option title="" value="0.5">50%</option>
-                                        <option title="" value="0.75">75%</option>
-                                        <option title="" value="1">100%</option>
-                                        <option title="" value="1.25">125%</option>
-                                        <option title="" value="1.5">150%</option>
-                                        <option title="" value="2">200%</option>
-                                        <option title="" value="3">300%</option>
-                                        <option title="" value="4">400%</option>
-                                    </select>
-                                </span>
-                                <field name="original_pdf" groups="!dn_base.group_dn_app_manager"   readonly="1" class="pdf_download"/>
-                                 <field name="pdf_doc" groups="dn_base.group_dn_app_manager"  readonly="1" class="pdf_download"/>
-                            </div>
+                    <app-document></app-document>
 
-                        </div>
-                        <canvas id="the-canvas"/>
+                    <!--<div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);">-->
+                        <!--<div class="top_btns">-->
+                            <!--<div class="PdfTopBtnsWrapper">-->
+                                <!--<div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev"/>-->
+                                <!--<div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next"/>-->
+                                <!--<span class="pg_no"> <span style="font-weight: bold;" id="page_num"/> / <span id="page_count"/></span>-->
+                                <!--<div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out"/>-->
+                                <!--<div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In"/>-->
+                                <!--<span style="display: inline-block;" id="scaleSelectContainer">-->
+                                    <!--<select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">-->
+                                        <!--<option title="" value="0.5">50%</option>-->
+                                        <!--<option title="" value="0.75">75%</option>-->
+                                        <!--<option title="" value="1">100%</option>-->
+                                        <!--<option title="" value="1.25">125%</option>-->
+                                        <!--<option title="" value="1.5">150%</option>-->
+                                        <!--<option title="" value="2">200%</option>-->
+                                        <!--<option title="" value="3">300%</option>-->
+                                        <!--<option title="" value="4">400%</option>-->
+                                    <!--</select>-->
+                                <!--</span>-->
+                                <!--<field name="original_pdf" groups="!dn_base.group_dn_app_manager"   readonly="1" class="pdf_download"/>-->
+                                <!--<field name="pdf_doc" groups="dn_base.group_dn_app_manager"  readonly="1" class="pdf_download"/>-->
+                            <!--</div>-->
 
-                        <div id="page_container1">
+                        <!--</div>-->
+                        <!--<canvas id="the-canvas"/>-->
 
-                            <div id="page_container">
+                        <!--<div id="page_container1">-->
 
-                            </div>
-                        </div>
-                    </div>
-                   <!--<script src="/dn_documents/static/js/pdf.js"/>-->
+                            <!--<div id="page_container">-->
+
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<script src="/dn_documents/static/js/pdf.js"/>-->
                     <!--<script src="/dn_documents/static/js/pdf.worker.js"/>-->
                     <div name="view_script">
-                        <script src="/dn_documents/static/js/doc_view.js"/>
+                        <!--<script src="/dn_documents/static/js/doc_view.js"/>-->
                     </div>
                     <script>
                         $('.modal-title:last').append($('.doc_download'));
                     </script>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
                 </form>
             </field>
         </record>
@@ -165,7 +172,7 @@
                 <form create="false" edit="false">
                     <div id="pdf_div"></div>
                     <script id="doc_js" src="/dn_documents/static/js/doc.js"/>
-               </form>
+                </form>
             </field>
         </record>
 

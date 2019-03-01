@@ -73,3 +73,7 @@
                         overflow: auto;
                         max-height: calc(100vh - 200px);
                     }
+
+.o_cp_left,.o_cp_right{
+    display:none!important;
+}
