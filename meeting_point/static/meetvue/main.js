@@ -362,7 +362,7 @@ var bootstrap_Components = undefined;
 (function () {
     if (window['odoo']) {
         console.log("Is export build");
-        bootstrap_Components = [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"], _components_messageicon_messageicon_component__WEBPACK_IMPORTED_MODULE_36__["MessageiconComponent"], _components_messenger_messenger_component__WEBPACK_IMPORTED_MODULE_35__["MessengerComponent"], _components_chat_chat_component__WEBPACK_IMPORTED_MODULE_15__["ChatComponent"], _components_comments_comments_component__WEBPACK_IMPORTED_MODULE_34__["CommentsComponent"]];
+        bootstrap_Components = [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"], _components_messageicon_messageicon_component__WEBPACK_IMPORTED_MODULE_36__["MessageiconComponent"], _components_messenger_messenger_component__WEBPACK_IMPORTED_MODULE_35__["MessengerComponent"], _components_chat_chat_component__WEBPACK_IMPORTED_MODULE_15__["ChatComponent"], _components_comments_comments_component__WEBPACK_IMPORTED_MODULE_34__["CommentsComponent"], _components_document_document_component__WEBPACK_IMPORTED_MODULE_27__["DocumentComponent"]];
     }
     else {
         window['odoo_build'] = 1;
@@ -1603,20 +1603,27 @@ var CommentsComponent = /** @class */ (function () {
         }
         var obj_this = this;
         obj_this.socketService.server_events['comment_received'] = function (data) {
-            console.log(data, 233);
-            if (obj_this.res_id != data.res_id || obj_this.res_model != data.res_model) {
-                return;
+            if (data.subtype_id === 2) {
+                if (data.body && data.body.startsWith('<p>')) {
+                    data.body = $(data.body)[0].innerHTML;
+                }
+                obj_this.notes.splice(0, 0, data);
             }
-            if (data.parent_id) {
-                for (var i in obj_this.comments) {
-                    if (obj_this.comments[i].id == data.parent_id) {
-                        obj_this.comments[i].children.push(data);
-                        break;
+            else if (data.subtype_id === 1) {
+                if (obj_this.res_id != data.res_id || obj_this.res_model != data.res_model) {
+                    return;
+                }
+                if (data.parent_id) {
+                    for (var i in obj_this.comments) {
+                        if (obj_this.comments[i].id == data.parent_id) {
+                            obj_this.comments[i].children.push(data);
+                            break;
+                        }
                     }
                 }
-            }
-            else {
-                obj_this.comments.splice(0, 0, data);
+                else {
+                    obj_this.comments.splice(0, 0, data);
+                }
             }
         };
         var on_comments_list = function (result) {
@@ -2126,9 +2133,10 @@ var DocumentComponent = /** @class */ (function () {
         libs += '<script src="assets/libs/js/mark.min.js"></script>';
         libs += '<script src="' + prefix + '/js/main.js"></script>';
         libs += '<script src="' + prefix + '/js/annotator.js"></script>';
-        if ($('.strt_sign').length == 0) {
-            libs += '<script src="annotator/js/dn_sign.js"></script>';
-        }
+        // if($('.strt_sign').length == 0)
+        // {
+        //     libs += '<script src="annotator/js/dn_sign.js"></script>';
+        // }
         $(libs_container).removeAttr('uninitialized');
         $(libs_container).append(libs);
     };
@@ -2137,13 +2145,15 @@ var DocumentComponent = /** @class */ (function () {
         window['show_annotation'] = false;
         window['functions'].showLoader('loaddocwaiter');
         setTimeout(function () {
-            var libs_container = $('#pdf-libs-conatiner');
-            if (libs_container.length == 0) {
-                console.log("Could not find #pdf-libs-container");
-                return;
-            }
-            if (libs_container.attr('uninitialized')) {
-                obj_this.loadLibs(libs_container);
+            if (!window["odoo"]) {
+                var libs_container = $('#pdf-libs-conatiner');
+                if (libs_container.length == 0) {
+                    console.log("Could not find #pdf-libs-container");
+                    return;
+                }
+                if (libs_container.attr('uninitialized')) {
+                    obj_this.loadLibs(libs_container);
+                }
             }
             var back_btn = $('.topbar .icon.back');
             back_btn.unbind('click');
@@ -2157,6 +2167,20 @@ var DocumentComponent = /** @class */ (function () {
         var obj_this = this;
         var doc_type = obj_this.route.snapshot.params.doc_type;
         var doc_id = obj_this.route.snapshot.params.res_id;
+        if (window["odoo"]) {
+            var url = window.location.href;
+            if (url.indexOf('model=') > -1) {
+                var _model = url.split("model=")[1].split("&")[0];
+                var _id = url.split("id=")[1].split("&")[0];
+                doc_id = _id;
+                if (_model == "meeting_point.doc") {
+                    doc_type = "meeting";
+                }
+                if (_model == "meeting_point.topicdoc") {
+                    doc_type = "topic";
+                }
+            }
+        }
         var input_data = undefined;
         var req_url = undefined;
         var res_model = '';
@@ -2212,6 +2236,10 @@ var DocumentComponent = /** @class */ (function () {
             var c_path = window['pathname'];
             $('.notification-list:first .list-group-item[ng-reflect-router-link="' + c_path + '"]').addClass('active');
         };
+        if (!doc_type) {
+            console.log("No doc_type");
+            return;
+        }
         obj_this.httpService.call_post_http(req_url, input_data, fetchDocData, null);
     };
     DocumentComponent.prototype.ngOnInit = function () {

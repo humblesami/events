@@ -168,41 +168,6 @@ class Controller(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/socket_request-json', type='json', csrf=False, auth='public', cors='*')
-    def socket_request_json(self):
-        res = ''
-        try:
-            kw = request.jsonrequest
-            auth = kw.get('auth')
-            data = kw.get('req_data')
-            if not data:
-                data = kw
-            time_zone = kw.get('time_zone')
-            forward_url = kw.get('function_url')
-            if auth and auth.get('token'):
-                uid = ws_methods.check_auth(auth)
-                data['uid'] = uid
-                data['db'] = auth['db']
-                data['token'] = auth['token']
-            else:
-                if not data.get('uid'):
-                    data['uid'] = data['id']
-                uid = ws_methods.check_auth(data)
-            if not uid:
-                return ws_methods.not_logged_in()
-
-            url = request.httprequest.host_url+forward_url
-            res = requests.post(url, json=data)
-            res = res.content
-            res = res.decode('utf8')
-            res = json.loads(res)
-            res = res.get('result')
-            if not res:
-                res = res.get('error')
-            return res
-        except:
-            return ws_methods.handle(res)
-
     @http.route('/model/binary', auth='public', csrf=False, cors='*')
     def model_binary_http(self, **kw):
         doc = self.model_binary(kw)

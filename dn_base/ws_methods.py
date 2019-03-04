@@ -18,7 +18,7 @@ def send_mail(mesgtosend):
 def mfile_url(model, field, id):
     conf = request.conf
     res = model + '/' + str(id) + '/' + field + '/' + conf['db'] + '/' + conf['token']
-    res = conf['host_url'] + 'dn/content_file/' + res
+    res = get_main_url() + '/dn/content_file/' + res
     return res
 
 def execute_update(query):
@@ -185,8 +185,20 @@ def check_auth(values):
         return False
     uid = request.session.authenticate(db, user.login, user.password)
     if not hasattr(request, 'conf'):
-        request.conf = { 'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token' : token }
+        request.conf = { 'uid': uid, 'db': request.db, 'token' : token }
     return uid
+
+host_url = False
+def get_main_url():
+    global host_url
+    if host_url:
+        return host_url
+    host_url = request.httprequest.host_url
+    base_url = host_url[:-1]
+    if base_url.startswith('http:') and not base_url.startswith('http://localhost') and not base_url.startswith('http://172'):
+        base_url = base_url.replace('http:', 'https:')
+    host_url = base_url
+    return host_url
 
 def check_auth_token(values):
     if values.get('stopit'):
@@ -205,7 +217,7 @@ def check_auth_token(values):
         return False
     uid = request.session.authenticate(db, user.login, user.password)
     if not hasattr(request, 'conf'):
-        request.conf = { 'host_url': request.httprequest.host_url, 'uid': uid, 'db': request.db, 'token' : token }
+        request.conf = { 'uid': uid, 'db': request.db, 'token' : token }
     return uid
 
 

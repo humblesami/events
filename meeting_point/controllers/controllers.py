@@ -476,8 +476,7 @@ class meeting(http.Controller):
             dbname = http.request.db
             dbname=dbname.encode("utf-8")
             # dbname = self._cr.dbname,
-            base_url = http.request.httprequest.host_url
-            base_url = base_url[:-1]
+            base_url = ws_methods.get_main_url()
             date_value = dateval.datetime.now()
             date_value = date_value.strftime('%Y-%m-%d %H:%M:%S')
             filters = [('publish', '=', True), ('start_datetime', '>=', date_value)]

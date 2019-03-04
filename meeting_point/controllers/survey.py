@@ -11,11 +11,6 @@ class website_survey(WebsiteSurvey):
 
     @http.route('/survey-questions', type="http", csrf=False, auth='none', cors='*')
     def get_survey_http(self, **kw):
-        # survey_title = val['title'].replace(' ', '-')
-        # survey_title = survey_title.replace("'", '-')
-        # start_url = http.request.conf['host_url'] + 'survey/start/' + survey_title + '-' + str(
-        #     val['id']) + '/phantom/' + values['db'] + '/' + values['token']
-        # val['start_url'] = start_url
         return self.get_survey_questions(kw)
 
     @http.route('/survey-questions-json', type="json", csrf=False, auth='none', cors='*')
@@ -336,41 +331,3 @@ class website_survey(WebsiteSurvey):
                                'filter_display_data': filter_display_data,
                                'filter_finish': filter_finish
                                })
-        # Quick retroengineering of what is injected into the template for now:
-        # (TODO: flatten and simplify this)
-        #
-        #     survey: a browse record of the survey
-        #     survey_dict: very messy dict containing all the info to display answers
-        #         {'page_ids': [
-        #
-        #             ...
-        #
-        #                 {'page': browse record of the page,
-        #                  'question_ids': [
-        #
-        #                     ...
-        #
-        #                     {'graph_data': data to be displayed on the graph
-        #                      'input_summary': number of answered, skipped...
-        #                      'prepare_result': {
-        #                                         answers displayed in the tables
-        #                                         }
-        #                      'question': browse record of the question_ids
-        #                     }
-        #
-        #                     ...
-        #
-        #                     ]
-        #                 }
-        #
-        #             ...
-        #
-        #             ]
-        #         }
-        #
-        #     page_range: pager helper function
-        #     current_filters: a list of ids
-        #     filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
-        #     filter_finish: boolean => only finished surveys or not
-        #
-

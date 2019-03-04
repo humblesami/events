@@ -19,8 +19,7 @@ class OdooChatAuth(auth):
         friendList = {}
         unseenMessages = 0
 
-        base_url = http.request.httprequest.host_url
-        base_url = base_url[:-1]
+        base_url = ws_methods.get_main_url()
         image_path1 = base_url + '/dn/content_file/res.users/'
         image_path2 = '/image_small/' + values['db'] + '/' + values['token']
 

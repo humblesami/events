@@ -355,8 +355,7 @@ class Signature(http.Controller):
         """ Create one mail by recipients and replace __URL__ by link with identification token """
         # set url
         req_env = http.request.env
-        base_url = http.request.httprequest.host_url
-        base_url = base_url[:-1]
+        base_url = ws_methods.get_main_url()
         base_url = '/' if req_env.context.get('relative_url') else \
             base_url
         Mail = req_env['mail.mail']

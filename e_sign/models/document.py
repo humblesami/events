@@ -1,17 +1,14 @@
 import os
 import base64
 import tempfile
-from random import randint
-
 from fpdf import FPDF
-# from docx import Document
 from werkzeug import urls
-
-from odoo import models, fields, api, http
+from random import randint
 from odoo.exceptions import UserError
+from odoo.addons.dn_base import ws_methods
+from odoo import models, fields, api, http
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from odoo.addons.dn_base.statics import raise_dn_model_error
-
 
 class Document(models.Model):
     _name = 'e_sign.document'
@@ -116,8 +113,7 @@ class Document(models.Model):
             return
         # set url
 
-        base_url = http.request.httprequest.host_url
-        base_url = base_url[:-1]
+        base_url = ws_methods.get_main_url()
         base_url = '/' if req_env.context.get('relative_url') else \
             base_url
         Mail = req_env['mail.mail']

@@ -1,6 +1,7 @@
 import werkzeug
 from odoo.exceptions import UserError
-from odoo import api, fields, models, tools, http
+from odoo import api, fields, models, tools
+from odoo.addons.dn_base import ws_methods
 
 class partner(models.Model):
     _inherit = 'res.partner'
@@ -19,8 +20,7 @@ class partner(models.Model):
             the url state components (menu_id, id, view_type) """
 
         res = dict.fromkeys(self.ids, False)
-        base_url = http.request.httprequest.host_url
-        base_url = base_url[:-1]
+        base_url = ws_methods.get_main_url()
         for partner in self:
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:

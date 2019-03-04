@@ -45,7 +45,7 @@ class Survey(models.Model):
         for survey in self:
             try:
                 if survey.my_status != 'not invited':
-                    base_url = request.httprequest.host_url
+                    base_url = ws_methods.get_main_url()
                     if survey.my_status == 'done':
                         survey.url = urls.url_join(base_url, "survey/meet/results/%s" % (slug(survey)))
                     elif survey.my_status == 'pending':
@@ -98,7 +98,7 @@ class Survey(models.Model):
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
-        base_url = request.httprequest.host_url
+        base_url = ws_methods.get_main_url()
         for survey in self:
             survey.public_url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
             survey.print_url = urls.url_join(base_url, "survey/print/%s" % (slug(survey)))

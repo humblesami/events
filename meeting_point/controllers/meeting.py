@@ -178,8 +178,7 @@ class meeting(http.Controller):
                 rendering_context = context
             else:
                 rendering_context = self._context
-            base_url = http.request.httprequest.host_url
-            base_url = base_url[:-1]
+            base_url = ws_methods.get_main_url()
             rendering_context.update({
                 'base_url': base_url
             })

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
-from odoo import models, fields, api, _, http
-from odoo.addons.dn_base import dn_dt
-from odoo.exceptions import ValidationError, UserError
-from odoo.addons.dn_attendance import workhours
 import math
+from odoo import models, fields, api, _
+from datetime import datetime, timedelta
+from odoo.exceptions import ValidationError
+from odoo.addons.dn_attendance import workhours
+from odoo.addons.dn_base import dn_dt, ws_methods
+
 class ScheduleInfo(models.Model):
     _name = "schedule.info"
 
@@ -304,8 +305,7 @@ class AttendanceWizard(models.Model):
 
         modeled = self._context.get('active_model')
         action_id = self.env['ir.model.data'].get_object_reference('dn_attendance', 'action_attendance_daily')
-        base_url = http.request.httprequest.host_url
-        base_url = base_url[:-1]
+        base_url = ws_methods.get_main_url()
         email_from = self.env['res.users'].search([('id', '=', self._uid)]).email
         group_hr_admin_id = self.env['ir.model.data'].xmlid_to_res_id(
             'leave_management_custom.group_leave_custom_admin')
