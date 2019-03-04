@@ -2,7 +2,7 @@
 (function(){
     var dnow = Date();
     document.writeln(
-        `<base href=${window.location.origin} />
+        `
         <script type="text/javascript" src="/meeting_point/static/meetvue/assets/config.js"></script>
         <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/json.js"></script>
         <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/simple_ajax.js"></script>
@@ -61,6 +61,7 @@ $(function(){
             if($('app-messageicon').length > 0)
             {
                 $('body').append(`
+                <base href=${window.location.origin} />
                     <div style="display:none">
                         <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger><app-document></app-document>
                     </div>
