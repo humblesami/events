@@ -70,7 +70,7 @@ class auth(http.Controller):
                     groups.append(group.full_name)
             if not hasattr(request, 'conf'):
                 request.conf = {'uid': uid, 'db': request.db, 'token': token}
-            user_photo = ws_methods.mfile_url('res.users','image_small', uid)
+            user_photo = ws_methods.mfile_url('res.users','image_small', uid, 'image')
             http_req = request.httprequest
             agent = http_req.user_agent
             ip = 'local'

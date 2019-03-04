@@ -1,8 +1,8 @@
 import json
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.addons.dn_base import ws_methods
+from odoo.exceptions import ValidationError
 from odoo.addons.dn_auth.controllers.ctl_auth import auth
 
 class OdooChatAuth(auth):
@@ -20,7 +20,7 @@ class OdooChatAuth(auth):
         unseenMessages = 0
 
         base_url = ws_methods.get_main_url()
-        image_path1 = base_url + '/dn/content_file/res.users/'
+        image_path1 = base_url + '/image/res.users/'
         image_path2 = '/image_small/' + values['db'] + '/' + values['token']
 
         filters = [('name', '=', 'MeetingPoint')]

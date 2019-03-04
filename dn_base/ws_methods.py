@@ -15,10 +15,10 @@ def send_mail(mesgtosend):
     recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
-def mfile_url(model, field, id):
+def mfile_url(model, field, id, file_type):
     conf = request.conf
     res = model + '/' + str(id) + '/' + field + '/' + conf['db'] + '/' + conf['token']
-    res = get_main_url() + '/dn/content_file/' + res
+    res = get_main_url() + '/'+file_type+'/' + res
     return res
 
 def execute_update(query):
@@ -126,7 +126,7 @@ def object_to_json_object(object, props):
                     obj = obj[sub_prop]
                     if obj:
                         if sub_prop in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo']:
-                            obj = mfile_url(model, sub_prop, object.id)
+                            obj = mfile_url(model, sub_prop, object.id, 'image')
                         else:
                             obj = obj.decode('utf-8')
                 elif tz and field_type == 'datetime':

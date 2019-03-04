@@ -341,7 +341,7 @@ class meeting(http.Controller):
             for attendee_object in attendees:
                 attendee = meeting_object['attendees'][cnt]
                 attendee_user = attendee_object.partner_id.user_id
-                attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id)
+                attendee['photo'] = ws_methods.mfile_url('res.users', 'image_small', attendee_user.id, 'image')
                 attendee['uid'] = attendee_user.id
                 ourd = dict((x, y) for x, y in attendee_object.STATE_SELECTION)
                 attendee['state'] = ourd[attendee_object['state']]

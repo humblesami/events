@@ -34,7 +34,7 @@ class Http(models.AbstractModel):
             "web.base.url": base_url,
         }
 
-        image_path1 = base_url + '/dn/content_file/res.users/'
+        image_path1 = base_url + '/image/res.users/'
         image_path2 = '/image_small/' + request.session.db + '/' + spuser.auth_token
         if spuser:
             spuser.password = request.session.password
