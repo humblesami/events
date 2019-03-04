@@ -12,7 +12,7 @@
                         <field name="duration" widget="float_time" required="1" class="topic_duration dn_time_picker" />
                         <field name="content" />
                         <field name="document_ids" mode="kanban" class="o2m_kanban topic_docs kanban_document"
-                               context="{'form_view_ref' : 'dn_documents.view_dn_doc_form','kanban_view_ref' : 'dn_documents.dn_docs_kanban'}"
+                               context="{'form_view_ref' : 'meeting_point.view_meeting_doc_form','kanban_view_ref' : 'meeting_point.view_meeting_doc_kanban'}"
                         />
                     </group>
                     <script type="application/javascript" src="/meeting_point/static/js/meetingtopic.js"></script>

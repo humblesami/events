@@ -77,3 +77,20 @@
 .o_cp_left,.o_cp_right{
     display:none!important;
 }
+
+.pdf-searchbar,.icon.back{
+                        display:none !important
+}
+
+.topbar .paginator {
+    display: flex;
+}
+
+.topbar .pager {
+    margin:0;
+}
+
+#viewer-wrapper{
+     height: calc(100vh - 232px) !important;
+
+}

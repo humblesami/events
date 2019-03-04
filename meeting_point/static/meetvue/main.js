@@ -2115,6 +2115,9 @@ var DocumentComponent = /** @class */ (function () {
     };
     DocumentComponent.prototype.loadLibs = function (libs_container) {
         var prefix = 'annotator';
+        if (window["odoo"]) {
+            prefix = "/dn_base/static/js/libs/annotator";
+        }
         var libs = '';
         libs += '<link href="' + prefix + '/shared/pdf.viewer.css" rel="stylesheet" type="text/css"  />';
         libs += '<link href="' + prefix + '/css/toolbar.css" rel="stylesheet" type="text/css" />';
@@ -2128,9 +2131,11 @@ var DocumentComponent = /** @class */ (function () {
         libs += '<script src="' + prefix + '/modules/m2.js"></script>';
         libs += '<script src="' + prefix + '/modules/m3.js"></script>';
         libs += '<script src="' + prefix + '/modules/m4.js"></script>';
-        libs += '<script src="assets/libs/js/jquery.ui.touch-punch.min.js"></script>';
-        libs += '<script src="assets/libs/js/jquery.mark.min.js"></script>';
-        libs += '<script src="assets/libs/js/mark.min.js"></script>';
+        if (!window["odoo"]) {
+            libs += '<script src="assets/libs/js/jquery.ui.touch-punch.min.js"></script>';
+            libs += '<script src="assets/libs/js/jquery.mark.min.js"></script>';
+            libs += '<script src="assets/libs/js/mark.min.js"></script>';
+        }
         libs += '<script src="' + prefix + '/js/main.js"></script>';
         libs += '<script src="' + prefix + '/js/annotator.js"></script>';
         // if($('.strt_sign').length == 0)
@@ -2145,15 +2150,13 @@ var DocumentComponent = /** @class */ (function () {
         window['show_annotation'] = false;
         window['functions'].showLoader('loaddocwaiter');
         setTimeout(function () {
-            if (!window["odoo"]) {
-                var libs_container = $('#pdf-libs-conatiner');
-                if (libs_container.length == 0) {
-                    console.log("Could not find #pdf-libs-container");
-                    return;
-                }
-                if (libs_container.attr('uninitialized')) {
-                    obj_this.loadLibs(libs_container);
-                }
+            var libs_container = $('#pdf-libs-conatiner');
+            if (libs_container.length == 0) {
+                console.log("Could not find #pdf-libs-container");
+                return;
+            }
+            if (libs_container.attr('uninitialized')) {
+                obj_this.loadLibs(libs_container);
             }
             var back_btn = $('.topbar .icon.back');
             back_btn.unbind('click');
@@ -5497,7 +5500,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sami/meetvue/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/faizan/meetvue (another copy)/src/main.ts */"./src/main.ts");
 
 
 /***/ })

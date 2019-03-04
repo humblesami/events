@@ -13,7 +13,7 @@
                     <h4>Attachment</h4>
                     <field name="attachment" filename="filename"
                            class="dn_documents_docs_upload oe_edit_only"/>
-                    <a type="object" name="open_view_doc_form"
+                    <button type="object" name="open_annotator_form"
                             class="fa fa-5x fa-file"/>
                 </form>
             </field>
@@ -25,9 +25,15 @@
             <field name="inherit_id" ref="dn_documents.dn_docs_kanban"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="before">
-
+                <xpath expr="//div[@name='open_sign_doc']" position="replace">
+                    <a type="object" name="open_annotator_form"
+                            class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
                 </xpath>
+                <xpath expr="//div[@name='open_sign_doc1']" position="replace">
+                    <a type="object" name="open_annotator_form"
+                            class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
+                </xpath>
+
             </field>
         </record>
 
@@ -151,7 +157,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name" string="Title" />
-                    <button type="object" name="open_view_doc_form"
+                    <button type="object" name="open_annotator_form"
                             class = "fa fa-2x fa-file" />
                 </tree>
             </field>
@@ -232,6 +238,7 @@
             <!--</field>-->
 
         </record>
+
 
         <template id="meeting_point_sign_page" name="Signature Page">
             <t t-call="website.layout">

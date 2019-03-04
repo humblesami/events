@@ -28,9 +28,12 @@ var network_config = {
 };
 
 
-if(window.location.toString().startsWith('http://localhost'))
+if(window.location.toString().indexOf('localhost')> -1)
 {
-    site_config = site_config_local;
+	site_config = site_config_local;
+	if(window["odoo"]){
+		site_config.server_db=window["odoo"].session_info.db
+	}
 }
 
 site_config.site_url = window.location.origin;

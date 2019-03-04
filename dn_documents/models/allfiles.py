@@ -263,3 +263,17 @@ class AllFiles(models.Model):
                 'res_id': self.id,
                 'target': 'current',
             }
+
+    def open_annotator_form(self):
+        view_id = self.env.ref('dn_documents.doc_annotator_form').id
+        if self:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': self.name,
+                'view_id': view_id,
+                'view_mode': 'form',
+                'res_model': self._name,
+                'res_id': self.id,
+                'target': 'current',
+            }
+
