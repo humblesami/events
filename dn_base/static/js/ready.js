@@ -73,6 +73,10 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/doc_preview.js?v='+dnow+'"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
+
+
+        document.writeln('<link rel="stylesheet" type="text/css" href="assets/css/emoji.css" />');
+        document.writeln('<link rel="stylesheet" type="text/css" href="assets/css/emoji.css.map" />');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/config.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/emoji-picker.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/jquery.emojiarea.js"></script>');
@@ -80,28 +84,9 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/libs/emoji/jQueryEmoji.js"></script>');
         document.writeln('<div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1"/>');
 
-//        $(function(){
-
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/pdf.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/pdf.viewer.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/rt_clipboard.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/color.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/shared/jsonlib.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m0.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m1.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m2.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m3.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/modules/m4.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.ui.touch-punch.min.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.mark.min.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/annotator/mark.min.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/js/main.js"></script>');
-//        document.writeln('<script src="/dn_base/static/js/libs/annotator/js/annotator.js"></script>');
-
-
-//        });
-
-
 
 
 
