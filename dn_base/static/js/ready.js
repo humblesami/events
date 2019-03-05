@@ -82,7 +82,6 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/libs/emoji/jquery.emojiarea.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/util.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/jQueryEmoji.js"></script>');
-        document.writeln('<div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1"/>');
 
         document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.ui.touch-punch.min.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.mark.min.js"></script>');

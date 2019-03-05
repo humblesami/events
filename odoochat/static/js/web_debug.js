@@ -65,6 +65,7 @@ $(function(){
                     <div style="display:none">
                         <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger><app-document></app-document>
                     </div>
+                    <div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1"/>
                 `);
                 $('body').append('<script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js?v="+dnow></script>');
                 clearInterval(myinter);

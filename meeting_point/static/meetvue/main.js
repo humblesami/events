@@ -1206,14 +1206,27 @@ var SocketService = /** @class */ (function () {
             }
         }, 11000);
     };
-    SocketService.prototype.update_unseen_message_count = function (inc) {
+    SocketService.prototype.update_unseen_message_count = function (event, target_id, target) {
+        var inc = 0;
         var obj_this = this;
         try {
-            obj_this.unseen_messages += inc;
-            if (obj_this.unseen_messages == 1) {
+            switch (event) {
+                case "receive-new-message":
+                    inc = 1;
+                    break;
+                case "read-new-message":
+                    inc = -1;
+                    break;
+                case "user-selected":
+                    inc = target.unseen * -1;
+                    break;
+            }
+            target.unseen = target.unseen + inc;
+            obj_this.unseen_messages = obj_this.unseen_messages + inc;
+            if (obj_this.unseen_messages >= 1) {
                 $('.un-read-msg.count').show();
             }
-            else if (obj_this.unseen_messages == 0) {
+            else if (obj_this.unseen_messages <= 0) {
                 $('.un-read-msg.count').hide();
             }
         }
@@ -1224,11 +1237,6 @@ var SocketService = /** @class */ (function () {
     SocketService.prototype.registerEventListeners = function () {
         var obj_this = this;
         var bootbox = window["bootbox"];
-        obj_this.server_events['chat_message_received'] = function (msg) {
-            obj_this.unseen_messages++;
-            obj_this.friends[msg.sender]['unseen']++;
-            obj_this.server_events['active_chat_message_received'](msg);
-        };
         obj_this.server_events['meeting_started'] = function (res) {
             bootbox.alert(res);
         };
@@ -1336,7 +1344,7 @@ var SocketService = /** @class */ (function () {
         if (item.parent_res_id || obj_this.current_model != res_model || obj_this.current_id != res_id) {
             index = obj_this.find_notification_index(item.res_model, item.res_id);
             if (index != -1) {
-                obj_this.notificationList[index].counter += 1;
+                obj_this.notificationList[index].counter = obj_this.notificationList[index].counter + 1;
             }
             else {
                 item.counter = 1;
@@ -3907,6 +3915,7 @@ var MessengerComponent = /** @class */ (function () {
         this.chat_initilized = 0;
         this.searchVal = '';
         this.is_request_sent = true;
+        this.chat_box_initilized = false;
         this.odoo_build = window['odoo'] ? 1 : undefined;
         var obj_this = this;
         obj_this.socketService = ss;
@@ -3917,8 +3926,13 @@ var MessengerComponent = /** @class */ (function () {
             obj_this.keys_chat_users = Object.keys(obj_this.chat_users);
             socketService.server_events['friend_joined'] = updateUserStatus;
             socketService.server_events['user_left'] = updateUserStatus;
-            socketService.server_events['active_chat_message_received'] = function (msg) {
-                obj_this.receiveMessage(obj_this, msg, msg.sender);
+            socketService.server_events['chat_message_received'] = function (msg) {
+                try {
+                    obj_this.receiveMessage(obj_this, msg, msg.sender);
+                }
+                catch (er) {
+                    console.log(er);
+                }
             };
             function updateUserStatus(user) {
                 //console.log(user.id+' online status = '+ user.online);
@@ -3986,8 +4000,10 @@ var MessengerComponent = /** @class */ (function () {
         var obj_this = this;
         obj_this.update_emjoi_urls(messages);
         obj_this.active_chat_user.messages = messages;
-        obj_this.update_unseen_count("user-selected", obj_this.active_chat_user.id, null);
+        obj_this.socketService.update_unseen_message_count("user-selected", obj_this.active_chat_user.id, obj_this.chat_users[obj_this.active_chat_user.id]);
         setTimeout(function () {
+            if (obj_this.chat_box_initilized)
+                return;
             var emoji_config = {
                 emojiable_selector: "[data-emojiable=true]",
                 assetsPath: "/assets/img",
@@ -3999,6 +4015,7 @@ var MessengerComponent = /** @class */ (function () {
             var emojiPicker = new window["EmojiPicker"](emoji_config);
             emojiPicker.discover();
             $('.msg-item').Emoji();
+            obj_this.chat_box_initilized = true;
         }, 100);
         obj_this.scrollToEnd();
     };
@@ -4072,51 +4089,31 @@ var MessengerComponent = /** @class */ (function () {
         if (window['odoo']) {
             message.content = message.content.replace(/assets\/img/g, "meeting_point/static/meetvue/assets/img");
         }
+        var sender = obj_this.chat_users[sender_id];
+        if (!sender) {
+            console.log(obj_this.chat_users, ' Dev issue as ' + sender_id + ' not found');
+            return;
+        }
         message.content = obj_this.sanitizer.bypassSecurityTrustHtml(message.content);
         var is_chat_open = obj_this.active_chat_user &&
             obj_this.active_chat_user.id == sender_id &&
             !this.is_minimize;
-        if (!obj_this.chat_users[sender_id]) {
-            console.log(obj_this.chat_users, ' Dev issue as ' + sender_id + ' not found');
+        if (!sender.messages) {
+            sender.messages = [];
         }
-        if (!obj_this.chat_users[sender_id].messages) {
-            obj_this.chat_users[sender_id].messages = [];
-        }
-        obj_this.chat_users[sender_id].messages.push(message);
+        sender.messages.push(message);
+        obj_this.socketService.update_unseen_message_count("receive-new-message", sender_id, sender);
         if (is_chat_open) {
-            obj_this.scrollToEnd();
             var input_data = {
                 message_id: message.id,
                 no_loader: 1
             };
-            obj_this.httpService.call_post_http('/set_message_status', input_data, null, null);
-            obj_this.update_unseen_count("new-message", sender_id, sender_id);
-        }
-        else {
-            obj_this.update_unseen_count("new-message", sender_id);
-        }
-    };
-    MessengerComponent.prototype.update_unseen_count = function (event, target_id, active_id) {
-        var inc = 0;
-        var obj_this = this;
-        var target = obj_this.chat_users[target_id];
-        try {
-            switch (event) {
-                case "new-message":
-                    inc = 1;
-                    if (target_id == active_id)
-                        inc = -1;
-                    target.unseen += inc;
-                    break;
-                case "user-selected":
-                    inc = target.unseen * -1;
-                    target.unseen = 0;
-                    break;
-            }
-            obj_this.socketService.update_unseen_message_count(inc);
-        }
-        catch (er) {
-            console.log("update message count err no ", er);
+            obj_this.httpService.call_post_http('/set_message_status', input_data, function (res_data) {
+            }, null);
+            obj_this.socketService.update_unseen_message_count("read-new-message", sender_id, sender);
+            setTimeout(function () {
+                obj_this.scrollToEnd();
+            }, 200);
         }
     };
     MessengerComponent.prototype.toggle_messenger = function (e) {
