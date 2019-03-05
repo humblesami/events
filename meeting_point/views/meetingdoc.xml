@@ -4,7 +4,7 @@
         <record id="view_meeting_doc_form" model="ir.ui.view">
             <field name="name">meeting.doc.form</field>
             <field name="model">meeting_point.doc</field>
-            <field name="priority">1</field>
+            <field name="priority">2</field>
             <field name="arch" type="xml">
                 <form>
                     <h4>Title</h4>
@@ -14,8 +14,20 @@
                     <field name="attachment" filename="filename"
                            class="dn_documents_docs_upload oe_edit_only"/>
                     <button type="object" name="open_annotator_form"
-                            class="fa fa-5x fa-file"/>
+                            class="fa fa-5x fa-file oe_read_only"/>
                 </form>
+            </field>
+        </record>
+
+        <record id="view_meeting_doc_default_annotator" model="ir.ui.view">
+            <field name="name">meeting.doc.default.annotator</field>
+            <field name="model">meeting_point.doc</field>
+            <field name="inherit_id" ref="dn_documents.doc_annotator_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <div></div>
+
             </field>
         </record>
 
