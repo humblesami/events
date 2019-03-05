@@ -12,6 +12,7 @@ class Survey(models.Model):
     meeting_id = fields.Many2one('calendar.event',string="Meeting", ondelete='cascade')
     date = fields.Datetime(string="Meeting Date")
     name = fields.Char()
+    print_url_new = fields.Char("Print link new", compute="_compute_survey_url")
     survey_type = fields.Selection([(1,'Survey'),(2,'Approval')],string="Survey Type")
     my_status = fields.Char(string="Status",compute="_compute_status")
     #seen_by_me = fields.Integer(compute='_compute_seen_by_me',default=0)
@@ -103,6 +104,7 @@ class Survey(models.Model):
             survey.public_url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
             survey.print_url = urls.url_join(base_url, "survey/print/%s" % (slug(survey)))
             survey.result_url = urls.url_join(base_url, "survey/results/%s" % (slug(survey)))
+            survey.print_url_new = urls.url_join(base_url, "survey/print/meet/%s" % (slug(survey)))
             survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, "Click here to start survey")
 
     def user_status(self, uid):
@@ -180,3 +182,9 @@ class Survey(models.Model):
 
         self.emit_meeting_update(self)
         return True
+
+class SurveyUserInput(models.Model):
+    """ Metadata for a set of one user's answers to a particular survey """
+
+    _inherit = ["survey.user_input"]
+    print_url_new = fields.Char("Public link to the empty survey", related='survey_id.print_url_new')
