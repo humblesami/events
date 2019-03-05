@@ -539,7 +539,7 @@ class Meeting(models.Model):
     def _onchange_stop_datetime(self):
         if self.stop_datetime:
             self.stop=self.stop_datetime
-
+    @api.multi
     @api.onchange('partner_ids')
     def _change_field_value(self):
         user_id = []

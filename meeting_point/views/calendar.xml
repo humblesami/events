@@ -268,9 +268,7 @@
                             <label for="partner_ids" string="Attendees"/>
                             <h3>
                                 <field name="partner_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" widget="many2manyattendee" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select attendees..." context="{'force_email':True}" class="oe_inline">
-                                    <tree>
-                                        <field name="name"/>
-                                    </tree>
+
                                 </field>
                             </h3>
                         </div>
