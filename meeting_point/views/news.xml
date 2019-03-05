@@ -42,6 +42,11 @@
             <field name="sequence" eval="3"/>
             <field name="arch" type="xml">
                 <form edit="false" class="home_form">
+                    <style>
+                         .o_control_panel,.o_cp_right,.o_cp_left{
+    display:none!important;
+}
+                    </style>
                     <script src="/meeting_point/static/js/home_include.js"/>
                     <div class="home_btns">
                         <span class="welcome_btn btn bnt-default">Welcome</span>

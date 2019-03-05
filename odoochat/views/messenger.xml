@@ -6,6 +6,11 @@
             <field name="sequence" eval="2"/>
             <field name="arch" type="xml">
                 <form>
+                    <style>
+                        .o_control_panel,.o_cp_right,.o_cp_left{
+    display:none!important;
+}
+                    </style>
                     <app-messenger></app-messenger>
                     <div id="messenger_libs">
                         <script src="/odoochat/static/js/message.js"></script>
