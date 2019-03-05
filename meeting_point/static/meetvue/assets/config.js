@@ -10,7 +10,7 @@ var site_config = {
 // console.log(site_config);
 var site_config_local = {
 	server_base_url:'http://localhost:8000',
-	server_db : 'erp',
+	server_db : 'demo',
 	live : false,
 	site_url: '',
     chat_server : 'http://localhost:3000',
@@ -28,12 +28,12 @@ var network_config = {
 };
 
 
-
 if(window.location.toString().indexOf('localhost')> -1)
 {
 	site_config = site_config_local;
-	if(window["odoo"])
-		site_config.server_db =window["odoo"].session_info.db
+	if(window["odoo"]){
+		site_config.server_db = window["odoo"].session_info.db
+	}
 }
 
 site_config.site_url = window.location.origin;

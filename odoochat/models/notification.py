@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 class NotificationType(models.Model):
     _name = 'notification.type'
-    name = fields.Char()
+    name = fields.Char(required=True)
     action_id = fields.Many2one('ir.actions.act_window')
     _sql_constraints = [
         (
@@ -116,8 +116,8 @@ class Notification(models.Model):
 
             values['content'] = ' comment(s) on ' + record_name
             notification_type = req_env['notification.type'].search([('name', '=', res_model)])
-            if not notification_type and not parent_notification:
-                raise ValidationError('Please ask support to add notification type '+res_model)
+            if not notification_type:
+                notification_type = req_env['notification.type'].create({'name' : res_model})
             values['notification_type_id'] = notification_type.id
 
             notification = req_env['notification'].create(values)
