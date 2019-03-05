@@ -20,6 +20,18 @@
             </field>
         </record>
 
+         <record id="view_topicdoc_default_annotator" model="ir.ui.view">
+            <field name="name">topic.doc.default.annotator</field>
+            <field name="model">meeting_point.topicdoc</field>
+            <field name="inherit_id" ref="dn_documents.doc_annotator_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <div></div>
+
+            </field>
+        </record>
+
         <record id="view_meetingtopic_tree" model="ir.ui.view">
             <field name="name">meeting_point.topic.tree.admin</field>
             <field name="model">meeting_point.topic</field>

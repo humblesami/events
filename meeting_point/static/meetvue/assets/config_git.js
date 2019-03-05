@@ -32,7 +32,7 @@ if(window.location.toString().indexOf('localhost')> -1)
 {
 	site_config = site_config_local;
 	if(window["odoo"]){
-		site_config.server_db=window["odoo"].session_info.db
+		site_config.server_db = window["odoo"].session_info.db
 	}
 }
 
