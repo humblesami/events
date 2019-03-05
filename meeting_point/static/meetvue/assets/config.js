@@ -35,6 +35,10 @@ if(window.location.toString().indexOf('localhost')> -1)
 		site_config.server_db = window["odoo"].session_info.db
 	}
 }
+else{
+    if(window.location.toString().indexOf('http://') > -1)
+        site_config = network_config;
+}
 
 site_config.site_url = window.location.origin;
 if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -1)

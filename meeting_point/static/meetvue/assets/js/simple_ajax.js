@@ -59,7 +59,7 @@ function dn_rpc_object(options) {
             if (options.onSuccess) {
                 if (response.error) {                    
                     if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
-                        bootbox.alert('Token expired, please login again');
+                        bootbox.alert('Token expired, please login again '+ options.url);
                         dn_current_site_user.logout(1);
                     } else if (response.error.indexOf('not allowed to access') > -1) {
                         bootbox.alert("Contact admin for permissions" + response.error);

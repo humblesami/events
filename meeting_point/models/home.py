@@ -91,7 +91,7 @@ class News(models.Model):
             env = self.env
             for obj in self:
                 surveys = env['survey.survey'].search([])
-                surveys = surveys.filtered(lambda x: x.my_status != 'not invited')
+                surveys = surveys.filtered(lambda x: x.my_status != 'pending')
                 obj.pending_surveys = surveys
         except:
             raise ValidationError(sys.exc_info() + " while getting surveys")
