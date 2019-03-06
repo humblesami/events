@@ -1,1 +1,0 @@
-document.writeln('<script src="/dn_base/static/js/crash_manager_debug.js"></script>');

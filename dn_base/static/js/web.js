@@ -2,7 +2,6 @@ odoo.define('dn_base.Abstract', function(require) {
     var abstract_wc = require('web.AbstractWebClient');
     var core = require('web.core');
     var session = require('web.session');
-    var crash_manager = require('web.crash_manager');
     var _t = core._t;
     abstract_wc.include({
         init: function(parent) {

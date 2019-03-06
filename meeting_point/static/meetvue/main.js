@@ -1051,15 +1051,16 @@ var SocketService = /** @class */ (function () {
         if (!window['socket_manager']) {
             window['socket_manager'] = obj_this;
         }
-        else {
-            var socket_manager = window['socket_manager'];
-            if (socket_manager.verified) {
-                console.log(obj_this.server_events);
-                Object.assign(obj_this, window['socket_manager']);
-                console.log(obj_this.server_events);
-                return;
-            }
-        }
+        // else
+        // {
+        //     var socket_manager = window['socket_manager'];
+        //     if(socket_manager.verified)
+        //     {
+        //         Object.assign(obj_this, window['socket_manager']);
+        //         // console.log(obj_this.server_events);
+        //         return;
+        //     }
+        // }
         var url = window['pathname'];
         if (!url.startsWith('/iframe')) {
             obj_this.iframe_url = false;
@@ -1208,8 +1209,8 @@ var SocketService = /** @class */ (function () {
                     console.log(er.message, ' in ' + res.name + ' with data ', res);
                 }
             });
-            if (site_config.show_logs.includes('socket'))
-                console.log('Socket server easily connected.. at ' + Date());
+            // if(site_config.show_logs.includes('socket'))
+            // console.log('Socket server easily connected.. at '+Date());
         });
     };
     SocketService.prototype.update_unseen_message_count = function (event, target_id, target) {
@@ -3877,6 +3878,7 @@ var MessengerComponent = /** @class */ (function () {
             socketService.server_events['friend_joined'] = updateUserStatus;
             socketService.server_events['user_left'] = updateUserStatus;
             socketService.server_events['chat_message_received'] = function (msg) {
+                //console.log(111, msg);
                 try {
                     obj_this.receiveMessage(obj_this, msg, msg.sender);
                 }
