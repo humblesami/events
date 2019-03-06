@@ -1,4 +1,4 @@
-@import url('https://use.fontawesome.com/releases/v5.7.2/css/all.css');
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
 
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
@@ -1033,37 +1033,6 @@ input[type="submit"].btn-block,
 input[type="reset"].btn-block,
 input[type="button"].btn-block {
   width: 100%;
-}
-
-.fade {
-  transition: opacity 0.15s linear;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fade {
-    transition: none;
-  }
-}
-
-.fade:not(.show) {
-  opacityy: 0;
-}
-
-.collapse:not(.show) {
-  display: none;
-}
-
-.collapsing {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  transition: height 0.35s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .collapsing {
-    transition: none;
-  }
 }
 
 .dropup,
