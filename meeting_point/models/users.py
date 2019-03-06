@@ -95,7 +95,8 @@ class MPUser(models.Model):
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
-        ('other', 'Other')
+        ('other', 'Other'),
+        ('decline','I decline to answer')
     ])
     marital = fields.Selection([
         ('single', 'Single'),
@@ -108,6 +109,29 @@ class MPUser(models.Model):
     job_title = fields.Char(string='Job Title')
     passport_id = fields.Char('Passport No')
     city = fields.Char(string="City")
+
+    #extra reporting fields
+    ethinicity = fields.Selection([
+
+        ('hispanic','Hispanic or Latino'),
+        ('american indian','American Indian or Alaskan Native'),
+        ('asian','Asian'),
+        ('nativeHawaian','Native Hawaiian or Other Native Pacific Islander'),
+        ('africanamerican','Black or African American'),
+        ('white','White'),
+        ('more','Two or more races'),
+        ('decline','I decline to answer')
+    ])
+    veteran = fields.Selection([
+        ('yes','Yes'),
+        ('no','No'),
+        ('decline','I decline to answer')
+    ])
+    disability = fields.Selection([
+        ('yes','Yes'),
+        ('no','No'),
+        ('decline','I decline to answer')
+    ])
 
 # Director fields
     board_joing_date = fields.Datetime(string="Board Joing Date")
