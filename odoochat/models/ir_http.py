@@ -1,10 +1,10 @@
 import odoo
 from odoo import models, http
 from odoo.addons.dn_base import ws_methods
-from odoo.addons.dn_auth.models.ir_http import dn_auth_Http
+# from odoo.addons.dn_auth.models.ir_http import dn_auth_Http
 
-class chat_Http(dn_auth_Http):
-    # _inherit = 'ir.http'
+class chat_Http(models.AbstractModel):
+    _inherit = 'ir.http'
     def session_info(self):        
         user_info = super(chat_Http, self).session_info()
         user = user_info['user']
