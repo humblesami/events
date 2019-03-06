@@ -126,7 +126,7 @@ var site_functions = {
             last_shown_time = new Date();
             setTimeout(function() {
                 if (last_shown_time && new Date() - last_shown_time > 8000) {
-                    console.log(site_functions.processes);
+                    //console.log(site_functions.processes);
                     server_wait_loader.hide();
                 }
             }, 9900);
