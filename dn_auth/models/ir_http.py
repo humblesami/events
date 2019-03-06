@@ -2,7 +2,7 @@ import odoo
 from odoo import models, http
 from odoo.addons.dn_base import ws_methods
 
-class Http(models.AbstractModel):
+class dn_auth_Http(models.AbstractModel):
     _inherit = 'ir.http'
 
     def session_info(self):
@@ -44,6 +44,7 @@ class Http(models.AbstractModel):
                 'token':spuser.auth_token,
                 'photo':image_path1 + str(user.id) + image_path2,
                 'name':user.name,
-                'id':user.id
+                'id':user.id,
+                'db':request.session.db
             }
         return user_info

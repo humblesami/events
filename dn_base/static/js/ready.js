@@ -20,7 +20,6 @@ var dn_current_site_user = {
         token : odoo.session_info.token,
     }
 }
-console.log(dn_current_site_user, 6722);
 var site_config = {
     server_db : 'demo'
 }
@@ -73,10 +72,7 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/doc_preview.js?v='+dnow+'"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
-
-
-        document.writeln('<link rel="stylesheet" type="text/css" href="assets/css/emoji.css" />');
-        document.writeln('<link rel="stylesheet" type="text/css" href="assets/css/emoji.css.map" />');
+        
         document.writeln('<script src="/dn_base/static/js/libs/emoji/config.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/emoji-picker.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/emoji/jquery.emojiarea.js"></script>');
@@ -85,12 +81,7 @@ function load_dn_assets()
 
         document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.ui.touch-punch.min.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.mark.min.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/annotator/mark.min.js"></script>');
-
-
-
-
-
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/mark.min.js"></script>');        
 
         $(function(){
             doc_preview.init();
@@ -98,6 +89,8 @@ function load_dn_assets()
                 dn_json_rpc_object.showHideLoader(true);
             });
             $('head').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
+            $('head').append('<link rel="stylesheet" href="/dn_base/static/css/emoji.css" />');
+            $('head').append('<link rel="stylesheet" href="/dn_base/static/css/emoji.css.map" />');
              // $('head').prepend('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">');
             setTimeout(function(){
                 $('.o_mobile_menu_toggle').mousedown(function(){
