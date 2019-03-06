@@ -1048,64 +1048,56 @@ var SocketService = /** @class */ (function () {
         };
         this.io = window['io'];
         var obj_this = this;
+        if (!window['socket_manager']) {
+            window['socket_manager'] = obj_this;
+        }
+        else {
+            var socket_manager = window['socket_manager'];
+            if (socket_manager.verified) {
+                console.log(obj_this.server_events);
+                Object.assign(obj_this, window['socket_manager']);
+                console.log(obj_this.server_events);
+                return;
+            }
+        }
         var url = window['pathname'];
         if (!url.startsWith('/iframe')) {
             obj_this.iframe_url = false;
         }
         var res = window['public_routes'].indexOf(url);
         if (res == -1) {
-            if (window['odoo']) {
-                obj_this.connect_socket(window['current_user'].cookie);
-                if (!window['socket_manager'])
-                    window['socket_manager'] = obj_this;
-                return;
-            }
-            if (window['socket_manager']) {
-                obj_this.connect_socket(window['current_user'].cookie);
-                return;
-            }
-            window['socket_manager'] = obj_this;
             try {
                 var user_cookie = localStorage.getItem('user');
                 var verification_data = undefined;
-                if (user_cookie)
-                    verification_data = JSON.parse(user_cookie);
-                else {
-                    var token = route.snapshot.params.token;
-                    verification_data = {
-                        token: token
-                    };
-                }
-                ;
                 if (window['odoo']) {
-                    verification_data = window['odoo'].session_info;
-                    verification_data.id = window['odoo'].session_info.uid;
+                    user_cookie = window['odoo'].session_info.user;
+                    console.log(user_cookie);
+                    obj_this.connect_socket(user_cookie);
                 }
-                if (verification_data && verification_data['token']) {
-                    verification_data['app_name'] = window['site_config']['app_name'];
-                    //console.log(verification_data);
-                    var options = {
-                        url: '/ws/verifytoken',
-                        data: verification_data,
-                        onSuccess: function (user_data) {
-                            if (user_data.user)
-                                user_data = user_data.user;
-                            obj_this.connect_socket(user_data);
-                        },
-                        onFailure: function (er) {
-                            if (!window['odoo']) {
-                                obj_this.router.navigate(['/login']);
+                else if (user_cookie) {
+                    verification_data = JSON.parse(user_cookie);
+                    if (verification_data && verification_data['token']) {
+                        verification_data['app_name'] = window['site_config']['app_name'];
+                        var options = {
+                            url: '/ws/verifytoken',
+                            data: verification_data,
+                            onSuccess: function (user_data) {
+                                if (user_data.user)
+                                    user_data = user_data.user;
+                                obj_this.connect_socket(user_data);
+                            },
+                            onFailure: function (er) {
+                                if (!window['odoo']) {
+                                    obj_this.router.navigate(['/login']);
+                                }
                             }
-                        }
-                    };
-                    window['dn_rpc_object'](options);
+                        };
+                        window['dn_rpc_object'](options);
+                    }
                 }
                 else {
                     console.log("No user in cookies", user_cookie);
-                    if (!window['odoo']) {
-                        obj_this.router.navigate(['/login']);
-                    }
-                    ;
+                    obj_this.router.navigate(['/login']);
                 }
             }
             catch (er) {
@@ -1130,7 +1122,7 @@ var SocketService = /** @class */ (function () {
         //console.log(obj_this.user_data);
         window['current_user'].cookie = authorized_user;
         $('#main-div').show();
-        this.user_data = authorized_user;
+        obj_this.user_data = authorized_user;
         obj_this.socket = this.io(window['site_config'].chat_server, {
             'reconnection': false,
             "transports": ['websocket'],
@@ -1140,11 +1132,35 @@ var SocketService = /** @class */ (function () {
         });
         var site_config = window['site_config'];
         obj_this.socket.on('connect', function () {
-            obj_this.socket.off('test');
-            obj_this.socket.off('authenticated');
             obj_this.socket.off('server_event');
-            obj_this.socket.emit('verify', authorized_user);
-            obj_this.socket.on('authenticated', function (data) {
+            authorized_user.socket_id = obj_this.socket.id;
+            var socket_error = socket_error = "Socket connection not established at " + window['site_config'].chat_server + 'because ';
+            $.ajax({
+                url: site_config.chat_server + '/verify-client',
+                data: authorized_user,
+                success: function (data) {
+                    if (data && !data.error) {
+                        socket_error = '';
+                        onAuthenticated(data);
+                    }
+                    else if (data.error) {
+                        console.log(authorized_user);
+                        socket_error += data.error;
+                    }
+                    else {
+                        socket_error += ' no response';
+                    }
+                },
+                error: function (a, b) {
+                    socket_error += b.responseText;
+                },
+                complete: function () {
+                    if (socket_error) {
+                        console.log(socket_error);
+                    }
+                }
+            });
+            function onAuthenticated(data) {
                 window['current_user'].cookie = data.user;
                 // if(site_config.show_logs.includes('socket'))
                 {
@@ -1165,10 +1181,8 @@ var SocketService = /** @class */ (function () {
                     obj_this.on_verified[i]();
                 }
                 obj_this.on_verified = [];
-            });
-            obj_this.socket.on('test', function (res) {
-                console.log(res, ': in test event...\n\n');
-            });
+            }
+            ;
             obj_this.socket.on('server_event', function (res) {
                 try {
                     if (!obj_this.server_events[res.name]) {
@@ -1189,17 +1203,8 @@ var SocketService = /** @class */ (function () {
                 }
             });
             if (site_config.show_logs.includes('socket'))
-                console.log('Socket server connected.. at ' + Date());
+                console.log('Socket server easily connected.. at ' + Date());
         });
-        setTimeout(function () {
-            if (!obj_this.verified) {
-                if (obj_this.socket && obj_this.socket.connected) {
-                    console.log("Socket connection not valid at " + window['site_config'].chat_server);
-                }
-                else
-                    console.log("Socket connection not established at " + window['site_config'].chat_server);
-            }
-        }, 11000);
     };
     SocketService.prototype.update_unseen_message_count = function (event, target_id, target) {
         var inc = 0;
@@ -3931,6 +3936,7 @@ var MessengerComponent = /** @class */ (function () {
         var obj_this = this;
         obj_this.socketService = ss;
         var socketService = ss;
+        console.log(433231223);
         function registerChatEventListeners() {
             obj_this.chat_users = socketService.friends;
             obj_this.user_data = socketService.user_data;
@@ -3965,7 +3971,12 @@ var MessengerComponent = /** @class */ (function () {
                 return;
             }
         }
-        ss.execute_on_verified(registerChatEventListeners);
+        try {
+            ss.execute_on_verified(registerChatEventListeners);
+        }
+        catch (er) {
+            console.log(113, er);
+        }
     }
     MessengerComponent.prototype.select_chat_user = function (target_id) {
         var obj_this = this;

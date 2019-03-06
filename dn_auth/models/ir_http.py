@@ -32,6 +32,7 @@ class Http(models.AbstractModel):
                                                      user.company_ids]} if display_switch_company_menu else False,
             "currencies": self.get_currencies(),
             "web.base.url": base_url,
+            "id":user.id,            
         }
 
         image_path1 = base_url + '/image/res.users/'
@@ -39,6 +40,10 @@ class Http(models.AbstractModel):
         if spuser:
             spuser.password = request.session.password
             spuser.login = request.session.login
-            user_info['token'] = spuser.auth_token
-            user_info['photo'] = image_path1 + str(user.id) + image_path2
+            user_info['user'] = {
+                'token':spuser.auth_token,
+                'photo':image_path1 + str(user.id) + image_path2,
+                'name':user.name,
+                'id':user.id
+            }
         return user_info
