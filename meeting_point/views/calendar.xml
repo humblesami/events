@@ -26,12 +26,13 @@
                         <field name="duration" widget="float_time" class="oe_inline"/>
                         <field name="location" string="Location" class="oe_read_only"/>
                     </group>
-                     <!--<group attrs="{'invisible': [('is_active_yet','=','no')]}">-->
-                            <!--<field name="video_call_link" widget="url" class="oe_read_only"/>-->
-                        <!--&lt;!&ndash;<button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>&ndash;&gt;-->
-                        <!--<field name="conference_bridge_number" class="conference"/>-->
-                        <!--<field name="pin" class="pin" />-->
-                        <!--</group>-->
+                    <!--attrs="{'invisible': [('is_active_yet','=','no')]}"-->
+                     <group>
+                            <field name="video_call_link" widget="url" />
+                        <!--<button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>-->
+                        <field name="conference_bridge_number" class="conference"/>
+                        <field name="pin" class="pin" />
+                        </group>
                     <div class="detail_btn o_hidden">
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn " string ="Accept" name="do_accept"/>
                         <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>
@@ -234,14 +235,15 @@
                             <field name="stop" attrs="{'invisible': True}"/>
                             <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': True}"/>
                         </group>
+                            <!--attrs="{'invisible': ['|','&amp;',('exectime', '!=', 'upcoming'),('exectime', '!=', 'ongoing'),('is_active_yet','=','no')]}"-->
 
-                        <!--<group class="emeeting" attrs="{'invisible': ['|','&amp;',('exectime', '!=', 'upcoming'),('exectime', '!=', 'ongoing'),('is_active_yet','=','no')]}">-->
-                            <!--<field attrs="{'invisible': [('id', '=', False)]}" class="conference" name="conference_bridge_number"/>-->
-                            <!--<field attrs="{'invisible': [('id', '=', False)]}" class="pin" name="pin"/>-->
-                            <!--<field attrs="{'invisible': [('id', '=', False)]}" name="video_call_link" widget="url"/>-->
+                        <group class="emeeting">
+                            <field  class="conference" name="conference_bridge_number"/>
+                            <field  class="pin" name="pin"/>
+                            <field  name="video_call_link" widget="url"/>
                             <!--<field class="end_call" name="end_call"/>-->
-                            <!--&lt;!&ndash;<field class="password" name="password"/>&ndash;&gt;-->
-                        <!--</group>-->
+                            <!--<field class="password" name="password"/>-->
+                        </group>
                         <group class= 'oe_read_only'>
                           <field name='location'/>
                         </group>

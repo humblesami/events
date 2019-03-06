@@ -257,7 +257,7 @@ class Meeting(models.Model):
             if surveys:
                 del vals['survey_ids']
             meeting = super(Meeting, self).create(vals)
-            self.setVideoLink(meeting, 1)
+            # self.setVideoLink(meeting, 1)
             if surveys:
                 meeting_id = meeting.id
                 for survey in surveys:
@@ -471,9 +471,9 @@ class Meeting(models.Model):
         if creating:
             meeting_id = event.id
             pin = self.getUniquePin(event.start, event.stop)
-            video_call_link = '/meeting_point/static/jitsi/index.html?name='+self.env.user.name+'&meeting_id=' + str(meeting_id) + '&pin=' + pin
-            conference_bridge_number = '+1-512-402-2718'
-            vide_vals = {'moderator': 0, 'pin': pin, 'conference_bridge_number': conference_bridge_number, 'video_call_link': video_call_link}
+            # video_call_link = '/meeting_point/static/jitsi/index.html?name='+self.env.user.name+'&meeting_id=' + str(meeting_id) + '&pin=' + pin
+            # conference_bridge_number = '+1-512-402-2718'
+            # vide_vals = {'moderator': 0, 'pin': pin, 'conference_bridge_number': conference_bridge_number, 'video_call_link': video_call_link}
             event.write(vide_vals)
         elif vals['pin']:
             pin = self.getUniquePin(event.start, event.stop, vals['pin'])
