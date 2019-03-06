@@ -1,4 +1,3 @@
-console.log('running in meeting')
 $(function(){
     $(document).on('change', '.meetingform .meeting_duration',function(e){
         addTopicIndex();

@@ -108,7 +108,6 @@ function load_dn_assets()
                     }
                 })
             },1500);
-            $('head').append('<link rel="stylesheet" href="/dn_base/static/css/meetvue.css?v='+dnow+'" />');
         });
     }
     catch(er)
