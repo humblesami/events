@@ -227,7 +227,7 @@
                         <field name="audience" class="o_hidden"></field>
                           <div class="survey_meeting_id" attrs="{'invisible': [('audience', '=', 'partners')]}">
                             <h4>Meeting</h4>
-                            <field name="meeting_id" domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','>=', time.strftime('%Y-%m-%d'))]   " />
+                            <field name="meeting_id" options="{'no_quick_create': True, 'no_create_edit' : True}"  domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','>=', time.strftime('%Y-%m-%d'))]   " />
                         </div>
                            <div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">
                             <h4>Respondents</h4>
