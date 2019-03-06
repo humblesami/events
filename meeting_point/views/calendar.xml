@@ -526,24 +526,27 @@
                         <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='doc_ids']" position= "replace">
-                       <field name="doc_ids">
-                             <kanban quick_create="false" edit="false" delete="true">
-                                 <field name="name"/>
-                                 <templates>
-                                     <t t-name="kanban-box">
-                                         <div style="position: relative;width:100px">
-                                             <div class="oe_module_vignette">
-                                                 <div class="oe_module_desc">
+                       <div class="o2m_kanban">
+                            <field name="doc_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form'}" class="kanban_document" mode="kanban"/>
+                        </div>
+                       <!--<field name="doc_ids">-->
+                             <!--<kanban quick_create="false" edit="false" delete="true">-->
+                                 <!--<field name="name"/>-->
+                                 <!--<templates>-->
+                                     <!--<t t-name="kanban-box">-->
+                                         <!--<div style="position: relative;width:100px">-->
+                                             <!--<div class="oe_module_vignette">-->
+                                                 <!--<div class="oe_module_desc">-->
 
-                                                    <a type="object" name="open_view_doc_form" class = "fa fa-2x fa-file"/>
-                                                    <field name="name"/>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                     </t>
-                                 </templates>
-                             </kanban>
-                        </field>
+                                                    <!--<a type="object" name="open_view_doc_form" class = "fa fa-2x fa-file"/>-->
+                                                    <!--<field name="name"/>-->
+                                                 <!--</div>-->
+                                             <!--</div>-->
+                                         <!--</div>-->
+                                     <!--</t>-->
+                                 <!--</templates>-->
+                             <!--</kanban>-->
+                        <!--</field>-->
                 </xpath>
             </field>
         </record>
