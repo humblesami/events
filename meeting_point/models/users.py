@@ -8,6 +8,7 @@ class partner(models.Model):
     is_committee=fields.Boolean(string="Is Committee")
     mp_user_id = fields.Many2one('meeting_point.users', string="Related MP.User")
 
+
     @api.multi
     def _compute_signup_url(self):
         """ proxy for function field towards actual implementation """
@@ -74,6 +75,7 @@ class MPUser(models.Model):
     _name= "meeting_point.users"
     _description = 'MeetingPoint Users'
 
+
     nick_name = fields.Char(string="Nick")
     website = fields.Char(string="Website")
     fax = fields.Char(string="Fax")
@@ -84,6 +86,7 @@ class MPUser(models.Model):
     bio = fields.Html(string="Bio")
     resume = fields.Binary(string="Resume")
     committee_ids = fields.Many2many("meeting_point.committee", string="Committees")
+
 
 
     country_id = fields.Many2one('res.country', string='Nationality (Country)')
@@ -145,6 +148,11 @@ class MPUser(models.Model):
     admin_image = fields.Binary(string="Picture")
     mail_to_assistant = fields.Boolean(string="Allow meeting invitations to assistant")
     uid = fields.Integer(compute='cal_uid')
+    term_start_date = fields.Date(string="Term Start Date")
+    term_end_date = fields.Date(string="Term End Date")
+
+
+
 
 
     @api.multi
