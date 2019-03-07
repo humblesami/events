@@ -437,10 +437,12 @@ class website_survey(WebsiteSurvey):
             return errpage
 
         # Select the right page
+        print ('11----------------------'+ws_methods.get_main_url())
         if user_input.state == 'new':  # Intro page
             data = {'survey': survey, 'page': None, 'token': user_input.token}
             return request.render('survey.survey_init', data)
         else:
+            print ('12----------------------'+ws_methods.get_main_url())
             return request.redirect(ws_methods.get_main_url() + '/survey/fill/%s/%s' % (survey.id, user_input.token))
 
     # AJAX submission of a page
@@ -480,6 +482,7 @@ class website_survey(WebsiteSurvey):
             else:
                 vals.update({'state': 'skip'})
             user_input.sudo(user=user_id).write(vals)
+            print ('13----------------------'+ws_methods.get_main_url())
             ret['redirect'] = ws_methods.get_main_url() + '/survey/fill/%s/%s' % (survey.id, post['token'])
             if go_back:
                 ret['redirect'] += '/prev'
