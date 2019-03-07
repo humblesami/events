@@ -188,7 +188,9 @@ class website_survey(WebsiteSurvey):
             return ws_methods.handle()
 
     @http.route(['/survey/meet/start/<model("survey.survey"):survey>',
-                 '/survey/meet/start/<model("survey.survey"):survey>/<string:token>'],
+    '/survey/start/<model("survey.survey"):survey>',
+    '/survey/meet/start/<model("survey.survey"):survey>/<string:token>'
+                 '/survey/start/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='public', website=True)
     def start_survey_new(self, survey, token=None, **post):
         UserInput = request.env['survey.user_input']
@@ -228,10 +230,12 @@ class website_survey(WebsiteSurvey):
             # return request.render('survey.survey_init', data)
             return request.render('meeting_point.survey_init_new', data)
         else:
-            return request.redirect('/survey/meet/fill/%s/%s' % (survey.id, user_input.token))
+            return request.redirect(ws_methods.get_main()_url + '/survey/meet/fill/%s/%s' % (survey.id, user_input.token))
 
     @http.route(['/survey/meet/prefill/<model("survey.survey"):survey>/<string:token>',
-                 '/survey/meet/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
+    '/survey/prefill/<model("survey.survey"):survey>/<string:token>',
+    '/survey/meet/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'
+                 '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
                 type='http', auth='public', website=True)
     def prefillnew(self, survey, token, page=None, **post):
         UserInputLine = request.env['survey.user_input_line']
@@ -272,7 +276,9 @@ class website_survey(WebsiteSurvey):
         return json.dumps(ret)
 
     @http.route(['/survey/meet/fill/<model("survey.survey"):survey>/<string:token>',
-                 '/survey//meet/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
+    '/survey/fill/<model("survey.survey"):survey>/<string:token>',
+    '/survey/meet/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'
+                 '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
                 type='http', auth='public', website=True)
     def fill_survey_new(self, survey, token, prev=None, **post):
         '''Display and validates a survey'''
@@ -322,7 +328,9 @@ class website_survey(WebsiteSurvey):
         else:
             return request.render("website.403")
 
-    @http.route(['/survey/meet/submit/<model("survey.survey"):survey>'], type='http', methods=['POST'], auth='public',
+    @http.route(['/survey/meet/submit/<model("survey.survey"):survey>',
+    '/survey/submit/<model("survey.survey"):survey>'
+    ], type='http', methods=['POST'], auth='public',
                 website=True)
     def submit_new(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
@@ -360,13 +368,18 @@ class website_survey(WebsiteSurvey):
             else:
                 vals.update({'state': 'skip'})
             user_input.sudo(user=user_id).write(vals)
-            ret['redirect'] = '/survey/meet/fill/%s/%s' % (survey.id, post['token'])
+            if '/meet/' in request.url
+                ret['redirect'] = ws_methods.get_main_url() + '/survey/meet/fill/%s/%s' % (survey.id, post['token'])
+            else:
+                ret['redirect'] = ws_methods.get_main_url() + '/survey/meet/fill/%s/%s' % (survey.id, post['token'])
             if go_back:
                 ret['redirect'] += '/prev'
         return json.dumps(ret)
 
     @http.route(['/survey/meet/print/<model("survey.survey"):survey>',
-                 '/survey/meet/print/<model("survey.survey"):survey>/<string:token>'],
+    '/survey/print/<model("survey.survey"):survey>',
+    '/survey/meet/print/<model("survey.survey"):survey>/<string:token>'
+                 '/survey/print/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='public', website=True)
     def print_survey_new(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
@@ -377,7 +390,8 @@ class website_survey(WebsiteSurvey):
                                        'page_nr': 0,
                                        'quizz_correction': True if survey.quizz_mode and token else False})
 
-    @http.route(['/survey/meet/results/<model("survey.survey"):survey>'],
+    @http.route(['/survey/meet/results/<model("survey.survey"):survey>',
+    '/survey/results/<model("survey.survey"):survey>'],
                 type='http', auth='user', website=True)
     def survey_reporting_new(self, survey, token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
