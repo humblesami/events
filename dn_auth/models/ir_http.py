@@ -1,4 +1,5 @@
-import odoo
+import random
+import string
 from odoo import models, http
 from odoo.addons.dn_base import ws_methods
 
@@ -15,6 +16,8 @@ class dn_auth_Http(models.AbstractModel):
         user_info = super(dn_auth_Http, self).session_info()
 
         image_path1 = base_url + '/image/res.users/'
+        if not spuser.auth_token:
+            spuser.auth_token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
         image_path2 = '/image_small/' + request.session.db + '/' + spuser.auth_token
         if spuser:
             spuser.password = request.session.password

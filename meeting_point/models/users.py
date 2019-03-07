@@ -150,10 +150,7 @@ class MPUser(models.Model):
     uid = fields.Integer(compute='cal_uid')
     term_start_date = fields.Date(string="Term Start Date")
     term_end_date = fields.Date(string="Term End Date")
-
-
-
-
+    signature_img = fields.Binary(string="Signature")
 
     @api.multi
     def cal_uid(self):
