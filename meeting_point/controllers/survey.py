@@ -99,7 +99,9 @@ class website_survey(WebsiteSurvey):
             survey_id = kw.get('survey_id')
             survey_id = int(survey_id)
             survey = request.env['survey.survey'].search([('id','=', survey_id)])
-            data = { 'url': survey.url +'/iframe/'+kw.get('token')+'/'+kw.get('db')}
+            data = { 'url': survey.url}
+            if '/start/' in data['url']:
+                data['url'] +='/iframe/' + kw.get('token') + '/' + kw.get('db')
             if survey.meeting_id:
                 data['meeting_name'] = survey.meeting_id.name
                 data['meeting_id'] = survey.meeting_id.id

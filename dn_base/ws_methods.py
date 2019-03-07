@@ -195,7 +195,7 @@ def get_main_url():
         return host_url
     host_url = request.httprequest.host_url
     base_url = host_url[:-1]
-    if base_url.startswith('http:') and not base_url.startswith('http://localhost') and not base_url.startswith('http://172'):
+    if 'localhost' not in base_url:
         base_url = base_url.replace('http:', 'https:')
     host_url = base_url
     return host_url
