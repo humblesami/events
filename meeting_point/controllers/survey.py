@@ -6,9 +6,40 @@ from odoo.http import request
 from odoo.addons.dn_base import ws_methods
 from odoo.addons.survey.controllers.main import WebsiteSurvey
 _logger = logging.getLogger(__name__)
-
+import werkzeug
+from datetime import datetime
 class website_survey(WebsiteSurvey):
+    def _check_bad_cases(self, survey, token=None):
+        # In case of bad survey, redirect to surveys list
+        if not survey.sudo().exists():
+            return werkzeug.utils.redirect("/survey/")
 
+        # In case of auth required, block public user
+        if survey.auth_required and request.env.user == request.website.user_id:
+            return request.render("survey.auth_required", {'survey': survey, 'token': token})
+
+        # In case of non open surveys
+        if survey.stage_id.closed:
+            return request.render("survey.notopen")
+
+        # If there is no pages
+        if not survey.page_ids:
+            return request.render("survey.nopages", {'survey': survey})
+
+        # Everything seems to be ok
+        return None
+
+    def _check_deadline(self, user_input):
+        '''Prevent opening of the survey if the deadline has turned out
+
+        ! This will NOT disallow access to users who have already partially filled the survey !'''
+        deadline = user_input.deadline
+        if deadline:
+            dt_deadline = fields.Datetime.from_string(deadline)
+            dt_now = datetime.now()
+            if dt_now > dt_deadline:  # survey is not open anymore
+                return request.render("survey.notopen")
+        return None
 
     @http.route('/survey-questions', type="http", csrf=False, auth='none', cors='*')
     def get_survey_http(self, **kw):

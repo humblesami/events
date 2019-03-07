@@ -72,6 +72,10 @@
                     <group name="committee_ids">
                         <field name="committee_ids" string="Committees" widget="many2many_tags"/>
                     </group>
+                    <group>
+                        <field name="term_start_date" string="Term Start Date"/>
+                        <field name="term_end_date" string="Term End Date"/>
+                    </group>
                     <notebook colspan="4">
                             <page name="Optional Diversity Information" string = "Optional Diversity Information">
                                 <group colspan="4">

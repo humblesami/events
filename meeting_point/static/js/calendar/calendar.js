@@ -52,9 +52,13 @@ $(function(){
         for (var i = 0; i < events.length; i++) {
                 console.log('events',events[i])
                 if (events[i].attendee) {
-                console.log('11')
+                   var parts = events[i].datestart .split('-')
+                   var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
+                   parts = mydate.toDateString()
+                   parts = parts.split(' ')
+                   dateValue = parts[1] + ' '+parts[2]+ ',' + parts[3]
                 schedule += '<div event_id='+events[i].id+' class="scheduleDetailOpener row fc-event">';
-                schedule += '<div class="col"> <span>' + events[i].datestart + '</span></div>';
+                schedule += '<div class="col"> <span>' + dateValue + '</span></div>';
                 schedule += '<div class="col">'+ hour_minutes(new Date(events[i].startSchedule)) + ' - ' + hour_minutes(new Date(events[i].endSchedule)) + '</div>';
                 schedule += '<div class="col fc-title">' + events[i].title + '</div>';
                 schedule += '</div>'

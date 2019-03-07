@@ -21,6 +21,20 @@ class Survey(models.Model):
                                    domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
     url = fields.Char(compute='_compute_url')
+    public_url_new = fields.Char("Public link", compute="_compute_survey_url")
+    result_url_new = fields.Char("Results link", compute="_compute_survey_url")
+    @api.multi
+    def action_start_survey(self):
+        """ Open the website page with the survey form """
+        self.ensure_one()
+        token = self.env.context.get('survey_token')
+        trail = "/%s" % token if token else ""
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Start Survey",
+            'target': 'self',
+            'url': self.with_context(relative_url=True).public_url_new + trail
+        }
 
     @api.multi
     def _compute_audience(self):
@@ -97,6 +111,41 @@ class Survey(models.Model):
         except:
             a = 1
 
+    @api.multi
+    def action_result_survey(self):
+        """ Open the website page with the survey results view """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Results of the Survey",
+            'target': 'self',
+            'url': self.with_context(relative_url=True).result_url_new
+        }
+
+
+    @api.multi
+    def action_view_answers(self):
+        """ Open the website page with the survey form """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "View Answers",
+            'target': 'self',
+            'url': '%s/%s' % (self.print_url_new, self.token)
+        }
+
+
+    @api.multi
+    def action_test_survey(self):
+        """ Open the website page with the survey form into test mode"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Results of the Survey",
+            'target': 'self',
+            'url': self.with_context(relative_url=True).public_url_new + "/phantom"
+        }
+
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
         base_url = ws_methods.get_main_url()
@@ -104,6 +153,9 @@ class Survey(models.Model):
             survey.public_url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
             survey.print_url = urls.url_join(base_url, "survey/print/%s" % (slug(survey)))
             survey.result_url = urls.url_join(base_url, "survey/results/%s" % (slug(survey)))
+
+            survey.public_url_new = urls.url_join(base_url, "survey/meet/start/%s" % (slug(survey)))
+            survey.result_url_new = urls.url_join(base_url, "survey/meet/results/%s" % (slug(survey)))
             survey.print_url_new = urls.url_join(base_url, "survey/meet/print/%s" % (slug(survey)))
             survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, "Click here to start survey")
 

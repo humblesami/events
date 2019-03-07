@@ -23,8 +23,15 @@ $(function(){
             }
             if(last_login && last_login.login_time)
             {
+                 var parts = last_login.login_time .split(' ')
+                 var dateValue = parts[0].split('-')
+                  var mydate = new Date(dateValue[0], dateValue[1] - 1, dateValue[2]);
+                  var dataValue = mydate.toDateString()
+                  dataValue = dataValue.split(' ')
+                  var final_date = dataValue[1] + ' '+dataValue[2]+ ',' + dataValue[3] +' ' + parts[1]
+            console.log('last value ',last_login.login_time,typeof(last_login.login_time))
                 var login_info_html = '<h3>Last Login</h3>';
-                login_info_html += '<div>Login Time: '+last_login.login_time+'</div>';
+                login_info_html += '<div>Login Time: '+final_date+'</div>';
                 login_info_html += '<div>OS: '+last_login.platform+'</div>';
                 login_info_html += '<div>Browser: '+last_login.browser+'</div>';
                 login_info_html += '<div>IP: '+last_login.ip+'</div>';

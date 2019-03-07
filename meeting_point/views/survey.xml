@@ -579,25 +579,31 @@
         </record>
 
         <!--Survey start button change-->
-        <template id="survey.survey_init" name="Survey">
-            <t t-call="website.layout">
-                <div class="wrap">
-                    <div class="oe_structure" />
-                    <div class="container">
-                        <t t-call="survey.back" />
-                        <div class='jumbotron mt32'>
-                            <h1 t-field='survey.title' />
-                            <div t-field='survey.description' class="oe_no_empty"/>
-                            <a class="btn btn-primary ml4 btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
-                                Start
-                            </a>
-                        </div>
+           <template id="new_back_button" name="back meeting button">
+
+                  <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="navbar-header">
+
+                <div class="survey_back_btn_container">
+                    <div  t-if="survey.meeting_id" t-ignore="true" class="pull-right">
+                        <a t-attf-href="/web#view_type=form&amp;model=calendar.event&amp;id=#{survey.meeting_id.id}&amp;action=meeting_point.action_upcoming_meeting" class="btn btn-default">Back to meeting</a>
                     </div>
-                    <div class="oe_structure" />
+                    <div  t-ignore="true" class="pull-right">
+                        <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;id=1&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
+                    </div>
+                    <div groups="meeting_point.group_meeting_admin" t-ignore="true" class="pull-right">
+                        <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=meeting_point.action_survey_admin" class="btn btn-default">Back to Survey</a>
+                    </div>
+
                 </div>
-            </t>
+                  </div>
+                        </div>
+                   </div>
         </template>
+
         <!--Survey new template for angular side-->
+
          <template id="pagenew" name="Pagenew">
             <div class="page-header">
                 <p class="pull-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
@@ -652,6 +658,7 @@
         <t t-call="website.layout">
             <div class="wrap">
                 <div class="container">
+                    <t t-call="meeting_point.new_back_button" />
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" class="oe_no_empty" />
@@ -666,6 +673,7 @@
         <t t-call="website.layout">
             <div class="wrap">
                 <div class="container">
+                    <t t-call="meeting_point.new_back_button" />
                     <div class="row">
                         <div class='jumbotron mt32'>
                             <h1><span t-field='survey.title'/></h1>
@@ -710,6 +718,7 @@
                 <div class="wrap">
                     <div class="oe_structure" />
                     <div class="container">
+                        <t t-call="meeting_point.new_back_button" />
                         <div class='jumbotron mt32'>
                             <h1 t-field='survey.title' />
                             <div t-field='survey.description' class="oe_no_empty"/>
@@ -727,6 +736,7 @@
             <div class="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
+                    <t t-call="meeting_point.new_back_button" />
                     <t t-call="meeting_point.pagenew" />
                 </div>
                 <div class="oe_structure"/>
@@ -747,6 +757,7 @@
         <template id="no_result_new" name="Survey Result modified">
         <t t-call="website.layout">
             <div class="container">
+                <t t-call="meeting_point.new_back_button" />
                 <h2><span t-field='survey.title'></span></h2>
                 <div class="jumbotron mt32">
                     <h2 class="text-muted">
@@ -937,6 +948,7 @@
         <t t-call="website.layout">
             <div class="oe_structure" />
             <div class="container js_surveyresult">
+               <t t-call="meeting_point.new_back_button" />
                 <div class="jumbotron mt32">
                     <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
                     <div t-field="survey.description" class="oe_no_empty" />
@@ -1013,18 +1025,14 @@
         <template id="back_button_meeting" name="Back button" inherit_id="survey.back">
             <xpath expr="//div" position="replace">
                 <div class="survey_back_btn_container">
-                    <div  t-if="survey.meeting_id" t-ignore="true" class="pull-right">
-                        <a t-attf-href="/web#view_type=form&amp;model=calendar.event&amp;id=#{survey.meeting_id.id}&amp;action=meeting_point.action_upcoming_meeting" class="btn btn-default">Back to meeting</a>
-                    </div>
-                    <div  t-ignore="true" class="pull-right">
-                        <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;id=1&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
-                    </div>
-                    <div groups="meeting_point.group_meeting_admin" t-ignore="true" class="pull-right">
-                        <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=meeting_point.action_survey_admin" class="btn btn-default">Back to Survey</a>
-                    </div>
+
+
                 </div>
             </xpath>
         </template>
+
+
+
         <template id="design_survey_front" inherit_id="website.assets_frontend" name="Survey Front Asserts">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/meeting_point/static/css/survey.css"/>
