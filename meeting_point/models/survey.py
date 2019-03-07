@@ -62,9 +62,9 @@ class Survey(models.Model):
                 if survey.my_status != 'not invited':
                     base_url = ws_methods.get_main_url()
                     if survey.my_status == 'done':
-                        survey.url = urls.url_join(base_url, "survey/meet/results/%s" % (slug(survey)))
+                        survey.url = base_url + "/survey/results/" + slug(survey)
                     elif survey.my_status == 'pending':
-                        survey.url = urls.url_join(base_url, "survey/meet/start/%s" % (slug(survey)))
+                        survey.url = base_url + "/survey/start/" + slug(survey)
             except:
                 a = 1
 
@@ -150,13 +150,13 @@ class Survey(models.Model):
         """ Computes a public URL for the survey """
         base_url = ws_methods.get_main_url()
         for survey in self:
-            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
-            survey.print_url = urls.url_join(base_url, "survey/print/%s" % (slug(survey)))
-            survey.result_url = urls.url_join(base_url, "survey/results/%s" % (slug(survey)))
+            survey.public_url = base_url + "/survey/start/" + slug(survey)
+            survey.print_url = base_url + "/survey/print/" + slug(survey)
+            survey.result_url = base_url + "/survey/results/" + slug(survey)
 
-            survey.public_url_new = urls.url_join(base_url, "survey/meet/start/%s" % (slug(survey)))
-            survey.result_url_new = urls.url_join(base_url, "survey/meet/results/%s" % (slug(survey)))
-            survey.print_url_new = urls.url_join(base_url, "survey/meet/print/%s" % (slug(survey)))
+            survey.public_url_new = base_url + "/survey/start/" + slug(survey)
+            survey.result_url_new = base_url + "/survey/results/" + slug(survey)
+            survey.print_url_new = base_url + "/survey/print/" + slug(survey)
             survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, "Click here to start survey")
 
     def user_status(self, uid):
