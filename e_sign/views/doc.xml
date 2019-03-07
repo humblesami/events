@@ -51,6 +51,44 @@
 
 
                     <field name="id" class="e_sign_doc_id" invisible="1"/>
+                    <div groups="dn_base.group_dn_app_manager" class="details_div">
+                        <div >
+
+                            <label string="Pending Signatures:"></label>
+                            <field groups="dn_base.group_dn_app_manager" class="badge" name="pending_signatures"/>
+                        </div>
+
+
+                        <field class="sign_ids" domain="[('id', '=', 1)]" name="sign_ids" groups="dn_base.group_dn_app_manager" string=" " mode="kanban" widget='one2many'>
+                            <kanban string="Signature(s)" create="false">
+                                <field name="draw_signature"/>
+                                <field name="id"/>
+                                <field name="showbutton"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_kanban_card" style="transition: 0.3s">
+
+                                            <div class="col-sm-4">
+                                                <t t-if="record.draw_signature.raw_value">
+                                                    <img style="width:100%" t-att-src="kanban_image('e_sign.signature', 'draw_signature', record.id.value)"/>
+                                                </t>
+                                                <t t-if="!record.draw_signature.raw_value">
+                                                    <strong style="color:red">Pending...</strong>
+                                                </t>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <strong class="oe_partner_heading">
+                                                    <!--<field name="document_id" style="margin-right:10px"/>-->
+                                                    <field name="user_id"/>
+                                                </strong>
+
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </div>
                     <group>
                         <!--<field name="workflow_enabled" groups="dn_base.group_dn_app_manager" class="e_sign_wrk_flow" />-->
                     </group>
@@ -77,7 +115,7 @@
                                     </select>
                                 </span>
                             </div>
-                            <div class="PdfButtonWrapper" >
+                            <div class="PdfButtonWrapper">
                                 <div id="save-doc-data" groups="dn_base.group_dn_app_manager" style="float:left" disabled="true" class="btn btn-primary  save_doc_data">
                                     Select User
                                 </div>
@@ -91,15 +129,29 @@
                                 <div id="date-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns date_psition">
                                     Date
                                 </div>
-                                <div id="text-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns text_psition">
-                                    Text
+                                <div id="text-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns name_psition">
+                                    Name
                                 </div>
+                                <div id="name-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns email_psition">
+                                    Email
+                                </div>
+                                <div id="phone-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns phone_psition">
+                                    Phone
+                                </div>
+                                <div id="company-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns company_psition">
+                                    Company
+                                </div>
+
+
+                                <!--<div id="text-position" groups="dn_base.group_dn_app_manager" class="drag btn btn-primary position_btns text_psition">-->
+                                <!--Text-->
+                                <!--</div>-->
                             </div>
 
                         </div>
 
                         <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
-                            <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;top:85px;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING></div>
+                            <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;top:85px;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING&gt;</div>
 
                             <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
                                 <canvas id="the-canvas"/>
@@ -109,7 +161,7 @@
 
                     <script src="/e_sign/static/js/pdf.worker.js"/>
                     <script src="/e_sign/static/js/pdf.js"/>
-                   <div name="esign_script"><script src="/e_sign/static/js/viewer.js"/></div>
+                    <div name="esign_script"><script src="/e_sign/static/js/viewer.js"/></div>
                     <link href="/e_sign/static/signature.css" rel="stylesheet"/>
                 </form>
             </field>

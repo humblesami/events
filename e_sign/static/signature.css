@@ -30,10 +30,7 @@ color:red!important
              border-radius: 3px;
              height: 29px;
          }
-         .PdfButtonWrapper {
-            background: #ffffff;
-            padding: 5px;
-         }
+
          .PdfButtonWrapper .btn {
               min-width: 130px;
               margin:3px;
@@ -136,6 +133,20 @@ padding:0!important;
 }
 
 
-#save-doc-data{
-background: #875a7b;
+
+.details_div{
+display:flex;
+padding:5px;
 }
+.sign_ids{
+height: 73px;
+overflow: auto;
+}
+
+.sign_ids:hover{
+    height: auto;
+overflow: auto;
+}
+.PdfButtonWrapper .drag {
+            background: #875a7b;
+         }

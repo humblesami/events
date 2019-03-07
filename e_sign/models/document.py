@@ -20,6 +20,7 @@ class Document(models.Model):
     workflow_enabled = fields.Boolean(string="Enable workflow")
 
     signature_ids = fields.Many2many('e_sign.signature', string="Signature(s)")
+    sign_ids = fields.Many2many('e_sign.signature', string="Signature(s)" ,compute="_compute_signs_only")
     my_signature_status = fields.Char(string="My Signature", compute="_compute_status")
     pending_signatures = fields.Char(string="Pending Signatures", compute="_compute_pending")
 
@@ -27,9 +28,9 @@ class Document(models.Model):
         for doc in self:
             total = 0
             pending = 0
-            for signature in doc.signature_ids:
+            for signature in doc.signature_ids.filtered(lambda r:r.type == "sign"):
                 total += 1
-                if not signature.draw_signature and not signature.upload_signature:
+                if not signature.draw_signature and not signature.upload_signature and signature.type=="sign":
                     pending += 1
             doc.pending_signatures = str(pending) + " of " + str(total)
             #doc.pending_signatures = pending
@@ -49,6 +50,11 @@ class Document(models.Model):
             else:
                 if found:
                     doc.my_signature_status = "Completed"
+    def _compute_signs_only(self):
+        for doc in self:
+            doc.sign_ids=doc.signature_ids.filtered(lambda r:r.type == "sign")
+
+
 
     @api.onchange('attachment')
     def validate_file_name_type(self):

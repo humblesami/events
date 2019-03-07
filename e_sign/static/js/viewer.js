@@ -442,6 +442,22 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                 }
                 if (sign.hasClass("date_psition")){
                     type="date"
+                    }
+                if (sign.hasClass("name_psition")){
+                    type="text"
+                    field_name="Name"
+                }
+                if (sign.hasClass("email_psition")){
+                    type="text"
+                    field_name="Email"
+                }
+                if (sign.hasClass("phone_psition")){
+                    type="text"
+                    field_name="Phone"
+                }
+                if (sign.hasClass("company_psition")){
+                    type="text"
+                    field_name="Company"
                 }
                 if (sign.hasClass("text_psition")){
                     type="text";
@@ -466,11 +482,13 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 
                     var input_data={'data':JSON.stringify(arr),document_id:doc_id,url:url,work_flow_enabled:false,meeting_id:meeting_id};
                     dn_json_rpc(req_url,input_data,function(data){
-                        doc_data=data.doc_data;
-                        renderPage(pageNum);
-                        $(".save_doc_data").attr('disabled','disabled');
-                        new_divs.hide().removeClass("new_sign");
+
+//                        doc_data=data.doc_data;
+//                        renderPage(pageNum);
+//                        $(".save_doc_data").attr('disabled','disabled');
+//                        new_divs.hide().removeClass("new_sign");
                         $('.youtubeVideoModal').modal('hide');
+window.location="web"+window.location.hash+"&h"
                     });
 
                 }
