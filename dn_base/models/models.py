@@ -75,42 +75,42 @@ class ir_model_seen_registery(models.Model):
         except:
             a = 1
 
-class IrAttachment(models.Model):
-    _inherit = "ir.attachment"
+# class IrAttachment(models.Model):
+#     _inherit = "ir.attachment"
 
-    @api.model
-    def create(self, vals):
-        if self._uid != 1:
-            self.validate_file_type(vals)
-        filedata = super(IrAttachment, self).create(vals)
-        return filedata
+#     @api.model
+#     def create(self, vals):
+#         if self._uid != 1:
+#             self.validate_file_type(vals)
+#         filedata = super(IrAttachment, self).create(vals)
+#         return filedata
 
-    @api.multi
-    def write(self, vals):
-        if self._uid != 1:
-            self.validate_file_type(vals)
-        filedata = super(IrAttachment, self).write(vals)
-        return filedata
+#     @api.multi
+#     def write(self, vals):
+#         if self._uid != 1:
+#             self.validate_file_type(vals)
+#         filedata = super(IrAttachment, self).write(vals)
+#         return filedata
 
-    def validate_file_type(self, vals):
-        fileType = 'exe'
-        try:
-            if 'datas_fname' in vals and vals['datas_fname'] == 'invitation.ics':
-                return
-            if not 'datas' in vals:
-                raise UserError('No file, systme error')
-            if vals['datas'] == '':
-                raise UserError('No data in file')
-            fileType = self._compute_mimetype(vals)
-        except:
-            raise_dn_model_error()
-        if fileType not in ['application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                            ,'application/vnd.ms-powerpoint','application/msword'
-                            #,'application/vnd.ms-excel'
-                            #,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                            ,'image/png','image/jpeg','image/jpg','image/bmp', 'image/gif'
-                            ,'text/plain'
-                            ]:
-            raise  UserError("Only images and documents are valid for upload, "+fileType + " not allowed")
-        else:
-            scan_virus(vals['datas'])
+#     def validate_file_type(self, vals):
+#         fileType = 'exe'
+#         try:
+#             if 'datas_fname' in vals and vals['datas_fname'] == 'invitation.ics':
+#                 return
+#             if not 'datas' in vals:
+#                 raise UserError('No file, systme error')
+#             if vals['datas'] == '':
+#                 raise UserError('No data in file')
+#             fileType = self._compute_mimetype(vals)
+#         except:
+#             raise_dn_model_error()
+#         if fileType not in ['application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+#                             ,'application/vnd.ms-powerpoint','application/msword'
+#                             #,'application/vnd.ms-excel'
+#                             #,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+#                             ,'image/png','image/jpeg','image/jpg','image/bmp', 'image/gif'
+#                             ,'text/plain'
+#                             ]:
+#             raise  UserError("Only images and documents are valid for upload, "+fileType + " not allowed")
+#         else:
+#             scan_virus(vals['datas'])
