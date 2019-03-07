@@ -132,6 +132,7 @@
                 showLinearLogins(logins_array);
         }
 
+
         function showGroupedLogins(logins_array)
         {
             var loginContent = '<h1>Login Records: '+logins_array.length+'</h1>';
@@ -139,10 +140,16 @@
             loginContent +='<table>';
             loginContent += '<thead><tr><th>Name</th><th>Email</th><th>Last Login</th><th>Login History</th></tr><thead><tbody>';
             logins_array.forEach(function(login, i){
+                 var parts = login.last_login.login_time.split(' ')
+                 var dateValue = parts[0].split('-')
+                  var mydate = new Date(dateValue[0], dateValue[1] - 1, dateValue[2]);
+                  var dataValue = mydate.toDateString()
+                  dataValue = dataValue.split(' ')
+                  var final_date = dataValue[1] + ' '+dataValue[2]+ ',' + dataValue[3] +' ' + parts[1]
                 loginContent += '<tr>';
                 loginContent += '<td>' + login.name + '</td><td>' + login.email + '</td>';
                 loginContent += '<td><div class="last_login">';
-                loginContent += '<div><b>Login Time : </b>' + login.last_login.login_time + '</div>';
+                loginContent += '<div><b>Login Time : </b>' + final_date + '</div>';
                 loginContent += '<div><b>OS         : </b>' + login.last_login.platform + '</div>';
                 loginContent += '<div><b>Browser    : </b>' + login.last_login.browser + '</div>';
                 loginContent += '<div><b>IP         : </b>' + login.last_login.ip + '</div>';
