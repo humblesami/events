@@ -154,9 +154,9 @@ class Survey(models.Model):
             survey.print_url = base_url + "/survey/print/" + slug(survey)
             survey.result_url = base_url + "/survey/results/" + slug(survey)
 
-            survey.public_url_new = base_url + "/survey/start/" + slug(survey)
-            survey.result_url_new = base_url + "/survey/results/" + slug(survey)
-            survey.print_url_new = base_url + "/survey/print/" + slug(survey)
+            survey.public_url_new = base_url + "/survey/meet/start/" + slug(survey)
+            survey.result_url_new = base_url + "/survey/meet/results/" + slug(survey)
+            survey.print_url_new = base_url + "/survey/meet/print/" + slug(survey)
             survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, "Click here to start survey")
 
     def user_status(self, uid):
