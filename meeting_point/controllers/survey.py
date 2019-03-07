@@ -1,8 +1,7 @@
 import json
-
-from odoo import http ,SUPERUSER_ID
 import logging
 from odoo.http import request
+from odoo import http ,SUPERUSER_ID
 from odoo.addons.dn_base import ws_methods
 from odoo.addons.survey.controllers.main import WebsiteSurvey
 _logger = logging.getLogger(__name__)
@@ -189,7 +188,7 @@ class website_survey(WebsiteSurvey):
 
     @http.route(['/survey/meet/start/<model("survey.survey"):survey>',
     '/survey/start/<model("survey.survey"):survey>',
-    '/survey/meet/start/<model("survey.survey"):survey>/<string:token>'
+    '/survey/meet/start/<model("survey.survey"):survey>/<string:token>',
                  '/survey/start/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='public', website=True)
     def start_survey_new(self, survey, token=None, **post):
@@ -230,11 +229,11 @@ class website_survey(WebsiteSurvey):
             # return request.render('survey.survey_init', data)
             return request.render('meeting_point.survey_init_new', data)
         else:
-            return request.redirect(ws_methods.get_main()_url + '/survey/meet/fill/%s/%s' % (survey.id, user_input.token))
+            return request.redirect(ws_methods.get_main_url() + '/survey/meet/fill/%s/%s' % (survey.id, user_input.token))
 
     @http.route(['/survey/meet/prefill/<model("survey.survey"):survey>/<string:token>',
     '/survey/prefill/<model("survey.survey"):survey>/<string:token>',
-    '/survey/meet/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'
+    '/survey/meet/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>',
                  '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
                 type='http', auth='public', website=True)
     def prefillnew(self, survey, token, page=None, **post):
@@ -277,7 +276,7 @@ class website_survey(WebsiteSurvey):
 
     @http.route(['/survey/meet/fill/<model("survey.survey"):survey>/<string:token>',
     '/survey/fill/<model("survey.survey"):survey>/<string:token>',
-    '/survey/meet/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'
+    '/survey/meet/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>',
                  '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
                 type='http', auth='public', website=True)
     def fill_survey_new(self, survey, token, prev=None, **post):
@@ -368,7 +367,7 @@ class website_survey(WebsiteSurvey):
             else:
                 vals.update({'state': 'skip'})
             user_input.sudo(user=user_id).write(vals)
-            if '/meet/' in request.url
+            if '/meet/' in request.httrequest.url:
                 ret['redirect'] = ws_methods.get_main_url() + '/survey/meet/fill/%s/%s' % (survey.id, post['token'])
             else:
                 ret['redirect'] = ws_methods.get_main_url() + '/survey/meet/fill/%s/%s' % (survey.id, post['token'])
@@ -378,7 +377,7 @@ class website_survey(WebsiteSurvey):
 
     @http.route(['/survey/meet/print/<model("survey.survey"):survey>',
     '/survey/print/<model("survey.survey"):survey>',
-    '/survey/meet/print/<model("survey.survey"):survey>/<string:token>'
+    '/survey/meet/print/<model("survey.survey"):survey>/<string:token>',
                  '/survey/print/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='public', website=True)
     def print_survey_new(self, survey, token=None, **post):
