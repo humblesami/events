@@ -52,7 +52,7 @@
 
                     <field name="id" class="e_sign_doc_id" invisible="1"/>
                     <div groups="dn_base.group_dn_app_manager" class="details_div">
-                        <div >
+                        <div class="pending_signs">
 
                             <label string="Pending Signatures:"></label>
                             <field groups="dn_base.group_dn_app_manager" class="badge" name="pending_signatures"/>

@@ -388,13 +388,15 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 		var input_email = $('<h2>Send by Email:</h2><input id="email" placeholder="Email" style="width:50%"/>');
 		var input_name = $('<input id="email" placeholder="Name" style="width:50%"/>');
 		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
+		var _users=false;
 		var meeting_id=$('.esign_doc_meet_id').html()
             if(!meeting_id || meeting_id=="False"){
                 meeting_id=false
+                _users=users;
             }
             else{
                 var meet_users = JSON.parse($('.esign_doc_meet_users').html());
-                users=meet_users;
+                _users=meet_users;
             }
 
 		body.html("<h2>Select User</h2>").append(dropdown) //.append(input_email).append(input_name);
@@ -402,7 +404,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 
         dropdown.append($("<option />").val(0).text("Select User"));
 
-		$.each(users, function() {
+		$.each(_users, function() {
          dropdown.append($("<option />").val(this.id).text(this.name));
         });
         input_email.click(function(e)
@@ -483,12 +485,12 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                     var input_data={'data':JSON.stringify(arr),document_id:doc_id,url:url,work_flow_enabled:false,meeting_id:meeting_id};
                     dn_json_rpc(req_url,input_data,function(data){
 
-//                        doc_data=data.doc_data;
-//                        renderPage(pageNum);
-//                        $(".save_doc_data").attr('disabled','disabled');
-//                        new_divs.hide().removeClass("new_sign");
+                        doc_data=data.doc_data;
+                        renderPage(pageNum);
+                        $(".save_doc_data").attr('disabled','disabled');
+                        new_divs.hide().removeClass("new_sign");
                         $('.youtubeVideoModal').modal('hide');
-window.location="web"+window.location.hash+"&h"
+//window.location="web"+window.location.hash+"&h"
                     });
 
                 }
