@@ -150,3 +150,6 @@ overflow: auto;
 .PdfButtonWrapper .drag {
             background: #875a7b;
          }
+         .pending_signs{
+         width:50%;
+         }
