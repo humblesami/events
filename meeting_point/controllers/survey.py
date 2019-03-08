@@ -64,7 +64,6 @@ class website_survey(WebsiteSurvey):
             #page_id = survey.page_ids[0].id
 
             questions = request.env['survey.question'].search([('survey_id', '=', survey_id)])
-            print(str(survey_id) + "-" + str(uid) +"-"+ str(len(questions)) + " get quest")
             if not questions:
                 title = survey.title
                 if not title:
@@ -135,7 +134,6 @@ class website_survey(WebsiteSurvey):
             survey_id = int(values['survey_id'])
             survey = request.env['survey.survey'].search([('id', '=', survey_id)])
             questions = request.env['survey.question'].search([('survey_id', '=', survey_id)])
-            print(str(survey_id) + "-" + str(uid) + "-" + str(len(questions)) + " submit quest")
             if not questions:
                 title = survey.title
                 if not title:
@@ -444,12 +442,11 @@ class website_survey(WebsiteSurvey):
             data = {'survey': survey, 'page': None, 'token': user_input.token}
             return request.render('survey.survey_init', data)
         else:
-            print ('12---------\n\n\n\n-------------'+ws_methods.get_main_url())
             return request.redirect(ws_methods.get_main_url() + '/survey/fill/%s/%s' % (survey.id, user_input.token))
 
     # AJAX submission of a page
     @http.route(['/survey/submit/<model("survey.survey"):survey>'], type='http', methods=['POST'], auth='public', website=True)
-    def submit(self, survey, **post):
+    def submit12(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
         page_id = int(post['page_id'])
         questions = request.env['survey.question'].search([('page_id', '=', page_id)])
@@ -484,7 +481,6 @@ class website_survey(WebsiteSurvey):
             else:
                 vals.update({'state': 'skip'})
             user_input.sudo(user=user_id).write(vals)
-            print ('13----------\n\n\n\n\n\n------------'+ws_methods.get_main_url())
             ret['redirect'] = ws_methods.get_main_url() + '/survey/fill/%s/%s' % (survey.id, post['token'])
             if go_back:
                 ret['redirect'] += '/prev'

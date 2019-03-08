@@ -193,11 +193,7 @@ def get_main_url():
     global host_url
     if host_url:
         return host_url
-    host_url = request.httprequest.host_url
-    base_url = host_url[:-1]
-    if 'localhost' not in base_url:
-        base_url = base_url.replace('http:', 'https:')
-    host_url = base_url
+    host_url = tools.config['server_base_url']
     return host_url
 
 def check_auth_token(values):
@@ -278,4 +274,3 @@ def add_user_to_socket_list(user_data):
         requests.get(socket_server['url']+'/odoo_event', params=user_data)
     except:
         print('odoo event failed')
-

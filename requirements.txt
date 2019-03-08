@@ -1,5 +1,5 @@
 Babel==2.3.4
-decorator==4.0.10
+decorator==4.3.0
 docutils==0.12
 ebaysdk==2.1.5
 feedparser==5.2.1
