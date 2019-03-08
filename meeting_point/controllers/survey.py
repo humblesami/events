@@ -227,7 +227,7 @@ class website_survey(WebsiteSurvey):
             # return request.render('survey.survey_init', data)
             return request.render('meeting_point.survey_init_new', data)
         else:
-            return request.redirect('/survey/meet/fill/%s/%s' % (survey.id, user_input.token))
+            return request.redirect(ws_methods.get_main_url() + '/survey/meet/fill/%s/%s' % (survey.id, user_input.token))
 
     @http.route(['/survey/meet/prefill/<model("survey.survey"):survey>/<string:token>',
                  '/survey/meet/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
@@ -359,7 +359,7 @@ class website_survey(WebsiteSurvey):
             else:
                 vals.update({'state': 'skip'})
             user_input.sudo(user=user_id).write(vals)
-            ret['redirect'] = '/survey/meet/fill/%s/%s' % (survey.id, post['token'])
+            ret['redirect'] = ws_methods.get_main_url() + '/survey/meet/fill/%s/%s' % (survey.id, post['token'])
             if go_back:
                 ret['redirect'] += '/prev'
         return json.dumps(ret)
@@ -410,7 +410,7 @@ class website_survey(WebsiteSurvey):
 
     @http.route(['/survey/start/<model("survey.survey"):survey>/iframe/<string:token>/<string:db>'],
                 type='http', auth='public', website=True)
-    def start_my_survey(self, survey, token, db, **post):
+    def start_survey(self, survey, token, db, **post):
         if token and db:
             uid = ws_methods.check_auth({'token':token, 'db': db})
         token = request.env.context.get('survey_token')
