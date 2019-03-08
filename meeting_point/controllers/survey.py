@@ -411,7 +411,6 @@ class website_survey(WebsiteSurvey):
     @http.route(['/survey/start/<model("survey.survey"):survey>/iframe/<string:token>/<string:db>'],
                 type='http', auth='public', website=True)
     def start_my_survey(self, survey, token, db, **post):
-        print ('11--------\n\n\n\n\n--------------'+ws_methods.get_main_url())
         if token and db:
             uid = ws_methods.check_auth({'token':token, 'db': db})
         token = request.env.context.get('survey_token')
@@ -446,8 +445,7 @@ class website_survey(WebsiteSurvey):
 
     # AJAX submission of a page
     @http.route(['/survey/submit/<model("survey.survey"):survey>'], type='http', methods=['POST'], auth='public', website=True)
-    def submit12(self, survey, **post):
-        _logger.debug('Incoming data: %s', post)
+    def submit(self, survey, **post):
         page_id = int(post['page_id'])
         questions = request.env['survey.question'].search([('page_id', '=', page_id)])
 
