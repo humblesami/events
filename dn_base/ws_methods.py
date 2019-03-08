@@ -125,7 +125,7 @@ def object_to_json_object(object, props):
                 if field_type == 'binary':
                     obj = obj[sub_prop]
                     if obj:
-                        if sub_prop in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo']:
+                        if sub_prop in ['admin_image', 'image_small', 'image_medium', 'image', 'image', 'photo','signature_img']:
                             obj = mfile_url(model, sub_prop, object.id, 'image')
                         else:
                             obj = obj.decode('utf-8')

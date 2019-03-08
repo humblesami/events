@@ -102,7 +102,7 @@ class ws_profile(http.Controller):
                 return ws_methods.http_response('User not in meeting point')
 
             props = ['id', 'name', 'image_medium', 'resume', 'email', 'nick_name', 'website', 'companies', 'bio', 'mobile_phone', 'work_phone',
-                     'fax', 'job_title', 'department', 'board_joing_date', 'admin_first_name', 'admin_last_name',
+                     'fax', 'job_title','signature_img', 'department', 'board_joing_date', 'admin_first_name', 'admin_last_name',
                      'admin_image', 'admin_nick_name', 'admin_email', 'admin_fax', 'admin_cell_phone',
                      'admin_work_phone', 'mail_to_assistant', 'term_start_date', 'term_end_date']
 
@@ -110,11 +110,12 @@ class ws_profile(http.Controller):
             profile_json = ws_methods.object_to_json_object(profile, props)
             profile_json['committees'] = committees
 
-            dnspuser = req_env['dnspusers'].search([('user_id','=', uid)])
-            sign = dnspuser.signature
-            if sign:
-                # profile_json['signature'] = sign.decode('utf-8')
-                profile_json['signature'] = ws_methods.mfile_url("dnspusers","signature",uid,"image")
+            # dnspuser = req_env['dnspusers'].search([('user_id','=', uid)])
+            # sign = dnspuser.signature
+            # if sign:
+            #     # profile_json['signature'] = sign.decode('utf-8')
+            #
+            #     profile_json['signature'] = ws_methods.mfile_url("dnspusers","signature",uid,"image")
 
 
             gmt = 0
@@ -176,11 +177,10 @@ class ws_profile(http.Controller):
             if not uid:
                 return ws_methods.not_logged_in()
             req_env = http.request.env
-            user = req_env['dnspusers'].search([('user_id','=',uid)])
-            if not user:
-                user = req_env['dnspusers'].create({'user_id':uid})
+            user = req_env['meeting_point.users'].search([('user_id','=',uid)])
 
-            sign =  user.signature
+
+            sign =  user.signature_img
             if sign:
                 sign = sign.decode('utf-8')
             sign = {'signature' : sign }
@@ -228,8 +228,8 @@ class ws_profile(http.Controller):
                 return ws_methods.http_response('', {"signature": binary_signature})
 
 
-            user = req_env['dnspusers'].search([('user_id', '=', uid)])
-            user.signature = values['binary_signature']
+            user = req_env['meeting_point.users'].search([('user_id', '=', uid)])
+            user.signature_img = values['binary_signature']
             return ws_methods.http_response('', "ok")
         except:
             ws_methods.handle()

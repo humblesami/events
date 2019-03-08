@@ -151,6 +151,11 @@
                         <field name="company_id" options="{'no_create': True}" readonly="0" groups="base.group_multi_company"/>
                     </group>
                 </xpath>
+                  <xpath expr="//field[@name='term_end_date']" position="after">
+
+                    <field name="signature_img" widget="signaturee"/>
+
+                </xpath>
                  <xpath expr="//field[@class='director_only_1']" position="attributes">
                      <attribute name="groups">meeting_point.group_meeting_director</attribute>
 
