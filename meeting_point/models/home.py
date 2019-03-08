@@ -33,7 +33,8 @@ class News(models.Model):
     def compute_to_do_items(self):
         environment = self.env
         for obj in self:
-            cnt = len(obj.pending_meetings.filtered(lambda r:r.attendee_status =='needsAction'))
+            # cnt = len(obj.pending_meetings.filtered(lambda r:r.attendee_status =='needsAction'))
+            cnt = len(obj.pending_meetings)
             obj.to_do_items_count = cnt + len(obj.pending_surveys) + len(obj.pending_documents)
 
 
