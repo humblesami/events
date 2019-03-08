@@ -113,7 +113,8 @@ class ws_profile(http.Controller):
             dnspuser = req_env['dnspusers'].search([('user_id','=', uid)])
             sign = dnspuser.signature
             if sign:
-                profile_json['signature'] = sign.decode('utf-8')
+                # profile_json['signature'] = sign.decode('utf-8')
+                profile_json['signature'] = ws_methods.mfile_url("dnspusers","signature",uid,"image")
 
 
             gmt = 0
