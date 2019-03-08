@@ -153,7 +153,7 @@
                 </xpath>
                   <xpath expr="//field[@name='term_end_date']" position="after">
 
-                    <field name="signature_img" widget="signaturee"/>
+                    <field name="signature_img" widget="signature"/>
 
                 </xpath>
                  <xpath expr="//field[@class='director_only_1']" position="attributes">
