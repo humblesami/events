@@ -247,6 +247,13 @@ action = {
                 parent="menu_root_settings"
         />
 
+        <menuitem
+                name="Approval/Voting" id="menu_meeting_voting"
+                parent="menu_root_settings"
+                action="action_meeting_voting"
+        />
+
+
          <menuitem
                 id="menu_sign_requests"
                 name="Signature Requests"

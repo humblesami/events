@@ -52,9 +52,11 @@
         'views/news.xml',
         'views/dashboard.xml',
         'views/signature_requests.xml',
+        'views/voting.xml',
         'views/menus.xml',
         'security/rules.xml',
         'demo/demo.xml',
+
     ],
     # only loaded in demonstration mode
     'installable': True,
