@@ -55,5 +55,101 @@
             <field name="res_model">meeting_point.voting</field>
             <field name="view_mode">kanban,form, tree</field>
         </record>
+        <!--templates for voting and approval-->
+            <!-- First page of a survey -->
+    <template id="voting_init" name="Voting Template">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="oe_structure" />
+                <div class="container">
+                    <div class='jumbotron mt32'>
+                        <h1 t-field='voting.name' />
+                        <div t-field='voting.voting_description' class="oe_no_empty"/>
+                        <a class="btn btn-primary btn-lg" t-att-href="'/vote/fill/%s/%s' % (slug(voting), token)">
+                            Start Voting
+                        </a>
+                    </div>
+                </div>
+                <div class="oe_structure" />
+            </div>
+        </t>
+    </template>
+
+     <template id="voting" name="Voting">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <t t-call="meeting_point.votepage" />
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+        <!--choice template-->
+        <template id="voting_choice" name="voting choice">
+        <div class="row">
+            <div t-foreach='voting.voting_options' t-as='label' t-attf-class="col-md-#{voting.column_nb}">
+                <label t-att-class="' bg-success '">
+                    <input type="radio" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
+                    <span t-field='label.value'/>
+                </label>
+            </div>
+        </div>
+    </template>
+
+                <template id="approval_choice" name="Approval choice">
+        <div class="row">
+            <div t-foreach='voting.approval_options' t-as='label' t-attf-class="col-md-#{voting.column_nb}">
+                <label t-att-class="' bg-success '">
+                    <input type="radio" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
+                    <span t-field='label.value'/>
+                </label>
+            </div>
+        </div>
+    </template>
+
+    <!-- A page -->
+    <template id="votepage" name="VotePage">
+        <div class="page-header">
+            <h1 t-field='voting.name' />
+            <div t-field='voting.voting_description' class="oe_no_empty"/>
+        </div>
+
+        <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (voting.id)" t-att-action="'/voting/fill/%s/%s' % (slug(voting), token)" t-att-data-prefill="'/voting/prefill/%s/%s/%s' % (slug(voting), token, slug(page))"  t-att-data-submit="'/voting/submit/%s' % (slug(survey))">
+
+            <t t-foreach= 'voting.id' t-as='voting'>
+                <t t-set="prefix" t-value="'%s_%s_%s' % (voting.id, page.id, question.id)" />
+                <div class="js_question-wrapper" t-att-id="prefix">
+
+                    <div t-field='voting.voting_description' class="text-muted oe_no_empty"/>
+                    <t t-if="voting.voting_type == 'voting'"><t t-call="meeting_point.voting_choice"/></t>
+                    <t t-if="voting.voting_type == 'approval'"><t t-call="meeting_point.approval_choice"/></t>
+
+                    <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                </div>
+            </t>
+            <div class="text-center mt16 mb16">
+                <button  type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+            </div>
+        </form>
+
+        <!-- Modal used to display error message, i.c.o. ajax error -->
+        <div class="modal fade" id="AJAXErrorModal" role="dialog" aria-labelledby="AJAXErrorModal" aria-hidden="true" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4 class="modal-title">A problem has occured</h4>
+                    </div>
+                    <div class="modal-body"><p>Something went wrong while contacting survey server. <strong class="text-danger">Your answers have probably not been recorded.</strong> Try refreshing.</p></div>
+                    <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
+                </div>
+            </div>
+        </div>
+
+    </template>
+        <!--end-->
     </data>
 </odoo>

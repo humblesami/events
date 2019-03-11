@@ -20,14 +20,14 @@ class Voting(models.Model):
                                    domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
     # url = fields.Char(compute='_compute_url')
-    # public_url_new = fields.Char("Public link", compute="_compute_voting_url")
+    public_url_new = fields.Char("Public link", compute="_compute_voting_url")
     # result_url_new = fields.Char("Results link", compute="_compute_voting_url")
 
     def _compute_voting_url(self):
         """ Computes a public URL for the survey """
         base_url = ws_methods.get_main_url()
         for voting in self:
-            voting.public_url = base_url + "/survey/start/" + slug(voting)
+            voting.public_url_new = base_url + "/voting/start/" + slug(voting)
             # survey.print_url = base_url + "/survey/print/" + slug(survey)
             # survey.result_url = base_url + "/survey/results/" + slug(survey)
             #
@@ -77,10 +77,10 @@ class Voting(models.Model):
         domain = ['|', ('user_id.groups_id.category_id', '=', category_id), ('is_committee', '=', True)]
         return domain
 
-class Voting(models.Model):
+class Votinganswer(models.Model):
     _name = 'meeting_point.voting.answer'
     voting_id = fields.Many2one('meeting_point.voting')
-
+    answerid = fields.Char(string = 'Response')
 
 
 
