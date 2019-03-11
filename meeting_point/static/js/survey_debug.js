@@ -1,8 +1,15 @@
-console.log(342332, 8333);
+console.log(2545);
 odoo.define('survey.survey', function (require) {
 'use strict';
 
 require('web.dom_ready');
+
+
+var the_form = $('.js_surveyform');
+if(!the_form.length) {
+    return $.Deferred().reject("DOM doesn't contain '.js_surveyform'");
+}
+
 var core = require('web.core');
 var time = require('web.time');
 var ajax = require('web.ajax');
@@ -15,11 +22,7 @@ var _t = core._t;
  * This file is intended to add interactivity to survey forms
  */
 
-var the_form = $('.js_surveyform');
 
-if(!the_form.length) {
-    return $.Deferred().reject("DOM doesn't contain '.js_surveyform'");
-}
 
     console.debug("[survey] Custom JS for survey is loading...");
 
@@ -152,8 +155,7 @@ if(!the_form.length) {
                 return false;
             }
             else if (_.has(response, 'redirect')){      // form is ok
-                console.log(response.redirect, 23444);
-                window.location = response.redirect;
+                window.location.href = response.redirect;
                 return true;
             }
             else {                                      // server sends bad data
