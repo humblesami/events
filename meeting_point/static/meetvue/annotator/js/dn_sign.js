@@ -90,6 +90,10 @@ $(document).ready(function () {
                     {
                         pdf_js_module.render({doc:data.doc, id: doc_id, first_time: 1, type : 'signature'});
                     }
+                    if(signature_url.post.indexOf('profile')> -1)
+                    {
+                        $('img.strt_sign')[0].src=$('img.strt_sign')[0].src+"&";
+                    }
                 }, type:'post'
             });
             $('#signModal .modal-footer button').click();
@@ -125,7 +129,7 @@ $(document).ready(function () {
             img.src = dataURL;
         }
     }
-
+    $("body").off( "click" ,".strt_sign");
     $('body').on('click', '.strt_sign', function () {
         if(sign_lib !=1)
         {

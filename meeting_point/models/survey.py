@@ -1,9 +1,7 @@
-from werkzeug import urls
-
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
 from odoo import models, fields, api
 from odoo.addons.dn_base import ws_methods
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class Survey(models.Model):
@@ -12,8 +10,6 @@ class Survey(models.Model):
     meeting_id = fields.Many2one('calendar.event',string="Meeting", ondelete='cascade')
     date = fields.Datetime(string="Meeting Date")
     name = fields.Char()
-    print_url_new = fields.Char("Print link new", compute="_compute_survey_url")
-    survey_type = fields.Selection([(1,'Survey'),(2,'Approval')],string="Survey Type")
     my_status = fields.Char(string="Status",compute="_compute_status")
     #seen_by_me = fields.Integer(compute='_compute_seen_by_me',default=0)
     partner_ids = fields.Many2many('res.partner', 'survey_survey_res_partner_rel',
@@ -21,20 +17,22 @@ class Survey(models.Model):
                                    domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
     url = fields.Char(compute='_compute_url')
-    public_url_new = fields.Char("Public link", compute="_compute_survey_url")
-    result_url_new = fields.Char("Results link", compute="_compute_survey_url")
+    base_url = fields.Char(compute = '_compute_base_url')
+
+
+    def _compute_survey_url(self):
+        """ Computes a public URL for the survey """
+        base_url = ws_methods.get_main_url()
+        for survey in self:
+            survey.public_url = "%s/survey/start/%s" % (base_url, slug(survey))
+            survey.print_url = "%s/survey/print/%s" % (base_url, slug(survey))
+            survey.result_url = "%s/survey/results/%s" % (base_url, slug(survey))
+            survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, "Click here to start survey")
+
     @api.multi
-    def action_start_survey(self):
-        """ Open the website page with the survey form """
-        self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "/%s" % token if token else ""
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Start Survey",
-            'target': 'self',
-            'url': self.with_context(relative_url=True).public_url_new + trail
-        }
+    def _compute_base_url(self):
+        for obj in self:
+            obj.base_url = ws_methods.get_main_url()
 
     @api.multi
     def _compute_audience(self):
@@ -111,54 +109,6 @@ class Survey(models.Model):
         except:
             a = 1
 
-    @api.multi
-    def action_result_survey(self):
-        """ Open the website page with the survey results view """
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Results of the Survey",
-            'target': 'self',
-            'url': self.with_context(relative_url=True).result_url_new
-        }
-
-
-    @api.multi
-    def action_view_answers(self):
-        """ Open the website page with the survey form """
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "View Answers",
-            'target': 'self',
-            'url': '%s/%s' % (self.print_url_new, self.token)
-        }
-
-
-    @api.multi
-    def action_test_survey(self):
-        """ Open the website page with the survey form into test mode"""
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Results of the Survey",
-            'target': 'self',
-            'url': self.with_context(relative_url=True).public_url_new + "/phantom"
-        }
-
-    def _compute_survey_url(self):
-        """ Computes a public URL for the survey """
-        base_url = ws_methods.get_main_url()
-        for survey in self:
-            survey.public_url = base_url + "/survey/start/" + slug(survey)
-            survey.print_url = base_url + "/survey/print/" + slug(survey)
-            survey.result_url = base_url + "/survey/results/" + slug(survey)
-
-            survey.public_url_new = base_url + "/survey/meet/start/" + slug(survey)
-            survey.result_url_new = base_url + "/survey/meet/results/" + slug(survey)
-            survey.print_url_new = base_url + "/survey/meet/print/" + slug(survey)
-            survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, "Click here to start survey")
-
     def user_status(self, uid):
         partner = self.env['res.users'].search([('id','=', uid)]).partner_id
         if self.meeting_id:
@@ -234,9 +184,3 @@ class Survey(models.Model):
 
         self.emit_meeting_update(self)
         return True
-
-class SurveyUserInput(models.Model):
-    """ Metadata for a set of one user's answers to a particular survey """
-
-    _inherit = ["survey.user_input"]
-    print_url_new = fields.Char("Public link to the empty survey", related='survey_id.print_url_new')

@@ -9,4 +9,4 @@
 //    $('body.o_connected_user').attr('style','padding-top:0px !important');
 //    $('.oe_structure.oe_empty').html('<h1 style="text-align:center;">404: Page not found!</h1>').show();
 //}
-$('#wrapwrap').append('<link rel="stylesheet" href="/dn_base/static/css/dn_front.css" />');
+//$('#wrapwrap').append('<link rel="stylesheet" href="/dn_base/static/css/dn_front.css" />');

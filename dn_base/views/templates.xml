@@ -21,7 +21,8 @@
         </template>
 
         <template id="assets_frontend" inherit_id="web.assets_frontend" name="Front End Inherit">
-            <xpath expr=".">
+            <xpath expr="//link[@href='/web/static/src/less/import_bootstrap.less']" position="after">
+                <link rel="stylesheet" type="text/less" href="/dn_base/static/css/dn_front.css"/>
                 <script src="/dn_base/static/js/frontend.js"></script>
             </xpath>
         </template>

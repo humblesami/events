@@ -9,7 +9,7 @@ var site_config = {
 };
 // console.log(site_config);
 var site_config_local = {
-	server_base_url:'http://localhost:8000',
+	server_base_url:'https://sami.com',
 	server_db : 'demo',
 	live : false,
 	site_url: '',
@@ -27,17 +27,22 @@ var network_config = {
 	show_logs : ['socket','ajax_before','ajax_success']
 };
 
-
-if(window.location.toString().indexOf('localhost')> -1)
+if(window.location.toString().indexOf('odoohq.com') == -1
+&& window.location.toString().indexOf('meetvue.com') == -1)
 {
-	site_config = site_config_local;
-	if(window["odoo"]){
-		site_config.server_db = window["odoo"].session_info.db
-	}
-}
-else{
-    if(window.location.toString().indexOf('http://') > -1)
+    
+    if(window.location.toString().indexOf('172.16') > -1)
+    {
         site_config = network_config;
+    }
+    else
+    {
+        site_config = site_config_local;
+    }	
+}
+
+if(window["odoo"]){
+    site_config.server_db = window["odoo"].session_info.db
 }
 
 site_config.site_url = window.location.origin;
