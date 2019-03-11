@@ -183,7 +183,9 @@
                     <script>
                         <!--$('.modal-title:last').append($('.doc_download'));-->
                     </script>
-                    <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
+                    <script>
+                      window["loadComponent"]("document","app-document");
+                    </script>
                 </form>
             </field>
         </record>

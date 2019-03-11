@@ -458,7 +458,9 @@
                     <script src="/meeting_point/static/js/meeting_form.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>                    
-                    <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
+                    <script >
+                        window["loadComponent"]("comments","app-comments");
+                    </script>
                 </form>
             </field>
         </record>

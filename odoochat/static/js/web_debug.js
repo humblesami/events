@@ -1,19 +1,5 @@
+//window["loadComponent"]=function(){}
 
-(function(){
-    var dnow = Date();
-    document.writeln(
-        `
-        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/config.js"></script>
-        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/json.js"></script>
-        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/simple_ajax.js"></script>
-        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/main.js"></script>
-        <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/datetime.js"></script>
-
-        <script type="text/javascript" src="/meeting_point/static/meetvue/polyfills.js"></script>
-        <script type="text/javascript" src="/meeting_point/static/meetvue/vendor.js"></script>
-        <script type="text/javascript" src="/meeting_point/static/meetvue/main.js?v="+dnow></script>`
-    );
-})();
 
 
 $(function(){
@@ -60,15 +46,34 @@ $(function(){
         var myinter = setInterval(function(){
             if($('app-messageicon').length > 0)
             {
-                $('body').append(`
-                <base href=${window.location.origin} />
-                    <div style="display:none">
-                        <app-root></app-root><app-comments></app-comments><app-messenger></app-messenger><app-document></app-document>
-                    </div>
-                    <div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1"/>
-                `);
-                $('body').append('<script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js?v="+dnow></script>');
                 clearInterval(myinter);
+                $('body').append(`
+
+
+                    <base href=${window.location.origin} />
+                    <app-root></app-root>
+                    <div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1"/>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/assets/config.js"></script>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/json.js"></script>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/simple_ajax.js"></script>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/main.js"></script>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/assets/js/datetime.js"></script>
+
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/runtime.js"></script>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/polyfills.js"></script>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/vendor.js"></script>
+                    <script type="text/javascript" src="/meeting_point/static/meetvue/main.js?v="+dnow></script>
+                `);
+            }
+        },50);
+
+        var myinter1 = setInterval(function(){
+            if(window["loadComponent"])
+            {
+                clearInterval(myinter1);
+                window["loadComponent"]("chat","app-chat");
+                window["loadComponent"]("messengericon","app-messageicon");
+
             }
         },50);
 
