@@ -192,25 +192,9 @@ class website_survey(WebsiteSurvey):
                  '/survey/start/<model("survey.survey"):survey>/iframe/<string:token>/<string:db>'],
                 type='http', auth='public', website=True)
     def start_survey(self, survey, token=None, db=None, **post):
-        user_input = False
         UserInput = request.env['survey.user_input']
         if token and db:
             ws_methods.check_auth({'token':token, 'db': db})
-            partner_id = request.env.user.partner_id.id
-            user_input = UserInput.sudo().search([('survey_id', '=', survey.id),('partner_id','=',partner_id)])
-            if not user_input:
-                vals = {'survey_id': survey.id, 'partner_id': partner_id}
-                user_input = UserInput.create(vals)
-                token = user_input.token
-                data = {'survey': survey, 'page': None, 'token': token}
-                return request.render('survey.survey_init', data)
-            else:
-                token = user_input.token
-        elif request.user.id != 4:
-            partner_id = request.env.user.partner_id.id
-            user_input = UserInput.sudo().search([('survey_id', '=', survey.id), ('partner_id', '=', partner_id)])
-            token = user_input.token
-
         if token and token == "phantom":
             _logger.info("[survey] Phantom mode")
             user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})

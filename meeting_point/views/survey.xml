@@ -296,6 +296,12 @@
             </xpath>
         </template>
 
+        <template id="jo_marzi" inherit_id="survey.assets_frontend" name="Survey custom assets">
+             <xpath expr="//script[@src='/survey/static/src/js/survey.js']" position="replace">
+                <script type="text/javascript" src="/meeting_point/static/js/survey.js" />
+             </xpath>
+        </template>
+
         <template id="survey.page" name="Survey Page Custom">
             <div class="page-header">
                 <p class="pull-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
