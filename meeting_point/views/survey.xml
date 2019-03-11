@@ -296,13 +296,13 @@
             </xpath>
         </template>
 
-        <template id="survey.assets_frontend" inherit_id="website.assets_frontend" name="Survey custom assets">
-            <xpath expr="//script[last()]" position="after">
-                <script type="text/javascript" src="/meeting_point/static/js/survey.js" />
-                <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
-                <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
-            </xpath>
-        </template>
+        <!--<template id="survey.assets_frontend" inherit_id="website.assets_frontend" name="Survey custom assets">-->
+            <!--<xpath expr="//script[last()]" position="after">-->
+                <!--<script type="text/javascript" src="/meeting_point/static/js/survey.js" />-->
+                <!--<script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>-->
+                <!--<script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>-->
+            <!--</xpath>-->
+        <!--</template>-->
 
         <template id="survey.page" name="Survey Page Custom">
             <div class="page-header">
