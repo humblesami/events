@@ -265,7 +265,24 @@
             </xpath>
         </template>
 
-
+        <template id="survey.survey_init" name="Survey Init Customized">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="oe_structure" />
+                    <div class="container">
+                        <t t-call="meeting_point.survey_back_container" />
+                        <div class='jumbotron mt32'>
+                            <h1 t-field='survey.title' />
+                            <div t-field='survey.description' class="oe_no_empty"/>
+                            <a class="btn btn-primary btn-lg" t-att-href="'%s/survey/fill/%s/%s' % (survey.base_url, slug(survey), token)">
+                                Start Survey
+                            </a>
+                        </div>
+                    </div>
+                    <div class="oe_structure" />
+                </div>
+            </t>
+        </template>
 
         <template id="survey" inherit_id="survey.survey" name="SurveyCustom">
             <xpath expr="//t[@t-call='survey.back']" position="replace">
