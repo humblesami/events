@@ -1322,6 +1322,14 @@ var SocketService = /** @class */ (function () {
                 ;
             }
         };
+        obj_this.server_events['chat_message_received'] = function (msg) {
+            var sender = obj_this.friends[msg.sender];
+            if (!sender) {
+                console.log(obj_this.friends, ' Dev issue as ' + msg.sender + ' not found');
+                return;
+            }
+            obj_this.update_unseen_message_count("receive-new-message", msg.sender, sender);
+        };
     };
     ;
     SocketService.prototype.emit_server_event = function (input_data, model, method) {
@@ -4107,7 +4115,7 @@ var MessengerComponent = /** @class */ (function () {
         }
         sender.messages.push(message);
         obj_this.socketService.update_unseen_message_count("receive-new-message", sender_id, sender);
-        if (is_chat_open) {
+        if ($(".msg_card_body").length > 0) {
             var input_data = {
                 message_id: message.id,
                 no_loader: 1
@@ -4178,9 +4186,9 @@ var MessengerComponent = /** @class */ (function () {
     };
     MessengerComponent.prototype.ngOnDestroy = function () {
         this.active_chat_user = undefined;
-        this.socketService.server_events['chat_message_received'] = function () {
-            //alert(34233434);
-        };
+        // this.socketService.server_events['chat_message_received'] = function(){
+        //     //alert(34233434);
+        // };
     };
     MessengerComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -5566,7 +5574,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sami/meetvue/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/faizan/meetvue (another copy)/src/main.ts */"./src/main.ts");
 
 
 /***/ })
