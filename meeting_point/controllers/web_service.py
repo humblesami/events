@@ -140,7 +140,8 @@ class ws(http.Controller):
             if not uid:
                 return ws_methods.not_logged_in()
             req_env = http.request.env
-            home = req_env['meeting_point.news'].search([('id', '=', 1)])
+            home = req_env['meeting_point.news'].search([])
+            home = home[len(home) - 1]
 
             home_object = ws_methods.object_to_json_object(home, ['id', 'title', 'photo', 'description'])
 
