@@ -26,7 +26,7 @@
             </xpath>
         </template>
 
-        <template id="web.login" name="Login">
+        <template id="web.login" name="Login Custom">
             <t t-call="web.login_layout">
                 <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -63,10 +63,13 @@
                         <button type="submit" class="btn btn-primary">Log in</button>
                     </div>
                 </form>
-                <div class="dn_footer">Copy rights</div>
-                <link rel="stylesheet" href="/dn_base/static/css/dn_login.css" />
-                <script src="/dn_base/static/js/login.js"></script>
             </t>
+            <!--<xpath expr="//form[hasclass('oe_login_form')]" position="after">-->
+                <!--<div class="dn_footer">Copy rights</div>-->
+                <!--<link rel="stylesheet" href="/dn_base/static/css/dn_login.css" />-->
+                <!--<script src="/dn_base/static/js/login.js"></script>-->
+                 <!--&lt;!&ndash;<script type="application/javascript" src='https://www.google.com/recaptcha/api.js'/>&ndash;&gt;-->
+            <!--</xpath>-->
         </template>
 
         <template id="web.layout" name="Web layout">
