@@ -204,6 +204,12 @@ class website_survey(WebsiteSurvey):
                 token = user_input.token
                 data = {'survey': survey, 'page': None, 'token': token}
                 return request.render('survey.survey_init', data)
+            else:
+                token = user_input.token
+        elif request.user.id != 4:
+            partner_id = request.env.user.partner_id.id
+            user_input = UserInput.sudo().search([('survey_id', '=', survey.id), ('partner_id', '=', partner_id)])
+            token = user_input.token
 
         if token and token == "phantom":
             _logger.info("[survey] Phantom mode")
@@ -241,7 +247,7 @@ class website_survey(WebsiteSurvey):
             return request.redirect('%s/survey/fill/%s/%s' % ( ws_methods.get_main_url(), survey.id, user_input.token))
 
 
-    # AJAX submission of a page
+    @http.route(['/survey/submit/<model("survey.survey"):survey>'], type='http', methods=['POST'], auth='public', website=True)
     def submit(self, survey, **post):
         page_id = int(post['page_id'])
         questions = request.env['survey.question'].search([('page_id', '=', page_id)])
