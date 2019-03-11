@@ -254,6 +254,7 @@ def emit_event(data, req_url=None):
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             res = socket_server['url'] + " is not available"
             print(res)
+            res = 'done'
         except requests.exceptions.HTTPError:
             res = 'httperror'
             print(res)
@@ -266,7 +267,7 @@ def emit_event(data, req_url=None):
     except:
         res = 'socket request failed because ' + str(sys.exc_info())
         print(res)
-        return res
+        return 'done'
 
 def add_user_to_socket_list(user_data):
     try:
