@@ -15,7 +15,7 @@
                         <field name="close_date"/>
                         <field name="voting_description"/>
                         <field name="voting_type"/>
-                        <field name="public_url_new"/>
+                        <field name="public_url_new" widget="url"/>
                         <div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">
                             <h4>Respondents</h4>
                             <field name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
@@ -91,25 +91,38 @@
         <!--choice template-->
         <template id="voting_choice" name="voting choice">
         <div class="row">
-            <div t-foreach='voting.voting_options' t-as='label' t-attf-class="col-md-#{voting.column_nb}">
-                <label t-att-class="' bg-success '">
-                    <input type="radio" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
-                    <span t-field='label.value'/>
-                </label>
-            </div>
+
+            <!--Voting Type "Yes"-->
+                <input type="radio" t-att-name="'%s_%s' % (prefix, 'yes')" t-att-value='yes' />
+                <span>Yes</span>
+
+            <!--Voting Type No-->
+                <input type="radio" t-att-name="'%s_%s' % (prefix, 'no')" t-att-value='no' />
+                <span>No</span>
+
+            <!--Voting Type Abstain-->
+                <input type="radio" t-att-name="'%s_%s' % (prefix, 'abstain')" t-att-value='abstain' />
+                <span>Abstain</span>
+
+            <!--<div t-foreach='voting.voting_options' t-as='label' t-attf-class="col-md-#{voting.column_nb}">-->
+                <!--<label t-att-class="' bg-success '">-->
+                    <!--<input type="radio" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />-->
+                    <!--<span t-field='label.value'/>-->
+                <!--</label>-->
+            <!--</div>-->
         </div>
     </template>
 
-                <template id="approval_choice" name="Approval choice">
-        <div class="row">
-            <div t-foreach='voting.approval_options' t-as='label' t-attf-class="col-md-#{voting.column_nb}">
-                <label t-att-class="' bg-success '">
-                    <input type="radio" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
-                    <span t-field='label.value'/>
-                </label>
-            </div>
-        </div>
-    </template>
+                <!--<template id="approval_choice" name="Approval choice">-->
+        <!--<div class="row">-->
+            <!--<div t-foreach='voting.approval_options' t-as='label' t-attf-class="col-md-#{voting.column_nb}">-->
+                <!--<label t-att-class="' bg-success '">-->
+                    <!--<input type="radio" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />-->
+                    <!--<span t-field='label.value'/>-->
+                <!--</label>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</template>-->
 
     <!-- A page -->
     <template id="votepage" name="VotePage">
@@ -118,37 +131,20 @@
             <div t-field='voting.voting_description' class="oe_no_empty"/>
         </div>
 
-        <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (voting.id)" t-att-action="'/voting/fill/%s/%s' % (slug(voting), token)" t-att-data-prefill="'/voting/prefill/%s/%s/%s' % (slug(voting), token, slug(page))"  t-att-data-submit="'/voting/submit/%s' % (slug(survey))">
+        <div t-if="voting.voting_type == 'voting'" class="col-md-12">
+            <form role="form">
 
-            <t t-foreach= 'voting.id' t-as='voting'>
-                <t t-set="prefix" t-value="'%s_%s_%s' % (voting.id, page.id, question.id)" />
-                <div class="js_question-wrapper" t-att-id="prefix">
+                <t t-call="meeting_point.voting_choice"/>
 
-                    <div t-field='voting.voting_description' class="text-muted oe_no_empty"/>
-                    <t t-if="voting.voting_type == 'voting'"><t t-call="meeting_point.voting_choice"/></t>
-                    <t t-if="voting.voting_type == 'approval'"><t t-call="meeting_point.approval_choice"/></t>
-
-                    <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                <div class="text-center mt16 mb16">
+                    <button class="btn btn-primary" name="button_submit" value="finish">Submit Vote</button>
                 </div>
-            </t>
-            <div class="text-center mt16 mb16">
-                <button  type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
-            </div>
-        </form>
-
-        <!-- Modal used to display error message, i.c.o. ajax error -->
-        <div class="modal fade" id="AJAXErrorModal" role="dialog" aria-labelledby="AJAXErrorModal" aria-hidden="true" >
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
-                        <h4 class="modal-title">A problem has occured</h4>
-                    </div>
-                    <div class="modal-body"><p>Something went wrong while contacting survey server. <strong class="text-danger">Your answers have probably not been recorded.</strong> Try refreshing.</p></div>
-                    <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
-                </div>
-            </div>
+            </form>
         </div>
+
+
+
+
 
     </template>
         <!--end-->
