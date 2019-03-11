@@ -1,7 +1,7 @@
 import json
 import logging
 from odoo.http import request
-from odoo import http ,SUPERUSER_ID,fields
+from odoo import http ,SUPERUSER_ID
 from odoo.addons.dn_base import ws_methods
 from odoo.addons.survey.controllers.main import WebsiteSurvey
 _logger = logging.getLogger(__name__)
@@ -186,20 +186,39 @@ class website_survey(WebsiteSurvey):
         except:
             return ws_methods.handle()
 
-    @http.route(['/survey/start/<model("survey.survey"):survey>/iframe/<string:token>/<string:db>'],
+
+    @http.route(['/survey/start/<model("survey.survey"):survey>',
+                 '/survey/start/<model("survey.survey"):survey>/<string:token>',
+                 '/survey/start/<model("survey.survey"):survey>/iframe/<string:token>/<string:db>'],
                 type='http', auth='public', website=True)
-    def start_token_survey(self, survey, token, db, **post):
-        if token and db:
-            uid = ws_methods.check_auth({'token':token, 'db': db})
-        token = request.env.context.get('survey_token')
+    def start_survey(self, survey, token=None, db=None, **post):
+        user_input = False
         UserInput = request.env['survey.user_input']
+        if token and db:
+            ws_methods.check_auth({'token':token, 'db': db})
+            partner_id = request.env.user.partner_id.id
+            user_input = UserInput.sudo().search([('survey_id', '=', survey.id),('partner_id','=',partner_id)])
+            if not user_input:
+                vals = {'survey_id': survey.id, 'partner_id': partner_id}
+                user_input = UserInput.create(vals)
+                token = user_input.token
+                data = {'survey': survey, 'page': None, 'token': token}
+                return request.render('survey.survey_init', data)
+
+        if token and token == "phantom":
+            _logger.info("[survey] Phantom mode")
+            user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})
+            data = {'survey': survey, 'page': None, 'token': user_input.token}
+            return request.render('survey.survey_init', data)
+        # END Test mode
+
         # Controls if the survey can be displayed
         errpage = self._check_bad_cases(survey, token=token)
         if errpage:
             return errpage
 
         # Manual surveying
-        if not token:            
+        if not token:
             vals = {'survey_id': survey.id}
             if request.website.user_id != request.env.user:
                 vals['partner_id'] = request.env.user.partner_id.id
@@ -214,15 +233,15 @@ class website_survey(WebsiteSurvey):
         if errpage:
             return errpage
 
-        # Select the right page        
+        # Select the right page
         if user_input.state == 'new':  # Intro page
             data = {'survey': survey, 'page': None, 'token': user_input.token}
             return request.render('survey.survey_init', data)
         else:
-            return request.redirect(ws_methods.get_main_url() + '/survey/fill/%s/%s' % (survey.id, user_input.token))
+            return request.redirect('%s/survey/fill/%s/%s' % ( ws_methods.get_main_url(), survey.id, user_input.token))
+
 
     # AJAX submission of a page
-    @http.route(['/survey/submit/<model("survey.survey"):survey>'], type='http', methods=['POST'], auth='public', website=True)
     def submit(self, survey, **post):
         page_id = int(post['page_id'])
         questions = request.env['survey.question'].search([('page_id', '=', page_id)])
@@ -257,79 +276,20 @@ class website_survey(WebsiteSurvey):
             else:
                 vals.update({'state': 'skip'})
             user_input.sudo(user=user_id).write(vals)
-            ret['redirect'] = ws_methods.get_main_url() + '/survey/fill/%s/%s' % (survey.id, post['token'])
+            ret['redirect'] = '%s/survey/fill/%s/%s' % (ws_methods.get_main_url(), survey.id, post['token'])
             if go_back:
-                ret['redirect'] += '/prev'
+                ret['redirect'] += ws_methods.get_main_url() + '/prev'
         return json.dumps(ret)
 
     @http.route(['/voting/start/<model("meeting_point.voting"):voting>'],
                 type='http', auth='public', website=True)
     def start_token_voting(self, voting, **post):
-        # if token and db:
-        #     uid = ws_methods.check_auth({'token':token, 'db': db})
-        # token = request.env.context.get('survey_token')
-        # UserInput = request.env['survey.user_input']
-        # Controls if the survey can be displayed
-        # errpage = self._check_bad_cases(voting, token=token)
-        # if errpage:
-        #     return errpage
-
-        # # Manual surveying
-        # if not token:
-        #     vals = {'voting_id': voting.id}
-        #     if request.website.user_id != request.env.user:
-        #         vals['partner_ids'] = request.env.user.partner_id.id
-        #     user_input = UserInput.create(vals)
-        # else:
-        #     user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
-        #     if not user_input:
-        #         return request.render("website.403")
-
-        # Do not open expired survey
-        # errpage = self._check_deadline(user_input)
-        # if errpage:
-        #     return errpage
-
-        # Select the right page
-        # if .state == 'new':  # Intro page
         data = {'voting': voting, 'page': None}
         return request.render('meeting_point.voting_init', data)
-        # else:
-        #     return request.redirect(ws_methods.get_main_url() + '/survey/fill/%s/%s' % (voting.id, user_input.token))
 
     # voting display
     @http.route(['/vote/fill/<model("meeting_point.voting"):voting>/<string:token>'],
                 type='http', auth='public', website=True)
     def fill_vote(self, voting, token, **post):
-        '''Display and validates a survey'''
-
-        # Controls if the survey can be displayed
-
         data = {'voting': voting, 'page': 1, 'token': token}
-
         return request.render('meeting_point.voting', data)
-        # Select the right page
-        # if user_input.state == 'new':  # First page
-        #     page, page_nr, last = Survey.next_page(user_input, 0, go_back=False)
-        #     data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
-        #     if last:
-        #         data.update({'last': True})
-        #     return request.render('survey.survey', data)
-        # elif user_input.state == 'done':  # Display success message
-        #     return request.render('survey.sfinished', {'survey': survey,
-        #                                                        'token': token,
-        #                                                        'user_input': user_input})
-        # elif user_input.state == 'skip':
-        #     flag = (True if prev and prev == 'prev' else False)
-        #     page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=flag)
-        #
-        #     #special case if you click "previous" from the last page, then leave the survey, then reopen it from the URL, avoid crash
-        #     if not page:
-        #         page, page_nr, last = Survey.next_page(user_input, user_input.last_displayed_page_id.id, go_back=True)
-        #
-        #     data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
-        #     if last:
-        #         data.update({'last': True})
-        #     return request.render('survey.survey', data)
-        # else:
-        #     return request.render("website.403")

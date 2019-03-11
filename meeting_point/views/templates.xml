@@ -245,21 +245,5 @@
             </field>
         </record>
 
-
-
-
-        <template id="survey_init_dn" name="Survey dn start">
-            <div style="text-align:center">
-                <h1>
-                    <label>Survey Ttile:</label>
-                    <label t-field="survey.title"/>
-                </h1>
-                <h1>
-                    <a class="btn survey_start_btn btn-primary mb4 btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
-                        Start Survey
-                    </a>
-                </h1>
-            </div>
-        </template>
     </data>
 </odoo>
