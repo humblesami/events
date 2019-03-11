@@ -2,9 +2,7 @@
 {
     display:none;
 }*/
- .navbar.navbar-static-top{
-    margin-top: 12px;
- }
+
  .btn-primary{
     background-color:#3fa19d !important;
     border-color:#3fa19d !important;
@@ -17,6 +15,17 @@
     background-color: #eeeeef;
 }
 
+.navbar-static-top
+{
+    display:none;
+    background-color: transparent;
+    border-color: transparent;
+}
+.survey_back_btn_container > div
+{
+    margin: 5px;
+}
 .form-control{
     background-color: #eeeeef;
 }
+
