@@ -15,6 +15,7 @@
                         <field name="close_date"/>
                         <field name="voting_description"/>
                         <field name="voting_type"/>
+                        <field name="public_url_new"/>
                         <div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">
                             <h4>Respondents</h4>
                             <field name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
