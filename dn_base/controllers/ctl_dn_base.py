@@ -27,46 +27,7 @@ class MySession(Session):
             request.session.logout(keep_db=True)
         return redirect('/web/login')
 
-socket_server = {
-    'url':tools.config['socket_url'],
-    'connected': False
-}
-
 class Controller(http.Controller):
-
-    @http.route('/messege_request', type='http', csrf=False, auth='public', cors='*')
-    def messege_request(self, **kw):
-        try:
-            kw = json.loads(kw['data'])
-            auth = kw.get('auth')
-            if not auth:
-                auth = kw
-            uid = ws_methods.check_auth(auth)
-            if not uid:
-                return ws_methods.not_logged_in()
-            if uid == 1:
-                return ws_methods.http_response('', 'Administrator can not send messages.')
-            req_env = http.request.env
-            values = kw.get('req_data')
-            if not values:
-                values = kw
-            values['uid'] = uid
-            args = kw.get('args')
-            model = args.get('model')
-            method = args.get('method')
-
-            if not model or not method:
-                return ws_methods.http_response('Please provide valid args')
-
-            method_to_call = getattr(req_env[model], method)
-            events = method_to_call(values)
-            res = ws_methods.emit_event(events)
-            if res == 'done':
-                return ws_methods.http_response('', 'done')
-            else:
-                return ws_methods.http_response(model + '.' + method + ' processed by Odoo server but ' + res)
-        except:
-            return ws_methods.handle()
 
     @http.route('/get-action-id', type='http', csrf=False, auth='public', cors='*')
     def get_action_id(self, **kw):

@@ -1,6 +1,10 @@
-footer
+footer, #footer
 {
-    display:none;
+    display :none;
+}
+.container.mt16.mb8
+{
+    display :none;
 }
 #top_menu>li:not(.dropdown)
 {
