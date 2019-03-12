@@ -1,15 +1,23 @@
 import json
 import base64
-import requests
 import werkzeug
 from odoo import http, tools
 from odoo.http import request
 from werkzeug.utils import redirect
 from odoo.exceptions import ValidationError
 from odoo.addons.dn_base import dn_dt, ws_methods
-from odoo.addons.web.controllers.main import Binary
 from odoo.addons.website.controllers.main import Website
+from odoo.addons.web.controllers.main import Home, Binary
 from odoo.addons.web.controllers.main import Session, binary_content
+
+class MyHome(Home):
+    @http.route('/web/login', type='http', auth="none", sitemap=False)
+    def web_login(self, redirect=None, **kw):
+        request.httprequest.url_root = tools.config['server_base_url']
+        if kw and kw['login']:
+            return super(MyHome, self).web_login(kw)
+        else:
+            return super(MyHome, self).web_login()
 
 class MyWebsite(Website):
     @http.route('/', type='http', auth="public", website=True)

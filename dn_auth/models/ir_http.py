@@ -1,6 +1,6 @@
 import random
 import string
-from odoo import models, http
+from odoo import models, http, tools
 from odoo.addons.dn_base import ws_methods
 
 class dn_auth_Http(models.AbstractModel):
@@ -14,6 +14,7 @@ class dn_auth_Http(models.AbstractModel):
             spuser = request.env['dnspusers'].sudo().create({'user_id': user.id})
         base_url = ws_methods.get_main_url()
         user_info = super(dn_auth_Http, self).session_info()
+        user_info["web.base.url"] = tools.config['server_base_url']
 
         image_path1 = base_url + '/image/res.users/'
         if not spuser.auth_token:
