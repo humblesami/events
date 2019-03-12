@@ -1,6 +1,7 @@
 odoo.define('survey.survey', function (require) {
 'use strict';
 
+console.log(34221);
 
 var the_form = $('.js_surveyform');
 if(!the_form.length) {
