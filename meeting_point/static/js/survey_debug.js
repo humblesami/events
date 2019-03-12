@@ -153,7 +153,7 @@ var _t = core._t;
                 return false;
             }
             else if (_.has(response, 'redirect')){      // form is ok
-                window.location.href = response.redirect;
+                window.location = response.redirect;
                 return true;
             }
             else {                                      // server sends bad data
