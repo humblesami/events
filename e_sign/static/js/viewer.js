@@ -133,7 +133,7 @@ $("#next").on('click',function goNext() {
  };
  page.render(renderContext);
 //  $('.saved_sign').hide();
-  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
+//  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
   var saved_new_signs=$('.saved_sign:visible,.new_sign');
   $.each(saved_new_signs, function() {
     var h,w,perc;
@@ -844,16 +844,34 @@ $("#nxxt_sign").click(function() {
     }
     var sign=d[0];
     var top=canvas.height*(sign.top/100);
+    var left=canvas.width*(sign.left/100);
+    var top_height = $('.top_btns').height() + 150
     renderPage(sign.page);
     $('html, #page_container1').animate({
-        scrollTop: top-150
+        scrollTop: top-150,
+        scrollLeft: left-150,
     }, 1000);
 //    $(this).css({top:top}).html("NEXT>");
-    $(this).html("NEXT>").animate({
-        top: top
+$(this).html("NEXT>").animate({
+        top: top_height+50+"px"
     }, 1000);
+    $(this).html("NEXT>").animate({
+        top: top_height+"px"
+    }, 1000);
+    setTimeout(function(){
+        $(`.saved_sign[id=${sign.id}]:visible`).css({border:"solid 3px yellow"})
+    },1000)
+
 
 });
+
+
+if($('#save-doc-data').hasClass("o_invisible_modifier")){
+console.log("dir");
+$('#page_container1')[0].style.height="calc(100vh - 165px)";
+}
+
+
 
 });
 

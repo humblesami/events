@@ -54,7 +54,9 @@ z-index: 9008!important;}
 @media (max-width: 540px) {
     .youtubeVideoModal .modal-dialog{ width: auto; }
     .youtubeVideoModal .modal-body{ padding:6px; }
-    #signature_editor{ width: 295px; margin:5px auto !important; }
+    #signature_editor{
+    width: calc(100vw - 50px);
+    margin:5px auto !important; }
 
     .youtubeVideoModal .modal-dialog .modal-body{
     text-align: center;
@@ -113,7 +115,11 @@ display:none!important
 }
 
 #page_container1{
-    height: calc(100vh - 190px);
+    height: calc(100vh - 278px);
+}
+#nxxt_sign {
+    top:145px;
+
 }
 
 @media screen and (max-width: 600px){
