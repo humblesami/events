@@ -385,10 +385,13 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
         var content=$('.youtubeVideoModal .modal-content:last');
         var footer = $('<div class="modal-footer" style="text-align: left;"></div>');
 		var dropdown = $('<select id="dropdown" style="width:50%"></select>');
-		var input_email = $('<h2>Send by Email:</h2><input id="email" placeholder="Email" style="width:50%"/>');
+		var input_email = $('<h3>Send by Email:</h3><input id="email" placeholder="Email" style="width:50%"/>');
 		var input_name = $('<input id="email" placeholder="Name" style="width:50%"/>');
+		var input_subject = $('<input id="subject" placeholder="Subject" style="width:50%"/>');
+		var email_body = $('<textarea class="o_sign_message_textarea o_input" style="border-style: solid;" rows="4"></textarea>');
 		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
 		var _users=false;
+		input_subject.val("Signature Request")
 		var meeting_id=$('.esign_doc_meet_id').html()
             if(!meeting_id || meeting_id=="False"){
                 meeting_id=false
@@ -399,7 +402,9 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                 _users=meet_users;
             }
 
-		body.html("<h2>Select User</h2>").append(dropdown) //.append(input_email).append(input_name);
+		body.html("<h3>Select User</h3>").append(dropdown) //.append(input_email).append(input_name);
+		body.append("<h3>Subject</h3>").append(input_subject);
+		body.append("<h3>Message</h3>").append(email_body);
 		body.append(save_btn);
 
         dropdown.append($("<option />").val(0).text("Select User"));
@@ -416,6 +421,8 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
             var isEmpty=false;
 //            var work_flow_enabled=$('.e_sign_wrk_flow input')[0].checked;
             var user=dropdown.val();
+            var subject = input_subject[0].value;
+            var message = email_body[0].value;
             var email =input_email[1].value;
             var name =input_name[0].value;
             if(!(user!=0 || (email!='' && name!=''))){
@@ -482,7 +489,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                     req_url = '/e-sign/save_sign_data';
 
 
-                    var input_data={'data':JSON.stringify(arr),document_id:doc_id,url:url,work_flow_enabled:false,meeting_id:meeting_id};
+                    var input_data={'data':JSON.stringify(arr),document_id:doc_id,url:url,work_flow_enabled:false,meeting_id:meeting_id,subject:subject,message:message};
                     dn_json_rpc(req_url,input_data,function(data){
 
                         doc_data=data.doc_data;
@@ -555,7 +562,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
             }
             }
             else{
-                body.append('<h2>Username:</h2>'+usr_name);
+                body.append('<h3>Username:</h3>'+usr_name);
                 body.append(del_btn);
             }
             signature_editor.signature();
@@ -714,7 +721,7 @@ $(document).on("click",".saved_sign.is_date", function(e){
 		var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
 
         input_date.val($.datepicker.formatDate('dd/mm/yy', new Date()));
-		body.html("<h2>Username:</h2>"+usr_name+"<h2>Date:</h2>").append(input_date);
+		body.html("<h3>Username:</h3>"+usr_name+"<h3>Date:</h3>").append(input_date);
 
 
             if(my_record=="true"){

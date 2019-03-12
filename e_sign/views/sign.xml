@@ -76,8 +76,8 @@
             <field name="auto_delete" eval="True" />
             <field name="body_html">
                 <![CDATA[
-<p>Dears ${object.user_id.name or ''}</p>
-<p>Your signature is required on a document.</p>
+
+<p>__Message__</p>
 <p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="__URL__">Go to document</a></p>
 
   <br/>

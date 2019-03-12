@@ -211,7 +211,7 @@ class Signature(http.Controller):
                 user_email = doc.signature_ids[-1].user_id.email
                 email=doc.signature_ids[-1].email
             if not doc.workflow_enabled:
-                self.create_response_and_send_mail(user_email,email,token,model,doc_id)
+                self.create_response_and_send_mail(user_email,email,token,model,doc_id,kw["subject"],kw["message"])
             elif doc.workflow_enabled:
                 if doc.signature_ids.filtered(lambda r: r.token != token).__len__()==0:
                     self.create_response_and_send_mail(user_email, email, token, model, doc_id)
@@ -334,14 +334,23 @@ class Signature(http.Controller):
     def get_doc_data(self, doc, token=False):
         doc_data = []
         req_env = http.request.env
+        uid = False
+        if token:
+            signs = doc.signature_ids.filtered(lambda r: r.token == token)
+            if signs:
+                uid = signs[0].user_id
         for s in doc.signature_ids:
             signed = False
 
             my_record = False
             if s.draw_signature:
                 signed = True
-            if (req_env.user == s.user_id and s.user_id) or token == s.token:
-                my_record = True
+            if token:
+                if (uid == s.user_id and s.user_id) or token == s.token:
+                    my_record = True
+            else:
+                if (req_env.user == s.user_id and s.user_id):
+                    my_record = True
             doc_data.append(
                 {"id": s.id, "name": s.user_id.name or s.name, "left": s.left, "top": s.top, "page": s.page,
                  "signed": signed, "zoom": s.zoom, "width": s.width, "height": s.height, "my_record": my_record,
@@ -351,7 +360,7 @@ class Signature(http.Controller):
 
         return doc_data
 
-    def create_response_and_send_mail(self,user_email,email,token,model,doc_id):
+    def create_response_and_send_mail(self,user_email,email,token,model,doc_id,subject,message):
         """ Create one mail by recipients and replace __URL__ by link with identification token """
         # set url
         req_env = http.request.env
@@ -365,12 +374,14 @@ class Signature(http.Controller):
             url = url + '/model='+model+'&id='+doc_id+'&/' + token
         # post the message
         template = req_env.ref('e_sign.email_template_signature_e_sign', raise_if_not_found=False)
+        body = template.body_html.replace("__URL__", url)
+        body = body.replace("__Message__", message)
         values = {
             'model': None,
             'res_id': None,
-            'subject': "Signature required",
-            'body': template.body_html.replace("__URL__", url),
-            'body_html': template.body_html.replace("__URL__", url),
+            'subject': subject,
+            'body': body,
+            'body_html': body,
             'parent_id': None,
             # 'attachment_ids': wizard.attachment_ids and [(6, 0, wizard.attachment_ids.ids)] or None,
             'email_from': '"OdooHQ" <a@a.com>',
