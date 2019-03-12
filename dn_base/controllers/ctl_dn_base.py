@@ -10,14 +10,14 @@ from odoo.addons.website.controllers.main import Website
 from odoo.addons.web.controllers.main import Home, Binary
 from odoo.addons.web.controllers.main import Session, binary_content
 
-class MyHome(Home):
-    @http.route('/web/login', type='http', auth="none", sitemap=False)
-    def web_login(self, redirect=None, **kw):
-        request.httprequest.url_root = tools.config['server_base_url']
-        if kw and kw['login']:
-            return super(MyHome, self).web_login(kw)
-        else:
-            return super(MyHome, self).web_login()
+# class MyHome(Home):
+#     @http.route('/web/login', type='http', auth="none", sitemap=False)
+#     def web_login(self, redirect=None, **kw):
+#         request.httprequest.url_root = tools.config['server_base_url']
+#         if kw and kw['login']:
+#             return super(MyHome, self).web_login(kw)
+#         else:
+#             return super(MyHome, self).web_login()
 
 class MyWebsite(Website):
     @http.route('/', type='http', auth="public", website=True)
