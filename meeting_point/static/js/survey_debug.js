@@ -154,7 +154,6 @@ var _t = core._t;
             }
             else if (_.has(response, 'redirect')){      // form is ok
                 window.location = response.redirect;
-                return true;
             }
             else {                                      // server sends bad data
                 console.error("Incorrect answer sent by server");
