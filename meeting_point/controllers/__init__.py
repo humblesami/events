@@ -8,3 +8,4 @@ from . import survey
 from . import meeting
 from . import doc_sign
 from . import topic
+from . import voting

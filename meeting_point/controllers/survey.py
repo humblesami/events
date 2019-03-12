@@ -271,15 +271,3 @@ class website_survey(WebsiteSurvey):
                 ret['redirect'] += ws_methods.get_main_url() + '/prev'
         return json.dumps(ret)
 
-    @http.route(['/voting/start/<model("meeting_point.voting"):voting>'],
-                type='http', auth='public', website=True)
-    def start_token_voting(self, voting, **post):
-        data = {'voting': voting, 'page': None}
-        return request.render('meeting_point.voting_init', data)
-
-    # voting display
-    @http.route(['/vote/fill/<model("meeting_point.voting"):voting>/<string:token>'],
-                type='http', auth='public', website=True)
-    def fill_vote(self, voting, token, **post):
-        data = {'voting': voting, 'page': 1, 'token': token}
-        return request.render('meeting_point.voting', data)

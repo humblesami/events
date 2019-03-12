@@ -11,3 +11,5 @@ from . import committee
 from . import home
 from . import signature
 from . import voting
+from . import votinganswer
+
