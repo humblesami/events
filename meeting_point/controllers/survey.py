@@ -189,12 +189,12 @@ class website_survey(WebsiteSurvey):
 
     @http.route(['/survey/start/<model("survey.survey"):survey>',
                  '/survey/start/<model("survey.survey"):survey>/<string:token>',
-                 '/survey/start/<model("survey.survey"):survey>/iframe/<string:token>/<string:db>'],
+                 '/survey/start/<model("survey.survey"):survey>/iframe/<string:auth_token>/<string:db>'],
                 type='http', auth='public', website=True)
-    def start_survey(self, survey, token=None, db=None, **post):
+    def start_survey(self, survey, token=None, auth_token=None, db=None, **post):
         UserInput = request.env['survey.user_input']
-        if token and db:
-            ws_methods.check_auth({'token':token, 'db': db})
+        if auth_token and db:
+            ws_methods.check_auth({'token':auth_token, 'db': db})
         if token and token == "phantom":
             _logger.info("[survey] Phantom mode")
             user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})
