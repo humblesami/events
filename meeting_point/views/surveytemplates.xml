@@ -1,0 +1,56 @@
+<odoo>
+    <data noupdate = "1">
+
+
+    <template id="survey_finished_custom" inherit_id="survey.sfinished" name="Survey finished custom">
+            <xpath expr="//t[@t-call='survey.back']" position="replace">
+                <t t-call="meeting_point.survey_back_container" />
+            </xpath>
+        </template>
+
+        <template id="survey_nopages_custom" inherit_id="survey.nopages" name="Survey no pages custom">
+            <xpath expr="//t[@t-call='survey.back']" position="replace">
+                <t t-call="meeting_point.survey_back_container" />
+            </xpath>
+        </template>
+
+        <template id="survey_init_custom" inherit_id="survey.survey_init" name="Survey init custom">
+            <xpath expr="//t[@t-call='survey.back']" position="replace">
+                <t t-call="meeting_point.survey_back_container" />
+            </xpath>
+        </template>
+
+        <template id="survey" inherit_id="survey.survey" name="SurveyCustom">
+            <xpath expr="//t[@t-call='survey.back']" position="replace">
+                <t t-call="meeting_point.survey_back_container" />
+            </xpath>
+        </template>
+
+        <template id="survey_print_custom" inherit_id="survey.survey_print" name="Survey print custom">
+            <xpath expr="//t[@t-call='survey.back']" position="replace">
+                <t t-call="meeting_point.survey_back_container" />
+            </xpath>
+        </template>
+
+        <template id="survey_assets_frontend" inherit_id="survey.assets_frontend" name="Survey assets custom">
+            <xpath expr="//script[@src='/survey/static/src/js/survey.js']" position="replace"></xpath>
+            <xpath expr="//script[@src='/survey/static/src/js/tour_test_survey.js']" position="replace"></xpath>
+            <xpath expr="//script[@src='/web/static/src/js/fields/field_utils.js']" position="replace"></xpath>
+        </template>
+
+
+        <template id="survey_custom" inherit_id="survey.survey" name="Survey custom">
+            <xpath expr="//t[@t-call='website.layout']" position="after">
+                <script type="text/javascript" src="/meeting_point/static/js/survey.js" />
+                <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
+                <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
+            </xpath>
+        </template>
+             <template id="survey_fnish_new_one" inherit_id="survey.result" name="SurveyCustomnewcha">
+            <xpath expr="//t[@t-call='survey.back']" position="replace">
+                <t t-call="meeting_point.survey_back_container" />
+            </xpath>
+        </template>
+</data>
+
+</odoo>

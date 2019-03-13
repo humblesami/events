@@ -1,5 +1,5 @@
 <odoo>
-    <data>
+    <data noupdate="0">
 
         <record id="meeting_point_survey_kanban" model="ir.ui.view">
             <field name="name">meeting.point.survey.kanban</field>
@@ -55,7 +55,7 @@
                                             <!--<button type="object" style="width: 100%" class="survey-button btn btn-primary ml4" name="action_send_survey" groups="meeting_point.group_meeting_admin">Share</button>-->
 
 
-                                            <button class="survey-button btn btn-primary ml4" style="width: 100%" name="action_result_survey" type="object" groups="meeting_point.group_meeting_admin">Analyze</button>
+                                            <button class="survey-button btn btn-primary ml4" style="width: 100%" name="action_result_survey" type="object" groups="meeting_point.group_meeting_admin">View Results</button>
 
                                     </div>
                                 </div>
@@ -115,14 +115,15 @@
             <field name="arch" type="xml">
                 <form string="Survey">
                     <field name="id" invisible="1"/>
+                    <field name="my_status" invisible="1"/>
                     <field name="tot_start_survey" invisible="1"/>
                     <field name="is_closed" invisible="1"/>
                     <header groups="survey.group_survey_manager">
-                        <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
-                        <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <!--<button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>-->
+                        <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('my_status', '=', 'done')]}"/>
                         <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_start_survey" string="Start Survey" type="object" attrs="{'invisible': [('my_status', '=', 'done')]}"/>
                         <!--<button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>-->
-                        <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
                         <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
@@ -253,55 +254,7 @@
             </div>
         </template>
 
-        <template id="survey_finished_custom" inherit_id="survey.sfinished" name="Survey finished custom">
-            <xpath expr="//t[@t-call='survey.back']" position="replace">
-                <t t-call="meeting_point.survey_back_container" />
-            </xpath>
-        </template>
 
-        <template id="survey_nopages_custom" inherit_id="survey.nopages" name="Survey no pages custom">
-            <xpath expr="//t[@t-call='survey.back']" position="replace">
-                <t t-call="meeting_point.survey_back_container" />
-            </xpath>
-        </template>
-
-        <template id="survey_init_custom" inherit_id="survey.survey_init" name="Survey init custom">
-            <xpath expr="//t[@t-call='survey.back']" position="replace">
-                <t t-call="meeting_point.survey_back_container" />
-            </xpath>
-        </template>
-
-        <template id="survey" inherit_id="survey.survey" name="SurveyCustom">
-            <xpath expr="//t[@t-call='survey.back']" position="replace">
-                <t t-call="meeting_point.survey_back_container" />
-            </xpath>
-        </template>
-
-        <template id="survey_print_custom" inherit_id="survey.survey_print" name="Survey print custom">
-            <xpath expr="//t[@t-call='survey.back']" position="replace">
-                <t t-call="meeting_point.survey_back_container" />
-            </xpath>
-        </template>
-
-        <template id="survey_assets_frontend" inherit_id="survey.assets_frontend" name="Survey assets custom">
-            <xpath expr="//script[@src='/survey/static/src/js/survey.js']" position="replace"></xpath>
-            <xpath expr="//script[@src='/survey/static/src/js/tour_test_survey.js']" position="replace"></xpath>
-            <xpath expr="//script[@src='/web/static/src/js/fields/field_utils.js']" position="replace"></xpath>
-        </template>
-
-
-        <template id="survey_custom" inherit_id="survey.survey" name="Survey custom">
-            <xpath expr="//t[@t-call='website.layout']" position="after">
-                <script type="text/javascript" src="/meeting_point/static/js/survey.js" />
-                <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
-                <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
-            </xpath>
-        </template>
-             <template id="survey_fnish_new_one" inherit_id="survey.result" name="SurveyCustomnewcha">
-            <xpath expr="//t[@t-call='survey.back']" position="replace">
-                <t t-call="meeting_point.survey_back_container" />
-            </xpath>
-        </template>
 
         <template id="survey.page" name="Survey Page Custom">
             <div class="page-header">
@@ -357,7 +310,6 @@
                     </div>
                 </div>
             </div>
->>>>>>> Stashed changes
         </template>
 
         <record id="email_template_survey_modified" model="mail.template">

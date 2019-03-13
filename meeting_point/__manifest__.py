@@ -56,6 +56,7 @@
         'views/menus.xml',
         'security/rules.xml',
         'demo/demo.xml',
+        'views/surveytemplates.xml',
 
     ],
     # only loaded in demonstration mode
