@@ -58,112 +58,118 @@
         </record>
         <!--templates for voting and approval-->
             <!-- First page of a survey -->
-    <template id="voting_init" name="Voting Template">
-        <t t-call="website.layout">
-            <div class="wrap">
-                <div class="oe_structure" />
-                <div class="container">
-                    <div class='jumbotron mt32'>
-                        <h1 t-field='voting.name' />
-                        <div t-field='voting.voting_description' class="oe_no_empty"/>
-                        <a class="btn btn-primary btn-lg" t-att-href="'/vote/fill/%s/%s' % (slug(voting), token)">
-                            Start Voting
-                        </a>
+        <template id="voting_init" name="Voting Template">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="oe_structure" />
+                    <div class="container">
+                        <div class='jumbotron mt32'>
+                            <h1 t-field='voting.name' />
+                            <div t-field='voting.voting_description' class="oe_no_empty"/>
+                            <a class="btn btn-primary btn-lg" t-att-href="'/vote/fill/%s' % (slug(voting))">
+                                Start Voting
+                            </a>
+                        </div>
                     </div>
+                    <div class="oe_structure" />
                 </div>
-                <div class="oe_structure" />
-            </div>
-        </t>
-    </template>
+            </t>
+        </template>
 
-     <template id="voting" name="Voting">
-        <t t-call="website.layout">
-            <div class="wrap">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <t t-call="meeting_point.votepage" />
-                </div>
-                <div class="oe_structure"/>
-            </div>
-        </t>
-    </template>
+        <template id="voting" name="Voting">
+            <t t-call="website.layout">
+                <h2 t-field='voting.name' />
+               <a t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{voting.id}&amp;action=meeting_point.action_meeting_voting" class="btn btn-default">Back to Voting</a>
+
+                <form class="voting_form">
+                    <div class="row voting_options-container">
+                    <!--Voting Type "Yes"-->
+                        <span>Yes</span>
+
+                    <!--Voting Type No-->
+                        <input type="radio" name="voting_options" t-att-value='no' t-value="no" />
+                        <span>No</span>
+
+                    <!--Voting Type Abstain-->
+                        <input type="radio" name ="voting_options" t-att-value='abstain' t-value="abstain" />
+                        <span>Abstain</span>
+                    </div>
+                    <script src="/meeting_point/static/js/voting.js"></script>
+                    <input type="hidden" class="user_choice" />
+                    <input type="hidden" name="voting_id" class="voting_id" t-att-value='voting.id' />
+                    <button  type="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+            </t>
+            <!--<t t-call="website.layout">-->
+                <!--<div class="wrap">-->
+                    <!--<div class="oe_structure"/>-->
+                    <!--<div class="container">-->
+                        <!--<t t-call="meeting_point.votepage" />-->
+                    <!--</div>-->
+                    <!--<div class="oe_structure"/>-->
+                <!--</div>-->
+            <!--</t>-->
+        </template>
 
         <!--Voting Options template-->
         <template id="voting_choice" name="voting choice">
             <div class="row voting_options-container">
-
             <!--Voting Type "Yes"-->
-                <input type="radio" name="voting_options" t-att-value='yes' />
+                <input type="radio" name="voting_options" t-att-value='yes' t-value="yes" />
                 <span>Yes</span>
 
             <!--Voting Type No-->
-                <input type="radio" name="voting_options" t-att-value='no' />
+                <input type="radio" name="voting_options" t-att-value='no' t-value="no" />
                 <span>No</span>
 
             <!--Voting Type Abstain-->
-                <input type="radio" name ="voting_options" t-att-value='abstain' />
+                <input type="radio" name ="voting_options" t-att-value='abstain' t-value="abstain" />
                 <span>Abstain</span>
             </div>
             <script src="/meeting_point/static/js/voting.js"></script>
             <input type="hidden" class = "user_choice" />
+            <input name="voting_id" type="hidden" class="voting_id" t-att-value='voting.id' />
         </template>
 
-        <!--Approval Options template-->
         <template id="approval_choice" name="approval choice">
-        <div class="row">
-
-            <!--Approval Type "Approve"-->
+            <div class="row">
                 <input type="radio" t-att-name="'%s' % ('approval_options')" t-att-value='Approve' />
                 <span>Approve</span>
-
-            <!--Approval Type "Reject"-->
                 <input type="radio" t-att-name="'%s' % ('approval_options')" t-att-value='Reject' />
                 <span>Reject</span>
+            </div>
+        </template>
 
-        </div>
-    </template>
+        <template id="votepage" name="VotePage">
+            <div class="page-header">
+                <h1 t-field='voting.name' />
+                <div t-field='voting.voting_description' class="oe_no_empty"/>
+            </div>
 
-                <!--<template id="approval_choice" name="Approval choice">-->
-        <!--<div class="row">-->
-            <!--<div t-foreach='voting.approval_options' t-as='label' t-attf-class="col-md-#{voting.column_nb}">-->
-                <!--<label t-att-class="' bg-success '">-->
-                    <!--<input type="radio" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />-->
-                    <!--<span t-field='label.value'/>-->
-                <!--</label>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</template>-->
+            <div class="col-md-12">
+                <form role="form" t-set="voting_opts" t-att-action="'/voting/answer/%s/%s/%s' % (slug(voting), token, voting_opts)"  t-att-data-submit="'/voting/answer/%s' % (slug(voting))">
+                    <div t-if="voting.voting_type == 'voting'">
+                        <t t-call="meeting_point.voting_choice"/>
+                    </div>
+                    <div t-if="voting.voting_type == 'approval'">
+                        <t t-call="meeting_point.approval_choice"/>
+                    </div>
 
-    <!-- A page -->
-    <template id="votepage" name="VotePage">
-        <div class="page-header">
-            <h1 t-field='voting.name' />
-            <div t-field='voting.voting_description' class="oe_no_empty"/>
-        </div>
-
-        <div class="col-md-12">
-            <form role="form"  t-att-action="'/voting/answer/%s/%s' % (slug(voting), token)"  t-att-data-submit="'/voting/answer/%s' % (slug(voting))">
-                <div t-if="voting.voting_type == 'voting'">
-                    <t t-call="meeting_point.voting_choice"/>
-                </div>
-                <div t-if="voting.voting_type == 'approval'">
-                    <t t-call="meeting_point.approval_choice"/>
-                </div>
-
-                <!--<a class="btn btn-primary btn-lg" t-att-href="'/voting/answer/%s/%s' % (slug(voting), token)">-->
-                            <!--Submit Vote-->
-                <!--</a>-->
-                 <button  type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Vote</button>
-                <!--<div class="text-center mt16 mb16">-->
-                    <!--<button class="btn btn-primary" name="button_submit" value="finish">Submit Vote</button>-->
-                <!--</div>-->
-            </form>
-        </div>
-    </template>
+                    <!--<a class="btn btn-primary btn-lg" t-att-href="'/voting/answer/%s/%s' % (slug(voting), token)">-->
+                                <!--Submit Vote-->
+                    <!--</a>-->
+                     <button  type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Vote</button>
+                    <!--<div class="text-center mt16 mb16">-->
+                        <!--<button class="btn btn-primary" name="button_submit" value="finish">Submit Vote</button>-->
+                    <!--</div>-->
+                </form>
+            </div>
+        </template>
         <!--end-->
 
         <!--Voting Answer Page-->
-     <template id="answerpage" name="Voting Answer Page">
+        <template id="answerpage" name="Voting Answer Page">
         <div class="page-header">
             <h1 t-field='answer.user_id' />
             <div t-field='answer.voting_id' class="oe_no_empty"/>

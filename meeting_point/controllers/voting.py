@@ -11,19 +11,30 @@ class website_voting(http.Controller):
                 type='http', auth='public', website=True)
     def start_token_voting(self, voting, **post):
         data = {'voting': voting, 'page': None}
-        return request.render('meeting_point.voting_init', data)
+        page = request.render('meeting_point.voting_init', data)
+        return page
 
     # voting display
-    @http.route(['/vote/fill/<model("meeting_point.voting"):voting>/<string:token>'],
-                type='http', auth='public', website=True)
-    def fill_vote(self, voting, token, **post):
-        data = {'voting': voting, 'page': 1, 'token': token}
-        return request.render('meeting_point.voting', data)
 
+    # @http.route(['/vote/fill/<string:voting>'],
+    #             type='http', auth='public', website=True)
+    # def fill1_vote(self, voting, **post):
+    #     # data = {'voting': voting}
+    #     return request.render('meeting_point.voting', voting)
+
+    @http.route(['/vote/fill/<model("meeting_point.voting"):voting>'],
+                type='http', auth='public', website=True)
+    def fill_vote(self, voting, **post):
+        data = {'voting': voting}
+        page = request.render('meeting_point.voting', data)
+        return  page
 
     # Voting Answer
-    @http.route(['/voting/answer/<model("meeting_point.votinganswer"):answer>/<string:token>'],
+    @http.route(['/voting/submit'],
                 type='http', auth='public', website=True)
-    def voting_answer(self, answer, **kw):
-        data = {'answer': answer, 'page': None}
+    def voting_answer(self, **kw):
+        # votingAnswer = request.env['meeting_point.votinganswer']
+        # votingAnswer.user_answer = kw['user_anser']
+        # votingAnswer.voting_id =kw['voting_id']
+        #
         return 'Submitted'# request.render('meeting_point.answerpage', data)
