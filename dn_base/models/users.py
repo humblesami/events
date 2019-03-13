@@ -19,9 +19,19 @@ class Users(models.Model):
             return False
     @api.model
     def create(self, vals):
-        data = self.is_valid_email(vals['login'])
-        if data == False:
+        data = 0
+        validationEmail = 0
+        if vals.get('email') != False:
+            data = self.is_valid_email(vals['email'])
+        if vals.get('login') != False:
+            validationEmail = self.is_valid_email(vals['login'])
+
+        if validationEmail == False and data == False:
             raise exceptions.ValidationError('Please Enter correct email Id')
+        elif validationEmail == False and data == True:
+                vals['login'] = vals['email']
+        elif validationEmail == True and data == False:
+                vals['email'] = vals['login']
         if "creating_child" in self._context:
             user = self.env['res.users'].search([('login', '=', vals['login'])])
             return user
