@@ -1,6 +1,3 @@
-(function(){
-    if (window.top == window.self)
-    {
-        $('.navbar-static-top').show();
-    }
-})();
+document.addEventListener("DOMContentLoaded", function(event) {
+    $('.navbar-static-top').show();
+});
