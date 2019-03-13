@@ -57,12 +57,15 @@ class Signature(http.Controller):
             #     return ws_methods.http_response("Please provide signatures")
             signature_id = kw['signature_id']
             token = kw.get('token')
+            sign1 = http.request.env['e_sign.signature'].sudo().search([('token', '=', token)])
+            uid = sign1.user_id
             sign = http.request.env['e_sign.signature'].sudo().search([('id', '=', signature_id)])
             if http.request.uid ==4:
-                if token!=sign.token:
+
+                if uid != sign.user_id:
                     raise UserError(("Unauthorized"))
             else:
-                if http.request.uid !=sign.user_id.id and token!=sign.token:
+                if http.request.uid !=sign.user_id.id and uid != sign.user_id:
                     raise UserError(("Unauthorized"))
             binary_signature = ""
             if kw['type'] == "upload":

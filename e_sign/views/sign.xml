@@ -132,14 +132,16 @@
 
                                 </div>
 
-
-                                <div id="page_container1" style="height:430px;overflow-y:auto;overflow-x:auto;position:relative;">
+                                <div id="viewer_container" style="position:relative;">
                                     <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;top:85px;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING></div>
 
+                                    <div id="page_container1" style="height:430px;overflow-y:auto;overflow-x:auto;position:relative;">
 
-                                    <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
-                                        <canvas id="the-canvas" style="border:1px solid black"></canvas>
 
+                                        <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
+                                            <canvas id="the-canvas" style="border:1px solid black"></canvas>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>

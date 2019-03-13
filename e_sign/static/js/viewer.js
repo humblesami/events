@@ -844,23 +844,27 @@ $("#nxxt_sign").click(function() {
     }
     var sign=d[0];
     var top=canvas.height*(sign.top/100);
+
     var left=canvas.width*(sign.left/100);
-    var top_height = $('.top_btns').height() + 150
     renderPage(sign.page);
     $('html, #page_container1').animate({
         scrollTop: top-150,
         scrollLeft: left-150,
-    }, 1000);
-//    $(this).css({top:top}).html("NEXT>");
+    }, 500);
+
 $(this).html("NEXT>").animate({
-        top: top_height+50+"px"
-    }, 1000);
-    $(this).html("NEXT>").animate({
-        top: top_height+"px"
-    }, 1000);
+        top: ($('#page_container1').height()/2)+"px"
+    }, 500);
+
     setTimeout(function(){
+    $('#nxxt_sign').html("NEXT>").animate({
+
+        top: top - $('#page_container1').scrollTop() + "px"
+    }, 1000);
+
+
         $(`.saved_sign[id=${sign.id}]:visible`).css({border:"solid 3px yellow"})
-    },1000)
+    },600)
 
 
 });
