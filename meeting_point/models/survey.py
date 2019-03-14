@@ -184,16 +184,16 @@ class Survey(models.Model):
 
         self.emit_meeting_update(self)
         return True
-
-class SurveyUserInputLine(models.Model):
-    _inherit = ['survey.user_input_line']
-
-    @api.model
-    def create(self, vals):
-        value_suggested = vals.get('value_suggested')
-        if value_suggested:
-            vals.update({'quizz_mark': self._get_mark(value_suggested)})
-        data = self.search([('survey_id', '=', 10), ['write_uid', '=', self._uid]])
-        if data:
-            return ('The answer must be in the right type')
-        return super(SurveyUserInputLine, self).create(vals)
+#
+# class SurveyUserInputLine(models.Model):
+#     _inherit = ['survey.user_input_line']
+#
+#     @api.model
+#     def create(self, vals):
+#         value_suggested = vals.get('value_suggested')
+#         if value_suggested:
+#             vals.update({'quizz_mark': self._get_mark(value_suggested)})
+#         data = self.search([('survey_id', '=', 10), ['write_uid', '=', self._uid]])
+#         if data:
+#             return ('The answer must be in the right type')
+#         return super(SurveyUserInputLine, self).create(vals)
