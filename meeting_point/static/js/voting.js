@@ -1,6 +1,70 @@
 $(function(){
     $('#votingBack').hide();
     $('#submitted').hide();
+
+    (function($) {
+        let voting_id = $('.voting_id').html();
+        let user_answer = '';
+        options = {
+            url : 'votinganswer',
+            data : {'voting_id' : voting_id},
+            success : function(data){
+                        if (data != ''){
+                            $('.voting_choice_container:first .'+data).prop('checked', true)
+                        }
+                     },
+            error : function(a, b){
+                        console.log(b.responseText)
+                    }
+        };
+        $.ajax(options);
+    })($);
+
+    $('.voting_choice_container:first input[type="radio"]').change(function(){
+        let voting_id = $('.voting_id').html();
+        let user_id = $('.user_id').html();
+        let user_choice = $('input:checked').val();
+//        console.log('Voting ID :' + voting_id + ' User ID :' + user_id + ' User Choice :' + user_choice)
+
+        var options = {
+            url : '/voting/submit',
+            data : {'user_answer' : user_choice, 'voting_id' : voting_id},
+            success:function(data){
+            console.log(data);
+            },
+            error:function(a, b){
+                console.log(b.responseText);
+            }
+        }
+        //console.log(options);
+        $.ajax(options);
+    });
+
+    $('.voting_opt_yes strong').click(function(){
+	    $('.voting_yes').prop("checked", true);
+	    $('.voting_yes').change();
+    });
+
+    $('.voting_opt_no strong').click(function(){
+	    $('.voting_no').prop("checked", true);
+	    $('.voting_no').change();
+    });
+
+    $('.voting_opt_abstain strong').click(function(){
+	    $('.voting_abstain').prop("checked", true);
+	    $('.voting_abstain').change();
+    });
+
+    $('.approval_opt_approve strong').click(function(){
+	    $('.approval_approve').prop("checked", true);
+	    $('.approval_approve').change();
+    });
+
+    $('.approval_opt_reject strong').click(function(){
+	    $('.approval_reject').prop("checked", true);
+	    $('.approval_reject').change();
+    });
+
     //console.log($('.voting_options-container').length, 34423);
     if($('.voting_options-container').length == 0)
         return;
@@ -30,4 +94,5 @@ $(function(){
         console.log(options);
         $.ajax(options);
     });
+
 })
