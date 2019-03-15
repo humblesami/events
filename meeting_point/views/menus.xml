@@ -46,7 +46,7 @@
                 sequence="5"
                 parent="menu_root_mp"
                 id="menu_root_settings"
-                groups="group_meeting_admin"
+                groups="group_meeting_admin,group_meeting_director"
         />
 
         <menuitem
