@@ -9,8 +9,8 @@ var site_config = {
 };
 // console.log(site_config);
 var site_config_local = {
-	server_base_url:'http://localhost:8000',
-	server_db : 'erp',
+	server_base_url:'https://sami.com',
+	server_db : 'demo',
 	live : false,
 	site_url: '',
     chat_server : 'http://localhost:3000',
