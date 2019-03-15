@@ -1,3 +1,4 @@
+import json
 import logging
 from odoo.http import request
 from odoo import http ,SUPERUSER_ID
@@ -78,3 +79,31 @@ class website_voting(http.Controller):
             return current_voting_answer['user_answer']
         else:
             return ''
+
+        # Voting OverAll Results
+
+    @http.route(['/voting/results'], type='http', auth='public', website=True)
+    def voting_result(self, **kw):
+        voting_id = int(kw['voting_id'])
+        uid = request.uid
+        voting_results = request.env['meeting_point.votinganswer'].search([('voting_id', '=', voting_id)])
+
+        votingType = request.env['meeting_point.voting'].search([('id','=',voting_id)]).voting_type
+        votingAnswer = {}
+        if votingType == 'voting':
+            votingAnswer={'yes':0,'no':0,'abstain':0}
+        elif votingType == 'approval':
+            votingAnswer={'approved':0,'reject':0}
+        else :
+            a = 0
+        if len(votingAnswer)> 0:
+            for val in voting_results:
+                if val.user_answer in votingAnswer:
+                    votingAnswer[val.user_answer] +=1
+                else :
+                    pass
+        res = {'total': len(voting_results),
+               'votingCount' : votingAnswer
+               }
+        json.dumps(res)
+        return res
