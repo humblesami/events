@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_op_home" name="Dashboard"
+            sequence="30" parent="openeducat_core.menu_op_school_root" action="action_openedu_home"   />
+
+
+    </data>
+</odoo>

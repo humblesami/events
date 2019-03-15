@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_op_classroom_form_inherit" model="ir.ui.view">
+            <field name="name">op.classroom.form.inherit</field>
+            <field name="model">op.classroom</field>
+            <field name="inherit_id" ref="openeducat_classroom.view_op_classroom_form" />
+            <field name="arch" type="xml">
+
+                <sheet position="inside">
+                    <notebook >
+                        <page name="capacity" string="Capacity">
+                            <notebook >
+                                <page name="classes" string="Classes">
+                                    <field name="class_ids" colspan="4" nolabel="1" >
+                                        <tree>
+                                            <field name="name"/>
+                                            <field name="class_start"/>
+                                            <field name="class_end"/>
+                                            <field name="total_sched_hrs_room" widget="float_time" />
+                                            <field name="total_avail_hrs_room" widget="float_time" />
+                                            <!--<field name="classhrs_week" widget="float_time"/>-->
+                                            <!--<field name="total_instr_hrs" widget="float_time"/>-->
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page name="bydate" string="By date">
+                                    <group col="4">
+                                        <field name="filter_start"  />
+                                        <field name="filter_end"  />
+                                    </group>
+                                    <group>
+                                        <field name="total_sched_hrs" widget="float_time" />
+                                        <field name="total_avail_hrs" widget="float_time" />
+                                    </group>
+                                </page>
+                            </notebook>
+                        </page>
+                    </notebook>
+                </sheet>
+
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

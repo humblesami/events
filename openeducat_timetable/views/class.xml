@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_op_class_form_inherit" model="ir.ui.view">
+            <field name="name">op.class.form.inherit</field>
+            <field name="model">op.batch</field>
+            <field name="inherit_id" ref="openeducat_core.view_op_batch_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button string="Create Timetable" type="object" name="action_create_timetable"  />
+
+                </xpath>
+
+                <notebook position="inside">
+                    <page name="time_table" string="Sessions">
+                        <field name="session_ids" colspan="4" />
+                    </page>
+                </notebook>
+
+                  <group name="main" position="after">
+
+                  <group class="oe_edit_only" string="Faculty availability and Scheduled classes">
+                       <field name="faculty_ids" nolabel="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="availaible"/>
+
+                            </tree>
+                        </field>
+                  </group>
+
+                    <group class="oe_edit_only" >
+
+
+
+                        <field name="class_ids" nolabel="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="faculty_id"/>
+                                <field name="class_start"/>
+                                <field name="class_end"/>
+                                <field name="start"/>
+                                <field name="end"/>
+                                <field name="total_sched_hrs" widget="float_time"/>
+                                <field name="total_avail_hrs" widget="float_time"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
+
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

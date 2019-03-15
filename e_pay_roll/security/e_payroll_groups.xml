@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record model="ir.module.category" id="custom_e_payroll">
+            <field name="name">E-payroll</field>
+            <field name="description">User access level for this module</field>
+            <field name="sequence">3</field>
+        </record>
+
+          <record id="group_e_payroll_custom_base" model="res.groups">
+            <field name="name">E-Payroll</field>
+        </record>
+
+
+        <record id="custom_group_e_payroll_officer" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="custom_e_payroll"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="user_model_ids" eval="[(4, ref('e_pay_roll.model_e_payroll_users'))]"/>
+    </record>
+
+    <record id="custom_group_e_payroll_manager" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="category_id" ref="custom_e_payroll"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')),(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+        <field name="user_model_ids" eval="[(4, ref('e_pay_roll.model_e_payroll_users'))]"/>
+    </record>
+
+        <record id="custom_group_e_payroll_staff" model="res.groups">
+            <field name="name">Staff</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="custom_e_payroll"/>
+            <field name="user_model_ids" eval="[(4, ref('e_pay_roll.model_e_payroll_users'))]"/>
+        </record>
+
+         <record id="custom_group_e_payroll_admin_e" model="res.groups">
+        <field name="name">Super Admin</field>
+        <field name="category_id" ref="custom_e_payroll"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')),(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+        <field name="user_model_ids" eval="[(4, ref('e_pay_roll.model_e_payroll_users'))]"/>
+    </record>
+
+
+
+
+    </data>
+</odoo>

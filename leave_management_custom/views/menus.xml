@@ -1,0 +1,147 @@
+<odoo>
+    <data>
+        <menuitem
+                name="Leaves"
+                id="hr_holidays.menu_hr_holidays_root"
+                sequence="95"
+                web_icon="hr_holidays,static/description/icon.png"
+                groups="base.group_user"
+                parent="dn_base.extras"
+        />
+
+
+        <menuitem name="E-Leave" id="menu_root" sequence="11"  web_icon="hr_holidays,static/description/icon.png"
+                  groups="base.group_erp_manager,group_leave_custom_admin,group_leave_custom_user,group_leave_custom_user_admin,group_leave_custom_super_user"
+        />
+        <!-- menu categories -->
+        <menuitem name="Dashboard" id="leave_management_custom.dashboard" parent="leave_management_custom.menu_root"
+
+                  action="hr_holidays.action_hr_holidays_dashboard" sequence="2"/>
+        <menuitem name="My Leaves" id="leave_management_custom.my_leave" parent="leave_management_custom.menu_root"/>
+
+        <menuitem
+                name="Leaves to Approve"
+                id="leave_management_custom.to_approve"
+                parent="leave_management_custom.menu_root"
+                 groups="base.group_erp_manager,group_leave_custom_admin,group_leave_custom_super_user,group_leave_custom_user_admin"
+                />
+
+        <menuitem
+                name="Unapproved Leaves"
+                id="leave_management_custom.to_approve_leaves"
+                parent="leave_management_custom.to_approve"
+                action="custom_open_department_holidays_approve"/>
+
+        <menuitem
+                name="Reports" id="leave_management_custom.reports"
+                parent="leave_management_custom.menu_root"
+                groups="group_leave_custom_admin,group_leave_custom_super_user,base.group_erp_manager"
+               />
+
+        <menuitem
+                name="Leaves" id="leave_management_custom.report_leaves"
+                parent="leave_management_custom.reports"
+                action="hr_holidays.action_hr_available_holidays_report"/>
+
+        <menuitem name="Organizational Hierarchy" id="leave_management_custom.hierarchy"
+                  parent="leave_management_custom.menu_root"
+                  groups="group_leave_custom_admin,base.group_erp_manager,group_leave_custom_super_user" />
+        <menuitem name="Company Detail" id="leave_management_custom.company_detail"
+                  parent="leave_management_custom.menu_root" />
+        <menuitem name="Configuration" id="leave_management_custom.configuration"
+                  parent="leave_management_custom.menu_root"
+                  action="hr_holidays.open_view_holiday_status" groups="base.group_erp_manager,leave_management_custom.group_leave_custom_admin,leave_management_custom.group_leave_custom_super_user"/>
+        <menuitem name="Public Holiday" id="public_holiday"
+                  parent="leave_management_custom.menu_root"
+                  action="hr_holiday_exclude_special_days.public_holiday_action"
+                  groups="group_leave_custom_admin,base.group_erp_manager,leave_management_custom.group_leave_custom_super_user"
+        />
+
+        <menuitem name="Leaves Details" id="leave_management_custom.report_leave_details"
+                  parent="leave_management_custom.reports"
+                  action="hr_holidays.open_employee_leaves"/>
+
+        <menuitem name="Leaves by Department" id="leave_management_custom.report_leave_by_department"
+                  parent="leave_management_custom.reports"
+                  action="hr_holidays.action_hr_holidays_summary_dept"/>
+        <menuitem
+                name="Approval Rules" action="record_leave_rules_action" id="record_leave_rules_assign"
+                parent="leave_management_custom.hierarchy"
+                sequence="6"/>
+        <menuitem
+                name="Rules Allocation" action="record_leave_rule_model_action" id="record_leave_rules_model_menu"
+                parent="leave_management_custom.hierarchy"
+                sequence="6"/>
+
+        <menuitem
+                name="Request Leave(s)" id="leave_management_custom.request_leave"
+                parent="leave_management_custom.my_leave"
+                action="custom_open_ask_holidays"/>
+        <menuitem
+                name="Allocation Request" id="leave_management_custom.allocation_request"
+                parent="leave_management_custom.my_leave"
+                action="custom_open_allocation_holidays"/>
+
+
+        <menuitem
+                name="Leaves Allocation" id="leave_management_custom.to_approve_leaves_allocation"
+                parent="leave_management_custom.to_approve"
+                action="custom_open_department_holidays_allocation_approve"/>
+    <!--change-->
+        <menuitem
+                name="Leaves Balance" id="leave_management_custom.leave_balance"
+                parent="leave_management_custom.menu_root"
+                action="leave_management_custom.custom_open_company_balance" sequence="1"/>
+
+            <menuitem
+                name="Users" id="E_leave_menu"
+                parent="menu_root" sequence="12"
+                groups="group_leave_custom_admin,base.group_erp_manager"
+                />
+        <menuitem
+                name="Super Admin" id="E_leave_menu_admin"
+                parent="E_leave_menu" sequence="0"
+                action="custom_e_leave_admin_action_admin"/>
+        <menuitem
+                name="Admin" id="E_leave_menu_manager"
+                parent="E_leave_menu" sequence="1"
+                action="custom_e_leave_manager_action_he"/>
+        <menuitem
+                name="Manager" id="E_leave_menu_officer"
+                parent="E_leave_menu" sequence="2"
+                action="custom_e_leave_officer_action_he"/>
+         <menuitem
+                name="Staff" id="E_leave_menu_staff"
+                parent="E_leave_menu" sequence="3"
+                action="custom_e_leave_staff_action_he"/>
+
+        <menuitem
+                name="System Users" id="E_leave_menu_child"
+                parent="E_leave_menu" sequence="5"
+                action="custom_e_leave_user_oo_action_employees"/>
+
+
+
+
+     <menuitem name="Bulk Leaves Allocation" id="public_holiday_config_bulk" sequence="10"
+              parent="leave_management_custom.menu_root" action="dn_attendance_leaves.allocate_bulk_leaves_action"
+               groups="group_leave_custom_admin,group_leave_custom_super_user"
+     />
+
+        <record id="cron_action_view" model="ir.actions.act_window">
+            <field name="name">Scheduled Actions</field>
+            <field name="res_model">ir.cron</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="context">{'search_default_all': 1}</field>
+            <field name="view_id" ref="base.ir_cron_view_tree"/>
+        </record>
+        <menuitem id="schedule_actions_custom" action="cron_action_view"
+                  parent="dn_attendance.menu_root_attendance"
+                  name="Schedule Actions"
+                  groups="group_leave_custom_admin,group_leave_custom_super_user"
+                  sequence="100"
+        />
+
+    </data>
+</odoo>

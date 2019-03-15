@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_op_faculty_form_session_inherit" model="ir.ui.view">
+            <field name="name">op.faculty.form.session.inherit</field>
+            <field name="model">op.faculty</field>
+            <field name="inherit_id" ref="openeducat_core.view_op_faculty_form" />
+            <field name="priority" eval="9" />
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page name="time_table" string="Availability">
+                        <field name="available_times" widget="one2many" colspan="4"/>
+                    </page>
+
+                    <page name="time_table" string="Sessions">
+                        <field name="session_ids" colspan="4" />
+                    </page>
+                </notebook>
+
+                <notebook position="before">
+                    <group>
+                        <field name="hours_per_year" widget="float_time" />
+                        <field name="hours_per_week" widget="float_time" />
+                        <field name="pay_rate_hourly"  />
+                        <field name="pay_rate_annually" />
+                        <!--<field name="available_times" widget="many2many_tags" />-->
+                        <!--<field name="available_days" widget="many2many_tags" />-->
+                    </group>
+
+                </notebook>
+                <field name="class_end" position="after">
+                    <field name="total_sched_hrs" widget="float_time" />
+                    <field name="total_avail_hrs" widget="float_time" />
+                </field>
+                <page name="bydate" position="inside">
+                    <group>
+                        <field name="filter_start"  />
+                        <field name="filter_end"  />
+                        <field name="total_sched_hrs1" widget="float_time" />
+                        <field name="total_avail_hrs1" widget="float_time" />
+                    </group>
+
+                </page>
+
+            </field>
+        </record>
+    </data>
+</odoo>

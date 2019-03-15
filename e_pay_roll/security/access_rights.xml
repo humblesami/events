@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+<!--<record id="hr_payroll.hr_payroll_rule_officer" model="ir.model.access">-->
+    <!--<field name="perm_read" eval="True"/>-->
+    <!--<field name="perm_write" eval="False"/>-->
+    <!--<field name="perm_create" eval="False"/>-->
+    <!--<field name="perm_unlink" eval="False"/>-->
+<!--</record>-->
+
+        <record id="hr_employee_new_profile_rule" model="ir.rule">
+        <field name="name">Employee check only own</field>
+        <field name="model_id" ref="e_pay_roll.model_hr_contract"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.user_id.id)]</field>
+        <field eval="0" name="perm_unlink"/>
+             <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field name="active" eval="True"/>
+        <field name="groups" eval="[(4,ref('leave_management_custom.group_leave_custom_user'))]"/>
+    </record>
+
+         <record id="hr_employee_custom_payrole_rule" model="ir.rule">
+        <field name="name">Employee check only own contract in Employee</field>
+        <field name="model_id" ref="e_pay_roll.model_hr_contract"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.user_id.id)]</field>
+        <field eval="0" name="perm_unlink"/>
+             <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+            <field name="active" eval="True"/>
+        <field name="groups" eval="[(4,ref('e_pay_roll.custom_group_e_payroll_staff'))]"/>
+    </record>
+    </data>
+ </odoo>

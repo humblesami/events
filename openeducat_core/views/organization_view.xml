@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_op_org_tree" model="ir.ui.view">
+            <field name="name">op.org.tree</field>
+            <field name="model">op.organization</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="organization">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="branch_ids" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_op_org_form" model="ir.ui.view">
+            <field name="name">op.org.form</field>
+            <field name="model">op.organization</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="organization">
+                    <sheet>
+                        <field name="logo" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_medium&quot;}"/>
+
+                        <group >
+                            <field name="name" />
+                            <field name="code" />
+                            <field name="email" />
+                            <field name="phone" />
+                            <field name="fax" />
+                            <field name="website" />
+
+                        </group>
+                         <group>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" class="o_address_street" placeholder="Street..."/>
+                                <field name="street2" class="o_address_street" placeholder="Street2..."/>
+                                <field name="city" class="o_address_city" placeholder="City" required="1"/>
+                                <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}"/>
+                                <field name="zip" class="o_address_zip" placeholder="ZIP"/>
+                                <field name="country_id" class="o_address_city,oe_no_button" placeholder="Country" options="{&quot;no_open&quot;: true}" required="1"/>
+                            </div>
+                        </group>
+                        <group string="Branches">
+                            <field name="branch_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_op_org">
+            <field name="name">Education Center</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.organization</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="view_op_category_search" />-->
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_org_form">
+            <field name="act_window_id" ref="act_open_op_org" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_org_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_org_tree">
+            <field name="act_window_id" ref="act_open_op_org" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_org_tree" />
+        </record>
+
+
+
+
+                <record id="view_op_branch_tree" model="ir.ui.view">
+            <field name="name">op.branch.tree</field>
+            <field name="model">op.branch</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <tree string="branch">
+                    <field name="name" />
+                    <field name="code" />
+                    <field name="phone" />
+                     <field name="rooms" />
+                     <field name="capacity" />
+                </tree>
+            </field>
+                </record>
+        <record id="view_op_branch_form" model="ir.ui.view">
+            <field name="name">op.branch.form</field>
+            <field name="model">op.branch</field>
+            <field name="priority" eval="8" />
+            <field name="arch" type="xml">
+                <form string="organization">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="code" />
+                            <field name="organization_id" />
+                            <field name="rooms" />
+                            <field name="capacity" />
+                            <field name="allocated" />
+                            <field name="email" />
+                            <field name="phone" />
+                            <field name="fax" />
+                            <field name="website" />
+                        </group>
+                         <group>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" class="o_address_street" placeholder="Street..."/>
+                                <field name="street2" class="o_address_street" placeholder="Street2..."/>
+                                <field name="city" class="o_address_city" placeholder="City" required="1"/>
+                                <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}"/>
+                                <field name="zip" class="o_address_zip" placeholder="ZIP"/>
+                                <field name="country_id" class="o_address_city,oe_no_button" placeholder="Country" options="{&quot;no_open&quot;: true}" required="1"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_op_branch">
+            <field name="name">Locations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">op.branch</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="view_op_category_search" />-->
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_branch_form">
+            <field name="act_window_id" ref="act_open_op_branch" />
+            <field name="sequence" eval="20" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_op_branch_form" />
+        </record>
+        <record model="ir.actions.act_window.view" id="act_open_op_branch_tree">
+            <field name="act_window_id" ref="act_open_op_branch" />
+            <field name="sequence" eval="10" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_op_branch_tree" />
+        </record>
+    </data>
+</odoo>
