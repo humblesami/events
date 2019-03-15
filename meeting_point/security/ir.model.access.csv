@@ -19,8 +19,7 @@
 "admin_topic_doc","Agenda Topic Docs","model_meeting_point_topicdoc","group_meeting_admin",1,1,1,1
 "admin_signature","Meeting Document Signatures","e_sign.model_e_sign_signature","group_meeting_admin",1,1,1,1
 "admin_dashboard","Meeting Admin Dashboard","model_meeting_point_dashboard","group_meeting_admin",1,0,0,0
-
-
+"admin_meeting_voitng","Meeting Voting Access","model_meeting_point_voting","group_meeting_admin",1,1,1,0
 
 "staff_event","Meetings","model_calendar_event","group_meeting_staff",1,0,0,0
 "staff_folder","Folders/Resources","model_meeting_point_folder","group_meeting_staff",1,0,0,0
@@ -50,3 +49,4 @@
 "director_document","Meeting Document","model_meeting_point_doc","group_meeting_director",1,0,0,0
 "director_topic","Agenda Topic","model_meeting_point_topic","group_meeting_director",1,0,0,0
 "director_topic_doc","Agenda Topic Docs","model_meeting_point_topicdoc","group_meeting_director",1,0,0,0
+"director_approval_voting","Director Meeting Voting Access","model_meeting_point_voting","group_meeting_director",1,0,0,0
