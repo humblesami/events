@@ -5,49 +5,53 @@
             <field name="name">Voting Form</field>
             <field name="model">meeting_point.voting</field>
             <field name="arch" type="xml">
-                <form string="Voting/Approval">
-                    <style>
-                        .voting_user_ids{
-                            display:none;
-                        }
-                    </style>
+                <form string="Voting/Approval" class="voting_form">
+                    <link rel="stylesheet" href="/meeting_point/static/css/voting.css" />
                     <group>
                         <field name="name"/>
-                        <field name="meeting_id"/>
+                        <field name="meeting_id" invisible="1"/>
                         <field name="motion_first"/>
                         <field name="motion_second"/>
                         <field name="open_date"/>
                         <field name="close_date"/>
                         <field name="voting_description"/>
                         <field name="voting_type"/>
-                            <field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>
-                        <div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">
-                            <h4>Respondents</h4>
-                            <field name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
+                        <field name="public_visibility"/>
+                        <!--<field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>-->
+                        <field attrs="{'invisible': [('meeting_id', '!=', False)]}" name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
                                    placeholder="Select respondents..." context="{'force_email':True}" class="oe_inline"/>
-                        </div>
-                        <field name="document_ids" mode="kanban" class="o2m_kanban topic_docs kanban_document"
-                               context="{'form_view_ref' : 'meeting_point.view_meeting_doc_form','kanban_view_ref' : 'meeting_point.view_meeting_doc_kanban'}"
-                        />
+                        <field class="kanban_document dn_attatchment_btn" name="document_ids" context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'}" mode="kanban" />
                     </group>
                     <div class="voting_choice_container" attrs="{'invisible' : [('voting_type', '=', False)]}">
-                      <div class="oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'voting')]}">
-                        <span class="voting_opt_yes"><input type="radio" class="voting_yes yes" name="voting" value="yes"/><strong>Yes</strong></span>
-                        <span class="voting_opt_no"><input type="radio" class="voting_no no" name="voting" value="no"/><strong>No</strong></span>
-                        <span class="voting_opt_abstain"><input type="radio" class="voting_abstain abstain" name="voting" value="abstain"/><strong>Abstain</strong></span>
+                      <div class="vote_options oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'voting')]}">
+                        <span class="vote_choice voting_opt_yes"><input type="radio" class="voting_yes yes" name="voting" value="yes"/><span>Yes</span></span>
+                        <span class="vote_choice voting_opt_no"><input type="radio" class="voting_no no" name="voting" value="no"/><span>No</span></span>
+                        <span class="vote_choice voting_opt_abstain"><input type="radio" class="voting_abstain abstain" name="voting" value="abstain"/><span>Abstain</span></span>
                       </div>
 
-                      <div class="oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'approval')]}">
-                        <span class="approval_opt_approve"><input type="radio" class="approval_approve approve" name="approval" value="approve"/><strong>Approve</strong></span>
-                        <span class="approval_opt_reject"><input type="radio" class="approval_reject reject" name="approval" value="reject"/><strong>Reject</strong></span>
+                      <div class="vote_options oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'approval')]}">
+                        <span class="vote_choice approval_opt_approve"><input type="radio" class="approval_approve approve" name="approval" value="approve"/><span>Approve</span></span>
+                        <span class="vote_choice approval_opt_reject"><input type="radio" class="approval_reject reject" name="approval" value="reject"/><span>Reject</span></span>
                       </div>
 
                       <div class="voting_user_ids">
                         <field name="id" class="voting_id"/>
                         <field name="user_id" class="user_id"/>
                       </div>
-                      <script src="/meeting_point/static/js/voting.js"/>
                     </div>
+                    <div groups="!meeting_point.admin" class="results_container" attrs="{'invisible': [('public_visibility', '=', False)]}">
+                        <h3>Results</h3>
+                        <div class="results">
+                            No Response Yet
+                        </div>
+                    </div>
+                    <div groups="meeting_point.admin" class="results_container">
+                        <h3>Results</h3>
+                        <div class="results">
+                            No Response Yet
+                        </div>
+                    </div>
+                    <script src="/meeting_point/static/js/voting.js"/>
                 </form>
             </field>
         </record>

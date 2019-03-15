@@ -1,0 +1,16 @@
+.voting_user_ids{
+    display:none;
+}
+.vote_options>span, .vote_options>input
+{
+    padding-right: 10px;
+    cursor: pointer;
+}
+.results
+{
+    display : none;
+}
+.results_container
+{
+    padding-top: 30px;
+}

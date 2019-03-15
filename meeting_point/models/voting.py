@@ -23,6 +23,7 @@ class Voting(models.Model):
     my_status = fields.Char(compute='_compute_status')
     user_id = fields.Char(compute='_compute_user_id')
     document_ids = fields.One2many('meeting_point.votingdocument', 'voting_id', string="Document(s)")
+    public_visibility = fields.Boolean()
 
     @api.multi
     def has_attachments(self):

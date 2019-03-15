@@ -1,6 +1,39 @@
 $(function(){
     $('#votingBack').hide();
     $('#submitted').hide();
+    function get_results(){
+    var options = {
+            url : '/voting/results',
+            data : {},
+            success:function(data){
+                for(var i in results)
+                {
+                    var vote_option = results[i];
+                    $('.results').html(`
+                    <div class="entry">
+                        <span class="choice_label">
+                            <span>Choice</span><span class="user-choice">`+vote_option.name+`</span>
+                        </span>
+                        <span class="choice_count">
+                            <span>Voters</span><span class="count">`+vote_option.count+`</span>
+                        </span>
+                    </div>
+                    `)
+                }
+            },
+            error:function(a, b){
+                console.log(b.responseText);
+            }
+        }
+        if(1 == 2 && $('.voting_form').hasClass('.o_form_readonly'))
+        {
+            var voting_id = $('.voting_id');
+            options.data.voting_id = voting_id;
+            console.log(options);
+//            $.ajax(options);
+        }
+    }
+    get_results();
 
     (function($) {
         let voting_id = $('.voting_id').html();
@@ -19,6 +52,8 @@ $(function(){
         };
         $.ajax(options);
     })($);
+
+
 
     $('.voting_choice_container:first input[type="radio"]').change(function(){
         let voting_id = $('.voting_id').html();
