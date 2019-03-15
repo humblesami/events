@@ -476,7 +476,7 @@ class meeting(http.Controller):
             dbname = http.request.db
             dbname=dbname.encode("utf-8")
             # dbname = self._cr.dbname,
-            base_url = ws_methods.get_main_url()
+            web_url = ws_methods.get_main_url()
             date_value = dateval.datetime.now()
             date_value = date_value.strftime('%Y-%m-%d %H:%M:%S')
             filters = [('publish', '=', True), ('start_datetime', '>=', date_value)]
@@ -487,13 +487,13 @@ class meeting(http.Controller):
             for event in meetings:
                 count = 0
                 attendee = http.request.env['calendar.attendee'].sudo().search([('partner_id','=',partner.id),('event_id','=',event.id)])
-                acceptUrl  = (base_url +'/meeting/accept/'+attendee.event_id.name+'/'+dbname+'/'+attendee.access_token).encode("utf-8")
-                declineUrl = (base_url +'/meeting/decline/'+attendee.event_id.name+'/'+dbname+'/'+attendee.access_token).encode("utf-8")
+                acceptUrl  = (web_url +'/meeting/accept/'+attendee.event_id.name+'/'+dbname+'/'+attendee.access_token).encode("utf-8")
+                declineUrl = (web_url +'/meeting/decline/'+attendee.event_id.name+'/'+dbname+'/'+attendee.access_token).encode("utf-8")
                 meeting_object = {"name":event.name,"start_time":event.start_datetime,"stop_time":event.stop_datetime,"accept":acceptUrl,"decline":declineUrl}
                 surveys = http.request.env['survey.survey'].sudo().search(
                     [('meeting_id', '=', event.id)])
                 for val in surveys:
-                    start_url = base_url +'/survey/start/'+(val.title).encode("utf-8")+'-'+str(val.id)+'/phantom'
+                    start_url = web_url +'/survey/start/'+(val.title).encode("utf-8")+'-'+str(val.id)+'/phantom'
                     survey_object={"name":val.title,'start_url':start_url}
                     dataValue[0]['data']['surveys'].append(survey_object)
                     # survey.append(survey_object)

@@ -1,5 +1,5 @@
-$('#loaderContainerajax').show();
-setTimeout(function(){
+
+
 $(function(){
     var str = $('span[name="public_event"]').html();
     var events = JSON.parse(str);
@@ -30,6 +30,7 @@ $(function(){
 
 
         function hour_minutes(dt) {
+        console.log('here it works')
             if (typeof (dt) == "string")
                 dt = new Date(dt);
             var hour = dt.getHours()+5;
@@ -43,11 +44,13 @@ $(function(){
 
         var str = $('span[name="public_event"]').html();
         var events = JSON.parse(str);
+        console.log('eventsss',events)
 
 
 
         var schedule = '<div class="container-fluid schedule-container schedule-wrap">';
         for (var i = 0; i < events.length; i++) {
+                console.log('events',events[i])
                 if (events[i].attendee) {
                    var parts = events[i].datestart .split('-')
                    var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
@@ -106,8 +109,6 @@ $(function(){
         });
     }
 });
-$('#loaderContainerajax').hide();
-},100)
 
 //   customButtons: {
 //        add_event: {

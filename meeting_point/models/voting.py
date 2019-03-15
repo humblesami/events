@@ -20,11 +20,21 @@ class Voting(models.Model):
                                    domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
     public_url_new = fields.Char("Public link", compute="_compute_voting_url")
+    my_status = fields.Char(compute='_compute_status')
+
+    @api.multi
+    def _compute_status(self):
+        for obj in self:
+            res = self.env['meeting_point.votinganswer'].search([('voting_id','=', obj.id),('user_id', '=', obj._uid)])
+            if res:
+                obj.my_status = 'completed'
+            else:
+                obj.my_status = 'pending'
 
     def _compute_voting_url(self):
-        base_url = ws_methods.get_main_url()
+        web_url = ws_methods.get_main_url()
         for voting in self:
-            voting.public_url_new = base_url + "/voting/start/" + slug(voting)
+            voting.public_url_new = web_url + "/voting/start/" + slug(voting)
 
 
     @api.multi

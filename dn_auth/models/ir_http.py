@@ -12,11 +12,11 @@ class dn_auth_Http(models.AbstractModel):
         spuser = request.env['dnspusers'].sudo().search([('user_id', '=', user.id)])
         if not spuser:
             spuser = request.env['dnspusers'].sudo().create({'user_id': user.id})
-        base_url = ws_methods.get_main_url()
+        web_url = ws_methods.get_main_url()
         user_info = super(dn_auth_Http, self).session_info()
-        user_info["web.base.url"] = tools.config['server_base_url']
+        user_info["web.base.url"] = tools.config['server_web_url']
 
-        image_path1 = base_url + '/image/res.users/'
+        image_path1 = web_url + '/image/res.users/'
         if not spuser.auth_token:
             spuser.auth_token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
         image_path2 = '/image_small/' + request.session.db + '/' + spuser.auth_token

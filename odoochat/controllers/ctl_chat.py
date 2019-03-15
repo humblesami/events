@@ -19,8 +19,8 @@ class OdooChatAuth(auth):
         friendList = {}
         unseenMessages = 0
 
-        base_url = ws_methods.get_main_url()
-        image_path1 = base_url + '/image/res.users/'
+        web_url = ws_methods.get_main_url()
+        image_path1 = web_url + '/image/res.users/'
         image_path2 = '/image_small/' + values['db'] + '/' + values['token']
 
         filters = [('name', '=', 'MeetingPoint')]

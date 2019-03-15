@@ -1,5 +1,7 @@
 $(function(){
-    console.log($('.voting_options-container').length, 34423);
+    $('#votingBack').hide();
+    $('#submitted').hide();
+    //console.log($('.voting_options-container').length, 34423);
     if($('.voting_options-container').length == 0)
         return;
     $('.voting_options-container input').click(function(){
@@ -18,6 +20,8 @@ $(function(){
                 console.log(data);
                 $('.voting_form').hide();
                 $('.voting_back').show();
+                $('#votingBack').show();
+                $('#submitted').show();
             },
             error:function(a, b){
                 console.log(b.responseText);

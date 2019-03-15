@@ -20,7 +20,7 @@
 
     # any module necessary for this one to work correctly
     'depends': [
-        'dn_auth','dn_website',
+        'dn_auth',
         'dn_documents', 'e_sign', #our base
         'odoochat',
         'calendar','survey', #builtin + required

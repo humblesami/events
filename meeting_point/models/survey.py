@@ -17,22 +17,22 @@ class Survey(models.Model):
                                    domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
     url = fields.Char(compute='_compute_url')
-    base_url = fields.Char(compute = '_compute_base_url')
+    web_url = fields.Char(compute = '_compute_web_url')
 
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
-        base_url = ws_methods.get_main_url()
+        web_url = ws_methods.get_main_url()
         for survey in self:
-            survey.public_url = "%s/survey/start/%s" % (base_url, slug(survey))
-            survey.print_url = "%s/survey/print/%s" % (base_url, slug(survey))
-            survey.result_url = "%s/survey/results/%s" % (base_url, slug(survey))
+            survey.public_url = "%s/survey/start/%s" % (web_url, slug(survey))
+            survey.print_url = "%s/survey/print/%s" % (web_url, slug(survey))
+            survey.result_url = "%s/survey/results/%s" % (web_url, slug(survey))
             survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, "Click here to start survey")
 
     @api.multi
-    def _compute_base_url(self):
+    def _compute_web_url(self):
         for obj in self:
-            obj.base_url = ws_methods.get_main_url()
+            obj.web_url = ws_methods.get_main_url()
 
     @api.multi
     def _compute_audience(self):
@@ -58,11 +58,11 @@ class Survey(models.Model):
         for survey in self:
             try:
                 if survey.my_status != 'not invited':
-                    base_url = ws_methods.get_main_url()
+                    web_url = ws_methods.get_main_url()
                     if survey.my_status == 'done':
-                        survey.url = base_url + "/survey/results/" + slug(survey)
+                        survey.url = web_url + "/survey/results/" + slug(survey)
                     elif survey.my_status == 'pending':
-                        survey.url = base_url + "/survey/start/" + slug(survey)
+                        survey.url = web_url + "/survey/start/" + slug(survey)
             except:
                 a = 1
 
@@ -184,16 +184,3 @@ class Survey(models.Model):
 
         self.emit_meeting_update(self)
         return True
-#
-# class SurveyUserInputLine(models.Model):
-#     _inherit = ['survey.user_input_line']
-#
-#     @api.model
-#     def create(self, vals):
-#         value_suggested = vals.get('value_suggested')
-#         if value_suggested:
-#             vals.update({'quizz_mark': self._get_mark(value_suggested)})
-#         data = self.search([('survey_id', '=', 10), ['write_uid', '=', self._uid]])
-#         if data:
-#             return ('The answer must be in the right type')
-#         return super(SurveyUserInputLine, self).create(vals)

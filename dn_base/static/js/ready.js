@@ -44,11 +44,10 @@ function load_dn_assets()
 {
     try
     {
-        var dnow = Date.now();
-        document.writeln('<script src="/dn_base/static/js/libs/bootbox.js?v='+dnow+'"></script>');
-        document.writeln('<script src="/dn_base/static/config.js?v='+dnow+'"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/bootbox.js"></script>');
+//        document.writeln('<script src="/dn_base/static/config.js"></script>');
         //Libraries
-        document.writeln('<script src="/dn_base/static/js/libs/datetime.js?v='+dnow+'"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/datetime.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/masked_input.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/time_picker.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/signature.js"></script>');
@@ -62,33 +61,23 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/view.js"></script>');
         document.writeln('<script src="/dn_base/static/js/form_view.js"></script>');
 
-        //document.writeln('<script src="/dn_base/static/js/utils.js"></script>');
-        //document.writeln('<script src="/dn_base/static/js/odoo10.js"></script>');
-        //document.writeln('<script src="/dn_base/static/js/kanban_view.js"></script>');
         document.writeln('<script src="/dn_base/static/js/list_view.js"></script>');
         document.writeln('<script src="/dn_base/static/js/control_panel.js"></script>');
         document.writeln('<script src="/dn_base/static/js/dialog.js"></script>');
 
-        document.writeln('<script src="/dn_base/static/js/doc_preview.js?v='+dnow+'"></script>');
+        document.writeln('<script src="/dn_base/static/js/doc_preview.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
-
-        
-        document.writeln('<script src="/dn_base/static/js/libs/emoji/config.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/emoji/emoji-picker.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/emoji/jquery.emojiarea.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/emoji/util.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/emoji/jQueryEmoji.js"></script>');
 
         document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.ui.touch-punch.min.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.mark.min.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/annotator/mark.min.js"></script>');        
+        document.writeln('<script src="/dn_base/static/js/libs/annotator/mark.min.js"></script>');
 
         $(function(){
             doc_preview.init();
             $(document).on('click', 'button.fa-5x', function(){
                 dn_json_rpc_object.showHideLoader(true);
             });
-            $('head').append('<link rel="stylesheet" href="/dn_base/static/css/web.css?v='+dnow+'" />');
+            $('head').append('<link rel="stylesheet" href="/dn_base/static/css/web.css" />');
             $('head').append('<link rel="stylesheet" href="/dn_base/static/css/emoji.css" />');
             $('head').append('<link rel="stylesheet" href="/dn_base/static/css/emoji.css.map" />');
              // $('head').prepend('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">');

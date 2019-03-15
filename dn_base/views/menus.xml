@@ -130,6 +130,14 @@
                 parent="extras"
         />
 
+        <menuitem
+                name="Website"
+                id="website.menu_website_configuration"
+                sequence="9"
+                web_icon="website,static/description/icon.png"
+                parent="dn_base.extras"
+        />
+
         <!--<menuitem-->
                 <!--id="hr.menu_hr_root"-->
                 <!--name="Employees"-->

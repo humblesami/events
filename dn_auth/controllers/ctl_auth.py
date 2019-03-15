@@ -39,7 +39,7 @@ class auth(http.Controller):
 
             request = http.request
             from odoo import tools
-            request.httprequest.url_root = tools.config['server_base_url']
+            request.httprequest.url_root = tools.config['server_web_url']
             try:
                 uid = request.session.authenticate(db, login, password)
             except:

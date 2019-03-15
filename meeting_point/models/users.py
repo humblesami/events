@@ -21,7 +21,7 @@ class partner(models.Model):
             the url state components (menu_id, id, view_type) """
 
         res = dict.fromkeys(self.ids, False)
-        base_url = ws_methods.get_main_url()
+        web_url = ws_methods.get_main_url()
         for partner in self:
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
@@ -61,11 +61,11 @@ class partner(models.Model):
             groupCheck = self.env['res.users'].search([('partner_id', '=', partner.id)]).has_group('meeting_point.group_meeting_director')
             if groupCheck:
                 route = 'set-password'
-                base_url = 'https://meetvue.com'
-                res[partner.id] = werkzeug.urls.url_join(base_url,
+                web_url = 'https://meetvue.com'
+                res[partner.id] = werkzeug.urls.url_join(web_url,
                                         "/%s?%s" % (route, werkzeug.urls.url_encode(query)))
             else :
-                res[partner.id] = werkzeug.urls.url_join(base_url,
+                res[partner.id] = werkzeug.urls.url_join(web_url,
                                                          "/web/%s?%s" % (route, werkzeug.urls.url_encode(query)))
         return res
 

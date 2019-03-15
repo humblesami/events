@@ -26,6 +26,5 @@
             <field name="view_id" ref="view_message_form" />
             <field name="res_id" ref="record_empty_row1"/>
         </record>
-
     </data>
 </odoo>

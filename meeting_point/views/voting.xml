@@ -65,6 +65,7 @@
                     <div class="container">
                         <div class='jumbotron mt32'>
                             <h1 t-field='voting.name' />
+                            <h1 t-field='voting.my_status' />
                             <div t-field='voting.voting_description' class="oe_no_empty"/>
                             <a class="btn btn-primary btn-lg" t-att-href="'/vote/fill/%s' % (slug(voting))">
                                 Start Voting
@@ -76,30 +77,64 @@
             </t>
         </template>
 
+        <template id="vote_submitted" name="Vote is Submitted">
+            <t t-call="website.layout">
+                <div class="wrap" style="margin-top:25px;">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <a id="votingBack" t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{votinganswer['voting_id'].id}&amp;action=meeting_point.action_meeting_voting" class="btn btn-default">Back to Voting</a>
+                    <div class="jumbotron mt32">
+                        <h2 id="submitted">Your Vote Has Been Submitted.</h2>
+                        <span>Your Vote is <h4 t-field="votinganswer.user_answer" /></span>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+                </div>
+            </t>
+            <!--<t t-call="website.layout">-->
+                <!--<div class="wrap">-->
+                    <!--<div class="oe_structure"/>-->
+                    <!--<div class="container">-->
+                        <!--<t t-call="meeting_point.votepage" />-->
+                    <!--</div>-->
+                    <!--<div class="oe_structure"/>-->
+                <!--</div>-->
+            <!--</t>-->
+        </template>
+
         <template id="voting" name="Voting">
             <t t-call="website.layout">
-                <h2 t-field='voting.name' />
-               <a t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{voting.id}&amp;action=meeting_point.action_meeting_voting" class="btn btn-default">Back to Voting</a>
+                <div class="wrap" style="margin-top:25px;">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <a id="votingBack" t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{voting.id}&amp;action=meeting_point.action_meeting_voting" class="btn btn-default">Back to Voting</a>
+                    <div class="jumbotron mt32">
+                        <h2 id="submitted">Your Vote Has Been Submitted.</h2>
+                        <form class="voting_form">
+                            <h2 t-field="voting.name"/>
+                            <h4 t-field="voting.voting_description" />
+                            <div class="row voting_options-container">
+                                <!--Voting Type "Yes"-->
+                                <input type="radio" name="voting_options" t-att-value="yes" t-value="yes"/>
+                                <span>Yes</span>
 
-                <form class="voting_form">
-                    <div class="row voting_options-container">
-                    <!--Voting Type "Yes"-->
-                        <span>Yes</span>
+                                <!--Voting Type No-->
+                                <input type="radio" name="voting_options" t-att-value="no" t-value="no"/>
+                                <span>No</span>
 
-                    <!--Voting Type No-->
-                        <input type="radio" name="voting_options" t-att-value='no' t-value="no" />
-                        <span>No</span>
-
-                    <!--Voting Type Abstain-->
-                        <input type="radio" name ="voting_options" t-att-value='abstain' t-value="abstain" />
-                        <span>Abstain</span>
+                                <!--Voting Type Abstain-->
+                                <input type="radio" name="voting_options" t-att-value="abstain" t-value="abstain"/>
+                                <span>Abstain</span>
+                            </div>
+                            <script src="/meeting_point/static/js/voting.js"/>
+                            <input type="hidden" class="user_choice"/>
+                            <input type="hidden" name="voting_id" class="voting_id" t-att-value="voting.id"/>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
                     </div>
-                    <script src="/meeting_point/static/js/voting.js"></script>
-                    <input type="hidden" class="user_choice" />
-                    <input type="hidden" name="voting_id" class="voting_id" t-att-value='voting.id' />
-                    <button  type="submit" class="btn btn-primary">Submit</button>
-
-                </form>
+                </div>
+                <div class="oe_structure"/>
+                </div>
             </t>
             <!--<t t-call="website.layout">-->
                 <!--<div class="wrap">-->

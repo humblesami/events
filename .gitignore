@@ -2,7 +2,7 @@
 *.po
 .vscode
 
-*config.js
+*/meetvue/*config.js
 custom_base
 node_modules
 */__pycache__

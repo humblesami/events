@@ -151,7 +151,7 @@
 
                         </div>
                         <div id="viewer_container" style="position:relative;">
-                            <div id="nxxt_sign" style="background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING&gt;</div>
+                            <div id="nxxt_sign" style="display:none;background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START SIGNING&gt;</div>
 
                             <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
 
@@ -163,8 +163,8 @@
                     </div>
 
 
-                    <script src="/e_sign/static/js/pdf.worker.js"/>
-                    <script src="/e_sign/static/js/pdf.js"/>
+                    <!--<script src="/e_sign/static/js/pdf.worker.js"/>-->
+                    <!--<script src="/e_sign/static/js/pdf.js"/>-->
                     <div name="esign_script"><script src="/e_sign/static/js/viewer.js"/></div>
                     <link href="/e_sign/static/signature.css" rel="stylesheet"/>
                 </form>

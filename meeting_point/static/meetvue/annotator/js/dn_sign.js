@@ -92,7 +92,8 @@ $(document).ready(function () {
                     }
                     if(signature_url.post.indexOf('profile')> -1)
                     {
-                        $('img.strt_sign')[0].src=$('img.strt_sign')[0].src+"&";
+                        var d = Date.now();
+                        $('img.strt_sign')[0].src=$('img.strt_sign')[0].src+"&d="+d;
                     }
                 }, type:'post'
             });
@@ -115,7 +116,7 @@ $(document).ready(function () {
         var canvas_context = myCanvas.getContext('2d');
 
         img.onload = function () {
-            canvas_context.drawImage(img, 0, 0, signature_editor.width(), signature_editor.height());
+            canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
         };
     }
 

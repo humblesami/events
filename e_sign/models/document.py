@@ -119,11 +119,11 @@ class Document(models.Model):
             return
         # set url
 
-        base_url = ws_methods.get_main_url()
-        base_url = '/' if req_env.context.get('relative_url') else \
-            base_url
+        web_url = ws_methods.get_main_url()
+        web_url = '/' if req_env.context.get('relative_url') else \
+            web_url
         Mail = req_env['mail.mail']
-        url = urls.url_join(base_url, "e_sign/sign")
+        url = urls.url_join(web_url, "e_sign/sign")
         # url = urls.url_parse(url).path[1:]  # dirty hack to avoid incorrect urls
         next_signs=self.signature_ids.filtered(lambda r:r.token != sign.token and not r.draw_signature)
         if next_signs:

@@ -343,10 +343,17 @@ button:focus {
 }
 
 #signature_editor {
-    width: 459px;
+    
+    width: calc(100vw - 50px);
     height: 198px;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+@media (min-width: 576px){
+#signature_editor {
+    width: 465px;
+}
 }
 
 .kbw-signature canvas{

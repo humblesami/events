@@ -134,12 +134,12 @@ class Attendee(models.Model):
             'declined': 'red'
         }
         rendering_context = dict(self._context)
-        base_url = ws_methods.get_main_url()
+        web_url = ws_methods.get_main_url()
         rendering_context.update({
             'color': colors,
             'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
-            'base_url': base_url
+            'web_url': web_url
         })
         invitation_template = invitation_template.with_context(rendering_context)
 

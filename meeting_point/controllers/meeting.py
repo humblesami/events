@@ -178,9 +178,9 @@ class meeting(http.Controller):
                 rendering_context = context
             else:
                 rendering_context = self._context
-            base_url = ws_methods.get_main_url()
+            web_url = ws_methods.get_main_url()
             rendering_context.update({
-                'base_url': base_url
+                'web_url': web_url
             })
             invitation_template = invitation_template.with_context(rendering_context)
 

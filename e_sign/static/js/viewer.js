@@ -18,6 +18,7 @@ console.log(777);
 
 
      function loadData(){
+                $('#loaderContainerajax').show();
                 req_url = '/e-sign/get_doc_data';
                 input_data = {document_id:doc_id,token:token,url:url};
                 dn_json_rpc(req_url,input_data, function(data)
@@ -28,26 +29,32 @@ console.log(777);
                 isAdmin=data.isAdmin;
                 //setTimeout(function(){ showPDF(pdf_binary); }, 3000);
                 renderPDF(pdf_binary);
-                 var d = $.grep(doc_data, function(v)
-                    {
-                        return !v.signed && v.my_record;
-                    });
-                if(d.length==0){
-                $("#nxxt_sign").hide();
-                }
+
                 //loadSignatures(data);
                 });
 
             }
             loadData();
 
+     function toggleNextButton(){
+        var d = $.grep(doc_data, function(v)
+                    {
+                        return !v.signed && v.my_record;
+                    });
+                if(d.length>0){
+                $("#nxxt_sign").show();
+                }
+     }
+
+
 $('#scaleSelect')[0].selectedIndex = 4;
 //$('.modal-footer:last').hide();
 
 function renderPDF(s) {
+$('#loaderContainerajax').show();
 
      var pdfData = atob(s);
-     PDFJS.workerSrc = '/e_sign/static/js/pdf.worker.js';
+//     PDFJS.workerSrc = '/e_sign/static/js/pdf.worker.js';
      pdfDoc = null;
      scale = 1.5;
      ctx = canvas.getContext('2d');
@@ -59,6 +66,7 @@ function renderPDF(s) {
                 pageNum = 1;
             }
          renderPage(pageNum);
+         toggleNextButton()
      });
  }
  
@@ -96,6 +104,7 @@ function renderPDF(s) {
 
 //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
   setTimeout(function(){ loadSignatures({"doc_data":doc_data}); }, 200);
+  $('#loaderContainerajax').hide();
    // loadSignatures({"doc_data":doc_data});
  }
 
@@ -324,7 +333,6 @@ function loadSignatures(data){
                 var positionY = $(this).position().top//+$(this).parent().scrollTop();
                 var thresh = $(this).parent().parent().height() - 40;
                 if(positionY-$(this).parent().parent().scrollTop()>thresh){
-                    console.log("yyyyyyyyyyyyyyyyyyy");
                     $( '#page_container1').animate({scrollTop: $(this).parent().parent().scrollTop()+133}, 7)
                 }
 
@@ -343,7 +351,7 @@ function loadSignatures(data){
                 return;
             }
             var left=parseFloat(new_signature[0].style.left)-$(this).position().left;
-            var top=parseFloat(new_signature[0].style.top)-$(this).parent().position().top+$(this).parent().scrollTop();
+            var top=parseFloat(new_signature[0].style.top)-$(this).parent().parent().position().top+$(this).parent().scrollTop();
             var percent_left=(left/canvas.width)*100;
             var percent_top=(top/canvas.height)*100;
            new_signature.css({position:'absolute',left:percent_left+"%",top:percent_top+"%",overflow:'hidden'});

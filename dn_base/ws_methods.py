@@ -193,7 +193,7 @@ def get_main_url():
     global host_url
     if host_url:
         return host_url
-    host_url = tools.config['server_base_url']
+    host_url = tools.config['server_web_url']
     return host_url
 
 def check_auth_token(values):

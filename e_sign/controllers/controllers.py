@@ -367,11 +367,11 @@ class Signature(http.Controller):
         """ Create one mail by recipients and replace __URL__ by link with identification token """
         # set url
         req_env = http.request.env
-        base_url = ws_methods.get_main_url()
-        base_url = '/' if req_env.context.get('relative_url') else \
-            base_url
+        web_url = ws_methods.get_main_url()
+        web_url = '/' if req_env.context.get('relative_url') else \
+            web_url
         Mail = req_env['mail.mail']
-        url = urls.url_join(base_url, "e_sign/sign")
+        url = urls.url_join(web_url, "e_sign/sign")
         # url = urls.url_parse(url).path[1:]  # dirty hack to avoid incorrect urls
         if token:
             url = url + '/model='+model+'&id='+doc_id+'&/' + token
