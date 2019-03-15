@@ -1,5 +1,5 @@
-
-
+$('#loaderContainerajax').show();
+setTimeout(function(){
 $(function(){
     var str = $('span[name="public_event"]').html();
     var events = JSON.parse(str);
@@ -109,6 +109,8 @@ $(function(){
         });
     }
 });
+$('#loaderContainerajax').hide();
+},100)
 
 //   customButtons: {
 //        add_event: {
