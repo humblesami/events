@@ -1,0 +1,416 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="tree_attendance_record">
+            <field name="name">attendance records tree</field>
+            <field name="model">attendance.record</field>
+            <field name="arch" type="xml">
+                <tree edit="false">
+                    <field name="employee_id"/>
+                    <field name="punch_time"/>
+                    <field name="punch_type"/>
+                    <field name="work_date"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="schedule_form_view">
+            <field name="name">Schedule form view</field>
+            <field name="model">schedule.info</field>
+            <field name="arch" type="xml">
+                <form modifiers="{}" create="false" edit="false" delete="false">
+                    <sheet string="schedule" modifiers="{}">
+                        <group col="4" modifiers="{}">
+                            <field name="expected_check_in" modifiers="{}"/>
+                            <field name="expected_check_out" modifiers="{}"/>
+                            <field name="break_start" modifiers="{}"/>
+                            <field name="break_end" modifiers="{}"/>
+                            <separator modifiers="{}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+             <record model="ir.ui.view" id="customform_attendance_record">
+            <field name="name">attendance records form</field>
+            <field name="model">attendance.record</field>
+            <field name="arch" type="xml">
+             <form modifiers="{}" edit="false">
+                <sheet string="attendance.record" modifiers="{}">
+                    <group col="4" modifiers="{}">
+                        <field name="employee_id" can_create="true" can_write="true" modifiers="{'required':true}"/>
+                        <field name="punch_time" modifiers="{'required':true}"/>
+                        <field name="punch_type" modifiers="{}"/>
+                        <field name="work_date" modifiers="{}"/>
+                        <field name="request_id" can_create="false" can_write="false" class = "oe_read_only" modifiers="{}"/>
+                        <field name="attendance_id" can_create="false" can_write="false" modifiers="{}"/>
+                        <separator modifiers="{}"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+          <record id="record_attendance_user_kanban" model="ir.ui.view">
+            <field name="name">attendance_record.kanban</field>
+            <field name="model">attendance.record</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" edit="false" delete = "false">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li>
+                                            <field name="employee_id"/>
+                                        </li>
+                                        <li>
+                                               Punch Time : <field name="punch_time" />
+                                        </li>
+                                        <li>
+                                                Date : <field name="work_date" />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="tree_attendance_daily">
+            <field name="name">attendance daily tree</field>
+            <field name="model">attendance.daily</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="work_date"/>
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="daily_attendance_user_kanban" model="ir.ui.view">
+            <field name="name">daily_attendance.kanban</field>
+            <field name="model">attendance.daily</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" default_order="name">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li>
+                                            <field name="employee_id"/>
+                                        </li>
+                                        <li>
+                                               Worked Hours : <field name="work_hour" widget="float_time"/>
+                                        </li>
+                                        <li>
+                                                Late Minutes : <field name="late_minutes" />
+                                        </li>
+                                        <li>
+                                                Date : <field name="work_date" />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+
+            </field>
+        </record>
+
+        <record id="dn_attendance_view_filter" model="ir.ui.view">
+        <field name="name">dn_attendance_view_filter</field>
+        <field name="model">attendance.daily</field>
+        <field name="arch" type="xml">
+            <search string="Hr Attendance Search">
+                <field name="employee_id"/>
+                <filter name="today" string="Today" domain="[('check_in', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('check_in', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
+                <filter string="Current Month" domain="[('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                <separator/>
+                <filter string="No Check Out" domain="[('check_out', '=', False)]" />
+                <separator/>
+                <filter string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                <group expand="0" string="Group By">
+                    <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Month" context="{'group_by':'check_in'}"/>
+                     <separator/>
+                    <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter name="groupby_work" string="Workdate" context="{'group_by':'work_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+        <record id="dn_attendance__attendnace_record_view_filter" model="ir.ui.view">
+        <field name="name">dn_attendance_view_filter_new</field>
+        <field name="model">attendance.daily</field>
+        <field name="arch" type="xml">
+            <search string="Hr Attendance Search">
+                <field name="employee_id"/>
+                <filter name="today" string="Today" domain="[('punch_time', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('punch_time', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
+                <filter string="Current Month" domain="[('punch_time', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                <separator/>
+                <filter string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                <group expand="0" string="Group By">
+                    <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Month" context="{'group_by':'punch_time'}"/>
+                     <separator/>
+                     <filter name="groupby_status" string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter name="groupby_work" string="Workdate" context="{'group_by':'work_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+        <record model="ir.actions.act_window" id="action_attendance_record">
+            <field name="name">Attendance Records</field>
+            <field name="res_model">attendance.record</field>
+            <field name="view_mode">kanban,tree,form</field>
+             <field name="search_view_id" ref="dn_attendance__attendnace_record_view_filter" />
+        </record>
+
+        <record model="ir.actions.act_window" id="action_attendance_daily">
+            <field name="name">Attendance Request</field>
+            <field name="res_model">attendance.daily</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'confirm')]</field>
+        </record>
+
+
+         <record model="ir.actions.act_window" id="myaction_attendance_daily">
+            <field name="name">My Daily Attendance</field>
+            <field name="res_model">attendance.daily</field>
+            <field name="view_mode">tree,form</field>
+             <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+             <field name="context">{'search_default_groupby_work': 1}</field>
+        </record>
+        <record model="ir.actions.act_window" id="myaction_attendance_daily_current_month">
+            <field name="name">Current Month Attendance</field>
+            <field name="res_model">attendance.daily</field>
+            <field name="view_mode">tree,form</field>
+             <field name="domain">[('employee_id.user_id', '=', uid),('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]</field>
+        </record>
+         <record model="ir.ui.view" id="my_daily_attendance_record">
+            <field name="name">attendance_daily_tree</field>
+            <field name="model">attendance.daily</field>
+            <field name="arch" type="xml">
+                <tree create="false" edit="false" delete="false" default_order='work_date desc' decoration-danger="state=='draft'" decoration-success = "state=='done'" decoration-info = "state=='confirm'">
+                  <field name="work_date"/>
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                    <field name = "expected_work_hour" widget="float_time"  sum="Total Expected Worked Hours"/>
+                    <field name="late_minutes" widget="float_time" sum="Total Late Minutes"/>
+                    <field name ="work_hour" widget="float_time" string="Total Hours Worked" sum="Total Worked Hours"/>
+                    <field name ="state" invisible = "1"/>
+                </tree>
+            </field>
+        </record>
+         <record model="ir.ui.view" id="custom_new_form_attendance_record">
+            <field name="name">attendance_daily_form_view</field>
+            <field name="model">attendance.daily</field>
+            <field name="arch" type="xml">
+           <form edit="false" create="false" delete="false">
+               <div class="row">
+                   <header>
+                       <field name="state" widget="statusbar" clickable = "1"/>
+                   </header>
+               </div>
+	    <sheet string="attendance.daily" modifiers="{}">
+		    <group col="4" modifiers="{}">
+                    <field name="name" />
+                    <field name="employee_id" can_create="false" readonly="1"/>
+                    <field name="check_in" readonly="1"/>
+                    <field name="check_out" readonly="1"/>
+                    <field name="work_hour" widget="float_time" readonly="1"/>
+                    <field name="late_minutes"  widget="float_time" readonly="1"/>
+                    <field name="work_date" modifiers="{'required':true}" readonly="1"/>
+                    <field name="request_data" readonly="1"/>
+                        <field name = "processed" readonly="1"/>
+                        <newline modifiers="{}"/>
+                    <field colspan="4" name="attendance_record_ids" attrs="{'readonly': [('state','=', 'done' )]}">
+                      <tree default_order='punch_time'>
+                        <field name = "punch_time"/>
+                        <field name = "punch_type"/>
+                        <field name = "work_date"/>
+                        <field name="request_id"/>
+                      </tree>
+                    </field>
+                    <newline modifiers="{}"/>
+                    <separator modifiers="{}"/>
+		    </group>
+	        </sheet>
+</form>
+            </field>
+        </record>
+         <record model="ir.ui.view" id="attendance_tree_daily_attendance_record">
+            <field name="name">attendance_daily_tree</field>
+            <field name="model">attendance.daily</field>
+            <field name="arch" type="xml">
+                <tree  decoration-danger="state=='draft'" decoration-success = "state=='done'" decoration-info = "state=='confirm'" create="false" edit="false" delete="false">
+                  <field name="work_date"/>
+                    <field name="employee_id"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                     <field name= "state"/>
+                </tree>
+            </field>
+        </record>
+       <record id="action_e_leave_custom_form_daily_attendance_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_attendance_daily"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="custom_new_form_attendance_record"/>
+        </record>
+ <record id="action_e_leave_custom_form_daily_attendance_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_attendance_daily"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="attendance_tree_daily_attendance_record"/>
+        </record>
+          <record model="ir.ui.view" id="form_attendance_record">
+            <field name="name">attendance_daily_form_view</field>
+            <field name="model">attendance.daily</field>
+            <field name="arch" type="xml">
+           <form create="false"  delete="false" edit="false">
+               <header>
+                   <button name="%(dn_attendance.action_attendance_wizard)d" type="action" string="Request Review" class="oe_highlight " context= "{'current_id': id,'work_date':work_date}" attrs="{'invisible': ['|',('state', '==', 'done'),('state','==','confirm')]}"/>
+                   <field name="state" widget="statusbar" readonly="False"/>
+               </header>
+	    <sheet string="attendance.daily">
+		    <group col="4" modifiers="{}">
+                    <field name="name" readonly="1"/>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="check_in" readonly="1"/>
+                    <field name="check_out" readonly="1"/>
+                    <field name="work_hour" widget="float_time" readonly="1"/>
+                    <field name="late_minutes" widget="float_time" readonly="1"/>
+                    <field name="work_date" readonly="1"/>
+                    <field name = "request_data" readonly="1"/>
+                    <newline modifiers="{}"/>
+                     <field colspan="4" name="attendance_record_ids" readonly="1">
+                      <tree default_order="punch_time">
+                        <field name="punch_time"/>
+                        <field name="punch_type"/>
+                        <field name="work_date"/>
+                        <field name = "request_id"/>
+                      </tree>
+                    </field>
+                    <newline modifiers="{}"/>
+                    <separator modifiers="{}"/>
+		    </group>
+
+	</sheet>
+</form>
+            </field>
+        </record>
+         <record id="action_e_leave_treae_daily_attendance_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="myaction_attendance_daily"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="my_daily_attendance_record"/>
+        </record>
+           <record id="action_e_leave_form_daily_attendance_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="myaction_attendance_daily"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_attendance_record"/>
+        </record>
+
+
+         <record id="action_e_leave_treae_current_month_attendance_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="myaction_attendance_daily_current_month"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="my_daily_attendance_record"/>
+        </record>
+           <record id="action_e_leave_form_current_month_attendance_employees" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="myaction_attendance_daily_current_month"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_attendance_record"/>
+        </record>
+
+
+
+        <!---->
+        <record model="ir.actions.act_window" id="daily_attendance_report_custom">
+            <field name="name">Daily Attendance</field>
+            <field name="res_model">attendance.daily</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="action_e_leave_treae_daily_attendance_employees_unique" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="daily_attendance_report_custom"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="my_daily_attendance_record"/>
+        </record>
+           <record id="action_e_leave_form_daily_attendance_employees_unique" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="daily_attendance_report_custom"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="form_attendance_record"/>
+        </record>
+
+        <!---->
+        <record id="ir_cron_upload attendace" model="ir.cron">
+            <field name="name">Create Attendance in HR Attendance</field>
+            <field name="model_id" ref="model_attendance_daily"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.create_attendance()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+
+        <!--cron job for -->
+          <record id="ir_cron_upload schedule" model="ir.cron">
+            <field name="name">Create Schedule</field>
+            <field name="model_id" ref="model_attendance_daily"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.create_schedule()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <menuitem
+                name="E-Attendance"
+                id="menu_root_attendance"
+                sequence="2"
+                web_icon="e_pay_roll,static/icons/icon.png"
+        />
+        <record model="ir.ui.view" id="my_tree_attendance_record">
+            <field name="name">attendance records tree</field>
+            <field name="model">attendance.record</field>
+            <field name="arch" type="xml">
+                <tree create="false" edit="false" delete="false" >
+                    <field name="employee_id"/>
+                    <field name="punch_time"/>
+                    <field name="punch_type"/>
+                    <field name="work_date"/>
+                </tree>
+            </field>
+        </record>
+           <record model="ir.actions.act_window" id="myrecord_action_attendance_record">
+            <field name="name">My Machine Records</field>
+            <field name="res_model">attendance.record</field>
+            <field name="view_mode">tree</field>
+                <field name="view_id" ref="my_tree_attendance_record"/>
+               <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        </record>
+    </data>
+</odoo>
