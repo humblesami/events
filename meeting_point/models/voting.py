@@ -10,7 +10,7 @@ class Voting(models.Model):
     motion_second = fields.Many2one('res.users')
     open_date = fields.Datetime(string='Open Date')
     close_date = fields.Datetime(string='Close Date')
-    voting_description = fields.Char(string='Voting Description')
+    voting_description = fields.Html(string='Voting Description')
     voting_type = fields.Selection([('voting', 'Voting'), ('approval', 'Approval')], string='Voting Type')
     voting_options = fields.Selection([('yes','Yes'), ('no', 'No'), ('abstain', 'Abstain')], string='Voting Options')
     approval_options = fields.Selection([('approve', 'Approve'), ('reject', 'Reject')], string='Approval Options')
@@ -21,6 +21,19 @@ class Voting(models.Model):
     audience = fields.Char(compute='_compute_audience')
     public_url_new = fields.Char("Public link", compute="_compute_voting_url")
     my_status = fields.Char(compute='_compute_status')
+    user_id = fields.Char(compute='_compute_user_id')
+    document_ids = fields.One2many('meeting_point.votingdocument', 'voting_id', string="Document(s)")
+
+    @api.multi
+    def has_attachments(self):
+        for topic in self:
+            if topic.document_ids:
+                topic.attachments = '<span class="fa fa-2x fa-file-text" />'
+
+
+    @api.multi
+    def _compute_user_id(self):
+        self.user_id=str(self._uid)
 
     @api.multi
     def _compute_status(self):
@@ -76,3 +89,9 @@ class Votinganswer(models.Model):
     user_id = fields.Many2one('res.users')
     voting_id = fields.Many2one('meeting_point.voting')
     user_answer = fields.Char(string = 'Response')
+
+
+class VotingDocument(models.Model):
+    _name = 'meeting_point.votingdocument'
+    _inherit = 'dn_documents.allfiles'
+    voting_id = fields.Many2one('meeting_point.voting', string='Voting Document')

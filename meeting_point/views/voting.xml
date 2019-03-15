@@ -6,6 +6,11 @@
             <field name="model">meeting_point.voting</field>
             <field name="arch" type="xml">
                 <form string="Voting/Approval">
+                    <style>
+                        .voting_user_ids{
+                            display:none;
+                        }
+                    </style>
                     <group>
                         <field name="name"/>
                         <field name="meeting_id"/>
@@ -15,13 +20,34 @@
                         <field name="close_date"/>
                         <field name="voting_description"/>
                         <field name="voting_type"/>
-                        <field name="public_url_new" widget="url"/>
+                            <field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>
                         <div class="survey_respondents" attrs="{'invisible': [('meeting_id', '!=', False)]}">
                             <h4>Respondents</h4>
                             <field name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
                                    placeholder="Select respondents..." context="{'force_email':True}" class="oe_inline"/>
                         </div>
+                        <field name="document_ids" mode="kanban" class="o2m_kanban topic_docs kanban_document"
+                               context="{'form_view_ref' : 'meeting_point.view_meeting_doc_form','kanban_view_ref' : 'meeting_point.view_meeting_doc_kanban'}"
+                        />
                     </group>
+                    <div class="voting_choice_container" attrs="{'invisible' : [('voting_type', '=', False)]}">
+                      <div class="oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'voting')]}">
+                        <span class="voting_opt_yes"><input type="radio" class="voting_yes yes" name="voting" value="yes"/><strong>Yes</strong></span>
+                        <span class="voting_opt_no"><input type="radio" class="voting_no no" name="voting" value="no"/><strong>No</strong></span>
+                        <span class="voting_opt_abstain"><input type="radio" class="voting_abstain abstain" name="voting" value="abstain"/><strong>Abstain</strong></span>
+                      </div>
+
+                      <div class="oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'approval')]}">
+                        <span class="approval_opt_approve"><input type="radio" class="approval_approve approve" name="approval" value="approve"/><strong>Approve</strong></span>
+                        <span class="approval_opt_reject"><input type="radio" class="approval_reject reject" name="approval" value="reject"/><strong>Reject</strong></span>
+                      </div>
+
+                      <div class="voting_user_ids">
+                        <field name="id" class="voting_id"/>
+                        <field name="user_id" class="user_id"/>
+                      </div>
+                      <script src="/meeting_point/static/js/voting.js"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -56,6 +82,13 @@
             <field name="res_model">meeting_point.voting</field>
             <field name="view_mode">kanban,form, tree</field>
         </record>
+
+        <record id="action_voting_answer" model="ir.actions.act_window">
+            <field name="name">Voting Answer</field>
+            <field name="res_model">meeting_point.votinganswer</field>
+            <field name="view_mode">kanban, form, tree</field>
+        </record>
+
         <!--templates for voting and approval-->
             <!-- First page of a survey -->
         <template id="voting_init" name="Voting Template">

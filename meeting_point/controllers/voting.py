@@ -43,16 +43,38 @@ class website_voting(http.Controller):
         page = request.render('meeting_point.voting', data)
         return  page
 
-    # Voting Answer
+    # Voting Answer Submission
     @http.route(['/voting/submit'],
                 type='http', auth='public', website=True)
     def voting_answer(self, **kw):
+        uid = request.uid
+        voting_id = int(kw['voting_id'])
         votingAnswer = request.env['meeting_point.votinganswer']
         # votingAnswer.user_answer = kw['user_answer']
         # votingAnswer.voting_id =kw['voting_id']
-        data = votingAnswer.create({
-            'user_answer':kw['user_answer'],
-            'voting_id':kw['voting_id'],
-            'user_id':request.uid
-        })
-        return 'Submitted'# request.render('meeting_point.answerpage', data)
+        current_voting_answer = votingAnswer.search([('voting_id', '=', voting_id), ('user_id', '=', uid)])
+        vals = {
+            'user_answer': kw['user_answer'],
+            'voting_id': voting_id,
+            'user_id': uid
+        }
+        if current_voting_answer:
+            res = current_voting_answer.write(vals)
+            return 'Corrected'
+        else:
+            res = votingAnswer.create(vals)
+            return 'Create'
+
+
+
+    # Voting Answer to User
+    @http.route(['/votinganswer'], type='http', auth='public', website=True)
+    def user_voting_answer(self, **kw):
+        uid = request.uid
+        voting_id = int(kw['voting_id'])
+        votingAnswer = request.env['meeting_point.votinganswer']
+        current_voting_answer = votingAnswer.search([('voting_id', '=', voting_id), ('user_id', '=', uid)])
+        if current_voting_answer:
+            return current_voting_answer['user_answer']
+        else:
+            return ''
