@@ -1,15 +1,9 @@
-.voting_user_ids{
-    display:none;
-}
-.vote_options>span, .vote_options>input
+.vote_choice>span, .vote_choice>input
 {
     padding-right: 10px;
     cursor: pointer;
 }
-.results
-{
-    display : none;
-}
+
 .results_container
 {
     padding-top: 30px;

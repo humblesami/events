@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Voting/Approval" class="voting_form">
                     <link rel="stylesheet" href="/meeting_point/static/css/voting.css" />
+                    <field name="id" invisible="1" class="voting_id"/>
                     <group>
                         <field name="name"/>
                         <field name="meeting_id" invisible="1"/>
@@ -14,42 +15,37 @@
                         <field name="motion_second"/>
                         <field name="open_date"/>
                         <field name="close_date"/>
-                        <field name="voting_description"/>
+                        <field name="description"/>
                         <field name="voting_type"/>
                         <field name="public_visibility"/>
                         <!--<field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>-->
                         <field attrs="{'invisible': [('meeting_id', '!=', False)]}" name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
                                    placeholder="Select respondents..." context="{'force_email':True}" class="oe_inline"/>
-                        <field class="kanban_document dn_attatchment_btn" name="document_ids" context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'}" mode="kanban" />
+                        <field class="kanban_document dn_attatchment_btn" name="document_ids"
+                               context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'
+                               ,'form_view_ref': 'dn_documents.doc_edit_form'}"
+                               mode="kanban" />
                     </group>
                     <div class="voting_choice_container" attrs="{'invisible' : [('voting_type', '=', False)]}">
                       <div class="vote_options oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'voting')]}">
-                        <span class="vote_choice voting_opt_yes"><input type="radio" class="voting_yes yes" name="voting" value="yes"/><span>Yes</span></span>
-                        <span class="vote_choice voting_opt_no"><input type="radio" class="voting_no no" name="voting" value="no"/><span>No</span></span>
-                        <span class="vote_choice voting_opt_abstain"><input type="radio" class="voting_abstain abstain" name="voting" value="abstain"/><span>Abstain</span></span>
+                        <span class="vote_choice"><input type="radio" class="voting_yes yes" name="voting" value="yes"/><span>Yes</span></span>
+                        <span class="vote_choice"><input type="radio" class="voting_no no" name="voting" value="no"/><span>No</span></span>
+                        <span class="vote_choice"><input type="radio" class="voting_abstain abstain" name="voting" value="abstain"/><span>Abstain</span></span>
                       </div>
 
                       <div class="vote_options oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'approval')]}">
-                        <span class="vote_choice approval_opt_approve"><input type="radio" class="approval_approve approve" name="approval" value="approve"/><span>Approve</span></span>
-                        <span class="vote_choice approval_opt_reject"><input type="radio" class="approval_reject reject" name="approval" value="reject"/><span>Reject</span></span>
+                        <span class="vote_choice"><input type="radio" class="approval_approve approve" name="approval" value="approve"/><span>Approve</span></span>
+                        <span class="vote_choice"><input type="radio" class="approval_reject reject" name="approval" value="reject"/><span>Reject</span></span>
                       </div>
 
-                      <div class="voting_user_ids">
-                        <field name="id" class="voting_id"/>
-                        <field name="user_id" class="user_id"/>
-                      </div>
                     </div>
-                    <div groups="!meeting_point.admin" class="results_container" attrs="{'invisible': [('public_visibility', '=', False)]}">
+                    <div groups="!meeting_point.admin" class="oe_read_only results_container" attrs="{'invisible': [('public_visibility', '=', False)]}">
                         <h3>Results</h3>
-                        <div class="results">
-                            No Response Yet
-                        </div>
+                        <div class="results"></div>
                     </div>
-                    <div groups="meeting_point.admin" class="results_container">
+                    <div groups="meeting_point.admin" class="oe_read_only results_container">
                         <h3>Results</h3>
-                        <div class="results">
-                            No Response Yet
-                        </div>
+                        <div class="results"></div>
                     </div>
                     <script src="/meeting_point/static/js/voting.js"/>
                 </form>
@@ -103,7 +99,7 @@
                         <div class='jumbotron mt32'>
                             <h1 t-field='voting.name' />
                             <h1 t-field='voting.my_status' />
-                            <div t-field='voting.voting_description' class="oe_no_empty"/>
+                            <div t-field='voting.description' class="oe_no_empty"/>
                             <a class="btn btn-primary btn-lg" t-att-href="'/vote/fill/%s' % (slug(voting))">
                                 Start Voting
                             </a>
@@ -149,7 +145,7 @@
                         <h2 id="submitted">Your Vote Has Been Submitted.</h2>
                         <form class="voting_form">
                             <h2 t-field="voting.name"/>
-                            <h4 t-field="voting.voting_description" />
+                            <h4 t-field="voting.description" />
                             <div class="row voting_options-container">
                                 <!--Voting Type "Yes"-->
                                 <input type="radio" name="voting_options" t-att-value="yes" t-value="yes"/>
@@ -216,7 +212,7 @@
         <template id="votepage" name="VotePage">
             <div class="page-header">
                 <h1 t-field='voting.name' />
-                <div t-field='voting.voting_description' class="oe_no_empty"/>
+                <div t-field='voting.description' class="oe_no_empty"/>
             </div>
 
             <div class="col-md-12">

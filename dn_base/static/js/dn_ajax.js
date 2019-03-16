@@ -85,23 +85,14 @@ var dn_json_rpc_object = {
         $.ajax({
             url: requestUrl,
             data: input_data,
-            beforeSend: function (jqXHR, settings) {
-                var this_req_url = settings.url;
-                if(!this_req_url.startsWith(dn_json_rpc_object.baseUrl))
-                    this_req_url = dn_json_rpc_object.baseUrl + this_req_url;
-                console.log(this_req_url);
-                jqXHR.abort();
-            }
-        });
-
-        $.ajax({
-            url: requestUrl,
-            data: input_data,
             dataType: 'JSON',
             type:'POST',
             beforeSend: function (jqXHR, settings) {
-                //console.log(window.location.origin+ settings.url, 99);
-//                    console.log(input_data);
+//                var this_req_url = settings.url;
+//                if(!this_req_url.startsWith(dn_json_rpc_object.baseUrl))
+//                    this_req_url = dn_json_rpc_object.baseUrl + this_req_url;
+//                console.log(this_req_url);
+//                jqXHR.abort();
             },
             success: function (results) {
                 serviceRequestInProgress = false;
@@ -208,6 +199,22 @@ function dn_rpc_object(reqObject)
     var reqfun = reqObject.url;
     var input_data =reqObject.data;
     var callback = reqObject.onSuccess;
+    if(!callback && reqObject.success)
+        callback = reqObject.success;
+    var failureCallBack = reqObject.onError;
+    if(reqObject.no_loader)
+        dn_json_rpc_object.showLoader = false;
+    else
+        dn_json_rpc_object.showLoader = true;
+    dn_json_rpc_object.request(reqfun, input_data, callback, failureCallBack)
+}
+function dn_rpc_ajax(reqObject)
+{
+    var reqfun = reqObject.url;
+    var input_data =reqObject.data;
+    var callback = reqObject.onSuccess;
+    if(!callback && reqObject.success)
+        callback = reqObject.success;
     var failureCallBack = reqObject.onError;
     if(reqObject.no_loader)
         dn_json_rpc_object.showLoader = false;

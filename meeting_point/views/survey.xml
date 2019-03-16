@@ -265,10 +265,10 @@
 
             <form role="form" method="post" class="js_surveyform"
                   t-att-name="'%s_%s' % (survey.id, page.id)"
-                  t-att-action="'%s/survey/fill/%s/%s' % (survey.base_url, slug(survey), token)"
-                  t-att-data-prefill="'%s/survey/prefill/%s/%s/%s' % (survey.base_url, slug(survey), token, slug(page))"
-                  t-att-data-validate="'%s/survey/validate/%s' % (survey.base_url, slug(survey))"
-                  t-att-data-submit="'%s/survey/submit/%s' % (survey.base_url, slug(survey))">
+                  t-att-action="'%s/survey/fill/%s/%s' % (survey.web_url, slug(survey), token)"
+                  t-att-data-prefill="'%s/survey/prefill/%s/%s/%s' % (survey.web_url, slug(survey), token, slug(page))"
+                  t-att-data-validate="'%s/survey/validate/%s' % (survey.web_url, slug(survey))"
+                  t-att-data-submit="'%s/survey/submit/%s' % (survey.web_url, slug(survey))">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="hidden" name="page_id" t-att-value="page.id" />
                 <input type="hidden" name="token" t-att-value="token" />

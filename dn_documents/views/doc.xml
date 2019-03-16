@@ -10,6 +10,18 @@
             </field>
         </record>
 
+        <record id="view_dn_documents_doc_tree" model="ir.ui.view">
+            <field name="name">dn_documents.document.tree</field>
+            <field name="model">dn_documents.allfiles</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Doc Title" />
+                    <button type="object" name="open_view_doc_form"
+                            class="fa fa-5x fa-file" />
+                </tree>
+            </field>
+        </record>
+
         <record id="dn_docs_kanban" model="ir.ui.view">
             <field name="name">dn_documents.doc.kanban</field>
             <field name="model">dn_documents.allfiles</field>
@@ -199,18 +211,6 @@
                     <div id="pdf_div"></div>
                     <script id="doc_js" src="/dn_documents/static/js/doc.js"/>
                 </form>
-            </field>
-        </record>
-
-        <record id="view_dn_documents_doc_tree" model="ir.ui.view">
-            <field name="name">dn_documents.document.tree</field>
-            <field name="model">dn_documents.allfiles</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name" string="Doc Title" />
-                    <button type="object" name="open_view_doc_form"
-                            class="fa fa-5x fa-file" />
-                </tree>
             </field>
         </record>
 
