@@ -36,8 +36,9 @@ class Attendance(http.Controller):
                 ws_methods.http_response('Not logged in')
             if 'data' in vals:
                 reqBody = vals['data']
-            if vals['login'] == 'machine@odoohq.com':
-                req_env = http.request.env
+            # if vals['login'] == 'machine@odoohq.com':
+            #     req_env = http.request.env
+            req_env = http.request.env
             cursor.autocommit(False)
             for tr in enumerate(reqBody):
                 rec = tr[1]
