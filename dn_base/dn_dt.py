@@ -13,6 +13,11 @@ def nowStr():
     res = dtTostr(res)
     return res
 
+def todayStr():
+    date_today = today()
+    res = dtTodatestr(date_today)
+    return res
+
 def nowtostr():
     res = datetime.now()
     res = dtTostr(res)
