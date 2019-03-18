@@ -83,7 +83,6 @@ odoo.define('dn_base.View', function (require) {
 //                        if (!(e && e.code === 200 && e.data.exception_type)) {
 //                            console.log(e);
 //                            //self.do_warn(_t("Page Expired"), _t("Please <a href=''><b>Click Here</b></a> to reload session"));
-//                            dntoast.error("View could not be loaded1", 500);
 //                        }
 //                        // Restore internal state
 //                        self.active_view = old_view;

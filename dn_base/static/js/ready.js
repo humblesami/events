@@ -54,9 +54,6 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/libs/pdf.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/fullcalendar.js"/>');
 
-        //Custom plugins
-        document.writeln('<script src="/dn_base/static/js/toast.js"></script>');
-
         //Editing in Core
         document.writeln('<script src="/dn_base/static/js/view.js"></script>');
         document.writeln('<script src="/dn_base/static/js/form_view.js"></script>');
