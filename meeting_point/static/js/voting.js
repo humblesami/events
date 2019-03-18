@@ -9,21 +9,29 @@ $(function(){
                 var vote_options_dom = '';
                 $('.vote_options:first').html('');
                 //console.log(111, data);
-                var my_answer = data.my_answer;
+                var my_status = data.my_status;
                 var vote_options_container = $('.vote_options:first');
-                if(data.my_answer != 'Not Required')
+                if(data.my_status)
                 {
                     for(var i in data.vote_options)
                     {
                         var option = data.vote_options[i];
                         vote_options_dom = '<span class="vote_choice">';
-                        vote_options_dom += '<input data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
+                        vote_options_dom += '<input name="vote_choice_input" data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
                         vote_options_dom += '</span>';
                         vote_options_container.append(vote_options_dom);
-                        if(my_answer == option.name)
-                        vote_options_container.find('.vote_choice:last input').attr('checked', true);
+                        if(my_status == option.name)
+                            vote_options_container.find('.vote_choice:last input').attr('checked', true);
                     }
                     vote_options_container.find('input[type="radio"]').change(on_user_answer);
+                    $('.vote_choice span').click(function(){
+                        var prev = $(this).prev();
+                        if(prev.is('input'))
+                        {
+                            prev.click();
+//                            prev.change();
+                        }
+                    });
                 }
 
                 if(data.message)
@@ -84,13 +92,4 @@ $(function(){
         }
         dn_rpc_ajax(options);
     }
-
-    $('.vote_choice span').click(function(){
-        var prev = $(this).prev();
-        if(prev.is('input'))
-        {
-            prev.click();
-	        //prev.change();
-	    }
-    });
 })

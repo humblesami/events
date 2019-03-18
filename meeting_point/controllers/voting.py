@@ -68,7 +68,7 @@ class website_voting(http.Controller):
                 filters[2] = ('voting_option_id','=',option.id)
                 voting_answers[option.name] = request.env['meeting_point.votinganswer'].search_count(filters)
 
-            res = { 'vote_options':voting_options_array, 'voting_answers': voting_answers, 'my_answer' : voting_object.my_answer}
+            res = { 'vote_options':voting_options_array, 'voting_answers': voting_answers, 'my_status' : voting_object.my_status}
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()

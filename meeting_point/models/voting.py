@@ -35,10 +35,31 @@ class Voting(models.Model):
                                    domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
     my_status = fields.Char(compute='_compute_status')
-    my_answer = fields.Char(compute='_compute_answer')
     user_id = fields.Char(compute='_compute_user_id')
     document_ids = fields.One2many('meeting_point.votingdocument', 'voting_id', string="Document(s)")
     public_visibility = fields.Boolean()
+
+
+    def write(self, vals):
+        partener_ids_beofre = False
+        if vals.get('partner_ids'):
+            partener_ids_beofre = self.partner_ids
+        res = super(Voting, self).write(vals)
+        if partener_ids_beofre:
+            partener_ids_after = self.partner_ids
+            to_exclude = []
+            for old_partner in partener_ids_beofre:
+                found = False
+                for partner in partener_ids_after:
+                    if partner.id == old_partner.id:
+                        found = True
+                        break
+                if not found:
+                    to_exclude.append(old_partner.user_id.id)
+            records = self.env['meeting_point.votinganswer'].search([('voting_id', '=', self.id), ('user_id', 'in', to_exclude)])
+            for rec in records:
+                rec.unlink()
+        return res
 
     @api.multi
     def has_attachments(self):
@@ -55,28 +76,18 @@ class Voting(models.Model):
     def _compute_status(self):
         uid = self._uid
         for obj in self:
-            found = ws_methods.uid_in_partners(uid, obj.partner_ids)
+            partner_ids = obj.partner_ids
+            if obj.meeting_id:
+                partner_ids = obj.meeting_id
+            found = ws_methods.uid_in_partners(uid, partner_ids)
             if not found:
                 return
             else:
                 res = self.env['meeting_point.votinganswer'].search([('voting_id','=', obj.id),('user_id', '=', obj._uid)])
                 if res:
-                    obj.my_status = 'completed'
+                    obj.my_status = res.voting_option_id.name
                 else:
                     obj.my_status = 'pending'
-
-    @api.multi
-    def _compute_answer(self):
-        uid = self._uid
-        for obj in self:
-            found = ws_methods.uid_in_partners(uid, obj.partner_ids)
-            if not found:
-                obj.my_answer = 'Not Required'
-            else:
-                res = self.env['meeting_point.votinganswer'].search([('voting_id', '=', obj.id), ('user_id', '=', uid)])
-                if res:
-                    obj.my_answer = res.voting_option_id.name
-
 
     @api.multi
     def _compute_audience(self):
@@ -111,7 +122,7 @@ class VotingAnswer(models.Model):
     voting_id = fields.Many2one('meeting_point.voting',required=True, ondelete="cascade")
     voting_option_id = fields.Many2one('meeting_point.votingoption', required=True, ondelete="cascade")
     def create(self, vals):
-        if self.voting_id.my_answer == 'Not Required':
+        if self.voting_id.my_status == 'pending':
             raise ValidationError('Can not answer because not invited')
         return super(VotingAnswer, self).create(vals)
 
