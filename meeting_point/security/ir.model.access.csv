@@ -19,7 +19,11 @@
 "admin_topic_doc","Agenda Topic Docs","model_meeting_point_topicdoc","group_meeting_admin",1,1,1,1
 "admin_signature","Meeting Document Signatures","e_sign.model_e_sign_signature","group_meeting_admin",1,1,1,1
 "admin_dashboard","Meeting Admin Dashboard","model_meeting_point_dashboard","group_meeting_admin",1,0,0,0
-"admin_meeting_voitng","Meeting Voting Access","model_meeting_point_voting","group_meeting_admin",1,1,1,0
+"admin_meeting_voitng","Admin Meeting Voting Access","model_meeting_point_voting","group_meeting_admin",1,1,1,0
+"admin_voting_document","Admin Voting Document Access","model_meeting_point_votingdocument","group_meeting_admin",1,1,1,0
+"admin_voting_Answer","Admin Voting Answer Access","model_meeting_point_votinganswer","group_meeting_admin",1,1,1,0
+"admin_voting_Type","Admin Voting Type Access","model_meeting_point_votingtype","group_meeting_admin",1,0,0,0
+"admin_voting_Options","Admin Voting Options Access","model_meeting_point_votingoption","group_meeting_admin",1,0,0,0
 
 
 "staff_event","Meetings","model_calendar_event","group_meeting_staff",1,0,0,0

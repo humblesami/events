@@ -121,3 +121,19 @@ class website_voting(http.Controller):
         return  page
 
     # Voting Answer Submission
+
+    @http.route('/voting/details', type='http', auth='public', cors='*')
+    def votingDetails(self, **kw):
+        try:
+            auth = kw.get('auth')
+            if not auth:
+                auth = kw
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+            if kw.get('data'):
+                kw = kw.get('data')
+            voting_id = int(kw['voting_id'])
+            return ws_methods.http_response('', "hee")
+        except:
+            return ws_methods.handle()

@@ -160,6 +160,9 @@ class ws(http.Controller):
             props = ['id','name', 'mp_signature_status', 'meeting_id.name']
             to_do_items['pending_documents'] = ws_methods.objects_list_to_json_list(home.pending_documents, props)
 
+            props = ['id', 'name', 'description', 'voting_type_id.name', 'my_status']
+            to_do_items['pending_votings'] = ws_methods.objects_list_to_json_list(home.pending_votings, props)
+
             public_events_list = home.public_events
             public_events = ws_methods.objects_list_to_json_list(public_events_list, ['id', 'start','stop', 'name'])
 

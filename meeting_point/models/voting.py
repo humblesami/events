@@ -37,7 +37,7 @@ class Voting(models.Model):
     my_status = fields.Char(compute='_compute_status')
     user_id = fields.Char(compute='_compute_user_id')
     document_ids = fields.One2many('meeting_point.votingdocument', 'voting_id', string="Document(s)")
-    public_visibility = fields.Boolean()
+    public_visibility = fields.Boolean(string="Results Visible To All")
 
 
     def write(self, vals):
@@ -75,15 +75,10 @@ class Voting(models.Model):
     @api.multi
     def _compute_status(self):
         uid = self._uid
+        partner = self.env.user.partner_id
         for obj in self:
-            partner_ids = obj.partner_ids
-            if obj.meeting_id:
-                partner_ids = obj.meeting_id
-            found = ws_methods.uid_in_partners(uid, partner_ids)
-            if not found:
-                return
-            else:
-                res = self.env['meeting_point.votinganswer'].search([('voting_id','=', obj.id),('user_id', '=', obj._uid)])
+            if partner in obj.partner_ids:
+                res = self.env['meeting_point.votinganswer'].search([('voting_id','=', obj.id),('user_id', '=', uid)])
                 if res:
                     obj.my_status = res.voting_option_id.name
                 else:

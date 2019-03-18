@@ -25,8 +25,10 @@ class News(models.Model):
                                          , compute="compute_events")
     public_event = fields.Char(string="All Upcoming Events"
                                      , compute="compute_events")
-
+    pending_votings = fields.Many2many('meeting_point.voting', string="Voting",
+                                            compute="compute_votings")
     to_do_items_count = fields.Integer(compute="compute_to_do_items")
+
 
     @api.multi
     def compute_to_do_items(self):
@@ -95,6 +97,18 @@ class News(models.Model):
                 obj.pending_surveys = surveys
         except:
             raise ValidationError(sys.exc_info() + " while getting surveys")
+
+    @api.multi
+    def compute_votings(self):
+        try:
+            env = self.env
+            for obj in self:
+                obj.pending_votings = []
+                continue
+                votings = env['meeting_point.voting'].search([]).filtered(lambda r: r.my_status == 'pending')
+                obj.pending_votings = votings
+        except:
+            raise ValidationError(sys.exc_info() + " while getting votings")
 
     @api.multi
     def compute_meetings(self):
