@@ -8,18 +8,22 @@ $(function(){
             success:function(data){
                 var vote_options_dom = '';
                 $('.vote_options:first').html('');
-                console.log(111, data);
+                //console.log(111, data);
                 var my_answer = data.my_answer;
+                var vote_options_container = $('.vote_options:first');
                 for(var i in data.vote_options)
                 {
                     var option = data.vote_options[i];
                     vote_options_dom = '<span class="vote_choice">';
                     vote_options_dom += '<input data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
                     vote_options_dom += '</span>';
-                    $('.vote_options:first').append(vote_options_dom);
+                    vote_options_container.append(vote_options_dom);
                     if(my_answer == option.name)
-                    $('.vote_options:first .vote_choice:last input').attr('checked', true);
+                    vote_options_container.find('.vote_choice:last input').attr('checked', true);
                 }
+
+                vote_options_container.find('input[type="radio"]').change(on_user_answer);
+
                 if(data.message)
                 {
                     $('.results').html(data.message);
@@ -42,7 +46,7 @@ $(function(){
                     </div>
                     `)
                 }
-                if(no_results)
+                if(no_results);
                 $('.results').html(no_results);
             }
         }
@@ -57,7 +61,7 @@ $(function(){
     }
     get_results();
 
-    $('.voting_choice_container:first input[type="radio"]').change(function(){
+    function on_user_answer(){
         var input_choice = $(this);
         if(!input_choice.is(':checked'))
         {
@@ -68,16 +72,16 @@ $(function(){
 
         var options = {
             url : '/voting/submit',
-            data : {'user_answer' : user_choice, 'voting_id' : voting_id},
+            data : {'voting_option_id' : user_choice, 'voting_id' : voting_id},
             success:function(data){
-            console.log(data);
+                console.log(data);
             },
             error:function(a, b){
                 console.log(b.responseText);
             }
         }
         dn_rpc_ajax(options);
-    });
+    }
 
     $('.vote_choice span').click(function(){
         var prev = $(this).prev();

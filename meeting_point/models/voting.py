@@ -2,24 +2,30 @@ from odoo import models, fields, api
 class VotingType(models.Model):
     _name = 'meeting_point.votingtype'
     name = fields.Char(string='Voting Type')
-    voting_option_ids = fields.One2many('meeting_point.voteoption', 'voting_type_id')
+    voting_option_ids = fields.One2many('meeting_point.votingoption', 'voting_type_id')
+    _sql_constraints = [
+        ('voting_option_unique', 'unique (name)', "Voting Type already exists !"),
+    ]
 
 class VotingChoice(models.Model):
-    _name = 'meeting_point.voteoption'
+    _name = 'meeting_point.votingoption'
     name = fields.Char(string='Choice')
-    voting_type_id = fields.Many2one('meeting_point.votingtype')
+    voting_type_id = fields.Many2one('meeting_point.votingtype', required=True, ondelete="restrict")
+    _sql_constraints = [
+        ('voting_option_unique', 'unique (name, voting_type_id)', "Option already exists !"),
+    ]
 
 
 class Voting(models.Model):
     _name = 'meeting_point.voting'
-    name = fields.Char(string='Title')
+    name = fields.Char(string='Title', required=True)
     meeting_id = fields.Many2one('calendar.event',string="Meeting", ondelete='cascade')
     motion_first = fields.Many2one('res.users')
     motion_second = fields.Many2one('res.users')
     open_date = fields.Datetime(string='Open Date')
     close_date = fields.Datetime(string='Close Date')
     description = fields.Html(string='Voting Description')
-    voting_type_id = fields.Many2one('meeting_point.votingtype')
+    voting_type_id = fields.Many2one('meeting_point.votingtype', required=True, ondelete="cascade")
     partner_ids = fields.Many2many('res.partner',
                                    'voting_voting_res_partner_rel',
                                    string='Respondents',
@@ -93,12 +99,12 @@ class Voting(models.Model):
 
 class VotingAnswer(models.Model):
     _name = 'meeting_point.votinganswer'
-    user_id = fields.Many2one('res.users')
-    voting_id = fields.Many2one('meeting_point.voting')
-    voting_option_id = fields.Many2one('meeting_point.voteoption')
+    user_id = fields.Many2one('res.users',required=True, ondelete="cascade")
+    voting_id = fields.Many2one('meeting_point.voting',required=True, ondelete="cascade")
+    voting_option_id = fields.Many2one('meeting_point.votingoption', required=True, ondelete="cascade")
 
 
 class VotingDocument(models.Model):
     _name = 'meeting_point.votingdocument'
     _inherit = 'dn_documents.allfiles'
-    voting_id = fields.Many2one('meeting_point.voting', string='Voting Document')
+    voting_id = fields.Many2one('meeting_point.voting', required=True, ondelete="cascade")

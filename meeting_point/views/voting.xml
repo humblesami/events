@@ -16,11 +16,17 @@
                         <field name="open_date"/>
                         <field name="close_date"/>
                         <field name="description"/>
-                        <field name="voting_type_id"/>
+                        <field name="voting_type_id"
+                               options="{'no_quick_create': True, 'no_create_edit' : True}"
+                        />
                         <field name="public_visibility"/>
                         <!--<field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>-->
-                        <field attrs="{'invisible': [('meeting_id', '!=', False)]}" name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
-                                   placeholder="Select respondents..." context="{'force_email':True}" class="oe_inline"/>
+                        <field attrs="{'invisible': [('meeting_id', '!=', False)]}"
+                               name="partner_ids" widget="many2many_tags"
+                               options="{'no_quick_create': True, 'no_create_edit' : True}"
+                               placeholder="Select respondents..."
+                               class="oe_inline"
+                        />
                         <field class="kanban_document dn_attatchment_btn" name="document_ids"
                                context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'
                                ,'form_view_ref': 'dn_documents.doc_edit_form'}"
@@ -74,6 +80,54 @@
             <field name="res_model">meeting_point.voting</field>
             <field name="view_mode">kanban,form, tree</field>
         </record>
+
+        <record id="action_meeting_voting_type" model="ir.actions.act_window">
+            <field name="name">Voting Types</field>
+            <field name="res_model">meeting_point.votingtype</field>
+            <field name="view_mode">kanban,form, tree</field>
+        </record>
+
+        <record id="action_meeting_voting_option" model="ir.actions.act_window">
+            <field name="name">Voting Type Options</field>
+            <field name="res_model">meeting_point.votingoption</field>
+            <field name="view_mode">kanban,form, tree</field>
+        </record>
+
+        <record id="action_meeting_voting_answer" model="ir.actions.act_window">
+            <field name="name">Voting Answers</field>
+            <field name="res_model">meeting_point.votinganswer</field>
+            <field name="view_mode">kanban,form, tree</field>
+        </record>
+
+        <record id="action_meeting_voting_document" model="ir.actions.act_window">
+            <field name="name">Voting Documents</field>
+            <field name="res_model">meeting_point.votingdocument</field>
+            <field name="view_mode">kanban,form, tree</field>
+        </record>
+
+        <menuitem
+                name="Voting Types" id="menu_meeting_voting_type"
+                action ="action_meeting_voting_type"
+                parent="devmenu"
+        />
+
+        <menuitem
+                name="Voting Type Options" id="menu_meeting_voting_option"
+                action ="action_meeting_voting_option"
+                parent="devmenu"
+        />
+
+        <menuitem
+                name="Voting Answers" id="menu_meeting_voting_answer"
+                action ="action_meeting_voting_answer"
+                parent="devmenu"
+        />
+
+        <menuitem
+                name="Voting Documents" id="menu_meeting_voting_document"
+                action ="action_meeting_voting_document"
+                parent="devmenu"
+        />
 
         <!--templates for voting and approval-->
         <template id="voting_init" name="Voting Template">
