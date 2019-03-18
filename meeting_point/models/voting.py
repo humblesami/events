@@ -1,4 +1,7 @@
 from odoo import models, fields, api
+from odoo.addons.dn_base import ws_methods
+from odoo.exceptions import ValidationError
+
 class VotingType(models.Model):
     _name = 'meeting_point.votingtype'
     name = fields.Char(string='Voting Type')
@@ -50,20 +53,29 @@ class Voting(models.Model):
 
     @api.multi
     def _compute_status(self):
+        uid = self._uid
         for obj in self:
-            res = self.env['meeting_point.votinganswer'].search([('voting_id','=', obj.id),('user_id', '=', obj._uid)])
-            if res:
-                obj.my_status = 'completed'
+            found = ws_methods.uid_in_partners(uid, obj.partner_ids)
+            if not found:
+                return
             else:
-                obj.my_status = 'pending'
+                res = self.env['meeting_point.votinganswer'].search([('voting_id','=', obj.id),('user_id', '=', obj._uid)])
+                if res:
+                    obj.my_status = 'completed'
+                else:
+                    obj.my_status = 'pending'
 
     @api.multi
     def _compute_answer(self):
+        uid = self._uid
         for obj in self:
-            res = self.env['meeting_point.votinganswer'].search(
-                [('voting_id', '=', obj.id), ('user_id', '=', self._uid)])
-            if res:
-                obj.my_answer = res.voting_option_id.name
+            found = ws_methods.uid_in_partners(uid, obj.partner_ids)
+            if not found:
+                obj.my_answer = 'Not Required'
+            else:
+                res = self.env['meeting_point.votinganswer'].search([('voting_id', '=', obj.id), ('user_id', '=', uid)])
+                if res:
+                    obj.my_answer = res.voting_option_id.name
 
 
     @api.multi
@@ -87,21 +99,21 @@ class Voting(models.Model):
             'url': self.with_context(relative_url=True).public_url_new + trail
         }
 
-
-
     @api.multi
     def filter_attendees(self):
         category_id = self.env['ir.module.category'].sudo().search([('name', '=', 'MeetingPoint')]).id
         domain = ['|', ('user_id.groups_id.category_id', '=', category_id), ('is_committee', '=', True)]
         return domain
 
-
-
 class VotingAnswer(models.Model):
     _name = 'meeting_point.votinganswer'
     user_id = fields.Many2one('res.users',required=True, ondelete="cascade")
     voting_id = fields.Many2one('meeting_point.voting',required=True, ondelete="cascade")
     voting_option_id = fields.Many2one('meeting_point.votingoption', required=True, ondelete="cascade")
+    def create(self, vals):
+        if self.voting_id.my_answer == 'Not Required':
+            raise ValidationError('Can not answer because not invited')
+        return super(VotingAnswer, self).create(vals)
 
 
 class VotingDocument(models.Model):

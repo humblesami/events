@@ -231,4 +231,37 @@
         </template>
 
     </data>
+
+    <data noupdate="1">
+        <record id="rec_voting_type1" model="meeting_point.votingtype">
+            <field name="name">Approval</field>
+        </record>
+
+        <record id="rec_voting_type1_option1" model="meeting_point.votingoption">
+            <field name="name">Accept</field>
+            <field name="voting_type_id" eval="ref('rec_voting_type1')"/>
+        </record>
+        <record id="rec_voting_type1_option2" model="meeting_point.votingoption">
+            <field name="name">Reject</field>
+            <field name="voting_type_id" eval="ref('rec_voting_type1')"/>
+        </record>
+
+        <record id="rec_voting_type2" model="meeting_point.votingtype">
+            <field name="name">Voting</field>
+        </record>
+
+        <record id="rec_voting_type2_option1" model="meeting_point.votingoption">
+            <field name="name">Yes</field>
+            <field name="voting_type_id" eval="ref('rec_voting_type2')"/>
+        </record>
+        <record id="rec_voting_type2_option2" model="meeting_point.votingoption">
+            <field name="name">No</field>
+            <field name="voting_type_id" eval="ref('rec_voting_type2')"/>
+        </record>
+        <record id="rec_voting_type2_option3" model="meeting_point.votingoption">
+            <field name="name">Abstain</field>
+            <field name="voting_type_id" eval="ref('rec_voting_type2')"/>
+        </record>
+    </data>
+
 </odoo>

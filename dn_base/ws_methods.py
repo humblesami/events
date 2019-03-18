@@ -92,6 +92,12 @@ def decode(key, enc):
         dec.append(dec_c)
     return "".join(dec)
 
+def uid_in_partners(uid ,partners):
+    for partner in partners:
+        if partner.user_id.id == uid:
+            return True
+    return False
+
 def objects_list_to_json_list(objects, props):
     json_obj_list = []
     for obj in objects:

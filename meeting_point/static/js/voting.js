@@ -11,18 +11,20 @@ $(function(){
                 //console.log(111, data);
                 var my_answer = data.my_answer;
                 var vote_options_container = $('.vote_options:first');
-                for(var i in data.vote_options)
+                if(data.my_answer != 'Not Required')
                 {
-                    var option = data.vote_options[i];
-                    vote_options_dom = '<span class="vote_choice">';
-                    vote_options_dom += '<input data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
-                    vote_options_dom += '</span>';
-                    vote_options_container.append(vote_options_dom);
-                    if(my_answer == option.name)
-                    vote_options_container.find('.vote_choice:last input').attr('checked', true);
+                    for(var i in data.vote_options)
+                    {
+                        var option = data.vote_options[i];
+                        vote_options_dom = '<span class="vote_choice">';
+                        vote_options_dom += '<input data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
+                        vote_options_dom += '</span>';
+                        vote_options_container.append(vote_options_dom);
+                        if(my_answer == option.name)
+                        vote_options_container.find('.vote_choice:last input').attr('checked', true);
+                    }
+                    vote_options_container.find('input[type="radio"]').change(on_user_answer);
                 }
-
-                vote_options_container.find('input[type="radio"]').change(on_user_answer);
 
                 if(data.message)
                 {
