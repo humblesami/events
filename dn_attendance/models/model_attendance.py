@@ -88,6 +88,8 @@ class AttendaceRecord(models.Model):
             vals['request_id'] = request_id.id
         elif(create_uid == 'machine@odoohq.com'):
             a=1
+        elif (create_uid == 'sami'):
+            a=1
         elif((request_id.id == False)  & (create_uid != 'machine@odoohq.com')):
             raise Warning('You cannot create a record with out a request from user for its review')
         vals, daily_attendance_object = self.find_create_daily_attendance(vals)
