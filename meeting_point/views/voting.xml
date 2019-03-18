@@ -16,7 +16,7 @@
                         <field name="open_date"/>
                         <field name="close_date"/>
                         <field name="description"/>
-                        <field name="voting_type"/>
+                        <field name="voting_type_id"/>
                         <field name="public_visibility"/>
                         <!--<field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>-->
                         <field attrs="{'invisible': [('meeting_id', '!=', False)]}" name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}"
@@ -25,19 +25,11 @@
                                context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'
                                ,'form_view_ref': 'dn_documents.doc_edit_form'}"
                                mode="kanban" />
+
                     </group>
-                    <div class="voting_choice_container" attrs="{'invisible' : [('voting_type', '=', False)]}">
-                      <div class="vote_options oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'voting')]}">
-                        <span class="vote_choice"><input type="radio" class="voting_yes yes" name="voting" value="yes"/><span>Yes</span></span>
-                        <span class="vote_choice"><input type="radio" class="voting_no no" name="voting" value="no"/><span>No</span></span>
-                        <span class="vote_choice"><input type="radio" class="voting_abstain abstain" name="voting" value="abstain"/><span>Abstain</span></span>
+                    <div class="oe_read_only voting_choice_container" attrs="{'invisible' : [('voting_type_id', '=', False)]}">
+                      <div class="vote_options">
                       </div>
-
-                      <div class="vote_options oe_read_only" attrs="{'invisible' : [('voting_type', '!=', 'approval')]}">
-                        <span class="vote_choice"><input type="radio" class="approval_approve approve" name="approval" value="approve"/><span>Approve</span></span>
-                        <span class="vote_choice"><input type="radio" class="approval_reject reject" name="approval" value="reject"/><span>Reject</span></span>
-                      </div>
-
                     </div>
                     <div groups="!meeting_point.admin" class="oe_read_only results_container" attrs="{'invisible': [('public_visibility', '=', False)]}">
                         <h3>Results</h3>
@@ -65,7 +57,7 @@
                                 </div>
                                 <div>
                                     <strong>
-                                        <field name="voting_type"/>
+                                        <field name="voting_type_id"/>
                                     </strong>
 
                                 </div>
@@ -83,14 +75,7 @@
             <field name="view_mode">kanban,form, tree</field>
         </record>
 
-        <record id="action_voting_answer" model="ir.actions.act_window">
-            <field name="name">Voting Answer</field>
-            <field name="res_model">meeting_point.votinganswer</field>
-            <field name="view_mode">kanban, form, tree</field>
-        </record>
-
         <!--templates for voting and approval-->
-            <!-- First page of a survey -->
         <template id="voting_init" name="Voting Template">
             <t t-call="website.layout">
                 <div class="wrap">
@@ -124,15 +109,6 @@
                 <div class="oe_structure"/>
                 </div>
             </t>
-            <!--<t t-call="website.layout">-->
-                <!--<div class="wrap">-->
-                    <!--<div class="oe_structure"/>-->
-                    <!--<div class="container">-->
-                        <!--<t t-call="meeting_point.votepage" />-->
-                    <!--</div>-->
-                    <!--<div class="oe_structure"/>-->
-                <!--</div>-->
-            <!--</t>-->
         </template>
 
         <template id="voting" name="Voting">
@@ -169,15 +145,6 @@
                 <div class="oe_structure"/>
                 </div>
             </t>
-            <!--<t t-call="website.layout">-->
-                <!--<div class="wrap">-->
-                    <!--<div class="oe_structure"/>-->
-                    <!--<div class="container">-->
-                        <!--<t t-call="meeting_point.votepage" />-->
-                    <!--</div>-->
-                    <!--<div class="oe_structure"/>-->
-                <!--</div>-->
-            <!--</t>-->
         </template>
 
         <!--Voting Options template-->
@@ -208,43 +175,6 @@
                 <span>Reject</span>
             </div>
         </template>
-
-        <template id="votepage" name="VotePage">
-            <div class="page-header">
-                <h1 t-field='voting.name' />
-                <div t-field='voting.description' class="oe_no_empty"/>
-            </div>
-
-            <div class="col-md-12">
-                <form role="form" t-set="voting_opts" t-att-action="'/voting/answer/%s/%s/%s' % (slug(voting), token, voting_opts)"  t-att-data-submit="'/voting/answer/%s' % (slug(voting))">
-                    <div t-if="voting.voting_type == 'voting'">
-                        <t t-call="meeting_point.voting_choice"/>
-                    </div>
-                    <div t-if="voting.voting_type == 'approval'">
-                        <t t-call="meeting_point.approval_choice"/>
-                    </div>
-
-                    <!--<a class="btn btn-primary btn-lg" t-att-href="'/voting/answer/%s/%s' % (slug(voting), token)">-->
-                                <!--Submit Vote-->
-                    <!--</a>-->
-                     <button  type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit Vote</button>
-                    <!--<div class="text-center mt16 mb16">-->
-                        <!--<button class="btn btn-primary" name="button_submit" value="finish">Submit Vote</button>-->
-                    <!--</div>-->
-                </form>
-            </div>
-        </template>
-        <!--end-->
-
-        <!--Voting Answer Page-->
-        <template id="answerpage" name="Voting Answer Page">
-        <div class="page-header">
-            <h1 t-field='answer.user_id' />
-            <div t-field='answer.voting_id' class="oe_no_empty"/>
-            <div t-field='answer.user_answer' class="oe_no_empty"/>
-        </div>
-     </template>
-        <!--end-->
 
     </data>
 </odoo>

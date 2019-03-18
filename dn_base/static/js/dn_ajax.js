@@ -1,13 +1,3 @@
-try
-{
-    if (dntoast == undefined)
-        document.writeln('<script src="/dn_base/static/js/toast.js"></script>');
-}
-catch(er)
-{
-    document.writeln('<script src="/dn_base/static/js/toast.js"></script>');
-}
-
 dn_base_web_url = window.location.origin + '';
 var site_loaderContainer = undefined;
 var dn_json_rpc_object = {
@@ -124,27 +114,21 @@ var dn_json_rpc_object = {
             failureCallBack(res);
         }
         else if (!res)
-            dntoast.error("Invalid Request Response in function reqfun ");
+            bootbox.alert("Invalid Request Response in function reqfun ");
         else
-            dntoast.error(res + "");
+            bootbox.alert(res + "");
     },
 
     handleResponse: function (res, reqfun, callback, failureCallBack) {
         var error_message = '';
         if (res == undefined) {
             error_message ="Url hit successful but Invalid Request Response in "+ reqfun;
-            if(dntoast && dntoast.error)
-                dntoast.error(error_message);
-            else
-                console.log(error_message);
+            bootbox.alert(error_message);
             return;
         }
         if (res.error == undefined) {
             error_message ="Url hit successful but error not defined  in "+ reqfun;
-            if(dntoast && dntoast.error)
-                dntoast.error(error_message);
-            else
-                console.log(error_message);
+            bootbox.alert(error_message);
             return;
         }
         else
@@ -154,35 +138,26 @@ var dn_json_rpc_object = {
                 failureCallBack(res.error);
             else {
                 error_message =res.error;
-                if(dntoast && dntoast.error)
-                    dntoast.error(error_message);
-                else
-                    console.log(error_message);
+                bootbox.alert(error_message);
             }
             return;
         }
         if (res.data == undefined) {
             if (res.message == undefined) {
                 error_message ="Undefined data and message " + reqfun;
-                if(dntoast && dntoast.error)
-                    dntoast.error(error_message);
-                else
-                    console.log(error_message);
+                bootbox.alert(error_message);
                 return;
             }
             if (res.message.length == 0) {
                 error_message ="Undefined data and no message in function "+ reqfun;
-                if(dntoast && dntoast.error)
-                    dntoast.error(error_message);
-                else
-                    console.log(error_message);
+                bootbox.alert(error_message);
                 return;
             }
         }
 
         if (res.message != undefined && res.message.length > 0) {
             if (res.message.length != 7 && res.message.toLowerCase() != "success")
-                dntoast.showSuccessMessage(res.message);
+                bootbox.alert(res.message);
         }
         if (callback != undefined)
             callback(res.data);

@@ -5,22 +5,33 @@ $(function(){
         var options = {
             url : '/voting/results',
             data : {},
-            success:function(results){
-                if(results.message)
+            success:function(data){
+                var vote_options_dom = '';
+                $('.vote_options:first').html('');
+                console.log(111, data);
+                var my_answer = data.my_answer;
+                for(var i in data.vote_options)
                 {
-                    $('.results').html(results.message);
+                    var option = data.vote_options[i];
+                    vote_options_dom = '<span class="vote_choice">';
+                    vote_options_dom += '<input data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
+                    vote_options_dom += '</span>';
+                    $('.vote_options:first').append(vote_options_dom);
+                    if(my_answer == option.name)
+                    $('.vote_options:first .vote_choice:last input').attr('checked', true);
+                }
+                if(data.message)
+                {
+                    $('.results').html(data.message);
                     return;
                 }
-                results.my_answer = results.my_answer.toLowerCase();
-                if(results.my_answer!='Pending')
-                {
-                    $('.voting_choice_container:first').find('input.'+results.my_answer).attr('checked', true);
-                }
-                console.log(results);
-                results = results.votingCount;
+                var results = data.voting_answers;
+                var no_results = 'No answer from any user';
                 for(var key in results)
                 {
-                    $('.results').append(`
+                    if(no_results)
+                        no_results = false;
+                    $('.results').html(`
                     <div class="entry">
                         <span class="choice_label">
                             <span>Choice</span>: <span class="user-choice">`+key+`</span>
@@ -31,6 +42,8 @@ $(function(){
                     </div>
                     `)
                 }
+                if(no_results)
+                $('.results').html(no_results);
             }
         }
         setTimeout(function(){
@@ -51,7 +64,7 @@ $(function(){
             return;
         }
         let voting_id = $('.voting_id').html();
-        let user_choice = input_choice.next().html();
+        let user_choice = input_choice.attr('data-id');
 
         var options = {
             url : '/voting/submit',

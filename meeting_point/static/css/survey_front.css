@@ -15,12 +15,15 @@
     background-color: #eeeeef;
 }
 
-.navbar-static-top
+.navbar.navbar-static-top
 {
     display: none;
     background-color: transparent;
     border-color: transparent;
+     margin-bottom: -20px;
+    margin-top: 30px;
 }
+
 .survey_back_btn_container > div
 {
     margin: 5px;

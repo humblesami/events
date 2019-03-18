@@ -17,22 +17,20 @@ class website_voting(http.Controller):
             if kw.get('data'):
                 kw = kw.get('data')
 
-            ws_methods.check_auth(kw)
+
             voting_id = int(kw['voting_id'])
             votingAnswer = request.env['meeting_point.votinganswer']
-            # votingAnswer.user_answer = kw['user_answer']
-            # votingAnswer.voting_id =kw['voting_id']
-            current_voting_answer = votingAnswer.search([('voting_id', '=', voting_id), ('user_id', '=', uid)])
             vals = {
-                'user_answer': kw['user_answer'],
-                'voting_id': voting_id,
-                'user_id': uid
+                'voting_option_id': kw['voting_option_id'],
             }
             res = 'error'
+            current_voting_answer = votingAnswer.search([('voting_id', '=', voting_id), ('user_id', '=', uid)])
             if current_voting_answer:
                 current_voting_answer.write(vals)
                 res = 'Corrected'
             else:
+                vals['voting_id'] = voting_id,
+                vals['user_id'] = uid
                 votingAnswer.create(vals)
                 res = 'Created'
             return ws_methods.http_response('', res)
@@ -54,22 +52,23 @@ class website_voting(http.Controller):
                 kw = kw.get('data')
 
             voting_id = int(kw['voting_id'])
-            voting_results = request.env['meeting_point.votinganswer'].search([('voting_id', '=', voting_id)])
-            if not voting_results:
-                return ws_methods.http_response('',{'message' :'No answers yet'})
-
             voting_object = request.env['meeting_point.voting'].search([('id', '=', voting_id)])
-            votingType = voting_object.voting_type
+            if not voting_object:
+                return ws_methods.http_response('No object found')
+
+            votingType = voting_object.voting_type_id
+            voting_options = votingType.voting_option_ids
+            filters = [('voting_id', '=', voting_id), ('user_id', '=', uid)]
+            filters.append('Hi')
+
             voting_answers = {}
-            if votingType == 'voting':
-                voting_answers = {'Yes': 0, 'No': 0, 'Abstain': 0}
-            elif votingType == 'approval':
-                voting_answers = {'Approve': 0, 'Reject': 0}
+            voting_options_array = []
+            for option in voting_options:
+                voting_options_array.append({'name':option.name,'id':option.id})
+                filters[2] = ('voting_option_id','=',option.id)
+                voting_answers[option.name] = request.env['meeting_point.votinganswer'].search_count(filters)
 
-
-            for obj in voting_results:
-                voting_answers[obj.user_answer] += 1
-            res = {'total': len(voting_results), 'votingCount': voting_answers, 'my_answer' : voting_object.my_answer}
+            res = { 'vote_options':voting_options_array, 'voting_answers': voting_answers, 'my_answer' : voting_object.my_answer}
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()

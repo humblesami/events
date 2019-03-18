@@ -1,6 +1,14 @@
 from odoo import models, fields, api
-from odoo.addons.dn_base import ws_methods
-from odoo.addons.http_routing.models.ir_http import slug
+class VotingType(models.Model):
+    _name = 'meeting_point.votingtype'
+    name = fields.Char(string='Voting Type')
+    voting_option_ids = fields.One2many('meeting_point.voteoption', 'voting_type_id')
+
+class VotingChoice(models.Model):
+    _name = 'meeting_point.voteoption'
+    name = fields.Char(string='Choice')
+    voting_type_id = fields.Many2one('meeting_point.votingtype')
+
 
 class Voting(models.Model):
     _name = 'meeting_point.voting'
@@ -11,9 +19,9 @@ class Voting(models.Model):
     open_date = fields.Datetime(string='Open Date')
     close_date = fields.Datetime(string='Close Date')
     description = fields.Html(string='Voting Description')
-    voting_type = fields.Selection([('voting', 'Voting'), ('approval', 'Approval')], string='Voting Type')
-
-    partner_ids = fields.Many2many('res.partner', 'voting_voting_res_partner_rel',
+    voting_type_id = fields.Many2one('meeting_point.votingtype')
+    partner_ids = fields.Many2many('res.partner',
+                                   'voting_voting_res_partner_rel',
                                    string='Respondents',
                                    domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
@@ -49,9 +57,7 @@ class Voting(models.Model):
             res = self.env['meeting_point.votinganswer'].search(
                 [('voting_id', '=', obj.id), ('user_id', '=', self._uid)])
             if res:
-                obj.my_answer = res.user_answer
-            else:
-                obj.my_answer = 'Pending'
+                obj.my_answer = res.voting_option_id.name
 
 
     @api.multi
@@ -85,14 +91,11 @@ class Voting(models.Model):
 
 
 
-
-
-
-class Votinganswer(models.Model):
+class VotingAnswer(models.Model):
     _name = 'meeting_point.votinganswer'
     user_id = fields.Many2one('res.users')
     voting_id = fields.Many2one('meeting_point.voting')
-    user_answer = fields.Char(string = 'Response')
+    voting_option_id = fields.Many2one('meeting_point.voteoption')
 
 
 class VotingDocument(models.Model):
