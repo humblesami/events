@@ -253,8 +253,10 @@ class AttendanceDaily(models.Model):
         daily_object.work_hour = validated_work_hours
         daily_object.late_minutes = math.floor(late_minutes)
         daily_object.expected_work_hour = math.floor(expectedWorkMinutes / 60)
-
-        val = res['time_records'][-1].get('check_out')
+        if res['time_records'].__len__() >0:
+            val = res['time_records'][-1].get('check_out')
+        else:
+            val =daily_object.check_in
         if val:
             daily_object.check_out = val
 
