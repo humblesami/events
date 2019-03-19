@@ -22,6 +22,7 @@ console.log(777);
 
      function loadData(){
                 $('#loaderContainerajax').show();
+                $(".o_loading").show();
                 req_url = '/e-sign/get_doc_data';
                 input_data = {document_id:doc_id,token:token,url:url};
                 dn_json_rpc(req_url,input_data, function(data)
