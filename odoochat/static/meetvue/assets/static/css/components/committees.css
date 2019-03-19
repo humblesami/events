@@ -1,0 +1,42 @@
+.kanbancard{
+    cursor: pointer;
+    padding: 2%;
+    margin: 2%;
+    box-shadow: 1px 2px 10px #000000;
+    background: rgba(255,255,255,0.5);
+}
+
+.kanban-committees-info-box{
+    background: #f3f3f3;
+    border-radius: 3px;
+    border: 1px solid #f1eeee;
+    margin: 15px 0;
+    padding: 7px;
+    align-items: self-end;
+    display: flex;
+    flex-direction: column;
+}
+
+.kanban-committees-info-box-img {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.kanban-committees-info-box-name{
+    margin-bottom: 5px;
+}
+
+.kanban-committees a {
+    color: #777777;
+    text-transform: capitalize;
+    margin: 3px;
+}
+
+.kanban-committees a i {
+    font-size: 24px;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 3px;
+    background: #9c4784;
+    padding: 5px 8px;
+}

@@ -1,0 +1,79 @@
+.Info p {
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.CalendarDateWrap{
+    background-color: #7c7bad;
+    background: linear-gradient(to bottom,#7c7bad,#7c7bad);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 7px 5px;
+    font-size: 0.885em;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+}
+
+span.kanban-upcoming-meeting-date {
+    font-size: 26px;
+}
+
+.kanban-upcoming-meeting{
+    display: flex;
+}
+
+.kanban-upcoming-meeting-date {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: normal;
+    margin-bottom: 3px;
+}
+.kanban-meeting-info{
+    background: #f3f3f3;
+    display: flex;
+    border-radius: 3px;
+    border: 1px solid #f1eeee;    
+    padding: 10px 2px 10px 6px;
+    flex-direction: column;
+    white-space: nowrap;
+    overflow-x: hidden;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
+}
+
+.kanban-upcoming-meeting a {
+    text-decoration: none;
+}
+
+.kanban-upcoming-meeting .Info {
+    font-size: 13px;
+    color: #6a6a6a;
+    padding-left: 10px;
+    padding-right: 10px;
+    line-height: 1.4em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.upcomingButton button
+{
+    font-size: 0.85rem;
+}
+.upcomingButton{
+    display: flex;
+    margin-top: 5px;
+
+}
+
+.upcomingButton button{
+    margin-right: 4px;
+}
+.upcomingButton button i {
+    font-size: 14px;
+    padding-right: 4px;
+}

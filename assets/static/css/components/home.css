@@ -1,0 +1,501 @@
+
+/*Homepage TabBar setting*/
+.home{
+	background:#f1f4f2;
+    padding:0 10%;
+    padding:0;
+    position:relative;	
+    margin-top: -20px;
+}
+
+.home #collapsibleNavbar .active{
+    background:#ffffff;
+  }
+
+.home div#collapsibleNavbar {
+    justify-content: center;
+    display:flex;
+}
+
+.home div#collapsibleNavbar button{
+    background: none;
+	color:#777a7e;
+	border:none;
+	flex-grow: 1;
+	font-size:18px;
+	font-family: 'Roboto', sans-serif;
+	font-weight:500;
+	padding:20px 0;
+	position:relative;
+}
+
+.HomePageDiscription{
+    display:flex;
+    justify-content: space-between;
+}
+
+#calenderModal
+{
+    min-height: calc(100vh - 5px);
+}
+
+.HomepageDocumentSection{
+    background:#f2f6fb;
+    padding:50px 0;
+    margin-bottom:30px;
+}
+
+.WelcomeContent{
+    padding-bottom:30px;
+    -webkit-flex:1 1 auto;
+    flex:1 1 auto;
+}
+
+div#welcome {
+    padding: 30px 0;
+}
+
+.WelcomeContent h4.HomeTitle{
+    margin-bottom:20px;
+}
+.WelcomeContent h4.HomeTitle span{
+    position:relative;
+}
+
+.WelcomeContent h4.HomeTitle span:before{
+    border-top:1px solid #dddddd;
+    content:"";
+    position:absolute;
+    bottom:-7px;
+    left:0px;
+    width:100%;
+}
+
+.HomePageContentText{
+  width: 100%;
+  text-align: justify;
+}
+
+.HomePageContentImg {
+    margin: 0px 0px 20px 20px;
+    flex-basis: 320px;
+    width: 320px;
+    float: right;
+}
+
+.fc-more-cell{
+	background: darkgreen;
+	color: white;
+	border-radius: 5px;
+}
+
+@media (max-width: 767px) { 
+
+   .HomePageContentImg {
+        margin: 0px 0px 20px 0px;
+        flex-basis: 100%;
+        width: 100%;
+        float: none;
+    }
+
+    .HomePageContentText {
+        width: 100%;    
+    }
+    
+}
+
+
+#collapsibleNavbar>button::before
+{
+    width:1px;
+	height:50%;
+	background:#d8dce0;
+	content:"";
+	position:absolute;
+    top:25%;
+    left:0px;
+}
+
+#collapsibleNavbar button:nth-child(3)::after{	
+	left:0px;
+}
+
+#collapsibleNavbar button i{
+	display:block;
+	font-size:26px;
+	margin-bottom:5px;
+	}
+
+#collapsibleNavbar button:focus {
+    outline: 0px dotted;
+    outline: 0px auto -webkit-focus-ring-color;
+}
+
+
+#collapsibleNavbar button.active
+{
+    background:white;
+}
+
+.active{
+  background-color: #7c7bad;
+  color: white;
+  border-color: #7c7bad;
+}
+
+
+.snackbar-success {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #54C036;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+    z-index: 999999;
+}
+
+.snackbar-success.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+
+
+.snackbar-error {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #ff0033;
+    color: white;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+    z-index: 999999;
+}
+
+.snackbar-error.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+#to-do .modal-header {
+    margin: 0px 15px 25px;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.ToDoDocumentsItem{
+   padding-top:25px;
+}
+
+.light-blue-bg{
+   background: #f2f6fb !important;
+}
+
+.DocToDoText{
+    color:#313030;
+	font-size:13px;
+	font-weight:600;
+	text-transform:capitalize;
+	font-family: 'Roboto', sans-serif;
+}
+
+.font-11{
+    font-size:11px;
+}
+
+.SignatureText{
+font-weight:500;
+
+}
+.pending-status{
+     color:#db4437;
+}
+
+.DocName h5 {
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 0;
+    font-weight: 700;
+}
+.DocMeetingDetails{
+    color:#66676f;
+    font-size:11px;
+    font-weight:400;
+}
+
+.SurveysInfoBox {
+    background: #f3f3f3;
+    min-height: 110px;
+    border-radius: 3px;
+    border: 1px solid #f1eeee;    
+    padding: 5px 15px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
+}
+.SurveysInfoBoxTitle h5 b{
+    font-weight: 700;
+    line-height: 1.3;
+    color: #515365;
+}
+
+.VotingsInfoBox {
+    background: #f3f3f3;
+    min-height: 110px;
+    border-radius: 3px;
+    border: 1px solid #f1eeee;    
+    padding: 5px 15px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
+}
+.VotingsInfoBoxTitle h5 b{
+    font-weight: 700;
+    line-height: 1.3;
+    color: #515365;
+}
+
+.VotingsInfoBoxTitle h5 span{
+  display:block;
+  font-weight:400;
+  font-size:13px;
+}
+
+.SurveysInfoBoxTitle h5 span{
+  display:block;
+  font-weight:400;
+  font-size:13px;
+}
+
+
+
+.gray-bg{
+    background: #f3f3f3
+}
+
+
+.CalendarDateWrap{
+    background-color: #7c7bad;
+    background: linear-gradient(to bottom,#7c7bad,#7c7bad);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 7px 5px;
+    font-size: 0.885em;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+}
+
+.FormWrapper {
+    padding: 2%;
+    border-left: 5px solid #7c7bad;
+    background: #f3f3f3;
+}
+.FormWrapper textarea.form-control{
+    margin-bottom: 20px;
+    min-height: 150px;
+    resize: none;
+}
+.FormWrapper .form-control{
+    margin-bottom: 20px;
+}
+
+.cancelbtn, .signupbtn{
+    min-width: 130px;
+    font-size: 0.859em;
+    margin-right: 5px;
+}
+.home-survey-title .title{
+    font-size: 1.500em;
+    margin-bottom: 15px;
+}
+
+a.fc-more{
+    background-color: blue !important;
+    color: white !important;
+}
+.to-do-alram
+{
+    position: relative;
+}
+.to-do-alram i{
+    width: 30px;
+    margin: 0 auto;
+    position: relative;
+}
+
+span.to-do-count {
+    background: #dc3545;
+    color: white;
+    border-radius: 20px;
+    padding: 3px 6px 2px;
+    font-weight: bold;
+    font-size: 12px;
+    position: absolute;
+    top: -6px;
+    right: -11px;
+    border: 2px solid #ffffff;
+}
+.event-card label
+{
+    margin-bottom: 0;
+    font-weight: bold;
+}
+.event-card td {
+    padding-bottom: 10px;
+    padding-right: 20px;
+    font-size: 0.85rem;
+}
+
+.Info p {
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+span.kanban-upcoming-meeting-date {
+    font-size: 26px;
+}
+
+.kanban-upcoming-meeting{
+    display: flex;
+}
+
+.kanban-upcoming-meeting-date {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: normal;
+    margin-bottom: 3px;
+}
+.kanban-meeting-info{
+    background: #f3f3f3;
+    display: flex;
+    border-radius: 3px;
+    border: 1px solid #f1eeee;    
+    padding: 10px 2px 10px 6px;
+    flex-direction: column;
+    white-space: nowrap;
+    overflow-x: hidden;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
+}
+.kanban-card.survey
+{
+    width: 240px;
+}
+
+.kanban-upcoming-meeting a {
+    text-decoration: none;
+}
+
+.kanban-upcoming-meeting .Info {
+    font-size: 13px;
+    color: #6a6a6a;
+    padding-left: 10px;
+    line-height: 1.4em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.upcomingButton button
+{
+    font-size: 0.85rem;
+}
+.upcomingButton{
+    display: flex;
+    margin-top: 5px;
+    flex: 1;
+
+}
+
+.upcomingButton button{
+    margin-right: 4px;
+}
+.upcomingButton button i {
+    font-size: 14px;
+    padding-right: 4px;
+}
+
+@media (max-width: 575px) {
+
+
+.home div#collapsibleNavbar button {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 0;
+}
+
+.home div#collapsibleNavbar button i {
+    display: block;
+    font-size: 15px;
+}
+
+span.to-do-count{
+    right: -6px;
+    font-size: 9px;
+    top: -8px;
+    padding:3px 5px 2px;
+}
+
+}
+@media (min-width: 576px) and (max-width: 767px) {
+    
+}
+@media (min-width: 768px) and (max-width: 991px) {
+
+}
