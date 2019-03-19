@@ -293,6 +293,7 @@ class AttendanceWizard(models.Model):
     message = fields.Char(string="Request body")
     work_date = fields.Date()
     employee_id = fields.Many2one("hr.employee")
+    send_mail = fields.Boolean(string="send email")
     # 0
     @api.multi
     def send_request(self):
@@ -323,11 +324,12 @@ class AttendanceWizard(models.Model):
             'emailFrom': email_from,
             'name': self.env['res.users'].search([('id', '=', self._uid)]).name
         })
-        for data in hr_attendance_admin:
-            local_context.update({
-                'emailTo': data
-            })
-            template.with_context(local_context).send_mail(self.id, force_send=True)
+        if self.send_mail == True :
+            for data in hr_attendance_admin:
+                local_context.update({
+                    'emailTo': data
+                })
+                template.with_context(local_context).send_mail(self.id, force_send=True)
 
 
         super(AttendanceDaily, check_state.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).sudo().write(

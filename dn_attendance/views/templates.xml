@@ -9,11 +9,14 @@
                 <group col="2" modifiers="{}">
                     <field name="message" string="Request Message" modifiers="{'readonly':false}"/>
                     <newline modifiers="{}"/>
+                     <field name = "send_mail" />
+                    <newline modifiers="{}"/>
                     <field name="work_date" readonly="1"/>
                     <newline modifiers="{}"/>
                     <field name="employee_id" readonly="1"/>
                     <field name = "create_date" readonly="1"/>
                     <field name = "create_uid" readonly="1"/>
+
                 </group>
                     <footer>
                         <button string="Send Request" name="send_request" type="object" class="btn-primary oe_edit_only" />
