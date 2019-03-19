@@ -457,10 +457,7 @@
                     <app-comments></app-comments>
                     <script src="/meeting_point/static/js/meeting_form.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
-                    <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>                    
-                    <script >
-                        window["loadComponent"]("comments","app-comments");
-                    </script>
+                    <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>
                 </form>
             </field>
         </record>

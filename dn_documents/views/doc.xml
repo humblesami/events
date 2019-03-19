@@ -172,32 +172,18 @@
         </record>
 
         <record id="doc_annotator_form" model="ir.ui.view">
-            <field name="name">dn_documents.document.annotator.form</field>
+            <field name="name">document.annotator.form</field>
             <field name="model">dn_documents.allfiles</field>
             <field name="priority">4</field>
             <field name="arch" type="xml">
                 <form create="false" class="doc_view_form" edit="false">
                     <link rel="stylesheet" href="/dn_documents/static/css/doc.css"/>
-                    <link href="/dn_base/static/js/libs/annotator/shared/pdf.viewer.css" rel="stylesheet" type="text/css"  />
-                    <link href="/dn_base/static/js/libs/annotator/css/toolbar.css" rel="stylesheet" type="text/css" />
-                    <link href="/dn_base/static/js/libs/annotator/css/custom.css" rel="stylesheet" type="text/css" />
-
                     <field name="id" class="dn_doc_id o_hidden"/>
-                    <!--<field name="attachment" filename="filename" readonly="1" class="doc_download"/>-->
                     <field name="path" class="dn_documents_doc_path" invisible="1"/>
                     <field name="filename" invisible="1"/>
                     <field name="html" class="meeting_doc_html" readonly="1" invisible="1"/>
-
-                    <app-document></app-document>
-
-                    <div name="view_script">
-                    </div>
-                    <script>
-                        <!--$('.modal-title:last').append($('.doc_download'));-->
-                    </script>
-                    <script>
-                      window["loadComponent"]("document","app-document");
-                    </script>
+                    <div name="view_script"></div>
+                    <script src="/dn_documents/static/js/an_doc.js"></script>
                 </form>
             </field>
         </record>

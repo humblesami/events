@@ -65,9 +65,9 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/doc_preview.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
-        document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.ui.touch-punch.min.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/annotator/jquery.mark.min.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/annotator/mark.min.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch-punch.min.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/jquery.mark.min.js"></script>');
+        document.writeln('<script src="/dn_base/static/js/libs/mark.min.js"></script>');
 
         $(function(){
             doc_preview.init();

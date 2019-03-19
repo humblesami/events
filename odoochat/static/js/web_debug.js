@@ -32,7 +32,7 @@ async_file_loader.prototype = {
         }
     }
 }
-//window["loadComponent"]=function(){}
+
 function wait_element_render(wait_options)
 {
     if(!wait_options.n)

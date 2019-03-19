@@ -61,8 +61,8 @@ $(function(){
         $('.o_thread_message').has('.o_mail_note').show()
         hideDates();
     })
-setTimeout(function(){
-    $('.o_thread_message').show()
+    setTimeout(function(){
+        $('.o_thread_message').show()
         $('.o_thread_message').has('.o_mail_note').hide();
         hideDates();
     }, 500);
@@ -80,7 +80,9 @@ setTimeout(function(){
         $('.o_thread_date_separator:first').nextUntil( ".o_thread_date_separator",".o_thread_message:visible " )
     }
 
-
+    load_angular(function(){
+        window["loadComponent"]("comments","app-comments");
+    });
 });
 
 var meeting_point = {
@@ -89,7 +91,7 @@ var meeting_point = {
             try {
                 if($('.meetingform').length == 0 || $('.meeting_duration').length == 0)
                 {
-                    bootbox.alert("No meeting form");
+                    console.log("No meeting form");
                     return;
                 }
 
@@ -110,7 +112,7 @@ var meeting_point = {
             }
             catch (er) {
                 console.log(er);
-                bootbox.alert(er.message);
+                console.log(er.message);
             }
         },
         onStartValidation:function(containerSelector, input){
@@ -124,7 +126,7 @@ var meeting_point = {
 
         },
         onInvalidDuration: function (containerSelector, message, input) {
-            bootbox.alert(message);
+            console.log(message);
             input.addClass('dnerror').focus();
             if($(containerSelector).closest('.modal-content').length !=0)
                 $(containerSelector).closest('.modal-content').find('.modal-footer').find('.btn.btn-primary').attr('disabled', '');
@@ -198,7 +200,7 @@ var meeting_point = {
                 $('.meetingform .btn-primary').removeAttr('disabled');
                 if($('.meetingtopicform').length == 0 || $('.meeting_duration').length == 0)
                 {
-                    bootbox.alert("No meeting form for topic");
+                    console.log("No meeting form for topic");
                     return;
                 }
 
@@ -221,7 +223,7 @@ var meeting_point = {
             }
             catch (er) {
                 console.log(er);
-                bootbox.alert(er.message);
+                console.log(er.message);
             }
         },
         calcSumOfTopicsDuration: function (currentTopicDuration) {
