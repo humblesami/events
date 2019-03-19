@@ -59,7 +59,7 @@ class Signature(http.Controller):
             signature_id = kw['signature_id']
             token = kw.get('token')
             sign1 = http.request.env['e_sign.signature'].sudo().search([('token', '=', token)])
-            uid = sign1.user_id
+            uid = sign1[0].user_id
             sign = http.request.env['e_sign.signature'].sudo().search([('id', '=', signature_id)])
             if http.request.uid ==4:
 
