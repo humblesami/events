@@ -1,7 +1,5 @@
 
 $(function(){
-console.log(777);
-
 
 
     var canvas=document.getElementById('the-canvas'),
@@ -398,7 +396,7 @@ odoo.define('dn.esignature', function (require){
 }
 
 $(document).on("click",".top_btns .save_doc_data", function(e){
-console.log("8888888888888");
+
         var new_divs =$('.new_sign');
         if(new_divs.length==0){
             return;
@@ -917,9 +915,9 @@ $(this).html("NEXT>").animate({
 
 
 if($('#save-doc-data').hasClass("o_invisible_modifier")){
-console.log("dir");
 $('#page_container1')[0].style.height="calc(100vh - 165px)";
 }
+
 
 
 

@@ -1,3 +1,4 @@
+import datetime
 import os
 import json
 import uuid
@@ -81,7 +82,8 @@ class Signature(http.Controller):
                     binary_signature = kw['binary_signature']
                     sign.with_context({"doc": doc}).write({'draw_signature': binary_signature})
                 if kw['type'] == "date":
-                    dt=kw['date']
+                    # dt=kw['date']
+                    dt=datetime.datetime.today().strftime('%b,%d  %Y')
                     binary_signature = self.get_auto_sign(sign,dt)
                     sign.with_context({"doc": doc}).write({'draw_signature': binary_signature})
                 if kw['type'] == "text":
