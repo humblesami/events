@@ -399,7 +399,7 @@ class Signature(http.Controller):
             Mail.create(values).send()
 
     def get_users(self,doc):
-        usrs=request.env['res.users'].sudo().search([])
+        usrs=request.env['res.users'].sudo().search([("id","!=",1)])
         users=[]
         for u in usrs:
             users.append({"id": u.id, "name": u.name})

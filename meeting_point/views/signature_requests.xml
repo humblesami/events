@@ -6,7 +6,7 @@
             <field name="sequence" eval="2"/>
             <field name="arch" type="xml">
                 <form>
-                    <a class="btn btn-primary request_sign">Request a Signature</a>
+                    <a groups="meeting_point.group_meeting_admin" class="btn btn-primary request_sign">Request a Signature</a>
                     <field name="doc_ids" mode="kanban" />
                     <style>
                         .o_control_panel{
