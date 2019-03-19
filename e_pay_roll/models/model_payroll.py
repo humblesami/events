@@ -29,7 +29,8 @@ class EmployeeField(models.Model):
         rate = self.wage * 12
         tempRate = 0
         if rate > 400000 and rate <=800000:
-            tempRate = 1000
+            tempRate = 1008
+
         elif rate >800000 and rate <=1200000:
             tempRate = 2000
         elif rate >1200000 and rate <=2400000:
