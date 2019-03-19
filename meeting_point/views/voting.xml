@@ -110,6 +110,12 @@
         </record>
 
         <menuitem
+                name="Approval/Voting" id="menu_meeting_voting"
+                parent="menu_root_settings"
+                action="action_meeting_voting"
+        />
+
+        <menuitem
                 name="Voting Types" id="menu_meeting_voting_type"
                 action ="action_meeting_voting_type"
                 parent="devmenu"
