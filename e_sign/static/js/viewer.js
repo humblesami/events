@@ -1,6 +1,9 @@
 
 $(function(){
 console.log(777);
+
+
+
     var canvas=document.getElementById('the-canvas'),
 	pdf_binary,
 	users,
@@ -52,6 +55,8 @@ $('#scaleSelect')[0].selectedIndex = 4;
 
 function renderPDF(s) {
 $('#loaderContainerajax').show();
+$(".o_loading").show();
+
 
      var pdfData = atob(s);
 //     PDFJS.workerSrc = '/e_sign/static/js/pdf.worker.js';
@@ -105,6 +110,8 @@ $('#loaderContainerajax').show();
 //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
   setTimeout(function(){ loadSignatures({"doc_data":doc_data}); }, 200);
   $('#loaderContainerajax').hide();
+  $(".o_loading").hide()
+
    // loadSignatures({"doc_data":doc_data});
  }
 
@@ -326,7 +333,6 @@ function loadSignatures(data){
                // $("#signature-position").css({ background: 'green', color: 'white', cursor: 'move' });
             },
             drag: function (event, ui) {
-            console.log(event,ui);
                 //var st = parseInt($(this).data("startingScrollTop"));
                 //ui.position.top -= $(this).parent().parent().scrollTop() - st;
                 var positionX = $(this).position().left;
@@ -382,8 +388,16 @@ function loadSignatures(data){
         });
         //End Dragable
 
+if(!odoo.dn_esign_script){
+odoo.dn_esign_script=1;
+odoo.define('dn.esignature', function (require){
+ web_client = require('web.web_client');
+
+});
+}
 
 $(document).on("click",".top_btns .save_doc_data", function(e){
+console.log("8888888888888");
         var new_divs =$('.new_sign');
         if(new_divs.length==0){
             return;
@@ -397,7 +411,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 		var input_name = $('<input id="email" placeholder="Name" style="width:50%"/>');
 		var input_subject = $('<input id="subject" placeholder="Subject" style="width:50%"/>');
 		var email_body = $('<textarea class="o_sign_message_textarea o_input" style="border-style: solid;" rows="4"></textarea>');
-		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
+		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Send</span>');
 		var _users=false;
 		input_subject.val("Signature Request")
 		var meeting_id=$('.esign_doc_meet_id').html()
@@ -505,16 +519,26 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                         $(".save_doc_data").attr('disabled','disabled');
                         new_divs.hide().removeClass("new_sign");
                         $('.youtubeVideoModal').modal('hide');
-//window.location="web"+window.location.hash+"&h"
+
+                        web_client.do_action({
+                            type: 'ir.actions.act_window',
+                            res_model: 'meeting_point.document',
+                            res_id: parseInt(doc_id),
+                            view_mode: 'form',
+                            views: [[false, 'form']],
+                            context: {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
+                            target: 'main'
+                         });
+
+                          web_client.do_notify(_("Sent"), "Signature request sent");
+
                     });
 
                 }
             });
 	});
 
-
-
-	$(document).on("click",".saved_sign.is_sign,.saved_sign.is_initial", function(){
+$(document).on("click",".saved_sign.is_sign,.saved_sign.is_initial", function(){
     var login=$(this).attr("login");
     var my_record=$(this).attr("my_record");
 
@@ -683,7 +707,8 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                     doc_data=data.doc_data;
                     renderPDF(data.pdf_binary);
                     $('.youtubeVideoModal').modal('hide');
-                     $('#loaderContainerajax').hide();
+                    $('#loaderContainerajax').hide();
+                    web_client.do_notify(_("Success"), "Signature saved");
                 });
 
             });
@@ -701,8 +726,19 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                 req_url = '/e-sign/delete_signature';
                 input_data = {signature_id:signature_id,document_id:doc_id,url:url};
                 dn_json_rpc(req_url,input_data, function(data){
-                    doc_data=data.doc_data;
-                    renderPDF(data.pdf_binary);
+//                    doc_data=data.doc_data;
+//                    renderPDF(data.pdf_binary);
+                      web_client.do_action({
+                            type: 'ir.actions.act_window',
+                            res_model: 'meeting_point.document',
+                            res_id: parseInt(doc_id),
+                            view_mode: 'form',
+                            views: [[false, 'form']],
+                            context: {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
+                            target: 'main'
+                         });
+
+
                 });
                 $('.youtubeVideoModal').modal('hide');
             }
@@ -841,6 +877,7 @@ $(document).on("click",".new_sign .del_sign", function(e){
 });
 
 
+
 $("#nxxt_sign").click(function() {
     var d = $.grep(doc_data, function(v)
         {
@@ -882,6 +919,7 @@ if($('#save-doc-data').hasClass("o_invisible_modifier")){
 console.log("dir");
 $('#page_container1')[0].style.height="calc(100vh - 165px)";
 }
+
 
 
 

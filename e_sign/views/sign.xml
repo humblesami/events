@@ -28,7 +28,7 @@
                                 <div class="kanban_del">
                                     <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <t t-if="record.draw_signature.raw_value">
                                         <img style="width:100%" t-att-src="kanban_image('e_sign.signature', 'draw_signature', record.id.value)"/>
                                     </t>
