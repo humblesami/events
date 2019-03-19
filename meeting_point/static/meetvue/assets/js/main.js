@@ -140,6 +140,7 @@ var site_functions = {
             if (!nam)
                 console.trace();
             else {
+                if(nam != 'force')
                 console.log("Hidden from " + hiddenFrom);
             }
             server_wait_loader.hide();

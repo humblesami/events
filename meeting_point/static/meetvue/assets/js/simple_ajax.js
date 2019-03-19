@@ -9,6 +9,7 @@ function dn_rpc_object(options) {
     var api_url = options.url;
     api_url = api_url.replace('-json', '');
     var req_url = site_config.server_base_url + api_url;
+    console.log('Ajax started for '+api_url);
     var input_data = {};
     if (options.data) {
         input_data = options.data;

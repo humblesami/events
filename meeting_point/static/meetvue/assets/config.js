@@ -54,3 +54,6 @@ if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -
 console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;
+if(site_config.site_url.startsWith('https://')){
+    $('head meta[name="viewport"]:first').after('<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />');
+}
