@@ -526,7 +526,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                             view_mode: 'form',
                             views: [[false, 'form']],
                             context: {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
-                            target: 'main'
+                            target: 'current'
                          });
 
                           web_client.do_notify(_("Sent"), "Signature request sent");
@@ -734,7 +734,7 @@ $(document).on("click",".saved_sign.is_sign,.saved_sign.is_initial", function(){
                             view_mode: 'form',
                             views: [[false, 'form']],
                             context: {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
-                            target: 'main'
+                            target: 'current'
                          });
 
 

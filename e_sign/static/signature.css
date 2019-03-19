@@ -160,3 +160,18 @@ overflow: auto;
          .pending_signs{
          width:50%;
          }
+
+
+         .o_control_panel > .breadcrumb > li{
+
+    display:none
+}
+
+.o_control_panel > .breadcrumb > li:last-child{
+
+    display:inline-block
+}
+.o_control_panel > .breadcrumb > li:first-child{
+
+    display:inline-block
+}
