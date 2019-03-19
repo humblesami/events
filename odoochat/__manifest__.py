@@ -19,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['dn_base', 'dn_auth'],
+    'depends': ['assets', 'dn_base', 'dn_auth'],
     'application':True,
     # always loaded
     'data': [

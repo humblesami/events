@@ -110,10 +110,10 @@ function load_angular(call_back, skip_initial_checks)
                 <base href=${window.location.origin} />
                 <app-root></app-root>
                 <div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1"/>
-                <script src="/meeting_point/static/meetvue/assets/config.js"></script>
-                <script src="/meeting_point/static/meetvue/assets/js/json.js"></script>
-                <script src="/meeting_point/static/meetvue/assets/js/main.js"></script>
-                <script src="/meeting_point/static/meetvue/assets/js/datetime.js"></script>
+                <script src="/odoochat/static/meetvue/assets/static/config.js"></script>
+                <script src="/odoochat/static/meetvue/assets/static/js/json.js"></script>
+                <script src="/odoochat/static/meetvue/assets/static/js/main.js"></script>
+                <script src="/odoochat/static/meetvue/assets/static/js/datetime.js"></script>
             </div>
         `);
     }
@@ -121,10 +121,10 @@ function load_angular(call_back, skip_initial_checks)
     var myLoader = new async_file_loader();
     myLoader.require(
         [
-            '/meeting_point/static/meetvue/runtime.js',
-            '/meeting_point/static/meetvue/polyfills.js',
-            '/meeting_point/static/meetvue/vendor.js',
-            '/meeting_point/static/meetvue/main.js',
+            '/odoochat/static/meetvue/runtime.js',
+            '/odoochat/static/meetvue/polyfills.js',
+            '/odoochat/static/meetvue/vendor.js',
+            '/odoochat/static/meetvue/main.js',
         ],
         function() {
             if(window["loadComponent"])
@@ -139,7 +139,22 @@ function load_angular(call_back, skip_initial_checks)
             }
             else
             {
-                console.log('Angular not loaded');
+                setTimeout(function(){
+                    if(window["loadComponent"])
+                    {
+                        odoo.angular_loading = false;
+                        odoo.angular_loaded = 1;
+                        console.log('Loaded angular files in 2nd try',Date());
+                        for(var i in on_angular_loaded)
+                        {
+                            on_angular_loaded[i]();
+                        }
+                    }
+                    else
+                    {
+                        console.log('Angular not loaded');
+                    }
+                }, 1000);
             }
         },
         document.getElementById('angular_container')
@@ -191,22 +206,26 @@ $(function(){
             });
             SystrayMenu.Items.push(notification_icon);
             SystrayMenu.Items.push(message_icon);
-
-
-
         }
     });
-     function load_chatter(){
-                var wait_options = {
-                    selector : 'body>nav:first>.o_main_navbar>.o_menu_systray app-messageicon',
-                    call_back : function(){
-                        load_angular(function(){
-                            window["loadComponent"]("chat","app-chat");
-                            window["loadComponent"]("messengericon","app-messageicon");
-                        })
-                    }
-                }
-                wait_element_render(wait_options);
+
+    function load_chatter(){
+        var wait_options = {
+            selector : 'body>nav:first>.o_main_navbar>.o_menu_systray app-messageicon',
+            call_back : function(){
+                load_angular(function(){
+                    window["loadComponent"]("chat","app-chat");
+                    window["loadComponent"]("messengericon","app-messageicon");
+
+                    var curl = window.location.toString();
+                    var origin = window.location.origin.toString();
+                    var path = curl.replace(origin, '');
+                    path = path.replace('odoochat/static/meetvue/web','web')
+                    window.history.pushState(null,'',path);
+                })
             }
-            load_chatter();
+        }
+        wait_element_render(wait_options);
+    }
+    load_chatter();
 });

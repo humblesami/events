@@ -4,7 +4,7 @@ var dn_json_rpc_object = {
     showHideLoader:function(show_it){
         if (!dn_json_rpc_object.initialized)
             dn_json_rpc_object.init();
-        if(!show_it)
+        if(!show_it && site_loaderContainer)
             site_loaderContainer.hide();
         else
         {

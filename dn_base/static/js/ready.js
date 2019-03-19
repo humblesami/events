@@ -75,8 +75,6 @@ function load_dn_assets()
                 dn_json_rpc_object.showHideLoader(true);
             });
             $('head').append('<link rel="stylesheet" href="/dn_base/static/css/web.css" />');
-            $('head').append('<link rel="stylesheet" href="/dn_base/static/css/emoji.css" />');
-            $('head').append('<link rel="stylesheet" href="/dn_base/static/css/emoji.css.map" />');
              // $('head').prepend('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">');
             setTimeout(function(){
                 $('.o_mobile_menu_toggle').mousedown(function(){
