@@ -87,10 +87,9 @@ var meeting_point = {
     meeting: {
         validateDurations: function (e, el) {
             try {
-                dntoast.hide();
                 if($('.meetingform').length == 0 || $('.meeting_duration').length == 0)
                 {
-                    dntoast.error("No meeting form");
+                    bootbox.alert("No meeting form");
                     return;
                 }
 
@@ -111,7 +110,7 @@ var meeting_point = {
             }
             catch (er) {
                 console.log(er);
-                dntoast.error(er.message);
+                bootbox.alert(er.message);
             }
         },
         onStartValidation:function(containerSelector, input){
@@ -125,7 +124,7 @@ var meeting_point = {
 
         },
         onInvalidDuration: function (containerSelector, message, input) {
-            dntoast.error(message);
+            bootbox.alert(message);
             input.addClass('dnerror').focus();
             if($(containerSelector).closest('.modal-content').length !=0)
                 $(containerSelector).closest('.modal-content').find('.modal-footer').find('.btn.btn-primary').attr('disabled', '');
@@ -196,11 +195,10 @@ var meeting_point = {
     topic: {
         validateDurations: function (e, el) {
             try {
-                dntoast.hide();
                 $('.meetingform .btn-primary').removeAttr('disabled');
                 if($('.meetingtopicform').length == 0 || $('.meeting_duration').length == 0)
                 {
-                    dntoast.error("No meeting form for topic");
+                    bootbox.alert("No meeting form for topic");
                     return;
                 }
 
@@ -223,7 +221,7 @@ var meeting_point = {
             }
             catch (er) {
                 console.log(er);
-                dntoast.error(er.message);
+                bootbox.alert(er.message);
             }
         },
         calcSumOfTopicsDuration: function (currentTopicDuration) {

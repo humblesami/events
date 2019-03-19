@@ -29,7 +29,7 @@ $(function(){
 //        {
 //            //err = '<h4>An ideal image will be with dimensions<br/>Width=1200, Height=800</h4>' + err;
 //            err = "<b>"+err+"</b>";
-//            dntoast.error(err, 480);
+//            bootbox.alert(err);
 //            validator_field.val('invalid').change();
 //        }
 //        else
@@ -39,7 +39,6 @@ $(function(){
     var lastFile = false;
     var file_tag = $('input[name="ufile"]');
     file_tag.change(function(e){
-        dntoast.hide();
         var el = this;
         if(!el.files)
             return;
