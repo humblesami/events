@@ -1,3 +1,7 @@
-document.addEventListener("DOMContentLoaded", function(event) {
-    $('.navbar-static-top').show();
-});
+//document.addEventListener("DOMContentLoaded",
+(function(event) {
+    if (window.top == window){
+        $('.navbar-static-top').show();
+    }
+})()
+//});
