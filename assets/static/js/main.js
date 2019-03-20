@@ -186,7 +186,8 @@ var site_functions = {
 
         }
     },
-    togglerelated: function(e, el, selector) {        
+    togglerelated: function(e, el, selector) {
+        console.log(234, 'Shown/hideen');
         if ($(el).hasClass('active')) {
             $(el).removeClass('active');
             $(selector).hide();

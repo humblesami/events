@@ -10,6 +10,7 @@ class odoochat(models.Model):
     read_status = fields.Boolean(default=False)
 
     def save(self, vals):
-        super(odoochat, self).create(vals)
+        message = super(odoochat, self).create(vals)
+        vals['id'] = message.id
         res = [{'name': 'chat_message_received', 'data':vals, 'audience': [ vals['to']] }]
         return res

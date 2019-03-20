@@ -101,11 +101,16 @@ class OdooChat(http.Controller):
                 return ws_methods.not_logged_in()
             req_env = http.request.env
             message_id = kw.get('message_id')
+            message_id = int(message_id)
             filters = [('id', '=', message_id)]
-            req_env['odoochat.message'].sudo().search(filters).write({'read_status': True})
+            message = req_env['odoochat.message'].sudo().search(filters)
+            if message:
+                message.read_status = True
+            else:
+                return ws_methods.http_response('Not found '+message_id)
             return ws_methods.http_response('', 'done')
         except:
-            ws_methods.handle()
+            return ws_methods.handle()
 
     @http.route('/get-user-messages-json', type="json", csrf=False, auth='public', cors='*')
     def getUserMessages_json_request(self, **kw):

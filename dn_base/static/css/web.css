@@ -346,3 +346,7 @@ body.o_app_switcher_background nav:first-child
 {
 	margin-left:5px;
 }
+.o_burger_menu
+{
+    z-index:9999;
+}
