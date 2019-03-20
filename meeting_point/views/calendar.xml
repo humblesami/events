@@ -205,11 +205,43 @@
             <field name="arch" type="xml">
                 <form string="Meetings" class="meetingform">
                      <field name="is_active_yet" class="o_hidden"/>
-                     <header class = "oe_read_only" attrs="{'invisible': [('is_active_yet','=','no')]}">
-                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Accept" name="do_accept"/>
-                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>
-                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Tentative" name="do_tentative"/>
-                    </header>
+                     <field name="attendee_status" class ="statusValue o_hidden"/>
+
+
+                                        <div class="acceptance_buttons_new">
+                                            <div class ="accet"  style = "display:none">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept" ><i class="fa fa-check fa-lg" style="color:white"/>Accept
+                                                </button>
+                                            </div>
+                                            <div class = "accept_visible" >
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept
+                                                </button>
+                                            </div>
+
+                                            <div class ="declin "  style = "display:none">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
+                                                </button>
+                                            </div>
+                                            <div class = "decline_visible">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline
+                                                </button>
+                                            </div>
+
+                                            <div class ="tentativehide "  style = "display:none">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
+                                                </button>
+                                            </div>
+                                            <div class = "tentative_visible" >
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
+                                                </button>
+                                            </div>
+                                        </div>
+
+                     <!--<header class = "oe_read_only" attrs="{'invisible': [('is_active_yet','=','no')]}">-->
+                        <!--<button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Accept" name="do_accept"/>-->
+                        <!--<button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>-->
+                        <!--<button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Tentative" name="do_tentative"/>-->
+                    <!--</header>-->
                     <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="id" class="meeting_id o_hidden"/>
                     <sheet>
@@ -222,7 +254,7 @@
                         </div>
                         <field name="state" invisible="1"/>
                         <field name="is_attendee" invisible="1"/>
-                        <field name="attendee_status" invisible="1"/>
+                        <!--<field name="attendee_status" invisible="1"/>-->
                         <field name="conference_status" class="conference_status o_hidden"/>
                         <field name="exectime"/>
                         <div name="readonly_completed_1">
