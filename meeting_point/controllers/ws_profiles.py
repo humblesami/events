@@ -10,11 +10,11 @@ from dateutil.relativedelta import relativedelta
 
 
 class ws_profile(http.Controller):
-    @http.route('/ws/profiles', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/ws/profiles', type="http", csrf=False, auth='public', cors='*')
     def get_profiles_http(self, **kw):
         return self.get_profiles(kw)
 
-    @http.route('/ws/profiles-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/ws/profiles-json', type="json", csrf=False, auth='public', cors='*')
     def get_profiles_json(self, **kw):
         reqBody = http.request.jsonrequest
         return self.get_profiles(reqBody)
@@ -66,11 +66,11 @@ class ws_profile(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/ws/profile', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/ws/profile', type="http", csrf=False, auth='public', cors='*')
     def get_my_profile_http(self, **kw):
         return self.get_my_profile(kw)
 
-    @http.route('/ws/profile-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/ws/profile-json', type="json", csrf=False, auth='public', cors='*')
     def get_my_profile_json(self, **kw):
         reqBody = http.request.jsonrequest
         return self.get_my_profile(reqBody)
@@ -131,7 +131,7 @@ class ws_profile(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/get-resume', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/get-resume', type="http", csrf=False, auth='public', cors='*')
     def get_resume_from_userID(self, **kw):
         return self.get_resume(kw)
 
@@ -162,11 +162,11 @@ class ws_profile(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/profile/get_signature', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/profile/get_signature', type="http", csrf=False, auth='public', cors='*')
     def profile_signature_http(self, **kw):
         return self.profile_signature_get(kw)
 
-    @http.route('/profile/get_signature-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/profile/get_signature-json', type="json", csrf=False, auth='public', cors='*')
     def profile_signature_json(self, **kw):
         reqBody = http.request.jsonrequest
         return self.profile_signature_get(reqBody)
@@ -188,11 +188,11 @@ class ws_profile(http.Controller):
         except:
             ws_methods.handle()
 
-    @http.route('/profile/save_signature', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/profile/save_signature', type="http", csrf=False, auth='public', cors='*')
     def profile_signature_save_http(self, **kw):
         return self.profile_signature_save(kw)
 
-    @http.route('/profile/save_signature-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/profile/save_signature-json', type="json", csrf=False, auth='public', cors='*')
     def profile_signature_save_json(self, **kw):
         reqBody = http.request.jsonrequest
         return self.profile_signature_save(reqBody)
@@ -287,11 +287,11 @@ class ws_profile(http.Controller):
             res = ''
         return res
 
-    @http.route('/ws/change-profile', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/ws/change-profile', type="http", csrf=False, auth='public', cors='*')
     def change_profile_http(self, **kw):
         return self.change_profile(kw)
 
-    @http.route('/ws/change-profile-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/ws/change-profile-json', type="json", csrf=False, auth='public', cors='*')
     def change_profile_json(self, **kw):
         reqBody = http.request.jsonrequest
         return self.change_profile(reqBody)

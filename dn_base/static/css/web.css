@@ -325,3 +325,13 @@ body.o_app_switcher_background nav:first-child
     right: -2px;
     z-index: 200;
 }
+
+#signature_editor{ width: 459px; height: 198px; margin-top:5px; margin-bottom:5px;}
+
+
+@media (max-width: 540px) {
+    #signature_editor{
+    width: calc(100vw - 50px);
+    margin:5px auto !important; }
+
+    }

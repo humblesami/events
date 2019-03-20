@@ -454,7 +454,7 @@
                             </field>
                         </div>                        
                     </sheet>                    
-                    <app-comments></app-comments>
+                    <app-comments  attrs="{'invisible': [('publish','=',False)]}" ></app-comments>
                     <script src="/meeting_point/static/js/meeting_form.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/attendance.js"/>
@@ -549,6 +549,23 @@
                              <!--</kanban>-->
                         <!--</field>-->
                 </xpath>
+            </field>
+        </record>
+
+        <record id="meeting_point_event_form_draft" model="ir.ui.view">
+            <field name="name">meeting.point.event.form.completed</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="meeting_point.meeting_point_event_form"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+
+
+                <xpath expr="//div[@name='mp_roster']" position="attributes">
+                   <attribute name="class">o2m_kanban roster-item</attribute>
+                </xpath>
+
+
             </field>
         </record>
 
