@@ -39,7 +39,7 @@
         #'demo/demo.xml',
     ],
     'qweb': [
-        'views/icon.xml'
+        'views/icon.xml','views/main.xml'
     ],
     'application':True,
     #'post_init_hook': '_auto_update_lang_en',
