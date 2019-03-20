@@ -425,7 +425,7 @@
     background: #dc3545;
     color: white;
     border-radius: 20px;
-    padding: 0 5px;
+    padding: 1px 5px !important;
     padding-top: 2px;
     font-weight: bold;
     font-size: 10px;
@@ -433,6 +433,9 @@
     top: 0px;
     right: -2px;
     z-index: 200;
+}
+.notification-container .un-read-msg{
+    right:0 !important;
 }
 
 
