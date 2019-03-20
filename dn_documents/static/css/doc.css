@@ -1,85 +1,135 @@
-
-
-                        .top_btns {
-                        background: rgb(50, 54, 57);
-                        text-align: center;
-                        width: 98.9%;
-                        margin-bottom: -18px;
-
-                        }
-                        .position_btns{
-                        z-index:999
-                        }
-
-                        .pg_no{
-                        color: white;
-                        }
-
-                        .doc_btn {
-                        background-color: gray;
-                        color: white;
-                        margin: 2px;
-                        }
-
-
-                        .edit_sign:hover,.del_sign:hover {
-                        background-color: white;
-                        color:red!important
-
-                        }
-
-                        .PdfTopBtnsWrapper {
-                        padding: 4px;
-                        margin-bottom:20px;
-                        }
-
-                        #scaleSelectContainer select#scaleSelect {
-                        background: white;
-                        margin-left: 3px;
-                        border: navajowhite;
-                        padding: 5px 10px;
-                        font-size: 12px;
-                        border-radius: 3px;
-                        height: 29px;
-                        }
-
-                        .PdfButtonWrapper {
-                        background: #ffffff;
-                        padding: 5px;
-                        }
-                        .PdfButtonWrapper .btn {
-                        min-width: 130px;
-                        margin:3px;
-                        }
-                        #the-canvas{
-                        border-left:1px solid #000000;
-                        border-top:1px solid #cacaca;
-                        border-right:1px solid #000000;
-                        border-bottom:1px solid #000000;
-                        }
-
-
-
-                        #page_container1
-                        {
-                            overflow-y:auto;overflow-x:auto;position:relative;
-                        }
-                        #page_container
-                        {
-                        overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;
-                        }
-
-                        .modal-body.o_act_window {
-                        overflow: auto;
-                        max-height: calc(100vh - 200px);
-                    }
-
-.o_cp_left,.o_cp_right{
-    display:none!important;
+#annotated-doc-conatiner {
+    display: none;
+    z-index: 13;
+    background: #fff;
+    position: relative;
+    margin: -24px -16px;
+    width: auto !important;
 }
 
-.pdf-searchbar,.icon.back{
-                        display:none !important
+#viewer-wrapper {
+    height: calc(100vh - 147px) !important;
+}
+
+#viewer-wrapper {
+    overflow: auto;
+    position: relative;
+}
+
+#content-wrapper {
+    width: 100%;
+}
+
+#viewer-wrapper {
+    height: calc(100vh - 147px) !important;
+}
+
+#comment-wrapper {
+    position: fixed;
+    width: 250px;
+    left: 0;
+    z-index: 58;
+    display: none;
+    background: #d4d4d4;
+    border-right: 1px solid #e6e6e6;
+    /* position: fixed;
+    width: 250px;
+    left: 0;
+    z-index: 58;
+    display: none;
+    background: #d4d4d4;
+    border-right: 1px solid #e6e6e6;
+    bottom: 2px; */
+    height: calc(100vh - 148px) !important;
+    top: 148px !important;
+}
+
+.top_btns {
+    background: rgb(50, 54, 57);
+    text-align: center;
+    width: 98.9%;
+    margin-bottom: -18px;
+}
+
+.position_btns {
+    z-index: 999
+}
+
+.pg_no {
+    color: white;
+}
+
+.doc_btn {
+    background-color: gray;
+    color: white;
+    margin: 2px;
+}
+
+.edit_sign:hover,
+.del_sign:hover {
+    background-color: white;
+    color: red!important
+}
+
+.PdfTopBtnsWrapper {
+    padding: 4px;
+    margin-bottom: 20px;
+}
+
+#scaleSelectContainer select#scaleSelect {
+    background: white;
+    margin-left: 3px;
+    border: navajowhite;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 3px;
+    height: 29px;
+}
+
+.PdfButtonWrapper {
+    background: #ffffff;
+    padding: 5px;
+}
+
+.PdfButtonWrapper .btn {
+    min-width: 130px;
+    margin: 3px;
+}
+
+#the-canvas {
+    border-left: 1px solid #000000;
+    border-top: 1px solid #cacaca;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+}
+
+#page_container1 {
+    overflow-y: auto;
+    overflow-x: auto;
+    position: relative;
+}
+
+#page_container {
+    overflow-y: auto;
+    overflow-x: auto;
+    text-align: initial;
+    position: relative;
+    display: inline-block;
+}
+
+.modal-body.o_act_window {
+    overflow: auto;
+    max-height: calc(100vh - 200px);
+}
+
+.o_cp_left,
+.o_cp_right {
+    display: none!important;
+}
+
+.pdf-searchbar,
+.icon.back {
+    display: none !important
 }
 
 .topbar .paginator {
@@ -87,10 +137,33 @@
 }
 
 .topbar .pager {
-    margin:0;
+    margin: 0;
 }
 
-#viewer-wrapper{
-     height: calc(100vh - 200px) !important;
 
+.comment-list {
+    height: calc(100vh - 199px) !important;
+}
+
+.comment-list-container{
+    padding-bottom: 65px !important;
+}
+.comment-list-form {
+    padding-left: 0;
+    width: 234px;
+    position: absolute;
+    bottom: 0px;
+}
+
+#commentText {
+    width: 100%;
+    resize: none;
+    border: indianred;
+    border-top: 1px solid darkturquoise;
+    padding: 5px 10px;
+    height: 42px;
+}
+
+.comment-header .title {
+    font-size: 13px;
 }
