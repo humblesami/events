@@ -13,7 +13,7 @@
                     <field name="is_attendee" invisible="1"/>
                     <field name="allday" invisible="1"/>
                     <field name="is_active_yet" invisible="1"/>
-                    <field name="attendee_status" invisible="1"/>
+                    <field name="attendee_status" class = "statusValue" invisible="1"/>
                     <field name="conference_status" class="conference_status o_hidden"/>
                     <field name="id" class="o_hidden meeting_id"/>
                     <field name="im_attendee" class="o_hidden is_attendee"/>
@@ -33,10 +33,34 @@
                         <field name="conference_bridge_number" class="conference"/>
                         <field name="pin" class="pin" />
                         </group>
-                    <div class="detail_btn o_hidden">
-                        <button type="object" class="btn btn-primary btn-sm acceptancebtn " string ="Accept" name="do_accept"/>
-                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>
-                        <button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Tentative" name="do_tentative"/>
+                    <div class="detail_btn o_hidden"  style="display:flex">
+
+                                            <div class="accet" style="display:none !important">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept"><i class="fa fa-check fa-lg" style="color:white"/>Accept
+                                                </button>
+                                            </div>
+                                            <div class="accept_visible">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept
+                                                </button>
+                                            </div>
+
+                                            <div class="declin " style="display:none !important">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
+                                                </button>
+                                            </div>
+                                            <div class="decline_visible">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline
+                                                </button>
+                                            </div>
+
+                                            <div class="tentativehide" style="display:none !important">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
+                                                </button>
+                                            </div>
+                                            <div class="tentative_visible">
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
+                                                </button>
+                                            </div>
                         <button type="object" class="btn-primary" name="go_to_meeting">Details</button>
                     </div>
 
@@ -208,8 +232,8 @@
                      <field name="attendee_status" class ="statusValue o_hidden"/>
 
 
-                                        <div class="acceptance_buttons_new">
-                                            <div class ="accet"  style = "display:none">
+                                        <div class="acceptance_buttons_new oe_read_only"  style="display:flex">
+                                            <div class ="accet"  style="display:none !important">
                                                 <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept" ><i class="fa fa-check fa-lg" style="color:white"/>Accept
                                                 </button>
                                             </div>
@@ -218,7 +242,7 @@
                                                 </button>
                                             </div>
 
-                                            <div class ="declin "  style = "display:none">
+                                            <div class ="declin "  style="display:none !important">
                                                 <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
                                                 </button>
                                             </div>
@@ -227,7 +251,7 @@
                                                 </button>
                                             </div>
 
-                                            <div class ="tentativehide "  style = "display:none">
+                                            <div class ="tentativehide "  style="display:none !important">
                                                 <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
                                                 </button>
                                             </div>
