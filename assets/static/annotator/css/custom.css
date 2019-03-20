@@ -84,9 +84,10 @@ body.pdf-viewer
     float: right;
     cursor: pointer;
     color: #ffffff;
+    margin: -2px;
 }
-.show-all-comments i.far.fa-times-circle {
-  font-size: 18px;
+.show-all-comments i.fa.fa-times-circle {
+  font-size: 20px;
 }
 .annotation .show-all-comments
 {
