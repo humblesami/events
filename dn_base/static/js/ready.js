@@ -82,16 +82,16 @@ function load_dn_assets()
                     {
                         setTimeout(function(){
                             $('.o_in_appswitcher:first').addClass('o_hidden');
-                        },500);
+                        },50);
                     }
                     else
                     {
                         setTimeout(function(){
                             $('.o_in_appswitcher:first').removeClass('o_hidden');
-                        },10);
+                        },100);
                     }
                 })
-            },1500);
+            },800);
         });
     }
     catch(er)
