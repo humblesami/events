@@ -304,7 +304,8 @@ body.o_app_switcher_background nav:first-child
 .o_menu_systray span.un-read-msg{
     top: 5px;
     right: -10px;
-    line-height: 15px;
+    line-height: normal;
+    padding: 0px 5px 1px;
 }
 .fa-file{
 
@@ -319,11 +320,12 @@ body.o_app_switcher_background nav:first-child
     padding: 0 5px;
     padding-top: 2px;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 10px;
     position: absolute;
     top: 0px;
     right: -2px;
     z-index: 200;
+     font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 #signature_editor{ width: 459px; height: 198px; margin-top:5px; margin-bottom:5px;}
