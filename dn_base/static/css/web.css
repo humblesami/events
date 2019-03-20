@@ -2,7 +2,10 @@ body
 {
     font-size:13.5px;
 }
-
+button, a
+{
+    cursor : pointer;
+}
 .o_form_view .oe_inline.o_field_one2many
 {
     width: 100% !important;

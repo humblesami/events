@@ -18,8 +18,8 @@
  * This file also contains some modifications by Igor Zhukov in order to add
  * custom scrollbars to EmojiMenu See keyword `MODIFICATION` in source code.
  */
-(function($, window, document) {
-
+(function($, window, document) {    
+    var emojiConfig = window['emojiConfig'];
   var ELEMENT_NODE = 1;
   var TEXT_NODE = 3;
   var TAGS_BLOCK = [ 'p', 'div', 'pre', 'form' ];
@@ -257,11 +257,11 @@
     var name = emoji[3];
     var filename = $.emojiarea.spriteSheetPath ? $.emojiarea.spriteSheetPath : $.emojiarea.assetsPath + '/emoji_spritesheet_!.png';
     var blankGifPath = $.emojiarea.blankGifPath ? $.emojiarea.blankGifPath : $.emojiarea.assetsPath + '/blank.gif';
-    var iconSize = menu && Config.Mobile ? 26 : $.emojiarea.iconSize
+    var iconSize = menu && emojiConfig.Mobile ? 26 : $.emojiarea.iconSize
     var xoffset = -(iconSize * column);
     var yoffset = -(iconSize * row);
-    var scaledWidth = (Config.EmojiCategorySpritesheetDimens[category][1] * iconSize);
-    var scaledHeight = (Config.EmojiCategorySpritesheetDimens[category][0] * iconSize);
+    var scaledWidth = (emojiConfig.EmojiCategorySpritesheetDimens[category][1] * iconSize);
+    var scaledHeight = (emojiConfig.EmojiCategorySpritesheetDimens[category][0] * iconSize);
 
     var style = 'display:inline-block;';
     style += 'width:' + iconSize + 'px;';
