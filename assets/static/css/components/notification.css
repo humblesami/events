@@ -452,11 +452,6 @@
     opacity: 1;
 }
 
-.notification-container .main-user-navbar {
-	display: flex;
-    align-items: center;
-}
-
 .notification-container .main-user-navbar button {
 	margin: 0 3px;
 }

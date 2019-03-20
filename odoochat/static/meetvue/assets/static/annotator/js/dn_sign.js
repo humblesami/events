@@ -108,7 +108,7 @@ $(document).ready(function () {
             signature_editor.signature('clear');
         });
 
-        $('body').prepend('<script src=/assets/static/js/signature.js"></script>');
+        $('body').prepend('<script src="/assets/static/js/signature.js"></script>');
 
         signature_editor.signature({thickness:4});
 
