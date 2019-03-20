@@ -1,6 +1,5 @@
-'use strict';
-var Config = {};
-Config.Emoji = {
+var emojiConfig = {};
+emojiConfig.Emoji = {
     "00a9": ["\u00A9", ["copyright"]],
     "00ae": ["\u00AE", ["registered"]],
     "203c": ["\u203C", ["bangbang"]],
@@ -848,7 +847,7 @@ Config.Emoji = {
     "1f1fa-1f1f8": ["\uD83C\uDDFA\uD83C\uDDF8", ["us"]]
 }
 
-Config.EmojiCategories = [
+emojiConfig.EmojiCategories = [
     ["1f604", "1f603", "1f600", "1f60a", "263a", "1f609", "1f60d", "1f618", "1f61a", "1f617", "1f619", "1f61c", "1f61d", "1f61b", "1f633", "1f601", "1f614", "1f60c", "1f612", "1f61e", "1f623", "1f622", "1f602", "1f62d", "1f62a", "1f625", "1f630", "1f605", "1f613", "1f629", "1f62b", "1f628", "1f631", "1f620", "1f621", "1f624", "1f616", "1f606", "1f60b", "1f637", "1f60e", "1f634", "1f635", "1f632", "1f61f", "1f626", "1f627", "1f608", "1f47f", "1f62e", "1f62c", "1f610", "1f615", "1f62f", "1f636", "1f607", "1f60f", "1f611", "1f472", "1f473", "1f46e", "1f477", "1f482", "1f476", "1f466", "1f467", "1f468", "1f469", "1f474", "1f475", "1f471", "1f47c", "1f478", "1f63a", "1f638", "1f63b", "1f63d", "1f63c", "1f640", "1f63f", "1f639", "1f63e", "1f479", "1f47a", "1f648", "1f649", "1f64a", "1f480", "1f47d", "1f4a9", "1f525", "2728", "1f31f", "1f4ab", "1f4a5", "1f4a2", "1f4a6", "1f4a7", "1f4a4", "1f4a8", "1f442", "1f440", "1f443", "1f445", "1f444", "1f44d", "1f44e", "1f44c", "1f44a", "270a", "270c", "1f44b", "270b", "1f450", "1f446", "1f447", "1f449", "1f448", "1f64c", "1f64f", "261d", "1f44f", "1f4aa", "1f6b6", "1f3c3", "1f483", "1f46b", "1f46a", "1f46c", "1f46d", "1f48f", "1f491", "1f46f", "1f646", "1f645", "1f481", "1f64b", "1f486", "1f487", "1f485", "1f470", "1f64e", "1f64d", "1f647", "1f3a9", "1f451", "1f452", "1f45f", "1f45e", "1f461", "1f460", "1f462", "1f455", "1f454", "1f45a", "1f457", "1f3bd", "1f456", "1f458", "1f459", "1f4bc", "1f45c", "1f45d", "1f45b", "1f453", "1f380", "1f302", "1f484", "1f49b", "1f499", "1f49c", "1f49a", "2764", "1f494", "1f497", "1f493", "1f495", "1f496", "1f49e", "1f498", "1f48c", "1f48b", "1f48d", "1f48e", "1f464", "1f465", "1f4ac", "1f463", "1f4ad"],
     ["1f436", "1f43a", "1f431", "1f42d", "1f439", "1f430", "1f438", "1f42f", "1f428", "1f43b", "1f437", "1f43d", "1f42e", "1f417", "1f435", "1f412", "1f434", "1f411", "1f418", "1f43c", "1f427", "1f426", "1f424", "1f425", "1f423", "1f414", "1f40d", "1f422", "1f41b", "1f41d", "1f41c", "1f41e", "1f40c", "1f419", "1f41a", "1f420", "1f41f", "1f42c", "1f433", "1f40b", "1f404", "1f40f", "1f400", "1f403", "1f405", "1f407", "1f409", "1f40e", "1f410", "1f413", "1f415", "1f416", "1f401", "1f402", "1f432", "1f421", "1f40a", "1f42b", "1f42a", "1f406", "1f408", "1f429", "1f43e", "1f490", "1f338", "1f337", "1f340", "1f339", "1f33b", "1f33a", "1f341", "1f343", "1f342", "1f33f", "1f33e", "1f344", "1f335", "1f334", "1f332", "1f333", "1f330", "1f331", "1f33c", "1f310", "1f31e", "1f31d", "1f31a", "1f311", "1f312", "1f313", "1f314", "1f315", "1f316", "1f317", "1f318", "1f31c", "1f31b", "1f319", "1f30d", "1f30e", "1f30f", "1f30b", "1f30c", "1f320", "2b50", "2600", "26c5", "2601", "26a1", "2614", "2744", "26c4", "1f300", "1f301", "1f308", "1f30a"],
     ["1f38d", "1f49d", "1f38e", "1f392", "1f393", "1f38f", "1f386", "1f387", "1f390", "1f391", "1f383", "1f47b", "1f385", "1f384", "1f381", "1f38b", "1f389", "1f38a", "1f388", "1f38c", "1f52e", "1f3a5", "1f4f7", "1f4f9", "1f4fc", "1f4bf", "1f4c0", "1f4bd", "1f4be", "1f4bb", "1f4f1", "260e", "1f4de", "1f4df", "1f4e0", "1f4e1", "1f4fa", "1f4fb", "1f50a", "1f509", "1f508", "1f507", "1f514", "1f515", "1f4e3", "1f4e2", "23f3", "231b", "23f0", "231a", "1f513", "1f512", "1f50f", "1f510", "1f511", "1f50e", "1f4a1", "1f526", "1f506", "1f505", "1f50c", "1f50b", "1f50d", "1f6c0", "1f6c1", "1f6bf", "1f6bd", "1f527", "1f529", "1f528", "1f6aa", "1f6ac", "1f4a3", "1f52b", "1f52a", "1f48a", "1f489", "1f4b0", "1f4b4", "1f4b5", "1f4b7", "1f4b6", "1f4b3", "1f4b8", "1f4f2", "1f4e7", "1f4e5", "1f4e4", "2709", "1f4e9", "1f4e8", "1f4ef", "1f4eb", "1f4ea", "1f4ec", "1f4ed", "1f4ee", "1f4e6", "1f4dd", "1f4c4", "1f4c3", "1f4d1", "1f4ca", "1f4c8", "1f4c9", "1f4dc", "1f4cb", "1f4c5", "1f4c6", "1f4c7", "1f4c1", "1f4c2", "2702", "1f4cc", "1f4ce", "2712", "270f", "1f4cf", "1f4d0", "1f4d5", "1f4d7", "1f4d8", "1f4d9", "1f4d3", "1f4d4", "1f4d2", "1f4da", "1f4d6", "1f516", "1f4db", "1f52c", "1f52d", "1f4f0", "1f3a8", "1f3ac", "1f3a4", "1f3a7", "1f3bc", "1f3b5", "1f3b6", "1f3b9", "1f3bb", "1f3ba", "1f3b7", "1f3b8", "1f47e", "1f3ae", "1f0cf", "1f3b4", "1f004", "1f3b2", "1f3af", "1f3c8", "1f3c0", "26bd", "26be", "1f3be", "1f3b1", "1f3c9", "1f3b3", "26f3", "1f6b5", "1f6b4", "1f3c1", "1f3c7", "1f3c6", "1f3bf", "1f3c2", "1f3ca", "1f3c4", "1f3a3", "2615", "1f375", "1f376", "1f37c", "1f37a", "1f37b", "1f378", "1f379", "1f377", "1f374", "1f355", "1f354", "1f35f", "1f357", "1f356", "1f35d", "1f35b", "1f364", "1f371", "1f363", "1f365", "1f359", "1f358", "1f35a", "1f35c", "1f372", "1f362", "1f361", "1f373", "1f35e", "1f369", "1f36e", "1f366", "1f368", "1f367", "1f382", "1f370", "1f36a", "1f36b", "1f36c", "1f36d", "1f36f", "1f34e", "1f34f", "1f34a", "1f34b", "1f352", "1f347", "1f349", "1f353", "1f351", "1f348", "1f34c", "1f350", "1f34d", "1f360", "1f346", "1f345", "1f33d"],
@@ -858,7 +857,7 @@ Config.EmojiCategories = [
 
 
 
-Config.EmojiCategorySpritesheetDimens = [
+emojiConfig.EmojiCategorySpritesheetDimens = [
     [7, 27],
     [4, 29],
     [7, 33],
@@ -867,7 +866,7 @@ Config.EmojiCategorySpritesheetDimens = [
 ];
 
 
-Config.emoji_data = {
+emojiConfig.emoji_data = {
     "00a9": [
         ["\u00A9"], "\uE24E", "\uDBBA\uDF29", ["copyright"], 0, 0
     ],
@@ -3405,7 +3404,7 @@ Config.emoji_data = {
     ]
 };
 
-Config.smileys = {
+emojiConfig.smileys = {
     "<3": "heart",
     "<\/3": "broken_heart",
     ":)": "blush",
@@ -3454,65 +3453,65 @@ Config.smileys = {
     "D:": "anguished"
 };
 
-Config.inits = {};
-Config.map = {};
+emojiConfig.inits = {};
+emojiConfig.map = {};
 
-Config.mapcolon = {};
+emojiConfig.mapcolon = {};
 var a = [];
-Config.reversemap = {};
+emojiConfig.reversemap = {};
 
-Config.init_emoticons = function()
+emojiConfig.init_emoticons = function()
 {
-    if (Config.inits.emoticons)
+    if (emojiConfig.inits.emoticons)
         return;
-    Config.init_colons(); // we require this for the emoticons map
-    Config.inits.emoticons = 1;
+    emojiConfig.init_colons(); // we require this for the emoticons map
+    emojiConfig.inits.emoticons = 1;
 
     var a = [];
-    Config.map.emoticons = {};
-    for (var i in Config.emoticons_data)
+    emojiConfig.map.emoticons = {};
+    for (var i in emojiConfig.emoticons_data)
     {
         // because we never see some characters in our text except as
         // entities, we must do some replacing
         var emoticon = i.replace(/\&/g, '&amp;').replace(/\</g, '&lt;')
             .replace(/\>/g, '&gt;');
 
-        if (!Config.map.colons[emoji.emoticons_data[i]])
+        if (!emojiConfig.map.colons[emoji.emoticons_data[i]])
             continue;
 
-        Config.map.emoticons[emoticon] = Config.map.colons[Config.emoticons_data[i]];
-        a.push(Config.escape_rx(emoticon));
+        emojiConfig.map.emoticons[emoticon] = emojiConfig.map.colons[emojiConfig.emoticons_data[i]];
+        a.push(emojiConfig.escape_rx(emoticon));
     }
-    Config.rx_emoticons = new RegExp(
+    emojiConfig.rx_emoticons = new RegExp(
         ('(^|\\s)(' + a.join('|') + ')(?=$|[\\s|\\?\\.,!])'), 'g');
 };
-Config.init_colons = function()
+emojiConfig.init_colons = function()
 {
-    if (Config.inits.colons)
+    if (emojiConfig.inits.colons)
         return;
-    Config.inits.colons = 1;
-    Config.rx_colons = new RegExp('\:[^\\s:]+\:', 'g');
-    Config.map.colons = {};
-    for (var i in Config.data)
+    emojiConfig.inits.colons = 1;
+    emojiConfig.rx_colons = new RegExp('\:[^\\s:]+\:', 'g');
+    emojiConfig.map.colons = {};
+    for (var i in emojiConfig.data)
     {
-        for (var j = 0; j < Config.data[i][3].length; j++)
+        for (var j = 0; j < emojiConfig.data[i][3].length; j++)
         {
-            Config.map.colons[emoji.data[i][3][j]] = i;
+            emojiConfig.map.colons[emoji.data[i][3][j]] = i;
         }
     }
 };
-Config.init_unified = function()
+emojiConfig.init_unified = function()
 {
-    if (Config.inits.unified)
+    if (emojiConfig.inits.unified)
         return;
-    Config.inits.unified = 1;
+    emojiConfig.inits.unified = 1;
 
     buildMap();
 
 };
 
 
-Config.escape_rx = function(text)
+emojiConfig.escape_rx = function(text)
 {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
@@ -3521,22 +3520,22 @@ function buildMap()
 {
 
     var colons = [],codes=[];
-    for (var i in Config.emoji_data)
+    for (var i in emojiConfig.emoji_data)
     {
-        for (var j = 0; j < Config.emoji_data[i][0].length; j++)
+        for (var j = 0; j < emojiConfig.emoji_data[i][0].length; j++)
         {
-            colons.push(Config.escape_rx (":"+Config.emoji_data[i][3][0])+":");
-            codes.push(Config.emoji_data[i][0][0]);
+            colons.push(emojiConfig.escape_rx (":"+emojiConfig.emoji_data[i][3][0])+":");
+            codes.push(emojiConfig.emoji_data[i][0][0]);
 
             // it is a map of {"colon smiley":"unicode char"}
-            Config.map[Config.emoji_data[i][3][0]] = Config.emoji_data[i][0][0];
-            Config.mapcolon[":"+Config.emoji_data[i][3][0]+":"] = Config.emoji_data[i][0][0];
+            emojiConfig.map[emojiConfig.emoji_data[i][3][0]] = emojiConfig.emoji_data[i][0][0];
+            emojiConfig.mapcolon[":"+emojiConfig.emoji_data[i][3][0]+":"] = emojiConfig.emoji_data[i][0][0];
             // it is a map of {"unicode char": "colon smiley"}
-            Config.reversemap[Config.emoji_data[i][0][0]] = Config.emoji_data[i][3][0];
+            emojiConfig.reversemap[emojiConfig.emoji_data[i][0][0]] = emojiConfig.emoji_data[i][3][0];
         }
 
-        Config.rx_colons = new RegExp('(' + colons.join('|') + ')', "g");
-        Config.rx_codes = new RegExp('(' + codes.join('|') + ')', "g");
+        emojiConfig.rx_colons = new RegExp('(' + colons.join('|') + ')', "g");
+        emojiConfig.rx_codes = new RegExp('(' + codes.join('|') + ')', "g");
     }
 }
-
+window['emojiConfig'] = emojiConfig;

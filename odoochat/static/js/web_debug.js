@@ -115,11 +115,13 @@ function load_angular(call_back, skip_initial_checks)
                 <script src="/assets/static/js/main.js"></script>
                 <script src="/assets/static/js/datetime.js"></script>
 
+
                 <script src="/assets/static/emoji/js/config.js"></script>
                 <script src="/assets/static/emoji/js/emoji-picker.js"></script>
-                <script src="/assets/static/emoji/js/jquery.emojiarea.js"></script>
                 <script src="/assets/static/emoji/js/util.js"></script>
+                <script src="/assets/static/emoji/js/jquery.emojiarea.js"></script>
                 <script src="/assets/static/emoji/js/jQueryEmoji.js"></script>
+
             </div>
         `);
     }
@@ -222,12 +224,6 @@ $(function(){
                 load_angular(function(){
                     window["loadComponent"]("chat","app-chat");
                     window["loadComponent"]("messengericon","app-messageicon");
-
-                    var curl = window.location.toString();
-                    var origin = window.location.origin.toString();
-                    var path = curl.replace(origin, '');
-                    path = path.replace('odoochat/static/meetvue/web','web')
-                    window.history.pushState(null,'',path);
                 })
             }
         }

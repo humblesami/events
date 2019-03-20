@@ -1,5 +1,3 @@
-'use strict';
-
 function cancelEvent (event) {
   event = event || window.event;
   if (event) {
