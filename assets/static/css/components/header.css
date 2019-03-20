@@ -437,17 +437,6 @@ div#search-modal {
     color: #888da8;
 }
 
-.btn {
-    cursor: pointer;
-    text-align: center;
-    font-size: 20px;
-    color: #fff;
-    transition: all 0.3s ease;
-    border-top-left-radius: 0.2rem  !important;
-    border-bottom-left-radius: 0.2rem  !important;
-    z-index: 200;
-}
-
 .input.active {
     width: 100%;
     visibility: visible;
@@ -467,13 +456,17 @@ div#search-modal {
 
 .main-user-navbar {
     display: flex;
-    align-items: center;
-    padding-right: 20px;
+    align-items: center;    
 }
 
 .main-user-navbar button {
     padding: 0;
     display: block;
+}
+
+.navbar-profile-menu
+{
+    padding-right: 20px;
 }
 
 .mobile-logout{ display: none; }
