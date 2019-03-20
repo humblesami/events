@@ -110,10 +110,17 @@ function load_angular(call_back, skip_initial_checks)
                 <base href=${window.location.origin} />
                 <app-root></app-root>
                 <div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1"/>
-                <script src="/odoochat/static/meetvue/assets/static/config.js"></script>
-                <script src="/odoochat/static/meetvue/assets/static/js/json.js"></script>
-                <script src="/odoochat/static/meetvue/assets/static/js/main.js"></script>
-                <script src="/odoochat/static/meetvue/assets/static/js/datetime.js"></script>
+                <script src="/assets/static/config.js"></script>
+                <script src="/assets/static/js/json.js"></script>
+                <script src="/assets/static/js/main.js"></script>
+                <script src="/assets/static/js/datetime.js"></script>
+
+                <script src="/assets/static/emoji/js/config.js"></script>
+                <script src="/assets/static/emoji/js/emoji-picker.js"></script>
+                <script src="/assets/static/emoji/js/jquery.emojiarea.js"></script>
+                <script src="/assets/static/emoji/js/util.js"></script>
+                <script src="/assets/static/emoji/js/jQueryEmoji.js"></script>
+                <script src="/assets/static/emoji/js/utils.js"></script>
             </div>
         `);
     }

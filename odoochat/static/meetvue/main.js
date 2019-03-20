@@ -3996,16 +3996,6 @@ var MessengerComponent = /** @class */ (function () {
                 obj_this.is_mobile_device = false;
             }
         });
-        if (!window['emoji_loaded']) {
-            var emoji_libs = '';
-            window['emoji_loaded'] = 1;
-            emoji_libs += '<script src="/assets/static/js/emoji/config.js"></script>';
-            emoji_libs += '<script src="/assets/static/js/emoji/emoji-picker.js"></script>';
-            emoji_libs += '<script src="/assets/static/js/emoji/jquery.emojiarea.js"></script>';
-            emoji_libs += '<script src="/assets/static/js/emoji/util.js"></script>';
-            emoji_libs += '<script src="/assets/static/js/emoji/jQueryEmoji.js"></script>';
-            $('body').append(emoji_libs);
-        }
         var obj_this = this;
         $(".msg_card_body").unbind("scroll");
         $(".msg_card_body").scroll(function () {
