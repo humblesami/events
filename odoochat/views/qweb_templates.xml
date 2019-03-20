@@ -1,8 +1,8 @@
 <templates>
 
     <t t-name="notification.dom">
-        <li>
-            <a style="cursor:pointer" class="showmouseawaybutton fa" aria-expanded="false" title="Notifications">
+        <li class="New-Notifications-Wrap">
+            <a style="cursor:pointer" class="showmouseawaybutton fa meetodoo-noti" aria-expanded="false" title="Notifications">
                 <app-chat></app-chat>
             </a>
         </li>
