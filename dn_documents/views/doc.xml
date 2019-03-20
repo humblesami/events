@@ -177,7 +177,6 @@
             <field name="priority">4</field>
             <field name="arch" type="xml">
                 <form create="false" class="doc_view_form" edit="false">
-                    <link rel="stylesheet" href="/dn_documents/static/css/doc.css"/>
                     <field name="id" class="dn_doc_id o_hidden"/>
                     <field name="path" class="dn_documents_doc_path" invisible="1"/>
                     <field name="filename" invisible="1"/>
@@ -185,6 +184,7 @@
                     <div name="view_script"></div>
                     <app-document></app-document>
                     <script src="/dn_documents/static/js/an_doc.js"></script>
+                    <link rel="stylesheet" href="/dn_documents/static/css/doc.css"/>
                 </form>
             </field>
         </record>
