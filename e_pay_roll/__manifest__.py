@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','dn_attendance',
+    'depends': ['base','assets','dn_attendance',
                 'l10n_in_hr_payroll',
                 'dn_hr_payroll_timesheet',
                 'leave_management_custom'],
