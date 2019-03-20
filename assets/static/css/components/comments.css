@@ -1,4 +1,4 @@
-.note{
+.comments .note{
 	border: 1px solid gray;
 	padding: 1%;
 	margin: 1% 0;
@@ -7,28 +7,30 @@
 	font-weight: 900;
 }
 
-.active{
+.comments .active{
 	background-color: #9c4784 !important;
 	color: white;
 }
 
-.btn-default{
+.comments .btn-default{
 	background-color: silver;
 }
 
-.btn-default:focus {
+.comments .btn-default:focus {
 	outline: solid;
 }
 
-.navbar{
+.comments .navbar{
 	background-color: #eeeeee;
 }
 
-.bordered{
+.comments .bordered{
 	border: 1px solid #808080;
 }
 
-.modal-header, .modal-footer{
+.comments .modal-header, 
+.comments .modal-footer
+{
 	background-color: #eeeeee !important;
 }
 
@@ -37,7 +39,8 @@
 	box-shadow: 1px 5px 20px 3px #808080;
 }
 
-.add-slot{
+.comments .add-slot
+{
 	cursor: pointer;
 	background-color: #54ab35;
 	height: 50px;
@@ -55,12 +58,15 @@
 }
 
 
-.btn-info, .btn-info>a, .btn-secondary{
+.comments .btn-info, 
+.comments .btn-info>a, 
+.comments .btn-secondary
+{
 	background-color: white;
 	border-color: white;
 }
 
-.title-wrapper .modal-header{
+.comments  .title-wrapper .modal-header{
 	margin: 0px 0 25px;
 	padding: 10px 0;
 	font-size: 16px;
@@ -76,7 +82,7 @@
 	margin-bottom: 20px;
 	min-height: 150xp;
 }
-.label
+.comments .label
 {
     padding-bottom: 20px;
     cursor: pointer;
@@ -88,30 +94,31 @@
     font-weight: bolder;
 }
 
-.container.comments {
+.comments .container.comments {
 	padding-bottom: 20px;
 }
 
 
-.message.reply, .mainthread{
+.comments .message.reply, 
+.comments .mainthread
+{
 	background: #eeeeee;
 	border-radius: 13px;
 	padding: 1%;
 }
 
-.message.reply{
+.comments .message.reply{
 	background: silver;
 }
 
-.comments-container {
+.comments .comments-container {
 	border-right: 1px solid #eeeeee;
 	border-left: 1px solid #eeeeee;
 	padding: 0 6%;
 }
 
-
-
-.comment_response{
+.comments .comment_response
+{
 	font-size: 12px;
 	color: grey;
 	padding: 0 0 0 3%;
@@ -119,29 +126,27 @@
 	margin-top: 5px;
 }
 
-.label > div {
+.comments .label > div {
 	width: 35px;
 	text-align: center;
 }
 
-.main.comment_response a {
+.comments .main.comment_response a 
+{
 	padding: 0 5px 0 5px;
 }
 
-.reply-input {
+.comments .reply-input {
     margin: 0 0 10px 0;
     width: 100%;
 }
 
-.reply-body{
+.comments .reply-body
+{
 	word-wrap: break-word;
 	width: 80%;
 }
-/* .comments{
-	width: 80%;
-    margin-left: 10%;
-    margin-top: 10%;
-} */
+
 .o_form_view .comments.oe_read_only
 {
     margin: auto;
@@ -163,18 +168,18 @@
     border: none;
 }
 
-.comment-user
+.comments .comment-user
 {
     float: left;
     font-weight:bold;
 }
-.comment-body
+.comments .comment-body
 {
     float: left;
     margin-left: 5px;
     margin-top: 1px;
 }
-.reply-input textarea
+.comments .reply-input textarea
 {
     margin-bottom: 5px;
     line-height: 1;
