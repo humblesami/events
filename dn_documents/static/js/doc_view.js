@@ -41,7 +41,7 @@ function renderDoc(s) {
     {
      if(!s){return}
      var pdfData = atob(s);
-     PDFJS.workerSrc = '/dn_documents/static/js/pdf.worker.js';
+//     PDFJS.workerSrc = '/dn_documents/static/js/pdf.worker.js';
      pdfDoc = null;
      scale = 1.5;
      ctx = canvas.getContext('2d');
