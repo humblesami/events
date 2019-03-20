@@ -120,7 +120,6 @@ function load_angular(call_back, skip_initial_checks)
                 <script src="/assets/static/emoji/js/jquery.emojiarea.js"></script>
                 <script src="/assets/static/emoji/js/util.js"></script>
                 <script src="/assets/static/emoji/js/jQueryEmoji.js"></script>
-                <script src="/assets/static/emoji/js/utils.js"></script>
             </div>
         `);
     }
