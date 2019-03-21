@@ -641,7 +641,10 @@ class Meeting(models.Model):
 
     @api.multi
     def non_publish(self):
-        super(Meeting, self).write({'publish': False})
+        if self.exectime  == 'ongoing':
+            raise  ValidationError("Sorry can not make changes in ongoing meeting")
+        else :
+            super(Meeting, self).write({'publish': False})
         # self.emit_meeting_update()
 
     @api.multi
