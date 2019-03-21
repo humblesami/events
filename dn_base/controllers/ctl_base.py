@@ -81,7 +81,7 @@ class Controller(http.Controller):
             if res == 'done':
                 return ws_methods.http_response('', 'done')
             else:
-                return ws_methods.http_response(model + '.' + method + ' processed by Odoo server but ' + res)
+                return ws_methods.http_response(model + '.' + method + ' processed but no response ')
         except:
             return ws_methods.handle()
 

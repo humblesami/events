@@ -425,14 +425,17 @@
     background: #dc3545;
     color: white;
     border-radius: 20px;
-    padding: 0 5px;
+    padding: 1px 5px !important;
     padding-top: 2px;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 10px;
     position: absolute;
     top: 0px;
     right: -2px;
     z-index: 200;
+}
+.notification-container .un-read-msg{
+    right:0 !important;
 }
 
 
@@ -452,6 +455,17 @@
     opacity: 1;
 }
 
+.notification-container .main-user-navbar {
+	display: flex;
+    align-items: center;
+}
+a.showmouseawaybutton.fa.meetodoo-noti {
+    padding: 0 !important;
+}
+.notification-container .mobile-chatroom.nav-icon.dropdown span{
+    display:block;
+    padding: 0 10px;
+}
 .notification-container .main-user-navbar button {
 	margin: 0 3px;
 }
@@ -463,6 +477,11 @@
         height: 26px;
         margin: 0 3px;
     }
+    .notification-container .chat-list, .notification-container .notification-list {
+        width: 100%;
+        top: 46px;
+    }
+
 }
 body.iframe {
     background: transparent;
@@ -470,4 +489,15 @@ body.iframe {
 .notification-container .toggle_notification_btn
 {
     cursor: pointer;
+}
+
+.New-Notifications-Wrap ul{
+ margin:0 !important;
+}
+
+.New-Notifications-Wrap ul li{
+    font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    padding: .7rem;
+    line-height: normal;
+    font-weight: 400 !important;
 }
