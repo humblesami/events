@@ -732,17 +732,18 @@ last-login-details
 #backTop {
 	display: none;
 	position: fixed;
-	bottom: 20px;
-	right: 30px;
-	z-index: 99;
-	font-size: 18px;
-	border: none;
-	outline: none;
-	background-color: #875a7b;
-	color: white;
-	cursor: pointer;
-	padding: 10px;
-	border-radius: 4px;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    background-color: #000000;
+    color: white;
+    cursor: pointer;
+    padding: 3px 5px;
+    border-radius: 4px;
+    width: 24px;
 }
 
 #backTop:hover {

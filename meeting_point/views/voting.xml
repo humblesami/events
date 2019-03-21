@@ -109,35 +109,35 @@
             <field name="view_mode">kanban,form, tree</field>
         </record>
 
-        <menuitem
-                name="Approval/Voting" id="menu_meeting_voting"
-                parent="menu_root_settings"
-                action="action_meeting_voting"
-        />
+        <!--<menuitem-->
+                <!--name="Approval/Voting" id="menu_meeting_voting"-->
+                <!--parent="menu_root_settings"-->
+                <!--action="action_meeting_voting"-->
+        <!--/>-->
 
-        <menuitem
-                name="Voting Types" id="menu_meeting_voting_type"
-                action ="action_meeting_voting_type"
-                parent="devmenu"
-        />
+        <!--<menuitem-->
+                <!--name="Voting Types" id="menu_meeting_voting_type"-->
+                <!--action ="action_meeting_voting_type"-->
+                <!--parent="devmenu"-->
+        <!--/>-->
 
-        <menuitem
-                name="Voting Type Options" id="menu_meeting_voting_option"
-                action ="action_meeting_voting_option"
-                parent="devmenu"
-        />
+        <!--<menuitem-->
+                <!--name="Voting Type Options" id="menu_meeting_voting_option"-->
+                <!--action ="action_meeting_voting_option"-->
+                <!--parent="devmenu"-->
+        <!--/>-->
 
-        <menuitem
-                name="Voting Answers" id="menu_meeting_voting_answer"
-                action ="action_meeting_voting_answer"
-                parent="devmenu"
-        />
+        <!--<menuitem-->
+                <!--name="Voting Answers" id="menu_meeting_voting_answer"-->
+                <!--action ="action_meeting_voting_answer"-->
+                <!--parent="devmenu"-->
+        <!--/>-->
 
-        <menuitem
-                name="Voting Documents" id="menu_meeting_voting_document"
-                action ="action_meeting_voting_document"
-                parent="devmenu"
-        />
+        <!--<menuitem-->
+                <!--name="Voting Documents" id="menu_meeting_voting_document"-->
+                <!--action ="action_meeting_voting_document"-->
+                <!--parent="devmenu"-->
+        <!--/>-->
 
         <!--templates for voting and approval-->
         <template id="voting_init" name="Voting Template">
