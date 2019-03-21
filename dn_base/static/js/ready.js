@@ -170,3 +170,7 @@ function addZeroToUnder10(d)
 }
 
 load_dn_assets();
+odoo.define('dn.web_client', function (require){
+ web_client = require('web.web_client');
+
+});

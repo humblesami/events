@@ -387,13 +387,6 @@ function loadSignatures(data){
         });
         //End Dragable
 
-if(!odoo.dn_esign_script){
-odoo.dn_esign_script=1;
-odoo.define('dn.esignature', function (require){
- web_client = require('web.web_client');
-
-});
-}
 
 $(document).on("click",".top_btns .save_doc_data", function(e){
 

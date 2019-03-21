@@ -119,9 +119,11 @@ class Signature(http.Controller):
 
             signature_id = kw['signature_id']
             sign = http.request.env['e_sign.signature'].search([('id', '=', signature_id)])
-            sign.unlink()
             doc_id = kw['document_id']
             doc = my_model.search([('id', '=', doc_id)])
+            doc.emit_data_update(doc)
+            sign.unlink()
+
             if not doc:
                 return ws_methods.http_response("Document : " + doc_id + " does not exist")
             doc.pdf_doc=doc.original_pdf

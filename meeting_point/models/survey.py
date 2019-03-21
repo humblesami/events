@@ -137,8 +137,8 @@ class Survey(models.Model):
             survey.my_status = survey.user_status(uid)
             a = 1
 
-    def emit_meeting_update(self, survey):
-        attendees = []
+    def emit_data_update(self, survey):
+        audience = []
         if survey.meeting_id:
             attendees_list = survey.meeting_id.partner_ids
         else:
@@ -146,12 +146,12 @@ class Survey(models.Model):
 
         for partner in attendees_list:
             if partner.user_id:
-                attendees.append(partner.user_id.id)
+                audience.append(partner.user_id.id)
         data = [{
             'name': 'to_do_item_updated',
+            'audience': audience,
             'data': {
-                'id': survey.id,
-                'attendees': attendees
+                'id': survey.id
             }
         }]
         ws_methods.emit_event(data)
@@ -166,7 +166,7 @@ class Survey(models.Model):
             if name:
                 values['title'] = name
         res = super(Survey, self).create(values)
-        self.emit_meeting_update(res)
+        self.emit_data_update(res)
         return res
 
     #
@@ -182,5 +182,5 @@ class Survey(models.Model):
                 values['title'] = name
         res = super(Survey, self).write(values)
 
-        self.emit_meeting_update(self)
+        self.emit_data_update(self)
         return True

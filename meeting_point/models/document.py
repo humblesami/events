@@ -9,6 +9,7 @@ from docx import Document
 from odoo import models, fields, api, http
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from odoo.addons.dn_base.statics import raise_dn_model_error
+from odoo.addons.dn_base import ws_methods
 
 from odoo.tools import pycompat, datetime, DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -103,6 +104,7 @@ class Document(models.Model):
                 for user in user_ids:
                     self.create_signature(user.id, doc)
                 self.sudo().embed_signature(doc)
+            self.emit_data_update(doc)
             return doc
         except:
             raise_dn_model_error("Error while creating document \n")
@@ -113,9 +115,17 @@ class Document(models.Model):
             super(Document, self).write(values)
             if before_ids != self.user_ids:
                 self.update_signatures()
+            self.emit_data_update(self)
             return True
         except:
             raise_dn_model_error("Error while writing document \n")
+
+    def unlink(self):
+        self.emit_data_update(self)
+        res = super(Document, self).unlink()
+
+
+        return res
 
     def create_signature(self, uid, doc):
         token = pycompat.text_type(uuid.uuid4())
@@ -331,6 +341,17 @@ class Document(models.Model):
             args.extend(myargs)
         docs = super(Document, self).search(args)
         return docs
+
+    def emit_data_update(self, doc):
+        audience = doc.signature_ids.mapped("user_id").ids
+        data = [{
+            'name': 'to_do_item_updated',
+            'audience': audience,
+            'data': {
+                'id': doc.id
+            }
+        }]
+        ws_methods.emit_event(data)
 
 
 class Empty(models.Model):

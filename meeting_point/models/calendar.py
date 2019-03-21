@@ -272,10 +272,7 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, vals):
-        emit = False
-        for val in vals:
-            if val == 'document_ids':
-                emit = True
+
         if self.env.user.id !=1 and self.exectime == "past":
             changing_the_past = True
             if changing_the_past:
@@ -291,8 +288,7 @@ class Meeting(models.Model):
         if self.env.user.has_group('meeting_point.group_meeting_admin'):
             self = self.sudo()
         res = super(Meeting, self).write(vals)
-        if emit:
-            self.emit_meeting_update()
+        self.emit_data_update()
         return res
 
     @api.multi
@@ -626,16 +622,16 @@ class Meeting(models.Model):
 
         return True
 
-    def emit_meeting_update(self):
-        attendees = []
+    def emit_data_update(self):
+        audience = []
         for partner in self.partner_ids:
             if partner.user_id:
-                attendees.append(partner.user_id.id)
+                audience.append(partner.user_id.id)
         data = [{
             'name': 'to_do_item_updated',
+            'audience': audience,
             'data': {
-                'id': self.id,
-                'attendees': attendees
+                'id': self.id
             }
         }]
         ws_methods.emit_event(data)
@@ -643,15 +639,15 @@ class Meeting(models.Model):
     @api.multi
     def action_publish(self):
         self.action_sendmail()
-        super(Meeting, self).write({'publish': True})
-        self.emit_meeting_update()
+        self.publish = True
+        # self.emit_data_update()
 
     @api.multi
     def non_publish(self):
         if self.exectime  == 'ongoing':
             raise  ValidationError("Sorry can not make changes in ongoing meeting")
         else :
-            super(Meeting, self).write({'publish': False})
+            self.publish = False
         # self.emit_meeting_update()
 
     @api.multi

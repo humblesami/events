@@ -1293,6 +1293,7 @@ var SocketService = /** @class */ (function () {
             bootbox.alert(res);
         };
         obj_this.server_events['notification_received'] = function (res) {
+            //console.log(res);
             obj_this.receive_notification(res);
         };
         obj_this.server_events['notification_updated'] = function (res) {
@@ -1330,6 +1331,15 @@ var SocketService = /** @class */ (function () {
             }
             obj_this.update_unseen_message_count("receive-new-message", msg.sender, sender);
         };
+        if (window["odoo"]) {
+            obj_this.server_events['to_do_item_updated'] = function () {
+                if (window["get_param_value"]("model") == "meeting_point.news") {
+                    setTimeout(function () {
+                        $('.o_menu_sections a:first').click();
+                    }, 5000);
+                }
+            };
+        }
     };
     ;
     SocketService.prototype.emit_server_event = function (input_data, model, method) {
@@ -1397,11 +1407,11 @@ var SocketService = /** @class */ (function () {
         var res_id = item.res_id;
         var res_model = item.res_model;
         if (item.parent_res_id) {
-            item.res_id = res_id = item.parent_res_id;
-            item.res_model = res_model = item.parent_res_model;
+            res_id = item.parent_res_id;
+            res_model = item.parent_res_model;
         }
-        if (obj_this.current_model != res_model || obj_this.current_id != res_id) {
-            index = obj_this.find_notification_index(res_model, res_id);
+        if (item.parent_res_id || obj_this.current_model != res_model || obj_this.current_id != res_id) {
+            index = obj_this.find_notification_index(item.res_model, item.res_id);
             if (index != -1) {
                 obj_this.notificationList[index].counter = obj_this.notificationList[index].counter + 1;
             }
@@ -1764,23 +1774,28 @@ var CommentsComponent = /** @class */ (function () {
             item['no_notify'] = 1;
             obj_this.notes.splice(0, 0, item);
         }
+        if (parent_item) {
+            item['parent_id'] = parent_item.id;
+            item['body'] = obj_this.new_reply;
+            // if(!Array.isArray(parent_item.children))
+            //     parent_item.children = [item]
+            // else
+            //     parent_item.children.push(item);
+            this.new_reply = '';
+            item['reply'] = 1;
+        }
         else {
-            if (parent_item) {
-                item['parent_id'] = parent_item.id;
-                item['body'] = obj_this.new_reply;
-                if (!Array.isArray(parent_item.children))
-                    parent_item.children = [item];
-                else
-                    parent_item.children.push(item);
-                this.new_reply = '';
-                item['reply'] = 1;
-            }
-            else {
-                item['body'] = obj_this.new_comment;
-                obj_this.comments.splice(0, 0, item);
-                this.new_comment = '';
-                item['reply'] = false;
-            }
+            item['body'] = obj_this.new_comment;
+            // if(obj_this.comment_subtype == 2)
+            // {
+            // 	item['no_notify'] = 1;
+            // 	obj_this.notes.splice(0, 0, item);
+            // }
+            // else {
+            // 	obj_this.comments.splice(0, 0, item);
+            // }
+            this.new_comment = '';
+            item['reply'] = false;
         }
         this.socketService.emit_server_event(item, 'mail.message', 'post_comment');
     };
@@ -2886,8 +2901,11 @@ var HomeComponent = /** @class */ (function () {
         var obj_this = this;
         obj_this.get_home_data();
         this.socketService.server_events['to_do_item_updated'] = function () {
-            if (obj_this)
-                obj_this.get_home_data();
+            if (obj_this) {
+                setTimeout(function () {
+                    obj_this.get_home_data();
+                }, 5000);
+            }
         };
     };
     HomeComponent = __decorate([
@@ -5143,7 +5161,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/sami/meetvue/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/faizan/meetvue (another copy)/src/main.ts */"./src/main.ts");
 
 
 /***/ })
