@@ -18,7 +18,7 @@
                                     <a>
                                         <img
                                              width="65" height="65" style="padding:0px;" class=""
-                                             src="http://icons.iconarchive.com/icons/papirus-team/papirus-places/512/folder-green-icon.png"/>
+                                             src="/meeting_point/static/img/folder-green-icon.png"/>
                                     </a>
                                 </div>
                                 <div t-attf-class="oe_kanban_content">
