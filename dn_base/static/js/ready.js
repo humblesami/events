@@ -76,22 +76,22 @@ function load_dn_assets()
             });
             $('head').append('<link rel="stylesheet" href="/dn_base/static/css/web.css" />');
              // $('head').prepend('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">');
-            setTimeout(function(){
-                $('.o_mobile_menu_toggle').mousedown(function(){
-                    if(!$('.o_in_appswitcher:first').hasClass('o_hidden'))
-                    {
-                        setTimeout(function(){
-                            $('.o_in_appswitcher:first').addClass('o_hidden');
-                        },50);
-                    }
-                    else
-                    {
-                        setTimeout(function(){
-                            $('.o_in_appswitcher:first').removeClass('o_hidden');
-                        },100);
-                    }
-                })
-            },800);
+//            setTimeout(function(){
+//                $('.o_mobile_menu_toggle').mousedown(function(){
+//                    if(!$('.o_in_appswitcher:first').hasClass('o_hidden'))
+//                    {
+//                        setTimeout(function(){
+//                            $('.o_in_appswitcher:first').addClass('o_hidden');
+//                        },50);
+//                    }
+//                    else
+//                    {
+//                        setTimeout(function(){
+//                            $('.o_in_appswitcher:first').removeClass('o_hidden');
+//                        },100);
+//                    }
+//                })
+//            },800);
         });
     }
     catch(er)
