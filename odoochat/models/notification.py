@@ -79,24 +79,41 @@ class Notification(models.Model):
         res = ws_methods.execute_read(sql)
         return res
 
-    def add_notification(self, params):
-        res_model = params.get('res_model')
-        res_id = params.get('res_id')
+    def add_notification(self, obj_res, notification_values, notification_message, audience):
 
-        parent_res_id = params.get('parent_res_id')
-        parent_res_model = params.get('parent_res_model')
-        audience = params['audience']
+        res_model = notification_values['res_model']
+        res_id = int(notification_values['res_id'])
+
+        parent_res_id = False
+        parent_res_model = notification_values.get('parent_res_model')
+        if parent_res_model:
+            parent_res_id = int(notification_values['parent_res_id'])
+
 
         notification = False
+        notification_values = {
+            'res_model': res_model,
+            'res_id': res_id,
+            'parent_res_model': parent_res_model,
+            'parent_res_id': parent_res_id,
+            'content': notification_message,
+        }
         if parent_res_id:
-
-            parent_notification = self.add_notification_item(parent_res_model, parent_res_id, audience)
-            notification = self.add_notification_item(res_model, res_id, audience, parent_notification)
+            parent_notification = self.add_notification_item(notification_message, parent_res_model, parent_res_id, audience)
+            notification = self.add_notification_item(notification_message, res_model, res_id, audience, parent_notification)
         else:
-            notification = self.add_notification_item(res_model, res_id, audience)
-        return notification
+            notification = self.add_notification_item(notification_message, res_model, res_id, audience)
 
-    def add_notification_item(self, res_model, res_id, audience, parent_notification=None):
+        if parent_res_id:
+            notification_values['is_parent'] = 1
+        events = [
+            {'name': 'notification_received', 'data': notification_values, 'audience': audience},
+            {'name': obj_res['name'], 'data': obj_res['data'], 'audience': audience}
+        ]
+        res = ws_methods.emit_event(events)
+        return res
+
+    def add_notification_item(self, notification_message, res_model, res_id, audience, parent_notification=None):
         req_env = self.env
         filters = [('res_id', '=', res_id), ('res_model', '=', res_model)]
         notification = req_env['notification'].search(filters)
@@ -105,16 +122,12 @@ class Notification(models.Model):
                 'res_id': res_id,
                 'res_model': res_model
             }
-            record_name = 'Unknown notification type'
             if parent_notification:
                 values['parent_id'] = parent_notification.id
                 values['parent_res_id'] = parent_notification.res_id
                 values['parent_res_model'] = parent_notification.res_model
-                record_name = req_env[parent_notification.res_model].search([('id', '=', parent_notification.res_id)]).name
-            else:
-                record_name = req_env[res_model].search([('id', '=', res_id)]).name
 
-            values['content'] = ' comment(s) on ' + record_name
+            values['content'] = notification_message
             notification_type = req_env['notification.type'].search([('name', '=', res_model)])
             if not notification_type:
                 notification_type = req_env['notification.type'].create({'name' : res_model})
@@ -148,6 +161,8 @@ class Notification(models.Model):
         notification = req_env['notification'].search(filters)[0]
         filters = [('user_id', '=', uid), ('notification_id', '=', notification.id)]
         notification_counter = req_env['notification.counter'].search(filters)
+        if len(notification_counter) != 1:
+            raise ValidationError('Invalid notification '+str(notification.id)+' for uid '+str(uid))
         counter = notification_counter.counter
         notification_counter.counter = 0
 
@@ -156,6 +171,7 @@ class Notification(models.Model):
             filters = [('user_id', '=', uid), ('notification_id', '=', notification.id)]
             notification_counter = req_env['notification.counter'].search(filters)
             notification_counter.counter -= counter
+        return 'done'
 
 class NotificationCounter(models.Model):
     _name = 'notification.counter'

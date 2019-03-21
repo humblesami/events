@@ -18,10 +18,12 @@ class MyMail(models.Model):
             datMessage = 'comment'
         comment_model = req_env['mail.message']
         #with_context(message_create_from_mail_mail=True).
+        res_model = values['res_model']
+        res_id = values['res_id']
         comment_vals = {
             'body': values['body'],
-            'model': values['res_model'],
-            'res_id': values['res_id'],
+            'model': res_model,
+            'res_id': res_id,
             'subtype_id': values['subtype_id'],
             'message_type': datMessage,
             'email_from': 'admin@example.com'
@@ -35,10 +37,22 @@ class MyMail(models.Model):
         res = comment_model.create(comment_vals)
         values['create_date'] = res.create_date
         values['user'] = {'name': req_env.user.name, 'id': req_env.user.id}
-        res = {
-            'name': 'comment_received',
-            'data': values,
+
+
+        res_obj = req_env[res_model].search([('id','=', res_id)])
+        res_obj = res_obj.get_name_audience()
+        notification_message = ' comment(s) on ' + res_obj['name']
+        audience = res_obj['audience']
+
+        data_object = {
+            'name' : 'comment_received',
+            'data' : values
         }
+        notification_values = {
+            'res_model': res_model,
+            'res_id' : res_id
+        }
+        res = req_env['notification'].add_notification(data_object, notification_values, notification_message, audience)
         return res
 
 class Empty(models.Model):

@@ -416,6 +416,13 @@ class Meeting(models.Model):
         except:
             q=1
 
+    def get_name_audience(self):
+        ids = []
+        for partner in self.partner_ids:
+            if partner.id != self.env.user.partner_id.id:
+                ids.append(partner.user_id.id)
+        res = { 'name' : '  meeting '+ self.name, 'audience': ids }
+        return res
 
     def get_audience(self):
         ids = []

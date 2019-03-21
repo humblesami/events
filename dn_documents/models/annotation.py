@@ -115,14 +115,19 @@ class PointAnnotation(models.Model):
             res['meta']['topic'] = topic_name
             notification_message += ' on agenda topic ' + topic_name
         notification_message += ' on meeting ' + meeting.name
-        res['notification_message'] = notification_message
 
-        res = {
+        data_object = {
             'name':'point_comment_received',
             'data':res,
-            'audience': meeting.get_audience(),
-            'id': point_id.id
         }
+        notification_values = {
+            'res_model':'annotation.point',
+            'res_id': comment['point_id'],
+            'parent_res_id': document_id,
+            'parent_res_model': res_model,
+        }
+        audience = meeting.get_audience()
+        res = req_env['notification'].add_notification(data_object, notification_values, notification_message, audience)
         return res
 
     @api.multi
