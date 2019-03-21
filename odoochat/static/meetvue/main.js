@@ -1293,7 +1293,6 @@ var SocketService = /** @class */ (function () {
             bootbox.alert(res);
         };
         obj_this.server_events['notification_received'] = function (res) {
-            //console.log(res);
             obj_this.receive_notification(res);
         };
         obj_this.server_events['notification_updated'] = function (res) {
@@ -1407,17 +1406,21 @@ var SocketService = /** @class */ (function () {
         var res_id = item.res_id;
         var res_model = item.res_model;
         if (item.parent_res_id) {
-            res_id = item.parent_res_id;
-            res_model = item.parent_res_model;
+            item.res_id = res_id = item.parent_res_id;
+            item.res_model = res_model = item.parent_res_model;
         }
         if (item.parent_res_id || obj_this.current_model != res_model || obj_this.current_id != res_id) {
-            index = obj_this.find_notification_index(item.res_model, item.res_id);
+            index = obj_this.find_notification_index(res_model, res_id);
             if (index != -1) {
                 obj_this.notificationList[index].counter = obj_this.notificationList[index].counter + 1;
             }
             else {
                 item.counter = 1;
                 obj_this.add_item_in_notification_list(item);
+            }
+            if (item.parent_res_id && index == -1) {
+                obj_this.active_parent_notification = item;
+                obj_this.active_parent_notification.active = 1;
             }
         }
     };
@@ -1774,28 +1777,23 @@ var CommentsComponent = /** @class */ (function () {
             item['no_notify'] = 1;
             obj_this.notes.splice(0, 0, item);
         }
-        if (parent_item) {
-            item['parent_id'] = parent_item.id;
-            item['body'] = obj_this.new_reply;
-            // if(!Array.isArray(parent_item.children))
-            //     parent_item.children = [item]
-            // else
-            //     parent_item.children.push(item);
-            this.new_reply = '';
-            item['reply'] = 1;
-        }
         else {
-            item['body'] = obj_this.new_comment;
-            // if(obj_this.comment_subtype == 2)
-            // {
-            // 	item['no_notify'] = 1;
-            // 	obj_this.notes.splice(0, 0, item);
-            // }
-            // else {
-            // 	obj_this.comments.splice(0, 0, item);
-            // }
-            this.new_comment = '';
-            item['reply'] = false;
+            if (parent_item) {
+                item['parent_id'] = parent_item.id;
+                item['body'] = obj_this.new_reply;
+                if (!Array.isArray(parent_item.children))
+                    parent_item.children = [item];
+                else
+                    parent_item.children.push(item);
+                this.new_reply = '';
+                item['reply'] = 1;
+            }
+            else {
+                item['body'] = obj_this.new_comment;
+                obj_this.comments.splice(0, 0, item);
+                this.new_comment = '';
+                item['reply'] = false;
+            }
         }
         this.socketService.emit_server_event(item, 'mail.message', 'post_comment');
     };
@@ -2244,19 +2242,19 @@ var DocumentComponent = /** @class */ (function () {
             }
         }
         function ativate_notification() {
-            obj_this.socketService.current_model = res_model;
-            obj_this.socketService.current_id = doc_id;
+            var active_notification = undefined;
             var list = obj_this.socketService.notificationList;
             for (var id in list) {
                 if (list[id].res_id == doc_id && list[id].res_model == res_model) {
                     list[id].active = 1;
-                    obj_this.active_parent_notification = list[id];
+                    active_notification = list[id];
+                    active_notification.active = 1;
+                    break;
                 }
             }
-            if (obj_this.active_parent_notification) {
-                obj_this.active_parent_notification.active = true;
-                obj_this.socketService.active_parent_notification = obj_this.active_parent_notification;
-            }
+            obj_this.active_parent_notification = obj_this.socketService.active_parent_notification = active_notification;
+            obj_this.socketService.current_id = doc_id;
+            obj_this.socketService.current_model = res_model;
         }
         obj_this.socketService.execute_on_verified(ativate_notification);
         var fetchDocData = function (data) {
@@ -5161,7 +5159,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/faizan/meetvue (another copy)/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/sami/meetvue/src/main.ts */"./src/main.ts");
 
 
 /***/ })
