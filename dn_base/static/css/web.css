@@ -69,10 +69,6 @@ z-index : 99999
     border-bottom:none;
     background-color: transparent;
 }
-.btn
-{
-    min-width: 50px;
-}
 .oe_kanban_bottom_right a
 {
     float:right;

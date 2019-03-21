@@ -33,7 +33,7 @@
                         <field name="conference_bridge_number" class="conference"/>
                         <field name="pin" class="pin" />
                         </group>
-                    <div class="detail_btn o_hidden"  style="display:flex">
+                    <div class="detail_btn o_hidden acceptance_buttons_new"  style="display:flex">
 
                                             <div class="accet" style="display:none !important">
                                                 <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept"><i class="fa fa-check fa-lg" style="color:white"/>Accept
@@ -61,7 +61,9 @@
                                                 <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
                                                 </button>
                                             </div>
-                        <button type="object" class="btn-primary" name="go_to_meeting">Details</button>
+                                            <div>
+                                                <button type="object" class="btn-primary" name="go_to_meeting">Details</button>
+                                            </div>
                     </div>
 
                     <script src="/meeting_point/static/js/event_popup.js"></script>
