@@ -187,7 +187,7 @@
         <record id="action_survey_admin" model="ir.actions.act_window">
             <field name="name">Actions</field>
             <field name="res_model">survey.survey</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="meeting_point_survey_kanban"/>
         </record>
 
