@@ -48,6 +48,7 @@ class auth(http.Controller):
                 return ws_methods.http_response('Invalid credentials')
 
             token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
+            request.token = token
             custom_user_model = request.env['dnspusers'].sudo()
             spuser = custom_user_model.search([('user_id', '=', uid)])
             if not spuser:

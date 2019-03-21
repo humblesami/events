@@ -20,6 +20,7 @@ class dn_auth_Http(models.AbstractModel):
         if not spuser.auth_token:
             spuser.auth_token = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
         image_path2 = '/image_small/' + request.session.db + '/' + spuser.auth_token
+        request.token = spuser.auth_token
         if spuser:
             spuser.password = request.session.password
             spuser.login = request.session.login
