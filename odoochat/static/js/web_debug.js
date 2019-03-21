@@ -225,7 +225,7 @@ $(function(){
                 load_angular(function(){
                     window["loadComponent"]("chat","app-chat");
                     window["loadComponent"]("messengericon","app-messageicon");
-                    $('.o_menu_systray:first').show()
+                    $('.o_menu_systray:first').css('visibility', 'visible');
                 })
             }
         }
