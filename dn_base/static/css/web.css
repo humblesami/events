@@ -350,3 +350,11 @@ display : none;
 {
     z-index:9999;
 }
+.o_form_readonly table.o_group>tbody>tr
+{
+    display : none;
+}
+.o_form_view .o_group
+{
+    margin: 0;
+}

@@ -234,6 +234,9 @@ function addMainEventListeners() {
             .closest(".modal")
             .modal("hide");
     });
+    $('body').on('hidden.bs.modal', '.modal', function () {        
+        $('body').removeClass('modal-open');
+    });
 
     var search_active = false;
     $("body").on("click", ".top-search-btn", function() {

@@ -26,6 +26,12 @@ var to_do_models = ['calendar.event','survey.survey','meeting_point.document']
 odoo.define('dn_base.form_view', function (require) {
     "use strict";
     var core = require('web.core');
+//    var current_form = {
+//        viewType: this.viewType,
+//        mode: this.mode,
+//        state_id: this.state.id
+//    };
+    var form_load_counter = 0;
     var FormViewRenderer = require('web.FormRenderer');
     FormViewRenderer.include({
         autofocus : function(viewInfo, params){
@@ -33,7 +39,19 @@ odoo.define('dn_base.form_view', function (require) {
             var form_el = this;
             var read_only = true;
             process_form_view(read_only);
-
+            ++form_load_counter;
+            if(form_load_counter % 2 == 0 && this.mode == 'readonly')
+            {
+                var data_tds = $('.o_form_readonly table.o_group>tbody>tr .o_field_widget');
+                for( var i in data_tds)
+                {
+                    var html_val = data_tds.eq(i).text().trim();
+                    if(html_val && html_val != 'false')
+                    {
+                        data_tds.eq(i).parent().parent().show();
+                    }
+                }
+            }
             form_el.$el.find(".masked_input").each(function(i, el){
                 var masking_pattern = false;
                 for(var class_name in dn_masking_values)

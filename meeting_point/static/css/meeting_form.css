@@ -8,10 +8,7 @@ display:none;
     min-width:160px;
 }
 
-.oe_button_box.publish_btn
-{
-    margin-right:36px;
-}
+
 
 .dnroster:first .roster-buttons
 {
@@ -82,15 +79,24 @@ iframe.comments-container
     min-height: 40vh;
 }
 
-app-comments .btn-group{
-display:flex
+app-comments .btn-group
+{
+    display:flex;
+}
 
+.oe_button_box.publish_btn
+{
+    margin-right:36px;
+}
+div.publish_btn
+{
+    padding-bottom: 10px
 }
 .publish_btn .btn
 {
     min-width: 100px;
-    height: 35px;
     margin-top: -10px;
+    background-color: mediumblue;
 }
 
 .comments.oe_read_only

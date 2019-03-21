@@ -1,3 +1,12 @@
+.messenger-container {
+    height: calc(100vh - 52px);
+    margin: 0;
+    position: absolute;
+    top: 50px;
+    width: 100vw;
+    left: 0;
+	z-index: 34;
+}
 #body-div{
 	height: 100%;
 	margin: 0;
@@ -525,15 +534,7 @@
 		width: calc(100% - 250px);
 	}
 }
-.messenger-container {
-    height: calc(100vh - 52px);
-    margin: 0;
-    position: absolute;
-    top: 50px;
-    width: 100vw;
-    left: 0;
-    z-index: 7853;
-}
+
 .messenger-container .nav-icon button{
 	background: #63628a;
     border-radius: 50% !important;

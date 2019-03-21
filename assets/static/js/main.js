@@ -186,8 +186,7 @@ var site_functions = {
 
         }
     },
-    togglerelated: function(e, el, selector) {
-        console.log(234, 'Shown/hideen');
+    togglerelated: function(e, el, selector) {        
         if ($(el).hasClass('active')) {
             $(el).removeClass('active');
             $(selector).hide();
@@ -234,6 +233,9 @@ function addMainEventListeners() {
         $(this)
             .closest(".modal")
             .modal("hide");
+    });
+    $('body').on('hidden.bs.modal', '.modal', function () {        
+        $('body').removeClass('modal-open');
     });
 
     var search_active = false;

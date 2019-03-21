@@ -752,3 +752,24 @@ last-login-details
 .overflow-hide{
     overflow: hidden;
 }
+.modal-header
+{
+    padding: 0;
+    display: block;    
+}
+.modal-footer{
+    padding: 5px;
+    display: block;
+    border: 1px dotted silver;
+    text-align: right;
+}
+.modal-header .close
+{
+    color: white;
+    background-color: red;
+    margin: 2px;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    opacity: 0.78;
+}
