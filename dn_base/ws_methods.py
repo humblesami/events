@@ -16,8 +16,7 @@ def send_mail(mesgtosend):
     server.sendmail("Sami Akam", recievers, mesgtosend)
 
 def mfile_url(model, field, id, file_type):
-    conf = request.conf
-    res = model + '/' + str(id) + '/' + field + '/' + conf['db'] + '/' + conf['token']
+    res = model + '/' + str(id) + '/' + field + '/' + request.db + '/' + request.token
     res = get_main_url() + '/'+file_type+'/' + res
     return res
 
@@ -166,11 +165,15 @@ def check_auth(values):
                 values[val] = values[val].split(',')[1]
             else:
                 values[val] =  values[val]
+
+    token = values.get('token')
+    if not hasattr(request, 'token'):
+        request.token = token
     if request.uid and request.uid != 4:
         return request.uid
     if not values:
         return False
-    token = values.get('token')
+
     if not token:
         return False
     db = values.get('db')
@@ -207,6 +210,8 @@ def check_auth_token(values):
         return False
     db = values['db']
     token = str(values['token'])
+    if not hasattr(request, 'token'):
+        request.token = token
     filters = [('auth_token', '=', token)]
     user = request.env['dnspusers'].sudo().search(filters)
     if not user:
