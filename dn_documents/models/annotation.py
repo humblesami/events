@@ -108,10 +108,15 @@ class PointAnnotation(models.Model):
             'y': point['y']
         }
         res['point'] = point
+        notification_message = ' comment(s) received on document ' + doc_name
         if new_point:
             res['new_point'] = 1
         if topic_name:
             res['meta']['topic'] = topic_name
+            notification_message += ' on agenda topic ' + topic_name
+        notification_message += ' on meeting ' + meeting.name
+        res['notification_message'] = notification_message
+
         res = {
             'name':'point_comment_received',
             'data':res,

@@ -77,7 +77,7 @@ class Controller(http.Controller):
                 return ws_methods.http_response('Please provide valid args')
 
             method_to_call = getattr(req_env[model], method)
-            res = method_to_call(values)
+            obj_res = method_to_call(values)
 
             if values.get('no_notify'):
                 return ws_methods.http_response('', 'done')
@@ -92,9 +92,9 @@ class Controller(http.Controller):
             if res_id:
                 res_id = int(res_id)
             else:
-                res_id = res['id']
+                res_id = obj_res['id']
 
-            audience = res.get('audience')
+            audience = obj_res.get('audience')
             if not audience:
                 if parent_res_id:
                     audience = req_env[parent_res_model].search([('id', '=', parent_res_id)]).get_audience()
@@ -119,13 +119,16 @@ class Controller(http.Controller):
                 notification_values['parent_res_model'] = parent_res_model
 
             notification = req_env['notification'].add_notification(notification_values)
-            notification_values['content'] = notification.content
+            if 'notification_message' in obj_res:
+                notification_values['content'] = obj_res['notification_message']
+            else:
+                notification_values['content'] = notification.content
 
             if notification.parent_res_id:
                 notification_values['is_parent'] = 1
             events = [
                 {'name': 'notification_received', 'data': notification_values, 'audience': audience},
-                {'name': res['name'], 'data': res['data'], 'audience': data_audience}
+                {'name': obj_res['name'], 'data': obj_res['data'], 'audience': data_audience}
             ]
             if not events:
                 raise ValidationError('Invalid events')
