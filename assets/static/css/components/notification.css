@@ -477,6 +477,11 @@ a.showmouseawaybutton.fa.meetodoo-noti {
         height: 26px;
         margin: 0 3px;
     }
+    .notification-container .chat-list, .notification-container .notification-list {
+        width: 100%;
+        top: 46px;
+    }
+
 }
 body.iframe {
     background: transparent;
