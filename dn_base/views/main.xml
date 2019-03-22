@@ -21,7 +21,7 @@
 
 
     <t t-extend="UserMenu.Actions">
-        <t t-jquery="a[data-menu='account']" t-operation="replace">
+        <t t-jquery="a[data-menu='logout']" t-operation="before">
             <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
             <span class="oe_topbar_name" />
         </t>
