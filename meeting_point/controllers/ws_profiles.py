@@ -230,7 +230,7 @@ class ws_profile(http.Controller):
 
             user = req_env['meeting_point.users'].search([('user_id', '=', uid)])
             user.signature_img = values['binary_signature']
-            return ws_methods.http_response('', "ok")
+            return ws_methods.http_response('', {"id":user.id})
         except:
             ws_methods.handle()
 

@@ -353,8 +353,8 @@ class Meeting(models.Model):
                 continue
     @api.multi
     def _compute_address(self):
-        val = ''
         for event in self:
+            val = ''
             if event.address:
                val = val + event.address + ', '
             if event.street:
