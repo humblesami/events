@@ -1,8 +1,9 @@
-
+$('#loaderContainerajax').show();
 $(function(){
-
+         setTimeout(function(){
         var str = $('span[name="public_event"]').html();
         var events = JSON.parse(str);
+
         $('#calendar').fullCalendar({
 
             header: {
@@ -97,7 +98,12 @@ $(function(){
 
             });
         }
-
+        $('#loaderContainerajax').hide();
+    },50)
+//    setTimeout(function(){
+//
+//     $('#calendar').show();
+//    },50)
 });
 
 //   customButtons: {

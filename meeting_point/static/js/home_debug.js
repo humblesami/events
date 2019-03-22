@@ -54,12 +54,14 @@ $(function(){
             if(!odoo.home_page_calendar)
             {
                 odoo.home_page_calendar = 1;
-                 $('#loaderContainerajax').show();
-                setTimeout(function(){
+//                 $('#loaderContainerajax').show();
+//                setTimeout(function(){
                 $('body').append('<script src="/meeting_point/static/js/calendar/fullcalendar.js"></script>');
-                $('#loaderContainerajax').hide();
-                },50)
                 $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');
+//                $('#loaderContainerajax').hide();
+//                $('#calendar').hide()
+//                },50)
+
 
 
             }
