@@ -42,6 +42,7 @@ odoo.define('dn_base.form_view', function (require) {
             ++form_load_counter;
             if(form_load_counter % 2 == 0 && this.mode == 'readonly')
             {
+                $('.o_control_panel,.o_cp_right,.o_cp_left').show();                
                 var data_tds = $('.o_form_readonly table.o_group>tbody>tr .o_field_widget');
                 for( var i in data_tds)
                 {

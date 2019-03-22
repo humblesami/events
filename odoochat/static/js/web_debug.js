@@ -206,6 +206,7 @@ $(function(){
                             }
                             action_url += '&view_type=form&model=dn_base.empty';
                             action_url += '&menu_id='+get_param_value('menu_id');
+                            $('.o_control_panel,.o_cp_right,.o_cp_left').hide();
                             window.location = action_url;
                         }
                     };
@@ -222,10 +223,10 @@ $(function(){
         var wait_options = {
             selector : 'body>nav:first>.o_main_navbar>.o_menu_systray app-messageicon',
             call_back : function(){
-                load_angular(function(){
+                load_angular(function(){                    
                     window["loadComponent"]("chat","app-chat");
                     window["loadComponent"]("messengericon","app-messageicon");
-                    $('.o_menu_systray:first>li').css('visibility', 'visible');
+                    // $('.o_menu_systray:first>li').css('visibility', 'visible');
                 })
             }
         }

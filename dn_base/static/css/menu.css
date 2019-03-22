@@ -14,12 +14,12 @@
     color :  #0d0415;
     background-color:  #ffeeee;
 }
-
+/*
 .o_menu_systray>li:not(.o_user_menu open)
 {
     visibility : hidden;
 }
-
+*/
 .o_menu_systray span.un-read-msg{
     top: 5px;
     right: -10px;
@@ -29,4 +29,12 @@
 .o_burger_menu
 {
     z-index:9999;
+}
+.o_main_navbar .o_user_menu
+{
+    margin-left: 0;
+}
+.o_main_navbar .o_user_menu > a 
+{
+    padding: 0 10px;
 }

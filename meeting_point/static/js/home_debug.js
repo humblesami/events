@@ -49,28 +49,32 @@ $(function(){
         odoo.home_btn_active = item_number;
 
         //to load calendar
+        var after_calendar = false;
         if(el.is('.calendar_btn'))
         {
             if(!odoo.home_page_calendar)
             {
                 odoo.home_page_calendar = 1;
-//                 $('#loaderContainerajax').show();
-//                setTimeout(function(){
-                $('body').append('<script src="/meeting_point/static/js/calendar/fullcalendar.js"></script>');
-                $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');
-//                $('#loaderContainerajax').hide();
-//                $('#calendar').hide()
-//                },50)
-
-
-
+                $('#loaderContainerajax').show();
+                $('#calendar').css('visiblity','hidden');
+                setTimeout(function(){
+                    $('body').append('<script src="/meeting_point/static/js/calendar/fullcalendar.js"></script>');
+                    $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');                                        
+                    after_calendar_shown();
+                    after_calendar = true;
+               },50);
             }
             $('.o_form_view:first').append('<script src="/meeting_point/static/js/calendar/calendar.js"></script>');
+        }
+        if(!after_calendar)
+        {
+            after_calendar_shown();
         }
     }
     showRelatedTab();
 
-    $('notification_icon.seen_not_seen').html('18');
+    function after_calendar_shown(){        
+        $('notification_icon.seen_not_seen').html('18');
 //    $('.seen_by_me').each(function(i, el){
 //        el = $(el.children[0]);
 //        if(el.html() == "0")
@@ -129,4 +133,7 @@ $(function(){
         itemsMobile: [585, 1]
     }
     $(".related-products").owlCarousel(owlOptions);
+    }
+
+    
 })

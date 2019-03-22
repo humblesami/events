@@ -26,6 +26,8 @@ $(function(){
             events: events
         });
 
+
+
         if ($('.fc-schedule-button').length == 0) {
 
 
@@ -99,6 +101,8 @@ $(function(){
             });
         }
         $('#loaderContainerajax').hide();
+        $('#calendar').css('visiblity','visible');
+
     },50)
 //    setTimeout(function(){
 //
