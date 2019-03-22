@@ -78,6 +78,10 @@ var dn_json_rpc_object = {
             dataType: 'JSON',
             type:'POST',
             beforeSend: function (jqXHR, settings) {
+                if(input_data.no_loader)
+                {
+                    dn_json_rpc_object.showHideLoader();
+                }
 //                var this_req_url = settings.url;
 //                if(!this_req_url.startsWith(dn_json_rpc_object.baseUrl))
 //                    this_req_url = dn_json_rpc_object.baseUrl + this_req_url;
