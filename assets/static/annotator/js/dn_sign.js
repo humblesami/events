@@ -75,6 +75,11 @@ $(document).ready(function () {
             var type = "draw";
             dataURL = myCanvas.toDataURL();
             
+            if(signature_editor.signature('isEmpty')){
+                dataURL ="";
+                console.log("empty",signature_editor.signature('isEmpty'));
+            }
+            
             $('.strt_sign.pdfjs').hide();
             dataURL = dataURL.replace('data:image/png;base64,', '');
             var input_data = {
@@ -93,7 +98,7 @@ $(document).ready(function () {
                     if(signature_url.post.indexOf('profile')> -1)
                     {
                         var d = Date.now();
-                        $('img.strt_sign')[0].src=$('img.strt_sign')[0].src+"&d="+d;
+                        $('img.strt_sign')[0].src=`${site_config.server_base_url}/image/meeting_point.users/${data.id}/signature_img/${current_user.cookie.db}/${current_user.cookie.token}?d=${d}`
                     }
                 }, type:'post'
             });
@@ -108,7 +113,7 @@ $(document).ready(function () {
             signature_editor.signature('clear');
         });
 
-        $('body').prepend('<script src=/assets/static/js/signature.js"></script>');
+        $('body').prepend('<script src="/assets/static/js/signature.js"></script>');
 
         signature_editor.signature({thickness:4});
 

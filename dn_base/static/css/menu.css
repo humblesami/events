@@ -1,6 +1,32 @@
-.oe_topbar_name{
-
+.o_user_menu.open .dropdown-menu > li:nth-child(1),
+.o_user_menu.open .dropdown-menu > li:nth-child(2),
+.o_user_menu.open .dropdown-menu > li:nth-child(3),
+ .o_user_menu.open .dropdown-menu > li:nth-child(4)
+{
+    display:none;
+}
+.o_main_navbar
+{
+    z-index:9999;
+}
+.oe_topbar_name
+{
     color :  #0d0415;
-    background-color: #ffeee;
+    background-color:  #ffeeee;
 }
 
+.o_menu_systray>li:not(.o_user_menu open)
+{
+    visibility : hidden;
+}
+
+.o_menu_systray span.un-read-msg{
+    top: 5px;
+    right: -10px;
+    line-height: normal;
+    padding: 0px 5px 1px;
+}
+.o_burger_menu
+{
+    z-index:9999;
+}

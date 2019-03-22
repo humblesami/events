@@ -517,6 +517,7 @@ span.to-do-count{
     cursor: pointer;
 }
 
+/*
 #videoModal .modal-content{
     height: 88vh;
     width: 89vw;
@@ -528,7 +529,7 @@ span.to-do-count{
 {
     height: 70vh;
     width: 85vw;
-}
+}*/
 #event-summary tr
 {
     display: none;

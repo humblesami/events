@@ -22,14 +22,13 @@ button, a
     display:none;
 }
 
-  div[name="user_ids"] img
-  {
+div[name="user_ids"] img
+{
     height:20px;
     width:20px;
     float:left;
     margin-left: 5px;
-  }
-
+}
 
 .o_input_dropdown
 {
@@ -51,11 +50,11 @@ z-index : 99999
     background-size:  100%;
     cursor:pointer;
 }
-.youtubeVideoModal .modal-header{
+
+.youtubeVideoModal .modal-header
+{
     padding: 6px 5px 20px 0;
 }
-
-
 
 .o_form_view .o_form_statusbar > .o_statusbar_buttons > .btn
 {
@@ -232,22 +231,11 @@ table.o_group.o_inner_group tr {
     margin: 0 0px 10px 15px;
 }
 
-.o_user_menu.open .dropdown-menu > li:nth-child(1),
-.o_user_menu.open .dropdown-menu > li:nth-child(2),
-.o_user_menu.open .dropdown-menu > li:nth-child(3),
- .o_user_menu.open .dropdown-menu > li:nth-child(4)
-{
-    display:none;
-}
-
 .bootbox.modal.in
 {
     z-index:90021;
 }
-.o_main_navbar
-{
-    z-index:9999;
-}
+
 .modal-header
 {
     margin-top: 0;
@@ -297,16 +285,7 @@ body.o_app_switcher_background nav:first-child
 .customClick:focus{
     background: red !important;
 }
-.o_menu_systray span.un-read-msg{
-    top: 5px;
-    right: -10px;
-    line-height: normal;
-    padding: 0px 5px 1px;
-}
-.o_menu_systray>li:not(.o_user_menu open)
-{
-    visibility : hidden;
-}
+
 .fa-file{
 
     cursor:pointer;
@@ -346,10 +325,7 @@ body.o_app_switcher_background nav:first-child
 {
 	margin-left:5px;
 }
-.o_burger_menu
-{
-    z-index:9999;
-}
+
 .o_form_readonly table.o_group>tbody>tr
 {
     display : none;
