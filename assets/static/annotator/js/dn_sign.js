@@ -74,11 +74,11 @@ $(document).ready(function () {
         save_btn.click(function (e) {
             var type = "draw";
             dataURL = myCanvas.toDataURL();
-            
-            if(signature_editor.signature('isEmpty')){
-                dataURL ="";
-                console.log("empty",signature_editor.signature('isEmpty'));
-            }
+            // console.log("empty",isCanvasBlank(myCanvas));
+            // if(isCanvasBlank(myCanvas)){
+            //     dataURL ="";
+            //     console.log("empty",signature_editor.signature('isEmpty'));
+            // }
             
             $('.strt_sign.pdfjs').hide();
             dataURL = dataURL.replace('data:image/png;base64,', '');
@@ -124,6 +124,15 @@ $(document).ready(function () {
             canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
         };
     }
+
+    function isCanvasBlank(canvas) {
+        const blank = document.createElement('canvas');
+      
+        blank.width = canvas.width;
+        blank.height = canvas.height;
+      
+        return canvas.toDataURL() === blank.toDataURL();
+      }
 
     function load_signature(data) {
 
