@@ -51,6 +51,8 @@
                 <t t-call="meeting_point.survey_back_container" />
             </xpath>
         </template>
+
+        <delete model="ir.rule" id="survey.survey_input_users_access"/>
 </data>
 
 </odoo>
