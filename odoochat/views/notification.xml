@@ -93,6 +93,7 @@
         </record>
 
         <menuitem
+                groups="base.group_system"
             name="Notifications" id="menu_notification"
             action="action_notification"
         />
