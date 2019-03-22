@@ -82,6 +82,7 @@
 	margin-bottom: 20px;
 	min-height: 150xp;
 }
+
 .comments .label
 {
     padding-bottom: 20px;
@@ -89,10 +90,11 @@
     float: right;
     background: gray;
     padding: 0 5px;
-    color: white;
+    color: white;    
     border-radius: 25px;
     font-weight: bolder;
 }
+
 
 .comments .container.comments {
 	padding-bottom: 20px;
@@ -108,7 +110,7 @@
 
 .comments .message.reply{
 	background:#d6d6d6;
-	border: 1px solid #bdbdbd;
+    border: 1px solid #bdbdbd;
 }
 
 .comments .comments-container {
@@ -179,10 +181,75 @@
     margin-left: 5px;
     margin-top: 1px;
 }
-.comments .reply-input textarea
+.comments .reply-input textarea 
 {
+    line-height: .8;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.o_view_manager_content .comments-container, 
+.o_view_manager_content .comments-container .container
+{
+    width: 100%;
+    margin: 0;
+}
+.o_view_manager_content .comments-container .row
+{
+    margin: 0 -16px 2px;
+    padding: .5rem;
+    display: block;
+    position: relative;
+}
+.o_view_manager_content .comments-container .row .row
+{
+    margin: 0 0px 2px;
+    padding: .5rem;
+    display: block;
+    position: relative;
+}
+.o_view_manager_content .comments .reply-input textarea {
     line-height: 1;
     padding: 10px;
     margin-bottom: 10px;
     font-size: 14px;
+    width: 92%;
+    margin: 0 auto 15px auto;
 }
+/*
+.replies-wrapper:first
+{
+    width: 96%;
+}
+.reply-input:first
+{
+    width: 90%;
+}
+
+.reply-textarea-conatiner
+{
+    width: 95%;
+    margin-left: 2.5%;
+}
+.o_view_manager_content .comments .reply-input
+{
+    width: 101%;
+    margin-left: 3%;
+}
+.o_view_manager_content .oform
+{
+    width: 97.5%;
+    margin-left: -2.5%;
+}
+.o_view_manager_content .reply.container
+{
+    width: 95%;
+}
+
+.o_view_manager_content .comments .label
+{
+    margin-right: 5%;
+}
+.o_view_manager_content .comments .message.reply{	
+    width: 90%;
+}*/
