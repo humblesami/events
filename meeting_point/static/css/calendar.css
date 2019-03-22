@@ -1113,10 +1113,8 @@ be a descendant of the grid when it is being dragged.
     border-bottom: 0;
 }
 
-
 .fc-week .fc-content-skeleton tbody
 {
-    position: absolute;
     top:-4px;
 }
 a.fc-time-grid-event.fc-event
