@@ -2,7 +2,7 @@
     <data>
 
         <menuitem
-                name="MeetingPoint"
+                name="MeetVUE"
                 id="menu_root_mp"
                 sequence="2"
                 groups="group_meeting_base"

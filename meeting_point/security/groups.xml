@@ -1,8 +1,8 @@
 <odoo>
     <data>
         <record id="module_category_meeting" model="ir.module.category">
-            <field name="name">MeetingPoint</field>
-            <field name="description">MeetingPoint</field>
+            <field name="name">MeetVUE</field>
+            <field name="description">MeetVUE</field>
             <field name="sequence">20</field>
         </record>
 
