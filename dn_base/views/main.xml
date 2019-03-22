@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-
     <t t-extend="UserMenu">
         <t t-jquery="li[class='o_user_menu']" t-operation="replace">
-
             <li class="o_user_menu">
-        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
-            <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
-             <link rel="stylesheet" href="/dn_base/static/css/menu.css"/>
-        </a>
-        <ul class="dropdown-menu" role="menu">
-            <t t-call="UserMenu.Actions"/>
-        </ul>
-    </li>
-
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
+                    <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>                    
+                    <link rel="stylesheet" href="/dn_base/static/css/menu.css"/>
+                </a>
+                <ul class="dropdown-menu RightTopDropDownNav" role="menu">
+                    <t t-call="UserMenu.Actions"/>
+                </ul>
+            </li>
         </t>
-
-
-</t>
+    </t>
 
 
     <t t-extend="UserMenu.Actions">
         <t t-jquery="a[data-menu='logout']" t-operation="before">
+        <div class="CustomUserDropDown">
             <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
             <span class="oe_topbar_name" />
+        </div>
+        
         </t>
          <t t-jquery="a[data-menu='settings']" t-operation="replace"></t>
          <t t-jquery="a[data-menu='documentation']" t-operation="replace"></t>

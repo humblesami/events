@@ -38,3 +38,31 @@
 {
     padding: 0 10px;
 }
+
+.RightTopDropDownNav{
+    max-height: none !important;
+    min-width: unset !important;
+    text-align: left;
+} 
+
+.RightTopDropDownNav a{
+    padding: 3px 10px !important;
+}
+
+.RightTopDropDownNav .oe_topbar_avatar {
+    height: 22px !important;
+}
+.CustomUserDropDown{
+    display: flex;
+    justify-content: flex-start;
+    padding: 3px 10px !important;
+}
+
+.CustomUserDropDown img{
+    display: block;
+    margin-right:5px; 
+}
+
+.CustomUserDropDown .oe_topbar_name{
+    background: transparent;
+}
