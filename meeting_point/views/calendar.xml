@@ -7,6 +7,13 @@
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <form string="Meetings">
+                    <style>
+                        .modal-footer:last .o_form_button_cancel{
+                            display:none
+
+                        }
+
+                    </style>
                     <field name="res_model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                     <field name="state" invisible="1"/>
