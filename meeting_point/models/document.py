@@ -23,7 +23,7 @@ class MeetingDoc(models.Model):
     def search(self, args, offset=0, limit=0, order=None, count=False):
         if not self.env.user.has_group('dn_base.group_dn_app_manager') and not self.env.user.has_group('base.group_system'):
             # list = self.env['calendar.event'].search([('partner_ids', 'in', [self.env.user.partner_id.id])]).ids
-            myargs = [('meeting_id.partner_ids','in',[self.env.user.partner_id.id])]
+            myargs = [('meeting_id.partner_ids','in',[self.env.user.partner_id.id]),('meeting_id.publish','=',True)]
             args.extend(myargs)
         docs = super(MeetingDoc, self).search(args)
         return docs
