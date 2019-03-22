@@ -58,7 +58,7 @@ $(function(){
                 setTimeout(function(){
                 $('body').append('<script src="/meeting_point/static/js/calendar/fullcalendar.js"></script>');
                 $('#loaderContainerajax').hide();
-                },1000)
+                },50)
                 $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');
 
 
