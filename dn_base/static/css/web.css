@@ -336,7 +336,7 @@ body.o_app_switcher_background nav:first-child
 {
     margin: 0;
 }
-.btn-default
+.modal-footer .btn-default
 {
     color: white;
     background-color: #008784;

@@ -69,8 +69,10 @@ class ResUsers(models.Model):
     @api.multi
     def password_match_message(self):
         self.ensure_one()
+        if self.env.user.id == 1:
+            return ''
         is_string = False
-        company_id = self.company_id
+        company_id = self.company_id        
         message = ''
         if company_id.password_lower:
             message = ''.join(' ' + 'Lowercase letter (At least ' + str(
