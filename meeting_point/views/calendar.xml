@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Meetings">
                     <style>
-                        .modal-footer:last .o_form_button_cancel{
+                        .modal-footer .o_form_button_cancel{
                             display:none
 
                         }
