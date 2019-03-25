@@ -108,7 +108,7 @@ class PointAnnotation(models.Model):
             'y': point['y']
         }
         res['point'] = point
-        notification_message = ' comment(s) received on document ' + doc_name
+        notification_message = ' comment(s) received on document ' + docname
         if new_point:
             res['new_point'] = 1
         if topic_name:
