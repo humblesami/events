@@ -120,6 +120,9 @@ var site_functions = {
     get_path: function() {
 
     },
+    logout_odoo:function(){        
+        window.location = '/web/login';
+    },
     showLoader: function(nam) {
         if (this.processes.length == 0) {
             server_wait_loader.show();
@@ -301,3 +304,4 @@ function addMainEventListeners() {
     }
 }
 addMainEventListeners();
+//# sourceURL=meetvumainjs

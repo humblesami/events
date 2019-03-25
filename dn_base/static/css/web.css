@@ -291,21 +291,6 @@ body.o_app_switcher_background nav:first-child
     cursor:pointer;
 }
 
-.un-read-msg
-{
-    background: #dc3545;
-    color: white;
-    border-radius: 20px;
-    padding: 0 5px;
-    padding-top: 2px;
-    font-weight: bold;
-    font-size: 10px;
-    position: absolute;
-    top: 0px;
-    right: -2px;
-    z-index: 200;
-     font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-}
 
 #signature_editor{ width: 459px; height: 198px; margin-top:5px; margin-bottom:5px;}
 
@@ -341,3 +326,100 @@ body.o_app_switcher_background nav:first-child
     color: white;
     background-color: #008784;
 }
+
+
+
+
+
+
+/*********** Menu CSS ***********/
+
+.o_menu_systray .customClick:first-child
+{
+    visibility : hidden;
+}
+.o_menu_systray span.un-read-msg{
+    top: 5px;
+    right: -10px;
+    line-height: normal;
+    padding: 0px 5px 1px;
+    font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.o_user_menu.open .dropdown-menu > li:nth-child(1),
+.o_user_menu.open .dropdown-menu > li:nth-child(2),
+.o_user_menu.open .dropdown-menu > li:nth-child(3),
+ .o_user_menu.open .dropdown-menu > li:nth-child(4)
+{
+    display:none;
+}
+.o_main_navbar
+{
+    z-index:9999;
+}
+.oe_topbar_name
+{
+    color :  #0d0415;
+    background-color:  #ffeeee;
+}
+/*
+.o_menu_systray>li:not(.o_user_menu open)
+{
+    visibility : hidden;
+}
+*/
+
+.o_burger_menu
+{
+    z-index:9999;
+}
+.o_main_navbar .o_user_menu
+{
+    margin-left: 0;
+}
+.o_main_navbar .o_user_menu > a
+{
+    padding: 0 10px;
+}
+
+.RightTopDropDownNav{
+    max-height: none !important;
+    min-width: unset !important;
+    text-align: left;
+}
+
+.RightTopDropDownNav a{
+    padding: 3px 10px !important;
+}
+
+.RightTopDropDownNav .oe_topbar_avatar {
+    height: 22px !important;
+}
+.CustomUserDropDown{
+    display: flex;
+    justify-content: flex-start;
+    padding: 3px 10px !important;
+}
+
+.CustomUserDropDown img{
+    display: block;
+    margin-right:5px;
+}
+
+.CustomUserDropDown .oe_topbar_name{
+    background: transparent;
+}
+.o_menu_sections>li:hover
+{
+    background-color: #68465f;
+}
+.o_menu_sections>li:hover>ul>li
+{
+    background-color: #875A7B;
+}
+.o_menu_sections>li:hover>ul>li:hover
+{
+    background-color: #68465f;
+}
+
+/********* Menu css end ********/

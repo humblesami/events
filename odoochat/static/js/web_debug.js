@@ -45,9 +45,9 @@ function wait_element_render(wait_options)
     }
     if($(wait_options.selector).length > 0)
     {
-        if(wait_options.n>1)
+        if(wait_options.n > 1)
         {
-            console.log(wait_options.selector+' loaded in '+wait_options.n+ ' tries');
+            //console.log(wait_options.selector+' loaded in '+wait_options.n+ ' tries');
         }
         setTimeout(wait_options.call_back, 10);
     }
@@ -161,9 +161,24 @@ function load_angular(call_back, skip_initial_checks)
                     }
                     else
                     {
-                        console.log('Angular not loaded');
+                        setTimeout(function(){
+                            if(window["loadComponent"])
+                            {
+                                odoo.angular_loading = false;
+                                odoo.angular_loaded = 1;
+                                console.log('Loaded angular files in 2nd try',Date());
+                                for(var i in on_angular_loaded)
+                                {
+                                    on_angular_loaded[i]();
+                                }
+                            }
+                            else
+                            {
+                                console.log('Angular not loaded');
+                            }
+                        }, 3000);
                     }
-                }, 1000);
+                }, 2000);
             }
         },
         document.getElementById('angular_container')
@@ -206,7 +221,7 @@ $(function(){
                             }
                             action_url += '&view_type=form&model=dn_base.empty';
                             action_url += '&menu_id='+get_param_value('menu_id');
-                            $('.o_control_panel,.o_cp_right,.o_cp_left').hide();
+                            $('.o_control_panel').hide();
                             window.location = action_url;
                         }
                     };
@@ -226,7 +241,7 @@ $(function(){
                 load_angular(function(){                    
                     window["loadComponent"]("chat","app-chat");
                     window["loadComponent"]("messengericon","app-messageicon");
-                    // $('.o_menu_systray:first>li').css('visibility', 'visible');
+                    $('.o_menu_systray .customClick:first').css('visibility', 'visible');
                 })
             }
         }

@@ -43,8 +43,8 @@
             <field name="arch" type="xml">
                 <form edit="false" class="home_form">
                     <style>
-                        .o_control_panel,.o_cp_right,.o_cp_left{
-                        display:none!important;
+                        .o_control_panel{
+                            display: none !important;
                         }
                     </style>
                     <script src="/meeting_point/static/js/home_include.js"/>

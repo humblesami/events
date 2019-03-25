@@ -573,3 +573,7 @@
 	background: #ffffff;
 	height:calc(100% - 50px) !important;
 }
+.backchatlist
+{
+    cursor: pointer;
+}

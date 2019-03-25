@@ -4,8 +4,7 @@
         <t t-jquery="li[class='o_user_menu']" t-operation="replace">
             <li class="o_user_menu">
                 <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
-                    <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>                    
-                    <link rel="stylesheet" href="/dn_base/static/css/menu.css"/>
+                    <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
                 </a>
                 <ul class="dropdown-menu RightTopDropDownNav" role="menu">
                     <t t-call="UserMenu.Actions"/>
