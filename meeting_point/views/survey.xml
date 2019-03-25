@@ -47,7 +47,7 @@
                                             </t>
                                             <t t-if="record.designed.raw_value">
                                                 <t t-if="record.my_status.raw_value=='pending' ">
-                                                    <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="width: 100%" name="action_start_survey"  attrs="{'invisible':[('stage_id', '=',3)]}">Start</button>
+                                                    <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="width: 100%" name="action_start_survey"  attrs="{'invisible':[('my_status', '=','done')]}">Start</button>
                                                 </t>
                                             </t>
 
@@ -85,7 +85,7 @@
                                                  </t>
                                                 <t t-if="record.designed.raw_value">
                                                     <t t-if="record.my_status.raw_value=='pending' ">
-                                                        <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="    width: 100%" name="action_start_survey" groups="!meeting_point.group_meeting_admin" attrs="{'invisible':[('stage_id', '=',3)]}">Start
+                                                        <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="    width: 100%" name="action_start_survey" groups="!meeting_point.group_meeting_admin" attrs="{'invisible':[('my_status', '=','done')]}">Start
                                                         </button>
                                                     </t>
                                                 </t>
@@ -318,12 +318,14 @@
         <record id="email_template_survey_modified" model="mail.template">
             <field name="name">Survey Template MeetingPoint</field>
             <field name="model_id" ref="model_survey_survey" />
+            <field name="subject">${object.title} invitation</field>
+             <field name="email_to" >${ctx['emailTo']|safe}</field>
             <field name="auto_delete" eval="True" />
             <field name="body_html">
                 <![CDATA[
 <p>Hello,</p>
 <p>We are conducting a survey, and your response would be appreciated.</p>
-<p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="__URL__">Please, click here to start survey</a></p>
+<p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="${ctx['url']}">Please, click here to start survey</a></p>
 <p>Thanks for your participation!</p>
                 ]]>
             </field>

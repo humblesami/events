@@ -46,10 +46,16 @@ class website_survey(WebsiteSurvey):
 
         # Manual surveying
         if not token:
+            # return request.render("website.403")
             vals = {'survey_id': survey.id}
             if request.website.user_id != request.env.user:
-                vals['partner_id'] = request.env.user.partner_id.id
-            user_input = UserInput.create(vals)
+                user_input = UserInput.sudo().search(['&',('partner_id', '=', request.env.user.partner_id.id),('survey_id','=',survey.id)], limit=1)
+                if not user_input:
+                    user_input = UserInput.create(vals)
+            else:
+                return request.render("website.403")
+            #     vals['partner_id'] = request.env.user.partner_id.id
+            # user_input = UserInput.create(vals)
         else:
             user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
             if not user_input:

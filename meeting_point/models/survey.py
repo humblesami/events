@@ -2,8 +2,9 @@ from odoo.http import request
 from odoo import models, fields, api
 from odoo.addons.dn_base import ws_methods
 from odoo.addons.http_routing.models.ir_http import slug
-
-
+from odoo.tools import pycompat
+import uuid
+import numpy as np
 class Survey(models.Model):
     _inherit = ['survey.survey']#,'dn.seen']
 
@@ -127,6 +128,9 @@ class Survey(models.Model):
                     if input.create_uid == request.env.user:
                         return "done"
                         break
+                    elif input.user_input_id.partner_id.user_id == request.env.user:
+                        return "done"
+                        break
         if not any_question:
             return 'done'
         return "pending"
@@ -165,12 +169,39 @@ class Survey(models.Model):
             name = values.get('name')
             if name:
                 values['title'] = name
+        SurveyUserInput = self.env['survey.user_input']
+        template = self.env.ref('meeting_point.email_template_survey_modified')
         res = super(Survey, self).create(values)
         self.emit_data_update(res)
+        if values['partner_ids'][0][2].__len__() != 0:
+            for partner_id in values['partner_ids'][0][2]:
+                emailId =  self.env['res.partner'].search([('id', '=', partner_id)]).email
+                local_context = dict(self._context)
+                local_context.update({
+                    'emailTo': emailId
+                })
+
+                token = pycompat.text_type(uuid.uuid4())
+                # create response with token
+                survey_user_input = SurveyUserInput.create({
+                    'survey_id': res.id,
+                    'date_create': fields.Datetime.now(),
+                    'type': 'link',
+                    'state': 'new',
+                    'token': token,
+                    'partner_id': partner_id,
+                    'email': emailId})
+                tokenValue = survey_user_input.token
+                local_context.update({
+                    'url': res.public_url+'/'+tokenValue
+                })
+                values['recipient_ids'] = [(4, partner_id)]
+                template.with_context(local_context).send_mail(res.id, force_send=True)
         return res
 
     #
     @api.multi
+    @api.model
     def write(self, values):
 
         title = values.get('title')
@@ -180,6 +211,53 @@ class Survey(models.Model):
             name = values.get('name')
             if name:
                 values['title'] = name
+        SurveyUserInput = self.env['survey.user_input']
+        partnerEnvirnment = self.env['res.partner']
+        if values['partner_ids'][0][2].__len__() != 0:
+           template = self.env.ref('meeting_point.email_template_survey_modified')
+           partner_to_email =  list(np.setdiff1d(values['partner_ids'][0][2], self.partner_ids.ids,assume_unique=True))
+           partner_to_remove =  list(np.setdiff1d(self.partner_ids.ids, values['partner_ids'][0][2],assume_unique=True))
+           for data in partner_to_email:
+                token = pycompat.text_type(uuid.uuid4())
+                emailId = partnerEnvirnment.search([('id', '=', data)]).email
+                local_context = dict(self._context)
+                local_context.update({
+                    'emailTo': emailId,
+                    'url' : self.public_url+'/'+token
+                })
+                survey_user_input = SurveyUserInput.create({
+                    'survey_id': self.id,
+                    'date_create': fields.Datetime.now(),
+                    'type': 'link',
+                    'state': 'new',
+                    'token': token,
+                    'partner_id': int(data),
+                    'email': emailId})
+                template.with_context(local_context).send_mail(self.id, force_send=True)
+           if partner_to_remove.__len__() != 0:
+               for partnerValue in partner_to_remove:
+                emailId = partnerEnvirnment.search([('id', '=', partnerValue)]).email
+                survey_user_input = SurveyUserInput.search([('survey_id', '=', self.id),
+                                                           ('state', 'in', ['new', 'skip']), '|',
+                                                           ('partner_id', '=', int(partnerValue)),
+                                                           ('email', '=', emailId)], limit=1)
+                if survey_user_input:
+                    survey_user_input.unlink()
+                else:
+                    values['partner_ids'][0][2].append(int(partnerValue))
+        else:
+            partner_to_remove = list(np.setdiff1d(self.partner_ids.ids, values['partner_ids'][0][2], assume_unique=True))
+            if partner_to_remove.__len__() != 0:
+                for partnerValue in partner_to_remove:
+                    emailId = partnerEnvirnment.search([('id', '=', partnerValue)]).email
+                    survey_user_input = SurveyUserInput.search([('survey_id', '=', self.id),
+                                                                ('state', 'in', ['new', 'skip']), '|',
+                                                                ('partner_id', '=', int(partnerValue)),
+                                                                ('email', '=', emailId)], limit=1)
+                    if survey_user_input:
+                        survey_user_input.unlink()
+                    else:
+                        values['partner_ids'][0][2].append(int(partnerValue))
         res = super(Survey, self).write(values)
 
         self.emit_data_update(self)
