@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "MeetingVUE",
+    'name': "MeetVUE",
 
     'summary': """
         Schedule meetings as many as you want""",

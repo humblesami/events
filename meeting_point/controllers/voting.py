@@ -69,6 +69,8 @@ class website_voting(http.Controller):
                 voting_answers[option.name] = request.env['meeting_point.votinganswer'].search_count(filters)
 
             res = { 'vote_options':voting_options_array, 'voting_answers': voting_answers, 'my_status' : voting_object.my_status}
+            if voting_object.public_visibility:
+                res['public'] = 1
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()

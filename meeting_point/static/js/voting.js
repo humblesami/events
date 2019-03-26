@@ -1,51 +1,58 @@
 $(function(){
     $('#votingBack').hide();
     $('#submitted').hide();
-    function get_results(){
-        var options = {
-            url : '/voting/results',
-            data : {},
-            success:function(data){
-                var vote_options_dom = '';
-                $('.vote_options:first').html('');
-                //console.log(111, data);
-                var my_status = data.my_status;
-                var vote_options_container = $('.vote_options:first');
-                if(data.my_status)
-                {
-                    for(var i in data.vote_options)
-                    {
-                        var option = data.vote_options[i];
-                        vote_options_dom = '<span class="vote_choice">';
-                        vote_options_dom += '<input name="vote_choice_input" data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
-                        vote_options_dom += '</span>';
-                        vote_options_container.append(vote_options_dom);
-                        if(my_status == option.name)
-                            vote_options_container.find('.vote_choice:last input').attr('checked', true);
-                    }
-                    vote_options_container.find('input[type="radio"]').change(on_user_answer);
-                    $('.vote_choice span').click(function(){
-                        var prev = $(this).prev();
-                        if(prev.is('input'))
-                        {
-                            prev.click();
-//                            prev.change();
-                        }
-                    });
-                }
 
-                if(data.message)
+    function show_results(data)
+    {
+        var vote_options_dom = '';
+        $('.vote_options:first').html('');
+        //console.log(111, data);
+        var my_status = data.my_status;
+        var vote_options_container = $('.vote_options:first');
+        if(data.my_status)
+        {
+            for(var i in data.vote_options)
+            {
+                var option = data.vote_options[i];
+                vote_options_dom = '<span class="vote_choice">';
+                vote_options_dom += '<input name="vote_choice_input" data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
+                vote_options_dom += '</span>';
+                vote_options_container.append(vote_options_dom);
+                if(my_status == option.name)
+                    vote_options_container.find('.vote_choice:last input').attr('checked', true);
+            }
+            vote_options_container.find('input[type="radio"]').change(on_user_answer);
+            $('.vote_choice span').click(function(){
+                var prev = $(this).prev();
+                if(prev.is('input'))
                 {
-                    $('.results').html(data.message);
-                    return;
+                    prev.click();
                 }
-                var results = data.voting_answers;
-                var no_results = 'No answer from any user';
-                for(var key in results)
-                {
-                    if(no_results)
-                        no_results = false;
-                    $('.results').html(`
+            });
+        }
+
+        if(data.message)
+        {
+            $('.results').html(data.message);
+            return;
+        }
+
+        var results = data.voting_answers;
+
+        var no_results = 'No answer from any user';
+        var results_div =
+        $('.results').html('');
+        var my_groups = odoo.session_info.user.groups;
+        var agi = my_groups.indexOf('MeetingPoint / Admin');
+
+        if(agi > -1 || data.public)
+        {
+            $('.results_container').show();
+            for(var key in results)
+            {
+                if(no_results)
+                    no_results = false;
+                $('.results').append(`
                     <div class="entry">
                         <span class="choice_label">
                             <span>Choice</span>: <span class="user-choice">`+key+`</span>
@@ -54,10 +61,19 @@ $(function(){
                             <span>Voters</span>: <span class="count">`+results[key]+`</span>
                         </span>
                     </div>
-                    `)
-                }
-                if(no_results);
+                `);
+            }
+            if(no_results)
                 $('.results').html(no_results);
+        }
+    }
+
+    function get_results(){
+        var options = {
+            url : '/voting/results',
+            data : {},
+            success:function(data){
+                show_results(data)
             }
         }
         setTimeout(function(){
@@ -93,3 +109,5 @@ $(function(){
         dn_rpc_ajax(options);
     }
 })
+
+//# sourceURL=localhost:8000/meeting_point/static/js/voting.js

@@ -6,5 +6,6 @@
 
 .results_container
 {
+    display : none;
     padding-top: 30px;
 }

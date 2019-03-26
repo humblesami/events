@@ -49,6 +49,12 @@ class chat_Http(models.AbstractModel):
             friendList[friend['id']] = friend
             friendIds.append(friend['id'])
 
+
+        groups = []
+        user_groups = req_env['res.users'].search([('id', '=', uid)]).groups_id
+        for group in user_groups:
+            groups.append(group.full_name)
+        values['groups'] = groups
         user_data = {'notifications': notificationList, 'friends': friendList, 'friendIds': friendIds,
                      'unseen': unseenMessages, 'user': values}
 
