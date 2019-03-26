@@ -73,7 +73,7 @@ class MPUser(models.Model):
     _inherits = {'res.users':'user_id'}
     _inherit = 'dn.user'
     _name= "meeting_point.users"
-    _description = 'MeetingPoint Users'
+    _description = 'MeetVUE Users'
 
 
     nick_name = fields.Char(string="Nick")

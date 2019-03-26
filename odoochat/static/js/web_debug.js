@@ -140,7 +140,6 @@ function load_angular(call_back, skip_initial_checks)
             {
                 odoo.angular_loading = false;
                 odoo.angular_loaded = 1;
-                console.log('Loaded angular files',Date());
                 for(var i in on_angular_loaded)
                 {
                     on_angular_loaded[i]();
@@ -153,7 +152,6 @@ function load_angular(call_back, skip_initial_checks)
                     {
                         odoo.angular_loading = false;
                         odoo.angular_loaded = 1;
-                        console.log('Loaded angular files in 2nd try',Date());
                         for(var i in on_angular_loaded)
                         {
                             on_angular_loaded[i]();
@@ -166,7 +164,6 @@ function load_angular(call_back, skip_initial_checks)
                             {
                                 odoo.angular_loading = false;
                                 odoo.angular_loaded = 1;
-                                console.log('Loaded angular files in 2nd try',Date());
                                 for(var i in on_angular_loaded)
                                 {
                                     on_angular_loaded[i]();
@@ -221,7 +218,6 @@ $(function(){
                             }
                             action_url += '&view_type=form&model=dn_base.empty';
                             action_url += '&menu_id='+get_param_value('menu_id');
-                            $('.o_control_panel').hide();
                             window.location = action_url;
                         }
                     };

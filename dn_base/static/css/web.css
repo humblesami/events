@@ -312,7 +312,6 @@ body.o_app_switcher_background nav:first-child
 {
 	margin-left:5px;
 }
-
 .o_form_readonly table.o_group>tbody>tr
 {
     display : none;
@@ -409,15 +408,15 @@ body.o_app_switcher_background nav:first-child
 .CustomUserDropDown .oe_topbar_name{
     background: transparent;
 }
-.o_menu_sections>li:hover
+.o_burger_menu_content .o_menu_sections>li:hover
 {
     background-color: #68465f;
 }
-.o_menu_sections>li:hover>ul>li
+.o_burger_menu_content .o_menu_sections>li:hover>ul>li
 {
     background-color: #875A7B;
 }
-.o_menu_sections>li:hover>ul>li:hover
+.o_burger_menu_content .o_menu_sections>li:hover>ul>li:hover
 {
     background-color: #68465f;
 }

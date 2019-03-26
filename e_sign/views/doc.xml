@@ -48,8 +48,7 @@
             <field name="model">e_sign.document</field>
             <field name="arch" type="xml">
                 <form create="false" class="sign_doc_form">
-
-
+                    <link href="/e_sign/static/signature.css" rel="stylesheet"/>
                     <field name="id" class="e_sign_doc_id" invisible="1"/>
                     <div groups="dn_base.group_dn_app_manager" class="details_div">
                         <div class="pending_signs">
@@ -166,7 +165,6 @@
                     <!--<script src="/e_sign/static/js/pdf.worker.js"/>-->
                     <!--<script src="/e_sign/static/js/pdf.js"/>-->
                     <div name="esign_script"><script src="/e_sign/static/js/viewer.js"/></div>
-                    <link href="/e_sign/static/signature.css" rel="stylesheet"/>
                 </form>
             </field>
         </record>

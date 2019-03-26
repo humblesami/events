@@ -112,7 +112,6 @@
             <field name="res_model">e_payroll.users</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="e_payroll_user_kanban"/>
-            <!--[('groups_id.category_id.name','=','MeetingPoint'),'|',('groups_id.name','=','Admin'),('groups_id.name','=','Staff')]-->
             <field name="domain">
                 [('groups_id.category_id.name','=','E-Payroll')]
             </field>
