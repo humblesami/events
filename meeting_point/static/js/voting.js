@@ -26,6 +26,7 @@ $(function(){
                 var prev = $(this).prev();
                 if(prev.is('input'))
                 {
+                    console.log('Radio Button is Clicked...')
                     prev.click();
                 }
             });
@@ -98,12 +99,11 @@ $(function(){
         }
         let voting_id = $('.voting_id').html();
         let user_choice = input_choice.attr('data-id');
-
         var options = {
             url : '/voting/submit',
             data : {'voting_option_id' : user_choice, 'voting_id' : voting_id},
             success:function(data){
-                console.log(data);
+                get_results();
             },
             error:function(a, b){
                 console.log(b.responseText);
