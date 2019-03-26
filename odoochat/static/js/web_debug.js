@@ -125,10 +125,9 @@ function load_angular(call_back, skip_initial_checks)
 
             </div>
         `);
-    }
 
-    var myLoader = new async_file_loader();
-    myLoader.require(
+        var myLoader = new async_file_loader();
+        myLoader.require(
         [
             '/odoochat/static/meetvue/runtime.js',
             '/odoochat/static/meetvue/polyfills.js',
@@ -180,6 +179,7 @@ function load_angular(call_back, skip_initial_checks)
         },
         document.getElementById('angular_container')
     );
+    }
 }
 
 $(function(){
