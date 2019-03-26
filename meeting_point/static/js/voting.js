@@ -62,6 +62,9 @@ $(function(){
                         </span>
                     </div>
                 `);
+
+                $('.viewGraphically').attr('href',$('.graphical_view_url').text());
+
             }
             if(no_results)
                 $('.results').html(no_results);

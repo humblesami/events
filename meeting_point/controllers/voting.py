@@ -87,16 +87,25 @@ class website_voting(http.Controller):
         else:
             return ''
 
+
+    @http.route(['/voting/graphical/<model("meeting_point.voting"):voting>'],
+                type='http', auth='public', website=True)
+    def start_graphical_view(self, voting, **post):
+        data = {'voting': voting, 'page': None}
+        page = request.render('meeting_point.voting_graphically', data)
+        return page
+
+
     @http.route(['/voting/start/<model("meeting_point.voting"):voting>'],
                 type='http', auth='public', website=True)
     def start_token_voting(self, voting, **post):
         data = {'voting': voting, 'page': None}
-        if voting.my_status == 'pending':
-            page = request.render('meeting_point.voting_init', data)
-            return page
-        else:
-            return request.redirect('%s/vote-submitted/%d' %( ws_methods.get_main_url(), int(voting.id)))
-            pass
+        # if voting.my_status == 'pending':
+        page = request.render('meeting_point.voting_init', data)
+        return page
+        # else:
+        #     return request.redirect('%s/vote-submitted/%d' %( ws_methods.get_main_url(), int(voting.id)))
+        #     pass
 
 
     @http.route(['/vote-submitted/<int:voting_id>'],

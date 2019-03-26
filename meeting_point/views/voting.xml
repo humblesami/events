@@ -44,6 +44,8 @@
                     <div class="oe_read_only results_container">
                         <h3>Results</h3>
                         <div class="results"></div>
+                        <a href="#" class="btn btn-primary viewGraphically">View Graphically</a>
+                        <field invisible="1" class="graphical_view_url" name="graphical_view_url"/>
                     </div>
                     <script src="/meeting_point/static/js/voting.js"/>
                 </form>
@@ -154,6 +156,25 @@
                 </div>
             </t>
         </template>
+
+
+        <template id="voting_graphically" name="Graphical View Of Voting Answers">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="oe_structure" />
+                    <div class="container">
+                        <a id="votingBack" style ="position: relative; margin: 30px 0 0 15px;" t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{voting.id}&amp;action=meeting_point.action_meeting_voting" class="btn btn-default">Back to Voting</a>
+                        <div class='jumbotron mt32'>
+                            <h1>We Are Working On Graphical View of Voting Answers</h1>
+                        </div>
+                    </div>
+                    <div class="oe_structure" />
+                </div>
+            </t>
+        </template>
+
+
+
 
         <template id="vote_submitted" name="Vote is Submitted">
             <t t-call="website.layout">

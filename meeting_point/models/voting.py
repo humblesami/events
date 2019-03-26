@@ -1,6 +1,8 @@
 from odoo import models, fields, api
 from odoo.addons.dn_base import ws_methods
 from odoo.exceptions import ValidationError
+from werkzeug import urls
+from odoo.addons.http_routing.models.ir_http import slug
 
 class VotingType(models.Model):
     _name = 'meeting_point.votingtype'
@@ -38,6 +40,16 @@ class Voting(models.Model):
     user_id = fields.Char(compute='_compute_user_id')
     document_ids = fields.One2many('meeting_point.votingdocument', 'voting_id', string="Document(s)")
     public_visibility = fields.Boolean(string="Results Visible To All")
+    graphical_view_url = fields.Char("View Graphically", compute="_compute_graphical_url")
+
+
+
+    def _compute_graphical_url(self):
+        """ Computes a public URL for the survey """
+        base_url = '/' if self.env.context.get('relative_url') else \
+                   self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for voting in self:
+            voting.graphical_view_url = urls.url_join(base_url, "/voting/graphical/%s" % (slug(voting)))
 
 
     def write(self, vals):
@@ -102,7 +114,7 @@ class Voting(models.Model):
             'type': 'ir.actions.act_url',
             'name': "Start Voting",
             'target': 'self',
-            'url': self.with_context(relative_url=True).public_url_new + trail
+            'url': self.with_context(relative_url=True) + trail
         }
 
     @api.multi
