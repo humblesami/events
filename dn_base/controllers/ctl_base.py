@@ -111,12 +111,14 @@ class Controller(http.Controller):
     def password_reset_emai(self, **kw):
         try:
             login = kw.get('login')
-            if  not login:
+            if not login:
                 return ws_methods.http_response('Please provide username/email')
             try:
                 request.env['res.users'].sudo().reset_password(login)
             except:
-                return ws_methods.http_response('Invalid login '+login)
+                import sys
+                err = sys.exc_info()[1].name
+                return ws_methods.http_response(err)
             data = { 'message':"Email has been sent to "+  login}
             return ws_methods.http_response('',data)
         except:

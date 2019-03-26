@@ -78,10 +78,6 @@ body.fixed .header-fixed {
     z-index: 200;
 }
 
-a {
-    color: #5e5e5f;
-}
-
 .breadcrumb {
     font-size: 1.5rem;
     font-weight: bold;

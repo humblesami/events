@@ -10,6 +10,7 @@ body{
 	justify-content: center;    
     height: 100vh;
     overflow: auto;
+    align-items: center;
     /* background-image: url("../img/login-bg.jpg"); */
     background-repeat: no-repeat;
     background-size: cover;
@@ -30,7 +31,6 @@ body{
     min-width: 300px;
     height: 100%;
     display: table;
-    position: relative;
     z-index: 200;
 }
 .login-form-div form{
