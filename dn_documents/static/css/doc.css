@@ -16,7 +16,7 @@
 }
 
 #viewer-wrapper {
-    height: calc(100vh - 196px) !important;
+    height: calc(100vh - 155px) !important;
 }
 
 #comment-wrapper {
@@ -27,12 +27,17 @@
     display: none;
     background: #d4d4d4;
     border-right: 1px solid #e6e6e6;
-    height: calc(100vh - 175px) !important;
-    top: 175px !important;
+    height: calc(100vh - 155px) !important;
+    top: 150px !important;
 }
 
 .modal #comment-wrapper {
-    top: 57px !important;
+    top: 50px !important;
+    height: calc(100vh - 161px) !important;
+}
+
+.o_form_view.doc_view_form.o_form_nosheet {
+    padding: 0;
 }
 
 .top_btns {
