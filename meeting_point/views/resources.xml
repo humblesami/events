@@ -55,7 +55,7 @@
                             <!--<span class="o_hidden modal-name" modal_name="meeting_point.all_files"></span>-->
                             <h5>Files:</h5>
                             <field class="kanban_document dn_attatchment_btn" name="file_ids"
-                               context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'}" mode="kanban">
+                               context="{'form_view_ref': 'meeting_point.view_meeting_doc_form'}" mode="kanban">
                             <form>
                                 <!--<field name="x_parent_partners"></field>-->
                                 <h5>Name:</h5>
@@ -93,7 +93,7 @@
                         <field name="name"/>
                         <div class="files">
                         <h5>Files:</h5>
-                            <field class="kanban_document dn_attatchment_btn" name="file_ids" context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'}" mode="kanban">
+                            <field class="kanban_document dn_attatchment_btn" name="file_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form'}" mode="kanban">
                                 <form>
                                     <h5>Name:</h5>
                                     <field name="name"/>
@@ -117,6 +117,37 @@
                         });
                     </script>
                 </form>
+            </field>
+        </record>
+
+
+                <record id="resources_file_default_annotator_form" model="ir.ui.view">
+            <field name="name">resources.file.default.annotator</field>
+            <field name="model">meeting_point.files</field>
+            <field name="inherit_id" ref="dn_documents.doc_annotator_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <div></div>
+
+            </field>
+        </record>
+
+        <record id="view_resources_file_kanban" model="ir.ui.view">
+            <field name="name">resources.file.kanban</field>
+            <field name="model">meeting_point.files</field>
+            <field name="inherit_id" ref="dn_documents.dn_docs_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='open_sign_doc']" position="replace">
+                    <a type="object" name="open_annotator_form"
+                       class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
+                </xpath>
+                <xpath expr="//div[@name='open_sign_doc1']" position="replace">
+                    <a type="object" name="open_annotator_form"
+                       class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
+                </xpath>
+
             </field>
         </record>
 

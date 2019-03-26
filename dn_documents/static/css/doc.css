@@ -3,12 +3,7 @@
     z-index: 13;
     background: #fff;
     position: relative;
-    margin: -24px -16px;
     width: auto !important;
-}
-
-#viewer-wrapper {
-    height: calc(100vh - 147px) !important;
 }
 
 #viewer-wrapper {
@@ -21,27 +16,23 @@
 }
 
 #viewer-wrapper {
-    height: calc(100vh - 147px) !important;
+    height: calc(100vh - 196px) !important;
 }
 
 #comment-wrapper {
     position: fixed;
     width: 250px;
-    left: 0;
+    left: 5px;
     z-index: 58;
     display: none;
     background: #d4d4d4;
     border-right: 1px solid #e6e6e6;
-    /* position: fixed;
-    width: 250px;
-    left: 0;
-    z-index: 58;
-    display: none;
-    background: #d4d4d4;
-    border-right: 1px solid #e6e6e6;
-    bottom: 2px; */
-    height: calc(100vh - 148px) !important;
-    top: 148px !important;
+    height: calc(100vh - 175px) !important;
+    top: 175px !important;
+}
+
+.modal #comment-wrapper {
+    top: 57px !important;
 }
 
 .top_btns {
@@ -117,13 +108,15 @@
     display: inline-block;
 }
 
-.modal-body.o_act_window {
+.modal-body.o_act_window111111111111111 {
     overflow: auto;
     max-height: calc(100vh - 200px);
 }
 
 .o_cp_left,
-.o_cp_right {
+.o_cp_right,
+.modal-footer,
+.o_cp_pager{
     display: none!important;
 }
 
@@ -142,7 +135,7 @@
 
 
 .comment-list {
-    height: calc(100vh - 199px) !important;
+    height: calc(100vh - 230px) !important;
 }
 
 .comment-list-container{

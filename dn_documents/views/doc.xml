@@ -156,20 +156,6 @@
             </field>
         </record>
 
-        <record id="view_dn_doc_form" model="ir.ui.view">
-            <field name="name">dndoc.form</field>
-            <field name="model">dn_documents.allfiles</field>
-            <field name="priority">3</field>
-            <field name="arch" type="xml">
-                <form>
-                    <group>
-                        <field name="name" string="Title" />
-                        <field name="filename" invisible="1"/>
-                        <field name="attachment" filename="filename" />
-                    </group>
-                </form>
-            </field>
-        </record>
 
         <record id="doc_annotator_form" model="ir.ui.view">
             <field name="name">document.annotator.form</field>
@@ -189,17 +175,6 @@
             </field>
         </record>
 
-        <record id="pdf_doc_view" model="ir.ui.view">
-            <field name="name">dn_documents.pdf_doc_view.form</field>
-            <field name="model">dn_documents.allfiles</field>
-            <field name="priority">9</field>
-            <field name="arch" type="xml">
-                <form create="false" edit="false">
-                    <div id="pdf_div"></div>
-                    <script id="doc_js" src="/dn_documents/static/js/doc.js"/>
-                </form>
-            </field>
-        </record>
 
         <record id="action_dn_documents_doc" model="ir.actions.act_window">
             <field name="name">Documents</field>
