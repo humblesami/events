@@ -116,7 +116,6 @@ function load_angular(call_back, skip_initial_checks)
                 <script src="/assets/static/js/datetime.js"></script>
 
                 <link rel="stylesheet" href="/assets/static/css/emoji.css" />
-	            <link rel="stylesheet" href="/assets/static/css/emoji.css.map" />
                 <script src="/assets/static/emoji/js/config.js"></script>
                 <script src="/assets/static/emoji/js/emoji-picker.js"></script>
                 <script src="/assets/static/emoji/js/util.js"></script>

@@ -41277,9 +41277,7 @@
 
 				/***/ }
 			/******/ ])
-	});
-	;
-//# sourceMappingURL=lib-jitsi-meet.js.map
+	});	
 }();
 
 window['JitsiMeetJS'] = window.JitsiMeetJS;

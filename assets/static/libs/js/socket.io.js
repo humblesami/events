@@ -6674,4 +6674,4 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-//# sourceMappingURL=socket.io.dev.js.map
+//# sourceMappingURL=socket.io.js

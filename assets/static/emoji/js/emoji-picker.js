@@ -3704,8 +3704,6 @@ window['emojiConfig'] = emojiConfig;
 	})();
 }.call(this));
 
-//# sourceMappingURL=emoji-picker.js.map
-
 window["EmojiPicker"] = EmojiPicker;
 
 function cancelEvent (event) {

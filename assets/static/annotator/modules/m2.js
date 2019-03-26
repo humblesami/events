@@ -4052,7 +4052,8 @@ function module2(module, exports, __webpack_require__) {
                     return r === 0 ? x : Math.round(x - r + div);
                 } /***/
             }]));
-        });; //# sourceMappingURL=pdf-annotate.js.map
+        });;
         /* WEBPACK VAR INJECTION */
     }.call(exports, __webpack_require__(3)(module)))
 }
+//# sourceURL=/assets/static/annotator/modules/m2.js
