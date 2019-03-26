@@ -270,7 +270,7 @@ mark.current {
 
 #pdf-annotate-point-input
 {
-    z-index: 999;
+    z-index: 9999;
 }
 
 .topbar select.scale
