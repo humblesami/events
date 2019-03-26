@@ -80,6 +80,64 @@
             </field>
         </record>
 
+                <record id="dn_docs_kanban_annotator" model="ir.ui.view">
+            <field name="name">dn_annotator.doc.kanban</field>
+            <field name="model">dn_documents.allfiles</field>
+            <field name="arch" type="xml">
+                <kanban class="documents">
+                    <!--<field name="name"/>-->
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="doc_element oe_edit_only oe_kanban_global_click">
+
+
+                                <div name="kanban_del" class="kanban_del">
+                                    <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
+                                </div>
+                                <div style="display:none;" class="dn_doc_id">
+                                    <field name="id"/>
+                                </div>
+                                <div class="oe_module_desc">
+                                    <div name="open_sign_doc">
+                                        <a style="pointer-events:all" type="object" class="fa fa-5x fa-file pull-left" name="open_annotator_form">
+                                        </a>
+                                    </div>
+
+                                    <div style="overflow:hidden">
+                                        <h2 name="name">
+                                            <field name="name"/>
+                                        </h2>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="doc_element oe_read_only" style="pointer-events:none" >
+                                <div name="kanban_del1" class="kanban_del">
+                                    <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
+                                </div>
+                                <div style="display:none;" class="dn_doc_id">
+                                    <field name="id"/>
+                                </div>
+                                <div class="oe_module_desc">
+                                    <div name="open_sign_doc1">
+                                        <a style="pointer-events:all" type="object" t-att-myatr="open_doc" class="fa fa-5x fa-file pull-left" name="open_annotator_form">
+                                        </a>
+                                    </div>
+                                    <div style="overflow:hidden">
+                                        <h2 name="name1">
+                                            <field name="name"/>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="doc_edit_form" model="ir.ui.view">
             <field name="name">dn_documents.edit.form</field>
             <field name="model">dn_documents.allfiles</field>

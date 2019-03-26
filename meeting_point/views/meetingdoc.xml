@@ -31,23 +31,6 @@
             </field>
         </record>
 
-        <record id="view_meeting_doc_kanban" model="ir.ui.view">
-            <field name="name">meeting.doc.kanban</field>
-            <field name="model">meeting_point.doc</field>
-            <field name="inherit_id" ref="dn_documents.dn_docs_kanban"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='open_sign_doc']" position="replace">
-                    <a type="object" name="open_annotator_form"
-                       class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
-                </xpath>
-                <xpath expr="//div[@name='open_sign_doc1']" position="replace">
-                    <a type="object" name="open_annotator_form"
-                       class="fa fa-5x fa-file pull-left" style="pointer-events:all"/>
-                </xpath>
-
-            </field>
-        </record>
 
         <record id="view_meeting_doc_edit_form" model="ir.ui.view">
             <field name="name">meeting_point.document.admin.form</field>

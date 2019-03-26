@@ -61,7 +61,7 @@
                             <div class="clearfix">
                                 <field class="HeadLogo" name="photo" widget="image"/>
                                 <field name="description" class="message"/>
-                                <field name="doc_ids" widget="doc_video"/>
+                                <field name="doc_ids" mode="kanban" context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban_annotator'}" />
                                 <field name="video_ids" widget="doc_video"/>
                             </div>
                         </div>

@@ -2250,6 +2250,9 @@ var DocumentComponent = /** @class */ (function () {
             if (_model == "meeting_point.files") {
                 doc_type = "resource";
             }
+            if (_model == "meeting_point.news.doc") {
+                doc_type = "home";
+            }
         }
         var input_data = undefined;
         var req_url = undefined;

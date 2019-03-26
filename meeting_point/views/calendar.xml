@@ -437,7 +437,7 @@
                         </div>
                         <div class="o2m_kanban">
                             <h4>Meeting Documents</h4>
-                            <field name="doc_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form'}" class="kanban_document" mode="kanban"/>
+                            <field name="doc_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form','kanban_view_ref': 'dn_documents.dn_docs_kanban_annotator'}" class="kanban_document" mode="kanban"/>
                         </div>
                         <div class="oe_read_only" name="readonly_completed_3">
                             <div class="o2m_kanban">
@@ -593,7 +593,7 @@
                 </xpath>
                 <xpath expr="//field[@name='doc_ids']" position= "replace">
                        <div class="o2m_kanban">
-                            <field name="doc_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form'}" class="kanban_document" mode="kanban"/>
+                            <field name="doc_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form','kanban_view_ref': 'dn_documents.dn_docs_kanban_annotator'}" class="kanban_document" mode="kanban"/>
                         </div>
                        <!--<field name="doc_ids">-->
                              <!--<kanban quick_create="false" edit="false" delete="true">-->
