@@ -112,7 +112,7 @@ $(function(){
         $('.seen_not_seen').html(to_do_count).css('display', 'block');
     }
 
-    $('.HeadLogo .img-responsive').css('cursor','pointer').click(function(ev)
+    $('.HeadLogo .img-responsive').css('cursor','pointer').dblclick(function(ev)
     {
         ev.preventDefault();
         ev.stopPropagation();

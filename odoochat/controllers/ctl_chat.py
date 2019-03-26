@@ -107,7 +107,7 @@ class OdooChat(http.Controller):
             if message:
                 message.read_status = True
             else:
-                return ws_methods.http_response('Not found '+message_id)
+                return ws_methods.http_response('Invalid message id => '+ str(message_id))
             return ws_methods.http_response('', 'done')
         except:
             return ws_methods.handle()

@@ -2295,7 +2295,7 @@ function info(msg) {
 // Non-fatal warnings.
 function warn(msg) {
   if (verbosity >= VERBOSITY_LEVELS.warnings) {
-    console.log('Warning: ' + msg);
+    //console.log('Warning: ' + msg);
   }
 }
 

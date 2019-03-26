@@ -1300,7 +1300,6 @@ var SocketService = /** @class */ (function () {
             console.log('notifications updated');
         };
         obj_this.server_events['friend_joined'] = function (user) {
-            console.log('Called friend joined here because mesnger not active');
             if (obj_this.user_data.id == user.id) {
                 console.log(user, "Should never happen now");
                 return;
@@ -1315,7 +1314,6 @@ var SocketService = /** @class */ (function () {
             }
         };
         obj_this.server_events['user_left'] = function (user) {
-            console.log('Called friend left here because mesnger not active');
             if (obj_this.user_data.id == user.id) {
                 console.log(user, "Should never happen now");
                 return;
@@ -1362,6 +1360,10 @@ var SocketService = /** @class */ (function () {
                 return;
             }
             obj_this.update_unseen_message_count("receive-new-message", msg.sender, sender);
+        };
+        obj_this.server_events['comment_received'] = function (data) {
+        };
+        obj_this.server_events['point_comment_received'] = function (data) {
         };
         if (window["odoo"]) {
             obj_this.server_events['to_do_item_updated'] = function () {
@@ -1658,7 +1660,7 @@ var ChatComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"comments\" class=\"comments oe_read_only\">\n    <link rel=\"stylesheet\" href=\"/assets/static/css/components/comments.css\">\n\t<div class=\"row\">\n\t\t<div class=\"btn-group col-sm-12\">\n\t\t\t<button [ngClass]=\"{active: comment_subtype === 1}\" (click)=\"comment_subtype=1\" class=\"btn btn-default btn-block\">\n\t\t\t\tMeeting Group Comments\n\t\t\t</button>\n\t\t\t<button [ngClass]=\"{active: comment_subtype === 2}\" (click)=\"comment_subtype=2\" class=\"btn btn-default btn-block\">\n\t\t\t\tPersonal Notes\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\t<div class=\"row\">\n\t\t<form class=\"col-lg-12\" style=\"padding-top:15px; padding-bottom:15px\">\n\t\t\t<div class=\"form-group\">\n\t\t\t\t<div *ngIf=\"comment_subtype === 1\">\n\t\t\t\t\t<textarea name=\"hj\" [(ngModel)]=\"new_comment\" (keyup)=\"save_comment_key_up($event, null)\" class=\"form-control\" rows=\"4\" id=\"comment\" placeholder=\"Add comments here.\"></textarea>\n\t\t\t\t</div>\n\t\t\t\t<div *ngIf=\"comment_subtype === 2\">\n\t\t\t\t\t<textarea name=\"hj\" [(ngModel)]=\"new_comment\" (keyup)=\"save_comment_key_up($event, null)\" class=\"form-control\" rows=\"4\" id=\"notes\" placeholder=\"Add notes here\"></textarea>\n\t\t\t\t</div>\n\t\t\t\t<button [disabled]=\"!new_comment\" class=\"btn btn-primary\" type = \"submit\" (click)=\"save_comment(null)\" >Post</button>\n\t\t\t</div>\n\t\t</form>\n    </div>\n    \n\t<div *ngIf=\"comment_subtype == 1\" class=\"container comments comments-container\">\n\t\t<div *ngFor=\"let c of comments\">\n\t\t\t<div id=\"{{c.id}}\" *ngIf=\"c\" class=\"row comment\">\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<div class=\"row mainthread\">\n\t\t\t\t\t\t<span class=\"comment-user\" *ngIf=\"c.user\">{{c.user.name}} : </span>\n                        <div class=\"comment-body\">\n                            <pre [innerHtml]=\"c.body.trim()\"></pre>\n                        </div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"row comment_response main\">\n\t\t\t\t\t\t<span>{{c.create_date | date:'medium' }}</span>&nbsp;&nbsp;\n\t\t\t\t\t\t<!-- <a *ngIf=\"0 && c.user.uid == myID\" title=\"Delete comment\" (click)=\"deleteComment(c.id, 'comment')\" >\n\t\t\t\t\t\t\t<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>\n\t\t\t\t\t\t</a> -->\n\t\t\t\t\t\t<a title=\"Add reply\" (click)=\"commentReply(c)\">\n\t\t\t\t\t\t\t<i class=\"fa fa-reply\" aria-hidden=\"true\"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<div class=\"label replies-wrapper\" title=\"Replies\" *ngIf=\"c.children && c.children.length\">\n\t\t\t\t\t\t\t<div (click)=\"showReplies(c.id)\">\n\t\t\t\t\t\t\t\t<span *ngIf=\"!c['showRep']\"><i class=\"fa fa-angle-down\"></i></span>\n\t\t\t\t\t\t\t\t<span *ngIf=\"c['showRep']\"><i class=\"fa fa-angle-up\"></i></span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\t\t\t\t<div class=\"reply-input\">\n\t\t\t\t\t<div *ngIf=\"c.active\" class=\"reply-textarea-conatiner\">\n\t\t\t\t\t\t<textarea (keyup)=\"save_comment_key_up($event, c)\" [(ngModel)]=\"new_reply\"  class=\"form-control reply-box\" rows=\"4\" id=\"reply\" placeholder=\"type here . . .\"></textarea>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"reply container\" *ngIf=\"c.children && c.children.length\">\n\n\t\t\t\t\t\t<div *ngIf=\"c['showRep']\">\n\t\t\t\t\t\t\t<div class=\"container oform\" *ngFor=\"let rep of c.children\">\n\t\t\t\t\t\t\t\t<div class=\"row reply message\">\n\t\t\t\t\t\t\t\t\t<span class=\"comment-user\" *ngIf=\"rep.user\">{{rep.user.name}} : </span>\n                                    <div class=\"comment-body\">\n                                        <pre [innerHtml]=\"rep.body.trim()\"></pre>\n                                    </div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"row comment_response\">\n\t\t\t\t\t\t\t\t\t<span>{{c.create_date | date:'medium' }} </span>&nbsp;&nbsp;\n\t\t\t\t\t\t\t\t\t<!-- <a title=\"Delete comment\" (click)=\"deleteComment(rep.id, c.id)\">\n\t\t\t\t\t\t\t\t\t\t<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>\n\t\t\t\t\t\t\t\t\t</a> -->\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div *ngIf=\"comment_subtype == 2\" class=\"container notes comments-container\">\n\t\t<div *ngFor=\"let c of notes\">\n\t\t\t<div *ngIf=\"c\" class=\"row\">\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<div class=\"row mainthread\">\n\t\t\t\t\t\t<span class=\"comment-user\" *ngIf=\"c.user\">{{c.user.name}} : </span>\n                        <div class=\"comment-body\">\n                            <pre [innerHtml]=\"c.body.trim()\"></pre>\n                        </div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"row comment_response main\">\n\t\t\t\t\t\t<span>{{c.create_date | date:'medium'}} </span>\n\t\t\t\t\t\t<!--<a title=\"Delete Note\" (click)=\"deleteComment(c.id,  'note')\" style=\"cursor: pointer\">-->\n\t\t\t\t\t\t<!--<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>-->\n\t\t\t\t\t\t<!--</a>-->\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
+module.exports = "<div *ngIf=\"comments\" class=\"comments main-container oe_read_only\">\n    <link rel=\"stylesheet\" href=\"/assets/static/css/components/comments.css\">\n\t<div class=\"row\">\n\t\t<div class=\"btn-group col-sm-12\">\n\t\t\t<button [ngClass]=\"{active: comment_subtype === 1}\" (click)=\"comment_subtype=1\" class=\"btn btn-default btn-block\">\n\t\t\t\tMeeting Group Comments\n\t\t\t</button>\n\t\t\t<button [ngClass]=\"{active: comment_subtype === 2}\" (click)=\"comment_subtype=2\" class=\"btn btn-default btn-block\">\n\t\t\t\tPersonal Notes\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\t<div class=\"row\">\n\t\t<form class=\"col-lg-12\" style=\"padding-top:15px; padding-bottom:15px\">\n\t\t\t<div class=\"form-group\">\n\t\t\t\t<div *ngIf=\"comment_subtype === 1\">\n\t\t\t\t\t<textarea name=\"hj\" [(ngModel)]=\"new_comment\" (keyup)=\"save_comment_key_up($event, null)\" class=\"form-control\" rows=\"4\" id=\"comment\" placeholder=\"Add comments here.\"></textarea>\n\t\t\t\t</div>\n\t\t\t\t<div *ngIf=\"comment_subtype === 2\">\n\t\t\t\t\t<textarea name=\"hj\" [(ngModel)]=\"new_comment\" (keyup)=\"save_comment_key_up($event, null)\" class=\"form-control\" rows=\"4\" id=\"notes\" placeholder=\"Add notes here\"></textarea>\n\t\t\t\t</div>\n\t\t\t\t<button [disabled]=\"!new_comment\" class=\"btn btn-primary\" type = \"submit\" (click)=\"save_comment(null)\" >Post</button>\n\t\t\t</div>\n\t\t</form>\n    </div>\n    \n\t<div *ngIf=\"comment_subtype == 1\" class=\"container comments comments-container\">\n\t\t<div *ngFor=\"let c of comments\">\n\t\t\t<div id=\"{{c.id}}\" *ngIf=\"c\" class=\"row comment\">\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<div class=\"row mainthread\">\n\t\t\t\t\t\t<span class=\"comment-user\" *ngIf=\"c.user\">{{c.user.name}} : </span>\n                        <div class=\"comment-body\">\n                            <pre [innerHtml]=\"c.body.trim()\"></pre>\n                        </div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"row comment_response main\">\n\t\t\t\t\t\t<span>{{c.create_date | date:'medium' }}</span>&nbsp;&nbsp;\n\t\t\t\t\t\t<!-- <a *ngIf=\"0 && c.user.uid == myID\" title=\"Delete comment\" (click)=\"deleteComment(c.id, 'comment')\" >\n\t\t\t\t\t\t\t<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>\n\t\t\t\t\t\t</a> -->\n\t\t\t\t\t\t<a title=\"Add reply\" (click)=\"commentReply(c)\">\n\t\t\t\t\t\t\t<i class=\"fa fa-reply\" aria-hidden=\"true\"></i>\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t<div class=\"label replies-wrapper\" title=\"Replies\" *ngIf=\"c.children && c.children.length\">\n\t\t\t\t\t\t\t<div (click)=\"showReplies(c.id)\">\n\t\t\t\t\t\t\t\t<span *ngIf=\"!c['showRep']\"><i class=\"fa fa-angle-down\"></i></span>\n\t\t\t\t\t\t\t\t<span *ngIf=\"c['showRep']\"><i class=\"fa fa-angle-up\"></i></span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\t\t\t\t<div class=\"reply-input\">\n\t\t\t\t\t<div *ngIf=\"c.active\" class=\"reply-textarea-conatiner\">\n\t\t\t\t\t\t<textarea (keyup)=\"save_comment_key_up($event, c)\" [(ngModel)]=\"new_reply\"  class=\"form-control reply-box\" rows=\"4\" id=\"reply\" placeholder=\"type here . . .\"></textarea>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"reply container\" *ngIf=\"c.children && c.children.length\">\n\n\t\t\t\t\t\t<div *ngIf=\"c['showRep']\">\n\t\t\t\t\t\t\t<div class=\"container oform\" *ngFor=\"let rep of c.children\">\n\t\t\t\t\t\t\t\t<div class=\"row reply message\">\n\t\t\t\t\t\t\t\t\t<span class=\"comment-user\" *ngIf=\"rep.user\">{{rep.user.name}} : </span>\n                                    <div class=\"comment-body\">\n                                        <pre [innerHtml]=\"rep.body.trim()\"></pre>\n                                    </div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"row comment_response\">\n\t\t\t\t\t\t\t\t\t<span>{{c.create_date | date:'medium' }} </span>&nbsp;&nbsp;\n\t\t\t\t\t\t\t\t\t<!-- <a title=\"Delete comment\" (click)=\"deleteComment(rep.id, c.id)\">\n\t\t\t\t\t\t\t\t\t\t<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>\n\t\t\t\t\t\t\t\t\t</a> -->\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\t<div *ngIf=\"comment_subtype == 2\" class=\"container notes comments-container\">\n\t\t<div *ngFor=\"let c of notes\">\n\t\t\t<div *ngIf=\"c\" class=\"row\">\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<div class=\"row mainthread\">\n\t\t\t\t\t\t<span class=\"comment-user\" *ngIf=\"c.user\">{{c.user.name}} : </span>\n                        <div class=\"comment-body\">\n                            <pre [innerHtml]=\"c.body.trim()\"></pre>\n                        </div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"row comment_response main\">\n\t\t\t\t\t\t<span>{{c.create_date | date:'medium'}} </span>\n\t\t\t\t\t\t<!--<a title=\"Delete Note\" (click)=\"deleteComment(c.id,  'note')\" style=\"cursor: pointer\">-->\n\t\t\t\t\t\t<!--<i class=\"fa fa-trash\" aria-hidden=\"true\"></i>-->\n\t\t\t\t\t\t<!--</a>-->\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
 
 /***/ }),
 
@@ -1709,6 +1711,10 @@ var CommentsComponent = /** @class */ (function () {
         }
         var obj_this = this;
         obj_this.socketService.server_events['comment_received'] = function (data) {
+            var container = $('.comments.main-container');
+            if (container.length < 1) {
+                return;
+            }
             if (data.subtype_id === 2) {
                 if (data.body && data.body.startsWith('<p>')) {
                     data.body = $(data.body)[0].innerHTML;
@@ -3875,7 +3881,6 @@ var MessengerComponent = /** @class */ (function () {
                 }
             };
             function updateUserStatus(user) {
-                console.log(user.id + ' friend online status = ' + user.online);
                 if (obj_this.user_data.id == user.id) {
                     console.log(user, "Should never happen now");
                     return;
@@ -4039,8 +4044,10 @@ var MessengerComponent = /** @class */ (function () {
                 message_id: message.id,
                 no_loader: 1
             };
-            obj_this.httpService.call_post_http('/set_message_status', input_data, function (res_data) {
-            }, null);
+            setTimeout(function () {
+                obj_this.httpService.call_post_http('/set_message_status', input_data, function (res_data) {
+                }, null);
+            }, 2000);
             obj_this.socketService.update_unseen_message_count("read-new-message", sender_id, sender);
             setTimeout(function () {
                 obj_this.scrollToEnd();

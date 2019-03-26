@@ -1215,7 +1215,20 @@ function module0(module, exports, __webpack_require__) {
 				return ['point'].indexOf(type) > -1;
 			}
 			window['socket_manager'].server_events['point_comment_received'] = function(data) {                
-                var annot_doc = $('#annotated-doc-conatiner').is(':visible');                
+				var annot_doc = $('#annotated-doc-conatiner');
+				if(annot_doc.length < 1)
+				{
+					return;
+				}
+				annot_doc = annot_doc.is(':visible');                
+				if(!annot_doc)
+				{
+					return;
+				}
+                if(annotation_mode != 1 ||  !annot_doc || data.point.doc_id != documentId)
+                {
+                    return;
+                }
                 if(annotation_mode != 1 ||  !annot_doc || data.point.doc_id != documentId)
                 {
                     return;
