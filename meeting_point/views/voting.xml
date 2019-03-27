@@ -437,7 +437,23 @@
         <!--</t>-->
     </template>
 
+    <!--email template-->
 
+        <record id="email_template_approval_modified" model="mail.template">
+            <field name="name">approval Template MeetVUE</field>
+            <field name="model_id" ref="model_survey_survey" />
+            <field name="subject">${object.name} invitation</field>
+             <field name="email_to" >${ctx['emailTo']|safe}</field>
+            <field name="auto_delete" eval="True" />
+            <field name="body_html">
+                <![CDATA[
+<p>Hello,</p>
+<p>We are conducting a motion, and your response would be appreciated.</p>
+<p><a style="margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="${ctx['url']}">Please, click here to redirect to motion</a></p>
+<p>Thanks for your participation!</p>
+                ]]>
+            </field>
+        </record>
 
 
     </data>

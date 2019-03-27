@@ -67,6 +67,29 @@ class Voting(models.Model):
             'url': result_url
         }
 
+    @api.model
+    def create(self, values):
+        template = self.env.ref('meeting_point.email_template_approval_modified')
+        menuId = self.env['ir.ui.menu'].search([('name', '=', 'MeetVUE')], limit=1)
+        actionId = self.env['ir.actions.act_window'].search([('name', '=', 'Voting')],
+                                                                limit=1)
+        base_url = '/' if self.env.context.get('relative_url') else \
+            self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        data = super(Voting, self).create(values)
+        result_url = urls.url_join(base_url, "web#id=%s&view_type=form&model=meeting_point.voting&action=%s&menu_id=%s" % (data.id,actionId.id,menuId.id))
+        self = self.with_context(url=result_url)
+        # template.sudo().with_context().send_mail(self.id, force_send=True)
+        if values['partner_ids'][0][2].__len__() != 0:
+            for partner_id in values['partner_ids'][0][2]:
+                emailId = self.env['res.partner'].search([('id', '=', partner_id)]).email
+                local_context = dict(self._context)
+                local_context.update({
+                    'emailTo': emailId,
+                    'url':result_url
+                })
+                template.with_context(local_context).send_mail(data.id, force_send=True)
+        return data
+
     def write(self, vals):
         partener_ids_beofre = False
         if vals.get('partner_ids'):
@@ -87,6 +110,7 @@ class Voting(models.Model):
             for rec in records:
                 rec.unlink()
         return res
+
 
     @api.multi
     def has_attachments(self):
