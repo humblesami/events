@@ -75,6 +75,46 @@ class website_voting(http.Controller):
         except:
             return ws_methods.handle()
 
+    @http.route(['/voting/results/<model("meeting_point.voting"):voting>'], type='http', csrf=False, auth='public',
+                cors='*')
+    def voting_result(self, voting, **kw):
+        try:
+            auth = kw.get('auth')
+            if not auth:
+                auth = kw
+            uid = ws_methods.check_auth(auth)
+            result_template = 'meeting_point.voting_result'
+            answers = request.env['meeting_point.votinganswer'].search([('voting_id', '=', voting.id)])
+            voting_type = voting.voting_type_id.display_name
+            respondents = voting.partner_ids.ids
+            response = []
+            graphdata = [
+                {
+                    'label': 'Accept',
+                    'count': 0,
+                },
+                {
+                    'label': 'Reject',
+                    'count': 0
+                }
+            ]
+            for value in answers:
+                response.append({'title': voting.name, 'text': value.voting_option_id.name, 'answer_id': value.id,
+                                 'respondant': value.user_id.partner_id.name})
+                if value.voting_option_id.name == 'Accept':
+                    graphdata[0]['count'] += 1
+                elif value.voting_option_id.name == 'Reject':
+                    graphdata[1]['count'] += 1
+                a = 1
+
+            return request.render(result_template,
+                                  {'voting': voting,
+                                   'voting_dict': response,
+                                   'graph_data': graphdata
+                                   })
+
+        except:
+            return ws_methods.handle()
     # Voting Answer to User
     @http.route(['/votinganswer'], type='http', csrf=False, auth='public', cors='*')
     def user_voting_answer(self, **kw):

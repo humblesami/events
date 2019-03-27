@@ -3,7 +3,8 @@ from odoo.addons.dn_base import ws_methods
 from odoo.exceptions import ValidationError
 from werkzeug import urls
 from odoo.addons.http_routing.models.ir_http import slug
-
+from werkzeug import urls
+from odoo.addons.http_routing.models.ir_http import slug
 class VotingType(models.Model):
     _name = 'meeting_point.votingtype'
     name = fields.Char(string='Voting Type')
@@ -51,6 +52,20 @@ class Voting(models.Model):
         for voting in self:
             voting.graphical_view_url = urls.url_join(base_url, "/voting/graphical/%s" % (slug(voting)))
 
+    @api.multi
+    def action_result_voting(self):
+        """ Open the website page with the survey results view """
+        self.ensure_one()
+        """ Computes a public URL for the survey """
+        base_url = '/' if self.env.context.get('relative_url') else \
+            self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        result_url = urls.url_join(base_url, "voting/results/%s" % (slug(self)))
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Results of the Voting",
+            'target': 'self',
+            'url': result_url
+        }
 
     def write(self, vals):
         partener_ids_beofre = False

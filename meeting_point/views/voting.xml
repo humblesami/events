@@ -8,6 +8,9 @@
                 <form string="Voting/Approval" class="voting_form">
                     <link rel="stylesheet" href="/meeting_point/static/css/voting.css" />
                     <field name="id" invisible="1" class="voting_id"/>
+                    <header>
+                        <button name="action_result_voting" string="View results" type="object" class="oe_highlight" />
+                    </header>
                     <group>
                         <field name="name"/>
                         <field name="meeting_id" invisible="1"/>
@@ -289,6 +292,52 @@
             <field name="name">Abstain</field>
             <field name="voting_type_id" eval="ref('rec_voting_type2')"/>
         </record>
+
+
+    <!--</template>-->
+        <template id="voting_result" name="Voting Resul">
+        <!--<t t-call="website.layout">-->
+             <div class="wrap">
+               <!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
+                <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+                <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+                <div class="oe_structure"/>
+                <div class="container">
+
+                    <div class="jumbotron mt32">
+                        <h1 t-field="voting.name"/>
+
+                        <div t-foreach="voting_dict" t-as="o">
+
+                        <div class="page">
+                              <span t-esc="o['title']"/>
+                            <span t-esc="o['text']"/>
+                            <span t-esc="o['answer_id']"/>
+                            <br/>
+                            <span> Respondant</span> :
+                             <span t-esc="o['respondant']"/>
+
+                        </div>
+                          <div t-foreach="graph_data" t-as="o" >
+                            <span t-esc="o['label']"/>
+                            <span t-esc="o['count']"/>
+                            <br/>
+
+
+                          </div>
+                         </div>
+                        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                         <script type="text/javascript" src="/meeting_point/static/js/voteResult.js" />
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        <!--</t>-->
+    </template>
+
+
+
+
     </data>
 
 </odoo>
