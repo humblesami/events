@@ -1,39 +1,39 @@
+.modal.o_technical_modal .modal-dialog .modal-content .modal-body
+{
+    overflow: hidden;
+    height: calc(100vh);
+}
 #annotated-doc-conatiner {
     display: none;
     z-index: 13;
-    background: #fff;
     position: relative;
-    width: auto !important;
+    /*background: #fff;
+    margin: 0 -16px;
+    width: auto !important;*/
 }
 
 #viewer-wrapper {
     overflow: auto;
     position: relative;
+    height: calc(100vh - 155px) !important;
 }
 
 #content-wrapper {
-    width: 100%;
-}
-
-#viewer-wrapper {
-    height: calc(100vh - 155px) !important;
-}
-
-#comment-wrapper {
     position: fixed;
-    width: 250px;
     left: 5px;
     z-index: 58;
     display: none;
-    background: #d4d4d4;
     border-right: 1px solid #e6e6e6;
-    height: calc(100vh - 155px) !important;
-    top: 150px !important;
+    height: 100%;
+    top: 50px;
+    overflow: auto;
+    margin: -3px;
+    height: calc(100vh - 155px);
 }
 
 .modal #comment-wrapper {
     top: 50px !important;
-    height: calc(100vh - 161px) !important;
+    height: calc(100vh - 155px);
 }
 
 .o_form_view.doc_view_form.o_form_nosheet {
@@ -135,17 +135,14 @@
 }
 
 .topbar .pager {
-    margin: 0;
+    margin: 0;calc(100vh - 255px) !important
 }
 
 
 .comment-list {
-    height: calc(100vh - 230px) !important;
+        height: calc(100vh - 210px);
 }
 
-.comment-list-container{
-    padding-bottom: 65px !important;
-}
 .comment-list-form {
     padding-left: 0;
     width: 234px;
