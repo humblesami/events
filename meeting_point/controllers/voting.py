@@ -75,9 +75,9 @@ class website_voting(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route(['/voting/results/<model("meeting_point.voting"):voting>'], type='http', csrf=False, auth='public',
+    @http.route(['/voting/results_new/<model("meeting_point.voting"):voting>'], type='http', csrf=False, auth='public',
                 cors='*')
-    def voting_result(self, voting, **kw):
+    def voting_resultnew(self, voting, **kw):
         try:
             auth = kw.get('auth')
             if not auth:

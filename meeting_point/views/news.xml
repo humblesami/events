@@ -156,7 +156,10 @@
                                 <div class="slider_div">
                                     <field name="pending_documents" context="{'kanban_view_ref': 'meeting_point.sign_doc_kanban'}" mode="kanban"/>
                                 </div>
-
+                                <h6>Approval/Votings</h6>
+                                <div class="slider_div">
+                                    <field name="pending_votings"  mode="kanban"/>
+                                </div>
                             </div>
                         </div>
                     </div>

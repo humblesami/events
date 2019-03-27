@@ -60,15 +60,17 @@
             <field name="model">meeting_point.voting</field>
             <field name="arch" type="xml">
                 <kanban default_order="name">
+                    <field name="name"/>
+                    <field name="voting_type_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div>
-                                    <field name="name"/>
+                                   <t t-esc="record.name.raw_value"/>
                                 </div>
                                 <div>
                                     <strong>
-                                        <field name="voting_type_id"/>
+                                        <t t-raw="record.voting_type_id.value"/>
                                     </strong>
 
                                 </div>

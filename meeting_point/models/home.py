@@ -36,7 +36,7 @@ class News(models.Model):
         for obj in self:
             # cnt = len(obj.pending_meetings.filtered(lambda r:r.attendee_status =='needsAction'))
             cnt = len(obj.pending_meetings)
-            obj.to_do_items_count = cnt + len(obj.pending_surveys) + len(obj.pending_documents)
+            obj.to_do_items_count = cnt + len(obj.pending_surveys) + len(obj.pending_documents) +len(obj.pending_votings)
 
 
     @api.multi
@@ -104,7 +104,6 @@ class News(models.Model):
             env = self.env
             for obj in self:
                 obj.pending_votings = []
-                continue
                 votings = env['meeting_point.voting'].search([]).filtered(lambda r: r.my_status == 'pending')
                 obj.pending_votings = votings
         except:

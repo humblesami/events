@@ -59,7 +59,7 @@ class Voting(models.Model):
         """ Computes a public URL for the survey """
         base_url = '/' if self.env.context.get('relative_url') else \
             self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        result_url = urls.url_join(base_url, "voting/results/%s" % (slug(self)))
+        result_url = urls.url_join(base_url, "voting/results_new/%s" % (slug(self)))
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Voting",
