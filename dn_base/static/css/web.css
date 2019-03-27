@@ -243,13 +243,14 @@ table.o_group.o_inner_group tr {
 }
 .modal-header .close
 {
-    border: 1px solid #e6e6e6;
     color: white;
     opacity: 1;
-    padding: 2px 6px 4px 6px;
-    margin: 4px;
+    position: absolute;
+    right: 2px;
+    top: 4px;
+    padding: 0px 5px 0px 5px;
     background: red;
-    border-radius: 9px;
+    border-radius: 30%;
 }
 .modal.o_technical_modal .modal-dialog
 {
