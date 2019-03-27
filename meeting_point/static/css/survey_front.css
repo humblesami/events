@@ -1,8 +1,4 @@
-/*.o_field_radio .o_radio_item:last-child,.o_field_radio .o_radio_item:nth-child(2)
-{
-    display:none;
-}*/
-
+/*
  .btn-primary{
     background-color:#3fa19d !important;
     border-color:#3fa19d !important;
@@ -20,7 +16,7 @@
     display: none;
     background-color: transparent;
     border-color: transparent;
-     margin-bottom: -20px;
+    margin-bottom: -20px;
     margin-top: 30px;
 }
 
@@ -32,3 +28,27 @@
     background-color: #eeeeef;
 }
 
+main .container:first-child
+{
+    padding-top: 50px;
+}
+*/
+
+.jumbotron.mt32
+{
+    margin-top:0 !important;
+}
+.survey_back_btn_container > div
+{
+    margin: 5px;
+}
+.navbar.navbar-static-top
+{
+    background-color: transparent;
+    border-color: transparent;
+    display : none;
+}
+#wrapwrap
+{
+    margin-top: 60px;
+}

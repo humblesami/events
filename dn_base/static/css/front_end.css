@@ -24,11 +24,9 @@ footer, #footer
 }
 body.o_connected_user
 {
-    padding-top: 0px !important;
-    margin-top: -10px !important;
+    padding-top: 0 !important;
 }
-body.o_connected_user
+#wrapwrap
 {
-    padding-top: 0px !important;
-    margin-top: -10px !important;
+    margin-top: 10px;
 }

@@ -118,11 +118,7 @@ h1, .h1, h2, .h2, h3, .h3
 {
     cursor:pointer;
 }
-body.o_connected_user
-{
-    padding-top:0 !important;
-}
-}
+
 .o_calendar_filter
 {
     display:none;
