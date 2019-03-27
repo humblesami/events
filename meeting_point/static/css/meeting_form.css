@@ -104,3 +104,9 @@ div.publish_btn
     padding: 5%;
     margin;auto;
 }
+
+.mtopic_tree tbody tr.o_data_row:hover
+{
+    background-color: #875A7B !important;
+    color: white;
+}

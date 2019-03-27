@@ -26,6 +26,10 @@ $(function(){
             $('.tentativehide').show()
             }
     }, 15);
-
-
+    $('.mtopic_tree:first tbody:first .attachment').each(function(i, el){
+        if($(el).html().trim().length > 0)
+        {
+            $(el).html('<i class="fa fa-file"></i>');
+        }
+    });
 });
