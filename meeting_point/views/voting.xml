@@ -163,6 +163,106 @@
         </template>
 
 
+                <template id="voting_approval_graphically" name="Graphical View Of Voting Answers">
+            <t t-call="website.layout">
+            <div class="oe_structure"/>
+            <div class="container js_surveyresult">
+                <div class="jumbotron mt32">
+                    <h1><span t-field="voting.name"/> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
+                    <div t-field="voting.description" class="oe_no_empty"/>
+                </div>
+
+
+                <!--<div class="panel panel-default hidden-print">-->
+                <!--    <div class="panel-heading"><span class="fa fa-filter"/>  Filters <span t-if="filter_display_data" class="pull-right text-primary clear_survey_filter"><i class="fa fa-times"/> Clear All Filters</span></div>-->
+                <!--    <div class="panel-body">-->
+                        <!--<span t-if="filter_finish == True">-->
+                            <!--<span class="label label-default only_left_radius filter-all">All surveys</span><span class="label label-primary only_right_radius filter-finished">Finished surveys</span>-->
+                        <!--</span>-->
+                        <!--<span t-if="filter_finish == False">-->
+                            <!--<span class="label label-primary only_left_radius filter-all">All surveys</span><span class="label label-default only_right_radius filter-finished">Finished surveys</span>-->
+                        <!--</span>-->
+                        <!--<span t-foreach="filter_display_data" t-as="filter_data">-->
+                            <!--<span class="label label-primary only_left_radius"><i class="fa fa-filter"/></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"/><span class="label label-success only_right_radius" t-esc="' &gt; '.join(filter_data['labels'])"/>-->
+                        <!--</span>-->
+                <!--    </div>-->
+                <!--</div>-->
+                <div t-foreach="voting_dict['page_ids']" t-as="page_ids">
+                    <div t-foreach="page_ids['question_ids']" t-as="question_ids" class="mt16">
+                        <t t-set="input_summary" t-value="question_ids['input_summary']"/>
+                        <t t-set="question" t-value="question_ids['question']"/>
+                        <t t-set="graph_data" t-value="question_ids['graph_data']"/>
+                        <t t-set="prepare_result" t-value="question_ids['prepare_result']"/>
+                        <h4>
+                            <span class="pull-right">
+                                <span class="label label-success"><span t-esc="input_summary['answered']"/> Answered</span>
+                                <span class="label label-danger"><span t-esc="input_summary['skipped']"/> Pending</span>
+                            </span>
+                        </h4>
+                        <t t-call="meeting_point.result_choice"/>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </t>
+        </template>
+
+
+        <template id="result_choice" name="Voting Choice Result">
+            <div>
+                <ul class="nav nav-tabs hidden-print">
+
+                    <li class="active">
+                        <a t-att-href="'#graph_question_%d' % voting.id" data-toggle="tab">
+                            <i class="fa fa-bar-chart-o"/> Pie Chart
+                        </a>
+                    </li>
+                    <li>
+                        <a t-att-href="'#data_question_%d' % voting.id" data-toggle="tab">
+                            <i class="fa fa-list-alt"/> Data
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane active survey_graph" t-att-id="'graph_question_%d' % voting.id"
+                  t-att-data-question_id="voting.id" data-graph_type="pie" t-att-graph-data="graph_data">
+                        <svg style="height:20em"/>
+                    </div>
+
+                    <div class="tab-pane" t-att-id="'data_question_%d' % voting.id">
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Answer Choices</th>
+                                    <th>User Responses</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="prepare_result['answers']" t-as="user_input">
+                                    <td>
+                                        <p t-esc="user_input['text']"/>
+                                    </td>
+                                    <td class="survey_answer">
+                                        <span t-esc="round(user_input['count'] *100.0/(input_summary['answered'] or 1),2)"/> %
+                                        <span t-esc="user_input['count']" class="label label-primary">Vote</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                 handle comments
+                <div>
+                    <t t-set="comments" t-value="prepare_result['comments']" />
+                    <t t-if="comments">
+                        <t t-call="survey.result_comments" />
+                    </t>
+                </div>
+        </div>
+    </template>
+
+
+
         <template id="voting_graphically" name="Graphical View Of Voting Answers">
             <t t-call="website.layout">
                 <div class="wrap">

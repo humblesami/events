@@ -127,13 +127,80 @@ class website_voting(http.Controller):
         else:
             return ''
 
+    @http.route([
+        '/voting/graphical/<model("meeting_point.voting"):voting_object>',
+        '/voting/graphical/<model("meeting_point.voting"):voting_object>/<string:token>/<string:db>'
+    ],
+        type='http', auth='public', website=True)
+    def start_graphical_view(self, voting_object, token=None, db=None, **post):
 
-    @http.route(['/voting/graphical/<model("meeting_point.voting"):voting>'],
-                type='http', auth='public', website=True)
-    def start_graphical_view(self, voting, **post):
-        data = {'voting': voting, 'page': None}
-        page = request.render('meeting_point.voting_graphically', data)
-        return page
+        try:
+            auth = {'token': token, 'db': db}
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+
+            # if not request.env.user.has_group('meeting_point.admin'):
+            #     if not voting_object.public_visibility:
+            #         return request.render('meeting_point.voting_graphically', {})
+
+            if not voting_object:
+                return ws_methods.http_response('No object found')
+
+            voting_id = voting_object.id
+            voting_type = voting_object.voting_type_id
+
+            voting_options = voting_type.voting_option_ids
+
+            voting_answers = []
+            total_count = 0
+            filters = [('voting_id', '=', voting_id), ('voting_option_id', '=', False)]
+            for option in voting_options:
+                filters[len(filters) - 1] = ('voting_option_id', '=', option.id)
+                count = request.env['meeting_point.votinganswer'].search_count(filters)
+                answer = {'text': option.name, 'count': count, 'answer_id': 1}
+                voting_answers.append(answer)
+                total_count += count
+
+            expected_no_answers = len(voting_object.partner_ids)
+            pending_count = expected_no_answers - total_count
+
+            pending_answers = {'text': 'Pending', 'count': pending_count, 'answer_id': 1}
+            # voting_answers.append(pending_answers)
+
+            answers_str = json.dumps(voting_answers)
+            dict1 = {
+                'page_ids': [
+                    {
+                        'question_ids': [
+                            {
+                                'question': voting_object.name,
+                                'input_summary': {
+                                    'total_inputs': len(voting_options),
+                                    'answered': total_count,
+                                    'skipped': pending_count
+                                },
+                                'prepare_result': {
+                                    'answers': voting_answers,
+                                    'comments': []
+                                },
+                                'graph_data': answers_str
+                            }
+                        ]
+                    }
+                ]
+            }
+
+            results = {
+                'voting': voting_object,
+                'voting_dict': dict1,
+                'page': None,
+            }
+
+            a = 1
+            return request.render('meeting_point.voting_approval_graphically', results)
+        except:
+            return request.render('meeting_point.voting_graphically', {})
 
 
     @http.route(['/voting/start/<model("meeting_point.voting"):voting>'],
