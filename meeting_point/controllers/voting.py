@@ -251,7 +251,28 @@ class website_voting(http.Controller):
                 return ws_methods.not_logged_in()
             if kw.get('data'):
                 kw = kw.get('data')
-            voting_id = int(kw['voting_id'])
-            return ws_methods.http_response('', "hee")
+
+            req_env = http.request.env
+            voting_id = int(kw['id'])
+
+            filters = [('id', '=', voting_id)]
+            voting_obj_orm = req_env['meeting_point.voting'].search(filters)
+
+            props = ['id', 'name', 'meeting_id', 'open_date', 'close_date',
+                     'description', 'my_status',
+                     'public_visibility', 'graphical_view_url']
+            voting_object = ws_methods.object_to_json_object(voting_obj_orm, props)
+            voting_object['voting_docs'] = ws_methods.objects_list_to_json_list(voting_obj_orm.document_ids, ['id', 'name'])
+            voting_object['voting_type'] = ws_methods.objects_list_to_json_list(voting_obj_orm.voting_type_id, ['id', 'name'])
+            voting_object['motion_first'] = {'id': voting_obj_orm.motion_first.partner_id.mp_user_id.id, 'name': voting_obj_orm.motion_first.name}
+            voting_object['motion_second'] = {'id': voting_obj_orm.motion_second.partner_id.mp_user_id.id, 'name': voting_obj_orm.motion_second.name}
+            # voting_object['Respondents'] = ws_methods.objects_list_to_json_list(voting_obj_orm.partner_ids, ['id', 'name'])
+            if voting_object['voting_type']:
+                voting_options = req_env['meeting_point.votingoption'].search([('voting_type_id', '=', voting_object['voting_type'][0]['id'])])
+                voting_object['voting_options'] = []
+                for option in voting_options:
+                    voting_object['voting_options'].append({'id': option.id, 'name': option.name})
+            data = {"voting": voting_object}
+            return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()

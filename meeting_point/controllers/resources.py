@@ -6,7 +6,8 @@ doc_models = {
     'resource':'meeting_point.files',
     'meeting':'meeting_point.doc',
     'topic':'meeting_point.topicdoc',
-    'signature':'meeting_point.document'
+    'signature':'meeting_point.document',
+    'voting':'meeting_point.votingdocument'
 }
 
 doc_types = {
@@ -14,7 +15,8 @@ doc_types = {
     'meeting_point.files':'resource',
     'meeting_point.doc':'meeting',
     'meeting_point.topicdoc':'topic',
-    'meeting_point.document':'signature'
+    'meeting_point.document':'signature',
+    'meeting_point.votingdocument':'voting'
 }
 
 class ws(http.Controller):
@@ -307,6 +309,11 @@ class ws(http.Controller):
                 props = ['meeting_id.name', 'meeting_id.id', 'mp_signature_status']
             elif doc_type == 'home':
                 props = ['name']
+            elif doc_type == 'voting':
+                attendeesList = file['voting_id']['partner_ids']
+                for obj in attendeesList:
+                    attendees.append({"name":obj['display_name'],"id":obj['id']})
+                props = ['voting_id.name', 'voting_id.id']
             else:
                 return ws_methods.http_response('Invalid document type ' + doc_type)
 
