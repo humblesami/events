@@ -1,6 +1,20 @@
 $(function(){
     $('#votingBack').hide();
     $('#submitted').hide();
+    $('.viewGraphically:first').css('background-color','#875A7B');
+
+    try{
+        var voting_id_dom = $('a[name="voting_type_id"]:first');
+        voting_id_dom.removeAttr('href').removeAttr('name');
+        var voting_id_html = voting_id_dom[0].outerHTML;
+        voting_id_dom.parent().html(voting_id_html);
+    }
+    catch(er)
+    {
+        console.log(34444);
+    }
+
+
 
     function show_results(data)
     {
@@ -9,27 +23,22 @@ $(function(){
         //console.log(111, data);
         var my_status = data.my_status;
         var vote_options_container = $('.vote_options:first');
+
+        $(`<div><button class="btn btn-sm btn btn-primary btn-sm ">Decline
+                                                </button></div>`)
         if(data.my_status)
         {
             for(var i in data.vote_options)
             {
                 var option = data.vote_options[i];
-                vote_options_dom = '<span class="vote_choice">';
-                vote_options_dom += '<input name="vote_choice_input" data-id='+option.id+' type="radio"/><span>'+option.name+'</span>';
-                vote_options_dom += '</span>';
+                vote_options_dom = '<div><button data-id='+option.id+' class="btn btn-sm btn btn-primary btn-sm ">';
+                vote_options_dom += option.name+'</button></div>';
+                vote_options_dom = $(vote_options_dom);
                 vote_options_container.append(vote_options_dom);
                 if(my_status == option.name)
-                    vote_options_container.find('.vote_choice:last input').attr('checked', true);
+                    vote_options_dom.find('button').prepend('<i class="fa fa-check fa-lg" style="color:white"/>');
             }
-            vote_options_container.find('input[type="radio"]').change(on_user_answer);
-            $('.vote_choice span').click(function(){
-                var prev = $(this).prev();
-                if(prev.is('input'))
-                {
-                    console.log('Radio Button is Clicked...')
-                    prev.click();
-                }
-            });
+            vote_options_container.find('button').click(on_user_answer);
         }
 
         if(data.message)
@@ -49,26 +58,26 @@ $(function(){
         if(agi > -1 || data.public)
         {
             $('.results_container').show();
-            for(var key in results)
-            {
-                if(no_results)
-                    no_results = false;
-                $('.results').append(`
-                    <div class="entry">
-                        <span class="choice_label">
-                            <span>Choice</span>: <span class="user-choice">`+key+`</span>
-                        </span>
-                        <span class="choice_count">
-                            <span>Voters</span>: <span class="count">`+results[key]+`</span>
-                        </span>
-                    </div>
-                `);
-
-                $('.viewGraphically').attr('href',$('.graphical_view_url').text());
-
-            }
-            if(no_results)
-                $('.results').html(no_results);
+//            for(var key in results)
+//            {
+//                if(no_results)
+//                    no_results = false;
+//                $('.results').append(`
+//                    <div class="entry">
+//                        <span class="choice_label">
+//                            <span>Choice</span>: <span class="user-choice">`+key+`</span>
+//                        </span>
+//                        <span class="choice_count">
+//                            <span>Voters</span>: <span class="count">`+results[key]+`</span>
+//                        </span>
+//                    </div>
+//                `);
+//
+//                $('.viewGraphically:first').attr('href',$('.graphical_view_url').text());
+//
+//            }
+//            if(no_results)
+//                $('.results').html(no_results);
         }
     }
 
@@ -93,12 +102,10 @@ $(function(){
 
     function on_user_answer(){
         var input_choice = $(this);
-        if(!input_choice.is(':checked'))
-        {
-            return;
-        }
         let voting_id = $('.voting_id').html();
         let user_choice = input_choice.attr('data-id');
+        let voting_data = {'voting_option_id' : user_choice, 'voting_id' : voting_id};
+        console.log(voting_data);
         var options = {
             url : '/voting/submit',
             data : {'voting_option_id' : user_choice, 'voting_id' : voting_id},

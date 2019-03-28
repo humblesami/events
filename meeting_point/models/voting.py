@@ -1,9 +1,6 @@
 from odoo import models, fields, api
 from odoo.addons.dn_base import ws_methods
 from odoo.exceptions import ValidationError
-from werkzeug import urls
-from odoo.addons.http_routing.models.ir_http import slug
-from werkzeug import urls
 from odoo.addons.http_routing.models.ir_http import slug
 class VotingType(models.Model):
     _name = 'meeting_point.votingtype'
@@ -79,19 +76,17 @@ class Voting(models.Model):
         self.respondent_id = self.env['res.partner'].browse(temp_attendee)
     def _compute_graphical_url(self):
         """ Computes a public URL for the survey """
-        base_url = '/' if self.env.context.get('relative_url') else \
-                   self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = ws_methods.get_main_url()
         for voting in self:
-            voting.graphical_view_url = urls.url_join(base_url, "/voting/graphical/%s" % (slug(voting)))
+            voting.graphical_view_url = base_url + "/voting/graphical/%s" % (slug(voting))
 
     @api.multi
     def action_result_voting(self):
         """ Open the website page with the survey results view """
         self.ensure_one()
         """ Computes a public URL for the survey """
-        base_url = '/' if self.env.context.get('relative_url') else \
-            self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        result_url = urls.url_join(base_url, "voting/results_new/%s" % (slug(self)))
+        base_url = ws_methods.get_main_url()
+        result_url = base_url + "voting/results_new/%s" % (slug(self))
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Voting",
@@ -109,10 +104,9 @@ class Voting(models.Model):
         menuId = self.env['ir.ui.menu'].search([('name', '=', 'MeetVUE')], limit=1)
         actionId = self.env['ir.actions.act_window'].search([('name', '=', 'Voting')],
                                                                 limit=1)
-        base_url = '/' if self.env.context.get('relative_url') else \
-            self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = ws_methods.get_main_url()
         data = super(Voting, self).create(values)
-        result_url = urls.url_join(base_url, "web#id=%s&view_type=form&model=meeting_point.voting&action=%s&menu_id=%s" % (data.id,actionId.id,menuId.id))
+        result_url = base_url + "web#id=%s&view_type=form&model=meeting_point.voting&action=%s&menu_id=%s" % (data.id,actionId.id,menuId.id)
         self = self.with_context(url=result_url)
         # template.sudo().with_context().send_mail(self.id, force_send=True)
         if values['partner_ids'][0][2].__len__() != 0:

@@ -44,6 +44,7 @@ div#wrapwrap footer
     width: 100%;
     text-align: center;
     color:red;
+    left:0;
 }
 .oe_login_form img
 {
@@ -72,12 +73,12 @@ div#wrapwrap footer
 
 .oe_login_buttons a
 {
-color : blue;
+    color : blue;
 }
 
 .oe_login_buttons a:hover
 {
-color : black;
+    color : black;
 }
 
 #wrapwrap

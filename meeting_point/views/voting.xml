@@ -6,62 +6,42 @@
             <field name="model">meeting_point.voting</field>
             <field name="arch" type="xml">
                 <form string="Voting/Approval" class="voting_form">
-                    <link rel="stylesheet" href="/meeting_point/static/css/voting.css" />
+                    <link rel="stylesheet" href="/meeting_point/static/css/voting.css"/>
                     <field name="id" invisible="1" class="voting_id"/>
-                    <header>
-                        <button name="action_result_voting" string="View results" type="object" class="oe_highlight" />
-                    </header>
+                    <sheet>
                     <group>
                         <field name="name"/>
                         <field name="meeting_id" invisible="1"/>
                          <field name="respondent_id" invisible="1"/>
 
-                        <field name="meeting_id" options="{'no_quick_create': True, 'no_create_edit' : True}"  attrs="{'invisible': [('audience', '=', 'partners')]}" domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','&gt;=', time.strftime('%Y-%m-%d'))]   "/>
+                        <field name="meeting_id" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible': [('audience', '=', 'partners')]}" domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','&gt;=', time.strftime('%Y-%m-%d'))]   "/>
                         <field name="topic_id_new" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('meeting_id','=',meeting_id)]" attrs="{'invisible': [('meeting_id', '=', False)]}"/>
-                        <field name="topic_id_alternate"  class="oe_read_only" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible': ['|',('topic_id_alternate', '=', False),('meeting_id','=',True)]}"/>
+                        <field name="topic_id_alternate" class="oe_read_only" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible': ['|',('topic_id_alternate', '=', False),('meeting_id','=',True)]}"/>
                         <field name="public_visibility"/>
-                        <field name = "enable_discussion"/>
+                        <field name="enable_discussion"/>
                         <!--<field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>-->
-                        <field attrs="{'invisible': [('meeting_id', '!=', False)]}"
-                               name="partner_ids" widget="many2many_tags"
-                               options="{'no_quick_create': True, 'no_create_edit' : True}"
-                               placeholder="Select respondents..."
-                               class="oe_inline"
-                        />
-                        <field name="motion_first"
-                               options="{'no_quick_create': True, 'no_create_edit' : True}"
-                               domain="[('partner_id','in',respondent_id)]"
-                        />
-                        <field name="motion_second"
-                               options="{'no_quick_create': True, 'no_create_edit' : True}"
-                               domain="[('partner_id','in',respondent_id)]"
-                        />
+                        <field attrs="{'invisible': [('meeting_id', '!=', False)]}" name="partner_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select respondents..." class="oe_inline"/>
+                        <field name="motion_first" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('partner_id','in',respondent_id)]"/>
+                        <field name="motion_second" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('partner_id','in',respondent_id)]"/>
                         <field name="open_date"/>
                         <field name="close_date"/>
                         <field name="description"/>
-                        <field name="voting_type_id"
-                               options="{'no_quick_create': True, 'no_create_edit' : True}"
-                        />
+                        <field name="voting_type_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                         <field name="audience" class="o_hidden"/>
-
-
-
                         <field class="kanban_document dn_attatchment_btn" name="document_ids"
-                               context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'
-                               ,'form_view_ref': 'dn_documents.doc_edit_form'}"
-                               mode="kanban" />
-
+                               context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban','form_view_ref': 'dn_documents.doc_edit_form'}"
+                               mode="kanban"/>
                     </group>
                     <div class="oe_read_only voting_choice_container" attrs="{'invisible' : [('voting_type_id', '=', False)]}">
                       <div class="vote_options">
                       </div>
                     </div>
                     <div class="oe_read_only results_container">
-                        <h3>Results</h3>
-                        <div class="results"></div>
-                        <a href="#" class="btn btn-primary viewGraphically">View Graphically</a>
+                        <a href="#" class="btn btn-primary viewGraphically">View Results (Graphical) </a>
+                        <div class="results"/>
                         <field invisible="1" class="graphical_view_url" name="graphical_view_url"/>
                     </div>
+                    </sheet>
                     <script src="/meeting_point/static/js/voting.js"/>
                 </form>
             </field>
@@ -263,7 +243,6 @@
                         </table>
                     </div>
                 </div>
-                 handle comments
                 <div>
                     <t t-set="comments" t-value="prepare_result['comments']" />
                     <t t-if="comments">
