@@ -29,11 +29,15 @@ class MyMail(models.Model):
             'email_from': 'admin@example.com'
         }
         parent_id = values.get('parent_id')
+        if parent_id:
+            parent_id = int(parent_id)
+        res_id = int(res_id)
         if not parent_id:
             comment_vals['subtype_id'] = values['subtype_id']
         else:
             parent_id = int(parent_id)
             comment_vals['parent_id'] = parent_id
+        comment_vals['res_id'] = res_id
         res = comment_model.create(comment_vals)
         values['create_date'] = res.create_date
         values['user'] = {'name': req_env.user.name, 'id': req_env.user.id}

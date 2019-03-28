@@ -259,11 +259,16 @@ class website_voting(http.Controller):
             voting_obj_orm = req_env['meeting_point.voting'].search(filters)
 
             props = ['id', 'name', 'meeting_id', 'open_date', 'close_date',
-                     'description', 'my_status',
-                     'public_visibility', 'graphical_view_url']
+                     'description', 'my_status', 'public_visibility', 'graphical_view_url', 'meeting_id',
+                     'topic_id_alternate', 'enable_discussion'
+                     ]
             voting_object = ws_methods.object_to_json_object(voting_obj_orm, props)
             voting_object['voting_docs'] = ws_methods.objects_list_to_json_list(voting_obj_orm.document_ids, ['id', 'name'])
             voting_object['voting_type'] = ws_methods.objects_list_to_json_list(voting_obj_orm.voting_type_id, ['id', 'name'])
+            voting_object['meeting'] = ws_methods.object_to_json_object(voting_obj_orm.meeting_id,
+                                                                                ['id', 'name'])
+            voting_object['topic'] = ws_methods.object_to_json_object(voting_obj_orm.topic_id_new,
+                                                                                ['id', 'name'])
             voting_object['motion_first'] = {'id': voting_obj_orm.motion_first.partner_id.mp_user_id.id, 'name': voting_obj_orm.motion_first.name}
             voting_object['motion_second'] = {'id': voting_obj_orm.motion_second.partner_id.mp_user_id.id, 'name': voting_obj_orm.motion_second.name}
             # voting_object['Respondents'] = ws_methods.objects_list_to_json_list(voting_obj_orm.partner_ids, ['id', 'name'])
