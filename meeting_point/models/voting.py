@@ -42,10 +42,12 @@ class Voting(models.Model):
     document_ids = fields.One2many('meeting_point.votingdocument', 'voting_id', string="Document(s)")
     public_visibility = fields.Boolean(string="Results Visible To All")
     graphical_view_url = fields.Char("View Graphically", compute="_compute_graphical_url")
-    topic_id = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
+    topic_id_new = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
     respondent_id = fields.Many2many('res.partner','user_voting_res_partner_rel',
                                    string='Respondents',
                                    domain=lambda self: self.filter_attendees())
+    topic_id_alternate = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
+    enable_discussion = fields.Boolean(string = 'Enable Discussion')
 
     @api.onchange('partner_ids')
     def _change_field_value(self):
@@ -99,6 +101,10 @@ class Voting(models.Model):
 
     @api.model
     def create(self, values):
+        if values.get('topic_id_new'):
+            values['topic_id_alternate'] = values['topic_id_new']
+            del values["meeting_id"]
+            del values['topic_id_new']
         template = self.env.ref('meeting_point.email_template_approval_modified')
         menuId = self.env['ir.ui.menu'].search([('name', '=', 'MeetVUE')], limit=1)
         actionId = self.env['ir.actions.act_window'].search([('name', '=', 'Voting')],
@@ -117,10 +123,28 @@ class Voting(models.Model):
                     'emailTo': emailId,
                     'url':result_url
                 })
-                template.with_context(local_context).send_mail(data.id, force_send=True)
+                # template.with_context(local_context).send_mail(data.id, force_send=True)
         return data
 
     def write(self, vals):
+        if vals.get('meeting_id') :
+            if vals.get('topic_id_new'):
+                del vals["meeting_id"]
+                vals['topic_id_alternate'] = vals['topic_id_new']
+                del vals['topic_id_new']
+            else:
+                if self.topic_id_alternate:
+                    vals['topic_id_alternate'] = None
+        elif vals.get('topic_id_new'):
+            vals['topic_id_alternate'] = vals['topic_id_new']
+            del vals['topic_id_new']
+            if self.meeting_id:
+                vals['meeting_id'] = None
+        elif vals.get('partner_ids'):
+            if self.meeting_id:
+                vals['meeting_id'] = None
+            if self.topic_id_alternate:
+                vals['topic_id_alternate'] = None
         partener_ids_beofre = False
         if vals.get('partner_ids'):
             partener_ids_beofre = self.partner_ids

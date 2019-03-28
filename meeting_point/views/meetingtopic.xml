@@ -14,6 +14,12 @@
                         <field name="document_ids" mode="kanban" class="o2m_kanban topic_docs kanban_document"
                                context="{'form_view_ref' : 'meeting_point.view_meeting_doc_form','kanban_view_ref': 'dn_documents.dn_docs_kanban_annotator'}"
                         />
+
+                           <div class="oe_read_only o2m_kanban">
+                            <h4>Approval/Voting</h4>
+                            <field name="voting_topic_ids" string=" " mode="kanban">
+                            </field>
+                        </div>
                     </group>
                     <script type="application/javascript" src="/meeting_point/static/js/meetingtopic.js"></script>
                 </form>

@@ -516,7 +516,12 @@
                                     <!--&lt;!&ndash;<script src="/meeting_point/static/js/survey_common.js"/>&ndash;&gt;-->
                                 <!--</form>-->
                             </field>
-                        </div>                        
+                        </div>
+                        <div class="oe_read_only o2m_kanban">
+                            <h4>Approval/Voting</h4>
+                            <field name="voting_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" string=" " mode="kanban">
+                            </field>
+                        </div>
                     </sheet>                    
                     <app-comments  attrs="{'invisible': [('publish','=',False)]}" ></app-comments>
                     <script src="/meeting_point/static/js/meeting_form.js"/>

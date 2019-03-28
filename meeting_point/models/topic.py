@@ -29,7 +29,7 @@ class Topic(models.Model):
     document_ids = fields.One2many('meeting_point.topicdoc','topic_id', string="Document(s)")
     details = fields.Char()
     attachments = fields.Html(compute='has_attachments', string="Attachment(s)")
-
+    voting_topic_ids = fields.One2many('meeting_point.voting', 'topic_id_alternate', string="Approval/Voting")
     @api.multi
     def has_attachments(self):
         for topic in self:

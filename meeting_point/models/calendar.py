@@ -249,6 +249,7 @@ class Meeting(models.Model):
     im_attendee = fields.Char(compute='look_if_invited')
     is_active_yet = fields.Char(compute="_compute_meeting_status")
     conference_status = fields.Char(compute='is_video_active')
+    voting_ids = fields.One2many('meeting_point.voting','meeting_id',string="Approval/Voting" )
 
     @api.model
     def create(self, vals):

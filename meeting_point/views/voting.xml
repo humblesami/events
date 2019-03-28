@@ -17,8 +17,10 @@
                          <field name="respondent_id" invisible="1"/>
 
                         <field name="meeting_id" options="{'no_quick_create': True, 'no_create_edit' : True}"  attrs="{'invisible': [('audience', '=', 'partners')]}" domain="['&amp;','&amp;','&amp;',('exectime','!=','completed'),('exectime','!=','archived'),('archived','=',False),('stop','&gt;=', time.strftime('%Y-%m-%d'))]   "/>
-                        <field name="topic_id" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('meeting_id','=',meeting_id)]" attrs="{'invisible': [('meeting_id', '=', False)]}"/>
+                        <field name="topic_id_new" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('meeting_id','=',meeting_id)]" attrs="{'invisible': [('meeting_id', '=', False)]}"/>
+                        <field name="topic_id_alternate"  class="oe_read_only" options="{'no_quick_create': True, 'no_create_edit' : True}" attrs="{'invisible': ['|',('topic_id_alternate', '=', False),('meeting_id','=',True)]}"/>
                         <field name="public_visibility"/>
+                        <field name = "enable_discussion"/>
                         <!--<field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>-->
                         <field attrs="{'invisible': [('meeting_id', '!=', False)]}"
                                name="partner_ids" widget="many2many_tags"
