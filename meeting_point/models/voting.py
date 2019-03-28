@@ -182,6 +182,21 @@ class Voting(models.Model):
                     obj.my_status = res.voting_option_id.name
                 else:
                     obj.my_status = 'pending'
+            elif partner in obj.meeting_id.partner_ids:
+                res = self.env['meeting_point.votinganswer'].search([('voting_id', '=', obj.id), ('user_id', '=', uid)])
+                if res:
+                    obj.my_status = res.voting_option_id.name
+                else:
+                    obj.my_status = 'pending'
+            elif obj.topic_id_alternate:
+                partnerValue = self.env['calendar.event'].search([('topic_ids', '=', obj.topic_id_alternate.id)]) .partner_ids
+                if partner in partnerValue:
+                    res = self.env['meeting_point.votinganswer'].search(
+                        [('voting_id', '=', obj.id), ('user_id', '=', uid)])
+                    if res:
+                        obj.my_status = res.voting_option_id.name
+                    else:
+                        obj.my_status = 'pending'
 
     @api.multi
     def _compute_audience(self):
@@ -195,13 +210,18 @@ class Voting(models.Model):
     @api.multi
     def action_start_voting(self):
         self.ensure_one()
-        token = self.env.context.get('survey_token')
-        trail = "/%s" % token if token else ""
+        # token = self.env.context.get('survey_token')
+        # trail = "/%s" % token if token else ""
+        # + trail
+        base_url = '/' if self.env.context.get('relative_url') else \
+            self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        result_url = urls.url_join(base_url, "/voting/start/%s" % (slug(self)))
+
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Voting",
             'target': 'self',
-            'url': self.with_context(relative_url=True) + trail
+            'url': result_url
         }
 
     @api.multi

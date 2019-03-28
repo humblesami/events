@@ -1,5 +1,5 @@
 $(function(){
-    $('#votingBack').hide();
+//    $('#votingBack').hide();
     $('#submitted').hide();
     $('.viewGraphically:first').css('background-color','#875A7B');
 
@@ -52,8 +52,13 @@ $(function(){
         var no_results = 'No answer from any user';
         var results_div =
         $('.results').html('');
-        var my_groups = odoo.session_info.user.groups;
-        var agi = my_groups.indexOf('MeetingPoint / Admin');
+        var agi =-2
+        if (odoo.session_info.user){
+            var my_groups = odoo.session_info.user.groups;
+            var agi = my_groups.indexOf('MeetingPoint / Admin');
+            }
+//        var my_groups = odoo.session_info.user.groups;
+//        var agi = my_groups.indexOf('MeetingPoint / Admin');
 
         if(agi > -1 || data.public)
         {
@@ -97,15 +102,33 @@ $(function(){
                 dn_rpc_ajax(options);
             }
         }, 100);
+
+         setTimeout(function(){
+            if($('#voter').length == 1)
+            {
+                console.log('12')
+                var voting_id = $('.voting_id');
+                options.data.voting_id = parseInt( $('.voting_id')[0].value);
+                dn_rpc_ajax(options);
+    }
+}, 100);
     }
     get_results();
 
     function on_user_answer(){
         var input_choice = $(this);
-        let voting_id = $('.voting_id').html();
+        let voting_id =0
+        if  ($('.voting_id')[0].value)
+        {
+            voting_id = $('.voting_id')[0].value
+        }
+        else{
+          voting_id =  $('.voting_id').html();
+        }
+//        let voting_id = $('.voting_id').html();
         let user_choice = input_choice.attr('data-id');
         let voting_data = {'voting_option_id' : user_choice, 'voting_id' : voting_id};
-        console.log(voting_data);
+//        console.log(voting_data);
         var options = {
             url : '/voting/submit',
             data : {'voting_option_id' : user_choice, 'voting_id' : voting_id},
