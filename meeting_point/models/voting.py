@@ -46,6 +46,19 @@ class Voting(models.Model):
     topic_id_alternate = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
     enable_discussion = fields.Boolean(string = 'Enable Discussion')
 
+    def get_name_audience(self):
+        ids = []
+        my_audience = self.partner_ids
+        if self.topic_id_alternate:
+            my_audience = self.topic_id_alternate.meeting_id.partner_ids
+        elif self.meeting_id:
+            my_audience = self.meeting_id.partner_ids
+        for partner in my_audience:
+            if partner.id != self.env.user.partner_id.id:
+                ids.append(partner.user_id.id)
+        res = {'name':  self.voting_type_id.name+'-'+self.name, 'audience': ids}
+        return res
+
     @api.onchange('partner_ids')
     def _change_field_value(self):
         user_id = []

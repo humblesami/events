@@ -63,6 +63,7 @@ $(function(){
         if(agi > -1 || data.public)
         {
             $('.results_container').show();
+            $('.viewGraphically:first').attr('href',$('.graphical_view_url').text());
 //            for(var key in results)
 //            {
 //                if(no_results)
