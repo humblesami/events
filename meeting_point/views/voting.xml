@@ -13,7 +13,16 @@
                     </header>
                     <group>
                         <field name="name"/>
-                        <field name="meeting_id" invisible="1"/>
+                        <field name="meeting_id" attrs="{'invisible': [('respondents', '!=', [])]}"/>
+
+                        <field name="topic_id"  domain="[('meeting_id','=',meeting_id)]" attrs="{'invisible': [('meeting_id', '=', False)]}"/>
+
+                        <field attrs="{'invisible': [('meeting_id', '!=', False)]}"
+                               name="respondents" widget="many2many_tags"
+                               options="{'no_quick_create': True, 'no_create_edit' : True}"
+                               placeholder="Select respondents..."
+                               class="oe_inline"
+                        />
                         <field name="motion_first"
                                options="{'no_quick_create': True, 'no_create_edit' : True}"
                         />
@@ -28,12 +37,7 @@
                         />
                         <field name="public_visibility"/>
                         <!--<field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>-->
-                        <field attrs="{'invisible': [('meeting_id', '!=', False)]}"
-                               name="partner_ids" widget="many2many_tags"
-                               options="{'no_quick_create': True, 'no_create_edit' : True}"
-                               placeholder="Select respondents..."
-                               class="oe_inline"
-                        />
+
                         <field class="kanban_document dn_attatchment_btn" name="document_ids"
                                context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban'
                                ,'form_view_ref': 'dn_documents.doc_edit_form'}"

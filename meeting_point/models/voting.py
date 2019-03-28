@@ -26,16 +26,20 @@ class Voting(models.Model):
     _name = 'meeting_point.voting'
     name = fields.Char(string='Title', required=True)
     meeting_id = fields.Many2one('calendar.event',string="Meeting", ondelete='cascade')
+    topic_id = fields.Many2one('meeting_point.topic', string="Agenda Topic", ondelete='cascade')
+    respondents = fields.Many2many('res.partner',
+                                   'voting_voting_res_partner_rel',
+                                   string='Respondents',
+                                   domain=lambda self: self.filter_attendees())
+
+    partner_ids = fields.Many2many('res.partner')
     motion_first = fields.Many2one('res.users')
     motion_second = fields.Many2one('res.users')
     open_date = fields.Datetime(string='Open Date')
     close_date = fields.Datetime(string='Close Date')
     description = fields.Html(string='Voting Description')
     voting_type_id = fields.Many2one('meeting_point.votingtype', required=True, ondelete="cascade")
-    partner_ids = fields.Many2many('res.partner',
-                                   'voting_voting_res_partner_rel',
-                                   string='Respondents',
-                                   domain=lambda self: self.filter_attendees())
+
     audience = fields.Char(compute='_compute_audience')
     my_status = fields.Char(compute='_compute_status')
     user_id = fields.Char(compute='_compute_user_id')
