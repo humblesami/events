@@ -26,29 +26,55 @@ class Voting(models.Model):
     _name = 'meeting_point.voting'
     name = fields.Char(string='Title', required=True)
     meeting_id = fields.Many2one('calendar.event',string="Meeting", ondelete='cascade')
-    topic_id = fields.Many2one('meeting_point.topic', string="Agenda Topic", ondelete='cascade')
-    respondents = fields.Many2many('res.partner',
-                                   'voting_voting_res_partner_rel',
-                                   string='Respondents',
-                                   domain=lambda self: self.filter_attendees())
-
-    partner_ids = fields.Many2many('res.partner')
-    motion_first = fields.Many2one('res.users')
+    motion_first = fields.Many2one('res.users' )
     motion_second = fields.Many2one('res.users')
     open_date = fields.Datetime(string='Open Date')
     close_date = fields.Datetime(string='Close Date')
     description = fields.Html(string='Voting Description')
     voting_type_id = fields.Many2one('meeting_point.votingtype', required=True, ondelete="cascade")
-
+    partner_ids = fields.Many2many('res.partner',
+                                   'voting_voting_res_partner_rel',
+                                   string='Respondents',
+                                   domain=lambda self: self.filter_attendees())
     audience = fields.Char(compute='_compute_audience')
     my_status = fields.Char(compute='_compute_status')
     user_id = fields.Char(compute='_compute_user_id')
     document_ids = fields.One2many('meeting_point.votingdocument', 'voting_id', string="Document(s)")
     public_visibility = fields.Boolean(string="Results Visible To All")
     graphical_view_url = fields.Char("View Graphically", compute="_compute_graphical_url")
+    topic_id = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
+    respondent_id = fields.Many2many('res.partner','user_voting_res_partner_rel',
+                                   string='Respondents',
+                                   domain=lambda self: self.filter_attendees())
 
+    @api.onchange('partner_ids')
+    def _change_field_value(self):
+        user_id = []
+        remain = []
+        for partner in self.partner_ids:
+            if (partner.is_committee):
+                temp = self.env['meeting_point.committee'].search([('partner_id', '=', partner.id)])
+                for val in temp.user_ids._ids:
+                    tempValueForPartner = self.env['meeting_point.users'].search(
+                        [('id', '=', val)]).user_id.partner_id.id
+                    user_id.append(tempValueForPartner)
+            else:
+                user_id.append(partner.id)
+        temp_attendee = list(set(user_id))
+        self.partner_ids = self.env['res.partner'].browse(temp_attendee)
+        self.respondent_id = self.env['res.partner'].browse(temp_attendee)
+        if len(self.partner_ids) > 0:
+            self.audience = "partners"
+        else:
+            self.audience = False
 
-
+    @api.onchange('meeting_id')
+    def _change_meeting_value(self):
+        user_id=[]
+        for partner in self.meeting_id.partner_ids:
+            user_id.append(partner.id)
+        temp_attendee = list(set(user_id))
+        self.respondent_id = self.env['res.partner'].browse(temp_attendee)
     def _compute_graphical_url(self):
         """ Computes a public URL for the survey """
         base_url = '/' if self.env.context.get('relative_url') else \
