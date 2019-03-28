@@ -1,6 +1,5 @@
 $(function()
 {
-    $('.mtopic_tree table tbody tr td:nth-child(6)').html('<span class="btn btn-primary btn-sm">View Details</span>');
     $('.kanban_document button.o-kanban-button-new').html("Attach");
     $('input[placeholder="Select attendees..."]:first').focus(function(){
         setTimeout(function(){

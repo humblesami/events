@@ -9,7 +9,7 @@ class Document(models.Model):
     _name = 'annotation.document'
     name = fields.Char()
     version = fields.Integer(required=True, default=0)
-    user_id = fields.Many2one('res.users',ondelete='cascade', required=True)
+    user_id = fields.Many2one('res.users',ondelete='cascade', required=False)
     _sql_constraints = [
         ('unique document against user', 'unique(user_id,name)',
          'Can not have duplicate document for same user'),

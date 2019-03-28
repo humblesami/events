@@ -41,7 +41,7 @@ odoo.define('dn_base.form_view', function (require) {
             process_form_view(read_only);
             if(this.mode == 'readonly')
             {
-                var trs = $('.o_form_readonly table.o_group>tbody>tr')
+                var trs = $(this.el).find('table.o_group:first>tbody>tr');
                 if(trs.eq(0).css('display') == 'none')
                 {
                     var data_tds = trs.find('.o_field_widget');
