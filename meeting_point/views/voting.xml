@@ -158,11 +158,31 @@
                 </div>
             </t>
         </template>
+        <template id="voting_back_container" name="voting back container custom">
+            <div class="navbar navbar-default navbar-static-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <div class="voting_back_btn_container">
+                            <div t-if="voting.meeting_id" t-ignore="true" class="pull-right">
+                                <a t-attf-href="/web#view_type=form&amp;model=calendar.event&amp;id=#{voting.meeting_id.id}&amp;action=voting.action_upcoming_meeting" class="btn btn-default">Back to meeting</a>
+                            </div>
+                            <div  t-ignore="true" class="pull-right">
+                                <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;id=1&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
+                            </div>
+                            <div  t-ignore="true" class="pull-right">
+                                <a t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{voting.id}&amp;action=meeting_point.action_meeting_voting"  class="btn btn-default">Back to Voting</a>
+                            </div>
+                        </div>
+                  </div>
+                </div>
+            </div>
+        </template>
 
 
-                <template id="voting_approval_graphically" name="Graphical View Of Voting Answers">
+        <template id="voting_approval_graphically" name="Graphical View Of Voting Answers">
             <t t-call="website.layout">
             <div class="oe_structure"/>
+                <t t-call="meeting_point.voting_back_container"/>
             <div class="container js_surveyresult">
                 <div class="jumbotron mt32">
                     <h1><span t-field="voting.name"/> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
