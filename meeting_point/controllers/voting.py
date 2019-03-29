@@ -1,7 +1,12 @@
+import base64
+import os
+
 import json
 from odoo import http
 from odoo.http import request
 from odoo.addons.dn_base import ws_methods
+from PIL import Image, ImageFont, ImageDraw
+from dateutil.relativedelta import relativedelta
 
 class website_voting(http.Controller):
 
@@ -268,7 +273,7 @@ class website_voting(http.Controller):
                 return ws_methods.http_response('', data)
             props = ['id', 'name', 'meeting_id', 'open_date', 'close_date',
                      'description', 'my_status', 'public_visibility', 'graphical_view_url', 'meeting_id',
-                     'enable_discussion'
+                     'enable_discussion', 'signature_required', 'signature_data'
                      ]
             voting_object = ws_methods.object_to_json_object(voting_obj_orm, props)
             voting_object['voting_docs'] = ws_methods.objects_list_to_json_list(voting_obj_orm.document_ids, ['id', 'name'])
@@ -302,3 +307,67 @@ class website_voting(http.Controller):
                 if respondent.user_id.id == uid:
                     not_allowed = False
         return not_allowed
+
+    @http.route('/voting/get_signature/<int:voting_id>', type="http", csrf=False, auth='public', cors='*')
+    def profile_signature_http(self, voting_id, **kw):
+        return self.voting_signature_get(voting_id, kw)
+
+    def voting_signature_get(self, voting_id, values):
+        try:
+            uid = ws_methods.check_auth(values)
+            if not uid:
+                return ws_methods.not_logged_in()
+            req_env = http.request.env
+            voting_object = req_env['meeting_point.voting'].search([('id','=',voting_id)])
+
+
+            sign =  voting_object.signature_data
+            if sign:
+                sign = sign.decode('utf-8')
+            sign = {'signature' : sign }
+            return ws_methods.http_response('', sign)
+        except:
+            ws_methods.handle()
+
+    @http.route('/voting/save_signature/<int:voting_id>', type="http", csrf=False, auth='public', cors='*')
+    def voting_signature_save_http(self, voting_id, **kw):
+        return self.voting_signature_save(voting_id, kw)
+
+
+
+    def voting_signature_save(self, voting_id, values):
+        try:
+            uid = ws_methods.check_auth(values)
+            if not uid:
+                return ws_methods.not_logged_in()
+            if 'data' in values:
+                values = values['data']
+            req_env = http.request.env
+            if values['type'] == "auto":
+                curr_dir = os.path.dirname(__file__)
+                pth = curr_dir.replace('controllers', 'doc_signs')
+                font_dir = curr_dir.replace('controllers', 'static')
+                user=req_env['res.users'].search([('user_id', '=', uid)])
+
+                font = ImageFont.truetype(font_dir + "/FREESCPT.TTF", 200)
+                sz = font.getsize(user.name)
+                sz = (sz[0] + 50, sz[1])
+                img = Image.new('RGB', sz, (255, 255, 255))
+                d = ImageDraw.Draw(img)
+                d.text((40, 0), user.name, (0, 0, 0), font=font)
+                uid = http.request.env.user.id
+                img_path = pth + "/" + str(uid) + "piic.png"
+                img.save(img_path)
+
+                res = open(img_path, 'rb')
+                read = res.read()
+                binary_signature = base64.encodebytes(read)
+                binary_signature = binary_signature.decode('utf-8')
+                return ws_methods.http_response('', {"signature": binary_signature})
+
+
+            voting_object = req_env['meeting_point.voting'].search([('id', '=', voting_id)])
+            voting_object.signature_data = values['binary_signature']
+            return ws_methods.http_response('', {"id":voting_object.id})
+        except:
+            ws_methods.handle()
