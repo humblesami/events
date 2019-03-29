@@ -44,10 +44,9 @@ class website_voting(http.Controller):
 
             vals = {}
             voting_id = int(kw['voting_id'])
-            if  kw.get('signature_data'):
-                voting_object = request.env['meeting_point.voting'].search([('id', '=', voting_id)])
-                if voting_object.signature_required:
-                    vals['signature_data'] = kw['signature_data']
+            voting_object = request.env['meeting_point.voting'].search([('id', '=', voting_id)])
+            if voting_object.signature_required:
+                vals['signature_data'] = kw['signature_data']
             votingAnswer = request.env['meeting_point.votinganswer']
             vals['voting_option_id'] = kw['voting_option_id']
             res = 'error'
@@ -299,7 +298,7 @@ class website_voting(http.Controller):
                 return ws_methods.http_response('', data)
             props = ['id', 'name', 'meeting_id', 'open_date', 'close_date',
                      'description', 'my_status', 'public_visibility', 'graphical_view_url', 'meeting_id',
-                     'enable_discussion', 'signature_required', 'signature_data'
+                     'enable_discussion', 'signature_required'
                      ]
             voting_object = ws_methods.object_to_json_object(voting_obj_orm, props)
             voting_object['voting_docs'] = ws_methods.objects_list_to_json_list(voting_obj_orm.document_ids, ['id', 'name'])
