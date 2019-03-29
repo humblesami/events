@@ -147,9 +147,71 @@
                                     </field>
                                 </div>
                                 <!--<div class="survey_container"></div>-->
-                                <h5>Surveys</h5>
+                               <h5>Surveys</h5>
                                 <div class="slider_div">
-                                    <field name="pending_surveys" mode="kanban"/>
+                                    <field name="pending_surveys"  mode="kanban">
+                                      <kanban default_order="date">
+                                       <field name="stage_id"/>
+                                       <field name="designed"/>
+                                       <field name="title"/>
+                                       <field name="tot_sent_survey"/>
+                                       <field name="tot_start_survey"/>
+                                       <field name="tot_comp_survey"/>
+                                       <field name="color"/>
+                                       <field name="auth_required"/>
+                                       <field name="public_url"/>
+                                       <field name="my_status"/>
+                                        <templates>
+                                            <t t-name="kanban-box" >
+                                                <div class="o_kanban_record" >
+                                                  <button style="pointer-events:auto; position:absolute; width:50%; height:75%; background:none; border:none;" title="open" type="object" name="open_record"/>
+
+                                                <div t-attf-class="survey_kanban_reocord oe_kanban_card oe_kanban_global_click oe_kanban_card">
+                                                    <!--<div class="kanban_del">-->
+                                                    <!--    <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>-->
+                                                    <!--</div>-->
+                                                    <div class="oe_kanban_content" style="text-align: initial;">
+
+
+                                                        <h3 class="oe_center">
+                                                            <field name="title"/>
+                                                        </h3>
+
+                                                        <t t-if="record.meeting_id.raw_value">
+                                                            <span>Meeting :</span><field name="meeting_id"/>
+                                                        </t>
+                                                        <t t-if="!record.meeting_id.raw_value">
+                                                            <field name="meeting_id" invisible="1"/>
+                                                        </t>
+                                                        <div class="survey_kanban">
+                                                            <div>
+                                                            <t t-if="record.my_status.raw_value=='done' ">
+                                                                <h3 class="badge" style="float:right">Completed<i class="fa fa-check fa-lg" style="color:green"/></h3>
+                                                            </t>
+                                                            </div>
+                                                                <t t-if="! record.designed.raw_value">
+                                                                    <button class="survey-button btn btn-primary  ml4" style="width: 100%" groups="meeting_point.group_meeting_admin">Test</button>
+                                                                </t>
+                                                                <t t-if="record.designed.raw_value">
+                                                                    <t t-if="record.my_status.raw_value=='pending' ">
+                                                                        <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="width: 100%" name="action_start_survey" attrs="{'invisible':[('my_status', '=','done')]}">Start</button>
+                                                                    </t>
+                                                                </t>
+
+
+
+                                                               <button class="survey-button btn btn-primary ml4" style="width: 100%" name="action_result_survey" type="object">View Results</button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+
+                                            </t>
+                                        </templates>
+                                    </kanban>
+
+                                    </field>
                                 </div>
                                 <!--<div class="sign_doc_container"></div>-->
                                 <h5>Documents To Sign</h5>

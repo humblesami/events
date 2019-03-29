@@ -21,6 +21,25 @@ class Survey(models.Model):
     web_url = fields.Char(compute = '_compute_web_url')
 
 
+
+    @api.multi
+    def open_record(self):
+        template = self.env.ref('meeting_point.survey_form_modified')
+        # view_id = self.sudo().get_formview_id()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'survey.survey',
+            'name': 'Record name',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(template.id, 'form')],
+            'view_id': template.id,
+            'res_id': self.id,
+            'target': 'current',
+        }
+
+
+
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
         web_url = ws_methods.get_main_url()

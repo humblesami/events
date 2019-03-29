@@ -75,6 +75,11 @@ class Voting(models.Model):
         temp_attendee = list(set(user_id))
         self.partner_ids = self.env['res.partner'].browse(temp_attendee)
         self.respondent_id = self.env['res.partner'].browse(temp_attendee)
+        if not self.motion_first.partner_id.id in self.respondent_id.ids:
+            self.motion_first = False
+        if not self.motion_second.partner_id.id in self.respondent_id.ids:
+            self.motion_second = False
+
         if len(self.partner_ids) > 0:
             self.audience = "partners"
         else:
@@ -87,6 +92,11 @@ class Voting(models.Model):
             user_id.append(partner.id)
         temp_attendee = list(set(user_id))
         self.respondent_id = self.env['res.partner'].browse(temp_attendee)
+        if not self.motion_first.partner_id.id in self.respondent_id.ids:
+            self.motion_first = False
+        if not self.motion_second.partner_id.id in self.respondent_id.ids:
+            self.motion_second = False
+        self.topic_id_new = False
     def _compute_graphical_url(self):
         """ Computes a public URL for the survey """
         base_url = ws_methods.get_main_url()
