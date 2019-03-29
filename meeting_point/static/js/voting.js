@@ -13,7 +13,8 @@ $(function(){
     {
         console.log(34444);
     }
-
+    var discussion_enabled = false;
+    var signature_required = false;
 
 
     function show_results(data)
@@ -22,10 +23,11 @@ $(function(){
         $('.vote_options:first').html('');
         //console.log(111, data);
         var my_status = data.my_status;
+        signature_required = data.signature_required;
         var vote_options_container = $('.vote_options:first');
 
         $(`<div><button class="btn btn-sm btn btn-primary btn-sm ">Decline
-                                                </button></div>`)
+                                                </button></div>`);
         if(data.my_status)
         {
             for(var i in data.vote_options)
@@ -107,6 +109,10 @@ $(function(){
     get_results();
 
     function on_user_answer(){
+        if(signature_required)
+        {
+
+        }
         var input_choice = $(this);
         let voting_id =0
         if  ($('.voting_id')[0].value)

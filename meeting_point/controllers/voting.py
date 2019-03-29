@@ -58,19 +58,22 @@ class website_voting(http.Controller):
 
             votingType = voting_object.voting_type_id
             voting_options = votingType.voting_option_ids
-            filters = [('voting_id', '=', voting_id), ('user_id', '=', uid)]
-            filters.append('Hi')
+            filters = [('voting_id', '=', voting_id), ('user_id', '=', uid), (1, '=', 1)]
 
             voting_answers = {}
             voting_options_array = []
             for option in voting_options:
-                voting_options_array.append({'name':option.name,'id':option.id})
-                filters[2] = ('voting_option_id','=',option.id)
+                voting_options_array.append({'name': option.name, 'id': option.id})
+                filters[len(filters) - 1] = ('voting_option_id', '=', option.id)
                 voting_answers[option.name] = request.env['meeting_point.votinganswer'].search_count(filters)
 
-            res = { 'vote_options':voting_options_array, 'voting_answers': voting_answers, 'my_status' : voting_object.my_status}
+            res = {'vote_options': voting_options_array, 'voting_answers': voting_answers, 'my_status': voting_object.my_status}
             if voting_object.public_visibility:
                 res['public'] = 1
+            if voting_object.signature_required:
+                res['signature_required'] = 1
+            if voting_object.enable_discussion:
+                res['signature_required'] = 1
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
