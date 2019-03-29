@@ -55,8 +55,8 @@ $(function(){
         var agi =-2
         if (odoo.session_info.user){
             var my_groups = odoo.session_info.user.groups;
-            var agi = my_groups.indexOf('MeetingPoint / Admin');
-            }
+            agi = my_groups.indexOf('MeetingPoint / Admin');
+        }
 //        var my_groups = odoo.session_info.user.groups;
 //        var agi = my_groups.indexOf('MeetingPoint / Admin');
 
@@ -64,26 +64,17 @@ $(function(){
         {
             $('.results_container').show();
             $('.viewGraphically:first').attr('href',$('.graphical_view_url').text());
-//            for(var key in results)
-//            {
-//                if(no_results)
-//                    no_results = false;
-//                $('.results').append(`
-//                    <div class="entry">
-//                        <span class="choice_label">
-//                            <span>Choice</span>: <span class="user-choice">`+key+`</span>
-//                        </span>
-//                        <span class="choice_count">
-//                            <span>Voters</span>: <span class="count">`+results[key]+`</span>
-//                        </span>
-//                    </div>
-//                `);
-//
-//                $('.viewGraphically:first').attr('href',$('.graphical_view_url').text());
-//
-//            }
-//            if(no_results)
-//                $('.results').html(no_results);
+        }
+
+
+        if($('.app-com').length)
+        {
+            $('.app-com:first:visible')
+            {
+                load_angular(function(){
+                    window["loadComponent"]("comments","app-comments");
+                });
+            }
         }
     }
 
@@ -107,12 +98,11 @@ $(function(){
          setTimeout(function(){
             if($('#voter').length == 1)
             {
-                console.log('12')
                 var voting_id = $('.voting_id');
                 options.data.voting_id = parseInt( $('.voting_id')[0].value);
                 dn_rpc_ajax(options);
-    }
-}, 100);
+            }
+        }, 100);
     }
     get_results();
 

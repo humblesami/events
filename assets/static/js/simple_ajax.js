@@ -45,17 +45,17 @@ function dn_rpc_object(options) {
             site_functions.showLoader("ajax" + api_url);
         if (options.type == 'post')
             url_with_params = options;
+        if (site_config.show_logs.includes('ajax_before'))
+        {
+            console.log(url_with_params);
+        }
     };
 
     options.success = function(response) {
         var result = false;
         if (!response) {
             console.log("Undefined response", url_with_params);            
-        } else {
-            if (site_config.show_logs.includes('ajax_before'))
-            {
-                console.log(url_with_params);
-            }
+        } else {            
             if (options.onSuccess) {
                 if (response.error) {                    
                     if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        

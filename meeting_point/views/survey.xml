@@ -6,7 +6,7 @@
             <field name="model">survey.survey</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-               <kanban default_order="date">
+                <kanban default_order="date">
                     <field name="stage_id"/>
                     <field name="designed"/>
                     <field name="title"/>
@@ -19,84 +19,20 @@
                     <field name="my_status"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="survey_kanban_reocord oe_kanban_card oe_kanban_global_click oe_kanban_card oe_kanban_action" groups="meeting_point.group_meeting_admin">
-                                <div class="kanban_del">
-                                    <a type="delete" groups="meeting_point.group_meeting_admin">Delete</a>
-                                </div>
-                                <div class="oe_kanban_content" style="text-align: initial;">
-
-
-                                    <h3 class="oe_center">
-                                        <field name="title"/>
-                                    </h3>
-
+                            <div class="survey_kantainer" style="padding:0">
+                                <a type="object" style="color:#4c4c4c;display:flex;padding:10px" name="open_same_window" class="oe_module_desc">
+                                    <h3><field name="title"/></h3>
                                     <t t-if="record.meeting_id.raw_value">
-                                        <span>Meeting :</span><field name="meeting_id"/>
+                                        <h4>Meeting: <field name="meeting_id"/></h4>
                                     </t>
-                                    <t t-if="!record.meeting_id.raw_value">
-                                        <field name="meeting_id" invisible="1"/>
+                                    <t t-if="record.my_status.raw_value=='pending' ">
+                                        <button type="object" class="btn btn-primary" name="action_start_survey">Start</button>
                                     </t>
-                                    <div class="survey_kanban">
-                                        <div>
-                                        <t t-if="record.my_status.raw_value=='done' ">
-                                            <h3 class="badge" style="float:right">Completed<i class="fa fa-check fa-lg" style="color:green"/></h3>
-                                        </t>
-                                        </div>
-                                            <t t-if="! record.designed.raw_value">
-                                                <button class="survey-button btn btn-primary  ml4" style="width: 100%" groups="meeting_point.group_meeting_admin">Test</button>
-                                            </t>
-                                            <t t-if="record.designed.raw_value">
-                                                <t t-if="record.my_status.raw_value=='pending' ">
-                                                    <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="width: 100%" name="action_start_survey"  attrs="{'invisible':[('my_status', '=','done')]}">Start</button>
-                                                </t>
-                                            </t>
-
-
-                                            <!--<button type="object" style="width: 100%" class="survey-button btn btn-primary ml4" name="action_send_survey" groups="meeting_point.group_meeting_admin">Share</button>-->
-
-
-                                            <button class="survey-button btn btn-primary ml4" style="width: 100%" name="action_result_survey" type="object" groups="meeting_point.group_meeting_admin">View Results</button>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div t-attf-class="survey_kanban_reocord oe_kanban_card  oe_kanban_card oe_kanban_action" groups="!meeting_point.group_meeting_admin">
-                                <div class="oe_kanban_content" style="text-align: initial;">
-                                    <t t-if="record.my_status.raw_value=='done' ">
-                                        <h3 class="badge" style="float:right">Completed<i class="fa fa-check fa-lg" style="color:green"/></h3>
-                                    </t>
-                                    <h1 class="oe_center">
-                                        <field name="title"/>
-                                    </h1>
-                                    <t t-if="record.meeting_id.raw_value">
-                                        <span>Meeting: </span><field name="meeting_id"/>
-                                    </t>
-                                    <t t-if="!record.meeting_id.raw_value">
-                                        <field name="meeting_id" invisible="1"/>
-                                    </t>
-                                    <div>
-                                        <div class="survey_kanban">
-
-                                                <a name="action_test_survey" type="object" groups="meeting_point.group_meeting_admin">Design
-                                                </a>
-                                               <t t-if="record.my_status.raw_value=='done' ">
-                                                 <button class="survey-button btn btn-primary ml4" style="width: 100%" name="action_result_survey" type="object">View Results</button>
-                                                 </t>
-                                                <t t-if="record.designed.raw_value">
-                                                    <t t-if="record.my_status.raw_value=='pending' ">
-                                                        <button type="object" class="btn btn-primary ml4 btn-md acceptancebtn oe_center" style="    width: 100%" name="action_start_survey" groups="!meeting_point.group_meeting_admin" attrs="{'invisible':[('my_status', '=','done')]}">Start
-                                                        </button>
-                                                    </t>
-                                                </t>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                </a>
+                          </div>
                         </t>
                     </templates>
                 </kanban>
-
             </field>
         </record>
 
@@ -115,6 +51,7 @@
         <record model="ir.ui.view" id="survey_form_modified">
             <field name="name">Form view for survey modified</field>
             <field name="model">survey.survey</field>
+            <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Survey">
                     <field name="id" invisible="1"/>
@@ -175,11 +112,6 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
                 </form>
             </field>
         </record>

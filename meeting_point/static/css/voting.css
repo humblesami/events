@@ -3,12 +3,15 @@
     padding-right: 10px;
     cursor: pointer;
 }
-
+.voting_choice_container
+{
+    margin-left:-5px;
+}
 .results_container
 {
     display : none;
     padding-top: 10px;
-    padding-left: 5px;
+    padding-bottom: 25px;
 }
 
 .viewGraphically{

@@ -2,6 +2,7 @@ from odoo import models, fields, api
 from odoo.addons.dn_base import ws_methods
 from odoo.exceptions import ValidationError
 from odoo.addons.http_routing.models.ir_http import slug
+
 class VotingType(models.Model):
     _name = 'meeting_point.votingtype'
     name = fields.Char(string='Voting Type')
@@ -45,6 +46,7 @@ class Voting(models.Model):
                                    domain=lambda self: self.filter_attendees())
     topic_id_alternate = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
     enable_discussion = fields.Boolean(string = 'Enable Discussion')
+    signature_required = fields.Boolean()
 
     def get_name_audience(self):
         ids = []
@@ -58,6 +60,18 @@ class Voting(models.Model):
                 ids.append(partner.user_id.id)
         res = {'name':  self.voting_type_id.name+'-'+self.name, 'audience': ids}
         return res
+
+    @api.multi
+    def open_same_window(self):
+        return {
+            'type': 'ir.actions.act_window',
+            # 'name': 'Assign Signatures',
+            # 'view_id': view_id,
+            'view_mode': 'form',
+            'res_model': self._name,
+            'res_id': self.id,
+            'target': 'current',
+        }
 
     @api.onchange('partner_ids')
     def _change_field_value(self):

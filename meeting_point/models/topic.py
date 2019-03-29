@@ -30,6 +30,19 @@ class Topic(models.Model):
     details = fields.Char()
     attachments = fields.Html(compute='has_attachments', string="Attachment(s)")
     voting_topic_ids = fields.One2many('meeting_point.voting', 'topic_id_alternate', string="Approval/Voting")
+
+
+    def open_same_window(self):
+        return {
+            'type': 'ir.actions.act_window',
+            # 'name': 'Assign Signatures',
+            # 'view_id': view_id,
+            'view_mode': 'form',
+            'res_model': self._name,
+            'res_id': self.id,
+            'target': 'current',
+        }
+
     @api.multi
     def has_attachments(self):
         for topic in self:

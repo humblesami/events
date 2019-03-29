@@ -85,15 +85,15 @@
             <field name="arch" type="xml">
                 <kanban default_order="start_datetime">
                     <field name="start_datetime"/>
+                    <field name="publish"/>
                     <field name="attendee_status"/>
-                    <field name="is_active_yet"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_module_vignette oe_kanban_global_click ">
-                                <div class="oe_module_desc">
+                            <div class="oe_module_vignette">
+                                <a type="object" style="color:#4c4c4c" name="go_to_meeting" class="oe_module_desc">
                                     <div class="meeting_info">
                                         <div class="date_tam" style="">
-                                            <div class="o_day" style="    font-size: 26px;">
+                                            <div class="o_day" style="font-size: 26px;">
                                                 <t t-esc="record.start_datetime.raw_value.getDate()"/>
                                             </div>
                                             <div>
@@ -105,56 +105,53 @@
                                             </div>
                                         </div>
                                         <div class="details">
-                                            <h2>
+                                            <h3>
                                                 <field name="name"/>
-                                            </h2>
-                                                 <div class="o_hidden pblic_evnt_id">
-                                            <field name="id" class="o_hidden" />
-                                            </div>
+                                            </h3>
+                                            <!--<field name="start_datetime"/>-->
                                             <p class="oe_module_name">
                                                 <p>
                                                     <field name="location" style="margin-right: 4px;" string="Location"/>
                                                 </p>
                                             </p>
-
                                             <div class="current_status">
                                                 <field name="attendee_status" invisible="1"/>
+                                                <field name="publish" invisible="1"/>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <t t-if="record.is_active_yet.value =='yes'">
+                                    <t t-if="record.publish.value">
                                         <div class="acceptancebuttons">
                                             <t t-if="record.attendee_status.value=='Accepted'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept"><i class="fa fa-check fa-lg" style="color:white"/>Accept
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept">
+                                                    <i class="fa fa-check fa-lg" style="color:white"/>Accept
+
                                                 </button>
                                             </t>
                                             <t t-if="record.attendee_status.value!='Accepted'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept
-                                                </button>
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept</button>
                                             </t>
-
                                             <t t-if="record.attendee_status.value=='Declined'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline">
+                                                    <i class="fa fa-check fa-lg" style="color:white"/>Decline
+
                                                 </button>
                                             </t>
                                             <t t-if="record.attendee_status.value!='Declined'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline
-                                                </button>
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline</button>
                                             </t>
-
                                             <t t-if="record.attendee_status.value=='Uncertain'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative">
+                                                    <i class="fa fa-check fa-lg" style="color:white"/>Tentative
                                                 </button>
                                             </t>
                                             <t t-if="record.attendee_status.value!='Uncertain'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
-                                                </button>
+                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative</button>
                                             </t>
                                         </div>
                                     </t>
-                                </div>
-                                <script src="/meeting_point/static/js/meeting_kanban.js" />
+                                </a>
+                                <script src="/meeting_point/static/js/meeting_kanban.js"/>
                             </div>
                         </t>
                     </templates>
@@ -422,7 +419,7 @@
                             <div class="mtopic_tree">
                                 <h3>Agenda Topics</h3>
                                 <sheet>
-                                   <field name="topic_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline">
+                                   <field name="topic_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline oe_edit_only">
                                       <tree>
                                       <field name= "sequence" widget="handle"/>
                                       <field name="name"/>
@@ -430,6 +427,9 @@
                                       <field name="duration" widget="float_time"/>
                                       <field name= "document_ids" class="attachment" string="Attachment(s)"/>
                                       </tree>
+                                    </field>
+                                    <field name="topic_ids" mode="kanban" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline oe_read_only">
+
                                     </field>
                                 </sheet>
                             </div>

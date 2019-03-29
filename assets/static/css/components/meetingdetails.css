@@ -306,3 +306,7 @@ h5, .h5 {
     font-size: 14px;
     padding-right: 4px;
 }
+
+.anchor-mb{
+    margin-bottom: 0.5rem;
+}

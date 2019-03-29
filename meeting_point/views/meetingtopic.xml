@@ -38,6 +38,26 @@
             </field>
         </record>
 
+        <record id="meeting_topic_kanban" model="ir.ui.view">
+            <field name="name">meeting.topic.kanban</field>
+            <field name="model">meeting_point.topic</field>
+            <field name="arch" type="xml">
+                <kanban default_order="name">
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="survey_kantainer" style="padding:0">
+                                <a type="object" style="color:#4c4c4c;display:flex;padding:10px" name="open_same_window" class="oe_module_desc">
+                                    <h3>Title: <field name="name"/></h3>
+                                    <h3>Duration: <field name="duration" type="string" widget="float_time"/></h3>
+                                </a>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_meetingtopic_tree" model="ir.ui.view">
             <field name="name">meeting_point.topic.tree.admin</field>
             <field name="model">meeting_point.topic</field>
