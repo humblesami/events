@@ -11,6 +11,7 @@
                         <field name="lead" />
                         <field name="duration" widget="float_time" required="1" class="topic_duration dn_time_picker" />
                         <field name="content" />
+                        <field name="sequence" />
                         <field name="document_ids" mode="kanban" class="o2m_kanban topic_docs kanban_document"
                                context="{'form_view_ref' : 'meeting_point.view_meeting_doc_form','kanban_view_ref': 'dn_documents.dn_docs_kanban_annotator'}"
                         />
@@ -48,7 +49,7 @@
                         <t t-name="kanban-box">
                             <div class="kantainer" style="padding:0">
                                 <a type="object" name="open_same_window" class="kanban_a oe_module_desc">
-                                    <h3>Title: <field name="name"/></h3>
+                                    <h2><field name="name"/></h2>
                                     <h3>Duration: <field name="duration" type="string" widget="float_time"/></h3>
                                 </a>
                             </div>

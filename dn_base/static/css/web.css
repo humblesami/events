@@ -420,5 +420,23 @@ body.o_app_switcher_background nav:first-child
 
 /********* Menu css end ********/
 .kanban_a{
-    display:flex;padding:10px
+    display: flex;
+    flex-direction: column;
+    padding: 20px 15px;
+    justify-content: center;
+    height: 100%;
 }
+.kanban_a h2{
+    font-size:16px;
+    margin:0 0 5px;
+    padding:0;
+ }
+.kanban_a h3{
+    font-size:13.5px;
+    margin:0 0 5px;
+    padding:0;
+ }
+
+ .oe_module_desc h2{
+    font-size:16px;
+ }

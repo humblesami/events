@@ -21,7 +21,7 @@
                         <t t-name="kanban-box">
                             <div class="kantainer" style="padding:0">
                                 <a type="object" name="open_same_window" class="kanban_a oe_module_desc">
-                                    <h3><field name="title"/></h3>
+                                    <h2><field name="title"/></h2>
                                     <t t-if="record.meeting_id.raw_value">
                                         <h4>Meeting: <field name="meeting_id"/></h4>
                                     </t>

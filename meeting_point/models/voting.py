@@ -194,8 +194,25 @@ class Voting(models.Model):
             records = self.env['meeting_point.votinganswer'].search([('voting_id', '=', self.id), ('user_id', 'in', to_exclude)])
             for rec in records:
                 rec.unlink()
+
+        self.emit_data_update(vals)
         return res
 
+
+
+    def emit_data_update(self, vals):
+        audience = []
+        for partner in self.respondent_id:
+            if partner.user_id:
+                audience.append(partner.user_id.id)
+        data = [{
+            'name': 'to_do_item_updated',
+            'audience': audience,
+            'data': {
+                'id': self.id
+            }
+        }]
+        ws_methods.emit_event(data)
 
     @api.multi
     def has_attachments(self):

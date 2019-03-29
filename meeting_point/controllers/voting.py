@@ -144,6 +144,8 @@ class website_voting(http.Controller):
             #     if not voting_object.public_visibility:
             #         return request.render('meeting_point.voting_graphically', {})
 
+            if self.check_partner(voting_object, uid):
+                return ws_methods.http_response('You are not Allowed to View this Page!')
             if not voting_object:
                 return ws_methods.http_response('No object found')
 
@@ -251,23 +253,23 @@ class website_voting(http.Controller):
                 return ws_methods.not_logged_in()
             if kw.get('data'):
                 kw = kw.get('data')
-
             req_env = http.request.env
             voting_id = int(kw['id'])
-
             filters = [('id', '=', voting_id)]
             voting_obj_orm = req_env['meeting_point.voting'].search(filters)
-
+            if self.check_partner(voting_obj_orm, uid):
+                data = {"message": 'You are not Authorized to Access this Page!'}
+                return ws_methods.http_response('', data)
             props = ['id', 'name', 'meeting_id', 'open_date', 'close_date',
                      'description', 'my_status', 'public_visibility', 'graphical_view_url', 'meeting_id',
-                     'topic_id_alternate', 'enable_discussion'
+                     'enable_discussion'
                      ]
             voting_object = ws_methods.object_to_json_object(voting_obj_orm, props)
             voting_object['voting_docs'] = ws_methods.objects_list_to_json_list(voting_obj_orm.document_ids, ['id', 'name'])
             voting_object['voting_type'] = ws_methods.objects_list_to_json_list(voting_obj_orm.voting_type_id, ['id', 'name'])
             voting_object['meeting'] = ws_methods.object_to_json_object(voting_obj_orm.meeting_id,
                                                                                 ['id', 'name'])
-            voting_object['topic'] = ws_methods.object_to_json_object(voting_obj_orm.topic_id_new,
+            voting_object['topic'] = ws_methods.object_to_json_object(voting_obj_orm.topic_id_alternate,
                                                                                 ['id', 'name'])
             voting_object['motion_first'] = {'id': voting_obj_orm.motion_first.partner_id.mp_user_id.id, 'name': voting_obj_orm.motion_first.name}
             voting_object['motion_second'] = {'id': voting_obj_orm.motion_second.partner_id.mp_user_id.id, 'name': voting_obj_orm.motion_second.name}
@@ -281,3 +283,16 @@ class website_voting(http.Controller):
             return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()
+
+    def check_partner(self, voting_obj_orm, uid):
+        not_allowed = True
+        if voting_obj_orm.partner_ids:
+            for partner in voting_obj_orm.partner_ids:
+                if partner.user_id.id == uid:
+                    not_allowed = False
+
+        if voting_obj_orm.respondent_id:
+            for respondent in voting_obj_orm.respondent_id:
+                if respondent.user_id.id == uid:
+                    not_allowed = False
+        return not_allowed

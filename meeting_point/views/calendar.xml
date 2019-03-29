@@ -419,17 +419,7 @@
                             <div class="mtopic_tree">
                                 <h3>Agenda Topics</h3>
                                 <sheet>
-                                   <field name="topic_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline oe_edit_only">
-                                      <tree>
-                                      <field name= "sequence" widget="handle"/>
-                                      <field name="name"/>
-                                      <field name= "lead"/>
-                                      <field name="duration" widget="float_time"/>
-                                      <field name= "document_ids" class="attachment" string="Attachment(s)"/>
-                                      </tree>
-                                    </field>
-                                    <field name="topic_ids" mode="kanban" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="oe_inline oe_read_only">
-
+                                    <field name="topic_ids" mode="kanban" class="oe_inline oe_read_only">
                                     </field>
                                 </sheet>
                             </div>
@@ -614,7 +604,7 @@
                      <field name="mail_sent"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_module_vignette oe_kanban_global_click " style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6);transition: 0.3s">
+                             <div class="oe_module_vignette oe_kanban_global_click " style="box-shadow: 1px 1px 3px 0 rgba(0,0,0,0.3);transition: 0.3s">
                                <div class="oe_module_icon" style="border:1px solid #cfcfcf; margin-right:5px;">
                                         <field name="photo" widget="image"/>
                                     </div>
