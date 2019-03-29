@@ -17,12 +17,12 @@ class website_voting(http.Controller):
             if kw.get('data'):
                 kw = kw.get('data')
 
-
+            vals = {}
             voting_id = int(kw['voting_id'])
+            if  kw.get('signature_required') and kw.get('signature_data'):
+                vals.update({'signature_data': kw['signature_data']})
             votingAnswer = request.env['meeting_point.votinganswer']
-            vals = {
-                'voting_option_id': kw['voting_option_id'],
-            }
+            vals.update({'voting_option_id': kw['voting_option_id']})
             res = 'error'
             current_voting_answer = votingAnswer.search([('voting_id', '=', voting_id), ('user_id', '=', uid)])
             if current_voting_answer:

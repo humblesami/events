@@ -47,7 +47,7 @@ class Voting(models.Model):
     topic_id_alternate = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
     enable_discussion = fields.Boolean(string = 'Enable Discussion')
     signature_required = fields.Boolean()
-
+    signature_data= fields.Binary(string="Signature")
 
 
     def get_name_audience(self):
