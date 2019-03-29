@@ -159,6 +159,24 @@
                 </div>
             </t>
         </template>
+
+
+        <template id="no_access_to_view" name="Voting Template">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="oe_structure" />
+                    <div class="container">
+                        <div class='jumbotron mt32'>
+                            <h3>You are not Allowed to View This Page!</h3>
+                        </div>
+                    </div>
+                    <div class="oe_structure" />
+                </div>
+            </t>
+        </template>
+
+
+
         <template id="voting_back_container" name="voting back container custom">
             <div class="navbar navbar-default navbar-static-top">
                 <div class="container">
