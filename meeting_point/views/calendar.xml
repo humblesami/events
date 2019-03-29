@@ -416,13 +416,44 @@
 
                         </notebook>
 
-                            <div class="mtopic_tree">
+                             <div class="mtopic_tree oe_read_only">
+
                                 <h3>Agenda Topics</h3>
                                 <sheet>
-                                    <field name="topic_ids" mode="kanban" class="oe_inline oe_read_only">
+                                    <field name="topic_ids"  class="oe_inline oe_read_only">
+                                      <kanban default_order="name">
+                                          <field name="name"/>
+                                          <templates>
+                                              <t t-name="kanban-box">
+                                                  <div class="kantainer" style="padding:0">
+                                                      <a type="object" name="open_same_window" class="kanban_a oe_module_desc">
+                                                          <h2><field name="name"/></h2>
+                                                          <h3>Duration: <field name="duration" type="string" widget="float_time"/></h3>
+                                                      </a>
+                                                  </div>
+                                              </t>
+                                          </templates>
+                                      </kanban>
+
                                     </field>
                                 </sheet>
                             </div>
+                        <div class = "mtopic_tree oe_edit_only">
+                                <h3>Agenda Topics</h3>
+                             <sheet>
+                                    <field name="topic_ids_new" >
+                                    <tree class="meetingtopic_tree">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" string="Title"/>
+                                    <field name="lead"/>
+                                    <field name="duration" class="topic_duration_span " type="string" widget="float_time"/>
+                                    <field name="attachments" string="Attachment(s)"/>
+                                    <field name="details"/>
+                                </tree>
+
+                                      </field>
+                                </sheet>
+                        </div>
                         </div>
                         <div class="o2m_kanban">
                             <h4>Meeting Documents</h4>

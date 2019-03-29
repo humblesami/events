@@ -227,6 +227,7 @@ class Meeting(models.Model):
     location = fields.Char(string="Location",compute = "_compute_address")
     city = fields.Char(string="City")
     topic_ids = fields.One2many('meeting_point.topic', 'meeting_id')
+    topic_ids_new = fields.One2many('meeting_point.topic', 'meeting_id')
     document_ids = fields.One2many('meeting_point.document','meeting_id',string="Document(s) To Sign")
     doc_ids = fields.One2many('meeting_point.doc', 'meeting_id', string="Meeting Document(s)")
     zip = fields.Char(string="Zip")
