@@ -48,6 +48,8 @@ class Voting(models.Model):
     enable_discussion = fields.Boolean(string = 'Enable Discussion')
     signature_required = fields.Boolean()
 
+
+
     def get_name_audience(self):
         ids = []
         my_audience = self.partner_ids
@@ -111,6 +113,29 @@ class Voting(models.Model):
         if not self.motion_second.partner_id.id in self.respondent_id.ids:
             self.motion_second = False
         self.topic_id_new = False
+
+
+    @api.onchange('motion_first')
+    def _change_motion_value(self):
+        value  = self.respondent_id
+        if value:
+            user_id = []
+            for partner in self.respondent_id:
+                if partner.id != self.motion_first.partner_id.id:
+                    user_id.append(partner.id)
+            data =list(set(user_id))
+            return {'domain': {'motion_second': [('partner_id', 'in', data)]}}
+
+    @api.onchange('motion_second')
+    def onchange_motion_second(self):
+        value  = self.respondent_id
+        if value:
+            user_id = []
+            for partner in self.respondent_id:
+                if partner.id != self.motion_second.partner_id.id:
+                    user_id.append(partner.id)
+            data =list(set(user_id))
+            return {'domain': {'motion_first': [('partner_id', 'in', data)]}}
     def _compute_graphical_url(self):
         """ Computes a public URL for the survey """
         base_url = ws_methods.get_main_url()
