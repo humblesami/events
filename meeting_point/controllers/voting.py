@@ -147,11 +147,11 @@ class website_voting(http.Controller):
             #     if not voting_object.public_visibility:
             #         return request.render('meeting_point.voting_graphically', {})
 
-            if voting_object.public_visibility:
-                return ws_methods.http_response('You are not Allowed to View this Page!')
+            if not voting_object.public_visibility:
+                return request.render('meeting_point.no_access_to_view', {})
 
             if self.check_partner(voting_object, uid):
-                return ws_methods.http_response('You are not Allowed to View this Page!')
+                return request.render('meeting_point.no_access_to_view', {})
             if not voting_object:
                 return ws_methods.http_response('No object found')
 
