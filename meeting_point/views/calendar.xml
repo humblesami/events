@@ -451,70 +451,7 @@
                         <div class="oe_read_only o2m_kanban">
                             <h4>Surveys</h4>
                             <field name="survey_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" string=" " mode="kanban">
-                                <!--<form string="Survey">-->
-                                    <!--<style>-->
-                                        <!--.o_form_statusbar-->
-                                        <!--{-->
-                                            <!--display:none !important;-->
-                                        <!--}-->
-                                    <!--</style>-->
-                                    <!--<field name="id" class="survey_id o_hidden"/>-->
-                                    <!--<field name="tot_start_survey" invisible="1"/>-->
-                                    <!--<field name="is_closed" invisible="1"/>-->
 
-                                    <!--<header groups="meeting_point.group_meeting_admin">-->
-                                        <!--<button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight" invisible="1"/>-->
-                                        <!--<button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>-->
-                                        <!--&lt;!&ndash;<button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight" attrs="{'invisible': [('id', '=', False)]}"/>&ndash;&gt;-->
-                                        <!--<button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>-->
-                                        <!--<button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>-->
-                                        <!--<field name="stage_id" widget="statusbar" clickable="True"/>-->
-                                    <!--</header>-->
-
-                                    <!--<sheet>-->
-                                        <!--<div class="oe_button_box" name="button_box">-->
-                                            <!--<button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">-->
-                                                <!--<field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>-->
-                                            <!--</button>-->
-                                            <!--<button name="action_survey_user_input" type="object" class="oe_stat_button" icon="fa-pencil-square-o">-->
-                                                <!--<field string="Answers" name="tot_comp_survey" widget="statinfo"/>-->
-                                            <!--</button>-->
-                                        <!--</div>-->
-                                        <!--<div class="oe_title" style="width: 100%;">-->
-                                            <!--<label for="title" class="oe_edit_only"/>-->
-                                            <!--<h1>-->
-                                                <!--<field name="title" placeholder="Title"/>-->
-                                            <!--</h1>-->
-                                        <!--</div>-->
-                                        <!--<group>-->
-                                            <!--<field name="survey_type" class="survey_type"/>-->
-                                        <!--</group>-->
-
-                                        <!--<group>-->
-                                            <!--<field name="meeting_id" invisible="1" domain="[('publish','!=',False)]" widget="selection" options="{'no_create_edit': True}"/>-->
-                                        <!--</group>-->
-                                        <!--&lt;!&ndash;<notebook class="survey_questions">&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<page string="Edit Questions">&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<field name="question_ids" mode="tree" nolabel="1">&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<tree>&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;<field name="sequence" widget="handle"/>&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;<field name="question"/>&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;<field name="type"/>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;</tree>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;</field>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</page>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<page string="Options" invisible="1">&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<group class="o_label_nowrap">&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<field name="users_can_go_back" string="User can come back in the previous page"/>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<field name="auth_required"/>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<field name="quizz_mode" groups="base.group_no_one"/>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;</group>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</page>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</notebook>&ndash;&gt;-->
-                                    <!--</sheet>-->
-                                    <!--&lt;!&ndash;<script src="/meeting_point/static/js/survey_common.js"/>&ndash;&gt;-->
-                                <!--</form>-->
                             </field>
                         </div>
                         <div class="oe_read_only o2m_kanban">
