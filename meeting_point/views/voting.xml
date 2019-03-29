@@ -30,6 +30,7 @@
 
                             <field name="public_visibility"/>
                             <field name="enable_discussion"/>
+                            <field name="signature_required"/>
                             <field class="kanban_document dn_attatchment_btn" name="document_ids" context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban','form_view_ref': 'dn_documents.doc_edit_form'}" mode="kanban"/>
                         </group>
                         <div class="oe_read_only voting_choice_container" attrs="{'invisible' : [('voting_type_id', '=', False)]}">
