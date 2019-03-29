@@ -59,7 +59,7 @@
                     <field name = 'my_status'/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="survey_kantainer" style="padding:0">
+                            <div class="kantainer" style="padding:0">
                                 <a type="object" style="color:#4c4c4c;display:flex;padding:10px" name="open_same_window" class="oe_module_desc">
                                     <h3><field name="name"/></h3>
                                     <t t-if="record.meeting_id.raw_value">
