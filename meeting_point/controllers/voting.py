@@ -1,14 +1,34 @@
-import base64
-import os
-
 import json
 from odoo import http
 from odoo.http import request
 from odoo.addons.dn_base import ws_methods
-from PIL import Image, ImageFont, ImageDraw
-from dateutil.relativedelta import relativedelta
 
 class website_voting(http.Controller):
+
+    @http.route(['/voting/get_signature'], type='http', csrf=False, auth='public', cors='*')
+    def get_signature(self, **kw):
+        try:
+            auth = kw.get('auth')
+            if not auth:
+                auth = kw
+            uid = ws_methods.check_auth(auth)
+            if not uid:
+                return ws_methods.not_logged_in()
+            if kw.get('data'):
+                kw = kw.get('data')
+            voting_id = int(kw['voting_id'])
+            signature = ''
+            votingAnswer = request.env['meeting_point.votinganswer']
+            res = 'error'
+            votingAnswer = votingAnswer.search([('voting_id', '=', voting_id), ('user_id', '=', uid)])
+
+            if votingAnswer.signature_data:
+                signature = votingAnswer.signature_data
+                signature = signature.decode('utf-8')
+            signature_data = {'signature_data' : signature}
+            return ws_methods.http_response('', signature_data)
+        except:
+            return ws_methods.handle()
 
     @http.route(['/voting/submit'], type='http', csrf=False, auth='public', cors='*')
     def voting_answer(self, **kw):
@@ -24,21 +44,23 @@ class website_voting(http.Controller):
 
             vals = {}
             voting_id = int(kw['voting_id'])
-            if  kw.get('signature_required') and kw.get('signature_data'):
-                vals.update({'signature_data': kw['signature_data']})
+            if  kw.get('signature_data'):
+                voting_object = request.env['meeting_point.voting'].search([('id', '=', voting_id)])
+                if voting_object.signature_required:
+                    vals['signature_data'] = kw['signature_data']
             votingAnswer = request.env['meeting_point.votinganswer']
-            vals.update({'voting_option_id': kw['voting_option_id']})
+            vals['voting_option_id'] = kw['voting_option_id']
             res = 'error'
             current_voting_answer = votingAnswer.search([('voting_id', '=', voting_id), ('user_id', '=', uid)])
             if current_voting_answer:
                 current_voting_answer.write(vals)
-                res = 'Corrected'
+                res = 'Update'
             else:
                 vals['voting_id'] = voting_id,
                 vals['user_id'] = uid
                 votingAnswer.create(vals)
-                res = 'Created'
-            return ws_methods.http_response('', res)
+                res = 'Create'
+            return ws_methods.http_response('', {'voting_option_id' : kw['voting_option_id'], 'operation': res})
         except:
             return ws_methods.handle()
 
@@ -72,13 +94,17 @@ class website_voting(http.Controller):
                 filters[len(filters) - 1] = ('voting_option_id', '=', option.id)
                 voting_answers[option.name] = request.env['meeting_point.votinganswer'].search_count(filters)
 
-            res = {'vote_options': voting_options_array, 'voting_answers': voting_answers, 'my_status': voting_object.my_status}
+            res = {
+                'vote_options': voting_options_array,
+                'voting_answers': voting_answers,
+                'my_status': voting_object.my_status
+            }
             if voting_object.public_visibility:
                 res['public'] = 1
             if voting_object.signature_required:
                 res['signature_required'] = 1
             if voting_object.enable_discussion:
-                res['signature_required'] = 1
+                res['discussion_enabled'] = 1
             return ws_methods.http_response('', res)
         except:
             return ws_methods.handle()
@@ -307,67 +333,3 @@ class website_voting(http.Controller):
                 if respondent.user_id.id == uid:
                     not_allowed = False
         return not_allowed
-
-    @http.route('/voting/get_signature/<int:voting_id>', type="http", csrf=False, auth='public', cors='*')
-    def profile_signature_http(self, voting_id, **kw):
-        return self.voting_signature_get(voting_id, kw)
-
-    def voting_signature_get(self, voting_id, values):
-        try:
-            uid = ws_methods.check_auth(values)
-            if not uid:
-                return ws_methods.not_logged_in()
-            req_env = http.request.env
-            voting_object = req_env['meeting_point.voting'].search([('id','=',voting_id)])
-
-
-            sign =  voting_object.signature_data
-            if sign:
-                sign = sign.decode('utf-8')
-            sign = {'signature' : sign }
-            return ws_methods.http_response('', sign)
-        except:
-            ws_methods.handle()
-
-    @http.route('/voting/save_signature/<int:voting_id>', type="http", csrf=False, auth='public', cors='*')
-    def voting_signature_save_http(self, voting_id, **kw):
-        return self.voting_signature_save(voting_id, kw)
-
-
-
-    def voting_signature_save(self, voting_id, values):
-        try:
-            uid = ws_methods.check_auth(values)
-            if not uid:
-                return ws_methods.not_logged_in()
-            if 'data' in values:
-                values = values['data']
-            req_env = http.request.env
-            if values['type'] == "auto":
-                curr_dir = os.path.dirname(__file__)
-                pth = curr_dir.replace('controllers', 'doc_signs')
-                font_dir = curr_dir.replace('controllers', 'static')
-                user=req_env['res.users'].search([('user_id', '=', uid)])
-
-                font = ImageFont.truetype(font_dir + "/FREESCPT.TTF", 200)
-                sz = font.getsize(user.name)
-                sz = (sz[0] + 50, sz[1])
-                img = Image.new('RGB', sz, (255, 255, 255))
-                d = ImageDraw.Draw(img)
-                d.text((40, 0), user.name, (0, 0, 0), font=font)
-                uid = http.request.env.user.id
-                img_path = pth + "/" + str(uid) + "piic.png"
-                img.save(img_path)
-
-                res = open(img_path, 'rb')
-                read = res.read()
-                binary_signature = base64.encodebytes(read)
-                binary_signature = binary_signature.decode('utf-8')
-                return ws_methods.http_response('', {"signature": binary_signature})
-
-
-            voting_object = req_env['meeting_point.voting'].search([('id', '=', voting_id)])
-            voting_object.signature_data = values['binary_signature']
-            return ws_methods.http_response('', {"id":voting_object.id})
-        except:
-            ws_methods.handle()

@@ -47,7 +47,6 @@ class Voting(models.Model):
     topic_id_alternate = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
     enable_discussion = fields.Boolean(string = 'Enable Discussion')
     signature_required = fields.Boolean()
-    signature_data= fields.Binary(string="Signature")
 
 
     def get_name_audience(self):
@@ -314,6 +313,8 @@ class VotingAnswer(models.Model):
     user_id = fields.Many2one('res.users',required=True, ondelete="cascade")
     voting_id = fields.Many2one('meeting_point.voting',required=True, ondelete="cascade")
     voting_option_id = fields.Many2one('meeting_point.votingoption', required=True, ondelete="cascade")
+    signature_data = fields.Binary(string="Signature")
+
     def create(self, vals):
         if self.voting_id.my_status == 'pending':
             raise ValidationError('Can not answer because not invited')

@@ -17,3 +17,20 @@
 .viewGraphically{
     margin-top: 10px;
 }
+
+.modal-content
+{
+    width: fit-content;
+}
+#signature_editor
+{
+    border: 1px solid silver;
+}
+btn.DocsBtn
+{
+    margin-right: 10px;
+}
+.modal-content
+{
+    margin-left:12%;
+}

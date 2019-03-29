@@ -15,7 +15,25 @@ $(function(){
     }
     var discussion_enabled = false;
     var signature_required = false;
+    var voting_id = false;
+    var on_load = true;
 
+    var signature_lib = {
+        save_input : {
+            voting_id: $('.voting_id').html(),            
+        },
+        fetch_input :{
+            voting_id : $('.voting_id').html()
+        },
+        fetch_url : 'voting/get_signature',
+        save_url : 'voting/submit',
+        signature_field: 'signature_data',
+        last_option: 'nothing',
+        on_sign_saved: function(data){            
+            $('.vote_options:first').find('button').children().remove();            
+            $('.vote_options:first').find('button[data-id="'+data.voting_option_id+'"]').prepend('<i class="fa fa-check fa-lg" style="color:white"></i>')
+        }
+    }        
 
     function show_results(data)
     {
@@ -40,7 +58,21 @@ $(function(){
                 if(my_status == option.name)
                     vote_options_dom.find('button').prepend('<i class="fa fa-check fa-lg" style="color:white"/>');
             }
-            vote_options_container.find('button').click(on_user_answer);
+            if(on_load)
+            {
+                onload = false;
+                if(!data.signature_required)
+                    vote_options_container.find('button').click(on_user_answer);
+                else           
+                {                  
+                    vote_options_container.find('button').click(function(){
+                        voting_option_id = $(this).attr('data-id');                        
+                        signature_lib.save_input['voting_option_id'] = voting_option_id;
+                        if($(this).children().length == 0)
+                            include_signs();
+                    });                    
+                }                             
+            }            
         }
 
         if(data.message)
@@ -59,8 +91,6 @@ $(function(){
             var my_groups = odoo.session_info.user.groups;
             agi = my_groups.indexOf('MeetingPoint / Admin');
         }
-//        var my_groups = odoo.session_info.user.groups;
-//        var agi = my_groups.indexOf('MeetingPoint / Admin');
 
         if(agi > -1 || data.public)
         {
@@ -91,7 +121,7 @@ $(function(){
         setTimeout(function(){
             if($('.voting_form:first').hasClass('o_form_readonly'))
             {
-                var voting_id = $('.voting_id');
+                voting_id = $('.voting_id');
                 options.data.voting_id = parseInt(voting_id.html());
                 dn_rpc_ajax(options);
             }
@@ -100,7 +130,7 @@ $(function(){
          setTimeout(function(){
             if($('#voter').length == 1)
             {
-                var voting_id = $('.voting_id');
+                voting_id = $('.voting_id');
                 options.data.voting_id = parseInt( $('.voting_id')[0].value);
                 dn_rpc_ajax(options);
             }
@@ -108,13 +138,184 @@ $(function(){
     }
     get_results();
 
+    
+    
+    function include_signs(current_option)
+    {
+        doc_preview.image('1');
+        var body = $('.youtubeVideoModal .modal-body:last');
+        var content = $('.youtubeVideoModal .modal-content:last');
+        var footer = $('<div class="modal-footer"></div>');
+        var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
+
+        $('.youtubeVideoModal .modal-footer').html("");
+        $('.youtubeVideoModal .modal-dialog').removeClass('modal-lg');
+        $('.youtubeVideoModal .modal-footer').hide();
+        var signature_editor = $('<div id="signature_editor"></div>');
+
+
+        var clear_btn = $('<span class="btn btn-danger btn-sm DocsBtn">Clear</span>');
+        var draw_sign_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Draw</span>');
+        var upload_btn = $('<input accept=".jpg,.png,.jpeg" style="display:none" type="file"></input>');
+
+        var auto_sign = $('<span class="btn btn-primary btn-sm DocsBtn">Auto</span>');
+        var top_div = $('<div class="DocsButtonWrapper"></div>');
+        var upload_clicker = '<button class="btn btn-sm btn-primary DocsBtn o_select_file_button"';
+        upload_clicker += ' title="Select" type="button">Upload</button>';
+        upload_clicker = $(upload_clicker);
+
+        upload_clicker.click(function() {
+            upload_btn.click();
+        });
+
+        top_div.append(draw_sign_btn).append(upload_clicker).append(auto_sign).append(upload_btn);
+        body.append(signature_editor);
+        signature_editor.before(top_div);
+        signature_editor.after(clear_btn);
+        clear_btn.after(save_btn);
+
+        //$('.youtubeVideoModal .modal-content').css({'width':'370px','margin-left': '19%'});        
+        signature_editor.signature();        
+
+        var myCanvas = signature_editor.find('canvas')[0];
+        var canvas_context = myCanvas.getContext('2d');
+        var img = new Image();
+        img.onload = function() {
+            canvas_context.drawImage(img, 0, 0, signature_editor.width(), signature_editor.height());
+        };
+        
+        var dataURL = '';
+
+        function load_signature(data) {  
+            if(data.error)
+            {
+                console.log(data.error);
+                return;
+            }
+            else
+            {
+                data = data.data;
+            }
+            signature_editor.signature();
+            signature_editor.signature('clear');
+            var signature_value = data[signature_lib.signature_field];
+            if (signature_value && signature_value.length > 0 && signature_value != "") {
+                dataURL = 'data:image/png;base64,' + signature_value;
+                //                    hidden_image.attr('src',dataURL);
+                img.src = dataURL;
+            }
+            if(signature_lib.on_sign_fetched)
+            {
+                signature_lib.on_sign_fetched();
+            }
+        }
+
+        function get_signature(){
+            var input_data = signature_lib.fetch_input;
+            if(!input_data)
+            {                
+                return;
+            }
+            if(input_data == 'silent')
+            {
+                return;
+            }
+            $.ajax({
+                url: signature_lib.fetch_url,
+                data: input_data,
+                dataType:'JSON',
+                success: load_signature,
+                error:function(e){
+                    console.log(e);
+                }
+            });
+        }
+        get_signature();
+
+        function save_signature(el_btn, auto){
+            var type = "draw";
+            dataURL = myCanvas.toDataURL();
+            var empty_url = "data:image/png;base64,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"
+            if (dataURL == empty_url) {
+                alert('Draw signature');
+                return;
+            }
+            dataURL = dataURL.replace('data:image/png;base64,', '');
+            var input_data = signature_lib.save_input;
+            input_data[signature_lib.signature_field] = dataURL;
+            if(auto)
+            {
+                input_data['type'] = 'auto';
+            }
+            $.ajax({
+                type:'POST',
+                url: signature_lib.save_url,
+                data:input_data,
+                dataType:'JSON',
+                success: on_anwser_saved,
+                error:function(e){
+                    console.log(e);
+                }
+            });
+        }
+        function on_anwser_saved(data){            
+            if(data.error)
+            {
+                console.log(data.error);
+                return;
+            }
+            else
+            {
+                data = data.data;
+            }
+            $('.youtubeVideoModal').modal('hide');
+            if(signature_lib.on_sign_saved)
+            {                
+                signature_lib.on_sign_saved(data);
+            }
+        }
+
+        save_btn.click(save_signature);
+
+        auto_sign.click(function(e) {
+            save_signature(this, 'auto');
+        });
+
+        upload_btn.change(function() {
+            if (!this.files)
+                return;
+            if (this.files.length < 1)
+                return;
+            var file_tag = this;
+            var reader = new FileReader();
+            auto_clicked = false;
+
+            var upload_file = this.files[0];
+            reader.readAsDataURL(upload_file);
+            reader.onload = function() {
+                var dataURL = reader.result;
+                canvas_context.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                img.src = dataURL;
+            }
+        });                
+
+        clear_btn.click(function() {
+            signature_editor.signature('clear');
+        });
+
+        draw_sign_btn.click(function() {
+            signature_editor.signature('clear');
+        });
+
+        var b =1;
+    }
+
     function on_user_answer(){
         if(signature_required)
         {
-
+            return;
         }
-        var input_choice = $(this);
-        let voting_id =0
+        var input_choice = $(this);        
         if  ($('.voting_id')[0].value)
         {
             voting_id = $('.voting_id')[0].value
@@ -122,10 +323,8 @@ $(function(){
         else{
           voting_id =  $('.voting_id').html();
         }
-//        let voting_id = $('.voting_id').html();
         let user_choice = input_choice.attr('data-id');
         let voting_data = {'voting_option_id' : user_choice, 'voting_id' : voting_id};
-//        console.log(voting_data);
         var options = {
             url : '/voting/submit',
             data : {'voting_option_id' : user_choice, 'voting_id' : voting_id},
@@ -138,6 +337,6 @@ $(function(){
         }
         dn_rpc_ajax(options);
     }
-})
+});
 
 //# sourceURL=localhost:8000/meeting_point/static/js/voting.js
