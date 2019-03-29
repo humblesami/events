@@ -29,6 +29,26 @@
             </xpath>
         </template>
 
+        <template id="website.404">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure oe_empty">
+                        <div class="container">
+                            <h1 class="mt32">404: Page not found!</h1>
+                            <p>
+                                The page you were looking for could not be found; it is possible you have
+                                typed the address incorrectly, but it has most probably been removed due
+                                to the recent website reorganisation.
+                            </p>
+                        </div>
+                    </div>
+                    <t t-if="request.debug">
+                        <t t-call="website.http_error_debug"/>
+                    </t>
+                </div>
+            </t>
+        </template>
+
         <template id="web.layout" name="Web layout">
             &lt;!DOCTYPE html&gt;
             <html t-att="html_data or {}">
