@@ -48,7 +48,7 @@ class Signature(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('email')!='':
+        if vals.get('email') not in ['',None]:
             vals['user_id'] = False
             email=vals.get('email')
             email = email.strip()

@@ -6,6 +6,9 @@ $(function(){
 	pdf_binary,
 	users,
 	doc_data,
+	send_to_all,
+	meeting_id,
+	meetings,
 	req_url,
 	doc_id=$('.e_sign_doc_id').first().html().trim(),
 	input_data = {document_id:doc_id },
@@ -27,17 +30,38 @@ $(function(){
                 {
                 doc_data=data.doc_data
                 users=data.users;
+                meetings=data.meetings;
+                meeting_id=data.meeting_id;
+                send_to_all=data.send_to_all;
                 pdf_binary=data.pdf_binary;
                 isAdmin=data.isAdmin;
                 //setTimeout(function(){ showPDF(pdf_binary); }, 3000);
                 renderPDF(pdf_binary);
+
+                if(meetings){
+                    $.each(meetings, function() {
+                     $('#dropdown_meeting').append($("<option />").val(this.id).text(this.name));
+                    });
+                }
+                if(meeting_id){
+                    $('#dropdown_meeting').val(meeting_id);
+                    $('.check_box_send_all').show();
+
+                }
+                if(send_to_all){
+                    $('#check_box_send_all').prop('checked', true);
+                }
+                if(doc_data.length == 0){
+                    console.log(1111111111111)
+                    $('.PdfButtonWrapper').show();
+                }
 
                 //loadSignatures(data);
                 });
 
             }
             loadData();
-
+console.log(1111111111111)
      function toggleNextButton(){
         var d = $.grep(doc_data, function(v)
                     {
@@ -300,9 +324,9 @@ function loadSignatures(data){
             //revert: "invalid",
             helper: "clone",
             scroll: true,
-            start: function () {
+            start: function (event, ui) {
                 //$(this).data("startingScrollTop", $(this).parent().scrollTop());
-                //$("#signature-position").css({ background: 'green', color: 'white', cursor: 'move' });
+                $(ui.helper).css({ height: '50px',padding:0,background: 'rgba(255, 235, 235, 0.9)',color:'black' });
             },
             drag: function (event, ui) {
 //                var st = parseInt($(this).data("startingScrollTop"));
@@ -366,7 +390,10 @@ function loadSignatures(data){
                     new_signature.html('<input style="display:inline;width:90%" type="text" placeholder="Field Name"/>');
 
                 }
-           new_signature.prepend('<i class="fa fa-times  fa-lg del_sign" style="margin-top:-6px;color:black;float:left" aria-hidden="true"/>');
+
+           new_signature.prepend('<i class="fa fa-pencil  fa-lg edit_sign" style="color:black;float:left" aria-hidden="true"/>');
+           new_signature.prepend('<i class="fa fa-times  fa-lg del_sign" style="color:black;float:left" aria-hidden="true"/>');
+
            new_signature.attr({"page":pageNum}).resizable();
 
 
@@ -391,14 +418,14 @@ function loadSignatures(data){
 $(document).on("click",".top_btns .save_doc_data", function(e){
 
         var new_divs =$('.new_sign');
-        if(new_divs.length==0){
+        var snd_to_all=$("#check_box_send_all").is(':checked');
+        if(new_divs.length==0 && !snd_to_all){
             return;
         }
 		doc_preview.image("uuuu");
         var body=$('.youtubeVideoModal .modal-body:last');
         var content=$('.youtubeVideoModal .modal-content:last');
         var footer = $('<div class="modal-footer" style="text-align: left;"></div>');
-		var dropdown = $('<select id="dropdown" style="width:50%"></select>');
 		var input_email = $('<h3>Send by Email:</h3><input id="email" placeholder="Email" style="width:50%"/>');
 		var input_name = $('<input id="email" placeholder="Name" style="width:50%"/>');
 		var input_subject = $('<input id="subject" placeholder="Subject" style="width:50%"/>');
@@ -406,44 +433,36 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
 		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Send</span>');
 		var _users=false;
 		input_subject.val("Signature Request")
-		var meeting_id=$('.esign_doc_meet_id').html()
-            if(!meeting_id || meeting_id=="False"){
+
+		var meeting_id=$('#dropdown_meeting').val();
+		if(!meeting_id || meeting_id==0){
                 meeting_id=false
-                _users=users;
-            }
-            else{
-                var meet_users = JSON.parse($('.esign_doc_meet_users').html());
-                _users=meet_users;
+                snd_to_all=false
             }
 
-		body.html("<h3>Select User</h3>").append(dropdown) //.append(input_email).append(input_name);
+
+
+//		body.html("<h3>Select User</h3>").append(dropdown)
+		//.append(input_email).append(input_name);
 		body.append("<h3>Subject</h3>").append(input_subject);
 		body.append("<h3>Message</h3>").append(email_body);
 		body.append(save_btn);
 
-        dropdown.append($("<option />").val(0).text("Select User"));
-
-		$.each(_users, function() {
-         dropdown.append($("<option />").val(this.id).text(this.name));
-        });
-        input_email.click(function(e)
-        {
-        dropdown[0].selectedIndex = 0;
-        });
+//        input_email.click(function(e)
+//        {
+//        dropdown[0].selectedIndex = 0;
+//        });
         save_btn.click(function(e){
             var arr=[];
             var isEmpty=false;
 //            var work_flow_enabled=$('.e_sign_wrk_flow input')[0].checked;
-            var user=dropdown.val();
+
             var subject = input_subject[0].value;
             var message = email_body[0].value;
             var email =input_email[1].value;
             var name =input_name[0].value;
-            if(!(user!=0 || (email!='' && name!=''))){
-                alert("Select user or Enter email and name.")
-                return;
-                }
 
+            if(snd_to_all){
             $.each(new_divs, function() {
                 var sign=$(this);
                 var left=sign.position().left;
@@ -455,6 +474,11 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                 var w=sign[0].style.width;
                 w=parseFloat(w);
                 var pg=sign.attr("page");
+                var user=sign.attr("user");
+                if(user==0 || !user){
+                isEmpty=true;
+                return;
+                }
                 var type;
                 var field_name="";
                 if (sign.hasClass("sign_psition")){
@@ -496,14 +520,15 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
                 arr.push(obj);
                 });
                 if(isEmpty){
-                    alert("Field name is empty!!!");
+                    alert("Select user for all fields!!!");
                     return;
                 }
-                if(arr.length!=0){
+             }
+                if(arr.length!=0 || snd_to_all){
                     req_url = '/e-sign/save_sign_data';
 
 
-                    var input_data={'data':JSON.stringify(arr),document_id:doc_id,url:url,work_flow_enabled:false,meeting_id:meeting_id,subject:subject,message:message};
+                    var input_data={'data':JSON.stringify(arr),document_id:doc_id,url:url,work_flow_enabled:false,meeting_id:meeting_id,subject:subject,message:message,send_to_all:snd_to_all};
                     dn_json_rpc(req_url,input_data,function(data){
 
                         doc_data=data.doc_data;
@@ -563,7 +588,7 @@ $(document).on("click",".saved_sign.is_sign,.saved_sign.is_initial", function(){
 
             var auto_sign = $('<span class="btn btn-primary btn-sm DocsBtn">Auto</span>');
             var top_div = $('<div class="DocsButtonWrapper" style="font-size:14px; height:auto" />');
-            var upload_clicker = '<button class="btn btn-sm btn-primary o_select_file_button"';
+            var upload_clicker = '<button class="btn btn-sm btn-primary o_select_file_button DocsBtn"';
             upload_clicker += ' title="Select" type="button">Upload</button>';
             upload_clicker = $(upload_clicker);
             upload_clicker.click(function(){
@@ -869,6 +894,62 @@ $(document).on("click",".new_sign .del_sign", function(e){
 });
 
 
+$(document).on("click",".new_sign", function(e){
+        var sign = $(this);
+
+        var selected = sign.attr("user");
+        console.log(selected,4444)
+
+        if($(e.target).is(".ui-resizable-handle,.del_sign")){
+
+        return;}
+		doc_preview.image("uuuu");
+        var body=$('.youtubeVideoModal .modal-body:last');
+
+		var dropdown = $('<select id="dropdown" style="width:50%"></select>');
+
+		var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Ok</span>');
+		var _users=false;
+		var meeting_id=$('#dropdown_meeting').val();
+            if(!meeting_id || meeting_id==0){
+                meeting_id=false
+                _users=users;
+            }
+            else{
+                var m = $.grep(meetings, function(v)
+                {
+                    return v.id == meeting_id;
+                });
+                var meet_users = m[0].attendees;
+                _users=meet_users;
+            }
+		body.html("<h3>Select User</h3>").append(dropdown) //.append(input_email).append(input_name);
+		body.append(save_btn);
+        dropdown.append($("<option />").val(0).text("Select User"));
+
+		$.each(_users, function() {
+         dropdown.append($("<option />").val(this.id).text(this.name));
+        });
+        if(selected){
+//            dropdown[0].selectedIndex = selected;
+            dropdown.val(selected)
+        }
+
+        save_btn.click(function(){
+
+            var user=dropdown.val();
+            if(user != 0){
+                var name = dropdown.find('option:selected').text();
+                sign.attr("user",user)
+                sign.find('.user_name').remove();
+                sign.append(`<a class='user_name row'>${name}</a>`)
+            }
+
+            $('.youtubeVideoModal').modal('hide');
+
+            });
+	});
+
 
 $("#nxxt_sign").click(function() {
     var d = $.grep(doc_data, function(v)
@@ -905,6 +986,35 @@ $(this).html("NEXT>").animate({
 
 
 });
+
+$('#check_box_send_all').change(function(){
+
+    if($("#check_box_send_all").is(':checked')){
+        $('.top_btns .position_btns').removeClass("drag").attr("disabled",true)
+        $(".save_doc_data").attr("disabled",false);
+        $('.new_sign').remove();
+    }
+    else{
+        $('.top_btns .position_btns').addClass("drag").attr("disabled",false)
+        $(".save_doc_data").attr("disabled",true);
+//        $('.new_sign').show();
+    }
+
+
+})
+
+$('#dropdown_meeting').change(function(){
+    if($('#dropdown_meeting').val()==0){
+        $('.check_box_send_all').hide();
+    }
+    else{
+        $('.check_box_send_all').show();
+    }
+
+
+})
+
+
 
 
 if($('#save-doc-data').hasClass("o_invisible_modifier")){

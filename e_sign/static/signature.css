@@ -15,12 +15,17 @@
     background-color: gray;
     color: white;
     margin: 2px;
+
 }
 
 .edit_sign:hover,
 .del_sign:hover {
     background-color: white;
     color: red!important
+}
+
+.new_sign i {
+    margin-left: 2px;
 }
 
 #scaleSelectContainer select#scaleSelect {
@@ -94,6 +99,7 @@
 .DocsBtn {
     min-width: 85px;
     margin: 2px;
+    margin-top: 20px;
 }
 
 .DocsButtonWrapper .btn:first-child,
@@ -158,7 +164,6 @@
 
 .sign_ids {
     height: 43px;
-    overflow: auto;
 }
 
 .sign_ids:hover {
@@ -166,7 +171,7 @@
     overflow: auto;
 }
 
-.PdfButtonWrapper .drag {
+.PdfButtonWrapper .drag,.PdfButtonWrapper .position_btns {
     background: #875a7b;
 }
 
@@ -184,4 +189,8 @@
 
 .o_control_panel > .breadcrumb > li:first-child {
     display: inline-block
+}
+
+.check_box_send_all,.PdfButtonWrapper{
+    display: none
 }

@@ -40,6 +40,7 @@ class Document(models.Model):
     _inherit = ['e_sign.document']#,'dn.seen'
 
     meeting_id = fields.Many2one('calendar.event', string="Meeting", ondelete='cascade')
+    send_to_all = fields.Boolean(string='Send to All')
     user_ids = fields.Many2many('res.users', string="Signature(s)")
     # seen_by_me = fields.Integer(compute='_compute_seen_by_me', default=0)
     mp_signature_status = fields.Char(string='My Signature', compute="_compute_signature_status")
@@ -286,6 +287,87 @@ class Document(models.Model):
         res_encode = base64.b64encode(read)
         res.close()
 
+        self.sudo().write({'pdf_doc': res_encode, 'from_code': True})
+
+    def add_pages_for_sign(self, doc):
+        if not doc.original_pdf or len(doc.signature_ids) == 0:
+            return
+        curr_dir = os.path.dirname(__file__)
+        pth = curr_dir.replace('models', 'doc_signs')
+
+        file = doc.original_pdf
+        f = base64.b64decode(file)
+        # f = base64.decodestring(file)
+
+        fobj = tempfile.NamedTemporaryFile(delete=False)
+        fname1 = fobj.name
+        fobj.write(f)
+        fobj.close()
+
+        input = PdfFileReader(open(fname1, "rb"))
+        # Addition of code for orientation correction Asfand
+        pageValue = input.getPage(0)
+        pageOrientation = pageValue.get('/Rotate')
+        page = input.getPage(0).mediaBox
+        zAxis = page.getUpperRight_x()
+        yAxis = page.getUpperLeft_x()
+        width = int(zAxis - yAxis)
+
+        height = int(page.getUpperRight_y() - page.getLowerRight_y())
+        solution = [width, height]
+        if width > height or pageOrientation == 90:
+            if height > width:
+                orientation = 'L'
+            else:
+                orientation = 'P'
+        elif pageOrientation == 0 or pageOrientation == 180 or pageOrientation == None:
+            if width > height:
+               orientation = 'L'
+            else:
+                orientation = 'P'
+
+        output = PdfFileWriter()
+        count = 0
+        pdf = FPDF(orientation, 'pt', solution)
+        pdf.add_page(orientation=orientation)
+        # Addition ended
+        for page_number in range(input.getNumPages()):
+            output.addPage(input.getPage(page_number))
+        current_pg = input.getNumPages() + 1
+
+        for sign in doc.signature_ids:
+            count = count + 1
+            sign.page = current_pg
+            if (count == 9):
+                pdf.add_page(orientation=orientation)
+                count = 0
+                current_pg += 1
+
+
+        signature_only_pdf_path = pth + "/signature-pdf-"+str(doc.id)+".pdf"
+        try:
+            pdf.output(signature_only_pdf_path, "F")
+        except:
+            if not os.path.exists(pth):
+                os.makedirs(pth)
+                pdf.output(signature_only_pdf_path, "F")
+            else:
+                raise
+        pdf.close()
+
+        signaturepdf = PdfFileReader(open(signature_only_pdf_path, "rb"))
+        for page_number in range(signaturepdf.getNumPages()):
+            output.addPage(signaturepdf.getPage(page_number))
+
+        output_pdf_path = pth + "/signed-doc-output-"+str(doc.id)+".pdf"
+        with open(output_pdf_path, "wb") as outputStream:
+            output.write(outputStream)
+        res = open(output_pdf_path, 'rb')
+        read = res.read()
+        # res_encode = base64.encodestring(read)
+        res_encode = base64.b64encode(read)
+        res.close()
+        self.original_pdf = res_encode
         self.sudo().write({'pdf_doc': res_encode, 'from_code': True})
 
     def get_extension(self, filename):

@@ -1,6 +1,8 @@
 import os
 import base64
 import tempfile
+import time
+
 from fpdf import FPDF
 from werkzeug import urls
 from random import randint
@@ -316,3 +318,49 @@ class Document(models.Model):
 
         docs=super(Document, self).search(args)
         return docs
+
+    def create_response_and_send_mail(self,user_email,email,token,model,doc_id,subject,message):
+        """ Create one mail by recipients and replace __URL__ by link with identification token """
+        # set url
+        req_env = self.env
+        web_url = ws_methods.get_main_url()
+        web_url = '/' if req_env.context.get('relative_url') else \
+            web_url
+        Mail = req_env['mail.mail']
+        url = urls.url_join(web_url, "e_sign/sign")
+        # url = urls.url_parse(url).path[1:]  # dirty hack to avoid incorrect urls
+        if token:
+            url = url + '/model='+model+'&id='+doc_id+'&/' + token
+        # post the message
+        template = req_env.ref('e_sign.email_template_signature_e_sign', raise_if_not_found=False)
+        body = template.body_html.replace("__URL__", url)
+        body = body.replace("__Message__", message)
+        values = {
+            'model': None,
+            'res_id': None,
+            'subject': subject,
+            'body': body,
+            'body_html': body,
+            'parent_id': None,
+            # 'attachment_ids': wizard.attachment_ids and [(6, 0, wizard.attachment_ids.ids)] or None,
+            'email_from': '"OdooHQ" <a@a.com>',
+            'auto_delete': True,
+        }
+        if user_email or email:
+            if user_email:
+                u=req_env['res.users'].search([('login','=',user_email)])
+                values['recipient_ids'] = [(4, u.partner_id.id)]
+            if email:
+                values['email_to'] = email
+            Mail.create(values).send()
+
+    def send_mails_thread(self,email_data):
+        with api.Environment.manage():
+            new_cr = self.pool.cursor()
+            self = self.with_env(self.env(cr=new_cr))
+            time.sleep(20)
+            for m in email_data:
+                self.create_response_and_send_mail(m['user_email'],m['email'],m['token'],m['model'],m['doc_id'],m['subject'],m['message'])
+
+            self._cr.commit()
+            self._cr.close()

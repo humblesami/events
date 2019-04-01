@@ -1,13 +1,16 @@
 import datetime
 import os
 import json
+import threading
+import time
 import uuid
 import base64
-from odoo import http
+from odoo import http, api
 from werkzeug import urls
 from random import randint
 from odoo.http import request
 from odoo.tools import pycompat
+from collections import OrderedDict
 from odoo.exceptions import UserError
 from odoo.addons.dn_base import ws_methods
 from PIL import Image, ImageFont, ImageDraw
@@ -164,10 +167,26 @@ class Signature(http.Controller):
             doc_data = self.get_doc_data(doc, token)
 
             pdf=doc.pdf_doc.decode('utf-8')
+            meeting_id = False
+            send_to_all = False
+            meetings = []
+            if m == "meeting_point.document":
+                meeting_id = False
+                send_to_all = doc.send_to_all
+                if doc.meeting_id:
+                    meeting_id = doc.meeting_id.id
+                for m in req_env['calendar.event'].search([]):
+                    arr = []
+                    for p in m.partner_ids:
+                        if p.user_id:
+                            arr.append({'id': p.user_id.id, 'name': p.user_id.name})
+                    meetings.append({'id': m.id, 'name': m.name, 'attendees': arr})
+
+
             is_admin = req_env.user.has_group('dn_base.group_dn_app_manager')
             if token:
                 is_admin=False
-            return ws_methods.http_response('', {"pdf_binary": pdf,"users":users,"doc_data":doc_data,"isAdmin":is_admin})
+            return ws_methods.http_response('', {"pdf_binary": pdf,"users":users,"doc_data":doc_data,"isAdmin":is_admin,"meetings":meetings,"meeting_id":meeting_id,"send_to_all":send_to_all})
 
         except:
             return ws_methods.handle()
@@ -187,54 +206,104 @@ class Signature(http.Controller):
             doc_id = kw['document_id']
             work_flow_enabled=kw['work_flow_enabled']
             meeting_id = kw['meeting_id']
+            send_to_all = kw['send_to_all']
             doc = my_model.sudo().search([('id', '=', doc_id)])
             if work_flow_enabled=='true':
                 doc.sudo().write({'workflow_enabled':True})
             if work_flow_enabled=='false':
                 doc.sudo().write({'workflow_enabled': False})
+            if send_to_all=='true':
+                doc.sudo().write({'send_to_all':True})
+            if send_to_all=='false':
+                doc.sudo().write({'send_to_all': False})
             if meeting_id not in ['False','false']:
                 meeting_id=int(meeting_id)
                 doc.sudo().write({'meeting_id': meeting_id})
             if meeting_id in ['False','false']:
                 doc.sudo().write({'meeting_id': False})
             signatures=json.loads(kw['data'])
-            token = pycompat.text_type(uuid.uuid4())
-            user_email=""
-            email = ""
-            for s in signatures:
-                zoom = s.get('zoom')
-                if not zoom:
-                    return ws_methods.http_response('Invalid Scale')
-                zoom = float(zoom)
-                if zoom == 0:
-                    return ws_methods.http_response('Invalid Zoom')
-                if not (s['user_id']!="0" or (s['email']!="" and s['name']!="")):
-                    return ws_methods.http_response("Select user or enter email and name")
+            email_data = []
+            if send_to_all == 'true':
+                m = req_env['calendar.event'].search([('id','=',meeting_id)])
+                sign_top = 5
+                c = 0
+                for p in m.partner_ids:
+                    if p.user_id:
+                        if c != 0:
+                            sign_top += 15
+                        c += 1
+                        token = pycompat.text_type(uuid.uuid4())
+                        obj = {'document_id': doc_id, 'user_id': p.user_id.id, 'type': "sign",'token': token,
+                               'left': 15, 'top': sign_top,'height': 40, 'width': 150,
+                               'zoom': 300
+                               }
+                        doc.signature_ids = [(0, 0, obj)]
 
-                obj={'document_id':s['document_id'],'user_id':s['user_id'],
-                                 'email': s['email'],'name': s['name'],'field_name': s['field_name'],
-                                 'left':s['left'],'top':s['top'],'page':s['page'],
-                                 'height':s['height'],'width':s['width'],'zoom': zoom,'type': s['type'],'token':token}
-                doc.signature_ids=[(0,0,obj)]
-            if doc.signature_ids:
-                user_email = doc.signature_ids[-1].user_id.email
-                email=doc.signature_ids[-1].email
-            if not doc.workflow_enabled:
-                self.create_response_and_send_mail(user_email,email,token,model,doc_id,kw["subject"],kw["message"])
-            elif doc.workflow_enabled:
-                if doc.signature_ids.filtered(lambda r: r.token != token).__len__()==0:
-                    self.create_response_and_send_mail(user_email, email, token, model, doc_id)
-                else:
-                    all_signed=True
-                    for s in doc.signature_ids.filtered(lambda r: r.token != token):
-                        if not s.draw_signature:
-                            all_signed=False
-                    if all_signed:
-                        self.create_response_and_send_mail(user_email, email, token, model, doc_id)
+                        user_email = p.user_id.email
+                        email = False
+                        mail = False
+
+                        if not doc.workflow_enabled:
+                            mail = True
+                        elif doc.workflow_enabled:
+                            if doc.signature_ids.filtered(lambda r: r.token != token).__len__() == 0:
+                                mail = True
+                            else:
+                                all_signed = True
+                                for s in doc.signature_ids.filtered(lambda r: r.token != token):
+                                    if not s.draw_signature:
+                                        all_signed = False
+                                        break
+                                if all_signed:
+                                    mail = True
+                        if mail:
+                            email_data.append(
+                                {'user_email': user_email, 'email': email, 'token': token, 'model': model,
+                                 'doc_id': doc_id, 'subject': kw['subject'], 'message': kw['message']})
+                doc.add_pages_for_sign(doc)
+            else:
+                user_ids = [s["user_id"] for s in signatures]
+                user_ids = list(OrderedDict.fromkeys(user_ids))
+                for u in user_ids:
+                    token = pycompat.text_type(uuid.uuid4())
+                    for s in [x for x in signatures if x['user_id'] == u] :
+                        if not (s['user_id']!="0" or (s['email']!="" and s['name']!="")):
+                            return ws_methods.http_response("Select user or enter email and name")
+
+                        obj={'document_id':s['document_id'],'user_id':s['user_id'],
+                                         'email': s['email'],'name': s['name'],'field_name': s['field_name'],
+                                         'left':s['left'],'top':s['top'],'page':s['page'],
+                                         'height':s['height'],'width':s['width'],'zoom': s['zoom'],'type': s['type'],'token':token}
+                        doc.signature_ids=[(0,0,obj)]
+                    user_email = doc.signature_ids.filtered(lambda r: r.token == token)[0].user_id.email
+                    email = doc.signature_ids.filtered(lambda r: r.token == token)[0].email
+                    mail = False
+
+                    if not doc.workflow_enabled:
+                        mail = True
+                    elif doc.workflow_enabled:
+                        if doc.signature_ids.filtered(lambda r: r.token != token).__len__() == 0:
+                            mail = True
+                        else:
+                            all_signed = True
+                            for s in doc.signature_ids.filtered(lambda r: r.token != token):
+                                if not s.draw_signature:
+                                    all_signed = False
+                                    break
+                            if all_signed:
+                                mail = True
+                    if mail:
+                        email_data.append(
+                            {'user_email': user_email, 'email': email, 'token': token, 'model': model,'doc_id': doc_id, 'subject': kw['subject'], 'message': kw['message']})
+
+            t = threading.Thread(target=req_env['e_sign.document'].send_mails_thread, args=([email_data]))
+            t.start()
+
 
             token = kw.get('token')
             doc_data=self.get_doc_data(doc,token)
             pdf = doc.pdf_doc.decode('utf-8')
+
             return ws_methods.http_response('', {"pdf_binary": pdf,"doc_data":doc_data})
 
         except:
@@ -403,6 +472,17 @@ class Signature(http.Controller):
             if email:
                 values['email_to'] = email
             Mail.create(values).send()
+
+    def send_mails_thread(self,email_data):
+        with api.Environment.manage():
+            new_cr = self.pool.cursor()
+            self = self.with_env(self.env(cr=new_cr))
+            time.sleep(20)
+            for m in email_data:
+                self.create_response_and_send_mail(m['user_email'],m['email'],m['token'],m['model'],m['doc_id'],m['subject'],m['message'])
+
+            self._cr.commit()
+            self._cr.close()
 
     def get_users(self,doc):
         usrs=request.env['res.users'].sudo().search([("id","!=",1)])

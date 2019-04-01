@@ -121,8 +121,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='pending_signatures']" position="after">
                     <br></br>
-                    <label string="Attach to meeting(Optional):"></label>
-                    <field groups="dn_base.group_dn_app_manager" string="Attach to meeting(Optional)"  name="meeting_id"/>
+                    <label groups="dn_base.group_dn_app_manager" string="Attach to meeting(Optional):"></label>
+                    <select id="dropdown_meeting" style="width:50%"><option value="0">Meeting</option></select>
+<!--                    <field groups="dn_base.group_dn_app_manager" string="Attach to meeting(Optional)"  name="meeting_id"/>-->
+
+                    <label class="check_box_send_all" groups="dn_base.group_dn_app_manager" string="Send to all attendees:"></label>
+                    <input groups="dn_base.group_dn_app_manager" id="check_box_send_all" class="check_box_send_all" type="checkbox"></input>
+<!--                    <field groups="dn_base.group_dn_app_manager" string="Attach to meeting(Optional)"  name="meeting_id"/>-->
 
 
                     <field name="meet_id" class="esign_doc_meet_id o_hidden"/>
