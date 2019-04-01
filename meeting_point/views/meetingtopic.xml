@@ -58,13 +58,13 @@
                                         <t t-if="record.lead.raw_value">
                                             <div>Lead: <field name="lead"/> </div>
                                         </t>
-                                        <div>Duraion: <field name="duration"/> </div>
-                                        <div t-if="record.document_ids.raw_value" t-as="doc">
-                                            Attachment Available
-                                        </div>
-                                        <div t-if="record.voting_ids.raw_value" t-as="doc">
-                                            Action Linked
-                                        </div>
+                                        <div>Duraion: <field  type="string"  widget="float_time" name="duration"/></div>
+                                        <!--<div t-if="record.attachments.raw_value == 'available'" t-as="doc">-->
+                                            <!--Attachments: <span class="fa fa-2x fa-file-text" />-->
+                                        <!--</div>-->
+                                         <!--<div t-if="record.actions.raw_value == 'available'" t-as="doc">-->
+                                            <!--Actions: <span class="fa fa-2x fa-file-text" />-->
+                                        <!--</div>-->
                                     </div>
                                 </a>
                             </div>

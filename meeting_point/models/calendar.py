@@ -251,6 +251,7 @@ class Meeting(models.Model):
     is_active_yet = fields.Char(compute="_compute_meeting_status")
     conference_status = fields.Char(compute='is_video_active')
     voting_ids = fields.One2many('meeting_point.voting','meeting_id',string="Approval/Voting" )
+    actions = fields.Html(compute='has_votings', string="Actions(s)")
 
     @api.model
     def create(self, vals):
@@ -296,6 +297,14 @@ class Meeting(models.Model):
         res = super(Meeting, self).write(vals)
         self.emit_data_update()
         return res
+
+    @api.multi
+    def has_voting(self):
+        for obj in self:
+            if obj.voting_ids:
+                obj.actions = 'available'
+            else:
+                obj.actions = 'zero'
 
     @api.multi
     def is_video_active(self):

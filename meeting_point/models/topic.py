@@ -29,6 +29,7 @@ class Topic(models.Model):
     document_ids = fields.One2many('meeting_point.topicdoc','topic_id', string="Document(s)")
     details = fields.Char()
     attachments = fields.Html(compute='has_attachments', string="Attachment(s)")
+    actions = fields.Html(compute='has_votings', string="Actions(s)")
     voting_ids = fields.One2many('meeting_point.voting', 'topic_id', string="Approval/Voting")
 
 
@@ -47,7 +48,17 @@ class Topic(models.Model):
     def has_attachments(self):
         for topic in self:
             if topic.document_ids:
-                topic.attachments = '<span class="fa fa-2x fa-file-text" />'
+                topic.attachments = 'available'
+            else:
+                topic.attachments = 'zero'
+
+    @api.multi
+    def has_votings(self):
+        for topic in self:
+            if topic.voting_ids:
+                topic.actions = 'available'
+            else:
+                topic.actions = 'zero'
 
     def vaildate_file(self,values):
         if 'attachment' not in values:

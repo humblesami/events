@@ -434,9 +434,9 @@
                             </field>
                         </div>
 
-                        <div class="oe_read_only o2m_kanban">
+                        <div  attrs="{'invisible': [('actions', '=', 'available')]}" class="oe_read_only o2m_kanban">
                             <h4>Approval/Voting</h4>
-                            <field name="voting_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" string=" " mode="kanban">
+                            <field name="voting_ids" string=" " mode="kanban">
                             </field>
                         </div>
 
