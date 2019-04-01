@@ -59,12 +59,14 @@
                                             <div>Lead: <field name="lead"/> </div>
                                         </t>
                                         <div>Duraion: <field  type="string"  widget="float_time" name="duration"/></div>
-                                        <!--<div t-if="record.attachments.raw_value == 'available'" t-as="doc">-->
-                                            <!--Attachments: <span class="fa fa-2x fa-file-text" />-->
-                                        <!--</div>-->
-                                         <!--<div t-if="record.actions.raw_value == 'available'" t-as="doc">-->
-                                            <!--Actions: <span class="fa fa-2x fa-file-text" />-->
-                                        <!--</div>-->
+                                       <div style="display:flex">
+                                            <div t-if="record.attachments.raw_value = 'available'">
+                                              <span class="fa fa-3x fa-file" />
+                                            </div>
+                                             <div t-if="record.actions.raw_value = 'available'">
+                                              <span><i class="fa fa-3x fa-tasks"></i></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </a>
                             </div>
