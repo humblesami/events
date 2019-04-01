@@ -175,7 +175,7 @@ class Signature(http.Controller):
                 send_to_all = doc.send_to_all
                 if doc.meeting_id:
                     meeting_id = doc.meeting_id.id
-                for m in req_env['calendar.event'].search([]):
+                for m in req_env['calendar.event'].sudo().search([]):
                     arr = []
                     for p in m.partner_ids:
                         if p.user_id:
