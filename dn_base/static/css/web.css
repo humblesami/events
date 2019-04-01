@@ -440,3 +440,31 @@ body.o_app_switcher_background nav:first-child
  .oe_module_desc h2{
     font-size:16px;
  }
+
+ .AgendaTopicInfoBox{
+    display:flex;
+ }
+
+ .AgendaTopicInfoBoxIcon{
+    display:flex;
+    flex-direction: column;
+ }
+
+ .AgendaTopicInfoBoxInnerIcon{
+    margin:0px 3px 3px 0;
+ }
+
+ .AgendaTopicInfoBoxInnerIcon .fa-3x {
+    font-size: 1.5em;
+}
+
+ .AgendaTopicInfoBoxDetails{
+    flex: 1;
+    font-size: 16px;
+    padding-left: 10px;
+    color: #2f3136;
+ }
+
+ .AgendaDuraion{
+    font-size: 13.5px;
+ }

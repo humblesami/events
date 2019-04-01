@@ -47,27 +47,29 @@
                     <field name="lead"/>
                     <field name="duration"/>
                     <field name="document_ids"/>
-                    <field name = "actions"/>
-                    <field name = "attachments"/>
+                    <field name="attachments"/>
+                    <field name="actions"/>
                    <templates>
                         <t t-name="kanban-box">
                             <div class="kantainer" style="padding:0">
                                 <a type="object" name="open_same_window" class="kanban_a oe_module_desc">
-                                    <div class="oe_module_desc">
-                                        <div style="font-weight:bold">
-                                            <field name="name"/>
+                                    <div class="oe_module_desc AgendaTopicInfoBox">
+                                        <div class="AgendaTopicInfoBoxIcon">
+                                            <div class="AgendaTopicInfoBoxInnerIcon" t-if="record.attachments.raw_value == 'available'">
+                                              <span class="fa fa-3x fa-file"/>
+                                            </div>
+                                             <div class="AgendaTopicInfoBoxInnerIcon" t-if="record.actions.raw_value == 'available'">
+                                              <span><i class="fa fa-3x fa-tasks"/></span>
+                                            </div>
                                         </div>
-                                        <t t-if="record.lead.raw_value">
-                                            <div>Lead: <field name="lead"/> </div>
-                                        </t>
-                                        <div>Duraion: <field  type="string"  widget="float_time" name="duration"/></div>
-                                       <div style="display:flex">
-                                            <div t-if="record.attachments.raw_value = 'available'">
-                                              <span class="fa fa-3x fa-file" />
+                                        <div class="AgendaTopicInfoBoxDetails">
+                                            <div>
+                                            <field name="name"/>
                                             </div>
-                                             <div t-if="record.actions.raw_value = 'available'">
-                                              <span><i class="fa fa-3x fa-tasks"></i></span>
-                                            </div>
+                                            <t t-if="record.lead.raw_value">
+                                                <div>Lead: <field name="lead"/> </div>
+                                            </t>
+                                        <div class="AgendaDuraion">Duraion: <field type="string" widget="float_time" name="duration"/></div>
                                         </div>
                                     </div>
                                 </a>

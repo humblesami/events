@@ -28,8 +28,8 @@ class Topic(models.Model):
     sequence = fields.Integer()
     document_ids = fields.One2many('meeting_point.topicdoc','topic_id', string="Document(s)")
     details = fields.Char()
-    attachments = fields.Html(compute='has_attachments', string="Attachment(s)")
-    actions = fields.Html(compute='has_votings', string="Actions(s)")
+    attachments = fields.Char(compute='has_attachments', string="Attachment(s)")
+    actions = fields.Char(compute='has_votings', string="Actions(s)")
     voting_ids = fields.One2many('meeting_point.voting', 'topic_id', string="Approval/Voting")
 
 
