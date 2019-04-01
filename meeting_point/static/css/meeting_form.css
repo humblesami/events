@@ -98,6 +98,31 @@ div.publish_btn
     margin-top: -10px;
     background-color: #875A7B;
 }
+button.stylish_kanban
+{
+    text-align:left;
+}
+.stylish_kanban
+{
+    box-shadow: 1px 1px 3px 0 rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+.attendee_image
+{
+    border:1px solid #cfcfcf;
+    margin-right:5px;
+    float:left;
+}
+.mail_n_sent
+{
+    display : flex;
+    padding-bottom: 5px;
+}
+
+.mail_n_sent .fa-exclamation-circle
+{
+    margin-top: 3px;
+}
 
 .comments.oe_read_only
 {

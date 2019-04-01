@@ -3,6 +3,8 @@ $(function(){
         this.select();
     });
 
+    $('.stylish_kanban img').removeClass('img-responsive');
+
     setTimeout(function(){
         var form_sheet = $('.o_form_sheet:first');
         var padding = parseFloat(form_sheet.css('padding-left')) + parseFloat(form_sheet.css('padding-left'));

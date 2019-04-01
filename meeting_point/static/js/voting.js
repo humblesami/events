@@ -11,7 +11,7 @@ $(function(){
     }
     catch(er)
     {
-        console.log(34444);
+
     }
     var discussion_enabled = false;
     var signature_required = false;

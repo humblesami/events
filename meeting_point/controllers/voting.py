@@ -305,7 +305,7 @@ class website_voting(http.Controller):
             voting_object['voting_type'] = ws_methods.objects_list_to_json_list(voting_obj_orm.voting_type_id, ['id', 'name'])
             voting_object['meeting'] = ws_methods.object_to_json_object(voting_obj_orm.meeting_id,
                                                                                 ['id', 'name'])
-            voting_object['topic'] = ws_methods.object_to_json_object(voting_obj_orm.topic_id_alternate,
+            voting_object['topic'] = ws_methods.object_to_json_object(voting_obj_orm.topic_id,
                                                                                 ['id', 'name'])
             voting_object['motion_first'] = {'id': voting_obj_orm.motion_first.partner_id.mp_user_id.id, 'name': voting_obj_orm.motion_first.name}
             voting_object['motion_second'] = {'id': voting_obj_orm.motion_second.partner_id.mp_user_id.id, 'name': voting_obj_orm.motion_second.name}

@@ -214,19 +214,6 @@
             </field>
         </record>
 
-         <!--<record id="meeting_point_event_kanban_archive" model="ir.ui.view">-->
-            <!--<field name="name">meeting.point.event.kanban.archive</field>-->
-            <!--<field name="model">calendar.event</field>-->
-            <!--<field name="inherit_id" ref="meeting_point.meeting_point_kanban"/>-->
-            <!--<field name="mode">primary</field>-->
-            <!--<field name="priority" eval="2"/>-->
-            <!--<field name="arch" type="xml">-->
-                <!--<xpath expr="//kanban" position="attributes">-->
-                    <!--<attribute name="create">false</attribute>-->
-
-                <!--</xpath>-->
-            <!--</field>-->
-        <!--</record>-->
 
         <record id="meeting_point_event_form" model="ir.ui.view">
             <field name="name">meeting.point.form</field>
@@ -234,44 +221,36 @@
             <field name="priority" eval="0"/>
             <field name="arch" type="xml">
                 <form string="Meetings" class="meetingform">
-                     <field name="is_active_yet" class="o_hidden"/>
-                     <field name="attendee_status" class ="statusValue o_hidden"/>
+                    <field name="is_active_yet" class="o_hidden"/>
+                    <field name="attendee_status" class ="statusValue o_hidden"/>
+                    <div class="acceptance_buttons_new oe_read_only"  style="display:flex"  attrs="{'invisible': [('is_active_yet','=','no')]}">
+                        <div class ="accet"  style="display:none !important">
+                            <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept" ><i class="fa fa-check fa-lg" style="color:white"/>Accept
+                            </button>
+                        </div>
+                        <div class = "accept_visible" >
+                            <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept
+                            </button>
+                        </div>
 
+                        <div class ="declin "  style="display:none !important">
+                            <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
+                            </button>
+                        </div>
+                        <div class = "decline_visible">
+                            <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline
+                            </button>
+                        </div>
 
-                                        <div class="acceptance_buttons_new oe_read_only"  style="display:flex"  attrs="{'invisible': [('is_active_yet','=','no')]}">
-                                            <div class ="accet"  style="display:none !important">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept" ><i class="fa fa-check fa-lg" style="color:white"/>Accept
-                                                </button>
-                                            </div>
-                                            <div class = "accept_visible" >
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept
-                                                </button>
-                                            </div>
-
-                                            <div class ="declin "  style="display:none !important">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
-                                                </button>
-                                            </div>
-                                            <div class = "decline_visible">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline
-                                                </button>
-                                            </div>
-
-                                            <div class ="tentativehide "  style="display:none !important">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
-                                                </button>
-                                            </div>
-                                            <div class = "tentative_visible" >
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
-                                                </button>
-                                            </div>
-                                        </div>
-
-                     <!--<header class = "oe_read_only" attrs="{'invisible': [('is_active_yet','=','no')]}">-->
-                        <!--<button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Accept" name="do_accept"/>-->
-                        <!--<button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Decline" name="do_decline"/>-->
-                        <!--<button type="object" class="btn btn-primary btn-sm acceptancebtn" string ="Tentative" name="do_tentative"/>-->
-                    <!--</header>-->
+                        <div class ="tentativehide "  style="display:none !important">
+                            <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
+                            </button>
+                        </div>
+                        <div class = "tentative_visible" >
+                            <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
+                            </button>
+                        </div>
+                    </div>
                     <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="id" class="meeting_id o_hidden"/>
                     <sheet>
@@ -288,55 +267,60 @@
                         <field name="conference_status" class="conference_status o_hidden"/>
                         <field name="exectime"/>
                         <div name="readonly_completed_1">
-                        <group>
-                            <field name="name" attrs="{'readonly': [('exectime', '=', 'completed')]}" string="Meeting Subject" placeholder="e.g. Business Lunch"/>
-                            <field name="start_datetime" string="Start Date &amp; Time" attrs="{'readonly': ['|',('exectime', '=', 'completed'),'&amp;',('id', '!=', False), ('recurrency','=',True)]}"/>
-                            <field name="stop_datetime" string="End Date &amp; Time" attrs="{'readonly': ['|',('exectime', '=', 'completed'),'&amp;',('id', '!=', False), ('recurrency','=',True)]}"/>
-                            <field name="duration" attrs="{'readonly': [('exectime', '=', 'completed')]}" widget="float_time" required="1" class="meeting_duration dn_time_picker"/>
-                            <field name="start" attrs="{'invisible': True}"/>
-                            <field name="stop" attrs="{'invisible': True}"/>
-                            <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': True}"/>
-                        </group>
-                            <!--attrs="{'invisible': ['|','&amp;',('exectime', '!=', 'upcoming'),('exectime', '!=', 'ongoing'),('is_active_yet','=','no')]}"-->
-
-                        <group class="emeeting">
-                            <field  class="conference" name="conference_bridge_number"/>
-                            <field  class="pin" name="pin"/>
-                            <field  name="video_call_link" widget="url"/>
-                            <!--<field class="end_call" name="end_call"/>-->
-                            <!--<field class="password" name="password"/>-->
-                        </group>
-                        <group class= 'oe_read_only'>
-                          <field name='location'/>
-                        </group>
-
-                        <group readonly="1" class = 'oe_edit_only'>
-                            <label for="address"/>
-                            <div class="o_address_format">
-                                <field name="address" placeholder="Street 1" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="resize:none"/>
-                                <field name="street" attrs="{'readonly': [('exectime', '=', 'completed')]}" placeholder="Street 2"/>
-                                <span class='oe_read_only' attrs="{'invisible': [('address', '=', False),('street', '=', False)]}">, </span>
-                                <field name="zip" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="zip masked_input" placeholder="Zip"/>
-                                <span class='oe_read_only' attrs="{'invisible': [('zip', '=', False)]}">, </span>
-                                <field name="city" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="margin-right: 4px;" placeholder="City"/>
-                                <span class='oe_read_only' attrs="{'invisible': [('city', '=', False)]}"><br/></span>
-                                <field name="country_state" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="margin-right: 4px;" domain="[('country_id','=',country)]" placeholder="State" options="{'no_create': True,'no_open ': True,'no_quick_create': True,                                        'no_create_edit' : True, 'no_open': True}"/>
-                                <span class='oe_read_only' attrs="{'invisible': [('country_state', '=', False)]}">, </span>
-                                <field name="country" required="1" attrs="{'readonly': [('exectime', '=', 'completed')]}" options="{'no_create': True,'no_open ': True,'no_quick_create': True,'no_create_edit' : True, 'no_open': True}"/>
-                            </div>
-                        </group>
                             <group>
-                            <field name="description" attrs="{'readonly': [('exectime', '=', 'completed')]}" />
-                        </group>
-                        <div class="oe_edit_only attendees">
-                            <label for="partner_ids" string="Attendees"/>
-                            <h3>
-                                <field name="partner_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" widget="many2manyattendee" options="{'no_quick_create': True, 'no_create_edit' : True}" placeholder="Select attendees..." context="{'force_email':True}" class="oe_inline">
+                                <field name="name" attrs="{'readonly': [('exectime', '=', 'completed')]}" string="Meeting Subject" placeholder="e.g. Business Lunch"/>
+                                <field name="start_datetime" string="Start Date &amp; Time" attrs="{'readonly': ['|',('exectime', '=', 'completed'),'&amp;',('id', '!=', False), ('recurrency','=',True)]}"/>
+                                <field name="stop_datetime" string="End Date &amp; Time" attrs="{'readonly': ['|',('exectime', '=', 'completed'),'&amp;',('id', '!=', False), ('recurrency','=',True)]}"/>
+                                <field name="duration" attrs="{'readonly': [('exectime', '=', 'completed')]}" widget="float_time" required="1" class="meeting_duration dn_time_picker"/>
+                                <field name="start" attrs="{'invisible': True}"/>
+                                <field name="stop" attrs="{'invisible': True}"/>
+                                <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': True}"/>
+                            </group>
 
-                                </field>
-                            </h3>
+                            <group class="emeeting">
+                                <field  class="conference" name="conference_bridge_number"/>
+                                <field  class="pin" name="pin"/>
+                                <field  name="video_call_link" widget="url"/>
+                            </group>
+
+                            <group class= 'oe_read_only'>
+                                <field name='location'/>
+                            </group>
+
+                            <group readonly="1" class = 'oe_edit_only'>
+                                <label for="address"/>
+                                <div class="o_address_format">
+                                    <field name="address" placeholder="Street 1" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="resize:none"/>
+                                    <field name="street" attrs="{'readonly': [('exectime', '=', 'completed')]}" placeholder="Street 2"/>
+                                    <span class='oe_read_only' attrs="{'invisible': [('address', '=', False),('street', '=', False)]}">, </span>
+                                    <field name="zip" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="zip masked_input" placeholder="Zip"/>
+                                    <span class='oe_read_only' attrs="{'invisible': [('zip', '=', False)]}">, </span>
+                                    <field name="city" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="margin-right: 4px;" placeholder="City"/>
+                                    <span class='oe_read_only' attrs="{'invisible': [('city', '=', False)]}"><br/></span>
+                                    <field name="country_state" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="margin-right: 4px;" domain="[('country_id','=',country)]" placeholder="State" options="{'no_create': True,'no_open ': True,'no_quick_create': True,                                        'no_create_edit' : True, 'no_open': True}"/>
+                                    <span class='oe_read_only' attrs="{'invisible': [('country_state', '=', False)]}">, </span>
+                                    <field name="country" required="1" attrs="{'readonly': [('exectime', '=', 'completed')]}" options="{'no_create': True,'no_open ': True,'no_quick_create': True,'no_create_edit' : True, 'no_open': True}"/>
+                                </div>
+                            </group>
+
+                            <group>
+                                <field name="description" attrs="{'readonly': [('exectime', '=', 'completed')]}" />
+                            </group>
+
+                            <div class="oe_edit_only attendees">
+                                <label for="partner_ids" string="Attendees"/>
+                                <h3>
+                                    <field name="partner_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}"
+                                           widget="many2manyattendee"
+                                           options="{'no_quick_create': True, 'no_create_edit' : True}"
+                                           placeholder="Select attendees..."
+                                           context="{'force_email':True}" class="oe_inline">
+
+                                    </field>
+                                </h3>
+                            </div>
                         </div>
-                        </div>
+
                         <div name="mp_roster" class="o2m_kanban oe_read_only roster-item">
                             <h4>Roster</h4>
                             <button class="btn-defult roster-item roster-item"
@@ -358,107 +342,77 @@
                             </group>
 
                             <notebook invisible="1">
-                            <page string="Options" attrs="{'invisible':True}">
-                                <group>
-                                    <div>
-                                        <group>
-                                            <field name="recurrency" invisible="1" options="{'no_create': True,'no_open ': True,'no_quick_create': True, 'no_create_edit' : True}"/>
-                                        </group>
-                                        <div attrs="{'invisible': [('recurrency', '=', False)]}">
-                                            <group>
-                                                <label for="interval"/>
-                                                <div class="o_row">
-                                                    <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                    <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                </div>
-                                                <label string="Until" for="end_type"/>
-                                                <div class="o_row">
-                                                    <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                    <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
-                                                    <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
-                                                </div>
-                                            </group>
-                                            <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
-                                                <field name="mo"/>
-                                                <field name="tu"/>
-                                                <field name="we"/>
-                                                <field name="th"/>
-                                                <field name="fr"/>
-                                                <field name="sa"/>
-                                                <field name="su"/>
-                                            </group>
-                                            <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
-                                                <label string="Day of Month" for="month_by"/>
-                                                <div class="o_row">
-                                                    <field name="month_by"/>
-                                                    <field name="day" attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'date')]}"/>
-                                                    <field name="byday" string="The" attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>
-                                                    <field name="week_list" nolabel="1" attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>
-                                                </div>
-                                            </group>
-                                        </div>
-                                    </div>
+                                <page string="Options" attrs="{'invisible':True}">
                                     <group>
-                                        <field name="privacy" invisible="1"/>
-                                        <field name="show_as" invisible="1"/>
-                                        <field name="rrule" invisible="1" readonly="0"/>
-                                        <field name="recurrent_id" invisible="1"/>
+                                        <div>
+                                            <group>
+                                                <field name="recurrency" invisible="1" options="{'no_create': True,'no_open ': True,'no_quick_create': True, 'no_create_edit' : True}"/>
+                                            </group>
+                                            <div attrs="{'invisible': [('recurrency', '=', False)]}">
+                                                <group>
+                                                    <label for="interval"/>
+                                                    <div class="o_row">
+                                                        <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                        <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                    </div>
+                                                    <label string="Until" for="end_type"/>
+                                                    <div class="o_row">
+                                                        <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                        <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
+                                                        <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                                    </div>
+                                                </group>
+                                                <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
+                                                    <field name="mo"/>
+                                                    <field name="tu"/>
+                                                    <field name="we"/>
+                                                    <field name="th"/>
+                                                    <field name="fr"/>
+                                                    <field name="sa"/>
+                                                    <field name="su"/>
+                                                </group>
+                                                <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
+                                                    <label string="Day of Month" for="month_by"/>
+                                                    <div class="o_row">
+                                                        <field name="month_by"/>
+                                                        <field name="day" attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'date')]}"/>
+                                                        <field name="byday" string="The" attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>
+                                                        <field name="week_list" nolabel="1" attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],                                                             'invisible': [('month_by', '!=', 'day')]}"/>
+                                                    </div>
+                                                </group>
+                                            </div>
+                                        </div>
+                                        <group>
+                                            <field name="privacy" invisible="1"/>
+                                            <field name="show_as" invisible="1"/>
+                                            <field name="rrule" invisible="1" readonly="0"/>
+                                            <field name="recurrent_id" invisible="1"/>
+                                        </group>
                                     </group>
-                                </group>
-                            </page>
+                                </page>
+                                <page invisible="1" string="Misc" groups="base.group_no_one">
+                                    <group>
+                                        <label for="user_id" string="Owner"/>
+                                        <field name="user_id" nolabel="1"/>
+                                    </group>
+                                </page>
+                            </notebook>
 
-                            <page invisible="1" string="Misc" groups="base.group_no_one">
-                                <group>
-                                    <label for="user_id" string="Owner"/>
-                                    <field name="user_id" nolabel="1"/>
-                                </group>
-                            </page>
-
-                        </notebook>
-
-                             <div class="mtopic_tree oe_read_only">
-
+                            <div class = "mtopic_tree oe_read_only">
                                 <h3>Agenda Topics</h3>
-                                <sheet>
-                                    <field name="topic_ids"  class="oe_inline oe_read_only">
-                                      <kanban default_order="name">
-                                          <field name="name"/>
-                                          <templates>
-                                              <t t-name="kanban-box">
-                                                  <div class="kantainer" style="padding:0">
-                                                      <a type="object" name="open_same_window" class="kanban_a oe_module_desc">
-                                                          <h2><field name="name"/></h2>
-                                                          <h3>Duration: <field name="duration" type="string" widget="float_time"/></h3>
-                                                      </a>
-                                                  </div>
-                                              </t>
-                                          </templates>
-                                      </kanban>
-
-                                    </field>
-                                </sheet>
+                                <field name="topic_ids" mode="kanban" ></field>
                             </div>
-                        <div class = "mtopic_tree oe_edit_only">
+                            <div class = "mtopic_tree oe_edit_only">
                                 <h3>Agenda Topics</h3>
-                             <sheet>
-                                    <field name="topic_ids_new" >
-                                    <tree class="meetingtopic_tree">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="name" string="Title"/>
-                                    <field name="lead"/>
-                                    <field name="duration" class="topic_duration_span " type="string" widget="float_time"/>
-                                    <field name="attachments" string="Attachment(s)"/>
-                                    <field name="details"/>
-                                </tree>
+                                <field name="topic_ids_new" mode="tree" ></field>
+                            </div>
+                        </div>
 
-                                      </field>
-                                </sheet>
-                        </div>
-                        </div>
                         <div class="o2m_kanban">
                             <h4>Meeting Documents</h4>
                             <field name="doc_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form','kanban_view_ref': 'dn_documents.dn_docs_kanban_annotator'}" class="kanban_document" mode="kanban"/>
                         </div>
+
                         <div class="oe_read_only" name="readonly_completed_3">
                             <div class="o2m_kanban">
                                 <h4>Documents For Signatures</h4>
@@ -469,17 +423,20 @@
                                 />
                             </div>
                         </div>
+
                         <div class="oe_read_only o2m_kanban">
                             <h4>Surveys</h4>
                             <field name="survey_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" string=" " mode="kanban">
 
                             </field>
                         </div>
+
                         <div class="oe_read_only o2m_kanban">
                             <h4>Approval/Voting</h4>
                             <field name="voting_ids" attrs="{'readonly': [('exectime', '=', 'completed')]}" string=" " mode="kanban">
                             </field>
                         </div>
+
                     </sheet>                    
                     <app-comments  attrs="{'invisible': [('publish','=',False)]}" ></app-comments>
                     <script src="/meeting_point/static/js/meeting_form.js"/>
@@ -635,18 +592,23 @@
                      <field name="mail_sent"/>
                     <templates>
                         <t t-name="kanban-box">
-                             <div class="oe_module_vignette oe_kanban_global_click " style="box-shadow: 1px 1px 3px 0 rgba(0,0,0,0.3);transition: 0.3s">
-                               <div class="oe_module_icon" style="border:1px solid #cfcfcf; margin-right:5px;">
-                                        <field name="photo" widget="image"/>
-                                    </div>
+                            <div class="oe_module_vignette oe_kanban_global_click stylish_kanban ">
+                                <div class="attendee_image">
+                                    <field name="photo" widget="image"/>
+                                </div>
                                 <div class="oe_module_desc">
-
                                     <div style="font-weight:bold">
                                         <div><field name="partner_id"/> </div>
-                                        <div><field name="email" widget="email"/>
-                                            <span title="Email Sent" t-if="record.mail_sent.value=='True'" class="fa fa-check-square-o fa-lg text-success ml4" groups="meeting_point.group_meeting_admin"></span>
-                                            <span title="Email Failed" t-if="record.mail_sent.value=='Fail'" class="fa fa-exclamation-circle fa-lg text-danger ml4" groups="meeting_point.group_meeting_admin"></span>
-
+                                        <div class="mail_n_sent">
+                                            <field name="email" widget="email"/>
+                                            <span title="Email Sent" t-if="record.mail_sent.value=='True'"
+                                                  class="fa fa-check-square-o fa-lg text-success ml4"
+                                                  groups="meeting_point.group_meeting_admin">
+                                            </span>
+                                            <span title="Email Failed" t-if="record.mail_sent.value=='Fail'"
+                                                  class="fa fa-exclamation-circle fa-lg text-danger ml4"
+                                                  groups="meeting_point.group_meeting_admin">
+                                            </span>
                                         </div>
                                         <div>Status:<span class="ml4 badge"><field class="badge" name="state"/> </span></div>
                                         <div class="fa fa-calendar-check-o" groups="!meeting_point.group_meeting_admin" attrs="{'invisible': [('exectime', '=', 'upcoming')]}">
@@ -659,7 +621,9 @@
                                             <field name="response_by"/> </span>
                                         </div>
                                     </div>
-                                    <div t-if="record.exectime.value=='ongoing' or record.exectime.value=='completed'" class="roster-buttons oe_read_only" groups="meeting_point.group_meeting_admin">
+                                    <div t-if="record.exectime.value=='ongoing' or record.exectime.value=='completed'"
+                                          class="roster-buttons oe_read_only"
+                                          groups="meeting_point.group_meeting_admin">
                                         <t>
                                            <button type="object" name="action_absent" class="btn btn-primary btn-sm">
                                                <t t-if="record.attendance.value=='Absent'">
@@ -668,7 +632,6 @@
                                                Absent
                                            </button>
                                         </t>
-
                                         <t>
                                            <button type="object" name="action_inperson" class="btn btn-primary btn-sm">
                                                <t t-if="record.attendance.value=='In-Person'">
@@ -677,7 +640,6 @@
                                                In-Person
                                            </button>
                                         </t>
-
                                         <t>
                                            <button type="object" name="action_online" class="btn btn-primary btn-sm">
                                                <t t-if="record.attendance.value=='Online'">

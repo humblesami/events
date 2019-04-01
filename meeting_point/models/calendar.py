@@ -258,6 +258,8 @@ class Meeting(models.Model):
             surveys = vals.get('survey_ids')
             if surveys:
                 del vals['survey_ids']
+            if vals.get('topic_ids_new'):
+                vals['topic_ids'] = vals.get('topic_ids_new')
             meeting = super(Meeting, self).create(vals)
             # self.setVideoLink(meeting, 1)
             if surveys:
@@ -289,6 +291,8 @@ class Meeting(models.Model):
                 raise ValidationError("Sorry you are not authorized to change the past event, you can mark attendance and attach documents only.")
         if self.env.user.has_group('meeting_point.group_meeting_admin'):
             self = self.sudo()
+        if vals.get('topic_ids_new'):
+            vals['topic_ids'] = vals.get('topic_ids_new')
         res = super(Meeting, self).write(vals)
         self.emit_data_update()
         return res
