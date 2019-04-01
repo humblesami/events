@@ -149,6 +149,9 @@
                                                 <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative</button>
                                             </t>
                                         </div>
+                                          <div class="o_hidden pblic_evnt_id">
+                                            <field name="id" class="o_hidden" />
+                                            </div>
                                     </t>
                                 </a>
                                 <script src="/meeting_point/static/js/meeting_kanban.js"/>
