@@ -223,7 +223,7 @@
                 <form string="Meetings" class="meetingform">
                     <field name="is_active_yet" class="o_hidden"/>
                     <field name="attendee_status" class ="statusValue o_hidden"/>
-                    <div class="acceptance_buttons_new oe_read_only"  style="display:flex"  attrs="{'invisible': [('is_active_yet','=','no')]}">
+                    <div class="acceptance_buttons_new oe_read_only"  style="display:flex"  attrs="{'invisible': ['|',('is_active_yet','=','no'),('exectime','=','completed')]}">
                         <div class ="accet"  style="display:none !important">
                             <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept" ><i class="fa fa-check fa-lg" style="color:white"/>Accept
                             </button>
