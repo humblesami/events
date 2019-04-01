@@ -462,7 +462,7 @@ $(document).on("click",".top_btns .save_doc_data", function(e){
             var email =input_email[1].value;
             var name =input_name[0].value;
 
-            if(snd_to_all){
+            if(!snd_to_all){
             $.each(new_divs, function() {
                 var sign=$(this);
                 var left=sign.position().left;
