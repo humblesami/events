@@ -51,7 +51,6 @@
                         <t t-name="kanban-box">
                             <div class="kantainer" style="padding:0">
                                 <a type="object" name="open_same_window" class="kanban_a oe_module_desc">
-
                                     <div class="oe_module_desc">
                                         <div style="font-weight:bold">
                                             <field name="name"/>
@@ -60,8 +59,11 @@
                                             <div>Lead: <field name="lead"/> </div>
                                         </t>
                                         <div>Duraion: <field name="duration"/> </div>
-                                        <div t-foreach="record.document_ids.raw_value" t-as="doc">
-                                            docu--
+                                        <div t-if="record.document_ids.raw_value" t-as="doc">
+                                            Attachment Available
+                                        </div>
+                                        <div t-if="record.voting_ids.raw_value" t-as="doc">
+                                            Action Linked
                                         </div>
                                     </div>
                                 </a>

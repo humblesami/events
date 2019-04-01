@@ -178,7 +178,7 @@ class Voting(models.Model):
 
     def emit_data_update(self, vals):
         listeners = []
-        for partner in self.respondent_id:
+        for partner in self.partner_ids:
             if partner.user_id:
                 listeners.append(partner.user_id.id)
         data = [{

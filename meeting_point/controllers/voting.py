@@ -326,9 +326,4 @@ class website_voting(http.Controller):
             for partner in voting_obj_orm.partner_ids:
                 if partner.user_id.id == uid:
                     not_allowed = False
-
-        if voting_obj_orm.respondent_id:
-            for respondent in voting_obj_orm.respondent_id:
-                if respondent.user_id.id == uid:
-                    not_allowed = False
         return not_allowed
