@@ -47,6 +47,8 @@
                     <field name="lead"/>
                     <field name="duration"/>
                     <field name="document_ids"/>
+                    <field name = "actions"/>
+                    <field name = "attachments"/>
                    <templates>
                         <t t-name="kanban-box">
                             <div class="kantainer" style="padding:0">
