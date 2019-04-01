@@ -250,7 +250,7 @@ class Meeting(models.Model):
     im_attendee = fields.Char(compute='look_if_invited')
     is_active_yet = fields.Char(compute="_compute_meeting_status")
     conference_status = fields.Char(compute='is_video_active')
-    voting_ids = fields.One2many('meeting_point.voting','meeting_id',string="Approval/Voting" )
+    voting_ids = fields.One2many('meeting_point.voting','meeting_id',string="Approval/Voting" , compute='has_votings_meeting')
     actions = fields.Html(compute='has_votings', string="Actions(s)")
 
     @api.model
@@ -259,8 +259,8 @@ class Meeting(models.Model):
             surveys = vals.get('survey_ids')
             if surveys:
                 del vals['survey_ids']
-            if vals.get('topic_ids_new'):
-                vals['topic_ids'] = vals.get('topic_ids_new')
+            # if vals.get('topic_ids_new'):
+            #     vals['topic_ids'] = vals.get('topic_ids_new')
             meeting = super(Meeting, self).create(vals)
             # self.setVideoLink(meeting, 1)
             if surveys:
@@ -292,20 +292,21 @@ class Meeting(models.Model):
                 raise ValidationError("Sorry you are not authorized to change the past event, you can mark attendance and attach documents only.")
         if self.env.user.has_group('meeting_point.group_meeting_admin'):
             self = self.sudo()
-        if vals.get('topic_ids_new'):
-            vals['topic_ids'] = vals.get('topic_ids_new')
         res = super(Meeting, self).write(vals)
         self.emit_data_update()
         return res
 
     @api.multi
-    def has_voting(self):
+    def has_votings(self):
         for obj in self:
             if obj.voting_ids:
                 obj.actions = 'available'
             else:
                 obj.actions = 'zero'
-
+    @api.multi
+    def has_votings_meeting(self):
+        for obj in self:
+            self.voting_ids = self.env['meeting_point.voting'].search(['&',('meeting_id','=',self.id),('topic_id','=',False)]).ids
     @api.multi
     def is_video_active(self):
         for obj in self:
