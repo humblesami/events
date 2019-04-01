@@ -560,7 +560,7 @@ function module0(module, exports, __webpack_require__) {
 
         function onDocLoaded()
         {
-            site_functions.hideLoader("renderdoc");            
+            site_functions.hideLoader("renderdoc");
             site_functions.hideLoader("loaddocwaiter");
         }
         
@@ -957,13 +957,16 @@ function module0(module, exports, __webpack_require__) {
                         {
 							addCommentCount(annotations_of_page, pange_number);
                         }
-                    }
-
-					for(var i = 1; i <= NUM_PAGES; i++){
-                        UI.renderPage(i, RENDER_OPTIONS, function(cb_data, page_num){                            
-                            onPageDone(cb_data, page_num);
-                        });
-                    }
+					}					
+					
+					UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num){                            
+						onPageDone(cb_data, page_num);
+						for(var i = 2; i <= NUM_PAGES; i++){
+							UI.renderPage(i, RENDER_OPTIONS, function(cb_data, page_num){                            
+								onPageDone(cb_data, page_num);
+							});
+						}
+					});
 				}
 				if(window['show_annotation']){
 					$('.annotationLayer').show();
