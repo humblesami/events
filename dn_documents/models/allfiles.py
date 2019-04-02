@@ -5,6 +5,7 @@ import base64
 import threading
 import subprocess
 
+import pdftotext
 from PIL import Image
 from fpdf import FPDF
 from random import randint
