@@ -194,3 +194,13 @@
 .check_box_send_all,.PdfButtonWrapper{
     display: none
 }
+
+ .o_cp_buttons, .o_cp_pager{
+
+     display:none !important;
+ }
+
+.o_cp_left{
+ position: absolute;
+    right: 0;
+}

@@ -385,7 +385,7 @@ class Document(models.Model):
                 'view_mode': 'form',
                 'res_model': self._name,
                 'res_id': self.id,
-                'context': {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
+                # 'context': {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
                 'target': 'current',
             }
 
