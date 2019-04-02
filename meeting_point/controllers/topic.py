@@ -31,6 +31,7 @@ class topic(http.Controller):
                 obj['duration'] = dn_dt.hours_to_hoursNminutes(duration)
             except:
                 a = 1
+            obj['votings'] = ws_methods.objects_list_to_json_list(topic.voting_ids, ['id', 'name', 'my_status'])
             obj["docs"] = ws_methods.objects_list_to_json_list(topic.document_ids, ['id', 'name'])
             return ws_methods.http_response('', obj)
         except:

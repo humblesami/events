@@ -333,6 +333,9 @@ class meeting(http.Controller):
             surveys = meeting.survey_ids
             meeting_object['surveys'] = ws_methods.objects_list_to_json_list(surveys, ['id', 'title', 'my_status'])
 
+            votings = meeting.voting_ids
+            meeting_object['votings'] = ws_methods.objects_list_to_json_list(votings, ['id', 'name', 'my_status'])
+
             attendees = meeting.attendee_ids
             attendees = attendees.filtered(lambda p: p.partner_id.id != 3)
             props = ['attendance', 'state', 'response_by']
