@@ -241,6 +241,7 @@
             </div>
             <div class="oe_structure"/>
         </t>
+            <script src="/meeting_point/static/js/voting.js"/>
         </template>
 
 

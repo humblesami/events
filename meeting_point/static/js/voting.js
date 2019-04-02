@@ -110,6 +110,16 @@ $(function(){
         }
     }
 
+    (function(event) {
+        if (window.top == window){
+            $('.navbar-static-top').show();
+        }
+        else
+        {
+            $('.navbar-static-top').hide();
+        }
+    })()
+
     function get_results(){
         var options = {
             url : '/voting/results',
@@ -340,3 +350,4 @@ $(function(){
 });
 
 //# sourceURL=localhost:8000/meeting_point/static/js/voting.js
+
