@@ -76,6 +76,17 @@ class Voting(models.Model):
 
     @api.onchange('partner_ids')
     def _change_partner_id_value(self):
+        user_id = []
+        for partner in self.partner_ids:
+            if (partner.is_committee):
+                temp = self.env['meeting_point.committee'].search([('partner_id', '=', partner.id)])
+                for val in temp.user_ids._ids:
+                    tempValueForPartner=self.env['meeting_point.users'].search([('id','=',val)]).user_id.partner_id.id
+                    user_id.append(tempValueForPartner)
+            else :
+                 user_id.append(partner.id)
+        TempAttendee=list(set(user_id))
+        self.partner_ids=self.env['res.partner'].browse(TempAttendee)
         if self.partner_ids:
             if self.motion_first and self.motion_first.partner_id not in self.partner_ids:
                 self.motion_first = False
@@ -84,7 +95,6 @@ class Voting(models.Model):
         else:
             self.motion_first = False
             self.motion_second = False
-        self.topic_id = False
 
     @api.onchange('motion_first')
     def _change_motion_value1(self):
