@@ -86,21 +86,21 @@ class Voting(models.Model):
             self.motion_second = False
         self.topic_id = False
 
-    # @api.onchange('motion_first')
-    # def _change_motion_value1(self):
-    #     selected_user = self.motion_first
-    #     data = self.partner_ids
-    #     if selected_user:
-    #         data = data.filtered(lambda x: x.user_id != selected_user)
-    #     return {'domain': {'motion_second': [('partner_id', 'in', data)]}}
-    #
-    # @api.onchange('motion_second')
-    # def _change_motion_value2(self):
-    #     selected_user = self.motion_second
-    #     data = self.partner_ids
-    #     if selected_user:
-    #         data = data.filtered(lambda x: x.user_id != selected_user)
-    #     return {'domain': {'motion_first': [('partner_id', 'in', data)]}}
+    @api.onchange('motion_first')
+    def _change_motion_value1(self):
+        selected_user = self.motion_first
+        data = self.partner_ids
+        if selected_user:
+            data = data.filtered(lambda x: x.user_id != selected_user)
+            return {'domain': {'motion_second': [('partner_id.id', 'in', data.ids)]}}
+
+    @api.onchange('motion_second')
+    def _change_motion_value2(self):
+        selected_user = self.motion_second
+        data = self.partner_ids
+        if selected_user:
+            data = data.filtered(lambda x: x.user_id != selected_user)
+            return {'domain': {'motion_first': [('partner_id.id', 'in', data.ids)]}}
 
 
     def _compute_graphical_url(self):
