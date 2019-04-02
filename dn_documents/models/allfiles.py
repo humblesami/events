@@ -12,10 +12,6 @@ import pdf2image as pdf2image
 from pytesseract import pytesseract
 
 from odoo import models, fields, api
-from pdfminer.converter import PDFPageAggregator
-from pdfminer.pdfparser import PDFParser, PDFDocument
-from pdfminer.layout import LAParams, LTTextBox, LTTextLine
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 
 from odoo.addons.dn_base.statics import scan_virus,raise_dn_model_error
 
@@ -180,24 +176,10 @@ class AllFiles(models.Model):
                      pth + filename])
                 res = open(pth + '_new.pdf', 'rb')
             content=""
-            parser = PDFParser(res)
-            doc = PDFDocument()
-            parser.set_document(doc)
-            doc.set_parser(parser)
-            doc.initialize('')
-            rsrcmgr = PDFResourceManager()
-            laparams = LAParams()
-            laparams.char_margin = 1.0
-            laparams.word_margin = 1.0
-            device = PDFPageAggregator(rsrcmgr, laparams=laparams)
-            interpreter = PDFPageInterpreter(rsrcmgr, device)
+            pdf = pdftotext.PDF(res)
+            for p in pdf:
+                content+=p
 
-            for page in doc.get_pages():
-                interpreter.process_page(page)
-                layout = device.get_result()
-                for lt_obj in layout:
-                    if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
-                        content += lt_obj.get_text()
 
             # print(content)
             if ext != "pdf":
