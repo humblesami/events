@@ -66,10 +66,18 @@ $(function(){
                 else           
                 {                  
                     vote_options_container.find('button').click(function(){
-                        voting_option_id = $(this).attr('data-id');                        
-                        signature_lib.save_input['voting_option_id'] = voting_option_id;
-                        if($(this).children().length == 0)
-                            include_signs();
+                        let close_date = $('.close_date').text();
+                        if (!voting_closed(close_date))
+                        {
+                            voting_option_id = $(this).attr('data-id');
+                            signature_lib.save_input['voting_option_id'] = voting_option_id;
+                            if($(this).children().length == 0)
+                                include_signs();
+                        }
+                        else
+                        {
+                            alert('This Approval/Voting is Closed.')
+                        }
                     });                    
                 }                             
             }            
@@ -119,6 +127,16 @@ $(function(){
             $('.navbar-static-top').hide();
         }
     })()
+
+    function voting_closed(close_date){
+		let closed = false;
+		let closingDate = new Date(close_date).getTime();
+		let dateNow = new Date().getTime();
+		if (closingDate < dateNow){
+			closed = true;
+		}
+		return closed;
+	}
 
     function get_results(){
         var options = {
