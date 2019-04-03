@@ -12,5 +12,9 @@
         <record model="res.groups" id="base.group_erp_manager">
            <field name="implied_ids" eval="[(4, ref('group_dn_app_manager'))]"/>
         </record>
+
+        <record model="res.groups" id="group_del_rule">
+            <field name="name">Del Extra</field>
+        </record>
     </data>
 </odoo>

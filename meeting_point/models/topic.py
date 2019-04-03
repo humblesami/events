@@ -17,7 +17,6 @@ class TopicDoc(models.Model):
 
 class Topic(models.Model):
     _name="meeting_point.topic"
-    _inherit = 'dn_documents.allfiles'
     _order = "sequence"
 
     name = fields.Char(string="Title", required=True)

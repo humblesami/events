@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "assests",
+    'name': "dn-assets",
 
     'summary': """
         App Resources """,
