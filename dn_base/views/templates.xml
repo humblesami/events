@@ -54,6 +54,9 @@
             <html t-att="html_data or {}">
                 <head>
                     <meta charset="utf-8"/>
+                    <t t-if="request.httprequest.host_url.startswith('https')">
+                        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+                    </t>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
                     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 
@@ -62,7 +65,8 @@
 
                     <script type="text/javascript">
                         var odoo = {
-                            csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                            csrf_token: '<t t-esc="request.csrf_token(None)"/>',
+                            site_url: '<t t-raw="request.httprequest.host_url" />',
                         };
                     </script>
 
