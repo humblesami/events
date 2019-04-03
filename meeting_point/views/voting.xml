@@ -85,6 +85,21 @@
             <field name="res_model">meeting_point.voting</field>
             <field name="view_mode">kanban,form,tree</field>
         </record>
+        <record id="action_voting_kanban_manager_he" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="action_meeting_voting"/>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="meeting_point_voting_kanban"/>
+            </record>
+        <record id="action_voting_form_manager_he" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="action_meeting_voting"/>
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_form_voting"/>
+        </record>
+
+
+
 
         <record id="action_meeting_voting_type" model="ir.actions.act_window">
             <field name="name">Voting Types</field>
@@ -182,15 +197,18 @@
                 <div class="container">
                     <div class="navbar-header">
                         <div class="voting_back_btn_container">
-                            <div t-if="voting.meeting_id" t-ignore="true" class="pull-right">
-                                <a t-attf-href="/web#view_type=form&amp;model=calendar.event&amp;id=#{voting.meeting_id.id}&amp;action=voting.action_upcoming_meeting" class="btn btn-default">Back to meeting</a>
-                            </div>
-                            <div  t-ignore="true" class="pull-right">
-                                <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;id=1&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
-                            </div>
-                            <div  t-ignore="true" class="pull-right">
-                                <a t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{voting.id}&amp;action=meeting_point.action_meeting_voting"  class="btn btn-default">Back to Voting</a>
-                            </div>
+                            <div t-if="voting.meeting_id != False &amp; voting.topic_id.id == False"  t-ignore="true" class="pull-right">
+                               <a t-attf-href="/web#view_type=form&amp;model=calendar.event&amp;id=#{voting.meeting_id.id}&amp;action=meeting_point.action_upcoming_meeting" class="btn btn-default">Back to meeting</a>
+                           </div>
+                              <div t-if="voting.topic_id"  t-ignore="true" class="pull-right">
+                               <a t-attf-href="/web#view_type=form&amp;model=meeting_point.topic&amp;id=#{voting.topic_id.id}&amp;action=meeting_point.action_topic_meeting&amp;menu_id=meeting_point.menu_root_mp" class="btn btn-default">Back to Topic</a>
+                           </div>
+                           <div t-ignore="true" class="pull-right">
+                               <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;id=1&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
+                           </div>
+                           <div t-ignore="true" class="pull-right">
+                               <a t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{voting.id}&amp;action=meeting_point.action_meeting_voting" class="btn btn-default">Back to Voting</a>
+                           </div>
                         </div>
                   </div>
                 </div>
