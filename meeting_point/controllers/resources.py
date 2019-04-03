@@ -291,8 +291,14 @@ class ws(http.Controller):
             if not file:
                 return ws_methods.http_response('Document Not Found')
             attendees = []
-            converted = file['pdf_doc'].decode('utf-8')
+            converted = False
+            if file.pdf_doc:
+                converted = file['pdf_doc'].decode('utf-8')
             doc = {'id': doc_id, "doc": converted, 'doc_nget-attendeesame': file['name'], 'type': doc_type}
+            if file.html:
+                doc['doc'] = file['html']
+                doc['excel'] = 1
+
             if doc_type == 'resource':
                 props = ['parent_folder.name', 'parent_folder.id']
             elif doc_type == 'meeting':
