@@ -45,6 +45,7 @@ class ws(http.Controller):
                 'meeting_point.files': ['name'],
                 'meeting_point.doc': ['name'],
                 'meeting_point.topicdoc': ['name'],
+                'meeting_point.voting': ['name', 'description'],
             }
 
             if model_name and model_name != '':
@@ -100,6 +101,7 @@ class ws(http.Controller):
                 'meeting_point.files': ['name', 'content'],
                 'meeting_point.doc': ['name', 'content'],
                 'meeting_point.topicdoc': ['name', 'content'],
+                'meeting_point.votingdocument': ['name', 'content'],
             }
 
             if model_name and model_name != '':
