@@ -21,7 +21,7 @@ var dn_json_rpc_object = {
             setTimeout(function(){
                 if(site_loaderContainer)
                     site_loaderContainer.hide();
-            }, 6000);
+            }, 29000);
         }
     },
     baseUrl: dn_base_web_url,
@@ -69,7 +69,7 @@ var dn_json_rpc_object = {
             dn_json_rpc_object.showHideLoader(true);
             setTimeout(function(){
                 site_loaderContainer.hide()
-            }, 6000);
+            }, 29000);
         }
 
         $.ajax({

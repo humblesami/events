@@ -178,8 +178,8 @@ class AllFiles(models.Model):
                 res = open(pth + '_new.pdf', 'rb')
             content=""
             pdf = pdftotext.PDF(res)
-            for p in pdf:
-                content+=p
+            for pag in pdf:
+                content += pag
 
 
             # print(content)

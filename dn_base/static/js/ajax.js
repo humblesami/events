@@ -16,7 +16,7 @@ function showLoader(path)
         dn_json_rpc_object.showHideLoader(true);
         setTimeout(function(){
             hideLoader(path);
-        }, 6000)
+        }, 29000)
     }
     requests_working.push(path);
 //    if(!timeOut)
