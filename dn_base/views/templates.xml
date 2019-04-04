@@ -53,23 +53,18 @@
             &lt;!DOCTYPE html&gt;
             <html t-att="html_data or {}">
                 <head>
+                    <meta charset="utf-8"/>
                     <script>
                         (function(){
-                            var meta_element = document.createElement("meta");
                             if(window.location.toString().startsWith('https'))
                             {
+                                var meta_element = document.createElement("meta");
                                 meta_element.setAttribute('http-equiv', 'Content-Security-Policy');
                                 meta_element.setAttribute('content', 'upgrade-insecure-requests');
                                 document.head.prepend(meta_element);
                             }
-                            meta_element = document.createElement("meta");
-                            meta_element.setAttribute('charset','utf-8');
-                            document.head.prepend(meta_element);
                         })()
                     </script>
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-                    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-
                     <title t-esc="title or 'OdooHQ'"/>
                     <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/dn_base/static/favicon.ico'"/>
 
