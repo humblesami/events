@@ -54,17 +54,7 @@
             <html t-att="html_data or {}">
                 <head>
                     <meta charset="utf-8"/>
-                    <script>
-                        (function(){
-                            if(window.location.toString().startsWith('https'))
-                            {
-                                var meta_element = document.createElement("meta");
-                                meta_element.setAttribute('http-equiv', 'Content-Security-Policy');
-                                meta_element.setAttribute('content', 'upgrade-insecure-requests');
-                                document.head.prepend(meta_element);
-                            }
-                        })()
-                    </script>
+                    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
                     <title t-esc="title or 'OdooHQ'"/>
                     <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/dn_base/static/favicon.ico'"/>
 
