@@ -53,10 +53,20 @@
             &lt;!DOCTYPE html&gt;
             <html t-att="html_data or {}">
                 <head>
-                    <meta charset="utf-8"/>
-                    <t t-if="request.httprequest.host_url.startswith('https')">
-                        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-                    </t>
+                    <script>
+                        (function(){
+                            var meta_element = document.createElement("meta");
+                            if(window.location.toString().startsWith('https'))
+                            {
+                                meta_utf8.setAttribute('http-equiv', 'Content-Security-Policy');
+                                meta_utf8.setAttribute('content', 'upgrade-insecure-requests');
+                                document.head.prepend(meta_element);
+                            }
+                            meta_element = document.createElement("meta");
+                            meta_element.setAttribute('charset','utf-8');
+                            document.head.prepend(meta_element);
+                        })()
+                    </script>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
                     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 
@@ -66,7 +76,7 @@
                     <script type="text/javascript">
                         var odoo = {
                             csrf_token: '<t t-esc="request.csrf_token(None)"/>',
-                            site_url2: '<t t-raw="request.httprequest.host_url" />',
+                            sample_attr: '<t t-raw="this is test raw value" />',
                         };
                     </script>
 
