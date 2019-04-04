@@ -2,7 +2,15 @@ $(function(){
 //    $('#votingBack').hide();
     $('#submitted').hide();
     $('.viewGraphically:first').css('background-color','#875A7B');
-
+    let sign_src = $('img[name=signature_data]').attr('src');
+    $('img[name=signature_data]').hide();
+    if(sign_src.length != 0 && sign_src.indexOf('placeholder') == -1){
+        console.log(sign_src);
+        sign_src += new Date();
+        console.log(sign_src);
+        $('img[name=signature_data]').attr('src', sign_src);
+        $('img[name=signature_data]').show();
+    }
     try{
         var voting_id_dom = $('a[name="voting_type_id"]:first');
         voting_id_dom.removeAttr('href').removeAttr('name');
@@ -32,6 +40,7 @@ $(function(){
         on_sign_saved: function(data){            
             $('.vote_options:first').find('button').children().remove();            
             $('.vote_options:first').find('button[data-id="'+data.voting_option_id+'"]').prepend('<i class="fa fa-check fa-lg" style="color:white"></i>')
+            console.log(data);
         }
     }        
 
@@ -285,6 +294,7 @@ $(function(){
                     console.log(e);
                 }
             });
+
         }
         function on_anwser_saved(data){            
             if(data.error)
@@ -301,6 +311,26 @@ $(function(){
             {                
                 signature_lib.on_sign_saved(data);
             }
+//            web_client.do_action({
+//                            type: 'ir.actions.act_window',
+//                            res_model: 'meeting_point.voting',
+//                            res_id: parseInt(signature_lib.save_input.voting_id),
+//                            view_mode: 'form',
+//                            views: [[true, 'form']],
+//                            context: {'form_view_initial_mode': 'browse', 'force_detailed_view': 'true'},
+//                            target: 'current'
+//                         });
+
+            let sign_src = $('img[name=signature_data]').attr('src');
+            $('img[name=signature_data]').hide();
+//            if(sign_src.length != 0 && sign_src.indexOf('placeholder') == -1){
+                img_src = "data:image/png;base64," + data.signature_data;
+                console.log(img_src);
+//                sign_src += new Date();
+                console.log(img_src);
+                $('img[name=signature_data]').attr('src', img_src);
+                $('img[name=signature_data]').show();
+//            }
         }
 
         save_btn.click(save_signature);

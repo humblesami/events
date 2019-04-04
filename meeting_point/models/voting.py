@@ -42,6 +42,7 @@ class Voting(models.Model):
     topic_id = fields.Many2one('meeting_point.topic',string="Topic",ondelete='cascade')
     enable_discussion = fields.Boolean(string = 'Enable Discussion')
     signature_required = fields.Boolean()
+    signature_data = fields.Binary(string="Signature", compute="_compute_signature")
 
 
 
@@ -64,6 +65,10 @@ class Voting(models.Model):
                 ids.append(partner.user_id.id)
         res = {'name':  self.voting_type_id.name+'-'+self.name, 'audience': ids}
         return res
+
+    def _compute_signature(self):
+        self.signature_data =  self.env['meeting_point.votinganswer'].search(['&',('user_id', '=', self._uid),('voting_id','=',self.id)]).signature_data
+
 
     @api.multi
     def open_same_window(self):
@@ -178,7 +183,7 @@ class Voting(models.Model):
         partener_ids_beofre = False
         if vals.get('partner_ids'):
             partener_ids_beofre = self.partner_ids
-        res = super(Voting, self).write(vals)
+        res = super(Voting, self.sudo()).write(vals)
         if partener_ids_beofre:
             partener_ids_after = self.partner_ids
             to_exclude = []

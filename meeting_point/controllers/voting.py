@@ -53,13 +53,14 @@ class website_voting(http.Controller):
             current_voting_answer = votingAnswer.search([('voting_id', '=', voting_id), ('user_id', '=', uid)])
             if current_voting_answer:
                 current_voting_answer.write(vals)
+                voting_object._compute_signature()
                 res = 'Update'
             else:
                 vals['voting_id'] = voting_id,
                 vals['user_id'] = uid
                 votingAnswer.create(vals)
                 res = 'Create'
-            return ws_methods.http_response('', {'voting_option_id' : kw['voting_option_id'], 'operation': res})
+            return ws_methods.http_response('', {'voting_option_id' : kw['voting_option_id'], 'operation': res, 'signature_data': kw['signature_data']})
         except:
             return ws_methods.handle()
 
