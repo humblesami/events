@@ -44,6 +44,19 @@ class Voting(models.Model):
     signature_required = fields.Boolean()
 
 
+
+
+    def signature_value(self):
+        self.signature_required = not  self.signature_required
+    def public_value(self):
+        self.public_visibility = not  self.public_visibility
+    def discussion_value(self):
+        self.enable_discussion = not  self.enable_discussion
+
+
+
+
+
     def get_name_audience(self):
         ids = []
         for partner in self.partner_ids:
