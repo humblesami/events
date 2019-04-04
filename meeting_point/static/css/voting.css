@@ -35,5 +35,8 @@ btn.DocsBtn
     margin-left:12%;
 }
  .motion-icon{
-    margin-lef: 5px;
+    margin-left: 5px;
  }
+ .motion-person {
+    padding-left: 15px;
+}

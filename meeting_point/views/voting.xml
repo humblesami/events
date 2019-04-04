@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Voting/Approval" class="voting_form">
                     <link rel="stylesheet" href="/meeting_point/static/css/voting.css"/>
+                    <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="id" invisible="1" class="voting_id"/>
                     <sheet>
                         <group>
@@ -20,11 +21,11 @@
                             <!--<field  name="public_url_new" widget="url" attrs="{'invisible': [('public_url_new','=',False)]}"/>-->
                             <div>
                               <div class="o_form_label"><strong>Motion First</strong><span class="fa fa-user motion-icon"></span></div>
-                              <field name="motion_first" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('partner_id','in',partner_ids)]"/>
+                              <field name="motion_first" class="motion-person" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('partner_id','in',partner_ids)]"/>
                             </div>
                             <div>
                               <div class="o_form_label"><strong>Motion Second</strong><span class="fa fa-user motion-icon"></span></div>
-                              <field name="motion_second" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('partner_id','in',partner_ids)]"/>
+                              <field name="motion_second" class="motion-person" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('partner_id','in',partner_ids)]"/>
                             </div>
                             <field name="open_date"/>
                             <field name="close_date"/>
