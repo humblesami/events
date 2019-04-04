@@ -190,6 +190,10 @@
     display: inline-block
 }
 
+.o_control_panel > .breadcrumb > li:nth-child(2) {
+    display: inline-block
+}
+
 .check_box_send_all,.PdfButtonWrapper{
     display: none
 }

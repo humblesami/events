@@ -12,6 +12,9 @@ from odoo import models, fields, api, http
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from odoo.addons.dn_base.statics import raise_dn_model_error
 
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT,datetime
+
+
 class Document(models.Model):
     _name = 'e_sign.document'
     _inherit = 'dn_documents.allfiles'
@@ -236,6 +239,26 @@ class Document(models.Model):
                     h = s.height
 
                 pdf.image(signarure_image_path, x=left, y=top, w=w, h=h)
+                if self.send_to_all:
+                    pdf.set_xy(left + 50,top+h)
+                    # pdf.ln(5)
+                    pdf.set_font('Arial', 'U', 15)
+                    signature_authority = s.user_id
+                    # Special case, we have restricted our users to read super admin
+                    try:
+                        sign_name = signature_authority.name
+                    except:
+                        sign_name = 'Root'
+                    pdf.cell(5, 5, sign_name)
+                    date = datetime.strptime(s.write_date,
+                                             DEFAULT_SERVER_DATETIME_FORMAT)
+                    date = date.strftime('%b %d %Y')
+                    # pdf.ln(20)
+                    pdf.set_xy(left +50, top + h + 20)
+                    pdf.cell(5, 5, date)
+                    # if ip:
+                    #     pdf.ln(25)
+                    #     pdf.cell(5, 5, ip)
                 current_page=pg
                 sign_pages.append(pg)
         signature_only_pdf_path = pth + "/signature-pdf-"+str(randint(1, 99))+".pdf"
