@@ -58,8 +58,8 @@
                             var meta_element = document.createElement("meta");
                             if(window.location.toString().startsWith('https'))
                             {
-                                meta_utf8.setAttribute('http-equiv', 'Content-Security-Policy');
-                                meta_utf8.setAttribute('content', 'upgrade-insecure-requests');
+                                meta_element.setAttribute('http-equiv', 'Content-Security-Policy');
+                                meta_element.setAttribute('content', 'upgrade-insecure-requests');
                                 document.head.prepend(meta_element);
                             }
                             meta_element = document.createElement("meta");
