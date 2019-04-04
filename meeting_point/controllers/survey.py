@@ -71,8 +71,7 @@ class website_survey(WebsiteSurvey):
             data = {'survey': survey, 'page': None, 'token': user_input.token}
             return request.render('survey.survey_init', data)
         else:
-            data = {'survey': survey, 'page': survey.page_ids[0], 'page_nr': 1, 'token': user_input.token}
-            return request.render('survey.survey', data)
+            return request.redirect('%s/survey/fill/%s/%s' % ( ws_methods.get_main_url(), survey.id, user_input.token))
 
     @http.route('/voting-submit', type="http", csrf=False, auth='none', cors='*')
     def submit_dn_survey_http(self, **kw):
