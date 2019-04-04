@@ -229,14 +229,17 @@ class Signature(http.Controller):
                 c = 0
                 for p in m.partner_ids:
                     if p.user_id:
-                        if c != 0:
-                            sign_top += 15
-                        c += 1
+                        if c == 0:
+                            sign_left = 3
+                        if c == 1:
+                            sign_left = 51
+
                         token = pycompat.text_type(uuid.uuid4())
                         obj = {'document_id': doc_id, 'user_id': p.user_id.id, 'type': "sign",'token': token,
-                               'left': 15, 'top': sign_top,'height': 40, 'width': 150,
+                               'left': sign_left, 'top': sign_top,'height': 40, 'width': 140,
                                'zoom': 300
                                }
+
                         doc.signature_ids = [(0, 0, obj)]
 
                         user_email = p.user_id.email
@@ -260,6 +263,11 @@ class Signature(http.Controller):
                             email_data.append(
                                 {'user_email': user_email, 'email': email, 'token': token, 'model': model,
                                  'doc_id': doc_id, 'subject': kw['subject'], 'message': kw['message']})
+                        if c == 1:
+                            c = 0
+                            sign_top += 15
+                            continue
+                        c += 1
                 doc.add_pages_for_sign(doc)
             else:
                 user_ids = [s["user_id"] for s in signatures]

@@ -27,10 +27,32 @@
                             <field name="close_date"/>
                             <field name="description"/>
 
+                            <sheet class="switchButtons">
+                           <div class="oe_button_box oe_edit_only" name="button_box">
+                               <strong>Enable Discussion </strong>
+                           <!--<label for="enable_discussion" class="oe_edit_only"/>-->
+                             <button name="discussion_value" type="object" class="oe_stat_button btn btn-primary">
+                                 <field name="enable_discussion" widget="boolean_button" options='{"terminology": "True"}'/>
+                             </button>
+                         </div>
 
-                            <field name="public_visibility"/>
-                            <field name="enable_discussion"/>
-                            <field name="signature_required"/>
+                                <div class="oe_button_box oe_edit_only" name="button_box">
+                                    <strong>Results Visible To All </strong>
+                           <!--<label for="public_visibility" class="oe_edit_only"/>-->
+                             <button name="public_value" type="object" class="oe_stat_button btn btn-primary">
+                                 <field name="public_visibility" widget="boolean_button" options='{"terminology": "True"}'/>
+                             </button>
+                         </div>
+
+                            <div class="oe_button_box oe_edit_only" name="button_box">
+                           <!--<label for="signature_required" class="oe_edit_only"/>-->
+                                <strong>Signature Required  </strong>
+                             <button name="signature_value" type="object" class="oe_stat_button btn btn-primary">
+                                 <field name="signature_required" widget="boolean_button" options='{"terminology": "True"}'/>
+                             </button>
+                         </div>
+                              </sheet>
+
                             <field class="kanban_document dn_attatchment_btn" name="document_ids" context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban','form_view_ref': 'dn_documents.doc_edit_form'}" mode="kanban"/>
                         </group>
                         <div class="oe_read_only voting_choice_container" attrs="{'invisible' : [('voting_type_id', '=', False)]}">
