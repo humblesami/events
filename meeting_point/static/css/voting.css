@@ -34,9 +34,19 @@ btn.DocsBtn
 {
     margin-left:12%;
 }
- .motion-icon{
+.motion-icon
+{
     margin-left: 5px;
- }
- .motion-person {
+}
+.motion-person
+{
     padding-left: 15px;
+}
+.acceptance_buttons_new
+{
+	display:flex;
+}
+.acceptance_buttons_new>div
+{
+	margin-right: 6px;
 }

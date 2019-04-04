@@ -5,7 +5,7 @@
                 name="MeetVUE"
                 id="menu_root_mp"
                 sequence="2"
-                groups="group_meeting_base"
+                groups="group_meeting_base,base.group_system"
                 web_icon="meeting_point,static/menu_icons/icon.png"
                 action="action_news_user_home"
         />

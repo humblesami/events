@@ -1,36 +1,42 @@
-.oe_module_vignette.oe_kanban_global_click
-{text-align:initial;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.6);transition: 0.3s;display: flex;/* height: 100%; */}
+.oe_module_vignette.oe_kanban_global_click {
+    text-align: initial;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
+    transition: 0.3s;
+    display: flex;
+    /* height: 100%; */
+}
 
-.meeting_info
-{
-display:flex;
-margin-bottom: 30px;
+.meeting_info {
+    display: flex;
+    margin-bottom: 10px;
+}
 
+.meeting_info .details,
+.meeting_info .date_tam {
+    float: left;
 }
-.meeting_info .details, .meeting_info .date_tam{
-float:left;
-}
-.meeting_info .date_tam{
-color: white;
-background-color: #3fa19d;
-padding: 5px;
-text-align:center;
-min-width: 69px;
-height: max-content;
-display: flex;
-flex-direction: column;
-}
-.meeting_info .details
-{
-margin-left:10px;
-overflow: hidden;
 
+.meeting_info .date_tam {
+    color: white;
+    background-color: #3fa19d;
+    padding: 5px;
+    text-align: center;
+    min-width: 69px;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
 }
-.acceptancebuttons
+
+.meeting_info .details {
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+.acceptance_buttons_new
 {
-margin-top:5px;
-text-align:center;
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
+	display:flex;
+}
+.acceptance_buttons_new>div
+{
+	margin-right: 6px;
 }

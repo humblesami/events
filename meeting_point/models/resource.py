@@ -13,7 +13,7 @@ class Folder(models.Model):
     def _default_partners(self):
         """ When active_model is res.partner, the current partners should be attendees """
         partners = self.env['meeting_point.users'].sudo().search([('user_id','=',self.env.user.id)])
-        return   partners
+        return partners
 
 
     partners = fields.Many2many('meeting_point.users', string="Access", default=_default_partners)

@@ -135,3 +135,19 @@ button.stylish_kanban
     background-color: #875A7B !important;
     color: white;
 }
+.acceptance_buttons_new
+{
+	display:flex;
+}
+.acceptance_buttons_new>div
+{
+	margin-right: 6px;
+}
+.acceptance_buttons_new.o_form_sheet
+{
+    padding: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+}

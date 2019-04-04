@@ -57,8 +57,8 @@
 
                         </group>
                         <div class="oe_read_only voting_choice_container" attrs="{'invisible' : [('voting_type_id', '=', False)]}">
-                          <div class="vote_options acceptance_buttons_new">
-                          </div>
+                            <div class="vote_options acceptance_buttons_new">
+                            </div>
                         </div>
                         <div>
                             <field name="signature_data" class="oe_read_only" widget='signature' domain="[('user_id.id','=',uid)]"/>

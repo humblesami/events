@@ -10,9 +10,7 @@
                     <style>
                         .modal-footer .o_form_button_cancel{
                             display:none
-
                         }
-
                     </style>
                     <field name="res_model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
@@ -33,44 +31,35 @@
                         <field name="duration" widget="float_time" class="oe_inline"/>
                         <field name="location" string="Location" class="oe_read_only"/>
                     </group>
-                    <!--attrs="{'invisible': [('is_active_yet','=','no')]}"-->
-                     <group>
-                            <field name="video_call_link" widget="url" />
-                        <!--<button type="object" class="btn-primary detail_btn oe_read_only"  name="start_conference" attrs="{'invisible': [('exectime', 'not in', ['upcoming','ongoing'])]}">Join</button>-->
+                    <group>
+                        <field name="video_call_link" widget="url" />
                         <field name="conference_bridge_number" class="conference"/>
                         <field name="pin" class="pin" />
-                        </group>
-                    <div class="detail_btn o_hidden acceptance_buttons_new"  style="display:flex">
+                    </group>
+                    <div class="acceptance_buttons_new oe_read_only"
+                         attrs="{'invisible': [('is_active_yet','=','no')]}">
+                        <div>
+                            <button type="object" class="btn btn-primary btn-sm" name="do_accept" >
+                                <i attrs="{'invisible': [('attendee_status','!=','accepted')]}"
+                                   class="fa fa-check fa-lg"/>Accept
+                            </button>
+                        </div>
+                        <div>
+                            <button type="object" class="btn btn-primary btn-sm" name="do_decline" >
+                                <i attrs="{'invisible': [('attendee_status','!=','declined')]}"
+                                   class="fa fa-check fa-lg"/>Decline
+                            </button>
+                        </div>
 
-                                            <div class="accet" style="display:none !important">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept"><i class="fa fa-check fa-lg" style="color:white"/>Accept
-                                                </button>
-                                            </div>
-                                            <div class="accept_visible">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept
-                                                </button>
-                                            </div>
-
-                                            <div class="declin " style="display:none !important">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
-                                                </button>
-                                            </div>
-                                            <div class="decline_visible">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline
-                                                </button>
-                                            </div>
-
-                                            <div class="tentativehide" style="display:none !important">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
-                                                </button>
-                                            </div>
-                                            <div class="tentative_visible">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
-                                                </button>
-                                            </div>
-                                            <div>
-                                                <button type="object" class="btn-primary" name="go_to_meeting">Details</button>
-                                            </div>
+                        <div>
+                            <button type="object" class="btn btn-primary btn-sm" name="do_tentative" >
+                                <i attrs="{'invisible': [('attendee_status','!=','tentative')]}"
+                                   class="fa fa-check fa-lg"/>Tentative
+                            </button>
+                        </div>
+                        <div>
+                            <button type="object" class="btn-primary btn-sm" name="go_to_meeting">Details</button>
+                        </div>
                     </div>
 
                     <script src="/meeting_point/static/js/event_popup.js"></script>
@@ -86,6 +75,7 @@
                 <kanban default_order="start_datetime">
                     <field name="start_datetime"/>
                     <field name="publish"/>
+                    <field name="is_active_yet"/>
                     <field name="attendee_status"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -108,51 +98,45 @@
                                             <h3>
                                                 <field name="name"/>
                                             </h3>
-                                            <!--<field name="start_datetime"/>-->
                                             <p class="oe_module_name">
                                                 <p>
                                                     <field name="location" style="margin-right: 4px;" string="Location"/>
                                                 </p>
                                             </p>
-                                            <div class="current_status">
-                                                <field name="attendee_status" invisible="1"/>
-                                                <field name="publish" invisible="1"/>
-                                            </div>
                                         </div>
                                     </div>
-                                    <t t-if="record.publish.value">
-                                        <div class="acceptancebuttons">
-                                            <t t-if="record.attendee_status.value=='Accepted'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept">
-                                                    <i class="fa fa-check fa-lg" style="color:white"/>Accept
-
+                                    <t t-if="record.is_active_yet and record.is_active_yet.value == 'yes'">
+                                        <div class="acceptance_buttons_new">
+                                            <div>
+                                                <button type="object" class="btn btn-primary btn-sm" name="do_accept">
+                                                    <t t-if="record.attendee_status.raw_value == 'accepted'">
+                                                        <i class="fa fa-check fa-lg"/>
+                                                    </t>
+                                                    Accept
                                                 </button>
-                                            </t>
-                                            <t t-if="record.attendee_status.value!='Accepted'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept</button>
-                                            </t>
-                                            <t t-if="record.attendee_status.value=='Declined'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline">
-                                                    <i class="fa fa-check fa-lg" style="color:white"/>Decline
-
-                                                </button>
-                                            </t>
-                                            <t t-if="record.attendee_status.value!='Declined'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline</button>
-                                            </t>
-                                            <t t-if="record.attendee_status.value=='Uncertain'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative">
-                                                    <i class="fa fa-check fa-lg" style="color:white"/>Tentative
-                                                </button>
-                                            </t>
-                                            <t t-if="record.attendee_status.value!='Uncertain'">
-                                                <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative</button>
-                                            </t>
-                                        </div>
-                                          <div class="o_hidden pblic_evnt_id">
-                                            <field name="id" class="o_hidden" />
                                             </div>
+                                            <div>
+                                                <button type="object" class="btn btn-primary btn-sm" name="do_decline">
+                                                    <t t-if="record.attendee_status.raw_value == 'declined'">
+                                                        <i class="fa fa-check fa-lg"/>
+                                                    </t>
+                                                    Decline
+                                                </button>
+                                            </div>
+
+                                            <div>
+                                                <button type="object" class="btn btn-primary btn-sm" name="do_tentative">
+                                                    <t t-if="record.attendee_status.raw_value == 'tentative'">
+                                                        <i class="fa fa-check fa-lg"/>
+                                                    </t>
+                                                    Tentative
+                                                </button>
+                                            </div>
+                                        </div>
                                     </t>
+                                    <div class="o_hidden pblic_evnt_id">
+                                        <field name="id" class="o_hidden"/>
+                                    </div>
                                 </a>
                                 <script src="/meeting_point/static/js/meeting_kanban.js"/>
                             </div>
@@ -199,12 +183,7 @@
                                                 <p>
                                                     <field name="location" string="Location"/>
                                                 </p>
-
                                             </p>
-
-                                            <div class="current_status">
-                                                <field name="attendee_status" invisible="1"/>
-                                            </div>
                                         </div>
                                     </div>
 
@@ -217,45 +196,38 @@
             </field>
         </record>
 
-
         <record id="meeting_point_event_form" model="ir.ui.view">
             <field name="name">meeting.point.form</field>
             <field name="model">calendar.event</field>
             <field name="priority" eval="0"/>
             <field name="arch" type="xml">
                 <form string="Meetings" class="meetingform">
+                    <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="is_active_yet" class="o_hidden"/>
                     <field name="attendee_status" class ="statusValue o_hidden"/>
                     <field name="actions" class="o_hidden"/>
-                    <div class="acceptance_buttons_new oe_read_only"  style="display:flex"  attrs="{'invisible': ['|',('is_active_yet','=','no'),('exectime','=','completed')]}">
-                        <div class ="accet"  style="display:none !important">
-                            <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_accept" ><i class="fa fa-check fa-lg" style="color:white"/>Accept
+                    <div class="acceptance_buttons_new o_form_sheet oe_read_only"
+                         attrs="{'invisible': [('is_active_yet','=','no')]}">
+                        <div>
+                            <button type="object" class="btn btn-primary btn-sm" name="do_accept" >
+                                <i attrs="{'invisible': [('attendee_status','!=','accepted')]}"
+                                   class="fa fa-check fa-lg"/>Accept
                             </button>
                         </div>
-                        <div class = "accept_visible" >
-                            <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_accept">Accept
-                            </button>
-                        </div>
-
-                        <div class ="declin "  style="display:none !important">
-                            <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_decline"><i class="fa fa-check fa-lg" style="color:white"/>Decline
-                            </button>
-                        </div>
-                        <div class = "decline_visible">
-                            <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_decline">Decline
+                        <div>
+                            <button type="object" class="btn btn-primary btn-sm" name="do_decline" >
+                                <i attrs="{'invisible': [('attendee_status','!=','declined')]}"
+                                   class="fa fa-check fa-lg"/>Decline
                             </button>
                         </div>
 
-                        <div class ="tentativehide "  style="display:none !important">
-                            <button type="object" class="btn btn-primary btn-sm acceptancebtn acceptancebuttonsactive" name="do_tentative"><i class="fa fa-check fa-lg" style="color:white"/>Tentative
-                            </button>
-                        </div>
-                        <div class = "tentative_visible" >
-                            <button type="object" class="btn btn-primary btn-sm acceptancebtn" name="do_tentative">Tentative
+                        <div>
+                            <button type="object" class="btn btn-primary btn-sm" name="do_tentative" >
+                                <i attrs="{'invisible': [('attendee_status','!=','tentative')]}"
+                                   class="fa fa-check fa-lg"/>Tentative
                             </button>
                         </div>
                     </div>
-                    <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="id" class="meeting_id o_hidden"/>
                     <sheet>
                         <div class="publish_btn oe_read_only" groups="meeting_point.group_meeting_admin">
@@ -267,7 +239,6 @@
                         </div>
                         <field name="state" invisible="1"/>
                         <field name="is_attendee" invisible="1"/>
-                        <!--<field name="attendee_status" invisible="1"/>-->
                         <field name="conference_status" class="conference_status o_hidden"/>
                         <field name="exectime"/>
                         <div name="readonly_completed_1">
@@ -488,7 +459,6 @@
                     <attribute name="delete">false</attribute>
                 </xpath>
 
-
                 <xpath expr="//div[@name='mp_roster']" position="attributes">
                    <attribute name="class">o2m_kanban roster-item</attribute>
                 </xpath>
@@ -504,38 +474,10 @@
                 <xpath expr="//div[@name='readonly_completed_3']" position="attributes">
                    <attribute name="class">oe_read_only</attribute>
                 </xpath>
-
-                 <xpath expr="//button[@name='do_accept']" position="attributes">
-                        <attribute name="invisible">1</attribute>
-                </xpath>
-                  <xpath expr="//button[@name='do_decline']" position="attributes">
-                        <attribute name="invisible">1</attribute>
-                </xpath>
-                  <xpath expr="//button[@name='do_tentative']" position="attributes">
-                        <attribute name="invisible">1</attribute>
-                </xpath>
                 <xpath expr="//field[@name='doc_ids']" position= "replace">
-                       <div class="o2m_kanban">
-                            <field name="doc_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form','kanban_view_ref': 'dn_documents.dn_docs_kanban_annotator'}" class="kanban_document" mode="kanban"/>
-                        </div>
-                       <!--<field name="doc_ids">-->
-                             <!--<kanban quick_create="false" edit="false" delete="true">-->
-                                 <!--<field name="name"/>-->
-                                 <!--<templates>-->
-                                     <!--<t t-name="kanban-box">-->
-                                         <!--<div style="position: relative;width:100px">-->
-                                             <!--<div class="oe_module_vignette">-->
-                                                 <!--<div class="oe_module_desc">-->
-
-                                                    <!--<a type="object" name="open_view_doc_form" class = "fa fa-2x fa-file"/>-->
-                                                    <!--<field name="name"/>-->
-                                                 <!--</div>-->
-                                             <!--</div>-->
-                                         <!--</div>-->
-                                     <!--</t>-->
-                                 <!--</templates>-->
-                             <!--</kanban>-->
-                        <!--</field>-->
+                    <div class="o2m_kanban">
+                        <field name="doc_ids" context="{'form_view_ref': 'meeting_point.view_meeting_doc_form','kanban_view_ref': 'dn_documents.dn_docs_kanban_annotator'}" class="kanban_document" mode="kanban"/>
+                    </div>
                 </xpath>
             </field>
         </record>

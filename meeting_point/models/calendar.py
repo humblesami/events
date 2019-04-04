@@ -209,6 +209,7 @@ class Meeting(models.Model):
         if self._context.get('active_model') == 'res.partner' and active_id:
             if active_id not in partners.ids:
                 partners |= self.env['res.partner'].browse(active_id)
+        partners = partners.filtered(lambda x: x.id != 3)
         return partners
 
     @api.model
@@ -423,10 +424,11 @@ class Meeting(models.Model):
                     continue
                 if rec.archived:
                     continue
-                res = rec.exectime != 'completed'
-                rec.is_active_yet = 'yes'
+                if rec.exectime != 'completed':
+                    rec.is_active_yet = 'yes'
         except:
-            q=1
+            a = 1
+            raise
 
     def get_name_audience(self):
         ids = []

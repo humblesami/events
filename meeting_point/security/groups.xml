@@ -37,7 +37,6 @@
             ,(4, ref('dn_base.group_dn_app_manager'))
             ,(4, ref('survey.group_survey_manager')),
             (4, ref('base.group_user'))]"/>
-            <field name="users" eval="[(4, ref('base.user_root'))]"/>
             <field name="user_model_ids" eval="[(4, ref('meeting_point.model_meeting_point_users'))]"/>
         </record>
     </data>
