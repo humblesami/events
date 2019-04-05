@@ -90,7 +90,7 @@
                     <field name="lead"  />
                     <field name="duration" class="topic_duration_span "
                            type="string"  widget="float_time"  />
-                    <field name="attachments" string="Attachment(s)"></field>
+                    <field name="attachments"  widget="html" string="Attachment(s)"></field>
                 </tree>
             </field>
         </record>

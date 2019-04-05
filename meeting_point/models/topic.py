@@ -47,9 +47,9 @@ class Topic(models.Model):
     def has_attachments(self):
         for topic in self:
             if topic.document_ids:
-                topic.attachments = 'available'
+                topic.attachments = '<i class="fa fa-file"></i>'
             else:
-                topic.attachments = 'zero'
+                topic.attachments = ''
 
     @api.multi
     def has_votings(self):

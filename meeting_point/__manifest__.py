@@ -23,7 +23,7 @@
         'dn_auth',
         'dn_documents', 'e_sign', #our base
         'odoochat',
-	'web_digital_sign',
+	'web_digital_sign','html_tree_widget',
         'calendar','survey', #builtin + required
         'doc_viewer', #custom + required
         #'inputmask_widget','web_digital_sign', #off the shelf + required

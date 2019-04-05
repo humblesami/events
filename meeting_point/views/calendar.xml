@@ -373,14 +373,14 @@
                                 </page>
                             </notebook>
 
-                            <div class = "mtopic_tree oe_read_only">
+                            <div class = "mtopic_tree ">
                                 <h3>Agenda Topics</h3>
-                                <field name="topic_ids" mode="kanban" ></field>
+                                <field name="topic_ids" mode="tree" ></field>
                             </div>
-                            <div class = "mtopic_tree oe_edit_only">
-                                <h3>Agenda Topics</h3>
-                                <field name="topic_ids_new" mode="tree" ></field>
-                            </div>
+<!--                            <div class = "mtopic_tree oe_edit_only">-->
+<!--                                <h3>Agenda Topics</h3>-->
+<!--                                <field name="topic_ids_new" mode="tree" ></field>-->
+<!--                            </div>-->
                         </div>
 
                         <div class="o2m_kanban">

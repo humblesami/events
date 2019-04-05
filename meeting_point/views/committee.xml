@@ -17,6 +17,9 @@
                                     <h2>
                                         <field name="name"/>
                                     </h2>
+                                    <field name="summary" widget="html" />
+                                     <field  name="members_html" widget="html"/>
+
                                 </div>
                                 <script src="/meeting_point/static/js/committee_kanban.js" />
                             </div>

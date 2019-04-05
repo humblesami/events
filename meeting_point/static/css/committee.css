@@ -13,12 +13,7 @@
 
 .o_kanban_view.o_kanban_ungrouped .o_kanban_record
 {
-    -ms-flex: none;
-    -moz-flex: none;
-    -webkit-box-flex: none;
-    -webkit-flex: none;
-    flex: none;
-    width: 23.5%;
+    overflow:hidden;
 }
 .o_form_view.o_form_nosheet
 {
@@ -32,4 +27,8 @@
     margin-right:5px;
     cursor:pointer;
     background-size:cover;
+}
+
+.committees-container .oe_form_field_html_text{
+ height:70px
 }
