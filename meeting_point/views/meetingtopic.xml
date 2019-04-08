@@ -91,6 +91,7 @@
                     <field name="duration" class="topic_duration_span "
                            type="string"  widget="float_time"  />
                     <field name="attachments"  widget="html" string="Attachment(s)"></field>
+                    <field name="actions"  widget="html" string="Actions"></field>
                 </tree>
             </field>
         </record>

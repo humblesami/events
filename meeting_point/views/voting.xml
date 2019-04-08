@@ -66,7 +66,7 @@
                             <field invisible="1" class="graphical_view_url" name="graphical_view_url"/>
                         </div>
                         <field class="kanban_document dn_attatchment_btn" name="document_ids" context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban','form_view_ref': 'dn_documents.doc_edit_form'}" mode="kanban"/>
-                        <app-comments class="app-com" attrs="{'invisible': [('enable_discussion','=',False)]}"/>
+                        <voting-comments class="app-com" attrs="{'invisible': [('enable_discussion','=',False)]}"/>
                     </sheet>
 
                     <script src="/meeting_point/static/js/voting.js"/>
@@ -96,8 +96,8 @@
                     <field name = 'my_status'/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="kantainer" style="padding:0">
-                                <a type="object" name="open_same_window" class="oe_module_desc kanban_a">
+                            <div class="kantainer oe_module_vignette oe_kanban_global_click" style="padding:0">
+<!--                                <a type="object" name="open_same_window" class="oe_module_desc kanban_a">-->
                                     <h2><field name="name"/></h2>
                                     <t t-if="record.meeting_id.raw_value">
                                         <h3>Type: <field name="voting_type_id"/></h3>
@@ -108,7 +108,7 @@
                                     <t t-if="record.topic_id.raw_value">
                                         <h4>Topic: <field name="topic_id"/></h4>
                                     </t>
-                                </a>
+<!--                                </a>-->
                             </div>
                         </t>
                     </templates>

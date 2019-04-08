@@ -34,4 +34,35 @@ $(function(){
             $(el).html('<i class="fa fa-file"></i>');
         }
     });
+
+
 });
+function openTopicDoc(e,id){
+e.stopPropagation();
+e.preventDefault();
+
+        web_client.do_action({
+                            type: 'ir.actions.act_window',
+                            res_model: 'meeting_point.topicdoc',
+                            res_id: id,
+                            view_mode: 'form',
+                            views: [[false, 'form']],
+                            context: {'form_view_initial_mode': 'edit', 'force_detailed_view': 'true'},
+                            target: 'new'
+                         });
+    }
+
+function openTopicAction(e,id){
+e.stopPropagation();
+e.preventDefault();
+
+        web_client.do_action({
+                            type: 'ir.actions.act_window',
+                            res_model: 'meeting_point.voting',
+                            res_id: id,
+                            view_mode: 'form',
+                            views: [[false, 'form']],
+                            name:"Action",
+                            target: 'new'
+                         });
+    }
