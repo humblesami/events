@@ -316,3 +316,7 @@ a.list-group-item.contact.active
     background-color: white;
     border-color: silver;
 }
+.excel_doc{
+    padding:20px;
+    display: none;
+}

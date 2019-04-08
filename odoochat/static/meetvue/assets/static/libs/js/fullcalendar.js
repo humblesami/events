@@ -14,8 +14,6 @@
 	}
 })(function($, moment) {
 
-;;
-
 var defaults = {
 
 	titleRangeSeparator: ' \u2014 ', // emphasized dash
@@ -69,15 +67,15 @@ var defaults = {
 		prevYear: "prev year",
 		nextYear: "next year",
 		today: 'today',
-		year: 'year',
-		month: 'month',
-		week: 'week',
-		day: 'day'
+		year: 'Year',
+		month: 'Month',
+		week: 'Week',
+		day: 'Day'
 	},
 
 	buttonIcons: {
-		prev: ' fas fa-angle-left',
-		next: ' fas fa-angle-right',
+		prev: 'left-single-arrow',
+		next: 'right-single-arrow',
 		prevYear: 'left-double-arrow',
 		nextYear: 'right-double-arrow'
 	},
@@ -137,14 +135,12 @@ var rtlDefaults = {
 	}
 };
 
-;;
 
 var fc = $.fullCalendar = { version: "2.2.7" };
 var fcViews = fc.views = {};
 
 
 $.fn.fullCalendar = function(options) {
-    
 	var args = Array.prototype.slice.call(arguments, 1); // for a possible method call
 	var res = this; // what this function will return (this jQuery object by default)
 
@@ -171,8 +167,8 @@ $.fn.fullCalendar = function(options) {
 			element.data('fullCalendar', calendar);
 			calendar.render();
 		}
-    });        
-    
+	});
+
 	return res;
 };
 
@@ -217,8 +213,6 @@ function isForcedAtomicOption(name) {
 }
 // FIX: find a different solution for view-option-hashes and have a whitelist
 // for options that can be recursively merged.
-
-;;
 
 var langOptionHash = fc.langs = {}; // initialize and expose
 
@@ -369,8 +363,6 @@ function getMomentLocaleData(langCode) {
 // Also, sets it as the default.
 fc.lang('en', englishDefaults);
 
-;;
-
 // exports
 fc.intersectionToSeg = intersectionToSeg;
 fc.applyAll = applyAll;
@@ -391,9 +383,10 @@ function compensateScroll(rowEls, scrollbarWidths) {
 		});
 	}
 	if (scrollbarWidths.right) {
+        //console.log(rowEls[0])
 		rowEls.css({
 			'border-right-width': 1,
-			'margin-right': scrollbarWidths.right - 1
+			//'margin-right': scrollbarWidths.right - 1
 		});
 	}
 }
@@ -509,7 +502,7 @@ function matchCellWidths(els) {
 // Returns true if the element is now a scroller, false otherwise.
 // NOTE: this method is best because it takes weird zooming dimensions into account
 function setPotentialScroller(containerEl, height) {
-	containerEl.height(height).addClass('fc-scroller');
+	//containerEl.height(height).addClass('fc-scroller');
 
 	// are scrollbars needed?
 	if (containerEl[0].scrollHeight - 1 > containerEl[0].clientHeight) { // !!! -1 because IE is often off-by-one :(
@@ -841,7 +834,7 @@ function debounce(func, wait) {
 	};
 }
 
-;;
+
 
 var ambigDateOfMonthRegex = /^\s*\d{4}-\d\d$/;
 var ambigTimeOrZoneRegex =
@@ -1319,7 +1312,7 @@ setLocalValues = allowValueOptimization ? function(mom, a) {
 	moment.updateOffset(mom, false); // keepTime=false
 } : setMomentValues;
 
-;;
+
 
 // Single Date Formatting
 // -------------------------------------------------------------------------------------------------
@@ -1549,7 +1542,7 @@ function chunkFormatString(formatStr) {
 	return chunks;
 }
 
-;;
+
 
 fc.Class = Class; // export
 
@@ -1591,7 +1584,7 @@ Class.extend = function(members) {
 Class.mixin = function(members) {
 	copyOwnProps(members.prototype || members, this.prototype);
 };
-;;
+
 
 /* A rectangular panel that is absolutely positioned over other content
 ------------------------------------------------------------------------------------------------------------------------
@@ -1760,7 +1753,7 @@ var Popover = Class.extend({
 
 });
 
-;;
+
 
 /* A "coordinate map" converts pixel coordinates into an associated cell, which has an associated date
 ------------------------------------------------------------------------------------------------------------------------
@@ -1938,7 +1931,7 @@ var ComboCoordMap = Class.extend({
 
 });
 
-;;
+
 
 /* Tracks mouse movements over a CoordMap and raises events about which cell the mouse is over.
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -2363,7 +2356,7 @@ function isCellsEqual(cell1, cell2) {
 	return false;
 }
 
-;;
+
 
 /* Creates a clone of an element and lets it track the mouse as it moves
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -2550,7 +2543,7 @@ var MouseFollower = Class.extend({
 
 });
 
-;;
+
 
 /* A utility class for rendering <tr> rows.
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -2654,7 +2647,7 @@ var RowRenderer = Class.extend({
 
 });
 
-;;
+
 
 /* An abstract class comprised of a "grid" of cells that each represent a specific datetime
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -3240,7 +3233,7 @@ var Grid = fc.Grid = RowRenderer.extend({
 
 });
 
-;;
+
 
 /* Event-rendering and event-interaction methods for the abstract Grid class
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -3919,13 +3912,15 @@ Grid.mixin({
 	eventsToSegs: function(events, rangeToSegsFunc) {
 		var eventRanges = this.eventsToRanges(events);
 		var segs = [];
-        var i;
+		var i;
+
 		for (i = 0; i < eventRanges.length; i++) {
-            var segda = this.eventRangeToSegs(eventRanges[i], rangeToSegsFunc);            
-            var segs_push = segs.push;
-            segs_push.apply(segs,segda);
-            //segs.push.apply(segs,segda);
+			segs.push.apply(
+				segs,
+				this.eventRangeToSegs(eventRanges[i], rangeToSegsFunc)
+			);
 		}
+
 		return segs;
 	},
 
@@ -4157,7 +4152,7 @@ function getDraggedElMeta(el) {
 }
 
 
-;;
+
 
 /* A component that renders a grid of whole-days that runs horizontally. There can be multiple rows, one per week.
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -4394,9 +4389,7 @@ var DayGrid = Grid.extend({
 		var rowFirst, rowLast; // inclusive cell-offset range for current row
 		var isStart, isEnd;
 		var segFirst, segLast; // inclusive cell-offset range for segment
-        var seg;
-        
-        //console.log("Here we miss  events some time");
+		var seg;
 
 		range = this.view.computeDayRange(range); // make whole-day range, considering nextDayThreshold
 		first = this.dateToCellOffset(range.start);
@@ -4628,7 +4621,7 @@ var DayGrid = Grid.extend({
 
 });
 
-;;
+
 
 /* Event-rendering methods for the DayGrid class
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -4647,14 +4640,8 @@ DayGrid.mixin({
 
 	// Retrieves all rendered segment objects currently rendered on the grid
 	getEventSegs: function() {
-        var var1 = Grid.prototype;
-        var1 = var1.getEventSegs;
-        var1 = var1.call(this);
-        var var2 = this.popoverSegs;
-        var1 = var1.concat(var2 || []);
-        return var1;
-		// return Grid.prototype.getEventSegs.call(this) // get the segments from the super-method
-		// 	.concat(this.popoverSegs || []); // append the segments from the "more..." popover
+		return Grid.prototype.getEventSegs.call(this) // get the segments from the super-method
+			.concat(this.popoverSegs || []); // append the segments from the "more..." popover
 	},
 
 
@@ -4730,7 +4717,7 @@ DayGrid.mixin({
 	// Builds the HTML to be used for the default element for an individual segment
 	fgSegHtml: function(seg, disableResizing) {
 		var view = this.view;
-        var event = seg.event;        
+		var event = seg.event;
 		var isDraggable = view.isEventDraggable(event);
 		var isResizable = !disableResizing && event.allDay && seg.isEnd && view.isEventResizable(event);
 		var classes = this.getSegClasses(seg, isDraggable, isResizable);
@@ -4743,7 +4730,6 @@ DayGrid.mixin({
 		// Only display a timed events time if it is the starting segment
 		if (!event.allDay && seg.isStart) {
 			timeHtml = '<span class="fc-time">' + htmlEscape(this.getEventTimeText(event)) + '</span>';
-            //timeHtml += '<input type="hidden" val = '+ event.id +'/>';
 		}
 
 		titleHtml =
@@ -4761,7 +4747,7 @@ DayGrid.mixin({
 					''
 					) +
 			'>' +
-				'<div class="fc-content" event_id="'+ event.id+'">' +
+				'<div class="fc-content" event_id="'+ event.id+'">'+
 					(this.isRTL ?
 						titleHtml + ' ' + timeHtml : // put a natural space in between
 						timeHtml + ' ' + titleHtml   //
@@ -4942,7 +4928,7 @@ function compareDaySegCols(a, b) {
 	return a.leftCol - b.leftCol;
 }
 
-;;
+
 
 /* Methods relate to limiting the number events for a given day on a DayGrid
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -5028,8 +5014,7 @@ DayGrid.mixin({
 		var td, rowspan;
 		var segMoreNodes; // array of "more" <td> cells that will stand-in for the current seg's cell
 		var j;
-        var moreTd, moreWrap, moreLink;
-        levelLimit = 1;
+		var moreTd, moreWrap, moreLink;
 
 		// Iterates through empty level cells and places "more" links inside if need be
 		function emptyCellsUntil(endCol) { // goes from current `col` to `endCol`
@@ -5123,7 +5108,9 @@ DayGrid.mixin({
 		var view = this.view;
 
 		return $('<a class="fc-more"/>')
-			.text(this.getMoreLinkText(hiddenSegs.length))
+			.text(
+				this.getMoreLinkText(hiddenSegs.length)
+			)
 			.on('click', function(ev) {
 				var clickOption = view.opt('eventLimitClick');
 				var date = cell.start;
@@ -5269,14 +5256,14 @@ DayGrid.mixin({
 
 	// Generates the text that should be inside a "more" link, given the number of events it represents
 	getMoreLinkText: function(num) {
-        var opt = this.view.opt('eventLimitText');
-        return num+" Events";
+		var opt = this.view.opt('eventLimitText');
+
 		if (typeof opt === 'function') {
 			return opt(num);
 		}
 		else {
 			return '+' + num + ' ' + opt;
-        }        
+		}
 	},
 
 
@@ -5301,7 +5288,7 @@ DayGrid.mixin({
 
 });
 
-;;
+
 
 /* A component that renders one or more columns of vertical time slots
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -5811,7 +5798,7 @@ var TimeGrid = Grid.extend({
 
 });
 
-;;
+
 
 /* Event-rendering methods for the TimeGrid class
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -5941,7 +5928,7 @@ TimeGrid.mixin({
 			timeText = this.getEventTimeText(event);
 			fullTimeText = this.getEventTimeText(event, 'LT');
 			startTimeText = this.getEventTimeText({ start: event.start });
-        }
+		}
 
 		return '<a class="' + classes.join(' ') + '"' +
 			(event.url ?
@@ -6219,7 +6206,7 @@ function compareForwardSlotSegs(seg1, seg2) {
 		compareSegs(seg1, seg2);
 }
 
-;;
+
 
 /* An abstract class from which other views inherit from
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -6972,7 +6959,7 @@ var View = fc.View = Class.extend({
 
 });
 
-;;
+
 
 
 function Calendar(element, instanceOptions) {
@@ -7009,6 +6996,7 @@ function Calendar(element, instanceOptions) {
 
 	// Exports
 	// -----------------------------------------------------------------------------------
+
 	t.options = options;
 	t.render = render;
 	t.destroy = destroy;
@@ -7302,9 +7290,9 @@ function Calendar(element, instanceOptions) {
 	function renderView(viewType) {
 		ignoreWindowResize++;
 
-        // if viewType is changing, destroy the old view        
+		// if viewType is changing, destroy the old view
 		if (currentView && viewType && (currentView.type !== viewType  || $('.fc-schedule-button').hasClass('fc-state-active'))) {
-            header.deactivateButton(currentView.type);            
+			header.deactivateButton(currentView.type);
 			freezeContentHeight(); // prevent a scroll jump when view element is removed
 			if (currentView.start) { // rendered before?
 				currentView.destroyView();
@@ -7768,7 +7756,7 @@ function Calendar(element, instanceOptions) {
 
 }
 
-;;
+
 
 /* Top toolbar area with buttons and title
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -7834,20 +7822,20 @@ function Header(calendar, options) {
 					var customText;
 					var innerHtml;
 					var classes;
-                    var button;
-                    
+					var button;
+
 					if (buttonName == 'title') {
 						groupChildren = groupChildren.add($('<h2>&nbsp;</h2>')); // we always want it to take up height
 						isOnlyButtons = false;
 					}
 					else {
 						if (calendar[buttonName]) { // a calendar method
-							buttonClick = function() {                                
+							buttonClick = function() {
 								calendar[buttonName]();
 							};
 						}
 						else if (calendar.isValidViewType(buttonName)) { // a view type
-							buttonClick = function() {                                
+							buttonClick = function() {
 								calendar.changeView(buttonName);
 							};
 							viewsWithButtons.push(buttonName);
@@ -7886,12 +7874,13 @@ function Header(calendar, options) {
 								'</button>'
 								)
 								.click(function() {
-                                    $('.schedule-container').hide();
+
+									$('.schedule-container').hide();
                                     $('.fc-prev-button').show();
                                     $('.fc-next-button').show();
                                     $('.fc-center').show();
                                     $('.fc-today-button').show();
-									// don't process clicks for disabled buttons
+                                    // don't process clicks for disabled buttons
 									if (!button.hasClass(tm + '-state-disabled')) {
 
 										buttonClick();
@@ -7903,9 +7892,9 @@ function Header(calendar, options) {
 											button.hasClass(tm + '-state-disabled')
 										) {
 											button.removeClass(tm + '-state-hover');
-                                        }
-                                    }
-                                    $('.fc-schedule-button').removeClass('fc-state-active');
+										}
+									}
+									$('.fc-schedule-button').removeClass('fc-state-active');
 								})
 								.mousedown(function() {
 									// the *down* effect (mouse pressed in).
@@ -8001,8 +7990,6 @@ function Header(calendar, options) {
 	}
 
 }
-
-;;
 
 fc.sourceNormalizers = [];
 fc.sourceFetchers = [];
@@ -9089,7 +9076,7 @@ function backupEventDates(event) {
 	event._end = event.end ? event.end.clone() : null;
 }
 
-;;
+
 
 /* An abstract class for the "basic" views, as well as month view. Renders one or more rows of day cells.
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -9295,22 +9282,12 @@ var BasicView = fcViews.basic = View.extend({
 
 	// Adjusts the vertical dimensions of the view to the specified values
 	setHeight: function(totalHeight, isAuto) {
-
-
-		var h1 = $('.navbar.fixed-top').height();
-        var h2 = $('#collapsibleNavbar').height();
-        var h3 = $("#calendar .fc-toolbar:first").height();
-        var hf = $(window).height();
-        //console.log(hf);
-        hf = hf - h1 -h2 - h3;
-        totalHeight = hf;
-
 		var eventLimit = this.opt('eventLimit');
 		var scrollerHeight;
 
 		// reset all heights to be natural
-		//unsetScroller(this.scrollerEl);
-		//uncompensateScroll(this.headRowEl);
+		unsetScroller(this.scrollerEl);
+		uncompensateScroll(this.headRowEl);
 
 		this.dayGrid.destroySegPopover(); // kill the "more" popover if displayed
 
@@ -9319,8 +9296,8 @@ var BasicView = fcViews.basic = View.extend({
 			this.dayGrid.limitRows(eventLimit); // limit the levels first so the height can redistribute after
 		}
 
-		//scrollerHeight = this.computeScrollerHeight(totalHeight);
-		//this.setGridHeight(scrollerHeight, isAuto);
+		scrollerHeight = this.computeScrollerHeight(totalHeight);
+		this.setGridHeight(scrollerHeight, isAuto);
 
 		// is the event limit dynamically calculated?
 		if (eventLimit && typeof eventLimit !== 'number') {
@@ -9329,25 +9306,25 @@ var BasicView = fcViews.basic = View.extend({
 
 		if (!isAuto && setPotentialScroller(this.scrollerEl, scrollerHeight)) { // using scrollbars?
 
-			//compensateScroll(this.headRowEl, getScrollbarWidths(this.scrollerEl));
+			compensateScroll(this.headRowEl, getScrollbarWidths(this.scrollerEl));
 
 			// doing the scrollbar compensation might have created text overflow which created more height. redo
-			//scrollerHeight = this.computeScrollerHeight(totalHeight);
-			//this.scrollerEl.height(scrollerHeight);
+			scrollerHeight = this.computeScrollerHeight(totalHeight);
+			this.scrollerEl.height(scrollerHeight);
 
-			//this.restoreScroll();
+			this.restoreScroll();
 		}
 	},
 
 
 	// Sets the height of just the DayGrid component in this view
 	setGridHeight: function(height, isAuto) {
-		// if (isAuto) {
-		// 	undistributeHeight(this.dayGrid.rowEls); // let the rows be their natural height with no expanding
-		// }
-		// else {
-		// 	distributeHeight(this.dayGrid.rowEls, height, true); // true = compensate for height-hogging rows
-		// }
+		if (isAuto) {
+			undistributeHeight(this.dayGrid.rowEls); // let the rows be their natural height with no expanding
+		}
+		else {
+			distributeHeight(this.dayGrid.rowEls, height, true); // true = compensate for height-hogging rows
+		}
 	},
 
 
@@ -9412,8 +9389,6 @@ var BasicView = fcViews.basic = View.extend({
 
 });
 
-;;
-
 /* A month view with day cells running in rows (one-per-week) and columns
 ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -9441,14 +9416,14 @@ var MonthView = fcViews.month = BasicView.extend({
 	// Overrides the default BasicView behavior to have special multi-week auto-height logic
 	setGridHeight: function(height, isAuto) {
 
-		// isAuto = isAuto || this.opt('weekMode') === 'variable'; // LEGACY: weekMode is deprecated
+		isAuto = isAuto || this.opt('weekMode') === 'variable'; // LEGACY: weekMode is deprecated
 
-		// // if auto, make the height of each row the height that it would be if there were 6 weeks
-		// if (isAuto) {
-		// 	height *= this.rowCnt / 6;
-		// }
+		// if auto, make the height of each row the height that it would be if there were 6 weeks
+		if (isAuto) {
+			height *= this.rowCnt / 6;
+		}
 
-		// distributeHeight(this.dayGrid.rowEls, height, !isAuto); // if auto, don't compensate for height-hogging rows
+		distributeHeight(this.dayGrid.rowEls, height, !isAuto); // if auto, don't compensate for height-hogging rows
 	},
 
 
@@ -9465,8 +9440,6 @@ var MonthView = fcViews.month = BasicView.extend({
 
 MonthView.duration = { months: 1 };
 
-;;
-
 /* A week view with simple day cells running horizontally
 ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -9474,7 +9447,6 @@ fcViews.basicWeek = {
 	type: 'basic',
 	duration: { weeks: 1 }
 };
-;;
 
 /* A view with a single simple day cell
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -9483,7 +9455,6 @@ fcViews.basicDay = {
 	type: 'basic',
 	duration: { days: 1 }
 };
-;;
 
 /* An abstract class for all agenda-related views. Displays one more columns with time slots running vertically.
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -9716,9 +9687,9 @@ fcViews.agenda = View.extend({ // AgendaView
 		this.bottomRuleEl.hide(); // .show() will be called later if this <hr> is necessary
 
 		// reset all dimensions back to the original state
-		//this.scrollerEl.css('overflow', '');
-		//unsetScroller(this.scrollerEl);
-		//uncompensateScroll(this.noScrollRowEls);
+		this.scrollerEl.css('overflow', '');
+		unsetScroller(this.scrollerEl);
+		uncompensateScroll(this.noScrollRowEls);
 
 		// limit number of events in the all-day area
 		if (this.dayGrid) {
@@ -9735,24 +9706,24 @@ fcViews.agenda = View.extend({ // AgendaView
 
 		if (!isAuto) { // should we force dimensions of the scroll container, or let the contents be natural height?
 
-			//scrollerHeight = this.computeScrollerHeight(totalHeight);
-			//if (setPotentialScroller(this.scrollerEl, scrollerHeight)) { // using scrollbars?
+			scrollerHeight = this.computeScrollerHeight(totalHeight);
+			if (setPotentialScroller(this.scrollerEl, scrollerHeight)) { // using scrollbars?
 
 				// make the all-day and header rows lines up
-				//compensateScroll(this.noScrollRowEls, getScrollbarWidths(this.scrollerEl));
+				compensateScroll(this.noScrollRowEls, getScrollbarWidths(this.scrollerEl));
 
 				// the scrollbar compensation might have changed text flow, which might affect height, so recalculate
 				// and reapply the desired height to the scroller.
-				//scrollerHeight = this.computeScrollerHeight(totalHeight);
-				//this.scrollerEl.height(scrollerHeight);
+				scrollerHeight = this.computeScrollerHeight(totalHeight);
+				this.scrollerEl.height(scrollerHeight);
 
-				//this.restoreScroll();
-			//}
-			//else { // no scrollbars
+				this.restoreScroll();
+			}
+			else { // no scrollbars
 				// still, force a height and display the bottom rule (marks the end of day)
-				//this.scrollerEl.height(scrollerHeight).css('overflow', 'hidden'); // in case <hr> goes outside
+				this.scrollerEl.height(scrollerHeight).css('overflow', 'hidden'); // in case <hr> goes outside
 				this.bottomRuleEl.show();
-			//}
+			}
 		}
 	},
 
@@ -9887,8 +9858,6 @@ fcViews.agenda = View.extend({ // AgendaView
 
 });
 
-;;
-
 /* A week view with an all-day cell area at the top, and a time grid below
 ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -9896,7 +9865,6 @@ fcViews.agendaWeek = {
 	type: 'agenda',
 	duration: { weeks: 1 }
 };
-;;
 
 /* A day view with an all-day cell area at the top, and a time grid below
 ----------------------------------------------------------------------------------------------------------------------*/
@@ -9905,7 +9873,6 @@ fcViews.agendaDay = {
 	type: 'agenda',
 	duration: { days: 1 }
 };
-;;
 
 /* A multi months view with day cells running in rows (one-per-week) and columns
  * implementation by tpruvot@github - 2013/2015
@@ -9982,7 +9949,7 @@ fcViews.year = View.extend({
 		this.firstMonth = parseInt(this.opt('firstMonth'), 10) || 0;
 		this.lastMonth = this.opt('lastMonth') || this.firstMonth+12;
 		this.hiddenMonths = this.opt('hiddenMonths') || [];
-		this.yearColumns = parseInt(this.opt('yearColumns'), 10) || 4;  //ex: '2x6', '3x4', '4x3'
+		this.yearColumns = parseInt(this.opt('yearColumns'), 10) || 2;  //ex: '2x6', '3x4', '4x3'
 		this.colFormat = this.opt('columnFormat');
 		this.weekNumbersVisible = this.opt('weekNumbers');
 		this.nwe = this.opt('weekends') ? 0 : 1;
@@ -10489,24 +10456,24 @@ fcViews.year = View.extend({
 	// Sets the height of the Day Grid components in this view
 	setGridHeight: function(height, isAuto, grid) {
 
-		// if (typeof(grid) != 'undefined') {
-		// 	if (isAuto) {
-		// 		undistributeHeight(grid.rowEls); // let the rows be their natural height with no expanding
-		// 	}
-		// 	else {
-		// 		distributeHeight(grid.rowEls, height, true); // true = compensate for height-hogging rows
-		// 	}
-		// 	return;
-		// }
+		if (typeof(grid) != 'undefined') {
+			if (isAuto) {
+				undistributeHeight(grid.rowEls); // let the rows be their natural height with no expanding
+			}
+			else {
+				distributeHeight(grid.rowEls, height, true); // true = compensate for height-hogging rows
+			}
+			return;
+		}
 
-		// $.each(this.dayGrids, function(offset, dayGrid) {
-		// 	if (isAuto) {
-		// 		undistributeHeight(dayGrid.rowEls); // let the rows be their natural height with no expanding
-		// 	}
-		// 	else {
-		// 		distributeHeight(dayGrid.rowEls, height, true); // true = compensate for height-hogging rows
-		// 	}
-		// });
+		$.each(this.dayGrids, function(offset, dayGrid) {
+			if (isAuto) {
+				undistributeHeight(dayGrid.rowEls); // let the rows be their natural height with no expanding
+			}
+			else {
+				distributeHeight(dayGrid.rowEls, height, true); // true = compensate for height-hogging rows
+			}
+		});
 	},
 
 	// scroller height based on first month
@@ -10554,7 +10521,7 @@ fcViews.year = View.extend({
 					// compute only once based on first month
 					scrollerHeight = view.computeScrollerHeight(totalHeight, dayGrid.scrollerEl);
 				}
-				//view.setGridHeight(scrollerHeight, isAuto, dayGrid);
+				view.setGridHeight(scrollerHeight, isAuto, dayGrid);
 
 				// is the event limit dynamically calculated?
 				if (eventLimit && typeof eventLimit !== 'number') {
@@ -10691,7 +10658,5 @@ fcViews.year = View.extend({
 	}
 
 });
-
-;;
 
 });
