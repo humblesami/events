@@ -59,7 +59,7 @@
 "director_document","Meeting Document","model_meeting_point_doc","group_meeting_director",1,0,0,0
 "director_topic","Agenda Topic","model_meeting_point_topic","group_meeting_director",1,0,0,0
 "director_topic_doc","Agenda Topic Docs","model_meeting_point_topicdoc","group_meeting_director",1,0,0,0
-"director_approval_voting","Director Meeting Voting Access","model_meeting_point_voting","group_meeting_director",1,0,0,0
+"director_approval_voting","Director Meeting Voting Access","model_meeting_point_voting","group_meeting_director",1,1,0,0
 "director_voting_document","Director Voting Document Access","model_meeting_point_votingdocument","group_meeting_director",1,0,0,0
 "director_voting_Answer","Director Voting Answer Access","model_meeting_point_votinganswer","group_meeting_director",1,1,1,0
 "director_voting_Type","Director Voting Type Access","model_meeting_point_votingtype","group_meeting_director",1,0,0,0
