@@ -29,8 +29,7 @@ var network_config = {
 
 if(window.location.toString().indexOf('odoohq.com') == -1
 && window.location.toString().indexOf('meetvue.com') == -1)
-{
-    
+{    
     if(window.location.toString().indexOf('172.16') > -1)
     {
         site_config = network_config;
@@ -51,10 +50,9 @@ if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -
     site_config.site_url = window.location.origin+'/web';
 }
 
-
 //console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;
 if(site_config.site_url.startsWith('https://')){
-    $('head meta[name="viewport"]:first').after('<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />');
+    $('head meta:first').after('<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />');
 }

@@ -197,10 +197,10 @@ $(document).ready(function () {
             dataURL = 'data:image/png;base64,' + signature_value;
             img.src = dataURL;
         }
-        if(voting_id != -1 && !data.signature_data && window['on_vote_sign_saved'])
-        {
-            window['on_vote_sign_saved']();
-        }
+        // if(voting_id != -1 && !data.signature_data && window['on_vote_sign_saved'])
+        // {
+        //     window['on_vote_sign_saved']();
+        // }
     }
     function getVotingId(){
         voting_id = window['voting_id'];

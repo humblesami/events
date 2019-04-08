@@ -1,4 +1,4 @@
-core-js@2.6.3
+core-js@2.6.4
 MIT
 Copyright (c) 2014-2019 Denis Pushkarev
 
@@ -48,19 +48,11 @@ THE SOFTWARE.
 MIT
 MIT
 
-@angular/compiler@6.1.10
-MIT
-MIT
-
 @angular/core@6.1.10
 MIT
 MIT
 
 @angular/forms@6.1.10
-MIT
-MIT
-
-@angular/platform-browser-dynamic@6.1.10
 MIT
 MIT
 
