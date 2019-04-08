@@ -132,7 +132,7 @@ var site_functions = {
                     //console.log(site_functions.processes);
                     server_wait_loader.hide();
                 }
-            }, 9900);
+            }, 29000);
         }
         this.processes.push(nam);
         //console.log(nam, new Date().getMilliseconds());
