@@ -80,7 +80,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette">
-                                <a type="object" style="color:#4c4c4c" name="go_to_meeting" class="oe_module_desc">
+                                <a type="object" style="color:#4c4c4c" name="go_to_kanban" class="oe_module_desc">
                                     <div class="meeting_info">
                                         <div class="date_tam" style="">
                                             <div class="o_day" style="font-size: 26px;">
@@ -176,7 +176,7 @@
                                             <h2>
                                                 <field name="name"/>
                                             </h2>
-                                                 <div class="o_hidden pblic_evnt_id">
+                                            <div class="o_hidden pblic_evnt_id">
                                             <field name="id" class="o_hidden" />
                                             </div>
                                             <p class="oe_module_name">

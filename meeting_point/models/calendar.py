@@ -680,6 +680,21 @@ class Meeting(models.Model):
             'target': 'current',
         }
 
+    @api.multi
+    def go_to_kanban(self):
+        a=1
+        return {
+            'type': 'ir.actions.act_window',
+            # 'name': 'Assign Signatures', 'view_id',
+            'view_id': self.env.ref('calendar.view_calendar_event_form_popup').id,
+            'view_type':'kanban',
+            'view_mode': 'form',
+            'res_model': self._name,
+            'res_id': self.id,
+            'target': 'new',
+            'context': self._context,
+            'flags': {'initial_mode': 'readonly'}
+        }
     def start_conference(self):
         qs = str(self.pin)+'&meeting_id='+str(self.id)
         urll = "/meeting_point/static/meet.html?pin="+qs
