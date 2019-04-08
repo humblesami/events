@@ -54,3 +54,16 @@ voting-comments .container
 {
     width:auto;
 }
+.o_form_view .oe_button_box .btn.oe_stat_button {
+    margin-right: 10px;
+    margin-left: 10px;
+    border: 1px solid #d9d7d7;
+    padding: 0;
+    height: 30px;
+    width: 40px;
+    text-align: center;
+        padding-bottom: 4px;
+}
+.o_form_view .oe_button_box .btn.oe_stat_button > .o_stat_info {
+    padding-right:0;
+}
