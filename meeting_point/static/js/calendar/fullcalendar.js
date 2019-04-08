@@ -67,10 +67,10 @@ var defaults = {
 		prevYear: "prev year",
 		nextYear: "next year",
 		today: 'today',
-		year: 'year',
-		month: 'month',
-		week: 'week',
-		day: 'day'
+		year: 'Year',
+		month: 'Month',
+		week: 'Week',
+		day: 'Day'
 	},
 
 	buttonIcons: {
@@ -383,9 +383,10 @@ function compensateScroll(rowEls, scrollbarWidths) {
 		});
 	}
 	if (scrollbarWidths.right) {
+        //console.log(rowEls[0])
 		rowEls.css({
 			'border-right-width': 1,
-			'margin-right': scrollbarWidths.right - 1
+			//'margin-right': scrollbarWidths.right - 1
 		});
 	}
 }
@@ -501,7 +502,7 @@ function matchCellWidths(els) {
 // Returns true if the element is now a scroller, false otherwise.
 // NOTE: this method is best because it takes weird zooming dimensions into account
 function setPotentialScroller(containerEl, height) {
-	containerEl.height(height).addClass('fc-scroller');
+	//containerEl.height(height).addClass('fc-scroller');
 
 	// are scrollbars needed?
 	if (containerEl[0].scrollHeight - 1 > containerEl[0].clientHeight) { // !!! -1 because IE is often off-by-one :(

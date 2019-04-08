@@ -5,7 +5,7 @@
  */
 
 
-.fc {
+ .fc {
 	direction: ltr;
 	text-align: left;
 }
@@ -1163,4 +1163,24 @@ a.fc-time-grid-event.fc-event
 }
 .fc-year-main-table .fc-week .fc-content-skeleton tbody td {
 	width: 85px;
+}
+tr.fc-year-week-days
+{
+    height: 23px;
+}
+.fc th
+{
+    padding-right: 3px;
+}
+.fc-day-grid-container
+{
+    border-top: 1px solid silver;
+}
+.fc-year-monthly-td .fc-row .fc-content-skeleton tbody td
+{
+    border: none;
+}
+.fc-day-grid-event > .fc-content
+{
+    color: white;
 }
