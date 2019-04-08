@@ -18,10 +18,7 @@
     margin-top: 10px;
 }
 
-.modal-content
-{
-    width: fit-content;
-}
+
 #signature_editor
 {
     border: 1px solid silver;
@@ -30,10 +27,7 @@ btn.DocsBtn
 {
     margin-right: 10px;
 }
-.modal-content
-{
-    margin-left:12%;
-}
+
 .motion-icon
 {
     margin-left: 5px;
@@ -49,4 +43,14 @@ btn.DocsBtn
 .acceptance_buttons_new>div
 {
 	margin-right: 6px;
+}
+
+
+voting-comments .btn-group
+{
+    display:flex;
+}
+voting-comments .container
+{
+    width:auto;
 }

@@ -1,4 +1,5 @@
 $(function(){
+
 //    $('#votingBack').hide();
     $('#submitted').hide();
     $('.viewGraphically:first').css('background-color','#875A7B');
@@ -135,7 +136,7 @@ $(function(){
             $('.app-com:first:visible')
             {
                 load_angular(function(){
-                    window["loadComponent"]("comments","app-comments");
+                    window["loadComponent"]("comments","voting-comments");
                 });
             }
         }
@@ -437,6 +438,10 @@ $(function(){
         }
 
     }
+setTimeout(function(){
+        $('.modal button:contains("Discard"):last:visible').click();
+},100)
+
 });
 
 //# sourceURL=localhost:8000/meeting_point/static/js/voting.js

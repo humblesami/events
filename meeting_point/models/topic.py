@@ -47,7 +47,9 @@ class Topic(models.Model):
     def has_attachments(self):
         for topic in self:
             if topic.document_ids:
-                topic.attachments = '<i class="fa fa-file"></i>'
+                topic.attachments = ''
+                for d in topic.document_ids:
+                    topic.attachments += '<a style="margin:1px" title="%s" onclick="openTopicDoc(event,%s)"  name="open_annotator_form" class="fa fa-lg fa-file"></a>'%(d.name,d.id)
             else:
                 topic.attachments = ''
 
@@ -55,9 +57,11 @@ class Topic(models.Model):
     def has_votings(self):
         for topic in self:
             if topic.voting_ids:
-                topic.actions = 'available'
+                topic.actions = ''
+                for d in topic.voting_ids:
+                    topic.actions += '<a style="margin:1px" title="%s" onclick="openTopicAction(event,%s)"  class="fa fa-lg fa-th-list"></a>'%(d.name,d.id)
             else:
-                topic.actions = 'zero'
+                topic.actions = ''
 
     def vaildate_file(self,values):
         if 'attachment' not in values:
