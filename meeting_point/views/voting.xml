@@ -78,7 +78,7 @@
             <field name="name">Voting form edit Remove</field>
             <field name="model">meeting_point.voting</field>
             <field name="inherit_id" ref="view_form_voting"/>
-            <field name="groups_id" eval="[(6, 0, [ref('meeting_point.group_meeting_director') ])]"/>
+            <field name="groups_id" eval="[(6, 0, [ref('meeting_point.group_meeting_director'),ref('meeting_point.group_meeting_staff')])]"/>
             <field name="arch" type="xml">
                 <xpath expr='//form[@class="voting_form"]' position='attributes'>
                     <attribute name="edit">false</attribute>
