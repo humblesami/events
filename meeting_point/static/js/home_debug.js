@@ -59,12 +59,14 @@ $(function(){
                 $('#calendar').css('visiblity','hidden');
                 setTimeout(function(){
                     $('body').append('<script src="/meeting_point/static/js/calendar/fullcalendar.js"></script>');
-                    $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');                                        
+                    $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');
+                    $('.o_form_view:first').append('<script src="/meeting_point/static/js/calendar/calendar.js"></script>');
                     after_calendar_shown();
                     after_calendar = true;
                },50);
             }
-            $('.o_form_view:first').append('<script src="/meeting_point/static/js/calendar/calendar.js"></script>');
+            else
+                $('.o_form_view:first').append('<script src="/meeting_point/static/js/calendar/calendar.js"></script>');
         }
         if(!after_calendar)
         {

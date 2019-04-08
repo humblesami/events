@@ -51,8 +51,7 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/libs/masked_input.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/time_picker.js"></script>');
         document.writeln('<script src="/dn_base/static/js/libs/signature.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/pdf.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/fullcalendar.js"/>');
+        document.writeln('<script async src="/dn_base/static/js/libs/pdf.js"></script>');
 
         //Editing in Core
         document.writeln('<script src="/dn_base/static/js/view.js"></script>');
@@ -63,11 +62,11 @@ function load_dn_assets()
         document.writeln('<script src="/dn_base/static/js/dialog.js"></script>');
 
         document.writeln('<script src="/dn_base/static/js/doc_preview.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
 
-        document.writeln('<script src="/dn_base/static/js/libs/jquery.ui.touch-punch.min.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/jquery.mark.min.js"></script>');
-        document.writeln('<script src="/dn_base/static/js/libs/mark.min.js"></script>');
+        document.writeln('<script async src="/dn_base/static/js/libs/jquery.ui.touch.min.js"></script>');
+        document.writeln('<script async src="/dn_base/static/js/libs/jquery.ui.touch-punch.min.js"></script>');
+        document.writeln('<script async src="/dn_base/static/js/libs/jquery.mark.min.js"></script>');
+        document.writeln('<script async src="/dn_base/static/js/libs/mark.min.js"></script>');
 
         $(function(){
             doc_preview.init();
