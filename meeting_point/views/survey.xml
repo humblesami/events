@@ -60,7 +60,7 @@
                     <field name="is_closed" invisible="1"/>
                     <header groups="survey.group_survey_manager">
                         <!--<button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>-->
-                        <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('my_status', '=', 'done')]}"/>
+                        <button name="action_test_survey" string="Test Survey" group="base.group_system" type="object" attrs="{'invisible': [('my_status', '=', 'done')]}"/>
                         <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_start_survey" string="Start Survey" type="object" attrs="{'invisible': [('my_status', '=', 'done')]}"/>
                         <!--<button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>-->
@@ -178,7 +178,7 @@
                                 <a t-attf-href="/web#view_type=form&amp;model=calendar.event&amp;id=#{survey.meeting_id.id}&amp;action=meeting_point.action_upcoming_meeting" class="btn btn-default">Back to meeting</a>
                             </div>
                             <div  t-ignore="true" class="pull-right">
-                                <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;id=1&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
+                                <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
                             </div>
                             <div groups="meeting_point.group_meeting_admin" t-ignore="true" class="pull-right">
                                 <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=meeting_point.action_survey_admin" class="btn btn-default">Back to Survey</a>

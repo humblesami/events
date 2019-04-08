@@ -240,7 +240,7 @@
                                <a t-attf-href="/web#view_type=form&amp;model=meeting_point.topic&amp;id=#{voting.topic_id.id}&amp;action=meeting_point.action_topic_meeting&amp;menu_id=meeting_point.menu_root_mp" class="btn btn-default">Back to Topic</a>
                            </div>
                            <div t-ignore="true" class="pull-right">
-                               <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;id=1&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
+                               <a t-attf-href="/web#view_type=form&amp;model=meeting_point.news&amp;action=meeting_point.action_news_user_home" class="btn btn-default">Back to Home Page</a>
                            </div>
                            <div t-ignore="true" class="pull-right">
                                <a t-attf-href="/web#view_type=form&amp;model=meeting_point.voting&amp;id=#{voting.id}&amp;action=meeting_point.action_meeting_voting" class="btn btn-default">Back to Voting</a>
