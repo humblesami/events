@@ -5029,6 +5029,27 @@ var MessengerComponent = /** @class */ (function () {
     };
     MessengerComponent.prototype.onUserSelected = function (messages) {
         var obj_this = this;
+        $(".msg_card_body").unbind("scroll");
+        $(".msg_card_body").scroll(function () {
+            var height = Math.floor(0.3 * $(".msg_card_body").height());
+            if ($(".msg_card_body").scrollTop() <= height) {
+                if (obj_this.is_request_sent) {
+                    return;
+                }
+                obj_this.is_request_sent = true;
+                obj_this.httpService.call_post_http('/get-user-messages', { target_id: obj_this.active_chat_user.id, offset: obj_this.active_chat_user.messages.length }, function (data) {
+                    if (data.length > 0) {
+                        obj_this.is_request_sent = false;
+                        obj_this.update_emjoi_urls(data);
+                        obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);
+                        setTimeout(function () {
+                            var height = $($(".messenger-body")[data.length - 1]).offset().top;
+                            $(".msg_card_body").scrollTop(height);
+                        }, 200);
+                    }
+                }, null);
+            }
+        });
         //waiting because [data-emojiable=true] needs to render
         setTimeout(function () {
             var emoji_config = {
@@ -5168,27 +5189,6 @@ var MessengerComponent = /** @class */ (function () {
                 obj_this.is_mobile_device = false;
             }
             obj_this.ng_init = true;
-        });
-        $(".msg_card_body").unbind("scroll");
-        $(".msg_card_body").scroll(function () {
-            var height = Math.floor(0.3 * $(".msg_card_body").height());
-            if ($(".msg_card_body").scrollTop() <= height) {
-                if (obj_this.is_request_sent) {
-                    return;
-                }
-                obj_this.is_request_sent = true;
-                obj_this.httpService.call_post_http('/get-user-messages', { target_id: obj_this.active_chat_user.id, offset: obj_this.active_chat_user.messages.length }, function (data) {
-                    if (data.length > 0) {
-                        obj_this.is_request_sent = false;
-                        obj_this.update_emjoi_urls(data);
-                        obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);
-                        setTimeout(function () {
-                            var height = $($(".messenger-body")[data.length - 1]).offset().top;
-                            $(".msg_card_body").scrollTop(height);
-                        }, 200);
-                    }
-                }, null);
-            }
         });
     };
     MessengerComponent.prototype.ngOnDestroy = function () {
@@ -7312,7 +7312,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_9__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/faizan/meetvue (another copy)/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/sami/meetvue/src/main.ts */"./src/main.ts");
 
 
 /***/ })
