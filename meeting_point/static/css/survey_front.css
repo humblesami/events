@@ -11,15 +11,6 @@
     background-color: #eeeeef;
 }
 
-.navbar.navbar-static-top
-{
-    display: none;
-    background-color: transparent;
-    border-color: transparent;
-    margin-bottom: -20px;
-    margin-top: 30px;
-}
-
 .survey_back_btn_container > div
 {
     margin: 5px;
@@ -33,6 +24,21 @@ main .container:first-child
     padding-top: 50px;
 }
 */
+
+.voting_back_btn_container > div, .survey_back_btn_container > div
+{
+    margin-right: 10px;
+}
+
+.voting_back_btn_container a.btn, .survey_back_btn_container a.btn{
+    padding: 6px 6px 3px;
+}
+.navbar.navbar-static-top
+{
+    display: none;
+    background-color: transparent;
+    border-color: transparent;
+}
 
 .jumbotron.mt32
 {

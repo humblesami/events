@@ -25,6 +25,12 @@ class website_voting(http.Controller):
             if votingAnswer.signature_data:
                 signature = votingAnswer.signature_data
                 signature = signature.decode('utf-8')
+            else:
+                user = request.env['meeting_point.users'].search([('user_id', '=', uid)])
+                signature = user.signature_img
+                if signature:
+                    signature = signature.decode('utf-8')
+
             signature_data = {'signature_data' : signature}
             return ws_methods.http_response('', signature_data)
         except:
@@ -60,7 +66,10 @@ class website_voting(http.Controller):
                 vals['user_id'] = uid
                 votingAnswer.create(vals)
                 res = 'Create'
-            return ws_methods.http_response('', {'voting_option_id' : kw['voting_option_id'], 'operation': res, 'signature_data': kw['signature_data']})
+            if voting_object.signature_required:
+                return ws_methods.http_response('', {'voting_option_id' : kw['voting_option_id'], 'operation': res, 'signature_data': kw['signature_data']})
+            else:
+                return ws_methods.http_response('', {'voting_option_id': kw['voting_option_id'], 'operation': res})
         except:
             return ws_methods.handle()
 
@@ -163,26 +172,25 @@ class website_voting(http.Controller):
 
     @http.route([
         '/voting/graphical/<model("meeting_point.voting"):voting_object>',
-        '/voting/graphical/<model("meeting_point.voting"):voting_object>/<string:token>/<string:db>'
+        '/voting/graphical/<model("meeting_point.voting"):voting_object>/<string:uid>/<string:token>/<string:db>'
     ],
         type='http', auth='public', website=True)
-    def start_graphical_view(self, voting_object, token=None, db=None, **post):
+    def start_graphical_view(self, voting_object, uid=None, token=None, db=None, **post):
 
         try:
-            auth = {'token': token, 'db': db}
+            auth = {'token': token, 'db': db, 'uid': uid}
             uid = ws_methods.check_auth(auth)
             if not uid:
                 return ws_methods.not_logged_in()
 
-            # if not request.env.user.has_group('meeting_point.admin'):
-            #     if not voting_object.public_visibility:
-            #         return request.render('meeting_point.voting_graphically', {})
+            if uid != 1 and not request.env.user.has_group('meeting_point.admin'):
+                if not voting_object.public_visibility:
+                    return request.render('meeting_point.no_access_to_view', {})
+                else:
+                    allowed = self.check_partner(voting_object, uid)
+                    if not allowed:
+                        return request.render('meeting_point.no_access_to_view', {})
 
-            if not voting_object.public_visibility:
-                return request.render('meeting_point.no_access_to_view', {})
-
-            if self.check_partner(voting_object, uid):
-                return request.render('meeting_point.no_access_to_view', {})
             if not voting_object:
                 return ws_methods.http_response('No object found')
 
@@ -294,12 +302,16 @@ class website_voting(http.Controller):
             voting_id = int(kw['id'])
             filters = [('id', '=', voting_id)]
             voting_obj_orm = req_env['meeting_point.voting'].search(filters)
-            if self.check_partner(voting_obj_orm, uid):
-                data = {"message": 'You are not Authorized to Access this Page!'}
-                return ws_methods.http_response('', data)
+
+            if uid != 1 and not request.env.user.has_group('meeting_point.admin'):
+                allowed = self.check_partner(voting_obj_orm, uid)
+                if not allowed:
+                    data = {"message": 'You are not Authorized to Access this Page!'}
+                    return ws_methods.http_response('', data)
+
             props = ['id', 'name', 'meeting_id', 'open_date', 'close_date',
                      'description', 'my_status', 'public_visibility', 'graphical_view_url', 'meeting_id',
-                     'enable_discussion', 'signature_required'
+                     'enable_discussion', 'signature_required', 'signature_data'
                      ]
             voting_object = ws_methods.object_to_json_object(voting_obj_orm, props)
             voting_object['voting_docs'] = ws_methods.objects_list_to_json_list(voting_obj_orm.document_ids, ['id', 'name'])
@@ -322,9 +334,9 @@ class website_voting(http.Controller):
             return ws_methods.handle()
 
     def check_partner(self, voting_obj_orm, uid):
-        not_allowed = True
+        allowed = False
         if voting_obj_orm.partner_ids:
             for partner in voting_obj_orm.partner_ids:
                 if partner.user_id.id == uid:
-                    not_allowed = False
-        return not_allowed
+                    allowed = True
+        return allowed

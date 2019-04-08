@@ -3,13 +3,19 @@ $(function(){
     $('#submitted').hide();
     $('.viewGraphically:first').css('background-color','#875A7B');
     let sign_src = $('img[name=signature_data]').attr('src');
+    $('#drawsign').hide();
     $('img[name=signature_data]').hide();
-    if(sign_src.length != 0 && sign_src.indexOf('placeholder') == -1){
+    if(sign_src && sign_src.length != 0 && sign_src.indexOf('placeholder') == -1){
         console.log(sign_src);
         sign_src += new Date();
         console.log(sign_src);
         $('img[name=signature_data]').attr('src', sign_src);
         $('img[name=signature_data]').show();
+        let signature_required = $('.signature_required');
+        if (signature_required.length > 0 && signature_required.text().indexOf('OnSwitch') != -1)
+        {
+            $('#drawsign').show();
+        }
     }
     try{
         var voting_id_dom = $('a[name="voting_type_id"]:first');
@@ -76,16 +82,24 @@ $(function(){
                 {                  
                     vote_options_container.find('button').click(function(){
                         let close_date = $('.close_date').text();
-                        if (!voting_closed(close_date))
+                        let open_date = $('.open_date').text();
+                        if(!voting_opened(open_date))
                         {
-                            voting_option_id = $(this).attr('data-id');
-                            signature_lib.save_input['voting_option_id'] = voting_option_id;
-                            if($(this).children().length == 0)
-                                include_signs();
+                            if (!voting_closed(close_date))
+                            {
+                                voting_option_id = $(this).attr('data-id');
+                                signature_lib.save_input['voting_option_id'] = voting_option_id;
+                                if($(this).children().length == 0)
+                                    include_signs();
+                            }
+                            else
+                            {
+                                alert('This Approval/Voting is Closed.')
+                            }
                         }
                         else
                         {
-                            alert('This Approval/Voting is Closed.')
+                            alert('This Approval/Voting is not Opened yet.')
                         }
                     });                    
                 }                             
@@ -145,6 +159,16 @@ $(function(){
 			closed = true;
 		}
 		return closed;
+	}
+
+	function voting_opened(open_date){
+		let opened = false;
+		let openingDate = new Date(open_date).getTime();
+		let dateNow = new Date().getTime();
+		if (openingDate > dateNow){
+			opened = true;
+		}
+		return opened;
 	}
 
     function get_results(){
@@ -223,7 +247,7 @@ $(function(){
         
         var dataURL = '';
 
-        function load_signature(data) {  
+        function load_signature(data) {
             if(data.error)
             {
                 console.log(data.error);
@@ -294,7 +318,7 @@ $(function(){
                     console.log(e);
                 }
             });
-
+            $('#drawsign').show();
         }
         function on_anwser_saved(data){            
             if(data.error)
@@ -369,31 +393,49 @@ $(function(){
     }
 
     function on_user_answer(){
-        if(signature_required)
+        let close_date = $('.close_date').text();
+        let open_date = $('.open_date').text();
+        if (voting_opened(open_date))
         {
+            alert('This Approval/Voting is not Opened yet.');
             return;
         }
-        var input_choice = $(this);        
-        if  ($('.voting_id')[0].value)
+        else
         {
-            voting_id = $('.voting_id')[0].value
-        }
-        else{
-          voting_id =  $('.voting_id').html();
-        }
-        let user_choice = input_choice.attr('data-id');
-        let voting_data = {'voting_option_id' : user_choice, 'voting_id' : voting_id};
-        var options = {
-            url : '/voting/submit',
-            data : {'voting_option_id' : user_choice, 'voting_id' : voting_id},
-            success:function(data){
-                get_results();
-            },
-            error:function(a, b){
-                console.log(b.responseText);
+            if (voting_closed(close_date))
+            {
+                alert('This Approval/Voting is Closed now.');
+            }
+            else
+            {
+                if(signature_required)
+                {
+                    return;
+                }
+                var input_choice = $(this);
+                if  ($('.voting_id')[0].value)
+                {
+                    voting_id = $('.voting_id')[0].value
+                }
+                else{
+                    voting_id =  $('.voting_id').html();
+                }
+                let user_choice = input_choice.attr('data-id');
+                let voting_data = {'voting_option_id' : user_choice, 'voting_id' : voting_id};
+                var options = {
+                    url : '/voting/submit',
+                    data : {'voting_option_id' : user_choice, 'voting_id' : voting_id},
+                    success:function(data){
+                        get_results();
+                    },
+                error:function(a, b){
+                        console.log(b.responseText);
+                    }
+                }
+                dn_rpc_ajax(options);
             }
         }
-        dn_rpc_ajax(options);
+
     }
 });
 

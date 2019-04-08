@@ -9,6 +9,7 @@
                     <link rel="stylesheet" href="/meeting_point/static/css/voting.css"/>
                     <link rel="stylesheet" href="/meeting_point/static/css/meeting_form.css"/>
                     <field name="id" invisible="1" class="voting_id"/>
+                    <field name="signature_required" invisible="1" class="signature_required"/>
                     <sheet>
                         <group>
                             <field name="voting_type_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
@@ -27,8 +28,8 @@
                               <div class="o_form_label"><strong>Motion Second</strong><span class="fa fa-user motion-icon"></span></div>
                               <field name="motion_second" class="motion-person" options="{'no_quick_create': True, 'no_create_edit' : True}" domain="[('partner_id','in',partner_ids)]"/>
                             </div>
-                            <field name="open_date"/>
-                            <field name="close_date"/>
+                            <field name="open_date" class="open_date"/>
+                            <field name="close_date" class="close_date"/>
                             <field name="description"/>
                             <sheet class="switchButtons">
                                    <div class="oe_button_box oe_edit_only" name="button_box">
@@ -39,7 +40,7 @@
                                  </div>
 
                                         <div class="oe_button_box oe_edit_only" name="button_box">
-                                            <strong>Results Visible To All </strong>
+                                            <strong>Result's Graphical Visibility</strong>
                                      <button name="public_value" type="object" class="oe_stat_button btn btn-primary">
                                          <field name="public_visibility" widget="boolean_button" options='{"terminology": "True"}'/>
                                      </button>
@@ -68,7 +69,6 @@
                         <field class="kanban_document dn_attatchment_btn" name="document_ids" context="{'kanban_view_ref': 'dn_documents.dn_docs_kanban','form_view_ref': 'dn_documents.doc_edit_form'}" mode="kanban"/>
                         <app-comments class="app-com" attrs="{'invisible': [('enable_discussion','=',False)]}"/>
                     </sheet>
-
                     <script src="/meeting_point/static/js/voting.js"/>
                 </form>
             </field>
@@ -228,7 +228,8 @@
 
 
 
-        <template id="voting_back_container" name="voting back container custom">
+        <template id="voting_back_container" name="voting back container survey_back_btn_container custom">
+            <link rel="stylesheet" href="/meeting_point/static/css/survey_front.css"/>
             <div class="navbar navbar-default navbar-static-top">
                 <div class="container">
                     <div class="navbar-header">
