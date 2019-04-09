@@ -20,10 +20,13 @@ $(function(){
         if (data){
         setTimeout(function(){
             $('.'+data).click()
-                if(childValue != ""){
+             setTimeout(function(){
+                 if(childValue != ""){
 
                 $('.'+childValue).click()
-          }
+
+             }
+            },50)
 
          },1000)
 
