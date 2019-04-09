@@ -21,7 +21,7 @@ $(function(){
         $('img[name=signature_data]').attr('src', sign_src);
         $('img[name=signature_data]').show();
         let signature_required = $('.signature_required');
-        if (signature_required.length > 0 && signature_required.text().indexOf('OnSwitch') != -1)
+        if (signature_required.length > 0 && signature_required.text().indexOf('ON') != -1)
         {
             $('#drawsign').show();
         }
