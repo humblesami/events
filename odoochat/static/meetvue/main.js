@@ -5004,36 +5004,39 @@ var MessengerComponent = /** @class */ (function () {
         else {
             obj_this.is_mobile_device = false;
         }
-        if (obj_this.chat_initilized != 1) {
-            obj_this.chat_initilized = 1;
-            $('body').on('keyup', '.emoji-wysiwyg-editor', function (e) {
-                if (e.keyCode == 13 && !e.shiftKey) {
-                    obj_this.sendMessage();
-                }
-                $('.emoji-menu').hide();
-            });
-            $('body').on('click', '#send_btn', function () {
-                obj_this.sendMessage();
-            });
-        }
         obj_this.active_chat_user = obj_this.chat_users[target_id];
         //console.log(111, obj_this.active_chat_user.id, obj_this.user_data.id, 2);
         this.is_minimize = false;
-        obj_this.httpService.call_post_http('/get-user-messages', { target_id: target_id }, function (data) {
-            obj_this.is_request_sent = false;
-            obj_this.onUserSelected(data);
-        }, null);
+        if (!obj_this.active_chat_user) {
+            console.log("No user selected with " + target_id + ' from ', obj_this.chat_users);
+            return;
+        }
+        if (obj_this.active_chat_user.messages) {
+            //obj_this.active_chat_user needed for $( ".msg_card_body") in dom
+            // will take some time to make above dome ready 
+            setTimeout(function () {
+                obj_this.onUserSelected(obj_this.active_chat_user.messages, 1);
+            }, 10);
+        }
+        else {
+            obj_this.httpService.call_post_http('/get-user-messages', { target_id: target_id }, function (data) {
+                obj_this.is_request_sent = false;
+                obj_this.onUserSelected(data);
+            }, null);
+        }
     };
     MessengerComponent.prototype.hide_chat_box = function () {
         $('.chat-container-wrppaer').removeAttr("id");
     };
-    MessengerComponent.prototype.onUserSelected = function (messages) {
+    MessengerComponent.prototype.onUserSelected = function (messages, already_fetched) {
+        if (already_fetched === void 0) { already_fetched = 0; }
         var obj_this = this;
         $(".msg_card_body").unbind("scroll");
         $(".msg_card_body").scroll(function () {
-            var height = Math.floor(0.3 * $(".msg_card_body").height());
-            if ($(".msg_card_body").scrollTop() <= height) {
-                if (obj_this.is_request_sent) {
+            var scroll_top = $(".msg_card_body").scrollTop();
+            if (scroll_top < 2) {
+                obj_this.is_request_sent = false;
+                if (obj_this.active_chat_user.read || obj_this.is_request_sent) {
                     return;
                 }
                 obj_this.is_request_sent = true;
@@ -5047,6 +5050,9 @@ var MessengerComponent = /** @class */ (function () {
                             $(".msg_card_body").scrollTop(height);
                         }, 200);
                     }
+                    else {
+                        obj_this.active_chat_user.read = 1;
+                    }
                 }, null);
             }
         });
@@ -5059,10 +5065,23 @@ var MessengerComponent = /** @class */ (function () {
             };
             var emojiPicker = new window["EmojiPicker"](emoji_config);
             emojiPicker.discover();
-            obj_this.update_emjoi_urls(messages);
-            obj_this.active_chat_user.messages = messages;
+            if (already_fetched != 1) {
+                obj_this.update_emjoi_urls(messages);
+                obj_this.active_chat_user.messages = messages;
+            }
             obj_this.socketService.update_unseen_message_count("user-selected", obj_this.active_chat_user.id, obj_this.chat_users[obj_this.active_chat_user.id]);
             $('.msg-item').Emoji();
+            $('.emoji-wysiwyg-editor').unbind('keyup');
+            $('#send_btn').unbind('click');
+            $('.emoji-wysiwyg-editor').keyup(function (e) {
+                if (e.keyCode == 13 && !e.shiftKey) {
+                    obj_this.sendMessage();
+                }
+                $('.emoji-menu').hide();
+            });
+            $('#send_btn').click(function () {
+                obj_this.sendMessage();
+            });
             obj_this.scrollToEnd();
         }, 20);
     };
@@ -5101,10 +5120,16 @@ var MessengerComponent = /** @class */ (function () {
         }
         var to_id = obj_this.active_chat_user["id"];
         var message_content = $('.emoji-wysiwyg-editor').html();
-        if (message_content.endsWith('<div><br></div>'))
+        if (message_content.endsWith('<div><br></div>')) {
             message_content = message_content.slice(0, -15);
-        if (!message_content)
+            if (message_content.endsWith('<div><br></div>'))
+                message_content = message_content.slice(0, -15);
+        }
+        if (!message_content) {
+            $('.emoji-wysiwyg-editor').html('');
             return;
+        }
+        console.log(15, message_content);
         var input_data = {
             content: message_content,
             sender: obj_this.user_data.id,
@@ -6915,14 +6940,16 @@ function View_VotingdetailsComponent_16(_l) { return _angular_core__WEBPACK_IMPO
 function View_VotingdetailsComponent_8(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 16, "div", [["class", "div1"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_9)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](2, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_10)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](4, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_11)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](6, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_12)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](8, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_13)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](10, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_14)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](12, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_15)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](14, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_16)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](16, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.voting_object.my_status; _ck(_v, 2, 0, currVal_0); var currVal_1 = (_co.voting_object.name && _co.voting_object.name); _ck(_v, 4, 0, currVal_1); var currVal_2 = _co.voting_object.motion_first; _ck(_v, 6, 0, currVal_2); var currVal_3 = _co.voting_object.motion_second; _ck(_v, 8, 0, currVal_3); var currVal_4 = _co.voting_object.meeting.name; _ck(_v, 10, 0, currVal_4); var currVal_5 = _co.voting_object.topic.name; _ck(_v, 12, 0, currVal_5); var currVal_6 = (_co.voting_object.open_date && _co.voting_object.open_date); _ck(_v, 14, 0, currVal_6); var currVal_7 = (_co.voting_object.close_date && _co.voting_object.close_date); _ck(_v, 16, 0, currVal_7); }, null); }
 function View_VotingdetailsComponent_18(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 3, "div", [["class", "row"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 1, "div", [["class", "col-sm-3 meet-elements"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" Description "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 0, "label", [["class", "col-sm-9"]], [[8, "innerHTML", 1]], null, null, null, null))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.voting_object.description; _ck(_v, 3, 0, currVal_0); }); }
 function View_VotingdetailsComponent_17(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 2, "div", [["class", "div2"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_18)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](2, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = (_co.voting_object.hasOwnProperty("description") && _co.voting_object.description); _ck(_v, 2, 0, currVal_0); }, null); }
-function View_VotingdetailsComponent_20(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 8, "div", [["class", "kanban-card"]], null, [[null, "click"]], function (_v, en, $event) { var ad = true; if (("click" === en)) {
+function View_VotingdetailsComponent_20(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 0, "img", [["class", "strt_sign_voting "], ["style", "width: 100%;"]], [[8, "src", 4]], null, null, null, null))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "data:image/png;base64,", _co.voting_object.signature_data, ""); _ck(_v, 0, 0, currVal_0); }); }
+function View_VotingdetailsComponent_19(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 4, "div", [["class", "row"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 3, "div", [["class", "col-sm-8 "], ["style", "display: flex;"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 2, "div", [["style", "position:relative;cursor: pointer;"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_20)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](4, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.voting_object.signature_data; _ck(_v, 4, 0, currVal_0); }, null); }
+function View_VotingdetailsComponent_22(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 8, "div", [["class", "kanban-card"]], null, [[null, "click"]], function (_v, en, $event) { var ad = true; if (("click" === en)) {
         var pd_0 = (_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 1).onClick() !== false);
         ad = (pd_0 && ad);
     } return ad; }, null, null)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 16384, null, 0, _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterLink"], [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], [8, null], _angular_core__WEBPACK_IMPORTED_MODULE_1__["Renderer2"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"]], { routerLink: [0, "routerLink"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 6, "div", [["class", "DocumentWrapper gray-bg"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 1, "div", [["class", "DocIcon"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](4, 0, null, null, 0, "i", [["class", "fa fa-file"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](5, 0, null, null, 3, "div", [["class", "DocText"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](6, 0, null, null, 2, "div", [["class", "DocName"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](7, 0, null, null, 1, "h5", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](8, null, ["", ""]))], function (_ck, _v) { var currVal_0 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "/voting/doc/", _v.context.$implicit.id, ""); _ck(_v, 1, 0, currVal_0); }, function (_ck, _v) { var currVal_1 = _v.context.$implicit.name; _ck(_v, 8, 0, currVal_1); }); }
-function View_VotingdetailsComponent_19(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 5, "div", [["class", "title-wrapper"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 1, "div", [["class", "modal-header"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" Voting Documents "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 2, "div", [["class", "row docwrappercontainer"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_20)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](5, 278528, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["IterableDiffers"]], { ngForOf: [0, "ngForOf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.voting_object.voting_docs; _ck(_v, 5, 0, currVal_0); }, null); }
-function View_VotingdetailsComponent_2(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 9, "div", [["class", "meeting-details-form"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 2, "div", [["class", "d-flex justify-content-between"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_3)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](3, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_8)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](5, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_17)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](7, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_19)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](9, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.voting_object; _ck(_v, 3, 0, currVal_0); var currVal_1 = _co.voting_object; _ck(_v, 5, 0, currVal_1); var currVal_2 = _co.voting_object; _ck(_v, 7, 0, currVal_2); var currVal_3 = (_co.voting_object.voting_docs && _co.voting_object.voting_docs.length); _ck(_v, 9, 0, currVal_3); }, null); }
-function View_VotingdetailsComponent_21(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-comments", [], null, null, null, _comments_comments_component_ngfactory__WEBPACK_IMPORTED_MODULE_4__["View_CommentsComponent_0"], _comments_comments_component_ngfactory__WEBPACK_IMPORTED_MODULE_4__["RenderType_CommentsComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _comments_comments_component__WEBPACK_IMPORTED_MODULE_5__["CommentsComponent"], [_app_http_service__WEBPACK_IMPORTED_MODULE_6__["HttpService"], _app_socket_service__WEBPACK_IMPORTED_MODULE_7__["SocketService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]], { res_model: [0, "res_model"], res_id: [1, "res_id"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "", _co.voting_object.model, ""); var currVal_1 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "", _co.voting_object.id, ""); _ck(_v, 1, 0, currVal_0, currVal_1); }, null); }
-function View_VotingdetailsComponent_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵpid"](0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["DatePipe"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["LOCALE_ID"]]), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 15, "div", [["id", "main-div"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 8, "div", [["class", " breadcrumbSection"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 7, "div", [["class", "container"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](4, 0, null, null, 6, "div", [["class", "row"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](5, 0, null, null, 5, "div", [["class", "col-sm-12"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](6, 0, null, null, 4, "ol", [["class", "breadcrumb"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_1)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](8, 278528, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["IterableDiffers"]], { ngForOf: [0, "ngForOf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](9, 0, null, null, 1, "li", [["class", "breadcrumb-item"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](10, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](11, 0, null, null, 5, "div", [["class", "container"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](12, 0, null, null, 2, "div", [["class", " form-details"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_2)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](14, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_21)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](16, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.bread_crumb.items; _ck(_v, 8, 0, currVal_0); var currVal_2 = _co.voting_object; _ck(_v, 14, 0, currVal_2); var currVal_3 = (_co.meetObjLoaded && _co.voting_object.enable_discussion); _ck(_v, 16, 0, currVal_3); }, function (_ck, _v) { var _co = _v.component; var currVal_1 = _co.bread_crumb.title; _ck(_v, 10, 0, currVal_1); }); }
+function View_VotingdetailsComponent_21(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 5, "div", [["class", "title-wrapper"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 1, "div", [["class", "modal-header"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" Voting Documents "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 2, "div", [["class", "row docwrappercontainer"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_22)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](5, 278528, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["IterableDiffers"]], { ngForOf: [0, "ngForOf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.voting_object.voting_docs; _ck(_v, 5, 0, currVal_0); }, null); }
+function View_VotingdetailsComponent_2(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 11, "div", [["class", "meeting-details-form"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 2, "div", [["class", "d-flex justify-content-between"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_3)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](3, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_8)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](5, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_17)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](7, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_19)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](9, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_21)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](11, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.voting_object; _ck(_v, 3, 0, currVal_0); var currVal_1 = _co.voting_object; _ck(_v, 5, 0, currVal_1); var currVal_2 = _co.voting_object; _ck(_v, 7, 0, currVal_2); var currVal_3 = _co.voting_object.signature_data; _ck(_v, 9, 0, currVal_3); var currVal_4 = (_co.voting_object.voting_docs && _co.voting_object.voting_docs.length); _ck(_v, 11, 0, currVal_4); }, null); }
+function View_VotingdetailsComponent_23(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-comments", [], null, null, null, _comments_comments_component_ngfactory__WEBPACK_IMPORTED_MODULE_4__["View_CommentsComponent_0"], _comments_comments_component_ngfactory__WEBPACK_IMPORTED_MODULE_4__["RenderType_CommentsComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _comments_comments_component__WEBPACK_IMPORTED_MODULE_5__["CommentsComponent"], [_app_http_service__WEBPACK_IMPORTED_MODULE_6__["HttpService"], _app_socket_service__WEBPACK_IMPORTED_MODULE_7__["SocketService"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"]], { res_model: [0, "res_model"], res_id: [1, "res_id"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "", _co.voting_object.model, ""); var currVal_1 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "", _co.voting_object.id, ""); _ck(_v, 1, 0, currVal_0, currVal_1); }, null); }
+function View_VotingdetailsComponent_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵpid"](0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["DatePipe"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["LOCALE_ID"]]), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 15, "div", [["id", "main-div"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 8, "div", [["class", " breadcrumbSection"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 7, "div", [["class", "container"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](4, 0, null, null, 6, "div", [["class", "row"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](5, 0, null, null, 5, "div", [["class", "col-sm-12"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](6, 0, null, null, 4, "ol", [["class", "breadcrumb"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_1)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](8, 278528, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["IterableDiffers"]], { ngForOf: [0, "ngForOf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](9, 0, null, null, 1, "li", [["class", "breadcrumb-item"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](10, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](11, 0, null, null, 5, "div", [["class", "container"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](12, 0, null, null, 2, "div", [["class", " form-details"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_2)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](14, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_VotingdetailsComponent_23)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](16, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.bread_crumb.items; _ck(_v, 8, 0, currVal_0); var currVal_2 = _co.voting_object; _ck(_v, 14, 0, currVal_2); var currVal_3 = (_co.meetObjLoaded && _co.voting_object.enable_discussion); _ck(_v, 16, 0, currVal_3); }, function (_ck, _v) { var _co = _v.component; var currVal_1 = _co.bread_crumb.title; _ck(_v, 10, 0, currVal_1); }); }
 function View_VotingdetailsComponent_Host_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-votingdetails", [], null, null, null, View_VotingdetailsComponent_0, RenderType_VotingdetailsComponent)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 245760, null, 0, _votingdetails_component__WEBPACK_IMPORTED_MODULE_8__["VotingdetailsComponent"], [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], _app_http_service__WEBPACK_IMPORTED_MODULE_6__["HttpService"], _angular_platform_browser__WEBPACK_IMPORTED_MODULE_9__["DomSanitizer"], _app_socket_service__WEBPACK_IMPORTED_MODULE_7__["SocketService"]], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
 var VotingdetailsComponentNgFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵccf"]("app-votingdetails", _votingdetails_component__WEBPACK_IMPORTED_MODULE_8__["VotingdetailsComponent"], View_VotingdetailsComponent_Host_0, {}, {}, []);
 
@@ -7039,6 +7066,15 @@ var VotingdetailsComponent = /** @class */ (function () {
         }
         return closed;
     };
+    VotingdetailsComponent.prototype.voting_opened = function (open_date) {
+        var opened = false;
+        var openingDate = new Date(open_date).getTime();
+        var dateNow = new Date().getTime();
+        if (openingDate > dateNow) {
+            opened = true;
+        }
+        return opened;
+    };
     VotingdetailsComponent.prototype.respond_invitation = function (option_name, response, voting_id) {
         var chek = $('.upcomingButton .fa-check:first');
         if (chek.length > 0) {
@@ -7053,25 +7089,31 @@ var VotingdetailsComponent = /** @class */ (function () {
             voting_id: voting_id,
             voting_option_id: response
         };
-        if (!this.voting_closed(obj_this.voting_object.close_date)) {
-            if (obj_this.voting_object.signature_required) {
-                window['voting_id'] = voting_id;
-                $('.strt_sign').trigger('click');
-                window['voting_option_id'] = response;
-                window['on_vote_sign_saved'] = function () {
-                    obj_this.voting_object.my_status = option_name;
-                };
+        if (!obj_this.voting_opened(obj_this.voting_object.open_date)) {
+            if (!obj_this.voting_closed(obj_this.voting_object.close_date)) {
+                if (obj_this.voting_object.signature_required) {
+                    window['voting_id'] = voting_id;
+                    $('.strt_sign').trigger('click');
+                    window['voting_option_id'] = response;
+                    window['on_vote_sign_saved'] = function (signature_data) {
+                        obj_this.voting_object.my_status = option_name;
+                        obj_this.voting_object.signature_data = signature_data;
+                    };
+                }
+                else {
+                    obj_this.httpService.call_post_http('/voting/submit', input_data, function () {
+                        obj_this.voting_object.my_status = option_name;
+                    }, function () {
+                        obj_this.voting_object.signature_required = true;
+                    });
+                }
             }
             else {
-                obj_this.httpService.call_post_http('/voting/submit', input_data, function () {
-                    obj_this.voting_object.my_status = option_name;
-                }, function () {
-                    obj_this.voting_object.signature_required = true;
-                });
+                alert('This Approval/Voting is Closed now.');
             }
         }
         else {
-            alert(obj_this.voting_object.name + ' is Closed.');
+            alert('This Approval/Voting is not Opened yet.');
         }
     };
     VotingdetailsComponent.prototype.ngOnInit = function () {
@@ -7190,7 +7232,7 @@ var VotingresultsComponent = /** @class */ (function () {
         window["functions"].showLoader('survey-iframe');
         var cookie = window['current_user'].cookie;
         var voting_id = obj_this.route.snapshot.params.id;
-        var voting_url = window["site_config"].server_base_url + '/voting/graphical/a-' + voting_id + '/' + cookie.token + '/' + cookie.db;
+        var voting_url = window["site_config"].server_base_url + '/voting/graphical/a-' + voting_id + '/' + cookie.id + '/' + cookie.token + '/' + cookie.db;
         console.log(voting_url);
         $('#survey-iframe').attr('src', voting_url);
         $('#survey-iframe').load(function () {

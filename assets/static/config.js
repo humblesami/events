@@ -15,7 +15,7 @@ var site_config_local = {
 	site_url: '',
     chat_server : 'http://localhost:3000',
     app_name : 'MeetingPoint',
-	show_logs : ['socket', 'ajax_before', 'ajax_success']
+	show_logs : ['socket', 'ajax_before'] //, 'ajax_success'
 };
 var network_config = {
 	server_base_url:'http://172.16.21.170:8000',

@@ -26,6 +26,10 @@ function dn_rpc_object(options) {
     var uid = dn_current_site_user.cookie.id;
     if (uid)
         input_data['uid'] = uid;
+    else{
+        console.log('No id in cookie', dn_current_site_user.cookie)
+        return;
+    }
     input_data['time_zone'] = dn_current_site_user.time_zone;
 
     //console.log(input_data);
@@ -76,9 +80,7 @@ function dn_rpc_object(options) {
                     if (response.data)
                         response = response.data;
                     if (options.onSuccess) {
-                        options.onSuccess(response);
-                        if (site_config.show_logs == 'ajax_success')
-                            console.log(response.data);
+                        options.onSuccess(response);                        
                     } else {
                         console.log(response.data);
                     }
@@ -87,7 +89,8 @@ function dn_rpc_object(options) {
                 if (response.error) {
                     console.log(response.error);
                 } else if (response.data) {
-                    console.log(response.data);
+                    if (site_config.show_logs == 'ajax_success')
+                        console.log(response.data);                    
                 } else {
 
                 }

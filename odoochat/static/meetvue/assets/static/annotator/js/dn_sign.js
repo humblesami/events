@@ -148,7 +148,7 @@ $(document).ready(function () {
                     }
                     if(voting_id != -1)
                     {
-                        window['on_vote_sign_saved']();
+                        window['on_vote_sign_saved'](data.signature_data);
                     }
                 }, type:'post'
             });
