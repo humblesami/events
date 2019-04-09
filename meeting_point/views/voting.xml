@@ -35,21 +35,20 @@
                                    <div class="oe_button_box oe_edit_only" name="button_box">
                                        <strong>Enable Discussion </strong>
                                      <button name="discussion_value" type="object" class="oe_stat_button btn btn-primary">
-                                         <field name="enable_discussion" widget="boolean_button" options='{"terminology": "True"}'/>
+                                         <field name="enable_discussion" widget="boolean_button" options='{"terminology": {"string_true": "ON", "hover_true": "ON", "string_false": "OFF", "hover_false": "OFF"}}'/>
                                      </button>
                                  </div>
 
                                         <div class="oe_button_box oe_edit_only" name="button_box">
                                             <strong>Result's Graphical Visibility</strong>
                                      <button name="public_value" type="object" class="oe_stat_button btn btn-primary">
-                                         <field name="public_visibility" widget="boolean_button" options='{"terminology": "True"}'/>
+                                         <field name="public_visibility" widget="boolean_button" options='{"terminology": {"string_true": "ON", "hover_true": "ON", "string_false": "OFF", "hover_false": "OFF"}}'/>
                                      </button>
                                  </div>
-
                                     <div class="oe_button_box oe_edit_only" name="button_box">
                                         <strong>Signature Required  </strong>
                                      <button name="signature_value" type="object" class="oe_stat_button btn btn-primary">
-                                         <field name="signature_required" widget="boolean_button" options='{"terminology": "True"}'/>
+                                         <field name="signature_required" widget="boolean_button" options='{"terminology": {"string_true": "ON", "hover_true": "ON", "string_false": "OFF", "hover_false": "OFF"}}'/>
                                      </button>
                                  </div>
                               </sheet>
