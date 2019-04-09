@@ -95,12 +95,10 @@
                     <field name = 'my_status'/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="kantainer oe_module_vignette oe_kanban_global_click" style="padding:0">
+                            <div class="kantainer oe_module_vignette oe_kanban_global_click">
 <!--                                <a type="object" name="open_same_window" class="oe_module_desc kanban_a">-->
                                     <h2><field name="name"/></h2>
-                                    <t t-if="record.meeting_id.raw_value">
-                                        <h3>Type: <field name="voting_type_id"/></h3>
-                                    </t>
+                                    <h3>Type: <field name="voting_type_id"/></h3>
                                     <t t-if="record.meeting_id.raw_value">
                                         <h4>Meeting: <field name="meeting_id"/></h4>
                                     </t>

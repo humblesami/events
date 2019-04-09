@@ -418,17 +418,20 @@ body.o_app_switcher_background nav:first-child
     justify-content: center;
     height: 100%;
 }
-.kanban_a h2{
-    font-size:16px;
+.kanban_a h2, .o_kanban_view.o_kanban_ungrouped .o_kanban_record h2{
+    font-size:15px;
     margin:0 0 5px;
     padding:0;
  }
-.kanban_a h3{
+.kanban_a h3, .o_kanban_view.o_kanban_ungrouped .o_kanban_record h3{
     font-size:13.5px;
     margin:0 0 5px;
     padding:0;
  }
 
+.o_kanban_view.o_kanban_ungrouped .o_kanban_record h4{
+    font-size:12px;
+}
  .oe_module_desc h2{
     font-size:16px;
  }
@@ -459,4 +462,8 @@ body.o_app_switcher_background nav:first-child
 
  .AgendaDuraion{
     font-size: 13.5px;
+ }
+
+ .o_form_view .o_field_widget .o_kanban_view.o_kanban_ungrouped .o_kanban_record{
+    display: inline-block;
  }

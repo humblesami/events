@@ -1,6 +1,14 @@
 $(function(){
 
-//    $('#votingBack').hide();
+    $('.oe_stat_button').click(function(event){
+    setTimeout(function(){
+        $('html, .o_content').animate({
+           scrollTop: 9150
+       }, 5);
+    },1000)
+
+    });
+
     $('#submitted').hide();
     $('.viewGraphically:first').css('background-color','#875A7B');
     let sign_src = $('img[name=signature_data]').attr('src');
