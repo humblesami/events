@@ -1,4 +1,34 @@
 $(function(){
+
+        function getCookie(cname) {
+          var name = cname + "=";
+          var ca = document.cookie.split(';');
+          for(var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+                    }
+        data = getCookie("buttonValue")
+        childValue = getCookie('childbutton')
+//         console.log(data,'datatestIng');
+        if (data){
+        setTimeout(function(){
+            $('.'+data).click()
+                if(childValue != ""){
+
+                $('.'+childValue).click()
+          }
+
+         },1000)
+
+        }
+
     $('.slider_div .o_kanban_ungrouped').addClass('related-products');
     $('.related-products .o_kanban_record').addClass('item');
     $('.slider_div .o_kanban_ghost,.oe_edit_only').remove();
@@ -21,7 +51,7 @@ $(function(){
     {
         if(el && el.is('.btn-primary'))
         {
-            console.log(585, el.index());
+//            console.log(585, el.index());
             return;
         }
         else
@@ -59,17 +89,19 @@ $(function(){
                 $('#calendar').css('visiblity','hidden');
                 setTimeout(function(){
                     $('body').append('<script src="/meeting_point/static/js/calendar/fullcalendar.js"></script>');
-                    $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');
-                    $('.o_form_view:first').append('<script src="/meeting_point/static/js/calendar/calendar.js"></script>');
+                    $('body').append(' <link rel="stylesheet" href="/meeting_point/static/css/calendar.css"/>');                                        
                     after_calendar_shown();
                     after_calendar = true;
+
                },50);
             }
-            else
-                $('.o_form_view:first').append('<script src="/meeting_point/static/js/calendar/calendar.js"></script>');
+            $('.o_form_view:first').append('<script src="/meeting_point/static/js/calendar/calendar.js"></script>');
+
         }
         if(!after_calendar)
         {
+
+
             after_calendar_shown();
         }
     }
@@ -137,5 +169,29 @@ $(function(){
     $(".related-products").owlCarousel(owlOptions);
     }
 
-    
+    setTimeout(function(){
+   $('.calendar_btn').click(function(){
+
+    document.cookie = "buttonValue=calendar_btn";
+         $('.fc-button-group').click(function(){
+
+         $('.fc-state-active').html();
+         document.cookie = "buttonValue=calendar_btn"
+         dat = $('.fc-state-active').attr('class').split(' ')[0]
+//         console.log('dat value we need',dat)
+         document.cookie = "childbutton="+ dat
+                 })
+           });
+
+      $('.to_do_items') .click(function(){
+
+     document.cookie = "buttonValue=to_do_items";
+      document.cookie = "childbutton= ";
+         });
+      $('.welcome_btn') .click(function(){
+         document.cookie = "buttonValue=welcome_btn"
+         document.cookie = "childbutton= "
+      });
+  },1000);
+
 })
