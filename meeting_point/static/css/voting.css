@@ -67,3 +67,13 @@ voting-comments .container
 .o_form_view .oe_button_box .btn.oe_stat_button > .o_stat_info {
     padding-right:0;
 }
+
+.yes, .no{
+    z-index: 1;
+}
+.yes{
+    color: green;
+}
+.no{
+    color: red;
+}

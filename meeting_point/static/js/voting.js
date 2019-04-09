@@ -1,5 +1,25 @@
 $(function(){
 
+    $('.switchButtons .o_field_boolean').each(function(i, el){
+
+        current_element = $(el).find('input:checkbox');
+
+        if (current_element.prop('checked') == true)
+        {
+            current_element.next().text('Yes').addClass('yes');
+        }
+        else
+        {
+            current_element.next().text('No').addClass('no');
+        }
+        current_element.click(function(){
+            console.log($(this).parent().find('.slider'));
+            $(this).parent().find('.slider').html('hello');
+        });
+    });
+
+
+
     $('.oe_stat_button').click(function(event){
     setTimeout(function(){
         $('html, .o_content').animate({

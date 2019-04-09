@@ -48,11 +48,14 @@ class Voting(models.Model):
 
 
     def signature_value(self):
-        self.signature_required = not  self.signature_required
+        a = 1
+        #self.signature_required = not  self.signature_required
     def public_value(self):
-        self.public_visibility = not  self.public_visibility
+        a = 1
+        # self.public_visibility = not  self.public_visibility
     def discussion_value(self):
-        self.enable_discussion = not  self.enable_discussion
+        a = 1
+        # self.enable_discussion = not  self.enable_discussion
 
 
 
