@@ -27,7 +27,7 @@ from odoo.http import request
 class OpenEduCatAppController(http.Controller):
 
     @http.route(['/openeducat_core/get_app_dash_data'], type='json',
-                auth='none', methods=['POST'], csrf=False)
+                auth='public', methods=['POST'], csrf=False)
     def compute_app_dashboard_data(self, **post):
         user_id = post.get('user_id', False)
         total_assignments = 0
@@ -77,7 +77,7 @@ class OpenEduCatAppController(http.Controller):
                 'assigned_books': assigned_books}
 
     @http.route(['/openeducat_core/get_faculty_dash_data'], type='json',
-                auth='none', methods=['POST'], csrf=False)
+                auth='public', methods=['POST'], csrf=False)
     def compute_faculty_dashboard_data(self, **post):
         user_id = post.get('user_id', False)
         total_assignments = 0

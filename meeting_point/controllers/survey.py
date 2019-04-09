@@ -6,7 +6,7 @@ from odoo.addons.survey.controllers.main import WebsiteSurvey
 
 class website_survey(WebsiteSurvey):
 
-    @http.route('/survey-details', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/survey-details', type="http", csrf=False, auth='public', cors='*')
     def get_survey_http(self, **kw):
         try:
             uid = ws_methods.check_auth(kw)
@@ -73,7 +73,7 @@ class website_survey(WebsiteSurvey):
         else:
             return request.redirect('%s/survey/fill/%s/%s' % ( ws_methods.get_main_url(), survey.id, user_input.token))
 
-    @http.route('/voting-submit', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/voting-submit', type="http", csrf=False, auth='public', cors='*')
     def submit_dn_survey_http(self, **kw):
         try:
             questions = kw.get('questions')
@@ -84,7 +84,7 @@ class website_survey(WebsiteSurvey):
             return ws_methods.handle()
         return self.submit_dn_survey(kw)
 
-    @http.route('/voting-submit-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/voting-submit-json', type="json", csrf=False, auth='public', cors='*')
     def submit_dn_survey_json(self, **kw):
         kw = request.jsonrequest
         return self.submit_dn_survey(kw)

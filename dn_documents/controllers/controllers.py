@@ -2,7 +2,7 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.dn_base import ws_methods
 class Document(http.Controller):
-    @http.route('/dn_documents/get_pdf',auth='none', csrf=False)
+    @http.route('/dn_documents/get_pdf',auth='public', csrf=False)
     def get_pdf(self, **kw):
         doc_id = kw.get('document_id')
         model = kw.get('model')

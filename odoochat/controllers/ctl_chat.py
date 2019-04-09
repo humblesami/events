@@ -135,25 +135,28 @@ class OdooChat(http.Controller):
             sender = uid
             to = kw.get('target_id')
             to = int(to)
-            offset = kw.get('offset')
-
-            filters = [('sender','=',to), ('to','=',sender)]
-            req_env['odoochat.message'].sudo().search(filters).write({'read_status':True})
+            offset = kw.get('offset')            
 
             db_filters = [('sender', 'in', [sender, to]), ('to', 'in', [to, sender])]
             count = req_env['odoochat.message'].search_count(db_filters)
             if not offset:
-                offset = 20
-            elif int(offset) < count:
-                offset = int(offset)
-            else:
-                return ws_methods.http_response('', {})
-            offset = count - offset
-            if offset < 0:
                 offset = 0
+            else:
+                offset = int(offset)
+                if offset < 0:
+                    offset = 0
+                elif offset > count:
+                    return ws_methods.http_response('', [])
+            
             messages = req_env['odoochat.message'].search(db_filters, offset=offset, limit=20)
             props = ['sender', 'to', 'content', 'create_date']
             messages_obj = ws_methods.objects_list_to_json_list(messages, props)
+
+            filters = [('sender','=',to), ('to','=',sender), ('read_status', '=', False)]
+            try:
+                req_env['odoochat.message'].search(filters).write({'read_status':True})
+            except:
+                a = 1
             res = ws_methods.http_response('', messages_obj)
             return res
         except:

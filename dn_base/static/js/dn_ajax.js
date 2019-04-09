@@ -52,6 +52,20 @@ var dn_json_rpc_object = {
     },
 
     request: function (reqfun, input_data, callback, failureCallBack) {
+        // if (!input_data['uid'])
+        // {
+        //     var req_uid = odoo.session_info.user.id;
+        //     if(input_data['auth'])
+        //     {
+        //         if (!input_data['auth']['uid'])
+        //         {
+        //             input_data['auth']['uid'] = uid;
+        //         }
+        //         else{
+        //             input_data['uid'] = uid;
+        //         }
+        //     }
+        // }
         var serviceRequestInProgress = false;
         if (serviceRequestInProgress) {
             //sam_popup.show("Some Request Already In Progress", "ok");

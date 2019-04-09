@@ -11,7 +11,7 @@ from odoo.addons.web.controllers.main import Home, Binary
 from odoo.addons.web.controllers.main import Session, binary_content
 
 # class MyHome(Home):
-#     @http.route('/web/login', type='http', auth="none", sitemap=False)
+#     @http.route('/web/login', type='http', auth='none', sitemap=False)
 #     def web_login(self, redirect=None, **kw):
 #         request.httprequest.url_root = tools.config['server_web_url']
 #         if kw and kw['login']:
@@ -340,7 +340,8 @@ class MyBinary(Binary):
             old_passwd = kw.get('old')
             token = kw.get('token')
             db = kw.get('db')
-            filters = [('auth_token', '=', token)]
+            uid = int(kw.get('uid'))
+            filters = [('auth_token', '=', token), ('uid', '=', uid)]
             user = request.env['dnspusers'].sudo().search(filters)
             uid = request.session.authenticate(db, user.login, old_passwd)
             if uid:

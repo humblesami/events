@@ -3,11 +3,11 @@ from odoo.addons.dn_base import ws_methods
 
 
 class ws(http.Controller):
-    @http.route('/meeting_point/search', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/meeting_point/search', type="http", csrf=False, auth='public', cors='*')
     def searchmp_http(self, **kw):
         return self.search_mp(kw)
 
-    @http.route('/meeting_point/search-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/meeting_point/search-json', type="json", csrf=False, auth='public', cors='*')
     def searchmp_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.search_mp(req_body)
@@ -71,11 +71,11 @@ class ws(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/meeting_point/search-docs', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/meeting_point/search-docs', type="http", csrf=False, auth='public', cors='*')
     def searchmp_docs_http(self, **kw):
         return self.search_docs(kw)
 
-    @http.route('/meeting_point/search-docs-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/meeting_point/search-docs-json', type="json", csrf=False, auth='public', cors='*')
     def searchmp_docs_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.search_docs(req_body)
@@ -127,11 +127,11 @@ class ws(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/ws/mp-home', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/ws/mp-home', type="http", csrf=False, auth='public', cors='*')
     def mp_home_http(self, **kw):
         return self.mp_home(kw)
 
-    @http.route('/ws/mp-home-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/ws/mp-home-json', type="json", csrf=False, auth='public', cors='*')
     def mp_home_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.mp_home(req_body)
@@ -181,11 +181,11 @@ class ws(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/ws/committees', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/ws/committees', type="http", csrf=False, auth='public', cors='*')
     def get_committees_http(self, **kw):
         return self.get_committees(kw)
 
-    @http.route('/ws/committees-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/ws/committees-json', type="json", csrf=False, auth='public', cors='*')
     def get_committees_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.get_committees(req_body)
@@ -218,11 +218,11 @@ class ws(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/committee/details', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/committee/details', type="http", csrf=False, auth='public', cors='*')
     def get_committee_http(self, **kw):
         return self.get_committee_details(kw)
 
-    @http.route('/committee/details-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/committee/details-json', type="json", csrf=False, auth='public', cors='*')
     def get_committee_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.get_committee_details(req_body)
@@ -247,7 +247,6 @@ class ws(http.Controller):
             return ws_methods.http_response('', data)
         except:
             return ws_methods.handle()
-
 
 
     @http.route('/ws/post-comment', type="http", csrf=False, auth='public', cors='*')

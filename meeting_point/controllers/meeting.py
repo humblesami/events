@@ -225,12 +225,12 @@ class meeting(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/meeting/summary', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/meeting/summary', type="http", csrf=False, auth='public', cors='*')
     def mp_meeting_http(self, **kw):
         res = self.mp_meeting_summary(kw)
         return res
 
-    @http.route('/meeting/summary-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/meeting/summary-json', type="json", csrf=False, auth='public', cors='*')
     def mp_meeting_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.mp_meeting_summary(req_body)
@@ -270,12 +270,12 @@ class meeting(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/meeting/details', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/meeting/details', type="http", csrf=False, auth='public', cors='*')
     def mp_meeting_compact_http(self, **kw):
         res = self.mp_meeting(kw)
         return res
 
-    @http.route('/meeting/details-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/meeting/details-json', type="json", csrf=False, auth='public', cors='*')
     def mp_meeting_compact_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.mp_meeting(req_body)
@@ -386,12 +386,12 @@ class meeting(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/meeting/list', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/meeting/list', type="http", csrf=False, auth='public', cors='*')
     def mp_meetings_http(self, **kw):
         res = self.mp_meetings(kw)
         return res
 
-    @http.route('/meeting/list-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/meeting/list-json', type="json", csrf=False, auth='public', cors='*')
     def mp_meetings_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.mp_meetings(req_body)

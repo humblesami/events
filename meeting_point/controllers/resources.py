@@ -20,11 +20,11 @@ doc_types = {
 }
 
 class ws(http.Controller):
-    @http.route('/root-folder', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/root-folder', type="http", csrf=False, auth='public', cors='*')
     def get_root_folder_http(self, **kw):
         return self.RootFolder(kw)
 
-    @http.route('/root-folder-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/root-folder-json', type="json", csrf=False, auth='public', cors='*')
     def get_root_folder_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.RootFolder(req_body)
@@ -96,11 +96,11 @@ class ws(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/ws/folder-doc', auth='none', csrf=False, cors='*')
+    @http.route('/ws/folder-doc', auth='public', csrf=False, cors='*')
     def get_folder_document_http(self, **kw):
         return self.get_home_doc(kw)
 
-    @http.route('/ws/folder-doc-json', auth='none', type="json", csrf=False, cors='*')
+    @http.route('/ws/folder-doc-json', auth='public', type="json", csrf=False, cors='*')
     def get_folder_document_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.get_home_doc(req_body)
@@ -117,11 +117,11 @@ class ws(http.Controller):
             return ws_methods.handle('Document not found')
 
 
-    @http.route('/meeting-doc', auth='none', csrf=False, cors='*')
+    @http.route('/meeting-doc', auth='public', csrf=False, cors='*')
     def get_meeting_doc_http(self, **kw):
         return self.get_meeting_doc(kw)
 
-    @http.route('/meeting-doc-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/meeting-doc-json', type="json", csrf=False, auth='public', cors='*')
     def get_meeting_doc_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.get_meeting_doc(req_body)
@@ -142,11 +142,11 @@ class ws(http.Controller):
         except:
             return ws_methods.handle('Document not found')
     # Routed to get unsigned document ,http and json Routes Api's
-    @http.route('/sign-doc-original', auth='none', csrf=False, cors='*')
+    @http.route('/sign-doc-original', auth='public', csrf=False, cors='*')
     def get_meeting_signature_original_http1(self, **kw):
         return self.get_meeting_unsigneddoc_original(kw)
 
-    @http.route('/sign-doc-original-json', type="json", auth='none', csrf=False, cors='*')
+    @http.route('/sign-doc-original-json', type="json", auth='public', csrf=False, cors='*')
     def get_meeting_signature_original_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.get_meeting_unsigneddoc_original(req_body)
@@ -168,11 +168,11 @@ class ws(http.Controller):
             return ws_methods.handle('Document not found')
 
     # Route To get Signed Document with validation if user is present in the meetings
-    @http.route('/sign-doc',auth='none', csrf=False, cors='*')
+    @http.route('/sign-doc',auth='public', csrf=False, cors='*')
     def get_meeting_signature_http(self, **kw):
         return self.get_meeting_signdoc_original(kw)
 
-    @http.route('/sign-doc-json',type="json" ,auth='none', csrf=False, cors='*')
+    @http.route('/sign-doc-json',type="json" ,auth='public', csrf=False, cors='*')
     def get_meeting_signature_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.get_meeting_signdoc_original(req_body)
@@ -197,11 +197,11 @@ class ws(http.Controller):
             return ws_methods.handle('Document not found')
 
     #Route to get document on HomePage
-    @http.route('/home-doc', auth='none', csrf=False, cors='*')
+    @http.route('/home-doc', auth='public', csrf=False, cors='*')
     def get_home_document_http(self, **kw):
         return self.get_home_doc(kw)
 
-    @http.route('/home-doc-json', auth='none',type="json", csrf=False, cors='*')
+    @http.route('/home-doc-json', auth='public',type="json", csrf=False, cors='*')
     def get_home_document_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.get_home_doc(req_body)

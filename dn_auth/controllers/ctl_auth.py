@@ -142,9 +142,9 @@ class auth(http.Controller):
     def verifyTokenHttp(self, **kw):
         try:
             values = kw
-            if http.request.uid and http.request.uid!=4:
-                uid = http.request.uid
-            else:
+            uid = values.get('uid')
+            uid = int(uid)
+            if http.request.uid != uid:
                 uid = self.verifyToken(values)
             if type(uid) is not int:
                 return ws_methods.http_response(uid)

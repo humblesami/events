@@ -7,7 +7,7 @@ from odoo.addons.dn_base import ws_methods
 
 class Attendance(http.Controller):
 
-    @http.route('/upload-attendance', type="http", auth='none', csrf=False, cors='*')
+    @http.route('/upload-attendance', type="http", auth='public', csrf=False, cors='*')
     def userAttendance_http(self, **kw):
         try:
             input_data = kw['input_data']
@@ -17,7 +17,7 @@ class Attendance(http.Controller):
         except:
             return ws_methods.handle()
 
-    @http.route('/upload-attendance-json', type="json", auth='none', csrf=False, cors='*')
+    @http.route('/upload-attendance-json', type="json", auth='public', csrf=False, cors='*')
     def userAttendance_json(self, **kw):
         try:
             reqBody = http.request.jsonrequest
@@ -72,7 +72,7 @@ class Attendance(http.Controller):
         date_str = dn_dt.dtTodatestr(dt)
         return date_str
 
-    @http.route('/testvalues', type="http", auth='none', csrf=False, cors='*')
+    @http.route('/testvalues', type="http", auth='public', csrf=False, cors='*')
     def change_namedd(self, **kw):
         try:
             return werkzeug.utils.redirect('/testvalues1')
@@ -108,7 +108,7 @@ class Attendance(http.Controller):
             return  ws_methods.handle()
 
 
-    @http.route('/testvalues1', type="http", auth='none', csrf=False, cors='*')
+    @http.route('/testvalues1', type="http", auth='public', csrf=False, cors='*')
     def change_namedd1(self, **kw):
         try:
             return "HEllo"

@@ -169,7 +169,9 @@ def check_auth(values):
     token = values.get('token')
     if not hasattr(request, 'token'):
         request.token = token
-    if request.uid and request.uid != 4:
+    stuid = values.get('uid')
+    uid = int(stuid)
+    if request.uid == uid:
         return request.uid
     if not values:
         return False
@@ -179,9 +181,7 @@ def check_auth(values):
     db = values.get('db')
     if not db:
         return False
-    token = str(token)
-    stuid = values.get('uid')
-    uid = int(stuid)
+    token = str(token)    
     filters = [('auth_token', '=', token),('user_id','=', uid)]
     user = request.env['dnspusers'].sudo().search(filters)
     if not user:

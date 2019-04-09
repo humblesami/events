@@ -35,19 +35,7 @@
                     <field name="notification_id" />
                 </tree>
             </field>
-        </record>
-
-        <record id="messages_tree" model="ir.ui.view">
-            <field name="name">Message Tree</field>
-            <field name="model">odoochat.message</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="content" />
-                    <field name="sender" />
-                    <field name="to" />
-                </tree>
-            </field>
-        </record>
+        </record>        
 
         <record id="comments_tree" model="ir.ui.view">
             <field name="name">Comments Tree</field>

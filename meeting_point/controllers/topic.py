@@ -5,12 +5,12 @@ from odoo.addons.dn_base import ws_methods
 class topic(http.Controller):
 
 
-    @http.route('/topic/details', type="http", csrf=False, auth='none', cors='*')
+    @http.route('/topic/details', type="http", csrf=False, auth='public', cors='*')
     def mp_meeting_compact_http(self, **kw):
         return self.mp_meeting_topic(kw)
 
 
-    @http.route('/topic/details-json', type="json", csrf=False, auth='none', cors='*')
+    @http.route('/topic/details-json', type="json", csrf=False, auth='public', cors='*')
     def mp_meeting_compact_json(self, **kw):
         req_body = http.request.jsonrequest
         return self.mp_meeting_topic(req_body)

@@ -502,7 +502,7 @@ class Signature(http.Controller):
     def get_model(self,model):
         return "e_sign.document"
 
-    @http.route('/get-sign-token', type='http', auth='none', cors='*')
+    @http.route('/get-sign-token', type='http', auth='public', cors='*')
     def get_sign_token(self, **kw):
         try:
             uid = ws_methods.check_auth(kw)
