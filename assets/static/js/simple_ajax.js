@@ -18,18 +18,20 @@ function dn_rpc_object(options) {
 
     input_data['db'] = site_config.server_db;
     if (!input_data.token)
+    {
         input_data['token'] = dn_current_site_user.cookie.token;
-    if (!input_data['no_login'] && !input_data['token'] && req_url.indexOf('authenticate') == -1 && !window['odoo']) {
-        console.log("No token found");
-        return;
+    }    
+    input_data['uid'] = dn_current_site_user.cookie.id;
+
+    if(!input_data['token'] || input_data['uid'])
+    {
+        if (!req_url.indexOf('authenticate') == -1 && !window['odoo']) {        
+            console.log('Auth expired ', dn_current_site_user.cookie)
+            return;  
+        }
     }
-    var uid = dn_current_site_user.cookie.id;
-    if (uid)
-        input_data['uid'] = uid;
-    else{
-        console.log('No id in cookie', dn_current_site_user.cookie)
-        return;
-    }
+    
+    
     input_data['time_zone'] = dn_current_site_user.time_zone;
 
     //console.log(input_data);
