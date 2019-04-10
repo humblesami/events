@@ -50,7 +50,10 @@ class ws_profile(http.Controller):
                          'admin_work_phone',
                          'mail_to_assistant',
                          'image_small',
-                         'image_medium'
+                         'image_medium',
+                         'companies',
+                         'board_joing_date',
+                         'bio'
                          ]
                 profile_json = ws_methods.object_to_json_object(profile, props)
                 if profile.committee_ids:
