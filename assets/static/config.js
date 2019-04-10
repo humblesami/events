@@ -50,7 +50,7 @@ if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -
     site_config.site_url = window.location.origin+'/web';
 }
 
-console.log(site_config);
+//console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;
 if(site_config.site_url.startsWith('https://')){

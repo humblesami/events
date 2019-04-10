@@ -129,7 +129,8 @@ function load_angular(call_back, skip_initial_checks)
         myLoader.require(
         [
             '/odoochat/static/meetvue/runtime.js',
-            '/odoochat/static/meetvue/polyfills.js',            
+            '/odoochat/static/meetvue/polyfills.js',
+            '/odoochat/static/meetvue/vendor.js',
             '/odoochat/static/meetvue/main.js',
         ],
         function() {

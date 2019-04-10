@@ -429,8 +429,6 @@ span.kanban-upcoming-meeting-date {
     border: 1px solid #f1eeee;    
     padding: 10px 2px 10px 6px;
     flex-direction: column;
-    white-space: nowrap;
-    overflow-x: hidden;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
 }
 .kanban-card.survey
@@ -447,9 +445,6 @@ span.kanban-upcoming-meeting-date {
     color: #6a6a6a;
     padding-left: 10px;
     line-height: 1.4em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .upcomingButton button
