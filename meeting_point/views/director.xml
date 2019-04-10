@@ -19,8 +19,21 @@
                             <field name="term_end_date" string="Term End Date"/>
                         </group>
                         <hr/>
-                        
-                        <h2 style="color:#3498DB">Administrative Assistant</h2>
+
+
+                    </div>
+                    <script>
+                    $(function(){
+                        if($('.o_form_buttons_view button').length == 2)
+                            $('.o_form_buttons_view').show();
+
+                    });
+                    </script>
+                </xpath>
+
+                <xpath expr="//notebook[@name='diversity']" position="after">
+                    <div name="director_only_4">
+                <h2 style="color:#3498DB">Administrative Assistant</h2>
                         <field name="admin_image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <h3>
@@ -41,14 +54,8 @@
                         </group>
                         <hr/>
                     </div>
-                    <script>
-                    $(function(){
-                        if($('.o_form_buttons_view button').length == 2)
-                            $('.o_form_buttons_view').show();
-
-                    });
-                    </script>
                 </xpath>
+
             </field>
         </record>
 
@@ -166,6 +173,10 @@
                 </xpath>
 
                   <xpath expr="//div[@name='director_only_3']" position="attributes">
+                     <attribute name="groups">meeting_point.group_meeting_director</attribute>
+
+                </xpath>
+                <xpath expr="//div[@name='director_only_4']" position="attributes">
                      <attribute name="groups">meeting_point.group_meeting_director</attribute>
 
                 </xpath>

@@ -73,7 +73,7 @@
                         <field name="committee_ids" string="Committees" widget="many2many_tags"/>
                     </group>
                     
-                    <!-- <notebook class="diversity" colspan="4">
+                    <notebook name="diversity" class="diversity" colspan="4">
                         <page name="Optional Diversity Information" string = "Optional Diversity Information">
                             <group colspan="4">
                                 <field name ="ethinicity" string="Ethnicity"/>
@@ -82,7 +82,7 @@
                                 <field name = "disability" string="Disability"/>
                             </group>
                         </page>
-                    </notebook> -->
+                    </notebook>
                     <field name="uid" class="o_hidden dn_uid" />
                     <script src="/meeting_point/static/js/mpuser.js" />
                 </xpath>
