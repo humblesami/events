@@ -426,11 +426,12 @@ breadcrumb
 
 .breadcrumbSection .breadcrumb li,
 .breadcrumbSection .breadcrumb a {
-    font-size: .875rem
+    font-size: .875rem;
 }
 
 .breadcrumbSection .breadcrumb li {
     color: #8c8c8cdb;
+    text-transform: capitalize;
 }
 
 .talbe-docs-wrapper {
