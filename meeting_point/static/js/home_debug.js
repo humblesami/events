@@ -16,8 +16,31 @@ $(function(){
                     }
         data = getCookie("buttonValue")
         childValue = getCookie('childbutton')
-//         console.log(data,'datatestIng');
+         console.log(data,'datatestIng');
         if (data){
+
+        setTimeout(function(){
+
+            if(data == 'calendar_btn'){
+                $('.welcome').css({'display' : 'none'})
+                $('#calendar').css({'display' : 'inline-block'});
+               $('.to-do-items').css({'display' : 'none'})
+
+            }
+            else if(data == 'welcome_btn'){
+
+                 $('.welcome').css({'display' : 'inline-block'})
+                $('#calendar').css({'display' : 'none'});
+               $('.to-do-items').css({'display' : 'none'})
+            }
+            else{
+
+              $('.welcome').css({'display' : 'none'})
+                $('#calendar').css({'display' : 'none'});
+               $('.to-do-items').css({'display' : 'inline-block'})
+
+            }
+            },50)
         setTimeout(function(){
             $('.'+data).click()
              setTimeout(function(){
@@ -28,7 +51,7 @@ $(function(){
              }
             },50)
 
-         },1000)
+         },300)
 
         }
 
