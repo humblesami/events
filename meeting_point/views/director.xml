@@ -7,21 +7,19 @@
             <field name="mode">primary</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='committee_ids']" position="after">                    
-                    <group>
-                        <field name="term_start_date" string="Term Start Date"/>
-                        <field name="term_end_date" string="Term End Date"/>
-                        <field class="director_only_1" name="companies"/>
-                        <field class="director_only_2" name="board_joing_date"/>
-                        <field name="bio"/>
-                        <field name="resume"/>                        
-                    </group>
-                    <hr/>
-                </xpath>
-
-                <xpath expr="//notebook[hasclass('diversity')]" position="after">
-                    <div name="director_only_3">                        
+                <xpath expr="//group[@name='committee_ids']" position="after">                  
+                    <div name="director_only_3">      
+                    
+                        <group>                            
+                            <field class="director_only_1" name="companies"/>
+                            <field class="director_only_2" name="board_joing_date"/>
+                            <field name="bio"/>
+                            <field name="resume"/>
+                            <field name="term_start_date" string="Term Start Date"/>
+                            <field name="term_end_date" string="Term End Date"/>
+                        </group>
                         <hr/>
+                        
                         <h2 style="color:#3498DB">Administrative Assistant</h2>
                         <field name="admin_image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
