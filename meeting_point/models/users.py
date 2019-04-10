@@ -1,6 +1,6 @@
 import werkzeug
 from odoo.exceptions import UserError
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, http
 from odoo.addons.dn_base import ws_methods
 
 class partner(models.Model):
@@ -169,6 +169,7 @@ class MPUser(models.Model):
             self = self.sudo()
         if values.get('send_email') == False:
             self = self.with_context(no_reset_password=True)
+
         if self.env.user.has_group('meeting_point.group_meeting_admin'):
             self = self.sudo()
         action = self._context
@@ -184,6 +185,8 @@ class MPUser(models.Model):
         employee = super(MPUser, self).create(values)
         employee.user_id.partner_id.user_id = employee.user_id
         employee.mp_user_id = employee.id
+        if values.get('send_email') != False and employee.user_id.has_group('meeting_point.group_meeting_director'):
+            employee.mail_assistant()
         #employee.email = employee.login
         return employee
 
@@ -207,5 +210,30 @@ class MPUser(models.Model):
             if user:
                 employee=user.unlink()
         return employee
+
+    def mail_assistant(self):
+
+        Mail = self.env['mail.mail']
+        req_env = http.request.env
+
+        template = self.env.ref('meeting_point.email_template_director_assistant', raise_if_not_found=False).with_context(self._context)
+        body = template.body_html.replace("_assistant_", self.admin_first_name)
+        body = body.replace("_user_", self.name)
+        body = body.replace("_sender_", req_env.user.name)
+
+        values = {
+            'model': None,
+            'res_id': None,
+            'subject': "Directors Profile Created",
+            'body': body,
+            'body_html': body,
+            'parent_id': None,
+            'email_from': '"%s" %s' %(req_env.user.company_id.name,req_env.user.email),
+            'auto_delete': True,
+        }
+        if self.admin_email:
+            values['email_to'] = self.admin_email
+            Mail.create(values).send()
+
 
 

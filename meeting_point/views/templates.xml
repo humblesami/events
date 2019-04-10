@@ -245,5 +245,29 @@
             </field>
         </record>
 
+        <!--Director assisstant -->
+        <record id="email_template_director_assistant" model="mail.template">
+            <field name="name">Director Created</field>
+            <field name="email_from"><![CDATA["${user.company_id.name}" <${user.company_id.email}>]]></field>
+            <field name="subject">Directors Profile Created </field>
+            <field name="auto_delete" eval="True" />
+            <field name="body_html">
+                <![CDATA[
+<p>Dear _assistant_</p>
+<p>Director profile for user _user_ has been created.</p>
+
+<p>Best Regards,</p>
+    _sender_
+    <p style="font-size: 11px; margin-top: 10px;">
+        <strong>Sent by _sender_  Using <span style="color:#9c4784">O</span><span style="color:#8e8f8f">doo</span><span style="color:#9c4784">HQ</span></strong>
+    </p>
+    <br/>
+    <p>
+    This is an automatically generated system message. Please do not reply to this e-mail.
+    </p>
+                ]]>
+            </field>
+        </record>
+
     </data>
 </odoo>

@@ -9,7 +9,7 @@
                 <form string="Meetings">
                     <style>
                         .modal-footer .o_form_button_cancel{
-                            display:none
+                        display:none
                         }
                     </style>
                     <field name="res_model" invisible="1"/>
@@ -23,7 +23,7 @@
                     <field name="id" class="o_hidden meeting_id"/>
                     <field name="im_attendee" class="o_hidden is_attendee"/>
                     <!--<a href="/web#view_type=form&amp;model=calendar.event&amp;action=meeting_point.action_upcoming_meeting"-->
-                       <!--class="meeting_link btn btn-sm btn-primary">Details</a>-->
+                    <!--class="meeting_link btn btn-sm btn-primary">Details</a>-->
                     <group>
                         <field name="name" string="Meeting Subject" />
                         <field name="start" string="Starting at" />
@@ -177,7 +177,7 @@
                                                 <field name="name"/>
                                             </h2>
                                             <div class="o_hidden pblic_evnt_id">
-                                            <field name="id" class="o_hidden" />
+                                                <field name="id" class="o_hidden" />
                                             </div>
                                             <p class="oe_module_name">
                                                 <p>
@@ -306,8 +306,8 @@
                                     groups="meeting_point.group_meeting_admin"
                             />
                             <div class="dnroster roster-item">
-                               <field name="attendee_ids" mode="kanban">
-                               </field>
+                                <field name="attendee_ids" mode="kanban">
+                                </field>
                             </div>
                         </div>
 
@@ -375,12 +375,22 @@
 
                             <div class = "mtopic_tree ">
                                 <h3>Agenda Topics</h3>
-                                <field name="topic_ids" mode="tree" ></field>
+                                <field name="topic_ids" mode="tree" >
+                                    <tree class="meetingtopic_tree">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name" string="Title"/>
+                                        <field name="lead"/>
+                                        <field name="duration" class="topic_duration_span " type="string" widget="float_time"/>
+                                        <field name="attachments" widget="html" string="Attachment(s)"/>
+                                        <field name="actions" widget="html" string="Actions"/>
+                                    </tree>
+
+                                </field>
                             </div>
-<!--                            <div class = "mtopic_tree oe_edit_only">-->
-<!--                                <h3>Agenda Topics</h3>-->
-<!--                                <field name="topic_ids_new" mode="tree" ></field>-->
-<!--                            </div>-->
+                            <!--                            <div class = "mtopic_tree oe_edit_only">-->
+                            <!--                                <h3>Agenda Topics</h3>-->
+                            <!--                                <field name="topic_ids_new" mode="tree" ></field>-->
+                            <!--                            </div>-->
                         </div>
 
                         <div class="o2m_kanban">
@@ -412,7 +422,7 @@
                             </field>
                         </div>
 
-                    </sheet>                    
+                    </sheet>
                     <app-comments  attrs="{'invisible': [('publish','=',False)]}" ></app-comments>
                     <script src="/meeting_point/static/js/meeting_form.js"/>
                     <script type="text/javascript" src="/meeting_point/static/js/meeting_point.js"/>
@@ -434,14 +444,14 @@
                     <attribute name="delete">false</attribute>
                     <attribute name="create">false</attribute>
                 </xpath>
-                 <xpath expr="//form" position="inside">
+                <xpath expr="//form" position="inside">
                     <style>
-                      ul.survey_kanban li:nth-child(1){
+                        ul.survey_kanban li:nth-child(1){
                         display:none;
-                      }
-                      ul.survey_kanban li:nth-child(2){
+                        }
+                        ul.survey_kanban li:nth-child(2){
                         display:none;
-                      }
+                        }
                     </style>
                 </xpath>
             </field>
@@ -460,19 +470,19 @@
                 </xpath>
 
                 <xpath expr="//div[@name='mp_roster']" position="attributes">
-                   <attribute name="class">o2m_kanban roster-item</attribute>
+                    <attribute name="class">o2m_kanban roster-item</attribute>
                 </xpath>
 
                 <xpath expr="//div[@name='readonly_completed_1']" position="attributes">
-                   <attribute name="class">oe_read_only</attribute>
+                    <attribute name="class">oe_read_only</attribute>
                 </xpath>
 
                 <xpath expr="//div[@name='readonly_completed_2']" position="attributes">
-                   <attribute name="class">oe_read_only</attribute>
+                    <attribute name="class">oe_read_only</attribute>
                 </xpath>
 
                 <xpath expr="//div[@name='readonly_completed_3']" position="attributes">
-                   <attribute name="class">oe_read_only</attribute>
+                    <attribute name="class">oe_read_only</attribute>
                 </xpath>
                 <xpath expr="//field[@name='doc_ids']" position= "replace">
                     <div class="o2m_kanban">
@@ -492,7 +502,7 @@
 
 
                 <xpath expr="//div[@name='mp_roster']" position="attributes">
-                   <attribute name="class">o2m_kanban roster-item</attribute>
+                    <attribute name="class">o2m_kanban roster-item</attribute>
                 </xpath>
 
 
@@ -535,7 +545,7 @@
                     <field name="attendance"/>
                     <field name="exectime"/>
                     <field name="response_by"/>
-                     <field name="mail_sent"/>
+                    <field name="mail_sent"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click stylish_kanban ">
@@ -568,31 +578,31 @@
                                         </div>
                                     </div>
                                     <div t-if="record.exectime.value=='ongoing' or record.exectime.value=='completed'"
-                                          class="roster-buttons oe_read_only"
-                                          groups="meeting_point.group_meeting_admin">
+                                         class="roster-buttons oe_read_only"
+                                         groups="meeting_point.group_meeting_admin">
                                         <t>
-                                           <button type="object" name="action_absent" class="btn btn-primary btn-sm">
-                                               <t t-if="record.attendance.value=='Absent'">
+                                            <button type="object" name="action_absent" class="btn btn-primary btn-sm">
+                                                <t t-if="record.attendance.value=='Absent'">
                                                     <i class="fa fa-check fa-lg" style="color:white"/>
                                                 </t>
-                                               Absent
-                                           </button>
+                                                Absent
+                                            </button>
                                         </t>
                                         <t>
-                                           <button type="object" name="action_inperson" class="btn btn-primary btn-sm">
-                                               <t t-if="record.attendance.value=='In-Person'">
+                                            <button type="object" name="action_inperson" class="btn btn-primary btn-sm">
+                                                <t t-if="record.attendance.value=='In-Person'">
                                                     <i class="fa fa-check fa-lg" style="color:white"/>
                                                 </t>
-                                               In-Person
-                                           </button>
+                                                In-Person
+                                            </button>
                                         </t>
                                         <t>
-                                           <button type="object" name="action_online" class="btn btn-primary btn-sm">
-                                               <t t-if="record.attendance.value=='Online'">
+                                            <button type="object" name="action_online" class="btn btn-primary btn-sm">
+                                                <t t-if="record.attendance.value=='Online'">
                                                     <i class="fa fa-check fa-lg" style="color:white"/>
                                                 </t>
-                                               Online
-                                           </button>
+                                                Online
+                                            </button>
                                         </t>
                                     </div>
                                 </div>
@@ -651,7 +661,7 @@
             <field name="domain">[('archived','=',False)]</field>
         </record>
 
-         <record id="action_completed_kanban" model="ir.actions.act_window.view">
+        <record id="action_completed_kanban" model="ir.actions.act_window.view">
             <field name="act_window_id" ref="action_completed_meeting"/>
             <field name="sequence" eval="1"/>
             <field name="view_mode">kanban</field>
