@@ -47,7 +47,7 @@
                                  </div>
                                     <div class="oe_button_box oe_edit_only" name="button_box">
                                         <strong>Signature Required  </strong>
-                                     <a class="oe_stat_button btn btn-primary">
+                                     <a class="oe_stat_button btn btn-primary signature_required">
                                          <field name="signature_required" widget="boolean_toggle"/>
                                      </a>
                                  </div>

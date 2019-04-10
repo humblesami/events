@@ -69,7 +69,10 @@ voting-comments .container
 }
 
 .yes, .no{
-    z-index: 1;
+        z-index: 1313;
+        width: 120%;
+        height: 135%;
+        top: auto;
 }
 .yes{
     color: green;

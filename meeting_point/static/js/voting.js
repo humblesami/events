@@ -6,18 +6,28 @@ $(function(){
 
         if (current_element.prop('checked') == true)
         {
-            current_element.next().text('Yes').addClass('yes');
+            $(el).find('.slider').text('Yes').addClass('yes');
         }
         else
         {
-            current_element.next().text('No').addClass('no');
+            $(el).find('.slider').text('No').addClass('no');
         }
-        current_element.click(function(){
-            console.log($(this).parent().find('.slider'));
-            $(this).parent().find('.slider').html('hello');
-        });
+        $(el).click(on_ckecked)
     });
 
+    function on_ckecked()
+    {
+        var check = $(this).find('input:checkbox');
+        if ($(check).prop('checked') == true)
+        {
+            $(this).find('.slider').text('Yes').addClass('yes');
+        }
+        else
+        {
+            $(this).find('.slider').text('No').addClass('no');
+        }
+
+    }
 
 
     $('.oe_stat_button').click(function(event){
@@ -40,8 +50,8 @@ $(function(){
         console.log(sign_src);
         $('img[name=signature_data]').attr('src', sign_src);
         $('img[name=signature_data]').show();
-        let signature_required = $('.signature_required');
-        if (signature_required.length > 0 && signature_required.text().indexOf('ON') != -1)
+        let signature_required = $('.signature_required').find('.yes');
+        if (signature_required.length > 0 && signature_required.text().indexOf('Yes') != -1)
         {
             $('#drawsign').show();
         }
