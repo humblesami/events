@@ -111,30 +111,50 @@ function standeredTime(time) {
 
 window['current_user'] = dn_current_site_user;
 var server_wait_loader = $("#server-wait");
-var last_shown_time = undefined;
 window['public_routes'] = ['/login', '/logout'];
-
 
 var site_functions = {
     processes: [],
     get_path: function() {
 
     },
+    meeting_time : function(dt){
+        var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss')
+        var res = {
+            day: moment_time.format('DD'),
+            month_year: moment_time.format('MMM YYYY'),
+            time: moment_time.format('HH:mm A')
+        }
+        return res;
+    },
+    meeting_time_str : function(dt){
+        var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss');
+        res = moment_time.format('MMM DD, YYYY hh:mm A');
+        return res;
+    },
+    hour_minutes: function(dt) {
+        if (typeof (dt) == "string")
+            dt = new Date(dt);
+        var hour = dt.getHours();
+        var minut = dt.getMinutes();
+        if (minut < 10) {
+            minut = '0' + minut;
+        }
+        return hour + ':' + minut;
+    },
     logout_odoo:function(){        
         window.location = '/web/login';
     },
     showLoader: function(nam) {
-        if (this.processes.length == 0) {
-            server_wait_loader.show();
-            last_shown_time = new Date();
-            setTimeout(function() {
-                if (last_shown_time && new Date() - last_shown_time > 8000) {
-                    //console.log(site_functions.processes);
-                    server_wait_loader.hide();
-                }
+        var obj_this = this;
+        var time_out = undefined;
+        if (obj_this.processes.length == 0) {
+            server_wait_loader.show();            
+            time_out = setTimeout(function() {
+                obj_this.hideLoader(nam);
             }, 29000);
         }
-        this.processes.push(nam);
+        obj_this.processes.push({name: nam, time_out: time_out});
         //console.log(nam, new Date().getMilliseconds());
     },
     hideLoader: function(nam, hiddenFrom) {
@@ -154,8 +174,9 @@ var site_functions = {
         }
         var found = false;
         for (var i = this.processes.length - 1; i >= 0; i--) {
-            if (this.processes[i] == nam) {
+            if (this.processes[i].name == nam) {
                 found = true;
+                clearTimeout(this.processes[i].time_out);
                 this.processes.splice(i, 1);
                 break;
             }
@@ -165,8 +186,7 @@ var site_functions = {
         } else {
             console.log(nam + " not found");
         }
-        if (this.processes.length == 0) {
-            last_shown_time = undefined;
+        if (this.processes.length == 0) {            
             server_wait_loader.hide();
         }
         //console.log(nam, new Date().getMilliseconds());

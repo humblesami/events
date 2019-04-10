@@ -246,11 +246,7 @@ img.emoji {
     display: none;
 }
 
-.chat-full-height .form-control, .emoji-wysiwyg-editor.form-control{
-	height: 40px !important;
-    line-height: 36px !important;
-    padding-top: 2px !important;
-    padding-bottom: 0px !important;
+.chat-full-height .form-control, .emoji-wysiwyg-editor.form-control{	
     font-size: 13px;
     border-left: 0;
     border-right: 0;

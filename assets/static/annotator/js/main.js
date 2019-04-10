@@ -15,7 +15,8 @@ var is_mobile_device = undefined;
     try
     { 
         document.createEvent("TouchEvent");
-        is_mobile_device = true; 
+        is_mobile_device = true;
+        window['is_mobile_device'] = 1;
     }
     catch(e)
     {

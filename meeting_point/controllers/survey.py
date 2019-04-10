@@ -21,8 +21,9 @@ class website_survey(WebsiteSurvey):
             if survey.meeting_id:
                 data['meeting_name'] = survey.meeting_id.name
                 data['meeting_id'] = survey.meeting_id.id
-                if not survey.name:
-                    data['survey_name'] = ''
+            if not survey.name:
+                data['survey_name'] = 'Unnamed'
+            else:
                 data['survey_name'] = survey.name
             return ws_methods.http_response('', data)
         except:

@@ -91,9 +91,6 @@
 	padding-bottom: 10px;
 }
 
-.notification-container .msg-item{
-	word-wrap: break-word;
-}
 
 .notification-container .close-chat {
 	position: absolute;

@@ -11,7 +11,7 @@ class Survey(models.Model):
 
     meeting_id = fields.Many2one('calendar.event', string="Meeting", ondelete='cascade')
     date = fields.Datetime(string="Meeting Date")
-    name = fields.Char()
+    name = fields.Char(required=True)
     my_status = fields.Char(string="Status", compute="_compute_status")
     # seen_by_me = fields.Integer(compute='_compute_seen_by_me',default=0)
     partner_ids = fields.Many2many('res.partner', 'survey_survey_res_partner_rel',

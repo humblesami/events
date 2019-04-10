@@ -4278,7 +4278,7 @@ function cancelEvent (event) {
     if ($textarea.attr('maxlength')) {
       this.$editor.attr('maxlength', $textarea.attr('maxlength'));
     }
-    this.$editor.height($textarea.outerHeight()); //auto adjust height
+    
     this.emojiPopup.appendUnicodeAsImageToElement(this.$editor, $textarea.val());
 
     this.$editor.attr({
@@ -4348,7 +4348,6 @@ function cancelEvent (event) {
     });
 
     $textarea.after("<i class='emoji-picker-icon emoji-picker " + this.options.popupButtonClasses + "' data-id='" + id + "' data-type='picker'></i>");
-
     $textarea.hide().after(this.$editor);
     this.setup();
 
