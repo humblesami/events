@@ -23,13 +23,13 @@ $(function(){
 
             if(data == 'calendar_btn'){
                 $('.welcome').css({'display' : 'none'})
-                $('#calendar').css({'display' : 'inline-block'});
+                $('#calendar').css({'display' : 'block'});
                $('.to-do-items').css({'display' : 'none'})
 
             }
             else if(data == 'welcome_btn'){
 
-                 $('.welcome').css({'display' : 'inline-block'})
+                 $('.welcome').css({'display' : 'block'})
                 $('#calendar').css({'display' : 'none'});
                $('.to-do-items').css({'display' : 'none'})
             }
@@ -37,7 +37,7 @@ $(function(){
 
               $('.welcome').css({'display' : 'none'})
                 $('#calendar').css({'display' : 'none'});
-               $('.to-do-items').css({'display' : 'inline-block'})
+               $('.to-do-items').css({'display' : 'block'})
 
             }
             },50)
