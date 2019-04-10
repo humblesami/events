@@ -268,10 +268,10 @@
                                     <field name="address" placeholder="Street 1" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="resize:none"/>
                                     <field name="street" attrs="{'readonly': [('exectime', '=', 'completed')]}" placeholder="Street 2"/>
                                     <span class='oe_read_only' attrs="{'invisible': [('address', '=', False),('street', '=', False)]}">, </span>
-                                    <field name="zip" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="zip masked_input" placeholder="Zip"/>
-                                    <span class='oe_read_only' attrs="{'invisible': [('zip', '=', False)]}">, </span>
                                     <field name="city" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="margin-right: 4px;" placeholder="City"/>
                                     <span class='oe_read_only' attrs="{'invisible': [('city', '=', False)]}"><br/></span>
+                                    <field name="zip" attrs="{'readonly': [('exectime', '=', 'completed')]}" class="zip masked_input" placeholder="Zip"/>
+                                    <span class='oe_read_only' attrs="{'invisible': [('zip', '=', False)]}">, </span>                                    
                                     <field name="country_state" attrs="{'readonly': [('exectime', '=', 'completed')]}" style="margin-right: 4px;" domain="[('country_id','=',country)]" placeholder="State" options="{'no_create': True,'no_open ': True,'no_quick_create': True,                                        'no_create_edit' : True, 'no_open': True}"/>
                                     <span class='oe_read_only' attrs="{'invisible': [('country_state', '=', False)]}">, </span>
                                     <field name="country" required="1" attrs="{'readonly': [('exectime', '=', 'completed')]}" options="{'no_create': True,'no_open ': True,'no_quick_create': True,'no_create_edit' : True, 'no_open': True}"/>
@@ -387,10 +387,11 @@
 
                                 </field>
                             </div>
-                            <!--                            <div class = "mtopic_tree oe_edit_only">-->
-                            <!--                                <h3>Agenda Topics</h3>-->
-                            <!--                                <field name="topic_ids_new" mode="tree" ></field>-->
-                            <!--                            </div>-->
+                            
+                            <!-- <div class = "mtopic_tree oe_edit_only">
+                                <h3>Agenda Topics</h3>
+                                <field name="topic_ids_new" mode="tree" ></field>
+                            </div> -->                            
                         </div>
 
                         <div class="o2m_kanban">

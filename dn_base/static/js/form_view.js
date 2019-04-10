@@ -41,19 +41,14 @@ odoo.define('dn_base.form_view', function (require) {
             process_form_view(read_only);
             if(this.mode == 'readonly')
             {
-                var trs = $(this.el).find('table.o_group:first>tbody>tr');
-                if(trs.eq(0).css('display') == 'none')
-                {
-                    var data_tds = trs.find('.o_field_widget');
-                    for( var i in data_tds)
+                var data_tds = $(this.el).find('table.o_group>tbody>tr:hidden .o_field_widget');                
+                data_tds.each(function(i, el){
+                    var html_val = $(el).text().trim();
+                    if(html_val && html_val != 'false')
                     {
-                        var html_val = data_tds.eq(i).text().trim();
-                        if(html_val && html_val != 'false')
-                        {
-                            data_tds.eq(i).closest('tr').show();
-                        }
+                        $(el).closest('tr').show();
                     }
-                }
+                });
             }
             form_el.$el.find(".masked_input").each(function(i, el){
                 var masking_pattern = false;

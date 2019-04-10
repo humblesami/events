@@ -7,39 +7,41 @@
             <field name="mode">primary</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='job_title']" position="after">
-                    <field class="director_only_1" name="companies"/>
-                    <field class="director_only_2" name="board_joing_date"/>
+                <xpath expr="//group[@name='committee_ids']" position="after">                    
+                    <group>
+                        <field name="term_start_date" string="Term Start Date"/>
+                        <field name="term_end_date" string="Term End Date"/>
+                        <field class="director_only_1" name="companies"/>
+                        <field class="director_only_2" name="board_joing_date"/>
+                        <field name="bio"/>
+                        <field name="resume"/>                        
+                    </group>
+                    <hr/>
                 </xpath>
 
-                <xpath expr="//group[@name='committee_ids']" position="after">
-                    <div name="director_only_3">
-                    <hr/>
-                    <group>
-                        <field name="bio"/>
-                        <field name="resume"/>
-                    </group>
-                    <hr/>
-                    <h2 style="color:#3498DB">Administrative Assistant</h2>
-                    <field name="admin_image" widget="image" class="oe_avatar"/>
-                    <div class="oe_title">
-                        <h3>
-                            <field name="admin_first_name" placeholder="First Name" style="width:auto;margin-right:10px"/>
-                            <field name="admin_last_name" placeholder="Last Name" style="width:auto"/>
-                        </h3>
-                        <h3/>
-                        <h3>
-                            <field name="admin_nick_name" placeholder="Nick Name" style="width: auto"/>
-                        </h3>
-                    </div>
-                    <group col="4">
-                        <field name="admin_email" string="E-Mail"/>
-                        <field name="mail_to_assistant" string="Grant E-Mail Access:"/>
-                        <field class="masked_input phone" name="admin_cell_phone" string="Cell Phone"/>
-                        <field class="masked_input phone" name="admin_work_phone" string="Work Phone"/>
-                        <field name="admin_fax"/>
-                    </group>
-                    <hr/>
+                <xpath expr="//notebook[hasclass('diversity')]" position="after">
+                    <div name="director_only_3">                        
+                        <hr/>
+                        <h2 style="color:#3498DB">Administrative Assistant</h2>
+                        <field name="admin_image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h3>
+                                <field name="admin_first_name" placeholder="First Name" style="width:auto;margin-right:10px"/>
+                                <field name="admin_last_name" placeholder="Last Name" style="width:auto"/>
+                            </h3>
+                            <h3/>
+                            <h3>
+                                <field name="admin_nick_name" placeholder="Nick Name" style="width: auto"/>
+                            </h3>
+                        </div>
+                        <group col="4">
+                            <field name="admin_email" string="E-Mail"/>
+                            <field name="mail_to_assistant" string="Grant E-Mail Access:"/>
+                            <field class="masked_input phone" name="admin_cell_phone" string="Cell Phone"/>
+                            <field class="masked_input phone" name="admin_work_phone" string="Work Phone"/>
+                            <field name="admin_fax"/>
+                        </group>
+                        <hr/>
                     </div>
                     <script>
                     $(function(){

@@ -44,13 +44,13 @@
             <field name="model">meeting_point.users</field>
             <field name="inherit_id" ref="dn_base.dn_base_user_form"/>
             <field name="mode">primary</field>
-            <field name="arch" type="xml">
+            <field name="arch" type="xml">                
                 <xpath expr="//h2[@name='name']" position="after">
+                    <link rel="stylesheet" href="/meeting_point/static/css/mpuser.css" />
                     <h2>
                         <field name="nick_name" placeholder="Nick Name"/>
                     </h2>
                 </xpath>
-
                 <xpath expr="//div[@class='oe_title']" position="after">
                     <h4 groups="meeting_point.group_meeting_admin" attrs="{'invisible': [('id','!=',False)]}"><field name="send_email"/> Send Email </h4>
                     <div name="access_groups">
@@ -72,20 +72,16 @@
                     <group name="committee_ids">
                         <field name="committee_ids" string="Committees" widget="many2many_tags"/>
                     </group>
-                    <group>
-                        <field name="term_start_date" string="Term Start Date"/>
-                        <field name="term_end_date" string="Term End Date"/>
-                    </group>
-                    <notebook colspan="4">
-                            <page name="Optional Diversity Information" string = "Optional Diversity Information">
-                                <group colspan="4">
-                                    <field name ="ethinicity" string="Ethnicity"/>
-                                    <field name = "gender" string="Gender"/>
-                                    <field name = "veteran" string="Veteran of U.S. Armed Forces"/>
-                                    <field name = "disability" string="Disability"/>
-                                </group>
-                            </page>
-
+                    
+                    <notebook class="diversity" colspan="4">
+                        <page name="Optional Diversity Information" string = "Optional Diversity Information">
+                            <group colspan="4">
+                                <field name ="ethinicity" string="Ethnicity"/>
+                                <field name = "gender" string="Gender"/>
+                                <field name = "veteran" string="Veteran of U.S. Armed Forces"/>
+                                <field name = "disability" string="Disability"/>
+                            </group>
+                        </page>
                     </notebook>
                     <field name="uid" class="o_hidden dn_uid" />
                     <script src="/meeting_point/static/js/mpuser.js" />
