@@ -26,7 +26,8 @@ $(function(){
             yearColumns: 3,
             editable: true,
             eventLimit: true, // allow "more" link when too many events
-            events: events
+            events: events,
+            defaultView: 'agendaWeek'
         });
 
 
