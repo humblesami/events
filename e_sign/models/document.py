@@ -59,31 +59,6 @@ class Document(models.Model):
         for doc in self:
             doc.sign_ids=doc.signature_ids.filtered(lambda r:r.type == "sign")
 
-
-
-    @api.onchange('attachment')
-    def validate_file_name_type(self):
-        if self.attachment:
-            if not self.filename:
-                raise UserError("There is no file")
-            else:
-                # Check the file's extension
-                if not self.filename.endswith(('ppt', 'pptx', 'doc', 'docx', 'pdf')):
-                    raise UserError("Invalid file uploaded, Only microsoft word, power point and PDF files are allowed")
-
-    def vaildate_file(self,values):
-        if 'attachment' not in values:
-            raise UserError("Please Upload Attachment")
-        if not values['attachment']:
-            raise UserError("Please Upload Attachment")
-        if 'filename' not in values:
-            raise UserError("Invalid File Name")
-        if not values['filename']:
-            raise UserError("Invalid File Name")
-        if not values['filename'].endswith(('pdf','ppt', 'pptx', 'doc', 'docx')):
-                #('ppt', 'pptx', 'doc', 'docx',
-                raise UserError("Invalid file uploaded, Only microsoft word, power point and PDF files are allowed")
-
     @api.model
     def create(self, values):
         try:

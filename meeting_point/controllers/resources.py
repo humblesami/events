@@ -7,7 +7,8 @@ doc_models = {
     'meeting':'meeting_point.doc',
     'topic':'meeting_point.topicdoc',
     'signature':'meeting_point.document',
-    'voting':'meeting_point.votingdocument'
+    'voting':'meeting_point.votingdocument',
+    'chat':'odoochat.attachment',
 }
 
 doc_types = {
@@ -16,7 +17,8 @@ doc_types = {
     'meeting_point.doc':'meeting',
     'meeting_point.topicdoc':'topic',
     'meeting_point.document':'signature',
-    'meeting_point.votingdocument':'voting'
+    'meeting_point.votingdocument':'voting',
+    'odoochat.attachment':'chat'
 }
 
 class ws(http.Controller):

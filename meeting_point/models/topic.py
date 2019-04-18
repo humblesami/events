@@ -63,18 +63,5 @@ class Topic(models.Model):
             else:
                 topic.actions = ''
 
-    def vaildate_file(self,values):
-        if 'attachment' not in values:
-            return self
-        if not values['attachment']:
-            return self
-        if 'filename' not in values:
-            raise ValidationError("Invalid File Name")
-        if not values['filename']:
-            raise ValidationError("Invalid File Name")
-        if not values['filename'].endswith(('pdf','ppt', 'pptx', 'doc', 'docx')):
-                #('ppt', 'pptx', 'doc', 'docx',
-            raise ValidationError("Invalid type file uploaded, Only pdf,doc and ppt files are allowed")
-
 
 

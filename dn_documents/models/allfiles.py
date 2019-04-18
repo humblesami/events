@@ -129,9 +129,10 @@ class AllFiles(models.Model):
         if not values['attachment']:
             raise raise_dn_model_error("Please Upload Attachment")
         if 'filename' not in values:
-            raise raise_dn_model_error("Invalid File Name")
-        if not values['filename']:
-            raise raise_dn_model_error("Invalid File Name")
+            if not 'name' in values:
+                raise raise_dn_model_error("Invalid File Name")
+            else:
+                values['filename'] = values['name']
         if not values['filename'].endswith(('pdf','ppt', 'pptx', 'doc', 'docx','xls','xlsx','png','jpg','jpeg')):
                 #('ppt', 'pptx', 'doc', 'docx',
                 raise raise_dn_model_error("Invalid file uploaded, Only microsoft word, power point, excel and PDF files are allowed")

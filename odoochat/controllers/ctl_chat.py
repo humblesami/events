@@ -85,7 +85,7 @@ class OdooChat(http.Controller):
             events = method_to_call(values)
             res = ws_methods.emit_event(events)
             if res == 'done':
-                return ws_methods.http_response('', 'done')
+                return ws_methods.http_response('', events[0]['data'])
             else:
                 return ws_methods.http_response(model + '.' + method + ' processed but ' + str(res))
         except:
