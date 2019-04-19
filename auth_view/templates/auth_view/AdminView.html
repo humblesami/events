@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<title>Admin Table</title>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+.block {
+  {% comment %} display: block; {% endcomment %}
+  width: 45%;
+  border: ipx solid black;
+  font-size: 16px;
+  cursor: pointer;
+  {% comment %} text-align: center; {% endcomment %}
+}
+</style>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+{% if user.is_superuser %}
+<h2>User Requests Data! Welcome {{request.user.username}}</h2></br></br>
+{% if Request_Users %}
+
+<table style="width:100%">
+    <tr>
+      <th>User Id</th>
+      <th>First Name</th>
+      <th>Last Name</th>  
+      <th>Email</th>
+      <th>User Name</th>
+      <th>Status</th>
+      <th>Resolve Complain</th>
+
+        
+  
+    </tr>
+       {% for R_User in Request_Users %}
+  
+    <tr>
+      <td>{{R_User.user_id.id}}</td>
+      <td>{{R_User.user_id.first_name}}</td>
+      <td>{{R_User.user_id.last_name}}</td>
+      <td>{{R_User.user_id.email}}</td>
+      <td>{{R_User.user_id.username}}</td>
+      {% if R_User.Status == 0 %}
+      <td>Solved</td>
+      <td>Resolved {{R_User.Status}}</td>
+
+      {% else %}
+      <td>UnSolved</td>
+      <td><a href="{% url 'ResolveComplain' R_User.user_id.id %}" class="center-align btn btn-warning btn-sm">Resolve Complain</a> {{R_User.Status}} </td>
+
+      {% endif %}
+      
+    </tr>
+  
+{% endfor %}
+{% endif %}
+{% endif %}
+
+</body>
+</html> 

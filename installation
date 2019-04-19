@@ -1,0 +1,17 @@
+pip install Django==2.2
+
+
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'demo1',
+		'USER': 'odoo',
+		'PASSWORD': '123',
+	}
+}
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py createsuperuser --username=sa --email=sa@gmail.com
+
+

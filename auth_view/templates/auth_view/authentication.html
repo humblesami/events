@@ -1,0 +1,22 @@
+{% extends 'auth.html' %}
+{% block content %}
+<h2>Login Page</h2>
+
+<form action="{% url 'LoginAuthentication' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <input type="hidden" name="userid" id="userid" value="{{userid}}" />            
+    <label for="AuthCode">Auth Code</label><br>
+    <input type="text" name="AuthCode" id="AuthCode" placeholder="AuthCode" />
+    <br />
+    {{Error}}                
+    <br/>
+    <input type="submit" value="Login User" class="btn btn-success"  />        
+    <br/>
+    <br/>
+    <a href='RegenerateEmailCode' class="btn btn-primary">Regenerate Email Code </a>
+    <a href="/account/RegenerateEmailCode/{{userid}}">Regenerate Email Code</a>
+    </br>
+</form>
+{% endblock %}
+

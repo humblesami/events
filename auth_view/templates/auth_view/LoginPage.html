@@ -1,0 +1,21 @@
+{% extends 'auth.html' %}
+{% block content %}
+<h2>Login Page</h2>
+
+<div>
+<form action="{% url 'LoginPage_view' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label for="username">User Name</label><br>
+    <input type="text" name="username" id="username" placeholder="username" >
+    <br>
+
+    <label for="password">Password</label><br>
+    <input type="password" name="password" id="password" placeholder="password" >
+    <br>
+    {{ login_error }}
+    </br>
+    <input type="submit" value="Login User" class="btn btn-success"  >
+    </br></br>
+</form> 
+{% endblock %}

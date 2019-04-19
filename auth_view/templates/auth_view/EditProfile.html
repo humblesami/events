@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <Title>Edit Profile</Title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <style>
+    div {
+  background-color: lightgrey;
+  width: 300px;
+  border: 25px solid green;
+  padding: 25px;
+  margin: 25px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+  <h2>{{title}}</h2>
+  <div>
+    <form action="/account/UpdateProfile/" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <p><label for="id_first_name">First name:</label>
+        <input type="text" name="first_name" maxlength="30" id="id_first_name" value={{request.user.first_name}}></p>
+
+      <p><label for="id_last_name">Last name:</label>
+        <input type="text" name="last_name" maxlength="150" id="id_last_name" value={{request.user.last_name}}></p>
+
+
+      <p><label for="phone_number">Phone Number:</label>
+        <input type="text" name="phone_number" maxlength="150" id="phone_number" value={{user_phn.phone_number}}></p>
+
+      <br>
+      <p> Get Authentication code on <select name="AuthCodeDestination" id="AuthCodeDestination">
+
+          {% if user_info.auth_destination == 1 %}
+          <option value="Email">Email</option>
+          <option value="Phone" selected> Phone</option>
+          {% else %}
+          <option value="Email" selected>Email</option>
+          <option value="Phone"> Phone</option>
+          {% endif %}
+
+
+        </select> </p>
+
+      <br><input type="submit" value="Update" class="btn btn-success"><br>
+
+    </form>
+  </div>
+
+
+</body>
+
+</html>

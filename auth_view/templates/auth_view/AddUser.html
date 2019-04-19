@@ -1,0 +1,61 @@
+{% extends 'auth.html' %}
+{% block content %}
+<h2>Login Page</h2>
+
+<div>
+    <form action="/account/saveuser/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}        
+        
+        <p class="error message">
+            {{form.errors}}
+        </p>        
+
+        <p>
+            <label for="id_username">username:</label> 
+            <input type="text" name="username" placeholder="username" maxlength="250" autofocus="" required="" id="id_username" value="awaism123" >
+        </p>
+        
+        
+        <p>
+            <label for="id_email">Email:</label> 
+            <input type="email" name="email" maxlength="200" required="" id="id_email" value="awais.mazhar@digitalnet.com" >
+        </p>
+        
+        <p>
+            <label for="id_first_name">First name:</label>
+            <input type="text" name="first_name" maxlength="30" id="id_first_name" value="awais">
+        </p>
+        
+        <p>
+            <label for="id_last_name">Last name:</label>
+            <input type="text" name="last_name" maxlength="150" id="id_last_name" value="mazhar">
+        </p>        
+
+        <p>
+            <label for="id_password1">Password:</label>            
+            <input type="hidden" name="password1" placeholder="Password" maxlength="50" required="" id="id_password1" value="HelloAwais1" >
+        </p>        
+        
+        <p>
+            <label for="id_password2">Confirm Password:</label>             
+            <input type="hidden" name="password2" placeholder="confirm Password" maxlength="50" required="" id="id_password2" value="HelloAwais1" >
+        </p>
+        
+        <p>
+            <label for="id_phone_number">Phone number:</label>
+            <input type="tel" name="phone_number" required="" id="id_phone_number">
+        </p>
+        {{phnForm.errors.phone_number}}
+
+        <br>
+        <p> Get Authentication code on
+            <select name="AuthCodeDestination" id="AuthCodeDestination">
+                <option value="Email">Email</option>
+                <option value="Phone">Phone</option>            
+            </select>
+        </p>        
+        <br>
+        <input type="submit" value="SignUp" class="btn btn-success">
+        <br/>        
+    </form> 
+{% endblock %}
