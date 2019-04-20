@@ -11,14 +11,14 @@ def create_groups(apps, schema_editor):
     director = Group.objects.create(name="Director")
     GroupExtend.objects.create(group=director,app_label="meetings")
 
-    content_id = ContentType.objects.filter(app_label="meetings",model="event")[0].id
-    permission =  Permission.objects.filter(content_type_id=content_id,codename="view_event")[0]
-    director.permissions.add(permission)
+    # content_id = ContentType.objects.filter(app_label="meetings",model="event")[0].id
+    # permission =  Permission.objects.filter(content_type_id=content_id,codename="view_event")[0]
+    # director.permissions.add(permission)
 
-    admin = Group.objects.create(name="Admin")
-    GroupExtend.objects.create(group=admin,app_label="meetings")
-    staff = Group.objects.create(name="Staff")
-    GroupExtend.objects.create(group=staff,app_label="meetings")
+    # admin = Group.objects.create(name="Admin")
+    # GroupExtend.objects.create(group=admin,app_label="meetings")
+    # staff = Group.objects.create(name="Staff")
+    # GroupExtend.objects.create(group=staff,app_label="meetings")
 
 class Migration(migrations.Migration):
 

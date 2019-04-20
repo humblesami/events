@@ -14,10 +14,12 @@ signalwire==1.3
 django-datatable==0.3.1
 djangorestframework-datatables==0.4.1
 
-
+django-cors-headers==2.5.2
 
 channels
 dj-database-url
 psycopg2
 asgi_redis
 haikunator
+
+simplejson==3.16.0

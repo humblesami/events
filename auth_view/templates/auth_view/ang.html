@@ -1,33 +1,51 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<title>Angle Page</title>	
-	{% load static %}
-	<link rel="stylesheet" href="{% static 'libs/bootstrap/bootstrap-4.1.3.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/site.css' %}" />
-    
-    <script src="{% static 'libs/jquery/jquery-3.3.1.js' %}"></script>
-	<script src="{% static 'libs/bootstrap/bootstrap-4.1.3.js' %}"></script>
-    <script src="{% static 'libs/bootstrap/popper-1.14.3.js' %}"></script>
-    <script src="{% static 'angu/assets/static/config.js' %}"></script>
-    <script src="{% static 'angu/assets/static/js/main.js' %}"></script>
-
+<html lang="en">
+	
+<head>	
+	<base href="/#/" />
+	<meta charset="utf-8" />	
+	<title>MeetVUE</title>
 </head>
-
 <body>
-	<h2>
-        Angular Page   
-		Welcome {{request.user.username}}
-	</h2>
-	<div>
-		
-		{% if request.user.is_authenticated %}
-			<a href="change-password" class="cbtn btn-primary btn-sm">Change Password</a></br></p>
-			<a href="profile/edit" class="cbtn btn-primary btn-sm">Edit Profile</a></br></p>
-		{% endif %}
-
+	{% load static %}
+	<script type="text/javascript" src="static/angular/assets/libs/js/jquery-2.2.4.js"></script>
+	<script id="config_script" type="text/javascript" src="static/angular/assets/config.js"></script>
+	<link rel="icon" type="image/x-icon"href="static/angular/assets/favicon.ico">
+	<link rel="stylesheet" type="text/css"href="static/angular/assets/libs/css/bootstrap-4.1.1.css"/>
+	<link rel="stylesheet" type="text/css"href="static/angular/assets/libs/css/jquery-ui.css"/>
+	<link rel="stylesheet" type="text/css"href="static/angular/assets/css/font-awsome-5.5.0.css"/>
+	<link rel="stylesheet" type="text/css"href="static/angular/assets/css/font-roboto-3.4.5.7.9.css"/>
+	<link rel="stylesheet" type="text/css"href="static/angular/assets/css/simple-line-icons.min.css"/>
+	<link rel="stylesheet" type="text/css"href="static/angular/assets/css/main.css"/>
+	<link rel="stylesheet" type="text/css"href="static/angular/assets/css/emoji.css"/>
+	<div id="server-wait" class="loadingoverlay" style="display: none;">
+		<img src="static/angular/assets/images/spin.png" alt="loading data..." />
+	</div>
+	<script type="text/javascript" src="static/angular/assets/js/json.js"></script>
+	<script type="text/javascript" src="static/angular/assets/js/simple_ajax.js"></script>
+	<script type="text/javascript" src="static/angular/assets/js/main.js"></script>
+	<script type="text/javascript" src="static/angular/assets/js/datetime.js"></script>
+	<div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1">
+		<script type="text/javascript" async src="static/angular/assets/annotator/shared/pdf.js"></script>
 	</div>
 
-	<p>Hello!.......This is my First Page of the site............</p>
+	<script type="text/javascript" src="static/angular/assets/libs/js/socket.io.js"></script>
+	<script>
+		window["io"] = io;
+	</script>	
+
+	<script type="text/javascript" async src="static/angular/assets/libs/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" async src="static/angular/assets/libs/js/bootstrap-4.1.1.js"></script>
+	<script type="text/javascript" async src="static/angular/assets/libs/js/moment.js"></script>
+	<script type="text/javascript" async src="static/angular/assets/libs/js/bootbox.js"></script>
+	<script type="text/javascript" async src="static/angular/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
+	
+	<script type="text/javascript" async src="static/angular/assets/emoji/js/emoji-picker.js"></script>
+	
+	<app-root></app-root>
+	
+	<script type="text/javascript" src="static/angular/runtime.a66f828dca56eeb90e02.js"></script>
+	<script type="text/javascript" src="static/angular/polyfills.5f6162307463d6be41dd.js"></script>
+	<script type="text/javascript" src="static/angular/main.537138a7c9d762423522.js"></script>
 </body>
-</html> 
+</html>

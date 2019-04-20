@@ -8,3 +8,5 @@ custom_base
 node_modules
 */__pycache__
 *pycache*
+angular
+*/angular

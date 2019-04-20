@@ -16,7 +16,7 @@ urlpatterns = [
     path('profile/edit',views.Edit_Profile,name='EditProfile'),
     path('UpdateProfile',views.UpdateProfile,name='UpdateProfile'),
 
-    path('angfg',views.Messenger,name='Messenger'),
+    path('messenger',views.Messenger,name='Messenger'),
 
 
     path('activate/<str:uidb64>/<str:token>', views.activate, name='activate'),
