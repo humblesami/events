@@ -22,8 +22,9 @@ from django.contrib import admin
 urlpatterns = [
     #  path('admin/', admin.site.urls),
     url(r'^admin/',admin.site.urls),
-    url(r'^',admin.site.urls),
+    # url(r'^',admin.site.urls),
     url(r'^account/',include('auth_view.urls')),
+    url(r'^ws/',include('auth_view.urls')),
     url(r'^voting/',include('voting.urls')),
 ]
 admin.site.site_header = 'MeetVUE'

@@ -16,6 +16,7 @@ urlpatterns = [
     path('profile/edit',views.Edit_Profile,name='EditProfile'),
     path('UpdateProfile',views.UpdateProfile,name='UpdateProfile'),
 
+    path('verifytoken',views.ConnectSocket,name='Socket'),
     path('messenger',views.Messenger,name='Messenger'),
 
 

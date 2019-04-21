@@ -1,3 +1,4 @@
+import json
 import smtplib
 from .forms import *
 from django.urls import reverse
@@ -78,10 +79,6 @@ def LoginPage_view(request):
 
 def ForgotPassword(request):
     return HttpResponse('Reset Password Clicked!')
-
-def Messenger(request):    
-    context={}
-    return render(request,'auth_view/ang.html',context)
 
 def Add_User(request):
     form=SignupForm()
@@ -431,24 +428,14 @@ def UpdateProfile(request):
         return redirect('../')
 
 
-# def LoginAfterChangePassword(request):
-#     if request.method == 'POST':
-#         user_id = request.POST['userid']
-#         New_Password1 = request.POST['new_password1']
-#         New_Password2 = request.POST['new_password2']
-#         user = User.objects.get(pk=user_id)
+def Messenger(request):
+    context={}
+    return render(request,'auth_view/ang.html',context)
 
-#         if(New_Password1==New_Password2):
-#             user.set_password(New_Password1)
-#             user.is_active = True
-#             user.save()
-#             login(request, user)
-#             return redirect('../') 
-#             print('Your password was successfully updated!')
-
-#         else:
-#             print('Please correct the error below123.')
-#             error="Please Submit the valid Password"
-#             form = PasswordChangeForm(request.user)
-#             context={'form':form,'userid':user.id,'Error':error}
-#             return render(request, 'auth_view/ResetPassword.html',context)
+def ConnectSocket(request):
+    kw = request.GET
+    values = {}
+    for key in kw:
+        values[key] = kw[key]
+    values = json.dumps(values)
+    return HttpResponse(values)
