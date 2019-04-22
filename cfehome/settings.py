@@ -39,8 +39,9 @@ EMAIL_USE_TLS = True
 # Application definition
 
 INSTALLED_APPS = [
+    'my_admin',
     'corsheaders',
-    'meetings',
+    'meetings.apps.MeetingConfig',
     'auth_view',
     'phonenumber_field',
     'table',

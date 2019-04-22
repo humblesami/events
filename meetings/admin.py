@@ -180,6 +180,6 @@ admin.site.register(Director,DirectorAdmin)
 admin.site.register(Staff,StaffAdmin)
 admin.site.register(Group,GroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
-admin.site.register(Profile,ProfileAdmin)
+# admin.site.register(Profile,ProfileAdmin)
 
 admin.site.site_header = "MeetVUE"
