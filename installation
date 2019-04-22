@@ -1,5 +1,7 @@
 pip install Django==2.2
 
+django-admin startproject myproject
+
 
 DATABASES = {
 	'default': {
@@ -9,9 +11,11 @@ DATABASES = {
 		'PASSWORD': '123',
 	}
 }
-python manage.py makemigrations
-python manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
 
-python manage.py createsuperuser --username=sa --email=sa@gmail.com
+python3 manage.py createsuperuser --username=sa --email=sa@gmail.com
 
+python3 manage.py runserver
 
+python3 manage.py startapp mymodule
