@@ -20,11 +20,16 @@ $(function(){
                     obj = JSON.parse(data);
                     $('.' + obj.answer).prepend('<i class="fa fa-check fa-lg" style="color:white"/>');    
                     window['sign_data'] = obj.signature_data;
-                    img_src ='data:image/png;base64,' + btoa(obj.signature_data);
-                    
-                    img = $('.voting-options-container').find('.user-sign');
-                    img.attr('src', img_src);
-                    img.show();
+                    img_src ='data:image/png;base64,' + obj.signature_data;
+                    if($('[name=signature_required]').prop('checked'))
+                    {
+                        $('.voting-options-container').append('<div><img src="'+img_src+'" class="user-sign" height="150px" width="150px" /></div>')
+                    }
+                    else
+                    {
+                        $('.user-sign').hide();
+                        
+                    }
 
                 }
                 else
@@ -58,6 +63,7 @@ $(function(){
             signature: window['sign_data'],
             callBack: function(data){
                 $('.fa-check').remove()
+                console.log(data);
                 get_results(option_id, option_name, data);
             }
         }
@@ -69,6 +75,7 @@ $(function(){
         }
         else
         {
+            $('.user-sign').hide();
             $('.fa-check').remove()
             get_results(option_id, option_name, '');
         }
@@ -82,13 +89,14 @@ $(function(){
                 let result = confirm('Signature is required...');
                 if (result)
                 {
-                    $('.fa-check').remove()
+                    $('.fa-check').remove();
+                    
                     get_results(option_id, option_name);        
                 }
             }
             else
             {   
-                $('.fa-check').remove()
+                $('.fa-check').remove();
                 get_results(option_id, option_name);
             }
         }

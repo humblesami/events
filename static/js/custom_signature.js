@@ -17,13 +17,12 @@ jQuery(document).ready(function(e) {
     jQuery.fn.sign = function(options) {
         var params = jQuery.fn.extend({
             reset: options.resetButton ? options.resetButton : null,
-            width: options.width ? options.width : 500,
+            width: options.width ? options.width : 480,
             height: options.height ? options.height : 300,
             lineWidth: options.lineWidth ? options.lineWidth : 10,
         }, options);
 
         var canvas = jQuery(this);
-        console.log(canvas, canvas[0]);
         
         var lineWidth = params.lineWidth;
         
@@ -56,8 +55,8 @@ jQuery(document).ready(function(e) {
             var rect = canvas.get(0).getBoundingClientRect();
             var pos = touch(evt);
             return {
-                x: pos.x + rect.left - fixFingerPosition,
-                y: pos.y - rect.top - fixFingerPosition
+                x: pos.x - rect.left,
+                y: pos.y - rect.top
             };
         }
 
@@ -94,12 +93,11 @@ jQuery(document).ready(function(e) {
                 y: pointStart.y + (pointEnd.y - pointStart.y) / 2
             }
         }
-
         // Mouse & touch events
         canvas.on('touchstart mousedown', function(e) {
             holdClick = true;
-            var mousePosition = getMousePosition(canvas, e);                    
-            points.push({x: mousePosition.x, y: mousePosition.y, break: false});
+            var mousePosition = getMousePosition(canvas, e);                   
+            points.push({x: mousePosition.x , y: mousePosition.y, break: false});
             return false;
         }).on('touchmove mousemove', function(e)
         {
@@ -112,7 +110,6 @@ jQuery(document).ready(function(e) {
             e.preventDefault();
             holdClick = false;
             points[points.length - 1].break = true;
-
             return false;
         });
 

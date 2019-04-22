@@ -32,7 +32,9 @@ class VotingAdmin(admin.ModelAdmin):
                 if voting_results:
                     extra_context['option_results'] = []
                     for result in voting_results:
-                        extra_context['option_results'].append({'option_name': result['answer__name'], 'option_result': result['answer_count']})
+                        total = len(voting_results)
+                        extra_context['option_results'].append({'option_name': result['answer__name'], 'option_result': result['answer_count'],
+                        'option_perc': round(((result['answer_count']/ total)*100),2)})
                 
                 user_answer = VotingAnswer.objects.filter(voting_id=voting_id, user_id = request.user.id)
                 # if not user_answer:

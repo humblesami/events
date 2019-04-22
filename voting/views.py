@@ -55,7 +55,7 @@ def answer(request, voting_id):
                 voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=request.user.id)
                 data = {
                     'answer': voting_answer.answer.name,
-                    'signature_data': voting_answer.signature_data
+                    'signature_data': base64.decodestring(voting_answer.signature_data)
                 }
                 res_data =json.dumps(data)
                 return HttpResponse(res_data)

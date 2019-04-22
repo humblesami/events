@@ -30,15 +30,15 @@
                 <button class="btn btn-primary {{option.name}}" data-id="{{option.id}}">{{option.name}}</button>
                 <!-- <input type="button" value="{{option.name}}" data-id="option.id"> -->
             {% endfor %}
-            <img src="" class="user-sign" style="display:none" height="42" width="42">
+            
         </div>
     {% endif %}
 
     {% if option_results %}
         <div style="display:flex">
             {% for result in option_results %}
-                <div>
-                    <label>{{result.option_name}} : {{result.option_result}}</label>
+                <div style="widows: 200px;">
+                    <label>{{result.option_name}} : {{result.option_result}}   ({{result.option_perc}} %)</label>
                 </div>
             {% endfor %}
         </div>
