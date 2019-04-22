@@ -23,7 +23,7 @@ def create_groups(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meetings', '0003_auto_20190411_1441'),
+        ('meetings', '0001_initial'),
     ]
 
     operations = [migrations.RunPython(create_groups),
