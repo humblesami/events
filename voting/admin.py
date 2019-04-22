@@ -13,6 +13,7 @@ class VotingTypeAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
     list_filter = ['name']
     search_fields = ['name']
+    
 
 
 class VotingAdmin(admin.ModelAdmin):
