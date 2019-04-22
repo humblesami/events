@@ -18,6 +18,8 @@ Including another URLconf
 
 from django.conf.urls import include,url
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     #  path('admin/', admin.site.urls),
@@ -26,7 +28,8 @@ urlpatterns = [
     url(r'^account/',include('auth_view.urls')),
     url(r'^ws/',include('auth_view.urls')),
     url(r'^voting/',include('voting.urls')),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 admin.site.site_header = 'MeetVUE'
 admin.site.site_title = "MeetVUE"
 admin.site.index_title = "Welcome to MeetVUE"

@@ -82,7 +82,8 @@ class ProfileInline(admin.StackedInline):
     readonly_fields = ('image_tag','admin_image_html')
 
     def image_tag(self,obj):
-        return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.image))
+        if obj.image:
+            return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.image))
     image_tag.short_description = ''
     def admin_image_html(self,obj):
         return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.admin_image))
