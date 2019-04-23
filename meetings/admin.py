@@ -33,8 +33,9 @@ class TopicInline(admin.TabularInline):
 
 class EventAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['name','start_date']})
+        (None,               {'fields': ['name','start_date', 'attendees']})
     ]
+    filter_horizontal = ('attendees',)
     inlines = [TopicInline]
 
 class UserAdminForm(forms.ModelForm):
