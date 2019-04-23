@@ -39,8 +39,8 @@ EMAIL_USE_TLS = True
 # Application definition
 
 INSTALLED_APPS = [
-    'documents',
     'ngapp',
+    'corsheaders',
     'webservice',
     'chat',
     'authsignup',
@@ -49,15 +49,15 @@ INSTALLED_APPS = [
     'auth_view',
     'phonenumber_field',
     'table',
-    'voting',    
+    'voting',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework', 
-    'rest_framework.authtoken', 
+    'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_datatables'
 
 ]
@@ -76,6 +76,8 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,16 +87,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS_ORIGIN_ALLOW_ALL = False
-#
-# CORS_ORIGIN_WHITELIST = (
-#     'http//:localhost:4200',
-# )
+PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
+CORS_ORIGIN_ALLOW_ALL = False
+if 'sami/django' in PROJECT_ROOT:
+    CORS_ORIGIN_ALLOW_ALL = True
+
 
 ROOT_URLCONF = 'mainapp.urls'
 DEFAULT_DOMAIN = 'http://8000/'
-
-PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
 
 TEMPLATES = [
     {
