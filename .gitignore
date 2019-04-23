@@ -9,3 +9,4 @@ node_modules
 */__pycache__
 *pycache*
 static/angular
+db.sqlite3
