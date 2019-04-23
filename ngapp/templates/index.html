@@ -30,9 +30,15 @@
 	<script type="text/javascript" src="/static/angular/assets/js/json.js"></script>
     <script type="text/javascript" src="/static/angular/assets/js/simple_ajax.js"></script>
     <script type="text/javascript" src="/static/angular/assets/js/main.js"></script>
+	{% csrf_token %}
 	<script>
-		{% if user %}
-			dn_current_site_user.cookie = {{ user }};
+		{% if uid %}
+			dn_current_site_user.cookie = {
+				id : {{id}},
+				name : '{{name}}',
+				token: $('input[name="csrfmiddlewaretoken"]:first').val()
+			};
+			console.log(dn_current_site_user.cookie);
 		{% endif %}
 	</script>
     <script type="text/javascript" src="/static/angular/assets/js/datetime.js"></script>

@@ -1,11 +1,13 @@
-from django.http import HttpResponse
-from django.shortcuts import render
 from mainapp import ws_methods
+from django.shortcuts import render
 
 def index(request):
     user = request.user
-    context = {'user': None}
+    context = {'uid': None}
     if user and user.id:
-        user = { 'name': ws_methods.get_user_name(user), 'id' : user.id}
-        context = {'user': user}
+        context = {
+            'uid' : user.id,
+            'name': ws_methods.get_user_name(user),
+            'id' : user.id,
+        }
     return render(request, 'index.html', context)
