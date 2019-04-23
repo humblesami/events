@@ -8,5 +8,5 @@ class AuthUser(models.Model):
 
     @classmethod
     def verify(cls, request, params):
-        user = authenticate(request, params['login'], params['password'])
+        user = authenticate(request, username=params['login'], password=params['password'])
         return { 'name' : user['login'], 'id' : user.id }

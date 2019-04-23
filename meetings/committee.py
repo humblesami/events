@@ -6,5 +6,8 @@ class Committee(models.Model):
     name = models.CharField(_('name'), max_length=150)
     users = models.ManyToManyField( Profile,blank=True,related_name="committees")
 
+    def get_detail(self):
+        a = 1
+
     def __str__(self):
         return self.name

@@ -7,7 +7,7 @@ def index(request):
     try:
         kw = request.POST
         if not kw:
-            request.GET
+            kw = request.GET
         kw = json.loads(kw['input_data'])
         args = kw['args']
         params = kw['params']

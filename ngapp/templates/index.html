@@ -33,12 +33,14 @@
 	{% csrf_token %}
 	<script>
 		{% if uid %}
-			dn_current_site_user.cookie = {
+			window['current_user'].cookie = {
 				id : {{id}},
 				name : '{{name}}',
-				token: $('input[name="csrfmiddlewaretoken"]:first').val()
+				token: $('input[name="csrfmiddlewaretoken"]:first').val(),
+				login: '{{login}}'
 			};
-			console.log(dn_current_site_user.cookie);
+			localStorage.setItem('user', JSON.stringify(window['current_user'].cookie));
+			//console.log(localStorage.getItem('user'), 188);
 		{% endif %}
 	</script>
     <script type="text/javascript" src="/static/angular/assets/js/datetime.js"></script>
@@ -61,8 +63,9 @@
     
 	<app-root></app-root>
     
-	<script type="text/javascript" src="/static/angular/runtime.a66f828dca56eeb90e02.js"></script>
-	<script type="text/javascript" src="/static/angular/polyfills.5a96d8ac98b4afab4ce9.js"></script>
-	<script type="text/javascript" src="/static/angular/main.cd44fcba50dd695de30d.js"></script>
+	<script type="text/javascript" src="/static/angular/runtime.js"></script>
+	<script type="text/javascript" src="/static/angular/polyfills.js"></script>
+	<script type="text/javascript" src="/static/angular/vendor.js"></script>
+	<script type="text/javascript" src="/static/angular/main.js"></script>
 </body>
 </html>

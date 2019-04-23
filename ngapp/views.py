@@ -9,5 +9,6 @@ def index(request):
             'uid' : user.id,
             'name': ws_methods.get_user_name(user),
             'id' : user.id,
+            'login': user.username
         }
     return render(request, 'index.html', context)
