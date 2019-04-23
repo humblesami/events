@@ -1,29 +1,15 @@
-from django.contrib import admin,messages
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-
 from django.utils.html import format_html
-from django.contrib.auth.models import User,Group as g
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
 from .models import Event,Topic
 from .user import Profile,User as u,Admin,Director,Staff,Group
 from .committee import Committee
-from django.contrib.auth.forms import (
-    AdminPasswordChangeForm, UserChangeForm, UserCreationForm,
-)
+
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
-from django.urls import path, reverse
-from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpResponseRedirect
-from django.contrib.admin.utils import unquote
-from django.template.response import TemplateResponse
-from django.utils.html import escape
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
-
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
 class TopicInline(admin.TabularInline):
