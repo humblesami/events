@@ -5,8 +5,11 @@
 	<meta charset="utf-8" />	
 	<title>MeetVUE</title>
 	<script>
-
+	{% if not user %}
+		window.location = '/account/login';
+	{% endif %}
 	</script>
+
 </head>
 
 <body>
@@ -28,7 +31,9 @@
     <script type="text/javascript" src="/static/angular/assets/js/simple_ajax.js"></script>
     <script type="text/javascript" src="/static/angular/assets/js/main.js"></script>
 	<script>
-		dn_current_site_user.cookie = {id: {{ uid }} };
+		{% if user %}
+			dn_current_site_user.cookie = {{ user }};
+		{% endif %}
 	</script>
     <script type="text/javascript" src="/static/angular/assets/js/datetime.js"></script>
 	<div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1">
