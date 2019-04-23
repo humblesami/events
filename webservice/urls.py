@@ -2,5 +2,6 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
-    path('endpoint', views.index, name='index'),
+    path('secure', views.index, name='index'),
+    path('public', views.public, name='public'),
 ]
