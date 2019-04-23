@@ -29,20 +29,26 @@ class VotingAdmin(admin.ModelAdmin):
             voting_id = request.resolver_match.kwargs['object_id']
             if voting_id:
                 
+                voting_choices = list(VotingChoice.objects.filter(voting_type = Voting.objects.get(pk=voting_id).voting_type.id))
+                extra_context['option_data']=[]
+                extra_context['option_results'] = []
+                for option in voting_choices:
+                    extra_context['option_data'].append({'id': option.id, 'name': option.name})
+                    extra_context['option_results'].append({'option_name': option.name, 'option_result': 0, 'option_perc': 0})
+
                 voting_results = list(VotingAnswer.objects.values('answer__name').annotate(answer_count=Count('answer')).filter(voting_id = voting_id))
                 if voting_results:
-                    extra_context['option_results'] = []
                     for result in voting_results:
                         total = len(voting_results)
-                        extra_context['option_results'].append({'option_name': result['answer__name'], 'option_result': result['answer_count'],
-                        'option_perc': round(((result['answer_count']/ total)*100),2)})
+                        for extra_result in extra_context['option_results']:
+                            if extra_result['option_name'] == result['answer__name']:
+                                extra_result['option_result'] = result['answer_count']
+                                extra_result['option_perc'] = round(((result['answer_count']/ total)*100),2)
+                        # extra_context['option_results'].append({'option_name': result['answer__name'], 'option_result': result['answer_count'],
+                        # 'option_perc': round(((result['answer_count']/ total)*100),2)})
                 
                 user_answer = VotingAnswer.objects.filter(voting_id=voting_id, user_id = request.user.id)
                 # if not user_answer:
-                voting_choices = list(VotingChoice.objects.filter(voting_type = Voting.objects.get(pk=voting_id).voting_type.id))
-                extra_context['option_data']=[]
-                for option in voting_choices:
-                    extra_context['option_data'].append({'id': option.id, 'name': option.name})
 
                 return super(VotingAdmin, self).change_view(
                     request, object_id, form_url, extra_context=extra_context,)
@@ -56,6 +62,8 @@ class VotingAdmin(admin.ModelAdmin):
             extra_context = extra_context or {}
             return super(VotingAdmin, self).change_view(
                 request, object_id, form_url, extra_context=extra_context,)
+    
+
 
 class VotingAnswerAdmin(admin.ModelAdmin):
     list_display = ['answer', 'voting', 'user', 'signature_data']

@@ -30,13 +30,16 @@
     {% endif %}
 
     {% if option_results %}
-        <div style="display:flex">
+    {% load static %}            
+            <script src="{% static '/libs/jquery/chart.js' %}"></script>
+        <div style="display:flex" class="voting-results-container">
             {% for result in option_results %}
                 <div style="widows: 200px;">
                     <label>{{result.option_name}} : {{result.option_result}}   ({{result.option_perc}} %)</label>
                 </div>
             {% endfor %}
         </div>
+        <canvas id="myChart"></canvas>
     {% endif %}
 
     {% if fieldset.name %}<h1>{{ fieldset.name }}</h1>{% endif %}
