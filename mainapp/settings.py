@@ -39,7 +39,7 @@ EMAIL_USE_TLS = True
 # Application definition
 
 INSTALLED_APPS = [
-    'angular',
+    'ngapp',
     'webservice',
     'chat',
     'authsignup',
@@ -101,7 +101,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(PROJECT_ROOT, '..', 'mainapp/templates'),
             os.path.join(PROJECT_ROOT, '..', 'voting/templates'),
-            os.path.join(PROJECT_ROOT, '..', 'angular/templates'),
+            os.path.join(PROJECT_ROOT, '..', 'ngapp/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

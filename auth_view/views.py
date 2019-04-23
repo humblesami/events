@@ -228,7 +228,7 @@ def index(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/login')
+    return redirect('/account/login')
 
 def DateTimeValidation(date_joined,CheckMints=5): 
     diff = datetime.now(timezone.utc) - date_joined
