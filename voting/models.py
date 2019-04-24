@@ -1,8 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
 from meetings.models import Event, Topic
-from smart_selects.db_fields import ChainedForeignKey
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 class VotingType(models.Model):
