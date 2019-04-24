@@ -12,6 +12,8 @@ class AuthUser(models.Model):
         password = params['password']
 
         user = authenticate(request, username=username, password=password)
+        if not user:
+            return {'error': 'Invalid credentials'}
         login(request, user)
 
         if user and user.id:
