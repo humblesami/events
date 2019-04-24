@@ -19,3 +19,6 @@ python3 manage.py createsuperuser --username=sa --email=sa@gmail.com
 python3 manage.py runserver
 
 python3 manage.py startapp mymodule
+
+
+project/static/angular/static/angular# cp -a assets ../../..//angular
