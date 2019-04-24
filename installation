@@ -21,4 +21,4 @@ python3 manage.py runserver
 python3 manage.py startapp mymodule
 
 
-project/static/angular/static/angular# cp -a assets ../../..//angular
+cp -a /meetvue/static/angular/static/angular/assets/  /meetvue/static/angular/
