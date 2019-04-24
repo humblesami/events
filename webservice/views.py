@@ -48,11 +48,6 @@ def public(request):
         model = apps.get_model(args['app'], args['model'])
         method_to_call = getattr(model, args['method'])
         res = method_to_call(request, params)
-        if type(res) is not object:
-            res = {'error': '', 'data': res}
-        else:
-            if not res.get('error') and not res.get('data'):
-                res = {'error': '', 'data': res}
         res = json.dumps(res)
         return HttpResponse(res)
     except:
