@@ -34,6 +34,10 @@ class Voting(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def get_details(cls, request, params):
+        return {'error': 'Not implemented'}
+
 class VotingAnswer(models.Model):
     answer = models.ForeignKey(VotingChoice, on_delete = models.CASCADE, blank = False)
     voting = models.ForeignKey(Voting, on_delete = models.CASCADE, blank = False)
@@ -42,3 +46,7 @@ class VotingAnswer(models.Model):
 
     def __str__(self):
         return self.answer.name
+    
+    @classmethod
+    def submit(cls, request, params):
+        return {'error': 'Not implemented'}

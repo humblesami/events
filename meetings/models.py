@@ -11,6 +11,14 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def respond_invitation(cls, request, params):
+        return {'error': 'Not implemented'}
+    
+    @classmethod
+    def get_records(cls, request, params):
+        return {'error': 'Not implemented'}
+
 class News(models.Model):
     name = models.CharField(max_length=200)
     def __str__(self):
@@ -18,7 +26,7 @@ class News(models.Model):
 
     @classmethod
     def get_data(cls):
-        return {'to_do_items': []}
+        return {'error': 'Not implemented'}
 
 class Topic(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
@@ -26,8 +34,6 @@ class Topic(models.Model):
     def __str__(self):
         return self.name
 
-
-
-
-
-
+    @classmethod
+    def get_details(cls, request, params):
+        return {'error': 'Not implemented'}

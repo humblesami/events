@@ -7,3 +7,7 @@ class Message(models.Model):
     to = models.IntegerField()
     content = models.TextField()
     read_status = models.BooleanField(default=False)
+
+    @classmethod
+    def get(cls, request, params):
+        return {'error': 'Not implemented'}

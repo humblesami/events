@@ -72,6 +72,14 @@ class Profile(models.Model):
 class ManagerDirector(UserManager):
     def get_queryset(self):
         return super(ManagerDirector, self).get_queryset().filter(groups__name__in=['Director'])
+    
+    @classmethod
+    def get_details(cls, request, params):
+        return {'error': 'Not implemented'}
+
+    @classmethod
+    def get_records(cls, request, params):
+        return {'error': 'Not implemented'}
 
 class ManagerAdmin(UserManager):
     def get_queryset(self):
