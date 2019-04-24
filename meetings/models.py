@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .user import *
-from .committee import *
 
 # Create your models here.
 class Event(models.Model):
