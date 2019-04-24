@@ -53,6 +53,7 @@ def LoginPage_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             if(user.is_superuser):
+                print('user is admin')
                 login(request,user)
                 current_user = request.user
                 # print current_user.id
@@ -60,11 +61,15 @@ def LoginPage_view(request):
                 # AllUsers=User.objects.all()
                 # R_Users = RequestTable.objects.filter(user_id=77)
                 # select * from RequestTable r,User u where r.user_id=u.id
+                print(R_Users)
                 context={'Request_Users':R_Users}
-                return redirect('/admin')
+                return render(request, 'auth_view/AdminView.html',context)
             else:
+                print(request)
                 GenerateRandomString(user)
-                return redirect('/')
+                print(user.id)
+                context={'userid':user.id}
+                return render(request, 'auth_view/authentication.html',context)
         else:
             context={'login_error':'Invalid Credentials'}
             return render(request, "auth_view/LoginPage.html", context)
@@ -223,7 +228,7 @@ def index(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/account/login')
+    return redirect('/login')
 
 def DateTimeValidation(date_joined,CheckMints=5): 
     diff = datetime.now(timezone.utc) - date_joined
