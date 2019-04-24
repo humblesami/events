@@ -3,7 +3,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.html import format_html
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
-from .models import Event,Topic
+from .models import Event,Topic, News
 from .user import Profile,User as u,Admin,Director,Staff,Group
 from .committee import Committee
 
@@ -161,7 +161,7 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Event,EventAdmin)
-# admin.site.register(Topic)
+admin.site.register(News)
 admin.site.register(u,UserAdmin)
 admin.site.register(Admin,AdminAdmin)
 admin.site.register(Director,DirectorAdmin)

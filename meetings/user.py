@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth.models import User as u,Group as g,UserManager
+import datetime
 GENDER_CHOICES = (
     (1, _("Male")),
     (2, _("Female")),
@@ -72,14 +73,6 @@ class Profile(models.Model):
 class ManagerDirector(UserManager):
     def get_queryset(self):
         return super(ManagerDirector, self).get_queryset().filter(groups__name__in=['Director'])
-    
-    @classmethod
-    def get_details(cls, request, params):
-        return {'error': 'Not implemented'}
-
-    @classmethod
-    def get_records(cls, request, params):
-        return {'error': 'Not implemented'}
 
 class ManagerAdmin(UserManager):
     def get_queryset(self):
@@ -98,6 +91,23 @@ class Director(u):
     class Meta:
         proxy = True
     
+    @classmethod
+    def get_details(cls, request, params):
+        return {'error': 'Not implemented'}
+
+    @classmethod
+    def get_records(cls, request, params):
+        directors = Director.objects.values()
+        total_cnt = directors.count()
+        current_cnt = total_cnt
+        directors = list(directors)
+        directors[0]['name'] = directors[0]['username']
+        del directors[0]['username']
+        # directors[0].pop(directors[0]['name'])
+        directors[0]['date_joined'] = str(directors[0]['date_joined'])
+        profiles_json = {'records':directors, 'total':total_cnt, 'count':current_cnt}
+        return profiles_json
+
     def save(self, *args, **kwargs):
         create = False
         if self.pk is None:

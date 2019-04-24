@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from videos.models import Video
 from .user import *
+
 
 # Create your models here.
 class Event(models.Model):
@@ -25,7 +27,23 @@ class News(models.Model):
 
     @classmethod
     def get_data(cls, request, params):
-        return {'error': 'Not implemented'}
+        home_object= {}
+        home_object['video_ids']=[]
+        home_object['doc_ids'] = []
+        home_object['to_do_items'] = {
+            'pending_meetings':[],
+            'pending_surveys':[],
+            'pending_documents':[],
+            'pending_votings':[]
+        }
+        home_object['calendar'] = []
+        news = News.objects.values()
+        for nw in news:
+            videos = Video.objects.filter(news_id = nw['id'])
+            for video in videos:
+                video.url = video.url.replace('/watch?v=', '/embed/')
+                home_object['video_ids'].append({'name': video.name, 'url': video.url})
+        return {'error': '', 'data': home_object}
 
 class Topic(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
