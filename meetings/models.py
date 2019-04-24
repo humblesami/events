@@ -25,7 +25,7 @@ class News(models.Model):
         return self.name
 
     @classmethod
-    def get_data(cls):
+    def get_data(cls, request, params):
         return {'error': 'Not implemented'}
 
 class Topic(models.Model):
