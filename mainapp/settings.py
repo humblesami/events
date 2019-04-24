@@ -89,7 +89,7 @@ MIDDLEWARE = [
 
 PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
 CORS_ORIGIN_ALLOW_ALL = False
-if 'sami/django' in PROJECT_ROOT:
+if 'sami/django' in PROJECT_ROOT or 'muhammadfaizan/django' in PROJECT_ROOT:
     CORS_ORIGIN_ALLOW_ALL = True
 
 
