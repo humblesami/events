@@ -9,7 +9,8 @@ def index(request):
     try:
         if not request.user.id:
             res = {'error': 'Unauthorized user'}
-            return res
+            res = json.dumps(res)
+            return HttpResponse(res)
             # user = authenticate(request, username='fazi', password='123')
             # if not user:
             #     res = {'error': 'Unauthorized user'}
