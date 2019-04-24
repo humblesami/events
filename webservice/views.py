@@ -8,12 +8,14 @@ from django.contrib.auth import authenticate, login
 def index(request):
     try:
         if not request.user.id:
-            user = authenticate(request, username='fazi', password='123')
-            if not user:
-                res = {'error': 'Unauthorized user'}
-                res = json.dumps(res)
-                return HttpResponse(res)
-            login(request, user)
+            res = {'error': 'Unauthorized user'}
+            return res
+            # user = authenticate(request, username='fazi', password='123')
+            # if not user:
+            #     res = {'error': 'Unauthorized user'}
+            #     res = json.dumps(res)
+            #     return HttpResponse(res)
+            # login(request, user)
         kw = request.POST
         if not kw:
             kw = request.GET
