@@ -17,7 +17,7 @@ class AuthUser(models.Model):
         login(request, user)
 
         if user and user.id:
-            return {'name': user.username, 'id': user.id}
+            return {'error': '', 'data': {'name': user.username, 'id': user.id} }
         else:
             return {'error': 'Invalid credentials'}
 

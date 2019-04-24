@@ -20,5 +20,6 @@ python3 manage.py runserver
 
 python3 manage.py startapp mymodule
 
-
-cp -a /meetvue/static/angular/static/angular/assets/  /meetvue/static/angular/
+sudo ng build --prod=true --output-path=/meetvue/static/angular/
+sudo cp -a /meetvue/static/angular/static/angular/assets/  /meetvue/static/angular/
+sudo python3 manage.py runserver 0.0.0.0:8000
