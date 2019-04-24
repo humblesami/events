@@ -3,7 +3,7 @@ import subprocess
 
 from django.core.files import File as DjangoFile
 
-import pdftotext
+# import pdftotext
 from PIL import Image
 from django.db import models
 from fpdf import FPDF
@@ -65,10 +65,10 @@ class File(models.Model):
                      '-o', converted_pth, '-d', 'document',
                      pth])
                 res = open(converted_pth, 'rb')
-            content=""
-            pdf = pdftotext.PDF(res)
-            for pag in pdf:
-                content += pag
+            # content=""
+            # pdf = pdftotext.PDF(res)
+            # for pag in pdf:
+            #     content += pag
             if ext != "pdf":
                 res = open(converted_pth, 'rb')
             else:
