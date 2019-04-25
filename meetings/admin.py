@@ -6,6 +6,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 from .models import Event,Topic, News
 from .user import Profile,User as u,Admin,Director,Staff,Group
 from .committee import Committee
+from .document import MeetingDocument
 
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
@@ -14,7 +15,20 @@ sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
 class TopicInline(admin.TabularInline):
     model = Topic
+
     extra = 0
+
+class MeetingDocInline(admin.TabularInline):
+    model = MeetingDocument
+    exclude=('html','content','original_pdf',)
+    readonly_fields = ('pdf_doc','Edit')
+    show_change_link = True
+    extra = 0
+
+    def Edit(self,obj):
+        return "<a href='meetings/document/%s/change'></a>" %(obj.id)
+
+
 
 
 class EventAdmin(admin.ModelAdmin):
@@ -22,7 +36,7 @@ class EventAdmin(admin.ModelAdmin):
         (None,               {'fields': ['name','start_date', 'attendees']})
     ]
     filter_horizontal = ('attendees',)
-    inlines = [TopicInline]
+    inlines = [TopicInline,MeetingDocInline]
 
 class UserAdminForm(forms.ModelForm):
     committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
