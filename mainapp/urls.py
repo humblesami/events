@@ -24,7 +24,6 @@ from django.conf import settings
 urlpatterns = [
     url(r'', include('ngapp.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^account/', include('auth_view.urls')),
     url(r'^ws/', include('webservice.urls')),
     url(r'^voting/', include('voting.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

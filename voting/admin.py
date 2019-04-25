@@ -67,7 +67,8 @@ class VotingAdmin(admin.ModelAdmin):
 
 class VotingAnswerAdmin(admin.ModelAdmin):
     list_display = ['answer', 'voting', 'user', 'signature_data']
-    list_filter = ['answer', 'user']
+    # list_filter = ['answer', 'user']
+    list_filter = ['user']
     search_fields = ['answer__name', 'voting__name', 'user__username']
 
 admin.site.register(Voting, VotingAdmin)

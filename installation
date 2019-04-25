@@ -21,10 +21,9 @@ python3 manage.py runserver
 python3 manage.py startapp mymodule
 
 sudo ng build --prod=true --output-path=/meetvue/static/angular/
-sudo cp -a /meetvue/static/angular/static/angular/assets/  /meetvue/static/angular/
+sudo mv -a /meetvue/static/angular/static/angular/assets/  /meetvue/static/angular/
+sudo mv -a /home/sami/django/jangomeet/static/angular/static/angular/assets/  /home/sami/django/jangomeet/static/angular/
 sudo python3 manage.py runserver 0.0.0.0:8000
-
-
 
 
 kill processes with port 8000
