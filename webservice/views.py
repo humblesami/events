@@ -8,13 +8,15 @@ from django.contrib.auth import authenticate, login
 def index(request):
     try:
         if not request.user.id:
-            if request.META['HTTP_REFERER'] == 'http://localhost:4200/':
-                user = authenticate(request, username='sa', password='123')
-                if not user:
-                    res = {'error': 'Unauthorized user'}
-                    res = json.dumps(res)
-                    return HttpResponse(res)
-                login(request, user)
+            referer = request.META.get('HTTP_REFERER')
+            if referer:
+                if 'localhost' in referer or '172.16' in referer:
+                    user = authenticate(request, username='sa', password='123')
+                    if not user:
+                        res = {'error': 'Unauthorized user'}
+                        res = json.dumps(res)
+                        return HttpResponse(res)
+                    login(request, user)
             else:
                 res = {'error': 'Unauthorized user'}
                 res = json.dumps(res)

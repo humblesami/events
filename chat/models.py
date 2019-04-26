@@ -22,11 +22,14 @@ class AuthUserChat(models.Model):
         unseenMessages = 0
         friendList = {}
         friendIds = []
+        http_host = request.META.get('HTTP_HOST')
+        if not http_host:
+            http_host = ''
         for friendObj in mp_users:
             friend = {
                 'id': friendObj.id,
                 'name': friendObj.fullname(),
-                'photo': friendObj.image.url
+                'photo': http_host+friendObj.image.url
             }
             # if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
             #         'meeting_point.group_meeting_admin'):
@@ -35,7 +38,7 @@ class AuthUserChat(models.Model):
             #     friend['type'] = 'director'
 
             db_filters = ()
-            friend['unseen'] = Message.annotate(answer_count=Count('*')).filter(sender=friendObj.id, read_status=False, to=uid)
+            friend['unseen'] = len(Message.objects.filter(sender=friendObj.id, read_status=False, to=uid))
             unseenMessages += friend['unseen']
             friendList[friend['id']] = friend
             friendIds.append(friend['id'])

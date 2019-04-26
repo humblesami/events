@@ -36,16 +36,14 @@ sudo python3 manage.py runserver 0.0.0.0:8000
 kill processes with port 8000
 sudo fuser -k 8000/tcp
 
-server
-{
-	listen 80;
-    listen 443 ssl;
+  server {
+    listen 8000;
 
     location / {
-        proxy_pass  http://localhost:8000/;
+      #proxy_pass http://compute-1-36:8787;
+      proxy_redirect http://localhost:8000;
     }
-    ssl on;
-}
+  }
 
 if pillow package below fails to install then use following first
 sudo apt install libjpeg8-dev zlib1g-dev
