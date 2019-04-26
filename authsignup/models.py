@@ -4,8 +4,6 @@ from django.contrib.auth import authenticate, login, logout
 
 # Create your models here.
 class AuthUser(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-
     @classmethod
     def login_user(cls, request, params):
         username = params['login']

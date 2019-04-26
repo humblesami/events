@@ -1,8 +1,8 @@
-pip install Django==2.2
-
+pip3 install Django==2.2
 django-admin startproject myproject
+pip3 install -r requirements.txt
 
-
+To use postgresql use following in settings
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -14,6 +14,13 @@ DATABASES = {
 python3 manage.py makemigrations
 python3 manage.py migrate
 
+
+To add default records of meeting
+1. Put default-records.py in migrations
+2. python3 manage.py migrate --fake meetings 0001_initial
+3. python3 manage.py migrate
+
+
 python3 manage.py createsuperuser --username=sa --email=sa@gmail.com
 
 python3 manage.py runserver
@@ -23,8 +30,10 @@ python3 manage.py startapp mymodule
 sudo ng build --prod=true --output-path=/meetvue/static/angular/
 sudo cp -a /meetvue/static/angular/static/angular/assets/  /meetvue/static/angular/
 mv /home/sami/django/jangomeet/static/angular/static/angular/assets/  /home/sami/django/jangomeet/static/angular/
+
+
 sudo python3 manage.py runserver 0.0.0.0:8000
-
-
 kill processes with port 8000
 sudo fuser -k 8000/tcp
+
+

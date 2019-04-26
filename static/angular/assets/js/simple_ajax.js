@@ -58,14 +58,26 @@ function dn_rpc_object(options) {
                         ajax_user.logout(1);
                     }
                     else if(options.onError) {
-                        options.onError(response.error);
+                        try{
+                            options.onError(response.error);
+                        }
+                        catch(er)
+                        {
+                            console.log(response.error, er);
+                        }                        
                     }
                 }
             } else {
                 if (response.data)
                     response = response.data;
                 if (options.onSuccess) {
-                    options.onSuccess(response);
+                    try{
+                        options.onSuccess(response);
+                    }
+                    catch(er)
+                    {
+                        console.log(response, er);
+                    }
                 } else if(site_config.show_logs.indexOf('ajax_success')){
                     console.log(response.data);
                 }
