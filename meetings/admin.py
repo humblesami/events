@@ -6,7 +6,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 from .models import Event,Topic, News
 from .user import Profile,User as u,Admin,Director,Staff,Group
 from .committee import Committee
-from .document import MeetingDocument
+from .document import MeetingDocument,AgendaDocument
 
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
@@ -15,28 +15,88 @@ sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
 class TopicInline(admin.TabularInline):
     model = Topic
-
+    # show_change_link = True
+    readonly_fields = ('Attachments','Edit')
     extra = 0
+
+    def Edit(self, obj):
+        html=""
+        if obj.id:
+            html = '<a class="related-widget-wrapper-link change-related" href="/admin/meetings/topic/%s/change">Edit</a>' % (obj.id)
+        return format_html(html)
+    def Attachments(self, obj):
+        html = "<div>"
+        for d in obj.agendadocument_set.all():
+            if d.pdf_doc:
+                html += '<a title="%s" class="fa  fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
+        html += '</div>'
+
+        return format_html(html)
 
 class MeetingDocInline(admin.TabularInline):
     model = MeetingDocument
-    exclude=('html','content','original_pdf',)
-    readonly_fields = ('pdf_doc','Edit')
-    show_change_link = True
+    exclude=('html','content','original_pdf','pdf_doc')
+    readonly_fields = ('View',)
+    # show_change_link = True
     extra = 0
 
+    def View(self,obj):
+        html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(obj.pdf_doc.url)
+        return format_html(html)
+
     def Edit(self,obj):
-        return "<a href='meetings/document/%s/change'></a>" %(obj.id)
-
-
+        html = '<a href="/admin/meetings/meetingdocument/%s/change">Edit</a>' %(obj.id)
+        return format_html(html)
+class AgendaDocInline(MeetingDocInline):
+    model = AgendaDocument
+    # exclude = ('html', 'content', 'original_pdf', 'pdf_doc')
+    # readonly_fields = ('View',)
+    # show_change_link = True
+    # extra = 0
+    #
+    # def View(self, obj):
+    #     html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' % (
+    #         obj.pdf_doc.url)
+    #     return format_html(html)
+    #
 
 
 class EventAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['name','start_date', 'attendees']})
+        (None,               {'fields': ['name','start_date', 'attendees','docs']})
     ]
     filter_horizontal = ('attendees',)
+    # autocomplete_fields = ('attendees',)
+
     inlines = [TopicInline,MeetingDocInline]
+    readonly_fields = ('docs',)
+
+    def docs(self, obj):
+        html = "<div>"
+        for d in obj.meetingdocument_set.all():
+            if d.pdf_doc:
+                html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
+        html += '</div>'
+
+        return format_html(html)
+
+class TopicAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,               {'fields': ['name',]})
+    ]
+
+    # readonly_fields = ('docs',)
+    # show_change_link = True
+    inlines = [AgendaDocInline,]
+
+    def docs(self, obj):
+        html = "<div>"
+        for d in obj.agendadocument_set.all():
+            if d.pdf_doc:
+                html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
+        html += '</div>'
+
+        return format_html(html)
 
 class UserAdminForm(forms.ModelForm):
     committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
@@ -176,6 +236,9 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 admin.site.register(Event,EventAdmin)
 admin.site.register(News)
+admin.site.register(Topic,TopicAdmin)
+admin.site.register(MeetingDocument)
+admin.site.register(AgendaDocument)
 admin.site.register(u,UserAdmin)
 admin.site.register(Admin,AdminAdmin)
 admin.site.register(Director,DirectorAdmin)

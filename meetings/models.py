@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from videos.models import Video
 from .user import *
-
+from .document import *
 
 # Create your models here.
 class Event(models.Model):

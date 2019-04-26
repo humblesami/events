@@ -82,14 +82,16 @@ class File(models.Model):
     def excel2xhtml(self, pth,filename):
         try:
             converted_pth = pth.replace("files", "converted")
+            converted_pth = converted_pth.split(".")[0] + ".xhtml"
             subprocess.check_call(
                 ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'xhtml',
                  '-o', converted_pth,
                  pth ])
             res = open(converted_pth, 'rb')
-            read = res.read()
-            r=read.decode("utf-8")
-            self.html = r
+            self.pdf_doc.save(filename + ".xhtml", DjangoFile(res))
+            # read = res.read()
+            # r=read.decode("utf-8")
+            # self.html = r
 
         except:
             raise
