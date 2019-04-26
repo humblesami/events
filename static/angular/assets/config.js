@@ -1,7 +1,7 @@
 var site_config = {
-	server_base_url:'http://34.74.192.194:8000',
+	server_base_url:'https://meetvue.com',
 	server_db : 'demo1',
-	site_url: 'http://34.74.192.194:8000',
+	site_url: 'https://meetvue.com',
 	live : true,
     chat_server : 'https://chat.brainpbx.com',
     app_name : 'MeetingPoint',
