@@ -26,7 +26,7 @@ SECRET_KEY = 'd9phtmv5b^cqr$daog097))s@$776gvk$-ca&shxt&re*r31bn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.16.21.170', 'localhost', 'meetvue.com', 'wwww.meetvue.com']
+ALLOWED_HOSTS = ['172.16.21.170', 'localhost', 'meetvue.com', 'www.meetvue.com']
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
