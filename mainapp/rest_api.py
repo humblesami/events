@@ -1,26 +1,21 @@
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+
 import json
 import sys
 import traceback
 from django.apps import apps
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
 
-def index(request):
+@csrf_exempt
+@api_view(["GET", "POST"])
+def secure(request):
     try:
         if not request.user.id:
             referer = request.META.get('HTTP_REFERER')
-            if referer:
-                if 'localhost' in referer or '172.16' in referer:
-                    user = authenticate(request, username='sa', password='123')
-                    if not user:
-                        res = {'error': 'Unauthorized user'}
-                        res = json.dumps(res)
-                        return HttpResponse(res)
-                    login(request, user)
-            else:
-                res = {'error': 'Unauthorized user'}
-                res = json.dumps(res)
-                return HttpResponse(res)
+            res = {'error': 'Unauthorized user'}
+            res = json.dumps(res)
+            return HttpResponse(res)
         kw = request.POST
         if not kw:
             kw = request.GET
@@ -39,6 +34,7 @@ def index(request):
         res = {'error' : errorMessage}
         res = json.dumps(res)
         return HttpResponse(res)
+
 
 def public(request):
     try:

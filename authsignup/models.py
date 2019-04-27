@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
+
 
 # Create your models here.
 class AuthUser(models.Model):
@@ -8,14 +10,15 @@ class AuthUser(models.Model):
     def login_user(cls, request, params):
         username = params['login']
         password = params['password']
-
         user = authenticate(request, username=username, password=password)
         if not user:
             return {'error': 'Invalid credentials'}
         login(request, user)
 
         if user and user.id:
-            return {'error': '', 'data': {'name': user.username, 'id': user.id} }
+            tokens = Token.objects.get_or_create(user=user)
+            token = tokens[0]
+            return {'name': user.username, 'id': user.id, 'token': token.key }
         else:
             return {'error': 'Invalid credentials'}
 

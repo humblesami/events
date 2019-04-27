@@ -20,11 +20,14 @@ from django.conf.urls import include,url
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
+from django.urls import path
+from .import rest_api
 
 urlpatterns = [
     url(r'', include('ngapp.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^ws/', include('webservice.urls')),
+    path('rest/public', rest_api.public, name = 'public'),
+    path('rest/secure', rest_api.secure, name = 'public'),
     url(r'^voting/', include('voting.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

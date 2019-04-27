@@ -28,20 +28,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['172.16.21.170', 'localhost', 'meetvue.com', 'wwww.meetvue.com']
 
-
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'sami.akram@digitalnet.com'
 EMAIL_HOST_PASSWORD = 'asddsazx'
 EMAIL_USE_TLS = True
 
-
 # Application definition
 
 INSTALLED_APPS = [
     'ngapp',
     'corsheaders',
-    'webservice',
     'chat',
     'authsignup',
     'my_admin',
@@ -60,26 +57,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_framework_datatables'
-
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework_datatables.renderers.DatatablesRenderer',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
     ),
-    'DEFAULT_FILTER_BACKENDS': (
-        'rest_framework_datatables.filters.DatatablesFilterBackend',
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
-    'PAGE_SIZE': 50,
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', )
 }
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -90,10 +80,12 @@ MIDDLEWARE = [
 ]
 
 PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
-CORS_ORIGIN_ALLOW_ALL = False
-if 'sami/django' in PROJECT_ROOT or 'muhammadfaizan/django' in PROJECT_ROOT:
-    CORS_ORIGIN_ALLOW_ALL = True
-
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    'localhost:4200',
+    '127.0.0.1:4200',
+    '172.16.21.170:4200',
+)
 
 ROOT_URLCONF = 'mainapp.urls'
 DEFAULT_DOMAIN = 'http://8000/'
