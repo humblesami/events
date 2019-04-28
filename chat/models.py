@@ -16,7 +16,7 @@ class Message(models.Model):
 
 class AuthUserChat(models.Model):
     @classmethod
-    def get_data(cls, request, params):
+    def verify_chat_user(cls, request, params):
         uid = params['id']
         mp_users = Profile.objects.exclude(id=uid)
         unseenMessages = 0

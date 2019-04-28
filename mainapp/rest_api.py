@@ -16,6 +16,8 @@ public_methods = {
 }
 
 def public(request):
+    args = {}
+    kw = {}
     try:
         kw = request.POST
         res = 'Unknown'
@@ -24,7 +26,9 @@ def public(request):
         kw = json.loads(kw['input_data'])
         args = kw['args']
         try:
-            res = args['app'][args['model'][args['method']]]
+            res = public_methods[args['app']]
+            res = res[args['model']]
+            res = res[args['method']]
         except:
             res = 'Invalid method call'
             return produce_result(res, args)
@@ -46,6 +50,8 @@ def public(request):
 @csrf_exempt
 @api_view(["GET", "POST"])
 def secure(request):
+    args = {}
+    kw = {}
     try:
         if not request.user.id:
             referer = request.META.get('HTTP_REFERER')

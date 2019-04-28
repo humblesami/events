@@ -27,13 +27,13 @@ class AuthUser(models.Model):
         logout(request)
         return {'error':'', 'data': 'ok'}
 
-    @classmethod
-    def verify(cls, request, params):
-        user = request.user
-        if user.id:
-            return { 'name' : user.username, 'id' : user.id }
-        else:
-            return {'error': 'Unauthorized user'}
+    # @classmethod
+    # def verify(cls, request, params):
+    #     user = request.user
+    #     if user.id:
+    #         return { 'name' : user.username, 'id' : user.id }
+    #     else:
+    #         return {'error': 'Unauthorized user'}
 
 
 # def GenerateRandomString(user):
