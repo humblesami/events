@@ -12,20 +12,18 @@ class Event(models.Model):
     start_date = models.DateTimeField('start date')
     attendees = models.ManyToManyField(User)
     
-    address =models.CharField('Address', max_length=200, default=None, null=True)
-    customMessage = models.CharField('Message', max_length=200, default=None, null=True)
-    street = models.CharField('Street', max_length=50, default=None, null=True)
-    description = models.TextField(default=None, null=True)
-    publish = models.BooleanField('Publish', default=None, null=True)
+    
+    custom_message = models.CharField('Message', max_length=200, blank=True)
+    street = models.CharField('Street', max_length=50, blank=True)
+    description = models.TextField(blank=True)
+    publish = models.BooleanField('Publish', default=False)
     # country = CountryField()
-    city = models.CharField('City', max_length=200, null=True)
-    archived = models.BooleanField('Archived', default=None, null=True)
-    zip = models.CharField('Zip', max_length=500, default=None, null=True)
-    pin = models.CharField('Meeting PIN', max_length=50, default=None, null=True)
-    conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, default=None, null=True)
-    end_call = models.BooleanField('End-Call On Moderator Left', default=None, null=True)
-    password = models.CharField('Password', max_length=50, default=None, null=True)
-    exectime = models.DurationField(default=None, null=True)
+    city = models.CharField('City', max_length=200, blank=True)
+    archived = models.BooleanField('Archived', default=False)
+    zip = models.CharField('Zip', max_length=500, blank=True)
+    pin = models.CharField('Meeting PIN', max_length=50, blank=True)
+    conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, blank=True)
+    exectime = models.CharField(max_length=50, blank=True)
 
 
 

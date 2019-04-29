@@ -16,43 +16,18 @@ var dn_current_site_user = {
         photo: false
     },
     socket: {},
-    verified: 0,
     time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    verifyCookie: function() {
+    verifyUserToken: function() {
         var user_info = dn_current_site_user.cookie;
         dn_current_site_user.cookie = localStorage.getItem('user');
         if(dn_current_site_user.cookie)
         {
             dn_current_site_user.cookie = JSON.parse(dn_current_site_user.cookie);
-            if(dn_current_site_user.cookie.id)
+            if(!dn_current_site_user.cookie.token)
             {
-                dn_current_site_user.verified = 1;     
+                site_functions.go_to_login();
             }
         }
-        return dn_current_site_user.verified;
-    },
-    verifyUserToken: function() {
-        site_functions.showLoader("verifytoken");
-        var user_info = dn_current_site_user.cookie;
-        var ajaxOptions = {
-            url: site_config.server_base_url + "/ws/verifytoken",
-            //async: false,
-            data: user_info,
-            success: function(res) {
-                if (typeof res == 'string')
-                    res = JSON.parse(res);
-                if (res.data == 'ok') {
-                    dn_current_site_user.verified = 1;
-                }
-            },
-            errro: function(er) {
-                console.log(er);
-            },
-            complete: function() {
-                site_functions.hideLoader("verifytoken");
-            }
-        };
-        $.ajax(ajaxOptions);
     },
     onLogin: function(data) {
         dn_current_site_user.cookie = data;
@@ -136,7 +111,7 @@ var site_functions = {
 
     },
     go_to_login: function(){
-        //window.location = '/account/login';
+        window.location = '/#/login';
     },
     meeting_time : function(dt){
         var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss')
@@ -344,4 +319,12 @@ function addMainEventListeners() {
     }
 }
 addMainEventListeners();
-//# sourceURL=meetvumainjs
+dn_current_site_user.verifyUserToken();
+
+var public_methods = {
+    'authsignup':{
+        'AuthUser':{
+            'login_user': 1
+        }
+    }
+}

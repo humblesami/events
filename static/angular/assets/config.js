@@ -49,6 +49,7 @@ if(window.location.origin.toString().indexOf( window.location.origin+'/web') > -
     site_config.site_url = window.location.origin+'/web';
 }
 
+site_config.public_urls = ['login']
 //console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;

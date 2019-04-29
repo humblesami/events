@@ -15,6 +15,7 @@ public_methods = {
     }
 }
 
+@api_view(["GET", "POST"])
 def public(request):
     args = {}
     kw = {}
@@ -77,7 +78,7 @@ def secure(request):
         return HttpResponse(res)
 
 
-def produce_result(res, args):
+def produce_result(res, args=None):
     if res:
         if type(res) == dict:
             if 'error' not in res:
@@ -91,8 +92,16 @@ def produce_result(res, args):
         elif isinstance(res, list):
             res = {'error': '', 'data': res}
         else:
-            res = {'error': ' Invalid result type in ' + args['app'] + '.' + args['model'] + '.' + args['method']}
+            if args:
+                args = ' in ' + args['app'] + '.' + args['model'] + '.' + args['method']
+            else:
+                args = ''
+            res = {'error': ' Invalid result type'+args}
     else:
-        res = {'error': 'Invalid response from ' + args['app'] + '.' + args['model'] + '.' + args['method']}
+        if args:
+            args = ' in ' + args['app'] + '.' + args['model'] + '.' + args['method']
+        else:
+            args = ''
+        res = {'error': 'Invalid response'+ args}
     res = json.dumps(res)
     return HttpResponse(res)

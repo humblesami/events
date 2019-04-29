@@ -11,3 +11,4 @@ node_modules
 db.sqlite3
 db.*
 media
+static/angular/static

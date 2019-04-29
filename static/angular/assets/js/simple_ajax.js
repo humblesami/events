@@ -10,18 +10,32 @@ function dn_rpc_object(options) {
         options.no_loader = 1;
 
     var ajax_user = window['current_user'];
-    input_data.args['db'] = site_config.server_db;
-    input_data.args['time_zone'] = ajax_user.time_zone;
+    // input_data.args['db'] = site_config.server_db;
+    // input_data.args['time_zone'] = ajax_user.time_zone;
 
     //console.log(input_data);
     if (input_data.no_loader)
     {
         options.no_loader = 1;
     }
-    var argsuments = input_data.args;
     
-    input_data = {input_data : JSON.stringify(input_data)};
-    options.data = input_data;
+    var args_data = {input_data : JSON.stringify(input_data)};
+    options.headers = {
+        
+    }
+    if(api_url.endsWith('/public'))
+    {
+        if(ajax_user.cookie && ajax_user.cookie.token)
+        {
+            options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;            
+        }
+        else
+        {
+            window['functions'].go_to_login();
+        }
+    }
+
+    options.data = args_data;
     options.dataType = 'json';
     options.type = 'GET',
     //options.contentType = "application/json; charset=utf-8";    
@@ -43,7 +57,7 @@ function dn_rpc_object(options) {
         if (!response) {
             console.log("Undefined response", url_with_params);            
         } else {            
-            if (response.error) {                                    
+            if (response.error) {
                 if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
                     bootbox.alert('Token expired, please login again '+ options.url);
                     ajax_user.logout(1);
@@ -94,11 +108,18 @@ function dn_rpc_object(options) {
     options.error = function(err) {
         if (options.onError)
             options.onError(err);
-        if (!options.no_loader)
-            site_functions.hideLoader("ajax" + api_url);
-        console.log(argsuments);
-        console.log(url_with_params);
-        console.log(err.statusText, "Error in webservice " + api_url);
+        if(err.responseText == '{"detail":"Authentication credentials were not provided."}')
+        {
+            console.log(input_data.args.method + ' needs login to be accessed');
+            ajax_user.logout(1);
+        }
+        
+            console.log(input_data.args);
+        console.log('Api failed ', url_with_params);
+        if(options.onError)
+        {
+            options.onError();
+        }
     };
     $.ajax(options);
 }
