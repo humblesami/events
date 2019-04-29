@@ -15,7 +15,6 @@ public_methods = {
     }
 }
 
-@api_view(["GET", "POST"])
 def public(request):
     args = {}
     kw = {}

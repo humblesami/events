@@ -23,7 +23,7 @@ function dn_rpc_object(options) {
     options.headers = {
         
     }
-    if(api_url.endsWith('/public'))
+    if(!api_url.endsWith('/public'))
     {
         if(ajax_user.cookie && ajax_user.cookie.token)
         {
