@@ -63,7 +63,15 @@ class AgendaDocInline(MeetingDocInline):
 
 class EventAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['name','start_date', 'attendees','docs']})
+        (None,               {'fields': [
+            'name',
+            'start_date',
+            'attendees',
+            'docs',
+            'address',
+            'street',
+            'description'
+            ]})
     ]
     filter_horizontal = ('attendees',)
     # autocomplete_fields = ('attendees',)
