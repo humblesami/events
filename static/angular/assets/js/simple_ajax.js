@@ -64,9 +64,8 @@ function dn_rpc_object(options) {
                 } else if (response.error.indexOf('not allowed to access') > -1) {
                     bootbox.alert("Contact admin for permissions" + response.error);
                 } else {
-                    console.log(response.error);
                     console.log(url_with_params);
-                    console.log(argsuments);
+                    console.log(input_data.args);
                     if(response.error.indexOf('Unauthorized') > -1)
                     {
                         ajax_user.logout(1);
