@@ -1,0 +1,12 @@
+*.pyc
+*.po
+.vscode
+.idea
+*/.idea
+*/odoochat/*config.js
+custom_base
+node_modules
+*/__pycache__
+*pycache*
+db.sqlite3
+db.*
