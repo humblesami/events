@@ -26,7 +26,7 @@ SECRET_KEY = 'd9phtmv5b^cqr$daog097))s@$776gvk$-ca&shxt&re*r31bn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['172.16.21.170', 'localhost', 'meetvue.com', 'www.meetvue.com']
+ALLOWED_HOSTS = ['172.16.21.170', '172.16.21.171', 'localhost', 'meetvue.com', 'www.meetvue.com']
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -85,6 +85,7 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:4200',
     '127.0.0.1:4200',
     '172.16.21.170:4200',
+    '172.16.21.171:4200',
 )
 
 ROOT_URLCONF = 'mainapp.urls'
