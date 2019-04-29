@@ -66,6 +66,7 @@ function dn_rpc_object(options) {
                 } else {
                     console.log(url_with_params);
                     console.log(input_data.args);
+                    console.log(response.error);
                     if(response.error.indexOf('Unauthorized') > -1)
                     {
                         ajax_user.logout(1);
