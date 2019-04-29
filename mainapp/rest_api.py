@@ -54,7 +54,6 @@ def secure(request):
     kw = {}
     try:
         if not request.user.id:
-            referer = request.META.get('HTTP_REFERER')
             res = {'error': 'Unauthorized user'}
             res = json.dumps(res)
             return HttpResponse(res)
