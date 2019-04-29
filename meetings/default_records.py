@@ -3,31 +3,32 @@
 from django.db import migrations
 
 def create_groups(apps, schema_editor):
-    db_alias = schema_editor.connection.alias
-    ContentType = apps.get_model("contenttypes", "ContentType")
-    Permission = apps.get_model("auth", "Permission")
-    Group = apps.get_model("auth", "Group")
-    GroupExtend = apps.get_model("meetings", "GroupExtend")
-
-    try:
-        content_id = ContentType.objects.filter(app_label="meetings",model="event")[0].id
-
-        director = Group.objects.filter(name="Director")
-        if not director.exists():
-            director = Group.objects.create(name="Director")
-            GroupExtend.objects.create(group=director, app_label="meetings")
-        permission = Permission.objects.filter(content_type_id=content_id, codename="view_event")[0]
-        director.permissions.add(permission)
-        if not Group.objects.filter(name="Admin").exists():
-            admin = Group.objects.create(name="Admin")
-            GroupExtend.objects.create(group=admin,app_label="meetings")
-        if not Group.objects.filter(name="Staff").exists():
-            staff = Group.objects.create(name="Staff")
-            GroupExtend.objects.create(group=staff,app_label="meetings")
-        print("///////////////////////////////////default records created")
-    except:
-        print("///////////////////////////////////default records error")
-        pass
+    pass
+    # db_alias = schema_editor.connection.alias
+    # ContentType = apps.get_model("contenttypes", "ContentType")
+    # Permission = apps.get_model("auth", "Permission")
+    # Group = apps.get_model("auth", "Group")
+    # GroupExtend = apps.get_model("meetings", "GroupExtend")
+    #
+    # try:
+    #     content_id = ContentType.objects.filter(app_label="meetings",model="event")[0].id
+    #
+    #     director = Group.objects.filter(name="Director")
+    #     if not director.exists():
+    #         director = Group.objects.create(name="Director")
+    #         GroupExtend.objects.create(group=director, app_label="meetings")
+    #     permission = Permission.objects.filter(content_type_id=content_id, codename="view_event")[0]
+    #     director.permissions.add(permission)
+    #     if not Group.objects.filter(name="Admin").exists():
+    #         admin = Group.objects.create(name="Admin")
+    #         GroupExtend.objects.create(group=admin,app_label="meetings")
+    #     if not Group.objects.filter(name="Staff").exists():
+    #         staff = Group.objects.create(name="Staff")
+    #         GroupExtend.objects.create(group=staff,app_label="meetings")
+    #     print("///////////////////////////////////default records created")
+    # except:
+    #     print("///////////////////////////////////default records error")
+    #     pass
 
 class Migration(migrations.Migration):
 

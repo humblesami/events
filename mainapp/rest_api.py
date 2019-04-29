@@ -1,5 +1,5 @@
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 import json
 import sys
@@ -15,9 +15,10 @@ public_methods = {
     }
 }
 
+@api_view(["GET", "POST"])
+@authentication_classes([])
+@permission_classes([])
 def public(request):
-    args = {}
-    kw = {}
     try:
         kw = request.POST
         res = 'Unknown'
@@ -50,13 +51,7 @@ def public(request):
 @csrf_exempt
 @api_view(["GET", "POST"])
 def secure(request):
-    args = {}
-    kw = {}
     try:
-        if not request.user.id:
-            res = {'error': 'Unauthorized user'}
-            res = json.dumps(res)
-            return HttpResponse(res)
         kw = request.POST
         if not kw:
             kw = request.GET

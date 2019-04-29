@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext, gettext_lazy as _
-from django.contrib.auth.models import User as u,Group as g,UserManager
+from django.contrib.auth.models import User as user_model,Group as group_model,UserManager
 import datetime
 GENDER_CHOICES = (
     (1, _("Male")),
@@ -33,7 +33,7 @@ ETHINICITY_CHOICES = (
 )
 
 class Profile(models.Model):
-    user = models.OneToOneField(u, on_delete=models.CASCADE,related_name='mp_user', blank=True)
+    user = models.OneToOneField(user_model, on_delete=models.CASCADE, related_name='mp_user', blank=True)
     image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
@@ -65,6 +65,9 @@ class Profile(models.Model):
     signature_image = models.ImageField(upload_to='profile/', null=True)
     resume = models.FileField(upload_to='files/', null=True)
 
+    def save(self, *args, **kwargs):
+        a =1
+
     def __str__(self):
         return self.user.username
 
@@ -94,11 +97,11 @@ class ManagerStaff(UserManager):
     def get_queryset(self):
         return super(ManagerStaff, self).get_queryset().filter(groups__name__in=['Staff'])
 
-class User(u):
+class User(user_model):
     class Meta:
         proxy = True
 
-class Director(u):
+class Director(user_model):
     objects = ManagerDirector()
     class Meta:
         proxy = True
@@ -126,9 +129,13 @@ class Director(u):
             create = True
         super(Director, self).save(*args, **kwargs)
         if create:
-            d = g.objects.get(name="Director")
-            self.groups.add(d)
+            try:
+                user_group = group_model.objects.get(name="Director")
+            except:
+                user_group = Group.objects.create(name="Director")
+                pass
             self.is_staff = True
+            self.groups.add(user_group)
             self.save()
             
 # @receiver(post_save, sender=Director)
@@ -139,7 +146,7 @@ class Director(u):
 #         instance.is_staff = True
 #         instance.save()
 
-class Admin(u):
+class Admin(user_model):
     objects = ManagerAdmin()
     class Meta:
         proxy = True
@@ -150,15 +157,16 @@ class Admin(u):
             create = True
         super(Admin, self).save(*args, **kwargs)
         if create:
-            d = g.objects.get(name="Admin")
+            try:
+                user_group = group_model.objects.get(name="Admin")
+            except:
+                user_group = Group.objects.create(name="Admin")
+                pass
             self.is_staff = True
-            self.groups.add(d)
+            self.groups.add(user_group)
             self.save()
             
-
-
-
-class Staff(u):
+class Staff(user_model):
     objects = ManagerStaff()
     class Meta:
         proxy = True
@@ -169,23 +177,23 @@ class Staff(u):
             create = True
         super(Staff, self).save(*args, **kwargs)
         if create:
-            d = g.objects.get(name="Staff")
-            self.groups.add(d)
+            try:
+                user_group = group_model.objects.get(name="Staff")
+            except:
+                user_group = Group.objects.create(name="Staff")
+                pass
             self.is_staff = True
+            self.groups.add(user_group)
             self.save()
-
-
-
-
 
 
 # ////////////////////GROUPS//////////////////////////////////
 
 class GroupExtend(models.Model):
-    group = models.OneToOneField(g, on_delete=models.CASCADE, blank=True)
+    group = models.OneToOneField(group_model, on_delete=models.CASCADE, blank=True)
     app_label = models.CharField(max_length=30, blank=True)
 
-class Group(g):
+class Group(group_model):
     class Meta:
         proxy = True
 
