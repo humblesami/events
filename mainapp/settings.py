@@ -176,3 +176,5 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, '..', 'static'),
 )
 STATIC_URL = '/static/'
+
+X_FRAME_OPTIONS = 'ALLOW-FROM localhost:4200/'

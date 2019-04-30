@@ -335,6 +335,12 @@ window.addEventListener('message', function receiveMessage(evt)
   {
     alert("got message: "+evt.data);
   }
+  if (evt.data === 'record_changed')
+  {
+    console.log(evt.data)
+    window.location = '/#/meetings/upcoming';
+  }
+  
 //   alert("got message: "+evt.origin);
 }, false);
 

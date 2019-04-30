@@ -1,7 +1,134 @@
 /*
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900');
 */
+body{
+    --toggle-left-menu-bg:#fe8a71;
+    --toggle-menu-color:#757575; 
+    --menu-color-text: #ffffff;
+    --menu-icon-color:#ffffff;
+    --header-bg-color:linear-gradient(to bottom,#e6e6ea,#e6e6ea);
+    --header-icon-color:rgba(0, 0, 0, 0.2);
+    
+	--color-main-bg: #24262d;
+	--button-bg: #132f6e;
+}
 
+body.green{
+    --toggle-left-menu-bg:#28a745;
+    --toggle-menu-color:#ffffff; 
+    --menu-color-text: #ffffff;
+    --menu-icon-color:#ffffff;
+    --header-bg-color: linear-gradient(to right, #28a745, #2a9eb0) ;
+    --header-icon-color:rgba(0, 0, 0, 0.2);
+    
+	--color-main-bg: #24262d;
+	--button-bg: #132f6e;
+}
+
+  body.white {
+    --toggle-left-menu-bg:#ffffff;
+    --toggle-menu-color:#333333; 
+    --menu-color-text: #333333;
+    --menu-icon-color:#333333;
+    --header-bg-color: linear-gradient(to right, #ffffff, #ffffff) ;
+    --header-icon-color:rgba(0, 0, 0, 0.2);
+    
+	--color-main-bg: #24262d;
+	--button-bg: #132f6e;
+}
+  body.white .MainHeader.navbar .navbar-nav h3{
+    color: #333333 !important;
+}
+  body.blue {
+    --toggle-left-menu-bg:#2930b4;
+    --toggle-menu-color:#ffffff; 
+    --menu-color-text: #ffffff;
+    --menu-icon-color:#ffffff;
+    --header-bg-color:  linear-gradient(to right, #2930b4, #2a9eb0);
+    --header-icon-color:rgba(0, 0, 0, 0.2);
+    
+	--color-main-bg: #24262d;
+	--button-bg: #132f6e;
+  }
+body.light{
+    --toggle-left-menu-bg:#E9B067;
+    --toggle-menu-color:#ffffff; 
+    --menu-color-text: #ffffff;
+    --menu-icon-color:#ffffff;
+    --header-bg-color:  linear-gradient(to right, #E9B067, #E9B067);
+    --header-icon-color:rgba(0, 0, 0, 0.2);
+    
+	--color-main-bg: #24262d;
+	--button-bg: #132f6e;
+  }
+
+  body.orange {
+        --toggle-left-menu-bg:#FF766E;
+        --toggle-menu-color:#ffffff; 
+        --menu-color-text: #ffffff;
+        --menu-icon-color:#ffffff;
+        --header-bg-color: linear-gradient(to right, #FF766E, #FF766E) ;
+        --header-icon-color:rgba(0, 0, 0, 0.2);
+        
+        --color-main-bg: #24262d;
+        --button-bg: #132f6e;
+    }
+
+
+    body.red {
+        --toggle-left-menu-bg:#d00000;
+        --toggle-menu-color:#ffffff; 
+        --menu-color-text: #ffffff;
+        --menu-icon-color:#ffffff;
+        --header-bg-color: linear-gradient(to right, #d00000, #e60000) ;
+        --header-icon-color:rgba(0, 0, 0, 0.2);
+        
+        --color-main-bg: #24262d;
+        --button-bg: #132f6e;
+    }
+
+
+  
+#switcher {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    position: fixed;
+    bottom: 1%;
+    left: 50%;
+    z-index: 999;
+    transform: translateX(-50%);
+  }
+  #switcher li {
+    width: 30px;
+    height: 30px;
+    margin: 0 15px 15px 0;
+    border: 3px solid black;
+  }
+
+  #greenButton {
+    background: #28a745;
+  }
+  #whiteButton {
+    background: white;
+  }
+  #blueButton {
+    background: blue;
+  }
+  #orangeButton {
+    background: #FF766E;
+  }
+  #lightButton{
+      background: #E9B067;
+  }
+  #redButton{
+    background: #ff5733;
+}
+.navbarNavDropdown{
+    background-color: var(--toggle-left-menu-bg);
+}
 :focus {
     box-shadow: none;
     outline: none;
@@ -45,22 +172,21 @@ mg {
 /* Color Them */
 
 .MainHeader.navbar .navbar-nav h3 {
-    color: #888888;
+    color: #ffffff;
 }
 
 .MainHeader.navbar .navbar-nav a,
 .dropdown-menu-list a.nav-sub-link {
-    color: #111111;
+    color: var(--menu-color-text);
 }
 
 .MainHeader.navbar .navbar-nav a:hover {
-    color: #000000;
-    background-color: #ebebeb;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .MainHeader.navbar .navbar-nav a i,
 .dropdown-menu-list a.nav-sub-link i {
-    color: #888888;
+    color: var(--menu-icon-color);
 }
 
 .hidemouseaway {
@@ -816,4 +942,23 @@ last-login-details
 .del
 {
     cursor: pointer;
+}
+
+.fc-button-group {
+    display: flex;
+}
+
+.fc-toolbar button {
+    float: none !important;
+    border-radius: 3px !important;
+    background: #ffffff;
+    box-shadow: none;
+    margin: 3px !important;
+    border: 1px solid #c7c7c7;
+    padding: 0px 13px !important;
+    text-transform: capitalize;
+    color: #616161 !important;
+}
+.fc-toolbar button:hover{
+    background-color: #f1f3f4;
 }

@@ -36,3 +36,33 @@ window['json_functions'] = {
 		return -1;
 	}
 }
+
+
+$(function() {
+    $('#greenButton').click(switchGreen);
+    $('#whiteButton').click(switchWhite);
+    $('#blueButton').click(switchBlue);
+    $('#lightButton').click(switchLight);
+    $('#orangeButton').click(switchOrange);
+    $('#redButton').click(switchRed);
+    
+
+    function switchGreen() {
+        $('body').attr('class', 'green');
+    }
+    function switchWhite() {
+        $('body').attr('class', 'white');
+    }
+    function switchBlue() {
+        $('body').attr('class', 'blue');
+    }
+    function switchLight() {
+        $('body').attr('class', 'light');
+    }
+    function switchOrange() {
+        $('body').attr('class', 'orange');
+    }
+    function switchRed() {
+        $('body').attr('class', 'red');
+    }
+});
