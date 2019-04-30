@@ -328,3 +328,13 @@ var public_methods = {
         }
     }
 }
+
+window.addEventListener('message', function receiveMessage(evt)
+{
+  if (evt.origin === 'http://my.iframe.org')
+  {
+    alert("got message: "+evt.data);
+  }
+//   alert("got message: "+evt.origin);
+}, false);
+
