@@ -38,7 +38,35 @@ class Voting(models.Model):
 
     @classmethod
     def get_details(cls, request, params):
-        return {'error': 'Not implemented'}
+        if params['id']:
+            voting_id = params['id']
+            voting_object_orm = Voting.objects.get(pk=voting_id)
+            voting_object = list(Voting.objects.filter(pk=voting_id).values())
+            voting_object = voting_object[0]
+            voting_object['open_date'] = str(voting_object['open_date'])
+            voting_object['close_date'] = str(voting_object['close_date'])
+            if voting_object_orm.voting_type:
+                voting_object['voting_type'] = []
+                voting_object['voting_type'].append({'id': voting_object_orm.voting_type.id,
+                'name': voting_object_orm.voting_type.name})
+
+                voting_options = list(voting_object_orm.voting_type.votingchoice_set.values())
+                voting_object['voting_options'] = []
+                for option in voting_options:
+                    voting_object['voting_options'].append({'id': option['id'], 'name': option['name']})
+            voting_object['meeting'] = []
+            voting_object['topic'] = []
+            meeting = voting_object_orm.meeting
+            if meeting:
+                voting_object['meeting'].append({'id': meeting.id, 'name': meeting.name})
+            topic = voting_object_orm.topic
+            if topic:
+                voting_object['topic'].append({'id': topic.validate_unique()})
+            voting_object['voting_docs'] = []
+
+        data = {"voting": voting_object}
+
+        return {'data': data}
 
 class VotingAnswer(models.Model):
     answer = models.ForeignKey(VotingChoice, on_delete = models.CASCADE, blank = False)
@@ -131,3 +159,4 @@ class VotingAnswer(models.Model):
     @classmethod
     def submit(cls, request, params):
         return {'error': 'Not implemented'}
+
