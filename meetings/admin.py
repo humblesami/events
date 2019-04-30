@@ -68,7 +68,6 @@ class EventAdmin(admin.ModelAdmin):
             'start_date',
             'attendees',
             'docs',
-            'address',
             'street',
             'description'
             ]})
