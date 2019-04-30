@@ -1,8 +1,10 @@
+from django.apps import apps
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext, gettext_lazy as _
-from django.contrib.auth.models import User as user_model,Group as group_model,UserManager
+from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
 import datetime
 GENDER_CHOICES = (
     (1, _("Male")),
@@ -32,8 +34,35 @@ ETHINICITY_CHOICES = (
     (8, _("I decline to answer"))
 )
 
-class Profile(models.Model):
-    user = models.OneToOneField(user_model, on_delete=models.CASCADE, related_name='mp_user', blank=True)
+permission_set = {
+    'Director':{
+        'event':{'view':1,}
+    },
+    'Staff': {
+        'event': {'view': 1,}
+    },
+    'Admin': {
+        'event': {'view': 1,'change':1}
+    }
+}
+def create_group(obj, group_name):
+    user_group = False
+    try:
+        user_group = MeetingGroup.objects.get(name=group_name)
+    except:
+        user_group = MeetingGroup.objects.create(name=group_name)
+        obj.groups.add(user_group)
+        obj.save()
+        group_permissions = permission_set[group_name]
+        for model_name in group_permissions:
+            content_id = ContentType.objects.filter(app_label="meetings", model=model_name)[0].id
+            for permission_type in group_permissions[model_name]:
+                code_name = permission_type+'_'+model_name
+                permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)[0]
+                user_group.permissions.add(permission)
+
+
+class Profile(user_model):
     image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
@@ -64,15 +93,13 @@ class Profile(models.Model):
     term_end_date = models.DateField( blank=True, null=True)
     signature_image = models.ImageField(upload_to='profile/', null=True)
     resume = models.FileField(upload_to='files/', null=True)
-
-    def save(self, *args, **kwargs):
-        a =1
+    # user_type = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
     def fullname(self):
-        user = self.user
+        user = self
         name = False
         if user.first_name:
             name = user.first_name
@@ -83,6 +110,23 @@ class Profile(models.Model):
         else:
             name = user.username
         return name
+
+    @classmethod
+    def get_records(cls, request, params):
+        profiles = Profile.objects.values()
+        total_cnt = profiles.count()
+        current_cnt = total_cnt
+        profiles = list(profiles)
+        profiles_json = {'records':profiles, 'total':total_cnt, 'count':current_cnt}
+        return profiles_json
+
+    @classmethod
+    def get_details(cls, request, params):
+        return {'error': 'Not implemented'}
+
+    def save(self, *args, **kwargs):
+        super(Profile, self).save(*args, **kwargs)
+        self.is_staff = True
 
 
 class ManagerDirector(UserManager):
@@ -97,107 +141,42 @@ class ManagerStaff(UserManager):
     def get_queryset(self):
         return super(ManagerStaff, self).get_queryset().filter(groups__name__in=['Staff'])
 
-class User(user_model):
-    class Meta:
-        proxy = True
-
-class Director(user_model):
+class Director(Profile):
     objects = ManagerDirector()
     class Meta:
         proxy = True
-    
-    @classmethod
-    def get_details(cls, request, params):
-        return {'error': 'Not implemented'}
-
-    @classmethod
-    def get_records(cls, request, params):
-        directors = Director.objects.values()
-        total_cnt = directors.count()
-        current_cnt = total_cnt
-        directors = list(directors)
-        directors[0]['name'] = directors[0]['username']
-        del directors[0]['username']
-        # directors[0].pop(directors[0]['name'])
-        directors[0]['date_joined'] = str(directors[0]['date_joined'])
-        profiles_json = {'records':directors, 'total':total_cnt, 'count':current_cnt}
-        return profiles_json
 
     def save(self, *args, **kwargs):
-        create = False
-        if self.pk is None:
-            create = True
+        created = self.pk
         super(Director, self).save(*args, **kwargs)
-        if create:
-            try:
-                user_group = group_model.objects.get(name="Director")
-            except:
-                user_group = Group.objects.create(name="Director")
-                pass
-            self.is_staff = True
-            self.groups.add(user_group)
-            self.save()
-            
-# @receiver(post_save, sender=Director)
-# def set_groups_director(sender, instance, created, **kwargs):
-#     if created:
-#         d = g.objects.get(name="Director")
-#         instance.groups.add(d)
-#         instance.is_staff = True
-#         instance.save()
+        if not created:
+            create_group(self, 'Director')
 
-class Admin(user_model):
+class Admin(Profile):
     objects = ManagerAdmin()
     class Meta:
         proxy = True
-    
+
     def save(self, *args, **kwargs):
-        create = False
-        if self.pk is None:
-            create = True
+        created = self.pk
         super(Admin, self).save(*args, **kwargs)
-        if create:
-            try:
-                user_group = group_model.objects.get(name="Admin")
-            except:
-                user_group = Group.objects.create(name="Admin")
-                pass
-            self.is_staff = True
-            self.groups.add(user_group)
-            self.save()
-            
-class Staff(user_model):
+        if not created:
+            create_group(self, 'Admin')
+
+class Staff(Profile):
     objects = ManagerStaff()
     class Meta:
         proxy = True
-    
+
     def save(self, *args, **kwargs):
-        create = False
-        if self.pk is None:
-            create = True
+        created = self.pk
         super(Staff, self).save(*args, **kwargs)
-        if create:
-            try:
-                user_group = group_model.objects.get(name="Staff")
-            except:
-                user_group = Group.objects.create(name="Staff")
-                pass
-            self.is_staff = True
-            self.groups.add(user_group)
-            self.save()
+        if not created:
+            create_group(self, 'Staff')
 
 
 # ////////////////////GROUPS//////////////////////////////////
 
-class GroupExtend(models.Model):
-    group = models.OneToOneField(group_model, on_delete=models.CASCADE, blank=True)
-    app_label = models.CharField(max_length=30, blank=True)
 
-class Group(group_model):
-    class Meta:
-        proxy = True
-
-@receiver(post_save, sender=Group)
-def set_group_type(sender, instance, created, **kwargs):
-    if created:
-        GroupExtend.objects.create(app_label = "meetings",group=instance)
+class MeetingGroup(group_model):
+    app_label = models.CharField(max_length=100)

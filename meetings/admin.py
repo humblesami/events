@@ -4,7 +4,7 @@ from django.utils.html import format_html
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
 from .models import Event,Topic, News
-from .user import Profile,User as u,Admin,Director,Staff,Group
+from .user import Profile,Admin,Director,Staff,MeetingGroup
 from .committee import Committee
 from .document import MeetingDocument,AgendaDocument
 
@@ -47,6 +47,7 @@ class MeetingDocInline(admin.TabularInline):
     def Edit(self,obj):
         html = '<a href="/admin/meetings/meetingdocument/%s/change">Edit</a>' %(obj.id)
         return format_html(html)
+
 class AgendaDocInline(MeetingDocInline):
     model = AgendaDocument
     # exclude = ('html', 'content', 'original_pdf', 'pdf_doc')
@@ -63,14 +64,16 @@ class AgendaDocInline(MeetingDocInline):
 
 class EventAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': [
+        (None, {
+            'fields': [
             'name',
             'start_date',
             'attendees',
             'docs',
             'street',
             'description'
-            ]})
+            ]
+        })
     ]
     filter_horizontal = ('attendees',)
     # autocomplete_fields = ('attendees',)
@@ -139,12 +142,31 @@ class ProfileInline(admin.StackedInline):
     insert_after = 'email'
 
     fieldsets = (
-        (None, {'fields': ( 'image_tag','image','bio','location','birth_date','nick_name',
-        'job_title','department','work_phone','mobile_phone','website','fax',
-        'board_joining_date','term_start_date','term_end_date','committees','resume')}),
-        (_('Diversity Information'), {'fields': ('ethinicity','gender','veteran','disability')}),
-        (_('Administrative Assistant'), {'fields': ('admin_image_html','admin_image','admin_first_name','admin_last_name','admin_nick_name',
-        'admin_cell_phone','admin_email','admin_work_phone','admin_fax','mail_to_assistant')}),
+        (None,
+             {
+                 'fields': (
+                     'image_tag','image','bio','location','birth_date','nick_name',
+                     'job_title','department','work_phone','mobile_phone','website','fax',
+                     'board_joining_date','term_start_date','term_end_date','committees','resume'
+                 )
+             }
+         ),
+        (_('Diversity Information'),
+            {
+                'fields': (
+                    'ethinicity','gender','veteran','disability'
+                )
+            }
+        ),
+        (_('Administrative Assistant'),
+            {
+                'fields': (
+                    'admin_image_html','admin_image','admin_first_name','admin_last_name',
+                    'admin_nick_name','admin_cell_phone','admin_email','admin_work_phone',
+                    'admin_fax','mail_to_assistant'
+                )
+            }
+        ),
     )
 
     readonly_fields = ('image_tag','admin_image_html')
@@ -210,9 +232,9 @@ class StaffAdmin(UserAdmin):
 class GroupAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
-        qs = super(GroupAdmin, self).get_queryset(request)
-        qs = qs.filter(groupextend__app_label = "meetings")
-
+        # qs = super(GroupAdmin, self).get_queryset(request)
+        # qs = qs.filter(meetinggroup__app_label = "meetings")
+        qs = MeetingGroup.objects.filter()
         return qs
 
     def save_model(self, request, obj, form, change):
@@ -246,11 +268,10 @@ admin.site.register(News)
 admin.site.register(Topic,TopicAdmin)
 admin.site.register(MeetingDocument)
 admin.site.register(AgendaDocument)
-admin.site.register(u,UserAdmin)
 admin.site.register(Admin,AdminAdmin)
 admin.site.register(Director,DirectorAdmin)
 admin.site.register(Staff,StaffAdmin)
-admin.site.register(Group,GroupAdmin)
+admin.site.register(MeetingGroup,GroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
 # admin.site.register(Profile,ProfileAdmin)
 
