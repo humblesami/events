@@ -15,9 +15,6 @@ public_methods = {
     }
 }
 
-@api_view(["GET", "POST"])
-@authentication_classes([])
-@permission_classes([])
 def public(request):
     try:
         kw = request.POST

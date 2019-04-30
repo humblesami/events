@@ -6,7 +6,7 @@
 	<title>MeetVUE</title>
 	<script>
 	{% if not user %}
-		window.location = '/account/login';
+		window.location = '/#/login';
 	{% endif %}
 	</script>
 
@@ -30,18 +30,6 @@
     <script type="text/javascript" src="/static/angular/assets/js/simple_ajax.js"></script>
     <script type="text/javascript" src="/static/angular/assets/js/main.js"></script>
 	{% csrf_token %}
-	<script>
-		{% if uid %}
-			window['current_user'].cookie = {
-				id : {{id}},
-				name : '{{name}}',
-				token: $('input[name="csrfmiddlewaretoken"]:first').val(),
-				login: '{{login}}'
-			};
-			localStorage.setItem('user', JSON.stringify(window['current_user'].cookie));
-			//console.log(localStorage.getItem('user'), 188);
-		{% endif %}
-	</script>
     <script type="text/javascript" src="/static/angular/assets/js/datetime.js"></script>
 	<div id="pdf-libs-conatiner" class="pdf-annotation" uninitialized="1">
 		<script type="text/javascript" async src="/static/angular/assets/annotator/shared/pdf.js"></script>
@@ -54,7 +42,7 @@
 
 	<script type="text/javascript" async src="/static/angular/assets/libs/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" async src="/static/angular/assets/libs/js/bootstrap-4.1.1.js"></script>
-	<script type="text/javascript" async src="/static/angular/assets/libs/js/moment.js"></script>
+	<script type="text/javascript" src="/static/angular/assets/libs/js/moment.js"></script>
 	<script type="text/javascript" async src="/static/angular/assets/libs/js/bootbox.js"></script>
 	<script type="text/javascript" async src="/static/angular/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
     

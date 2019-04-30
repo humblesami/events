@@ -23,7 +23,7 @@ function dn_rpc_object(options) {
     options.headers = {
         
     }
-    if(!api_url.endsWith('/public'))
+    if(api_url.endsWith('/secure'))
     {
         if(ajax_user.cookie && ajax_user.cookie.token)
         {
@@ -31,6 +31,7 @@ function dn_rpc_object(options) {
         }
         else
         {
+            console.log(ajax_user.cookie, ' Invalid token for', input_data.args);
             window['functions'].go_to_login();
         }
     }

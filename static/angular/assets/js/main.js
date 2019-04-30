@@ -1,3 +1,5 @@
+var time_out_session = undefined;
+var session_time_limit = 60000;
 (function() {
     var wl = window.location;
     if (wl.hash) {
@@ -30,35 +32,32 @@ var dn_current_site_user = {
         }
     },
     onLogin: function(data) {
+        // console.log(233);
+        if(time_out_session)
+        {
+            clearTimeout(time_out_session);
+        }
+        time_out_session = setTimeout(function() {
+            site_functions.go_to_login();
+        }, session_time_limit);
         dn_current_site_user.cookie = data;
         data = JSON.stringify(data);
-        localStorage.setItem('user', data);
-        dn_current_site_user.verified = 1;
+        localStorage.setItem('user', data);        
     },
-    logout: function(navigate) {        
+    logout: function(navigate) {
+        // console.log(342);
         localStorage.removeItem("user");
-        dn_current_site_user.cookie = false;
-        dn_current_site_user.verified = 0;
+        dn_current_site_user.cookie = undefined;        
         if(window['socket_manager'])
         {
+            window['socket_manager'].close_socket();
             window['socket_manager'].user_data = undefined;
         }
-        if (navigate) {
-            if(window['go_login'])
-            {
-                window['go_login']();
-            }
-            else
-            {
-                window.location = site_config.site_url+ "/#/login";
-            }            
-            setTimeout(function() {
-                bootbox.hideAll();
-                dn_current_site_user.removeEventListners();
-            }, 2000);
-        } else {
+        setTimeout(function() {
+            bootbox.hideAll();
             dn_current_site_user.removeEventListners();
-        }
+        }, 500);
+        window.location = '/#/login';
     },
     removeEventListners: function() {
         $(document).off('click');
@@ -111,7 +110,7 @@ var site_functions = {
 
     },
     go_to_login: function(){
-        window.location = '/#/login';
+        dn_current_site_user.logout(1);
     },
     meeting_time : function(dt){
         var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss')
@@ -136,9 +135,6 @@ var site_functions = {
             minut = '0' + minut;
         }
         return hour + ':' + minut;
-    },
-    logout_odoo:function(){        
-        window.location = '/web/login';
     },
     showLoader: function(nam) {
         var obj_this = this;
@@ -225,9 +221,8 @@ function getUrlLastItem() {
     return point_id[point_id.length - 1];
 }
 
-function addMainEventListeners() {
-    $(document).on('mousedown touchstart', function(e) {
-        //console.log(2222111);
+function addMainEventListeners() {    
+    $(document).on('mousedown touchstart', function(e) {        
         var target = e.target;
         var showbtn = $(target).closest('.showmouseawaybutton');
         if (showbtn && showbtn.length > 0) {
@@ -264,16 +259,7 @@ function addMainEventListeners() {
         $(".btn-search").toggleClass("animate");
         $(".serach-input").val("");
         search_active = true;
-    });
-
-    function handleSessionExpiry() {
-        if (time_out_session && dn_current_site_user.cookie && dn_current_site_user.cookie.token) {
-            clearTimeout(time_out_session);
-            time_out_session = setTimeout(function() {
-                dn_current_site_user.logout(1);
-            }, 600000);
-        }
-    }
+    });    
 
 
     function hideSearchbar(e) {
@@ -291,17 +277,17 @@ function addMainEventListeners() {
                 .focus();
         }
     }
-
-    var time_out_session = setTimeout(dn_current_site_user.logout, 600000);
+    
     (function() {
         if (site_config.site_url.indexOf('localhost') > -1) {
-            clearTimeout(time_out_session);
-            time_out_session = undefined;
+            // clearTimeout(time_out_session);
+            // time_out_session = undefined;
         }
     })();
 
-    $(document).on("mouseup touchend keyup", function(e) {
-        handleSessionExpiry();
+    $(document).on("mouseup touchend keyup", function(e) {        
+        clearTimeout(time_out_session);
+        handleSessionExpiry();        
         hideSearchbar(e);
     });
 
@@ -318,6 +304,7 @@ function addMainEventListeners() {
         });
     }
 }
+
 addMainEventListeners();
 dn_current_site_user.verifyUserToken();
 
@@ -335,12 +322,23 @@ window.addEventListener('message', function receiveMessage(evt)
   {
     alert("got message: "+evt.data);
   }
-  if (evt.data === 'record_changed')
-  {
-    console.log(evt.data)
-    window.location = '/#/meetings/upcoming';
-  }
-  
 //   alert("got message: "+evt.origin);
 }, false);
 
+
+time_out_session = setTimeout(function(){    
+    site_functions.go_to_login();    
+}, session_time_limit);
+
+
+function handleSessionExpiry() {
+    var pathoo = window.location.toString().split('/');
+    var pathoo = '/'+ pathoo[pathoo.length - 1];    
+    pathoo = public_routes.indexOf(pathoo) ==-1
+    
+    if (time_out_session && pathoo) {                
+        time_out_session = setTimeout(function() {
+            site_functions.go_to_login();
+        }, session_time_limit);
+    }
+}
