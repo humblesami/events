@@ -53,6 +53,7 @@ site_config.public_urls = ['login']
 //console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
 window['site_config'] = site_config;
-if(site_config.site_url.startsWith('https://')){
-    $('head meta:first').after('<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />');
-}
+// if(site_config.site_url.startsWith('https://')){
+//     $('head meta:first').after('<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />');
+// }
+//console.log(site_config)

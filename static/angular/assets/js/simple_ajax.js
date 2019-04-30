@@ -109,17 +109,17 @@ function dn_rpc_object(options) {
     options.error = function(err) {
         if (options.onError)
             options.onError(err);
-        if(err.responseText == '{"detail":"Authentication credentials were not provided."}')
+        if(err.responseText == '{"detail":"Invalid token."}' ||
+            err.responseText == '{"detail":"Authentication credentials were not provided."}')
         {
             console.log(input_data.args.method + ' needs login to be accessed');
             ajax_user.logout(1);
         }
-        
-            console.log(input_data.args);
-        console.log('Api failed ', url_with_params);
-        if(options.onError)
+        else
         {
-            options.onError();
+            console.log(err);
+            console.log(input_data.args);
+            console.log('Api failed ', url_with_params);
         }
     };
     $.ajax(options);
