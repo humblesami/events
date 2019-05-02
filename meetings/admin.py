@@ -71,9 +71,12 @@ class EventAdmin(admin.ModelAdmin):
             'name',
             'start_date',
             'attendees',
-            'docs',
+            'description',
+            'country',
+            'state',
             'street',
-            'description'
+            'city',
+
             ]
         })
     ]
@@ -94,7 +97,7 @@ class EventAdmin(admin.ModelAdmin):
 
 class TopicAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['name',]})
+        (None,               {'fields': ['name','lead','duration']})
     ]
 
     # readonly_fields = ('docs',)
@@ -266,7 +269,7 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Event,EventAdmin)
-admin.site.register(News)
+# admin.site.register(News)
 admin.site.register(Topic,TopicAdmin)
 admin.site.register(MeetingDocument)
 admin.site.register(AgendaDocument)

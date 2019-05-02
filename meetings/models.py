@@ -7,6 +7,9 @@ from django_countries.fields import CountryField
 
 # Create your models here.
 class Event(models.Model):
+    class Meta:
+        verbose_name = "Meeting"
+        verbose_name_plural = "Meetings"
     name = models.CharField(max_length=200)
     start_date = models.DateTimeField('start date')
     attendees = models.ManyToManyField(Profile)
@@ -16,7 +19,8 @@ class Event(models.Model):
     street = models.CharField('Street', max_length=50, blank=True)
     description = models.TextField(blank=True)
     publish = models.BooleanField('Publish', default=False)
-    # country = CountryField()
+    country = CountryField( blank=True)
+    state = models.CharField('State', max_length=200, blank=True)
     city = models.CharField('City', max_length=200, blank=True)
     archived = models.BooleanField('Archived', default=False)
     zip = models.CharField('Zip', max_length=500, blank=True)
@@ -237,6 +241,8 @@ class News(models.Model):
 class Topic(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    lead = models.CharField(max_length=200,blank=True)
+    duration = models.DurationField(blank=True,null=True)
     def __str__(self):
         return self.name
 
