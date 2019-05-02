@@ -41,6 +41,12 @@ class AuthUserChat(models.Model):
                 unseenMessages += friend['unseen']
                 friendList[friend['id']] = friend
                 friendIds.append(friend['id'])
+            else:
+                req_user = {
+                    'id': uid,
+                    'name': friendObj.fullname(),
+                    'photo': http_host + friendObj.image.url
+                }
         if not req_user:
             user_object = user_model.objects.get(pk=uid)
             if user_object.is_superuser:
@@ -52,5 +58,7 @@ class AuthUserChat(models.Model):
                     'name': profile_object.name,
                     'photo': http_host + profile_object.image.url
                 }
+        if not req_user:
+            return "user does not exist"
         data = {'friends' : friendList, 'notifications': [], 'unseen': unseenMessages, 'user': req_user }
         return data
