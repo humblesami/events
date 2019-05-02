@@ -36,15 +36,25 @@ ETHINICITY_CHOICES = (
 
 permission_set = {
     'Director':{
-        'event':{'view':1,}
+        'meetings':{
+            'event':{'view':1,}
+        },
+        'voting':{},
     },
     'Staff': {
-        'event': {'view': 1,}
+         'meetings':{
+            'event':{'view':1,}
+        },
+        'voting':{},
     },
     'Admin': {
-        'event': {'view': 1,'change':1}
+         'meetings':{
+            'event':{'view':1,}
+        },
+        'voting':{},
     }
 }
+
 def create_group(obj, group_name):
     user_group = False
     try:
@@ -54,12 +64,14 @@ def create_group(obj, group_name):
         obj.groups.add(user_group)
         obj.save()
         group_permissions = permission_set[group_name]
-        for model_name in group_permissions:
-            content_id = ContentType.objects.filter(app_label="meetings", model=model_name)[0].id
-            for permission_type in group_permissions[model_name]:
-                code_name = permission_type+'_'+model_name
-                permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)[0]
-                user_group.permissions.add(permission)
+        for app_name in group_permissions:
+            for model_name in group_permissions[app_name]:
+                model_permissions = group_permissions[app_name][model_name]
+                content_id = ContentType.objects.filter(app_label=app_name, model=model_name)[0].id
+                for permission_type in model_permissions:
+                    code_name = permission_type+'_'+model_name
+                    permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)[0]
+                    user_group.permissions.add(permission)
 
 
 class Profile(user_model):
