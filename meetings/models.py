@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from videos.models import Video
 from .user import *
 from .document import *
@@ -10,7 +9,7 @@ from django_countries.fields import CountryField
 class Event(models.Model):
     name = models.CharField(max_length=200)
     start_date = models.DateTimeField('start date')
-    attendees = models.ManyToManyField(User)
+    attendees = models.ManyToManyField(Profile)
     
     
     custom_message = models.CharField('Message', max_length=200, blank=True)

@@ -1,11 +1,10 @@
 from django.apps import apps
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
-import datetime
+
+
 GENDER_CHOICES = (
     (1, _("Male")),
     (2, _("Female")),
@@ -81,6 +80,7 @@ def create_group(obj, group_name):
     try:
         user_group = MeetingGroup.objects.get(name=group_name)
         obj.groups.add(user_group)
+        obj.save()
     except:
         user_group = MeetingGroup.objects.create(name=group_name)
         obj.groups.add(user_group)
@@ -99,6 +99,7 @@ def create_group(obj, group_name):
 class Profile(user_model):
     class Meta:
         verbose_name_plural = "MeetVUE  Users"
+    name = models.CharField(max_length=200, blank=True, null=True)
     image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
