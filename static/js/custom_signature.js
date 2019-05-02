@@ -47,7 +47,7 @@ jQuery(document).ready(function(e) {
                 touch = e;
             }
 
-            return ({x: touch.pageX, y: touch.pageY});
+            return ({x: touch.pageX, y: touch.clientY});
         }
 
         var getMousePosition = function(canvas, evt)
@@ -303,7 +303,7 @@ function init_sign(config) {
         var canvas_context = myCanvas.getContext('2d');
         //var canvas_context1 = myCanvas1.getContext('2d');
 
-        console.log(signature_editor.find('canvas')[0]);
+        //console.log(signature_editor.find('canvas')[0]);
         signature_editor.find('canvas').sign({
             resetButton: clear_btn,
             lineWidth:4
@@ -318,7 +318,7 @@ function init_sign(config) {
     
     function load_signature(data) {
         var clear_btn = $('#clear-sig');
-        console.log(signature_editor.find('canvas')[0], 199);
+        //console.log(signature_editor.find('canvas')[0], 199);
         signature_editor.find('canvas').sign({
             resetButton: clear_btn,
             lineWidth:4
@@ -333,7 +333,7 @@ function init_sign(config) {
     }
     // $("body").off( "click" ,".strt_sign");
     (function () {
-        console.log(3333);
+        //console.log(3333);
         if(sign_lib !=1)
         {
             set_up_signature();

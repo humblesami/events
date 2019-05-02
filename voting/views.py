@@ -69,31 +69,35 @@ def answer(request, voting_id):
                         chart_data['option_data'].append({'id': option.id, 'name': option.name})
                         chart_data['option_results'].append({'option_name': option.name, 'option_result': 0})
 
-                    voting_results = VotingAnswer.objects.values('answer__name').filter(voting_id = voting_id).annotate(answer_count=Count('answer'))
+                    voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id = voting_id).annotate(answer_count=Count('user_answer'))
                     # count = voting_results
 
                     if voting_results:
                         for result in voting_results:
                             total = len(voting_results)
                             for extra_result in chart_data['option_results']:
-                                if extra_result['option_name'] == result['answer__name']:
+                                if extra_result['option_name'] == result['user_answer__name']:
                                     extra_result['option_result'] = result['answer_count']
 
                 voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=request.user.id)
                 data = {
-                    'answer': voting_answer.answer.name,
+                    'answer': voting_answer.user_answer.name,
                     'signature_data': base64.decodestring(voting_answer.signature_data),
                     'chart_data' : chart_data['option_results']
                 }
                 res_data =json.dumps(data)
                 return HttpResponse(res_data)
             except VotingAnswer.DoesNotExist:
-                return HttpResponse('noting')
+                data={
+                    'answer': 'nothing'
+                }
+                res_data = json.dumps(data)
+                return HttpResponse(res_data)
 
 
 def save_Choice(choice_id, voting_id, user_id, signature_data):
     voting_answer = VotingAnswer()
-    voting_answer.answer_id = int(choice_id)
+    voting_answer.user_answer_id = int(choice_id)
     voting_answer.voting_id = voting_id
     voting_answer.user_id = user_id
     if signature_data:
@@ -102,7 +106,7 @@ def save_Choice(choice_id, voting_id, user_id, signature_data):
 
 def update_Choice(choice_id, voting_id, user_id, signature_data):
     voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=user_id)
-    voting_answer.answer_id = int(choice_id)
+    voting_answer.user_answer_id = int(choice_id)
     voting_answer.voting_id = voting_id
     voting_answer.user_id = user_id
     if signature_data:

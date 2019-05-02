@@ -36,12 +36,12 @@ class VotingAdmin(admin.ModelAdmin):
                     extra_context['option_data'].append({'id': option.id, 'name': option.name})
                     extra_context['option_results'].append({'option_name': option.name, 'option_result': 0, 'option_perc': 0})
 
-                voting_results = list(VotingAnswer.objects.values('answer__name').annotate(answer_count=Count('answer')).filter(voting_id = voting_id))
+                voting_results = list(VotingAnswer.objects.values('user_answer__name').annotate(answer_count=Count('user_answer')).filter(voting_id = voting_id))
                 if voting_results:
                     for result in voting_results:
                         total = len(voting_results)
                         for extra_result in extra_context['option_results']:
-                            if extra_result['option_name'] == result['answer__name']:
+                            if extra_result['option_name'] == result['user_answer__name']:
                                 extra_result['option_result'] = result['answer_count']
                                 extra_result['option_perc'] = round(((result['answer_count']/ total)*100),2)
                         # extra_context['option_results'].append({'option_name': result['answer__name'], 'option_result': result['answer_count'],
@@ -66,10 +66,10 @@ class VotingAdmin(admin.ModelAdmin):
 
 
 class VotingAnswerAdmin(admin.ModelAdmin):
-    list_display = ['answer', 'voting', 'user', 'signature_data']
+    list_display = ['user_answer', 'voting', 'user', 'signature_data']
     # list_filter = ['answer', 'user']
     list_filter = ['user']
-    search_fields = ['answer__name', 'voting__name', 'user__username']
+    search_fields = ['user_answer__name', 'voting__name', 'user__username']
 
 admin.site.register(Voting, VotingAdmin)
 admin.site.register(VotingType, VotingTypeAdmin)

@@ -17,19 +17,22 @@ $(function(){
                 // console.log(data);
                 if (!(option_name)){
                     $('.fa-check').remove();
-                    var obj = {};
-                    try{
-                        obj = JSON.parse(data);
-                    }
-                    catch(er){
-                        console.log(er);
-                        return;
-                    }
+//                    var obj = {};
+//                    try{
+//                        obj = JSON.parse(data);
+//                    }
+//                    catch(er){
+//                        console.log(er);
+//                        return;
+//                    }
                     var obj = JSON.parse(data);
-                    $('.' + obj.answer).prepend('<i class="fa fa-check fa-lg" style="color:white"/>');    
-                    window['sign_data'] = obj.signature_data;
-                    img_src ='data:image/png;base64,' + obj.signature_data;
-                    if($('[name=signature_required]').prop('checked'))
+                    $('.' + obj.answer).prepend('<i class="fa fa-check fa-lg" style="color:white"/>');
+                    if(obj.signature_data)
+                    {
+                        window['sign_data'] = obj.signature_data;
+                        img_src ='data:image/png;base64,' + obj.signature_data;
+                    }
+                    if($('[name=signature_required]').prop('checked') && window['sign_data'])
                     {
                         $('.voting-options-container').append('<div><img src="'+img_src+'" class="user-sign" height="150px" width="150px" /></div>')
                     }

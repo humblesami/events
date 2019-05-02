@@ -69,10 +69,10 @@ class Voting(models.Model):
         return {'data': data}
 
 class VotingAnswer(models.Model):
-    answer = models.ForeignKey(VotingChoice, on_delete = models.CASCADE, blank = False)
-    voting = models.ForeignKey(Voting, on_delete = models.CASCADE, blank = False)
+    voting = models.ForeignKey(Voting, on_delete = models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete = models.CASCADE, blank = False)
     signature_data = models.BinaryField('Signature Data', blank = True)
+    user_answer = models.ForeignKey(VotingChoice, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.answer.name
@@ -117,15 +117,15 @@ class VotingAnswer(models.Model):
                 chart_data['option_data'].append({'id': option.id, 'name': option.name})
                 chart_data['option_results'].append({'option_name': option.name, 'option_result': 0})
 
-            voting_results = VotingAnswer.objects.values('answer__name').filter(
-                voting_id=voting_id).annotate(answer_count=Count('answer'))
+            voting_results = VotingAnswer.objects.values('user_answer__name').filter(
+                voting_id=voting_id).annotate(answer_count=Count('user_answer'))
             # count = voting_results
 
             if voting_results:
                 for result in voting_results:
                     total = len(voting_results)
                     for extra_result in chart_data['option_results']:
-                        if extra_result['option_name'] == result['answer__name']:
+                        if extra_result['option_name'] == result['user_answer__name']:
                             extra_result['option_result'] = result['answer_count']
 
         voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=request.user.id)
