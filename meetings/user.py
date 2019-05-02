@@ -80,6 +80,7 @@ def create_group(obj, group_name):
     user_group = False
     try:
         user_group = MeetingGroup.objects.get(name=group_name)
+        obj.groups.add(user_group)
     except:
         user_group = MeetingGroup.objects.create(name=group_name)
         obj.groups.add(user_group)
