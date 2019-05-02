@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.forms import UserChangeForm
 from django.utils.html import format_html
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
@@ -10,7 +11,8 @@ from .document import MeetingDocument,AgendaDocument
 
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
+
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
 class TopicInline(admin.TabularInline):
@@ -108,7 +110,7 @@ class TopicAdmin(admin.ModelAdmin):
 
         return format_html(html)
 
-class UserAdminForm(forms.ModelForm):
+class UserAdminForm(UserChangeForm):
     committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
 
     class Meta:
@@ -134,66 +136,36 @@ class UserAdminForm(forms.ModelForm):
 
         return user
 
-class ProfileInline(admin.StackedInline):
-    form = UserAdminForm
-    model = Profile
-    # verbose_name = "Phone"
-    verbose_name_plural = ""
-    insert_after = 'email'
-
-    fieldsets = (
-        (None,
-             {
-                 'fields': (
-                     'image_tag','image','bio','location','birth_date','nick_name',
-                     'job_title','department','work_phone','mobile_phone','website','fax',
-                     'board_joining_date','term_start_date','term_end_date','committees','resume'
-                 )
-             }
-         ),
-        (_('Diversity Information'),
-            {
-                'fields': (
-                    'ethinicity','gender','veteran','disability'
-                )
-            }
-        ),
-        (_('Administrative Assistant'),
-            {
-                'fields': (
-                    'admin_image_html','admin_image','admin_first_name','admin_last_name',
-                    'admin_nick_name','admin_cell_phone','admin_email','admin_work_phone',
-                    'admin_fax','mail_to_assistant'
-                )
-            }
-        ),
-    )
-
-    readonly_fields = ('image_tag','admin_image_html')
-
-    def image_tag(self,obj):
-        if obj.image:
-            return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.image))
-    image_tag.short_description = ''
-    def admin_image_html(self,obj):
-        return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.admin_image))
-    admin_image_html.short_description = ''
-
-
-
 
 class UserAdmin(BaseUserAdmin):
-    change_form_template = 'custom/change_form.html'
-    pass
-class ProfileAdmin(admin.ModelAdmin):
+    verbose_name_plural = "AAAAAAAAA"
     form = UserAdminForm
+    fieldsets = (
+        (None, {'fields': ('image_tag', 'image', 'username', 'password',)}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (None, {'fields': ('committees',)}),
+        (_('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', ),
+        }),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+
+    )
+    readonly_fields = ('image_tag',)
+
+    def image_tag(self, obj):
+        if obj.image:
+            return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.image))
+
+    image_tag.short_description = ''
     pass
 
 class AdminAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('username', 'password','is_active')}),
+        (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (None, {'fields': ('committees',)}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+
     )
 
     def get_queryset(self, request):
@@ -202,12 +174,42 @@ class AdminAdmin(UserAdmin):
         return qs
 
 class DirectorAdmin(UserAdmin):
-    inlines = [ProfileInline] 
     fieldsets = (
-        (None, {'fields': ('username', 'password','is_active')}),
+        (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (None,
+         {
+             'fields': (
+                 'bio', 'location', 'birth_date', 'nick_name',
+                 'job_title', 'department', 'work_phone', 'mobile_phone', 'website', 'fax',
+                 'board_joining_date', 'term_start_date', 'term_end_date','committees', 'resume'
+             )
+         }
+         ),
+        (_('Diversity Information'),
+         {
+             'fields': (
+                 'ethinicity', 'gender', 'veteran', 'disability'
+             )
+         }
+         ),
+        (_('Administrative Assistant'),
+         {
+             'fields': (
+                 'admin_image_html', 'admin_image', 'admin_first_name', 'admin_last_name',
+                 'admin_nick_name', 'admin_cell_phone', 'admin_email', 'admin_work_phone',
+                 'admin_fax', 'mail_to_assistant'
+             )
+         }
+         ),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
+    readonly_fields = ('image_tag','admin_image_html')
+
+    def admin_image_html(self, obj):
+        return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.admin_image))
+
+    admin_image_html.short_description = ''
 
     def get_queryset(self, request):
         qs = super(DirectorAdmin, self).get_queryset(request)
@@ -215,11 +217,11 @@ class DirectorAdmin(UserAdmin):
         return qs
 
 class StaffAdmin(UserAdmin):
-    inlines = [ProfileInline] 
     fieldsets = (
-        (None, {'fields': ('username', 'password','is_active')}),
+        (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (None, {'fields': ('committees',)}),
     )
 
     def get_queryset(self, request):
@@ -229,7 +231,7 @@ class StaffAdmin(UserAdmin):
    
 
 
-class GroupAdmin(admin.ModelAdmin):
+class GroupAdmin(GroupAdmin):
 
     def get_queryset(self, request):
         # qs = super(GroupAdmin, self).get_queryset(request)
@@ -273,6 +275,6 @@ admin.site.register(Director,DirectorAdmin)
 admin.site.register(Staff,StaffAdmin)
 admin.site.register(MeetingGroup,GroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
-# admin.site.register(Profile,ProfileAdmin)
+admin.site.register(Profile,UserAdmin)
 
 admin.site.site_header = "MeetVUE"

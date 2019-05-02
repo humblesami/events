@@ -96,6 +96,8 @@ def create_group(obj, group_name):
 
 
 class Profile(user_model):
+    class Meta:
+        verbose_name_plural = "MeetVUE  Users"
     image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
@@ -200,6 +202,7 @@ class Staff(Profile):
     objects = ManagerStaff()
     class Meta:
         proxy = True
+        verbose_name_plural = "Staff"
 
     def save(self, *args, **kwargs):
         created = self.pk
@@ -212,4 +215,5 @@ class Staff(Profile):
 
 
 class MeetingGroup(group_model):
-    app_label = models.CharField(max_length=100)
+    pass
+    # app_label = models.CharField(max_length=100)
