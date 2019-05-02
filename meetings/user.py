@@ -40,18 +40,39 @@ permission_set = {
             'event':{'view':1,}
         },
         'voting':{},
+        'authtoken':{
+            'token':{
+                'view':1,
+                'add':1,
+                'delete': 1,
+            }
+        },
     },
     'Staff': {
          'meetings':{
             'event':{'view':1,}
         },
         'voting':{},
+        'authtoken': {
+            'token': {
+                'view': 1,
+                'add': 1,
+                'delete': 1,
+            }
+        },
     },
     'Admin': {
          'meetings':{
             'event':{'view':1,}
         },
         'voting':{},
+        'authtoken': {
+            'token': {
+                'view': 1,
+                'add': 1,
+                'delete': 1,
+            }
+        },
     }
 }
 

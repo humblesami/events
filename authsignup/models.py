@@ -14,10 +14,13 @@ class AuthUser(models.Model):
         login(request, user)
         if user and user.id:
             tokens = Token.objects.filter(user=user)
-            if len(tokens) > 0:
-                tokens[0].delete()
-            token = Token.objects.create(user=user)
-            return {'name': user.username, 'id': user.id, 'token': token.key }
+            if user.has_perm('authtoken.add_token'):
+                if len(tokens) > 0:
+                    tokens[0].delete()
+                token = Token.objects.create(user=user)
+                return {'name': user.username, 'id': user.id, 'token': token.key }
+            else:
+                return {'error': 'Not authorized to have token'}
         else:
             return {'error': 'Invalid credentials'}
 
