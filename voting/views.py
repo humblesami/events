@@ -73,8 +73,10 @@ def answer(request, voting_id):
                     # count = voting_results
 
                     if voting_results:
+                        total = 0
                         for result in voting_results:
-                            total = len(voting_results)
+                            total += result['answer_count']
+                        for result in voting_results:
                             for extra_result in chart_data['option_results']:
                                 if extra_result['option_name'] == result['user_answer__name']:
                                     extra_result['option_result'] = result['answer_count']
@@ -94,6 +96,11 @@ def answer(request, voting_id):
                 res_data = json.dumps(data)
                 return HttpResponse(res_data)
 
+def update_my_status(choice_id, voting_id):
+    voting_choice = VotingChoice.objects.get(pk=choice_id)
+    voting = Voting.objects.get(pk=voting_id)
+    voting.my_status = voting_choice.name
+    voting.save()
 
 def save_Choice(choice_id, voting_id, user_id, signature_data):
     voting_answer = VotingAnswer()
@@ -103,6 +110,7 @@ def save_Choice(choice_id, voting_id, user_id, signature_data):
     if signature_data:
         voting_answer.signature_data = signature_data
     voting_answer.save()
+    update_my_status(choice_id, voting_id)
 
 def update_Choice(choice_id, voting_id, user_id, signature_data):
     voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=user_id)
@@ -112,9 +120,8 @@ def update_Choice(choice_id, voting_id, user_id, signature_data):
     if signature_data:
         voting_answer.signature_data = signature_data
     voting_answer.save()
+    update_my_status(choice_id= choice_id, voting_id= voting_id)
 
-def record_signature(request, res_model, res_id):
-    return HttpResponse('voting signature accessed..')
 
 def topic(request, meeting_id):
     all_topics = []

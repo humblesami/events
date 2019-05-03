@@ -31,6 +31,7 @@ class Voting(models.Model):
     enable_discussion = models.BooleanField('Enable Discussion', blank=True, default=False)
     public_visibility = models.BooleanField('Results Visible To All', blank=True, default=False)
     description = models.TextField()
+    my_status = models.CharField(max_length=50, default='pending')
     # user = models.ForeignKey(User, on_delete=models.CASCADE, default = None)
 
     def __str__(self):
@@ -52,8 +53,20 @@ class Voting(models.Model):
 
                 voting_options = list(voting_object_orm.voting_type.votingchoice_set.values())
                 voting_object['voting_options'] = []
+                voting_object['chart_data'] = []
                 for option in voting_options:
                     voting_object['voting_options'].append({'id': option['id'], 'name': option['name']})
+                    voting_object['chart_data'].append({'option_name': option['name'], 'option_result': 0})
+
+                voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
+                    answer_count=Count('user_answer'))
+                if voting_results:
+                    for result in voting_results:
+                        total = len(voting_results)
+                        for chart_data in voting_object['chart_data']:
+                            if chart_data['option_name'] == result['user_answer__name']:
+                                chart_data['option_result'] = result['answer_count']
+
             voting_object['meeting'] = []
             voting_object['topic'] = []
             meeting = voting_object_orm.meeting
@@ -68,6 +81,20 @@ class Voting(models.Model):
 
         return {'data': data}
 
+
+    @classmethod
+    def get_records(cls, request, params):
+        votings = Voting.objects.values()
+        total_cnt = votings.count()
+        current_cnt = total_cnt
+        votings = list(votings)
+        for voting in votings:
+            voting['open_date'] = str(voting['open_date'])  #.day) + '-' + str(voting['open_date'].month) + '-' +str(voting['open_date'].year)
+            voting['close_date'] = str(voting['close_date'].year) + '-' + str(voting['close_date'].month) + '-' + str(voting['close_date'].day)
+            voting['voting_type']= list(VotingType.objects.filter(pk=voting['voting_type_id']).values('name'))[0]['name']
+        votings_json = {'records': votings, 'total': 0, 'count': 0}
+        return votings_json
+
 class VotingAnswer(models.Model):
     voting = models.ForeignKey(Voting, on_delete = models.CASCADE, null=True)
     user = models.ForeignKey(User, on_delete = models.CASCADE, blank = False)
@@ -75,7 +102,7 @@ class VotingAnswer(models.Model):
     user_answer = models.ForeignKey(VotingChoice, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.answer.name
+        return self.user_answer.name
 
     @classmethod
     def answer(cls, request, params):
@@ -137,26 +164,104 @@ class VotingAnswer(models.Model):
         return data
 
     @classmethod
+    def update_my_status(self, choice_id, voting_id):
+        voting_choice = VotingChoice.objects.get(pk=choice_id)
+        voting = Voting.objects.get(pk=voting_id)
+        voting.my_status = voting_choice.name
+        voting.save()
+
+    @classmethod
     def save_Choice(cls, choice_id, voting_id, user_id, signature_data):
         voting_answer = VotingAnswer()
-        voting_answer.answer_id = int(choice_id)
+        voting_answer.user_answer_id = int(choice_id)
         voting_answer.voting_id = voting_id
         voting_answer.user_id = user_id
         if signature_data:
             voting_answer.signature_data = signature_data
         voting_answer.save()
+        cls.update_my_status(choice_id, voting_id)
+
+
 
     @classmethod
     def update_Choice(cls, choice_id, voting_id, user_id, signature_data):
         voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=user_id)
-        voting_answer.answer_id = int(choice_id)
+        voting_answer.user_answer_id = int(choice_id)
         voting_answer.voting_id = voting_id
         voting_answer.user_id = user_id
         if signature_data:
             voting_answer.signature_data = signature_data
         voting_answer.save()
+        cls.update_my_status(choice_id, voting_id)
+
 
     @classmethod
     def submit(cls, request, params):
-        return {'error': 'Not implemented'}
+        voting_id = params.get('voting_id')
+        user_answer_id = params.get('voting_option_id')
+        res = 'error'
+        signature_data = ''
+        chart_data = []
+        if voting_id:
+            voting_object = Voting.objects.get(pk=voting_id)
+            if voting_object:
+                if voting_object.signature_required:
+                    pass
+                else:
+                    voting_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id = request.user.id)
+                    if voting_answer:
+                        cls.update_Choice(choice_id= user_answer_id, voting_id= voting_id, user_id= request.user.id, signature_data='')
+                        res = 'Update'
+                    else:
+                        cls.save_Choice(choice_id= user_answer_id, voting_id= voting_id, user_id= request.user.id, signature_data='')
+                        res = 'Created'
+
+                voting_options = list(voting_object.voting_type.votingchoice_set.values())
+                for option in voting_options:
+                    chart_data.append({'option_name': option['name'], 'option_result': 0})
+
+                voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
+                    answer_count=Count('user_answer'))
+                if voting_results:
+                    for result in voting_results:
+                        for data in chart_data:
+                            if data['option_name'] == result['user_answer__name']:
+                                data['option_result'] = result['answer_count']
+
+        if voting_object.signature_required:
+            data = {
+                'voting_option_id': user_answer_id,
+                'operation': res,
+                'signature_data': signature_data,
+                'chart_data': chart_data
+            }
+            return data
+        else:
+            data = {
+                'voting_option_id': user_answer_id,
+                'operation': res,
+                'chart_data': chart_data
+
+            }
+            return data
+
+
+    @classmethod
+    def get_signature(cls, request, params):
+        voting_id = params.get('voting_id')
+        if voting_id:
+            voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=request.user.id)
+            signature_data = voting_answer.signature_data
+            if signature_data:
+                base64.decodestring(signature_data)
+                signature_data = signature_data.decode('utf-8')
+                data = {
+                    'signature': signature_data
+                }
+            else:
+                data = {
+                    'signature': ''
+                }
+        return data
+
 

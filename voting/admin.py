@@ -22,6 +22,10 @@ class VotingAdmin(admin.ModelAdmin):
     # search_fields = ['name', 'open_date', 'close_date', 'voting_type__name']
     change_form_template = 'custom/change_form.html'
 
+    def get_form(self, request, obj=None, **kwargs):
+        self.exclude = ("my_status",)
+        form = super(VotingAdmin, self).get_form(request, obj, **kwargs)
+        return form
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         if self.has_change_permission(request):
@@ -38,8 +42,10 @@ class VotingAdmin(admin.ModelAdmin):
 
                 voting_results = list(VotingAnswer.objects.values('user_answer__name').annotate(answer_count=Count('user_answer')).filter(voting_id = voting_id))
                 if voting_results:
+                    total = 0
                     for result in voting_results:
-                        total = len(voting_results)
+                        total += result['answer_count']
+                    for result in voting_results:
                         for extra_result in extra_context['option_results']:
                             if extra_result['option_name'] == result['user_answer__name']:
                                 extra_result['option_result'] = result['answer_count']
