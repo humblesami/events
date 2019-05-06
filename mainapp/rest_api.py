@@ -69,6 +69,33 @@ def secure(request):
         return HttpResponse(res)
 
 
+def session(request):
+    try:
+        kw = request.POST
+        if not kw:
+            kw = request.GET
+
+        kw = json.loads(kw['input_data'])
+        args = kw['args']
+        params = kw['params']
+
+        if not request.user.id:
+            res = {'error': 'Invalid user'}
+            return produce_result(res, args)
+
+        model = apps.get_model(args['app'], args['model'])
+        method_to_call = getattr(model, args['method'])
+        res = method_to_call(request, params)
+        return produce_result(res, args)
+    except:
+        eg = traceback.format_exception(*sys.exc_info())
+        errorMessage = ''
+        for er in eg:
+            errorMessage += " " + er
+        res = {'error' : errorMessage}
+        res = json.dumps(res)
+        return HttpResponse(res)
+
 def produce_result(res, args=None):
     if res:
         if type(res) == dict:

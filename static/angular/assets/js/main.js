@@ -1,5 +1,5 @@
 var time_out_session = undefined;
-var session_time_limit = 60000;
+var session_time_limit = 600000;
 (function() {
     var wl = window.location;
     if (wl.hash) {

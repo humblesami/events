@@ -71,8 +71,9 @@ class Event(models.Model):
     def get_details(cls, request, params):
         if params['id']:
             meeting_id = params['id']
-            meeting_object = {}
+            meeting_id = int(meeting_id)
             meeting_object_orm = Event.objects.get(pk=meeting_id)
+
             meeting_object = Event.objects.filter(pk=meeting_id).values()
             meeting_object = list(meeting_object)
             meeting_object = meeting_object[0]

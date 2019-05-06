@@ -181,8 +181,6 @@ class VotingAnswer(models.Model):
         voting_answer.save()
         cls.update_my_status(choice_id, voting_id)
 
-
-
     @classmethod
     def update_Choice(cls, choice_id, voting_id, user_id, signature_data):
         voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=user_id)
@@ -193,7 +191,6 @@ class VotingAnswer(models.Model):
             voting_answer.signature_data = signature_data
         voting_answer.save()
         cls.update_my_status(choice_id, voting_id)
-
 
     @classmethod
     def submit(cls, request, params):
@@ -245,7 +242,6 @@ class VotingAnswer(models.Model):
             }
             return data
 
-
     @classmethod
     def get_signature(cls, request, params):
         voting_id = params.get('voting_id')
@@ -262,6 +258,10 @@ class VotingAnswer(models.Model):
                 data = {
                     'signature': ''
                 }
+        else:
+            data = {
+                'error': 'Invalid voting id'
+            }
         return data
 
 

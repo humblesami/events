@@ -106,10 +106,10 @@ function dn_rpc_object(options) {
             site_functions.hideLoader("ajax" + api_url);
         //console.log("Comepleted " +req_url);
     };
-    options.error = function(err) {
+    options.error = function(err) {        
         if (options.onError)
-            options.onError(err);
-        if(err.responseText == '{"detail":"Invalid token."}' ||
+            options.onError(err);            
+        if(err.responseText == '{"detail":"Invalid token."}' || 
             err.responseText == '{"detail":"Authentication credentials were not provided."}')
         {
             console.log(input_data.args.method + ' needs login to be accessed');
@@ -120,7 +120,7 @@ function dn_rpc_object(options) {
             console.log(err);
             console.log(input_data.args);
             console.log('Api failed ', url_with_params);
-        }
+        }                
     };
     $.ajax(options);
 }
