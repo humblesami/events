@@ -515,7 +515,7 @@ button:focus {
     box-shadow: 0 0 0 0.2rem #7c7bad;
 }
 
-#signature_editor {
+/* #signature_editor {
     width: calc(100vw - 50px);
     height: 198px;
     margin-top: 5px;
@@ -526,11 +526,11 @@ button:focus {
     #signature_editor {
         width: 465px;
     }
-}
+} */
 
-.kbw-signature canvas {
+/* .kbw-signature canvas {
     border: 1px solid #313030;
-}
+} */
 
 .gray-bg {
     background: #f3f3f3
@@ -932,8 +932,7 @@ last-login-details
 }
 
 .modal-header {
-    padding: 0;
-    display: block;
+    padding: 5px;
 }
 
 .modal-footer {

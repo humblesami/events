@@ -60,5 +60,11 @@ class AuthUserChat(models.Model):
                 }
         if not req_user:
             return "user does not exist"
-        data = {'friends' : friendList, 'notifications': [], 'unseen': unseenMessages, 'user': req_user }
+        data = {
+            'friends' : friendList,
+            'friendIds': friendIds ,
+            'notifications': [],
+            'unseen': unseenMessages,
+            'user': req_user
+        }
         return data

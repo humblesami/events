@@ -39,47 +39,50 @@ class Voting(models.Model):
 
     @classmethod
     def get_details(cls, request, params):
-        if params['id']:
-            voting_id = params['id']
-            voting_object_orm = Voting.objects.get(pk=voting_id)
-            voting_object = list(Voting.objects.filter(pk=voting_id).values())
-            voting_object = voting_object[0]
-            voting_object['open_date'] = str(voting_object['open_date'])
-            voting_object['close_date'] = str(voting_object['close_date'])
-            if voting_object_orm.voting_type:
-                voting_object['voting_type'] = []
-                voting_object['voting_type'].append({'id': voting_object_orm.voting_type.id,
-                'name': voting_object_orm.voting_type.name})
+        uid = request.user.id
+        voting_id = params['id']
+        voting_object_orm = Voting.objects.get(pk=voting_id)
+        voting_object = voting_object_orm.__dict__
+        voting_object['open_date'] = str(voting_object['open_date'])
+        voting_object['close_date'] = str(voting_object['close_date'])
 
-                voting_options = list(voting_object_orm.voting_type.votingchoice_set.values())
-                voting_object['voting_options'] = []
-                voting_object['chart_data'] = []
-                for option in voting_options:
-                    voting_object['voting_options'].append({'id': option['id'], 'name': option['name']})
-                    voting_object['chart_data'].append({'option_name': option['name'], 'option_result': 0})
+        voting_object['voting_type'] = {
+            'id': voting_object_orm.voting_type.id,
+            'name': voting_object_orm.voting_type.name
+        }
 
-                voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
-                    answer_count=Count('user_answer'))
-                if voting_results:
-                    for result in voting_results:
-                        total = len(voting_results)
-                        for chart_data in voting_object['chart_data']:
-                            if chart_data['option_name'] == result['user_answer__name']:
-                                chart_data['option_result'] = result['answer_count']
+        voting_options = list(voting_object_orm.voting_type.votingchoice_set.values())
+        voting_object['voting_options'] = []
+        voting_object['chart_data'] = []
+        for option in voting_options:
+            voting_object['voting_options'].append({'id': option['id'], 'name': option['name']})
+            voting_object['chart_data'].append({'option_name': option['name'], 'option_result': 0})
 
-            voting_object['meeting'] = []
-            voting_object['topic'] = []
-            meeting = voting_object_orm.meeting
-            if meeting:
-                voting_object['meeting'].append({'id': meeting.id, 'name': meeting.name})
-            topic = voting_object_orm.topic
-            if topic:
-                voting_object['topic'].append({'id': topic.validate_unique()})
-            voting_object['voting_docs'] = []
+        voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
+            answer_count=Count('user_answer'))
+        if voting_results:
+            for result in voting_results:
+                total = len(voting_results)
+                for chart_data in voting_object['chart_data']:
+                    if chart_data['option_name'] == result['user_answer__name']:
+                        chart_data['option_result'] = result['answer_count']
 
-        data = {"voting": voting_object}
-
-        return {'data': data}
+        user_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id=uid)
+        if len(user_answer) > 0:
+            user_answer = user_answer[0]
+            voting_object['signature_data'] = user_answer.signature_data.decode()
+        voting_object['meeting'] = []
+        voting_object['topic'] = []
+        meeting = voting_object_orm.meeting
+        if meeting:
+            voting_object['meeting'].append({'id': meeting.id, 'name': meeting.name})
+        topic = voting_object_orm.topic
+        if topic:
+            voting_object['topic'].append({'id': topic.validate_unique()})
+        voting_object['voting_docs'] = []
+        if voting_object.get('_state'):
+            del voting_object['_state']
+        return voting_object
 
 
     @classmethod
@@ -172,45 +175,44 @@ class VotingAnswer(models.Model):
 
     @classmethod
     def save_Choice(cls, choice_id, voting_id, user_id, signature_data):
-        voting_answer = VotingAnswer()
-        voting_answer.user_answer_id = int(choice_id)
-        voting_answer.voting_id = voting_id
-        voting_answer.user_id = user_id
         if signature_data:
-            voting_answer.signature_data = signature_data
+            signature_data = signature_data.encode()
+        voting_answer = VotingAnswer(user_answer_id=choice_id,voting_id = voting_id, user_id = user_id, signature_data=signature_data)
         voting_answer.save()
         cls.update_my_status(choice_id, voting_id)
+        return voting_answer
 
     @classmethod
-    def update_Choice(cls, choice_id, voting_id, user_id, signature_data):
-        voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=user_id)
+    def update_Choice(cls, voting_answer, choice_id, signature_data):
         voting_answer.user_answer_id = int(choice_id)
-        voting_answer.voting_id = voting_id
-        voting_answer.user_id = user_id
         if signature_data:
+            signature_data = signature_data.encode()
             voting_answer.signature_data = signature_data
         voting_answer.save()
-        cls.update_my_status(choice_id, voting_id)
+        cls.update_my_status(choice_id, voting_answer.voting_id)
 
     @classmethod
     def submit(cls, request, params):
         voting_id = params.get('voting_id')
         user_answer_id = params.get('voting_option_id')
-        res = 'error'
-        signature_data = ''
         chart_data = []
+        res_data = {'error': 'Unknown result'}
         if voting_id:
             voting_object = Voting.objects.get(pk=voting_id)
             if voting_object:
-                if voting_object.signature_required:
-                    pass
-                else:
-                    voting_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id = request.user.id)
+                voting_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id = request.user.id)
+                if user_answer_id:
+                    signature_data = ''
+                    if voting_object.signature_required:
+                        signature_data = params.get('signature_data')
+                        if not signature_data:
+                            return 'Please provide signature'
                     if voting_answer:
-                        cls.update_Choice(choice_id= user_answer_id, voting_id= voting_id, user_id= request.user.id, signature_data='')
+                        voting_answer = voting_answer[0]
+                        cls.update_Choice(voting_answer, user_answer_id, signature_data)
                         res = 'Update'
                     else:
-                        cls.save_Choice(choice_id= user_answer_id, voting_id= voting_id, user_id= request.user.id, signature_data='')
+                        voting_answer = cls.save_Choice(user_answer_id, voting_id, request.user.id, signature_data)
                         res = 'Created'
 
                 voting_options = list(voting_object.voting_type.votingchoice_set.values())
@@ -224,23 +226,16 @@ class VotingAnswer(models.Model):
                         for data in chart_data:
                             if data['option_name'] == result['user_answer__name']:
                                 data['option_result'] = result['answer_count']
-
-        if voting_object.signature_required:
-            data = {
-                'voting_option_id': user_answer_id,
-                'operation': res,
-                'signature_data': signature_data,
-                'chart_data': chart_data
-            }
-            return data
+                res_data = {
+                    'voting_option_id': user_answer_id,
+                    'chart_data': chart_data
+                }
+            else:
+                return 'Voting object not found'
         else:
-            data = {
-                'voting_option_id': user_answer_id,
-                'operation': res,
-                'chart_data': chart_data
+            return 'Invalid voting id'
 
-            }
-            return data
+        return res_data
 
     @classmethod
     def get_signature(cls, request, params):

@@ -17,8 +17,8 @@ jQuery(document).ready(function(e) {
     jQuery.fn.sign = function(options) {
         var params = jQuery.fn.extend({
             reset: options.resetButton ? options.resetButton : null,
-            width: options.width ? options.width : 480,
-            height: options.height ? options.height : 300,
+            width: options.width ? options.width : 466,
+            height: options.height ? options.height : 260,
             lineWidth: options.lineWidth ? options.lineWidth : 10,
         }, options);
 
@@ -165,32 +165,42 @@ function init_sign(config) {
     var dataURL = '';
     var doc_id = 0;
     var img = new Image();
-    var signature_args = config.args;
-
+    
     var signature_editor = $('#signature_editor');
     var auto_sign = $('#auto-sig');
     var insert_sign = $('#insert-sig');
 
-    function set_up_signature()
-    {
+    function load_signature(signature_value) {
+        var clear_btn = $('#clear-sig');
+        //console.log(signature_editor.find('canvas')[0], 199);
+        signature_editor.find('canvas').sign({
+            resetButton: clear_btn,
+            lineWidth:4
+        });
+        clear_btn.click();
+
+        if (signature_value && signature_value.length > 0) {
+            dataURL = 'data:image/png;base64,' + signature_value;
+            img.src = dataURL;
+        }
+    }
+
+
+    function setup_signature(){
         var save_btn = $('#save-sig');
         var upload_clicker = $('#upload-sig-btn');
         var upload_btn = $('#upload-sig');
 
         var clear_btn = $('#clear-sig');
         var draw_sign_btn = $('#draw-sig');
-
-        if(config.signature)
-        {
-            load_signature(config)
-        }
+        
+        load_signature(config.signature_data);
 
         upload_clicker = $(upload_clicker);
         upload_clicker.click(function () {
             upload_btn.click();
         });
 
-    
         upload_btn.change(function () {
             if (!this.files)
                 return;
@@ -206,32 +216,17 @@ function init_sign(config) {
                 var dataURL = reader.result;
                 canvas_context.clearRect(0, 0, myCanvas.width, myCanvas.height);
                 img.src = dataURL;
+                load_signature(dataURL);
             }
         });
 
         auto_sign.click(function (e) {
-            var input_data = {
-                document_id: doc_id,
-                binary_signature: "",
-                type: "auto"
-            };
-            var options = {
-                args: signature_args,
-                params: input_data,
-                onSuccess: load_signature
-            }
-            dn_rpc_object(options);
+            load_signature(config.signature);
         });
 
         insert_sign.click(function (e) {
-            var input_data = {
-                document_id: doc_id,
-            };
-            dn_rpc_object(
-                config.url,input_data, load_signature
-            );
-        })
-
+            load_signature(config.signature);
+        });
 
         save_btn.click(function (e) {
             var type = "draw";
@@ -243,35 +238,9 @@ function init_sign(config) {
                 console.log('No signs');
                 return;
             }
-
-            if(!config.save_now)
-            {                
-                if(config.callBack)
-                {
-                    config.callBack(dataURL);
-                }
-                return;
-            }
-
             $('.strt_sign.pdfjs').hide();
             dataURL = dataURL.replace('data:image/png;base64,', '');
-            var input_data = {
-                document_id: doc_id,
-                binary_signature: dataURL,
-                type: type
-            };
-
-            var options = {
-                args: signature_args,
-                params: input_data,
-                onSuccess: function(data){
-                    if(config.callBack)
-                    {
-                        config.callBack(data);
-                    }
-                }
-            }
-            dn_rpc_object(options);
+            config.on_signed(dataURL);
             $('#signModal .modal-footer button').click();
         });
 
@@ -292,28 +261,13 @@ function init_sign(config) {
 
         img.onload = function () {
             canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
-            //canvas_context1.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
+            // $('#signModal').show();
         };
-    }
+    };
 
-    
-    function load_signature(data) {
-        var clear_btn = $('#clear-sig');
-        //console.log(signature_editor.find('canvas')[0], 199);
-        signature_editor.find('canvas').sign({
-            resetButton: clear_btn,
-            lineWidth:4
-        });
-        clear_btn.click();
-
-        var signature_value = data.signature;
-        if (signature_value && signature_value.length > 0) {
-            dataURL = 'data:image/png;base64,' + data.signature;
-            img.src = dataURL;
-        }
-    }
-
-    set_up_signature();
+    $('#signModal').modal('show');
+    $( "#signModal" ).on('shown.bs.modal', setup_signature);
+    // $('#signModal').hide();
 
 };
 window['init_sign'] = init_sign;
