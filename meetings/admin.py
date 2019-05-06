@@ -70,6 +70,7 @@ class EventAdmin(admin.ModelAdmin):
             'fields': [
             'name',
             'start_date',
+            'end_date',
             'attendees',
             'description',
             'country',

@@ -12,6 +12,7 @@ class Event(models.Model):
         verbose_name_plural = "Meetings"
     name = models.CharField(max_length=200)
     start_date = models.DateTimeField('start date')
+    end_date = models.DateTimeField('end date')
     attendees = models.ManyToManyField(Profile)
     
     
@@ -81,7 +82,10 @@ class Event(models.Model):
                 return ('', {'message': 'Meeting with id' + str(meeting_id) + ' exists no more'})
 
             meeting_object['start_date'] = str(meeting_object['start_date'])
+            meeting_object['end_date'] = str(meeting_object['end_date'])
             topics = list(meeting_object_orm.topic_set.values())
+            for t in topics:
+                t['duration'] = str(t['duration'])
             meeting_docs = list(meeting_object_orm.meetingdocument_set.values())
             sign_docs = []
             surveys = []
@@ -95,7 +99,7 @@ class Event(models.Model):
                 attendee['last_login'] = str(attendee['last_login'])
                 attendee['date_joined'] = str(attendee['date_joined'])
 
-            meeting_object['topic'] = topics
+            meeting_object['topics'] = topics
             meeting_object['meeting_docs'] = meeting_docs
             meeting_object['sign_docs'] = []
             meeting_object['surveys'] = []
@@ -208,6 +212,7 @@ class Event(models.Model):
             for meeting in meetings:
                 if meeting['start_date']:
                     meeting['start_date'] = str(meeting['start_date'])
+                    meeting['end_date'] = str(meeting['end_date'])
             meetings = {'records': meetings, 'total': 0, 'count': 0}
             data = {'error': '', 'data': meetings}
         else:
