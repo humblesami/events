@@ -154,12 +154,82 @@ class Profile(user_model):
         total_cnt = profiles.count()
         current_cnt = total_cnt
         profiles = list(profiles)
+        for profile in profiles:
+            profile['date_joined'] = str(profile['date_joined'])
+            if profile['first_name'] or profile['last_name']:
+                profile['name'] = profile['first_name'] +' ' + profile['last_name']
+            else:
+                profile['name'] = profile['username']
+            profile['image_small'] = profile['image']
         profiles_json = {'records':profiles, 'total':total_cnt, 'count':current_cnt}
         return profiles_json
 
     @classmethod
     def get_details(cls, request, params):
-        return {'error': 'Not implemented'}
+        user_id = params['id']
+        profile = Profile.objects.filter(pk=user_id)[0].__dict__
+        profile['date_joined'] = str(profile['date_joined'])
+        if profile.get('_state'):
+            del profile['_state']
+        data = {"profile": profile, "next": 0, "prev": 0}
+
+    #     uid = ws_methods.check_auth(values)
+    #     if not uid:
+    #         return ws_methods.not_logged_in()
+    #     req_env = http.request.env
+    #     mp_user_id = 0
+    #     if 'data' in values:
+    #         values = values['data']
+    #     if 'id' in values:
+    #         mp_user_id = values['id']
+    #
+    #     next = False
+    #     prev = False
+    #
+    #     if mp_user_id:
+    #         profile = req_env['meeting_point.users'].search([('id', '=', mp_user_id)])
+    #         prev = req_env['meeting_point.users'].search([('id', '<', values['id'])], limit=1, order='id desc')
+    #         next = req_env['meeting_point.users'].search([('id', '>', values['id'])], limit=1, order='id')
+    #         next = next.id
+    #         prev = prev.id
+    #     else:
+    #         profile = req_env['meeting_point.users'].search([('user_id', '=', uid)])
+    #     if not profile:
+    #         return ws_methods.http_response('User not in meeting point')
+    #
+    #     props = ['id', 'name', 'image_medium', 'resume', 'email', 'nick_name', 'website', 'companies', 'bio',
+    #              'mobile_phone', 'work_phone',
+    #              'fax', 'job_title', 'signature_img', 'department', 'board_joing_date', 'admin_first_name',
+    #              'admin_last_name',
+    #              'admin_image', 'admin_nick_name', 'admin_email', 'admin_fax', 'admin_cell_phone',
+    #              'admin_work_phone', 'mail_to_assistant', 'term_start_date', 'term_end_date',
+    #              'companies', 'board_joing_date', 'bio', 'ethinicity', 'gender', 'veteran', 'disability']
+    #
+    #     committees = ws_methods.objects_list_to_json_list(profile.committee_ids, ['id', 'name'])
+    #     profile_json = ws_methods.object_to_json_object(profile, props)
+    #     profile_json['committees'] = committees
+    #
+    #     # dnspuser = req_env['dnspusers'].search([('user_id','=', uid)])
+    #     # sign = dnspuser.signature
+    #     # if sign:
+    #     #     # profile_json['signature'] = sign.decode('utf-8')
+    #     #
+    #     #     profile_json['signature'] = ws_methods.mfile_url("dnspusers","signature",uid,"image")
+    #
+    #     gmt = 0
+    #     if 'gmt' in values:
+    #         gmt = values['gmt']
+    #     if mp_user_id:
+    #         mp_user_id = int(mp_user_id)
+    #         uid = req_env['res.users'].search([('mp_user_id', '=', mp_user_id)]).id
+    #     profile_json['login'] = self.last_login(uid, gmt)
+    #
+    #     data = {"profile": profile_json, "next": next, "prev": prev}
+    #     return ws_methods.http_response('', data)
+    #
+    # except:
+    # return ws_methods.handle()
+        return data
 
     def save(self, *args, **kwargs):
         super(Profile, self).save(*args, **kwargs)

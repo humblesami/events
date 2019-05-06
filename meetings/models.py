@@ -3,6 +3,8 @@ from videos.models import Video
 from .user import *
 from .document import *
 from django_countries.fields import CountryField
+from django.utils import  timezone
+import  datetime
 
 
 # Create your models here.
@@ -12,7 +14,7 @@ class Event(models.Model):
         verbose_name_plural = "Meetings"
     name = models.CharField(max_length=200)
     start_date = models.DateTimeField('start date')
-    end_date = models.DateTimeField('end date')
+    end_date = models.DateTimeField('end date', default=datetime.datetime.now())
     attendees = models.ManyToManyField(Profile)
     
     
@@ -27,9 +29,43 @@ class Event(models.Model):
     zip = models.CharField('Zip', max_length=500, blank=True)
     pin = models.CharField('Meeting PIN', max_length=50, blank=True)
     conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, blank=True)
-    exectime = models.CharField(max_length=50, blank=True)
+
+    @property
+    def exectime(self):
+        current_date = timezone.now()
+        if self.start_date >= current_date:
+            return 'upcoming'
+        elif self.end_date <= current_date:
+            return 'completed'
 
 
+    def _compute_address(self):
+        val = ''
+        if self.street:
+            val = val + self.street + ', '
+        if self.city:
+            val = val + self.city + ', '
+        if self.state:
+            val = val + self.state + ', '
+        if self.zip:
+            val = val + self.zip + ', '
+        if self.country:
+            val = val + str(self.country.name)
+        last_character = val[len(val) - 1]
+        if last_character == ' ':
+            val = val.strip()
+        if last_character == ',':
+            val = val[:-1]
+        val = val.strip()
+        return val
+    location = property(_compute_address)
+
+    # def _compute_exectime(self):
+    #     if self.end_date:
+    #         # self.exectime = 'upcoming'
+    #         return 'upcoming'
+    #
+    # exectime = property(_compute_exectime)
 
     # pin = fields.Char(string="Meeting PIN")
     # conference_bridge_number = fields.Char(string="Conference Bridge No.")
@@ -74,7 +110,7 @@ class Event(models.Model):
             meeting_id = params['id']
             meeting_id = int(meeting_id)
             meeting_object_orm = Event.objects.get(pk=meeting_id)
-
+            location = meeting_object_orm.location
             meeting_object = Event.objects.filter(pk=meeting_id).values()
             meeting_object = list(meeting_object)
             meeting_object = meeting_object[0]
@@ -83,6 +119,10 @@ class Event(models.Model):
 
             meeting_object['start_date'] = str(meeting_object['start_date'])
             meeting_object['end_date'] = str(meeting_object['end_date'])
+            meeting_object['start'] = meeting_object['start_date']
+            meeting_object['stop'] = meeting_object['end_date']
+            if location:
+                meeting_object['location'] = location
             topics = list(meeting_object_orm.topic_set.values())
             for t in topics:
                 t['duration'] = str(t['duration'])
@@ -204,19 +244,41 @@ class Event(models.Model):
 # except:
 # return ws_methods.handle()
 
+    def get_meetings(meeting_type):
+        if meeting_type == 'archived':
+            meetings = Event.objects.filter(archived=True)
+        else:
+            meetings = Event.objects.all()
+        meeting_list = []
+        for meeting in meetings:
+            if meeting.exectime == meeting_type:
+                meeting_list.append(meeting)
+        return  meeting_list
+
     @classmethod
     def get_records(cls, request, params):
-        meetings = Event.objects.values()
-        meetings = list(meetings)
+        meeting_type = params.get('meeting_type')
+        meeting_list = cls.get_meetings(meeting_type)
+        meetings = []
+        if meeting_list:
+            for meeting in meeting_list:
+                location = meeting.location
+                meeting_val = meeting.__dict__
+                meeting_val['location'] = location
+                meetings.append(meeting_val)
+        else:
+            return 'No meeting Found'
         if meetings:
             for meeting in meetings:
                 if meeting['start_date']:
                     meeting['start_date'] = str(meeting['start_date'])
                     meeting['end_date'] = str(meeting['end_date'])
+                    if meeting.get('_state'):
+                        del meeting['_state']
             meetings = {'records': meetings, 'total': 0, 'count': 0}
             data = {'error': '', 'data': meetings}
         else:
-            data = {'error': 'Something Wrong in Meeting'}
+            data = {'error': 'Meeting not found'}
         return data
 
 class News(models.Model):
