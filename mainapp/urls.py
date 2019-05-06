@@ -21,6 +21,8 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path
+
+from mainapp import views
 from .import rest_api
 
 urlpatterns = [
@@ -30,7 +32,10 @@ urlpatterns = [
     path('rest/secure', rest_api.secure, name = 'public'),
     path('rest/secure1', rest_api.session, name = 'public'),
     url(r'^voting/', include('voting.urls')),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('media/<str:folder>/<str:file>/', views.serve_protected_document, name='serve_protected_document'),
+
+]\
+              # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 admin.site.site_header = 'MeetVUE'
 admin.site.site_title = "MeetVUE"
