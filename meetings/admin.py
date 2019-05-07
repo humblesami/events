@@ -258,7 +258,7 @@ class CommitteeAdmin(admin.ModelAdmin):
         html="<div>"
         for u in obj.users.all():
             if u.image:
-                html+='<img title="%s" style="width:50px;border-radius:92px" src="/media/%s" />' % (u.user.username,u.image)
+                html+='<img title="%s" style="width:50px;border-radius:92px" src="/media/%s" />' % (u.username,u.image)
         html+='</div>'
 
 

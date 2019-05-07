@@ -322,13 +322,43 @@ window.addEventListener('message', function receiveMessage(evt)
   {
     alert("got message: "+evt.data);
   }
-  if (evt.data === 'record_changed')
-  {
-    console.log(evt.data)
-    window.location = '/#/meetings/upcoming';
+
+  if(evt.data.action){
+    let {id,model,action}=evt.data;
+
+    if (action === 'change')
+    {
+        switch(model){
+        case 'director':
+            window.location = `/#/profile/${id}`;
+            break;
+        case 'event':
+            window.location = `/#/meeting/${id}`;
+            break;
+        
+         
+        }
+      
+    }
+    else
+    {
+        switch(model){
+        case 'event':
+            window.location = `/#/meetings/upcoming`;
+            break;
+        case 'director':
+            window.location = `/#/profiles`;
+            break;
+            
+
+      
+      }
+        
+    }
+  
+    console.log(action)
   }
   
-//   alert("got message: "+evt.origin);
 }, false);
 
 

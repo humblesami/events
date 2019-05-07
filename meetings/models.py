@@ -51,11 +51,12 @@ class Event(models.Model):
             val = val + self.zip + ', '
         if self.country:
             val = val + str(self.country.name)
-        last_character = val[len(val) - 1]
-        if last_character == ' ':
-            val = val.strip()
-        if last_character == ',':
-            val = val[:-1]
+        if val:
+            last_character = val[len(val) - 1]
+            if last_character == ' ':
+                val = val.strip()
+            if last_character == ',':
+                val = val[:-1]
         val = val.strip()
         return val
     location = property(_compute_address)

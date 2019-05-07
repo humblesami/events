@@ -1,17 +1,12 @@
 /*global opener */
 (function() {
-window.parent.postMessage('record_changed', '*');
-    'use strict';
-    var initData = JSON.parse(document.getElementById('django-admin-popup-response-constants').dataset.popupResponse);
-    switch(initData.action) {
-    case 'change':
-        opener.dismissChangeRelatedObjectPopup(window, initData.value, initData.obj, initData.new_value);
-        break;
-    case 'delete':
-        opener.dismissDeleteRelatedObjectPopup(window, initData.value);
-        break;
-    default:
-        opener.dismissAddRelatedObjectPopup(window, initData.value, initData.obj);
-        break;
-    }
+console.log(77777)
+var path = window.location.pathname.split('/')
+var length = path.length
+var model = path[3]
+var action = path[length-2]
+var id = path[4]
+var data = {"model":model,"action":action,"id":id}
+window.parent.postMessage(data, '*');
+
 })();

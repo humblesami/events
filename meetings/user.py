@@ -129,7 +129,7 @@ class Profile(user_model):
     term_start_date = models.DateField( blank=True, null=True)
     term_end_date = models.DateField( blank=True, null=True)
     signature_image = models.ImageField(upload_to='profile/', null=True)
-    resume = models.FileField(upload_to='files/', null=True)
+    resume = models.FileField(upload_to='files/', null=True,blank=True)
     # user_type = models.CharField(max_length=50)
 
     def __str__(self):
@@ -156,11 +156,16 @@ class Profile(user_model):
         profiles = list(profiles)
         for profile in profiles:
             profile['date_joined'] = str(profile['date_joined'])
+            profile['last_login'] = str(profile['last_login'])
+            profile['birth_date'] = str(profile['birth_date'])
+            profile['term_start_date'] = str(profile['term_start_date'])
+            profile['term_end_date'] = str(profile['term_end_date'])
+            profile['board_joining_date'] = str(profile['board_joining_date'])
             if profile['first_name'] or profile['last_name']:
                 profile['name'] = profile['first_name'] +' ' + profile['last_name']
             else:
                 profile['name'] = profile['username']
-            profile['image_small'] = profile['image']
+            profile['image_small'] = 'media/'+profile['image']
         profiles_json = {'records':profiles, 'total':total_cnt, 'count':current_cnt}
         return profiles_json
 
@@ -169,6 +174,15 @@ class Profile(user_model):
         user_id = params['id']
         profile = Profile.objects.filter(pk=user_id)[0].__dict__
         profile['date_joined'] = str(profile['date_joined'])
+        profile['last_login'] = str(profile['last_login'])
+        profile['birth_date'] = str(profile['birth_date'])
+        profile['term_start_date'] = str(profile['term_start_date'])
+        profile['term_end_date'] = str(profile['term_end_date'])
+        profile['board_joining_date'] = str(profile['board_joining_date'])
+
+        profile['image'] = "media/"+profile['image']
+        profile['admin_image'] = "media/" + profile['admin_image']
+        profile['name'] = profile['username']
         if profile.get('_state'):
             del profile['_state']
         data = {"profile": profile, "next": 0, "prev": 0}
