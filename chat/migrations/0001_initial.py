@@ -76,7 +76,9 @@ class Migration(migrations.Migration):
                 ('res_model', models.CharField(max_length=128)),
                 ('subtype_id', models.IntegerField()),
                 ('body', models.TextField()),
+                ('create_date', models.DateTimeField(null=True)),
                 ('parent', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='chat.Comment')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

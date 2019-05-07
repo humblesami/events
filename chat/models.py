@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from django.apps import apps
+from django.contrib import admin
 from django.db import models
 
 from mainapp import ws_methods
@@ -194,6 +197,8 @@ class Comment(models.Model):
     subtype_id = models.IntegerField()
     body = models.TextField()
     parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    create_date = models.DateTimeField(null=True)
 
     @classmethod
     def get_comments(cls, request, params):
@@ -202,8 +207,29 @@ class Comment(models.Model):
             res_model=params['res_model'],
             res_id=params['res_id'],
             subtype_id=params['subtype_id'],
-        ).values()
-        res = list(res)
+        ).order_by('id')
+        try:
+
+            parents = {
+
+            }
+            comments = []
+            for obj in res:
+                comment = obj.__dict__
+                del comment['_state']
+                comment['create_date'] = str(comment['create_date'])
+                comment['children'] = []
+                parents[comment['id']] = comment
+                pk = comment['parent_id']
+                if not pk:
+                    parents[pk] = comment
+                    comments.append(comment)
+                else:
+                    parents[pk]['children'].append(comment)
+            comments.reverse()
+            res = comments
+        except:
+            res = []
         return res
 
     @classmethod
@@ -213,14 +239,20 @@ class Comment(models.Model):
             res_model=params['res_model'],
             res_id=params['res_id'],
             subtype_id=params['subtype_id'],
-            body=params['body']
+            body=params['body'],
+            user_id=request.user.id,
+            create_date=datetime.now()
         )
+        if params.get('parent_id'):
+            comment.parent_id=params['parent_id']
         comment.save()
         comment = comment.__dict__
         del comment['_state']
         event_data = {'name': 'comment_received', 'data': comment}
         Notification.add_notification(params, event_data)
         return 'done'
+
+admin.site.register(Comment)
 
 class Message(models.Model):
     sender = models.IntegerField()

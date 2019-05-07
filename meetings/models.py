@@ -3,8 +3,8 @@ from videos.models import Video
 from .user import *
 from .document import *
 from django_countries.fields import CountryField
-from django.utils import  timezone
-import  datetime
+from django.utils import timezone
+import datetime
 
 
 # Create your models here.
@@ -13,16 +13,16 @@ class Event(models.Model):
         verbose_name = "Meeting"
         verbose_name_plural = "Meetings"
     name = models.CharField(max_length=200)
-    start_date = models.DateTimeField('start date', null=True, default=datetime.datetime.now())
+    start_date = models.DateTimeField('start date', null=True)
     end_date = models.DateTimeField('end date', null=True)
     attendees = models.ManyToManyField(Profile)
-    
-    
+
+
     custom_message = models.CharField('Message', max_length=200, blank=True)
     street = models.CharField('Street', max_length=50, blank=True)
     description = models.TextField(blank=True)
     publish = models.BooleanField('Publish', default=False)
-    country = CountryField( blank=True)
+    country = CountryField(blank=True)
     state = models.CharField('State', max_length=200, blank=True)
     city = models.CharField('City', max_length=200, blank=True)
     archived = models.BooleanField('Archived', default=False)
@@ -97,7 +97,7 @@ class Event(models.Model):
     # archived = fields.Boolean(string="Archived")
     # #message_ids = fields.One2many("mail.message",'res_id',write=['meeting_point.director'])
 
-    
+
     def __str__(self):
         return self.name
 
@@ -144,7 +144,7 @@ class Event(models.Model):
             meeting_object['meeting_docs'] = meeting_docs
             meeting_object['sign_docs'] = []
             meeting_object['surveys'] = []
-            meeting_object['votings']= votings
+            meeting_object['votings'] = votings
             meeting_object['attendees'] = attendees
             data = {"meeting": meeting_object, "next": 0, "prev": 0}
 
@@ -254,7 +254,7 @@ class Event(models.Model):
         for meeting in meetings:
             if meeting.exectime == meeting_type:
                 meeting_list.append(meeting)
-        return  meeting_list
+        return meeting_list
 
     @classmethod
     def get_records(cls, request, params):
@@ -289,19 +289,19 @@ class News(models.Model):
 
     @classmethod
     def get_data(cls, request, params):
-        home_object= {}
-        home_object['video_ids']=[]
+        home_object = {}
+        home_object['video_ids'] = []
         home_object['doc_ids'] = []
         home_object['to_do_items'] = {
-            'pending_meetings':[],
-            'pending_surveys':[],
-            'pending_documents':[],
-            'pending_votings':[]
+            'pending_meetings': [],
+            'pending_surveys': [],
+            'pending_documents': [],
+            'pending_votings': []
         }
         home_object['calendar'] = []
         news = News.objects.values()
         for nw in news:
-            videos = Video.objects.filter(news_id = nw['id'])
+            videos = Video.objects.filter(news_id=nw['id'])
             for video in videos:
                 video.url = video.url.replace('/watch?v=', '/embed/')
                 home_object['video_ids'].append({'name': video.name, 'url': video.url})
@@ -310,8 +310,8 @@ class News(models.Model):
 class Topic(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    lead = models.CharField(max_length=200,blank=True)
-    duration = models.DurationField(blank=True,null=True)
+    lead = models.CharField(max_length=200, blank=True)
+    duration = models.DurationField(blank=True, null=True)
     def __str__(self):
         return self.name
 
