@@ -14,7 +14,8 @@ class Event(models.Model):
         verbose_name_plural = "Meetings"
     name = models.CharField(max_length=200)
     start_date = models.DateTimeField('start date')
-    end_date = models.DateTimeField('end date', default=datetime.datetime.now())
+    start_date = models.DateTimeField('start date', null=True, default=datetime.datetime.now())
+    end_date = models.DateTimeField('end date', null=True)
     attendees = models.ManyToManyField(Profile)
     
     

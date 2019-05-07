@@ -5,6 +5,8 @@ import smtplib
 import threading
 import traceback
 
+import requests
+
 
 def get_user_name(user):
     name = False
@@ -25,6 +27,53 @@ def send_mail(mesgtosend):
     recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akram", recievers, mesgtosend)
 
+
+socket_server = {
+    'url': 'http://localhost:3000',
+    'connected': False
+}
+
+from django.db import connection
+def execute_update(query):
+    cr = connection.cursor()
+    res = cr.execute(query)
+    return res
+
+
+def execute_read(query):
+    cr = connection.cursor()
+    cr.execute(query)
+    res = cr.dictfetchall()
+    return res
+
+def emit_event(data, req_url=None):
+    try:
+        if not data:
+            data = []
+        data = json.dumps(data)
+        if not req_url:
+            req_url = '/odoo_event'
+        url = socket_server['url'] + req_url + '?data=' + data
+        try:
+            r = requests.get(socket_server['url'])
+            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            res = socket_server['url'] + " is not available"
+            print(res)
+            res = 'done'
+        except requests.exceptions.HTTPError:
+            res = 'httperror'
+            print(res)
+        else:
+            res = requests.get(url)
+            res = res._content.decode("utf-8")
+            return res
+        return res
+
+    except:
+        res = 'socket request failed because ' + str(sys.exc_info())
+        print(res)
+        return 'done'
 
 # def mfile_url(model, field, id, file_type):
 #     res = model + '/' + str(id) + '/' + field + '/' + request.db + '/' + request.token
@@ -276,42 +325,7 @@ def send_mail(mesgtosend):
 #
 #
 # # Socket Connetion
-# socket_server = {
-#     'url': tools.config['socket_url'],
-#     'connected': False
-# }
-#
-# import requests
-#
-#
-# def emit_event(data, req_url=None):
-#     try:
-#         if not data:
-#             data = []
-#         data = json.dumps(data)
-#         if not req_url:
-#             req_url = '/odoo_event'
-#         url = socket_server['url'] + req_url + '?data=' + data
-#         try:
-#             r = requests.get(socket_server['url'])
-#             r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
-#         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-#             res = socket_server['url'] + " is not available"
-#             print(res)
-#             res = 'done'
-#         except requests.exceptions.HTTPError:
-#             res = 'httperror'
-#             print(res)
-#         else:
-#             res = requests.get(url)
-#             res = res._content.decode("utf-8")
-#             return res
-#         return res
-#
-#     except:
-#         res = 'socket request failed because ' + str(sys.exc_info())
-#         print(res)
-#         return 'done'
+
 #
 #
 # def add_user_to_socket_list(user_data):

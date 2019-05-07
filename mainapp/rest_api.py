@@ -97,29 +97,25 @@ def session(request):
         return HttpResponse(res)
 
 def produce_result(res, args=None):
-    if res:
-        if type(res) == dict:
-            if 'error' not in res:
-                if 'data' in res:
-                    res = res.get('data')
-                    res['error'] = ''
-                else:
-                    res = {'data' : res, 'error': ''}
-        elif type(res) == str:
-            res = {'error': res}
-        elif isinstance(res, list):
-            res = {'error': '', 'data': res}
-        else:
-            if args:
-                args = ' in ' + args['app'] + '.' + args['model'] + '.' + args['method']
+    if type(res) == dict:
+        if 'error' not in res:
+            if 'data' in res:
+                res = res.get('data')
+                res['error'] = ''
             else:
-                args = ''
-            res = {'error': ' Invalid result type'+args}
+                res = {'data' : res, 'error': ''}
+    elif type(res) == str:
+        if res == 'done':
+            res = {'error': res, 'data': 'done'}
+        else:
+            res = {'error': res}
+    elif isinstance(res, list):
+        res = {'error': '', 'data': res}
     else:
         if args:
             args = ' in ' + args['app'] + '.' + args['model'] + '.' + args['method']
         else:
             args = ''
-        res = {'error': 'Invalid response'+ args}
+        res = {'error': ' Invalid result type'+args}
     res = json.dumps(res)
     return HttpResponse(res)

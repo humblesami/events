@@ -37,6 +37,9 @@ class Voting(models.Model):
     def __str__(self):
         return self.name
 
+    def get_audience(self):
+        return []
+
     @classmethod
     def get_details(cls, request, params):
         uid = request.user.id
