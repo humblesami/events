@@ -35,6 +35,7 @@ class VotingAdmin(admin.ModelAdmin):
     # list_filter = ['open_date', 'close_date', 'voting_type']
     # search_fields = ['name', 'open_date', 'close_date', 'voting_type__name']
     inlines = [VotingDocInline,]
+    filter_horizontal = ('respondents',)
     change_form_template = 'custom/change_form.html'
 
     def get_form(self, request, obj=None, **kwargs):

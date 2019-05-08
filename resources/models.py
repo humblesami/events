@@ -25,7 +25,8 @@ class Folder(models.Model):
                 obj['parent_id'] = parent_id
                 obj['name'] = folder.name
                 try:
-                    files = list(parent.files_set.values())
+                    if len(files) < 0:
+                        files = list(parent.files_set.values())
                     if len(files) > 0:
                         obj['files'] = files
                 except:
