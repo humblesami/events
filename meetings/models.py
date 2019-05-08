@@ -105,12 +105,19 @@ class Event(models.Model):
                         attendee['name'] = attendee['first_name'] + ' ' + attendee['last_name']
                     elif attendee['username']:
                         attendee['name'] = attendee['username']
-                attendee['last_login'] = str(attendee['last_login'])
-                attendee['date_joined'] = str(attendee['date_joined'])
-                img = attendee['image']
-                if img.find('media') == -1:
-                    img = 'media/' + img
-                    attendee['photo'] = img
+                if attendee['date_joined']:
+                    attendee['date_joined'] = str(attendee['date_joined'])
+                if attendee['birth_date']:
+                    attendee['birth_date'] = str(attendee['birth_date'])
+                if attendee['board_joining_date']:
+                    attendee['board_joining_date'] = str(attendee['board_joining_date'])
+                if attendee['term_start_date']:
+                    attendee['term_start_date'] = str(attendee['term_start_date'])
+                if attendee['term_end_date']:
+                    attendee['term_end_date'] = str(attendee['term_end_date'])
+                if attendee['last_login']:
+                    attendee['last_login'] = str(attendee['last_login'])
+                attendee['photo'] = attendee['image']
 
             meeting_object['topics'] = topics
             meeting_object['meeting_docs'] = meeting_docs
