@@ -1,8 +1,7 @@
 import base64
 from django.db import models
 from django.db.models import Count
-
-from meetings.models import Event, Topic
+from meetings.models import Event, Topic, Profile
 from django.contrib.auth.models import User
 from documents.models import File
 # Create your models here.
