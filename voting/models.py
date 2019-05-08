@@ -180,6 +180,8 @@ class VotingAnswer(models.Model):
     def save_Choice(cls, choice_id, voting_id, user_id, signature_data):
         if signature_data:
             signature_data = signature_data.encode()
+        else:
+            signature_data = bytes(signature_data, 'utf-8')
         voting_answer = VotingAnswer(user_answer_id=choice_id,voting_id = voting_id, user_id = user_id, signature_data=signature_data)
         voting_answer.save()
         cls.update_my_status(choice_id, voting_id)
