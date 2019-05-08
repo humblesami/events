@@ -1,8 +1,12 @@
 function dn_rpc_object(options) {
     var api_url = options.url;
-    var req_url = site_config.server_base_url + api_url;    
+    if(!api_url)
+    {
+        api_url = '/rest/secure';
+    }
+    var req_url = site_config.server_base_url + api_url;
     if (!options.data) {
-        console.log('No data and args for request ',options);
+        console.log('No data and arguments for request ',options);
         return;
     }
     var input_data = options.data;
@@ -10,24 +14,22 @@ function dn_rpc_object(options) {
         options.no_loader = 1;
 
     var ajax_user = window['current_user'];
-    // input_data.args['db'] = site_config.server_db;
-    // input_data.args['time_zone'] = ajax_user.time_zone;
 
     //console.log(input_data);
     if (input_data.no_loader)
     {
         options.no_loader = 1;
     }
-    
+
     var args_data = {input_data : JSON.stringify(input_data)};
     options.headers = {
-        
+
     }
     if(api_url.endsWith('/secure'))
     {
         if(ajax_user.cookie && ajax_user.cookie.token)
         {
-            options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;            
+            options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;
         }
         else
         {
@@ -38,7 +40,10 @@ function dn_rpc_object(options) {
 
     options.data = args_data;
     options.dataType = 'json';
-    options.type = 'GET',
+    if(req_url.startsWith('https'))
+    {
+        options.type = 'POST';
+    }
     //options.contentType = "application/json; charset=utf-8";    
 
     options.url = req_url;
