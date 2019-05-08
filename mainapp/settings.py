@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'documents',
     'esign',
     'videos',
+    'annotations',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

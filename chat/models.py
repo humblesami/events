@@ -30,7 +30,7 @@ class Notification(models.Model):
                 nt = obj.notification_type
                 note = nt.template
                 if obj.counter > 1:
-                    note = 'You have '+obj.counter+' new '+note
+                    note = 'You have ' + str(obj.counter) + ' new '+note
                 note = {
                     'res_id': obj.res_id,
                     'res_model': nt.res_model,
@@ -109,6 +109,11 @@ class Notification(models.Model):
         else:
             return 'No audience for the notification'
         return res
+
+    @classmethod
+    def update_counter(cls, request, params):
+        a =1
+
 
 class Comment(models.Model):
     res_id = models.IntegerField()
@@ -230,10 +235,11 @@ class AuthUserChat(models.Model):
                 }
         if not req_user:
             return "user does not exist"
+        notifications = Notification.getMyNotifications(request, False)
         data = {
             'friends' : friendList,
             'friendIds': friendIds ,
-            'notifications': [],
+            'notifications': notifications,
             'unseen': unseenMessages,
             'user': req_user
         }
