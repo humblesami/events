@@ -1,7 +1,11 @@
 import base64
 from django.db import models
 from django.db.models import Count
-from meetings.models import Event, Topic, Profile
+
+from meetings.models import Event, Topic
+from django.contrib.auth.models import User
+from documents.models import File
+# Create your models here.
 
 class VotingType(models.Model):
     name = models.CharField('Voting Type', max_length=100, blank = False)
@@ -52,7 +56,7 @@ class Voting(models.Model):
         voting_object = voting_object_orm.__dict__
         voting_object['open_date'] = str(voting_object['open_date'])
         voting_object['close_date'] = str(voting_object['close_date'])
-
+        voting_object['voting_docs'] = list(voting_object_orm.votingdocuments_set.all().values())
         voting_object['voting_type'] = {
             'id': voting_object_orm.voting_type.id,
             'name': voting_object_orm.voting_type.name
@@ -78,6 +82,8 @@ class Voting(models.Model):
         if len(user_answer) > 0:
             user_answer = user_answer[0]
             voting_object['signature_data'] = user_answer.signature_data.decode()
+        else:
+            voting_object['my_status'] = 'pending'
         voting_object['meeting'] = []
         voting_object['topic'] = []
         meeting = voting_object_orm.meeting
@@ -86,7 +92,6 @@ class Voting(models.Model):
         topic = voting_object_orm.topic
         if topic:
             voting_object['topic'].append({'id': topic.validate_unique()})
-        voting_object['voting_docs'] = []
         if voting_object.get('_state'):
             del voting_object['_state']
         return voting_object
@@ -272,3 +277,7 @@ class VotingAnswer(models.Model):
                 'error': 'Invalid voting id'
             }
         return data
+
+
+class VotingDocuments(File):
+    voting = models.ForeignKey('Voting', on_delete=models.CASCADE)

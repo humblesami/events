@@ -22,10 +22,7 @@ class Committee(models.Model):
                 committee_members = []
                 members = committee.users.all()
                 for member in members:
-                    member_img = member.image.name
-                    if member_img.find('media') == -1:
-                        member_img = 'media/'+ member_img
-                    member = {'id': member.id, 'name': member.username, 'image_small': member_img}
+                    member = {'id': member.id, 'name': member.username, 'image_small': member.image.name}
                     committee_members.append(member)
 
                 committee = {"name": committee.name, 'id': committee.id, "members": committee_members,
@@ -57,7 +54,7 @@ class Committee(models.Model):
             committee_memebers = []
             members = committee.users.filter()
             for member in members:
-                member = {'id': member.id, 'name': member.username}
+                member = {'id': member.id, 'name': member.username, 'image_small': member.image.name}
                 committee_memebers.append(member)
             committee = {'name': committee.name, 'id': committee.id, 'members': committee_memebers}
             data.append(committee)

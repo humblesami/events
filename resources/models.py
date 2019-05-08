@@ -17,7 +17,9 @@ class Folder(models.Model):
             folder = Folder.objects.get(pk=folder_id)
             files = list(folder.files_set.values())
             obj['files'] = files
+            obj['sub_folders'] = []
             parents = list(folder.parent.all())
+            ar = []
             for parent in parents:
                 parent_id = parent.id
                 obj['parent_id'] = parent_id
@@ -28,7 +30,6 @@ class Folder(models.Model):
                         obj['files'] = files
                 except:
                     pass
-                ar = []
                 ar.append({'id': parent.id, 'name': parent.name})
             obj['parents'] = ar
             return obj

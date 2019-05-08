@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Permission
-from .models import Voting, VotingType, VotingChoice, VotingAnswer
+from .models import Voting, VotingType, VotingChoice, VotingAnswer, VotingDocuments
 from django.db.models import Count
 
 # Register your models here.
@@ -14,12 +14,27 @@ class VotingTypeAdmin(admin.ModelAdmin):
     list_filter = ['name']
     search_fields = ['name']
     
+class VotingDocInline(admin.TabularInline):
+    model = VotingDocuments
+    exclude=('html','content','original_pdf','pdf_doc')
+    # readonly_fields = ('View',)
+    # show_change_link = True
+    extra = 0
 
+    # def docs(self, obj):
+    #     html = "<div>"
+    #     for d in obj.meetingdocument_set.all():
+    #         if d.pdf_doc:
+    #             html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
+    #     html += '</div>'
+    #
+    #     return format_html(html)
 
 class VotingAdmin(admin.ModelAdmin):
     # list_display = ['name', 'description', 'open_date', 'close_date', 'voting_type']
     # list_filter = ['open_date', 'close_date', 'voting_type']
     # search_fields = ['name', 'open_date', 'close_date', 'voting_type__name']
+    inlines = [VotingDocInline,]
     change_form_template = 'custom/change_form.html'
 
     def get_form(self, request, obj=None, **kwargs):
@@ -76,6 +91,8 @@ class VotingAnswerAdmin(admin.ModelAdmin):
     # list_filter = ['answer', 'user']
     list_filter = ['user']
     search_fields = ['user_answer__name', 'voting__name', 'user__username']
+
+
 
 admin.site.register(Voting, VotingAdmin)
 admin.site.register(VotingType, VotingTypeAdmin)
