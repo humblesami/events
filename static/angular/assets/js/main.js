@@ -338,6 +338,9 @@ window.addEventListener('message', function receiveMessage(evt)
         case 'committee':
         window.location = `/#/committees/${id}`;
         break;
+        case 'voting':
+        window.location = `/#/votings/${id}`;
+        break;
         
          
         }
@@ -354,6 +357,9 @@ window.addEventListener('message', function receiveMessage(evt)
             break;
         case 'committee':
         window.location = `/#/committees`;
+        break;
+        case 'voting':
+        window.location = `/#/votings`;
         break;
             
 
