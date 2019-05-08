@@ -6,6 +6,7 @@ import threading
 import traceback
 
 import requests
+from django.forms.models import model_to_dict
 
 
 def get_user_name(user):
@@ -74,6 +75,25 @@ def emit_event(data, req_url=None):
         res = 'socket request failed because ' + str(sys.exc_info())
         print(res)
         return 'done'
+
+def obj_to_dict(obj,fields=None,to_str=None):
+    if fields:
+        dict = model_to_dict(obj,fields)
+    else:
+        dict = model_to_dict(obj)
+    if to_str:
+        for field in to_str:
+            dict[field] = str(dict[field])
+    return dict
+
+def queryset_to_list(queryset,fields=None,to_str=None):
+    list = []
+    for obj in queryset:
+        dict = obj_to_dict(obj,fields,to_str)
+        list.append(dict)
+
+    return list
+
 
 # def mfile_url(model, field, id, file_type):
 #     res = model + '/' + str(id) + '/' + field + '/' + request.db + '/' + request.token

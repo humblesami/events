@@ -249,7 +249,7 @@ class GroupAdmin(GroupAdmin):
 
 class CommitteeAdmin(admin.ModelAdmin):
     filter_horizontal = ('users',)
-    fields=('name','members','users')
+    fields=('name','summary','members','users')
     list_display=('name','members')
     
     readonly_fields = ('members',)

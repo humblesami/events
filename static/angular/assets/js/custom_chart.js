@@ -19,9 +19,14 @@
             datasets: [{
                 data: data,
                 backgroundColor: [
-                    'red',
-                    'green',
-                    'blue',
+                    'DodgerBlue',
+                    'Gold',
+                    'HotPink',
+                ],
+                hoverBackgroundColor: [
+                    'DodgerBlue',
+                    'Gold',
+                    'HotPink',
                 ],
             }],
         

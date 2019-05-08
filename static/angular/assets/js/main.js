@@ -335,6 +335,9 @@ window.addEventListener('message', function receiveMessage(evt)
         case 'event':
             window.location = `/#/meeting/${id}`;
             break;
+        case 'committee':
+        window.location = `/#/committees/${id}`;
+        break;
         
          
         }
@@ -349,6 +352,9 @@ window.addEventListener('message', function receiveMessage(evt)
         case 'director':
             window.location = `/#/profiles`;
             break;
+        case 'committee':
+        window.location = `/#/committees`;
+        break;
             
 
       
