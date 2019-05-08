@@ -1,11 +1,7 @@
 import base64
-
 from django.db import models
 from django.db.models import Count
-
-from meetings.models import Event, Topic
-from django.contrib.auth.models import User
-# Create your models here.
+from meetings.models import Event, Topic, Profile
 
 class VotingType(models.Model):
     name = models.CharField('Voting Type', max_length=100, blank = False)
@@ -32,13 +28,21 @@ class Voting(models.Model):
     public_visibility = models.BooleanField('Results Visible To All', blank=True, default=False)
     description = models.TextField()
     my_status = models.CharField(max_length=50, default='pending')
+    respondents = models.ManyToManyField(Profile)
     # user = models.ForeignKey(User, on_delete=models.CASCADE, default = None)
 
     def __str__(self):
         return self.name
 
     def get_audience(self):
-        return []
+        res = []
+        if self.meeting:
+            for obj in self.meeting.attendees.constrained_target.values():
+                res.append(obj['profile_id'])
+        else:
+            for obj in self.respondents.constrained_target.values():
+                res.append(obj['profile_id'])
+        return res
 
     @classmethod
     def get_details(cls, request, params):
@@ -103,8 +107,8 @@ class Voting(models.Model):
 
 class VotingAnswer(models.Model):
     voting = models.ForeignKey(Voting, on_delete = models.CASCADE, null=True)
-    user = models.ForeignKey(User, on_delete = models.CASCADE, blank = False)
-    signature_data = models.BinaryField('Signature Data', blank = True)
+    user = models.ForeignKey(Profile, on_delete = models.CASCADE, blank = False)
+    signature_data = models.BinaryField('Signature Data', default=b'', null=True, blank=True)
     user_answer = models.ForeignKey(VotingChoice, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -178,11 +182,16 @@ class VotingAnswer(models.Model):
 
     @classmethod
     def save_Choice(cls, choice_id, voting_id, user_id, signature_data):
+        signature_required = False
         if signature_data:
             signature_data = signature_data.encode()
         else:
-            signature_data = bytes(signature_data, 'utf-8')
-        voting_answer = VotingAnswer(user_answer_id=choice_id,voting_id = voting_id, user_id = user_id, signature_data=signature_data)
+            signature_required = Voting.objects.get(pk=voting_id).signature_required
+            if signature_required:
+                return 'Please provide signature to submit response'
+        voting_answer = VotingAnswer(user_answer_id=choice_id,voting_id = voting_id, user_id = user_id)
+        if signature_required:
+            voting_answer.signature_data = signature_data
         voting_answer.save()
         cls.update_my_status(choice_id, voting_id)
         return voting_answer
@@ -263,5 +272,3 @@ class VotingAnswer(models.Model):
                 'error': 'Invalid voting id'
             }
         return data
-
-

@@ -1,10 +1,8 @@
-from datetime import datetime
-
-from django.apps import apps
-from django.contrib import admin
 from django.db import models
-
+from django.apps import apps
+from datetime import datetime
 from mainapp import ws_methods
+from django.contrib import admin
 from meetings.user import Profile, create_group
 from django.contrib.auth.models import User as user_model, User
 
@@ -12,183 +10,105 @@ from django.contrib.auth.models import User as user_model, User
 class NotificationType(models.Model):
     res_app = models.CharField(max_length=128)
     res_model = models.CharField(max_length=128)
+    res_type = models.CharField(max_length=64)
     template = models.CharField(max_length=256)
-    parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
+
 
 class Notification(models.Model):
     res_id = models.IntegerField()
-    parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    counter = models.IntegerField(default=1)
     notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE)
-    content = models.CharField(max_length=512)
 
     @classmethod
     def getMyNotifications(cls, request, params):
         uid = request.user.id
-        app_name = params.get('res_app')
-        model_name = params.get('res_model')
-        res_id = params.get('res_id')
-        sql = 'select distinct '
-        sql += ' res_app, res_model, n.content, res_id, n.id, counter '
-        sql += ' ,nt.action_id'
-        sql += ' from'
-        sql += ' chat_notification n '
-        sql += ' join chat_notification_type nt on nt.id=n.notification_type_id'
-        sql += ' join chat_notification_counter c on c.notification_id=n.id'
-        sql += ' where counter>0 and n.parent_id is null and user_id='+str(uid)
-        if app_name:
-            sql += " and res_app='"+app_name+"'"
-        if model_name:
-            sql += " and res_model='"+model_name+"'"
-        if res_id:
-            sql += " and res_id="+str(res_id)
-        res = ws_methods.execute_read(sql)
-        return res
-
-    @classmethod
-    def getNotificationCount(cls, request, params):
-        uid = request.user.id
-        app_name = params.get('res_app')
-        model_name = params.get('res_model')
-        res_id = params.get('res_id')
-        sql = 'select counter from '
-        sql += ' notification n '
-        sql += ' join notification_counter c on c.notification_id=n.id'
-        sql += ' where counter>0 and user_id='+str(uid)
-        if app_name:
-            sql += " and res_app='" + app_name + "'"
-        if model_name:
-            sql += " and res_model='" + model_name + "'"
-        if res_id:
-            sql += " and res_id=" + str(res_id)
-        res = ws_methods.execute_read(sql)
-        if len(res) > 0:
-            res = res[0]['counter']
-        else:
-            res = 0
-        return res
-
-    @classmethod
-    def getMyNotificationsOnRecord(cls, request, params):
-        uid = request.user.id
-        app_name = params.get('res_app')
-        model_name = params.get('res_model')
-        res_id = params.get('res_id')
-        sql = 'select res_app, res_model, n.content, res_id, n.id, counter from '
-        sql += ' notification n'
-        sql += ' join notification nt on nt.id=n.notification_type_id'
-        sql += ' join notification_counter c on c.notification_id=n.id'
-        sql += ' where counter>0 and user_id='+str(uid)
-        if app_name:
-            sql += " and res_app='" + app_name + "'"
-        if model_name:
-            sql += " and res_model='" + model_name + "'"
-        if res_id:
-            sql += " and res_id=" + str(res_id)
-        res = ws_methods.execute_read(sql)
+        res = []
+        records = Notification.objects.filter(counter__gt=0,user_id=uid)
+        if records:
+            for obj in records:
+                nt = obj.notification_type
+                note = nt.template
+                if obj.counter > 1:
+                    note = 'You have '+obj.counter+' new '+note
+                note = {
+                    'res_id': obj.res_id,
+                    'res_model': nt.res_model,
+                    'res_app': nt.res_app,
+                    'res_type': nt.res_type,
+                    'body': note
+                }
+                res.append(note)
         return res
 
     @classmethod
     def add_notification(cls, params, event_data):
-        model = apps.get_model(params['res_app'], params['res_model'])
-        obj_res = model.objects.get(pk=params['res_id'])
-        audience = obj_res.get_audience()
 
-        parent_object = params.get('parent')
-        if parent_object:
-            notification_values1 = {
-                'res_model': parent_object['res_model'],
-                'res_id': parent_object['res_id'],
-                'res_app': parent_object['res_app'],
-                'content': 'Fake cont',
-            }
-            audience = obj_res.get_audience()
-            parent_notification = cls.add_notification_item(notification_values1, audience)
-            params['parent_id'] = parent_notification.id
-            del params['parent']
-
-        notification = cls.add_notification_item(params, audience)
-        events = [
-            {'name': 'notification_received', 'data': notification, 'audience': audience},
-            {'name': event_data['name'], 'data': event_data['data'], 'audience': audience}
-        ]
-        res = ws_methods.emit_event(events)
-        return res
-
-    @classmethod
-    def add_notification_item(cls, notification_values, audience):
-        content = 'Fakeo'
-        res_model = notification_values['res_model']
-        res_id = notification_values['res_id']
-        res_app = notification_values['res_app']
+        res_model = params['res_model']
+        res_app = params['res_app']
+        res_id = params['res_id']
         res_id = int(res_id)
 
-        notification_type = NotificationType.objects.filter(res_app=res_app, res_model=res_model)
-        if len(notification_type) == 0:
-            notification_type = NotificationType(res_app=res_app, res_model=res_model)
+        model = apps.get_model(res_app, res_model)
+        obj_res = model.objects.get(pk=res_id)
+        audience = obj_res.get_audience()
+        if not audience:
+            return 'No Audience'
+
+        res_type = params.get('res_type')
+        if not res_type:
+            res_type = 'comment'
+
+        template = params.get('template')
+        if not template:
+            template = ' comment(s) '
+
+        notification_type = NotificationType.objects.filter(
+            res_app=res_app, res_model=res_model, res_type=res_type
+        )
+        if not notification_type:
+            notification_type = NotificationType(
+                res_app=res_app, res_model=res_model,
+                res_type=res_type, template=template
+            )
             notification_type.save()
         else:
             notification_type = notification_type[0]
 
-
-        notification = Notification.objects.filter(notification_type_id=notification_type.id, res_id=res_id)
-        if not notification:
-            notification = Notification(
-                res_id=res_id,
-                notification_type_id=notification_type.id
-            )
-            notification.save()
-        else:
-            notification = notification[0]
-        a = 1
         for uid in audience:
-            notification_counter = NotificationCounter.objects.filter(
-                user_id=uid,notification_id=notification.id)
-            if len(notification_counter) > 0:
-                notification_counter = notification_counter[0]
-                notification_counter.counter += 1
-                notification_counter.save()
-            else:
-                notification_counter = NotificationCounter(
-                    counter=1,
-                    user_id=uid,
-                    notification_id=notification.id
-                )
-                notification_counter.save()
-        notification = notification.__dict__
-        del notification['_state']
-        return notification
-
-    @classmethod
-    def update_counter(cls, request, params):
-
-        uid = request.user.id
-        res_id = params.get('res_id')
-        res_app = params.get('res_app')
-        res_model = params.get('res_model')
-        notification = Notification.objects.filter(res_app=res_app,res_model=res_model, res_id=res_id)
-        notification = notification[0]
-        notification_counter = NotificationCounter.objects.filter(user_id=uid,notification_id=notification.id)
-        if len(notification_counter) != 1:
-            return 'Invalid notification '+str(notification.id)+' for uid '+str(uid)
-        counter = notification_counter.counter
-        notification_counter.counter = 0
-        notification_counter.save()
-
-        if notification.parent:
-            notification = notification.parent
-            notification_counter = NotificationCounter.objects.filter(
-                user_id=uid,
-                notification_id=notification.id
+            notification = Notification.objects.filter(
+                notification_type_id=notification_type.id,
+                res_id=res_id,user_id=uid
             )
-            notification_counter.counter -= counter
-            notification_counter.save()
-        return 'done'
+            if not notification:
+                notification = Notification(
+                    res_id=res_id,
+                    user_id=uid,
+                    notification_type_id=notification_type.id
+                )
+                notification.save()
+            else:
+                notification = notification[0]
+                notification.counter += 1
+                notification.save()
 
-class NotificationCounter(models.Model):
-    _name = 'notification.counter'
-    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    counter = models.IntegerField(default = 0)
+        if len(audience) > 0:
+            note = notification_type.template
+            note = {
+                'res_id': res_id,
+                'res_model': res_model,
+                'res_app': res_app,
+                'res_type': res_type,
+                'body': note
+            }
+            events = [
+                {'name': 'notification_received', 'data': note, 'audience': audience},
+                {'name': event_data['name'], 'data': event_data['data'], 'audience': audience}
+            ]
+            res = ws_methods.emit_event(events)
+        else:
+            return 'No audience for the notification'
+        return res
 
 class Comment(models.Model):
     res_id = models.IntegerField()
@@ -251,8 +171,6 @@ class Comment(models.Model):
         event_data = {'name': 'comment_received', 'data': comment}
         Notification.add_notification(params, event_data)
         return 'done'
-
-admin.site.register(Comment)
 
 class Message(models.Model):
     sender = models.IntegerField()
@@ -320,3 +238,9 @@ class AuthUserChat(models.Model):
             'user': req_user
         }
         return data
+
+
+admin.site.register(Comment)
+admin.site.register(Message)
+admin.site.register(Notification)
+admin.site.register(NotificationType)

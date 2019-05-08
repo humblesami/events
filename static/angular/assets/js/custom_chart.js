@@ -1,5 +1,5 @@
-// $(function(){
-    function drawChart(chartData)
+(function(){
+    function drawChart(chartData, canvas_selector)
     {
         let labels = [];
         let data = [];
@@ -28,11 +28,12 @@
             // These labels appear in the legend and in the tooltips when hovering different arcs
             labels: labels
         };
-        var ctx = document.getElementById('myChart').getContext('2d');
+        var ctx = $(canvas_selector)[0].getContext('2d');
         var myPieChart = new Chart(ctx, {
             type: 'pie',
             backgroundColor: 'rgb(255, 99, 132)',
             data: chartData
         });
     }
-// })
+    window['drawChart'] = drawChart;
+})()
