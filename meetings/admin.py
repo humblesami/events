@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserChangeForm
 from django.utils.html import format_html
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
-from .models import Event,Topic, News
+from .models import Event,Topic, News, NewsVideo, NewsDocument
 from .user import Profile,Admin,Director,Staff,MeetingGroup
 from .committee import Committee
 from .document import MeetingDocument,AgendaDocument
@@ -266,10 +266,19 @@ class CommitteeAdmin(admin.ModelAdmin):
         return format_html(html)
     # members.short_description = ''
     
-       
-       
+class NewsVideoInline(admin.TabularInline):
+    model = NewsVideo
+    extra = 0
+class NewsDocumentInline(admin.TabularInline):
+    model = NewsDocument
+    exclude = ('html', 'content', 'original_pdf', 'pdf_doc')
+    extra = 0
 
-admin.site.register(News)
+
+class NewsAdmin(admin.ModelAdmin):
+    inlines = [NewsVideoInline, NewsDocumentInline, ]
+
+admin.site.register(News, NewsAdmin)
 admin.site.register(Event,EventAdmin)
 admin.site.register(Topic,TopicAdmin)
 admin.site.register(MeetingDocument)

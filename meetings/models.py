@@ -206,9 +206,6 @@ class News(models.Model):
             home_object['doc_ids'] = news_docs
 
             break
-
-        home_object['video_ids'] = []
-        home_object['doc_ids'] = []
         home_object['to_do_items'] = {
             'pending_meetings': [],
             'pending_surveys': [],
@@ -222,6 +219,8 @@ class News(models.Model):
             event['country'] = str(event['country'].name)
             event['start_date'] = str(event['start_date'])
             event['end_date'] = str(event['end_date'])
+            event['start'] = event['start_date']
+            event['stop'] = event['end_date']
             if event['attendees']:
                 del event['attendees']
             calendar_events.append(event)
@@ -231,6 +230,8 @@ class News(models.Model):
         for meeting in pending_meetings:
             meeting['start_date'] = str(meeting['start_date'])
             meeting['end_date'] = str(meeting['end_date'])
+            meeting['start'] = meeting['start_date']
+            meeting['stop'] = meeting['end_date']
         home_object['to_do_items']['pending_meetings'] = pending_meetings
 
         votings = Voting.objects.filter(meeting__id__isnull=False, close_date__gte=datetime.datetime.now())
