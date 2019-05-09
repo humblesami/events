@@ -49,7 +49,7 @@ function dn_rpc_object(options) {
         options.type = 'POST';
     }
     // console.log(options.type, 18);
-    //options.contentType = "application/json; charset=utf-8";
+    //options.contentType = "application/json; charset=utf-8";    
 
     options.url = req_url;
     options.timeout = 30000;
@@ -66,10 +66,10 @@ function dn_rpc_object(options) {
     options.success = function(response) {
         var result = false;
         if (!response) {
-            console.log("Undefined response", url_with_params);
-        } else {
+            console.log("Undefined response", url_with_params);            
+        } else {            
             if (response.error) {
-                if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {
+                if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
                     bootbox.alert('Token expired, please login again '+ options.url);
                     ajax_user.logout(1);
                 } else if (response.error.indexOf('not allowed to access') > -1) {

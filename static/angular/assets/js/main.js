@@ -329,9 +329,6 @@ window.addEventListener('message', function receiveMessage(evt) {
         //console.log(evt.data, model);
         if (action === 'change') {
             switch (model) {
-                case 'director':
-                    window.location = `/#/profile/${id}`;
-                    break;
                 case 'event':
                     window.location = `/#/meeting/${id}`;
                     break;
@@ -344,6 +341,15 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'voting':
                     window.location = `/#/votings/${id}`;
                     break;
+                case 'director':
+                window.location = `/#/director/${id}`;
+                break;
+                case 'admin':
+                window.location = `/#/admin/${id}`;
+                break;
+                case 'staff':
+                window.location = `/#/staff/${id}`;
+                break;
 
 
             }
@@ -353,14 +359,20 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'event':
                     window.location = `/#/meetings/upcoming`;
                     break;
-                case 'director':
-                    window.location = `/#/profiles`;
-                    break;
                 case 'committee':
                     window.location = `/#/committees`;
                     break;
                 case 'voting':
                     window.location = `/#/votings`;
+                    break;
+                    case 'director':
+                    window.location = `/#/directors`;
+                    break;
+                    case 'admin':
+                    window.location = `/#/admins`;
+                    break;
+                    case 'staff':
+                    window.location = `/#/staff`;
                     break;
 
 
