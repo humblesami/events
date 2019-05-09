@@ -18,7 +18,8 @@ class AuthUser(models.Model):
                 if len(tokens) > 0:
                     tokens[0].delete()
                 token = Token.objects.create(user=user)
-                return {'name': user.username, 'id': user.id, 'token': token.key }
+                user_groups = list(user.groups.all().values())
+                return {'name': user.username, 'id': user.id, 'token': token.key, 'groups':user_groups }
             else:
                 return {'error': 'Not authorized to have token'}
         else:

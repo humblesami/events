@@ -155,7 +155,11 @@ class Profile(user_model):
         profiles = Profile.objects.filter(groups__name__iexact=group)
         total_cnt = profiles.count()
         current_cnt = total_cnt
-        profiles = queryset_to_list(profiles,to_str=['signature_image','date_joined','birth_date','board_joining_date','term_start_date','term_end_date','image','admin_image','resume','groups','user_permissions'])
+        profiles = queryset_to_list(profiles,to_str=[
+            'signature_image','date_joined','birth_date','board_joining_date',
+            'term_start_date','term_end_date','image','admin_image','resume',
+            'groups','user_permissions'
+        ])
         # for profile in profiles:
         #     if profile['date_joined']:
         #         profile['date_joined'] = str(profile['date_joined'])
@@ -182,8 +186,46 @@ class Profile(user_model):
         if not user_id:
             user_id = request.user.id
         profile = Profile.objects.filter(pk=user_id)[0]
-        profile = obj_to_dict(profile,to_str=['signature_image','date_joined','birth_date','board_joining_date','term_start_date','term_end_date','image','admin_image','resume','groups','user_permissions'])
-
+        profile = obj_to_dict(profile, fields=
+            [
+            'id', 'name', 'email', 'nick_name', 'website',
+            'companies', 'bio', 'mobile_phone', 'work_phone',
+            'fax', 'job_title', 'department', 'board_joing_date',
+            'admin_first_name',
+            'admin_last_name',
+            'admin_image',
+            'admin_nick_name',
+            'admin_email',
+            'admin_fax',
+            'admin_cell_phone',
+            'admin_work_phone',
+            'mail_to_assistant',
+            'image__name',
+            'last_login',
+            'date_joined',
+                'term_start_date',
+                'term_end_date',
+                'birth_date',
+            'signature_image__name',
+                'resume__name',
+                'board_joining_date',
+            'bio'
+        ], to_str=
+        [
+            'last_login','date_joined','birth_date','board_joining_date',
+            'term_start_date','term_end_date',
+            'admin_image'
+         ]
+                              )
+        # user_groups = list(profile.groups.all().values())
+        # profile['mgroup'] = 'director'
+        # for grp in user_groups:
+        #     if grp['name'] == 'Admin':
+        #         profile['mgroup'] = 'admin'
+        #         break
+        #     if grp['name'] == 'Staff':
+        #         profile['mgroup'] = 'staff'
+        #         break
         data = {"profile": profile, "next": 0, "prev": 0}
         return data
     @classmethod

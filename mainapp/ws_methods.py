@@ -88,7 +88,8 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
         dict = model_to_dict(obj)
     if to_str:
         for field in to_str:
-            dict[field] = str(dict[field])
+            if dict[field]:
+                dict[field] = str(dict[field])
 
     if related:
         for field in related:
