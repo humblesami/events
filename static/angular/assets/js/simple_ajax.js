@@ -67,48 +67,53 @@ function dn_rpc_object(options) {
         var result = false;
         if (!response) {
             console.log("Undefined response", url_with_params);            
-        } else {            
-            if (response.error) {
-                if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
-                    bootbox.alert('Token expired, please login again '+ options.url);
-                    ajax_user.logout(1);
-                } else if (response.error.indexOf('not allowed to access') > -1) {
-                    bootbox.alert("Contact admin for permissions" + response.error);
-                } else {
-                    if(options.type == 'GET')
-                    {
-                        console.log(url_with_params);
-                    }
-                    console.log(input_data.args);
-                    console.log(response.error);
-                    if(response.error.indexOf('Unauthorized') > -1)
-                    {
-                        ajax_user.logout(1);
-                    }
-                    else if(options.onError) {
-                        try{
-                            options.onError(response.error);
-                        }
-                        catch(er)
-                        {
-                            console.log(response.error, er);
-                        }                        
-                    }
+        } else if (response.data) {
+            response = response.data;
+            if (options.onSuccess) {
+                try{
+                    options.onSuccess(response);
                 }
+                catch(er)
+                {
+                    console.log(response, er);
+                }
+            } else if(site_config.show_logs.indexOf('ajax_success')){
+                console.log(response.data);
+            }
+        }
+        else {
+            if(!response.error)
+            {
+                response.error = response;
+            }
+
+            if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {
+                bootbox.alert('Token expired, please login again '+ options.url);
+                ajax_user.logout(1);
+            } else if (response.error.indexOf('not allowed to access') > -1) {
+                bootbox.alert("Contact admin for permissions" + response.error);
             } else {
-                if (response.data)
-                    response = response.data;
-                if (options.onSuccess) {
+                if(options.type == 'GET')
+                {
+                    console.log(url_with_params);
+                }
+
+                if(response.error.indexOf('Unauthorized') > -1)
+                {
+                    ajax_user.logout(1);
+                }
+                else if(options.onError) {
                     try{
-                        options.onSuccess(response);
+                        options.onError(response.error);
                     }
                     catch(er)
                     {
-                        console.log(response, er);
+                        console.log(response.error, er);
                     }
-                } else if(site_config.show_logs.indexOf('ajax_success')){
-                    console.log(response.data);
                 }
+                console.log(input_data.args);
+                response.error = response.error.replace('<br/>','\n');
+                console.log(response.error);
             }
         }
     };

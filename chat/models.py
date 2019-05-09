@@ -216,29 +216,28 @@ class AuthUserChat(models.Model):
         uid = params['id']
         uid = int(uid)
         mp_users = Profile.objects.filter()
-        unseenMessages = 0
-        friendList = {}
-        friendIds = []
+        unseen_messages = 0
+        friend_list = {}
+        friend_ids = []
         http_host = request.META.get('HTTP_HOST')
         req_user = False
         if not http_host:
             http_host = ''
         for friendObj in mp_users:
             if friendObj.pk != uid:
+                id = friendObj.id
+                name = friendObj.fullname()
+                photo = http_host + friendObj.image.url
+                unseen = len(Message.objects.filter(sender=friendObj.id, read_status=False, to=uid))
+                unseen_messages += unseen
                 friend = {
-                    'id': friendObj.id,
-                    'name': friendObj.fullname(),
-                    'photo': http_host+friendObj.image.url
+                    'id': id,
+                    'unseen': unseen,
+                    'name': name,
+                    'photo': photo
                 }
-                # if friendObj.has_group('meeting_point.group_meeting_staff') or friendObj.has_group(
-                #         'meeting_point.group_meeting_admin'):
-                #     friend['type'] = 'staff'
-                # else:
-                #     friend['type'] = 'director'
-                friend['unseen'] = len(Message.objects.filter(sender=friendObj.id, read_status=False, to=uid))
-                unseenMessages += friend['unseen']
-                friendList[friend['id']] = friend
-                friendIds.append(friend['id'])
+                friend_list[id] = friend
+                friend_ids.append(id)
             else:
                 req_user = {
                     'id': uid,
@@ -260,10 +259,10 @@ class AuthUserChat(models.Model):
             return "user does not exist"
         notifications = Notification.getMyNotifications(request, False)
         data = {
-            'friends' : friendList,
-            'friendIds': friendIds ,
+            'friends' : friend_list,
+            'friendIds': friend_ids ,
             'notifications': notifications,
-            'unseen': unseenMessages,
+            'unseen': unseen_messages,
             'user': req_user
         }
         return data

@@ -1,12 +1,10 @@
-from django.db import models
-
-from mainapp import ws_methods
-from .user import *
-from .document import *
-from django_countries.fields import CountryField
-from django.utils import timezone
 import datetime
-from voting.models import Voting,VotingAnswer
+from django.db import models
+from documents.file import File
+from django.utils import timezone
+from meetings.user import Profile
+from voting.models import Voting
+from django_countries.fields import CountryField
 
 
 # Create your models here.
@@ -15,20 +13,20 @@ class Event(models.Model):
         verbose_name = "Meeting"
         verbose_name_plural = "Meetings"
     name = models.CharField(max_length=200)
-    start_date = models.DateTimeField('start date', null=True)
-    end_date = models.DateTimeField('end date', null=True)
+    start_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(null=True)
     attendees = models.ManyToManyField(Profile)
 
 
     custom_message = models.CharField('Message', max_length=200, blank=True)
-    street = models.CharField('Street', max_length=50, blank=True)
+    street = models.CharField(max_length=150, blank=True)
     description = models.TextField(blank=True)
-    publish = models.BooleanField('Publish', default=False)
+    publish = models.BooleanField(default=False)
     country = CountryField(blank=True)
     state = models.CharField('State', max_length=200, blank=True)
-    city = models.CharField('City', max_length=200, blank=True)
-    archived = models.BooleanField('Archived', default=False)
-    zip = models.CharField('Zip', max_length=500, blank=True)
+    city = models.CharField(max_length=200, blank=True)
+    archived = models.BooleanField(default=False)
+    zip = models.CharField(max_length=10, blank=True)
     pin = models.CharField('Meeting PIN', max_length=50, blank=True)
     conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, blank=True)
 
@@ -67,6 +65,36 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_upcoming_public_events(cls):
+        public_events = Event.objects.filter(archived=False, publish=True, end_date__gt=datetime.datetime.now())
+        public_events = list(public_events.values())
+        calendar_events = []
+        for event in public_events:
+            event['country'] = str(event['country'].name)
+            event['start_date'] = str(event['start_date'])
+            event['end_date'] = str(event['end_date'])
+            event['start'] = event['start_date']
+            event['stop'] = event['end_date']
+            if event['attendees']:
+                del event['attendees']
+            calendar_events.append(event)
+        return calendar_events
+
+    @classmethod
+    def get_pending_meetings(cls, uid):
+        meetings = Event.objects.filter(attendees__id__contains=[uid], publish=True,
+                                                end_date__gte=datetime.datetime.now())
+        pending_meetings = []
+        pending_meetings = list(meetings.values())
+        for meeting in pending_meetings:
+            meeting['start_date'] = str(meeting['start_date'])
+            meeting['end_date'] = str(meeting['end_date'])
+            meeting['start'] = meeting['start_date']
+            meeting['stop'] = meeting['end_date']
+            pending_meetings.append(meeting)
+        return  pending_meetings
 
     @classmethod
     def respond_invitation(cls, request, params):
@@ -182,8 +210,7 @@ class News(models.Model):
     def get_data(cls, request, params):
         uid = request.user.id
         home_object = {}
-
-        news = News.objects.values()
+        news = News.objects.get(pk=1).values()
         for obj in news:
             home_object['news'] = {
                 'id': obj['id'],
@@ -191,7 +218,6 @@ class News(models.Model):
                 'photo': obj['photo'],
                 'name': obj['name'],
             }
-
             videos = NewsVideo.objects.filter(news_id=obj['id'])
             news_videos = []
             for video in videos:
@@ -204,72 +230,14 @@ class News(models.Model):
             for doc in docs:
                 news_docs.append({'name': doc.name, 'id': doc.id})
             home_object['doc_ids'] = news_docs
-
             break
         home_object['to_do_items'] = {
-            'pending_meetings': [],
-            'pending_surveys': [],
+            'pending_meetings':  Event.get_pending_meetings(uid),
+            'pending_surveys': Voting.get_todo_votings(uid),
             'pending_documents': [],
             'pending_votings': []
         }
-        public_events = Event.objects.filter(archived=False, publish=True, end_date__gt=datetime.datetime.now())
-        public_events = ws_methods.queryset_to_list(public_events)
-        calendar_events = []
-        for event in public_events:
-            event['country'] = str(event['country'].name)
-            event['start_date'] = str(event['start_date'])
-            event['end_date'] = str(event['end_date'])
-            event['start'] = event['start_date']
-            event['stop'] = event['end_date']
-            if event['attendees']:
-                del event['attendees']
-            calendar_events.append(event)
-        home_object['calendar'] = calendar_events
-
-        pending_meetings = list(Event.objects.filter(attendees__id=uid, publish=True, end_date__gte=datetime.datetime.now()).values())
-        for meeting in pending_meetings:
-            meeting['start_date'] = str(meeting['start_date'])
-            meeting['end_date'] = str(meeting['end_date'])
-            meeting['start'] = meeting['start_date']
-            meeting['stop'] = meeting['end_date']
-        home_object['to_do_items']['pending_meetings'] = pending_meetings
-
-        votings = Voting.objects.filter(meeting__id__isnull=False, close_date__gte=datetime.datetime.now())
-        pending_votings = []
-        if votings:
-            for voting in votings:
-                user_voting = voting.meeting.attendees.all().filter(pk=uid)
-                if user_voting:
-                    user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
-                    if len(user_answer) > 0:
-                        user_answer = user_answer[0]
-                        my_status = user_answer.user_answer.name
-                    else:
-                        my_status = 'pending'
-                    pending_votings.append({
-                        'id': voting.id,
-                         'name': voting.name,
-                         'voting_type_name': voting.voting_type.name,
-                         'my_status': my_status
-                    })
-
-        """Voting Based on Respondents"""
-        votings = Voting.objects.filter(respondents__id=uid, close_date__gte=datetime.datetime.now())
-        if votings:
-            for voting in votings:
-                user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
-                if len(user_answer) > 0:
-                    user_answer = user_answer[0]
-                    my_status = user_answer.user_answer.name
-                else:
-                    my_status = 'pending'
-                pending_votings.append({
-                    'id': voting.id,
-                    'name': voting.name,
-                    'voting_type_name': voting.voting_type.name,
-                    'my_status': my_status
-                })
-        home_object['to_do_items']['pending_votings'] = pending_votings
+        home_object['calendar'] = Event.get_upcoming_public_events()
         return {'error': '', 'data': home_object}
 
 class NewsDocument(File):

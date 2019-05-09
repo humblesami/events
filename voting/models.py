@@ -1,41 +1,76 @@
 import base64
+import datetime
 from django.db import models
-from django.db.models import Count
-from django.contrib.auth.models import User
 from documents.models import File
 from meetings.user import Profile
-# Create your models here.
+from django.db.models import Count
 
 class VotingType(models.Model):
-    name = models.CharField('Voting Type', max_length=100, blank = False)
+    name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
 
 class VotingChoice(models.Model):
-    name = models.CharField('Voting Choice', max_length = 100, blank = False)
-    voting_type = models.ForeignKey(VotingType, on_delete = models.CASCADE, blank = False)
+    name = models.CharField('Voting Choice', max_length = 100)
+    voting_type = models.ForeignKey(VotingType, on_delete = models.CASCADE)
     def __str__(self):
         return self.name
 
 
-
 class Voting(models.Model):
-    voting_type = models.ForeignKey(VotingType, on_delete=models.CASCADE, blank = False)
-    name = models.CharField('Title', max_length=200, blank = False)
+    voting_type = models.ForeignKey(VotingType, on_delete=models.CASCADE)
+    name = models.CharField('Title', max_length=200)
     meeting = models.ForeignKey('meetings.Event', null=True, on_delete=models.SET_NULL, blank=True)
     topic = models.ForeignKey('meetings.Topic', null=True, on_delete=models.SET_NULL, blank=True)
-    open_date = models.DateTimeField('Start Date', blank = False)
-    close_date = models.DateTimeField('End Date', blank = False)
+    open_date = models.DateTimeField('Start Date')
+    close_date = models.DateTimeField('End Date')
     signature_required = models.BooleanField('Signature Required', blank=True, default=False)
     enable_discussion = models.BooleanField('Enable Discussion', blank=True, default=False)
     public_visibility = models.BooleanField('Results Visible To All', blank=True, default=False)
     description = models.TextField()
     my_status = models.CharField(max_length=50, default='pending')
-    respondents = models.ManyToManyField(Profile, blank=True)
-    # user = models.ForeignKey(User, on_delete=models.CASCADE, default = None)
+    respondents = models.ManyToManyField(Profile, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_todo_votings(cls, uid):
+        votings = Voting.objects.filter(meeting__id__isnull=False, close_date__gte=datetime.datetime.now())
+        pending_votings = []
+        if votings:
+            for voting in votings:
+                user_voting = voting.meeting.attendees.all().filter(pk=uid)
+                if user_voting:
+                    user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
+                    if len(user_answer) > 0:
+                        user_answer = user_answer[0]
+                        my_status = user_answer.user_answer.name
+                    else:
+                        my_status = 'pending'
+                    pending_votings.append({
+                        'id': voting.id,
+                        'name': voting.name,
+                        'voting_type_name': voting.voting_type.name,
+                        'my_status': my_status
+                    })
+
+        votings = Voting.objects.filter(respondents__id=uid, close_date__gte=datetime.datetime.now())
+        if votings:
+            for voting in votings:
+                user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
+                if len(user_answer) > 0:
+                    user_answer = user_answer[0]
+                    my_status = user_answer.user_answer.name
+                else:
+                    my_status = 'pending'
+                pending_votings.append({
+                    'id': voting.id,
+                    'name': voting.name,
+                    'voting_type_name': voting.voting_type.name,
+                    'my_status': my_status
+                })
+        return pending_votings
 
     def get_audience(self):
         res = []

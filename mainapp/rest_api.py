@@ -37,13 +37,7 @@ def public(request):
         res = method_to_call(request, params)
         return produce_result(res, args)
     except:
-        eg = traceback.format_exception(*sys.exc_info())
-        errorMessage = ''
-        for er in eg:
-            errorMessage += " " + er
-        res = {'error' : errorMessage}
-        res = json.dumps(res)
-        return HttpResponse(res)
+        return produce_exception()
 
 
 @csrf_exempt
@@ -61,14 +55,7 @@ def secure(request):
         res = method_to_call(request, params)
         return produce_result(res, args)
     except:
-        eg = traceback.format_exception(*sys.exc_info())
-        errorMessage = ''
-        for er in eg:
-            errorMessage += " " + er
-        res = {'error' : errorMessage}
-        res = json.dumps(res)
-        return HttpResponse(res)
-
+        return produce_exception()
 
 def session(request):
     try:
@@ -89,13 +76,18 @@ def session(request):
         res = method_to_call(request, params)
         return produce_result(res, args)
     except:
-        eg = traceback.format_exception(*sys.exc_info())
-        errorMessage = ''
-        for er in eg:
+        return produce_exception()
+
+def produce_exception():
+    eg = traceback.format_exception(*sys.exc_info())
+    errorMessage = ''
+    cnt = 0
+    for er in eg:
+        cnt += 1
+        if not '/dist-packages' in er:
             errorMessage += " " + er
-        res = {'error' : errorMessage}
-        res = json.dumps(res)
-        return HttpResponse(res)
+    errorMessage = errorMessage.replace('\n', '<br/>')
+    return HttpResponse(errorMessage)
 
 def produce_result(res, args=None):
     if type(res) == dict:
