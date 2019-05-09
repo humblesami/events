@@ -175,7 +175,9 @@ class Profile(user_model):
 
     @classmethod
     def get_details(cls, request, params):
-        user_id = params['id']
+        user_id = params.get('id')
+        if not user_id:
+            user_id = request.user.id
         profile = Profile.objects.filter(pk=user_id)[0].__dict__
         if profile['date_joined']:
             profile['date_joined'] = str(profile['date_joined'])
@@ -187,11 +189,20 @@ class Profile(user_model):
             profile['term_start_date'] = str(profile['term_start_date'])
         if profile['term_end_date']:
             profile['term_end_date'] = str(profile['term_end_date'])
+        if profile['last_login']:
+            profile['last_login'] = str(profile['last_login'])
         if profile.get('_state'):
             del profile['_state']
         data = {"profile": profile, "next": 0, "prev": 0}
         return data
-
+    @classmethod
+    def update_profile(cls, request, params):
+        user_id = request.user.id
+        profile = Profile.objects.get(pk=user_id)
+        for key in params:
+            setattr(profile, key, params[key])
+        profile.save()
+        return 'done'
 
     def save(self, *args, **kwargs):
         super(Profile, self).save(*args, **kwargs)
