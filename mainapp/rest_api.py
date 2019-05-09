@@ -15,6 +15,7 @@ public_methods = {
     }
 }
 
+@csrf_exempt
 def public(request):
     try:
         kw = request.POST
