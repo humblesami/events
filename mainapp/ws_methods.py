@@ -76,20 +76,36 @@ def emit_event(data, req_url=None):
         print(res)
         return 'done'
 
-def obj_to_dict(obj,fields=None,to_str=None):
+def obj_to_dict(obj,fields=None,to_str=None,related=None):
     if fields:
         dict = model_to_dict(obj,fields)
+        for field in fields:
+            if field.find("__") != -1:
+                val = getattr(obj, field.split("__")[0])
+                val = getattr(val, field.split("__")[1])
+                dict[field.split("__")[0]] = val
     else:
         dict = model_to_dict(obj)
     if to_str:
         for field in to_str:
             dict[field] = str(dict[field])
+
+    if related:
+        for field in related:
+            _to_str = related[field].get("to_str")
+            _fields = related[field].get("fields")
+            _related = related[field].get("related")
+            rel_obj = getattr(obj, field)
+            if rel_obj._queryset_class:
+                dict[field] = queryset_to_list(rel_obj.filter(),fields=_fields,to_str=_to_str,related=_related)
+
+
     return dict
 
-def queryset_to_list(queryset,fields=None,to_str=None):
+def queryset_to_list(queryset,fields=None,to_str=None,related=None):
     list = []
     for obj in queryset:
-        dict = obj_to_dict(obj,fields,to_str)
+        dict = obj_to_dict(obj,fields,to_str,related)
         list.append(dict)
 
     return list

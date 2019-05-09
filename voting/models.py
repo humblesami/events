@@ -31,7 +31,7 @@ class Voting(models.Model):
     public_visibility = models.BooleanField('Results Visible To All', blank=True, default=False)
     description = models.TextField()
     my_status = models.CharField(max_length=50, default='pending')
-    respondents = models.ManyToManyField(Profile)
+    respondents = models.ManyToManyField(Profile, null=True, blank=True)
     # user = models.ForeignKey(User, on_delete=models.CASCADE, default = None)
 
     def __str__(self):

@@ -29,8 +29,8 @@ urlpatterns = [
     url(r'', include('ngapp.urls')),
     url(r'^admin/', admin.site.urls),
     path('rest/public', rest_api.public, name = 'public'),
-    path('rest/secure', rest_api.secure, name = 'public'),
-    path('rest/secure1', rest_api.session, name = 'public'),
+    path('rest/secure', rest_api.secure, name = 'secure'),
+    path('rest/secure1', rest_api.session, name = 'session'),
     url(r'^voting/', include('voting.urls')),
     path('media/<str:folder>/<str:file>/', views.serve_protected_document, name='serve_protected_document'),
 
