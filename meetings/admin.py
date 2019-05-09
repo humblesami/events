@@ -268,9 +268,8 @@ class CommitteeAdmin(admin.ModelAdmin):
        
        
 
-
+admin.site.register(News)
 admin.site.register(Event,EventAdmin)
-# admin.site.register(News)
 admin.site.register(Topic,TopicAdmin)
 admin.site.register(MeetingDocument)
 admin.site.register(AgendaDocument)

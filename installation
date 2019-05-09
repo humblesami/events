@@ -25,6 +25,8 @@ To add default records of meeting
 
 python3 manage.py createsuperuser --username=sa --email=sa@gmail.com
 
+create home page
+
 python3 manage.py runserver
 
 python3 manage.py startapp mymodule

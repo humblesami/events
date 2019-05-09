@@ -22,19 +22,16 @@ var dn_current_site_user = {
     verifyUserToken: function() {
         var user_info = dn_current_site_user.cookie;
         dn_current_site_user.cookie = localStorage.getItem('user');
-        if(dn_current_site_user.cookie)
-        {
+        if (dn_current_site_user.cookie) {
             dn_current_site_user.cookie = JSON.parse(dn_current_site_user.cookie);
-            if(!dn_current_site_user.cookie.token)
-            {
+            if (!dn_current_site_user.cookie.token) {
                 site_functions.go_to_login();
             }
         }
     },
     onLogin: function(data) {
         // console.log(233);
-        if(time_out_session)
-        {
+        if (time_out_session) {
             clearTimeout(time_out_session);
         }
         time_out_session = setTimeout(function() {
@@ -42,14 +39,13 @@ var dn_current_site_user = {
         }, session_time_limit);
         dn_current_site_user.cookie = data;
         data = JSON.stringify(data);
-        localStorage.setItem('user', data);        
+        localStorage.setItem('user', data);
     },
     logout: function(navigate) {
         // console.log(342);
         localStorage.removeItem("user");
-        dn_current_site_user.cookie = undefined;        
-        if(window['socket_manager'])
-        {
+        dn_current_site_user.cookie = undefined;
+        if (window['socket_manager']) {
             window['socket_manager'].close_socket();
             window['socket_manager'].user_data = undefined;
         }
@@ -109,10 +105,10 @@ var site_functions = {
     get_path: function() {
 
     },
-    go_to_login: function(){
+    go_to_login: function() {
         dn_current_site_user.logout(1);
     },
-    meeting_time : function(dt){
+    meeting_time: function(dt) {
         var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss')
         var res = {
             day: moment_time.format('DD'),
@@ -121,13 +117,13 @@ var site_functions = {
         }
         return res;
     },
-    meeting_time_str : function(dt){
+    meeting_time_str: function(dt) {
         var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss');
         res = moment_time.format('MMM DD, YYYY hh:mm A');
         return res;
     },
     hour_minutes: function(dt) {
-        if (typeof (dt) == "string")
+        if (typeof(dt) == "string")
             dt = new Date(dt);
         var hour = dt.getHours();
         var minut = dt.getMinutes();
@@ -140,12 +136,15 @@ var site_functions = {
         var obj_this = this;
         var time_out = undefined;
         if (obj_this.processes.length == 0) {
-            server_wait_loader.show();            
+            server_wait_loader.show();
             time_out = setTimeout(function() {
                 obj_this.hideLoader(nam);
             }, 29000);
         }
-        obj_this.processes.push({name: nam, time_out: time_out});
+        obj_this.processes.push({
+            name: nam,
+            time_out: time_out
+        });
         //console.log(nam, new Date().getMilliseconds());
     },
     hideLoader: function(nam, hiddenFrom) {
@@ -154,8 +153,8 @@ var site_functions = {
             if (!nam)
                 console.trace();
             else {
-                if(nam != 'force')
-                console.log("Hidden from " + hiddenFrom);
+                if (nam != 'force')
+                    console.log("Hidden from " + hiddenFrom);
             }
             server_wait_loader.hide();
         }
@@ -177,7 +176,7 @@ var site_functions = {
         } else {
             console.log(nam + " not found");
         }
-        if (this.processes.length == 0) {            
+        if (this.processes.length == 0) {
             server_wait_loader.hide();
         }
         //console.log(nam, new Date().getMilliseconds());
@@ -200,7 +199,7 @@ var site_functions = {
 
         }
     },
-    togglerelated: function(e, el, selector) {        
+    togglerelated: function(e, el, selector) {
         if ($(el).hasClass('active')) {
             $(el).removeClass('active');
             $(selector).hide();
@@ -221,8 +220,8 @@ function getUrlLastItem() {
     return point_id[point_id.length - 1];
 }
 
-function addMainEventListeners() {    
-    $(document).on('mousedown touchstart', function(e) {        
+function addMainEventListeners() {
+    $(document).on('mousedown touchstart', function(e) {
         var target = e.target;
         var showbtn = $(target).closest('.showmouseawaybutton');
         if (showbtn && showbtn.length > 0) {
@@ -247,7 +246,7 @@ function addMainEventListeners() {
             .closest(".modal")
             .modal("hide");
     });
-    $('body').on('hidden.bs.modal', '.modal', function () {        
+    $('body').on('hidden.bs.modal', '.modal', function() {
         $('body').removeClass('modal-open');
     });
 
@@ -259,7 +258,7 @@ function addMainEventListeners() {
         $(".btn-search").toggleClass("animate");
         $(".serach-input").val("");
         search_active = true;
-    });    
+    });
 
 
     function hideSearchbar(e) {
@@ -277,7 +276,7 @@ function addMainEventListeners() {
                 .focus();
         }
     }
-    
+
     (function() {
         if (site_config.site_url.indexOf('localhost') > -1) {
             // clearTimeout(time_out_session);
@@ -285,9 +284,9 @@ function addMainEventListeners() {
         }
     })();
 
-    $(document).on("mouseup touchend keyup", function(e) {        
+    $(document).on("mouseup touchend keyup", function(e) {
         clearTimeout(time_out_session);
-        handleSessionExpiry();        
+        handleSessionExpiry();
         hideSearchbar(e);
     });
 
@@ -309,82 +308,84 @@ addMainEventListeners();
 dn_current_site_user.verifyUserToken();
 
 var public_methods = {
-    'authsignup':{
-        'AuthUser':{
+    'authsignup': {
+        'AuthUser': {
             'login_user': 1
         }
     }
 }
 
-window.addEventListener('message', function receiveMessage(evt)
-{
-  if (evt.origin === 'http://my.iframe.org')
-  {
-    alert("got message: "+evt.data);
-  }
+window.addEventListener('message', function receiveMessage(evt) {
+    if (evt.origin === 'http://my.iframe.org') {
+        alert("got message: " + evt.data);
+    }
 
-  if(evt.data.action){
-    let {id,model,action}=evt.data;
+    if (evt.data.action) {
+        let {
+            id,
+            model,
+            action
+        } = evt.data;
+        //console.log(evt.data, model);
+        if (action === 'change') {
+            switch (model) {
+                case 'director':
+                    window.location = `/#/profile/${id}`;
+                    break;
+                case 'event':
+                    window.location = `/#/meeting/${id}`;
+                    break;
+                case 'news':
+                    window.location = `/#/`;
+                    break;
+                case 'committee':
+                    window.location = `/#/committees/${id}`;
+                    break;
+                case 'voting':
+                    window.location = `/#/votings/${id}`;
+                    break;
 
-    if (action === 'change')
-    {
-        switch(model){
-        case 'director':
-            window.location = `/#/profile/${id}`;
-            break;
-        case 'event':
-            window.location = `/#/meeting/${id}`;
-            break;
-        case 'committee':
-        window.location = `/#/committees/${id}`;
-        break;
-        case 'voting':
-        window.location = `/#/votings/${id}`;
-        break;
-        
-         
+
+            }
+
+        } else {
+            switch (model) {
+                case 'event':
+                    window.location = `/#/meetings/upcoming`;
+                    break;
+                case 'director':
+                    window.location = `/#/profiles`;
+                    break;
+                case 'committee':
+                    window.location = `/#/committees`;
+                    break;
+                case 'voting':
+                    window.location = `/#/votings`;
+                    break;
+
+
+
+            }
+
         }
-      
-    }
-    else
-    {
-        switch(model){
-        case 'event':
-            window.location = `/#/meetings/upcoming`;
-            break;
-        case 'director':
-            window.location = `/#/profiles`;
-            break;
-        case 'committee':
-        window.location = `/#/committees`;
-        break;
-        case 'voting':
-        window.location = `/#/votings`;
-        break;
-            
 
-      
-      }
-        
+        console.log(action)
     }
-  
-    console.log(action)
-  }
-  
+
 }, false);
 
 
-time_out_session = setTimeout(function(){    
-    site_functions.go_to_login();    
+time_out_session = setTimeout(function() {
+    site_functions.go_to_login();
 }, session_time_limit);
 
 
 function handleSessionExpiry() {
     var pathoo = window.location.toString().split('/');
-    var pathoo = '/'+ pathoo[pathoo.length - 1];    
-    pathoo = public_routes.indexOf(pathoo) ==-1
-    
-    if (time_out_session && pathoo) {                
+    var pathoo = '/' + pathoo[pathoo.length - 1];
+    pathoo = public_routes.indexOf(pathoo) == -1
+
+    if (time_out_session && pathoo) {
         time_out_session = setTimeout(function() {
             site_functions.go_to_login();
         }, session_time_limit);

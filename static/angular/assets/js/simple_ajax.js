@@ -40,12 +40,16 @@ function dn_rpc_object(options) {
 
     options.data = args_data;
     options.dataType = 'json';
-    if(req_url.startsWith('https'))
+    if(req_url.indexOf('localhost')> -1)
+    {
+        options.type = 'GET';
+    }
+    else
     {
         options.type = 'POST';
     }
     // console.log(options.type, 18);
-    //options.contentType = "application/json; charset=utf-8";    
+    //options.contentType = "application/json; charset=utf-8";
 
     options.url = req_url;
     options.timeout = 30000;
@@ -62,16 +66,19 @@ function dn_rpc_object(options) {
     options.success = function(response) {
         var result = false;
         if (!response) {
-            console.log("Undefined response", url_with_params);            
-        } else {            
+            console.log("Undefined response", url_with_params);
+        } else {
             if (response.error) {
-                if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
+                if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {
                     bootbox.alert('Token expired, please login again '+ options.url);
                     ajax_user.logout(1);
                 } else if (response.error.indexOf('not allowed to access') > -1) {
                     bootbox.alert("Contact admin for permissions" + response.error);
                 } else {
-                    console.log(url_with_params);
+                    if(options.type == 'GET')
+                    {
+                        console.log(url_with_params);
+                    }
                     console.log(input_data.args);
                     console.log(response.error);
                     if(response.error.indexOf('Unauthorized') > -1)
