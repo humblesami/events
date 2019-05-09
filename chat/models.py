@@ -99,7 +99,8 @@ class Notification(models.Model):
                 'res_model': res_model,
                 'res_app': res_app,
                 'res_type': res_type,
-                'body': note
+                'body': note,
+                'counter':1
             }
             events = [
                 {'name': 'notification_received', 'data': note, 'audience': audience},
