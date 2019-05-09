@@ -113,7 +113,27 @@ class Notification(models.Model):
 
     @classmethod
     def update_counter(cls, request, params):
-        a =1
+        uid = request.user.id
+        res_model = params['res_model']
+        res_app = params['res_app']
+        res_id = params['res_id']
+        res_id = int(res_id)
+
+        notification_type = NotificationType.objects.filter(
+            res_app=res_app, res_model=res_model
+        )
+
+        for nt in notification_type:
+            notification = Notification.objects.filter(
+                notification_type_id=nt.id,
+                res_id=res_id, user_id=uid
+            )
+            if len(notification) > 0:
+                notification = notification[0]
+                notification.counter = 0
+                notification.save()
+                break
+        return 'done'
 
 
 class Comment(models.Model):
@@ -160,6 +180,8 @@ class Comment(models.Model):
 
     @classmethod
     def add(cls, request, params):
+        profile = Profile()
+
         comment = Comment(
             res_app=params['res_app'],
             res_model=params['res_model'],
