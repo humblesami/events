@@ -374,6 +374,9 @@ window.addEventListener('message', function receiveMessage(evt) {
                     case 'staff':
                     window.location = `/#/staff`;
                     break;
+                    case 'folder':
+                    window.location = `/#/resources`;
+                    break;
 
 
 
