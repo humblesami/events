@@ -84,7 +84,7 @@ def produce_exception():
     cnt = 0
     for er in eg:
         cnt += 1
-        if not '/dist-packages' in er:
+        if not 'usr/lib' in er:
             errorMessage += " " + er
     errorMessage = errorMessage.replace('\n', '<br/>')
     return HttpResponse(errorMessage)

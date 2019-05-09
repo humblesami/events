@@ -206,22 +206,22 @@ class News(models.Model):
     def get_data(cls, request, params):
         uid = request.user.id
         home_object = {}
-        news = News.objects.get(pk=1).values()
+        news = News.objects.filter(pk=1)
         for obj in news:
             home_object['news'] = {
-                'id': obj['id'],
-                'description': obj['description'],
-                'photo': obj['photo'],
-                'name': obj['name'],
+                'id': obj.id,
+                'description': obj.description,
+                'photo': obj.photo.url,
+                'name': obj.name,
             }
-            videos = NewsVideo.objects.filter(news_id=obj['id'])
+            videos = NewsVideo.objects.filter(news_id=obj.id)
             news_videos = []
             for video in videos:
                 video.url = video.url.replace('/watch?v=', '/embed/')
                 news_videos.append({'name': video.name, 'url': video.url})
             home_object['video_ids'] = news_videos
 
-            docs = NewsDocument.objects.filter(news_id=obj['id'])
+            docs = NewsDocument.objects.filter(news_id=obj.id)
             news_docs = []
             for doc in docs:
                 news_docs.append({'name': doc.name, 'id': doc.id})

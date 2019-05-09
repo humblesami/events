@@ -1,16 +1,15 @@
 from django import forms
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.contrib.auth.forms import UserChangeForm
-from django.utils.html import format_html
-from django.contrib import admin
-from django.utils.translation import gettext, gettext_lazy as _
-from .models import Event,Topic, News, NewsVideo, NewsDocument
-from .user import Profile,Admin,Director,Staff,MeetingGroup
 from .committee import Committee
-from .document import MeetingDocument,AgendaDocument
-
-from django.views.decorators.debug import sensitive_post_parameters
+from django.contrib import admin
+from django.utils.html import format_html
 from django.utils.decorators import method_decorator
+from .document import MeetingDocument,AgendaDocument
+from django.contrib.auth.forms import UserChangeForm
+from django.utils.translation import gettext_lazy as _
+from .user import Profile,Admin,Director,Staff,MeetingGroup
+from .models import Event,Topic, News, NewsVideo, NewsDocument
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
@@ -268,11 +267,11 @@ class CommitteeAdmin(admin.ModelAdmin):
 class NewsVideoInline(admin.TabularInline):
     model = NewsVideo
     extra = 0
+
 class NewsDocumentInline(admin.TabularInline):
     model = NewsDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc')
     extra = 0
-
 
 class NewsAdmin(admin.ModelAdmin):
     inlines = [NewsVideoInline, NewsDocumentInline, ]
