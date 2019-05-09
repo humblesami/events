@@ -18,8 +18,7 @@ class Committee(models.Model):
         comm_id = params.get('id')
         if comm_id:
             committee_orm = Committee.objects.filter(pk=comm_id)[0]
-            committee = obj_to_dict(committee_orm,fields=['id','name','summary'])
-            committee['members'] = queryset_to_list(committee_orm.users.all(),fields=['id','username','image',],to_str=['image'])
+            committee = obj_to_dict(committee_orm,fields=['id','name','summary'],related={"users":{"fields":['id','username','image__name']}})
             if committee:
 
                 data = {"committee": committee, "next": 0, "prev": 0}
@@ -32,13 +31,10 @@ class Committee(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
-        data = []
         committees_orm = Committee.objects.filter()
         total_cnt = committees_orm.count()
         current_cnt = total_cnt
-        committees = queryset_to_list(committees_orm)
-        for committee in committees:
-            committee['users'] = queryset_to_list(committee['users'],fields=['id','username','image',],to_str=['image'])
+        committees = queryset_to_list(committees_orm,fields=['id','name','summary'],related={"users":{"fields":['id','username','image__name']}})
 
         data = {'records':committees, 'total':total_cnt, 'count':current_cnt}
         return data
