@@ -1,7 +1,6 @@
 from django.db import models
 
 from mainapp import ws_methods
-from videos.models import Video
 from .user import *
 from .document import *
 from django_countries.fields import CountryField
@@ -170,8 +169,11 @@ class Event(models.Model):
             data = {'error': 'Meeting not found'}
         return data
 
+
 class News(models.Model):
     name = models.CharField(max_length=200)
+    description = models.TextField(default='None')
+    photo = models.ImageField(upload_to='home/', default='profile/ETjUSr1v2n.png')
 
     def __str__(self):
         return self.name
@@ -180,6 +182,31 @@ class News(models.Model):
     def get_data(cls, request, params):
         uid = request.user.id
         home_object = {}
+
+        news = News.objects.values()
+        for obj in news:
+            home_object['news'] = {
+                'id': obj['id'],
+                'description': obj['description'],
+                'photo': obj['photo'],
+                'name': obj['name'],
+            }
+
+            videos = NewsVideo.objects.filter(news_id=obj['id'])
+            news_videos = []
+            for video in videos:
+                video.url = video.url.replace('/watch?v=', '/embed/')
+                news_videos.append({'name': video.name, 'url': video.url})
+            home_object['video_ids'] = news_videos
+
+            docs = NewsDocument.objects.filter(news_id=obj['id'])
+            news_docs = []
+            for doc in docs:
+                news_docs.append({'name': doc.name, 'id': doc.id})
+            home_object['doc_ids'] = news_docs
+
+            break
+
         home_object['video_ids'] = []
         home_object['doc_ids'] = []
         home_object['to_do_items'] = {
@@ -199,21 +226,14 @@ class News(models.Model):
                 del event['attendees']
             calendar_events.append(event)
         home_object['calendar'] = calendar_events
-        news = News.objects.get()
-        videos = list(news.video_set.all())
-        for video in videos:
-            video.url = video.url.replace('/watch?v=', '/embed/')
-            home_object['video_ids'].append({'name': video.name, 'url': video.url})
 
-        pending_meetings = list(Event.objects.filter(attendees__id = uid, publish=True, end_date__gte=datetime.datetime.now()).values())
+        pending_meetings = list(Event.objects.filter(attendees__id=uid, publish=True, end_date__gte=datetime.datetime.now()).values())
         for meeting in pending_meetings:
             meeting['start_date'] = str(meeting['start_date'])
             meeting['end_date'] = str(meeting['end_date'])
         home_object['to_do_items']['pending_meetings'] = pending_meetings
 
-        """Votings Based on Meetings"""
-
-        votings = Voting.objects.filter(meeting__id__isnull=False, close_date__gte = datetime.datetime.now())
+        votings = Voting.objects.filter(meeting__id__isnull=False, close_date__gte=datetime.datetime.now())
         pending_votings = []
         if votings:
             for voting in votings:
@@ -225,10 +245,15 @@ class News(models.Model):
                         my_status = user_answer.user_answer.name
                     else:
                         my_status = 'pending'
-                    pending_votings.append({'id': voting.id, 'name': voting.name, 'voting_type_name': voting.voting_type.name, 'my_status': my_status})
+                    pending_votings.append({
+                        'id': voting.id,
+                         'name': voting.name,
+                         'voting_type_name': voting.voting_type.name,
+                         'my_status': my_status
+                    })
 
         """Voting Based on Respondents"""
-        votings = Voting.objects.filter(respondents__id=uid, close_date__gte = datetime.datetime.now())
+        votings = Voting.objects.filter(respondents__id=uid, close_date__gte=datetime.datetime.now())
         if votings:
             for voting in votings:
                 user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
@@ -237,10 +262,25 @@ class News(models.Model):
                     my_status = user_answer.user_answer.name
                 else:
                     my_status = 'pending'
-                pending_votings.append({'id': voting.id, 'name': voting.name, 'voting_type_name': voting.voting_type.name, 'my_status': my_status})
+                pending_votings.append({
+                    'id': voting.id,
+                    'name': voting.name,
+                    'voting_type_name': voting.voting_type.name,
+                    'my_status': my_status
+                })
         home_object['to_do_items']['pending_votings'] = pending_votings
-
         return {'error': '', 'data': home_object}
+
+class NewsDocument(File):
+    news = models.ForeignKey(News, on_delete=models.CASCADE)
+
+class NewsVideo(models.Model):
+    name = models.CharField('Video Title', max_length=200)
+    url = models.CharField('Video Link', max_length=500)
+    news = models.ForeignKey(News, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.name
 
 class Topic(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
