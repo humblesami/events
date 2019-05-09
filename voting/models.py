@@ -68,15 +68,15 @@ class Voting(models.Model):
 
         voting_options = []
         try:
-            voting_options = list(voting_object_orm.votingdocument_set.all().values())
+            voting_options = list(voting_object_orm.voting_type.votingchoice_set.all())
         except:
             pass
 
         voting_object['chart_data'] = []
         voting_object['voting_options'] = []
         for option in voting_options:
-            voting_object['voting_options'].append({'id': option['id'], 'name': option['name']})
-            voting_object['chart_data'].append({'option_name': option['name'], 'option_result': 0})
+            voting_object['voting_options'].append({'id': option.id, 'name': option.name})
+            voting_object['chart_data'].append({'option_name': option.name, 'option_result': 0})
 
         voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
             answer_count=Count('user_answer'))
