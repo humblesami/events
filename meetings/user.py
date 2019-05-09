@@ -100,7 +100,7 @@ def create_group(obj, group_name):
 class Profile(user_model):
     class Meta:
         verbose_name_plural = "MeetVUE  Users"
-    name = models.CharField(max_length=200, blank=True, null=True)
+    name = models.CharField(max_length=200, default='', blank=True)
     image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
@@ -112,7 +112,7 @@ class Profile(user_model):
     mobile_phone = models.CharField(max_length=30, blank=True)
     website = models.CharField(max_length=30, blank=True)
     fax = models.CharField(max_length=30, blank=True)
-    ethinicity = models.IntegerField(choices=ETHINICITY_CHOICES, blank=True, null=True)
+    ethnicity = models.IntegerField(choices=ETHINICITY_CHOICES, blank=True, null=True)
     gender = models.IntegerField(choices=GENDER_CHOICES, blank=True, null=True)
     veteran = models.IntegerField(choices=YES_NO_CHOICES, blank=True, null=True)
     disability = models.IntegerField(choices=YES_NO_CHOICES, blank=True, null=True)
@@ -134,7 +134,7 @@ class Profile(user_model):
     # user_type = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.username
+        return self.fullname()
 
     def fullname(self):
         user = self
@@ -188,25 +188,27 @@ class Profile(user_model):
         profile = Profile.objects.filter(pk=user_id)[0]
         profile = obj_to_dict(profile, fields=
             [
-            'id', 'name', 'email', 'nick_name', 'website',
-            'companies', 'bio', 'mobile_phone', 'work_phone',
-            'fax', 'job_title', 'department', 'board_joing_date',
-            'admin_first_name',
-            'admin_last_name',
-            'admin_image',
-            'admin_nick_name',
-            'admin_email',
-            'admin_fax',
-            'admin_cell_phone',
-            'admin_work_phone',
-            'mail_to_assistant',
-            'image__name',
-            'last_login',
-            'date_joined',
+                'id', 'name', 'email', 'nick_name',
+                'website', 'companies', 'bio',
+                'mobile_phone', 'work_phone',
+                'fax', 'job_title', 'department',
+                'board_joing_date',
+                'admin_first_name',
+                'admin_last_name',
+                'admin_image',
+                'admin_nick_name',
+                'admin_email',
+                'admin_fax',
+                'admin_cell_phone',
+                'admin_work_phone',
+                'mail_to_assistant',
+                'image__name',
+                'last_login',
+                'date_joined',
                 'term_start_date',
                 'term_end_date',
                 'birth_date',
-            'signature_image__name',
+                'signature_image__name',
                 'resume__name',
                 'board_joining_date',
             'bio'

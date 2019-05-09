@@ -129,13 +129,9 @@ class Event(models.Model):
             voting['open_date'] = str(voting['open_date'])
             voting['close_date'] = str(voting['close_date'])
 
-        attendees = list(meeting_object_orm.attendees.values())
-        for attendee in attendees:
-            if not attendee['name']:
-                if attendee['first_name'] or attendee['last_name']:
-                    attendee['name'] = attendee['first_name'] + ' ' + attendee['last_name']
-                elif attendee['username']:
-                    attendee['name'] = attendee['username']
+        attendees = []
+        for attendee in meeting_object_orm.attendees:
+            attendee['name'] = attendee.fullname()
             if attendee['date_joined']:
                 attendee['date_joined'] = str(attendee['date_joined'])
             if attendee['birth_date']:
@@ -149,7 +145,7 @@ class Event(models.Model):
             if attendee['last_login']:
                 attendee['last_login'] = str(attendee['last_login'])
             attendee['photo'] = attendee['image']
-
+            attendees.append(attendee)
         meeting_object['topics'] = topics
         meeting_object['meeting_docs'] = meeting_docs
         meeting_object['sign_docs'] = []

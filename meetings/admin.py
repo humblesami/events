@@ -68,17 +68,16 @@ class EventAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
             'fields': [
-            'name',
-            'publish',
-            'start_date',
-            'end_date',
-            'attendees',
-            'description',
-            'country',
-            'state',
-            'street',
-            'city',
-
+                'name',
+                'publish',
+                'start_date',
+                'end_date',
+                'attendees',
+                'description',
+                'country',
+                'state',
+                'street',
+                'city',
             ]
         })
     ]
@@ -99,7 +98,9 @@ class EventAdmin(admin.ModelAdmin):
 
 class TopicAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['name','lead','duration']})
+        (None, {
+            'fields': ['name', 'lead', 'duration']
+        })
     ]
 
     # readonly_fields = ('docs',)
@@ -250,19 +251,17 @@ class GroupAdmin(GroupAdmin):
 
 class CommitteeAdmin(admin.ModelAdmin):
     filter_horizontal = ('users',)
-    fields=('name','summary','members','users')
-    list_display=('name','members')
+    fields= ('name', 'description', 'members', 'users')
+    list_display= ('name', 'members')
     
     readonly_fields = ('members',)
 
     def members(self,obj):
-        html="<div>"
+        html = '<div>'
         for u in obj.users.all():
             if u.image:
-                html+='<img title="%s" style="width:50px;border-radius:92px" src="/media/%s" />' % (u.username,u.image)
-        html+='</div>'
-
-
+                html += '<img title="%s" style="width:50px;border-radius:92px" src="/media/%s" />' % (u.username,u.image)
+        html += '</div>'
         return format_html(html)
     # members.short_description = ''
     

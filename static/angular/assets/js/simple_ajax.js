@@ -86,8 +86,8 @@ function dn_rpc_object(options) {
             {
                 response.error = response;
             }
-
-            if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {
+            
+            if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
                 bootbox.alert('Token expired, please login again '+ options.url);
                 ajax_user.logout(1);
             } else if (response.error.indexOf('not allowed to access') > -1) {
@@ -97,7 +97,7 @@ function dn_rpc_object(options) {
                 {
                     console.log(url_with_params);
                 }
-
+                
                 if(response.error.indexOf('Unauthorized') > -1)
                 {
                     ajax_user.logout(1);
@@ -109,7 +109,7 @@ function dn_rpc_object(options) {
                     catch(er)
                     {
                         console.log(response.error, er);
-                    }
+                    }                        
                 }
                 console.log(input_data.args);
                 response.error = response.error.replace('<br/>','\n');

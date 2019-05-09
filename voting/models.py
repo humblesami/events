@@ -29,7 +29,7 @@ class Voting(models.Model):
     public_visibility = models.BooleanField('Results Visible To All', blank=True, default=False)
     description = models.TextField()
     my_status = models.CharField(max_length=50, default='pending')
-    respondents = models.ManyToManyField(Profile, null=True, blank=True)
+    respondents = models.ManyToManyField(Profile, blank=True)
 
     def __str__(self):
         return self.name
