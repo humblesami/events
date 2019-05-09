@@ -7,6 +7,7 @@ from .document import *
 from django_countries.fields import CountryField
 from django.utils import timezone
 import datetime
+from voting.models import Voting,VotingAnswer
 
 
 # Create your models here.
@@ -39,6 +40,8 @@ class Event(models.Model):
             return 'upcoming'
         elif self.end_date <= current_date:
             return 'completed'
+        elif self.start_date >= current_date and self.end_date >= current_date:
+            return 'ongoing'
 
 
     def _compute_address(self):
@@ -186,14 +189,57 @@ class News(models.Model):
             'pending_votings': []
         }
         public_events = Event.objects.filter(archived=False, publish=True, end_date__gt=datetime.datetime.now())
-        home_object['calendar'] = ws_methods.queryset_to_list(public_events)
+        public_events = ws_methods.queryset_to_list(public_events)
+        calendar_events = []
+        for event in public_events:
+            event['country'] = str(event['country'].name)
+            event['start_date'] = str(event['start_date'])
+            event['end_date'] = str(event['end_date'])
+            if event['attendees']:
+                del event['attendees']
+            calendar_events.append(event)
+        home_object['calendar'] = calendar_events
+        news = News.objects.get()
+        videos = list(news.video_set.all())
+        for video in videos:
+            video.url = video.url.replace('/watch?v=', '/embed/')
+            home_object['video_ids'].append({'name': video.name, 'url': video.url})
 
-        news = News.objects.values()
-        for nw in news:
-            videos = Video.objects.filter(news_id=nw['id'])
-            for video in videos:
-                video.url = video.url.replace('/watch?v=', '/embed/')
-                home_object['video_ids'].append({'name': video.name, 'url': video.url})
+        pending_meetings = list(Event.objects.filter(attendees__id = uid, publish=True, end_date__gte=datetime.datetime.now()).values())
+        for meeting in pending_meetings:
+            meeting['start_date'] = str(meeting['start_date'])
+            meeting['end_date'] = str(meeting['end_date'])
+        home_object['to_do_items']['pending_meetings'] = pending_meetings
+
+        """Votings Based on Meetings"""
+
+        votings = Voting.objects.filter(meeting__id__isnull=False, close_date__gte = datetime.datetime.now())
+        pending_votings = []
+        if votings:
+            for voting in votings:
+                user_voting = voting.meeting.attendees.all().filter(pk=uid)
+                if user_voting:
+                    user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
+                    if len(user_answer) > 0:
+                        user_answer = user_answer[0]
+                        my_status = user_answer.user_answer.name
+                    else:
+                        my_status = 'pending'
+                    pending_votings.append({'id': voting.id, 'name': voting.name, 'voting_type_name': voting.voting_type.name, 'my_status': my_status})
+
+        """Voting Based on Respondents"""
+        votings = Voting.objects.filter(respondents__id=uid, close_date__gte = datetime.datetime.now())
+        if votings:
+            for voting in votings:
+                user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
+                if len(user_answer) > 0:
+                    user_answer = user_answer[0]
+                    my_status = user_answer.user_answer.name
+                else:
+                    my_status = 'pending'
+                pending_votings.append({'id': voting.id, 'name': voting.name, 'voting_type_name': voting.voting_type.name, 'my_status': my_status})
+        home_object['to_do_items']['pending_votings'] = pending_votings
+
         return {'error': '', 'data': home_object}
 
 class Topic(models.Model):

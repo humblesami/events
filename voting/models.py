@@ -1,9 +1,9 @@
 import base64
 from django.db import models
 from django.db.models import Count
-from meetings.models import Event, Topic, Profile
 from django.contrib.auth.models import User
 from documents.models import File
+from meetings.user import Profile
 # Create your models here.
 
 class VotingType(models.Model):
@@ -22,8 +22,8 @@ class VotingChoice(models.Model):
 class Voting(models.Model):
     voting_type = models.ForeignKey(VotingType, on_delete=models.CASCADE, blank = False)
     name = models.CharField('Title', max_length=200, blank = False)
-    meeting = models.ForeignKey(Event, null=True, on_delete=models.SET_NULL, blank=True)
-    topic = models.ForeignKey(Topic, null=True, on_delete=models.SET_NULL, blank=True)
+    meeting = models.ForeignKey('meetings.Event', null=True, on_delete=models.SET_NULL, blank=True)
+    topic = models.ForeignKey('meetings.Topic', null=True, on_delete=models.SET_NULL, blank=True)
     open_date = models.DateTimeField('Start Date', blank = False)
     close_date = models.DateTimeField('End Date', blank = False)
     signature_required = models.BooleanField('Signature Required', blank=True, default=False)
@@ -31,7 +31,7 @@ class Voting(models.Model):
     public_visibility = models.BooleanField('Results Visible To All', blank=True, default=False)
     description = models.TextField()
     my_status = models.CharField(max_length=50, default='pending')
-    respondents = models.ManyToManyField(Profile, null=True, blank=True)
+    respondents = models.ManyToManyField(Profile, blank=True)
     # user = models.ForeignKey(User, on_delete=models.CASCADE, default = None)
 
     def __str__(self):

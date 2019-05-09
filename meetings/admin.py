@@ -69,6 +69,7 @@ class EventAdmin(admin.ModelAdmin):
         (None, {
             'fields': [
             'name',
+            'publish',
             'start_date',
             'end_date',
             'attendees',
