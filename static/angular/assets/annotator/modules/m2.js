@@ -1323,7 +1323,12 @@ function module2(module, exports, __webpack_require__) {
                                             input_data['point'] = point;
                                             var is_comment = point.sub_type != 'personal';                                            
                                             if(is_comment && !received_comment){
-                                                window['socket_manager'].emit_server_event(input_data ,'annotation.point', 'save_comment_point');
+                                                let args = {
+                                                    app:'annotations',
+                                                    model:'Point',
+                                                    method:'save_point',
+                                                }
+                                                window['socket_manager'].emit_server_event(input_data ,args);
                                             }
                                             updateAnnotations(documentId, annotations, is_comment);
                                         }

@@ -14,3 +14,6 @@ media
 static/angular/static
 */migrations
 */migrations/*
+*/migrations/*.py
+000*.py
+*/000*.py

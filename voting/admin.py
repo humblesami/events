@@ -1,7 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.models import Permission
-from .models import Voting, VotingType, VotingChoice, VotingAnswer, VotingDocuments
 from django.db.models import Count
+from .models import Voting, VotingType, VotingChoice, VotingAnswer, VotingDocument
 
 # Register your models here.
 class ChoiceInline(admin.TabularInline):
@@ -15,7 +14,7 @@ class VotingTypeAdmin(admin.ModelAdmin):
     search_fields = ['name']
     
 class VotingDocInline(admin.TabularInline):
-    model = VotingDocuments
+    model = VotingDocument
     exclude=('html','content','original_pdf','pdf_doc')
     # readonly_fields = ('View',)
     # show_change_link = True

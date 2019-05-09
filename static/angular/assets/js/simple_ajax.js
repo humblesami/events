@@ -4,7 +4,7 @@ function dn_rpc_object(options) {
     {
         api_url = '/rest/secure';
     }
-    var req_url = site_config.server_base_url + api_url;
+    var req_url = site_config.server_base_url + api_url;    
     if (!options.data) {
         console.log('No data and arguments for request ',options);
         return;
@@ -20,16 +20,16 @@ function dn_rpc_object(options) {
     {
         options.no_loader = 1;
     }
-
+    
     var args_data = {input_data : JSON.stringify(input_data)};
     options.headers = {
-
+        
     }
     if(api_url.endsWith('/secure'))
     {
         if(ajax_user.cookie && ajax_user.cookie.token)
         {
-            options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;
+            options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;            
         }
         else
         {
@@ -44,6 +44,7 @@ function dn_rpc_object(options) {
     {
         options.type = 'POST';
     }
+    // console.log(options.type, 18);
     //options.contentType = "application/json; charset=utf-8";    
 
     options.url = req_url;

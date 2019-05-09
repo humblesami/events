@@ -623,10 +623,7 @@ function module0(module, exports, __webpack_require__) {
 		function discard_point_notifications(point, count){
             point.counter = 0;
             embed_comment_count(point, 0);
-            var doc_id = ((documentId.split('-'))[1].split('.'))[0];
-            var modal = '';
-            (documentId.indexOf('topic')>-1)? modal = 'meeting_point.topicdoc': modal = 'meeting_point.doc';
-            window['socket_manager'].removeParentNotification(modal, doc_id, 'annotation.point', point.id, count);
+            window['socket_manager'].removeNotification('annotations', 'Point', point.id);
         }
 
         function embed_comment_count(point, count, cookie_only){

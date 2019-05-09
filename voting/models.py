@@ -55,15 +55,25 @@ class Voting(models.Model):
         voting_object = voting_object_orm.__dict__
         voting_object['open_date'] = str(voting_object['open_date'])
         voting_object['close_date'] = str(voting_object['close_date'])
-        voting_object['voting_docs'] = list(voting_object_orm.votingdocuments_set.all().values())
+
+        voting_object['voting_docs'] = []
+        try:
+            voting_object['voting_docs'] = list(voting_object_orm.votingdocument_set.all().values())
+        except:
+            pass
         voting_object['voting_type'] = {
             'id': voting_object_orm.voting_type.id,
             'name': voting_object_orm.voting_type.name
         }
 
-        voting_options = list(voting_object_orm.voting_type.votingchoice_set.values())
-        voting_object['voting_options'] = []
+        voting_options = []
+        try:
+            voting_options = list(voting_object_orm.votingdocument_set.all().values())
+        except:
+            pass
+
         voting_object['chart_data'] = []
+        voting_object['voting_options'] = []
         for option in voting_options:
             voting_object['voting_options'].append({'id': option['id'], 'name': option['name']})
             voting_object['chart_data'].append({'option_name': option['name'], 'option_result': 0})
@@ -278,5 +288,5 @@ class VotingAnswer(models.Model):
         return data
 
 
-class VotingDocuments(File):
+class VotingDocument(File):
     voting = models.ForeignKey('Voting', on_delete=models.CASCADE)
