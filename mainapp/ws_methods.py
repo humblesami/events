@@ -1,13 +1,17 @@
 import sys
 import json
-import base64
 import smtplib
-import threading
-import traceback
+from datetime import datetime
 
 import requests
 from django.forms.models import model_to_dict
 
+def now_str():
+    now = str(datetime.now())
+    now = now.replace(' ','-')
+    now = now.replace(':', '-')
+    now = now.replace('.', '-')
+    return now
 
 def get_user_name(user):
     name = False

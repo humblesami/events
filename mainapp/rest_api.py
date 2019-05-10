@@ -84,7 +84,7 @@ def produce_exception():
     cnt = 0
     for er in eg:
         cnt += 1
-        if not 'usr/lib' in er:
+        if not 'lib/python' in er:
             errorMessage += " " + er
     errorMessage = errorMessage.replace('\n', '<br/>')
     return HttpResponse(errorMessage)
@@ -99,7 +99,7 @@ def produce_result(res, args=None):
                 res = {'data' : res, 'error': ''}
     elif type(res) == str:
         if res == 'done':
-            res = {'error': res, 'data': 'done'}
+            res = {'error': '', 'data': 'done'}
         else:
             res = {'error': res}
     elif isinstance(res, list):

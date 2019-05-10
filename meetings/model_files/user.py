@@ -1,4 +1,8 @@
+import base64
 from django.db import models
+from mainapp import ws_methods
+from documents.file import File
+from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
@@ -128,8 +132,7 @@ class Profile(user_model):
     mail_to_assistant = models.BooleanField( blank=True, null=True)
     term_start_date = models.DateField( blank=True, null=True)
     term_end_date = models.DateField( blank=True, null=True)
-    signature_image = models.ImageField(upload_to='profile/', null=True)
-    resume = models.FileField(upload_to='files/', null=True,blank=True)
+    signature_image = models.ImageField(null=True, blank=True)
     # user_type = models.CharField(max_length=50)
 
     def __str__(self):
@@ -154,8 +157,16 @@ class Profile(user_model):
         profiles = Profile.objects.filter(groups__name__iexact=group)
         total_cnt = profiles.count()
         current_cnt = total_cnt
-        profiles = queryset_to_list(profiles,fields=['username','image','email','id'])
-
+        profiles = queryset_to_list(
+            profiles,
+            fields=[
+                'signature_image','date_joined','birth_date',
+                'board_joining_date',
+                'term_start_date','term_end_date','image__name',
+                'admin_image__name',
+            ],
+            to_str= ['signature_image']
+        )
         profiles_json = {'records': profiles, 'total': total_cnt, 'count': current_cnt}
         return profiles_json
 
@@ -165,43 +176,89 @@ class Profile(user_model):
         group = params.get('type')
         if not user_id:
             user_id = request.user.id
-        profile = Profile.objects.filter(pk=user_id)[0]
-        profile = obj_to_dict(profile, fields=
-            [
-                'id', 'username', 'email', 'nick_name',
+        profile_orm = Profile.objects.filter(pk=user_id)[0]
+        profile = obj_to_dict(
+            profile_orm,
+            fields= [
+                'id', 'email', 'nick_name',
                 'website', 'companies', 'bio',
                 'mobile_phone', 'work_phone',
                 'fax', 'job_title', 'department',
                 'board_joing_date',
                 'admin_first_name',
                 'admin_last_name',
-                'admin_image',
                 'admin_nick_name',
                 'admin_email',
                 'admin_fax',
                 'admin_cell_phone',
                 'admin_work_phone',
                 'mail_to_assistant',
-                'image',
                 'last_login',
                 'date_joined',
                 'term_start_date',
                 'term_end_date',
                 'birth_date',
-                'signature',
-                'resume',
                 'board_joining_date',
-            'bio'
-        ],related={"groups":{"fields":['name']}})
-
+                'bio'
+            ],
+            to_str= [
+                'last_login','date_joined','birth_date','board_joining_date',
+                'term_start_date','term_end_date',
+            ]
+        )
+        profile['name'] = profile_orm.fullname()
+        if profile_orm.image and profile_orm.image.url:
+            profile['image'] = profile_orm.image.url
+        if profile_orm.admin_image and profile_orm.admin_image.url:
+            profile['admin_image'] = profile_orm.admin_image.url
+        resume = Resume.objects.filter(user_id=user_id)
+        if resume:
+            profile['resume'] = {'id': resume[0].id}
+        if profile_orm.signature_image:
+            profile['signature_image'] = str(profile_orm.signature_image)
         data = {"profile": profile, "next": 0, "prev": 0}
         return data
     @classmethod
     def update_profile(cls, request, params):
         user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
+
         for key in params:
-            setattr(profile, key, params[key])
+            if key !=' image' and key !=' admin_image':
+                setattr(profile, key, params[key])
+
+        now_str = False
+        if params.get('image'):
+            if not now_str:
+                now_str = ws_methods.now_str()
+            image_data = params['image']
+            format, imgstr = image_data.split(';base64,')
+            ext = format.split('/')[-1]
+
+            data = ContentFile(base64.b64decode(imgstr))
+            file_name = 'image_' + now_str + '_'+str(user_id) + '.' + ext
+            profile.image.save(file_name, data, save=True)
+
+        if params.get('admin_image'):
+            if not now_str:
+                now_str = ws_methods.now_str()
+            image_data = params['admin_image']
+            format, imgstr = image_data.split(';base64,')
+            ext = format.split('/')[-1]
+
+            data = ContentFile(base64.b64decode(imgstr))
+            file_name = 'admin_image_' + now_str + '_'+str(user_id) + '.' + ext
+            profile.admin_image.save(file_name, data, save=True)
+
+        profile.save()
+        return 'done'
+
+
+    @classmethod
+    def save_signature(cls, request, params):
+        user_id = request.user.id
+        profile = Profile.objects.get(pk=user_id)
+        profile.signature_image = params['signature_data']
         profile.save()
         return 'done'
 
@@ -209,6 +266,8 @@ class Profile(user_model):
         super(Profile, self).save(*args, **kwargs)
         self.is_staff = True
 
+class Resume(File):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
 class ManagerDirector(UserManager):
     def get_queryset(self):
