@@ -42,9 +42,9 @@ class News(models.Model):
         voting_model = apps.get_model('voting', 'Voting')
         home_object['to_do_items'] = {
             'pending_meetings':  Event.get_pending_meetings(uid),
-            'pending_surveys': voting_model.get_todo_votings(uid),
+            'pending_surveys': [],
             'pending_documents': [],
-            'pending_votings': []
+            'pending_votings': voting_model.get_todo_votings(uid)
         }
         home_object['doc_ids'] = news_docs
         home_object['video_ids'] = news_videos

@@ -71,13 +71,11 @@ class Event(models.Model):
         public_events = list(public_events.values())
         calendar_events = []
         for event in public_events:
-            event['country'] = str(event['country'].name)
+            event['country'] = str(event['country'])
             event['start_date'] = str(event['start_date'])
             event['end_date'] = str(event['end_date'])
             event['start'] = event['start_date']
             event['stop'] = event['end_date']
-            if event['attendees']:
-                del event['attendees']
             calendar_events.append(event)
         return calendar_events
 
@@ -86,7 +84,7 @@ class Event(models.Model):
         meetings = Event.objects.filter(attendees__id=uid, publish=True,
                                                 end_date__gte=datetime.datetime.now())
 
-        pending_meetings = ws_methods.queryset_to_list(meetings, fields=[
+        meetings = ws_methods.queryset_to_list(meetings, fields=[
             'name',
             'start_date',
             'end_date',
@@ -94,8 +92,10 @@ class Event(models.Model):
             'start_date',
             'start_date',
         ])
-
-        for meeting in pending_meetings:
+        pending_meetings = []
+        for meeting in meetings:
+            meeting['start_date'] = str(meeting['start_date'])
+            meeting['end_date'] = str(meeting['end_date'])
             meeting['start'] = meeting['start_date']
             meeting['stop'] = meeting['end_date']
             pending_meetings.append(meeting)
