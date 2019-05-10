@@ -3,7 +3,7 @@ from django.apps import apps
 from datetime import datetime
 from mainapp import ws_methods
 from django.contrib import admin
-from meetings.user import Profile, create_group
+from meetings.model_files.user import Profile, create_group
 from django.contrib.auth.models import User as user_model, User
 
 

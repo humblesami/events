@@ -1,6 +1,4 @@
-from django.db import models
-
-from meetings.document import MeetingDocument
+from meetings.model_files.document import MeetingDocument
 from  .file import *
 # Create your models here.
 

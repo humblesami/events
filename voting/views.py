@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Voting, VotingType, VotingChoice, VotingAnswer
-from meetings.models import Event, Topic
+from meetings.model_files.topic import Topic
 from django.db.models import Count
 
 import base64

@@ -1,12 +1,12 @@
 from django import forms
-from .committee import Committee
+from meetings.model_files.committee import Committee
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.decorators import method_decorator
-from .document import MeetingDocument,AgendaDocument
+from meetings.model_files.document import MeetingDocument,AgendaDocument
 from django.contrib.auth.forms import UserChangeForm
 from django.utils.translation import gettext_lazy as _
-from .user import Profile,Admin,Director,Staff,MeetingGroup
+from meetings.model_files.user import Profile,Admin,Director,Staff,MeetingGroup
 from .models import Event,Topic, News, NewsVideo, NewsDocument
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.views.decorators.debug import sensitive_post_parameters

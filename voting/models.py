@@ -2,8 +2,9 @@ import base64
 import datetime
 from django.db import models
 from documents.models import File
-from meetings.user import Profile
 from django.db.models import Count
+from meetings.models import Profile, Event, Topic
+
 
 class VotingType(models.Model):
     name = models.CharField(max_length=100)
@@ -20,8 +21,8 @@ class VotingChoice(models.Model):
 class Voting(models.Model):
     voting_type = models.ForeignKey(VotingType, on_delete=models.CASCADE)
     name = models.CharField('Title', max_length=200)
-    meeting = models.ForeignKey('meetings.Event', null=True, on_delete=models.SET_NULL, blank=True)
-    topic = models.ForeignKey('meetings.Topic', null=True, on_delete=models.SET_NULL, blank=True)
+    meeting = models.ForeignKey(Event, null=True, on_delete=models.SET_NULL, blank=True)
+    topic = models.ForeignKey(Topic, null=True, on_delete=models.SET_NULL, blank=True)
     open_date = models.DateTimeField('Start Date')
     close_date = models.DateTimeField('End Date')
     signature_required = models.BooleanField('Signature Required', blank=True, default=False)

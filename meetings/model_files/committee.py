@@ -1,4 +1,4 @@
-from .user import Profile
+from meetings.model_files.user import Profile
 from django.db import models
 from mainapp.ws_methods import obj_to_dict, queryset_to_list
 

@@ -1,5 +1,4 @@
-from django.db import models
-from meetings.user import *
+from meetings.model_files.user import *
 
 # Create your models here.
 
