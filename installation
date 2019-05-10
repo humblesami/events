@@ -38,9 +38,7 @@ python3 manage.py startapp mymodule
 ng build --prod=true --output-path=/home/sami/django/jangomeet/static/angular
 mv /home/sami/django/jangomeet/static/angular/static/angular/assets/  /home/sami/django/jangomeet/static/angular/
 
-sudo python3 manage.py runserver 0.0.0.0:8000
-kill processes with port 8000
-sudo fuser -k 8000/tcp
+
 
   server {
     listen 8000;
@@ -53,3 +51,7 @@ sudo fuser -k 8000/tcp
 
 if pillow package below fails to install then use following first
 sudo apt install libjpeg8-dev zlib1g-dev
+
+sudo python3 manage.py runserver 0.0.0.0:8000
+kill processes with port 8000
+sudo fuser -k 8000/tcp

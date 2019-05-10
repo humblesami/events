@@ -196,7 +196,7 @@ class Event(models.Model):
 
 class News(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField(default='None')
+    description = models.TextField(default='', blank=True)
     photo = models.ImageField(upload_to='home/', default='profile/ETjUSr1v2n.png')
 
     def __str__(self):
@@ -206,27 +206,32 @@ class News(models.Model):
     def get_data(cls, request, params):
         uid = request.user.id
         home_object = {}
-        news = News.objects.filter(pk=1)
-        for obj in news:
-            home_object['news'] = {
-                'id': obj.id,
-                'description': obj.description,
-                'photo': obj.photo.url,
-                'name': obj.name,
-            }
-            videos = NewsVideo.objects.filter(news_id=obj.id)
-            news_videos = []
-            for video in videos:
-                video.url = video.url.replace('/watch?v=', '/embed/')
-                news_videos.append({'name': video.name, 'url': video.url})
-            home_object['video_ids'] = news_videos
+        news = News.objects.all()
+        if not news:
+            news = News(name='News & Announcements')
+            news.save()
+        else:
+            news = news[0]
 
-            docs = NewsDocument.objects.filter(news_id=obj.id)
-            news_docs = []
-            for doc in docs:
-                news_docs.append({'name': doc.name, 'id': doc.id})
-            home_object['doc_ids'] = news_docs
-            break
+        home_object['news'] = {
+            'id': news.id,
+            'description': news.description,
+            'photo': news.photo.url,
+            'name': news.name,
+        }
+        videos = NewsVideo.objects.filter(news_id=news.id)
+        news_videos = []
+        for video in videos:
+            video.url = video.url.replace('/watch?v=', '/embed/')
+            news_videos.append({'name': video.name, 'url': video.url})
+        home_object['video_ids'] = news_videos
+
+        docs = NewsDocument.objects.filter(news_id=news.id)
+        news_docs = []
+        for doc in docs:
+            news_docs.append({'name': doc.name, 'id': doc.id})
+        home_object['doc_ids'] = news_docs
+
         home_object['to_do_items'] = {
             'pending_meetings':  Event.get_pending_meetings(uid),
             'pending_surveys': Voting.get_todo_votings(uid),
