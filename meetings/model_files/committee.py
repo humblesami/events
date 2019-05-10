@@ -20,7 +20,7 @@ class Committee(models.Model):
                 committee_orm,
                 fields=['id', 'name', 'description'],
                 related={
-                    'users': {'fields': ['id', 'username', 'image__name']}
+                    'users': {'fields': ['id', 'username', 'image']}
                 }
             )
             if committee:
@@ -41,7 +41,7 @@ class Committee(models.Model):
             committees_orm,
             fields=['id', 'name', 'description'],
             related={
-                'users': {'fields': ['id', 'username', 'image__name']}
+                'users': {'fields': ['id', 'username', 'image']}
             }
         )
 

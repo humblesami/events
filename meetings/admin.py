@@ -194,7 +194,7 @@ class DirectorAdmin(UserAdmin):
         (_('Diversity Information'),
          {
              'fields': (
-                 'ethinicity', 'gender', 'veteran', 'disability'
+                 'ethnicity', 'gender', 'veteran', 'disability'
              )
          }
          ),

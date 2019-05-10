@@ -154,27 +154,8 @@ class Profile(user_model):
         profiles = Profile.objects.filter(groups__name__iexact=group)
         total_cnt = profiles.count()
         current_cnt = total_cnt
-        profiles = queryset_to_list(profiles,to_str=[
-            'signature_image','date_joined','birth_date','board_joining_date',
-            'term_start_date','term_end_date','image','admin_image','resume',
-            'groups','user_permissions'
-        ])
-        # for profile in profiles:
-        #     if profile['date_joined']:
-        #         profile['date_joined'] = str(profile['date_joined'])
-        #     if profile['birth_date']:
-        #         profile['birth_date'] = str(profile['birth_date'])
-        #     if profile['board_joining_date']:
-        #         profile['board_joining_date'] = str(profile['board_joining_date'])
-        #     if profile['term_start_date']:
-        #         profile['term_start_date'] = str(profile['term_start_date'])
-        #     if profile['term_end_date']:
-        #         profile['term_end_date'] = str(profile['term_end_date'])
-        #     if profile['first_name'] or profile['last_name']:
-        #         profile['name'] = profile['first_name'] + ' ' + profile['last_name']
-        #     else:
-        #         profile['name'] = profile['username']
-        #     profile['image_small'] = profile['image']
+        profiles = queryset_to_list(profiles,fields=['username','image','email','id'])
+
         profiles_json = {'records': profiles, 'total': total_cnt, 'count': current_cnt}
         return profiles_json
 
@@ -187,7 +168,7 @@ class Profile(user_model):
         profile = Profile.objects.filter(pk=user_id)[0]
         profile = obj_to_dict(profile, fields=
             [
-                'id', 'name', 'email', 'nick_name',
+                'id', 'username', 'email', 'nick_name',
                 'website', 'companies', 'bio',
                 'mobile_phone', 'work_phone',
                 'fax', 'job_title', 'department',
@@ -201,32 +182,18 @@ class Profile(user_model):
                 'admin_cell_phone',
                 'admin_work_phone',
                 'mail_to_assistant',
-                'image__name',
+                'image',
                 'last_login',
                 'date_joined',
                 'term_start_date',
                 'term_end_date',
                 'birth_date',
-                'signature_image__name',
-                'resume__name',
+                'signature',
+                'resume',
                 'board_joining_date',
             'bio'
-        ], to_str=
-        [
-            'last_login','date_joined','birth_date','board_joining_date',
-            'term_start_date','term_end_date',
-            'admin_image'
-         ]
-                              )
-        # user_groups = list(profile.groups.all().values())
-        # profile['mgroup'] = 'director'
-        # for grp in user_groups:
-        #     if grp['name'] == 'Admin':
-        #         profile['mgroup'] = 'admin'
-        #         break
-        #     if grp['name'] == 'Staff':
-        #         profile['mgroup'] = 'staff'
-        #         break
+        ],related={"groups":{"fields":['name']}})
+
         data = {"profile": profile, "next": 0, "prev": 0}
         return data
     @classmethod

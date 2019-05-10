@@ -86,6 +86,15 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
                 dict[field.split("__")[0]] = val
     else:
         dict = model_to_dict(obj)
+
+    for field in dict:
+        if str(type(dict[field])) in ["<class \'datetime.datetime\'>"]:
+            dict[field] = str(dict[field])
+        if str(type(dict[field])) in ["<class \'django.db.models.fields.files.FieldFile\'>",'<class \'django.db.models.fields.files.ImageFieldFile\'>']:
+            if dict[field]:
+                dict[field] = dict[field].url
+            else:
+                dict[field] = None
     if to_str:
         for field in to_str:
             if dict[field]:
