@@ -4,6 +4,7 @@ from mainapp import ws_methods
 from django.utils import timezone
 from meetings.model_files.user import Profile
 from django_countries.fields import CountryField
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
@@ -85,6 +86,7 @@ class Event(models.Model):
                                                 end_date__gte=datetime.datetime.now())
 
         meetings = ws_methods.queryset_to_list(meetings, fields=[
+            'id',
             'name',
             'start_date',
             'end_date',
@@ -94,22 +96,44 @@ class Event(models.Model):
         ])
         pending_meetings = []
         for meeting in meetings:
+            meeting_id = meeting['id']
+            invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = uid)
+            user_response = 'needsAction'
+            if invitation_response:
+                user_response =list(invitation_response)[0].state
             meeting['start_date'] = str(meeting['start_date'])
             meeting['end_date'] = str(meeting['end_date'])
             meeting['start'] = meeting['start_date']
             meeting['stop'] = meeting['end_date']
+            meeting['attendee_status'] = user_response
             pending_meetings.append(meeting)
         return pending_meetings
 
     @classmethod
     def respond_invitation(cls, request, params):
-        return {'error': 'Not implemented'}
+        meeting_id = params.get('meeting_id')
+        user_response = params.get('response')
+        user_id = request.user.id
+        try:
+            invitation_response = Invitation_Response.objects.get(event_id = meeting_id, attendee_id = user_id)
+            invitation_response.state = user_response
+            invitation_response.save()
+        except:
+            invitation_response = Invitation_Response(state= user_response, event_id = meeting_id, attendee_id = user_id)
+            invitation_response.save()
+        return 'done'
 
     @classmethod
     def get_details(cls, request, params):
         meeting_id = params['id']
+        user_id = request.user.id
         meeting_id = int(meeting_id)
         meeting_object_orm = Event.objects.get(pk=meeting_id)
+        invitation_response = list(meeting_object_orm.invitation_response_set.filter(attendee_id=request.user.id))
+        if invitation_response:
+            attendee_status = invitation_response[0].state
+        else:
+            attendee_status = 'needsAction'
         location = meeting_object_orm.location
         meeting_object = Event.objects.filter(pk=meeting_id).values()
         meeting_object = list(meeting_object)
@@ -121,6 +145,7 @@ class Event(models.Model):
         meeting_object['end_date'] = str(meeting_object['end_date'])
         meeting_object['start'] = meeting_object['start_date']
         meeting_object['stop'] = meeting_object['end_date']
+        meeting_object['attendee_status'] = attendee_status
         if location:
             meeting_object['location'] = location
         topics = list(meeting_object_orm.topic_set.values())
@@ -133,10 +158,13 @@ class Event(models.Model):
         for voting in votings:
             voting['open_date'] = str(voting['open_date'])
             voting['close_date'] = str(voting['close_date'])
-
+        """attendee needs fix"""
         attendees = []
-        for attendee in meeting_object_orm.attendees:
-            attendee['name'] = attendee.fullname()
+        meeting_attendees = list(meeting_object_orm.attendees.all())
+        for attendee in meeting_attendees:
+            full_name = attendee.fullname()
+            attendee = attendee.__dict__
+            attendee['name'] = full_name
             if attendee['date_joined']:
                 attendee['date_joined'] = str(attendee['date_joined'])
             if attendee['birth_date']:
@@ -150,6 +178,8 @@ class Event(models.Model):
             if attendee['last_login']:
                 attendee['last_login'] = str(attendee['last_login'])
             attendee['photo'] = attendee['image']
+            if attendee['_state']:
+                del attendee['_state']
             attendees.append(attendee)
         meeting_object['topics'] = topics
         meeting_object['meeting_docs'] = meeting_docs
@@ -180,8 +210,14 @@ class Event(models.Model):
         if meeting_list:
             for meeting in meeting_list:
                 location = meeting.location
+                invitatino_response = meeting.invitation_response_set.filter(attendee_id=request.user.id)
+                if invitatino_response:
+                    attndee_status = invitatino_response[0].state
+                else:
+                    attndee_status = 'needsAction'
                 meeting_val = meeting.__dict__
                 meeting_val['location'] = location
+                meeting_val['attendee_status'] = attndee_status
                 meetings.append(meeting_val)
         else:
             return 'No meeting Found'
@@ -197,3 +233,24 @@ class Event(models.Model):
         else:
             data = {'error': 'Meeting not found'}
         return data
+
+
+
+STATE_SELECTION = (
+    ('needsAction', _("Needs Action")),
+    ('tentative', _("Uncertain")),
+    ('declined', _("Declined")),
+    ('accepted', _("Accepted")),
+)
+
+# STATE_SELECTION = [
+#     ('needsAction', 'Needs Action'),
+#     ('tentative', 'Uncertain'),
+#     ('declined', 'Declined'),
+#     ('accepted', 'Accepted'),
+# ]
+class Invitation_Response(models.Model):
+    state = models.CharField(max_length=20,choices=STATE_SELECTION, blank=True, null=True)
+    attendee = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    pass

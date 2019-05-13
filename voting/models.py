@@ -1,6 +1,7 @@
 import base64
 import datetime
 from django.db import models
+from django.db.models import Q
 from documents.models import File
 from django.db.models import Count
 from meetings.models import Profile, Event, Topic
@@ -37,28 +38,19 @@ class Voting(models.Model):
 
     @classmethod
     def get_todo_votings(cls, uid):
-        votings = Voting.objects.filter(meeting__id__isnull=False, close_date__gte=datetime.datetime.now())
+        votings = Voting.objects.filter(
+            Q(meeting__id__isnull = False)
+            |
+            Q(respondents__id = uid),
+            Q(close_date__gte=datetime.datetime.now())
+        )
         pending_votings = []
-        if votings:
-            for voting in votings:
+        for voting in votings:
+            if voting.meeting:
                 user_voting = voting.meeting.attendees.all().filter(pk=uid)
-                if user_voting:
-                    user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
-                    if len(user_answer) > 0:
-                        user_answer = user_answer[0]
-                        my_status = user_answer.user_answer.name
-                    else:
-                        my_status = 'pending'
-                    pending_votings.append({
-                        'id': voting.id,
-                        'name': voting.name,
-                        'voting_type_name': voting.voting_type.name,
-                        'my_status': my_status
-                    })
-
-        votings = Voting.objects.filter(respondents__id=uid, close_date__gte=datetime.datetime.now())
-        if votings:
-            for voting in votings:
+            else:
+                user_voting = voting
+            if user_voting:
                 user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
                 if len(user_answer) > 0:
                     user_answer = user_answer[0]
