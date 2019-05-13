@@ -1,6 +1,7 @@
 from django.db import models
 from django.apps import apps
 from datetime import datetime
+from documents.file import File
 from mainapp import ws_methods
 from django.contrib import admin
 from meetings.model_files.user import Profile, create_group
@@ -203,12 +204,62 @@ class Comment(models.Model):
 class Message(models.Model):
     sender = models.IntegerField()
     to = models.IntegerField()
-    content = models.TextField()
+    body = models.TextField()
     read_status = models.BooleanField(default=False)
 
     @classmethod
-    def get(cls, request, params):
-        return {'error': 'Not implemented'}
+    def get_friend_messages(cls, request, params):
+        uid = request.user.id
+        target_id = params['target_id']
+        data = Message.objects.filter(sender__in=[target_id, uid], to__in=[target_id, uid])[0: 20]
+        for obj in data:
+            if obj.to == uid and not obj.read_status:
+                obj.read_status = True
+                obj.save()
+        data = ws_methods.queryset_to_list(data, fields=['id', 'body', 'to', 'sender'])
+        return data
+
+    @classmethod
+    def get_old_messages(cls, request, params):
+        uid = request.user.id
+        target_id = params['target_id']
+        offset = params['offset']
+
+        data = Message.objects.filter(sender__in=[target_id, uid], to__in=[target_id, uid])[offset: offset + 20]
+        for obj in data:
+            if obj.to == uid and not obj.read_status:
+                obj.read_status = True
+                obj.save()
+
+        data = ws_methods.queryset_to_list(data, fields=['id', 'body', 'to', 'sender'])
+        return data
+
+
+    @classmethod
+    def send(cls, request, params):
+        uid = request.user.id
+        target_id = params['to']
+        body = params['body']
+        message = Message(to=target_id, sender=uid, body=body)
+        message.save()
+        message = message.__dict__
+        del message['_state']
+        events = [
+            {'name': 'chat_message_received', 'data': message, 'audience': [target_id]}
+        ]
+        res = ws_methods.emit_event(events)
+        return res
+
+    @classmethod
+    def mark_read(cls, request, params):
+        message_id = params['message_id']
+        message = Message.objects.get(pk=message_id)
+        message.read_status = True
+        message.save()
+        return 'done'
+
+class MessageDocument(File):
+    message_id = models.ForeignKey(Message, on_delete=models.CASCADE)
 
 class AuthUserChat(models.Model):
     @classmethod
