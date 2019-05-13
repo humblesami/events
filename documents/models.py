@@ -1,5 +1,6 @@
 from meetings.model_files.document import MeetingDocument
 from  .file import *
+from .annotation import *
 # Create your models here.
 
 class Document(models.Model):

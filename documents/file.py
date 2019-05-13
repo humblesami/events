@@ -13,8 +13,8 @@ from mainapp import settings
 
 class File(models.Model):
     name = models.CharField(max_length=30)
-    html = models.CharField(max_length=30)
-    content = models.CharField(max_length=30)
+    html = models.CharField(max_length=30, blank=True)
+    content = models.CharField(max_length=30, blank=True)
     attachment = models.FileField(upload_to='files/')
     pdf_doc = models.FileField(upload_to='converted/')
     original_pdf = models.FileField(upload_to='original/')
