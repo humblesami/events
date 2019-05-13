@@ -218,16 +218,34 @@ class Profile(user_model):
             profile['signature_image'] = str(profile_orm.signature_image)
         data = {"profile": profile, "next": 0, "prev": 0}
         return data
+
     @classmethod
     def update_profile(cls, request, params):
         user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
 
         for key in params:
-            if key !=' image' and key !=' admin_image':
+            if key !=' image' and key !=' admin_image' and key !=' resume':
                 setattr(profile, key, params[key])
 
         now_str = False
+        if params.get('resume'):
+            if not now_str:
+                now_str = ws_methods.now_str()
+            image_data = params['resume']
+            format, imgstr = image_data.split(';base64,')
+            ext = format.split('/')[-1]
+
+            data = ContentFile(base64.b64decode(imgstr))
+            file_name = 'resume_' + now_str + '_'+str(user_id) + '.' + ext
+            resume = Resume.objects.filter(user_id=user_id)
+            if resume:
+                resume = resume[0]
+            else:
+                resume = Resume(name='', user_id=user_id)
+                resume.save()
+            resume.attachment.save(file_name, data, save=True)
+
         if params.get('image'):
             if not now_str:
                 now_str = ws_methods.now_str()
