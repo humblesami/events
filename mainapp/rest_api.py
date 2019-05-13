@@ -93,10 +93,9 @@ def produce_result(res, args=None):
     if type(res) == dict:
         if 'error' not in res:
             if 'data' in res:
-                res = res.get('data')
                 res['error'] = ''
             else:
-                res = {'data' : res, 'error': ''}
+                res = {'data': res, 'error': ''}
     elif type(res) == str:
         if res == 'done':
             res = {'error': '', 'data': 'done'}
