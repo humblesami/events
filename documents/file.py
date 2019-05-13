@@ -18,7 +18,7 @@ class File(models.Model):
     attachment = models.FileField(upload_to='files/')
     pdf_doc = models.FileField(upload_to='converted/')
     original_pdf = models.FileField(upload_to='original/')
-
+    file_type = models.CharField(max_length=128, default='')
 
     def __str__(self):
         return self.name
@@ -30,10 +30,8 @@ class File(models.Model):
         super(File, self).save(*args, **kwargs)
         if create:
             self.get_pdf()
-
             pass
         else:
-
             pass
 
 
@@ -124,9 +122,13 @@ class File(models.Model):
     def get_binary(cls, request, params):
         if params['id']:
             file_id = int(params['id'])
-            f= File.objects.filter(id=file_id)[0]
-            result = base64.b64encode(f.pdf_doc.read()).decode('utf-8')
-            doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': f.name, 'type': ''}
+            file_obj = File.objects.filter(id=file_id)[0]
+            pdf_doc = file_obj.pdf_doc
+            pdf_doc = pdf_doc.read()
+            pdf_doc = base64.b64encode(pdf_doc)
+            result = pdf_doc.decode('utf-8')
+            # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
+            doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': file_obj.name, 'type': ''}
 
             return {'data': doc}
 

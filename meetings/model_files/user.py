@@ -1,4 +1,6 @@
 import base64
+import io
+
 from django.db import models
 from mainapp import ws_methods
 from documents.file import File
@@ -7,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
 
+from django.core.files import File as DjangoFile
 from mainapp.ws_methods import queryset_to_list, obj_to_dict
 
 GENDER_CHOICES = (
@@ -133,6 +136,7 @@ class Profile(user_model):
     term_start_date = models.DateField( blank=True, null=True)
     term_end_date = models.DateField( blank=True, null=True)
     signature_image = models.ImageField(null=True, blank=True)
+    resume = models.OneToOneField(File, null=True, on_delete=models.CASCADE)
     # user_type = models.CharField(max_length=50)
 
     def __str__(self):
@@ -184,12 +188,10 @@ class Profile(user_model):
                 'website', 'companies', 'bio',
                 'mobile_phone', 'work_phone',
                 'fax', 'job_title', 'department',
-                'board_joing_date',
-                'admin_first_name',
-                'admin_last_name',
-                'admin_nick_name',
-                'admin_email',
-                'admin_fax',
+                'board_joing_date','admin_first_name',
+                'admin_last_name','admin_nick_name',
+                'admin_email','image'
+                'admin_fax','admin_image'
                 'admin_cell_phone',
                 'admin_work_phone',
                 'mail_to_assistant',
@@ -201,21 +203,11 @@ class Profile(user_model):
                 'board_joining_date',
                 'bio'
             ],
-            to_str= [
-                'last_login','date_joined','birth_date','board_joining_date',
-                'term_start_date','term_end_date',
-            ]
         )
         profile['name'] = profile_orm.fullname()
-        if profile_orm.image and profile_orm.image.url:
-            profile['image'] = profile_orm.image.url
-        if profile_orm.admin_image and profile_orm.admin_image.url:
-            profile['admin_image'] = profile_orm.admin_image.url
-        resume = Resume.objects.filter(user_id=user_id)
+        resume = profile_orm.resume
         if resume:
-            profile['resume'] = {'id': resume[0].id}
-        if profile_orm.signature_image:
-            profile['signature_image'] = str(profile_orm.signature_image)
+            profile['resume'] = {'id': resume.id}
         data = {"profile": profile, "next": 0, "prev": 0}
         return data
 
@@ -225,7 +217,7 @@ class Profile(user_model):
         profile = Profile.objects.get(pk=user_id)
 
         for key in params:
-            if key !=' image' and key !=' admin_image' and key !=' resume':
+            if key !=' image' and key !=' admin_image' and key !='resume':
                 setattr(profile, key, params[key])
 
         now_str = False
@@ -233,18 +225,26 @@ class Profile(user_model):
             if not now_str:
                 now_str = ws_methods.now_str()
             image_data = params['resume']
-            format, imgstr = image_data.split(';base64,')
-            ext = format.split('/')[-1]
 
-            data = ContentFile(base64.b64decode(imgstr))
-            file_name = 'resume_' + now_str + '_'+str(user_id) + '.' + ext
-            resume = Resume.objects.filter(user_id=user_id)
-            if resume:
-                resume = resume[0]
-            else:
-                resume = Resume(name='', user_id=user_id)
-                resume.save()
-            resume.attachment.save(file_name, data, save=True)
+            format, imgstr = image_data.split(';base64,')
+            # binary_data = DjangoFile(imgstr)
+            binary_data = io.BytesIO(base64.b64decode(imgstr))
+            jango_file = DjangoFile(binary_data)
+
+            resume_file = profile.resume # File.objects.filter(user_id=user_id)
+            if not resume_file:
+                resume_file = File(name='samd', file_type='dsad')
+
+            resume_file.attachment.save("smnh.pdf", jango_file)
+            resume_file.save()
+
+            profile.resume = resume_file
+            profile.save()
+                # resume.attachment = binary_data
+            # else:
+            #     resume = Resume(name='ffg', user_id=user_id)
+            #     resume.attachment.save("reamoddsssaas.pdf", jango_file)
+            #     resume.save()
 
         if params.get('image'):
             if not now_str:
@@ -284,8 +284,8 @@ class Profile(user_model):
         super(Profile, self).save(*args, **kwargs)
         self.is_staff = True
 
-class Resume(File):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+# class Resume(File):
+#     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
 class ManagerDirector(UserManager):
     def get_queryset(self):
