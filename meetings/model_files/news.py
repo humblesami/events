@@ -48,7 +48,7 @@ class News(models.Model):
         }
         home_object['doc_ids'] = news_docs
         home_object['video_ids'] = news_videos
-        home_object['calendar'] = Event.get_upcoming_public_events()
+        home_object['calendar'] = Event.get_upcoming_public_events(uid)
 
         return {'error': '', 'data': home_object}
 

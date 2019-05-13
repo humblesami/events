@@ -67,16 +67,21 @@ class Event(models.Model):
         return self.name
 
     @classmethod
-    def get_upcoming_public_events(cls):
+    def get_upcoming_public_events(cls, user_id):
         public_events = Event.objects.filter(archived=False, publish=True, end_date__gt=datetime.datetime.now())
-        public_events = list(public_events.values())
         calendar_events = []
         for event in public_events:
-            event['country'] = str(event['country'])
-            event['start_date'] = str(event['start_date'])
-            event['end_date'] = str(event['end_date'])
-            event['start'] = event['start_date']
-            event['stop'] = event['end_date']
+            event.start_date = str(event.start_date)
+            event.end_date = str(event.end_date)
+            event.country = str(event.country.name)
+            event.start = event.start_date
+            event.stop = event.end_date
+            my_event = event.attendees.filter(pk = user_id)
+            if my_event:
+                event.my_event = 1
+            event = event.__dict__
+            if event['_state']:
+                del event['_state']
             calendar_events.append(event)
         return calendar_events
 
@@ -247,6 +252,9 @@ class Event(models.Model):
         else:
             attendee_status = 'needsAction'
         location = meeting_obj.location
+        my_event =  meeting_obj.attendees.filter(pk=user_id)
+        if my_event:
+            my_event = 1
 
         meeting = meeting_obj.__dict__
         meeting['start_date'] = str(meeting['start_date'])
@@ -255,6 +263,7 @@ class Event(models.Model):
         meeting['stop'] = meeting['end_date']
         meeting['location'] = location
         meeting['attendee_status'] = attendee_status
+        meeting['my_event'] = my_event
         if meeting['_state']:
             del meeting['_state']
         return {'data': meeting}
