@@ -190,18 +190,12 @@ class Profile(user_model):
                 'fax', 'job_title', 'department',
                 'board_joing_date','admin_first_name',
                 'admin_last_name','admin_nick_name',
-                'admin_email','image'
-                'admin_fax','admin_image'
-                'admin_cell_phone',
-                'admin_work_phone',
-                'mail_to_assistant',
-                'last_login',
-                'date_joined',
-                'term_start_date',
-                'term_end_date',
-                'birth_date',
-                'board_joining_date',
-                'bio'
+                'admin_email', 'admin_fax','admin_image'
+                'admin_cell_phone', 'admin_work_phone',
+                'mail_to_assistant', 'bio',
+                'image', 'last_login', 'date_joined',
+                'term_start_date', 'term_end_date',
+                'birth_date', 'board_joining_date',
             ],
         )
         profile['name'] = profile_orm.fullname()
@@ -227,24 +221,22 @@ class Profile(user_model):
             image_data = params['resume']
 
             format, imgstr = image_data.split(';base64,')
-            # binary_data = DjangoFile(imgstr)
             binary_data = io.BytesIO(base64.b64decode(imgstr))
             jango_file = DjangoFile(binary_data)
 
+            file_name = ''
             resume_file = profile.resume # File.objects.filter(user_id=user_id)
             if not resume_file:
-                resume_file = File(name='samd', file_type='dsad')
+                file_name = 'resume_' + now_str + '_' + str(user_id) + '.pdf'
+                resume_file = File(name=file_name, file_type='resume')
+            else:
+                file_name = resume_file.name
 
-            resume_file.attachment.save("smnh.pdf", jango_file)
+            resume_file.attachment.save(file_name, jango_file)
             resume_file.save()
 
             profile.resume = resume_file
             profile.save()
-                # resume.attachment = binary_data
-            # else:
-            #     resume = Resume(name='ffg', user_id=user_id)
-            #     resume.attachment.save("reamoddsssaas.pdf", jango_file)
-            #     resume.save()
 
         if params.get('image'):
             if not now_str:
