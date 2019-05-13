@@ -63,7 +63,7 @@ jQuery(document).ready(function(e) {
         var draw = function(ctx, x, y)
         {
             points.push({x: x, y: y, break: false});
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             var p1 = points[0];
             var p2 = points[1];
 
@@ -180,7 +180,13 @@ function init_sign(config) {
         clear_btn.click();
 
         if (signature_value && signature_value.length > 0) {
-            dataURL = 'data:image/png;base64,' + signature_value;
+            if(config.include_prefix)
+            {
+                dataURL = signature_value;
+            }
+            else{
+                dataURL = 'data:image/png;base64,' + signature_value;
+            }
             img.src = dataURL;
         }
     }
@@ -231,15 +237,17 @@ function init_sign(config) {
         save_btn.click(function (e) {
             var type = "draw";
             dataURL = myCanvas.toDataURL();
-            $('.strt_sign.pdfjs').hide();
-            dataURL = dataURL.replace('data:image/png;base64,', '');
-            if(! dataURL)
+            $('.strt_sign.pdfjs').hide();            
+            if(!dataURL)
             {
                 console.log('No signs');
                 return;
             }
             $('.strt_sign.pdfjs').hide();
-            dataURL = dataURL.replace('data:image/png;base64,', '');
+            if(!config.include_prefix)
+            {
+                dataURL = dataURL.replace('data:image/png;base64,', '');
+            }
             config.on_signed(dataURL);
             $('#signModal .modal-footer button').click();
         });

@@ -40,11 +40,11 @@ function dn_rpc_object(options) {
 
     options.data = args_data;
     options.dataType = 'json';
-    if(req_url.indexOf('localhost')> -1)
-    {
-        options.type = 'GET';
-    }
-    else
+    // if(req_url.indexOf('localhost')> -1)
+    // {
+    //     options.type = 'GET';
+    // }
+    // else
     {
         options.type = 'POST';
     }
@@ -78,7 +78,7 @@ function dn_rpc_object(options) {
                     console.log(response, er);
                 }
             } else if(site_config.show_logs.indexOf('ajax_success')){
-                console.log(response.data);
+                console.log(response);
             }
         }
         else {
@@ -135,7 +135,7 @@ function dn_rpc_object(options) {
         }
         else
         {
-            console.log(err);
+            // console.log(err);
             console.log(input_data.args);
             console.log('Api failed ', url_with_params);
         }                
