@@ -162,14 +162,7 @@ class Profile(user_model):
         total_cnt = profiles.count()
         current_cnt = total_cnt
         profiles = queryset_to_list(
-            profiles,
-            fields=[
-                'signature_image','date_joined','birth_date',
-                'board_joining_date',
-                'term_start_date','term_end_date','image__name',
-                'admin_image__name',
-            ],
-            to_str= ['signature_image']
+            profiles,fields=['username','image','email','id']
         )
         profiles_json = {'records': profiles, 'total': total_cnt, 'count': current_cnt}
         return profiles_json
