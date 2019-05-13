@@ -57,12 +57,12 @@ class Voting(models.Model):
                     my_status = user_answer.user_answer.name
                 else:
                     my_status = 'pending'
-                pending_votings.append({
-                    'id': voting.id,
-                    'name': voting.name,
-                    'voting_type_name': voting.voting_type.name,
-                    'my_status': my_status
-                })
+                    pending_votings.append({
+                        'id': voting.id,
+                        'name': voting.name,
+                        'voting_type_name': voting.voting_type.name,
+                        'my_status': my_status
+                    })
         return pending_votings
 
     def get_audience(self):

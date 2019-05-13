@@ -234,6 +234,30 @@ class Event(models.Model):
             data = {'error': 'Meeting not found'}
         return data
 
+    @classmethod
+    def meeting_summary(cls, request, params):
+        meeting_id = params.get('id')
+        user_id = request.user.id
+        meeting_obj = Event.objects.get(pk= meeting_id)
+        if not meeting_obj:
+            return 'Invalid meeting id requested'
+        invitation_response = meeting_obj.invitation_response_set.filter(attendee_id = user_id)
+        if invitation_response:
+            attendee_status = invitation_response[0].state
+        else:
+            attendee_status = 'needsAction'
+        location = meeting_obj.location
+
+        meeting = meeting_obj.__dict__
+        meeting['start_date'] = str(meeting['start_date'])
+        meeting['end_date'] = str(meeting['end_date'])
+        meeting['start'] = meeting['start_date']
+        meeting['stop'] = meeting['end_date']
+        meeting['location'] = location
+        meeting['attendee_status'] = attendee_status
+        if meeting['_state']:
+            del meeting['_state']
+        return {'data': meeting}
 
 
 STATE_SELECTION = (
@@ -243,12 +267,7 @@ STATE_SELECTION = (
     ('accepted', _("Accepted")),
 )
 
-# STATE_SELECTION = [
-#     ('needsAction', 'Needs Action'),
-#     ('tentative', 'Uncertain'),
-#     ('declined', 'Declined'),
-#     ('accepted', 'Accepted'),
-# ]
+
 class Invitation_Response(models.Model):
     state = models.CharField(max_length=20,choices=STATE_SELECTION, blank=True, null=True)
     attendee = models.ForeignKey(Profile, on_delete=models.CASCADE)
