@@ -165,26 +165,11 @@ class Event(models.Model):
             voting['close_date'] = str(voting['close_date'])
         """attendee needs fix"""
         attendees = []
-        meeting_attendees = list(meeting_object_orm.attendees.all())
-        for attendee in meeting_attendees:
-            full_name = attendee.fullname()
-            attendee = attendee.__dict__
-            attendee['name'] = full_name
-            if attendee['date_joined']:
-                attendee['date_joined'] = str(attendee['date_joined'])
-            if attendee['birth_date']:
-                attendee['birth_date'] = str(attendee['birth_date'])
-            if attendee['board_joining_date']:
-                attendee['board_joining_date'] = str(attendee['board_joining_date'])
-            if attendee['term_start_date']:
-                attendee['term_start_date'] = str(attendee['term_start_date'])
-            if attendee['term_end_date']:
-                attendee['term_end_date'] = str(attendee['term_end_date'])
-            if attendee['last_login']:
-                attendee['last_login'] = str(attendee['last_login'])
-            attendee['photo'] = attendee['image']
-            if attendee['_state']:
-                del attendee['_state']
+        meeting_attendees = meeting_object_orm.attendees.all()
+        for attendee_obj in meeting_attendees:
+            attendee = {}
+            attendee['name'] = attendee_obj.fullname()
+            attendee['photo'] = attendee_obj.image.url
             attendees.append(attendee)
         meeting_object['topics'] = topics
         meeting_object['meeting_docs'] = meeting_docs

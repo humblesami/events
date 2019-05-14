@@ -1,5 +1,6 @@
 var time_out_session = undefined;
 var session_time_limit = 600000;
+var is_mobile_device = undefined;
 (function() {
     var wl = window.location;
     if (wl.hash) {
@@ -7,7 +8,16 @@ var session_time_limit = 600000;
     } else {
         window['pathname'] = wl.toString().replace(window.location.origin, '');
     }
-    window['click_events'] = {};
+    try
+    { 
+        document.createEvent("TouchEvent");
+        is_mobile_device = true;
+        window['is_mobile_device'] = 1;
+    }
+    catch(e)
+    {
+         return false; 
+    }
 })()
 
 var dn_current_site_user = {
@@ -51,33 +61,8 @@ var dn_current_site_user = {
         }
         setTimeout(function() {
             bootbox.hideAll();
-            dn_current_site_user.removeEventListners();
         }, 500);
         window.location = '/#/login';
-    },
-    removeEventListners: function() {
-        $(document).off('click');
-        $(document).off('mouseup');
-        $(document).off('mousedown');
-        $(document).off('mousemove');
-        $(document).off('touchstart');
-        $(document).off('touchend');
-        $(document).off('touchmove');
-        $(document).off('keydown');
-        $(document).off('keyup');
-
-
-        $(document.body).off('click');
-        $(document.body).off('mouseup');
-        $(document.body).off('mousedown');
-        $(document.body).off('mousemove');
-        $(document.body).off('touchstart');
-        $(document.body).off('touchend');
-        $(document.body).off('touchmove');
-        $(document.body).off('keydown');
-        $(document.body).off('keyup');
-        window['click_events'] = {};
-        addMainEventListeners();
     },
     initUserDataFromCookie: function() {
         var user_info = localStorage.getItem("user");
@@ -275,21 +260,21 @@ function addMainEventListeners() {
                 .find("input:first")
                 .focus();
         }
-    }
-
-    (function() {
-        if (site_config.site_url.indexOf('localhost') > -1) {
-            // clearTimeout(time_out_session);
-            // time_out_session = undefined;
-        }
-    })();
+    }    
 
     $(document).on("mouseup touchend keyup", function(e) {
         clearTimeout(time_out_session);
         handleSessionExpiry();
         hideSearchbar(e);
-    });
+    });    
+}
 
+addMainEventListeners();
+(function() {
+    if (site_config.site_url.indexOf('localhost') > -1) {
+        // clearTimeout(time_out_session);
+        // time_out_session = undefined;
+    }
     var showHeaderAt = 0;
     var win = $(window),
         body = $("body");
@@ -302,9 +287,7 @@ function addMainEventListeners() {
             }
         });
     }
-}
-
-addMainEventListeners();
+})();
 dn_current_site_user.verifyUserToken();
 
 var public_methods = {
