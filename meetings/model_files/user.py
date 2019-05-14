@@ -173,7 +173,16 @@ class Profile(user_model):
         group = params.get('type')
         if not user_id:
             user_id = request.user.id
-        profile_orm = Profile.objects.filter(pk=user_id)[0]
+        profile_orm = Profile.objects.filter(pk=user_id)
+        if not profile_orm:
+            user_object = user_model.objects.get(pk=user_id)
+            if user_object.is_superuser:
+                profile_object = Profile(user_ptr=user_object, name=user_object.username)
+                profile_object.save()
+                create_group(user_object, 'Admin')
+                profile_orm = profile_object
+        else:
+            profile_orm = profile_orm[0]
         profile = obj_to_dict(
             profile_orm,
             fields= [

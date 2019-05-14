@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from .file import *
 from meetings.model_files.user import Profile
@@ -191,11 +192,9 @@ class AnnotationDocument(File):
         return 'done'
 
 class Annotation(models.Model):
-    pass
     name = models.CharField(max_length=200)
-    uid = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     document = models.ForeignKey(AnnotationDocument, on_delete=models.CASCADE)
-    color = models.CharField(max_length=50)
     date_time = models.DateTimeField()
     page = models.IntegerField()
     type = models.CharField(max_length=50)
@@ -203,8 +202,7 @@ class Annotation(models.Model):
 
 
 class RectangleAnnotation(Annotation):
-    title = models.CharField(max_length=200)
-
+    color = models.CharField(max_length=50)
 
 class Dimensions(models.Model):
     rectangle_id = models.ForeignKey(RectangleAnnotation, on_delete=models.CASCADE)
@@ -222,13 +220,9 @@ class PointAnnotation(Annotation):
     my_notification = models.IntegerField()
 
 
-class CommentAnnotation(models.Model):
-    content = models.CharField(max_length=500)
+class CommentAnnotation(Annotation):
+    body = models.CharField(max_length=500)
     point_id = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
-    uid = models.IntegerField()
-    uuid = models.CharField(max_length=50)
-    date_time = models.DateTimeField()
-    user_name = models.CharField(max_length=100)
 
 
 class DrawingAnnotation(Annotation):
