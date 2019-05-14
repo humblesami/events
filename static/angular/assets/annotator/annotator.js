@@ -1,4 +1,4 @@
-(function(){
+(function() {
     var annotation_mode = 0;
     var hand_drawings = [];
     var comments_shown = false;
@@ -8,101 +8,99 @@
     var comment_item_focused = false;
     var select_comment_item = undefined;
     var handleAnnotationClick = undefined;
-    var loadALlCommentsOnDocument = function(){console.log("Load comment not defined");}
-    var saveAnnotationsAtServer = function(){console.log("Save annotation not defined");};
-    var onAnnotationsDownloaded = function(){console.log("onAnnotationsDownloaded not defined");}
-    function initDocCookies(documentId)
-    {
-        localStorage.setItem(documentId+'/version', 0);
-        localStorage.setItem(documentId+'/scale', 1);
-        localStorage.setItem(documentId+'/roate', 0);
-        localStorage.setItem(documentId+'/dirty', 0);
-        localStorage.setItem(documentId+'/annotations', "[]");
+    var loadALlCommentsOnDocument = function() {
+        console.log("Load comment not defined");
     }
-    
-    function resetCookies(documentId)
-    {
-        localStorage.setItem(documentId+'/version', 0);
-        localStorage.setItem(documentId+'/annotations', "[]");
+    var saveAnnotationsAtServer = function() {
+        console.log("Save annotation not defined");
+    };
+    var onAnnotationsDownloaded = function() {
+        console.log("onAnnotationsDownloaded not defined");
     }
-    
-    function getDocumentVersion(documentId)
-    {
+
+    function initDocCookies(documentId) {
+        localStorage.setItem(documentId + '/version', 0);
+        localStorage.setItem(documentId + '/scale', 1);
+        localStorage.setItem(documentId + '/roate', 0);
+        localStorage.setItem(documentId + '/dirty', 0);
+        localStorage.setItem(documentId + '/annotations', "[]");
+    }
+
+    function resetCookies(documentId) {
+        localStorage.setItem(documentId + '/version', 0);
+        localStorage.setItem(documentId + '/annotations', "[]");
+    }
+
+    function getDocumentVersion(documentId) {
         var res = getCookieStrict(documentId, documentId + '/version');
-        if(isNaN(res))
-        {
+        if (isNaN(res)) {
             bootbox.alert("Cookie1 must have been se, plz contact support");
         }
         return res;
     }
-    function isDocumentDirty(documentId)
-    {
-        var res = getCookieStrict(documentId, documentId + '/dirty');    
-        if(isNaN(res))
-        {
-            bootbox.alert("Cookie2 must have been set for "+documentId+", plz contact support");
+
+    function isDocumentDirty(documentId) {
+        var res = getCookieStrict(documentId, documentId + '/dirty');
+        if (isNaN(res)) {
+            bootbox.alert("Cookie2 must have been set for " + documentId + ", plz contact support");
         }
         return res;
     }
-    function setDocDirty(documentId)
-    {
+
+    function setDocDirty(documentId) {
         var document_dirty = isDocumentDirty(documentId);
-        if(document_dirty != 1)
-        {
-            var document_version = getCookieStrict(documentId, documentId+'/version');
+        if (document_dirty != 1) {
+            var document_version = getCookieStrict(documentId, documentId + '/version');
             document_version += 1;
-            localStorage.setItem(documentId+'/version', document_version);
-            localStorage.setItem(documentId+'/dirty', 1);
+            localStorage.setItem(documentId + '/version', document_version);
+            localStorage.setItem(documentId + '/dirty', 1);
         }
     }
-    function unSetDocDirty(documentId,)
-    {
-        localStorage.setItem(documentId+'/dirty', 0);
+
+    function unSetDocDirty(documentId) {
+        localStorage.setItem(documentId + '/dirty', 0);
     }
-    function setDocVersion(documentId, version)
-    {
-        localStorage.setItem(documentId+'/version', version);
+
+    function setDocVersion(documentId, version) {
+        localStorage.setItem(documentId + '/version', version);
     }
-    
-    function getCookieStrict(documentId, key)
-    {
+
+    function getCookieStrict(documentId, key) {
         validate_key(documentId, key);
         var val = localStorage.getItem(key);
-        if(!isNaN(val))
+        if (!isNaN(val))
             val = parseFloat(val);
         return val;
     }
-    function setCookieStrict(documentId, key, val)
-    {
+
+    function setCookieStrict(documentId, key, val) {
         var temp_key = validate_key(documentId, key);
-        if(temp_key == 'dirty' || temp_key == 'version')
-        {
+        if (temp_key == 'dirty' || temp_key == 'version') {
             bootbox.alert("Should not happend");
             console.trace();
         }
         localStorage.setItem(key, val);
     }
-    function validate_key(documentId, key)
-    {
-        var keys = ['version','annotations','dirty','scale','rotate','pen/size','pen/color','text/size','text/color'];
+
+    function validate_key(documentId, key) {
+        var keys = ['version', 'annotations', 'dirty', 'scale', 'rotate', 'pen/size', 'pen/color', 'text/size', 'text/color'];
         var temp_key = key.replace(documentId + '/', '');
-        if(keys.indexOf(temp_key) == -1)
-        {
+        if (keys.indexOf(temp_key) == -1) {
             console.trace();
-            bootbox.alert("Please report this issue2 with "+key +" for "+ documentId);
+            bootbox.alert("Please report this issue2 with " + key + " for " + documentId);
         }
         return temp_key;
     }
-    
+
     function module0(module, exports, __webpack_require__) {
-        try{
+        try {
             'use strict';
             var _ = __webpack_require__(2);
             var _2 = _interopRequireDefault(_);
             var _initColorPicker = __webpack_require__(4);
-            var _initColorPicker2 = _interopRequireDefault(_initColorPicker);        
-    
-            var save_drawing = function(){};
+            var _initColorPicker2 = _interopRequireDefault(_initColorPicker);
+
+            var save_drawing = function() {};
             var activeAnnotationId = undefined;
             var activePointId = undefined;
             var documentId = false;
@@ -113,14 +111,14 @@
             var commentText = comments_wrapper.find('#commentText');
             var comment_list_div = comments_wrapper.find('.comment-list:first');
             var comment_list = comments_wrapper.find('.comment-list-container:first');
-    
+
             var activeAnnotationItem = undefined;
             var annotationBiengEdited = false;
             var comments_loaded = false;
-    
+
             var force_download = 0;
             var loadAnnotationsFromServer = undefined;
-            
+
             var _slicedToArray = function() {
                 function sliceIterator(arr, i) {
                     var _arr = [];
@@ -154,96 +152,84 @@
                     }
                 };
             }();
-    
+
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule ? obj : {
                     default: obj
                 };
             }
-    
+
             var UI = _2.default.UI;
             var PAGE_HEIGHT = void 0;
-            
-    
-            var RENDER_OPTIONS = {};        
-    
+
+
+            var RENDER_OPTIONS = {};
+
             _2.default.setStoreAdapter(new _2.default.LocalStoreAdapter());
             //PDFJS.workerSrc = './shared/pdf.worker.js';
-    
+
             var NUM_PAGES = 0;
             var pdf_doc_data = undefined;
             var pdfStoreAdapter = _2.default.getStoreAdapter();
-    
-            (function(){
-                var message = '';			
-                (function(){
-                    onAnnotationsDownloaded = function(data, doc_data)
-                    {
+
+            (function() {
+                var message = '';
+                (function() {
+                    onAnnotationsDownloaded = function(data, doc_data) {
                         var comments = data.comments;
-                        if(!Array.isArray(comments))
-                        {
+                        if (!Array.isArray(comments)) {
                             comments = [];
                             console.log("Why not comments");
                         }
                         var document_version = getDocumentVersion(documentId);
-                        if(!data.annotations)
-                        {
+                        if (!data.annotations) {
                             data.annotations = [];
-                        }  
-                        var message = undefined;                
+                        }
+                        var message = undefined;
                         var document_dirty = isDocumentDirty(documentId);
                         var to_send = [];
-                        if(data.version > document_version)
-                        {                           
-                            if(document_dirty == 1)
-                            {
-                                message = "Document annotation version="+data.version+" available from server,";
-                                message += "<br>You have older version="+document_version+" at local.";
+                        if (data.version > document_version) {
+                            if (document_dirty == 1) {
+                                message = "Document annotation version=" + data.version + " available from server,";
+                                message += "<br>You have older version=" + document_version + " at local.";
                                 message += "<br>If you download, it will discard your recent changes,";
-                                message += "<br>Do you still want to download?"; 
-                                bootbox.confirm(message, function(dr){
-                                    if(dr)
-                                    {
+                                message += "<br>Do you still want to download?";
+                                bootbox.confirm(message, function(dr) {
+                                    if (dr) {
                                         updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
-                                    }
-                                    else{
+                                    } else {
                                         updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
                                     }
-                                });                                                       
-                            }
-                            else{
+                                });
+                            } else {
                                 updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
                         }
                     }
-    
+
                     function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {
-                        if(annotations.length == 0){
+                        if (annotations.length == 0) {
                             annotations = getLocalAnnotations();
                         }
-                        if(annotations.length == 0 && comments.length == 0){
-                            if(doc_data && doc_data.first_time)
-                            {
+                        if (annotations.length == 0 && comments.length == 0) {
+                            if (doc_data && doc_data.first_time) {
                                 render_details(doc_data);
                             }
                             return;
                         }
-                        annotations = annotations.filter(annot => annot.type != 'point' || annot.sub_type)
+                        annotations = annotations.filter(function(annot) {
+                            annot.type != 'point' || annot.sub_type
+                        });
                         annotations = annotations.concat(comments);
-                        annotations.forEach(function(item){
+                        annotations.forEach(function(item) {
                             item.class = 'Annotation';
                         });
                         var annotation_cookie = "";
-                        if(Array.isArray(annotations))
-                        {
-                            annotation_cookie  = JSON.stringify(annotations);
-                        }
-                        else
-                        {
+                        if (Array.isArray(annotations)) {
+                            annotation_cookie = JSON.stringify(annotations);
+                        } else {
                             bootbox.alert("invalid annotations");
                             return;
                         }
@@ -252,135 +238,124 @@
                         unSetDocDirty(documentId);
                         render_details(doc_data);
                     }
-    
+
                 })();
-    
-                (function(){
-                    function onAnnotationsUploaded(data, reset){
-                        if(data != "done")
-                        {
-                            if(isNaN(data))
-                            {
+
+                (function() {
+                    function onAnnotationsUploaded(data, reset) {
+                        if (data != "done") {
+                            if (isNaN(data)) {
                                 bootbox.alert("Could not save:");
                                 console.log(data);
                                 return;
                             }
                             var document_version = getDocumentVersion(documentId);
                             message = "Server already has version=" + data;
-                            message += "<br>Do you want to overwrite server version with local="+document_version+"?";
-                            bootbox.confirm(message, function(dr){
-                                if(dr)
-                                {
+                            message += "<br>Do you want to overwrite server version with local=" + document_version + "?";
+                            bootbox.confirm(message, function(dr) {
+                                if (dr) {
                                     document_version = data + 1;
                                     setDocVersion(document_version);
                                     saveAnnotationsAtServer();
                                 }
                             });
-                        }
-                        else
-                        {
-                            if(reset == 'reset')
-                            {
+                        } else {
+                            if (reset == 'reset') {
                                 initDocCookies(documentId);
                                 render();
-                            }
-                            else
+                            } else
                                 unSetDocDirty(documentId);
                             console.log("Saved");
                         }
                     }
-    
-                    function onAnnotationSaveFailed(er){
+
+                    function onAnnotationSaveFailed(er) {
                         console.log(er);
                     }
-    
-                    saveAnnotationsAtServer = function (save_type)
-                    {
+
+                    saveAnnotationsAtServer = function(save_type) {
                         save_drawing(1);
-                        if(!documentId)
-                        {
+                        if (!documentId) {
                             console.log("saveAnnotationsAtServer must be called after document id is set")
                             return;
                         }
                         var document_dirty = isDocumentDirty(documentId);
-                        if(document_dirty != 1)
+                        if (document_dirty != 1)
                             return;
-    
+
                         var document_version = getDocumentVersion(documentId);
-                        var input_data = {doc_id:documentId};
+                        var input_data = {
+                            doc_id: documentId
+                        };
                         delete input_data['reset'];
-                        if(save_type == 'reset')
-                        {
+                        if (save_type == 'reset') {
                             input_data['reset'] = 1;
-                        }
-                        else {
-                            var annotationString = localStorage.getItem(documentId+'/annotations');
-                            if(!annotationString || annotationString == '[]')
-                            {
+                        } else {
+                            var annotationString = localStorage.getItem(documentId + '/annotations');
+                            if (!annotationString || annotationString == '[]') {
                                 console.log("No annotations");
                                 return;
                             }
-                            if(document_version == 0)
-                            {
+                            if (document_version == 0) {
                                 setDocDirty(documentId);
                                 setDocVersion(documentId, 1);
                             }
                             input_data['annotations'] = annotationString;
                             input_data['version'] = document_version;
                         }
-    
+
                         dn_rpc_object({
-                            url:'/save-annotations',
-                            data:input_data,
-                            no_loader:1,
-                            onSuccess: function(data){
+                            url: '/save-annotations',
+                            data: input_data,
+                            no_loader: 1,
+                            onSuccess: function(data) {
                                 onAnnotationsUploaded(data, save_type);
                             },
                             onError: onAnnotationSaveFailed,
-                            type:'post'
+                            type: 'post'
                         });
                     }
-                    
+
                     window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
-    
-                    $('body').on('click','.doc-saver',function(){
+
+                    $('body').on('click', '.doc-saver', function() {
                         saveAnnotationsAtServer();
                     });
-    
+
                 })();
-    
-                $('body').on('click','.cb-container.autosave input',function(){
-                    if($(this).prop('checked'))
+
+                $('body').on('click', '.cb-container.autosave input', function() {
+                    if ($(this).prop('checked'))
                         saveAnnotationsAtServer();
                 });
-    
-                $('body').on('click','.toolbar .back',function(){
+
+                $('body').on('click', '.toolbar .back', function() {
                     on_leave_document();
                 });
-    
-                $('body').on('click','.doc-clearer',function(){
+
+                $('body').on('click', '.doc-clearer', function() {
                     message = "Do you want to erase all annotations on document.";
                     message += "<br>Warning: it will disable autosave to not affect the online vesion.";
-                    bootbox.confirm(message, function(dr){
-                        if(dr)
-                        {
+                    bootbox.confirm(message, function(dr) {
+                        if (dr) {
                             resetCookies(documentId);
                             $('.cb-container.autosave input').prop('checked', false);
                             render();
                         }
                     });
                 });
-    
-                $('body').on('click','.doc-reseter',function(){
+
+                $('body').on('click', '.doc-reseter', function() {
                     message = "Do you want to erase all annotations on document.";
                     message += "<br>Warning: It will also reset.";
                     //message += "<br>You can cancel or uncheck auto save if you do not want to reset online";
-                    bootbox.confirm(message, function(dr){
-                        if(dr)
-                        {
+                    bootbox.confirm(message, function(dr) {
+                        if (dr) {
                             var annotations = localStorage.getItem(documentId + '/annotations');
                             annotations = JSON.parse(annotations);
-                            annotations = annotations.filter(annot => annot.type == 'point' && !annot.sub_type);
+                            annotations = annotations.filter(function(annot) {
+                                annot.type == 'point' && !annot.sub_type
+                            });
                             annotations = JSON.stringify(annotations);
                             localStorage.removeItem(documentId + '/annotations');
                             localStorage.setItem(documentId + '/annotations', annotations);
@@ -389,168 +364,140 @@
                         }
                     });
                 });
-    
+
             })();
-    
-            $(window).unload(function(){
+
+            $(window).unload(function() {
                 on_leave_document();
-            });                
-            
-            $('body').on('click','.ContextMenuPopup.toolbar:first .copy:first', function(){
+            });
+
+            $('body').on('click', '.ContextMenuPopup.toolbar:first .copy:first', function() {
                 document.execCommand("copy");
                 $(this).parent().parent().hide();
             });
-            
-            $(document).mousedown(function(e){
-                if(e.button == 2)
+
+            $(document).mousedown(function(e) {
+                if (e.button == 2)
                     return;
                 var $target = $(e.target);
-                if(comment_item_focused)
-                {                    
-                    var not_in_comments = $target.closest('#comment-wrapper').length == 0;                    
-                    if(not_in_comments)
-                    {
+                if (comment_item_focused) {
+                    var not_in_comments = $target.closest('#comment-wrapper').length == 0;
+                    if (not_in_comments) {
                         comment_item_focused = false;
                         loadALlCommentsOnDocument();
                     }
                 }
-                if(contextMenuShown && !$target.is('.ContextMenuPopup button') && !$target.is('.ContextMenuPopup .colored'))
+                if (contextMenuShown && !$target.is('.ContextMenuPopup button') && !$target.is('.ContextMenuPopup .colored'))
                     $('.ContextMenuPopup').hide();
-                if($('.topbar:first .pen:first').hasClass('active')){
-                    if(hand_drawings.length > 0 && $target.closest('#viewer').length == 0){
+                if ($('.topbar:first .pen:first').hasClass('active')) {
+                    if (hand_drawings.length > 0 && $target.closest('#viewer').length == 0) {
                         save_drawing();
                     }
-                }
-                else
-                {
+                } else {
                     $('.pdfViewer').css("cursor", "default");
-                    if($target.closest('.annotation_button.prop').length > 0)
-                    {
+                    if ($target.closest('.annotation_button.prop').length > 0) {
                         $('.topbar:first .pen:first').click();
-                    }
-                    else
-                    {
-                        if(activePointId && $target.closest('#comment-wrapper').length == 0)
-                        {
+                    } else {
+                        if (activePointId && $target.closest('#comment-wrapper').length == 0) {
                             activePointId = undefined;
                             $('.comment-list-form').hide();
-                        }
-                        else
-                        {
+                        } else {
                             var comment_active = $('.toolbar .comment').hasClass('active');
-                            if(comment_active && $target.closest('#viewer').length == 0)
-                            $('.toolbar .cursor').click();
+                            if (comment_active && $target.closest('#viewer').length == 0)
+                                $('.toolbar .cursor').click();
                         }
-                    }                    
+                    }
                 }
             });
-    
-            $('body').on('click', '.cell.colored', function(){
+
+            $('body').on('click', '.cell.colored', function() {
                 var obj = $(this);
                 var color_value = obj.attr('hex').substring(1);
-                if(!activeAnnotationItem)
-                {
+                if (!activeAnnotationItem) {
                     $('.topbar .pen-color:first').css('background', color_value);
                     $('.topbar .pen-color:first').attr('color', color_value);
                     setPen(null, color_value);
                     obj.append($('#applied_color').show());
-                }
-                else if(activeAnnotationItem.color != color_value)
-                {
+                } else if (activeAnnotationItem.color != color_value) {
                     activeAnnotationItem.color = color_value;
-                    pdfStoreAdapter.editAnnotation(documentId, activeAnnotationId, activeAnnotationItem).then(function(res){
+                    pdfStoreAdapter.editAnnotation(documentId, activeAnnotationId, activeAnnotationItem).then(function(res) {
                         obj.append($('#applied_color').show());
-                    });                
+                    });
                 }
-            });                
-            
-            $('.notification-list:first').on('click, li.list-group-item contact',function(){
+            });
+
+            $('.notification-list:first').on('click, li.list-group-item contact', function() {
                 console.log(1344);
             });
-    
-            function onPenLeave()
-            {
-    
+
+            function onPenLeave() {
+
             }
-    
-            var setPen = function(a, b){}
-            
+
+            var setPen = function(a, b) {}
+
             var vertical = 'top';
             var horizontal = 'left';
             var sclae_value = undefined;
-            function addCommentCount(annotations_of_page, pange_number)
-            {
-                var annotations_of_page = annotations_of_page.filter(a=>{
-                    return a.type=='point' && !a.sub_type;
+
+            function addCommentCount(annotations_of_page, pange_number) {
+                var annotations_of_page = annotations_of_page.filter(function(a) {
+                    return a.type == 'point' && !a.sub_type;
                 });
-                for(var p_index in annotations_of_page)
-                {   
-                    var c_point = annotations_of_page[p_index];                             
-                    var notif_counters_html = '<div point_id='+c_point.uuid+' class="new_comments_count"';
+                for (var p_index in annotations_of_page) {
+                    var c_point = annotations_of_page[p_index];
+                    var notif_counters_html = '<div point_id=' + c_point.uuid + ' class="new_comments_count"';
                     var point_top = c_point.y * sclae_value - 15;
                     var point_left = c_point.x * sclae_value + 15;
-                    var y_dim = vertical+':'+point_top+'px;';
-                    var x_dim = horizontal+':'+point_left+'px;';
+                    var y_dim = vertical + ':' + point_top + 'px;';
+                    var x_dim = horizontal + ':' + point_left + 'px;';
                     var style = y_dim + x_dim;
-                    if(c_point.counter == 0)
-                    {
-                        style +='display:none;'
+                    if (c_point.counter == 0) {
+                        style += 'display:none;'
                     }
-                    notif_counters_html += ' style="' + style + '" comment_count="'+c_point.counter+'">' + c_point.counter + '</div>';
-                    $('#pageContainer'+pange_number+' .canvasWrapper').append(notif_counters_html);                
-                }			
+                    notif_counters_html += ' style="' + style + '" comment_count="' + c_point.counter + '">' + c_point.counter + '</div>';
+                    $('#pageContainer' + pange_number + ' .canvasWrapper').append(notif_counters_html);
+                }
             }
-    
-            function hideComments()
-            {            
+
+            function hideComments() {
                 comments_wrapper.hide();
                 viewerLeftMargin();
                 comments_shown = false;
-                localStorage.removeItem(documentId+'/comments_shown');            
+                localStorage.removeItem(documentId + '/comments_shown');
             }
-            
-            function viewerLeftMargin(vuw)
-            {
-                if(comments_wrapper.is(':visible'))
-                {
+
+            function viewerLeftMargin(vuw) {
+                if (comments_wrapper.is(':visible')) {
                     var margin_left = parseFloat($('#viewer').css('margin-left'));
                     var comment_width = comments_wrapper.width();
-                    if(margin_left < comment_width)
+                    if (margin_left < comment_width)
                         margin_left = comment_width;
-                    $('#viewer').css('margin-left', margin_left+'px');
-                }
-                else
-                {
+                    $('#viewer').css('margin-left', margin_left + 'px');
+                } else {
                     $('#viewer').css('margin-left', 'auto');
                 }
             }
-    
-            function showCommentsContainer(comment_type)
-            {
-                if (comment_type)
-                {
+
+            function showCommentsContainer(comment_type) {
+                if (comment_type) {
                     comments_to_show = comment_type;
                 }
-                if(comments_to_show == 'notes')
-                {
+                if (comments_to_show == 'notes') {
                     comments_wrapper.find('.title:first').html('Personal Notes');
-                }
-                else
-                {
+                } else {
                     comments_wrapper.find('.title:first').html('Comments');
                 }
                 comments_wrapper.show();
                 viewerLeftMargin();
-                if(!activePointId)
-                {
+                if (!activePointId) {
                     $('.comment-list-form').hide();
-                }
-                else
+                } else
                     $('.comment-list-form').show();
                 comments_shown = comments_to_show;
-                localStorage.setItem(documentId+'/comments_shown', comments_shown);
-            }     
-            
+                localStorage.setItem(documentId + '/comments_shown', comments_shown);
+            }
+
             function on_leave_document() {
                 $('#annotated-doc-conatiner').hide();
                 comments_shown = false;
@@ -558,51 +505,45 @@
                 $('#main-div').show();
                 saveAnnotationsAtServer('Leaving');
             }
-    
-            function onDocLoaded()
-            {
+
+            function onDocLoaded() {
                 site_functions.hideLoader("renderdoc");
                 site_functions.hideLoader("loaddocwaiter");
             }
-            
-            function showHideAnnotations(rotate_degree)
-            {
-                var doc_data =  RENDER_OPTIONS.document_data;
+
+            function showHideAnnotations(rotate_degree) {
+                var doc_data = RENDER_OPTIONS.document_data;
                 var doc_type = doc_data.type;
-                if(rotate_degree == 0 && (doc_type == 'meeting'|| doc_type == 'topic'))
-                {
+                if (rotate_degree == 0 && (doc_type == 'meeting' || doc_type == 'topic')) {
                     annotation_mode = 1;
                     RENDER_OPTIONS.showAnnotations = true;
                     var pen_size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
-                    var pen_color = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';                    
+                    var pen_color = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';
                     setPen(pen_size, pen_color);
                     $('.topbar:first .annotation_button').show();
                     $('.annot-toggler').show();
-                }
-                else{
+                } else {
                     annotation_mode = 0;
                     $('.annot-toggler').hide();
-                    if(doc_type == 'meeting'|| doc_type == 'topic')
-                        annotation_mode = 2;                    
+                    if (doc_type == 'meeting' || doc_type == 'topic')
+                        annotation_mode = 2;
                     RENDER_OPTIONS.showAnnotations = false;
                     $('.topbar:first .annotation_button').hide();
-                    if(doc_data.type == 'signature')
-                    {
+                    if (doc_data.type == 'signature') {
                         $('.strt_sign').attr('doc_id', doc_data.id);
-                        if(doc_data.mp_signature_status == "Pending")
-                        {
+                        if (doc_data.mp_signature_status == "Pending") {
                             $('.sign_completed.pdfjs').hide();
                             $('.strt_sign.pdfjs').show();
                         }
-    
-                        if(doc_data.mp_signature_status == "Completed") {
+
+                        if (doc_data.mp_signature_status == "Completed") {
                             $('.strt_sign.pdfjs').hide();
                             $('.sign_completed.pdfjs').show();
                         }
                     }
                 }
             }
-            
+
             function getLocalAnnotations() {
                 var res = getCookieStrict(documentId, documentId + '/annotations');
                 if (!res)
@@ -611,50 +552,42 @@
                     res = JSON.parse(res);
                 return res;
             }
-    
-            function onCOmmentAdded()
-            {
+
+            function onCOmmentAdded() {
                 commentText.val('');
                 commentText.parent().show();
-                comment_list.css('padding-bottom','65px');
+                comment_list.css('padding-bottom', '65px');
                 comment_list_div.scrollTop(999999000);
                 commentText.focus();
             }
-    
-            function discard_point_notifications(point, count){
+
+            function discard_point_notifications(point, count) {
                 point.counter = 0;
                 embed_comment_count(point, 0);
                 window['socket_manager'].removeNotification('annotations', 'Point', point.id);
             }
-    
-            function embed_comment_count(point, count, cookie_only){
-                var annotations = getCookieStrict(documentId, documentId + '/annotations');			
+
+            function embed_comment_count(point, count, cookie_only) {
+                var annotations = getCookieStrict(documentId, documentId + '/annotations');
                 if (!annotations)
                     annotations = [];
                 else
                     annotations = JSON.parse(annotations);
-                for(var i in annotations)
-                {
-                    if(annotations[i].uuid == point.uuid)
-                    {
+                for (var i in annotations) {
+                    if (annotations[i].uuid == point.uuid) {
                         var newVal = 0;
-                        if(count != 0)
-                        {
+                        if (count != 0) {
                             newVal = count;
-                            if(annotations[i].counter)    
+                            if (annotations[i].counter)
                                 newVal = newVal + annotations[i].counter
                         }
                         point.counter = newVal;
                         annotations[i].counter = newVal;
-                        if(!cookie_only)
-                        {
-                            var elem = $('.new_comments_count[point_id="'+point.uuid+'"]');
-                            if(newVal == 0)
-                            {
-                                elem.hide();						
-                            }
-                            else
-                            {                        
+                        if (!cookie_only) {
+                            var elem = $('.new_comments_count[point_id="' + point.uuid + '"]');
+                            if (newVal == 0) {
+                                elem.hide();
+                            } else {
                                 elem.show();
                             }
                             elem.html(newVal).attr('comment_count', newVal);
@@ -664,17 +597,17 @@
                     }
                 }
             }
-            
-            save_drawing = function (onsave){
+
+            save_drawing = function(onsave) {
                 if (hand_drawings.length > 0) {
-                    var annotations  = getCookieStrict(documentId, documentId + '/annotations');
+                    var annotations = getCookieStrict(documentId, documentId + '/annotations');
                     annotations = JSON.parse(annotations);
                     var combined_drawing = hand_drawings[0];
                     //console.log(annotations);
-                    annotations = annotations.filter( el => el.to_merge != 1);
-                    //console.log(annotations);
-                    for(var i = 1; i < hand_drawings.length; i++){
-                        // annotations = annotations.filter( el => el.uuid != hand_drawings[i].uuid );
+                    annotations = annotations.filter(function(el) {
+                        el.to_merge != 1
+                    });
+                    for (var i = 1; i < hand_drawings.length; i++) {
                         combined_drawing.lines = combined_drawing.lines.concat(hand_drawings[i].lines);
                     }
                     combined_drawing.to_merge = 0;
@@ -683,33 +616,33 @@
                     localStorage.setItem(documentId + '/annotations', JSON.stringify(annotations));
                     hand_drawings = [];
                     combined_drawing = {};
-                    if(!onsave)
+                    if (!onsave)
                         render_details();
                 }
             }
-    
-            function render(doc_data) {			
-                site_functions.showLoader("renderdoc");            
-                if(doc_data && doc_data.first_time)
-                {
-    
+
+            function render(doc_data) {
+                site_functions.showLoader("renderdoc");
+                if (doc_data && doc_data.first_time) {
+
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
                     comment_list_div = comments_wrapper.find('.comment-list:first');
                     comment_list = comments_wrapper.find('.comment-list-container:first');
-    
-                    documentId = doc_data.type+'-'+doc_data.id+'.pdf';
+
+                    documentId = doc_data.type + '-' + doc_data.id + '.pdf';
                     RENDER_OPTIONS.documentId = documentId;
                     comments_loaded = false;
-                    var cookieVal = localStorage.getItem(documentId+'/dirty');
-                    if(!cookieVal)
-                    {
+                    var cookieVal = localStorage.getItem(documentId + '/dirty');
+                    if (!cookieVal) {
                         initDocCookies(documentId);
                     }
-                    if(doc_data.type == 'meeting' || doc_data.type == 'topic')
-                    {
+                    if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
                         var document_version = getDocumentVersion(documentId);
-                        var input_data = {doc_id:documentId, version:document_version};                
+                        var input_data = {
+                            doc_id: documentId,
+                            version: document_version
+                        };
                         // dn_rpc_object({
                         //     url:'/get-annotations',
                         //     data:input_data,
@@ -722,80 +655,76 @@
                         //     }
                         // });
                         onAnnotationsDownloaded([], doc_data);
-                    }
-                    else{
+                    } else {
                         render_details(doc_data);
                     }
-                }
-                else
-                {
-                    setTimeout(render_details, 100);                
+                } else {
+                    setTimeout(render_details, 100);
                 }
             }
-    
+
             // Scale/rotate
-            function init_ScaleRotate() {            
+            function init_ScaleRotate() {
                 function setScaleRotate(scale, rotate) {
-    
+
                     scale = parseFloat(scale, 10);
                     rotate = parseInt(rotate, 10);
                     var vcw = $('#viewer').width();
                     var vuw = 0;
-                    vuw = scale/RENDER_OPTIONS.scale * vcw;
+                    vuw = scale / RENDER_OPTIONS.scale * vcw;
                     viewerLeftMargin(vuw);
                     if (RENDER_OPTIONS.scale !== scale || RENDER_OPTIONS.rotate !== rotate) {
                         RENDER_OPTIONS.scale = scale;
-                        RENDER_OPTIONS.rotate = rotate;                    
+                        RENDER_OPTIONS.rotate = rotate;
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale', RENDER_OPTIONS.scale);
-                        var newScale = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale');                    
+                        var newScale = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale');
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/rotate', RENDER_OPTIONS.rotate % 360);
                         render();
                     }
                 }
-    
-                var scale_select = document.querySelector('.toolbar select.scale');            
-                scale_select.addEventListener('change', handleScaleChange);            
+
+                var scale_select = document.querySelector('.toolbar select.scale');
+                scale_select.addEventListener('change', handleScaleChange);
+
                 function handleScaleChange() {
                     setScaleRotate(scale_select.value, RENDER_OPTIONS.rotate);
                 }
-    
+
                 function handleRotateCWClick() {
                     setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate + 90);
                 }
-    
+
                 function handleRotateCCWClick() {
                     setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate - 90);
                 }
-                
+
                 document.querySelector('.toolbar .rotate-ccw').addEventListener('click', handleRotateCCWClick);
                 document.querySelector('.toolbar .rotate-cw').addEventListener('click', handleRotateCWClick);
-                
-                $('body').on('click','.toolbar:first .zoomin', function(){
-                    if(RENDER_OPTIONS.scale>=5)
+
+                $('body').on('click', '.toolbar:first .zoomin', function() {
+                    if (RENDER_OPTIONS.scale >= 5)
                         return;
                     var selected_option = scale_select.children[scale_select.selectedIndex];
                     scale_select.value = $(selected_option).next().val();
                     handleScaleChange();
                 });
-                $('body').on('click','.toolbar:first .zoomout', function(){
-                    if(RENDER_OPTIONS.scale<=0.25)
+                $('body').on('click', '.toolbar:first .zoomout', function() {
+                    if (RENDER_OPTIONS.scale <= 0.25)
                         return;
                     var selected_option = scale_select.children[scale_select.selectedIndex];
                     scale_select.value = $(selected_option).prev().val();
                     handleScaleChange();
                 });
             }
-    
+
             function render_details(doc_data) {
-                try{
+                try {
                     var pdfData = false;
                     var pages_rendered = 0;
-                    if(doc_data && doc_data.first_time)
-                    {
-                        if(doc_data.type == 'meeting'|| doc_data.type == 'topic'){
+                    if (doc_data && doc_data.first_time) {
+                        if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
                             window['show_annotation'] = true;
-                        }
-                        else{
+                        } else {
                             window['show_annotation'] = false
                         }
                         $('.topbar:first .annotation_button').hide();
@@ -811,27 +740,23 @@
                         var scale_select = $('.toolbar select.scale:first');
                         RENDER_OPTIONS = {
                             documentId: documentId,
-                            scale: getCookieStrict(documentId, documentId+'/scale'),
-                            rotate: getCookieStrict(documentId, documentId+'/rotate'),
-                            pdfDocument : null
+                            scale: getCookieStrict(documentId, documentId + '/scale'),
+                            rotate: getCookieStrict(documentId, documentId + '/rotate'),
+                            pdfDocument: null
                         }
-                        if(!RENDER_OPTIONS.rotate)
-                        {
+                        if (!RENDER_OPTIONS.rotate) {
                             RENDER_OPTIONS.rotate = 360;
-                            setCookieStrict(documentId, documentId+'/rotate',360);
+                            setCookieStrict(documentId, documentId + '/rotate', 360);
                         }
-                        
-                        if(!RENDER_OPTIONS.scale)
-                        {
+
+                        if (!RENDER_OPTIONS.scale) {
                             RENDER_OPTIONS.scale = 1;
-                            setCookieStrict(documentId, documentId+'/scale', 1)
+                            setCookieStrict(documentId, documentId + '/scale', 1)
                         }
                         scale_select.val(RENDER_OPTIONS.scale);
-    
-                        if(doc_data.type)
-                        {                        
-                            if(doc_data.doc.startsWith('data:application/pdf;base64,'))
-                            {
+
+                        if (doc_data.type) {
+                            if (doc_data.doc.startsWith('data:application/pdf;base64,')) {
                                 doc_data.doc = doc_data.doc.replace('data:application/pdf;base64,', '');
                             }
                             var raw = atob(doc_data.doc);
@@ -840,41 +765,34 @@
                                 uint8Array[i] = raw.charCodeAt(i);
                             }
                             doc_data.doc = uint8Array;
-                            RENDER_OPTIONS.document_data = doc_data;                        
-    
-                            PDFJS.getDocument(doc_data.doc).then(function(pdf_data){
+                            RENDER_OPTIONS.document_data = doc_data;
+
+                            PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
                                 pdf_doc_data = pdf_data;
                                 $('.page-count').html(pdf_doc_data.numPages);
-                                if(pdf_doc_data.numPages > 1)
-                                    $('.page-next-btn').removeAttr('disabled');                            
+                                if (pdf_doc_data.numPages > 1)
+                                    $('.page-next-btn').removeAttr('disabled');
                                 renderPdfData(pdf_doc_data);
                             });
-                        }
-                        else
-                        {
+                        } else {
                             bootbox.alert("Invalid document data ", doc_data);
                             onDocLoaded();
                             return;
-                        }                					
-                    }
-                    else{
-                        if(RENDER_OPTIONS.document_data)
-                        {
+                        }
+                    } else {
+                        if (RENDER_OPTIONS.document_data) {
                             pdfData = RENDER_OPTIONS.document_data.doc;
                             documentId = RENDER_OPTIONS.documentId;
-                        }
-                        else
-                        {
+                        } else {
                             bootbox.alert("Invalid render options data ", RENDER_OPTIONS);
                             onDocLoaded();
                             return;
                         }
                         renderPdfData(pdf_doc_data)
                     }
-    
+
                     function renderPdfData(pdfContent) {
-                        if(!pdfContent)
-                        {
+                        if (!pdfContent) {
                             alert("PDF not loaded");
                             onDocLoaded();
                             return;
@@ -889,15 +807,14 @@
                         }
                         sclae_value = $('select.scale').val();
                         var rotateBy = RENDER_OPTIONS.rotate;
-                        
-                        var rotate_degree = rotateBy%360;
+
+                        var rotate_degree = rotateBy % 360;
                         showHideAnnotations(rotate_degree);
-                                            
-                        switch(rotate_degree)
-                        {
+
+                        switch (rotate_degree) {
                             case 90:
                                 vertical = 'right';
-                                horizontal = 'top';                            
+                                horizontal = 'top';
                                 break;
                             case 180:
                                 vertical = 'bottom';
@@ -908,15 +825,12 @@
                                 horizontal = 'bottom';
                                 break;
                         }
-                        
-                        function onPageDone(annotations_of_page, pange_number)
-                        {                        
+
+                        function onPageDone(annotations_of_page, pange_number) {
                             pages_rendered++;
-                            if(pages_rendered == 1)
-                            {
+                            if (pages_rendered == 1) {
                                 first_page_rendered = 1;
-                                if(doc_data && doc_data.first_time)
-                                {
+                                if (doc_data && doc_data.first_time) {
                                     var header_height = $('.headerheight').height();
                                     var toolbar_rect = $('.topbar:first')[0].getBoundingClientRect();
                                     var toolbar_height = toolbar_rect.height;
@@ -924,123 +838,121 @@
                                     var path_url = window['pathname'];
                                     var ar_path = path_url.split('/');
                                     //console.log(path_url);                                
-                                    if(ar_path[1] == 'iframe')
+                                    if (ar_path[1] == 'iframe')
                                         height += 137;
-                                    $('#viewer-wrapper').css({ height: 'calc(100vh - ' + height + 'px)' });
-                                    comments_wrapper.css({top: (height+2) });
-                                    var c_div_height = 'calc(100vh - '+(height + 55)+'px)';                                
-                                    comment_list_div.css('height',c_div_height);
+                                    $('#viewer-wrapper').css({
+                                        height: 'calc(100vh - ' + height + 'px)'
+                                    });
+                                    comments_wrapper.css({
+                                        top: (height + 2)
+                                    });
+                                    var c_div_height = 'calc(100vh - ' + (height + 55) + 'px)';
+                                    comment_list_div.css('height', c_div_height);
                                     $('body').addClass('pdf-viewer');
                                 }
                                 $('#content-wrapper').show();
                                 onDocLoaded();
                             }
-    
-                            if(annotation_mode == 1)
-                            {
+
+                            if (annotation_mode == 1) {
                                 addCommentCount(annotations_of_page, pange_number);
                             }
-                        }					
-                        
-                        UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num){                            
+                        }
+
+                        UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num) {
                             onPageDone(cb_data, page_num);
-                            for(var i = 2; i <= NUM_PAGES; i++){
-                                UI.renderPage(i, RENDER_OPTIONS, function(cb_data, page_num){                            
+                            for (var i = 2; i <= NUM_PAGES; i++) {
+                                UI.renderPage(i, RENDER_OPTIONS, function(cb_data, page_num) {
                                     onPageDone(cb_data, page_num);
                                 });
                             }
                         });
                     }
-                    if(window['show_annotation']){
+                    if (window['show_annotation']) {
                         $('.annotationLayer').show();
                         $('.annotation_button').show();
-                    }
-                    else{
+                    } else {
                         $('.annotationLayer').hide();
                         $('.annotation_button').hide();
                     }
-                }
-                catch(er)
-                {
+                } catch (er) {
                     console.log(er);
                 }
             }
-    
+
             // Text stuff
             (function() {
                 var textSize = void 0;
                 var textColor = void 0;
-    
+
                 function initText() {
                     var size = document.querySelector('.toolbar .text-size');
                     [8, 9, 10, 11, 12, 14, 18, 24, 30, 36, 48, 60, 72, 96].forEach(function(s) {
                         size.appendChild(new Option(s, s));
                     });
-    
+
                     var textSizeCookies = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/text/size');
                     setText(textSizeCookies || 10, getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/text/color') || '#000000');
-    
+
                     (0, _initColorPicker2.default)(document.querySelector('.text-color'), textColor, function(value) {
                         setText(textSize, value);
                     });
                 }
-    
+
                 function setText(size, color) {
                     var modified = false;
-    
+
                     if (textSize !== size) {
                         modified = true;
                         textSize = size;
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/text/size', textSize);
                         document.querySelector('.toolbar .text-size').value = textSize;
                     }
-    
+
                     if (textColor !== color) {
                         modified = true;
                         textColor = color;
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/text/color', textColor);
-    
+
                         var selected = document.querySelector('.toolbar .text-color.color-selected');
                         if (selected) {
                             selected.classList.remove('color-selected');
                             selected.removeAttribute('aria-selected');
                         }
-    
+
                         selected = document.querySelector('.toolbar .text-color[data-color="' + color + '"]');
                         if (selected) {
                             selected.classList.add('color-selected');
                             selected.setAttribute('aria-selected', true);
                         }
                     }
-    
+
                     if (modified) {
                         UI.setText(textSize, textColor);
                     }
                 }
-    
+
                 function handleTextSizeChange(e) {
                     setText(e.target.value, textColor);
                 }
-    
+
                 //Sami disabled text
                 //document.querySelector('.toolbar .text-size').addEventListener('change', handleTextSizeChange);
                 //initText();
             })();
-    
+
             // Pen stuff
             (function() {
                 var penSize = undefined;
                 var penColor = undefined;
-    
-                setPen = function(size, color) {                
-                    var modified = false;                
-                    if(size && typeof(size) != 'number')
-                    {
+
+                setPen = function(size, color) {
+                    var modified = false;
+                    if (size && typeof(size) != 'number') {
                         size = parseInt(size);
                     }
-                    if(color && color.length == 6)
-                    {
-                        color = '#'+color;
+                    if (color && color.length == 6) {
+                        color = '#' + color;
                     }
                     //console.log(size, penSize, color, penColor);
                     if (size && penSize !== size) {
@@ -1049,14 +961,14 @@
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size', penSize);
                         document.querySelector('.toolbar .pen-size').value = penSize;
                     }
-    
+
                     if (color && penColor !== color) {
                         modified = true;
                         penColor = color;
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color', penColor);
                         $('.toolbar .pen-color:first').css('background-color', penColor);
                         $('.toolbar .pen-color:first').attr('color', color);
-    
+
                         $('select.pen-size').css('color', color);
                         $('select.pen-size option').css('color', color);
                     }
@@ -1064,37 +976,37 @@
                         UI.setPen(penSize, penColor);
                     }
                 }
-    
+
                 function handlePenSizeChange(e) {
                     setPen(e.target.value, penColor);
                 }
-                function handlePenColorChange(e)
-                {
+
+                function handlePenColorChange(e) {
                     var topbar_width = $('.topbar:first').width();
                     var color_popup = $('.ColorPalettePopup:first');
-                    var btn_rect = this.getBoundingClientRect();                
-    
-                    var popup_postion = {top: btn_rect.y + 20};
-                    if(topbar_width/2 > btn_rect.x)
-                    {
+                    var btn_rect = this.getBoundingClientRect();
+
+                    var popup_postion = {
+                        top: btn_rect.y + 20
+                    };
+                    if (topbar_width / 2 > btn_rect.x) {
                         popup_postion.left = btn_rect.x;
-                    }
-                    else
-                    {                    
+                    } else {
                         popup_postion.left = btn_rect.x - color_popup.width();
                     }
                     color_popup.css(popup_postion).show();
                     var c_color = $(this).attr('color');
-                    color_popup.find('div[hex="'+c_color+'"]:first').click();
+                    color_popup.find('div[hex="' + c_color + '"]:first').click();
                 }
-                $('body').on('click','.toolbar .pen-color:first', handlePenColorChange);
-                $('body').on('change','.toolbar .pen-size:first',handlePenSizeChange);			
+                $('body').on('click', '.toolbar .pen-color:first', handlePenColorChange);
+                $('body').on('change', '.toolbar .pen-size:first', handlePenSizeChange);
             })();
-    
+
             // Toolbar buttons
             (function() {
                 var tooltype = 'cursor';
-                function setActiveToolbarItem(type, button) {                
+
+                function setActiveToolbarItem(type, button) {
                     UI.disablePoint();
                     var oldButton = $('.toolbar button.active');
                     if (oldButton.length > 0) {
@@ -1109,7 +1021,7 @@
                             case 'text':
                                 UI.disableText();
                                 break;
-                            case 'point':                        
+                            case 'point':
                                 UI.disablePoint();
                                 break;
                             case 'area':
@@ -1121,9 +1033,9 @@
                         }
                     }
                     $(button).addClass('active');
-    
+
                     tooltype = type;
-    
+
                     switch (type) {
                         case 'cursor':
                             UI.enableEdit();
@@ -1146,39 +1058,32 @@
                             break;
                     }
                 }
-    
+
                 function handleToolbarClick(e) {
                     var active_btn = $('.topbar:first .active');
                     var target = $(e.target);
                     target = target.closest('button');
-                    if(target.hasClass('pen') && active_btn.hasClass('pen'))
-                    {
+                    if (target.hasClass('pen') && active_btn.hasClass('pen')) {
                         $('.topbar:first .cursor').click();
-                    }
-                    else
-                    {
+                    } else {
                         var tooltype = $(e.target).closest('[data-tooltype]').data('tooltype');
-                        if(tooltype)
+                        if (tooltype)
                             setActiveToolbarItem(tooltype, e.target);
                     }
-    
-                    if(target.hasClass('comment'))
-                    {
-                        if(target.hasClass('personal'))
-                        {
+
+                    if (target.hasClass('comment')) {
+                        if (target.hasClass('personal')) {
                             comment_sub_type = 'personal';
-                        }
-                        else
-                        {
+                        } else {
                             comment_sub_type = false;
                         }
                     }
                 }
-    
+
                 $('body').on('click', '.toolbar.topbar:first button, .toolbar.annotation-options:first button', handleToolbarClick);
                 $('.toolbar:first .cursor').click();
-            })();		
-    
+            })();
+
             // Clear toolbar button
             (function() {
                 function handleClearClick(e) {
@@ -1191,81 +1096,77 @@
                 }
                 //document.querySelector('a.clear').addEventListener('click', handleClearClick);
             })();
-    
-    
+
+
             // Comment stuff
             (function(window, document) {
-                var obj_this = this;			
+                var obj_this = this;
+
                 function supportsComments(target) {
                     var type = target.getAttribute('data-pdf-annotate-type');
                     return ['point'].indexOf(type) > -1;
                 }
-                
-                var on_annotation_comment_received = function(data) {                
+
+                var on_annotation_comment_received = function(data) {
                     var annot_doc = $('#annotated-doc-conatiner');
-                    if(annot_doc.length < 1)
-                    {
+                    if (annot_doc.length < 1) {
                         return;
                     }
-                    annot_doc = annot_doc.is(':visible');                
-                    if(!annot_doc)
-                    {
+                    annot_doc = annot_doc.is(':visible');
+                    if (!annot_doc) {
                         return;
                     }
-                    if(annotation_mode != 1 ||  !annot_doc || data.point.doc_id != documentId)
-                    {
+                    if (annotation_mode != 1 || !annot_doc || data.point.doc_id != documentId) {
                         return;
                     }
-                    if(annotation_mode != 1 ||  !annot_doc || data.point.doc_id != documentId)
-                    {
+                    if (annotation_mode != 1 || !annot_doc || data.point.doc_id != documentId) {
                         return;
                     }
-                    var annot_id = comment_list.attr('annotation-id');                       
-                    if(data['new_point']){
+                    var annot_id = comment_list.attr('annotation-id');
+                    if (data['new_point']) {
                         data.point.counter = 1;
                         var current_annotations = getLocalAnnotations();
                         current_annotations.push(data.point);
-                        current_annotations  = JSON.stringify(current_annotations);
-                        setCookieStrict(documentId, documentId + '/annotations', current_annotations);                    
-                        
-                        UI.renderPage(data.point.page, RENDER_OPTIONS, function(cb_data, page_num){                            
+                        current_annotations = JSON.stringify(current_annotations);
+                        setCookieStrict(documentId, documentId + '/annotations', current_annotations);
+
+                        UI.renderPage(data.point.page, RENDER_OPTIONS, function(cb_data, page_num) {
                             addCommentCount(cb_data, page_num);
                             embed_comment_count(data.point, 1, 1);
                         });
-                    }
-                    else {
+                    } else {
                         if (data.point.uuid == annot_id) {
                             //when same point opened
-                            pdfStoreAdapter.addComment(documentId, data.point.uuid, data.point.comment, 1).then(function(aComment){
+                            pdfStoreAdapter.addComment(documentId, data.point.uuid, data.point.comment, 1).then(function(aComment) {
                                 insertComment(aComment, 1);
                                 var new_comment = comments_wrapper.find('.comment-list-item:last');
-                                new_comment.css({'background':'green', color:'white'});                            
+                                new_comment.css({
+                                    'background': 'green',
+                                    color: 'white'
+                                });
                             });
                             discard_point_notifications(data.point, 1);
-                        }
-                        else {
+                        } else {
                             pdfStoreAdapter.addComment(documentId, data.point.uuid, data.point.comment, 1);
                             embed_comment_count(data.point, 1);
                         }
                     }
                 }
-    
+
                 window['on_annotation_comment_received'] = on_annotation_comment_received;
-                
+
                 var annotation_user = localStorage.getItem('user');
                 annotation_user = JSON.parse(annotation_user);
                 $('body').on('keyup', '#commentText', function(e) {
-                    if(!activePointId)
-                    {
+                    if (!activePointId) {
                         console.log("Comment not added because, no active annotationId");
                         return;
                     }
-                    if(!e.shiftKey && e.keyCode == 13)
-                    {
+                    if (!e.shiftKey && e.keyCode == 13) {
                         e.preventDefault();
-                        var commentValue = commentText[0].value;// commentText.val().trim();
-                        commentValue = commentValue.substr(0, commentValue.length-1);
-                        if(commentValue == '') {
+                        var commentValue = commentText[0].value; // commentText.val().trim();
+                        commentValue = commentValue.substr(0, commentValue.length - 1);
+                        if (commentValue == '') {
                             commentText.val('');
                             return;
                         }
@@ -1277,22 +1178,21 @@
                             content: commentValue
                         };
                         //console.log(commentText.content)
-                        if(!comment.content)
+                        if (!comment.content)
                             return false;
-                            pdfStoreAdapter.addComment(documentId, activePointId, comment).then(function(comment){
-                                insertComment(comment, 1);
-                            });
+                        pdfStoreAdapter.addComment(documentId, activePointId, comment).then(function(comment) {
+                            insertComment(comment, 1);
+                        });
                     }
                 });
-    
-                loadALlCommentsOnDocument = function (point_uuid)
-                {
+
+                loadALlCommentsOnDocument = function(point_uuid) {
                     comment_list.html('');
                     comment_list.removeAttr('annotation-id');
                     var point_type = false;
-                    if(comments_to_show == 'notes')
-                        point_type = 'personal';                
-    
+                    if (comments_to_show == 'notes')
+                        point_type = 'personal';
+
                     pdfStoreAdapter.getPointAnnotations(documentId, point_type).then(function(pointAnnotations) {
                         pointAnnotations = pointAnnotations.annotations;
                         pointAnnotations.sort(function(a, b) {
@@ -1300,293 +1200,275 @@
                         });
                         var cnt = -1;
                         var counter = -1;
-                        var count = pointAnnotations.length;                    
-                        for(var i in pointAnnotations)
-                        {
+                        var count = pointAnnotations.length;
+                        for (var i in pointAnnotations) {
                             ++cnt;
-                            pdfStoreAdapter.getComments(documentId, pointAnnotations[cnt].uuid).then(function(comments){							
+                            pdfStoreAdapter.getComments(documentId, pointAnnotations[cnt].uuid).then(function(comments) {
                                 ++counter;
                                 var annotationItem = pointAnnotations[counter];
                                 renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);
-                                if(counter + 1 == count)
-                                {
+                                if (counter + 1 == count) {
                                     onAllCommentsRendered(point_uuid)
                                 }
                             });
                         }
-                        if(cnt == -1)
-                        {
+                        if (cnt == -1) {
                             onAllCommentsRendered(point_uuid);
                         }
                     });
                 }
-                
-                function onAllCommentsRendered(point_uuid)
-                {
+
+                function onAllCommentsRendered(point_uuid) {
                     comments_loaded = 1;
-                    setTimeout(function(){
-                        if(point_uuid)
-                        {
+                    setTimeout(function() {
+                        if (point_uuid) {
                             select_comment_item(point_uuid);
-                        }
-                        else
-                        {
+                        } else {
                             showCommentsContainer(comments_to_show);
-                            commentText.closest('form').hide();                                        
-                            comment_list.css('padding-bottom','5px');
+                            commentText.closest('form').hide();
+                            comment_list.css('padding-bottom', '5px');
                         }
-                    },11);
+                    }, 11);
                 }
-    
-                function renderCommentsByAnnotation(comments, annotationId, sub_type){
+
+                function renderCommentsByAnnotation(comments, annotationId, sub_type) {
                     var group = document.createElement('div');
                     group.classList.add("groupcomment");
-                    for(var i in comments)
-                    {
+                    for (var i in comments) {
                         var aComment = comments[i];
                         var child = makeCommentItem(aComment);
                         group.appendChild(child);
                     }
-                    $(group).attr('annotationId',annotationId);
+                    $(group).attr('annotationId', annotationId);
                     comment_list.append(group);
                 }
-    
-                function renderComments(comments)
-                {
+
+                function renderComments(comments) {
                     comment_list.html('');
                     comments.forEach(insertComment);
                 }
                 var selected_comment_item = false;
-                $('body').on('click','#comment-wrapper .buttons',function(e){
+                $('body').on('click', '#comment-wrapper .buttons', function(e) {
                     e.preventDefault();
                     contextMenuShown = true;
                     selected_comment_item = $(this).closest('.comment-list-item');
-                    $('.update-comment:first').css({'top':e.pageY,'left':e.pageX}).show();
+                    $('.update-comment:first').css({
+                        'top': e.pageY,
+                        'left': e.pageX
+                    }).show();
                 });
-                
-                $('body').on('click','.annotation_button.unread', function(){                
-                    var els = $('.canvasWrapper .new_comments_count');                
+
+                $('body').on('click', '.annotation_button.unread', function() {
+                    var els = $('.canvasWrapper .new_comments_count');
                     var lenth = els.length;
-                    for(var i=0; i<lenth; i++)
-                    {
+                    for (var i = 0; i < lenth; i++) {
                         var el = els.eq(i);
-                        var cnt = parseInt(el.html());                    
-                        if(cnt > 0)
-                        {
+                        var cnt = parseInt(el.html());
+                        if (cnt > 0) {
                             select_comment_item(el.attr('point_id'))
                             break;
                         }
                     }
                 });
-    
-                commentText.focus(function(){
+
+                commentText.focus(function() {
                     comment_item_focused = true;
                 });
-    
-                $('body').on('click','.update-comment:first .delete', function(e){
+
+                $('body').on('click', '.update-comment:first .delete', function(e) {
                     var comment_parent = selected_comment_item.closest('.groupcomment');
                     var comment_id = selected_comment_item.attr('comment-id');
                     var annotationId = selected_comment_item.attr('annotation');
-                    pdfStoreAdapter.deleteComment(documentId, annotationId, comment_id).then(function(){
-                        if(comment_parent.children('.comment-list-item').length == 1)
-                        {
+                    pdfStoreAdapter.deleteComment(documentId, annotationId, comment_id).then(function() {
+                        if (comment_parent.children('.comment-list-item').length == 1) {
                             comment_parent.remove();
-                        }
-                        else
+                        } else
                             selected_comment_item.remove();
                         contextMenuShown = false;
                         $('.update-comment').hide();
                     });
                 });
-    
-                $('body').on('click','.show-all-comments', function(){
+
+                $('body').on('click', '.show-all-comments', function() {
                     setTimeout(hideComments, 50);
                 });
-    
-                select_comment_item = function (point_identifier)
-                {                
-                    if(!comments_loaded)
-                    {
+
+                select_comment_item = function(point_identifier) {
+                    if (!comments_loaded) {
                         loadALlCommentsOnDocument(point_identifier);
                         return;
                     }
                     var annotationId = undefined;
-                    if(typeof(point_identifier) == 'string')
-                        annotationId = point_identifier; 
+                    if (typeof(point_identifier) == 'string')
+                        annotationId = point_identifier;
                     else
                         annotationId = point_identifier.attr('annotationId');
-                    if(!annotationId)
-                    {
+                    if (!annotationId) {
                         console.log("Invalid point id");
                         return;
-                    }				
-                    var c_svg = $('svg.annotationLayer').find('svg[data-pdf-annotate-id="'+annotationId+'"]')
-                    if(c_svg.length > 0)
-                    {                    
-                        var target1 = $('.canvasWrapper .new_comments_count[point_id="'+annotationId+'"]');
-                        setTimeout(function(){
-                            
+                    }
+                    var c_svg = $('svg.annotationLayer').find('svg[data-pdf-annotate-id="' + annotationId + '"]')
+                    if (c_svg.length > 0) {
+                        var target1 = $('.canvasWrapper .new_comments_count[point_id="' + annotationId + '"]');
+                        setTimeout(function() {
+
                             $('#viewer-wrapper').scrollTop(0);
                             var parent = target1.closest('.canvasWrapper');
                             var parent_height = parent.height();
-                            var p_number= parent.closest('.page').index()
+                            var p_number = parent.closest('.page').index()
                             var page_top = parent_height * p_number;
-    
+
                             var c_target = target1[0];
                             //console.log(c_target);
-                            var my_top =  parseFloat(c_target.style.top) - 100;
-                            var my_left =  parseFloat(c_target.style.left) - 100;
+                            var my_top = parseFloat(c_target.style.top) - 100;
+                            var my_left = parseFloat(c_target.style.left) - 100;
                             var scroll_to = page_top + my_top;
-        
+
                             $('#viewer-wrapper').scrollLeft(my_left);
-                            $('#viewer-wrapper').animate({scrollTop:scroll_to}, 500);                        
+                            $('#viewer-wrapper').animate({
+                                scrollTop: scroll_to
+                            }, 500);
                             UI.enableEdit(c_svg[0]);
                             handleAnnotationClick(c_svg[0]);
                         }, 15);
-                    }
-                    else
-                    {
+                    } else {
                         console.log(target, "Not found");
                     }
                 }
-    
-                $('body').on('click','#comment-wrapper .groupcomment',function(e){                
-                    if($(e.target).is('.buttons'))
-                    {
+
+                $('body').on('click', '#comment-wrapper .groupcomment', function(e) {
+                    if ($(e.target).is('.buttons')) {
                         return;
                     }
                     select_comment_item($(this));
                 });
-    
-                function makeCommentItem(aComment)
-                {
+
+                function makeCommentItem(aComment) {
                     //console.log(aComment);
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
-                    var child_info = '<div>'+ aComment.content+'</div>';
+                    var child_info = '<div>' + aComment.content + '</div>';
                     aComment.date_time = window["functions"]['standeredTime'](aComment.date_time);
                     child_info += '<div class="user-time-info">';
-                    child_info +='<span class"time">'+aComment.date_time+'</span>';
+                    child_info += '<span class"time">' + aComment.date_time + '</span>';
                     //child_info +='<span class="buttons">:</span>';
-                    child_info +='<span class="user">'+aComment.user_name+'</span>';
-                    child_info +='</div>';
-                    $(child).attr('comment-id',aComment.uuid);
-                    $(child).attr('annotation',aComment.annotation);
+                    child_info += '<span class="user">' + aComment.user_name + '</span>';
+                    child_info += '</div>';
+                    $(child).attr('comment-id', aComment.uuid);
+                    $(child).attr('annotation', aComment.annotation);
                     child.innerHTML = child_info;
                     return child;
                 }
-    
+
                 function insertComment(aComment, textBox) {
                     var child = makeCommentItem(aComment);
                     comment_list.append(child);
-                    if(textBox)
+                    if (textBox)
                         onCOmmentAdded();
                 }
-    
+
                 handleAnnotationClick = function(target) {
                     activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
-                    pdfStoreAdapter.getAnnotation(documentId, activeAnnotationId).then(function(item)
-                    {
+                    pdfStoreAdapter.getAnnotation(documentId, activeAnnotationId).then(function(item) {
                         activeAnnotationItem = item;
                         if (supportsComments(target)) {
                             activePointId = activeAnnotationId;
-                            pdfStoreAdapter.getComments(documentId, activeAnnotationId).then(renderComments).then(function(){
-                                if(item.counter > 0)
-                                {
-                                    var lenth = comments_wrapper.find('.comment-list-item').length;                                
+                            pdfStoreAdapter.getComments(documentId, activeAnnotationId).then(renderComments).then(function() {
+                                if (item.counter > 0) {
+                                    var lenth = comments_wrapper.find('.comment-list-item').length;
                                     lenth = lenth - item.counter - 1;
-                                    var new_comments = comments_wrapper.find('.comment-list-item:gt('+lenth+')');                                
-                                    new_comments.css({'background':'green', color:'white'})                                
+                                    var new_comments = comments_wrapper.find('.comment-list-item:gt(' + lenth + ')');
+                                    new_comments.css({
+                                        'background': 'green',
+                                        color: 'white'
+                                    })
                                     discard_point_notifications(item, item.counter);
                                 }
                             });
-                            if(activeAnnotationItem.sub_type)
-                            {
+                            if (activeAnnotationItem.sub_type) {
                                 comment_list.removeAttr('annotation-id');
                                 showCommentsContainer('notes');
-                            }
-                            else
-                            {
+                            } else {
                                 comment_list.attr('annotation-id', activeAnnotationId);
-                                $('#pdf-annotate-edit-overlay a' ).remove();
+                                $('#pdf-annotate-edit-overlay a').remove();
                                 showCommentsContainer('comments');
                             }
                             onCOmmentAdded();
-                        }
-                        else
-                        {
+                        } else {
                             var ctxMenu = $('.colors.ContextMenuPopup:first');
                             var pos = $(target).position();
                             var tw = $('#pdf-annotate-edit-overlay:visible').width();
                             var cmw = ctxMenu.width();
-                            var left_pos =  pos.left + tw/2 - cmw/2;
+                            var left_pos = pos.left + tw / 2 - cmw / 2;
                             var color = $(target).attr('fill');
-                            if(!color){
-                                color=$(target).attr('stroke');
+                            if (!color) {
+                                color = $(target).attr('stroke');
                             }
-                            if(color == 'none' || !color)
+                            if (color == 'none' || !color)
                                 color = '#000000';
-    
-                            var selected = ctxMenu.find('.row>.cell[hex="'+color+'"]');
-                            if(selected.length == 0)
-                            {
+
+                            var selected = ctxMenu.find('.row>.cell[hex="' + color + '"]');
+                            if (selected.length == 0) {
                                 $('#applied_color').hide();
-                            }
-                            else
+                            } else
                                 selected.append($('#applied_color').show());
-    
-    
-                            ctxMenu.css({'left':left_pos, 'top':pos.top + 30}).show();
+
+
+                            ctxMenu.css({
+                                'left': left_pos,
+                                'top': pos.top + 30
+                            }).show();
                             contextMenuShown = true;
                         }
                     });
                 }
+
                 function handleAnnotationBlur(target) {
                     annotationBiengEdited = false;
                     activeAnnotationItem = false;
-                }   
-                
+                }
+
                 var ww = $(window).width();
                 var wh = $(window).height();
-                var dh = $(document).height();			            
-                
-                $('body').on('click','.toolbar:first .comment', function(){                
+                var dh = $(document).height();
+
+                $('body').on('click', '.toolbar:first .comment', function() {
                     UI.destroyEditOverlay();
-                    if($(this).is('.personal'))
+                    if ($(this).is('.personal'))
                         comments_to_show = 'notes';
-                    else
-                    {
+                    else {
                         comments_to_show = 'comments';
                     }
                     loadALlCommentsOnDocument();
                 });
-    
-                
+
+
                 UI.addEventListener('annotation:click', handleAnnotationClick);
                 UI.addEventListener('annotation:blur', handleAnnotationBlur);
             })(window, document);
             exports.render = render;
-        }
-        catch(err){
+        } catch (err) {
             console.log(err)
         }
     }
+
     function module1(module, exports, __webpack_require__) {
-    
+
         var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
         (function() {
             if (typeof twttr === "undefined" || twttr === null) {
                 var twttr = {};
             }
             twttr.txt = {};
-           })();
+        })();
     }
+
     function module2(module, exports, __webpack_require__) {
         var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */
-        
+
         var annotation_user_m2 = localStorage.getItem('user');
         annotation_user_m2 = JSON.parse(annotation_user_m2);
-    
+
         (function(module) {
             'use strict';
             var resFun = undefined;
@@ -1602,42 +1484,42 @@
                 else root["PDFAnnotate"] = factory();
             })(undefined, function() {
                 return (function(modules) { // webpackBootstrap
-                   // The module cache
-                    
-                    var installedModules = {};// The require function
-                    
-                    function __webpack_require__(moduleId) {// Check if module is in cache
-                        
-                        if (installedModules[moduleId])return installedModules[moduleId].exports;// Create a new module (and put it into the cache)
-                        
-                        var module = installedModules[moduleId] = { 
+                    // The module cache
+
+                    var installedModules = {}; // The require function
+
+                    function __webpack_require__(moduleId) { // Check if module is in cache
+
+                        if (installedModules[moduleId]) return installedModules[moduleId].exports; // Create a new module (and put it into the cache)
+
+                        var module = installedModules[moduleId] = {
                             exports: {},
-                           id: moduleId,
-                           loaded: false 
-                        };// Execute the module function
-                        
-                        modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);// Flag the module as loaded
-                        
-                        module.loaded = true;// Return the exports of the module
-                        
-                        return module.exports; 
-                    }// expose the modules object (__webpack_modules__)
-                    
-                    __webpack_require__.m = modules;// expose the module cache
-                    
-                    __webpack_require__.c = installedModules;// __webpack_public_path__
-                    
-                    __webpack_require__.p = "";// Load entry module and return exports
-                    
-                    return __webpack_require__(0); 
-                }( [ /* 0 */function(module, exports, __webpack_require__) {
+                            id: moduleId,
+                            loaded: false
+                        }; // Execute the module function
+
+                        modules[moduleId].call(module.exports, module, module.exports, __webpack_require__); // Flag the module as loaded
+
+                        module.loaded = true; // Return the exports of the module
+
+                        return module.exports;
+                    } // expose the modules object (__webpack_modules__)
+
+                    __webpack_require__.m = modules; // expose the module cache
+
+                    __webpack_require__.c = installedModules; // __webpack_public_path__
+
+                    __webpack_require__.p = ""; // Load entry module and return exports
+
+                    return __webpack_require__(0);
+                }([ /* 0 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
                     });
                     var _PDFJSAnnotate = __webpack_require__(1);
                     var _PDFJSAnnotate2 = _interopRequireDefault(_PDFJSAnnotate);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -1645,7 +1527,7 @@
                     }
                     exports.default = _PDFJSAnnotate2.default;
                     module.exports = exports['default']; /***/
-                }, /* 1 */function(module, exports, __webpack_require__) {
+                }, /* 1 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -1658,7 +1540,7 @@
                     var _render2 = _interopRequireDefault(_render);
                     var _UI = __webpack_require__(28);
                     var _UI2 = _interopRequireDefault(_UI);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -1725,7 +1607,7 @@
                         }
                     };
                     module.exports = exports['default']; /***/
-                }, /* 2 */function(module, exports, __webpack_require__) {
+                }, /* 2 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -1749,13 +1631,13 @@
                     var _abstractFunction = __webpack_require__(3);
                     var _abstractFunction2 = _interopRequireDefault(_abstractFunction);
                     var _event = __webpack_require__(4);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
                         };
                     }
-    
+
                     function _classCallCheck(instance, Constructor) {
                         if (!(instance instanceof Constructor)) {
                             throw new TypeError("Cannot call a class as a function");
@@ -1810,12 +1692,12 @@
                              * @return {Promise}
                              */
                         }, {
-                            key: 'getCommentAnnotations',                        
+                            key: 'getCommentAnnotations',
                             value: function getCommentAnnotations(documentId) {
                                 (0, _abstractFunction2.default)('getCommentAnnotations');
                             }
                         }, {
-                            key: 'getPointAnnotations',                        
+                            key: 'getPointAnnotations',
                             value: function getCommentAnnotations(documentId, sub_type) {
                                 (0, _abstractFunction2.default)('getPointAnnotations');
                             }
@@ -1872,7 +1754,7 @@
                              */
                             value: function getAllComments(documentId) {
                                 (0, _abstractFunction2.default)('getAllComments');
-                            }                         
+                            }
                         }, {
                             key: '__addComment',
                             value: function __addComment(documentId, annotationId, content) {
@@ -1926,7 +1808,7 @@
                             },
                             set: function set(fn) {
                                 this.__addAnnotation = function addAnnotation(documentId, pageNumber, annotation) {
-                                    return fn.apply(undefined, arguments).then(function(annotation) {                                    
+                                    return fn.apply(undefined, arguments).then(function(annotation) {
                                         (0, _event.fireEvent)('annotation:add', documentId, pageNumber, annotation);
                                         return annotation;
                                     });
@@ -2008,7 +1890,7 @@
                     }();
                     exports.default = StoreAdapter;
                     module.exports = exports['default']; /***/
-                }, /* 3 */function(module, exports) {
+                }, /* 3 */ function(module, exports) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -2023,7 +1905,7 @@
                         throw new Error(name + ' is not implemented');
                     }
                     module.exports = exports['default']; /***/
-                }, /* 4 */function(module, exports, __webpack_require__) {
+                }, /* 4 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -2034,7 +1916,7 @@
                     var _events = __webpack_require__(5);
                     var _events2 = _interopRequireDefault(_events);
                     var _utils = __webpack_require__(6);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -2048,8 +1930,7 @@
                      * @param {Event} e The DOM event to be handled
                      */
                     document.addEventListener('click', function handleDocumentClick(e) {
-                        if(!$('.toolbar .cursor').hasClass('active'))
-                        {
+                        if (!$('.toolbar .cursor').hasClass('active')) {
                             return;
                         }
                         if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
@@ -2063,9 +1944,9 @@
                             emitter.emit('annotation:click', target);
                         }
                         clickNode = target;
-                    }); // let mouseOverNode;
+                    }); // var mouseOverNode;
                     // document.addEventListener('mousemove', function handleDocumentMousemove(e) {
-                    //   let target = findAnnotationAtPoint(e.clientX, e.clientY);
+                    //   var target = findAnnotationAtPoint(e.clientX, e.clientY);
                     //
                     //   // Emit annotation:mouseout if target was mouseout'd
                     //   if (mouseOverNode && !target) {
@@ -2082,17 +1963,17 @@
                     function fireEvent() {
                         emitter.emit.apply(emitter, arguments);
                     };
-    
+
                     function addEventListener() {
                         emitter.on.apply(emitter, arguments);
                     };
-    
+
                     function removeEventListener() {
                         emitter.removeListener.apply(emitter, arguments);
                     }; /***/
-                }, /* 5 */function(module, exports) { // Copyright Joyent, Inc. and other Node contributors.
+                }, /* 5 */ function(module, exports) { // Copyright Joyent, Inc. and other Node contributors.
                     //
-                    
+
                     function EventEmitter() {
                         this._events = this._events || {};
                         this._maxListeners = this._maxListeners || undefined;
@@ -2180,7 +2061,7 @@
                     EventEmitter.prototype.once = function(type, listener) {
                         if (!isFunction(listener)) throw TypeError('listener must be a function');
                         var fired = false;
-    
+
                         function g() {
                             this.removeListener(type, g);
                             if (!fired) {
@@ -2266,23 +2147,23 @@
                     EventEmitter.listenerCount = function(emitter, type) {
                         return emitter.listenerCount(type);
                     };
-    
+
                     function isFunction(arg) {
                         return typeof arg === 'function';
                     }
-    
+
                     function isNumber(arg) {
                         return typeof arg === 'number';
                     }
-    
+
                     function isObject(arg) {
                         return (typeof arg === 'undefined' ? 'undefined' : _typeof2(arg)) === 'object' && arg !== null;
                     }
-    
+
                     function isUndefined(arg) {
                         return arg === void 0;
                     } /***/
-                }, /* 6 */function(module, exports, __webpack_require__) {
+                }, /* 6 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -2303,7 +2184,7 @@
                     exports.getMetadata = getMetadata;
                     var _createStylesheet = __webpack_require__(7);
                     var _createStylesheet2 = _interopRequireDefault(_createStylesheet);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -2373,7 +2254,7 @@
                         }
                         return null;
                     }
-                    
+
                     /**
                      * Determine if a point intersects a rect
                      *
@@ -2471,8 +2352,7 @@
                                 if (el.getAttribute('data-pdf-annotate-type') === 'strikeout') {
                                     h += LINE_OFFSET;
                                     y -= LINE_OFFSET / 2;
-                                }
-                                else if (el.getAttribute('data-pdf-annotate-type') === 'underline') {
+                                } else if (el.getAttribute('data-pdf-annotate-type') === 'underline') {
                                     h += LINE_OFFSET;
                                     y -= LINE_OFFSET - 2;
                                 }
@@ -2495,7 +2375,7 @@
                         }; // For the case of nested SVG (point annotations) and grouped
                         // lines or rects no adjustment needs to be made for scale.
                         // I assume that the scale is already being handled
-                        // natively by virtue of the `transform` attribute.
+                        // natively by virtue of the "transform" attribute.
                         if (!['svg', 'g'].includes(el.nodeName.toLowerCase())) {
                             result = scaleUp(findSVGAtPoint(rect.left, rect.top), result);
                         }
@@ -2506,7 +2386,7 @@
                      *
                      * @param {SVGElement} svg The SVG to gather metadata from
                      * @param {Object} rect A map of numeric values to scale
-                     * @return {Object} A copy of `rect` with values scaled up
+                     * @return {Object} A copy of "rect" with values scaled up
                      */
                     function scaleUp(svg, rect) {
                         var result = {};
@@ -2522,7 +2402,7 @@
                      *
                      * @param {SVGElement} svg The SVG to gather metadata from
                      * @param {Object} rect A map of numeric values to scale
-                     * @return {Object} A copy of `rect` with values scaled down
+                     * @return {Object} A copy of "rect" with values scaled down
                      */
                     function scaleDown(svg, rect) {
                         var result = {};
@@ -2599,7 +2479,7 @@
                             viewport: JSON.parse(svg.getAttribute('data-pdf-annotate-viewport'))
                         };
                     } /***/
-                }, /* 7 */function(module, exports) {
+                }, /* 7 */ function(module, exports) {
                     module.exports = function createStyleSheet(blocks) {
                         var style = document.createElement('style');
                         var text = Object.keys(blocks).map(function(selector) {
@@ -2609,30 +2489,30 @@
                         style.appendChild(document.createTextNode(text));
                         return style;
                     };
-    
+
                     function processRuleSet(selector, block) {
                         return selector + ' {\n' + processDeclarationBlock(block) + '\n}';
                     }
-    
+
                     function processDeclarationBlock(block) {
                         return Object.keys(block).map(function(prop) {
                             return processDeclaration(prop, block[prop]);
                         }).join('\n');
                     }
-    
+
                     function processDeclaration(prop, value) {
                         if (!isNaN(value) && value != 0) {
                             value = value + 'px';
                         }
                         return hyphenate(prop) + ': ' + value + ';';
                     }
-    
+
                     function hyphenate(prop) {
                         return prop.replace(/[A-Z]/g, function(match) {
                             return '-' + match.toLowerCase();
                         });
                     } /***/
-                }, /* 8 */function(module, exports, __webpack_require__) {
+                }, /* 8 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -2641,26 +2521,26 @@
                     var _uuid2 = _interopRequireDefault(_uuid);
                     var _StoreAdapter2 = __webpack_require__(2);
                     var _StoreAdapter3 = _interopRequireDefault(_StoreAdapter2);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
                         };
                     }
-    
+
                     function _classCallCheck(instance, Constructor) {
                         if (!(instance instanceof Constructor)) {
                             throw new TypeError("Cannot call a class as a function");
                         }
                     }
-    
+
                     function _possibleConstructorReturn(self, call) {
                         if (!self) {
                             throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
                         }
                         return call && ((typeof call === 'undefined' ? 'undefined' : _typeof2(call)) === "object" || typeof call === "function") ? call : self;
                     }
-    
+
                     function _inherits(subClass, superClass) {
                         if (typeof superClass !== "function" && superClass !== null) {
                             throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === 'undefined' ? 'undefined' : _typeof2(superClass)));
@@ -2676,17 +2556,15 @@
                         if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
                     } // StoreAdapter for working with localStorage
                     // This is ideal for testing, examples, and prototyping                
-    
+
                     var LocalStoreAdapter = function(_StoreAdapter) {
                         _inherits(LocalStoreAdapter, _StoreAdapter);
-    
-                        function updateAnnotationColor(annotationId, aType, aColor)
-                        {
-                            var nodes = document.querySelectorAll('[data-pdf-annotate-id="' + annotationId + '"]');                    
+
+                        function updateAnnotationColor(annotationId, aType, aColor) {
+                            var nodes = document.querySelectorAll('[data-pdf-annotate-id="' + annotationId + '"]');
                             nodes.forEach(function(n) {
-                                var prop_to_change = false;                     
-                                switch(aType)
-                                {
+                                var prop_to_change = false;
+                                switch (aType) {
                                     case 'strikeout':
                                     case 'underline':
                                         prop_to_change = 'stroke';
@@ -2695,26 +2573,25 @@
                                         prop_to_change = 'fill';
                                         break;
                                     case 'drawing':
-                                        if(aColor.indexOf('#') == -1)
-                                            aColor = '#'+ aColor;
-                                        $(n).attr('stroke' , aColor);
-                                        prop_to_change = 'fill';                                    
+                                        if (aColor.indexOf('#') == -1)
+                                            aColor = '#' + aColor;
+                                        $(n).attr('stroke', aColor);
+                                        prop_to_change = 'fill';
                                         break;
                                 }
-                                if(prop_to_change)
-                                {
-                                    $(n).attr(prop_to_change , '#'+ aColor);
+                                if (prop_to_change) {
+                                    $(n).attr(prop_to_change, '#' + aColor);
                                 }
                             });
                         }
-    
+
                         function LocalStoreAdapter() {
                             _classCallCheck(this, LocalStoreAdapter);
                             return _possibleConstructorReturn(this, Object.getPrototypeOf(LocalStoreAdapter).call(this, {
                                 getAnnotations: function getAnnotations(documentId, pageNumber) {
                                     return new Promise(function(resolve, reject) {
                                         var annotations = _getAnnotations(documentId).filter(function(i) {
-                                            return i.page === pageNumber && i.class === 'Annotation' && (i.uid == annotation_user_m2.id || (i.type=='point' && !i.sub_type));
+                                            return i.page === pageNumber && i.class === 'Annotation' && (i.uid == annotation_user_m2.id || (i.type == 'point' && !i.sub_type));
                                         });
                                         resolve({
                                             documentId: documentId,
@@ -2725,8 +2602,8 @@
                                 },
                                 getCommentAnnotations: function(documentId, sub_type) {
                                     return new Promise(function(resolve, reject) {
-                                        var annotations = _getAnnotations(documentId).filter(function(i) {                                          
-                                            return i.type=='point' && i.class === 'Annotation' && (i.uid == annotation_user_m2.id || !i.sub_type);
+                                        var annotations = _getAnnotations(documentId).filter(function(i) {
+                                            return i.type == 'point' && i.class === 'Annotation' && (i.uid == annotation_user_m2.id || !i.sub_type);
                                         });
                                         resolve({
                                             documentId: documentId,
@@ -2734,13 +2611,13 @@
                                         });
                                     });
                                 },
-                                getPointAnnotations: function(documentId, sub_type) {                                
+                                getPointAnnotations: function(documentId, sub_type) {
                                     return new Promise(function(resolve, reject) {
-                                        var annotations = _getAnnotations(documentId).filter(function(i) {   
+                                        var annotations = _getAnnotations(documentId).filter(function(i) {
                                             if (sub_type)
-                                                return i.type=='point' && i.class === 'Annotation' && i.uid == annotation_user_m2.id && i.sub_type;
+                                                return i.type == 'point' && i.class === 'Annotation' && i.uid == annotation_user_m2.id && i.sub_type;
                                             else
-                                                return i.type=='point' && i.class === 'Annotation' && !i.sub_type;
+                                                return i.type == 'point' && i.class === 'Annotation' && !i.sub_type;
                                         });
                                         resolve({
                                             documentId: documentId,
@@ -2757,48 +2634,44 @@
                                 getAnnotation: function getAnnotation(documentId, annotationId) {
                                     return Promise.resolve(_getAnnotations(documentId)[findAnnotation(documentId, annotationId)]);
                                 },
-                                addAnnotation: function addAnnotation(documentId, pageNumber, annotation) {                                
+                                addAnnotation: function addAnnotation(documentId, pageNumber, annotation) {
                                     return new Promise(function(resolve, reject) {
-                                        if(typeof annotation.type != 'string')
-                                        {
+                                        if (typeof annotation.type != 'string') {
                                             console.log("Invalid annotation", annotation);
                                             //console.trace();
                                             return;
                                         }
-    
-                                        if(!annotation_user_m2.id)
-                                        {
+
+                                        if (!annotation_user_m2.id) {
                                             bootbox.alert("No user Id given");
                                             return;
                                         }
                                         annotation.class = 'Annotation';
                                         annotation.uuid = (0, _uuid2.default)();
                                         annotation.page = pageNumber;
-                                        annotation.date_time = new Date();                                    
-                                        if(!annotation_user_m2.id)
-                                        {
+                                        annotation.date_time = new Date();
+                                        if (!annotation_user_m2.id) {
                                             console.log("oops no user id");
                                             return;
                                         }
                                         annotation.uid = annotation_user_m2.id;
                                         var annotations = _getAnnotations(documentId);
-                                        annotations.push(annotation);                                    
-                                        if(annotation.type == "drawing")
-                                        {
+                                        annotations.push(annotation);
+                                        if (annotation.type == "drawing") {
                                             annotation.to_merge = 1;
                                             hand_drawings.push(annotation);
                                         }
-                                        
+
                                         var is_comment = annotation.type == 'pooint' && !annotation.sub_type;
                                         updateAnnotations(documentId, annotations, is_comment);
                                         resolve(annotation);
                                     });
                                 },
-                                editAnnotation: function editAnnotation(documentId, annotationId, annotation) {                                
+                                editAnnotation: function editAnnotation(documentId, annotationId, annotation) {
                                     return new Promise(function(resolve, reject) {
                                         var annotations = _getAnnotations(documentId);
-                                        var annotationIndex = findAnnotation(documentId, annotationId);                                    
-                                        annotations[annotationIndex] = annotation;                                    
+                                        var annotationIndex = findAnnotation(documentId, annotationId);
+                                        annotations[annotationIndex] = annotation;
                                         updateAnnotations(documentId, annotations);
                                         updateAnnotationColor(annotationId, annotation.type, annotation.color);
                                         resolve(annotation);
@@ -2817,19 +2690,17 @@
                                 },
                                 getComments: function getComments(documentId, annotationId) {
                                     return new Promise(function(resolve, reject) {
-                                        var all_annotaions = _getAnnotations(documentId);                                    
+                                        var all_annotaions = _getAnnotations(documentId);
                                         var points = all_annotaions.filter(function(i) {
                                             return i.uuid === annotationId;
                                         });
                                         var comments_array = [];
-                                        if(Array.isArray(points) && points.length>0)
-                                        {
+                                        if (Array.isArray(points) && points.length > 0) {
                                             comments_array = points[0].comments;
-                                        }
-                                        else{
+                                        } else {
                                             comments_array = [];
                                         }
-                                        if(!Array.isArray(comments_array))
+                                        if (!Array.isArray(comments_array))
                                             comments_array = [];
                                         resolve(comments_array);
                                     });
@@ -2843,95 +2714,82 @@
                                         });
                                         resolve(points || []);
                                     });
-                                },                            
+                                },
                                 addComment: function addComment(documentId, annotationId, values, received_comment) {
-                                    return new Promise(function(resolve, reject) {                                    
-                                        if(annotationId)
-                                        {
+                                    return new Promise(function(resolve, reject) {
+                                        if (annotationId) {
                                             var comment = {
                                                 class: 'Comment',
                                                 uuid: (0, _uuid2.default)(),
                                                 point_id: annotationId,
                                                 content: values.content,
-                                                uid:values.uid,
-                                                user_name:values.user_name,
-                                                date_time:values.date_time,
+                                                uid: values.uid,
+                                                user_name: values.user_name,
+                                                date_time: values.date_time,
                                             };
-                                            let doc_data = documentId.split('-');
-                                            let res_id = doc_data[1].split('.')[0];
-                                            let res_model = 'meeting_point.doc';
-                                            if(documentId.indexOf('topic') > -1)
+                                            var doc_data = documentId.split('-');
+                                            var res_id = doc_data[1].split('.')[0];
+                                            var res_model = 'meeting_point.doc';
+                                            if (documentId.indexOf('topic') > -1)
                                                 res_model = 'meeting_point.topicdoc';
-    
+
                                             var input_data = {
-                                                doc_type : doc_data[0],
-                                                doc_id : documentId,
-                                                parent_res_id : res_id,
-                                                parent_res_model : res_model,
-                                                res_model : 'annotation.point',
+                                                doc_type: doc_data[0],
+                                                doc_id: documentId,
+                                                parent_res_id: res_id,
+                                                parent_res_model: res_model,
+                                                res_model: 'annotation.point',
                                             };
-                                            
-                                            let annotations = _getAnnotations(documentId);
-                                            let point = {};
-                                            
-                                            let index = -1;
-                                            for(let i in annotations)
-                                            {
-                                                if(annotations[i].uuid == annotationId)
-                                                {
+
+                                            var annotations = _getAnnotations(documentId);
+                                            var point = {};
+
+                                            var index = -1;
+                                            for (var i in annotations) {
+                                                if (annotations[i].uuid == annotationId) {
                                                     index = i;
                                                     var annotation = annotations[i];
-                                                    for(var key in annotation)
-                                                    {
-                                                        if(key != 'comments')
-                                                        {
+                                                    for (var key in annotation) {
+                                                        if (key != 'comments') {
                                                             point[key] = annotation[key];
                                                         }
                                                     }
                                                     break;
                                                 }
                                             }
-                                            if(index > -1)
-                                            {
-                                                if(!annotations[index].comments)
-                                                {
+                                            if (index > -1) {
+                                                if (!annotations[index].comments) {
                                                     annotations[index].comments = [comment];
-                                                }
-                                                else
-                                                {
+                                                } else {
                                                     annotations[index].comments.push(comment);
                                                 }
                                                 point.comment = comment;
-                                                point.doc_id = documentId;                                            
+                                                point.doc_id = documentId;
                                                 input_data['point'] = point;
-                                                var is_comment = point.sub_type != 'personal';                                            
-                                                if(is_comment && !received_comment){
-                                                    let args = {
-                                                        app:'annotations',
-                                                        model:'Point',
-                                                        method:'save_point',
+                                                var is_comment = point.sub_type != 'personal';
+                                                if (is_comment && !received_comment) {
+                                                    var args = {
+                                                        app: 'annotations',
+                                                        model: 'Point',
+                                                        method: 'save_point',
                                                     }
-                                                    let options = {
+                                                    var options = {
                                                         args: args,
                                                         input_data: input_data
                                                     }
                                                     dn_rpc_object(options);
                                                 }
                                                 updateAnnotations(documentId, annotations, is_comment);
+                                            } else {
+                                                console.log("Annotation not found " + annotationId);
                                             }
-                                            else
-                                            {
-                                                console.log("Annotation not found "+annotationId);
-                                            }
-                                        }
-                                        else
-                                        {                                        
+                                        } else {
                                             console.log("Comment not added because, no active annotationId");
-                                        }									
+                                        }
                                         resolve(comment);
                                     });
                                 },
-    
+
                                 editComment: function editComment(documentId, uuid, annotationId, content) {
                                     return new Promise(function(resolve, reject) {
                                         var annotations = _getAnnotations(documentId);
@@ -2967,7 +2825,7 @@
                         return LocalStoreAdapter;
                     }(_StoreAdapter3.default);
                     exports.default = LocalStoreAdapter;
-    
+
                     function _getAnnotations(documentId) {
                         var res = getCookieStrict(documentId, documentId + '/annotations');
                         if (!res)
@@ -2976,23 +2834,24 @@
                             res = JSON.parse(res);
                         return res;
                     }
-    
+
                     var annot_save_timeout = undefined;
-                    function updateAnnotations(documentId, annotations, is_comment) {                    
+
+                    function updateAnnotations(documentId, annotations, is_comment) {
                         var annotation_cookie = "";
-                        if(Array.isArray(annotations))
-                            annotation_cookie  = JSON.stringify(annotations);
+                        if (Array.isArray(annotations))
+                            annotation_cookie = JSON.stringify(annotations);
                         setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
-                        if(is_comment){
+                        if (is_comment) {
                             return;
                         }
                         setDocDirty(documentId);
                         clearTimeout(annot_save_timeout);
-                        annot_save_timeout = setTimeout(function(){
+                        annot_save_timeout = setTimeout(function() {
                             saveAnnotationsAtServer();
                         }, 30000);
                     }
-    
+
                     function findAnnotationObject(documentId, annotationId) {
                         var index = -1;
                         var annotations = _getAnnotations(documentId);
@@ -3002,7 +2861,7 @@
                             }
                         }
                     }
-    
+
                     function findAnnotation(documentId, annotationId) {
                         var index = -1;
                         var annotations = _getAnnotations(documentId);
@@ -3015,7 +2874,7 @@
                         return index;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 9 */function(module, exports) {
+                }, /* 9 */ function(module, exports) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3023,7 +2882,7 @@
                     exports.default = uuid;
                     var REGEXP = /[xy]/g;
                     var PATTERN = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-    
+
                     function replacement(c) {
                         var r = Math.random() * 16 | 0;
                         var v = c == 'x' ? r : r & 0x3 | 0x8;
@@ -3038,7 +2897,7 @@
                         return PATTERN.replace(REGEXP, replacement);
                     }
                     module.exports = exports['default']; /***/
-                }, /* 10 */function(module, exports, __webpack_require__) {
+                }, /* 10 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3050,7 +2909,7 @@
                     var _appendChild2 = _interopRequireDefault(_appendChild);
                     var _renderScreenReaderHints = __webpack_require__(20);
                     var _renderScreenReaderHints2 = _interopRequireDefault(_renderScreenReaderHints);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3089,7 +2948,7 @@
                         });
                     }
                     module.exports = exports['default']; /***/
-                }, /* 11 */function(module, exports, __webpack_require__) {
+                }, /* 11 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3107,7 +2966,7 @@
                     var _renderRect2 = _interopRequireDefault(_renderRect);
                     var _renderText = __webpack_require__(19);
                     var _renderText2 = _interopRequireDefault(_renderText);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3125,9 +2984,9 @@
                         var x = void 0;
                         var y = void 0; // Modulus 360 on the rotation so that we only
                         var viewport_rotation = viewport.rotation % 360;
-                        if(viewport_rotation<0)
+                        if (viewport_rotation < 0)
                             viewport_rotation += 360;
-                        
+
                         switch (viewport_rotation) {
                             case 0:
                                 x = y = 0;
@@ -3176,45 +3035,43 @@
                             var paths = node.querySelector('path')
                             var rects = node.querySelector('rect');
                             var gs = node.querySelector('g');
-                            if(svgs)
+                            if (svgs)
                                 arr.push(svgs);
-                            if(paths)
+                            if (paths)
                                 arr.push(paths);
-                            if(rects)
+                            if (rects)
                                 arr.push(rects);
-                            if(gs)
+                            if (gs)
                                 arr.push(gs);
-                        
+
                             var viewport_rotation = viewport.rotation % 360;
-                            if(viewport_rotation<0)
-                            viewport_rotation += 360;
-                            
+                            if (viewport_rotation < 0)
+                                viewport_rotation += 360;
+
                             switch (viewport_rotation) {
                                 case 90:
                                     node.setAttribute('x', viewport.width - y - width);
                                     node.setAttribute('y', x);
-                                    if(svgs)
-                                    {
+                                    if (svgs) {
                                         svgs.setAttribute('x', 1);
                                         svgs.setAttribute('y', 0);
                                     }
-    
+
                                     break;
                                 case 180:
                                     node.setAttribute('x', viewport.width - x - width);
                                     node.setAttribute('y', viewport.height - y - height);
-                                    if(svgs)
+                                    if (svgs)
                                         svgs.setAttribute('y', 2);
                                     break;
                                 case 270:
                                     node.setAttribute('x', y);
                                     node.setAttribute('y', viewport.height - x - height);
-                                    if(svgs)
-                                    {
+                                    if (svgs) {
                                         svgs.setAttribute('x', -1);
                                         svgs.setAttribute('y', 0);
                                     }
-    
+
                                     break;
                             }
                         }
@@ -3262,11 +3119,12 @@
                         return child;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 12 */function(module, exports) { /* eslint-disable no-unused-vars */
+                }, /* 12 */ function(module, exports) {
+                    /* eslint-disable no-unused-vars */
                     'use strict';
                     var hasOwnProperty = Object.prototype.hasOwnProperty;
                     var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-    
+
                     function toObject(val) {
                         if (val === null || val === undefined) {
                             throw new TypeError('Object.assign cannot be called with null or undefined');
@@ -3295,7 +3153,7 @@
                         }
                         return to;
                     }; /***/
-                }, /* 13 */function(module, exports, __webpack_require__) {
+                }, /* 13 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3305,7 +3163,7 @@
                     var _setAttributes2 = _interopRequireDefault(_setAttributes);
                     var _normalizeColor = __webpack_require__(15);
                     var _normalizeColor2 = _interopRequireDefault(_normalizeColor);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3313,12 +3171,12 @@
                     }
                     /**
                      * Create SVGLineElements from an annotation definition.
-                     * This is used for anntations of type `strikeout`.
+                     * This is used for anntations of type "strikeout".
                      *
                      * @param {Object} a The annotation definition
                      * @return {SVGGElement} A group of all lines to be rendered
                      */
-                    function renderLine(a) {                    
+                    function renderLine(a) {
                         var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                         (0, _setAttributes2.default)(group, {
                             stroke: (0, _normalizeColor2.default)(a.color || '#f00'),
@@ -3337,7 +3195,7 @@
                         return group;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 14 */function(module, exports) {
+                }, /* 14 */ function(module, exports) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3366,7 +3224,7 @@
                         });
                     }
                     module.exports = exports['default']; /***/
-                }, /* 15 */function(module, exports) {
+                }, /* 15 */ function(module, exports) {
                     "use strict";
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3386,7 +3244,7 @@
                         return color;
                     }
                     module.exports = exports["default"]; /***/
-                }, /* 16 */function(module, exports, __webpack_require__) {
+                }, /* 16 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3396,7 +3254,7 @@
                     var _setAttributes2 = _interopRequireDefault(_setAttributes);
                     var _normalizeColor = __webpack_require__(15);
                     var _normalizeColor2 = _interopRequireDefault(_normalizeColor);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3404,12 +3262,12 @@
                     }
                     /**
                      * Create SVGPathElement from an annotation definition.
-                     * This is used for anntations of type `drawing`.
+                     * This is used for anntations of type "drawing".
                      *
                      * @param {Object} a The annotation definition
                      * @return {SVGPathElement} The path to be rendered
                      */
-                    function renderPath(a) {                    
+                    function renderPath(a) {
                         var d = [];
                         var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                         for (var i = 0, l = a.lines.length; i < l; i++) {
@@ -3419,7 +3277,7 @@
                                 d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
                             }
                         }
-    
+
                         (0, _setAttributes2.default)(path, {
                             d: d.join(' ') + 'Z',
                             stroke: (0, _normalizeColor2.default)(a.color || '#000'),
@@ -3429,7 +3287,7 @@
                         return path;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 17 */function(module, exports, __webpack_require__) {
+                }, /* 17 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3437,7 +3295,7 @@
                     exports.default = renderPoint;
                     var _setAttributes = __webpack_require__(14);
                     var _setAttributes2 = _interopRequireDefault(_setAttributes);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3447,7 +3305,7 @@
                     var D = 'M499.968 214.336q-113.832 0 -212.877 38.781t-157.356 104.625 -58.311 142.29q0 62.496 39.897 119.133t112.437 97.929l48.546 27.9 -15.066 53.568q-13.392 50.778 -39.06 95.976 84.816 -35.154 153.45 -95.418l23.994 -21.204 31.806 3.348q38.502 4.464 72.54 4.464 113.832 0 212.877 -38.781t157.356 -104.625 58.311 -142.29 -58.311 -142.29 -157.356 -104.625 -212.877 -38.781z';
                     /**
                      * Create SVGElement from an annotation definition.
-                     * This is used for anntations of type `comment`.
+                     * This is used for anntations of type "comment".
                      *
                      * @param {Object} a The annotation definition
                      * @return {SVGElement} A svg to be rendered
@@ -3458,7 +3316,7 @@
                         var innerSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                         var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                         var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                        
+
                         (0, _setAttributes2.default)(innerSVG, {
                             width: SIZE,
                             height: SIZE,
@@ -3478,8 +3336,7 @@
                             stroke: '#000',
                             fill: '#fff'
                         });
-                        if(a.sub_type)
-                        {
+                        if (a.sub_type) {
                             (0, _setAttributes2.default)(outerSVG, {
                                 width: 28,
                                 height: 25,
@@ -3487,8 +3344,7 @@
                                 y: a.y
                             });
                         }
-                        if(!a.sub_type)
-                        {
+                        if (!a.sub_type) {
                             (0, _setAttributes2.default)(outerSVG, {
                                 width: SIZE,
                                 height: SIZE,
@@ -3498,44 +3354,29 @@
                             innerSVG.appendChild(path);
                             outerSVG.appendChild(rect);
                             outerSVG.appendChild(innerSVG);
+                        } else {
+                            var svg_str = '';
+                            svg_str += '<rect width="25" height="22" x="1.962286" y="1"';
+                            svg_str += ' style="fill:#ffff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-opacity:1" />';
+                            
+                            svg_str += ' <rect width="18.4" height="1.5012145" x="5.8" y="5"';
+                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
+                            
+                            svg_str += ' <rect width="18" height="0.86" x="6" y="10"';
+                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
+                            
+                            svg_str += ' <rect width="18.4" height="0.86" x="5.8" y="14"';
+                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
+                            
+                            svg_str += ' <rect width="18" height="0.86" x="6" y="18"';
+                            svg_str += ' style="fill:#000000;fill-opacity:1;stroke:none" />';
+                            
+                            outerSVG.innerHTML = svg_str;
                         }
-                        else        
-                        {
-                            outerSVG.innerHTML = `<rect
-                            width="25"
-                            height="22"
-                            x="1.962286"
-                            y="1"
-                            style="fill:#ffff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-opacity:1" />
-                         <rect
-                            width="18.4"
-                            height="1.5012145"
-                            x="5.8"
-                            y="5"
-                            style="fill:#000000;fill-opacity:1;stroke:none" />
-                         <rect
-                            width="18"
-                            height="0.86"
-                            x="6"
-                            y="10"
-                            style="fill:#000000;fill-opacity:1;stroke:none" />
-                         <rect
-                            width="18.4"
-                            height="0.86"
-                            x="5.8"
-                            y="14"
-                            style="fill:#000000;fill-opacity:1;stroke:none" />
-                         <rect
-                            width="18"
-                            height="0.86"
-                            x="6"
-                            y="18"
-                            style="fill:#000000;fill-opacity:1;stroke:none" />`;     
-                        }                                               
                         return outerSVG;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 18 */function(module, exports, __webpack_require__) {
+                }, /* 18 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3550,7 +3391,7 @@
                     var _setAttributes2 = _interopRequireDefault(_setAttributes);
                     var _normalizeColor = __webpack_require__(15);
                     var _normalizeColor2 = _interopRequireDefault(_normalizeColor);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3558,12 +3399,12 @@
                     }
                     /**
                      * Create SVGRectElements from an annotation definition.
-                     * This is used for anntations of type `area` and `highlight`.
+                     * This is used for anntations of type area and highlight.
                      *
                      * @param {Object} a The annotation definition
                      * @return {SVGGElement|SVGRectElement} A group of all rects to be rendered
                      */
-                    function renderRect(a) {                    
+                    function renderRect(a) {
                         if (a.type === 'highlight') {
                             var _ret = function() {
                                 var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -3588,7 +3429,7 @@
                             return rect;
                         }
                     }
-    
+
                     function createRect(r) {
                         var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                         (0, _setAttributes2.default)(rect, {
@@ -3600,7 +3441,7 @@
                         return rect;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 19 */function(module, exports, __webpack_require__) {
+                }, /* 19 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3610,7 +3451,7 @@
                     var _setAttributes2 = _interopRequireDefault(_setAttributes);
                     var _normalizeColor = __webpack_require__(15);
                     var _normalizeColor2 = _interopRequireDefault(_normalizeColor);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3618,12 +3459,12 @@
                     }
                     /**
                      * Create SVGTextElement from an annotation definition.
-                     * This is used for anntations of type `textbox`.
+                     * This is used for anntations of type textbox.
                      *
                      * @param {Object} a The annotation definition
                      * @return {SVGTextElement} A text to be rendered
                      */
-                    function renderText(a) {                    
+                    function renderText(a) {
                         var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                         (0, _setAttributes2.default)(text, {
                             x: a.x,
@@ -3635,7 +3476,7 @@
                         return text;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 20 */function(module, exports, __webpack_require__) {
+                }, /* 20 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3645,7 +3486,7 @@
                     var _insertScreenReaderHint2 = _interopRequireDefault(_insertScreenReaderHint);
                     var _initEventHandlers = __webpack_require__(27);
                     var _initEventHandlers2 = _interopRequireDefault(_initEventHandlers);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3701,7 +3542,7 @@
                         'area': sortByPoint
                     };
                     module.exports = exports['default']; /***/
-                }, /* 21 */function(module, exports, __webpack_require__) {
+                }, /* 21 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3715,7 +3556,7 @@
                     var _insertElementWithinElement2 = _interopRequireDefault(_insertElementWithinElement);
                     var _renderScreenReaderComments = __webpack_require__(25);
                     var _renderScreenReaderComments2 = _interopRequireDefault(_renderScreenReaderComments);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3761,7 +3602,7 @@
                         // }
                     }
                     module.exports = exports['default']; /***/
-                }, /* 22 */function(module, exports) {
+                }, /* 22 */ function(module, exports) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3788,7 +3629,7 @@
                         return node;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 23 */function(module, exports, __webpack_require__) {
+                }, /* 23 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3797,13 +3638,13 @@
                     var _insertElementWithinElement = __webpack_require__(24);
                     var _insertElementWithinElement2 = _interopRequireDefault(_insertElementWithinElement);
                     var _utils = __webpack_require__(6);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
                         };
                     }
-    
+
                     function _toConsumableArray(arr) {
                         if (Array.isArray(arr)) {
                             for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
@@ -3817,7 +3658,7 @@
                     /**
                      * Insert an element at a point within the document.
                      * This algorithm will try to insert between elements if possible.
-                     * It will however use `insertElementWithinElement` if it is more accurate.
+                     * It will however use "insertElementWithinElement" if it is more accurate.
                      *
                      * @param {Element} el The element to be inserted
                      * @param {Number} x The x coordinate of the point
@@ -3857,14 +3698,14 @@
                         return false;
                     }
                     module.exports = exports['default']; /***/
-                }, /* 24 */function(module, exports, __webpack_require__) {
+                }, /* 24 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
                     });
                     exports.default = insertElementWithinElement;
                     var _utils = __webpack_require__(6);
-    
+
                     function _toConsumableArray(arr) {
                         if (Array.isArray(arr)) {
                             for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
@@ -3887,7 +3728,7 @@
                      * @return {Boolean} True if element was able to be inserted, otherwise false
                      */
                     function insertElementWithinElement(el, x, y, pageNumber, insertBefore) {
-                        var OFFSET_ADJUST = 2; // If inserting before adjust `x` by looking for element a few px to the right
+                        var OFFSET_ADJUST = 2; // If inserting before adjust "x" by looking for element a few px to the right
                         // Otherwise adjust a few px to the left
                         // This is to allow a little tolerance by searching within the box, instead
                         // of getting a false negative by testing right on the border.
@@ -3895,7 +3736,7 @@
                         var node = textLayerElementFromPoint(x, y + OFFSET_ADJUST, pageNumber);
                         if (!node) {
                             return false;
-                        } // Now that node has been found inverse the adjustment for `x`.
+                        } // Now that node has been found inverse the adjustment for "x".
                         // This is done to accomodate tolerance by cutting off on the outside of the
                         // text boundary, instead of missing a character by cutting off within.
                         x = x + OFFSET_ADJUST * (insertBefore ? -1 : 1);
@@ -3954,7 +3795,7 @@
                         })[0];
                     }
                     module.exports = exports['default']; /***/
-                }, /* 25 */function(module, exports, __webpack_require__) {
+                }, /* 25 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -3964,7 +3805,7 @@
                     var _PDFJSAnnotate2 = _interopRequireDefault(_PDFJSAnnotate);
                     var _insertScreenReaderComment = __webpack_require__(26);
                     var _insertScreenReaderComment2 = _interopRequireDefault(_insertScreenReaderComment);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -3986,7 +3827,7 @@
                      *  <div>Some highlighted text goes here...</div>
                      *  <div class="screenReaderOnly">End highlight 1</div>
                      *
-                     * NOTE: `screenReaderOnly` is not a real class, just used for brevity
+                     * NOTE: "screenReaderOnly" is not a real class, just used for brevity
                      *
                      * @param {String} documentId The ID of the document
                      * @param {String} annotationId The ID of the annotation
@@ -4001,7 +3842,7 @@
                             promise = _PDFJSAnnotate2.default.getStoreAdapter().getComments(documentId, annotationId);
                         }
                         return promise.then(function(comments) { // Node needs to be found by querying DOM as it may have been inserted as innerHTML
-                            // leaving `screenReaderNode` as an invalid reference (see `insertElementWithinElement`).
+                            // leaving "screenReaderNode" as an invalid reference (see "insertElementWithinElement").
                             var node = document.getElementById('pdf-annotate-screenreader-' + annotationId);
                             if (node) {
                                 var list = document.createElement('ol');
@@ -4013,7 +3854,7 @@
                         });
                     }
                     module.exports = exports['default']; /***/
-                }, /* 26 */function(module, exports) {
+                }, /* 26 */ function(module, exports) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -4037,7 +3878,7 @@
                         }
                     }
                     module.exports = exports['default']; /***/
-                }, /* 27 */function(module, exports, __webpack_require__) {
+                }, /* 27 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -4054,7 +3895,7 @@
                     var _event = __webpack_require__(4);
                     var _PDFJSAnnotate = __webpack_require__(1);
                     var _PDFJSAnnotate2 = _interopRequireDefault(_PDFJSAnnotate);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -4146,7 +3987,7 @@
                         }
                     }
                     module.exports = exports['default']; /***/
-                }, /* 28 */function(module, exports, __webpack_require__) {
+                }, /* 28 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -4177,10 +4018,10 @@
                         setText: _text.setText,
                         createPage: _page.createPage,
                         renderPage: _page.renderPage,
-                        renderPageWithoutAnnotations:_page.renderPageWithoutAnnotations
+                        renderPageWithoutAnnotations: _page.renderPageWithoutAnnotations
                     };
                     module.exports = exports['default']; /***/
-                }, /* 29 */function(module, exports, __webpack_require__) {
+                }, /* 29 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -4227,13 +4068,13 @@
                     var _appendChild2 = _interopRequireDefault(_appendChild);
                     var _event = __webpack_require__(4);
                     var _utils = __webpack_require__(6);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
                         };
                     }
-    
+
                     function _toConsumableArray(arr) {
                         if (Array.isArray(arr)) {
                             for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
@@ -4262,8 +4103,8 @@
                         destroyEditOverlay();
                         overlay = document.createElement('div');
                         var anchor = document.createElement('a');
-                        var svgTaret = (0, _utils.findSVGContainer)(target);                    
-                        var parentNode = svgTaret.parentNode;                    
+                        var svgTaret = (0, _utils.findSVGContainer)(target);
+                        var parentNode = svgTaret.parentNode;
                         var id = target.getAttribute('data-pdf-annotate-id');
                         var rect = (0, _utils.getAnnotationRect)(target);
                         var styleLeft = rect.left - OVERLAY_BORDER_SIZE;
@@ -4318,8 +4159,8 @@
                             anchor.style.display = 'none';
                         });
                     }
-    
-                    
+
+
                     /**
                      * Destroy the edit overlay if it exists.
                      */
@@ -4348,23 +4189,25 @@
                         var _getMetadata = (0, _utils.getMetadata)(svg);
                         var documentId = _getMetadata.documentId;
                         var annotation_cookie = localStorage.getItem(documentId + '/annotations');
-                        if(annotation_cookie){
+                        if (annotation_cookie) {
                             var annotations = JSON.parse(annotation_cookie);
-                            var point = annotations.filter(annot => annot.uuid == annotationId);
-                            if(point.length > 0){
-                                if(point[0].type == 'point' && !point[0].sub_type){
+                            var point = annotations.filter(function(annot) {
+                                annot.uuid == annotationId
+                            });
+                            if (point.length > 0) {
+                                if (point[0].type == 'point' && !point[0].sub_type) {
                                     return;
                                 }
                             }
                         }
-    
+
                         [].concat(_toConsumableArray(nodes)).forEach(function(n) {
                             n.parentNode.removeChild(n);
                         });
                         _PDFJSAnnotate2.default.getStoreAdapter().deleteAnnotation(documentId, annotationId);
                         destroyEditOverlay();
                     }
-    
+
                     /**
                      * Handle document.click event
                      *
@@ -4392,7 +4235,7 @@
                             deleteAnnotation();
                         }
                     }
-    
+
                     var object_to_move = undefined;
                     /**
                      * Handle document.mousedown event
@@ -4400,7 +4243,7 @@
                      * @param {Event} e The DOM event that needs to be handled
                      */
                     function handleDocumentMousedown(e) {
-    
+
                         if (e.target !== overlay) {
                             return;
                         } // Highlight and strikeout annotations are bound to text within the document.
@@ -4414,23 +4257,23 @@
                         isDragging = true;
                         dragOffsetX = e.clientX;
                         dragOffsetY = e.clientY;
-    
+
                         dragStartX = overlay.offsetLeft;
                         dragStartY = overlay.offsetTop;
                         overlay.style.background = 'rgba(255, 255, 255, 0.7)';
                         overlay.style.cursor = 'move';
                         var delbtn = overlay.querySelector('a');
-                        if(delbtn && delbtn.style)
+                        if (delbtn && delbtn.style)
                             delbtn.style.display = 'none';
-    
+
                         document.addEventListener('mousemove', handleDocumentMousemove);
                         document.addEventListener('mouseup', handleDocumentMouseup);
                         (0, _utils.disableUserSelect)();
-                        object_to_move = $('.new_comments_count[point_id="'+annotationId+'"]');
-                        if(object_to_move.length == 0)
+                        object_to_move = $('.new_comments_count[point_id="' + annotationId + '"]');
+                        if (object_to_move.length == 0)
                             object_to_move = false;
                         else
-                        object_to_move = object_to_move[0];                    
+                            object_to_move = object_to_move[0];
                     }
                     /**
                      * Handle document.mousemove event
@@ -4449,13 +4292,13 @@
                         var maxX = rect.width;
                         if (y > minY && y + overlay.offsetHeight < maxY) {
                             overlay.style.top = y + 'px';
-                            if(object_to_move)
+                            if (object_to_move)
                                 object_to_move.style.top = (y - 15) + 'px';
                         }
-    
+
                         if (x > minX && x + overlay.offsetWidth < maxX) {
                             overlay.style.left = x + 'px';
-                            if(object_to_move)
+                            if (object_to_move)
                                 object_to_move.style.left = (x + 20) + 'px';
                         }
                     }
@@ -4472,13 +4315,13 @@
                         var _getMetadata2 = (0, _utils.getMetadata)(svg);
                         var documentId = _getMetadata2.documentId;
                         var delbtn = overlay.querySelector('a');
-                        if(delbtn && delbtn.style)
+                        if (delbtn && delbtn.style)
                             delbtn.style.display = '';
-    
+
                         function getDelta(propX, propY) {
                             return calcDelta(parseInt(target[0].getAttribute(propX), 10), parseInt(target[0].getAttribute(propY), 10));
                         }
-    
+
                         function calcDelta(x, y) {
                             return {
                                 deltaX: OVERLAY_BORDER_SIZE + (0, _utils.scaleDown)(svg, {
@@ -4530,7 +4373,7 @@
                                             }
                                         }
                                     }); // } else if (type === 'strikeout') {
-                                    //   let { deltaX, deltaY } = getDelta('x1', 'y1');
+                                    //   var { deltaX, deltaY } = getDelta('x1', 'y1');
                                     //   [...target].forEach(target, (t, i) => {
                                     //     if (deltaY !== 0) {
                                     //       t.setAttribute('y1', parseInt(t.getAttribute('y1'), 10) + deltaY);
@@ -4583,15 +4426,14 @@
                      *
                      * @param {Element} e The annotation element that was clicked
                      */
-                    function handleAnnotationClick(target) {                    
-                        createEditOverlay(target);                    
-                    }                
+                    function handleAnnotationClick(target) {
+                        createEditOverlay(target);
+                    }
                     /**
                      * Enable edit mode behavior.
                      */
-                    function enableEdit(target) {                    
-                        if(target)
-                        {
+                    function enableEdit(target) {
+                        if (target) {
                             //console.log(target);
                             createEditOverlay(target);
                             return;
@@ -4613,7 +4455,7 @@
                         _enabled = false;
                         (0, _event.removeEventListener)('annotation:click', handleAnnotationClick);
                     }; /***/
-                }, /* 30 */function(module, exports, __webpack_require__) {
+                }, /* 30 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -4626,7 +4468,7 @@
                     var _appendChild = __webpack_require__(11);
                     var _appendChild2 = _interopRequireDefault(_appendChild);
                     var _utils = __webpack_require__(6);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -4639,18 +4481,20 @@
                     var lines = void 0;
                     /**
                      * Handle document.mousedown event
-                     */                
+                     */
                     function handleDocumentMousedown(e) {
                         //console.log(e, 777);
-                        if(is_mobile_device)
-                            $('body').css('overflow','hidden');
+                        if (is_mobile_device)
+                            $('body').css('overflow', 'hidden');
                         path = null;
                         lines = [];
-                        
+
                         document.addEventListener('mousemove', handleDocumentMousemove);
                         document.addEventListener('mouseup', handleDocumentMouseup);
-                        
-                        document.addEventListener('touchmove', handleDocumentMousemove,{passive: false});
+
+                        document.addEventListener('touchmove', handleDocumentMousemove, {
+                            passive: false
+                        });
                         document.addEventListener('touchend', handleDocumentMouseup);
                     }
                     /**
@@ -4658,17 +4502,17 @@
                      *
                      * @param {Event} e The DOM event to be handled
                      */
-                    
-                    function handleDocumentMouseup(e) {                     
+
+                    function handleDocumentMouseup(e) {
                         //console.log(777);
-                         if(e.changedTouches)
-                            e = e.changedTouches[0];                     
+                        if (e.changedTouches)
+                            e = e.changedTouches[0];
                         var svg = void 0;
                         if (lines.length > 1 && (svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
                             var _getMetadata = (0, _utils.getMetadata)(svg);
                             var documentId = _getMetadata.documentId;
                             var pageNumber = _getMetadata.pageNumber;
-                            lines[lines.length -1].push(-1);
+                            lines[lines.length - 1].push(-1);
                             _PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId, pageNumber, {
                                 type: 'drawing',
                                 width: _penSize,
@@ -4683,14 +4527,14 @@
                         }
                         document.removeEventListener('mousemove', handleDocumentMousemove);
                         document.removeEventListener('mouseup', handleDocumentMouseup);
-    
+
                         document.removeEventListener('touchmove', handleDocumentMousemove);
                         document.removeEventListener('touchend', handleDocumentMouseup);
-                        if(is_mobile_device)
-                            $('body').css('overflow','auto');
+                        if (is_mobile_device)
+                            $('body').css('overflow', 'auto');
                     }
-    
-                    function saveDrawingAnnotation(){
+
+                    function saveDrawingAnnotation() {
                         var docId = hand_drawings.documentId;
                         var pageNumber = hand_drawings.pageNumber;
                         var lines = hand_drawings.lines;
@@ -4711,14 +4555,13 @@
                      *
                      * @param {Event} e The DOM event to be handled
                      */
-                    
-                    function handleDocumentMousemove(e) {                    
+
+                    function handleDocumentMousemove(e) {
                         e.preventDefault();
                         //console.log(e); 
-                        if(e.touches)
-                         {
-                             e = e.touches[0];                         
-                         }                                         
+                        if (e.touches) {
+                            e = e.touches[0];
+                        }
                         savePoint(e.clientX, e.clientY);
                     }
                     /**
@@ -4784,8 +4627,8 @@
                         if (_enabled) {
                             return;
                         }
-                        if(is_mobile_device)
-                            $('body').css('overflow','hidden');
+                        if (is_mobile_device)
+                            $('body').css('overflow', 'hidden');
                         _enabled = true;
                         document.addEventListener('mousedown', handleDocumentMousedown);
                         document.addEventListener('touchstart', handleDocumentMousedown);
@@ -4794,16 +4637,16 @@
                     /**
                      * Disable the pen behavior
                      */
-                    function disablePen() {                    
+                    function disablePen() {
                         if (!_enabled) {
                             return;
-                        }                    
+                        }
                         _enabled = false;
                         document.removeEventListener('mousedown', handleDocumentMousedown);
                         document.removeEventListener('touchstart', handleDocumentMousedown);
                         (0, _utils.enableUserSelect)();
                     } /***/
-                }, /* 31 */function(module, exports, __webpack_require__) {
+                }, /* 31 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -4819,8 +4662,8 @@
                     var _PDFJSAnnotate2 = _interopRequireDefault(_PDFJSAnnotate);
                     var _appendChild = __webpack_require__(11);
                     var _appendChild2 = _interopRequireDefault(_appendChild);
-                    var _utils = __webpack_require__(6);                
-    
+                    var _utils = __webpack_require__(6);
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -4872,9 +4715,8 @@
                      * Save a new point annotation from input
                      */
                     function savePoint() {
-                        if (input.value.trim().length == 0)
-                        {
-                            closeInput();                        
+                        if (input.value.trim().length == 0) {
+                            closeInput();
                             return;
                         }
                         if (input.value.trim().length > 0) {
@@ -4903,20 +4745,25 @@
                                 //console.log(43333);
                                 annotation.counter = 0;
                                 pdfStoreAdapter.addAnnotation(documentId, pageNumber, annotation).then(function(annotation) {
-                                    var values = {content:content, date_time:new Date(), uid:annotation_user_m2.id, user_name: annotation_user_m2.name}
-                                    pdfStoreAdapter.addComment(documentId, annotation.uuid, values);                                
+                                    var values = {
+                                        content: content,
+                                        date_time: new Date(),
+                                        uid: annotation_user_m2.id,
+                                        user_name: annotation_user_m2.name
+                                    }
+                                    pdfStoreAdapter.addComment(documentId, annotation.uuid, values);
                                     (0, _appendChild2.default)(svg, annotation);
                                     var new_point_id = annotation.uuid;
-    
+
                                     var sval = $('select.scale').val();
-                                    var notif_counters_html = '<div point_id='+annotation.uuid+' class="new_comments_count"';
-                                    var point_top = annotation.y*sval - 15;
-                                    var point_left = annotation.x*sval + 15;
-                                    var y_dim = 'top:'+point_top+'px;';
-                                    var x_dim = 'left:'+point_left+'px;';
-                                    notif_counters_html += ' comment_count="0" style="'+y_dim+x_dim+';display:none;">0</div>';
+                                    var notif_counters_html = '<div point_id=' + annotation.uuid + ' class="new_comments_count"';
+                                    var point_top = annotation.y * sval - 15;
+                                    var point_left = annotation.x * sval + 15;
+                                    var y_dim = 'top:' + point_top + 'px;';
+                                    var x_dim = 'left:' + point_left + 'px;';
+                                    notif_counters_html += ' comment_count="0" style="' + y_dim + x_dim + ';display:none;">0</div>';
                                     notif_counters_html = $(notif_counters_html);
-                                    $('#pageContainer'+pageNumber+' .canvasWrapper').append(notif_counters_html);
+                                    $('#pageContainer' + pageNumber + ' .canvasWrapper').append(notif_counters_html);
                                     select_comment_item(new_point_id);
                                 });
                             }();
@@ -4954,7 +4801,7 @@
                         _enabled = false;
                         document.removeEventListener('mouseup', handleDocumentMouseup);
                     } /***/
-                }, /* 32 */function(module, exports, __webpack_require__) {
+                }, /* 32 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -4966,13 +4813,13 @@
                     var _appendChild = __webpack_require__(11);
                     var _appendChild2 = _interopRequireDefault(_appendChild);
                     var _utils = __webpack_require__(6);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
                         };
                     }
-    
+
                     function _toConsumableArray(arr) {
                         if (Array.isArray(arr)) {
                             for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
@@ -5009,7 +4856,7 @@
                      *
                      * @param {Event} e The DOM event to handle
                      */
-                    function handleDocumentMousedown(e) {                	
+                    function handleDocumentMousedown(e) {
                         var svg = void 0;
                         if (_type !== 'area' || !(svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
                             return;
@@ -5042,7 +4889,7 @@
                             overlay.style.height = e.clientY - originY + 'px';
                         }
                     }
-                    
+
                     /**
                      * Handle document.keyup event
                      *
@@ -5066,7 +4913,7 @@
                      * @param {Array} rects The rects to use for annotation
                      * @param {String} color The color of the rects
                      */
-                    function saveRect(type, rects, color) {                     
+                    function saveRect(type, rects, color) {
                         var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);
                         var node = void 0;
                         var annotation = void 0;
@@ -5079,8 +4926,7 @@
                                 color = 'FFFF00';
                             } else if (type === 'strikeout') {
                                 color = 'FF0000';
-                            }
-                            else if (type === 'underline') {
+                            } else if (type === 'underline') {
                                 color = '00FF00';
                             }
                         } // Initialize the annotation
@@ -5091,8 +4937,7 @@
                                 var offset = 0;
                                 if (type === 'strikeout') {
                                     offset = r.height / 2;
-                                }
-                                else if (type === 'underline') {
+                                } else if (type === 'underline') {
                                     offset = r.height - 2;
                                 }
                                 return (0, _utils.scaleDown)(svg, {
@@ -5120,27 +4965,26 @@
                         var documentId = _getMetadata.documentId;
                         var pageNumber = _getMetadata.pageNumber; // Add the annotation
                         var pdfStoreAdapter = _PDFJSAnnotate2.default.getStoreAdapter();
-                        var onAnnotationAdded = function(annotation) {                        
+                        var onAnnotationAdded = function(annotation) {
                             var somefg = (0, _appendChild2.default);
                             somefg(svg, annotation);
                         };
                         pdfStoreAdapter.addAnnotation(documentId, pageNumber, annotation).then(onAnnotationAdded);
                     }
-    
+
                     /**
                      * Handle document.mouseup event
                      *
                      * @param {Event} e The DOM event to handle
                      */
                     function handleDocumentMouseup32(data_tool_type) {
-                        if(typeof data_tool_type != 'string')
-                        {
+                        if (typeof data_tool_type != 'string') {
                             return;
                         }
                         _type = data_tool_type;
                         var rects = void 0;
                         if (_type !== 'area' && (rects = getSelectionRects())) {
-                            var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);                        
+                            var svg = (0, _utils.findSVGAtPoint)(rects[0].left, rects[0].top);
                             var consumableArray = _toConsumableArray(rects);
                             var mappedFun = function(r) {
                                 return {
@@ -5151,7 +4995,7 @@
                                 };
                             };
                             consumableArray = [].concat(consumableArray);
-                            var resFun = consumableArray.map(mappedFun);                        
+                            var resFun = consumableArray.map(mappedFun);
                             saveRect(_type, resFun);
                         } else if (_type === 'area' && overlay) {
                             var _svg = overlay.parentNode.querySelector('svg.annotationLayer');
@@ -5172,7 +5016,7 @@
                     /**
                      * Enable rect behavior
                      */
-                    function enableRect(type) {                                                            
+                    function enableRect(type) {
                         _type = type;
                         if (_enabled) {
                             return;
@@ -5180,7 +5024,7 @@
                         _enabled = true;
                         document.addEventListener('mouseup', handleDocumentMouseup32);
                         document.addEventListener('mousedown', handleDocumentMousedown);
-                        document.addEventListener('keyup', handleDocumentKeyup);                    
+                        document.addEventListener('keyup', handleDocumentKeyup);
                         handleDocumentMouseup32(type);
                     }
                     /**
@@ -5195,7 +5039,7 @@
                         document.removeEventListener('mousedown', handleDocumentMousedown);
                         document.removeEventListener('keyup', handleDocumentKeyup);
                     } /***/
-                }, /* 33 */function(module, exports, __webpack_require__) {
+                }, /* 33 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -5213,7 +5057,7 @@
                     var _appendChild = __webpack_require__(11);
                     var _appendChild2 = _interopRequireDefault(_appendChild);
                     var _utils = __webpack_require__(6);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -5228,7 +5072,7 @@
                      *
                      * @param {Event} e The DOM event to handle
                      */
-                    function handleDocumentMouseup(e) {                    
+                    function handleDocumentMouseup(e) {
                         if (input || !(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
                         }
@@ -5344,7 +5188,7 @@
                         _enabled = false;
                         document.removeEventListener('mouseup', handleDocumentMouseup);
                     } /***/
-                }, /* 34 */function(module, exports, __webpack_require__) {
+                }, /* 34 */ function(module, exports, __webpack_require__) {
                     'use strict';
                     Object.defineProperty(exports, "__esModule", {
                         value: true
@@ -5389,7 +5233,7 @@
                     var _PDFJSAnnotate2 = _interopRequireDefault(_PDFJSAnnotate);
                     var _renderScreenReaderHints = __webpack_require__(20);
                     var _renderScreenReaderHints2 = _interopRequireDefault(_renderScreenReaderHints);
-    
+
                     function _interopRequireDefault(obj) {
                         return obj && obj.__esModule ? obj : {
                             default: obj
@@ -5413,7 +5257,7 @@
                         canvas.setAttribute('id', 'page' + pageNumber);
                         return page;
                     }
-                    
+
                     /**
                      * Render a page that has already been created.
                      *
@@ -5424,8 +5268,8 @@
                      *    - fulfilled: [pdfPage, annotations]
                      *    - rejected: Error
                      */
-                    
-                    function renderPage(pageNumber, renderOptions, onPageRendered) {                    
+
+                    function renderPage(pageNumber, renderOptions, onPageRendered) {
                         var documentId = renderOptions.documentId;
                         var pdfDocument = renderOptions.pdfDocument;
                         var scale = renderOptions.scale;
@@ -5443,15 +5287,15 @@
                             var canvasContext = canvas.getContext('2d', {
                                 alpha: false
                             });
-                            var viewport = pdfPage.getViewport(scale, rotate);                        
+                            var viewport = pdfPage.getViewport(scale, rotate);
                             //var viewport = pdfPage.getViewport($('#viewer').width() / pdfPage.getViewport(1.0).width);
                             var transform = scalePage(pageNumber, viewport, canvasContext); // Render the page
                             var fun1 = pdfPage.render({
                                 canvasContext: canvasContext,
                                 viewport: viewport,
                                 transform: transform
-                            });                        
-                            var fun2 = _PDFJSAnnotate2.default.render(svg, viewport, annotations);                        
+                            });
+                            var fun2 = _PDFJSAnnotate2.default.render(svg, viewport, annotations);
                             return Promise.all([fun1, fun2]).then(function() { // Text content is needed for a11y, but is also necessary for creating
                                 // highlight and strikeout annotations which require selecting text.
                                 return pdfPage.getTextContent({
@@ -5463,10 +5307,10 @@
                                         var textLayerBuilder = textLayerFactory.createTextLayerBuilder(textLayer, pageNumber - 1, viewport);
                                         textLayerBuilder.setTextContent(textContent);
                                         textLayerBuilder.render(); // Enable a11y for annotations
-                                        // Timeout is needed to wait for `textLayerBuilder.render`
+                                        // Timeout is needed to wait for "textLayerBuilder.render"
                                         setTimeout(function() {
                                             try {
-                                                (0, _renderScreenReaderHints2.default)(annotations.annotations);                                            
+                                                (0, _renderScreenReaderHints2.default)(annotations.annotations);
                                                 resolve();
                                             } catch (e) {
                                                 reject(e);
@@ -5476,14 +5320,14 @@
                                 });
                             }).then(function() { // Indicate that the page was loaded
                                 page.setAttribute('data-loaded', 'true');
-                                if(onPageRendered)
+                                if (onPageRendered)
                                     onPageRendered(annotations.annotations, pageNumber);
                                 return [pdfPage, annotations];
                             });
                         });
                     }
-    
-                    function renderPageWithoutAnnotations(pageNumber, renderOptions, onPageRendered) {                    
+
+                    function renderPageWithoutAnnotations(pageNumber, renderOptions, onPageRendered) {
                         var documentId = renderOptions.documentId;
                         var pdfDocument = renderOptions.pdfDocument;
                         var scale = renderOptions.scale;
@@ -5501,15 +5345,15 @@
                             var canvasContext = canvas.getContext('2d', {
                                 alpha: false
                             });
-                            var viewport = pdfPage.getViewport(scale, rotate);                        
+                            var viewport = pdfPage.getViewport(scale, rotate);
                             //var viewport = pdfPage.getViewport($('#viewer').width() / pdfPage.getViewport(1.0).width);
                             var transform = scalePage(pageNumber, viewport, canvasContext); // Render the page
                             var fun1 = pdfPage.render({
                                 canvasContext: canvasContext,
                                 viewport: viewport,
                                 transform: transform
-                            });                        
-                            var fun2 = _PDFJSAnnotate2.default.render(svg, viewport, annotations);                        
+                            });
+                            var fun2 = _PDFJSAnnotate2.default.render(svg, viewport, annotations);
                             return Promise.all([fun1, fun2]).then(function() { // Text content is needed for a11y, but is also necessary for creating
                                 // highlight and strikeout annotations which require selecting text.
                                 return pdfPage.getTextContent({
@@ -5521,11 +5365,11 @@
                                         var textLayerBuilder = textLayerFactory.createTextLayerBuilder(textLayer, pageNumber - 1, viewport);
                                         textLayerBuilder.setTextContent(textContent);
                                         textLayerBuilder.render(); // Enable a11y for annotations
-                                        // Timeout is needed to wait for `textLayerBuilder.render`
+                                        // Timeout is needed to wait for "textLayerBuilder.render"
                                         setTimeout(function() {
                                             try {
                                                 (0, _renderScreenReaderHints2.default)(annotations.annotations);
-                                                if(onPageRendered)
+                                                if (onPageRendered)
                                                     onPageRendered();
                                                 resolve();
                                             } catch (e) {
@@ -5621,7 +5465,7 @@
                             return x_ === x ? [c, d] : [d, c];
                         }
                     }
-    
+
                     function getOutputScale(ctx) {
                         var devicePixelRatio = window.devicePixelRatio || 1;
                         var backingStoreRatio = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
@@ -5632,7 +5476,7 @@
                             scaled: pixelRatio !== 1
                         };
                     }
-    
+
                     function roundToDivide(x, div) {
                         var r = x % div;
                         return r === 0 ? x : Math.round(x - r + div);
@@ -5642,46 +5486,42 @@
             /* WEBPACK VAR INJECTION */
         }.call(exports, __webpack_require__(3)(module)))
     }
-    
-    $(function(){
+
+    $(function() {
         var last_active_was_comment = false;
         $(document).on('mouseup', '#viewer', function(e) {
-            if(e.button == 2)
+            if (e.button == 2)
                 return;
-            if(annotation_mode != 1)
+            if (annotation_mode != 1)
                 return;
-            setTimeout(function(){                
-                var selection = window.getSelection();              
-                if(annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0 ))
-                {
+            setTimeout(function() {
+                var selection = window.getSelection();
+                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
                     var ctxMenu = $('.annotation-options.ContextMenuPopup');
-                    ctxMenu.css({'left':e.pageX - ctxMenu.width()/2, 'top':e.clientY+12}).show();
+                    ctxMenu.css({
+                        'left': e.pageX - ctxMenu.width() / 2,
+                        'top': e.clientY + 12
+                    }).show();
                     //console.log(ctxMenu.position());
                     contextMenuShown = true;
-                }
-                else
-                {
+                } else {
                     var pen_active = $('.toolbar .pen').hasClass('active');
                     var cursor_active = $('.toolbar .cursor').hasClass('active');
                     var comment_active = $('.toolbar .comment').hasClass('active');
-                    if(comment_active)
-                    {
-                        if(last_active_was_comment)
+                    if (comment_active) {
+                        if (last_active_was_comment)
                             last_active_was_comment = true;
-                        else
-                        {
+                        else {
                             last_active_was_comment = false;
-                            if(!cursor_active)
+                            if (!cursor_active)
                                 $('.toolbar .cursor').click();
                         }
-                    }
-                    else if(!pen_active && !cursor_active)
-                    {
+                    } else if (!pen_active && !cursor_active) {
                         $('.toolbar .cursor').click();
                     }
                 }
-            },10);
-        });        
+            }, 10);
+        });
     });
 
     function module3(module, exports) {
@@ -5697,10 +5537,11 @@
             return module;
         }
     }
+
     function module4(module, exports) {
-    
+
         'use strict';
-    
+
         Object.defineProperty(exports, "__esModule", {
             value: true
         });
@@ -5755,11 +5596,11 @@
             hex: '#F06291',
             name: 'Light Pink'
         }];
-    
+
         function initColorPicker(el, value, onChange) {
             function setColor(value) {
                 var fireOnChange = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
-    
+
                 currentValue = value;
                 a.setAttribute('data-color', value);
                 a.style.background = value;
@@ -5768,7 +5609,7 @@
                 }
                 closePicker();
             }
-    
+
             function togglePicker() {
                 if (isPickerOpen) {
                     closePicker();
@@ -5776,7 +5617,7 @@
                     openPicker();
                 }
             }
-    
+
             function closePicker() {
                 document.removeEventListener('keyup', handleDocumentKeyup);
                 if (picker && picker.parentNode) {
@@ -5785,7 +5626,7 @@
                 isPickerOpen = false;
                 a.focus();
             }
-    
+
             function openPicker() {
                 if (!picker) {
                     picker = document.createElement('div');
@@ -5795,7 +5636,7 @@
                     picker.style.position = 'absolute';
                     picker.style.width = '122px';
                     el.style.position = 'relative';
-    
+
                     COLORS.map(createColorOption).forEach(function(c) {
                         c.style.margin = '2px';
                         c.onclick = function() {
@@ -5804,12 +5645,12 @@
                         picker.appendChild(c);
                     });
                 }
-    
+
                 document.addEventListener('keyup', handleDocumentKeyup);
                 el.appendChild(picker);
                 isPickerOpen = true;
             }
-    
+
             function createColorOption(color) {
                 var e = document.createElement('a');
                 e.className = 'color';
@@ -5819,13 +5660,13 @@
                 e.style.background = color.hex;
                 return e;
             }
-    
+
             function handleDocumentKeyup(e) {
                 if (e.keyCode === 27) {
                     closePicker();
                 }
             }
-    
+
             var picker = void 0;
             var isPickerOpen = false;
             var currentValue = void 0;
@@ -5836,54 +5677,54 @@
             //el.appendChild(a);
             setColor(value, false);
         }
-    
+
     }
 
     function loadAnnotationnModules(modules) { // webpackBootstrap
         // The module cache
         var installedModules = {};
-    
+
         // The require function
         function __webpack_require__(moduleId) {
-    
+
             // Check if module is in cache
             if (installedModules[moduleId])
                 return installedModules[moduleId].exports;
-    
+
             // Create a new module (and put it into the cache)
             var module = installedModules[moduleId] = {
                 exports: {},
                 id: moduleId,
                 loaded: false
             };
-    
+
             // Execute the module function
             modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-    
+
             // Flag the module as loaded
             module.loaded = true;
-    
+
             // Return the exports of the module
             return module.exports;
         }
-    
+
         // expose the modules object (__webpack_modules__)
         __webpack_require__.m = modules;
-    
+
         // expose the module cache
         __webpack_require__.c = installedModules;
-    
+
         // __webpack_public_path__
         __webpack_require__.p = "";
-    
+
         // Load entry module and return exports
         return __webpack_require__(0);
     }
-    var pdf_js_module = loadAnnotationnModules([    
-        module0,        
-        module1,        
-        module2,        
-        module3,        
+    var pdf_js_module = loadAnnotationnModules([
+        module0,
+        module1,
+        module2,
+        module3,
         module4
     ]);
     window['pdf_js_module'] = pdf_js_module;
