@@ -937,8 +937,7 @@ last-login-details
 }
 
 .modal-header {
-    padding: 0;
-    display: block;
+    padding: 5px;
 }
 
 .modal-footer {

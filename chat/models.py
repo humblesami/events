@@ -270,15 +270,12 @@ class AuthUserChat(models.Model):
         unseen_messages = 0
         friend_list = {}
         friend_ids = []
-        http_host = request.META.get('HTTP_HOST')
         req_user = False
-        if not http_host:
-            http_host = ''
         for friendObj in mp_users:
             if friendObj.pk != uid:
                 id = friendObj.id
                 name = friendObj.fullname()
-                photo = http_host + friendObj.image.url
+                photo = friendObj.image.url
                 unseen = len(Message.objects.filter(sender=friendObj.id, read_status=False, to=uid))
                 unseen_messages += unseen
                 friend = {
@@ -293,7 +290,7 @@ class AuthUserChat(models.Model):
                 req_user = {
                     'id': uid,
                     'name': friendObj.fullname(),
-                    'photo': http_host + friendObj.image.url
+                    'photo': friendObj.image.url
                 }
         if not req_user:
             user_object = user_model.objects.get(pk=uid)
@@ -304,7 +301,7 @@ class AuthUserChat(models.Model):
                 req_user = {
                     'id': uid,
                     'name': profile_object.name,
-                    'photo': http_host + profile_object.image.url
+                    'photo': profile_object.image.url
                 }
         if not req_user:
             return "user does not exist"
