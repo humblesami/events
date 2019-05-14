@@ -52,7 +52,7 @@ else
         site_config = network_config;
     }
 }
-if(current_site_base_url.indexOf('wwww.') > -1)
+if(current_site_base_url.indexOf('www.') > -1)
 {
 	site_config.server_base_url = site_config.server_base_url.replace('https://','https://www.')
 }
@@ -66,4 +66,4 @@ window['site_config'] = site_config;
 // if(site_config.site_url.startsWith('https://')){
 //     $('head meta:first').after('<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />');
 // }
-console.log(site_config)
+// console.log(site_config)
