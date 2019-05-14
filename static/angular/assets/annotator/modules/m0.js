@@ -725,17 +725,18 @@ function module0(module, exports, __webpack_require__) {
                 {
                     var document_version = getDocumentVersion(documentId);
                     var input_data = {doc_id:documentId, version:document_version};                
-                    dn_rpc_object({
-                        url:'/get-annotations',
-                        data:input_data,
-                        no_loader:1,
-                        onSuccess: function (annotaions_data) {
-                            onAnnotationsDownloaded(annotaions_data, doc_data);
-                        },
-                        onError:function(er){
-                            console.log(er, 34444);
-                        }
-                    });
+                    // dn_rpc_object({
+                    //     url:'/get-annotations',
+                    //     data:input_data,
+                    //     no_loader:1,
+                    //     onSuccess: function (annotaions_data) {
+                    //         onAnnotationsDownloaded(annotaions_data, doc_data);
+                    //     },
+                    //     onError:function(er){
+                    //         console.log(er, 34444);
+                    //     }
+					// });
+					onAnnotationsDownloaded([], doc_data);
                 }
                 else{
                     render_details(doc_data);
