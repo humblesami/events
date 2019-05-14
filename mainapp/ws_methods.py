@@ -51,6 +51,13 @@ def execute_read(query):
     res = cr.dictfetchall()
     return res
 
+
+def choices_to_list(choice_list):
+    lst = []
+    for choice in choice_list:
+        lst.append({'id': choice[0], 'name': str(choice[1])})
+    return  lst
+
 def emit_event(data, req_url=None):
     try:
         if not data:

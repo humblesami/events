@@ -185,26 +185,33 @@ class Profile(user_model):
             profile_orm = profile_orm[0]
         profile = obj_to_dict(
             profile_orm,
-            fields= [
-                'id', 'email', 'nick_name',
-                'website', 'companies', 'bio',
-                'mobile_phone', 'work_phone',
-                'fax', 'job_title', 'department',
-                'board_joing_date','admin_first_name',
-                'admin_last_name','admin_nick_name',
-                'admin_email', 'admin_fax','admin_image'
-                'admin_cell_phone', 'admin_work_phone',
-                'mail_to_assistant', 'bio',
-                'image', 'last_login', 'date_joined',
-                'term_start_date', 'term_end_date',
-                'birth_date', 'board_joining_date',
+            fields=[
+                'id', 'name', 'bio', 'location', 'birth_date', 'nick_name', 'job_title', 'department',
+                'work_phone', 'mobile_phone', 'website', 'fax', 'ethnicity', 'gender', 'veteran',
+                'disability', 'board_joining_date', 'admin_first_name', 'admin_last_name', 'admin_nick_name',
+                'admin_cell_phone', 'admin_email', 'admin_work_phone', 'admin_fax', 'admin_image', 'mail_to_assistant',
+                'term_start_date', 'term_end_date', 'date_joined'
             ],
         )
         profile['name'] = profile_orm.fullname()
+        profile['date_joined'] = str(profile['date_joined'])
+        profile['term_start_date'] = str(profile['term_start_date'])
+        profile['term_end_date'] = str(profile['term_end_date'])
+        profile['birth_date'] = str(profile['birth_date'])
+        profile['board_joining_date'] = str(profile['board_joining_date'])
+        profile['disability'] = profile_orm.get_disability_display()
+        profile['ethnicity'] = profile_orm.get_ethnicity_display()
+        profile['gender'] = profile_orm.get_gender_display()
+        profile['veteran'] = profile_orm.get_veteran_display()
         resume = profile_orm.resume
         if resume:
             profile['resume'] = {'id': resume.id}
-        data = {"profile": profile, "next": 0, "prev": 0}
+        gender = ws_methods.choices_to_list(profile_orm._meta.get_field('gender').choices)
+        disability = ws_methods.choices_to_list(profile_orm._meta.get_field('disability').choices)
+        ethnicity = ws_methods.choices_to_list(profile_orm._meta.get_field('ethnicity').choices)
+        veteran = ws_methods.choices_to_list(profile_orm._meta.get_field('veteran').choices)
+        choice_fields = {'gender': gender, 'disability': disability, 'ethnicity': ethnicity, 'veteran': veteran}
+        data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
         return data
 
     @classmethod

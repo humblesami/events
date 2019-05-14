@@ -10,7 +10,6 @@ class AnnotationDocument(File):
 
     @classmethod
     def get_annotations(cls, request, params):
-        pass
         res = {}
         # values = kw
         # uid = ws_methods.check_auth(values)
@@ -104,7 +103,7 @@ class AnnotationDocument(File):
         #
         # points = notes_points
         # annotations = rectanglular_annotations + points + drawings
-        # res = {'version': doc.version, 'annotations': annotations, 'comments': comments_points}
+        res = {'version': 0, 'annotations': [], 'comments': []}
         return res
 
     @classmethod

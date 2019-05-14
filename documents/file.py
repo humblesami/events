@@ -128,7 +128,7 @@ class File(models.Model):
             pdf_doc = base64.b64encode(pdf_doc)
             result = pdf_doc.decode('utf-8')
             # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
-            doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': file_obj.name, 'type': ''}
+            doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': file_obj.name, 'type': file_obj.file_type}
             return {'data': doc}
 
 
