@@ -87,6 +87,8 @@ def emit_event(data, req_url=None):
         print(res)
         return 'done'
 
+
+import urllib.parse
 def obj_to_dict(obj,fields=None,to_str=None,related=None):
     if fields:
         dict = model_to_dict(obj,fields)
@@ -99,11 +101,20 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
         dict = model_to_dict(obj)
 
     for field in dict:
-        if str(type(dict[field])) in ["<class \'datetime.datetime\'>"]:
-            dict[field] = str(dict[field])
-        if str(type(dict[field])) in ["<class \'django.db.models.fields.files.FieldFile\'>",'<class \'django.db.models.fields.files.ImageFieldFile\'>']:
+        #handled non url file fields (saved as binary string)
+        if type(dict[field]) is not str  and type(dict[field]) is not int:
             if dict[field]:
-                dict[field] = dict[field].url
+                if str(type(dict[field])) in ["<class \'datetime.datetime\'>"]:
+                    dict[field] = str(dict[field])
+                elif str(type(dict[field])) in ["<class \'django.db.models.fields.files.FieldFile\'>",'<class \'django.db.models.fields.files.ImageFieldFile\'>']:
+                    try:
+                        dict[field] = dict[field].url
+                        if not dict[field].url:
+                            dict[field] = str(dict[field])
+                    except:
+                        if dict[field].startswith('/media/data'):
+                            dict[field] = dict[field][7:]
+                            dict[field] = urllib.parse.unquote(dict[field])
             else:
                 dict[field] = None
     if to_str:
