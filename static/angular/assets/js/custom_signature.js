@@ -17,8 +17,8 @@ jQuery(document).ready(function(e) {
     jQuery.fn.sign = function(options) {
         var params = jQuery.fn.extend({
             reset: options.resetButton ? options.resetButton : null,
-            width: options.width ? options.width : $('#signature_editor').width(),
-            height: options.height ? options.height :  $('#signature_editor').height(),
+            width: options.width ? options.width : 466,
+            height: options.height ? options.height :  260,
             lineWidth: options.lineWidth ? options.lineWidth : 10,
         }, options);
 
