@@ -37,7 +37,7 @@ class Event(models.Model):
             return 'upcoming'
         elif self.end_date <= current_date:
             return 'completed'
-        elif self.start_date >= current_date and self.end_date >= current_date:
+        elif self.start_date <= current_date and self.end_date >= current_date:
             return 'ongoing'
 
 
@@ -183,12 +183,15 @@ class Event(models.Model):
 
     def get_meetings(meeting_type):
         if meeting_type == 'archived':
-            meetings = Event.objects.filter(archived=True)
+            meetings = Event.objects.filter(archived=True, publish=True)
         else:
-            meetings = Event.objects.all()
+            meetings = Event.objects.filter(publish=True)
         meeting_list = []
         for meeting in meetings:
-            if meeting.exectime == meeting_type:
+            if meeting_type == 'upcoming':
+                if meeting.exectime in (meeting_type, 'ongoing'):
+                    meeting_list.append(meeting)
+            elif meeting.exectime == meeting_type:
                 meeting_list.append(meeting)
         return meeting_list
 

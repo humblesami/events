@@ -108,6 +108,85 @@ class AnnotationDocument(File):
 
     @classmethod
     def add_annotation(cls, request, params):
+        params = [
+            {
+                'type': 'point',
+                'x': 112,
+                'y': 33,
+                "sub_type": "personal",
+                "counter": 0,
+                "class": "Annotation",
+                "uuid": "5310e112-6406-44ef-a9bd-312a118a0c04",
+                "page": 1,
+                "date_time": "2019-05-14T12:27:59.736Z",
+                "uid": 7,
+                "comments":
+                    [
+                        {
+                            "class": "Comment",
+                            "uuid": "3a7fce3f-33ee-47e9-a5f3-7dcc51c961ef",
+                            "point_id": "5310e112-6406-44ef-a9bd-312a118a0c04",
+                            "content": "avc",
+                            "uid": 7,
+                            "user_name": "FaIzan",
+                            "date_time": "2019-05-14T12:27:59.738Z"
+                        },
+                        {
+                            "class": "Comment",
+                            "uuid": "c4f98327-d5c6-4cfa-91b8-24ba027d838d",
+                            "point_id": "5310e112-6406-44ef-a9bd-312a118a0c04",
+                            "content": "def",
+                            "uid": 7,
+                            "user_name": "FaIzan",
+                            "date_time": "2019-05-14T12:28:02.309Z"
+                        },
+                        {
+                            "class": "Comment",
+                            "uuid": "abca7c75-af42-4f4e-9ee4-a5e9a8539229",
+                            "point_id": "5310e112-6406-44ef-a9bd-312a118a0c04",
+                            "content": "ghi",
+                            "uid": 7,
+                            "user_name": "FaIzan",
+                            "date_time": "2019-05-14T12:28:04.900Z"
+                        },
+                        {
+                            "class": "Comment",
+                            "uuid": "9ede2656-6d7a-4975-98d5-f838982a669f",
+                            "point_id": "5310e112-6406-44ef-a9bd-312a118a0c04",
+                            "content": "jkl",
+                            "uid": 7,
+                            "user_name": "FaIzan",
+                            "date_time": "2019-05-14T12:28:07.420Z"
+                        }
+                    ]
+            }
+        ]
+
+        # params = [
+        #     {
+        #         "type":"point",
+        #         "x":101,
+        #         "y":32,
+        #         "sub_type":"personal",
+        #         "counter":0,
+        #         "class":"Annotation",
+        #         "uuid":"14fd5958-e137-4aaa-93e9-74fe3675bee2",
+        #         "page":1,
+        #         "date_time":"2019-05-14T11:54:29.032Z",
+        #         "uid":7,
+        #         "comments":[
+        #             {
+        #                 "class":"Comment",
+        #                 "uuid":"0e192394-64dc-4b2d-8fd0-6e039c2b8670",
+        #                 "point_id":"14fd5958-e137-4aaa-93e9-74fe3675bee2",
+        #                 "content":"avc",
+        #                 "uid":7,
+        #                 "user_name":"FaIzan",
+        #                 "date_time":"2019-05-14T11:54:29.035Z"
+        #             }
+        #         ]
+        #     }
+        # ]
         # uid = ws_methods.check_auth(kw)
         # if not uid:
         #     return ws_methods.not_logged_in()
