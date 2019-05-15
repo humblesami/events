@@ -168,6 +168,7 @@ class Event(models.Model):
         meeting_attendees = meeting_object_orm.attendees.all()
         for attendee_obj in meeting_attendees:
             attendee = {}
+            attendee['id'] = attendee['uid'] = attendee_obj.id
             attendee['name'] = attendee_obj.fullname()
             attendee['photo'] = attendee_obj.image.url
             attendees.append(attendee)
