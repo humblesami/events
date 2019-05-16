@@ -17,7 +17,7 @@ class File(models.Model):
     content = models.CharField(max_length=30)
     attachment = models.FileField(upload_to='files/')
     pdf_doc = models.FileField(upload_to='converted/')
-    original_pdf = models.FileField(upload_to='original/')
+
     file_type = models.CharField(max_length=128, default='')
 
     def __str__(self):

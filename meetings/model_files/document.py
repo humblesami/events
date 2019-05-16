@@ -1,6 +1,21 @@
+import base64
+import datetime
+import io
+import json
+import os
+import threading
+import uuid
+from collections import OrderedDict
+from random import randint
+from django.core.files import File as DjangoFile
 
+from PIL import ImageFont, Image, ImageDraw
 from django.db import models
 from documents.file import File
+from esign.model_files.document import SignDocument
+from esign.model_files.signature import Signature
+from mainapp.ws_methods import queryset_to_list
+from meetings.model_files.user import Profile
 from .event import Event
 from .topic import Topic
 
@@ -9,5 +24,328 @@ class MeetingDocument(File):
     meeting = models.ForeignKey(Event, on_delete=models.CASCADE)
 
 class AgendaDocument(File):
-
     agenda = models.ForeignKey(Topic, on_delete=models.CASCADE)
+
+class SignDocument(SignDocument):
+    send_to_all = models.BooleanField(blank=True, null=True)
+    meeting = models.ForeignKey(Event, on_delete=models.CASCADE,blank=True, null=True)
+
+    @classmethod
+    def get_records(cls, request, params):
+        docs = SignDocument.objects.filter()
+        total_cnt = docs.count()
+        current_cnt = total_cnt
+        docs = queryset_to_list(
+            docs,fields=['name','id']
+        )
+        result = {'records': docs, 'total': total_cnt, 'count': current_cnt}
+        return result
+
+    @classmethod
+    def get_detail(cls, request, params):
+        file_id = int(params['document_id'])
+        token = params['token']
+        if token:
+            signature = Signature.objects.filter(token=token)
+            if not signature.exists():
+                return "Invalid Token"
+            file_obj = signature[0].document
+        else:
+            file_obj = cls.objects.filter(id=file_id)[0]
+        pdf_doc = file_obj.pdf_doc.read()
+        pdf_doc = base64.b64encode(pdf_doc)
+        pdf_doc = pdf_doc.decode('utf-8')
+        users = Profile.objects.all()
+        users = queryset_to_list(users,fields=['id','username'])
+        meetings = Event.objects.all()
+        meetings = queryset_to_list(meetings,fields=['id','name'],related={'attendees':{'fields':['id','username']}})
+        meeting_id = False
+        send_to_all = False
+        if file_obj.meeting:
+            meeting_id = file_obj.meeting.id
+        if file_obj.send_to_all:
+            send_to_all = file_obj.send_to_all
+        doc_data = cls.get_doc_data(request,file_obj,token)
+        is_admin = True
+
+
+        result = {"pdf_binary": pdf_doc,"users":users,"doc_data":doc_data,"isAdmin":is_admin,"meetings":meetings,"meeting_id":meeting_id,"send_to_all":send_to_all}
+        return result
+
+    @classmethod
+    def get_signature(cls, request, params):
+        signature_id = params['signature_id']
+        sign = Signature.objects.filter(id=signature_id)[0]
+
+        image = sign.image
+        if image:
+            image = sign.image.read()
+            image = base64.b64encode(image)
+            image = image.decode('utf-8')
+        else:
+            if sign.type == 'initial':
+                image = cls.get_auto_sign(sign)
+        return {"signature": image}
+
+    @classmethod
+    def save_sign_data(cls, request, params):
+        doc_id = int(params['document_id'])
+        work_flow_enabled = params['work_flow_enabled']
+        meeting_id = params['meeting_id']
+        send_to_all = params['send_to_all']
+        doc = cls.objects.filter(id=doc_id)[0]
+        if work_flow_enabled == 'true':
+            doc.workflow_enabled=True
+        if work_flow_enabled == 'false':
+            doc.workflow_enabled=False
+        if send_to_all == 'true':
+            doc.send_to_all=True
+        if send_to_all == 'false':
+            doc.send_to_all=False
+        if meeting_id not in ['False', 'false']:
+            meeting_id = int(meeting_id)
+            doc.meeting_id=meeting_id
+        if meeting_id in ['False', 'false']:
+            doc.meeting=False
+        signatures = json.loads(params['data'])
+        email_data = []
+        if send_to_all == 'true':
+            m = Event.objects.filter(id=meeting_id)
+            sign_top = 5
+            c = 0
+            for p in m.attendees.all():
+                if p.user_id:
+                    if c == 0:
+                        sign_left = 3
+                    if c == 1:
+                        sign_left = 51
+
+                    token = uuid.uuid4()
+                    obj = Signature(**{'document': doc, 'user': p, 'type': "sign", 'token': token,
+                           'left': sign_left, 'top': sign_top, 'height': 40, 'width': 140,
+                           'zoom': 300
+                           })
+                    obj.save()
+
+            #         user_email = p.email
+            #         email = False
+            #         mail = False
+            #
+            #         if not doc.workflow_enabled:
+            #             mail = True
+            #         elif doc.workflow_enabled:
+            #             if doc.signature_set.filter(token != token).__len__() == 0:
+            #                 mail = True
+            #             else:
+            #                 all_signed = True
+            #                 for s in doc.signature_set.filter(token != token):
+            #                     if not s.image:
+            #                         all_signed = False
+            #                         break
+            #                 if all_signed:
+            #                     mail = True
+            #         if mail:
+            #             email_data.append(
+            #                 {'user_email': user_email, 'email': email, 'token': token, 'subject': params['subject'], 'message': params['message']})
+            #         if c == 1:
+            #             c = 0
+            #             sign_top += 15
+            #             continue
+            #         c += 1
+            # cls.add_pages_for_sign(doc)
+        else:
+            user_ids = [s["user_id"] for s in signatures]
+            user_ids = list(OrderedDict.fromkeys(user_ids))
+            for u in user_ids:
+                token = uuid.uuid4()
+                for s in [x for x in signatures if x['user_id'] == u]:
+                    obj = Signature(**{'document_id': s['document_id'], 'user_id': s['user_id'],
+                           'email': s['email'], 'name': s['name'], 'field_name': s['field_name'],
+                           'left': s['left'], 'top': s['top'], 'page': s['page'],
+                           'height': s['height'], 'width': s['width'], 'zoom': s['zoom'], 'type': s['type'],
+                           'token': token})
+                    obj.save()
+        #         user_email = doc.signature_ids.filtered(lambda r: r.token == token)[0].user_id.email
+        #         email = doc.signature_ids.filtered(lambda r: r.token == token)[0].email
+        #         mail = False
+        #
+        #         if not doc.workflow_enabled:
+        #             mail = True
+        #         elif doc.workflow_enabled:
+        #             if doc.signature_set.filter(token != token).__len__() == 0:
+        #                 mail = True
+        #             else:
+        #                 all_signed = True
+        #                 for s in doc.signature_set.filter(token != token):
+        #                     if not s.image:
+        #                         all_signed = False
+        #                         break
+        #                 if all_signed:
+        #                     mail = True
+        #         if mail:
+        #             email_data.append(
+        #                 {'user_email': user_email, 'email': email, 'token': token,
+        #                  'subject': params['subject'], 'message': params['message']})
+        #
+        # t = threading.Thread(target=cls.send_mails_thread, args=([email_data]))
+        # t.start()
+
+        doc_data = cls.get_doc_data(request,doc)
+        pdf_doc = doc.pdf_doc.read()
+        pdf_doc = base64.b64encode(pdf_doc)
+        pdf_doc = pdf_doc.decode('utf-8')
+
+        return {"pdf_binary": pdf_doc, "doc_data": doc_data}
+
+    @classmethod
+    def save_signature(cls, request, params):
+        doc_id = int(params['document_id'])
+        doc = cls.objects.filter(id=doc_id)[0]
+        signature_id = params['signature_id']
+        token = params.get('token')
+        uid = False
+        sign = Signature.objects.filter(id=signature_id)[0]
+        if token:
+            sign1 = Signature.objects.filter(token=token)
+            if not sign1.exists():
+                return "Unauthorized"
+            if sign1:
+                uid = sign1[0].user.id
+            if uid != sign.user.id:
+                return "Unauthorized"
+        else:
+            if request.user.id != 1:
+                if request.user.id != sign.user.id:
+                    return "Unauthorized"
+        binary_signature = ""
+        if params['type'] == "upload":
+            binary_signature = params['binary_signature']
+            binary_data = io.BytesIO(base64.b64decode(binary_signature))
+            jango_file = DjangoFile(binary_data)
+            sign.image.save(params['filename'], jango_file)
+        else:
+            if params['type'] == "auto":
+                binary_signature = cls.get_auto_sign(sign)
+                # sign.write({'draw_signature': binary_signature})
+            if params['type'] == "draw":
+                binary_signature = params['binary_signature']
+                binary_data = io.BytesIO(base64.b64decode(binary_signature))
+                jango_file = DjangoFile(binary_data)
+                sign.image.save("sign", jango_file)
+            if params['type'] == "date":
+                # dt=kw['date']
+                dt = datetime.datetime.today().strftime('%b,%d  %Y')
+                binary_signature = cls.get_auto_sign(sign, dt)
+                binary_data = io.BytesIO(base64.b64decode(binary_signature))
+                jango_file = DjangoFile(binary_data)
+                sign.image.save("sign", jango_file)
+            if params['type'] == "text":
+                text = params['text']
+                binary_signature = cls.get_sign_text(sign, text)
+                binary_data = io.BytesIO(base64.b64decode(binary_signature))
+                jango_file = DjangoFile(binary_data)
+                sign.image.save("sign", jango_file)
+
+        # doc.embed_signatures()
+        pdf_doc = doc.pdf_doc.read()
+        pdf_doc = base64.b64encode(pdf_doc)
+        pdf_doc = pdf_doc.decode('utf-8')
+        doc_data = cls.get_doc_data(request,doc, token)
+
+        return {"pdf_binary": pdf_doc, "signature": binary_signature, "doc_data": doc_data}
+
+    @classmethod
+    def delete_signature(cls, request, params):
+        signature_id = params['signature_id']
+        sign = Signature.objects.filter(id=signature_id)
+        doc_id = params['document_id']
+        doc = cls.objects.filter(id=doc_id)
+        # doc.emit_data_update(doc)
+        sign.delete()
+
+        doc.pdf_doc = doc.original_pdf
+        # doc.embed_signatures()
+
+        pdf_doc = doc.pdf_doc.read()
+        pdf_doc = base64.b64encode(pdf_doc)
+        pdf_doc = pdf_doc.decode('utf-8')
+        doc_data = cls.get_doc_data(request,doc)
+
+        return {"pdf_binary": pdf_doc, "doc_data": doc_data}
+
+    def get_doc_data(request,doc,token=False):
+        signatures = doc.signature_set.all()
+        signatures = queryset_to_list(signatures,fields=['user__id','user__username','id','type','page','field_name','zoom','width','height','top','left','image'])
+        uid = False
+        if token:
+            signs = doc.signature_set.filter(token=token)
+            if signs:
+                uid = signs[0].user.id
+        for s in signatures:
+            signed = False
+            my_record = False
+            s["name"]=s["user__username"]
+            if s["image"]:
+                signed = True
+            if token:
+                if (uid == s["user"] and s["user__id"]) or token == s["token"]:
+                    my_record = True
+            else:
+                if (request.user.id == s["user__id"]):
+                    my_record = True
+            s["signed"] = signed
+            s["my_record"] = my_record
+        return signatures
+
+    def get_auto_sign( sign, date=""):
+        curr_dir = os.path.dirname(__file__)
+        pth = curr_dir.replace('model_files', 'static')
+        font = ImageFont.truetype(pth + "/FREESCPT.TTF", 200)
+        txt = sign.user.username or sign.name
+        if sign.type == "initial":
+            txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
+        if sign.type == "date":
+            font = ImageFont.truetype(pth + "/ubuntu.regular.ttf", 200)
+            txt = date
+
+        sz = font.getsize(txt)
+        sz = (sz[0] + 50, sz[1])
+        # if sz[0] < 100:
+        #     sz=(150,50)
+        img = Image.new('RGB', sz, (255, 255, 255))
+        d = ImageDraw.Draw(img)
+
+        d.text((40, 0), txt, (0, 0, 0), font=font)
+
+        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+        img.save(img_path)
+
+        res = open(img_path, 'rb')
+        read = res.read()
+        binary_signature = base64.encodebytes(read)
+        binary_signature = binary_signature.decode('utf-8')
+        return binary_signature
+
+    def get_sign_text(self, sign, text):
+        curr_dir = os.path.dirname(__file__)
+        pth = curr_dir.replace('model_files', 'static')
+        font = ImageFont.truetype(pth + "/FREESCPT.TTF", 200)
+
+        sz = font.getsize(text)
+        sz = (sz[0] + 50, sz[1])
+        # if sz[0] < 100:
+        #     sz=(150,50)
+        img = Image.new('RGB', sz, (255, 255, 255))
+        d = ImageDraw.Draw(img)
+
+        d.text((40, 0), text, (0, 0, 0), font=font)
+
+        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+        img.save(img_path)
+
+        res = open(img_path, 'rb')
+        read = res.read()
+        binary_signature = base64.encodebytes(read)
+        binary_signature = binary_signature.decode('utf-8')
+        return binary_signature
+

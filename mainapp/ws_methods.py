@@ -87,7 +87,7 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
             if field.find("__") != -1:
                 val = getattr(obj, field.split("__")[0])
                 val = getattr(val, field.split("__")[1])
-                dict[field.split("__")[0]] = val
+                dict[field] = val
     else:
         dict = model_to_dict(obj)
 
@@ -112,7 +112,6 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
             rel_obj = getattr(obj, field)
             if rel_obj._queryset_class:
                 dict[field] = queryset_to_list(rel_obj.filter(),fields=_fields,to_str=_to_str,related=_related)
-
 
     return dict
 
