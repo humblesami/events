@@ -1,12 +1,17 @@
+from meetings.model_files.user import Profile
 from django.contrib.auth.models import User
 from django.db import models
 from .file import *
-from meetings.model_files.user import Profile
+import datetime
+import json
 
 
-class AnnotationDocument(File):
+
+class AnnotationDocument(models.Model):
     version = models.IntegerField()
-    user_id = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    document = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
+    doc_name = models.CharField(max_length=100, null=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
     @classmethod
     def get_annotations(cls, request, params):
@@ -23,8 +28,34 @@ class AnnotationDocument(File):
         #     return ws_methods.http_response('Please Provide document id!')
         #
         # doc_name = values.get('doc_id')
-        # force = values.get('force')
         #
+        force = params.get('force')
+        doc_id = params.get('id')
+        doc_name = params.get('doc_id')
+        user_id = request.user.id
+        point_obj = PointAnnotation.objects.filter(document_id = doc_id)
+        comments_points = []
+        counter = 0
+        for point in point_obj:
+            if point.sub_type != 'personal':
+                comments_points.append({
+                    'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
+                    'date_time': str(point.date_time), 'x': point.x, 'y': point.y, 'sub_type': point.sub_type,
+                    'comments': []
+                })
+                comments = point.commentannotation_set.all()
+                for comment in comments:
+                    comments_points[counter]['comments'].append({
+                        'class': "Comment",
+                        'uuid': comment.uuid,
+                        'point_id': point.uuid,
+                        'uid': comment.user_id,
+                        'content': comment.body,
+                        'user_name': comment.user.username,
+                        'date_time': str(comment.date_time)
+                    })
+                counter += 1
+
         # filter = [('doc_name', '=', doc_name)]
         # point_objects = req_env['annotation.point'].search(filter)
         # props = ['id', 'uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
@@ -45,6 +76,20 @@ class AnnotationDocument(File):
         #     comments_points[i]['counter'] = note_counter
         #     i = i + 1
         #
+
+        doc = AnnotationDocument.objects.filter(doc_name=doc_name, user_id=user_id)
+        if not doc:
+            res = {'version': -1, 'annotations': [], 'comments': comments_points}
+            return res
+
+        doc = doc[0]
+        document_version = params.get('version') or 0
+        if not str(document_version).isnumeric():
+            document_version = 0
+
+        if doc.version < document_version and not force:
+            res = {'version': doc.version, 'comments': comments_points}
+            return  res
         # doc = req_env['annotation.document'].search([('name', '=', doc_name), ('user_id', '=', uid)])
         # if not doc:
         #     res = {'version': -1, 'annotations': [], 'comments': comments_points}
@@ -85,6 +130,29 @@ class AnnotationDocument(File):
         #     drawings[i]['width'] = 1
         #     i = i + 1
         #
+
+        point_object = PointAnnotation.objects.filter(document_version__doc_name=doc_name)
+        note_points = []
+        counter = 0
+        for point in point_object:
+            if point.sub_type == 'personal':
+                note_points.append({
+                    'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
+                    'date_time': str(point.date_time), 'x': point.x, 'y': point.y, 'sub_type': point.sub_type,
+                    'comments': []
+                })
+                comments = point.commentannotation_set.all()
+                for comment in comments:
+                    note_points[counter]['comments'].append({
+                        'class': "Comment",
+                        'uuid': comment.uuid,
+                        'point_id': point.uuid,
+                        'uid': comment.user_id,
+                        'content': comment.body,
+                        'user_name': comment.user.username,
+                        'date_time': str(comment.date_time)
+                    })
+                counter += 1
         # filter = [('document_id', '=', document_id), ('type', '=', 'point'), ('sub_type', '=', 'personal')]
         # point_objects = req_env['annotation.point'].search(filter)
         # props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
@@ -103,95 +171,65 @@ class AnnotationDocument(File):
         #
         # points = notes_points
         # annotations = rectanglular_annotations + points + drawings
-        res = {'version': 0, 'annotations': [], 'comments': []}
+        res = {'version': doc.version, 'annotations': note_points, 'comments': comments_points}
         return res
 
     @classmethod
     def add_annotation(cls, request, params):
-        params = [
-            {
-                'type': 'point',
-                'x': 112,
-                'y': 33,
-                "sub_type": "personal",
-                "counter": 0,
-                "class": "Annotation",
-                "uuid": "5310e112-6406-44ef-a9bd-312a118a0c04",
-                "page": 1,
-                "date_time": "2019-05-14T12:27:59.736Z",
-                "uid": 7,
-                "comments":
-                    [
-                        {
-                            "class": "Comment",
-                            "uuid": "3a7fce3f-33ee-47e9-a5f3-7dcc51c961ef",
-                            "point_id": "5310e112-6406-44ef-a9bd-312a118a0c04",
-                            "content": "avc",
-                            "uid": 7,
-                            "user_name": "FaIzan",
-                            "date_time": "2019-05-14T12:27:59.738Z"
-                        },
-                        {
-                            "class": "Comment",
-                            "uuid": "c4f98327-d5c6-4cfa-91b8-24ba027d838d",
-                            "point_id": "5310e112-6406-44ef-a9bd-312a118a0c04",
-                            "content": "def",
-                            "uid": 7,
-                            "user_name": "FaIzan",
-                            "date_time": "2019-05-14T12:28:02.309Z"
-                        },
-                        {
-                            "class": "Comment",
-                            "uuid": "abca7c75-af42-4f4e-9ee4-a5e9a8539229",
-                            "point_id": "5310e112-6406-44ef-a9bd-312a118a0c04",
-                            "content": "ghi",
-                            "uid": 7,
-                            "user_name": "FaIzan",
-                            "date_time": "2019-05-14T12:28:04.900Z"
-                        },
-                        {
-                            "class": "Comment",
-                            "uuid": "9ede2656-6d7a-4975-98d5-f838982a669f",
-                            "point_id": "5310e112-6406-44ef-a9bd-312a118a0c04",
-                            "content": "jkl",
-                            "uid": 7,
-                            "user_name": "FaIzan",
-                            "date_time": "2019-05-14T12:28:07.420Z"
-                        }
-                    ]
-            }
-        ]
+        doc_name = params.get('doc_id')
+        doc_id = params.get('id')
+        user_id = request.user.id
+        document_version = params.get('version') or 0
+        if not str(document_version).isnumeric():
+            document_version = 0
+        doc = AnnotationDocument.objects.filter(doc_name = doc_name, user_id = user_id, document_id = doc_id)
+        if doc:
+            doc = doc[0]
+            reset = params.get('reset')
+            if not reset:
+                if doc.version >= document_version:
+                    return {'version': doc.version}
+                points = PointAnnotation.objects.filter(document_version_id = doc.id).delete()
+                if reset:
+                    doc.version = 0
+                    return 'done'
+        else:
+            doc = AnnotationDocument(version=document_version, document_id=doc_id, doc_name=doc_name, user_id=user_id)
+            doc = doc.save()
 
-        # params = [
-        #     {
-        #         "type":"point",
-        #         "x":101,
-        #         "y":32,
-        #         "sub_type":"personal",
-        #         "counter":0,
-        #         "class":"Annotation",
-        #         "uuid":"14fd5958-e137-4aaa-93e9-74fe3675bee2",
-        #         "page":1,
-        #         "date_time":"2019-05-14T11:54:29.032Z",
-        #         "uid":7,
-        #         "comments":[
-        #             {
-        #                 "class":"Comment",
-        #                 "uuid":"0e192394-64dc-4b2d-8fd0-6e039c2b8670",
-        #                 "point_id":"14fd5958-e137-4aaa-93e9-74fe3675bee2",
-        #                 "content":"avc",
-        #                 "uid":7,
-        #                 "user_name":"FaIzan",
-        #                 "date_time":"2019-05-14T11:54:29.035Z"
-        #             }
-        #         ]
-        #     }
-        # ]
-        # uid = ws_methods.check_auth(kw)
-        # if not uid:
-        #     return ws_methods.not_logged_in()
-        # req_env = http.request.env
-        #
+        doc = AnnotationDocument.objects.filter(doc_name = doc_name, user_id = user_id, document_id = doc_id)
+        if doc:
+            doc = doc[0]
+        values = json.loads(params['annotations'])
+        for val in values:
+            type = val.get('type')
+            comments = val.get('comments')
+            name = val.get('class')
+            user = val.get('uid')
+            date_time = val.get('date_time')
+            page = val.get('page')
+            uuid = val.get('uuid')
+            sub_type = val.get('sub_type')
+            x = val.get('x')
+            y = val.get('y')
+            if sub_type == 'personal':
+                point = PointAnnotation(name=name, user_id=user, date_time=date_time, page=page,
+                                   type=type, uuid=uuid, sub_type=sub_type, document_id=doc_id, x=x, y=y,
+                                        created_by_id=user, my_notification = 0, document_version_id = doc.id)
+                point.save()
+                point_id = PointAnnotation.objects.filter(date_time=date_time, x=x, y=y, type=type, sub_type=sub_type
+                                                          , user_id=user, uuid=uuid).values('id')[0]['id']
+                if comments:
+                    for val in comments:
+                        body = val['content']
+                        uuid = val['uuid']
+                        date_time = val['date_time']
+                        commented_by = val['uid']
+                        comment_anno = CommentAnnotation(body=body, point_id_id=point_id, user_id=commented_by
+                                                         , date_time=date_time, uuid=uuid)
+                        comment_anno.save()
+
+
         # doc_name = kw.get('doc_id')
         # doc = req_env['annotation.document'].search([('name', '=', doc_name), ('user_id', '=', uid)])
         # if doc:
@@ -203,7 +241,7 @@ class AnnotationDocument(File):
         #             return ws_methods.http_response('', doc.version)
         #     res = req_env['annotation.rectangle'].search([('document_id', '=', doc.id)]).unlink()
         #     res = req_env['annotation.drawing'].search([('document_id', '=', doc.id)]).unlink()
-        #     points = req_env['annotation.point'].search([('document_id', '=', doc.id), ('sub_type', '=', 'personal')])
+        #     points = req_env['annotation.point'].search([('document_id', '=', doc.id), (' ', '=', 'personal')])
         #
         #     for p in points:
         #         res = p.comments.unlink()
@@ -267,16 +305,22 @@ class AnnotationDocument(File):
         #     else:
         #         req_env[modal].create(val)
         # doc.version = kw['version']
+        doc.version = document_version
+        doc.save()
         return 'done'
+
 
 class Annotation(models.Model):
     name = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    document = models.ForeignKey(AnnotationDocument, on_delete=models.CASCADE)
+
+    #null for point with subtype=comment
+    document_version = models.ForeignKey(AnnotationDocument, null=True, on_delete=models.CASCADE)
+
     date_time = models.DateTimeField()
     page = models.IntegerField()
     type = models.CharField(max_length=50)
-    uuid = models.CharField(max_length=50)
+    uuid = models.CharField(max_length=200)
 
 
 class RectangleAnnotation(Annotation):
@@ -290,19 +334,6 @@ class Dimensions(models.Model):
     height = models.FloatField()
 
 
-class PointAnnotation(Annotation):
-    doc_name = models.CharField(max_length=200)
-    sub_type = models.CharField(max_length=200)
-    x = models.IntegerField()
-    y = models.IntegerField()
-    my_notification = models.IntegerField()
-
-
-class CommentAnnotation(Annotation):
-    body = models.CharField(max_length=500)
-    point_id = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
-
-
 class DrawingAnnotation(Annotation):
     title = models.CharField(max_length=50)
 
@@ -311,3 +342,73 @@ class Line(models.Model):
     drawing_id = models.ForeignKey(DrawingAnnotation, on_delete=models.CASCADE)
     x = models.IntegerField()
     y = models.IntegerField()
+
+
+class PointAnnotation(Annotation):
+    sub_type = models.CharField(max_length=200)
+
+    # null for subtype=personal
+    document = models.ForeignKey(File, null=True, on_delete=models.CASCADE)
+
+    x = models.IntegerField()
+    y = models.IntegerField()
+    my_notification = models.IntegerField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    @classmethod
+    def save_point(cls, point):
+        type = point.get('type')
+        x = point.get('x')
+        y = point.get('y')
+        sub_type = ''
+        counter = point.get('counter')
+        uuid = point.get('uuid')
+        page = point.get('page')
+        date_time = point.get('date_time')
+        doc_id = point.get('document_id')
+        user_id = point.get('uid')
+        name = point.get('class')
+        uuid = point.get('uuid')
+        page = point.get('page')
+        type = point.get('type')
+
+        user_point = PointAnnotation.objects.filter(document_id=doc_id, uuid=uuid, created_by_id=user_id)
+        if user_point:
+            user_point = user_point[0]
+            return user_point.id
+        else:
+            user_point = PointAnnotation(sub_type=sub_type, document_id=doc_id, x=x, y=y, my_notification=0,
+                                created_by_id=user_id, user_id=user_id, name=name, date_time=date_time,
+                                page=page, type=type, uuid=uuid)
+            user_point.save()
+            user_point = PointAnnotation.objects.filter(document_id=doc_id, uuid=uuid, created_by_id=user_id)
+            return user_point[0].id
+
+    @classmethod
+    def save_comment(cls, request, params):
+        doc_id = params.get('parent_res_id')
+        doc_name = params.get('doc_id')
+        user_id = request.user.id
+        point = params.get('point')
+        if point:
+            point['document_id'] = doc_id
+            point_id = cls.save_point(point)
+            comment = point.get('comment')
+            comment_uuid = comment.get('uuid')
+            comment_body = comment.get('content')
+            comment_uid = comment.get('uid')
+            comment_date_time = comment.get('date_time')
+            if comment:
+                comment = CommentAnnotation(body=comment_body, point_id_id=point_id, user_id=comment_uid,
+                                            date_time=comment_date_time, uuid=comment_uuid)
+                comment.save()
+                return 'done'
+        else:
+            return 'Invalid Point'
+
+class CommentAnnotation(models.Model):
+    body = models.CharField(max_length=500)
+    point_id = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    date_time = models.DateTimeField(default=datetime.datetime.now())
+    uuid = models.CharField(max_length=200)
