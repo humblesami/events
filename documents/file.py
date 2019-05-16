@@ -13,8 +13,8 @@ from mainapp import settings
 
 class File(models.Model):
     name = models.CharField(max_length=30)
-    html = models.CharField(max_length=30)
-    content = models.CharField(max_length=30)
+    html = models.CharField(max_length=30, blank=True)
+    content = models.CharField(max_length=30, blank=True)
     attachment = models.FileField(upload_to='files/')
     pdf_doc = models.FileField(upload_to='converted/')
 
@@ -128,7 +128,7 @@ class File(models.Model):
             pdf_doc = base64.b64encode(pdf_doc)
             result = pdf_doc.decode('utf-8')
             # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
-            doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': file_obj.name, 'type': ''}
+            doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': file_obj.name, 'type': file_obj.file_type}
             return {'data': doc}
 
 

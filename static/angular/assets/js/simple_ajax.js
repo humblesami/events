@@ -40,11 +40,18 @@ function dn_rpc_object(options) {
 
     options.data = args_data;
     options.dataType = 'json';
-    // if(req_url.indexOf('localhost')> -1)
-    // {
-    //     options.type = 'GET';
-    // }
-    // else
+    if(req_url.indexOf('localhost')> -1)
+    {
+        if(!input_data.args.post)
+        {
+            options.type = 'GET';
+        }
+        else
+        {
+            options.type = 'POST';
+        }
+    }
+    else
     {
         options.type = 'POST';
     }
@@ -85,48 +92,18 @@ function dn_rpc_object(options) {
             if(!response.error)
             {
                 response.error = response;
-            }
-            
-            if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
-                bootbox.alert('Token expired, please login again '+ options.url);
-                ajax_user.logout(1);
-            } else if (response.error.indexOf('not allowed to access') > -1) {
-                bootbox.alert("Contact admin for permissions" + response.error);
-            } else {
-                if(options.type == 'GET')
-                {
-                    console.log(url_with_params);
-                }
-                
-                if(response.error.indexOf('Unauthorized') > -1)
-                {
-                    ajax_user.logout(1);
-                }
-                else if(options.onError) {
-                    try{
-                        options.onError(response.error);
-                    }
-                    catch(er)
-                    {
-                        console.log(response.error, er);
-                    }                        
-                }
-                console.log(input_data.args);
-                response.error = response.error.replace('<br/>','\n');
-                console.log(response.error);
-            }
+            }            
+
+            hanldeError(response);
         }
     };
     options.complete = function() {
         if (options.onComplete)
             options.onComplete();
         if (!options.no_loader)
-            site_functions.hideLoader("ajax" + api_url);
-        //console.log("Comepleted " +req_url);
+            site_functions.hideLoader("ajax" + api_url);        
     };
-    options.error = function(err) {        
-        if (options.onError)
-            options.onError(err);            
+    options.error = function(err) {                
         if(err.responseText == '{"detail":"Invalid token."}' || 
             err.responseText == '{"detail":"Authentication credentials were not provided."}')
         {
@@ -135,11 +112,50 @@ function dn_rpc_object(options) {
         }
         else
         {
-            // console.log(err);
-            console.log(input_data.args);
-            console.log('Api failed ', url_with_params);
-        }                
+            if (err.statusText =='OK')
+            {                            
+                err = {
+                    error: err.responseText
+                }     
+                hanldeError(err);       
+            }
+            else{
+                console.log('Api failed to reach');
+            }
+        }
     };
+
+
+    function hanldeError(response)
+    {
+        if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
+            bootbox.alert('Token expired, please login again '+ options.url);
+            ajax_user.logout(1);
+        } else if (response.error.indexOf('not allowed to access') > -1) {
+            bootbox.alert("Contact admin for permissions" + response.error);
+        } else {                                
+            if(response.error.indexOf('Unauthorized') > -1)
+            {
+                ajax_user.logout(1);
+            }
+            else if(options.onError) {
+                try{
+                    options.onError(response.error);
+                }
+                catch(er)
+                {
+                    console.log(response.error, er);
+                }                        
+            }                
+        }
+        console.log(input_data.args);
+        if(options.type == 'GET')
+        {
+            console.log(url_with_params);
+        }
+        response.error = response.error.replace('<br/>','\n');
+        console.log(response.error);
+    }
     $.ajax(options);
 }
 window['dn_rpc_object'] = dn_rpc_object;

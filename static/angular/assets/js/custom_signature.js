@@ -18,7 +18,7 @@ jQuery(document).ready(function(e) {
         var params = jQuery.fn.extend({
             reset: options.resetButton ? options.resetButton : null,
             width: options.width ? options.width : 466,
-            height: options.height ? options.height : 260,
+            height: options.height ? options.height :  260,
             lineWidth: options.lineWidth ? options.lineWidth : 10,
         }, options);
 

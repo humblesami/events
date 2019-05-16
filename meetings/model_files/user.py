@@ -135,7 +135,7 @@ class Profile(user_model):
     mail_to_assistant = models.BooleanField( blank=True, null=True)
     term_start_date = models.DateField( blank=True, null=True)
     term_end_date = models.DateField( blank=True, null=True)
-    signature_image = models.ImageField(null=True, blank=True)
+    signature_data = models.BinaryField(default=b'', null=True, blank=True)
     resume = models.OneToOneField(File, null=True, on_delete=models.CASCADE)
     # user_type = models.CharField(max_length=50)
 
@@ -173,29 +173,42 @@ class Profile(user_model):
         group = params.get('type')
         if not user_id:
             user_id = request.user.id
-        profile_orm = Profile.objects.filter(pk=user_id)[0]
+        profile_orm = Profile.objects.filter(pk=user_id)
+        if not profile_orm:
+            user_object = user_model.objects.get(pk=user_id)
+            if user_object.is_superuser:
+                profile_object = Profile(user_ptr=user_object, name=user_object.username)
+                profile_object.save()
+                create_group(user_object, 'Admin')
+                profile_orm = profile_object
+        else:
+            profile_orm = profile_orm[0]
         profile = obj_to_dict(
             profile_orm,
-            fields= [
-                'id', 'email', 'nick_name',
-                'website', 'companies', 'bio',
-                'mobile_phone', 'work_phone',
-                'fax', 'job_title', 'department',
-                'board_joing_date','admin_first_name',
-                'admin_last_name','admin_nick_name',
-                'admin_email', 'admin_fax','admin_image'
-                'admin_cell_phone', 'admin_work_phone',
-                'mail_to_assistant', 'bio',
-                'image', 'last_login', 'date_joined',
-                'term_start_date', 'term_end_date',
-                'birth_date', 'board_joining_date',
+            fields=[
+                'id', 'name', 'image', 'bio', 'location', 'birth_date', 'nick_name', 'job_title', 'department',
+                'work_phone', 'mobile_phone', 'website', 'fax', 'ethnicity', 'gender', 'veteran',
+                'disability', 'board_joining_date', 'admin_first_name', 'admin_last_name', 'admin_nick_name',
+                'admin_cell_phone', 'admin_email', 'admin_work_phone', 'admin_fax', 'admin_image', 'mail_to_assistant',
+                'term_start_date', 'term_end_date', 'date_joined'
             ],
         )
         profile['name'] = profile_orm.fullname()
+        profile['date_joined'] = str(profile['date_joined'])
+        profile['disability'] = profile_orm.get_disability_display()
+        profile['ethnicity'] = profile_orm.get_ethnicity_display()
+        profile['gender'] = profile_orm.get_gender_display()
+        profile['veteran'] = profile_orm.get_veteran_display()
+        profile['signature_data'] = profile_orm.signature_data.decode()
         resume = profile_orm.resume
         if resume:
             profile['resume'] = {'id': resume.id}
-        data = {"profile": profile, "next": 0, "prev": 0}
+        gender = ws_methods.choices_to_list(profile_orm._meta.get_field('gender').choices)
+        disability = ws_methods.choices_to_list(profile_orm._meta.get_field('disability').choices)
+        ethnicity = ws_methods.choices_to_list(profile_orm._meta.get_field('ethnicity').choices)
+        veteran = ws_methods.choices_to_list(profile_orm._meta.get_field('veteran').choices)
+        choice_fields = {'gender': gender, 'disability': disability, 'ethnicity': ethnicity, 'veteran': veteran}
+        data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
         return data
 
     @classmethod
@@ -204,13 +217,11 @@ class Profile(user_model):
         profile = Profile.objects.get(pk=user_id)
 
         for key in params:
-            if key !=' image' and key !=' admin_image' and key !='resume':
+            if key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume':
                 setattr(profile, key, params[key])
 
-        now_str = False
+
         if params.get('resume'):
-            if not now_str:
-                now_str = ws_methods.now_str()
             image_data = params['resume']
 
             format, imgstr = image_data.split(';base64,')
@@ -220,7 +231,7 @@ class Profile(user_model):
             file_name = ''
             resume_file = profile.resume # File.objects.filter(user_id=user_id)
             if not resume_file:
-                file_name = 'resume_' + now_str + '_' + str(user_id) + '.pdf'
+                file_name = 'resume_' + str(user_id) + '.pdf'
                 resume_file = File(name=file_name, file_type='resume')
             else:
                 file_name = resume_file.name
@@ -232,25 +243,21 @@ class Profile(user_model):
             profile.save()
 
         if params.get('image'):
-            if not now_str:
-                now_str = ws_methods.now_str()
             image_data = params['image']
             format, imgstr = image_data.split(';base64,')
             ext = format.split('/')[-1]
 
             data = ContentFile(base64.b64decode(imgstr))
-            file_name = 'image_' + now_str + '_'+str(user_id) + '.' + ext
+            file_name = 'image_'+str(user_id) + '.' + ext
             profile.image.save(file_name, data, save=True)
 
         if params.get('admin_image'):
-            if not now_str:
-                now_str = ws_methods.now_str()
             image_data = params['admin_image']
             format, imgstr = image_data.split(';base64,')
             ext = format.split('/')[-1]
 
             data = ContentFile(base64.b64decode(imgstr))
-            file_name = 'admin_image_' + now_str + '_'+str(user_id) + '.' + ext
+            file_name = 'admin_image_'+str(user_id) + '.' + ext
             profile.admin_image.save(file_name, data, save=True)
 
         profile.save()
@@ -261,7 +268,10 @@ class Profile(user_model):
     def save_signature(cls, request, params):
         user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
-        profile.signature_image = params['signature_data']
+        signature_data = params['signature_data']
+        signature_data = signature_data.encode()
+        # signature_data = base64.encodebytes(signature_data)
+        profile.signature_data = signature_data
         profile.save()
         return 'done'
 

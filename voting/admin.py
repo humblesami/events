@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.db.models import Count
-from .models import Voting, VotingType, VotingChoice, VotingAnswer, VotingDocument
+from .models import *
 
-# Register your models here.
+
 class ChoiceInline(admin.TabularInline):
     model = VotingChoice
     extra = 3
+
 
 class VotingTypeAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -13,6 +14,7 @@ class VotingTypeAdmin(admin.ModelAdmin):
     list_filter = ['name']
     search_fields = ['name']
     
+
 class VotingDocInline(admin.TabularInline):
     model = VotingDocument
     exclude=('html','content','original_pdf','pdf_doc')
@@ -20,19 +22,8 @@ class VotingDocInline(admin.TabularInline):
     # show_change_link = True
     extra = 0
 
-    # def docs(self, obj):
-    #     html = "<div>"
-    #     for d in obj.meetingdocument_set.all():
-    #         if d.pdf_doc:
-    #             html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
-    #     html += '</div>'
-    #
-    #     return format_html(html)
 
 class VotingAdmin(admin.ModelAdmin):
-    # list_display = ['name', 'description', 'open_date', 'close_date', 'voting_type']
-    # list_filter = ['open_date', 'close_date', 'voting_type']
-    # search_fields = ['name', 'open_date', 'close_date', 'voting_type__name']
     inlines = [VotingDocInline,]
     filter_horizontal = ('respondents',)
     change_form_template = 'custom/change_form.html'
@@ -83,7 +74,6 @@ class VotingAdmin(admin.ModelAdmin):
             extra_context = extra_context or {}
             return super(VotingAdmin, self).change_view(
                 request, object_id, form_url, extra_context=extra_context,)
-    
 
 
 class VotingAnswerAdmin(admin.ModelAdmin):
@@ -91,7 +81,6 @@ class VotingAnswerAdmin(admin.ModelAdmin):
     # list_filter = ['answer', 'user']
     list_filter = ['user']
     search_fields = ['user_answer__name', 'voting__name', 'user__username']
-
 
 
 admin.site.register(Voting, VotingAdmin)

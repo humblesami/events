@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'survey',
     'documents',
     'esign',
-    'annotations',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
