@@ -265,7 +265,7 @@ class Profile(user_model):
 
 
     @classmethod
-    def save_signature(cls, request, paconsrams):
+    def save_signature(cls, request, params):
         user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
         signature_data = params['signature_data']
