@@ -187,7 +187,11 @@ function getHTMLMediaElement(mediaElement, config) {
             }
         };
 
+        var full_screen_media = null;
+
         function launchFullscreen(element) {
+            full_screen_media = $(element);
+            full_screen_media.width('100%');
             if (element.requestFullscreen) {
                 element.requestFullscreen();
             } else if (element.mozRequestFullScreen) {
@@ -208,6 +212,10 @@ function getHTMLMediaElement(mediaElement, config) {
 
             if (document.webkitIsFullScreen) {
                 document.webkitCancelFullScreen();
+            }
+            if(full_screen_media.hasClass('self'))
+            {
+                full_screen_media.width('180px');
             }
         }
 
