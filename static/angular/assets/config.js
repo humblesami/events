@@ -13,7 +13,7 @@ var site_config_local = {
 	server_db : 'demo1',
 	live : false,
 	site_url: '',
-    chat_server : 'http://localhost:3000',
+    chat_server : 'https://localhost:9002',
     app_name : 'MeetingPoint',
 	show_logs : ['socket', 'ajax_before'] //, 'ajax_success'
 };
@@ -22,7 +22,7 @@ var network_config = {
 	server_db : 'demo1',
 	live : false,
 	site_url: '',
-    chat_server : 'http://172.16.21.170:3000',
+    chat_server : 'https://172.16.21.170:9002',
     app_name : 'MeetingPoint',
 	show_logs : ['socket','ajax_before','ajax_success']
 };
@@ -31,7 +31,7 @@ var network_config_https = {
 	server_db : 'demo1',
 	live : false,
 	site_url: '',
-    chat_server : 'https://172.16.21.170:3000',
+    chat_server : 'https://172.16.21.170:9002',
     app_name : 'MeetingPoint',
 	show_logs : ['socket','ajax_before','ajax_success']
 };
