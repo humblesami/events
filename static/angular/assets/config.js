@@ -66,4 +66,4 @@ window['site_config'] = site_config;
 // if(site_config.site_url.startsWith('https://')){
 //     $('head meta:first').after('<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />');
 // }
-console.log(site_config)
+// console.log(site_config)

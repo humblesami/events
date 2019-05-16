@@ -40,7 +40,7 @@
         
         // by default, socket.io server is assumed to be deployed on your own URL
         // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com/';
-        connection.socketURL = 'https://localhost:9002/';
+        connection.socketURL = site_config.chat_server +'/';
         //console.log(connection.socketURL, 1009);
         
         // comment-out below line if you do not have your own socket.io server
