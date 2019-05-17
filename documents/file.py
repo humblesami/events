@@ -72,7 +72,7 @@ class File(models.Model):
             else:
                 res = open(pth , 'rb')
             self.pdf_doc.save(filename+".pdf", DjangoFile(res))
-            self.original_pdf.save(filename+".pdf", DjangoFile(res))
+            # self.original_pdf.save(filename+".pdf", DjangoFile(res))
 
         except:
             raise
@@ -114,7 +114,7 @@ class File(models.Model):
             pdf.output(converted_pth, "F")
             res = open(converted_pth, 'rb')
             self.pdf_doc.save(filename+".pdf", DjangoFile(res))
-            self.original_pdf.save(filename+".pdf", DjangoFile(res))
+            # self.original_pdf.save(filename+".pdf", DjangoFile(res))
         except:
             raise
 

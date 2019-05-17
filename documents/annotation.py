@@ -16,19 +16,6 @@ class AnnotationDocument(models.Model):
     @classmethod
     def get_annotations(cls, request, params):
         res = {}
-        # values = kw
-        # uid = ws_methods.check_auth(values)
-        # if not uid:
-        #     return ws_methods.not_logged_in()
-        # req_env = http.request.env
-        #
-        # if 'doc_id' in values:
-        #     a = 1
-        # else:
-        #     return ws_methods.http_response('Please Provide document id!')
-        #
-        # doc_name = values.get('doc_id')
-        #
         force = params.get('force')
         doc_id = params.get('id')
         doc_name = params.get('doc_id')
@@ -56,27 +43,6 @@ class AnnotationDocument(models.Model):
                     })
                 counter += 1
 
-        # filter = [('doc_name', '=', doc_name)]
-        # point_objects = req_env['annotation.point'].search(filter)
-        # props = ['id', 'uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
-        #
-        # comments_points = ws_methods.objects_list_to_json_list(point_objects, props)
-        #
-        # props = ['uid', 'user_name', 'date_time', 'uuid', 'content']
-        # i = 0
-        # for point in point_objects:
-        #     comments = point.comments
-        #     comments = ws_methods.objects_list_to_json_list(comments, props)
-        #     for com in comments:
-        #         com['point_id'] = comments_points[i]['uuid']
-        #     comments_points[i]['comments'] = comments
-        #     note_counter = point['my_notifications']
-        #     if note_counter > 0:
-        #         a = 1
-        #     comments_points[i]['counter'] = note_counter
-        #     i = i + 1
-        #
-
         doc = AnnotationDocument.objects.filter(doc_name=doc_name, user_id=user_id)
         if not doc:
             res = {'version': -1, 'annotations': [], 'comments': comments_points}
@@ -90,46 +56,11 @@ class AnnotationDocument(models.Model):
         if doc.version < document_version and not force:
             res = {'version': doc.version, 'comments': comments_points}
             return  res
-        # doc = req_env['annotation.document'].search([('name', '=', doc_name), ('user_id', '=', uid)])
-        # if not doc:
-        #     res = {'version': -1, 'annotations': [], 'comments': comments_points}
-        #     return ws_methods.http_response('', res)
-        #
-        # document_version = values.get('version') or 0
-        # document_version = int(document_version)
-        # if doc.version < document_version and not force:
-        #     return ws_methods.http_response('', {'version': doc.version, 'comments': comments_points})
-        #
-        # document_id = doc.id
-        # filter = [('document_id', '=', document_id), ('type', 'in', ['underline', 'highlight', 'strikeout'])]
-        #
-        # rectangle_objects = req_env['annotation.rectangle'].search(filter)
-        # props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'color']
-        # rectanglular_annotations = ws_methods.objects_list_to_json_list(rectangle_objects, props)
-        # props = ['x', 'y', 'width', 'height']
-        # i = 0
-        # for rect in rectangle_objects:
-        #     dimentions = ws_methods.objects_list_to_json_list(rect.rectangles, props)
-        #     rectanglular_annotations[i]['rectangles'] = dimentions
-        #     rectanglular_annotations[i]['doc_id'] = doc_name
-        #     i = i + 1
-        #
-        # filter = [('document_id', '=', document_id), ('type', '=', 'drawing')]
-        # drawing_objects = req_env['annotation.drawing'].search(filter)
-        # props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'color']
-        # drawings = ws_methods.objects_list_to_json_list(drawing_objects, props)
-        # props = ['x', 'y']
-        # i = 0
-        # for rect in drawing_objects:
-        #     dimentions = ws_methods.objects_list_to_json_list(rect.lines, props)
-        #     ar_res = []
-        #     for xy in dimentions:
-        #         ar_res.append([xy['x'], xy['y']])
-        #     drawings[i]['lines'] = ar_res
-        #     drawings[i]['doc_id'] = doc_name
-        #     drawings[i]['width'] = 1
-        #     i = i + 1
-        #
+
+        user_rectangles = RectangleAnnotation.get_rectangles(doc.id)
+
+        line_drawings = DrawingAnnotation.get_drawings(doc.id)
+
 
         point_object = PointAnnotation.objects.filter(document_version__doc_name=doc_name)
         note_points = []
@@ -153,25 +84,8 @@ class AnnotationDocument(models.Model):
                         'date_time': str(comment.date_time)
                     })
                 counter += 1
-        # filter = [('document_id', '=', document_id), ('type', '=', 'point'), ('sub_type', '=', 'personal')]
-        # point_objects = req_env['annotation.point'].search(filter)
-        # props = ['uid', 'document_id.name', 'page', 'type', 'uuid', 'date_time', 'x', 'y', 'sub_type']
-        #
-        # notes_points = ws_methods.objects_list_to_json_list(point_objects, props)
-        #
-        # props = ['uid', 'user_name', 'date_time', 'uuid', 'content']
-        # i = 0
-        # for point in point_objects:
-        #     comments = point.comments
-        #     comments = ws_methods.objects_list_to_json_list(comments, props)
-        #     for com in comments:
-        #         com['point_id'] = notes_points[i]['uuid']
-        #     notes_points[i]['comments'] = comments
-        #     i = i + 1
-        #
-        # points = notes_points
-        # annotations = rectanglular_annotations + points + drawings
-        res = {'version': doc.version, 'annotations': note_points, 'comments': comments_points}
+
+        res = {'version': doc.version, 'annotations': note_points + line_drawings + user_rectangles, 'comments': comments_points}
         return res
 
     @classmethod
@@ -190,6 +104,8 @@ class AnnotationDocument(models.Model):
                 if doc.version >= document_version:
                     return {'version': doc.version}
                 points = PointAnnotation.objects.filter(document_version_id = doc.id).delete()
+                drawings = DrawingAnnotation.objects.filter(document_version_id=doc.id).delete()
+                rectangles = RectangleAnnotation.objects.filter(document_version_id=doc.id).delete()
                 if reset:
                     doc.version = 0
                     return 'done'
@@ -203,7 +119,6 @@ class AnnotationDocument(models.Model):
         values = json.loads(params['annotations'])
         for val in values:
             type = val.get('type')
-            comments = val.get('comments')
             name = val.get('class')
             user = val.get('uid')
             date_time = val.get('date_time')
@@ -212,7 +127,17 @@ class AnnotationDocument(models.Model):
             sub_type = val.get('sub_type')
             x = val.get('x')
             y = val.get('y')
-            if sub_type == 'personal':
+
+            comments = val.get('comments')
+            lines = val.get('lines')
+
+            if type in('strikeout', 'highlight', 'underline'):
+                RectangleAnnotation.add_rectangle(val, doc.id)
+
+            if type == 'drawing' and lines:
+                DrawingAnnotation.add_drawing(val, doc.id)
+
+            if type == 'point' and sub_type == 'personal':
                 point = PointAnnotation(name=name, user_id=user, date_time=date_time, page=page,
                                    type=type, uuid=uuid, sub_type=sub_type, document_id=doc_id, x=x, y=y,
                                         created_by_id=user, my_notification = 0, document_version_id = doc.id)
@@ -229,82 +154,6 @@ class AnnotationDocument(models.Model):
                                                          , date_time=date_time, uuid=uuid)
                         comment_anno.save()
 
-
-        # doc_name = kw.get('doc_id')
-        # doc = req_env['annotation.document'].search([('name', '=', doc_name), ('user_id', '=', uid)])
-        # if doc:
-        #     reset = kw.get('reset')
-        #     if not reset:
-        #         document_version = kw.get('version') or 0
-        #         document_version = int(document_version)
-        #         if doc.version >= document_version:
-        #             return ws_methods.http_response('', doc.version)
-        #     res = req_env['annotation.rectangle'].search([('document_id', '=', doc.id)]).unlink()
-        #     res = req_env['annotation.drawing'].search([('document_id', '=', doc.id)]).unlink()
-        #     points = req_env['annotation.point'].search([('document_id', '=', doc.id), (' ', '=', 'personal')])
-        #
-        #     for p in points:
-        #         res = p.comments.unlink()
-        #         if len(p.comments) == 0:
-        #             res = p.unlink()
-        #     if reset:
-        #         doc.version = 0
-        #         return ws_methods.http_response('', 'done')
-        # else:
-        #     doc = req_env['annotation.document'].create({'name': doc_name, 'user_id': uid, 'version': 0})
-        #
-        # values = kw.get('annotations')
-        # values = json.loads(values)
-        #
-        # if not values:
-        #     return ws_methods.http_response('', 'No annotations to save')
-        # for val in values:
-        #     atype = val.get('type')
-        #     modal = types[atype]
-        #
-        #     dimensions = val.get('rectangles')
-        #     comments = val.get('comments')
-        #     lines = val.get('lines')
-        #
-        #     if val['uid'] != uid and not comments:
-        #         continue
-        #
-        #     val['document_id'] = doc.id
-        #     if dimensions:
-        #         del val['rectangles']
-        #         rid = req_env[modal].create(val)
-        #         modal = types['rectangle']
-        #         for vals in dimensions:
-        #             vals['rectangle_id'] = rid.id
-        #             req_env[modal].create(vals)
-        #     elif lines:
-        #         del val['lines']
-        #         pen_id = req_env[modal].create(val)
-        #         modal = types['line']
-        #         for line in lines:
-        #             vals = {}
-        #             vals['drawing_id'] = pen_id.id
-        #             vals['x'] = line[0]
-        #             vals['y'] = line[1]
-        #             req_env[modal].create(vals)
-        #     elif comments:
-        #         del val['comments']
-        #         point_id = req_env[modal].search([('uuid', '=', val['uuid'])])
-        #         if not point_id:
-        #             if val['sub_type'] != 'personal':
-        #                 continue
-        #             point_id = req_env[modal].create(val)
-        #         else:
-        #             if point_id.sub_type != 'personal':
-        #                 continue
-        #         modal = types['comment']
-        #         for vals in comments:
-        #             if vals['uid'] == uid:
-        #                 vals['point_id'] = point_id.id
-        #                 req_env[modal].create(vals)
-        #     else:
-        #         req_env[modal].create(val)
-        # doc.version = kw['version']
         doc.version = document_version
         doc.save()
         return 'done'
@@ -326,6 +175,57 @@ class Annotation(models.Model):
 class RectangleAnnotation(Annotation):
     color = models.CharField(max_length=50)
 
+    @classmethod
+    def add_rectangle(cls, val, doc_id):
+        type = val.get('type')
+        name = val.get('class')
+        user = val.get('uid')
+        date_time = val.get('date_time')
+        page = val.get('page')
+        uuid = val.get('uuid')
+        color = val.get('color')
+
+        dimensions = val.get('rectangles')
+        rectangle = RectangleAnnotation(name=name, user_id=user, date_time=date_time, page=page,
+                                        type=type, uuid=uuid, document_version_id=doc_id, color=color)
+        rectangle.save()
+        rectangle = RectangleAnnotation.objects.filter(user_id=user, date_time=date_time,
+                                                       uuid=uuid, document_version=doc_id)[0]
+        for dimension in dimensions:
+            x = dimension.get('x')
+            y = dimension.get('y')
+            width = dimension.get('width')
+            height = dimension.get('height')
+            user_dimension = Dimensions(rectangle_id_id=rectangle.id, x=x, y=y, width=width, height=height)
+            user_dimension.save()
+
+    @classmethod
+    def get_rectangles(cls, doc_id):
+        rectangles = RectangleAnnotation.objects.filter(document_version_id=doc_id)
+        user_rectangle = []
+        counter = 0
+        for rectangle in rectangles:
+            user_rectangle.append({
+                'uid': rectangle.user.id,
+                'document_name': rectangle.document_version.doc_name,
+                'type': rectangle.annotation_ptr.type,
+                'page': rectangle.annotation_ptr.page,
+                'uuid': rectangle.annotation_ptr.uuid,
+                'date_time': str(rectangle.annotation_ptr.date_time),
+                'color': rectangle.color,
+                'doc_id': rectangle.document_version.doc_name,
+
+            })
+            dimensions = rectangle.dimensions_set.all()
+            user_dimension = []
+            for dimension in dimensions:
+                user_dimension.append({'x': dimension.x, 'y': dimension.y,
+                                       'width': dimension.width, 'height': dimension.height})
+            user_rectangle[counter]['rectangles'] = user_dimension
+            counter += 1
+        return  user_rectangle
+
+
 class Dimensions(models.Model):
     rectangle_id = models.ForeignKey(RectangleAnnotation, on_delete=models.CASCADE)
     x = models.FloatField()
@@ -336,6 +236,62 @@ class Dimensions(models.Model):
 
 class DrawingAnnotation(Annotation):
     title = models.CharField(max_length=50)
+    width = models.IntegerField(default=2)
+    color = models.CharField(max_length=20, default='#000000')
+    to_merge = models.IntegerField(default=0)
+
+    @classmethod
+    def add_drawing(cls, val, doc_id):
+        type = val.get('type')
+        name = val.get('class')
+        user = val.get('uid')
+        date_time = val.get('date_time')
+        page = val.get('page')
+        uuid = val.get('uuid')
+        to_merge = val.get('to_merge')
+        width = val.get('width')
+        color = val.get('color')
+        lines = val.get('lines')
+        drawing = DrawingAnnotation(title=name, user_id=user, date_time=date_time, page=page,
+                                    type=type, uuid=uuid, document_version_id=doc_id,
+                                    width=width, color=color, to_merge=to_merge)
+        drawing.save()
+        drawing = DrawingAnnotation.objects.filter(user_id=user, date_time=date_time, uuid=uuid,
+                                                   document_version=doc_id)
+        if drawing:
+            drawing = drawing[0]
+            for line in lines:
+                drawing_id = drawing.id
+                x = line[0]
+                y = line[1]
+                drawing_line = Line(drawing_id_id=drawing_id, x=x, y=y)
+                drawing_line.save()
+
+    @classmethod
+    def get_drawings(cls, doc_id):
+        drawings = DrawingAnnotation.objects.filter(document_version_id=doc_id)
+        line_drawings = []
+        counter = 0
+        for drawing in drawings:
+            line_drawings.append({
+                'uid': drawing.user.id,
+                'document_name': drawing.document_version.doc_name,
+                'type': drawing.annotation_ptr.type,
+                'page': drawing.annotation_ptr.page,
+                'uuid': drawing.annotation_ptr.uuid,
+                'date_time': str(drawing.annotation_ptr.date_time),
+                'color': drawing.color,
+                'width': drawing.width,
+                'doc_id': drawing.document_version.doc_name,
+
+            })
+            lines = drawing.line_set.all()
+            drawing_lines = []
+            for line in lines:
+                drawing_lines.append({'x': line.x, 'y': line.y})
+            line_drawings[counter]['lines'] = drawing_lines
+            counter += 1
+        return  line_drawings
 
 
 class Line(models.Model):
