@@ -1,15 +1,15 @@
 
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i');
+/* @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i'); */
 
 body{
     font-family: 'Roboto Condensed', sans-serif !important;
     --toggle-left-menu-bg:#2A2A2A;
-    --toggle-menu-color:#757575; 
+    --toggle-menu-color:#757575;
     --menu-color-text: #ffffff;
     --menu-icon-color:#ffffff;
     --header-bg-color:linear-gradient(to bottom,#F1F1F1,#F1F1F1);
     --header-icon-color:rgba(0, 0, 0, 0.2);
-    
+
 	--color-main-bg: #24262d;
     --button-bg: #132f6e;
     --DocIcon-bg:#E9F6FF;
@@ -17,26 +17,26 @@ body{
 
 body.green{
     --toggle-left-menu-bg:#28a745;
-    --toggle-menu-color:#ffffff; 
+    --toggle-menu-color:#ffffff;
     --menu-color-text: #ffffff;
     --menu-icon-color:#ffffff;
     --header-bg-color: linear-gradient(to right, #28a745, #2a9eb0) ;
     --header-icon-color:rgba(0, 0, 0, 0.2);
-    
+
 	--color-main-bg: #24262d;
     --button-bg: #132f6e;
     --DocIcon-bg:#28a745;
-    
+
 }
 body.green .home{ background: rgb(206, 255, 245); }
   body.white {
     --toggle-left-menu-bg:#ffffff;
-    --toggle-menu-color:#333333; 
+    --toggle-menu-color:#333333;
     --menu-color-text: #333333;
     --menu-icon-color:#333333;
     --header-bg-color: linear-gradient(to right, #ffffff, #ffffff) ;
     --header-icon-color:rgba(0, 0, 0, 0.2);
-    
+
 	--color-main-bg: #24262d;
     --button-bg: #132f6e;
     --DocIcon-bg:#333333;
@@ -49,24 +49,24 @@ body.white .header-fixed{
 }
   body.blue {
     --toggle-left-menu-bg:#2930b4;
-    --toggle-menu-color:#ffffff; 
+    --toggle-menu-color:#ffffff;
     --menu-color-text: #ffffff;
     --menu-icon-color:#ffffff;
     --header-bg-color:  linear-gradient(to right, #2930b4, #2a9eb0);
     --header-icon-color:rgba(0, 0, 0, 0.2);
-    
+
 	--color-main-bg: #24262d;
     --button-bg: #132f6e;
     --DocIcon-bg:#2930b4;
   }
 body.light{
     --toggle-left-menu-bg:#E9B067;
-    --toggle-menu-color:#ffffff; 
+    --toggle-menu-color:#ffffff;
     --menu-color-text: #ffffff;
     --menu-icon-color:#ffffff;
     --header-bg-color:  linear-gradient(to right, #E9B067, #E9B067);
     --header-icon-color:rgba(0, 0, 0, 0.2);
-    
+
 	--color-main-bg: #24262d;
     --button-bg: #132f6e;
     --DocIcon-bg:#E9B067;
@@ -75,12 +75,12 @@ body.light .home{ background: rgba(233, 176, 103, 0.61); }
 
   body.orange {
         --toggle-left-menu-bg:#FF766E;
-        --toggle-menu-color:#ffffff; 
+        --toggle-menu-color:#ffffff;
         --menu-color-text: #ffffff;
         --menu-icon-color:#ffffff;
         --header-bg-color: linear-gradient(to right, #FF766E, #FF766E) ;
         --header-icon-color:rgba(0, 0, 0, 0.2);
-        
+
         --color-main-bg: #24262d;
         --button-bg: #132f6e;
         --DocIcon-bg:#FF766E;
@@ -88,17 +88,17 @@ body.light .home{ background: rgba(233, 176, 103, 0.61); }
 
     body.red {
         --toggle-left-menu-bg:#d00000;
-        --toggle-menu-color:#ffffff; 
+        --toggle-menu-color:#ffffff;
         --menu-color-text: #ffffff;
         --menu-icon-color:#ffffff;
         --header-bg-color: linear-gradient(to right, #d00000, #e60000) ;
         --header-icon-color:rgba(0, 0, 0, 0.2);
-        
+
         --color-main-bg: #24262d;
         --button-bg: #132f6e;
         --DocIcon-bg:#d00000;
     }
-  
+
 #switcher {
     display: none !important;
     list-style: none;
@@ -436,7 +436,7 @@ div.HomePageDiscription div#home-content p {
 .DocIcon i {
     font-size: 24px;
     color: #2699FB;
-    
+
 }
 .DocumentWrapper:hover .DocIcon{
     background: #7FC4FD;
@@ -520,18 +520,29 @@ button:focus {
     box-shadow: 0 0 0 0.2rem #7c7bad;
 }
 
+.init_sign
+{
+    padding: 5px;
+    border: 1px solid silver;
+    border-radius: 100%;
+    margin-left: 2px;
+    margin-top: 2px;
+    z-index: 45;
+    cursor: pointer;
+    position: relative;
+}
 #signature_editor {
-    width: calc(100vw - 50px);
-    height: 198px;
+    /* width: calc(100vw - 50px);
+    height: 198px; */
     margin-top: 5px;
     margin-bottom: 5px;
 }
-
+/*
 @media (min-width: 576px) {
     #signature_editor {
         width: 465px;
     }
-}
+} */
 
 .kbw-signature canvas {
     border: 1px solid #313030;
@@ -899,7 +910,6 @@ last-login-details
 }
 
 #leave-room {
-    display: none;
     margin-top: 20px;
 }
 
@@ -937,8 +947,7 @@ last-login-details
 }
 
 .modal-header {
-    padding: 0;
-    display: block;
+    padding: 5px;
 }
 
 .modal-footer {
@@ -990,7 +999,7 @@ th.fc-day-header.fc-widget-header {
 .full-width-heading{
     border-bottom: 1px solid #E1E1E1;
     margin-bottom: 20px;
-    padding-bottom:20px;  
+    padding-bottom:20px;
 }
 
 .doc-thumb{

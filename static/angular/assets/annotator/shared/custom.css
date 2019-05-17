@@ -1,0 +1,710 @@
+#annotated-doc-conatiner * {
+  box-sizing: border-box;
+}
+
+.toolbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e6e6e6;  
+  padding: 0 5px;
+  z-index: 24;
+  flex-wrap: wrap;
+}
+.toolbar.topbar {
+    padding-top:3px;
+    display: flex;  
+    justify-content: center;
+    position: relative;
+    background: linear-gradient(to bottom,#eeeeee,#eeeeee);
+    box-shadow:0 1px 0 0 #cfd8dc;
+}
+
+.toolbar .spacer {
+  display: inline-block;
+  border-left: 1px solid #c1c1c1;
+  height: 34px;
+  margin: 0 5px -11px;
+}
+
+.comments-toggler
+  {
+    background: green;
+    color: wheat;
+  }
+
+.toolbar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.toolbar button, .toolbar a {
+    background-color: transparent;
+    border: 0px solid transparent;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 30px;
+    height: 30px;
+    padding: 4px;
+    margin: 0 2px;
+    margin-top: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.toolbar .selectBox {
+    height: 46px;
+    display: flex;
+    font-size: 14px;
+    padding-right: 4px;
+}
+
+.toolbar button:after {
+  content: ' ';
+  display: block;
+}
+
+.toolbar button.active {
+  background: silver;
+}
+
+.toolbar.strt_sign{
+    background-color: #5f5e97 !important;
+    height: 32px !important;
+    color: white !important;
+    margin-top: 8px !important;
+    font-size: 14px !important;
+    font-weight: bold;
+}
+.toolbar button.pen {
+  font-size: 16px;
+}
+
+.toolbar button.rectangle:after {
+  width: 15px;
+  height: 15px;
+  border: 1px solid red;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+/*
+.toolbar button.highlight:after {
+  width: 17px;
+  height: 17px;
+  background: yellow;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+
+.toolbar button.strikeout:after {
+  width: 15px;
+  height: 1px;
+  background: red;
+  position: absolute;
+  top: 12px;
+  left: 4px;
+}
+
+.toolbar button.underline:after {
+  width: 20px;
+  height: 1px;
+  background: green;
+  position: absolute;
+  bottom: 2px;
+  left: 4px;
+}*/
+
+.toolbar button.text:after {
+  content: 'T';
+  font-family: 'Times New Roman';
+}
+
+.color {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border: 1px solid #000;
+  vertical-align: middle;
+}
+
+.color-selected {
+  border: 3px solid #666;
+  width: 30px;
+  height: 30px;
+  margin-top: -1px;
+  margin-left: -2px;
+  margin-right: -2px;
+}
+
+.text-color, .pen-color {
+  display: inline-block;
+}
+.topbar .pen-color
+{
+    margin-top: 14px;
+    cursor: pointer;
+    margin-left: 7px;
+    height: 18px;
+    width: 20px;
+    background-color: black;
+}
+
+.Icon {
+  width: 24px;
+  height: 24px;
+  color: #757575;
+  pointer-events: none;
+}
+
+
+.cb-container {
+    position: relative;
+    padding-left: 35px;
+    font-weight: bold;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-top: -5px;
+    margin-left: 10px;
+    padding-top: 5px;
+}
+.cb-container label
+{
+  padding-top: 14px;
+  font-size: 14px;
+}
+
+.topbar .comment .Icon
+{
+  padding-top: 3px;
+}
+/* Hide the browser's default checkbox */
+.cb-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 13px;
+  left: 0;
+  height: 22px;
+  width: 23px;
+  cursor: pointer;
+  margin-top: 5px;
+  border: 1px solid silver;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.cb-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.cb-container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid grey;
+    color: grey;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.PenSize.pen-child
+{
+    margin-top:13px;
+}
+
+.toolbar button.unread {
+    background-color: red;
+    color: white;
+    height: 33px;
+    font-size: 13px;
+    margin-top: 6px;
+    font-weight: bold;
+}
+.toolbar span.unread {
+    background: white;
+    color: red;
+    padding: 0 5px 0px 4px;
+    border-radius: 10px;
+    margin-right: 5px;
+}
+
+.input-number{
+    display: flex;
+    align-items: center;
+}
+.search-bar-container{
+    display: flex;
+    align-items: center;
+}
+
+.input-number input{
+   height: 30px;
+    color: #333333;
+    flex: 1;
+    margin-right: 5px;
+    width: 90px;
+}
+
+.pdf-searchbar input{
+    height: 30px;
+    font-size: 14px;
+    border: none;
+    width:120px;
+}
+
+.pdf-searchbar button{
+    height: 30px;
+    color: #757575;
+    background: #f0f0f0;
+ 
+}
+
+.search-bar-container{
+    display: block;
+    width: 100%;
+    padding: 0rem 60px 0 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    position: relative;
+}
+
+.show-hide-arrows{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+    right: 7px;
+}
+
+.show-hide-arrows button{
+    background: transparent;
+    padding: 0 6px;
+    min-width: 15px
+}
+
+.topbar .paginator
+{
+    margin: 11px 5px;
+}
+.topbar .paginator .pager
+{
+    padding: 5px;
+    cursor: pointer;
+}
+.topbar .paginator .pager.prev
+{
+    margin-left:5px;
+}
+.topbar .paginator .pager.next
+{
+    margin-right:5px;
+}
+
+.topbar .paginator input
+{
+    width: 42px;
+    margin-right: 5px;
+    padding-left: 4px;
+}
+
+.search-bar-container .search-hint-text {
+	display: none;
+	width: fit-content;
+	background-color: white;
+	color: #7c7bad;
+	text-align: center;
+	border-radius: 10px;
+	padding: 5px;
+	position: absolute;
+	z-index: 1;
+	top: 150%;
+	left: 0;
+	border: 2px solid #7c7bad;
+	text-shadow: 1px 1px silver;
+}
+
+.search-bar-container .search-hint-text::after {
+	content: "";
+	position: absolute;
+	bottom: 100%;
+	left: 10%;
+	border-width: 10px;
+	border-style: solid;
+	border-color: transparent transparent #7c7bad transparent;
+}
+
+.toolbar button.comment
+{
+    padding: 0 2px 5px 2px;
+    margin-left: 10px;
+    margin-top: 6px;
+    display: flex;
+    height: 30px;
+    min-width: 20px;
+}
+.toolbar button.add-point-button{
+    background: #7c7bad;
+    height: 18px;
+    min-width: 12px;
+    width: 18px;
+    border-radius: 100%;
+    z-index: 5;
+    padding: 0;
+    margin-left: -3px;
+}
+
+.toolbar .paginator .pager:hover, .toolbar button:hover, .toolbar a:hover
+{
+    background-color: #c1cfcf;
+}
+.toolbar button.add-point-button:hover{
+    background-color: green;
+}
+
+body.pdf-viewer
+{
+    overflow: hidden;
+}
+#annotated-doc-conatiner
+{
+    display: none;
+    z-index: 13;
+    background: #fff;
+    position: relative;
+    width: 100%;
+}
+
+#viewer-wrapper{
+    overflow: auto;
+    position: relative;
+}
+
+#content-wrapper {    
+  width: 100%;
+ 
+}
+#comment-wrapper {
+    position: fixed;
+    width: 250px;
+    left: 0;
+    z-index: 58;
+    display: none;
+    background: #d4d4d4;
+    border-right: 1px solid #e6e6e6;
+    /* position: fixed;
+    width: 250px;
+    left: 0;
+    z-index: 58;    
+    display: none;
+    background: #d4d4d4;
+    border-right: 1px solid #e6e6e6;
+    bottom: 2px; */
+}
+
+#notification-wrapper{
+	position: absolute;
+	width: 50px;
+	top: 11px;
+	right: 0;
+	height: 95.7%;
+	display: none;
+	background: #d4d4d4;
+	border-right: 1px solid #e6e6e6;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.pdfViewer .canvasWrapper {
+  box-shadow: 0 0 3px #bbb;
+}
+
+.pdfViewer .page {
+  margin-bottom: 10px;
+}
+
+.annotationLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.comment-header{
+  padding: 15px 10px;
+  border-bottom: 1px solid #cccccc;  
+  background: linear-gradient(to bottom,#7c7bad,#7c7bad);
+  box-shadow: inset 0 -1px 0 0 #cfd8dc;
+}
+
+.comment-header .title{ 
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 0.890rem;
+}
+.show-all-comments
+{
+    float: right;
+    cursor: pointer;
+    color: #ffffff;
+    margin: -2px;
+}
+.show-all-comments i.fa.fa-times-circle {
+  font-size: 20px;
+}
+.annotation .show-all-comments
+{
+    display: none;
+}
+#viewer {
+  margin: 0 auto;
+  /*margin-top: 53px;*/
+}
+
+#viewer .page:last-child {
+  width: 100%;
+}
+
+.Icon {
+  width: 24px;
+  height: 24px;
+  color: #757575;
+  pointer-events: none;
+}
+
+/*********** Comments ***********/
+
+#comment-wrapper h4 {
+  margin: 0;
+  padding: 12px;
+  text-align: center;
+  background: #f5f5f5;
+  color: #757575;
+}
+
+#comment-wrapper .comment-list-item {
+  border-bottom: 1px solid #c5c5c5;
+  background-color: #ffffff;
+  border-radius: 4px;
+  font-size: 12px;
+  margin: 3px;
+  color: #888da8;  
+  padding: 8px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.comment-list-item .user-time-info {
+  font-size: 11px;
+  margin-top: 7px;
+} 
+.comment-list-item .user-time-info .user
+{
+    float: right;
+    font-weight: 500;
+}
+.comment-list-item .user-time-info .buttons
+{
+  float: right;
+  font-size: 16px;
+  background: red;
+  width: 15px;
+  margin-top: -5px;
+}
+
+.comment-list
+{
+    overflow-y: scroll;
+}
+#comment-wrapper .comment-list-container {                
+    width: 100%;
+    padding-bottom: 65px;
+}
+.comment-list-form
+{
+    padding-left: 2px;
+    width: 234px;
+    position: absolute;
+    bottom: -4px;
+}
+
+#commentText {
+    width: 100%;
+    resize: none;
+    border: indianred;
+    border: 1px solid darkturquoise;
+}
+
+/* #commentText:focus {
+  outline: none;
+  border-top: 1px solid #cccccc;
+  box-shadow: transparent;
+} */
+
+/****** Context Menu *******/
+.ContextMenuPopup {
+  display: none;
+  position: fixed;
+  z-index: 99999;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: white;
+  box-shadow: 1px 1px 10px #aaa;
+}
+
+.ContextMenuPopup >div {
+  float: left;
+  text-align: center;
+  
+}
+
+.ContextMenuPopup >div>button {
+  cursor: pointer;
+}
+
+.ContextMenuPopup {
+  width: fit-content;
+  height: fit-content;
+}
+
+/* =================================
+
+Color Popup
+
+==================================*/
+
+
+.ColorPalettePopup .row {
+  display: flex;
+  margin: 2px;
+}
+
+.ColorPalettePopup .row .cell {
+  flex: 1 0 28px;
+  height: 26px;
+  margin: 0 1px;
+  border-radius: 1px;
+  cursor: pointer;
+}
+
+ .ColorPalettePopup .row .cell.colored .check-mark {
+  margin-left: 7px;
+}
+
+.StylePopup {
+  width: 160px;    
+}
+hr
+{
+    margin: 5px 0;
+}
+.groupcomment
+{
+    border: 1px dotted #adadad;
+    margin-bottom: 7px;
+    border-radius: 5px;
+}
+
+.btn-primary.strt_sign.pdfjs
+{
+    cursor: pointer;
+    height: 34px;
+    margin-top: 6px;
+}
+
+.textLayer {    
+    line-height:inherit;
+    background: rgba(255,255,255,0.1);
+	opacity: 1;
+}
+.textLayer mark
+{
+    padding: 0;
+    background: rgba(255,255,0,1);
+}
+mark.current {
+    background: rgba(34,139,34,1);;
+    color: white;
+}
+
+#pdf-annotate-point-input
+{
+    z-index: 9999;
+}
+
+.topbar select.scale
+{
+    background: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+    border: 0;
+    color: darkslategrey;    
+}
+.new_comments_count
+{
+    z-index: 54;
+    padding: 0px 5px;
+    border-radius: 8px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    position: absolute;
+    font-weight: bold;
+}
+
+.annotation-options
+{
+    width: 220px;
+}
+
+.textLayer>div::selection { 
+    background: silver;
+} 
+.textLayer>div::-moz-selection { 
+    background: silver;        
+} 
+a.list-group-item
+{
+    background-color: white;
+    border-color: silver;
+}
+a.list-group-item.contact.active
+{
+    background-color: white;
+    border-color: silver;
+}
+.excel_doc{
+    padding:20px;
+    display: none;
+}
