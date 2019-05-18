@@ -176,5 +176,6 @@ STATICFILES_DIRS = (
 )
 STATIC_URL = '/static/'
 
+
 X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost:4200/'
 #X_FRAME_OPTIONS = 'allow-from https://example.com/

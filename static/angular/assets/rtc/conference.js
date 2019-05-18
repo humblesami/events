@@ -8,28 +8,15 @@
             beforeOpenOrJoin(roomid, function() {
                 connection.openOrJoin(roomid, function(isRoomExist, roomid, error) {
                     if(error) {
-                        if(error.startsWith('Room not ava'))
-                        {
-                            console.log(error);
-                            // connection.join(function(){
-                            //     if (error) {
-                            //         disableInputButtons(true);
-                            //         if(error === 'Room not available') {
-                            //           alert('This room does not exist. Please either create it or wait for moderator to enter in the room.');
-                            //           return;
-                            //         }
-                            //         alert(error);
-                            //     }
-                            // })
-                        }
-                        else{
-                            disableInputButtons(true);
-                            alert(error);
-                            return;
-                        }
+                        console.log(error, isRoomExist);
+                        disableInputButtons(true);
+                        return;
                     }
                     else if (connection.isInitiator === true) {                        
                         console.log('Yes moderator');
+                    }
+                    else{
+                        console.log('Attendee');
                     }
                     afterOpenOrJoin();
                 });
@@ -345,14 +332,5 @@
     var roomer = url.searchParams.get("room");
     var participant = url.searchParams.get("participant");
     document.getElementById('room-id').value = roomer;
-    if(participant == "1")
-    {
-        $('#open-room').click();
-    }
-    else{
-        document.getElementById('room-id').disabled = true;
-        document.getElementById('open-room').disabled = false;
-        document.getElementById('leave-room').disabled = false;
-        document.getElementById('open-room').innerHTML = 'Recieve Call';
-    }
+    $('#open-room').click();
 })()
