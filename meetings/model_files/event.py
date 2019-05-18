@@ -214,7 +214,8 @@ class Event(models.Model):
                 meeting_val['attendee_status'] = attndee_status
                 meetings.append(meeting_val)
         else:
-            return 'No meeting Found'
+            res = {'records': meetings, 'total': 0, 'count': 0}
+            return res
         if meetings:
             for meeting in meetings:
                 if meeting['start_date']:

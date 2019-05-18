@@ -158,4 +158,14 @@ function dn_rpc_object(options) {
     }
     $.ajax(options);
 }
+$(function(){
+    var container = $('#container');
+    if(container.length > 0)
+    {
+        if(self != top)
+        {
+            container.css('overflow-x', 'hidden');    
+        }
+    }    
+});
 window['dn_rpc_object'] = dn_rpc_object;
