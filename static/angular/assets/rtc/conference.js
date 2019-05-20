@@ -80,16 +80,21 @@
                 video.setAttribute('autoplay', true);
                 video.setAttribute('playsinline', true);
             }
+            
         
             if(event.type === 'local') {
-            video.volume = 0;
-            try {
-                video.setAttributeNode(document.createAttribute('muted'));
-            } catch (e) {
-                video.setAttribute('muted', true);
-            }
+                video.volume = 0;
+                try {
+                    video.setAttributeNode(document.createAttribute('muted'));
+                    // video.setAttributeNode(document.createAttribute('controls'));
+                } catch (e) {
+                    video.setAttribute('muted', true);
+                    // video.setAttribute('controls', true);
+                }
             }
             video.srcObject = event.stream;
+            // event.stream.getVideoTracks()[0].enabled = true;
+            // event.stream.getAudioTracks()[0].enabled = true;
         
             var width = parseInt(connection.videosContainer.clientWidth / 3) - 20;
             var mediaElement = getHTMLMediaElement(video, {

@@ -188,7 +188,6 @@
                         var message = undefined;
                         var document_dirty = isDocumentDirty(documentId);
                         var to_send = [];
-                        console.log(323);
                         if (data.version > document_version) {
                             if (document_dirty == 1) {
                                 message = "Document annotation version=" + data.version + " available from server,";
@@ -364,7 +363,7 @@
                             var annotations = localStorage.getItem(documentId + '/annotations');
                             annotations = JSON.parse(annotations);
                             annotations = annotations.filter(function(annot) {
-                                annot.type == 'point' && !annot.sub_type
+                                return annot.type == 'point' && !annot.sub_type
                             });
                             annotations = JSON.stringify(annotations);
                             localStorage.removeItem(documentId + '/annotations');
@@ -615,7 +614,7 @@
                     var combined_drawing = hand_drawings[0];
                     //console.log(annotations);
                     annotations = annotations.filter(function(el) {
-                        el.to_merge != 1
+                        return el.to_merge != 1
                     });
                     for (var i = 1; i < hand_drawings.length; i++) {
                         combined_drawing.lines = combined_drawing.lines.concat(hand_drawings[i].lines);
@@ -1163,6 +1162,14 @@
                         setCookieStrict(documentId, documentId + '/annotations', current_annotations);
 
                         UI.renderPage(data.point.page, RENDER_OPTIONS, function(cb_data, page_num) {
+                            pdfStoreAdapter.addComment(documentId, data.point.uuid, data.point.comment, 1).then(function(aComment) {
+                                insertComment(aComment, 1);
+                                var new_comment = comments_wrapper.find('.comment-list-item:last');
+                                new_comment.css({
+                                    'background': 'green',
+                                    color: 'white'
+                                });
+                            });
                             addCommentCount(cb_data, page_num);
                             embed_comment_count(data.point, 1, 1);
                         });
@@ -1196,7 +1203,6 @@
                     }
                     if (!e.shiftKey && e.keyCode == 13) {
                         e.preventDefault();
-                        console.log(1122333);
                         var commentValue = commentText[0].value; // commentText.val().trim();
                         commentValue = commentValue.substr(0, commentValue.length - 1);
                         if (commentValue == '') {
@@ -2818,7 +2824,7 @@
                                                             console.log('comment saved')
                                                         },
                                                         onError:function(er){
-                                                            console.log(er, 34444);
+                                                            console.log(er);
                                                         }
                                                     });
                                                 }
@@ -4235,7 +4241,7 @@
                         if (annotation_cookie) {
                             var annotations = JSON.parse(annotation_cookie);
                             var point = annotations.filter(function(annot) {
-                                annot.uuid == annotationId
+                                return annot.uuid == annotationId
                             });
                             if (point.length > 0) {
                                 if (point[0].type == 'point' && !point[0].sub_type) {

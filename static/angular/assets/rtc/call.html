@@ -23,10 +23,15 @@
     <div id="rtc-container" class="make-center">
         <div class="message"></div>
         <div class="setup-buttons">
-            <input type="text" id="room-id" value="abcdef" autocorrect="off" autocapitalize="off" size="20">
-            <button id="open-room">Open Room</button>            
+            <input type="text" id="room-id" value="abcdef" 
+            autocorrect="off" autocapitalize="off" size="20"
+            style="display:none"
+            >
+            <button id="open-room" style="display:none">Open Room</button>
             <button id="share-screen" disabled="">Share Your Screen</button>
-            <button id="leave-room" disabled="">Hangup (Leave)</button>
+            <button id="leave-room" disabled=""
+            style="display:none"
+            >Hangup (Leave)</button>
         </div>
         <div id="videos-container" style="margin: 20px 0;"></div>
         <script type="text/javascript" src="static/angular/assets/config.js"></script>
