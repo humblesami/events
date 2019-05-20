@@ -20,28 +20,7 @@ class AnnotationDocument(models.Model):
         doc_id = params.get('id')
         doc_name = params.get('doc_id')
         user_id = request.user.id
-        point_obj = PointAnnotation.objects.filter(document_id = doc_id)
-        comments_points = []
-        counter = 0
-        for point in point_obj:
-            if point.sub_type != 'personal':
-                comments_points.append({
-                    'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
-                    'date_time': str(point.date_time), 'x': point.x, 'y': point.y, 'sub_type': point.sub_type,
-                    'comments': []
-                })
-                comments = point.commentannotation_set.all()
-                for comment in comments:
-                    comments_points[counter]['comments'].append({
-                        'class': "Comment",
-                        'uuid': comment.uuid,
-                        'point_id': point.uuid,
-                        'uid': comment.user_id,
-                        'content': comment.body,
-                        'user_name': comment.user.username,
-                        'date_time': str(comment.date_time)
-                    })
-                counter += 1
+        comments_points = PointAnnotation.get_point_annotations(doc_id=doc_id)
 
         doc = AnnotationDocument.objects.filter(doc_name=doc_name, user_id=user_id)
         if not doc:
@@ -58,34 +37,12 @@ class AnnotationDocument(models.Model):
             return  res
 
         user_rectangles = RectangleAnnotation.get_rectangles(doc.id)
-
         line_drawings = DrawingAnnotation.get_drawings(doc.id)
-
-
-        point_object = PointAnnotation.objects.filter(document_version__doc_name=doc_name)
-        note_points = []
-        counter = 0
-        for point in point_object:
-            if point.sub_type == 'personal':
-                note_points.append({
-                    'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
-                    'date_time': str(point.date_time), 'x': point.x, 'y': point.y, 'sub_type': point.sub_type,
-                    'comments': []
-                })
-                comments = point.commentannotation_set.all()
-                for comment in comments:
-                    note_points[counter]['comments'].append({
-                        'class': "Comment",
-                        'uuid': comment.uuid,
-                        'point_id': point.uuid,
-                        'uid': comment.user_id,
-                        'content': comment.body,
-                        'user_name': comment.user.username,
-                        'date_time': str(comment.date_time)
-                    })
-                counter += 1
-
-        res = {'version': doc.version, 'annotations': note_points + line_drawings + user_rectangles, 'comments': comments_points}
+        note_points = PointAnnotation.get_point_annotations(doc_name=doc_name)
+        res = {
+            'version': doc.version, 'annotations': note_points + line_drawings + user_rectangles,
+            'comments': comments_points
+        }
         return res
 
     @classmethod
@@ -361,6 +318,41 @@ class PointAnnotation(Annotation):
                 return 'done'
         else:
             return 'Invalid Point'
+
+    @classmethod
+    def get_point_annotations(cls, doc_name=None, doc_id=None):
+        if doc_id:
+            point_obj = PointAnnotation.objects.filter(document_id=doc_id)
+            sub_type = ''
+            return_sub_type = False
+        else:
+            point_obj = PointAnnotation.objects.filter(document_version__doc_name=doc_name)
+            sub_type = 'personal'
+            return_sub_type = 'personal'
+
+        comments_points = []
+        counter = 0
+        for point in point_obj:
+            if point.sub_type == sub_type:
+                comments_points.append({
+                    'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
+                    'date_time': str(point.date_time), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
+                    'class': 'Annotation', 'counter': 0, 'page': point.page, 'comments': []
+                })
+                comments = point.commentannotation_set.all()
+                for comment in comments:
+                    comments_points[counter]['comments'].append({
+                        'class': "Comment",
+                        'uuid': comment.uuid,
+                        'point_id': point.uuid,
+                        'uid': comment.user_id,
+                        'content': comment.body,
+                        'user_name': comment.user.username,
+                        'date_time': str(comment.date_time)
+                    })
+                counter += 1
+        return  comments_points
+
 
 class CommentAnnotation(models.Model):
     body = models.CharField(max_length=500)
