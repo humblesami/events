@@ -1,5 +1,6 @@
 from meetings.model_files.user import Profile
 from django.contrib.auth.models import User
+from mainapp import ws_methods
 from django.db import models
 from .file import *
 import datetime
@@ -270,13 +271,9 @@ class PointAnnotation(Annotation):
 
     @classmethod
     def save_point(cls, point):
-        type = point.get('type')
         x = point.get('x')
         y = point.get('y')
         sub_type = ''
-        counter = point.get('counter')
-        uuid = point.get('uuid')
-        page = point.get('page')
         date_time = point.get('date_time')
         doc_id = point.get('document_id')
         user_id = point.get('uid')
@@ -284,28 +281,31 @@ class PointAnnotation(Annotation):
         uuid = point.get('uuid')
         page = point.get('page')
         type = point.get('type')
+        new_point = False
 
         user_point = PointAnnotation.objects.filter(document_id=doc_id, uuid=uuid, created_by_id=user_id)
         if user_point:
             user_point = user_point[0]
-            return user_point.id
+            return {'point_id': user_point.id, 'new_point': new_point}
         else:
             user_point = PointAnnotation(sub_type=sub_type, document_id=doc_id, x=x, y=y, my_notification=0,
                                 created_by_id=user_id, user_id=user_id, name=name, date_time=date_time,
                                 page=page, type=type, uuid=uuid)
             user_point.save()
+            new_point = 1
             user_point = PointAnnotation.objects.filter(document_id=doc_id, uuid=uuid, created_by_id=user_id)
-            return user_point[0].id
+            return {'point_id': user_point[0].id, 'new_point': new_point}
 
     @classmethod
     def save_comment(cls, request, params):
         doc_id = params.get('parent_res_id')
-        doc_name = params.get('doc_id')
         user_id = request.user.id
         point = params.get('point')
         if point:
             point['document_id'] = doc_id
-            point_id = cls.save_point(point)
+            user_point = cls.save_point(point)
+            point_id = user_point.get('point_id')
+            new_point = user_point.get('new_point')
             comment = point.get('comment')
             comment_uuid = comment.get('uuid')
             comment_body = comment.get('content')
@@ -315,7 +315,27 @@ class PointAnnotation(Annotation):
                 comment = CommentAnnotation(body=comment_body, point_id_id=point_id, user_id=comment_uid,
                                             date_time=comment_date_time, uuid=comment_uuid)
                 comment.save()
-                return 'done'
+                res = {}
+                res['point'] = point
+                point['id'] = point_id
+                res['new_point'] = new_point
+                doc = File.objects.get(pk=doc_id)
+                attendees = []
+                if doc:
+                    meeting_doc = doc.meetingdocument
+                    if meeting_doc:
+                        meeting = meeting_doc.meeting
+                        if meeting:
+                            meeting_attendees = meeting.attendees.all()
+                            if meeting_attendees:
+                                for attendee in meeting_attendees:
+                                    if user_id != attendee.id:
+                                        attendees.append(attendee.id)
+                events = [
+                    {'name': 'point_comment_received', 'data': res, 'audience': attendees}
+                ]
+                res = ws_methods.emit_event(events)
+                return res
         else:
             return 'Invalid Point'
 
