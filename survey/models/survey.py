@@ -35,3 +35,16 @@ class Survey(models.Model):
 
     def get_absolute_url(self):
         return reverse("survey-detail", kwargs={"id": self.pk})
+
+    @classmethod
+    def get_records(cls, request, params):
+        surveys = []
+        survey_obj = Survey.objects.filter(is_published=True)
+        for survey in survey_obj:
+            surveys.append({
+                'id': survey.id,
+                'name': survey.name,
+                'description': survey.description
+            })
+        surveys_json = {'records': surveys, 'total': 0, 'count': 0}
+        return surveys_json
