@@ -9,12 +9,14 @@ from .actions import make_published
 
 class QuestionInline(admin.TabularInline):
     model = Question
-    ordering = ("order", "category")
+    exclude = ['order',]
+    ordering = ["category",]
     extra = 1
 
 
 class CategoryInline(admin.TabularInline):
     model = Category
+    exclude = ['order', ]
     extra = 0
 
 

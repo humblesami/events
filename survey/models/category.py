@@ -16,7 +16,7 @@ class Category(models.Model):
         verbose_name=_("Survey"),
         related_name="categories",
     )
-    order = models.IntegerField(_("Display order"), blank=True, null=True)
+    order = models.IntegerField("Display order", default=1)
     description = models.CharField(
         _("Description"), max_length=2000, blank=True, null=True
     )

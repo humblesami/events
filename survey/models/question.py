@@ -68,7 +68,7 @@ class Question(models.Model):
     )
 
     text = models.TextField(_("Text"))
-    order = models.IntegerField(_("Order"))
+    order = models.IntegerField('Order', default=1)
     required = models.BooleanField(_("Required"))
     category = models.ForeignKey(
         Category,
@@ -94,7 +94,7 @@ class Question(models.Model):
     class Meta(object):
         verbose_name = _("question")
         verbose_name_plural = _("questions")
-        ordering = ("survey", "order")
+        ordering = ["survey",]
 
     def save(self, *args, **kwargs):
         if self.type in [Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE]:

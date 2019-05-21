@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'meetings.apps.MeetingConfig',
     'voting',
     'resources',
+    'bootstrapform',
     'survey',
     'documents',
     'esign',
