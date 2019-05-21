@@ -102,7 +102,8 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
         for field in fields:
             if field.find("__") != -1:
                 val = getattr(obj, field.split("__")[0])
-                val = getattr(val, field.split("__")[1])
+                if val:
+                    val = getattr(val, field.split("__")[1])
                 dict[field] = val
     else:
         dict = model_to_dict(obj)

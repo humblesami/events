@@ -324,6 +324,9 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'voting':
                     window.location = `/#/votings/${id}`;
                     break;
+                case 'survey':
+                    window.location = `/#/surveys/${id}`;
+                    break;
                 case 'director':
                 window.location = `/#/director/${id}`;
                 break;
@@ -348,16 +351,19 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'voting':
                     window.location = `/#/votings`;
                     break;
-                    case 'director':
+                case 'survey':
+                    window.location = `/#/surveys`;
+                    break;
+                case 'director':
                     window.location = `/#/directors`;
                     break;
-                    case 'admin':
+                case 'admin':
                     window.location = `/#/admins`;
                     break;
-                    case 'staff':
+                case 'staff':
                     window.location = `/#/staff`;
                     break;
-                    case 'folder':
+                case 'folder':
                     window.location = `/#/resources`;
                     break;
 

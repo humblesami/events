@@ -47,15 +47,7 @@ class SignDocument(File):
         new_file.attachment.save(params["name"], jango_file)
         new_file.save()
 
-
-
-        docs = cls.objects.filter()
-        total_cnt = docs.count()
-        current_cnt = total_cnt
-        docs = queryset_to_list(
-            docs, fields=['name', 'id']
-        )
-        result = {'records': docs, 'total': total_cnt, 'count': current_cnt}
+        result = {'id': new_file.id}
         return result
 
     def embed_signatures(self):
