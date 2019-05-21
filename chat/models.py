@@ -1,3 +1,6 @@
+import base64
+
+from django.core.files.base import ContentFile
 from django.db import models
 from django.apps import apps
 from datetime import datetime
@@ -207,16 +210,35 @@ class Message(models.Model):
     body = models.TextField()
     read_status = models.BooleanField(default=False)
 
+
+    def get_message_list(uid, target_id, offset):
+        ins = [target_id, uid]
+        ar = []
+        for obj in Message.objects.filter(sender__in=ins, to__in=ins)[offset: offset + 20]:
+            if obj.to == uid and not obj.read_status:
+                obj.read_status = True
+                obj.save()
+            dict_obj = {
+                'id': obj.id,
+                'body': obj.body,
+                'to': obj.to,
+                'sender': obj.sender,
+                'attachments': []
+            }
+            for att in MessageDocument.objects.filter(message_id=obj.id):
+                dict_obj['attachments'].append({
+                    'name': att.name,
+                    'url': att.pdf_doc.url
+                })
+            ar.append(dict_obj)
+        return ar
+
+
     @classmethod
     def get_friend_messages(cls, request, params):
         uid = request.user.id
         target_id = params['target_id']
-        data = Message.objects.filter(sender__in=[target_id, uid], to__in=[target_id, uid])[0: 20]
-        for obj in data:
-            if obj.to == uid and not obj.read_status:
-                obj.read_status = True
-                obj.save()
-        data = ws_methods.queryset_to_list(data, fields=['id', 'body', 'to', 'sender'])
+        data = cls.get_message_list(uid, target_id, 0)
         return data
 
     @classmethod
@@ -224,14 +246,7 @@ class Message(models.Model):
         uid = request.user.id
         target_id = params['target_id']
         offset = params['offset']
-
-        data = Message.objects.filter(sender__in=[target_id, uid], to__in=[target_id, uid])[offset: offset + 20]
-        for obj in data:
-            if obj.to == uid and not obj.read_status:
-                obj.read_status = True
-                obj.save()
-
-        data = ws_methods.queryset_to_list(data, fields=['id', 'body', 'to', 'sender'])
+        data = cls.get_message_list(uid, target_id, offset)
         return data
 
 
@@ -242,7 +257,29 @@ class Message(models.Model):
         body = params['body']
         message = Message(to=target_id, sender=uid, body=body)
         message.save()
+        attachment_paths = []
+        attachments = params.get('attachments')
+        if attachments:
+            for attachment in attachments:
+                file_name = attachment['name']
+                doc = MessageDocument(
+                    message_id=message.id,
+                    file_type='message',
+                    name=file_name
+                )
+
+                image_data = attachment['binary']
+                image_data = image_data.encode()
+                image_data = ContentFile(base64.b64decode(image_data))
+                file_name = attachment['name']
+                doc.attachment.save(file_name, image_data, save=True)
+
+                attachment_paths.append({
+                    'name': file_name,
+                    'path': doc.pdf_doc.url
+                })
         message = message.__dict__
+        message['attachments'] = attachment_paths
         del message['_state']
         events = [
             {'name': 'chat_message_received', 'data': message, 'audience': [target_id]}
@@ -259,7 +296,7 @@ class Message(models.Model):
         return 'done'
 
 class MessageDocument(File):
-    message_id = models.ForeignKey(Message, on_delete=models.CASCADE)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
 
 class AuthUserChat(models.Model):
     @classmethod
@@ -320,3 +357,4 @@ admin.site.register(Comment)
 admin.site.register(Message)
 admin.site.register(Notification)
 admin.site.register(NotificationType)
+admin.site.register(MessageDocument)

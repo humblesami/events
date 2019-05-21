@@ -15,10 +15,9 @@ class File(models.Model):
     name = models.CharField(max_length=30)
     html = models.CharField(max_length=30, blank=True)
     content = models.CharField(max_length=30, blank=True)
-    attachment = models.FileField(upload_to='files/')
-    pdf_doc = models.FileField(upload_to='converted/')
-
+    pdf_doc = models.FileField(upload_to='converted/', null=True)
     file_type = models.CharField(max_length=128, default='')
+    attachment = models.FileField(upload_to='files/')
 
     def __str__(self):
         return self.name
