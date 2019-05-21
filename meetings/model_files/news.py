@@ -1,6 +1,9 @@
 from django.apps import apps
 from django.db import models
 from documents.file import File
+from esign.model_files.signature import Signature
+from mainapp.ws_methods import obj_to_dict, queryset_to_list
+from meetings.model_files.document import SignDocument
 from meetings.model_files.event import Event
 
 class News(models.Model):
@@ -40,11 +43,14 @@ class News(models.Model):
             news_docs.append({'name': doc.name, 'id': doc.id})
 
         voting_model = apps.get_model('voting', 'Voting')
+        esign_doc_model = apps.get_model('meetings', 'SignDocument')
+        sign_doc_ids = SignDocument.objects.filter(signature__image='',signature__user=request.user)
+        sign_doc_ids = queryset_to_list(sign_doc_ids,fields=['id','name','meeting__name'])
         home_object['to_do_items'] = {
             'pending_meetings':  Event.get_pending_meetings(uid),
             'pending_surveys': [],
-            'pending_documents': [],
-            'pending_votings': voting_model.get_todo_votings(uid)
+            'pending_documents': sign_doc_ids,
+            'pending_votings': voting_model.get_todo_votings(uid),
         }
         home_object['doc_ids'] = news_docs
         home_object['video_ids'] = news_videos

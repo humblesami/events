@@ -406,7 +406,7 @@ div.HomePageDiscription div#home-content p {
     margin-bottom: 34px;
 }
 .DocText {
-    color: #ffffff;
+    color: #0e0c0c;
     font-size: 13px;
     font-weight: 500;
     text-transform: capitalize;
@@ -534,6 +534,12 @@ button:focus {
 #signature_editor {
     /* width: calc(100vw - 50px);
     height: 198px; */
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#signature_editor_esign {
+    width: 459px;
+    height: 198px;
     margin-top: 5px;
     margin-bottom: 5px;
 }

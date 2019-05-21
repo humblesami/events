@@ -7,13 +7,18 @@ import threading
 import uuid
 from collections import OrderedDict
 from random import randint
+
+from PyPDF2 import PdfFileWriter, PdfFileReader
 from django.core.files import File as DjangoFile
 
 from PIL import ImageFont, Image, ImageDraw
 from django.db import models
+from fpdf import FPDF
+
 from documents.file import File
 from esign.model_files.document import SignDocument
 from esign.model_files.signature import Signature
+from mainapp.settings import MEDIA_ROOT
 from mainapp.ws_methods import queryset_to_list
 from meetings.model_files.user import Profile
 from .event import Event
@@ -52,9 +57,6 @@ class SignDocument(SignDocument):
             file_obj = signature[0].document
         else:
             file_obj = cls.objects.filter(id=file_id)[0]
-        pdf_doc = file_obj.pdf_doc.read()
-        pdf_doc = base64.b64encode(pdf_doc)
-        pdf_doc = pdf_doc.decode('utf-8')
         users = Profile.objects.all()
         users = queryset_to_list(users,fields=['id','username'])
         meetings = Event.objects.all()
@@ -65,12 +67,15 @@ class SignDocument(SignDocument):
             meeting_id = file_obj.meeting.id
         if file_obj.send_to_all:
             send_to_all = file_obj.send_to_all
+
         doc_data = cls.get_doc_data(request,file_obj,token)
-        is_admin = True
-
-
-        result = {"pdf_binary": pdf_doc,"users":users,"doc_data":doc_data,"isAdmin":is_admin,"meetings":meetings,"meeting_id":meeting_id,"send_to_all":send_to_all}
-        return result
+        isAdmin = True
+        doc_data["isAdmin"]=isAdmin
+        doc_data["meetings"] =meetings
+        doc_data["users"] =users
+        doc_data["meeting_id"] =meeting_id
+        doc_data["send_to_all"] =send_to_all
+        return doc_data
 
     @classmethod
     def get_signature(cls, request, params):
@@ -94,34 +99,35 @@ class SignDocument(SignDocument):
         meeting_id = params['meeting_id']
         send_to_all = params['send_to_all']
         doc = cls.objects.filter(id=doc_id)[0]
-        if work_flow_enabled == 'true':
+        if work_flow_enabled:
             doc.workflow_enabled=True
-        if work_flow_enabled == 'false':
+        if not work_flow_enabled:
             doc.workflow_enabled=False
-        if send_to_all == 'true':
+        if send_to_all:
             doc.send_to_all=True
-        if send_to_all == 'false':
+        if not send_to_all:
             doc.send_to_all=False
-        if meeting_id not in ['False', 'false']:
+        if meeting_id:
             meeting_id = int(meeting_id)
             doc.meeting_id=meeting_id
-        if meeting_id in ['False', 'false']:
-            doc.meeting=False
+        if not meeting_id:
+            doc.meeting=None
+        doc.save()
         signatures = json.loads(params['data'])
         email_data = []
-        if send_to_all == 'true':
+        if send_to_all:
             m = Event.objects.filter(id=meeting_id)
             sign_top = 5
             c = 0
-            for p in m.attendees.all():
-                if p.user_id:
+            for p in m[0].attendees.all():
+                if p:
                     if c == 0:
                         sign_left = 3
                     if c == 1:
                         sign_left = 51
 
-                    token = uuid.uuid4()
-                    obj = Signature(**{'document': doc, 'user': p, 'type': "sign", 'token': token,
+                    token = str(uuid.uuid4())
+                    obj = Signature(**{'document': doc, 'user_id': p.id, 'type': "sign", 'token': token,
                            'left': sign_left, 'top': sign_top, 'height': 40, 'width': 140,
                            'zoom': 300
                            })
@@ -147,17 +153,17 @@ class SignDocument(SignDocument):
             #         if mail:
             #             email_data.append(
             #                 {'user_email': user_email, 'email': email, 'token': token, 'subject': params['subject'], 'message': params['message']})
-            #         if c == 1:
-            #             c = 0
-            #             sign_top += 15
-            #             continue
-            #         c += 1
-            # cls.add_pages_for_sign(doc)
+                    if c == 1:
+                        c = 0
+                        sign_top += 15
+                        continue
+                    c += 1
+            doc.add_pages_for_sign()
         else:
             user_ids = [s["user_id"] for s in signatures]
             user_ids = list(OrderedDict.fromkeys(user_ids))
             for u in user_ids:
-                token = uuid.uuid4()
+                token = str(uuid.uuid4())
                 for s in [x for x in signatures if x['user_id'] == u]:
                     obj = Signature(**{'document_id': s['document_id'], 'user_id': s['user_id'],
                            'email': s['email'], 'name': s['name'], 'field_name': s['field_name'],
@@ -191,11 +197,7 @@ class SignDocument(SignDocument):
         # t.start()
 
         doc_data = cls.get_doc_data(request,doc)
-        pdf_doc = doc.pdf_doc.read()
-        pdf_doc = base64.b64encode(pdf_doc)
-        pdf_doc = pdf_doc.decode('utf-8')
-
-        return {"pdf_binary": pdf_doc, "doc_data": doc_data}
+        return doc_data
 
     @classmethod
     def save_signature(cls, request, params):
@@ -231,7 +233,7 @@ class SignDocument(SignDocument):
                 binary_signature = params['binary_signature']
                 binary_data = io.BytesIO(base64.b64decode(binary_signature))
                 jango_file = DjangoFile(binary_data)
-                sign.image.save("sign", jango_file)
+                sign.image.save("sign"+".png", jango_file)
             if params['type'] == "date":
                 # dt=kw['date']
                 dt = datetime.datetime.today().strftime('%b,%d  %Y')
@@ -246,34 +248,30 @@ class SignDocument(SignDocument):
                 jango_file = DjangoFile(binary_data)
                 sign.image.save("sign", jango_file)
 
-        # doc.embed_signatures()
-        pdf_doc = doc.pdf_doc.read()
-        pdf_doc = base64.b64encode(pdf_doc)
-        pdf_doc = pdf_doc.decode('utf-8')
+        doc.embed_signatures()
         doc_data = cls.get_doc_data(request,doc, token)
+        doc_data["signature"] = binary_signature
 
-        return {"pdf_binary": pdf_doc, "signature": binary_signature, "doc_data": doc_data}
+        return doc_data
 
     @classmethod
     def delete_signature(cls, request, params):
-        signature_id = params['signature_id']
+        signature_id = int(params['signature_id'])
         sign = Signature.objects.filter(id=signature_id)
         doc_id = params['document_id']
-        doc = cls.objects.filter(id=doc_id)
+        doc = cls.objects.filter(id=doc_id)[0]
         # doc.emit_data_update(doc)
         sign.delete()
+        doc.embed_signatures()
+        doc_data = cls.get_doc_data(request,doc)
 
-        doc.pdf_doc = doc.original_pdf
-        # doc.embed_signatures()
+        return doc_data
 
+    def get_doc_data(request,doc,token=False):
         pdf_doc = doc.pdf_doc.read()
         pdf_doc = base64.b64encode(pdf_doc)
         pdf_doc = pdf_doc.decode('utf-8')
-        doc_data = cls.get_doc_data(request,doc)
 
-        return {"pdf_binary": pdf_doc, "doc_data": doc_data}
-
-    def get_doc_data(request,doc,token=False):
         signatures = doc.signature_set.all()
         signatures = queryset_to_list(signatures,fields=['user__id','user__username','id','type','page','field_name','zoom','width','height','top','left','image'])
         uid = False
@@ -288,14 +286,14 @@ class SignDocument(SignDocument):
             if s["image"]:
                 signed = True
             if token:
-                if (uid == s["user"] and s["user__id"]) or token == s["token"]:
+                if (uid == s["user__id"] and s["user__id"]) or token == s["token"]:
                     my_record = True
             else:
                 if (request.user.id == s["user__id"]):
                     my_record = True
             s["signed"] = signed
             s["my_record"] = my_record
-        return signatures
+        return {"pdf_binary":pdf_doc,"doc_data":signatures}
 
     def get_auto_sign( sign, date=""):
         curr_dir = os.path.dirname(__file__)
@@ -348,4 +346,66 @@ class SignDocument(SignDocument):
         binary_signature = base64.encodebytes(read)
         binary_signature = binary_signature.decode('utf-8')
         return binary_signature
+
+    def add_pages_for_sign( self):
+        if not self.original_pdf or not self.signature_set.all().exists():
+            return
+        pth = MEDIA_ROOT + "/" + self.original_pdf.name
+
+
+        input = PdfFileReader(open(pth, "rb"))
+        # Addition of code for orientation correction Asfand
+        pageValue = input.getPage(0)
+        pageOrientation = pageValue.get('/Rotate')
+        page = input.getPage(0).mediaBox
+        zAxis = page.getUpperRight_x()
+        yAxis = page.getUpperLeft_x()
+        width = int(zAxis - yAxis)
+
+        height = int(page.getUpperRight_y() - page.getLowerRight_y())
+        solution = [width, height]
+        if width > height or pageOrientation == 90:
+            if height > width:
+                orientation = 'L'
+            else:
+                orientation = 'P'
+        elif pageOrientation == 0 or pageOrientation == 180 or pageOrientation == None:
+            if width > height:
+                orientation = 'L'
+            else:
+                orientation = 'P'
+
+        output = PdfFileWriter()
+        count = 0
+        pdf = FPDF(orientation, 'pt', solution)
+        pdf.add_page(orientation=orientation)
+        # Addition ended
+        for page_number in range(input.getNumPages()):
+            output.addPage(input.getPage(page_number))
+        current_pg = input.getNumPages() + 1
+
+        for sign in self.signature_set.all():
+            count = count + 1
+            sign.page = current_pg
+            sign.save()
+            if (count == 9):
+                pdf.add_page(orientation=orientation)
+                count = 0
+                current_pg += 1
+
+        signature_only_pdf_path = MEDIA_ROOT + "/files/signature-pdf-pages" + str(self.id) + ".pdf"
+        pdf.output(signature_only_pdf_path, "F")
+
+        pdf.close()
+
+        signaturepdf = PdfFileReader(open(signature_only_pdf_path, "rb"))
+        for page_number in range(signaturepdf.getNumPages()):
+            output.addPage(signaturepdf.getPage(page_number))
+
+        output_pdf_path = MEDIA_ROOT + "/files/sign-doc-output-pages" + str(self.id) + ".pdf"
+        with open(output_pdf_path, "wb") as outputStream:
+            output.write(outputStream)
+        res = open(output_pdf_path, 'rb')
+        self.pdf_doc.save(self.original_pdf.name, DjangoFile(res))
+        self.original_pdf.save(self.original_pdf.name, DjangoFile(res))
 

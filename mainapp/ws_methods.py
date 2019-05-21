@@ -2,6 +2,8 @@ import sys
 import json
 import smtplib
 from datetime import datetime
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate, login
 
 import requests
 from django.forms.models import model_to_dict
@@ -351,27 +353,18 @@ def queryset_to_list(queryset,fields=None,to_str=None,related=None):
 #     return host_url
 #
 #
-# def check_auth_token(values):
-#     if values.get('stopit'):
-#         a = 1
-#     if request.uid and request.uid != 4:
-#         return request.uid
-#     if not values:
-#         return False
-#     if not values['token']:
-#         return False
-#     db = values['db']
-#     token = str(values['token'])
-#     if not hasattr(request, 'token'):
-#         request.token = token
-#     filters = [('auth_token', '=', token)]
-#     user = request.env['dnspusers'].sudo().search(filters)
-#     if not user:
-#         return False
-#     uid = request.session.authenticate(db, user.login, user.password)
-#     if not hasattr(request, 'conf'):
-#         request.conf = {'uid': uid, 'db': request.db, 'token': token}
-#     return uid
+def check_auth_token(request,values):
+    if request.user and not request.user.is_anonymous:
+        return request.user.id
+    if not values['auth_token']:
+        return False
+    token = Token.objects.filter(key=values['auth_token'])
+    if not token.exists():
+        return False
+    user = token[0].user
+    login(request, user)
+
+    return user.id
 #
 #
 # def authenticate(data):

@@ -7,7 +7,7 @@ from meetings.model_files.document import MeetingDocument,AgendaDocument
 from django.contrib.auth.forms import UserChangeForm
 from django.utils.translation import gettext_lazy as _
 from meetings.model_files.user import Profile,Admin,Director,Staff,MeetingGroup
-from .models import Event,Topic, News, NewsVideo, NewsDocument
+from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
@@ -287,5 +287,6 @@ admin.site.register(Staff,StaffAdmin)
 admin.site.register(MeetingGroup,GroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
 admin.site.register(Profile,UserAdmin)
+admin.site.register(SignDocument)
 
 admin.site.site_header = "MeetVUE"
