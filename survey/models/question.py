@@ -69,7 +69,7 @@ class Question(models.Model):
 
     text = models.TextField(_("Text"))
     order = models.IntegerField('Order', default=1)
-    required = models.BooleanField(_("Required"))
+    required = models.BooleanField(_("Required"), default=True)
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
