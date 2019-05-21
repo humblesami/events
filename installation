@@ -33,7 +33,7 @@ python3 manage.py runserver
 
 python3 manage.py startapp mymodule
 
-ng build --aot --prod=true --source-map=false --output-path=/home/sami/django/jangomeet/static/angular
+ng build --aot --source-map=false --prod=true --output-path=/home/sami/django/jangomeet/static/angular
 mv /home/sami/django/jangomeet/static/angular/static/angular/assets/  /home/sami/django/jangomeet/static/angular/
 
 
