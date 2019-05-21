@@ -88,6 +88,7 @@ class SignDocument(SignDocument):
             image = base64.b64encode(image)
             image = image.decode('utf-8')
         else:
+            image = None
             if sign.type == 'initial':
                 image = cls.get_auto_sign(sign)
         return {"signature": image}
@@ -240,13 +241,13 @@ class SignDocument(SignDocument):
                 binary_signature = cls.get_auto_sign(sign, dt)
                 binary_data = io.BytesIO(base64.b64decode(binary_signature))
                 jango_file = DjangoFile(binary_data)
-                sign.image.save("sign", jango_file)
+                sign.image.save("sign"+".png", jango_file)
             if params['type'] == "text":
                 text = params['text']
                 binary_signature = cls.get_sign_text(sign, text)
                 binary_data = io.BytesIO(base64.b64decode(binary_signature))
                 jango_file = DjangoFile(binary_data)
-                sign.image.save("sign", jango_file)
+                sign.image.save("sign"+".png", jango_file)
 
         doc.embed_signatures()
         doc_data = cls.get_doc_data(request,doc, token)
@@ -324,7 +325,7 @@ class SignDocument(SignDocument):
         binary_signature = binary_signature.decode('utf-8')
         return binary_signature
 
-    def get_sign_text(self, sign, text):
+    def get_sign_text( sign, text):
         curr_dir = os.path.dirname(__file__)
         pth = curr_dir.replace('model_files', 'static')
         font = ImageFont.truetype(pth + "/FREESCPT.TTF", 200)
