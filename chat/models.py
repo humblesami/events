@@ -5,7 +5,6 @@ from datetime import datetime
 from documents.file import File
 from mainapp import ws_methods
 from django.contrib import admin
-from django.core.files.base import ContentFile
 from django.contrib.auth.models import User as user_model
 from meetings.model_files.user import Profile, create_group
 
@@ -268,12 +267,9 @@ class Message(models.Model):
                 )
 
                 image_data = attachment['binary']
-                image_data = image_data.encode()
-                image_data = ContentFile(base64.b64decode(image_data))
-                file_name = attachment['name']
-                doc.attachment.save(file_name, image_data, save=True)
-                doc.save()
+                image_data = ws_methods.base64StringToFile(image_data, file_name)
 
+                doc.attachment.save(file_name, image_data, save=True)
                 attachment_urls.append({
                     'name': file_name,
                     'url': doc.attachment.url
@@ -281,11 +277,15 @@ class Message(models.Model):
         message = message.__dict__
         message['attachments'] = attachment_urls
         del message['_state']
+        message['uuid'] = params['uuid']
         events = [
             {'name': 'chat_message_received', 'data': message, 'audience': [target_id]}
         ]
         res = ws_methods.emit_event(events)
-        return res
+        if res == 'done':
+            return message
+        else:
+            return res
 
     @classmethod
     def mark_read(cls, request, params):

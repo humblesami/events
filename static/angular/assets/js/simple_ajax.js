@@ -29,18 +29,15 @@ function dn_rpc_object(options) {
     options.headers = {
         
     }
-    // if(api_url.endsWith('/secure'))
-    // {
-        if(ajax_user.cookie && ajax_user.cookie.token)
-        {
-            options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;            
-        }
-        else
-        {
-            console.log(ajax_user.cookie, ' Invalid token for', input_data.args);
-            window['functions'].go_to_login();
-        }
-    // }
+    if(ajax_user.cookie && ajax_user.cookie.token)
+    {
+        options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;            
+    }
+    else if(api_url.endsWith('/secure'))
+    {
+        console.log(ajax_user.cookie, ' Invalid token for', input_data.args);
+        window['functions'].go_to_login();
+    }
 
     options.data = args_data;
     options.dataType = 'json';
@@ -157,7 +154,7 @@ function dn_rpc_object(options) {
         {
             console.log(url_with_params);
         }
-        response.error = response.error.replace('<br/>','\n');
+        response.error = response.error.replace(/<br\/>/g, "\n");
         console.log(response.error);
     }
     $.ajax(options);

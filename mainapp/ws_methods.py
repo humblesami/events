@@ -1,9 +1,12 @@
+import base64
 import sys
 import json
 import smtplib
 from datetime import datetime
+from django.contrib.auth import login
+from django.core.files.base import ContentFile
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate, login
+
 
 import requests
 from django.forms.models import model_to_dict
@@ -57,6 +60,17 @@ def execute_read(query):
     cr.execute(query)
     res = cr.dictfetchall()
     return res
+
+
+def base64StringToFile(data, file_name):
+    if 'data:' in data and ';base64,' in data:
+        header, data = data.split(';base64,')
+    try:
+        decoded_file = base64.b64decode(data)
+    except:
+        raise ValueError('Invalid binary')
+
+    return ContentFile(decoded_file, name=file_name)
 
 
 def choices_to_list(choice_list):

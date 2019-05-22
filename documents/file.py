@@ -1,14 +1,11 @@
 import base64
 import subprocess
-
-from django.core.files import File as DjangoFile
-
 # import pdftotext
+from fpdf import FPDF
 from PIL import Image
 from django.db import models
-from fpdf import FPDF
-
 from mainapp import settings
+from django.core.files import File as DjangoFile
 
 
 class File(models.Model):
@@ -17,7 +14,7 @@ class File(models.Model):
     content = models.CharField(max_length=30, blank=True)
     pdf_doc = models.FileField(upload_to='converted/', null=True)
     file_type = models.CharField(max_length=128, default='')
-    attachment = models.FileField(upload_to='files/')
+    attachment = models.FileField(upload_to='files/', null=True)
 
     def __str__(self):
         return self.name

@@ -37,10 +37,12 @@ var dn_current_site_user = {
             if (!dn_current_site_user.cookie.token) {
                 site_functions.go_to_login();
             }
+            else{
+                $('body').removeClass('public').addClass('user');
+            }
         }
     },
-    onLogin: function(data) {
-        // console.log(233);
+    onLogin: function(data) {        
         if (time_out_session) {
             clearTimeout(time_out_session);
         }
@@ -48,12 +50,14 @@ var dn_current_site_user = {
             site_functions.go_to_login();
         }, session_time_limit);
         dn_current_site_user.cookie = data;
-        data = JSON.stringify(data);
+        data = JSON.stringify(data);        
         localStorage.setItem('user', data);
+        $('body').removeClass('public').addClass('user');
     },
     logout: function(navigate) {
         // console.log(342);
         localStorage.removeItem("user");
+        $('body').removeClass('user').addClass('public');
         dn_current_site_user.cookie = undefined;
         if (window['socket_manager']) {
             window['socket_manager'].close_socket();
@@ -93,6 +97,32 @@ var site_functions = {
     go_to_login: function() {
         dn_current_site_user.logout(1);
     },
+
+    
+    get_file_binaries(files, resolve){
+        var res_binaries = [];
+        var len = files.length;
+        for (var i = 0; i < files.length; i++) {            
+            setupReader(files[i]);
+        }
+        function setupReader(file) {
+            var name = file.name;
+            var reader = new FileReader();
+            reader.onload = function(){            
+                var dataURL = reader.result;            
+                res_binaries.push({
+                    name: name,
+                    binary : dataURL
+                });
+                if(res_binaries.length == len)
+                {
+                    resolve(res_binaries);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    },
+
     meeting_time: function(dt) {
         var moment_time = moment(dt, 'YYYY-MM-DD HH:mm:ss')
         var res = {
@@ -354,16 +384,16 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'survey':
                     window.location = `/#/surveys`;
                     break;
-                case 'director':
+                    case 'director':
                     window.location = `/#/directors`;
                     break;
-                case 'admin':
+                    case 'admin':
                     window.location = `/#/admins`;
                     break;
-                case 'staff':
+                    case 'staff':
                     window.location = `/#/staff`;
                     break;
-                case 'folder':
+                    case 'folder':
                     window.location = `/#/resources`;
                     break;
 
