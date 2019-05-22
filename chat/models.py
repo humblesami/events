@@ -1,14 +1,13 @@
 import base64
-
-from django.core.files.base import ContentFile
 from django.db import models
 from django.apps import apps
 from datetime import datetime
 from documents.file import File
 from mainapp import ws_methods
 from django.contrib import admin
+from django.core.files.base import ContentFile
+from django.contrib.auth.models import User as user_model
 from meetings.model_files.user import Profile, create_group
-from django.contrib.auth.models import User as user_model, User
 
 
 class NotificationType(models.Model):
@@ -20,7 +19,7 @@ class NotificationType(models.Model):
 
 class Notification(models.Model):
     res_id = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(user_model, on_delete=models.CASCADE)
     counter = models.IntegerField(default=1)
     notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE)
 
@@ -147,7 +146,7 @@ class Comment(models.Model):
     subtype_id = models.IntegerField()
     body = models.TextField()
     parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(user_model, on_delete=models.CASCADE)
     create_date = models.DateTimeField(null=True)
 
     @classmethod
@@ -228,7 +227,7 @@ class Message(models.Model):
             for att in MessageDocument.objects.filter(message_id=obj.id):
                 dict_obj['attachments'].append({
                     'name': att.name,
-                    'url': att.pdf_doc.url
+                    'url': att.attachment.url
                 })
             ar.append(dict_obj)
         return ar
@@ -257,7 +256,7 @@ class Message(models.Model):
         body = params['body']
         message = Message(to=target_id, sender=uid, body=body)
         message.save()
-        attachment_paths = []
+        attachment_urls = []
         attachments = params.get('attachments')
         if attachments:
             for attachment in attachments:
@@ -273,13 +272,14 @@ class Message(models.Model):
                 image_data = ContentFile(base64.b64decode(image_data))
                 file_name = attachment['name']
                 doc.attachment.save(file_name, image_data, save=True)
+                doc.save()
 
-                attachment_paths.append({
+                attachment_urls.append({
                     'name': file_name,
-                    'path': doc.pdf_doc.url
+                    'url': doc.attachment.url
                 })
         message = message.__dict__
-        message['attachments'] = attachment_paths
+        message['attachments'] = attachment_urls
         del message['_state']
         events = [
             {'name': 'chat_message_received', 'data': message, 'audience': [target_id]}
