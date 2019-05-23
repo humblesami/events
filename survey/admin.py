@@ -27,7 +27,7 @@ class SurveyAdmin(admin.ModelAdmin):
     actions = [make_published]
 
     def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ("template",)
+        self.exclude = ("template","need_logged_user",)
         form = super(SurveyAdmin, self).get_form(request, obj, **kwargs)
         return form
 

@@ -11,8 +11,7 @@ class Survey(models.Model):
     description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Users can see it and answer it"))
     need_logged_user = models.BooleanField(
-        _("Only authenticated users can see it and answer it")
-    )
+        _("Only authenticated users can see it and answer it"), default=True)
     display_by_question = models.BooleanField(_("Display by question"))
     template = models.CharField(_("Template"), max_length=255, null=True, blank=True)
 
