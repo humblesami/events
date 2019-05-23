@@ -281,6 +281,10 @@ a,
     opacity: .5;
 }
 
+#main-div {
+    padding-bottom: 100px;
+}
+
 #main-div .img-thumbnail-lg {
     width: 130px;
     height: 135px;
@@ -317,61 +321,6 @@ a,
     overflow-y: auto;
 }
 
-
-/*Homepage Welcome Content setting*/
-
-div#welcome {
-    padding: 30px 0;
-}
-
-.WelcomeContent h4.HomeTitle {
-    margin-bottom: 20px;
-}
-
-.WelcomeContent h4.HomeTitle span {
-    position: relative;
-}
-
-.WelcomeContent h4.HomeTitle span:before {
-    border-top: 1px solid #dddddd;
-    content: "";
-    position: absolute;
-    bottom: -7px;
-    left: 0px;
-    width: 100%;
-}
-
-
-/*.WelcomeContent h4.HomeTitle span:after{
-    border:1px solid #9c4784;
-    content:"";
-    position:absolute;
-    bottom:-7px;
-    right:0px;
-    width:30%;
-}*/
-
-.HomePageDiscription {
-    display: flex;
-    justify-content: space-between;
-}
-
-div.HomePageDiscription div#home-content p {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: #888da8;
-}
-
-.WelcomeContent {
-    padding-top: 30px;
-    padding-bottom: 30px;
-    -webkit-flex: 1 1 auto;
-    flex: 1 1 auto;
-}
-
-
-/* Home Page Document Section */
-
 .DocumentSection {
     padding: 0;
 }
@@ -405,9 +354,6 @@ div.HomePageDiscription div#home-content p {
     transform: scale(1.1);
 }
 
-.HomepageDocumentSection .DocumentWrapper {
-    margin-bottom: 34px;
-}
 .DocText {
     color: #ffffff;
     font-size: 13px;
@@ -449,37 +395,6 @@ div.HomePageDiscription div#home-content p {
     background: #2699FB;
 }
 
-
-
-/* Home Page Video Section */
-
-#homevideos {
-    display: flex;
-    margin-right: -15px;
-    margin-left: -15px;
-}
-
-.HomePageVideoWrapper {
-    border-radius: 3px;
-    overflow: hidden;
-    background: #7c7bad;
-    margin-bottom: 25px;
-}
-
-.HomePageVideoWrapper p {
-    margin: 0;
-    padding: 13px 0;
-    color: #ffffff;
-    font-weight: 400;
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-    text-align: center;
-}
-
-.CalendarWrapper {
-    margin: 30px 0;
-    padding: 0 2%;
-}
 
 .btn-primary {
     color: #ffffff;
@@ -573,9 +488,18 @@ breadcrumb
 
 .breadcrumbSection {
     background: #f1f2f4;
-    padding: 0.859em 0;
-    margin-bottom: 15px;
-    margin-top: -20px;
+    padding: 0.859em 0.16em 0.859em 0.859em;
+}
+.breadcrumbSection .btn-primary{
+    float: right;
+    margin-top: -9px;
+}
+
+.breadcrumbSection .btn-danger{
+    float: right;
+    margin-top: -9px;
+    margin-right: 6px;
+    font-size: 0.875rem;
 }
 
 .breadcrumbSection .breadcrumb {
@@ -593,6 +517,7 @@ breadcrumb
 .breadcrumbSection .breadcrumb li {
     color: #8c8c8cdb;
     text-transform: capitalize;
+    display: inline;
 }
 
 .talbe-docs-wrapper {
@@ -713,11 +638,6 @@ last-login-details
 
 .profile-image {
     display: none;
-}
-
-#main-div {
-    padding-bottom: 100px;
-    padding-top: 20px;
 }
 
 .schedule-wrap {
@@ -2417,7 +2337,6 @@ button
   
   .app-menu {
     margin-bottom: 0;
-    padding-bottom: 40px;
   }
   .app-menu li{ border-top:1px solid rgba(255, 255, 255, 0.15);
   }
@@ -2543,14 +2462,8 @@ button
     .sidebar-mini.sidenav-toggled .app-sidebar {
       left: 0;
       width: 70px;
-      overflow: hidden;
     }
-    .sidebar-mini.sidenav-toggled .app-sidebar:hover {
-      overflow: visible;
-    }
-    .sidebar-mini.sidenav-toggled .app-menu__item {
-      overflow: hidden;
-    }
+    
     .sidebar-mini.sidenav-toggled .app-menu__item:hover {
       overflow: visible;
     }
@@ -2717,4 +2630,8 @@ body.public .app-sidebar
     border: 1px solid #D7DAE2;
     background: transparent;
     color: #3059C9;
+}
+.sidebar-mini.sidenav-toggled .app-sidebar
+{
+    overflow: auto;
 }
