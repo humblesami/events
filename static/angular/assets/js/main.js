@@ -86,7 +86,7 @@ function standeredTime(time) {
 }
 
 window['current_user'] = dn_current_site_user;
-var server_wait_loader = $("#server-wait");
+var server_wait_loader = undefined;
 window['public_routes'] = ['/login', '/logout'];
 
 var site_functions = {
@@ -148,6 +148,14 @@ var site_functions = {
         return hour + ':' + minut;
     },
     showLoader: function(nam) {
+        if(!server_wait_loader)
+        {
+            server_wait_loader = window['loader'];
+            if(!server_wait_loader)
+            {
+                return;
+            }            
+        }
         var obj_this = this;
         var time_out = undefined;
         if (obj_this.processes.length == 0) {
@@ -163,6 +171,13 @@ var site_functions = {
         //console.log(nam, new Date().getMilliseconds());
     },
     hideLoader: function(nam, hiddenFrom) {
+        if(!server_wait_loader){
+            server_wait_loader = window['loader'];
+            if(!server_wait_loader)
+            {
+                return;
+            } 
+        }
         if (!nam || nam == 'force') {
             this.processes = [];
             if (!nam)
