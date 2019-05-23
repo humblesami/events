@@ -27,7 +27,7 @@ function drawChart(chartData, canvasId)
         };
         var ctx = document.getElementById(canvasId).getContext('2d');
         var myPieChart = new Chart(ctx, {
-            type: 'pie',
+            type: 'doughnut',
             backgroundColor: 'rgb(255, 99, 132)',
             data: chartData
         });
