@@ -24,6 +24,44 @@
                 {% endfor%}
             </td>
         </tr>
+		<tr>
+			<td>
+				{% load static %}
+				<script src="{% static '/libs/jquery/jquery-3.3.1.js' %}"></script>
+				<script src="{% static '/libs/jquery/chart.js' %}"></script>
+				<script src="{% static 'js/custom_survey_chart.js' %}"></script>
+				{% if form.field.widget.input_type == 'radio' %}
+					<div>
+						{% for data in chart_data %}
+							{% if data.question == form.label|safe %}
+								<div style="display:flex" class="voting-results-container">
+									{% for result in data.question_data %}
+										<div style="widows: 200px;">
+											<script>
+												if(window['chartData'])
+												{
+													window['chartData'].push({'option_name':'{{result.option_name}}', 'option_result': {{result.option_result}}})
+												}
+												else
+												{
+													window['chartData'] = [{'option_name':'{{result.option_name}}', 'option_result': {{result.option_result}}}]
+												}
+											</script>
+										</div>
+									{% endfor %}
+								</div>
+								<canvas id="myChart-{{data.question}}"></canvas>
+								<script>
+									drawChart(window['chartData'], 'myChart-{{data.question}}');
+									window['chartData'] = null;
+								</script>
+							{% endif %}
+						{% endfor %}
+					</div>
+				{% endif %}
+
+			</td>
+		</tr>
 	{% endif %}
 {% endfor %}
     </tbody>

@@ -9,7 +9,7 @@ class Survey(models.Model):
 
     name = models.CharField(_("Name"), max_length=400)
     description = models.TextField(_("Description"))
-    is_published = models.BooleanField(_("Users can see it and answer it"))
+    is_published = models.BooleanField(_("Users can see it and answer it"), default=False)
     need_logged_user = models.BooleanField(
         _("Only authenticated users can see it and answer it"), default=True)
     display_by_question = models.BooleanField(_("Display by question"))
@@ -38,7 +38,7 @@ class Survey(models.Model):
     @classmethod
     def get_records(cls, request, params):
         surveys = []
-        survey_obj = Survey.objects.filter(is_published=True)
+        survey_obj = Survey.objects.filter()
         for survey in survey_obj:
             surveys.append({
                 'id': survey.id,

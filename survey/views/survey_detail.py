@@ -3,9 +3,9 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View
-
+from django.db.models import Count
 from survey.forms import ResponseForm
-from survey.models import Category, Survey
+from survey.models import Category, Survey, Answer
 
 
 class SurveyDetail(View):
@@ -24,7 +24,25 @@ class SurveyDetail(View):
         form = ResponseForm(
             survey=survey, user=request.user, step=kwargs.get("step", 0)
         )
-        context = {"response_form": form, "survey": survey, "categories": categories}
+        questions = survey.questions.all()
+        chart_data = []
+
+        for question in questions:
+            if question.type in ('radio'):
+                choices = question.choices.split(',')
+                user_answers = list(
+                    Answer.objects.values('body').filter(question_id=question.id).annotate(answer_count=Count('body'))
+                )
+                question_data = []
+                for choice in choices:
+                    question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0})
+                    for user_answer in user_answers:
+                        for singledata in question_data:
+                            if user_answer['body'] == singledata['option_name']:
+                                singledata['option_result'] = user_answer['answer_count']
+                chart_data.append({'question': question.text.strip(), 'question_data': question_data})
+
+        context = {"response_form": form, "survey": survey, "categories": categories, 'chart_data': chart_data}
 
         return render(request, template_name, context)
 
