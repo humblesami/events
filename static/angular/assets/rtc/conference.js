@@ -1,11 +1,11 @@
 (function(){
-    var original_rtc_html = $('#rtc-container').html();
-    function init_video_call(){
 
+    function init_video_call(){
         document.getElementById('open-room').onclick = function() {        
             disableInputButtons();            
             var roomid = document.getElementById('room-id').value;
             beforeOpenOrJoin(roomid, function() {
+                connection.socketCustomParameters = '&user_id='+user_id+'&token='+token;
                 connection.openOrJoin(roomid, function(isRoomExist, roomid, error) {
                     if(error) {
                         console.log(error, isRoomExist);
@@ -198,7 +198,6 @@
         
         function afterOpenOrJoin() {
             connection.socket.on(connection.socketCustomEvent, function(message) {
-                console.log(message, 1856);
                 if (message.userid === connection.userid) return; // ignore self messages
         
                 if (message.justSharedMyScreen === true) {
@@ -335,7 +334,8 @@
     init_video_call();
     var url = new URL(window.location.toString());
     var roomer = url.searchParams.get("room");
-    var participant = url.searchParams.get("participant");
+    var user_id = url.searchParams.get("uid");
+    var token = url.searchParams.get("token");
     document.getElementById('room-id').value = roomer;
     $('#open-room').click();
 })()

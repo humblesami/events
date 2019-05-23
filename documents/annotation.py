@@ -7,7 +7,6 @@ import datetime
 import json
 
 
-
 class AnnotationDocument(models.Model):
     version = models.IntegerField()
     document = models.ForeignKey(File, on_delete=models.CASCADE, null=True)

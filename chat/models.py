@@ -202,14 +202,15 @@ class Comment(models.Model):
         Notification.add_notification(params, event_data)
         return 'done'
 
+
 class Message(models.Model):
     sender = models.IntegerField()
     to = models.IntegerField()
     body = models.TextField()
     read_status = models.BooleanField(default=False)
+    create_date = models.DateTimeField(null=True, default=datetime.now())
 
-
-    def get_message_list(uid, target_id, offset):
+    def get_message_list(cls, uid, target_id, offset):
         ins = [target_id, uid]
         ar = []
         for obj in Message.objects.filter(sender__in=ins, to__in=ins)[offset: offset + 20]:
@@ -221,6 +222,7 @@ class Message(models.Model):
                 'body': obj.body,
                 'to': obj.to,
                 'sender': obj.sender,
+                'create_date': str(obj.create_date),
                 'attachments': []
             }
             for att in MessageDocument.objects.filter(message_id=obj.id):
@@ -230,7 +232,6 @@ class Message(models.Model):
                 })
             ar.append(dict_obj)
         return ar
-
 
     @classmethod
     def get_friend_messages(cls, request, params):
@@ -247,13 +248,12 @@ class Message(models.Model):
         data = cls.get_message_list(uid, target_id, offset)
         return data
 
-
     @classmethod
     def send(cls, request, params):
         uid = request.user.id
         target_id = params['to']
         body = params['body']
-        message = Message(to=target_id, sender=uid, body=body)
+        message = Message(to=target_id, sender=uid, body=body, create_date=datetime.now())
         message.save()
         attachment_urls = []
         attachments = params.get('attachments')
@@ -274,8 +274,11 @@ class Message(models.Model):
                     'name': file_name,
                     'url': doc.attachment.url
                 })
+
+        message['create_date'] = str(message.create_date)
         message = message.__dict__
         message['attachments'] = attachment_urls
+
         del message['_state']
         message['uuid'] = params['uuid']
         events = [
@@ -295,8 +298,10 @@ class Message(models.Model):
         message.save()
         return 'done'
 
+
 class MessageDocument(File):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
+
 
 class AuthUserChat(models.Model):
     @classmethod

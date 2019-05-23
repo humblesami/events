@@ -276,8 +276,21 @@ class Profile(user_model):
         return 'done'
 
     def save(self, *args, **kwargs):
+        creating = False
+        if not self.pk:
+            creating = True
         super(Profile, self).save(*args, **kwargs)
-        self.is_staff = True
+        if creating:
+            user_data = {
+                'id': self.pk,
+                'photo': self.image.url,
+                'name': self.fullname()
+            }
+            events = [
+                {'name': 'new_friend', 'data': user_data, 'audience': ['all_online']}
+            ]
+            ws_methods.emit_event(events)
+            self.is_staff = True
 
 # class Resume(File):
 #     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
