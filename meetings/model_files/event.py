@@ -182,7 +182,8 @@ class Event(models.Model):
 
         return {'data': data}
 
-    def get_meetings(meeting_type):
+    @classmethod
+    def get_meetings(cls, meeting_type):
         if meeting_type == 'archived':
             meetings = Event.objects.filter(archived=True, publish=True)
         else:
@@ -197,36 +198,32 @@ class Event(models.Model):
         return meeting_list
 
     @classmethod
+    def get_meeting_summaries(cls, meetings, uid):
+        res_meetings = []
+        for meeting_obj in meetings:
+            meeting = {}
+            meeting_id = meeting_obj.id
+            invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=uid)
+            user_response = 'needsAction'
+            if invitation_response:
+                user_response = list(invitation_response)[0].state
+            meeting['name'] = meeting_obj.name
+            meeting['start_date'] = str(meeting_obj.start_date)
+            meeting['end_date'] = str(meeting_obj.end_date)
+            meeting['start'] = str(meeting_obj.start_date)
+            meeting['stop'] = str(meeting_obj.end_date)
+            meeting['location'] = meeting_obj.location
+            meeting['attendee_status'] = user_response
+            res_meetings.append(meeting)
+        return res_meetings
+
+    @classmethod
     def get_records(cls, request, params):
         meeting_type = params.get('meeting_type')
         meeting_list = cls.get_meetings(meeting_type)
-        meetings = []
-        if meeting_list:
-            for meeting in meeting_list:
-                location = meeting.location
-                invitatino_response = meeting.invitation_response_set.filter(attendee_id=request.user.id)
-                if invitatino_response:
-                    attndee_status = invitatino_response[0].state
-                else:
-                    attndee_status = 'needsAction'
-                meeting_val = meeting.__dict__
-                meeting_val['location'] = location
-                meeting_val['attendee_status'] = attndee_status
-                meetings.append(meeting_val)
-        else:
-            res = {'records': meetings, 'total': 0, 'count': 0}
-            return res
-        if meetings:
-            for meeting in meetings:
-                if meeting['start_date']:
-                    meeting['start_date'] = str(meeting['start_date'])
-                    meeting['end_date'] = str(meeting['end_date'])
-                    if meeting.get('_state'):
-                        del meeting['_state']
-            meetings = {'records': meetings, 'total': 0, 'count': 0}
-            data = {'error': '', 'data': meetings}
-        else:
-            data = {'error': 'Meeting not found'}
+        meetings = cls.get_meeting_summaries(meeting_list, request.user.id)
+        meetings = {'records': meetings, 'total': 0, 'count': 0}
+        data = {'error': '', 'data': meetings}
         return data
 
     @classmethod
