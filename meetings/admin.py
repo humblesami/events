@@ -75,6 +75,7 @@ class EventAdmin(admin.ModelAdmin):
                 'description',
                 'pin',
                 'conference_bridge_number',
+                'video_call_link',
                 'country',
                 'state',
                 'zip',

@@ -16,8 +16,6 @@ class Event(models.Model):
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
     attendees = models.ManyToManyField(Profile)
-
-
     custom_message = models.CharField('Message', max_length=200, blank=True)
     street = models.CharField(max_length=150, blank=True)
     description = models.TextField(blank=True)
@@ -29,6 +27,7 @@ class Event(models.Model):
     zip = models.CharField(max_length=10, blank=True)
     pin = models.CharField('Meeting PIN', max_length=50, blank=True, null=True)
     conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, null=True, blank=True)
+    video_call_link = models.CharField(max_length=200, null=True)
 
     @property
     def exectime(self):
