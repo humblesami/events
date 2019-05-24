@@ -210,7 +210,10 @@ class Message(models.Model):
     read_status = models.BooleanField(default=False)
     create_date = models.DateTimeField(null=True, default=datetime.now())
 
+    @classmethod
     def get_message_list(cls, uid, target_id, offset):
+        uid = int(uid)
+        target_id = int(target_id)
         ins = [target_id, uid]
         ar = []
         for obj in Message.objects.filter(sender__in=ins, to__in=ins)[offset: offset + 20]:
@@ -275,9 +278,9 @@ class Message(models.Model):
                     'url': doc.attachment.url
                 })
 
-        message['create_date'] = str(message.create_date)
         message = message.__dict__
         message['attachments'] = attachment_urls
+        message['create_date'] = str(message['create_date'])
 
         del message['_state']
         message['uuid'] = params['uuid']
