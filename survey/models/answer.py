@@ -65,7 +65,7 @@ class Answer(models.Model):
         return values
 
     def check_answer_body(self, question, body):
-        if question.type in [Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE]:
+        if question.type in [Question.RADIO, Question.SELECT_MULTIPLE]:
             choices = question.get_clean_choices()
             if body:
                 if body[0] == "[":

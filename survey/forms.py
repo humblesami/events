@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
-
-import logging
 import uuid
-
+import logging
 from django import forms
 from django.forms import models
 from django.urls import reverse
 from django.utils.text import slugify
-
-from survey.models import Answer, Question, Response
 from survey.signals import survey_completed
 from survey.widgets import ImageSelectWidget
+from survey.models import Answer, Question, Response
 
 LOGGER = logging.getLogger(__name__)
 
@@ -21,8 +18,8 @@ class ResponseForm(models.ModelForm):
         Question.TEXT: forms.Textarea,
         Question.SHORT_TEXT: forms.TextInput,
         Question.RADIO: forms.RadioSelect,
-        Question.SELECT: forms.Select,
-        Question.SELECT_IMAGE: ImageSelectWidget,
+        # Question.SELECT: forms.Select,
+        # Question.SELECT_IMAGE: ImageSelectWidget,
         Question.SELECT_MULTIPLE: forms.CheckboxSelectMultiple,
     }
 
@@ -133,8 +130,8 @@ class ResponseForm(models.ModelForm):
             qchoices = question.get_choices()
             # add an empty option at the top so that the user has to explicitly
             # select one of the options
-            if question.type in [Question.SELECT, Question.SELECT_IMAGE]:
-                qchoices = tuple([("", "-------------")]) + qchoices
+            # if question.type in [Question.SELECT, Question.SELECT_IMAGE]:
+            #     qchoices = tuple([("", "-------------")]) + qchoices
         return qchoices
 
     def get_question_field(self, question, **kwargs):
@@ -227,8 +224,8 @@ class ResponseForm(models.ModelForm):
                 answer = self._get_preexisting_answer(question)
                 if answer is None:
                     answer = Answer(question=question)
-                if question.type == Question.SELECT_IMAGE:
-                    value, img_src = field_value.split(":", 1)
+                # if question.type == Question.SELECT_IMAGE:
+                #     value, img_src = field_value.split(":", 1)
                     # TODO
                 answer.body = field_value
                 data["responses"].append((answer.question.id, answer.body))

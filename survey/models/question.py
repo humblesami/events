@@ -52,8 +52,6 @@ class Question(models.Model):
     TEXT = "text"
     SHORT_TEXT = "short-text"
     RADIO = "radio"
-    SELECT = "select"
-    SELECT_IMAGE = "select_image"
     SELECT_MULTIPLE = "select-multiple"
     INTEGER = "integer"
 
@@ -61,9 +59,7 @@ class Question(models.Model):
         (TEXT, _("text (multiple line)")),
         (SHORT_TEXT, _("short text (one line)")),
         (RADIO, _("radio")),
-        (SELECT, _("select")),
         (SELECT_MULTIPLE, _("Select Multiple")),
-        (SELECT_IMAGE, _("Select Image")),
         (INTEGER, _("integer")),
     )
 
@@ -97,7 +93,7 @@ class Question(models.Model):
         ordering = ["survey",]
 
     def save(self, *args, **kwargs):
-        if self.type in [Question.RADIO, Question.SELECT, Question.SELECT_MULTIPLE]:
+        if self.type in [Question.RADIO, Question.SELECT_MULTIPLE]:
             validate_choices(self.choices)
         super(Question, self).save(*args, **kwargs)
 

@@ -6,6 +6,7 @@ from django.views.generic import View
 from django.db.models import Count
 from survey.forms import ResponseForm
 from survey.models import Category, Survey, Answer
+from ast import literal_eval
 
 
 class SurveyDetail(View):
@@ -28,18 +29,29 @@ class SurveyDetail(View):
         chart_data = []
 
         for question in questions:
-            if question.type in ('radio'):
+            if question.type in ('radio', 'select-multiple'):
                 choices = question.choices.split(',')
-                user_answers = list(
-                    Answer.objects.values('body').filter(question_id=question.id).annotate(answer_count=Count('body'))
-                )
+                if question.type == 'radio':
+                    user_answers = list(
+                        Answer.objects.values('body').filter(question_id=question.id).annotate(answer_count=Count('body'))
+                    )
+                else:
+                    user_answers = []
+                    multi_choices = Answer.objects.values('body').filter(question_id=question.id)
+                    for multi_choice in multi_choices:
+                        multi_choice = literal_eval(multi_choice['body'])
+                        for multi in multi_choice:
+                            user_answers.append({'body': multi, 'answer_count': 1})
+
+                # literal_eval(user_answers[0]['body'])
                 question_data = []
                 for choice in choices:
                     question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0})
-                    for user_answer in user_answers:
+                    for index, user_answer in enumerate(user_answers):
                         for singledata in question_data:
                             if user_answer['body'] == singledata['option_name']:
-                                singledata['option_result'] = user_answer['answer_count']
+                                singledata['option_result'] = user_answer['answer_count'] + singledata['option_result']
+                                del user_answers[index]
                 chart_data.append({'question': question.text.strip(), 'question_data': question_data})
 
         context = {"response_form": form, "survey": survey, "categories": categories, 'chart_data': chart_data}

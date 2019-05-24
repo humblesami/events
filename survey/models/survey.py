@@ -2,6 +2,10 @@
 
 from django.db import models
 from django.urls import reverse
+from meetings.model_files.event import Event
+from meetings.model_files.topic import Topic
+from meetings.model_files.user import Profile
+from voting.models import Voting
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -9,11 +13,15 @@ class Survey(models.Model):
 
     name = models.CharField(_("Name"), max_length=400)
     description = models.TextField(_("Description"))
-    is_published = models.BooleanField(_("Users can see it and answer it"), default=False)
+    is_published = models.BooleanField(_("Publish"), default=False)
     need_logged_user = models.BooleanField(
         _("Only authenticated users can see it and answer it"), default=True)
-    display_by_question = models.BooleanField(_("Display by question"))
+    display_by_question = models.BooleanField(_("Display by question"), default=False)
+    meeting = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
+    voting = models.ForeignKey(Voting, on_delete=models.CASCADE, null=True)
     template = models.CharField(_("Template"), max_length=255, null=True, blank=True)
+    respondents = models.ManyToManyField(Profile)
 
     class Meta(object):
         verbose_name = _("survey")

@@ -23,11 +23,12 @@ class CategoryInline(admin.TabularInline):
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ("name", "is_published", "need_logged_user")
     list_filter = ("is_published", "need_logged_user")
+    filter_horizontal = ('respondents',)
     inlines = [QuestionInline]
     actions = [make_published]
 
     def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ("template","need_logged_user",)
+        self.exclude = ("template","need_logged_user","display_by_question", )
         form = super(SurveyAdmin, self).get_form(request, obj, **kwargs)
         return form
 

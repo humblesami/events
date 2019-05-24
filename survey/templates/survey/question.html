@@ -29,7 +29,7 @@
 				{% load static %}
 				<script src="{% static '/libs/jquery/chart.js' %}"></script>
 				<script src="{% static 'js/custom_survey_chart.js' %}"></script>
-				{% if form.field.widget.input_type == 'radio' %}
+				{% if form.field.widget.input_type == 'radio' or form.field.widget.input_type == 'checkbox' %}
 					<div>
 						{% for data in chart_data %}
 							{% if data.question == form.label|safe %}

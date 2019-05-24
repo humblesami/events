@@ -20,7 +20,7 @@ class BaseModelTest(BaseTest):
             [Question.TEXT, "Mytext", None],
             [Question.SHORT_TEXT, "Mytext", None],
             [Question.RADIO, "Yes", "Yes, No, Maybe"],
-            [Question.SELECT, "No", "Yes, No, Maybe"],
+            # [Question.SELECT, "No", "Yes, No, Maybe"],
             # [Question.SELECT_IMAGE,Answer, "TODO" ,None],
             [Question.SELECT_MULTIPLE, "Yes", "Yes, No, Maybe"],
             [Question.INTEGER, 42, None],
