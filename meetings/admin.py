@@ -73,10 +73,13 @@ class EventAdmin(admin.ModelAdmin):
                 'end_date',
                 'attendees',
                 'description',
+                'pin',
+                'conference_bridge_number',
                 'country',
                 'state',
-                'street',
+                'zip',
                 'city',
+                'street',
             ]
         })
     ]
