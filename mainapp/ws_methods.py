@@ -86,6 +86,7 @@ def emit_event(data, req_url=None):
         data = json.dumps(data)
         if not req_url:
             req_url = '/odoo_event'
+        data = data.replace('\\', '')
         url = socket_server['url'] + req_url + '?data=' + data
         try:
             r = requests.get(socket_server['url'])
