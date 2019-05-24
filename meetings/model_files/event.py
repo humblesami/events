@@ -116,14 +116,15 @@ class Event(models.Model):
 
     @classmethod
     def respond_invitation(cls, request, params):
-        meeting_id = params.get('meeting_id')
-        user_response = params.get('response')
+        meeting_id = params['meeting_id']
+        user_response = params['response']
         user_id = request.user.id
-        try:
-            invitation_response = Invitation_Response.objects.get(event_id = meeting_id, attendee_id = user_id)
+        invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
+        if invitation_response:
+            invitation_response = invitation_response[0]
             invitation_response.state = user_response
             invitation_response.save()
-        except:
+        else:
             invitation_response = Invitation_Response(state= user_response, event_id = meeting_id, attendee_id = user_id)
             invitation_response.save()
         return 'done'
@@ -207,6 +208,7 @@ class Event(models.Model):
             user_response = 'needsAction'
             if invitation_response:
                 user_response = list(invitation_response)[0].state
+            meeting['id'] = meeting_obj.id
             meeting['name'] = meeting_obj.name
             meeting['start_date'] = str(meeting_obj.start_date)
             meeting['end_date'] = str(meeting_obj.end_date)
