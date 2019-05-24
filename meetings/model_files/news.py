@@ -5,6 +5,7 @@ from esign.model_files.signature import Signature
 from mainapp.ws_methods import obj_to_dict, queryset_to_list
 from meetings.model_files.document import SignDocument
 from meetings.model_files.event import Event
+from survey.models import Survey
 
 class News(models.Model):
     name = models.CharField(max_length=200)
@@ -48,7 +49,7 @@ class News(models.Model):
         sign_doc_ids = queryset_to_list(sign_doc_ids,fields=['id','name','meeting__name'])
         home_object['to_do_items'] = {
             'pending_meetings':  Event.get_pending_meetings(uid),
-            'pending_surveys': [],
+            'pending_surveys': Survey.get_pending_surveys(uid),
             'pending_documents': sign_doc_ids,
             'pending_votings': voting_model.get_todo_votings(uid),
         }

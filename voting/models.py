@@ -39,18 +39,14 @@ class Voting(models.Model):
     @classmethod
     def get_todo_votings(cls, uid):
         votings = Voting.objects.filter(
-            Q(meeting__id__isnull = False)
+            (Q(meeting__id__isnull = False) & Q(meeting__attendees__id=uid))
             |
             Q(respondents__id = uid),
             Q(close_date__gte=datetime.datetime.now())
         )
         pending_votings = []
         for voting in votings:
-            if voting.meeting:
-                user_voting = voting.meeting.attendees.all().filter(pk=uid)
-            else:
-                user_voting = voting
-            if user_voting:
+            if voting:
                 user_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=uid)
                 if len(user_answer) > 0:
                     user_answer = user_answer[0]

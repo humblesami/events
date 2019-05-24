@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
-
+import datetime
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
-from meetings.model_files.event import Event
-from meetings.model_files.topic import Topic
-from meetings.model_files.user import Profile
-from voting.models import Voting
+from mainapp import ws_methods
 from django.utils.translation import ugettext_lazy as _
 
 
 class Survey(models.Model):
 
     name = models.CharField(_("Name"), max_length=400)
+    open_date = models.DateTimeField(default=datetime.datetime.now())
+    close_date = models.DateTimeField(default=datetime.datetime.now())
     description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Publish"), default=False)
     need_logged_user = models.BooleanField(
         _("Only authenticated users can see it and answer it"), default=True)
     display_by_question = models.BooleanField(_("Display by question"), default=False)
-    meeting = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
-    voting = models.ForeignKey(Voting, on_delete=models.CASCADE, null=True)
+    meeting = models.ForeignKey('meetings.Event', on_delete=models.CASCADE, null=True, blank=True)
+    topic = models.ForeignKey('meetings.Topic', on_delete=models.CASCADE, null=True, blank=True)
+    voting = models.ForeignKey('voting.Voting', on_delete=models.CASCADE, null=True, blank=True)
     template = models.CharField(_("Template"), max_length=255, null=True, blank=True)
-    respondents = models.ManyToManyField(Profile)
+    respondents = models.ManyToManyField('meetings.Profile', blank=True)
 
     class Meta(object):
         verbose_name = _("survey")
@@ -61,6 +61,7 @@ class Survey(models.Model):
         survey_id = params.get('survey_id')
         if survey_id:
             survey_obj = Survey.objects.filter(pk=survey_id)
+            # survey = ws_methods.obj_to_dict(survey_obj)
             survey = list(survey_obj)[0]
             questions = survey.questions.all()
             survey_questions = []
@@ -75,6 +76,31 @@ class Survey(models.Model):
             if survey['_state']:
                 del survey['_state']
             survey['questions'] = survey_questions
+            survey['open_date'] = str(survey['open_date'])
+            survey['close_date'] = str(survey['close_date'])
             return survey
         else:
             return 'Invalid Survey ID'
+
+    @classmethod
+    def get_pending_surveys(cls, uid):
+        surveys = Survey.objects.filter(
+            (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+            |
+            Q(respondents__id=uid),
+            Q(close_date__gte=datetime.datetime.now())
+        )
+        pending_survey = []
+        for survey in surveys:
+            user_response = survey.questions.filter(answers__isnull=False, answers__response__user__id=uid)
+            if len(user_response) > 0:
+                my_status = 'done'
+            # my_status = user_answer.user_answer.name
+            else:
+                my_status = 'pending'
+                pending_survey.append({
+                    'id': survey.id,
+                    'title': survey.name,
+                    'my_status': my_status
+                })
+        return pending_survey
