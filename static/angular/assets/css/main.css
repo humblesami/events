@@ -229,6 +229,7 @@ body.fixed .header-fixed {
 .breadcrumb {
     font-size: 1.5rem;
     font-weight: bold;
+    background: #f1f2f4;    
 }
 
 
@@ -497,11 +498,17 @@ breadcrumb
 
 .breadcrumbSection {
     background: #f1f2f4;
-    padding: 0.859em 0.16em 0.859em 0.859em;
+    padding: 0.55em 0.16em 0.52em 0.52em;
+    height: 46px;
 }
+.breadcrumbSection>div
+{
+    float: left;
+}
+
 .breadcrumbSection .btn{
     margin: 0 3px;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 
@@ -510,6 +517,12 @@ breadcrumb
     margin: 0;
     background-color: transparent;
     border-radius: 0;
+    margin-left: 10px;
+}
+
+.breadcrumbSection .breadcrumb ul{
+    margin: 0;
+    padding: 0;
 }
 
 .breadcrumbSection .breadcrumb li,
@@ -2607,11 +2620,11 @@ body.public .app-sidebar
 .MeetingHeadWrapper{
     display: flex;
     justify-content: flex-end;
-
-    border-bottom:1px solid #E1E1E1;
-    margin-top: 1.3rem;
-    margin-bottom: 1.3rem;
-    padding-bottom: 1.3rem;
+    /* border-bottom: 1px solid #E1E1E1; */
+    /* margin-top: 1.3rem; */
+    /* margin-bottom: 1.3rem; */
+    /* padding-bottom: 1.3rem; */
+    margin: 1rem 0 1rem 0;
 }
 
 .MainTitleHeadWrap{
