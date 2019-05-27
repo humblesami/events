@@ -64,6 +64,10 @@ function dn_rpc_object(options) {
     var url_with_params = 'Nothing';
     options.beforeSend = function(a, b) {
         url_with_params = b.url;
+        if(site_config.trace_request)
+        {
+            console.log(url_with_params, input_data.args);
+        }
         if (!options.no_loader)
             site_functions.showLoader("ajax" + api_url);
         if (options.type == 'post')

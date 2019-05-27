@@ -1,6 +1,6 @@
 
 var chat_ser_port = 3000;
-var site_config = {
+var site_config_live = {
 	server_base_url:'https://meetvue.com',
 	server_db : 'demo1',
 	site_url: 'https://meetvue.com',
@@ -40,22 +40,28 @@ var network_config_https = {
 	show_logs : ['socket','ajax_before','ajax_success']
 };
 
+var site_config = site_config_live;
+
 var current_site_base_url = window.location.origin.toString();
-if(current_site_base_url.indexOf('localhost') > -1)
-{   
-    site_config = site_config_local;
-}
-else
+if(current_site_base_url != 'http://172.16.21.171:4200')
 {
-	if(current_site_base_url.startsWith('https://172'))
-	{
-		site_config = network_config_https;
-	}
-    else if(current_site_base_url.indexOf('172.16') > -1)
+    if(current_site_base_url.indexOf('localhost') > -1)
+    {   
+        site_config = site_config_local;
+    }
+    else
     {
-        site_config = network_config;
+        if(current_site_base_url.startsWith('https://172'))
+        {
+            site_config = network_config_https;
+        }
+        else if(current_site_base_url.indexOf('172.16') > -1)
+        {
+            site_config = network_config;
+        }
     }
 }
+
 if(current_site_base_url.indexOf('www.') > -1)
 {
 	site_config.server_base_url = site_config.server_base_url.replace('https://','https://www.')

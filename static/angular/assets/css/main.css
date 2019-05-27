@@ -289,10 +289,10 @@ a,
     opacity: .5;
 }
 
-#main-div {
+/* #main-div {
     padding-bottom: 20px;
     padding-top: 10px;
-}
+} */
 
 #main-div .img-thumbnail-lg {
     width: 130px;
@@ -498,19 +498,12 @@ breadcrumb
 .breadcrumbSection {
     background: #f1f2f4;
     padding: 0.859em 0.16em 0.859em 0.859em;
-    height: 2.75rem;
 }
-.breadcrumbSection .btn-primary{
-    float: right;
-    margin-top: -9px;
+.breadcrumbSection .btn{
+    margin: 0 3px;
+    font-size: 16px;
 }
 
-.breadcrumbSection .btn-danger{
-    float: right;
-    margin-top: -9px;
-    margin-right: 6px;
-    font-size: 0.875rem;
-}
 
 .breadcrumbSection .breadcrumb {
     padding: 0;
@@ -2621,11 +2614,27 @@ body.public .app-sidebar
     padding-bottom: 1.3rem;
 }
 
-.MeetingHeadWrapper .btn {
+.MainTitleHeadWrap{
+    border-bottom:1px solid #E1E1E1;
+    margin-top: 1.3rem;
+    margin-bottom: 1.3rem;
+    padding-bottom: 0.7rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.MeetingHeadWrapper .btn, .MeetingBtnWrapper .btn {
     border: 1px solid #D7DAE2;
     background: transparent;
     color: #3059C9;
 }
+
+.HeadingWrap{
+    color: #2B2B2B;
+    font-size: 30px;
+}
+
 .sidebar-mini.sidenav-toggled .app-sidebar
 {
     overflow: auto;
