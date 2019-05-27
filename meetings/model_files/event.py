@@ -134,12 +134,6 @@ class Event(models.Model):
         user_id = request.user.id
         meeting_id = int(meeting_id)
         meeting_object_orm = Event.objects.get(pk=meeting_id)
-        invitation_response = list(meeting_object_orm.invitation_response_set.filter(attendee_id=request.user.id))
-        if invitation_response:
-            attendee_status = invitation_response[0].state
-        else:
-            attendee_status = 'needsAction'
-
         meeting_object = Event.objects.filter(pk=meeting_id).values()
         meeting_object = list(meeting_object)
         meeting_object = meeting_object[0]
@@ -161,8 +155,9 @@ class Event(models.Model):
         meeting_object['end_date'] = str(meeting_object['end_date'])
         meeting_object['start'] = meeting_object['start_date']
         meeting_object['stop'] = meeting_object['end_date']
-        meeting_object['attendee_status'] = attendee_status
-        meeting_object['attendee_status'] = attendee_status
+
+        attendance_status = cls.get_attendance_status(meeting_id, user_id)
+        meeting_object['attendee_status'] = attendance_status
 
         topics = list(meeting_object_orm.topic_set.values())
         for t in topics:
@@ -180,6 +175,7 @@ class Event(models.Model):
             attendee['id'] = attendee['uid'] = attendee_obj.id
             attendee['name'] = attendee_obj.fullname()
             attendee['photo'] = attendee_obj.image.url
+            attendee['attendance_status'] = cls.get_attendance_status(meeting_id, attendee_obj.id)
             attendees.append(attendee)
         meeting_object['topics'] = topics
         meeting_object['meeting_docs'] = meeting_docs
@@ -211,15 +207,19 @@ class Event(models.Model):
         return meeting_list
 
     @classmethod
+    def get_attendance_status(cls, meeting_id, uid):
+        invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=uid)
+        attendance_status = 'needsAction'
+        if invitation_response:
+            attendance_status = list(invitation_response)[0].state
+        return attendance_status
+
+    @classmethod
     def get_meeting_summaries(cls, meetings, uid):
         res_meetings = []
         for meeting_obj in meetings:
             meeting = {}
             meeting_id = meeting_obj.id
-            invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=uid)
-            user_response = 'needsAction'
-            if invitation_response:
-                user_response = list(invitation_response)[0].state
             meeting['id'] = meeting_obj.id
             meeting['name'] = meeting_obj.name
             meeting['start_date'] = str(meeting_obj.start_date)
@@ -227,7 +227,10 @@ class Event(models.Model):
             meeting['start'] = str(meeting_obj.start_date)
             meeting['stop'] = str(meeting_obj.end_date)
             meeting['location'] = meeting_obj.location
-            meeting['attendee_status'] = user_response
+
+            attendance_status = cls.get_attendance_status(meeting_id, uid)
+            meeting['attendee_status'] = attendance_status
+
             res_meetings.append(meeting)
         return res_meetings
 
@@ -239,36 +242,6 @@ class Event(models.Model):
         meetings = {'records': meetings, 'total': 0, 'count': 0}
         data = {'error': '', 'data': meetings}
         return data
-
-    @classmethod
-    def meeting_summary(cls, request, params):
-        meeting_id = params.get('id')
-        user_id = request.user.id
-        meeting_obj = Event.objects.get(pk= meeting_id)
-        if not meeting_obj:
-            return 'Invalid meeting id requested'
-        invitation_response = meeting_obj.invitation_response_set.filter(attendee_id = user_id)
-        if invitation_response:
-            attendee_status = invitation_response[0].state
-        else:
-            attendee_status = 'needsAction'
-        location = meeting_obj.location
-        my_event =  meeting_obj.attendees.filter(pk=user_id)
-        if my_event:
-            my_event = 1
-
-        meeting = meeting_obj.__dict__
-        meeting['start_date'] = str(meeting['start_date'])
-        meeting['end_date'] = str(meeting['end_date'])
-        meeting['start'] = meeting['start_date']
-        meeting['stop'] = meeting['end_date']
-        meeting['location'] = location
-        meeting['attendee_status'] = attendee_status
-        meeting['my_event'] = my_event
-        if meeting['_state']:
-            del meeting['_state']
-        return {'data': meeting}
-
 
 STATE_SELECTION = (
     ('needsAction', _("Needs Action")),
