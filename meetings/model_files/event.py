@@ -39,6 +39,27 @@ class Event(models.Model):
         elif self.start_date <= current_date and self.end_date >= current_date:
             return 'ongoing'
 
+    def _compute_duration(self):
+        val = self.end_date - self.start_date
+        seconds = val.total_seconds()
+        hours = seconds / 3600
+        hours = int(hours)
+
+        rem_seconds = seconds % 3600
+        minutes = rem_seconds / 60
+        minutes = int(minutes)
+
+        if hours < 10:
+            hours = '0' + str(hours)
+        else:
+            hours = str(hours)
+        if minutes < 10:
+            minutes = '0'+str(minutes)
+        else:
+            minutes = str(minutes)
+        val = hours + ':' + minutes
+        return val
+    duration = property(_compute_duration)
 
     def _compute_address(self):
         val = ''
@@ -89,28 +110,7 @@ class Event(models.Model):
         meetings = Event.objects.filter(attendees__id=uid, publish=True,
                                                 end_date__gte=datetime.datetime.now())
 
-        meetings = ws_methods.queryset_to_list(meetings, fields=[
-            'id',
-            'name',
-            'start_date',
-            'end_date',
-            'pin',
-            'start_date',
-            'start_date',
-        ])
-        pending_meetings = []
-        for meeting in meetings:
-            meeting_id = meeting['id']
-            invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = uid)
-            user_response = 'needsAction'
-            if invitation_response:
-                user_response =list(invitation_response)[0].state
-            meeting['start_date'] = str(meeting['start_date'])
-            meeting['end_date'] = str(meeting['end_date'])
-            meeting['start'] = meeting['start_date']
-            meeting['stop'] = meeting['end_date']
-            meeting['attendee_status'] = user_response
-            pending_meetings.append(meeting)
+        pending_meetings = cls.get_meeting_summaries(meetings, uid)
         return pending_meetings
 
     @classmethod
@@ -139,26 +139,35 @@ class Event(models.Model):
             attendee_status = invitation_response[0].state
         else:
             attendee_status = 'needsAction'
-        location = meeting_object_orm.location
+
         meeting_object = Event.objects.filter(pk=meeting_id).values()
         meeting_object = list(meeting_object)
         meeting_object = meeting_object[0]
         if not meeting_object:
             return ('', {'message': 'Meeting with id' + str(meeting_id) + ' exists no more'})
 
+        location = meeting_object_orm.location
+        duration = meeting_object_orm.duration
+        meeting_object['location'] = location
+        meeting_object['duration'] = duration
+
+        meeting_object['street'] = meeting_object_orm.street
+        meeting_object['city'] = meeting_object_orm.city
+        meeting_object['state'] = meeting_object_orm.state
+        meeting_object['zip'] = meeting_object_orm.zip
+        meeting_object['country'] = meeting_object_orm.country.name
+
         meeting_object['start_date'] = str(meeting_object['start_date'])
         meeting_object['end_date'] = str(meeting_object['end_date'])
         meeting_object['start'] = meeting_object['start_date']
         meeting_object['stop'] = meeting_object['end_date']
         meeting_object['attendee_status'] = attendee_status
-        if location:
-            meeting_object['location'] = location
+        meeting_object['attendee_status'] = attendee_status
+
         topics = list(meeting_object_orm.topic_set.values())
         for t in topics:
             t['duration'] = str(t['duration'])
         meeting_docs = list(meeting_object_orm.meetingdocument_set.values())
-        sign_docs = []
-        surveys = []
         votings = list(meeting_object_orm.voting_set.values())
         for voting in votings:
             voting['open_date'] = str(voting['open_date'])
@@ -174,8 +183,12 @@ class Event(models.Model):
             attendees.append(attendee)
         meeting_object['topics'] = topics
         meeting_object['meeting_docs'] = meeting_docs
-        meeting_object['sign_docs'] = []
-        meeting_object['surveys'] = []
+        sign_docs =  meeting_object_orm.signdocument_set.all()
+        sign_docs = ws_methods.queryset_to_list(sign_docs, fields=['id','pdf_doc','name'])
+        meeting_object['sign_docs'] = sign_docs
+        surveys = meeting_object_orm.survey_set.all()
+        surveys = ws_methods.queryset_to_list(surveys, fields=['id','name'])
+        meeting_object['surveys'] = surveys
         meeting_object['votings'] = votings
         meeting_object['attendees'] = attendees
         data = {"meeting": meeting_object, "next": 0, "prev": 0}
