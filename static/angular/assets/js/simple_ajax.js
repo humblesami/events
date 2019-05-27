@@ -4,7 +4,7 @@ function dn_rpc_object(options) {
     {
         api_url = '/rest/secure';
     }
-    var req_url = site_config.server_base_url + api_url;    
+    var req_url = site_config.server_base_url + api_url;
     if (!options.data) {
         console.log('No data and arguments for request ',options);
         return;
@@ -43,20 +43,19 @@ function dn_rpc_object(options) {
     options.dataType = 'json';
     if(req_url.indexOf('localhost')> -1)
     {
-        if(!input_data.args.post)
-        {
-            options.type = 'GET';
-        }
-        else
+        if(input_data.args && input_data.args.post)
         {
             options.type = 'POST';
+        }
+        else
+        {            
+            options.type = 'GET';
         }
     }
     else
     {
         options.type = 'POST';
     }
-    // console.log(options.type, 18);
     //options.contentType = "application/json; charset=utf-8";    
 
     options.url = req_url;

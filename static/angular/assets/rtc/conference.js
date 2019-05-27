@@ -18,6 +18,30 @@
                     else{
                         console.log('Attendee');
                     }
+
+                    function close_window(message)
+                    {
+                        alert(message);
+                        window.close();
+                    }
+
+                    connection.socket.on('call_ended', function(){
+                        console.log('Recie');
+                        var message = ('Call ended because other participant(s) left');
+                        close_window(message);
+                    });
+                    connection.socket.on('duplicate', function(){
+                        var message = ('Call ended because other call initiated');
+                        close_window(message);
+                    });
+                    connection.socket.on('no_response', function(){
+                        var message = ('Call ended because respondant not answering');
+                        close_window(message);
+                    });
+                    connection.socket.on('call_rejected', function(){
+                        var message = ('Call ended because respondant not answering');
+                        close_window(message);
+                    });
                     afterOpenOrJoin();
                 });
             });

@@ -1,8 +1,13 @@
 var time_out_session = undefined;
 var session_time_limit = 600000;
 var is_mobile_device = undefined;
+var is_local_host = false;
 (function() {
     var wl = window.location;
+    if(wl.toString().indexOf('localhost') > -1)
+    {
+        is_local_host = true;
+    }
     if (wl.hash) {
         window['pathname'] = wl.hash.substr(1, wl.hash.length);
     } else {
@@ -305,21 +310,21 @@ function addMainEventListeners() {
                 .find("input:first")
                 .focus();
         }
-    }    
+    }
 
     $(document).on("mouseup touchend keyup", function(e) {
-        clearTimeout(time_out_session);
-        handleSessionExpiry();
+        if(!is_local_host)
+        {
+            clearTimeout(time_out_session);
+            handleSessionExpiry();
+        }
+        
         hideSearchbar(e);
     });    
 }
 
 addMainEventListeners();
-(function() {
-    if (site_config.site_url.indexOf('localhost') > -1) {
-        // clearTimeout(time_out_session);
-        // time_out_session = undefined;
-    }
+(function() {    
     var showHeaderAt = 0;
     var win = $(window),
         body = $("body");
@@ -425,11 +430,18 @@ window.addEventListener('message', function receiveMessage(evt) {
 
 
 time_out_session = setTimeout(function() {
-    site_functions.go_to_login();
+    if(!is_local_host)
+    {
+        site_functions.go_to_login();
+    }    
 }, session_time_limit);
 
 
 function handleSessionExpiry() {
+    if(is_local_host)
+    {
+        return;
+    }
     var pathoo = window.location.toString().split('/');
     var pathoo = '/' + pathoo[pathoo.length - 1];
     pathoo = public_routes.indexOf(pathoo) == -1
