@@ -3,7 +3,8 @@
     {
         let labels = [];
         let data = [];
-        let total_votings = 0
+        let total_votings = 0;
+        let chart_type = '';
         for(let i = 0; i < chartData.length; i++)
         {
             total_votings += chartData[i]['option_result']
@@ -20,23 +21,30 @@
             }
             data.push(chartData[i]['option_result']);
         }
-        
+        if (canvas_selector == '#progress-chart'){
+            chart_type = 'doughnut'
+        }else{
+            chart_type = 'pie'
+        }
+
         chartData = {
             datasets: [{
                 data: data,
                 backgroundColor: [
-                    'DodgerBlue',
+                    'Red',
+                    '#F5F5F5',
                     'Purple',
                     'HotPink',
-                    'Red',
+                    'DodgerBlue',
                     'Yellow',
                     'Orange'
                 ],
                 hoverBackgroundColor: [
-                    'DodgerBlue',
+                    'Red',
+                    '#F5F5F5',
                     'Purple',
                     'HotPink',
-                    'Red',
+                    'DodgerBlue',
                     'Yellow',
                     'Orange'
                 ],
@@ -47,7 +55,7 @@
         };
         var ctx = $(canvas_selector)[0].getContext('2d');
         var myPieChart = new Chart(ctx, {
-            type: 'pie',
+            type: chart_type,
             backgroundColor: 'rgb(255, 99, 132)',
             data: chartData
         });

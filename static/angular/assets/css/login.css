@@ -8,30 +8,15 @@ body{
     height: 100vh;
     overflow: auto;
     align-items: center;
-    /* background-image: url("../img/login-bg.jpg"); */
+    background-image: url('/static/angular/assets/images/login-cbg.png');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-position: center left;
+    background-size: auto;
     position: relative;
-}
-.Login-form-wrapper:before{
-    content: "";
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color:rgba(0, 0, 0, 0.33);
+    padding: 20px;
 }
 
-.login-form-div {
-    min-width: 300px;
-    height: 100%;
-    display: table;
-    z-index: 200;
-}
 .login-form-div form{
-    padding: 30px 0 100px;
     display: table-cell;
     vertical-align: middle;
 }
@@ -56,21 +41,21 @@ body{
     font-weight: 500;
     margin-bottom: 15px;
 }
-
+.login-logo {
+    text-align: center;
+}
 .meet-logo img{ max-width: 100%; }
 
 .login-form-div .form-control{
-    height: 35px;
-    line-height:35px; 
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
-	background-color: transparent;
-    border: solid 1px #875a7b;
-    padding: 0 20px 0 30px;
+    height: 50px;
+    line-height: 50px;
+    background-color: transparent;
+    border: solid 1px #D8D8D8;
+    padding: 0 20px 0 60px;
     color: #ffffff;
-    background:rgba(0, 0, 0, 0.40);
+    background: rgba(0, 0, 0, 0.40);
     font-size: 14px;
+    border-radius: 35px;
 }
 
 .form-control::placeholder {
@@ -83,7 +68,7 @@ body{
 }
 
 .login-form-div .form-group {
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 input:-webkit-autofill,
@@ -94,26 +79,24 @@ input:-webkit-autofill:active {
 }
 
 .login-btn{
-    width: 100%;
     display: block;
-    height: 35px;
-    line-height: 35px;
-	border-radius: 0;
-    background-color: #875a7b;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+	border-radius: 35px;
+    background-color: #3059C9;
 
     border:transparent;
     color: #ffffff;
-
-    font-size: 14px;
+    padding: 0px 40px;
+    font-size: 20px;
     font-weight: 400;
     margin-bottom:10px; 
 }
 
 .forgot{
-    display: block;
-    width: 100%;
     color:#875a7b; 
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     text-align: left;
 }
@@ -121,17 +104,47 @@ input:-webkit-autofill:active {
     text-decoration: underline;
 }
 .input-label-icon{ position: relative;}
-.input-label-icon i{
+.input-label-icon i, .input-label-icon img{
     font-size: 12px;
     color: #875a7b;
     display: block;
     position: absolute;
     top: 50%;
-    left: 10px;
+    left: 25px;
     transform: translateY(-50%);
 }
 
-.
+.loginshape01{
+    position: absolute;
+    display: block;
+    bottom: 0;
+    left: 0;
+}
+.loginshape02{ 
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+}
+.loginshape03{ 
+    position: absolute;
+    display: block;
+    bottom: 0;
+    right: 0;
+}
+
+
+.member-login-box{
+    text-align: center;
+    padding: 30px 0;
+}
+.member-login-box span{
+    display: block;
+    color: #141414;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top:10px; 
+}
 @media (min-width: 800px) and (max-width: 1200px) {
     .Login-form-wrapper:before{
         display: block;
@@ -139,15 +152,21 @@ input:-webkit-autofill:active {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-    .Login-form-wrapper{justify-content: center;}
+    
     .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }
-    .Login-form-wrapper{ padding: 0 10vw; }
+    
     
 }
 
 @media (max-width: 767px) { 
-        .Login-form-wrapper{justify-content: center;}
-        .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }
-        .Login-form-wrapper{ padding: 0 10vw; }
+        
+        .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }        
         .meet-logo img{ max-width: 60%; }
+}
+img.user-icon
+{
+    height: 20px;
+}
+.img-key{
+    width: 50%;
 }

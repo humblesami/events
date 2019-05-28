@@ -5,10 +5,10 @@ html, body{
     overflow: hidden;
 }
 
-#main-div{    
-    height: calc(100vh - 122px);
+.router-outlet{    
+    height: calc(100vh - 110px);
     overflow: auto;
-    padding-bottom:20px; 
+    padding: 1% 0;
 }
 body{
     font-family: 'Roboto Condensed', sans-serif !important;
@@ -323,10 +323,6 @@ a,
     align-items: center;
 }
 
-.modal-body {
-    min-height: auto !important;
-}
-
 .navbar-collapse.show .main-nav {
     width: 100%;
     overflow-y: auto;
@@ -502,12 +498,14 @@ breadcrumb
 ===================*/
 
 .breadcrumbSection {
-    background: #f1f2f4;
-    min-height: 50px;
     display: flex;
     justify-content: space-between;
-    padding: 0 20px 0 15px;
+    flex-direction: row-reverse;
     align-items: center;
+    
+    background: #f1f2f4;
+    min-height: 40px;
+    padding: 0 20px 0 15px;
 }
 .breadcrumbSection>div
 {
@@ -517,6 +515,10 @@ breadcrumb
 .breadcrumbSection .btn{
     margin: 0 3px;
     font-size: 12px;
+    color: white;
+}
+.edit-buttons a:not([href]):not([tabindex]){
+    color: white;
 }
 
 
@@ -688,6 +690,9 @@ last-login-details
 .scheduleDetailOpener span {
     padding-right: 10px;
 }
+.VotingsInfoBoxTitle {
+    padding: 15px;
+}
 
 .kanban-card {
     cursor: pointer;
@@ -702,23 +707,22 @@ last-login-details
     margin-bottom: 30px;
 }
 
-.kanban-card a {
-    height: 100%;
-}
-
 .kanban-folder {
-    padding: 7px;
+    padding: 15px;
     font-weight: 500;
-    background: #efefef;
+    background: #ffffff;
     display: flex;
     align-items: center;
-    border-radius: 3px;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
+    border-radius: 0;
+    border: 1px solid #A2A2A2;
+    flex-direction: column;
 }
 
 .kanban-folder span {
-    color: #5e5e5f;
-    margin-left: 7%;
+    color: #3059C9;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 15px;
 }
 
 .kanban-profiles {
@@ -1058,7 +1062,6 @@ button.navbar-toggler {
 	position: relative;
 	margin: 0 5px;
 }
-
 .nav-icon button:hover{
 	opacity: 1;
 }
@@ -1077,11 +1080,6 @@ button.navbar-toggler {
     background: silver;
 }
 */
-
-.main-nav-header {
-    display: flex;
-    flex: 1;
-}
 
 .main-nav-header nav.navbar{
     padding: 0;
@@ -2595,11 +2593,6 @@ button
     }
   }
   
-  @media (max-width: 480px) {
-    .app-content {
-      padding: 15px;
-    }
-  }
 
 .bs-btnwrap{
     display: flex;
@@ -2757,6 +2750,7 @@ span.kanban-upcoming-meeting-date {
     flex: 1;
 }
 
+
 .upcomingButton button{
     margin-right: 4px;
 }
@@ -2772,5 +2766,24 @@ span.kanban-upcoming-meeting-date {
 .btn-meeting:hover{
     background:#3059C9;
 }
+.res-message
+{
+    border: 2px solid;
+    padding: 5%;
+    margin: 1%;
+}
+@media (max-width: 576px) {
+    .main-nav-header img.logo
+    {
+        width: 30vw;
+    }
+}
 
+.main-nav-header {
+    display: flex;
+    flex: 1;
+    vertical-align: middle;
+    align-items: center;
+    padding-left: 15px;
+}
 /* End Of Upcoming Meeting  */

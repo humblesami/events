@@ -21,3 +21,12 @@ auth.content {
 {
     padding-bottom: 20px;
 }
+@media (max-width: 767px)
+    .aligned .form-row > div {
+        width: calc(100vw - 70px);
+    }
+}
+.aligned label
+{
+    padding: 15px 0 0 0;
+}
