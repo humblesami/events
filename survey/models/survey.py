@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime
 from django.db import models
+from ast import literal_eval
 from django.db.models import Q
 from django.urls import reverse
-from mainapp import ws_methods
+from django.db.models import Count
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -104,3 +105,68 @@ class Survey(models.Model):
                     'my_status': my_status
                 })
         return pending_survey
+
+    @classmethod
+    def get_results(cls, request, params):
+        try:
+            survey_id = params['survey_id']
+            uid = request.user.id
+            survey = Survey.objects.filter(
+                (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+                |
+                Q(respondents__id=uid), pk=survey_id)
+            if survey:
+                survey = survey[0]
+                survey_results = {
+                    'id': survey.id,
+                    'name': survey.name,
+                    'questions': []
+                }
+                questions = survey.questions.all()
+                for question in questions:
+                    question_choices = []
+                    user_answers = []
+                    if question.type in ('radio', 'select-multiple'):
+                        question_choices = question.choices.split(',')
+                    answers = list(question.answers.values('body', 'response__user__username').annotate(answer_count=Count('body')))
+                    for answer in answers:
+                        user_answer = answer['body']
+                        if question.type == 'select-multiple':
+                            user_answer = literal_eval(user_answer)
+                        user_answers.append({
+                            'answers': user_answer,
+                            'user_name': answer['response__user__username']
+                        })
+                    question_data = []
+                    chart_data = []
+                    for choice in question_choices:
+                        question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0})
+                    for index, user_answer in enumerate(answers):
+                        if question.type == 'select-multiple':
+                            user_answer = literal_eval(user_answer['body'])
+                            for user_ans in user_answer:
+                                for singledata in question_data:
+                                    if user_ans == singledata['option_name']:
+                                        singledata['option_result'] += 1
+                                        break
+                        else:
+                            for singledata in question_data:
+                                if user_answer['body'] == singledata['option_name']:
+                                    singledata['option_result'] = user_answer['answer_count'] + singledata[
+                                        'option_result']
+                        # del answers[index]
+                    # if question_data:
+                    #     chart_data.append({'chart_data': question_data})
+                    survey_results['questions'].append({
+                        'id': question.id,
+                        'name': question.text,
+                        'choices': question_choices,
+                        'user_answers': user_answers,
+                        'chart_data': question_data
+                    })
+                return survey_results
+            else:
+                return 'There is not survey against this id'
+        except:
+            return 'Something went wrong while getting survey results.'
+        pass
