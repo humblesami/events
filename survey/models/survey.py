@@ -114,13 +114,18 @@ class Survey(models.Model):
             survey = Survey.objects.filter(
                 (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
                 |
+                (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+                |
+                (Q(voting__id__isnull=False) & Q(voting__respondents__id=uid) | (Q(voting__id__isnull=False) & Q(voting__meeting__attendees__id=uid)))
+                |
                 Q(respondents__id=uid), pk=survey_id)
             if survey:
                 survey = survey[0]
                 survey_results = {
                     'id': survey.id,
                     'name': survey.name,
-                    'questions': []
+                    'questions': [],
+                    'progess_data': []
                 }
                 questions = survey.questions.all()
                 for question in questions:
@@ -146,7 +151,7 @@ class Survey(models.Model):
                             user_answer = literal_eval(user_answer['body'])
                             for user_ans in user_answer:
                                 for singledata in question_data:
-                                    if user_ans == singledata['option_name']:
+                                    if user_ans == singledata['option_name'].lower():
                                         singledata['option_result'] += 1
                                         break
                         else:
@@ -154,9 +159,33 @@ class Survey(models.Model):
                                 if user_answer['body'] == singledata['option_name']:
                                     singledata['option_result'] = user_answer['answer_count'] + singledata[
                                         'option_result']
-                        # del answers[index]
-                    # if question_data:
-                    #     chart_data.append({'chart_data': question_data})
+                    progress_data = []
+                    respondents = 0
+                    if survey.meeting:
+                        respondents = len(survey.meeting.attendees.all())
+
+                    if len(survey.respondents.all()):
+                        respondents = len(survey.respondents.all())
+
+                    if survey.topic:
+                        respondents = len(survey.topic.event.attendees.all())
+
+                    if survey.voting:
+                        respondents = len(survey.voting.respondents.all())
+                        if not respondents:
+                            respondents = len(survey.voting.meeting.attendees.all())
+
+                    if survey.responses:
+                        responses = len(survey.responses.all())
+
+                    progress_data.append({
+                        'option_name': 'Response Required',
+                        'option_result': respondents - responses
+                    })
+                    progress_data.append({
+                        'option_name': 'Responsed',
+                        'option_result': responses
+                    })
                     survey_results['questions'].append({
                         'id': question.id,
                         'name': question.text,
@@ -164,6 +193,7 @@ class Survey(models.Model):
                         'user_answers': user_answers,
                         'chart_data': question_data
                     })
+                    survey_results['progress_data'] = progress_data
                 return survey_results
             else:
                 return 'There is not survey against this id'
