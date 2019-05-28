@@ -5,9 +5,10 @@ html, body{
     overflow: hidden;
 }
 
-body.user .app-content{    
-    height: calc(100vh - 70px);
+#main-div{    
+    height: calc(100vh - 122px);
     overflow: auto;
+    padding-bottom:20px; 
 }
 body{
     font-family: 'Roboto Condensed', sans-serif !important;
@@ -370,7 +371,11 @@ a,
     font-weight: 500;
     text-transform: capitalize;
     font-family: 'Roboto', sans-serif;
+    background: #606060;
+    padding: 15px;
 }
+
+.DocumentWrapper:hover .DocText {  background:#2699FB }
 
 .DocIcon {
     text-align: center;
@@ -498,8 +503,11 @@ breadcrumb
 
 .breadcrumbSection {
     background: #f1f2f4;
-    padding: 0.55em 0.16em 0.52em 0.52em;
-    height: 46px;
+    min-height: 50px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px 0 15px;
+    align-items: center;
 }
 .breadcrumbSection>div
 {

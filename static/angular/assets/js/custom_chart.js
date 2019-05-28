@@ -10,8 +10,14 @@
         }
         for(let i = 0; i < chartData.length; i++)
         {
+            if (total_votings > 0){
             labels.push(chartData[i]['option_name'] + 
-            ' ('+chartData[i]['option_result']+' - '+(chartData[i]['option_result']/total_votings*100).toFixed(2)+'%)');
+                ' ('+chartData[i]['option_result']+' - '+(chartData[i]['option_result']/total_votings*100).toFixed(2)+'%)');
+            }
+            else{
+                labels.push(chartData[i]['option_name'] + 
+                ' ('+chartData[i]['option_result']+' - 0%)');
+            }
             data.push(chartData[i]['option_result']);
         }
         
@@ -20,13 +26,19 @@
                 data: data,
                 backgroundColor: [
                     'DodgerBlue',
-                    'Gold',
+                    'Purple',
                     'HotPink',
+                    'Red',
+                    'Yellow',
+                    'Orange'
                 ],
                 hoverBackgroundColor: [
                     'DodgerBlue',
-                    'Gold',
+                    'Purple',
                     'HotPink',
+                    'Red',
+                    'Yellow',
+                    'Orange'
                 ],
             }],
         
