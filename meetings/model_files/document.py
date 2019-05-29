@@ -28,8 +28,18 @@ from .topic import Topic
 class MeetingDocument(File):
     meeting = models.ForeignKey(Event, on_delete=models.CASCADE)
 
+    def save(self, *args, **kwargs):
+        if not self.file_type:
+            self.file_type = 'meeting'
+            super(MeetingDocument, self).save(*args, **kwargs)
+
 class AgendaDocument(File):
     agenda = models.ForeignKey(Topic, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if not self.file_type:
+            self.file_type = 'topic'
+            super(AgendaDocument, self).save(*args, **kwargs)
 
 class SignDocument(SignDocument):
     send_to_all = models.BooleanField(blank=True, null=True)

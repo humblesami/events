@@ -20,7 +20,7 @@ class Survey(models.Model):
     display_by_question = models.BooleanField(_("Display by question"), default=False)
     meeting = models.ForeignKey('meetings.Event', on_delete=models.CASCADE, null=True, blank=True)
     topic = models.ForeignKey('meetings.Topic', on_delete=models.CASCADE, null=True, blank=True)
-    voting = models.ForeignKey('voting.Voting', on_delete=models.CASCADE, null=True, blank=True)
+    # voting = models.ForeignKey('voting.Voting', on_delete=models.CASCADE, null=True, blank=True)
     template = models.CharField(_("Template"), max_length=255, null=True, blank=True)
     respondents = models.ManyToManyField('meetings.Profile', blank=True)
 
@@ -116,8 +116,6 @@ class Survey(models.Model):
                 |
                 (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
                 |
-                (Q(voting__id__isnull=False) & Q(voting__respondents__id=uid) | (Q(voting__id__isnull=False) & Q(voting__meeting__attendees__id=uid)))
-                |
                 Q(respondents__id=uid), pk=survey_id)
             if survey:
                 survey = survey[0]
@@ -170,10 +168,10 @@ class Survey(models.Model):
                     if survey.topic:
                         respondents = len(survey.topic.event.attendees.all())
 
-                    if survey.voting:
-                        respondents = len(survey.voting.respondents.all())
-                        if not respondents:
-                            respondents = len(survey.voting.meeting.attendees.all())
+                    # if survey.voting:
+                    #     respondents = len(survey.voting.respondents.all())
+                    #     if not respondents:
+                    #         respondents = len(survey.voting.meeting.attendees.all())
 
                     if survey.responses:
                         responses = len(survey.responses.all())

@@ -314,3 +314,8 @@ class VotingAnswer(models.Model):
 
 class VotingDocument(File):
     voting = models.ForeignKey('Voting', on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if not self.file_type:
+            self.file_type = 'voting'
+            super(VotingDocument, self).save(*args, **kwargs)

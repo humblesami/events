@@ -36,7 +36,7 @@ class TopicInline(admin.TabularInline):
 
 class MeetingDocInline(admin.TabularInline):
     model = MeetingDocument
-    exclude=('html','content','pdf_doc')
+    exclude=('html','content','pdf_doc', 'file_type')
     readonly_fields = ('View',)
     # show_change_link = True
     extra = 0
@@ -51,7 +51,7 @@ class MeetingDocInline(admin.TabularInline):
 
 class AgendaDocInline(MeetingDocInline):
     model = AgendaDocument
-    # exclude = ('html', 'content', 'original_pdf', 'pdf_doc')
+    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
     # readonly_fields = ('View',)
     # show_change_link = True
     # extra = 0
