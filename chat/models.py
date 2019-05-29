@@ -208,7 +208,7 @@ class Message(models.Model):
     to = models.IntegerField()
     body = models.TextField()
     read_status = models.BooleanField(default=False)
-    create_date = models.DateTimeField(null=True, default=datetime.now())
+    create_date = models.DateTimeField(null=True, auto_now_add=True)
 
     @classmethod
     def get_message_list(cls, uid, target_id, offset):

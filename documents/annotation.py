@@ -377,5 +377,5 @@ class CommentAnnotation(models.Model):
     body = models.CharField(max_length=500)
     point_id = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    date_time = models.DateTimeField(default=datetime.datetime.now())
+    date_time = models.DateTimeField(auto_now_add=True)
     uuid = models.CharField(max_length=200)

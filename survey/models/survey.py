@@ -11,8 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 class Survey(models.Model):
 
     name = models.CharField(_("Name"), max_length=400)
-    open_date = models.DateTimeField(default=datetime.datetime.now())
-    close_date = models.DateTimeField(default=datetime.datetime.now())
+    open_date = models.DateTimeField(auto_now_add=True)
+    close_date = models.DateTimeField(auto_now_add=True)
     description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Publish"), default=False)
     need_logged_user = models.BooleanField(
