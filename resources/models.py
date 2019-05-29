@@ -8,15 +8,17 @@ class Folder(models.Model):
 
     def __str__(self):
         return self.name
+
     @classmethod
     def get_details(cls, request, params):
         obj = {}
         folder_id = params.get('id')
         if folder_id:
             folder = Folder.objects.get(pk=folder_id)
-            files = list(folder.files_set.values())
+            files = list(folder.resourcedocument_set.values())
             obj['files'] = files
             obj['sub_folders'] = []
+            obj['id'] = folder_id
             parents = list(folder.parent.all())
             ar = []
             for parent in parents:
@@ -26,7 +28,7 @@ class Folder(models.Model):
                 obj['id'] = folder.id
                 try:
                     if len(files) < 0:
-                        files = list(parent.files_set.values())
+                        files = list(parent.resourcedocument_set.values())
                     if len(files) > 0:
                         obj['files'] = files
                 except:
@@ -62,6 +64,7 @@ class Folder(models.Model):
         # return ws_methods.http_response('', obj)
 
         return {'error': 'Not implemented'}
+
     @classmethod
     def get_records(cls, request, params):
         total_cnt = Folder.objects.filter(parent_folder__isnull = True).count()
@@ -71,11 +74,13 @@ class Folder(models.Model):
         folderObject = {'records':folder, 'total':total_cnt, 'count':current_cnt}
         return folderObject
 
-class Files(models.Model):
-    name = models.CharField('Title', max_length=200, blank=False)
+class ResourceDocument(File):
     parent_folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
     users = models.ManyToManyField (Profile, 'Access')
-    file = models.FileField(upload_to='files/', null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.file_type:
+            self.file_type = 'resource'
+        super(ResourceDocument, self).save(*args, **kwargs)
     def __str__(self):
         return self.name

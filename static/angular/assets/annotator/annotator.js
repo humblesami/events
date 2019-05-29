@@ -511,7 +511,7 @@
                 $('#annotated-doc-conatiner').hide();
                 shown_comment_type = false;
                 comments_wrapper.hide();
-                $('#main-div').show();
+                $('.router-outlet').show();
                 saveAnnotationsAtServer('Leaving');
             }
 
@@ -762,7 +762,7 @@
                         $('#content-wrapper').hide();
                         $('.strt_sign.pdfjs').hide();
                         $('.sign_completed.pdfjs').hide();
-                        $('#main-div').hide();
+                        $('.router-outlet').hide();
                         $('.doc-reseter').hide();
                         $('.toolbar.topbar:first').show();
                         $('#annotated-doc-conatiner').show();

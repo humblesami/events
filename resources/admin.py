@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Folder, Files
+from .models import Folder, ResourceDocument
 # Register your models here.
 
 class FolderInline(admin.TabularInline):
@@ -9,9 +9,10 @@ class FolderInline(admin.TabularInline):
     extra = 0
 
 class FileInline(admin.TabularInline):
-    model = Files
+    model = ResourceDocument
     autocomplete_fields = ['users']
     show_change_link = True
+    exclude = ['pdf_doc','content', 'html', 'file_type']
     # readonly_fields = ('View',)
     extra = 0
 
@@ -40,4 +41,4 @@ class FilesAdmin(admin.ModelAdmin):
     filter_horizontal = ('users',)
 
 admin.site.register(Folder, FolderAdmin)
-admin.site.register(Files, FilesAdmin)
+admin.site.register(ResourceDocument, FilesAdmin)

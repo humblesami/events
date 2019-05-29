@@ -708,7 +708,7 @@ last-login-details
 }
 
 .kanban-folder {
-    padding: 15px;
+    padding: 25px 15px;
     font-weight: 500;
     background: #ffffff;
     display: flex;
@@ -2661,10 +2661,12 @@ body.public .app-sidebar
 
 /* Start Of Upcoming Meeting  */
 .Info p {
-    margin-bottom: 5px;
+    margin-bottom: 7px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 16px;
+    color: #4D4F5C;
 }
 
 .CalendarDateWrap{
@@ -2718,16 +2720,16 @@ span.kanban-upcoming-meeting-date {
 }
 .kanban-upcoming-meeting .Info {
     flex: 1;
+    padding-top: 12px;
     padding-left: 12px;
-    justify-content: space-between;
     display: flex;
     flex-direction: column;
 }
 
 .kanban-upcoming-meeting .Info, .kanban-upcoming-meeting .Info a {
-    font-size: 13px;
-    color: #6a6a6a;
-    line-height: 1.4em;
+    font-size: 15px;
+    color: #43425D;
+    line-height: 22px;
 }
 .CalendarDateWrapper {
     white-space: nowrap;

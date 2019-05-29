@@ -378,8 +378,9 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'staff':
                 window.location = `/#/staff/${id}`;
                 break;
-
-
+                case 'folder':
+                window.location = `/#/resource/${id}`;
+                    break;
             }
 
         } else {
@@ -408,16 +409,10 @@ window.addEventListener('message', function receiveMessage(evt) {
                     case 'folder':
                     window.location = `/#/resources`;
                     break;
-
-
-
             }
-
         }
-
         console.log(action)
     }
-
 }, false);
 
 

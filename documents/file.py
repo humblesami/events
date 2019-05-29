@@ -116,16 +116,15 @@ class File(models.Model):
 
     @classmethod
     def get_binary(cls, request, params):
-        if params['id']:
-            file_id = int(params['id'])
-            file_obj = File.objects.filter(id=file_id)[0]
-            pdf_doc = file_obj.pdf_doc
-            pdf_doc = pdf_doc.read()
-            pdf_doc = base64.b64encode(pdf_doc)
-            result = pdf_doc.decode('utf-8')
-            # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
-            doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': file_obj.name, 'type': file_obj.file_type}
-            return {'data': doc}
+        file_id = int(params['id'])
+        file_obj = File.objects.get(id=file_id)
+        pdf_doc = file_obj.pdf_doc
+        pdf_doc = pdf_doc.read()
+        pdf_doc = base64.b64encode(pdf_doc)
+        result = pdf_doc.decode('utf-8')
+        # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
+        doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': file_obj.name, 'type': file_obj.file_type}
+        return {'data': doc}
 
 
 #

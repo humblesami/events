@@ -168,3 +168,44 @@ input[type="range"]::-webkit-slider-thumb {
     width: 10px;
     height: 26px;
 }
+
+
+
+#rtc-container{
+    position: fixed;
+    background-color: white;
+    border: 1px solid;
+    display: none;
+}
+
+#rtc-container.full{    
+    left: 5vw;
+    top: 5vh;
+    width: 90vw;
+    height: 90vh;
+    z-index: 10003;    
+}
+#rtc-container.min{    
+    bottom: 0;
+    right:0;
+    z-index: 77;
+}
+#rtc-container.full .maximizer
+{
+    display: none;
+}
+#rtc-container.min .minimizer
+{
+    display: none;
+}
+#rtc-container .closer span
+{
+    padding: 3px;
+    border: 1px solid silver;
+    margin: 2px;
+    cursor: pointer;
+}
+#rtc-container .closer>div
+{
+    margin: 5px 0;
+}
