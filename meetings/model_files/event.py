@@ -215,6 +215,26 @@ class Event(models.Model):
         return attendance_status
 
     @classmethod
+    def meeting_summary(cls, request, params):
+        
+        meeting = {}
+        uid = request.user.id
+        meeting_id = int(params['id'])
+        meeting_obj = Event.objects.get(pk=meeting_id)
+        meeting['id'] = meeting_obj.id
+        meeting['name'] = meeting_obj.name
+        meeting['start_date'] = str(meeting_obj.start_date)
+        meeting['end_date'] = str(meeting_obj.end_date)
+        meeting['start'] = str(meeting_obj.start_date)
+        meeting['stop'] = str(meeting_obj.end_date)
+        meeting['location'] = meeting_obj.location
+
+        attendance_status = cls.get_attendance_status(meeting_id, uid)
+        meeting['attendee_status'] = attendance_status
+
+        return meeting
+    
+    @classmethod
     def get_meeting_summaries(cls, meetings, uid):
         res_meetings = []
         for meeting_obj in meetings:
