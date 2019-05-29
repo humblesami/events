@@ -16,10 +16,10 @@ body{
     padding: 20px;
 }
 
-.login-form-div form{
+/* .login-form-div form{
     display: table-cell;
     vertical-align: middle;
-}
+} */
 .meet-logo{
     text-align: center;
     margin-bottom: 1.5rem;
@@ -161,12 +161,10 @@ input:-webkit-autofill:active {
 @media (max-width: 767px) { 
         
         .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }        
-        .meet-logo img{ max-width: 60%; }
+  
 }
-img.user-icon
-{
-    height: 20px;
-}
+
 .img-key{
-    width: 50%;
+    padding: 0px 40px;
+    max-width: 100%;
 }

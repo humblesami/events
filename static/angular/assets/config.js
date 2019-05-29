@@ -72,7 +72,7 @@ site_config.site_url = current_site_base_url;
 site_config.public_urls = ['login']
 //console.log(site_config);
 site_config['app_name'] = 'MeetingPoint';
-site_config.trace_request = 1;
+// site_config.trace_request = 1;
 window['site_config'] = site_config;
 // if(site_config.site_url.startsWith('https://')){
 //     $('head meta:first').after('<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />');

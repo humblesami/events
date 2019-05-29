@@ -477,15 +477,15 @@
             }
 
             function viewerLeftMargin(vuw) {
-                if (comments_wrapper.is(':visible')) {
-                    var margin_left = parseFloat($('#viewer').css('margin-left'));
-                    var comment_width = comments_wrapper.width();
-                    if (margin_left < comment_width)
-                        margin_left = comment_width;
-                    $('#viewer').css('margin-left', margin_left + 'px');
-                } else {
-                    $('#viewer').css('margin-left', 'auto');
-                }
+                // if (comments_wrapper.is(':visible')) {
+                //     var margin_left = parseFloat($('#viewer').css('margin-left'));
+                //     var comment_width = comments_wrapper.width();
+                //     if (margin_left < comment_width)
+                //         margin_left = comment_width;
+                //     $('#viewer').css('margin-left', margin_left + 'px');
+                // } else {
+                //     $('#viewer').css('margin-left', 'auto');
+                // }
             }
 
             function showCommentsContainer(comment_sub_type) {
@@ -874,11 +874,11 @@
                                     $('#viewer-wrapper').css({
                                         height: 'calc(100vh - ' + height + 'px)'
                                     });
-                                    comments_wrapper.css({
-                                        top: (height + 2)
-                                    });
-                                    var c_div_height = 'calc(100vh - ' + (height + 55) + 'px)';
-                                    comment_list_div.css('height', c_div_height);
+                                    // comments_wrapper.css({
+                                    //     top: (height + 2)
+                                    // });
+                                    // var c_div_height = 'calc(100vh - ' + (height + 55) + 'px)';
+                                    // comment_list_div.css('height', c_div_height);
                                     $('body').addClass('pdf-viewer');
                                 }
                                 $('#content-wrapper').show();

@@ -6,7 +6,7 @@
   background-color: #ffffff;
   border-bottom: 1px solid #e6e6e6;  
   padding: 0 5px;
-  z-index: 24;
+  z-index: 2;
   flex-wrap: wrap;
 }
 .toolbar.topbar {
@@ -393,38 +393,32 @@ body.pdf-viewer
 }
 #annotated-doc-conatiner
 {
-    display: none;
-    z-index: 13;
+    display: none;    
     background: #fff;
     position: relative;
     width: 100%;
 }
 
 #viewer-wrapper{
-    overflow: auto;
     position: relative;
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 #content-wrapper {    
   width: 100%;
- 
+  height: calc(100vh - 122px);
+  overflow: auto;
 }
 #comment-wrapper {
-    position: fixed;
-    width: 250px;
-    left: 0;
-    z-index: 58;
+    position: relative;
+    width: 350px;
+    z-index: 3;
     display: none;
-    background: #d4d4d4;
+    background: #ffffff;
     border-right: 1px solid #e6e6e6;
-    /* position: fixed;
-    width: 250px;
-    left: 0;
-    z-index: 58;    
-    display: none;
-    background: #d4d4d4;
-    border-right: 1px solid #e6e6e6;
-    bottom: 2px; */
+    height: calc(100vh - 122px);
+    overflow: auto;
 }
 
 #notification-wrapper{
@@ -509,15 +503,15 @@ body.pdf-viewer
 
 #comment-wrapper .comment-list-item {
   border-bottom: 1px solid #c5c5c5;
-  background-color: #ffffff;
   border-radius: 4px;
-  font-size: 12px;
-  margin: 3px;
-  color: #888da8;  
+  font-size: 13px;
+  margin: 5px;
   padding: 8px;
   white-space: pre-wrap;
   line-height: 1.5;
   cursor: pointer;
+  background-color: #ffffff;
+  color: #4a4a4a;
 }
 
 .comment-list-item .user-time-info {
@@ -541,6 +535,8 @@ body.pdf-viewer
 .comment-list
 {
     overflow-y: scroll;
+    height: calc(100vh - 172px);
+    overflow: auto;
 }
 #comment-wrapper .comment-list-container {                
     width: 100%;
@@ -571,7 +567,7 @@ body.pdf-viewer
 .ContextMenuPopup {
   display: none;
   position: fixed;
-  z-index: 99999;
+  z-index: 1122;
   justify-content: center;
   align-items: center;
   padding: 5px;
@@ -629,9 +625,12 @@ hr
 }
 .groupcomment
 {
-    border: 1px dotted #adadad;
-    margin-bottom: 7px;
-    border-radius: 5px;
+  border: 0px dotted #adadad;
+  margin: 5px;
+  border-radius: 5px;
+  background: #d2d2d2;
+  padding: 5px;
+}
 }
 
 .btn-primary.strt_sign.pdfjs
@@ -658,7 +657,7 @@ mark.current {
 
 #pdf-annotate-point-input
 {
-    z-index: 9999;
+    z-index: 1121;
 }
 
 .topbar select.scale
