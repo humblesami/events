@@ -758,7 +758,6 @@ last-login-details
     background: #4b74b5;
     padding: 16px;
 }
-}
 
 .hidemouseaway {
     display: none;
@@ -770,16 +769,14 @@ last-login-details
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 80px);
-    opacity: 0.2;
-    background: rgba(0, 0, 0);
+    height: 100%;
+    background: white;
 }
 
 #server-wait img {
     position: relative;
-    top: calc(50vh - 22px);
-    left: calc(50vw - 22px);
-    animation: fa-spin 1s infinite steps(12);
+    top: calc(50% - 94px);
+    left: calc(50% - 76px);
 }
 
 .bootbox-close-button.close {
