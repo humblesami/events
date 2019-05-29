@@ -155,6 +155,7 @@ class Event(models.Model):
         meeting_object['end_date'] = str(meeting_object['end_date'])
         meeting_object['start'] = meeting_object['start_date']
         meeting_object['stop'] = meeting_object['end_date']
+        meeting_object['exectime'] = meeting_object_orm.exectime
 
         attendance_status = cls.get_attendance_status(meeting_id, user_id)
         meeting_object['attendee_status'] = attendance_status

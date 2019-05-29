@@ -280,6 +280,7 @@ class NewsDocumentInline(admin.TabularInline):
 class NewsAdmin(admin.ModelAdmin):
     inlines = [NewsVideoInline, NewsDocumentInline, ]
 
+
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event,EventAdmin)
 admin.site.register(Topic,TopicAdmin)
