@@ -775,7 +775,7 @@ last-login-details
 
 #server-wait img {
     position: relative;
-    top: calc(50% - 94px);
+    top: calc(50vh - 110px);
     left: calc(50% - 76px);
 }
 
@@ -2274,11 +2274,7 @@ body.iframe {
 {
     background: #09f;
 }
-#call_modal .call_container iframe {
-    border: 0;
-    width: 100%;
-    height: 100%;
-}
+
 #call_modal .incoming_call_message
 {
     text-align: center;    

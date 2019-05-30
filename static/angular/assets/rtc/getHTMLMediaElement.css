@@ -185,10 +185,11 @@ input[type="range"]::-webkit-slider-thumb {
     height: 90vh;
     z-index: 10003;    
 }
-#rtc-container.min{    
-    bottom: 0;
-    right:0;
+#rtc-container.min{
+    bottom: 4px;
+    right: 3px;
     z-index: 77;
+    height: 31px;
 }
 #rtc-container.full .maximizer
 {

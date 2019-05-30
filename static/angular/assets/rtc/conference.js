@@ -367,7 +367,7 @@
             roomer = params.room;
             user_id = params.uid;
             token = params.token;
-            console.log(params, 13);
+            // console.log(params, 13);
         }
     
         document.getElementById('room-id').value = roomer;
@@ -375,6 +375,6 @@
     }
     
     window['init_video_caller'] = init_video_caller;
-    console.log(32121);
 })();
 //init_video_caller();
+//# sourceURL=/static/angular/assets/rtc/conference.js
