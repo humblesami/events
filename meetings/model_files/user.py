@@ -190,8 +190,11 @@ class Profile(user_model):
                 'work_phone', 'mobile_phone', 'website', 'fax', 'ethnicity', 'gender', 'veteran',
                 'disability', 'board_joining_date', 'admin_first_name', 'admin_last_name', 'admin_nick_name',
                 'admin_cell_phone', 'admin_email', 'admin_work_phone', 'admin_fax', 'admin_image', 'mail_to_assistant',
-                'term_start_date', 'term_end_date', 'date_joined'
+                'term_start_date', 'term_end_date', 'date_joined', 'groups'
             ],
+            related={
+                'committees': {'fields': ['id', 'name']}
+            }
         )
         profile['name'] = profile_orm.fullname()
         profile['date_joined'] = str(profile['date_joined'])
@@ -200,6 +203,8 @@ class Profile(user_model):
         profile['gender'] = profile_orm.get_gender_display()
         profile['veteran'] = profile_orm.get_veteran_display()
         profile['signature_data'] = profile_orm.signature_data.decode()
+        profile['group'] = profile['groups'][0].name
+        del profile['groups']
         resume = profile_orm.resume
         if resume:
             profile['resume'] = {'id': resume.id}

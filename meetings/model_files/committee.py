@@ -20,10 +20,13 @@ class Committee(models.Model):
                 committee_orm,
                 fields=['id', 'name', 'description'],
                 related={
-                    'users': {'fields': ['id', 'username', 'image']}
+                    'users': {'fields': ['id', 'username', 'image', 'groups']}
                 }
             )
             if committee:
+                for user in committee['users']:
+                    user['group'] = user['groups'][0].name
+                    del user['groups']
 
                 data = {"committee": committee, "next": 0, "prev": 0}
                 return data
