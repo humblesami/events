@@ -4,7 +4,11 @@ html, body{
     height: 100%;    
     overflow: hidden;
 }
-
+.form-control:focus,
+.form-control.focus {
+    outline: none;
+    box-shadow: none;
+}
 .router-outlet{    
     height: calc(100vh - 110px);
     overflow: auto;
@@ -2803,4 +2807,89 @@ span.kanban-upcoming-meeting-date {
 }
 .PdfViewerWrapper  .pdfViewer .canvasWrapper {
     box-shadow: 0 0 1px rgba(0, 0, 0, 0.27);
+}
+
+.ResourcesHeadWrapper .HeadingWrap{
+    flex: 1.1;
+}
+.ResourcesSearchCreateWrapper {
+    display: flex;
+    flex: 1;
+}
+
+.ResourcesSearchCreateWrapper .input-group-text, .ResourcesSearchCreateWrapper .form-control{
+    border: none;
+    background: #F3F3F3;
+    color: #a2a2a2;
+}
+.create-btnwrap{
+    margin-left: 10px;
+}
+.create-btnwrap .btn-create{
+    background:#4B74B5;
+    color:#ffffff;
+    border-radius: 4px;
+}
+
+.modal-folder-icon{
+    width: 103px;
+    height: 103px;
+    border-radius: 103px;
+    background: #ffffff;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#CreateFolder .modal-content{
+    background: #F1F9FF;
+    border: none;
+    border-radius: 6px;
+    padding-top:20px;
+    padding-bottom: 20px; 
+    }
+.Modal-Folder-Box{
+    padding: 0 30px;
+    text-align: center;
+}
+.Modal-Folder-Box span{
+    color:#3059C9;
+    font-size:18px;
+    display: block;
+    padding: 0 0 1rem;
+}
+
+.Modal-Folder-Box .form-control{
+    border:1px solid #A2A2A2;
+}
+.Modal-Folder-Option{
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+}
+.Modal-Folder-Option .btn-chose{
+    background:#4B74B5;
+    color:#ffffff;
+    border-radius: 25px;
+    padding: 8px 25px;
+}
+
+#CreateFolder button.close {
+    background: #D75A4A;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 36px;
+    color: #ffffff;
+    opacity: 1;
+    cursor: pointer;
+    font-size: 19px;
+    z-index: 900;
+}
+
+#CreateFolder button.close:hover{
+    opacity: 0.5;
 }

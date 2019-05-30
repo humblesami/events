@@ -1,6 +1,7 @@
 (function(){
-    function init_video_caller(params){
-        function init_video_call(){
+    var video_caller = {};
+    function setup_call(params){
+        function init_call(){
             document.getElementById('open-room').onclick = function() {        
                 disableInputButtons();            
                 var roomid = document.getElementById('room-id').value;
@@ -24,24 +25,26 @@
                             alert(message);
                             window.close();
                         }
+
+                        video_caller.socket = connection.socket;
     
-                        connection.socket.on('call_ended', function(){
-                            console.log('Recie');
-                            var message = ('Call ended because other participant(s) left');
-                            close_window(message);
-                        });
-                        connection.socket.on('duplicate', function(){
-                            var message = ('Call ended because other call initiated');
-                            close_window(message);
-                        });
-                        connection.socket.on('no_response', function(){
-                            var message = ('Call ended because respondant not answering');
-                            close_window(message);
-                        });
-                        connection.socket.on('call_rejected', function(){
-                            var message = ('Call ended because respondant not answering');
-                            close_window(message);
-                        });
+                        // connection.socket.on('call_ended', function(){
+                        //     console.log('Recie');
+                        //     var message = ('Call ended because other participant(s) left');
+                        //     close_window(message);
+                        // });
+                        // connection.socket.on('duplicate', function(){
+                        //     var message = ('Call ended because other call initiated');
+                        //     close_window(message);
+                        // });
+                        // connection.socket.on('no_response', function(){
+                        //     var message = ('Call ended because respondant not answering');
+                        //     close_window(message);
+                        // });
+                        // connection.socket.on('call_rejected', function(){
+                        //     var message = ('Call ended because respondant not answering');
+                        //     close_window(message);
+                        // });
                         afterOpenOrJoin();
                     });
                 });
@@ -84,10 +87,11 @@
                 if(existing && existing.parentNode) {
                 existing.parentNode.removeChild(existing);
                 }
-            
+
                 if(event.type === 'local' && event.stream.isVideo) {
-                RMCMediaTrack.cameraStream = event.stream;
-                RMCMediaTrack.cameraTrack = event.stream.getVideoTracks()[0];
+                    RMCMediaTrack.cameraStream = event.stream;
+                    RMCMediaTrack.cameraTrack = event.stream.getVideoTracks()[0];
+                    // RMCMediaTrack.cameraStream.mute();                    
                 }
             
                 event.mediaElement.removeAttribute('src');
@@ -212,7 +216,8 @@
             var RMCMediaTrack = {
                 cameraStream: null,
                 cameraTrack: null,
-                screen: null
+                screen: null,
+                m_audio_track: null
             };
             
             function beforeOpenOrJoin(roomid, callback) {
@@ -354,8 +359,14 @@
                     });
                 });
             }
+
+            video_caller.end_call = function(){                
+                RMCMediaTrack.cameraTrack.stop();
+                RMCMediaTrack.cameraStream.stop();                
+            }
         }
-        init_video_call();
+
+        init_call();
     
         var url = new URL(window.location.toString());
         var roomer = url.searchParams.get("room");
@@ -373,8 +384,10 @@
         document.getElementById('room-id').value = roomer;
         $('#open-room').click();
     }
+
+    video_caller.init = setup_call;
     
-    window['init_video_caller'] = init_video_caller;
+    window['video_caller'] = video_caller;
 })();
 //init_video_caller();
 //# sourceURL=/static/angular/assets/rtc/conference.js
