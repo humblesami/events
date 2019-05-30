@@ -184,8 +184,21 @@ class Event(models.Model):
         sign_docs = ws_methods.queryset_to_list(sign_docs, fields=['id','pdf_doc','name'])
         meeting_object['sign_docs'] = sign_docs
         surveys = meeting_object_orm.survey_set.all()
-        surveys = ws_methods.queryset_to_list(surveys, fields=['id','name'])
+        surveys = ws_methods.queryset_to_list(surveys, fields=['id', 'name'],
+        related = {
+            'responses': {'fields': ['id', 'user']}
+        }
+       )
         meeting_object['surveys'] = surveys
+        for survey in surveys:
+            if not survey['responses']:
+                survey['my_status'] = 'pending'
+            for response in survey['responses']:
+                if response['user'] == user_id:
+                    survey['my_status'] = 'done'
+                else:
+                    survey['my_status'] = 'pending'
+            del survey['responses']
         meeting_object['votings'] = votings
         meeting_object['attendees'] = attendees
         data = {"meeting": meeting_object, "next": 0, "prev": 0}
