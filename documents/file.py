@@ -36,9 +36,8 @@ class File(models.Model):
         tmp = self.attachment.url.split('.')
         ext = tmp[len(tmp) - 1]
         filename = self.attachment.name.replace("files/","").split(".")[0]
-
         pth = settings.BASE_DIR + self.attachment.url
-        if ext == "doc" or ext == "docx" or  ext == "ppt" or ext == "pptx" or ext == "pdf":
+        if ext in ("doc","docx","ppt","pptx","pdf"):
             self.doc2pdf(pth,ext,filename)
         elif ext == "xls" or ext =="xlsx":
             self.excel2xhtml(pth,filename)

@@ -31,7 +31,7 @@ class MeetingDocument(File):
     def save(self, *args, **kwargs):
         if not self.file_type:
             self.file_type = 'meeting'
-            super(MeetingDocument, self).save(*args, **kwargs)
+        super(MeetingDocument, self).save(*args, **kwargs)
 
 class AgendaDocument(File):
     agenda = models.ForeignKey(Topic, on_delete=models.CASCADE)
@@ -39,7 +39,7 @@ class AgendaDocument(File):
     def save(self, *args, **kwargs):
         if not self.file_type:
             self.file_type = 'topic'
-            super(AgendaDocument, self).save(*args, **kwargs)
+        super(AgendaDocument, self).save(*args, **kwargs)
 
 class SignDocument(SignDocument):
     send_to_all = models.BooleanField(blank=True, null=True)

@@ -318,4 +318,4 @@ class VotingDocument(File):
     def save(self, *args, **kwargs):
         if not self.file_type:
             self.file_type = 'voting'
-            super(VotingDocument, self).save(*args, **kwargs)
+        super(VotingDocument, self).save(*args, **kwargs)
