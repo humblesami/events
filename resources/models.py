@@ -1,10 +1,11 @@
 from meetings.model_files.user import *
+from mainapp import  ws_methods
 
 # Create your models here.
 
 class Folder(models.Model):
     name = models.CharField(max_length = 200)
-    parent_folder = models.ForeignKey('self', on_delete=models.CASCADE, related_name='parent', null=True, blank=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -12,34 +13,29 @@ class Folder(models.Model):
     @classmethod
     def get_details(cls, request, params):
         obj = {}
-        folder_id = params.get('id')
-        if folder_id:
-            folder = Folder.objects.get(pk=folder_id)
-            files = list(folder.resourcedocument_set.values())
-            obj['files'] = files
-            obj['sub_folders'] = []
-            obj['id'] = folder_id
-            parents = list(folder.parent.all())
-            ar = []
-            for parent in parents:
-                parent_id = parent.id
-                obj['parent_id'] = parent_id
-                obj['name'] = folder.name
-                obj['id'] = folder.id
-                try:
-                    if len(files) < 0:
-                        files = list(parent.resourcedocument_set.values())
-                    if len(files) > 0:
-                        obj['files'] = files
-                except:
-                    pass
-                ar.append({'id': parent.id, 'name': parent.name})
-            obj['parents'] = ar
-            return obj
+        folder_id = params['id']
+        folder = Folder.objects.get(pk=folder_id)
+        obj['id'] = folder_id
+        obj['name'] = folder.name
+        obj['parents'] = cls.get_ancestors(folder)
 
-        else:
-            return 'InValid Data'
+        ar = []
+        sub_folders = folder.folder_set.values()
+        for sub in sub_folders:
+            sub_folder = {'id': sub['id'], 'name': sub['name'], 'parent_id': folder.id}
+            ar.append(sub_folder)
+        obj['sub_folders'] = ar
+        obj['files'] = list(folder.resourcedocument_set.values())
+        return obj
 
+    @classmethod
+    def get_ancestors(cls, folder_orm):
+        parents_list = []
+        upper_folder = folder_orm.parent
+        while upper_folder:
+            parents_list.append({'name':upper_folder.name,'id':upper_folder.id})
+            upper_folder = upper_folder.parent
+        return parents_list
         # obj = {}
         # req_env = http.request.env
         # folder = req_env['meeting_point.folder'].search([('id', '=', id)])
@@ -67,15 +63,15 @@ class Folder(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
-        total_cnt = Folder.objects.filter(parent_folder__isnull = True).count()
-        folder = Folder.objects.filter(parent_folder__isnull=True).values('name', 'id')
+        total_cnt = Folder.objects.filter(parent__isnull = True).count()
+        folder = Folder.objects.filter(parent__isnull=True).values('name', 'id')
         folder = list(folder)
         current_cnt = len(folder)
         folderObject = {'records':folder, 'total':total_cnt, 'count':current_cnt}
         return folderObject
 
 class ResourceDocument(File):
-    parent_folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
     users = models.ManyToManyField (Profile, 'Access')
 
     def save(self, *args, **kwargs):

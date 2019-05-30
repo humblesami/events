@@ -5,7 +5,8 @@ from .models import Folder, ResourceDocument
 class FolderInline(admin.TabularInline):
     model = Folder
     show_change_link = True
-    # readonly_fields = ('View',)
+    verbose_name = "Sub Folder"
+    verbose_name_plural = "Sub Folders"
     extra = 0
 
 class FileInline(admin.TabularInline):
@@ -24,12 +25,12 @@ class FolderAdmin(admin.ModelAdmin):
             ]
         })
     ]
-    readonly_fields = ['parent_folder',]
+    readonly_fields = ['parent',]
     inlines = [FolderInline,FileInline]
     def get_queryset(self, request):
         qs = super(FolderAdmin, self).get_queryset(request)
         if request.path =='/admin/resources/folder/':
-            qs = qs.filter(parent_folder=None)
+            qs = qs.filter(parent=None)
         return qs
 
 
