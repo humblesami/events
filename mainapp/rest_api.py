@@ -124,7 +124,7 @@ def search(request):
             kwargs = {}
             q_objects = Q()
             for field in fields:
-                q_objects |= Q(**{field: params['kw']})
+                q_objects |= Q(**{field+'__contains': params['kw']})
                 kwargs.update({'{0}__{1}'.format(field, 'contains'): params['kw'].lower()})
             model_obj = apps.get_model(app, model)
             search_result = model_obj.objects.filter(q_objects)
