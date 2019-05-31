@@ -164,6 +164,38 @@ def queryset_to_list(queryset,fields=None,to_str=None,related=None):
     return list
 
 
+
+def obj_to_dict_search(obj,fields=None,to_str=None,related=None):
+    if fields:
+        dict = model_to_dict(obj,fields)
+        for field in fields:
+            if field.find("__") != -1:
+                val = getattr(obj, field.split("__")[0])
+                if val:
+                    val = getattr(val, field.split("__")[1])
+                dict[field] = val
+    else:
+        dict = model_to_dict(obj)
+
+    res_dict = {}
+    for field_name, val in dict.items():
+                #handled non url file fields (saved as binary string)
+        if type(dict[field_name]) is str or type(dict[field_name]) is int:
+            res_dict[field_name] = val
+
+
+    return res_dict
+
+def queryset_to_list_search(queryset,fields=None,to_str=None,related=None):
+    list = []
+    for obj in queryset:
+        dict = obj_to_dict_search(obj,fields,to_str,related)
+        if dict:
+            list.append(dict)
+
+    return list
+
+
 # def mfile_url(model, field, id, file_type):
 #     res = model + '/' + str(id) + '/' + field + '/' + request.db + '/' + request.token
 #     res = get_main_url() + '/' + file_type + '/' + res

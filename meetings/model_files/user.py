@@ -283,6 +283,7 @@ class Profile(user_model):
     def save(self, *args, **kwargs):
         creating = False
         if not self.pk:
+            self.name = self.fullname()
             creating = True
         super(Profile, self).save(*args, **kwargs)
         if creating:

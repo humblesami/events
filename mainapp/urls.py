@@ -31,6 +31,9 @@ urlpatterns = [
     path('rest/public', rest_api.public, name = 'public'),
     path('rest/secure', rest_api.secure, name = 'secure'),
     path('rest/secure1', rest_api.session, name = 'session'),
+    path('rest/search', rest_api.search_ws, name = 'search_ws'),
+    path('rest/search1', rest_api.search_session, name = 'search_session'),
+
     url(r'^voting/', include('voting.urls')),
     url(r'^esign/', include('esign.urls')),
     path('media/<str:folder>/<str:file>/', views.serve_protected_document, name='serve_protected_document'),

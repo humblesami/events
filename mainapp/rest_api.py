@@ -1,11 +1,15 @@
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.contrib.auth.decorators import login_required
+from django.db.models import  Q
 
 import json
 import sys
 import traceback
 from django.apps import apps
 from django.http import HttpResponse
+
+from mainapp import ws_methods
 
 public_methods = {
     'authsignup':{
@@ -57,8 +61,84 @@ def secure(request):
     except:
         return produce_exception()
 
+
+# 'meeting_point.news': ['name', 'description'],
+                # 'meeting_point.news.video': ['name'],
+
+                # 'calendar.event': ['name', 'description'],
+                # 'survey.survey': ['title'],
+                #
+                # 'meeting_point.users': ['name', 'login'],
+                #
+                # 'meeting_point.topic': ['name', 'lead'],
+                # 'meeting_point.folder': ['name'],
+                # 'meeting_point.committee': ['name'],
+                #
+                # 'meeting_point.document': ['name'],
+                # # 'meeting_point.news.doc': ['name'],
+                # 'meeting_point.files': ['name'],
+                # 'meeting_point.doc': ['name'],
+                # 'meeting_point.topicdoc': ['name'],
+                # 'meeting_point.voting': ['name', 'description'],
+                # }
+
+@login_required()
+def search_session(request):
+    try:
+        if request.user.id != 1:
+            return produce_result("unauthorized")
+        results = search(request)
+        return produce_result(results)
+    except:
+        return produce_exception()
+
+@csrf_exempt
+@api_view(["GET", "POST"])
+def search_ws(request):
+    try:
+        results = search(request)
+        return produce_result(results)
+    except:
+        return produce_exception()
+
+def search(request):
+    kw = request.POST
+    if not kw:
+        kw = request.GET
+    kw = json.loads(kw['input_data'])
+    args = kw['args']
+    params = kw['params']
+    results = []
+    search_apps = {
+        'meetings':
+            {
+                'event': ['name', 'description'],
+                'topic': ['name', 'lead'],
+                'committee': ['name'],
+                'profile':['username']
+            },
+    }
+
+    for app, models in search_apps.items():
+        for model, fields in models.items():
+            kwargs = {}
+            q_objects = Q()
+            for field in fields:
+                q_objects |= Q(**{field: params['kw']})
+                kwargs.update({'{0}__{1}'.format(field, 'contains'): params['kw'].lower()})
+            model_obj = apps.get_model(app, model)
+            search_result = model_obj.objects.filter(q_objects)
+            if search_result:
+                # search_result.values()
+                search_result = ws_methods.queryset_to_list_search(search_result)
+                results = results + search_result
+    return results
+
+@login_required()
 def session(request):
     try:
+        if request.user.id != 1:
+            produce_result("unauthorized")
         kw = request.POST
         if not kw:
             kw = request.GET
