@@ -381,6 +381,12 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'folder':
                 window.location = `/#/resource/${id}`;
                     break;
+                case 'signdoc':
+                    window.location = `/#/signdoc/${id}`;
+                    break;
+                case 'signdocument':
+                    window.location = `/#/signdoc/${id}`;
+                        break;
             }
 
         } else {
@@ -398,7 +404,7 @@ window.addEventListener('message', function receiveMessage(evt) {
                     window.location = `/#/surveys`;
                     break;
                     case 'director':
-                    window.location = `/#/profiles/directors`;
+                    window.location = `/#/directors`;
                     break;
                     case 'admin':
                     window.location = `/#/admins`;
@@ -409,6 +415,12 @@ window.addEventListener('message', function receiveMessage(evt) {
                     case 'folder':
                     window.location = `/#/resources`;
                     break;
+                    case 'signdoc':
+                    window.location = `/#/signdoc/${id}`;
+                    break;
+                case 'signdocument':
+                    window.location = `/#/signdoc/${id}`;
+                        break;
             }
         }
         console.log(action)
