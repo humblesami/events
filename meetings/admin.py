@@ -1,4 +1,6 @@
 from django import forms
+
+from documents.admin import FileAdmin
 from meetings.model_files.committee import Committee
 from django.contrib import admin
 from django.utils.html import format_html
@@ -281,10 +283,19 @@ class NewsAdmin(admin.ModelAdmin):
     inlines = [NewsVideoInline, NewsDocumentInline, ]
 
 
+class MeetingDocumentForm(FileAdmin):
+    pass
+
+class SignDocumentForm(FileAdmin):
+    def get_form(self, request, obj=None, **kwargs):
+        self.exclude = ('send_to_all')
+        form = super(SignDocumentForm, self).get_form(request, obj, **kwargs)
+        return form
+
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event,EventAdmin)
 admin.site.register(Topic,TopicAdmin)
-admin.site.register(MeetingDocument)
+admin.site.register(MeetingDocument, MeetingDocumentForm)
 admin.site.register(AgendaDocument)
 admin.site.register(Admin,AdminAdmin)
 admin.site.register(Director,DirectorAdmin)
@@ -292,6 +303,6 @@ admin.site.register(Staff,StaffAdmin)
 admin.site.register(MeetingGroup,GroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
 admin.site.register(Profile,UserAdmin)
-admin.site.register(SignDocument)
+admin.site.register(SignDocument, SignDocumentForm)
 
 admin.site.site_header = "MeetVUE"

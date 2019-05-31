@@ -4,9 +4,11 @@ from .annotation import *
 
 
 class FileAdmin(admin.ModelAdmin):
-    fields = ('name','attachment','pdf_doc')
-    readonly_fields = ('pdf_doc',)
 
+    def get_form(self, request, obj=None, **kwargs):
+        self.exclude = ('html', 'file_type', 'content', 'original_pdf', 'pdf_doc')
+        form = super(FileAdmin, self).get_form(request, obj, **kwargs)
+        return form
 
 admin.site.register(File,FileAdmin)
 admin.site.register(Annotation)

@@ -364,10 +364,10 @@ window.addEventListener('message', function receiveMessage(evt) {
                     window.location = `/#/committees/${id}`;
                     break;
                 case 'voting':
-                    window.location = `/#/votings/${id}`;
+                    window.location = `/#/voting/${id}`;
                     break;
                 case 'survey':
-                    window.location = `/#/surveys/${id}`;
+                    window.location = `/#/survey/${id}`;
                     break;
                 case 'director':
                 window.location = `/#/director/${id}`;
