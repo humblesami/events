@@ -32,6 +32,8 @@ class Event(models.Model):
     @property
     def exectime(self):
         current_date = timezone.now()
+        if not self.publish:
+            return 'draft'
         if self.start_date >= current_date:
             return 'upcoming'
         elif self.end_date <= current_date:
@@ -209,6 +211,8 @@ class Event(models.Model):
     def get_meetings(cls, meeting_type):
         if meeting_type == 'archived':
             meetings = Event.objects.filter(archived=True, publish=True)
+        elif meeting_type == 'draft':
+            meetings = Event.objects.filter(publish=False)
         else:
             meetings = Event.objects.filter(publish=True)
         meeting_list = []
@@ -216,6 +220,8 @@ class Event(models.Model):
             if meeting_type == 'upcoming':
                 if meeting.exectime in (meeting_type, 'ongoing'):
                     meeting_list.append(meeting)
+            elif meeting_type == 'draft':
+                meeting_list.append(meeting)
             elif meeting.exectime == meeting_type:
                 meeting_list.append(meeting)
         return meeting_list
