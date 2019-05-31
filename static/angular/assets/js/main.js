@@ -398,7 +398,7 @@ window.addEventListener('message', function receiveMessage(evt) {
                     window.location = `/#/surveys`;
                     break;
                     case 'director':
-                    window.location = `/#/directors`;
+                    window.location = `/#/profiles/directors`;
                     break;
                     case 'admin':
                     window.location = `/#/admins`;

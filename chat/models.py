@@ -146,7 +146,7 @@ class Comment(models.Model):
     body = models.TextField()
     parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(user_model, on_delete=models.CASCADE)
-    create_date = models.DateTimeField(null=True)
+    create_date = models.DateTimeField(null=True, auto_now_add=True)
 
     @classmethod
     def get_comments(cls, request, params):
@@ -198,6 +198,7 @@ class Comment(models.Model):
         comment.save()
         comment = comment.__dict__
         del comment['_state']
+        comment['create_date'] = str(datetime.now())
         event_data = {'name': 'comment_received', 'data': comment}
         Notification.add_notification(params, event_data)
         return 'done'
@@ -280,7 +281,7 @@ class Message(models.Model):
 
         message = message.__dict__
         message['attachments'] = attachment_urls
-        message['create_date'] = str(message['create_date'])
+        message['create_date'] = str(datetime.now())
 
         del message['_state']
         message['uuid'] = params['uuid']
