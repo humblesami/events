@@ -360,9 +360,14 @@
                 });
             }
 
-            video_caller.end_call = function(){                
-                RMCMediaTrack.cameraTrack.stop();
-                RMCMediaTrack.cameraStream.stop();                
+            video_caller.end_call = function(){
+                try{
+                    RMCMediaTrack.cameraTrack.stop();
+                    RMCMediaTrack.cameraStream.stop();
+                }
+                catch(er){
+                    
+                }
             }
         }
 

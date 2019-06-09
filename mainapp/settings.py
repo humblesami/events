@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-
+import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -151,6 +151,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SOCKET_SERVER_URL = ''
+base_dir = os.path.dirname(os.path.abspath(__file__))
+base_dir = base_dir.replace('mainapp', '')
+with open(base_dir+'config.json') as f:
+    configs = json.loads(f.read())
+    SOCKET_SERVER_URL = configs['socket_url']
+
+if 'localhost' in SOCKET_SERVER_URL:
+    AUTH_PASSWORD_VALIDATORS = []
 
 # AUTH_USER_MODEL = 'user.User'
 

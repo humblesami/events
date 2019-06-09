@@ -11,6 +11,7 @@ from rest_framework.authtoken.models import Token
 import requests
 from django.forms.models import model_to_dict
 
+
 def now_str():
     now = str(datetime.now())
     now = now.replace(' ','-')
@@ -37,16 +38,11 @@ def send_mail(mesgtosend):
     recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
     server.sendmail("Sami Akram", recievers, mesgtosend)
 
+from mainapp.settings import SOCKET_SERVER_URL
 socket_server = {
-    'url': '',
+    'url': SOCKET_SERVER_URL,
     'connected': False
 }
-import os
-base_dir = os.path.dirname(os.path.abspath(__file__))
-base_dir = base_dir.replace('/mainapp', '/')
-with open(base_dir+'config.json') as f:
-    configs = json.loads(f.read())
-    socket_server['url'] = configs['socket_url']
 
 from django.db import connection
 def execute_update(query):
