@@ -954,8 +954,6 @@ table#change-history tbody th {
 .delete-confirmation form .cancel-link {
     display: inline-block;
     vertical-align: middle;
-    height: 15px;
-    line-height: 15px;
     background: #ddd;
     border-radius: 4px;
     padding: 10px 15px;

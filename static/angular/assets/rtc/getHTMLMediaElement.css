@@ -32,9 +32,10 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
 }
 
 .media-box {
-    background: black;
+    /* background: black;
     border: 1px solid rgb(107, 107, 107);
-    margin: 1px;
+    margin: 1px; */
+    position: relative;
 }
 
 .media-controls, .volume-control {
@@ -117,11 +118,37 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
 .zoom-out {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAglJREFUWEftV8lqAkEQzYd4EuK47ytueHA5OPgFjoIHEVzwYOIl4NWf8JKDl/xXPqPSr+nSUceZEYfEgA8Kpal686yqqWpf/gWCwSAlEgmKxWK02+3e1LEl4BsOh6W/OrofmqZRKpUiXdepXq9/qGNLpNNpgmWzWRoMBpo6vg+RSIS63a4krVQqtgKSySRlMhlvBdRqNcrn85K0XC7/vgCQ5nI5mVqnEsAX5YKAfr/vjQA0Hwjxy9wI4B7wTABn4BYB8C+VSu4FiDrrSB0eIuosDWR4nXAGUjcCuFnhz0IQZzbRyJev6Hg8lrUrFAqEpuNaMhEHu3kNO52O9OVYsyAYZoVyPwIC0OmNRkMGczbMRG4EcAO2Wq1DDMezRaPRSwGr1cq32WxoOp3SbDaztPl87jjdDMP4WiwWtFwuEfN9zgETz/pU7k888cQDYb1e+8SEMuwsFAoZyv0qxCS1jDVbr9e75JlMJofJd82wF5zuAzz97AwXHOV+BEaxlTOPT/5erVZtBZzHmj/ZLEex2ANyG55bPB4/IXCzjhGHfcCrGXFmzmKx6DjST4DUM5FbAfAX5fLmQoKa3ZIB+CEDYjE9BXgjQLy7khR1bbfbtgLQL7jYwH84HHojIBAIHDq72Ww6ZgB+EDAajbwR4Pf7pQCQbrfbd3VsCfwv5Gzt9/tXdfzAIKI/NHr5AU4kDfWD0WSsAAAAAElFTkSuQmCC');
 }
-
-.media-box video {
+.ajdfldf{
     width: 100%;
-    vertical-align: top;
-    object-fit: fill;
+    height: 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    box-orient: horizontal;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+}
+
+.media-box{
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.media-box video {
+    height: -webkit-calc(100% + 2px);
+    height: calc(100% + 2px);
+    left: -1px;
+    pointer-events: none;
+    position: absolute;
+    top: -1px;
+    width: -webkit-calc(100% + 2px);
+    width: calc(100% + 2px);
 }
 
 .media-box audio {
@@ -173,17 +200,27 @@ input[type="range"]::-webkit-slider-thumb {
 
 #rtc-container{
     position: fixed;
-    background-color: white;
-    border: 1px solid;
+    color: #ffffff;
     display: none;
+
+    background: #638FC9;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #638FC9, #7FC4FD);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #638FC9, #7FC4FD); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 #rtc-container.full{    
-    left: 5vw;
+    /* left: 5vw;
     top: 5vh;
     width: 90vw;
     height: 90vh;
-    z-index: 10003;    
+    z-index: 10003;     */
+
+    left: 0;
+    top: 7vh;
+    height: 93vh;
+    z-index: 10003;
+    right: 0;
 }
 #rtc-container.min{
     bottom: 4px;
@@ -209,4 +246,113 @@ input[type="range"]::-webkit-slider-thumb {
 #rtc-container .closer>div
 {
     margin: 5px 0;
+}
+
+.user-call-img-wrapper {
+    border-radius: 50px;
+    overflow: hidden;
+    width: 138px;
+    height: 138px;
+    margin: 20px auto;
+}
+.user-call-infobox-wrapper{
+    padding-bottom:20px; 
+}
+.user-call-infobox-wrapper span{
+    display: block;
+    color: #ffffff;
+    font-size:18px; 
+}
+
+.call_starting {
+    position: absolute;
+    left: 0;
+    top: 0vh;
+    height: 93vh;
+    z-index: 10003;
+    right: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.CallOptionsButton{
+    display: flex;
+    justify-content: center;
+    padding-top:10px; 
+}
+
+.CallOptionsButton a{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background: #4B74B5;
+
+    width: 60px;
+    height: 60px;
+    border-radius: 60px;
+    margin: 0 10px;
+}
+.CallOptionsButton a.reject{
+    background: #FF5454;
+}
+
+.spinner {
+    position: relative;
+    overflow: hidden;
+    height: 10px;
+    padding-bottom:20px; 
+}
+
+.spinner div {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: -20px;
+    top: 0px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    animation: move 4s infinite cubic-bezier(.2,.64,.81,.23);
+  }
+  .spinner div:nth-child(2) {
+    animation-delay: 150ms;
+  }
+  .spinner div:nth-child(3) {
+    animation-delay: 300ms;
+  }
+  .spinner div:nth-child(4) {
+    animation-delay: 450ms;
+  }
+  @keyframes move {
+    0% {left: 0%;}
+    75% {left:100%;}
+    100% {left:100%;}
+  }
+
+  .media-container.self {
+    position: absolute;
+    width: 267px !important;
+    height: 200px !important;
+    bottom: 30px;
+    left: 40px;
+    border: 0;
+    background: #000000;
+    padding: 0;
+    border-radius: 0;
+    display: block;
+    z-index: 999;
+}
+.media-container:nth-child(2){
+    position: absolute;
+    width:  100% !important;
+    height: 100% !important;
+    bottom: 0;
+    left:0;
+    border: 0;
+    background: #000000;
+    padding: 0;
+    border-radius: 0;
+    display: block;
 }

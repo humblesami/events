@@ -46,6 +46,10 @@ var dn_current_site_user = {
                 $('body').removeClass('public').addClass('user');
             }
         }
+        else
+        {
+            site_functions.go_to_login();
+        }
     },
     onLogin: function(data) {        
         if (time_out_session) {
@@ -60,9 +64,16 @@ var dn_current_site_user = {
         $('body').removeClass('public').addClass('user');
     },
     logout: function(navigate) {
-        // console.log(342);
+        if(!dn_current_site_user.cookie)
+        {
+            if($('body').hasClass('user'))
+            {
+                console.log('Invalid scenario that body has user class')
+                $('body').removeClass('user').addClass('public');
+            }
+            return;
+        }
         localStorage.removeItem("user");
-        $('body').removeClass('user').addClass('public');
         dn_current_site_user.cookie = undefined;
         if (window['socket_manager']) {
             window['socket_manager'].close_socket();
@@ -71,7 +82,6 @@ var dn_current_site_user = {
         setTimeout(function() {
             bootbox.hideAll();
         }, 500);
-        window.location = '/#/login';
     },
     initUserDataFromCookie: function() {
         var user_info = localStorage.getItem("user");
@@ -99,8 +109,16 @@ var site_functions = {
     get_path: function() {
 
     },
+
     go_to_login: function() {
-        dn_current_site_user.logout(1);
+        if(dn_current_site_user.cookie)
+        {
+            dn_current_site_user.logout();
+        }
+        if(!window.location.toString().endsWith('login'))
+        {
+            window.location = '/#/login';
+        }
     },
 
     

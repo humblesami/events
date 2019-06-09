@@ -2301,7 +2301,7 @@ button
     left: 0;
     width: 230px;
     overflow: auto;
-    z-index: 97;
+    z-index: 9097;
     background-color: var(--toggle-left-menu-bg);
     -webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
             box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);

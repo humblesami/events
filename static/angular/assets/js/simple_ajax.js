@@ -37,6 +37,7 @@ function dn_rpc_object(options) {
     {
         console.log(ajax_user.cookie, ' Invalid token for', input_data.args);
         window['functions'].go_to_login();
+        return;
     }
 
     options.data = args_data;
@@ -66,6 +67,10 @@ function dn_rpc_object(options) {
         url_with_params = b.url;
         if(site_config.trace_request)
         {
+            if(api_url == '/rest/secure')
+            {
+                url_with_params = url_with_params.replace('rest/secure','rest/secure1');
+            }
             console.log(url_with_params, input_data.args);
         }
         if (!options.no_loader)
@@ -112,7 +117,8 @@ function dn_rpc_object(options) {
             err.responseText == '{"detail":"Authentication credentials were not provided."}')
         {
             console.log(input_data.args.method + ' needs login to be accessed');
-            ajax_user.logout(1);
+            ajax_user.go_to_login();
+            return;
         }
         else
         {
@@ -134,13 +140,15 @@ function dn_rpc_object(options) {
     {
         if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
             bootbox.alert('Token expired, please login again '+ options.url);
-            ajax_user.logout(1);
+            ajax_user.go_to_login();
+            return;
         } else if (response.error.indexOf('not allowed to access') > -1) {
             bootbox.alert("Contact admin for permissions" + response.error);
         } else {                                
             if(response.error.indexOf('Unauthorized') > -1)
             {
-                ajax_user.logout(1);
+                ajax_user.go_to_login();
+                return;
             }
             else if(options.onError) {
                 try{
