@@ -280,6 +280,14 @@ class Profile(user_model):
         profile.save()
         return 'done'
 
+    def delete(self, using=None, keep_parents=False):
+        uid = self.pk
+        super(Profile, self).delete()
+        events = [
+            {'name': 'friend_removed', 'data': uid, 'audience': ['all_online']}
+        ]
+        ws_methods.emit_event(events)
+
     def save(self, *args, **kwargs):
         creating = False
         if not self.pk:

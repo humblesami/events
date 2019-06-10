@@ -65,14 +65,10 @@ var dn_current_site_user = {
     },
     logout: function(navigate) {
         if(!dn_current_site_user.cookie)
-        {
-            if($('body').hasClass('user'))
-            {
-                console.log('Invalid scenario that body has user class')
-                $('body').removeClass('user').addClass('public');
-            }
+        {            
             return;
         }
+        $('body').removeClass('user').addClass('public');        
         localStorage.removeItem("user");
         dn_current_site_user.cookie = undefined;
         if (window['socket_manager']) {
@@ -388,60 +384,59 @@ window.addEventListener('message', function receiveMessage(evt) {
                     window.location = `/#/survey/${id}`;
                     break;
                 case 'director':
-                window.location = `/#/director/${id}`;
-                break;
+                    window.location = `/#/director/${id}`;
+                    break;
                 case 'admin':
-                window.location = `/#/admin/${id}`;
-                break;
+                    window.location = `/#/admin/${id}`;
+                    break;
                 case 'staff':
-                window.location = `/#/staff/${id}`;
-                break;
+                    window.location = `/#/staff/${id}`;
+                    break;
                 case 'folder':
-                window.location = `/#/resource/${id}`;
+                    window.location = `/#/resource/${id}`;
                     break;
                 case 'signdoc':
                     window.location = `/#/signdoc/${id}`;
                     break;
                 case 'signdocument':
                     window.location = `/#/signdoc/${id}`;
-                        break;
+                    break;
             }
 
         } else {
             switch (model) {
                 case 'event':
-                    window.location = `/#/meetings/upcoming`;
-                    break;
+                        window.location = `/#/meetings/upcoming`;
+                        break;
                 case 'committee':
-                    window.location = `/#/committees`;
-                    break;
+                        window.location = `/#/committees`;
+                        break;
                 case 'voting':
-                    window.location = `/#/votings`;
-                    break;
+                        window.location = `/#/votings`;
+                        break;
                 case 'survey':
-                    window.location = `/#/surveys`;
+                        window.location = `/#/surveys`;
+                        break;
+                case 'director':
+                    window.location = `/#/profiles/directors`;
                     break;
-                    case 'director':
-                    window.location = `/#/directors`;
+                case 'admin':
+                    window.location = `/#/profiles/admins`;
                     break;
-                    case 'admin':
-                    window.location = `/#/admins`;
+                case 'staff':
+                    window.location = `/#/profiles/staff`;
                     break;
-                    case 'staff':
-                    window.location = `/#/staff`;
-                    break;
-                    case 'folder':
+                case 'folder':
                     window.location = `/#/resources`;
                     break;
-                    case 'signdoc':
-                    window.location = `/#/signdoc/${id}`;
+                case 'signdoc':
+                    window.location = `/#/signdocs`;
                     break;
                 case 'signdocument':
-                    window.location = `/#/signdoc/${id}`;
-                        break;
+                    window.location = `/#/signdocs`;
+                    break;
             }
         }
-        console.log(action)
     }
 }, false);
 
