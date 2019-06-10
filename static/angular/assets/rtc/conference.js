@@ -1,6 +1,6 @@
 (function(){
     var video_caller = {};
-    function setup_call(params){
+    function setup_call(params, on_started){
         function init_call(){
             document.getElementById('open-room').onclick = function() {        
                 disableInputButtons();            
@@ -14,10 +14,10 @@
                             return;
                         }
                         else if (connection.isInitiator === true) {                        
-                            console.log('Yes moderator');
+                            console.log('Yes moderator-', roomid);
                         }
                         else{
-                            console.log('Attendee');
+                            console.log('Attendee-', roomid);
                         }
     
                         function close_window(message)
@@ -25,27 +25,12 @@
                             alert(message);
                             window.close();
                         }
-
                         video_caller.socket = connection.socket;
-    
-                        // connection.socket.on('call_ended', function(){
-                        //     console.log('Recie');
-                        //     var message = ('Call ended because other participant(s) left');
-                        //     close_window(message);
-                        // });
-                        // connection.socket.on('duplicate', function(){
-                        //     var message = ('Call ended because other call initiated');
-                        //     close_window(message);
-                        // });
-                        // connection.socket.on('no_response', function(){
-                        //     var message = ('Call ended because respondant not answering');
-                        //     close_window(message);
-                        // });
-                        // connection.socket.on('call_rejected', function(){
-                        //     var message = ('Call ended because respondant not answering');
-                        //     close_window(message);
-                        // });
                         afterOpenOrJoin();
+                        if(on_started)
+                        {
+                            on_started();
+                        }
                     });
                 });
             };
@@ -395,4 +380,4 @@
     window['video_caller'] = video_caller;
 })();
 //init_video_caller();
-//# sourceURL=/static/angular/assets/rtc/conference.js
+//# -- sdsourceURL=/static/angular/assets/rtc/conference.js
