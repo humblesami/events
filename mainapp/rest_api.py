@@ -108,31 +108,59 @@ def search(request):
     kw = json.loads(kw['input_data'])
     args = kw['args']
     params = kw['params']
+    search_text = params['kw'].lower()
+    is_content_search = params.get('is_content_search')
     results = []
-    search_apps = {
-        'meetings':
-            {
-                'event': ['name', 'description'],
-                'topic': ['name', 'lead'],
-                'committee': ['name'],
-                'profile':['username']
-            },
-    }
-
+    if is_content_search:
+        search_apps = {
+            'documents':
+                {
+                    'file': ['content']
+                }
+        }
+    else:
+        search_apps = {
+            'meetings':
+                {
+                    'event': ['name', 'description'],
+                    'topic': ['name', 'lead'],
+                    'committee': ['name'],
+                    'profile': ['username'],
+                    'MeetingDocument': ['name'],
+                    'AgendaDocument': ['name'],
+                    'SignDocument': ['name']
+                },
+            'resources':
+                {
+                    'folder': ['name'],
+                    'ResourceDocument': ['name']
+                },
+            'survey':
+                {
+                    'survey': ['name', 'description']
+                },
+            'voting':
+                {
+                    'voting': ['name', 'description'],
+                    'VotingDocument': ['name']
+                }
+        }
     for app, models in search_apps.items():
         for model, fields in models.items():
             kwargs = {}
             q_objects = Q()
             for field in fields:
                 q_objects |= Q(**{field+'__contains': params['kw']})
-                kwargs.update({'{0}__{1}'.format(field, 'contains'): params['kw'].lower()})
+                kwargs.update({'{0}__{1}'.format(field, 'contains'): search_text})
             model_obj = apps.get_model(app, model)
             search_result = model_obj.objects.filter(q_objects)
             if search_result:
-                # search_result.values()
                 search_result = ws_methods.queryset_to_list_search(search_result)
+                for result in search_result:
+                    result['model'] = app + '.' + model
                 results = results + search_result
     return results
+
 
 @login_required()
 def session(request):

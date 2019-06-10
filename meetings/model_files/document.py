@@ -41,9 +41,15 @@ class AgendaDocument(File):
             self.file_type = 'topic'
         super(AgendaDocument, self).save(*args, **kwargs)
 
+
 class SignDocument(SignDocument):
     send_to_all = models.BooleanField(blank=True, null=True)
     meeting = models.ForeignKey(Event, on_delete=models.CASCADE,blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.file_type:
+            self.file_type = 'signature'
+        super(SignDocument, self).save(*args, **kwargs)
 
     @classmethod
     def get_records(cls, request, params):

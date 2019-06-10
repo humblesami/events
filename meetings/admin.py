@@ -16,6 +16,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
+
 class TopicInline(admin.TabularInline):
     model = Topic
     # show_change_link = True
@@ -36,6 +37,7 @@ class TopicInline(admin.TabularInline):
 
         return format_html(html)
 
+
 class MeetingDocInline(admin.TabularInline):
     model = MeetingDocument
     exclude=('html','content','pdf_doc', 'file_type')
@@ -50,6 +52,7 @@ class MeetingDocInline(admin.TabularInline):
     def Edit(self,obj):
         html = '<a href="/admin/meetings/meetingdocument/%s/change">Edit</a>' %(obj.id)
         return format_html(html)
+
 
 class AgendaDocInline(MeetingDocInline):
     model = AgendaDocument
@@ -101,6 +104,7 @@ class EventAdmin(admin.ModelAdmin):
 
         return format_html(html)
 
+
 class TopicAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
@@ -120,6 +124,7 @@ class TopicAdmin(admin.ModelAdmin):
         html += '</div>'
 
         return format_html(html)
+
 
 class UserAdminForm(UserChangeForm):
     committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
@@ -170,6 +175,7 @@ class UserAdmin(BaseUserAdmin):
     image_tag.short_description = ''
     pass
 
+
 class AdminAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
@@ -183,6 +189,7 @@ class AdminAdmin(UserAdmin):
         qs = super(AdminAdmin, self).get_queryset(request)
         qs = qs.filter(groups__name__in=['Admin'])
         return qs
+
 
 class DirectorAdmin(UserAdmin):
     fieldsets = (
@@ -227,6 +234,7 @@ class DirectorAdmin(UserAdmin):
         qs = qs.filter(groups__name__in=['Director'])
         return qs
 
+
 class StaffAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
@@ -239,7 +247,6 @@ class StaffAdmin(UserAdmin):
         qs = super(StaffAdmin, self).get_queryset(request)
         qs = qs.filter(groups__name__in=['Staff'])
         return qs
-   
 
 
 class GroupAdmin(GroupAdmin):
@@ -253,6 +260,7 @@ class GroupAdmin(GroupAdmin):
     def save_model(self, request, obj, form, change):
         a=1
         super(GroupAdmin, self).save_model(request, obj, form, change)
+
 
 class CommitteeAdmin(admin.ModelAdmin):
     filter_horizontal = ('users',)
@@ -269,15 +277,18 @@ class CommitteeAdmin(admin.ModelAdmin):
         html += '</div>'
         return format_html(html)
     # members.short_description = ''
-    
+
+
 class NewsVideoInline(admin.TabularInline):
     model = NewsVideo
     extra = 0
 
+
 class NewsDocumentInline(admin.TabularInline):
     model = NewsDocument
-    exclude = ('html', 'content', 'original_pdf', 'pdf_doc')
+    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
     extra = 0
+
 
 class NewsAdmin(admin.ModelAdmin):
     inlines = [NewsVideoInline, NewsDocumentInline, ]
@@ -286,11 +297,13 @@ class NewsAdmin(admin.ModelAdmin):
 class MeetingDocumentForm(FileAdmin):
     pass
 
+
 class SignDocumentForm(FileAdmin):
     def get_form(self, request, obj=None, **kwargs):
         self.exclude = ('send_to_all')
         form = super(SignDocumentForm, self).get_form(request, obj, **kwargs)
         return form
+
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event,EventAdmin)

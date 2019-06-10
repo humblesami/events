@@ -70,6 +70,7 @@ class Folder(models.Model):
         folderObject = {'records':folder, 'total':total_cnt, 'count':current_cnt}
         return folderObject
 
+
 class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
     users = models.ManyToManyField (Profile, 'Access')

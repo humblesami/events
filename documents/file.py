@@ -1,6 +1,7 @@
 import base64
 import subprocess
 # import pdftotext
+import pdftotext
 from fpdf import FPDF
 from PIL import Image
 from django.db import models
@@ -9,7 +10,7 @@ from django.core.files import File as DjangoFile
 
 
 class File(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
     html = models.CharField(max_length=30, blank=True)
     content = models.CharField(max_length=30, blank=True)
     pdf_doc = models.FileField(upload_to='converted/', null=True)
@@ -26,10 +27,19 @@ class File(models.Model):
         super(File, self).save(*args, **kwargs)
         if create:
             self.get_pdf()
+            content = ""
+            if self.pdf_doc:
+                pdf = pdftotext.PDF(self.pdf_doc)
+                for pag in pdf:
+                    content += pag
+                self.content = content
+                self.save()
+            elif self.html:
+                self.content = self.html
+                self.save()
             pass
         else:
             pass
-
 
 
     def get_pdf(self):
@@ -58,10 +68,6 @@ class File(models.Model):
                      '-o', converted_pth, '-d', 'document',
                      pth])
                 res = open(converted_pth, 'rb')
-            # content=""
-            # pdf = pdftotext.PDF(res)
-            # for pag in pdf:
-            #     content += pag
             if ext != "pdf":
                 res = open(converted_pth, 'rb')
             else:
@@ -82,9 +88,9 @@ class File(models.Model):
                  pth ])
             res = open(converted_pth, 'rb')
             self.pdf_doc.save(filename + ".xhtml", DjangoFile(res))
-            # read = res.read()
-            # r=read.decode("utf-8")
-            # self.html = r
+            read = res.read()
+            r=read.decode("utf-8")
+            self.html = r
 
         except:
             raise

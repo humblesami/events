@@ -162,9 +162,14 @@ class Event(models.Model):
         attendance_status = cls.get_attendance_status(meeting_id, user_id)
         meeting_object['attendee_status'] = attendance_status
 
-        topics = list(meeting_object_orm.topic_set.values())
-        for t in topics:
-            t['duration'] = str(t['duration'])
+        topic_orm = list(meeting_object_orm.topic_set.all())
+        topics = []
+        topic = {}
+        for t in topic_orm:
+            topic = ws_methods.obj_to_dict(t)
+            topic['duration'] = str(topic['duration'])
+            topic['docs'] = list(t.agendadocument_set.values())
+            topics.append(topic)
         meeting_docs = list(meeting_object_orm.meetingdocument_set.values())
         votings = list(meeting_object_orm.voting_set.values())
         for voting in votings:

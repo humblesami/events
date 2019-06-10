@@ -62,6 +62,12 @@ class News(models.Model):
 class NewsDocument(File):
     news = models.ForeignKey(News, on_delete=models.CASCADE)
 
+    def save(self, *args, **kwargs):
+        if not self.file_type:
+            self.file_type = 'home'
+        super(NewsDocument, self).save(*args, **kwargs)
+
+
 class NewsVideo(models.Model):
     name = models.CharField('Video Title', max_length=200)
     url = models.CharField('Video Link', max_length=500)
