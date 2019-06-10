@@ -30,6 +30,7 @@ class SignDocument(File):
         super(SignDocument, self).save(*args, **kwargs)
         if create:
             self.original_pdf = self.pdf_doc
+            self.save()
             pass
         else:
             pass
