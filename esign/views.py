@@ -7,8 +7,8 @@ from rest_framework.decorators import api_view
 from mainapp.rest_api import produce_result, produce_exception
 from mainapp.ws_methods import check_auth_token
 
-# @csrf_exempt
-# @api_view(["GET", "POST"])
+@csrf_exempt
+@api_view(["GET", "POST"])
 def get_details(request):
     try:
         kw = request.POST
