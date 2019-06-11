@@ -10,7 +10,6 @@ index
 # dependencies
 /node_modules
 
-package.json
 package-lock.json
 
 
@@ -65,4 +64,3 @@ node_modules
 connect.lock
 coverage
 typings
-package-lock.json
