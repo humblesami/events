@@ -133,7 +133,7 @@ export class SocketService {
                     obj_this.rtc_multi_connector = window['video_caller'];
                 }
                 obj_this.ongoing_call = video_call.id;
-                console.log(obj_this.rtc_multi_connector, 190);
+                // console.log(obj_this.rtc_multi_connector, 190);
 
                 var on_started = undefined;
                 if(video_call.caller.id == params.uid)

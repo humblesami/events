@@ -65,11 +65,6 @@
 
 .selector ul.selector-chooser {
     float: left;
-    width: 22px;
-    background-color: #eee;
-    border-radius: 10px;
-    margin: 10em 5px 0 5px;
-    padding: 0;
 }
 
 .selector-chooser li {

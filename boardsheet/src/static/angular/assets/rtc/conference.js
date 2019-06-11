@@ -403,7 +403,6 @@
     }
 
     video_caller.init = setup_call;
-    console.log(video_caller, 1344);
     window['video_caller'] = video_caller;
 })();
 //init_video_caller();

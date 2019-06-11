@@ -291,14 +291,14 @@ input[type="submit"], button {
         margin-bottom: 5px;
     }
 
-    .selector ul.selector-chooser {
+    /* .selector ul.selector-chooser {
         width: 26px;
         height: 52px;
         padding: 2px 0;
         margin: auto 15px;
         border-radius: 20px;
         transform: translateY(-10px);
-    }
+    } */
 
     .selector-add, .selector-remove {
         width: 20px;
@@ -701,13 +701,7 @@ input[type="submit"], button {
     }
 
     .selector ul.selector-chooser {
-        display: block;
-        float: none;
-        width: 52px;
-        height: 26px;
-        padding: 0 2px;
-        margin: 15px auto 20px;
-        transform: none;
+        margin: auto;
     }
 
     .selector ul.selector-chooser li {

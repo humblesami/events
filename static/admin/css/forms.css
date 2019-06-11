@@ -68,7 +68,6 @@ form ul.inline li {
 /* ALIGNED FIELDSETS */
 
 .aligned label {
-    padding-top: 10px;
     float: left;
     width: 160px;
     word-wrap: break-word;
@@ -420,6 +419,7 @@ body.popup .submit-row {
 
 .inline-group .tabular fieldset.module {
     border: none;
+    overflow-x: auto;
 }
 
 .inline-related.tabular fieldset.module table {
