@@ -22,7 +22,6 @@
     
                         function close_window(message)
                         {
-                            alert(message);
                             window.close();
                         }
                         video_caller.socket = connection.socket;
@@ -35,9 +34,9 @@
                 });
             };
     
-            document.getElementById('leave-room').onclick = function(){
-                window.close();
-            };
+            // document.getElementById('leave-room').onclick = function(){
+            //     close_window()
+            // };
             
             // ......................................................
             // ..................RTCMultiConnection Code.............
@@ -105,6 +104,7 @@
                         // video.setAttribute('controls', true);
                     }
                 }
+                video.setAttribute('controls', true);
                 video.srcObject = event.stream;
                 // event.stream.getVideoTracks()[0].enabled = true;
                 // event.stream.getAudioTracks()[0].enabled = true;
@@ -113,7 +113,7 @@
                 var mediaElement = getHTMLMediaElement(video, {
                     title: event.userid,
                     buttons: ['full-screen'],
-                    width: width,
+                    // width: width,
                     showOnMouseEnter: false
                 });
             
@@ -131,6 +131,29 @@
             
                 // to keep room-id in cache
                 localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
+                /*if(event.type != 'local')
+                {
+					console.log(4554);
+					var $video  = $('video').last(),
+					$window = $(window);
+
+					$(window).resize(function(){
+
+						var height = $window.height();
+						$video.css('height', height);
+
+						var videoWidth = $video.width(),
+							windowWidth = $window.width(),
+						marginLeftAdjust =   (windowWidth - videoWidth) / 2;
+
+						$video.css({
+							'height': height,
+							'marginLeft' : marginLeftAdjust
+						});
+					}).resize();
+				}*/
+
+
             };
             
             connection.onstreamended = function(event) {
@@ -228,6 +251,9 @@
                         }
                     }
                 });
+
+
+
             }
             
             var btnShareScreen = document.getElementById('share-screen');
@@ -373,6 +399,7 @@
     
         document.getElementById('room-id').value = roomer;
         $('#open-room').click();
+
     }
 
     video_caller.init = setup_call;

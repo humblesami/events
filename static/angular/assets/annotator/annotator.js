@@ -1,4 +1,5 @@
 (function() {
+    var annotation_user_m2;
     var annotation_mode = 0;
     var hand_drawings = [];
     var shown_comment_type = false;
@@ -631,6 +632,7 @@
             }
 
             function render(doc_data) {
+                annotation_user_m2 = window['current_user'].cookie;
                 site_functions.showLoader("renderdoc");
                 if (doc_data && doc_data.first_time) {
 
@@ -638,8 +640,7 @@
                     commentText = comments_wrapper.find('#commentText');
                     comment_list_div = comments_wrapper.find('.comment-list:first');
                     comment_list = comments_wrapper.find('.comment-list-container:first');
-
-                    documentId = doc_data.type + '-' + doc_data.id + '.pdf';
+                    documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';
                     doc_id = doc_data.id;
                     RENDER_OPTIONS.documentId = documentId;
                     comments_loaded = false;
@@ -1212,8 +1213,8 @@
                         //console.log(commentValue);
                         var comment = {
                             date_time: new Date(),
-                            user_name: annotation_user.name,
-                            uid: annotation_user.id,
+                            user_name: annotation_user_m2.name,
+                            uid: annotation_user_m2.id,
                             content: commentValue
                         };
                         //console.log(commentText.content)
@@ -1505,9 +1506,6 @@
 
     function module2(module, exports, __webpack_require__) {
         var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */
-
-        var annotation_user_m2 = localStorage.getItem('user');
-        annotation_user_m2 = JSON.parse(annotation_user_m2);
 
         (function(module) {
             'use strict';
@@ -2757,6 +2755,7 @@
                                 },
                                 addComment: function addComment(documentId, annotationId, values, received_comment) {
                                     return new Promise(function(resolve, reject) {
+                                        console.log(documentId, 14);
                                         if (annotationId) {
                                             var comment = {
                                                 class: 'Comment',
