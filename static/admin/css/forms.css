@@ -68,8 +68,7 @@ form ul.inline li {
 /* ALIGNED FIELDSETS */
 
 .aligned label {
-    display: block;
-    padding: 4px 10px 0 0;
+    padding-top: 10px;
     float: left;
     width: 160px;
     word-wrap: break-word;
@@ -155,11 +154,8 @@ form .aligned table p {
 }
 
 .aligned .vCheckboxLabel {
-    float: none;
     width: auto;
     display: inline-block;
-    vertical-align: -3px;
-    padding: 0 0 5px 5px;
 }
 
 .aligned .vCheckboxLabel + p.help,
@@ -525,4 +521,8 @@ form .related-widget-wrapper ul {
 
 .clearable-file-input input {
     margin-top: 0;
+}
+
+.empty-form {
+    display: none !important;
 }

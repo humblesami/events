@@ -224,9 +224,9 @@ input[type="submit"], button {
         max-height: 120px;
     }
 
-    .aligned label {
+    /* .aligned label {
         padding-top: 6px;
-    }
+    } */
 
     .aligned .add-another,
     .aligned .related-lookup,
@@ -580,7 +580,6 @@ input[type="submit"], button {
 
     .aligned label {
         width: 100%;
-        padding: 0 0 10px;
     }
 
     .aligned label:after {
@@ -605,7 +604,6 @@ input[type="submit"], button {
 
     .aligned .vCheckboxLabel {
         flex: 1 0;
-        padding: 1px 0 0 5px;
     }
 
     .aligned label + p,
@@ -987,5 +985,15 @@ input[type="submit"], button {
     table.model tbody th, table.model tbody td {
         font-size: 13px;
         word-break: break-word;
+    }
+}
+@media (max-width: 767px) {
+    .aligned .vCheckboxLabel{
+        margin-left: 5px;
+    }
+}
+@media (min-width: 768px) {
+    .aligned .vCheckboxLabel{
+        margin: -5px 5px 0 0
     }
 }
