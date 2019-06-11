@@ -22,7 +22,7 @@ class AnnotationDocument(models.Model):
         user_id = request.user.id
         comments_points = PointAnnotation.get_point_annotations(doc_id=doc_id)
 
-        doc = AnnotationDocument.objects.filter(doc_name=doc_name, user_id=user_id)
+        doc = AnnotationDocument.objects.filter(doc_name=doc_name)
         if not doc:
             res = {'version': -1, 'annotations': [], 'comments': comments_points}
             return res
@@ -36,9 +36,9 @@ class AnnotationDocument(models.Model):
             res = {'version': doc.version, 'comments': comments_points}
             return  res
 
-        user_rectangles = RectangleAnnotation.get_rectangles(doc.id)
-        line_drawings = DrawingAnnotation.get_drawings(doc.id)
-        note_points = PointAnnotation.get_point_annotations(doc_name=doc_name)
+        user_rectangles = RectangleAnnotation.get_rectangles(doc.id, user_id)
+        line_drawings = DrawingAnnotation.get_drawings(doc.id, user_id)
+        note_points = PointAnnotation.get_point_annotations(doc_name=doc_name, user_id=user_id)
         res = {
             'version': doc.version, 'annotations': note_points + line_drawings + user_rectangles,
             'comments': comments_points
@@ -157,8 +157,8 @@ class RectangleAnnotation(Annotation):
             user_dimension.save()
 
     @classmethod
-    def get_rectangles(cls, doc_id):
-        rectangles = RectangleAnnotation.objects.filter(document_version_id=doc_id)
+    def get_rectangles(cls, doc_id, user_id):
+        rectangles = RectangleAnnotation.objects.filter(document_version_id=doc_id, user_id = user_id)
         user_rectangle = []
         counter = 0
         for rectangle in rectangles:
@@ -225,8 +225,8 @@ class DrawingAnnotation(Annotation):
                 drawing_line.save()
 
     @classmethod
-    def get_drawings(cls, doc_id):
-        drawings = DrawingAnnotation.objects.filter(document_version_id=doc_id)
+    def get_drawings(cls, doc_id, user_id):
+        drawings = DrawingAnnotation.objects.filter(document_version_id=doc_id, user_id=user_id)
         line_drawings = []
         counter = 0
         for drawing in drawings:
@@ -321,15 +321,22 @@ class PointAnnotation(Annotation):
                 doc = File.objects.get(pk=doc_id)
                 attendees = []
                 if doc:
-                    meeting_doc = doc.meetingdocument
-                    if meeting_doc:
-                        meeting = meeting_doc.meeting
-                        if meeting:
-                            meeting_attendees = meeting.attendees.all()
-                            if meeting_attendees:
-                                for attendee in meeting_attendees:
-                                    if user_id != attendee.id:
-                                        attendees.append(attendee.id)
+                    try:
+                        if doc.meetingdocument:
+                            meeting_doc = doc.meetingdocument
+                            if meeting_doc:
+                                meeting = meeting_doc.meeting
+                    except:
+                        if doc.agendadocument:
+                            agenda = doc.agendadocument.agenda
+                            if agenda:
+                                meeting = agenda.event
+                    if meeting:
+                        meeting_attendees = meeting.attendees.all()
+                        if meeting_attendees:
+                            for attendee in meeting_attendees:
+                                if user_id != attendee.id:
+                                    attendees.append(attendee.id)
                 events = [
                     {'name': 'point_comment_received', 'data': res, 'audience': attendees}
                 ]
@@ -339,13 +346,13 @@ class PointAnnotation(Annotation):
             return 'Invalid Point'
 
     @classmethod
-    def get_point_annotations(cls, doc_name=None, doc_id=None):
+    def get_point_annotations(cls, doc_name=None, doc_id=None, user_id=None):
         if doc_id:
             point_obj = PointAnnotation.objects.filter(document_id=doc_id)
             sub_type = ''
             return_sub_type = False
         else:
-            point_obj = PointAnnotation.objects.filter(document_version__doc_name=doc_name)
+            point_obj = PointAnnotation.objects.filter(document_version__doc_name=doc_name, user_id=user_id)
             sub_type = 'personal'
             return_sub_type = 'personal'
 
