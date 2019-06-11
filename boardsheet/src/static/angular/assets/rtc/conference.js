@@ -131,6 +131,29 @@
             
                 // to keep room-id in cache
                 localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
+                /*if(event.type != 'local')
+                {
+					console.log(4554);
+					var $video  = $('video').last(),
+					$window = $(window);
+
+					$(window).resize(function(){
+
+						var height = $window.height();
+						$video.css('height', height);
+
+						var videoWidth = $video.width(),
+							windowWidth = $window.width(),
+						marginLeftAdjust =   (windowWidth - videoWidth) / 2;
+
+						$video.css({
+							'height': height,
+							'marginLeft' : marginLeftAdjust
+						});
+					}).resize();
+				}*/
+
+
             };
             
             connection.onstreamended = function(event) {
@@ -228,6 +251,9 @@
                         }
                     }
                 });
+
+
+
             }
             
             var btnShareScreen = document.getElementById('share-screen');
@@ -373,6 +399,7 @@
     
         document.getElementById('room-id').value = roomer;
         $('#open-room').click();
+
     }
 
     video_caller.init = setup_call;

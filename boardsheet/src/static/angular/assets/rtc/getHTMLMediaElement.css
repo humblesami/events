@@ -140,16 +140,7 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
     right: 0;
     top: 0;
 }
-.media-box video {
-    height: -webkit-calc(100% + 2px);
-    height: calc(100% + 2px);
-    left: -1px;
-    pointer-events: none;
-    position: absolute;
-    top: -1px;
-    width: -webkit-calc(100% + 2px);
-    width: calc(100% + 2px);
-}
+
 
 .media-box audio {
     height: 5em;
@@ -415,4 +406,20 @@ div#ongoing_controls {
     padding: 0;
     border-radius: 0;
     display: block;
+}
+.media-box video {
+    height: -webkit-calc(100% + 2px);
+    height: calc(100% + 2px);
+    left: -1px;
+    pointer-events: none;
+    position: absolute;
+    top: -1px;
+    width: -webkit-calc(100% + 2px);
+    width: calc(100% + 2px);
+}
+.media-box>h2:first-child{
+   display: none;
+}
+.control.zoom-in{
+   display: none;
 }
