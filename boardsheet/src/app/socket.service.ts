@@ -117,8 +117,8 @@ export class SocketService {
                 video_call.state = 'ongoing';
                 if(!video_call.id)
                 {
-                    console.log('Invalid call id, it must has been alreasy set');
-                    console.log(video_call, video_call.incoming);
+                    console.log(video_call.state, 'Invalid call id, it must has been alreasy set');
+                    // console.log(video_call, video_call.incoming);
                     return;
                 }
                 
