@@ -125,10 +125,12 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
                 if str(type(dict[field])) in ["<class \'datetime.datetime\'>"]:
                     dict[field] = str(dict[field])
                 elif str(type(dict[field])) in ["<class \'django.db.models.fields.files.FieldFile\'>",'<class \'django.db.models.fields.files.ImageFieldFile\'>']:
-                    try:
-                        dict[field] = dict[field].url
-                        if not dict[field].url:
+                    try:                        
+                        file_url = dict[field].url
+                        if not file_url:                        
                             dict[field] = str(dict[field])
+                        else:
+                            dict[field] = file_url
                     except:
                         if dict[field].startswith('/media/data'):
                             dict[field] = dict[field][7:]
