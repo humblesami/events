@@ -1,7 +1,8 @@
 import base64
 import subprocess
+pdf_to_text = None
 try:
-    import pdftotext
+    import pdftotext as pdf_to_text
 except:
     pass
 from fpdf import FPDF
@@ -28,20 +29,21 @@ class File(models.Model):
             create = True
         super(File, self).save(*args, **kwargs)
         if create:
-            self.get_pdf()
-            content = ""
-            if self.pdf_doc:
-                pdf = pdftotext.PDF(self.pdf_doc)
-                for pag in pdf:
-                    content += pag
-                self.content = content
-                self.save()
-            elif self.html:
-                self.content = self.html
-                self.save()
-            pass
-        else:
-            pass
+            try:
+                self.get_pdf()
+                content = ""            
+                pdf_file = self.pdf_doc
+                if pdf_file and pdf_to_text:
+                    pdf = pdf_to_text.PDF(pdf_file)
+                    for pag in pdf:
+                        content += pag
+                    self.content = content
+                    self.save()
+                elif self.html:
+                    self.content = self.html
+                    self.save()
+            except:
+                pass
 
 
     def get_pdf(self):
@@ -55,8 +57,6 @@ class File(models.Model):
             self.excel2xhtml(pth,filename)
         elif ext in ['png','jpg','jpeg']:
             self.img2pdf(pth,filename)
-        else:
-            raise
 
     def doc2pdf(self, pth,ext,filename):
         try:

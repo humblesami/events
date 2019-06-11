@@ -22,7 +22,6 @@
     
                         function close_window(message)
                         {
-                            alert(message);
                             window.close();
                         }
                         video_caller.socket = connection.socket;
@@ -35,9 +34,9 @@
                 });
             };
     
-            document.getElementById('leave-room').onclick = function(){
-                window.close();
-            };
+            // document.getElementById('leave-room').onclick = function(){
+            //     close_window()
+            // };
             
             // ......................................................
             // ..................RTCMultiConnection Code.............
@@ -105,6 +104,7 @@
                         // video.setAttribute('controls', true);
                     }
                 }
+                // video.setAttribute('controls', false);
                 video.srcObject = event.stream;
                 // event.stream.getVideoTracks()[0].enabled = true;
                 // event.stream.getAudioTracks()[0].enabled = true;
