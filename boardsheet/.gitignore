@@ -2,10 +2,8 @@
 /dist
 /tmp
 /out-tsc
+
 /index.html
-/index
-index.html
-index
 
 # dependencies
 /node_modules
