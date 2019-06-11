@@ -1,0 +1,147 @@
+<app-breadcrumb *ngIf="voting_object" app="voting" model="voting" 
+rid="{{voting_object.id}}" edit="1" delete="1" 
+routes='[{"title":"Actions", "link":"/actions"}, {"title":"Resolutions", "link":"/actions/votings"}]'
+title="{{voting_object.name}}"></app-breadcrumb>
+<!-- <app-paginator></app-paginator>
+<app-breadcrumb app="voting" model="voting" 
+edit="1" delete="1" 
+*ngIf="voting_object"
+routes='[{"title":"Votings", "link":"/votings/{{voting_object.id}}"}]'
+title="{{bread_crumb.title}}"></app-breadcrumb>     -->
+<div class="router-outlet">
+    <div class="container" *ngIf="voting_object">        
+        <div class=" form-details">
+            <div class="meeting-details-form">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="upcomingButton" id="tdmrb{{voting_object.id}}">
+                            <button (click)='respond_invitation(option.name, option.id, voting_object.id)' class="btn btn-primary" *ngFor="let option of voting_object.voting_options">
+                                <i *ngIf="voting_object.my_status == option.name" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                                <span name="option.name">{{option.name}}</span>
+                            </button>
+                            <button style="display: none" *ngIf="voting_object && voting_object.signature_required == true" id="{{voting_object.id}}" class="fa fa-pen fa-lg strt_sign voting btn-primary" url='/voting/save_signature'></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="div1">
+                    <!-- <div *ngIf="voting_object.signature">
+                        <img src="data:image/png;base64,{{voting_object.signature}}" height="280" width="466" />
+                    </div> -->
+                    <div *ngIf="voting_object.my_status" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            My Status
+                        </div>
+                        <label class="col-sm-9">
+                            {{voting_object.my_status}}
+                        </label>                        
+                    </div>                    
+                    <div class="row" *ngIf="voting_object.signature_data">
+                        <div class="col-sm-8 " style="display: flex;">
+                            <div style="position:relative;cursor: pointer;">
+                                <img class="strt_sign_voting " style="width: 100%;" *ngIf="voting_object.signature_data" src="data:image/png;base64,{{voting_object.signature_data}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="voting_object.name && voting_object.name" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            Subject
+                        </div>
+                        <label class="col-sm-9">
+                            {{voting_object.name}}
+                        </label>
+                    </div>
+
+                    <div *ngIf="voting_object.motion_first" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            Motion First
+                            <span class="fa fa-user motion-icon"></span>
+                        </div>
+                        <a class="col-sm-6 col-md-4 col-lg-4 anchor-mb" routerLink="/profile/{{voting_object.motion_first.id}}">{{voting_object.motion_first.name}}</a>
+                    </div>
+
+                    <div *ngIf="voting_object.motion_second" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            Motion Second
+                            <span class="fa fa-user motion-icon"></span>
+                        </div>
+                        <a class="col-sm-6 col-md-4 col-lg-4 anchor-mb" routerLink="/profile/{{voting_object.motion_second.id}}">{{voting_object.motion_second.name}}</a>
+                    </div>
+
+                    <div *ngIf="voting_object.meeting.name" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            Meeting Subject
+                        </div>
+                        <a class="col-sm-6 col-md-4 col-lg-4 anchor-mb" routerLink="/home/meeting/{{voting_object.meeting.id}}">{{voting_object.meeting.name}}</a>
+                    </div>
+
+                    <div *ngIf="voting_object.topic.name" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            Topic Subject
+                        </div>
+                        <a class="col-sm-6 col-md-4 col-lg-4 anchor-mb" routerLink="/topic/{{voting_object.topic.id}}">{{voting_object.topic.name}}</a>
+                    </div>
+
+                    <div *ngIf="voting_object.open_date && voting_object.open_date" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            Open Date
+                        </div>
+                        <label class="col-sm-9">
+                            {{voting_object.open_date | date:'medium' }}
+                        </label>
+                    </div>
+
+                    <div *ngIf="voting_object.close_date && voting_object.close_date" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            Close Date
+                        </div>
+                        <label class="col-sm-9">
+                            {{voting_object.close_date | date:'medium'}}
+                        </label>
+                    </div>
+
+                </div>
+
+
+                <div class="div2">
+                    <div *ngIf="voting_object.hasOwnProperty('description') && voting_object.description" class="row">
+                        <div class="col-sm-3 meet-elements">
+                            Description
+                        </div>
+                        <label class="col-sm-9" [innerHtml]="voting_object.description"></label>
+                    </div>
+                </div>                
+                
+                <div style="display:none" class="title-wrapper voting-chart">
+                    <div class="modal-header">
+                        Graphical View
+                    </div>
+                    <div class="row docwrappercontainer">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+
+                <div *ngIf="voting_object.voting_docs && voting_object.voting_docs.length" class="title-wrapper">
+                    <div class="modal-header">
+                        Voting Documents
+                    </div>
+                    <div class="row docwrappercontainer">
+                        <div class="kanban-card" routerLink="/voting/doc/{{doc.id}}" *ngFor="let doc of voting_object.voting_docs">
+                            <div class="DocumentWrapper gray-bg">
+                                <div class="DocIcon">
+                                    <i class="fa fa-file"></i>
+                                </div>
+                                <div class="DocText">
+                                    <div class="DocName">
+                                        <h5>{{doc.name}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <app-comments *ngIf="voting_object && voting_object.enable_discussion" res_app="{{discussion_params.res_app}}" res_model="{{discussion_params.res_model}}" res_id="{{discussion_params.res_id}}"></app-comments>
+    </div>
+</div>

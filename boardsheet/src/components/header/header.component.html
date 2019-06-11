@@ -1,0 +1,231 @@
+<div class="header-container">
+    <div *ngIf="socketService.user_data">
+        <div class="headerheight"></div>
+        <div class="header-fixed">    
+            <div class="main-nav-header">
+                <a class="nav-icon-split app-sidebar__toggle" data-toggle="sidebar" aria-label="Hide Sidebar"><img src="static/angular/assets/images/menu.png" alt=""></a>
+                <a routerLink="/">
+                    <img class="logo" src="static/angular/assets/images/logo.svg">			
+                </a>
+            </div>
+            
+            <div class="main-user-navbar">
+                <div class="searchheader-icon nav-icon">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="nav-icon" (click)="change_cursor()">
+                    <span class="cursor_chooser"><i class="fas fa-hand-pointer" id="cursor_chooser"></i></span>
+                    <canvas id="cursor_canvas" width="20" height="20" style="display:none" ></canvas>
+                </div>
+                <div class="messageicon-container mobile-chatroom nav-icon dropdown">
+                    <button routerLink="/messenger" class="showmouseawaybutton notification-icon">
+                        <i class="fas fa-comment"></i>
+                    </button>
+                    <span class="un-read-msg" *ngIf="socketService.unseen_messages !=0 ">{{socketService.unseen_messages}}</span>
+                </div>
+                <app-chat></app-chat>
+                <div class="navbar-profile-menu dropdown">
+                    <button class="profile-icon showmouseawaybutton" (click)="show_profile_menu($event)">
+                        <span class="header-user-name">{{socketService.user_data.name}}</span>
+                        <img id="navbar-profile-img" class="img-thumbnail-sm" src="{{socketService.user_photo}}">
+                    </button>
+                    <div class="profile-menu dropdown-menu hidemouseaway">
+                        <a class="dropdown-item" routerLink="/my-profile">
+                            <div class="drop-down-user">
+                                <img class="img-thumbnail-sm" src="{{socketService.user_photo}}">
+                                <h5>{{socketService.user_data.name}}</h5>
+                            </div>
+                        </a>
+                        <hr>
+                        <a class="dropdown-item" routerLink="/settings"><i class="fa fa-cogs"></i> Change Password</a>
+                        <a id='logout_link' (click)="signout()" class="dropdown-item"><i class="icon-logout"></i> Logout</a>
+                    </div>
+                </div>        
+            </div>
+            
+            <div class="searchbar-full-width" style="display: none;">
+                <div class="lowerheader input-group">
+                    <input id="search-box" type="text"
+                        pattern="[a-zA-Z ]*"
+                        [(ngModel)]="search_key_word"
+                        (keyup.enter)="search()"
+                        placeholder="Search"  aria-expanded="false" class="form-control" />
+    
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <input [(ngModel)]="is_content_search" type="checkbox" aria-label="Checkbox for following text input">
+                            <span style="margin-left: 10px;">In FIles</span>
+                        </span>
+                        <span class="input-group-text">
+                            <button (click)="search()" class="btn btn-secondary" type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>        
+                </div>
+            </div>
+        </div>
+    
+        <div *ngIf="show_search_results">
+            <div class="show_search_results">
+                <div *ngIf="no_search" class="no-search">
+                    <h1>No Result Found!</h1>
+                </div>
+                <div class="close-button" (click)="show_search_results = false; search_key_word = '';">
+                    <i class="fa fa-times"></i>
+                </div>
+                <div *ngIf="!no_search" class="container">
+                    <h3 *ngIf="is_content_search" style="color: #696969">Search Results Based on Content of Documents.</h3>
+                    <div *ngIf="!content_search" class="row search-box-wrapper">
+                        <div *ngIf="search_results.users.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Moderators</h2>
+                                <h3 *ngFor="let item of search_results.users">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.meetings.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Meetings</h2>
+                                <h3 *ngFor="let item of search_results.meetings">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.meeting_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Meeting Documents</h2>
+                                <h3 *ngFor="let item of search_results.meeting_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.votings.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Resolutions</h2>
+                                <h3 *ngFor="let item of search_results.votings">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.voting_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Resolution Documents</h2>
+                                <h3 *ngFor="let item of search_results.voting_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.surveys.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Surveys</h2>
+                                <h3 *ngFor="let item of search_results.surveys">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.committees.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Committees</h2>
+                                <h3 *ngFor="let item of search_results.committees">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.resources.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Resources</h2>
+                                <h3 *ngFor="let item of search_results.resources">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.resource_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Resource Documents</h2>
+                                <h3 *ngFor="let item of search_results.resource_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.topics.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Topics</h2>
+                                <h3 *ngFor="let item of search_results.topics">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.topic_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Topic Documents</h2>
+                                <h3 *ngFor="let item of search_results.topic_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Documents</h2>
+                                <h3 *ngFor="let item of search_results.documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="content_search" class="row">
+                        <div *ngIf="search_results.signature_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Documents for Signature</h2>
+                                <h3 *ngFor="let item of search_results.signature_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.meeting_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Meeting Documents</h2>
+                                <h3 *ngFor="let item of search_results.meeting_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.topic_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Documents in Topics</h2>
+                                <h3 *ngFor="let item of search_results.topic_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.resource_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Documents in Resources</h2>
+                                <h3 *ngFor="let item of search_results.resource_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.home_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Home Page Documents</h2>
+                                <h3 *ngFor="let item of search_results.home_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                        <div *ngIf="search_results.voting_documents.length" class="col-sm">
+                            <div class="result-box-info">
+                                <h2>Resolutions Documents</h2>
+                                <h3 *ngFor="let item of search_results.voting_documents">
+                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

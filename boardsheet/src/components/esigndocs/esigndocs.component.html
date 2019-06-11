@@ -1,0 +1,44 @@
+﻿<app-paginator></app-paginator>
+<app-breadcrumb  app="meetings" model="signdocument" 
+create="1"
+routes='[{"title":"Actions", "link":"/actions"}]'
+title="e-Signature"></app-breadcrumb>
+
+<div class="router-outlet">
+        <div class="container">
+                <div class="MainTitleHeadWrap">
+                        <div class="HeadingWrap">
+                            <img src="static/angular/assets/images/meeting-icon.png" alt="" /> Esignature
+                        </div>
+                        <div class="MeetingBtnWrapper">
+                            <div class="btn-group">
+                                <a routerLink="/actions/votings" class="btn">Resolutions</a>
+                                <a routerLink="/actions/signdocs" class="btn">Esignature</a>
+                                <a routerLink="/actions/surveys" class="btn">Surveys</a>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+    <div class="cards container mt-4">
+        <div class="row">
+            <div class="col-md-3 mb-4" *ngFor="let doc of docs">
+                <a routerLink="/signdoc/{{doc.id}}" class="kanban-folder">
+                    <span>{{doc.name}}</span>
+                    <div class="Folderwrapper">
+                        <i class="fa fa-file"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container" *ngIf="!docs">
+        <div class="row">
+            <div class="col-lg-12 ">
+                <div class="jumbotron text-center">
+                    <h1>There are no resources for now!</h1>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

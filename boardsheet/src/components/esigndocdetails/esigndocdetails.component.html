@@ -1,0 +1,89 @@
+﻿<app-breadcrumb app="meetings" model="signdocument" 
+*ngIf="doc"
+rid="{{doc.id}}" delete="1" 
+routes='[{"title":"Actions", "link":"/actions"}, {"title":"Esignature", "link":"/actions/signdocs"}]'
+title="{{doc.name}}"></app-breadcrumb>
+<div class="router-outlet">
+
+    <div name="id" class="e_sign_doc_id" invisible="1" ></div>
+
+    <div class="sign-position dev_only" ></div>
+    <div class="meetings_div col-md-6">
+        <strong>Attach to meeting(Optional):</strong>
+    <select id="dropdown_meeting" style="width:50%"><option value="0">Select Meeting</option></select>
+    <br><strong class="check_box_send_all" >Send to all attendees:</strong>
+    <input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>
+    </div>
+    
+    <div id="holder" style="position:relative;text-align: center;background-color: rgb(82, 86, 89);">
+
+        <div class="top_btns">
+            <div class="PdfTopBtnsWrapper">
+                <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev" ></div>
+                <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next" ></div>
+                <span class="pg_no"> <span style="font-weight: bold;" id="page_num" ></span> / <span id="page_count" ></span></span>
+                <div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out" ></div>
+                <div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In" ></div>
+                <span style="display: inline-block;" id="scaleSelectContainer">
+                    <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
+                        <option title="" value="0.5">50%</option>
+                        <option title="" value="0.75">75%</option>
+                        <option title="" value="1">100%</option>
+                        <option title="" value="1.25">125%</option>
+                        <option title="" value="1.5">150%</option>
+                        <option title="" value="2">200%</option>
+                        <option title="" value="3">300%</option>
+                        <option title="" value="4">400%</option>
+                    </select>
+                </span>
+            </div>
+            <div class="PdfButtonWrapper">
+                <div id="save-doc-data" style="float:left" disabled="true" class="btn btn-primary  save_doc_data">
+                    Send
+                </div>
+                <div id="signature-position" class="drag btn btn-primary position_btns sign_psition">
+                    Signature
+                </div>
+                <div id="initial-position" class="drag btn btn-primary position_btns initial_psition">
+                    Initials
+                </div>
+
+                <div id="date-position" class="drag btn btn-primary position_btns date_psition">
+                    Date
+                </div>
+                <div id="text-position" class="drag btn btn-primary position_btns name_psition">
+                    Name
+                </div>
+                <div id="name-position" class="drag btn btn-primary position_btns email_psition">
+                    Email
+                </div>
+                <div id="phone-position" class="drag btn btn-primary position_btns phone_psition">
+                    Phone
+                </div>
+                <div id="company-position" class="drag btn btn-primary position_btns company_psition">
+                    Company
+                </div>
+
+
+                <!-- <div id="text-position"  class="drag btn btn-primary position_btns text_psition">
+                Text
+                </div> -->
+            </div>
+
+        </div>
+        
+        <div id="viewer_container" style="position:relative;">
+            <div id="nxxt_sign" style="display:none;background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START
+                SIGNING</div>
+
+            <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
+
+                <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
+                    <canvas id="the-canvas" ></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

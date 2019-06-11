@@ -1,0 +1,76 @@
+﻿<app-paginator></app-paginator>
+<app-breadcrumb app="resources" model="folder" create="1" title="Resources"></app-breadcrumb>
+<div class="router-outlet  pt-0">
+    <div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="MainTitleHeadWrap ResourcesHeadWrapper">
+					<div class="HeadingWrap">
+						<img src="static/angular/assets/images/face-scan.png" alt="" /> Resources
+					</div>
+					<div class="ResourcesSearchCreateWrapper">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search here…">
+                        </div>
+                        <div class="create-btnwrap">
+                            <a href="javascript:void(0);" class="btn btn-create" data-toggle="modal" data-target="#CreateFolder">Create</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <div class="cards container mt-4">
+        <div class="row">
+            <div class="col-md-3 mb-4" *ngFor="let folder of folders">
+                <a routerLink="/resource/{{folder.id}}" class="kanban-folder">
+                    
+                    <span>{{folder.name}}</span>
+                    <div class="Folderwrapper">
+                            <img src="static/angular/assets/images/folder.png" alt="user" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" *ngIf="no_resource">
+        <div class="row">
+            <div class="col-lg-12 ">
+                <div class="jumbotron text-center">
+                    <h1>There are no resources for now!</h1>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Folder Modal -->
+<div class="modal fade" id="CreateFolder" tabindex="-1" role="dialog" aria-labelledby="CreateFolder" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">          
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+    <div class="modal-body">
+        <div class="pt-5 pb-3">
+            <div class="modal-folder-icon">
+                <img src="static/angular/assets/images/modal-folder.png" alt="modal-folder" />
+            </div>
+        </div>
+        <div class="Modal-Folder-Box">
+            <span>Create New Folder</span>
+            <input type="text" class="form-control" placeholder="Enter folder name">
+            <div class="Modal-Folder-Option">
+                <a href="javascript:void(0);" class="btn btn-chose" >Create</a>
+                <a href="javascript:void(0);" class="btn btn-chose" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>

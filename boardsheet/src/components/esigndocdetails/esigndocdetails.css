@@ -1,0 +1,216 @@
+.position_btns {
+    z-index: 999
+}
+
+.top_btns {
+    background: rgb(50, 54, 57);
+    padding: 2px;
+}
+
+.pg_no {
+    color: white;
+}
+
+.doc_btn {
+    background-color: gray;
+    color: white;
+    margin: 2px;
+
+}
+
+.edit_sign:hover,
+.del_sign:hover {
+    background-color: white;
+    color: red!important
+}
+
+.new_sign i {
+    margin-left: 2px;
+}
+
+#scaleSelectContainer select#scaleSelect {
+    background: white;
+    margin-left: 3px;
+    border: navajowhite;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 3px;
+    height: 29px;
+}
+
+.PdfButtonWrapper .btn {
+    min-width: 130px;
+    margin: 3px;
+}
+
+.sign-box.fa-lg {
+    margin-left: 10px;
+}
+
+#signature_editor_esign {
+    width: 459px;
+    height: 198px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.youtubeVideoModal .modal-dialog {
+    width: 495px;
+}
+
+.youtubeVideoModal {
+    z-index: 9008!important;
+}
+
+@media (max-width: 540px) {
+    .youtubeVideoModal .modal-dialog {
+        width: auto;
+    }
+    .youtubeVideoModal .modal-body {
+        padding: 6px;
+    }
+    #signature_editor_esign {
+        width: calc(100vw - 50px);
+        margin: 5px auto !important;
+    }
+    .youtubeVideoModal .modal-dialog .modal-body {
+        text-align: center;
+    }
+}
+
+.DocsButtonWrapper:nth-child(1) {
+    margin: 0;
+}
+
+
+/*#signature_editor_esign
+{
+    padding: 0px;
+    border: 1px solid #cccccc;
+    margin: 3px 10px;
+    width: 304px;
+    height: 198px;
+}*/
+
+#signature_editor_esign canvas {
+    border: 1px solid;
+}
+
+.DocsBtn {
+    min-width: 85px;
+    margin: 2px;
+    margin-top: 20px;
+}
+
+.DocsButtonWrapper .btn:first-child,
+.DocsBtn.DocsBtnfirst {
+    margin-left: 0px;
+}
+
+.DocsButtonWrapper {
+    font-size: 14px;
+    height: auto
+}
+
+.sign_embed {
+    height: auto;
+    padding: 20px;
+    border: 1px solid lightgray;
+}
+
+.embed-responsive {
+    height: 390px;
+}
+
+.sign_btn {
+    margin: 5px;
+}
+
+.sign_doc_form .o_inner_groupp,
+.o_cp_right {
+    display: none!important
+}
+
+#page_container1 {
+    height: calc(100vh - 225px);
+}
+
+#nxxt_sign {
+    top: 5px;
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+    #nxxt_sign {
+        width: 90px!important;
+        height: 25px;
+        font-size: 0.8em;
+    }
+}
+
+.o_form_nosheet {
+    padding: 0!important;
+}
+
+.new_sign {
+    box-shadow: 0px 0px 3px 1px #A4498C;
+}
+
+.details_div {
+    display: flex;
+    padding: 5px;
+}
+
+.sign_ids {
+    height: 43px;
+}
+
+.sign_ids:hover {
+    height: auto;
+    overflow: auto;
+}
+
+.PdfButtonWrapper .drag,.PdfButtonWrapper .position_btns {
+    background: #875a7b;
+}
+
+.pending_signs {
+    width: 50%;
+}
+
+.o_control_panel > .breadcrumb > li {
+    display: none
+}
+
+.o_control_panel > .breadcrumb > li:last-child {
+    display: inline-block
+}
+
+.o_control_panel > .breadcrumb > li:first-child {
+    display: inline-block
+}
+
+.o_control_panel > .breadcrumb > li:nth-child(2) {
+    display: inline-block
+}
+
+.check_box_send_all,.PdfButtonWrapper{
+    display: none
+}
+
+ .o_cp_buttons, .o_cp_pager{
+
+     display:none !important;
+ }
+
+.o_cp_left{
+ position: absolute;
+    right: 0;
+}
+
+.meetings_div
+{
+    height: 71px;
+
+
+}

@@ -1,0 +1,77 @@
+<app-breadcrumb app="survey" model="survey" 
+*ngIf="surveyDetails"
+rid="{{surveyDetails.id}}" edit="1" delete="1" 
+routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/actions/surveys"}]'
+title="{{surveyDetails.name}}"></app-breadcrumb>
+<div class="router-outlet">
+	<div class="container" *ngIf="surveyDetails">        
+		<div class=" form-details">
+				<div class="meeting-details-form">
+					<div class="d-flex justify-content-between" *ngIf="surveyDetails.is_published">
+						<div>
+							<div class="survey-top-buttons" id="tdmrb{{surveyDetails.id}}">
+								<a *ngIf="surveyDetails" id="{{surveyDetails.id}}" class="btn btn-primary" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Start Survey</a>
+								<a *ngIf="surveyDetails" id="{{surveyDetails.id+surveyDetails.name}}" class="btn btn-primary" routerLink='/survey/{{surveyDetails.id}}/results'>Survey Results</a>
+							</div>
+						</div>
+					</div>
+					
+						<div class="div1">
+								<div *ngIf="surveyDetails.name" class="row">
+										<div class="col-sm-3 meet-elements">
+												Subject
+										</div>
+										<label class="col-sm-9">
+												{{surveyDetails.name}}
+										</label>
+								</div>
+
+								<div *ngIf="surveyDetails.meeting && surveyDetails.meeting.name" class="row">
+										<div class="col-sm-3 meet-elements">
+												Meeting Subject
+										</div>
+										<a class="col-sm-6 col-md-4 col-lg-4 anchor-mb" routerLink="/home/meeting/{{voting_object.meeting.id}}">{{voting_object.meeting.name}}</a>
+								</div>
+
+								<div *ngIf="surveyDetails.topic && surveyDetails.topic.name" class="row">
+										<div class="col-sm-3 meet-elements">
+												Topic Subject
+										</div>
+										<a class="col-sm-6 col-md-4 col-lg-4 anchor-mb" routerLink="/topic/{{voting_object.topic.id}}">{{voting_object.topic.name}}</a>
+								</div>
+
+						</div>
+
+
+						<div class="div2">
+								<div *ngIf="surveyDetails.hasOwnProperty('description') && surveyDetails.description" class="row">
+										<div class="col-sm-3 meet-elements">
+												Description
+										</div>
+										<label class="col-sm-9" [innerHtml]="surveyDetails.description"></label>
+								</div>
+						</div>
+
+						<div class="div3">
+							<div *ngIf="surveyDetails.questions && surveyDetails.questions.length" class="row">
+									<div class="col-sm-3 meet-elements">
+											Questions
+									</div>
+									<!-- <div *ngFor="let question of surveyDetails.questions">
+										<label class="col-sm-9">
+											{{question.text}}
+										</label>
+									</div> -->
+									<div>
+										<label class="col-sm-9" *ngFor="let question of surveyDetails.questions">
+											{{question.text}}
+										</label>
+									</div>
+							</div>
+						</div>
+
+				</div>
+		</div>
+		<app-comments *ngIf="voting_object && voting_object.enable_discussion" res_app="{{discussion_params.res_app}}" res_model="{{discussion_params.res_model}}" res_id="{{discussion_params.res_id}}"></app-comments>
+	</div>
+</div>

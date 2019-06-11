@@ -19,3 +19,4 @@ static/angular/static
 000*.py
 */000*.py
 config.json
+*/node_modules

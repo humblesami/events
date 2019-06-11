@@ -1,0 +1,24 @@
+#calenderModal
+{
+    min-height: calc(100vh - 5px);
+}
+.CalendarDateWrapper {
+    white-space: nowrap;
+    width: 90px;
+}
+.CalendarDateWrap{
+    background: linear-gradient(to bottom,#ffffff,#ffffff);
+    color: #3059C9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 7px 5px;
+    font-size: 0.885em;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    border-radius: 50%;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
+    width: 86px;
+    height: 86px;
+}

@@ -1,0 +1,128 @@
+<div class="messenger-container">
+    <div class="chat friends-chat-box">
+        <div class="card contacts_card">
+            <div class="MessengerWrap"><h1 class="MessengerText">Messenger</h1></div>
+            <div class="card-header MessengerSearchWrap">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">
+                </div>
+            </div>
+            <div class="card-body contacts_body">
+                <ul class="contacts">
+                    <li *ngFor="let uid of socketService.keys_chat_users"
+                        (click)="select_chat_user(uid)"
+                        [ngClass]="[active_chat_user && uid == active_chat_user.id ? 'active': '']">                                
+                        <div >
+                            <a class="contact-item d-flex align-items-center bd-highlight">
+                                <div class="img_cont">
+                                    <img src="{{socketService.server_url}}{{socketService.chat_users[uid].photo}}" class="rounded-circle user_img">
+                                    <span [ngClass]="[socketService.chat_users[uid].online ? '': 'offline']" class="online_icon"></span>
+                                </div>
+                                <div class="user_info">
+                                    <span>{{ socketService.chat_users[uid].name }}</span>
+                                    <p *ngIf="socketService.chat_users[uid].online">Online</p>
+                                    <p *ngIf="!socketService.chat_users[uid].online">Offline</p>
+                                </div>
+                                <span class="unseen" *ngIf="socketService.chat_users[uid].unseen">
+                                    {{socketService.chat_users[uid].unseen}}
+                                </span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="chat chat-container-wrppaer">
+        <div *ngIf="active_chat_user" class="card chat-full-height">
+            <div class="chat-user-title">
+                <span (click)="hide_chat_box()" class="backchatlist"><i class="fas fa-arrow-left"></i></span>
+                <h2>{{active_chat_user.name}}</h2>
+                <div *ngIf="active_chat_user.online" class="userstat">Online</div>
+                <div *ngIf="!active_chat_user.online" class="userstat">Offline</div>
+                <div style="position:absolute; top:10px; right:10px">
+                    <span style="cursor:pointer"
+                        (click)="socketService.video_call.init(active_chat_user.id)">
+                    <i class="fa fa-phone" style="font-size:24px;color:green"></i>
+                </span>
+                </div>
+                
+                <div class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
+            </div>			
+            <div class="card-body msg_card_body meetVue-chat-body">
+                <div class="messenger-body" *ngFor="let msg of active_chat_user.messages">
+                    <div *ngIf="msg.sender == socketService.user_data.id"
+                            class="d-flex align-items-end justify-content-end mb-4">
+                        <div class="msg_cotainer_send">
+                            <div class="msg-send-box-wrapper">
+                                <div class="msg-send-box-text" [innerHTML]="msg.body"></div>
+                                <div class="attachment_container">                                                
+                                    <a *ngFor="let doc of msg.attachments" contenteditable="false"
+                                    href="{{socketService.server_url}}{{doc.url}}"
+                                    target="__blank"
+                                    class="download" style="display: flex;">
+                                        <span class="file_name">
+                                            <i class="fa fa-download"></i>{{doc.name}}
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <span class="msg_time_send">{{msg.create_date | date:'medium'}}</span>
+                        </div>
+                    </div>
+                    <div *ngIf="msg.sender != socketService.user_data.id"
+                            class="d-flex align-items-end justify-content-start mb-4">
+                        <div class="img_cont_msg">
+                            <img src="{{socketService.server_url}}{{active_chat_user.photo}}" class="rounded-circle user_img_msg">
+                        </div>
+                        <div class="msg_cotainer">
+                            <div class="msg-box-wrapper">
+                                <div class="msg-box-text" [innerHTML]="msg.body"></div>
+                            </div>
+                            <span class="msg_time">{{msg.create_date | date:'medium'}}</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="card-footer meetVue-chat-footer">
+                <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
+                    <div class="call_container ">
+                        <div *ngFor="let doc of attachments" contenteditable="false"
+                            class="doc-thumb" style="display: flex;">
+                            <span class="doc-thumb-icon"><i class="fa fa-2x fa-file"></i></span>
+                            <span class="file_name">{{doc.name}}</span>
+                            <span class="doc-thumb-close" (click)="remove_attachment($event)">
+                                <i class="del fas fa-times-circle"></i>
+                            </span>
+                        </div>                                    
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="message_input_box" data-emojiable="true"
+                            data-type="image" class="form-control" placeholder="Type your message here" />                                
+                    <div class="input-group-append">
+                        <form style="padding: 10px;border:1px solid" class="input-group-text attach_btn" (click)="attach_btn_click($event)">
+                            <input (change)="file_change($event)" id="msg_file" type="file" 
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.ppt" 
+                                multiple
+                                style="display:none" 
+                            />
+                            <i class="fas fa-paperclip"></i>
+                        </form>
+                    </div>
+
+                    <div class="input-group-append">
+                        <span id="send_btn" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!is_mobile_device && !active_chat_user" class="card wellcomescreen">
+            <h3>Welcome to MeetVUE</h3>
+        </div>
+    </div>
+</div>

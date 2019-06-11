@@ -1,0 +1,35 @@
+h2.heading-title {
+    margin-bottom: 20px;    
+}
+h2.heading-title span {
+    position: relative;
+}
+h2.heading-title span:before {
+    border-top: 1px solid #dddddd;
+    content: "";
+    position: absolute;
+    bottom: -7px;
+    left: 0px;
+    width: 100%;
+}
+
+.modal-header, .modal-footer{
+    background-color: #eeeeee !important;
+}
+
+.bordered{
+    border: 1px solid #808080;
+}
+
+
+
+.kanban-committees-info-box{
+    background: #f3f3f3;
+    border-radius: 3px;
+    border: 1px solid #f1eeee;
+    margin: 15px 0;
+    padding: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}

@@ -1,0 +1,135 @@
+<app-breadcrumb 
+*ngIf="surveyDetails"
+routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/actions/surveys"}, {"title":"{{surveyDetails.name}}", "link":"/survey/{{surveyDetails.id}}"}]'
+title="Results"></app-breadcrumb>
+<div class="router-outlet">
+        <div class="col-sm-3" style="position: absolute; right:0%;">
+                <canvas id="progress-chart"></canvas>
+            </div>
+  <div class="container" *ngIf="surveyDetails">
+      <div class="col-sm-8">
+          <h3>{{surveyDetails.name}}</h3>
+      </div>
+      <div class="row">
+
+          <div class="col-sm-12 mr-b20" *ngIf="surveyDetails.questions">
+              <div *ngFor="let question of surveyDetails.questions" class="row">
+                  <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                      <label>
+                          <b>Question</b>
+                      </label>
+                  </div>
+                  <div class="col-sm-8">
+                      <h4>{{question.name}}</h4>
+                      <div *ngIf="question.choices" style="display: flex">
+                          <div *ngFor="let choice of question.choices">
+                            <label>
+                                {{choice}}&nbsp;&nbsp;
+                            </label>
+                          </div>
+                      </div>
+                      <div *ngIf="question.user_answers">
+                          <div *ngFor="let answer of question.user_answers" style="display: flex">
+                            <div class="col-sm-4" style="border-right: 1px solid #cccccc;">
+                              <label>
+                                  {{answer.answers}}&nbsp;&nbsp;
+                              </label>
+                            </div>
+                            <div class="col-sm-4">
+                                <label>
+                                    {{answer.user_name}}&nbsp;&nbsp;
+                                </label>
+                              </div>
+                          </div>
+                      </div>
+                      <div *ngIf="question.chart_data && question.chart_data.length">
+                        <canvas id="chartData-{{question.id}}"></canvas>
+                      </div>
+                  </div>
+              </div>
+              <!-- <div *ngIf="topic.lead" class="row">
+                  <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                      <label>
+                          <b>Lead</b>
+                      </label>
+                  </div>
+                  <div class="col-sm-8">
+                      {{topic.lead}}
+                  </div>
+              </div>
+              <div *ngIf="topic.duration" class="row">
+                  <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                      <label>
+                          <b>Duration</b>
+                      </label>
+                  </div>
+                  <div class="col-sm-8">
+                      {{topic.duration}}
+                  </div>
+              </div>
+              <div *ngIf="topic.content" class="row">
+                  <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                      <label>
+                          <b>Content</b>
+                      </label>
+                  </div>
+                  <div class="col-sm-8">
+                      {{topic.content}}
+                  </div>
+              </div> -->
+
+              
+          </div>
+      </div>
+  </div>
+  <!-- <div class="container">
+      <div *ngIf="topic.votings && topic.votings.length" class="title-wrapper">
+          <div class="modal-header">
+              Approval/Voting
+          </div>
+          <div class="row">
+              <div class="kanban-card survey" *ngFor="let vote of topic.votings">
+                  <div class="SurveysInfoBox d-flex flex-wrap justify-content-between align-items-center">
+                      <div class="SurveysInfoBoxTitle">
+                          <span class="container">
+                              <h5>
+                                  <b>{{vote.name}}</b>
+                              </h5>
+                          </span>
+                      </div>
+                      <div class="">
+                          <button class="btn btn-primary" routerLink="/voting/{{vote.id}}">
+                              <span *ngIf = "vote.my_status != 'pending'">Results</span>
+                              <span *ngIf = "vote.my_status == 'pending'">Start</span>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <section *ngIf="topic.docs && topic.docs.length" class="HomepageDocumentSection">
+      <div class="container">
+          <div class="row">
+              <div class="col-sm-12">
+                  <h4>
+                      <b>Documents</b>
+                  </h4>
+                  <br>
+              </div>
+              <div class="col-sm-12">
+                  <div class="row">
+                      <a class="col-sm-6 col-md-4 col-lg-3" routerLink="/topic/doc/{{doc.id}}" *ngFor="let doc of topic.docs">
+                          <div class="DocumentWrapper">
+                                  <div class="DocIcon">
+                                  <i class="fa fa-file"></i>
+                              </div>
+                              <div class="DocText">{{doc.name}}</div>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section> -->
+</div>

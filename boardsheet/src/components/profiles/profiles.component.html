@@ -1,0 +1,43 @@
+﻿
+<app-paginator></app-paginator>
+<app-breadcrumb app="meetings" model="{{type}}" create="1" title="Profiles ({{type}})"></app-breadcrumb>
+<div class="router-outlet">
+    <div  class="container">
+        <div class="MeetingHeadWrapper">
+            <div class="btn-group">
+                <a routerLink="/profiles/directors" class="btn">Directors</a>
+                <a routerLink="/profiles/admins" class="btn">Admins</a>
+                <a routerLink="/profiles/staff" class="btn">Staff</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="kanban-profiles kanban-card" *ngFor="let profile of profiles_data">
+                <a class="kanban-profiles-user-info-box" routerLink="/{{type}}/{{profile.id}}">
+                    <div class="kanban-profiles-user-img">
+                        <img class="img-thumbnail-md"
+                        src="{{socketService.server_url}}{{profile.image}}">                        
+                    </div>
+                    <div class="kanban-profiles-user-info">
+                        <div class="kanban-profiles-user-name">
+                            {{profile.username}}
+                        </div>
+                        <div *ngIf="profile.email" class="kanban-profiles-user-email">
+                            {{profile.email}}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" *ngIf="no_prof">
+		<div class="row">
+			<div class="col-lg-12 ">
+				<div class="jumbotron text-center">
+                    <h1>There are no {{type + 's'}} to show for now!</h1>
+                    <hr>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>
