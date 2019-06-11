@@ -6,9 +6,12 @@
 .messenger-container .container-fluid, .row{
 	height: 100%;
 }
+.messenger-container .friends-chat-box{
+	width:280px;
+}
 
 .chat-container-wrppaer{
-	width: calc(100% - 420px);
+	width: calc(100% - 280px);
 	position: relative;
 	border-left: 1px solid rgba(0, 0, 0, .20);
 }
@@ -126,6 +129,7 @@
 	position: relative;
 	height: 50px;
 	width: 50px;
+	overflow:hidden;
 }
 .messenger-container .img_cont_msg{
 	height: 40px;
@@ -413,15 +417,15 @@
 	border-bottom: 1px solid rgba(0, 0, 0, .10);
 	box-sizing: border-box;
 	height: 50px;
-	padding: 8px;
+	padding: 8px 15px;
 	position: relative;
-	text-align: center;	
+	text-align: left;
 	line-height: 1;
 }
 .messenger-container .chat-user-title h2{
 	color: rgba(0, 0, 0, 1);
-	font-size: 15px;
-	font-weight: 400;
+	font-size: 17px;
+	font-weight: 600;
 	margin: 0;
 	text-transform: capitalize;
 }
@@ -433,7 +437,22 @@
 	margin-top: 2px;
 	vertical-align: middle;
 	white-space: nowrap;
-	text-align: center;
+	text-align: left;
+}
+
+.CallCircleIcon{
+	position: absolute;
+    top: 8px;
+    right: 15px;
+    width: 33px;
+    height: 33px;
+    background: #18af3b;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .messenger-container .messenger-body{
@@ -588,3 +607,4 @@
     color: blue;
     padding-right: 5px;
 }
+
