@@ -233,13 +233,23 @@ input[type="range"]::-webkit-slider-thumb {
 #rtc-container .closer span
 {
     padding: 3px;
-    border: 1px solid silver;
     margin: 2px;
     cursor: pointer;
+    font-size: 12px;
+    background: #ffffff;
+    color: #000000;
+    display: block;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #rtc-container .closer>div
 {
     margin: 5px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .user-call-img-wrapper {
@@ -261,7 +271,7 @@ input[type="range"]::-webkit-slider-thumb {
     bottom: 0;
     display:flex;
     justify-content: center;
-    align-items:center; 
+    align-items:center;
 }
 
 .CallingContainer{
@@ -270,12 +280,12 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .user-call-infobox-wrapper{
-    padding-bottom:20px; 
+    padding-bottom:20px;
 }
 .user-call-infobox-wrapper span{
     display: block;
     color: #ffffff;
-    font-size:18px; 
+    font-size:18px;
 }
 div#ongoing_controls {
     position: absolute;
@@ -289,14 +299,16 @@ div#ongoing_controls {
 }
 #rtc-container.full .closer{
     position: absolute;
-    z-index: 2222;
-    right: 25px;
-    top:25px;
+    right: 0;
+    top:0;
+    z-index: 200;
+    width: 70px;
+    background:rgba(0, 0, 0, 0.43);
+    border-bottom-left-radius: 5px;
 }
 
 #rtc-container.min .closer{
     position: absolute;
-    z-index: 2222;
     right: 25px;
     top: auto;
     bottom: -4px;
@@ -305,6 +317,7 @@ div#ongoing_controls {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     text-align: center;
+    z-index: 200;
 }
 
 #rtc-container.min .closer span{

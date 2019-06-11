@@ -1,7 +1,9 @@
 import base64
 import subprocess
-# import pdftotext
-import pdftotext
+try:
+    import pdftotext
+except:
+    pass
 from fpdf import FPDF
 from PIL import Image
 from django.db import models
