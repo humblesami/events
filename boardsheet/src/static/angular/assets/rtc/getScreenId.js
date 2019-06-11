@@ -54,8 +54,8 @@ getScreenId(function (error, sourceId, screen_constraints) {
             video: {
                 mandatory: {
                     chromeMediaSource: error ? 'screen' : 'desktop',
-                    maxWidth: window.screen.width > 1920 ? window.screen.width : 1920,
-                    maxHeight: window.screen.height > 1080 ? window.screen.height : 1080
+                    // maxWidth: window.screen.width > 1920 ? window.screen.width : 1920,
+                    // maxHeight: window.screen.height > 1080 ? window.screen.height : 1080
                 },
                 optional: []
             }

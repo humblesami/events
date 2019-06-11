@@ -104,7 +104,7 @@
                         // video.setAttribute('controls', true);
                     }
                 }
-                // video.setAttribute('controls', false);
+                video.setAttribute('controls', true);
                 video.srcObject = event.stream;
                 // event.stream.getVideoTracks()[0].enabled = true;
                 // event.stream.getAudioTracks()[0].enabled = true;
@@ -113,7 +113,7 @@
                 var mediaElement = getHTMLMediaElement(video, {
                     title: event.userid,
                     buttons: ['full-screen'],
-                    width: width,
+                    // width: width,
                     showOnMouseEnter: false
                 });
             

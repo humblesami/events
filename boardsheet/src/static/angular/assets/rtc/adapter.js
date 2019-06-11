@@ -969,12 +969,12 @@
               maxFrameRate: frameRateSpecified || 3
             }
           };
-          if (widthSpecified) {
-            constraints.video.mandatory.maxWidth = widthSpecified;
-          }
-          if (heightSpecified) {
-            constraints.video.mandatory.maxHeight = heightSpecified;
-          }
+        //   if (widthSpecified) {
+        //     constraints.video.mandatory.maxWidth = widthSpecified;
+        //   }
+        //   if (heightSpecified) {
+        //     constraints.video.mandatory.maxHeight = heightSpecified;
+        //   }
           return window.navigator.mediaDevices.getUserMedia(constraints);
         });
       };

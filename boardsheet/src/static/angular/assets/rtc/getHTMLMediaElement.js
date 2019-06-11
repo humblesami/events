@@ -277,11 +277,11 @@ function getHTMLMediaElement(mediaElement, config) {
     }
 
     var video_element = mediaBox.querySelector('video');
-    video_element.style.maxHeight = innerHeight + 'px';
-    if(is_first)
-    {
-        video_element.style.width = '180px';
-    }
+    // video_element.style.maxHeight = innerHeight + 'px';
+    // if(is_first)
+    // {
+    //     video_element.style.width = '180px';
+    // }
 
     var times = 0;
 
