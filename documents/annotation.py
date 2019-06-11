@@ -119,7 +119,7 @@ class Annotation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     #null for point with subtype=comment
-    document = models.ForeignKey(AnnotationDocument, null=True, on_delete=models.CASCADE)
+    #document = models.ForeignKey(AnnotationDocument, null=True, on_delete=models.CASCADE)
 
     date_time = models.DateTimeField()
     page = models.IntegerField()
