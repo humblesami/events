@@ -458,16 +458,16 @@ function distributeHeight(els, availableHeight, shouldRedistribute) {
 	}
 
 	// assign heights to all expandable elements
-	$(flexEls).each(function(i, el) {
-		var minOffset = i === flexEls.length - 1 ? minOffset2 : minOffset1;
-		var naturalOffset = flexOffsets[i];
-		var naturalHeight = flexHeights[i];
-		var newHeight = minOffset - (naturalOffset - naturalHeight); // subtract the margin/padding
+	// $(flexEls).each(function(i, el) {
+	// 	var minOffset = i === flexEls.length - 1 ? minOffset2 : minOffset1;
+	// 	var naturalOffset = flexOffsets[i];
+	// 	var naturalHeight = flexHeights[i];
+	// 	var newHeight = minOffset - (naturalOffset - naturalHeight); // subtract the margin/padding
 
-		if (naturalOffset < minOffset) { // we check this again because redistribution might have changed things
-			$(el).height(newHeight);
-		}
-	});
+	// 	if (naturalOffset < minOffset) { // we check this again because redistribution might have changed things
+	// 		$(el).height(newHeight);
+	// 	}
+	// });
 }
 
 
