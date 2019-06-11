@@ -60,15 +60,15 @@ class AnnotationDocument(models.Model):
             if not reset:
                 if doc.version >= document_version:
                     return {'version': doc.version}
-                points = PointAnnotation.objects.filter(document_version_id = doc.id).delete()
-                drawings = DrawingAnnotation.objects.filter(document_version_id=doc.id).delete()
-                rectangles = RectangleAnnotation.objects.filter(document_version_id=doc.id).delete()
+                points = PointAnnotation.objects.filter(document_id = doc.id).delete()
+                drawings = DrawingAnnotation.objects.filter(document_id=doc.id).delete()
+                rectangles = RectangleAnnotation.objects.filter(document_id=doc.id).delete()
                 if reset:
                     doc.version = 0
                     return 'done'
         else:
             doc = AnnotationDocument(version=document_version, document_id=doc_id, doc_name=doc_name, user_id=user_id)
-            doc = doc.save()
+            doc.save()
 
         doc = AnnotationDocument.objects.filter(doc_name = doc_name, user_id = user_id, document_id = doc_id)
         if doc:
@@ -96,11 +96,10 @@ class AnnotationDocument(models.Model):
 
             if type == 'point' and sub_type == 'personal':
                 point = PointAnnotation(name=name, user_id=user, date_time=date_time, page=page,
-                                   type=type, uuid=uuid, sub_type=sub_type, document_id=doc_id, x=x, y=y,
-                                        created_by_id=user, my_notification = 0, document_version_id = doc.id)
+                                   type=type, uuid=uuid, sub_type=sub_type, x=x, y=y,
+                                        created_by_id=user, my_notification = 0, document_id = doc.id)
                 point.save()
-                point_id = PointAnnotation.objects.filter(date_time=date_time, x=x, y=y, type=type, sub_type=sub_type
-                                                          , user_id=user, uuid=uuid).values('id')[0]['id']
+                point_id = point.pk
                 if comments:
                     for val in comments:
                         body = val['content']
@@ -110,7 +109,6 @@ class AnnotationDocument(models.Model):
                         comment_anno = CommentAnnotation(body=body, point_id_id=point_id, user_id=commented_by
                                                          , date_time=date_time, uuid=uuid)
                         comment_anno.save()
-
         doc.version = document_version
         doc.save()
         return 'done'
@@ -121,7 +119,7 @@ class Annotation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     #null for point with subtype=comment
-    document_version = models.ForeignKey(AnnotationDocument, null=True, on_delete=models.CASCADE)
+    document = models.ForeignKey(AnnotationDocument, null=True, on_delete=models.CASCADE)
 
     date_time = models.DateTimeField()
     page = models.IntegerField()
@@ -144,10 +142,8 @@ class RectangleAnnotation(Annotation):
 
         dimensions = val.get('rectangles')
         rectangle = RectangleAnnotation(name=name, user_id=user, date_time=date_time, page=page,
-                                        type=type, uuid=uuid, document_version_id=doc_id, color=color)
-        rectangle.save()
-        rectangle = RectangleAnnotation.objects.filter(user_id=user, date_time=date_time,
-                                                       uuid=uuid, document_version=doc_id)[0]
+                                        type=type, uuid=uuid, document_id=doc_id, color=color)
+        rectangle.save()        
         for dimension in dimensions:
             x = dimension.get('x')
             y = dimension.get('y')
@@ -158,19 +154,19 @@ class RectangleAnnotation(Annotation):
 
     @classmethod
     def get_rectangles(cls, doc_id, user_id):
-        rectangles = RectangleAnnotation.objects.filter(document_version_id=doc_id, user_id = user_id)
+        rectangles = RectangleAnnotation.objects.filter(document_id=doc_id, user_id = user_id)
         user_rectangle = []
         counter = 0
         for rectangle in rectangles:
             user_rectangle.append({
                 'uid': rectangle.user.id,
-                'document_name': rectangle.document_version.doc_name,
+                'document_name': rectangle.document.doc_name,
                 'type': rectangle.annotation_ptr.type,
                 'page': rectangle.annotation_ptr.page,
                 'uuid': rectangle.annotation_ptr.uuid,
                 'date_time': str(rectangle.annotation_ptr.date_time),
                 'color': rectangle.color,
-                'doc_id': rectangle.document_version.doc_name,
+                'doc_id': rectangle.document.doc_name,
 
             })
             dimensions = rectangle.dimensions_set.all()
@@ -210,11 +206,9 @@ class DrawingAnnotation(Annotation):
         color = val.get('color')
         lines = val.get('lines')
         drawing = DrawingAnnotation(title=name, user_id=user, date_time=date_time, page=page,
-                                    type=type, uuid=uuid, document_version_id=doc_id,
+                                    type=type, uuid=uuid, document_id=doc_id,
                                     width=width, color=color, to_merge=to_merge)
         drawing.save()
-        drawing = DrawingAnnotation.objects.filter(user_id=user, date_time=date_time, uuid=uuid,
-                                                   document_version=doc_id)
         if drawing:
             drawing = drawing[0]
             for line in lines:
@@ -226,20 +220,20 @@ class DrawingAnnotation(Annotation):
 
     @classmethod
     def get_drawings(cls, doc_id, user_id):
-        drawings = DrawingAnnotation.objects.filter(document_version_id=doc_id, user_id=user_id)
+        drawings = DrawingAnnotation.objects.filter(document_id=doc_id, user_id=user_id)
         line_drawings = []
         counter = 0
         for drawing in drawings:
             line_drawings.append({
                 'uid': drawing.user.id,
-                'document_name': drawing.document_version.doc_name,
+                'document_name': drawing.document.doc_name,
                 'type': drawing.annotation_ptr.type,
                 'page': drawing.annotation_ptr.page,
                 'uuid': drawing.annotation_ptr.uuid,
                 'date_time': str(drawing.annotation_ptr.date_time),
                 'color': drawing.color,
                 'width': drawing.width,
-                'doc_id': drawing.document_version.doc_name,
+                'doc_id': drawing.document.doc_name,
 
             })
             lines = drawing.line_set.all()
@@ -259,13 +253,10 @@ class Line(models.Model):
 
 class PointAnnotation(Annotation):
     sub_type = models.CharField(max_length=200)
-
-    # null for subtype=personal
-    document = models.ForeignKey(File, null=True, on_delete=models.CASCADE)
-
     x = models.IntegerField()
     y = models.IntegerField()
     my_notification = models.IntegerField()
+    pdf = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     @classmethod
@@ -282,18 +273,18 @@ class PointAnnotation(Annotation):
         type = point.get('type')
         new_point = False
 
-        user_point = PointAnnotation.objects.filter(document_id=doc_id, uuid=uuid, created_by_id=user_id)
+        doc_id = int(doc_id)
+        user_point = PointAnnotation.objects.filter(pdf_id=doc_id, uuid=uuid, created_by_id=user_id)
         if user_point:
             user_point = user_point[0]
             return {'point_id': user_point.id, 'new_point': new_point}
         else:
-            user_point = PointAnnotation(sub_type=sub_type, document_id=doc_id, x=x, y=y, my_notification=0,
+            user_point = PointAnnotation(sub_type=sub_type, pdf_id=doc_id, x=x, y=y, my_notification=0,
                                 created_by_id=user_id, user_id=user_id, name=name, date_time=date_time,
                                 page=page, type=type, uuid=uuid)
             user_point.save()
             new_point = 1
-            user_point = PointAnnotation.objects.filter(document_id=doc_id, uuid=uuid, created_by_id=user_id)
-            return {'point_id': user_point[0].id, 'new_point': new_point}
+            return {'point_id': user_point.id, 'new_point': new_point}
 
     @classmethod
     def save_comment(cls, request, params):
@@ -348,11 +339,11 @@ class PointAnnotation(Annotation):
     @classmethod
     def get_point_annotations(cls, doc_name=None, doc_id=None, user_id=None):
         if doc_id:
-            point_obj = PointAnnotation.objects.filter(document_id=doc_id)
+            point_obj = PointAnnotation.objects.filter(pdf_id=doc_id)
             sub_type = ''
             return_sub_type = False
         else:
-            point_obj = PointAnnotation.objects.filter(document_version__doc_name=doc_name, user_id=user_id)
+            point_obj = PointAnnotation.objects.filter(document__doc_name=doc_name, user_id=user_id)
             sub_type = 'personal'
             return_sub_type = 'personal'
 
