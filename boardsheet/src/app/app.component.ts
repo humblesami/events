@@ -46,5 +46,11 @@ export class AppComponent {
             }
             $(this).parent().toggleClass('is-expanded');
         });
+
+        
+        $('#rtc-container').mouseup(function(){
+            $('#rtc-container').removeClass('min').addClass('full');
+            window['rtc-call-max'] = 1;            
+        });
     }
 }

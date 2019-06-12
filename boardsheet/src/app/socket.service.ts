@@ -254,9 +254,11 @@ export class SocketService {
 
             minimize: function(){
                 $('#rtc-container').removeClass('full').addClass('min');
+                window['rtc-call-max'] = undefined;
             },
             maximize: function(){
                 $('#rtc-container').removeClass('min').addClass('full');
+                window['rtc-call-max'] = 1;
             },
 
             show_notification: function(message){

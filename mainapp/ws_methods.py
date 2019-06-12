@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 
 
 import requests
+from urllib.parse import quote, unquote
 from django.forms.models import model_to_dict
 
 
@@ -82,6 +83,7 @@ def emit_event(data, req_url=None):
         data = json.dumps(data)
         if not req_url:
             req_url = '/odoo_event'
+        data = quote(data)        
         url = socket_server['url'] + req_url + '?data=' + data
         try:
             r = requests.get(socket_server['url'])
@@ -105,7 +107,6 @@ def emit_event(data, req_url=None):
         return 'done'
 
 
-import urllib.parse
 def obj_to_dict(obj,fields=None,to_str=None,related=None):
     if fields:
         dict = model_to_dict(obj,fields)
@@ -134,7 +135,7 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
                     except:
                         if dict[field].startswith('/media/data'):
                             dict[field] = dict[field][7:]
-                            dict[field] = urllib.parse.unquote(dict[field])
+                            dict[field] = unquote(dict[field])
             else:
                 dict[field] = None
     if to_str:

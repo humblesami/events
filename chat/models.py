@@ -215,9 +215,10 @@ class Message(models.Model):
     def get_message_list(cls, uid, target_id, offset):
         uid = int(uid)
         target_id = int(target_id)
-        ins = [target_id, uid]
+        user_ids = [target_id, uid]
         ar = []
-        for obj in Message.objects.filter(sender__in=ins, to__in=ins)[offset: offset + 20]:
+        messages = Message.objects.filter(sender__in=user_ids, to__in=user_ids).order_by('-id')[offset: offset + 20][::-1]
+        for obj in messages:
             if obj.to == uid and not obj.read_status:
                 obj.read_status = True
                 obj.save()

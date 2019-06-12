@@ -276,6 +276,14 @@ function addMainEventListeners() {
                 $('.hidemouseaway').hide();
             }
         }
+        if(window['rtc-call-max'])
+        {
+            if($(target).closest('#rtc-container').length == 0)
+            {
+                $('#rtc-container').removeClass('full').addClass('min');
+                window['rtc-call-max'] = undefined;                
+            }
+        }        
     });
 
     $('body').on('mouseup', '.navbar-toggler', function(e) {

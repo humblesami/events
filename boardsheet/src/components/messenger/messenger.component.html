@@ -58,8 +58,8 @@
                             class="d-flex align-items-end justify-content-end mb-4">
                         <div class="msg_cotainer_send">
                             <div class="msg-send-box-wrapper">
-                                <div class="msg-send-box-text" [innerHTML]="msg.body"></div>
-                                <div class="attachment_container">                                                
+                                <div  *ngIf="msg.body" class="msg-send-box-text" [innerHTML]="msg.body"></div>
+                                <div class="attachment_container">                                    
                                     <a *ngFor="let doc of msg.attachments" contenteditable="false"
                                     href="{{socketService.server_url}}{{doc.url}}"
                                     target="__blank"
@@ -80,7 +80,17 @@
                         </div>
                         <div class="msg_cotainer">
                             <div class="msg-box-wrapper">
-                                <div class="msg-box-text" [innerHTML]="msg.body"></div>
+                                <div *ngIf="msg.body" class="msg-box-text" [innerHTML]="msg.body"></div>
+                                <div class="attachment_container">                                    
+                                    <a *ngFor="let doc of msg.attachments" contenteditable="false"
+                                    href="{{socketService.server_url}}{{doc.url}}"
+                                    target="__blank"
+                                    class="download" style="display: flex;">
+                                        <span class="file_name">
+                                            <i class="fa fa-download"></i>{{doc.name}}
+                                        </span>
+                                    </a>
+                                </div>
                             </div>
                             <span class="msg_time">{{msg.create_date | date:'medium'}}</span>
                         </div>

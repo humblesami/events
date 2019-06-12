@@ -76,15 +76,16 @@ export class MessengerComponent implements OnInit {
             console.log("No user selected with "+target_id+' from ',obj_this.socketService.chat_users);
             return;
         }
-        if(obj_this.active_chat_user.messages)
+        // if(obj_this.active_chat_user.messages)
+        // {
+        //     //obj_this.active_chat_user needed for $( ".msg_card_body") in dom
+        //     // but will take some time to make above dom ready, so wait 10 ms please
+        //     setTimeout(function(){
+        //         obj_this.onUserSelected(obj_this.active_chat_user.messages, 1);
+        //     },10)            
+        // }
+        // else
         {
-            //obj_this.active_chat_user needed for $( ".msg_card_body") in dom
-            // but will take some time to make above dom ready, so wait 10 ms please
-            setTimeout(function(){
-                obj_this.onUserSelected(obj_this.active_chat_user.messages, 1);
-            },10)            
-        }
-        else{
             let args = {
                 app: 'chat',
                 model: 'message',
@@ -94,7 +95,7 @@ export class MessengerComponent implements OnInit {
                 params: {target_id: target_id},
                 args: args
             };
-            var call_on_user_selected_event = function(data){                
+            var call_on_user_selected_event = function(data){
                 if(!Array.isArray(data))
                 {
                     data = [];
@@ -105,7 +106,7 @@ export class MessengerComponent implements OnInit {
             }
             input_data['no_loader'] = 1;
             obj_this.httpService.get(input_data, call_on_user_selected_event, call_on_user_selected_event);
-        }		
+        }
 	}
 
 	hide_chat_box(){
@@ -280,21 +281,28 @@ export class MessengerComponent implements OnInit {
             console.log('Chat user must already have messages');
             obj_this.active_chat_user.messages = [];
         }
-        
+
         var message_content = $('.emoji-wysiwyg-editor').html();
-		if(message_content.endsWith('<div><br></div>'))
-		{
-            message_content = message_content.slice(0, -15);
+        if(message_content)
+        {
             if(message_content.endsWith('<div><br></div>'))
-			    message_content = message_content.slice(0, -15);
+            {
+                message_content = message_content.slice(0, -15);
+                if(message_content.endsWith('<div><br></div>'))
+                {
+                	message_content = message_content.slice(0, -15);
+                }
+			}
+            if(message_content){
+                message_content = message_content.replace(/^(\s+<br( \/)?>)*|(<br( \/)?>\s)*$/gm, '');
+            }
         }
-        
-        if (!message_content){
+
+        if (!message_content  && obj_this.attachments.length == 0){                
             $('.emoji-wysiwyg-editor').html('');
             return;
         }
 
-        message_content = message_content.replace(/^(\s+<br( \/)?>)*|(<br( \/)?>\s)*$/gm, '');        
         var date = new Date();
         var components = [
             date.getFullYear(),
@@ -335,8 +343,12 @@ export class MessengerComponent implements OnInit {
             }
         }
 
-		obj_this.send_message(input_data, force_post);
-		input_data.body = obj_this.sanitizer.bypassSecurityTrustHtml(message_content);
+        obj_this.send_message(input_data, force_post);
+        if(message_content)
+        {
+            message_content = obj_this.sanitizer.bypassSecurityTrustHtml(message_content);
+        }
+        input_data.body = message_content;
         obj_this.active_chat_user.messages.push(input_data);        
         $('.emoji-wysiwyg-editor').html("");        
         obj_this.attachments = [];
@@ -364,7 +376,10 @@ export class MessengerComponent implements OnInit {
             console.log(obj_this.socketService.chat_users, ' Dev issue as '+sender_id+' not found');
             return;
         }
-        message.body = obj_this.sanitizer.bypassSecurityTrustHtml(message.body);
+        if(message.body)
+        {
+            message.body = obj_this.sanitizer.bypassSecurityTrustHtml(message.body);
+        }
 		// var is_chat_open = obj_this.active_chat_user &&
 		// 	obj_this.active_chat_user.id == sender_id &&
 		// 	!this.is_minimize;
@@ -410,7 +425,10 @@ export class MessengerComponent implements OnInit {
         
         {
             messages.forEach(element => {
-                element.body = obj_this.sanitizer.bypassSecurityTrustHtml(element.body);
+                if(element.body)
+                {
+                    element.body = obj_this.sanitizer.bypassSecurityTrustHtml(element.body);
+                }
             });
         }
     }
