@@ -2204,16 +2204,16 @@ div#search-modal {
 
 .notification-container .chat-list , 
 .notification-container .notification-list{
-	position: fixed;
+    position: fixed;
     display: none;
     z-index: 99999;
     top: 50px;
     right: 0;
     width: 380px;
     background: white;
-    height: auto;
-    box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19);
-    overflow-y: auto;
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19);    
     padding: 10px;
     border: 1px solid #dadada;
 }

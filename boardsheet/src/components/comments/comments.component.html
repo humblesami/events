@@ -1,7 +1,7 @@
 <div class="row d-flex justify-content-center">
 	<div class="col-sm-12 col-md-10 col-lg-8">
 		<div *ngIf="comments" class="comments main-container oe_read_only">
-			<div class="row">
+			<div class="row row pt-5 pb-3">
 				<div class="btn-group col-sm-12">
 					<button [ngClass]="{active: comment_subtype === 1}" (click)="comment_subtype=1" class="btn btn-default btn-block">
 						Comments
@@ -12,7 +12,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<form class="col-lg-12 pt-5 pb-5">
+				<form class="col-lg-12">
 					<div class="form-group">
 						<div *ngIf="comment_subtype === 1">
 							<textarea name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="comment" placeholder="Add comments here."></textarea>

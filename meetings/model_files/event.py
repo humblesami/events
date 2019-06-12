@@ -29,6 +29,12 @@ class Event(models.Model):
     conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, null=True, blank=True)
     video_call_link = models.CharField(max_length=200, null=True, blank=True)
 
+    def get_audience(self):
+        res = []
+        for obj in self.attendees.all():
+            res.append(obj.id)
+        return res
+    
     @property
     def exectime(self):
         current_date = timezone.now()
