@@ -123,7 +123,7 @@ def obj_to_dict(obj,fields=None,to_str=None,related=None):
         #handled non url file fields (saved as binary string)
         if type(dict[field]) is not str  and type(dict[field]) is not int:
             if dict[field]:
-                if str(type(dict[field])) in ["<class \'datetime.datetime\'>"]:
+                if str(type(dict[field])) in ["<class \'datetime.datetime\'>", "<class 'datetime.date'>"]:
                     dict[field] = str(dict[field])
                 elif str(type(dict[field])) in ["<class \'django.db.models.fields.files.FieldFile\'>",'<class \'django.db.models.fields.files.ImageFieldFile\'>']:
                     try:                        

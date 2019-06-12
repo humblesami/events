@@ -183,10 +183,10 @@ class Profile(user_model):
                 profile_orm = profile_object
         else:
             profile_orm = profile_orm[0]
-        profile = obj_to_dict(
+        profile = ws_methods.obj_to_dict(
             profile_orm,
             fields=[
-                'id', 'name', 'image', 'bio', 'location', 'birth_date', 'nick_name', 'job_title', 'department',
+                'id', 'name', 'email', 'image', 'bio', 'location', 'birth_date', 'nick_name', 'job_title', 'department',
                 'work_phone', 'mobile_phone', 'website', 'fax', 'ethnicity', 'gender', 'veteran',
                 'disability', 'board_joining_date', 'admin_first_name', 'admin_last_name', 'admin_nick_name',
                 'admin_cell_phone', 'admin_email', 'admin_work_phone', 'admin_fax', 'admin_image', 'mail_to_assistant',
@@ -196,8 +196,9 @@ class Profile(user_model):
                 'committees': {'fields': ['id', 'name']}
             }
         )
-        profile['name'] = profile_orm.fullname()
-        profile['date_joined'] = str(profile['date_joined'])
+        if not profile['name']:
+            profile['name'] = profile_orm.fullname()
+        # profile['date_joined'] = str(profile['date_joined'])
         profile['disability'] = profile_orm.get_disability_display()
         profile['ethnicity'] = profile_orm.get_ethnicity_display()
         profile['gender'] = profile_orm.get_gender_display()

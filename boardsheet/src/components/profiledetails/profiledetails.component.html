@@ -38,7 +38,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
 						</div>
 
-						 <div  class="row"><!-- *ngIf="profile_data.username" -->
+						 <div  class="row" *ngIf="profile_data.name">
                             <div class="col-sm-12">
                                 <label for="job-title">
                                     <b>Name</b>
@@ -46,7 +46,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </div>
                             <div class="col-sm-12">
                                 Sratic Uma
-								{{profile_data.username}}
+								{{profile_data.name}}
                             </div>
                         </div>
 
@@ -507,7 +507,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Email</b>
                             </label>
                             <input value="{{profile_data.email}}" (change)="modified_profile_data.email = $event.target.value"
-                                type="text" placeholder="Enter Email" id="email" disabled>
+                                type="text" placeholder="Enter Email" id="email">
                         </div>
                     </div>
 

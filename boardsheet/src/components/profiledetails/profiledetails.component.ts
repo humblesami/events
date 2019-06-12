@@ -98,7 +98,11 @@ export class ProfileDetailsComponent implements OnInit {
         if (path == "staff"){
 			this.type = "staff";
 			this.type_breadCrumb = 'staff';
-        }
+		}
+		if (!this.type_breadCrumb)
+		{
+			this.type_breadCrumb = window['current_user'].cookie['groups'][0].name.toLowerCase() + 's';
+		}
         let input_data = undefined;
         if (id) {
 			obj_this.my_profile = false;
