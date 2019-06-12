@@ -42,67 +42,21 @@ export class HeaderComponent implements OnInit {
         home_documents: []
     };
     no_search = false;
-    route_map={
-        'meetings.event':{
-            model: '/meeting/',
-            type: 'meetings'
-        },
-        'meetings.topic': {
-            model:'/topic/',
-            type: 'topics'
-        },
-        'resources.folder':{
-            model:'/resource/',
-            type: 'resource'
-        },
-        'meetings.committee': {
-            model: '/committees/',
-            type: 'committee'
-        },
-        'survey.survey': {
-            model: '/survey/',
-            type: 'survey'
-        },
-        'meeting_point.doc':{
-            model: '/meeting/doc/',
-            type: 'document'
-        },
-        'meeting_point.topicdoc':{
-            model: '/topic/doc/',
-            type: 'document'
-        },
-		'meeting_point.news.doc':{
-			model: '/home/doc/',
-			type: 'document'
-		},
-        'meeting_point.users':{
-            model: '/profile/',
-            type: 'user'
-        },
-        'voting.voting':{
-            model: '/voting/',
-            type: 'voting'
-        },
-        'voting.VotingDocument' :{
-            model: 'voting/doc/',
-            type: 'voting_documents'
-        },
-        'meetings.MeetingDocument':{
-            model: '/meeting/doc/',
-            type: 'meeting_documents'
-        },
-        'resources.ResourceDocument': {
-            model: '/resource/doc/',
-            type: 'resource_documents'
-        },
-        'meetings.SignDocument':{
-            model: '/signdoc/',
-            type: 'sign_documents'
-        },
-        'meetings.AgendaDocument':{
-            model: '/topic/doc/',
-            type: 'topic_documents'
-        }
+    route_map = {
+        'meetings.Event':'/meeting/',         
+        'meetings.Topic': '/topic/',            
+        'resources.Folder':'/resource/',            
+        'meetings.Committee': '/committees/',            
+        'survey.Survey': '/survey/',                    
+		'meetings.NewsDocument': '/home/doc/',			
+        'meetings.Profile': '/profile/',
+        'voting.Voting': '/voting/',
+
+        'voting.VotingDocument' : 'voting/doc/',
+        'meetings.MeetingDocument': '/meeting/doc/',            
+        'resources.ResourceDocument': '/resource/doc/',            
+        'meetings.SignDocument': '/signdoc/',            
+        'meetings.AgendaDocument': '/topic/doc/',            
     };
 
     socketService : any
@@ -140,6 +94,9 @@ export class HeaderComponent implements OnInit {
         return file_route;
     }
 
+    doc_types = [];
+    content_search_results = undefined;
+
     search(){
         let obj_this = this;
     	obj_this.content_search = obj_this.is_content_search;
@@ -169,49 +126,50 @@ export class HeaderComponent implements OnInit {
             home_documents: []
 
         };
+
+        function add_result(item_type, item){
+            if(Array.isArray(obj_this.search_results[item_type]))
+            {
+                obj_this.search_results[item_type].push(item);
+            }
+            else
+            {
+                console.log(obj_this.search_results[item_type], 'is not array');
+            }
+        }
+
         let url = window.location + '';
         obj_this.search_key_word = obj_this.search_key_word.replace(/[^a-zA-Z0-9 ]/g, '');
         if(obj_this.search_key_word.length < 1) {
             return;
         }
         else {
-            
-            
-
             var success_cb = function (result) {
 				$('.searchbar-full-width').hide();
 				if(obj_this.content_search){
+                    obj_this.doc_types = [];
+                    obj_this.content_search_results = {};
 					result.forEach(item => {
                         let file_route = obj_this.settingDocRoute(item.file_type);
-						item['route'] = file_route + item.id + '/' + obj_this.search_key_word;
-						item['type'] = item.file_type;
-						obj_this.search_results[item.file_type+'_documents'].push(item);
-						// item.file_type.indexOf('resource') != -1 ? obj_this.search_results.resourse_doc.push(item): null;
-						// item.file_type.indexOf('meeting') != -1 ? obj_this.search_results.meeting_doc.push(item): null;
-						// item.file_type.indexOf('topic') != -1 ? obj_this.search_results.topic_doc.push(item): null;
-                        // item.file_type.indexOf('home') != -1 ? obj_this.search_results.home_doc.push(item): null;
-                        // item.file_type.indexOf('voting') != -1 ? obj_this.search_results.voting_doc.push(item): null;
-					});
+						item['route'] = file_route + item.id + '/' + obj_this.search_key_word;                        
+                        if(obj_this.content_search_results[item.file_type])
+                        {
+                            obj_this.content_search_results[item.file_type].push(item);
+                        }
+                        else
+                        {
+                            obj_this.doc_types.push(item.file_type);
+                            obj_this.content_search_results[item.file_type] = [item];
+                        }
+                    });
+                    console.log(obj_this.content_search_results, obj_this.doc_types);
 				}
 				else {
 					result.forEach(item => {
-						item['route'] = obj_this.route_map[item.model].model + item.id;
-						item['type'] = obj_this.route_map[item.model].type;
-
-						item.type === 'meetings' ? obj_this.search_results.meetings.push(item) : null;
-						item.type === 'topics' ? obj_this.search_results.topics.push(item) : null;
-						item.type === 'resource' ? obj_this.search_results.resources.push(item) : null;
-						item.type === 'committee' ? obj_this.search_results.committees.push(item) : null;
-						item.type === 'survey' ? obj_this.search_results.surveys.push(item) : null;
-						item.type === 'document' ? obj_this.search_results.documents.push(item) : null;
-                        item.type === 'user' ? obj_this.search_results.users.push(item) : null;
-                        item.type === 'voting' ? obj_this.search_results.votings.push(item) : null;
-                        item.type === 'meeting_documents' ? obj_this.search_results.meeting_documents.push(item) : null;
-                        item.type === 'topic_documents' ? obj_this.search_results.topic_documents.push(item) : null;
-                        item.type === 'resource_documents' ? obj_this.search_results.resource_documents.push(item) : null;
-                        item.type === 'sign_documents' ? obj_this.search_results.signature_documents.push(item) : null;
-                        item.type === 'voting_documents' ? obj_this.search_results.voting_documents.push(item) : null;
-
+                        console.log(item);
+						// item['route'] = obj_this.route_map[item.model].model + item.id;
+						// let item_type = obj_this.route_map[item.model].type;
+						// add_result(item_type, item);
 					});
 				}
                 if(result.length < 1) {

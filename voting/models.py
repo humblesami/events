@@ -2,7 +2,7 @@ import base64
 import datetime
 from django.db import models
 from django.db.models import Q
-from documents.models import File
+from documents.file import File
 from django.db.models import Count
 from meetings.models import Profile, Event, Topic
 

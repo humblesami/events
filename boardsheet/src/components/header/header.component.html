@@ -175,54 +175,16 @@
                         </div>
                     </div>
                     <div *ngIf="content_search" class="row">
-                        <div *ngIf="search_results.signature_documents.length" class="col-sm">
-                            <div class="result-box-info">
-                                <h2>Documents for Signature</h2>
-                                <h3 *ngFor="let item of search_results.signature_documents">
-                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
-                                </h3>
+                        <div *ngFor="let doc_type of doc_types">
+                            <div *ngIf="content_search_results[doc_type].length > 0" class="col-sm">
+                                <div class="result-box-info">
+                                    <h2>{{doc_type}} Documents</h2>
+                                    <h3 *ngFor="let item of content_search_results[doc_type]">
+                                        <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                    </h3>
+                                </div>
                             </div>
-                        </div>
-                        <div *ngIf="search_results.meeting_documents.length" class="col-sm">
-                            <div class="result-box-info">
-                                <h2>Meeting Documents</h2>
-                                <h3 *ngFor="let item of search_results.meeting_documents">
-                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
-                                </h3>
-                            </div>
-                        </div>
-                        <div *ngIf="search_results.topic_documents.length" class="col-sm">
-                            <div class="result-box-info">
-                                <h2>Documents in Topics</h2>
-                                <h3 *ngFor="let item of search_results.topic_documents">
-                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
-                                </h3>
-                            </div>
-                        </div>
-                        <div *ngIf="search_results.resource_documents.length" class="col-sm">
-                            <div class="result-box-info">
-                                <h2>Documents in Resources</h2>
-                                <h3 *ngFor="let item of search_results.resource_documents">
-                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
-                                </h3>
-                            </div>
-                        </div>
-                        <div *ngIf="search_results.home_documents.length" class="col-sm">
-                            <div class="result-box-info">
-                                <h2>Home Page Documents</h2>
-                                <h3 *ngFor="let item of search_results.home_documents">
-                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
-                                </h3>
-                            </div>
-                        </div>
-                        <div *ngIf="search_results.voting_documents.length" class="col-sm">
-                            <div class="result-box-info">
-                                <h2>Resolutions Documents</h2>
-                                <h3 *ngFor="let item of search_results.voting_documents">
-                                    <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
-                                </h3>
-                            </div>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
             </div>
