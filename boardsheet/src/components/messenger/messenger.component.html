@@ -15,7 +15,7 @@
                     <li *ngFor="let uid of socketService.keys_chat_users"
                         (click)="select_chat_user(uid)"
                         [ngClass]="[active_chat_user && uid == active_chat_user.id ? 'active': '']">                                
-                        <div >
+                        <div *ngIf="socketService.chat_users[uid].name.indexOf(searchVal) > -1">
                             <a class="contact-item d-flex align-items-center bd-highlight">
                                 <div class="img_cont">
                                     <img src="{{socketService.server_url}}{{socketService.chat_users[uid].photo}}" class="rounded-circle user_img">
