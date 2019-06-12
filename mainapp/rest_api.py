@@ -122,26 +122,26 @@ def search(request):
         search_apps = {
             'meetings':
                 {
-                    'event': ['name', 'description'],
-                    'topic': ['name', 'lead'],
-                    'committee': ['name'],
-                    'profile': ['username'],
+                    'Event': ['name', 'description'],
+                    'Topic': ['name', 'lead'],
+                    'Committee': ['name'],
+                    'Profile': ['username'],
                     'MeetingDocument': ['name'],
                     'AgendaDocument': ['name'],
                     'SignDocument': ['name']
                 },
             'resources':
                 {
-                    'folder': ['name'],
+                    'Folder': ['name'],
                     'ResourceDocument': ['name']
                 },
             'survey':
                 {
-                    'survey': ['name', 'description']
+                    'Survey': ['name', 'description']
                 },
             'voting':
                 {
-                    'voting': ['name', 'description'],
+                    'Voting': ['name', 'description'],
                     'VotingDocument': ['name']
                 }
         }
