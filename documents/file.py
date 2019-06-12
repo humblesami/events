@@ -1,16 +1,23 @@
 import base64
 import subprocess
-pdf_to_text = None
-try:
-    import pdftotext as pdf_to_text
-except:
-    pass
+from PyPDF2 import PdfFileReader
 from fpdf import FPDF
 from PIL import Image
 from django.db import models
 from mainapp import settings
 from django.core.files import File as DjangoFile
 
+
+def text_extractor(f):
+    pdf = PdfFileReader(f)
+    number_of_pages = pdf.numPages
+    n = 0
+    text = ''
+    while n != number_of_pages:
+        page = pdf.getPage(n)
+        text += page.extractText() + ' '
+        n += 1
+    return text
 
 class File(models.Model):
     name = models.CharField(max_length=100)
@@ -29,21 +36,12 @@ class File(models.Model):
             create = True
         super(File, self).save(*args, **kwargs)
         if create:
-            try:
-                self.get_pdf()
-                content = ""            
-                pdf_file = self.pdf_doc
-                if pdf_file and pdf_to_text:
-                    pdf = pdf_to_text.PDF(pdf_file)
-                    for pag in pdf:
-                        content += pag
-                    self.content = content
-                    self.save()
-                elif self.html:
-                    self.content = self.html
-                    self.save()
-            except:
-                pass
+            self.get_pdf()
+            if self.html:
+                self.content = self.html
+            else:
+                self.content = text_extractor(self.pdf_doc)
+            self.save()
 
 
     def get_pdf(self):

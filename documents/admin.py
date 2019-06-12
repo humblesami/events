@@ -6,7 +6,7 @@ from .annotation import *
 class FileForm(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ('html', 'file_type', 'original_pdf', 'pdf_doc')
+        self.exclude = ('html', 'file_type', 'content', 'original_pdf', 'pdf_doc')
         form = super(FileForm, self).get_form(request, obj, **kwargs)
         return form
 
