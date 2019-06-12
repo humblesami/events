@@ -178,7 +178,7 @@
                         <div *ngFor="let doc_type of doc_types">
                             <div *ngIf="content_search_results[doc_type].length > 0" class="col-sm">
                                 <div class="result-box-info">
-                                    <h2>{{doc_type}} Documents</h2>
+                                    <h2>{{doc_type | titlecase}} Documents</h2>
                                     <h3 *ngFor="let item of content_search_results[doc_type]">
                                         <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
                                     </h3>

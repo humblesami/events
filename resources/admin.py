@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Folder, ResourceDocument
+from documents.admin import FileForm
 # Register your models here.
 
 class FolderInline(admin.TabularInline):
@@ -34,12 +35,10 @@ class FolderAdmin(admin.ModelAdmin):
         return qs
 
 
-class FilesAdmin(admin.ModelAdmin):
-    # list_display = ['user_answer', 'voting', 'user', 'signature_data']
-    # list_filter = ['answer', 'user']
-    # list_filter = ['partners']
-    # search_fields = ['user_answer__name', 'voting__name', 'user__username']
-    filter_horizontal = ('users',)
+class ResourceDocumentForm(FileForm):
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(ResourceDocumentForm, self).get_form(request, obj, **kwargs)
+        return form
 
 admin.site.register(Folder, FolderAdmin)
-admin.site.register(ResourceDocument, FilesAdmin)
+admin.site.register(ResourceDocument, ResourceDocumentForm)

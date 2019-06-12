@@ -3,14 +3,14 @@ from .file import File
 from .annotation import *
 
 
-class FileAdmin(admin.ModelAdmin):
+class FileForm(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ('html', 'file_type', 'content', 'original_pdf', 'pdf_doc')
-        form = super(FileAdmin, self).get_form(request, obj, **kwargs)
+        self.exclude = ('html', 'file_type', 'original_pdf', 'pdf_doc')
+        form = super(FileForm, self).get_form(request, obj, **kwargs)
         return form
 
-admin.site.register(File,FileAdmin)
+admin.site.register(File,FileForm)
 admin.site.register(Annotation)
 admin.site.register(AnnotationDocument)
 admin.site.register(RectangleAnnotation)

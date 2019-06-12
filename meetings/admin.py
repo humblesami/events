@@ -1,6 +1,6 @@
 from django import forms
 
-from documents.admin import FileAdmin
+from documents.admin import FileForm
 from meetings.model_files.committee import Committee
 from django.contrib import admin
 from django.utils.html import format_html
@@ -294,11 +294,11 @@ class NewsAdmin(admin.ModelAdmin):
     inlines = [NewsVideoInline, NewsDocumentInline, ]
 
 
-class MeetingDocumentForm(FileAdmin):
+class MeetingDocumentForm(FileForm):
     pass
 
 
-class SignDocumentForm(FileAdmin):
+class SignDocumentForm(FileForm):
     def get_form(self, request, obj=None, **kwargs):
         self.exclude = ('send_to_all')
         form = super(SignDocumentForm, self).get_form(request, obj, **kwargs)
