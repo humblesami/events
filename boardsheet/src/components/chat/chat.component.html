@@ -3,7 +3,7 @@
         <div class="mobile-chatroom nav-icon dropdown">
             <button (mouseup)="toggle_notifications($event)"
             class="showmouseawaybutton notification-icon">
-                <i class="fas fa-bell"></i>
+               <i class="icon-noti"></i>
             </button>
             <span class="un-read-msg" *ngIf="socketService.notificationList.length > 0">{{socketService.notificationList.length}}</span>
         </div>

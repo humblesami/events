@@ -13,15 +13,130 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     <i class="fa fa-angle-right"></i>
                 </span>
             </div>
-            <form class="details-card">
-                <div *ngIf="my_profile" class="clearfix">
+
+			<div class="row">
+                    <div class="col-lg-12">
+                        <div class="MainTitleHeadWrap">
+                            <div class="HeadingWrap">
+                                <img src="static/angular/assets/images/face-scan.png" alt="" /> Profile
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+			<form class="details-card">
+			<div class="row">
+				<div class="col-sm-12 mb-3">
+					<div *ngIf="my_profile" class="clearfix">
                     <button (click)="editProfile()" type="button" class="cancelbtn">Edit</button>
                 </div>
+				</div>
+				<div class="col-sm-12 col-md-3 col-lg-2">
+					<div class="ProfileUserNameJonbWrapper">
+						<div class="ProfileChangeSaveWrapper">
+							<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
+							<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
+						</div>
+
+						 <div  class="row"><!-- *ngIf="profile_data.username" -->
+                            <div class="col-sm-12">
+                                <label for="job-title">
+                                    <b>Name</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-12">
+                                Sratic Uma
+								{{profile_data.username}}
+                            </div>
+                        </div>
+
+					</div>
+
+				</div>
+				<div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
+					<div class="Pro-info">
+						PERSONAL INFO
+					</div>
+					<div *ngIf="profile_data.email" class="row">
+						<div class="col-sm-3">
+							<label for="w-phone">
+								<b>Email</b>
+							</label>
+						</div>
+						<div class="col-sm-9 UserProfileDiscription">
+							{{profile_data.email}}
+						</div>
+					</div>
+					<div *ngIf="profile_data.job_title" class="row">
+                            <div class="col-sm-3">
+                                <label for="job-title">
+                                    <b>Job Title</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-9 UserProfileDiscription">
+                                {{profile_data.job_title}}
+                            </div>
+                        </div>
+
+					<div *ngIf="profile_data.department" class="row">
+                            <div class="col-sm-3">
+                                <label for="department">
+                                    <b>Department</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-9 UserProfileDiscription">
+                                {{profile_data.department}}
+                            </div>
+                        </div>
+                        <div *ngIf="profile_data.work_phone" class="row">
+                            <div class="col-sm-3">
+                                <label for="w-phone">
+                                    <b>Work Phone</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-9 UserProfileDiscription">
+                                {{profile_data.work_phone}}
+                            </div>
+                        </div>
+                        <div *ngIf="profile_data.mobile_phone" class="row">
+                            <div class="col-sm-3">
+                                <label for="c-phone">
+                                    <b>Cell Phone</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-9 UserProfileDiscription">
+                                {{profile_data.mobile_phone}}
+                            </div>
+                        </div>
+                        <div *ngIf="profile_data.fax" class="row">
+                            <div class="col-sm-3">
+                                <label for="fax">
+                                    <b>Fax</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-9 UserProfileDiscription">
+                                {{profile_data.fax}}
+                            </div>
+                        </div>
+                        <div *ngIf="profile_data.website" class="row">
+                            <div class="col-sm-3">
+                                <label for="website">
+                                    <b>Website</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-9 UserProfileDiscription">
+                                {{profile_data.website}}
+                            </div>
+                        </div>
+
+
+				</div>
+			</div>
+
+
+
                 <div class="row">
-                    <div class="col-sm-8">
-                        <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
-                        <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
-                    </div>
+
                     <div class="col-sm-4">                                             
                         <div class="container" *ngIf="profile_data.last_login">
                             <div class="row last-login-details">
@@ -91,56 +206,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 {{profile_data.job_title}}
                             </div>
                         </div>
-                        <div *ngIf="profile_data.department" class="row">
-                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
-                                <label for="department">
-                                    <b>Department</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-8">
-                                {{profile_data.department}}
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.work_phone" class="row">
-                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
-                                <label for="w-phone">
-                                    <b>Work Phone</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-8">
-                                {{profile_data.work_phone}}
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.mobile_phone" class="row">
-                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
-                                <label for="c-phone">
-                                    <b>Cell Phone</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-8">
-                                {{profile_data.mobile_phone}}
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.fax" class="row">
-                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
-                                <label for="fax">
-                                    <b>Fax</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-8">
-                                {{profile_data.fax}}
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.website" class="row">
-                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
-                                <label for="website">
-                                    <b>Website</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-8">
-                                {{profile_data.website}}
-                            </div>
-                        </div>
+
+
 
                         <!-- Term Date -->
 
@@ -304,10 +371,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </h3>
                             </div>
                             <div class="container row">
-                                <div class="col-sm-8">
-                                    <img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
-                                    <img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
-                                </div>
+                                <div class="col-sm-2">
+									<div class="ProfileChangeSaveWrapper">
+										<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
+										<img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
+									</div>
+								</div>
                             </div>
                             <div class="admin_info_after_name container">
                                 <div *ngIf="profile_data.admin_first_name" class="row">
@@ -402,7 +471,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div *ngIf="!modified_profile_data.image">
                             <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
                             <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
-                        </div>                        
+                        </div>
                         <input (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
                     </div>
                 </div>

@@ -9,17 +9,17 @@
                 </a>
             </div>
             
-            <div class="main-user-navbar">
+			<div class="main-user-navbar">
                 <div class="searchheader-icon nav-icon">
-                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                    <button id="search-btn"><i class="icon-search"></i></button>
                 </div>
                 <div class="nav-icon" (click)="change_cursor()">
-                    <span class="cursor_chooser"><i class="fas fa-hand-pointer" id="cursor_chooser"></i></span>
+                    <span class="cursor_chooser"><i class="icon-cursor" id="cursor_chooser"></i></span>
                     <canvas id="cursor_canvas" width="20" height="20" style="display:none" ></canvas>
                 </div>
                 <div class="messageicon-container mobile-chatroom nav-icon dropdown">
                     <button routerLink="/messenger" class="showmouseawaybutton notification-icon">
-                        <i class="fas fa-comment"></i>
+                        <i class="icon-chat"></i>
                     </button>
                     <span class="un-read-msg" *ngIf="socketService.unseen_messages !=0 ">{{socketService.unseen_messages}}</span>
                 </div>
@@ -29,16 +29,16 @@
                         <span class="header-user-name">{{socketService.user_data.name}}</span>
                         <img id="navbar-profile-img" class="img-thumbnail-sm" src="{{socketService.user_photo}}">
                     </button>
-                    <div class="profile-menu dropdown-menu hidemouseaway">
+                    <div class="profile-menu dropdown-menu hidemouseaway dropdown-menu-lg-right">
                         <a class="dropdown-item" routerLink="/my-profile">
                             <div class="drop-down-user">
-                                <img class="img-thumbnail-sm" src="{{socketService.user_photo}}">
+                                <!-- <img class="img-thumbnail-sm" src="{{socketService.user_photo}}"> -->
                                 <h5>{{socketService.user_data.name}}</h5>
                             </div>
                         </a>
-                        <hr>
-                        <a class="dropdown-item" routerLink="/settings"><i class="fa fa-cogs"></i> Change Password</a>
-                        <a id='logout_link' (click)="signout()" class="dropdown-item"><i class="icon-logout"></i> Logout</a>
+						<a class="dropdown-item" routerLink="/accountsettings" href="">Account setting</a>
+                        <a class="dropdown-item" routerLink="/settings">Change Password</a>
+                        <a id='logout_link' (click)="signout()" class="dropdown-item">Logout</a>
                     </div>
                 </div>        
             </div>
