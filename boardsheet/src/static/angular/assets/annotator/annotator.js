@@ -2755,7 +2755,6 @@
                                 },
                                 addComment: function addComment(documentId, annotationId, values, received_comment) {
                                     return new Promise(function(resolve, reject) {
-                                        console.log(documentId, 14);
                                         if (annotationId) {
                                             var comment = {
                                                 class: 'Comment',

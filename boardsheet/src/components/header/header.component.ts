@@ -43,20 +43,20 @@ export class HeaderComponent implements OnInit {
     };
     no_search = false;
     route_map = {
-        'meetings.Event':'/meeting/',         
-        'meetings.Topic': '/topic/',            
-        'resources.Folder':'/resource/',            
-        'meetings.Committee': '/committees/',            
-        'survey.Survey': '/survey/',                    
-		'meetings.NewsDocument': '/home/doc/',			
-        'meetings.Profile': '/profile/',
-        'voting.Voting': '/voting/',
+        'meetings.Event': ['/meeting/', 'meetings'],
+        'meetings.Topic': ['/topic/', 'topics'],
+        'resources.Folder': ['/resource/', 'resource'],
+        'meetings.Committee': ['/committees/', 'committee'],
+        'survey.Survey': ['/survey/', 'survey'],
+		'meetings.NewsDocument': ['/home/doc/', 'document'],
+        'meetings.Profile': ['/profile/', 'user'],
+        'voting.Voting': ['/voting/', 'voting'],
 
-        'voting.VotingDocument' : 'voting/doc/',
-        'meetings.MeetingDocument': '/meeting/doc/',            
-        'resources.ResourceDocument': '/resource/doc/',            
-        'meetings.SignDocument': '/signdoc/',            
-        'meetings.AgendaDocument': '/topic/doc/',            
+        'voting.VotingDocument' : ['voting/doc/', 'voting_documents'],
+        'meetings.MeetingDocument': ['/meeting/doc/', 'meeting_documents'],
+        'resources.ResourceDocument': ['/resource/doc/', 'resource_documents'],
+        'meetings.SignDocument': ['/signdoc/', 'sign_documents'],
+        'meetings.AgendaDocument': ['/topic/doc/', 'topic_documents']
     };
 
     socketService : any
@@ -167,9 +167,9 @@ export class HeaderComponent implements OnInit {
 				else {
 					result.forEach(item => {
                         console.log(item);
-						// item['route'] = obj_this.route_map[item.model].model + item.id;
-						// let item_type = obj_this.route_map[item.model].type;
-						// add_result(item_type, item);
+						item['route'] = obj_this.route_map[item.model][0] + item.id;
+						let item_type = obj_this.route_map[item.model][1]
+						add_result(item_type, item);
 					});
 				}
                 if(result.length < 1) {

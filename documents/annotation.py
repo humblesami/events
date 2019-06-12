@@ -70,48 +70,48 @@ class AnnotationDocument(models.Model):
             doc = AnnotationDocument(version=document_version, document_id=doc_id, doc_name=doc_name, user_id=user_id)
             doc.save()
 
-        doc = AnnotationDocument.objects.filter(doc_name = doc_name, user_id = user_id, document_id = doc_id)
+        # doc = AnnotationDocument.objects.filter(doc_name = doc_name, user_id = user_id, document_id = doc_id)
         if doc:
-            doc = doc[0]
-        values = json.loads(params['annotations'])
-        for val in values:
-            type = val.get('type')
-            name = val.get('class')
-            user = val.get('uid')
-            date_time = val.get('date_time')
-            page = val.get('page')
-            uuid = val.get('uuid')
-            sub_type = val.get('sub_type')
-            x = val.get('x')
-            y = val.get('y')
+            # doc = doc[0]
+            values = json.loads(params['annotations'])
+            for val in values:
+                type = val.get('type')
+                name = val.get('class')
+                user = val.get('uid')
+                date_time = val.get('date_time')
+                page = val.get('page')
+                uuid = val.get('uuid')
+                sub_type = val.get('sub_type')
+                x = val.get('x')
+                y = val.get('y')
 
-            comments = val.get('comments')
-            lines = val.get('lines')
+                comments = val.get('comments')
+                lines = val.get('lines')
 
-            if type in('strikeout', 'highlight', 'underline'):
-                RectangleAnnotation.add_rectangle(val, doc.id)
+                if type in('strikeout', 'highlight', 'underline'):
+                    RectangleAnnotation.add_rectangle(val, doc.id)
 
-            if type == 'drawing' and lines:
-                DrawingAnnotation.add_drawing(val, doc.id)
+                if type == 'drawing' and lines:
+                    DrawingAnnotation.add_drawing(val, doc.id)
 
-            if type == 'point' and sub_type == 'personal':
-                point = PointAnnotation(name=name, user_id=user, date_time=date_time, page=page,
-                                   type=type, uuid=uuid, sub_type=sub_type, x=x, y=y,
-                                        created_by_id=user, my_notification = 0, document_id = doc.id)
-                point.save()
-                point_id = point.pk
-                if comments:
-                    for val in comments:
-                        body = val['content']
-                        uuid = val['uuid']
-                        date_time = val['date_time']
-                        commented_by = val['uid']
-                        comment_anno = CommentAnnotation(body=body, point_id_id=point_id, user_id=commented_by
-                                                         , date_time=date_time, uuid=uuid)
-                        comment_anno.save()
-        doc.version = document_version
-        doc.save()
-        return 'done'
+                if type == 'point' and sub_type == 'personal':
+                    point = PointAnnotation(name=name, user_id=user, date_time=date_time, page=page,
+                                    type=type, uuid=uuid, sub_type=sub_type, x=x, y=y,
+                                            created_by_id=user, my_notification = 0, document_id = doc.id)
+                    point.save()
+                    point_id = point.pk
+                    if comments:
+                        for val in comments:
+                            body = val['content']
+                            uuid = val['uuid']
+                            date_time = val['date_time']
+                            commented_by = val['uid']
+                            comment_anno = CommentAnnotation(body=body, point_id_id=point_id, user_id=commented_by
+                                                            , date_time=date_time, uuid=uuid)
+                            comment_anno.save()
+            doc.version = document_version
+            doc.save()
+            return 'done'
 
 
 class Annotation(models.Model):
@@ -210,7 +210,7 @@ class DrawingAnnotation(Annotation):
                                     width=width, color=color, to_merge=to_merge)
         drawing.save()
         if drawing:
-            drawing = drawing[0]
+            # drawing = drawing[0]
             for line in lines:
                 drawing_id = drawing.id
                 x = line[0]
