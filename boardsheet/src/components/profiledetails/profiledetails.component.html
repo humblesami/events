@@ -1,7 +1,13 @@
 ﻿<app-breadcrumb app="meetings" model="{{type}}" 
-rid="{{profile_data.id}}" edit="1" delete="1" 
+rid="{{profile_data.id}}" *ngIf="!my_profile" edit="1" delete="1" 
 routes='[{"title":"Profiles", "link":"/profiles"}, {"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
+
+<app-breadcrumb app="meetings" model="{{type}}" 
+rid="{{profile_data.id}}" *ngIf="my_profile"
+routes='[{"title":"Profiles", "link":"/profiles"}, {"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
+title="{{profile_data.name}}"></app-breadcrumb>
+
 <div class="router-outlet">
     <div *ngIf="!edit_mode">      
         <div class="container">
@@ -15,126 +21,121 @@ title="{{profile_data.name}}"></app-breadcrumb>
             </div>
 
 			<div class="row">
-                    <div class="col-lg-12">
-                        <div class="MainTitleHeadWrap">
-                            <div class="HeadingWrap">
-                                <img src="static/angular/assets/images/face-scan.png" alt="" /> Profile
-                            </div>
-                        </div>
+                <div class="col-lg-12">
+                    <div class="MainTitleHeadWrap">
+                        <div class="HeadingWrap">
+                            <img src="static/angular/assets/images/face-scan.png" alt="" /> Profile
+                        </div>                        
+                        <div *ngIf="my_profile" class="edit-buttons">
+                            <a class="btn btn-primary" (click)="editProfile()">Edit</a>
+                        </div>                        
                     </div>
                 </div>
+            </div>
 
 			<form class="details-card">
-			<div class="row">
-				<div class="col-sm-12 mb-3">
-					<div *ngIf="my_profile" class="clearfix">
-                    <button (click)="editProfile()" type="button" class="cancelbtn">Edit</button>
-                </div>
-				</div>
-				<div class="col-sm-12 col-md-3 col-lg-2">
-					<div class="ProfileUserNameJonbWrapper">
-						<div class="ProfileChangeSaveWrapper">
-							<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
-							<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
-						</div>
+                <div class="row">				
+                    <div class="col-sm-12 col-md-3 col-lg-2">
+                        <div class="ProfileUserNameJonbWrapper">
+                            <div class="ProfileChangeSaveWrapper">
+                                <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
+                                <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
+                            </div>
 
-						 <div  class="row" *ngIf="profile_data.name">
-                            <div class="col-sm-12">
-                                <label for="job-title">
-                                    <b>Name</b>
-                                </label>
+                            <div  class="row" *ngIf="profile_data.name">
+                                <div class="col-sm-12">
+                                    <label for="job-title">
+                                        <b>Name</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-12">
+                                    Sratic Uma
+                                    {{profile_data.name}}
+                                </div>
                             </div>
-                            <div class="col-sm-12">
-                                Sratic Uma
-								{{profile_data.name}}
-                            </div>
+
                         </div>
 
-					</div>
-
-				</div>
-				<div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
-					<div class="Pro-info">
-						PERSONAL INFO
-					</div>
-					<div *ngIf="profile_data.email" class="row">
-						<div class="col-sm-3">
-							<label for="w-phone">
-								<b>Email</b>
-							</label>
-						</div>
-						<div class="col-sm-9 UserProfileDiscription">
-							{{profile_data.email}}
-						</div>
-					</div>
-					<div *ngIf="profile_data.job_title" class="row">
-                            <div class="col-sm-3">
-                                <label for="job-title">
-                                    <b>Job Title</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.job_title}}
-                            </div>
+                    </div>
+                    <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
+                        <div class="Pro-info">
+                            PERSONAL INFO
                         </div>
-
-					<div *ngIf="profile_data.department" class="row">
-                            <div class="col-sm-3">
-                                <label for="department">
-                                    <b>Department</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.department}}
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.work_phone" class="row">
+                        <div *ngIf="profile_data.email" class="row">
                             <div class="col-sm-3">
                                 <label for="w-phone">
-                                    <b>Work Phone</b>
+                                    <b>Email</b>
                                 </label>
                             </div>
                             <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.work_phone}}
+                                {{profile_data.email}}
                             </div>
                         </div>
-                        <div *ngIf="profile_data.mobile_phone" class="row">
-                            <div class="col-sm-3">
-                                <label for="c-phone">
-                                    <b>Cell Phone</b>
-                                </label>
+                        <div *ngIf="profile_data.job_title" class="row">
+                                <div class="col-sm-3">
+                                    <label for="job-title">
+                                        <b>Job Title</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.job_title}}
+                                </div>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.mobile_phone}}
+
+                        <div *ngIf="profile_data.department" class="row">
+                                <div class="col-sm-3">
+                                    <label for="department">
+                                        <b>Department</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.department}}
+                                </div>
                             </div>
-                        </div>
-                        <div *ngIf="profile_data.fax" class="row">
-                            <div class="col-sm-3">
-                                <label for="fax">
-                                    <b>Fax</b>
-                                </label>
+                            <div *ngIf="profile_data.work_phone" class="row">
+                                <div class="col-sm-3">
+                                    <label for="w-phone">
+                                        <b>Work Phone</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.work_phone}}
+                                </div>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.fax}}
+                            <div *ngIf="profile_data.mobile_phone" class="row">
+                                <div class="col-sm-3">
+                                    <label for="c-phone">
+                                        <b>Cell Phone</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.mobile_phone}}
+                                </div>
                             </div>
-                        </div>
-                        <div *ngIf="profile_data.website" class="row">
-                            <div class="col-sm-3">
-                                <label for="website">
-                                    <b>Website</b>
-                                </label>
+                            <div *ngIf="profile_data.fax" class="row">
+                                <div class="col-sm-3">
+                                    <label for="fax">
+                                        <b>Fax</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.fax}}
+                                </div>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.website}}
+                            <div *ngIf="profile_data.website" class="row">
+                                <div class="col-sm-3">
+                                    <label for="website">
+                                        <b>Website</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.website}}
+                                </div>
                             </div>
-                        </div>
 
 
-				</div>
-			</div>
-
-
-
+                    </div>
+                </div>
                 <div class="row">
 
                     <div class="col-sm-4">                                             
@@ -289,7 +290,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                         
                         <div class="row">
-                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                            <div *ngIf="my_profile" class="col-sm-2" style="border-right: 1px solid #cccccc;">
                                 <label>
                                     <b>Signature</b>
                                     <a                                        
@@ -461,7 +462,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 
     <div class="container">
-        <div class="details-card" *ngIf="edit_mode">
+        <div class="row edit-buttons edit-mode">                
+            <a class="btn btn-primary cancel" (click)="editProfile()" type="button">Cancel</a>
+            <a class="btn btn-primary save" (click)="onSubmit()" type="submit">Save</a>                
+        </div>
+        <div class="details-card edit-mode" *ngIf="edit_mode">            
             <div class="row">
                 <div class="container row">
                     <div class="col-sm-8">
@@ -590,7 +595,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                        <div *ngIf="my_profile" class="col-sm-2" style="border-right: 1px solid #cccccc;">
                             <label>
                                 <b>Signature</b>
                                 <a 
@@ -749,17 +754,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     type="text" placeholder="" id="admin-work-phone" required>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="clearfix col-sm">
-                            <button (click)="editProfile()" type="button" class="cancelbtn">Cancel</button>
-                        </div>
-                        <div class="clearfix col-sm">
-                            <button (click)="onSubmit()" type="submit" class="signupbtn">Save</button>
-                        </div>
-                    </div>
+                    </div>                    
                 </div>
             </div>
         </div>

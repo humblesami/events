@@ -53,6 +53,19 @@ export class ProfileDetailsComponent implements OnInit {
 
 	editProfile() {        
         this.edit_mode = !this.edit_mode;
+        if(this.edit_mode)
+        {
+            setTimeout(function(){            
+                $('.router-outlet input[type="text"]:visible:first').focus();
+            }, 20);
+        }
+        else
+        {
+            setTimeout(function(){            
+                $('.router-outlet').scrollTop(0);
+            }, 20);
+            
+        }
 	}
 
 	addFile(event, filter){
@@ -195,7 +208,10 @@ export class ProfileDetailsComponent implements OnInit {
                     }, 3000);   
                 }
 				
-			});
+            });
+            setTimeout(function(){            
+                $('.router-outlet').scrollTop(0);
+            }, 20);
     }
     init_sign()
     {
