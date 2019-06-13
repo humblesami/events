@@ -40,6 +40,10 @@ class File(models.Model):
             if self.html:
                 self.content = self.html
             else:
+                if not self.pdf_doc:
+                    raise Exception('File conversion failed')
+                if not self.pdf_doc.file:
+                    raise Exception('File conversion failed.')
                 self.content = text_extractor(self.pdf_doc)
             self.save()
 
@@ -55,6 +59,8 @@ class File(models.Model):
             self.excel2xhtml(pth,filename)
         elif ext in ['png','jpg','jpeg']:
             self.img2pdf(pth,filename)
+        else:
+            raise Exception('Invalid File Type')
 
     def doc2pdf(self, pth,ext,filename):
         try:

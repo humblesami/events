@@ -46,7 +46,12 @@ class MeetingDocInline(admin.TabularInline):
     extra = 0
 
     def View(self,obj):
-        html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(obj.pdf_doc.url)
+        pdf_url = None
+        html = ''
+        if obj.pdf_doc:
+            pdf_url = obj.pdf_doc.url
+            if pdf_url:
+                html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(obj.pdf_doc.url)
         return format_html(html)
 
     def Edit(self,obj):
@@ -249,7 +254,7 @@ class StaffAdmin(UserAdmin):
         return qs
 
 
-class GroupAdmin(GroupAdmin):
+class MeetingGroupAdmin(GroupAdmin):
 
     def get_queryset(self, request):
         # qs = super(GroupAdmin, self).get_queryset(request)
@@ -313,7 +318,7 @@ admin.site.register(AgendaDocument)
 admin.site.register(Admin,AdminAdmin)
 admin.site.register(Director,DirectorAdmin)
 admin.site.register(Staff,StaffAdmin)
-admin.site.register(MeetingGroup,GroupAdmin)
+admin.site.register(MeetingGroup,MeetingGroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
 admin.site.register(Profile,UserAdmin)
 admin.site.register(SignDocument, SignDocumentForm)
