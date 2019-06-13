@@ -262,6 +262,9 @@ class Event(models.Model):
 
         attendance_status = cls.get_attendance_status(meeting_id, uid)
         meeting['attendee_status'] = attendance_status
+        my_event = meeting_obj.attendees.filter(pk=request.user.id)
+        if my_event:
+            meeting['my_event'] = 1
 
         return meeting
     
