@@ -111,6 +111,31 @@ export class HeaderComponent implements OnInit {
 					result.forEach(item => {                        
                         item['route'] = obj_this.route_map[item.model] + item.id;					
                         var item_type = item.model.split('.')[1]+'s';
+                        if (item_type == 'Profiles')
+                        {
+                            if (!item.name)
+                            {
+                                if (item.first_name)
+                                {
+                                    if (item.last_name)
+                                    {
+                                        item.name = item.first_name + ' ' + item.last_name;
+                                    }
+                                }
+                                if (!item.last_name)
+                                {
+                                    if (item.last_name)
+                                    {
+                                        item.name = item.last_name;
+                                    }
+                                }
+                                if (!item.first_name && !item.last_name)
+                                {
+                                    item.name = item.username;
+                                }
+                            }
+                        }
+
 						if(obj_this.search_results[item_type])
                         {
                             obj_this.search_results[item_type].push(item);
