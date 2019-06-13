@@ -243,13 +243,16 @@ fieldset.monospace textarea {
 /* SUBMIT ROW */
 
 .submit-row {
-    padding: 12px 14px;
-    margin: 0 0 20px;
+    padding: 10px 17px;
     background: #f8f8f8;
     border: 1px solid #eee;
     border-radius: 4px;
-    text-align: right;
-    overflow: hidden;
+    
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 12;
+    width: 100%;
 }
 
 body.popup .submit-row {
@@ -525,4 +528,15 @@ form .related-widget-wrapper ul {
 
 .empty-form {
     display: none !important;
+}
+
+
+body.change-form #content{
+    height: calc(100vh - 156px);
+    overflow: auto;
+}
+
+body.popup #content{
+    height: calc(100vh - 56px);
+    overflow: auto;
 }
