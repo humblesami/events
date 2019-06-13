@@ -983,11 +983,11 @@ input[type="submit"], button {
 }
 @media (max-width: 767px) {
     .aligned .vCheckboxLabel{
-        margin-left: 5px;
+        margin: 5px;
     }
 }
 @media (min-width: 768px) {
     .aligned .vCheckboxLabel{
-        margin: -5px 5px 0 0
+        margin: 3px 5px 0 0
     }
 }

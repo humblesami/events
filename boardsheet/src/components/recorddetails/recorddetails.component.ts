@@ -22,9 +22,9 @@ export class RecorddetailsComponent implements OnInit {
     // let temp = window.location.hash.split("edit")[1]
     this.url = window['site_config'].server_base_url+"/" + this.model + "/" + this.id;
     this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.url)
-    $('html').css('overflow', 'hidden');
+    // $('html').css('overflow', 'hidden');
     $('#record_details_iframe').load(function(){
-      window['functions'].hideLoader('jangoiframe')
+        window['functions'].hideLoader('jangoiframe')
     });
   }
 
