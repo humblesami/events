@@ -1,15 +1,15 @@
 ﻿<app-breadcrumb app="meetings" model="{{type}}" 
-rid="{{profile_data.id}}" *ngIf="!my_profile" edit="1" delete="1" 
+rid="{{profile_data.id}}" *ngIf="!my_profile" edit="1" delete="1"
 routes='[{"title":"Profiles", "link":"/profiles"}, {"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
 
-<app-breadcrumb app="meetings" model="{{type}}" 
+<app-breadcrumb app="meetings" model="{{type}}"
 rid="{{profile_data.id}}" *ngIf="my_profile"
 routes='[{"title":"Profiles", "link":"/profiles"}, {"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
 
 <div class="router-outlet">
-    <div *ngIf="!edit_mode">      
+    <div *ngIf="!edit_mode">
         <div class="container">
             <div class="page-links">
                 <span class="prev next-prev-link" title="Privious">
@@ -25,16 +25,16 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     <div class="MainTitleHeadWrap">
                         <div class="HeadingWrap">
                             <img src="static/angular/assets/images/face-scan.png" alt="" /> Profile
-                        </div>                        
+                        </div>
                         <div *ngIf="my_profile" class="edit-buttons">
                             <a class="btn btn-primary" (click)="editProfile()">Edit</a>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
             </div>
 
 			<form class="details-card">
-                <div class="row">				
+                <div class="row">
                     <div class="col-sm-12 col-md-3 col-lg-2">
                         <div class="ProfileUserNameJonbWrapper">
                             <div class="ProfileChangeSaveWrapper">
@@ -43,14 +43,14 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </div>
 
                             <div  class="row" *ngIf="profile_data.name">
-                                <div class="col-sm-12">
-                                    <label for="job-title">
-                                        <b>Name</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-12">
-                                    Sratic Uma
+                                <div class="col-sm-12 UserProfileNameTittle">
                                     {{profile_data.name}}
+                                </div>
+                            </div>
+
+							<div *ngIf="profile_data.job_title" class="row">
+                                <div class="col-sm-12 UserProfileDiscripTittle">
+                                    {{profile_data.job_title}}
                                 </div>
                             </div>
 
@@ -71,16 +71,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 {{profile_data.email}}
                             </div>
                         </div>
-                        <div *ngIf="profile_data.job_title" class="row">
-                                <div class="col-sm-3">
-                                    <label for="job-title">
-                                        <b>Job Title</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.job_title}}
-                                </div>
-                            </div>
+
 
                         <div *ngIf="profile_data.department" class="row">
                                 <div class="col-sm-3">
@@ -138,7 +129,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 </div>
                 <div class="row">
 
-                    <div class="col-sm-4">                                             
+                    <div class="col-sm-4">
                         <div class="container" *ngIf="profile_data.last_login">
                             <div class="row last-login-details">
                                 <div class="col-sm-12">
@@ -164,16 +155,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 <div class="row">
                     <div class="container">
 
-                        <div *ngIf="profile_data.username" class="row">
-                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
-                                <label for="job-title">
-                                    <b>Name</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-8">
-                                {{profile_data.username}}
-                            </div>
-                        </div>
                         <div *ngIf="profile_data.nick_name" class="row">
                             <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
                                 <label for="department">
@@ -208,7 +189,16 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </div>
                         </div>
 
-
+						<div *ngIf="profile_data.board_joining_date" class="row">
+                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                                <label for="website">
+                                    <b>Board Joining Date</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-8">
+                                {{profile_data.board_joining_date | date:'MMM dd,yyyy'}}
+                            </div>
+                        </div>
 
                         <!-- Term Date -->
 
@@ -227,22 +217,13 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
                                 <label for="website">
                                     <b>Term End Date</b>
-                                </label>
+                                </label>s
                             </div>
                             <div class="col-sm-8">
                                 {{profile_data.term_end_date| date:'MMM dd,yyyy'}}
                             </div>
                         </div>
-                        <div *ngIf="profile_data.companies" class="row">
-                            <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
-                                <label for="website">
-                                    <b>Company</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-8">
-                                {{profile_data.companies}}
-                            </div>
-                        </div>
+
                         <div *ngIf="profile_data.board_joing_date" class="row">
                             <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
                                 <label for="website">
@@ -275,7 +256,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </div>
                         </div><br>
 
-                        
+
                         <div *ngIf="profile_data.resume" class="row">
                             <div class="col-sm-12">
                                 <h3>Resume</h3>
@@ -288,12 +269,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </div>
                             </a>
                         </div>
-                        
+
                         <div class="row">
                             <div *ngIf="my_profile" class="col-sm-2" style="border-right: 1px solid #cccccc;">
                                 <label>
                                     <b>Signature</b>
-                                    <a                                        
+                                    <a
                                         (click)='init_sign()'
                                         class="fa fa-pen fa-lg init_sign"
                                     >
@@ -301,12 +282,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </label>
                             </div>
                             <div class="col-sm-8 " style="display: flex;">
-                                <div style="position:relative;cursor: pointer;">                                           
-                                    <img class="strt_sign profile " style="width: 100%;" 
+                                <div style="position:relative;cursor: pointer;">
+                                    <img class="strt_sign profile " style="width: 100%;"
                                         *ngIf="profile_data.signature_data"
                                         src="data:image/png;base64,{{profile_data.signature_data}}"
                                     />
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -361,7 +342,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </div>
                                 </div>
                             </div>
-                        </div>  
+                        </div>
 
                         <!--Admin Details-->
 
@@ -432,6 +413,16 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         {{profile_data.admin_cell_phone}}
                                     </div>
                                 </div>
+								<div *ngIf="profile_data.admin_fax" class="row">
+                                    <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                                        <label>
+                                            <b>Fax</b>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        {{profile_data.admin_fax}}
+                                    </div>
+                                </div>
                                 <div *ngIf="profile_data.admin_fax" class="row">
                                     <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
                                         <label>
@@ -453,7 +444,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </div>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
             </form>
@@ -462,16 +453,16 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 
     <div class="container">
-        <div class="row edit-buttons edit-mode">                
+        <div class="row edit-buttons edit-mode">
             <a class="btn btn-primary cancel" (click)="editProfile()" type="button">Cancel</a>
-            <a class="btn btn-primary save" (click)="onSubmit()" type="submit">Save</a>                
+            <a class="btn btn-primary save" (click)="onSubmit()" type="submit">Save</a>
         </div>
-        <div class="details-card edit-mode" *ngIf="edit_mode">            
+        <div class="details-card edit-mode" *ngIf="edit_mode">
             <div class="row">
                 <div class="container row">
                     <div class="col-sm-8">
                         <div *ngIf="modified_profile_data.image">
-                            <img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">                                
+                            <img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
                         </div>
                         <div *ngIf="!modified_profile_data.image">
                             <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
@@ -513,6 +504,13 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </label>
                             <input value="{{profile_data.email}}" (change)="modified_profile_data.email = $event.target.value"
                                 type="text" placeholder="Enter Email" id="email">
+
+							<label for="bio">
+                                <b>Bio</b>
+                            </label>
+
+                            <input value="{{profile_data.bio}}" (change)="modified_profile_data.bio = $event.target.value"
+                                type="text" placeholder="Enter Bio" id="bio">
                         </div>
                     </div>
 
@@ -526,6 +524,39 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div class="col-sm-8">
                             <input value="{{profile_data.job_title}}" (change)="modified_profile_data.job_title = $event.target.value"
                                 type="text" placeholder="Enter Job Title" id="job-title" required>
+                        </div>
+                    </div>
+					<div class="row">
+                        <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                            <label for="board_joining_date">
+                                <b>Board Joining Date</b>
+                            </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input value="{{profile_data.board_joining_date}}" (change)="modified_profile_data.board_joining_date = $event.target.value"
+                                type="date" placeholder="Enter Board Joining Date" id="board_joining_date" required>
+                        </div>
+                    </div>
+					<div class="row">
+                        <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                            <label for="term_start_date">
+                                <b>Term Start Date</b>
+                            </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
+                                type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
+                        </div>
+                    </div>
+					<div class="row">
+                        <div class="col-sm-2" style="border-right: 1px solid #cccccc;">
+                            <label for="term_end_date">
+                                <b>Term End Date</b>
+                            </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input value="{{profile_data.term_end_date}}" (change)="modified_profile_data.term_end_date = $event.target.value"
+                                type="date" placeholder="Enter End Start Date" id="term_end_date" required>
                         </div>
                     </div>
                     <div class="row">
@@ -598,7 +629,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div *ngIf="my_profile" class="col-sm-2" style="border-right: 1px solid #cccccc;">
                             <label>
                                 <b>Signature</b>
-                                <a 
+                                <a
                                     (click)='init_sign()'
                                     class="fa fa-pen fa-lg init_sign"
                                 >
@@ -607,7 +638,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                         <div class="col-sm-8 " style="display: flex;">
                             <div style="position:relative;cursor: pointer;">
-                                <img class="strt_sign profile " style="width: 100%;" 
+                                <img class="strt_sign profile " style="width: 100%;"
                                     *ngIf="profile_data.signature_data"
                                     src="data:image/png;base64,{{profile_data.signature_data}}"
                                 />
@@ -683,7 +714,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </h3>
                         </div>
                     </div>
-                    <div class="row">                            
+                    <div class="row">
                         <div *ngIf="modified_profile_data.admin_image" class="col-sm-12">
                             <img *ngIf="modified_profile_data.admin_image" class="img-thumbnail-lg" src="{{modified_profile_data.admin_image}}">
                             <img *ngIf="!modified_profile_data.admin_image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
@@ -754,7 +785,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     type="text" placeholder="" id="admin-work-phone" required>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>

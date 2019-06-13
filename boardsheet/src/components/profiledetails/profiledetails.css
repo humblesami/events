@@ -1,5 +1,13 @@
-.details-card {
-
+.ProfileUserNameJonbWrapper{
+	text-align:center;
+}
+.UserProfileNameTittle{
+	color:#3059C9;
+	font-size:25px;
+}
+.UserProfileDiscripTittle{
+	color:#444444;
+	font-size:16px;
 }
 
 .details-card h3{
@@ -184,11 +192,15 @@ button:hover {
 }
 .edit-buttons.edit-mode
 {
-    justify-content: center;
+   justify-content: center;
     position: absolute;
     z-index: 14;
-    margin-top: -50px;
     width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid #cccccc;
+    left: 0;
+    padding: 7px;
 }
 .edit-buttons.edit-mode a
 {
@@ -196,6 +208,7 @@ button:hover {
     margin: 5px;
     border: 1px solid white;
     border-radius: 0.25rem;
+    min-width:100px;
 }
 .edit-buttons.edit-mode a.save{
     background: #7c7bad;    
