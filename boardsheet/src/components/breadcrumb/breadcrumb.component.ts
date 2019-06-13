@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {SocketService} from '../../app/socket.service';
 
 class RouteLink {
   title: string;
@@ -21,8 +22,10 @@ export class BreadcrumbComponent implements OnInit {
 @Input() routes : any;
 
 route_links: any;
+socketService: any;
 
-  constructor() { 
+  constructor(private sserv : SocketService) { 
+    this.socketService = sserv;
       if(this.create)
       {
           this.create_button = true;          

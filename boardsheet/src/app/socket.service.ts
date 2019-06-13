@@ -320,7 +320,13 @@ export class SocketService {
             return;
         }
         $('#main-div').show();
-        obj_this.user_data = authorized_user;        
+        for(var i = 0; i < authorized_user.groups.length; i++){
+            if( authorized_user.groups[i].name == 'Admin'){
+                authorized_user.is_admin = 1;
+                break;
+            }
+        }
+        obj_this.user_data = authorized_user;       
 
         let complete_server_url = obj_this.site_config.chat_server+'/sio';
         obj_this.socket = window['io'].connect(complete_server_url,{

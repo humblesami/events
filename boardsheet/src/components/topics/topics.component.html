@@ -1,6 +1,8 @@
 <app-breadcrumb app="meetings" model="topic" 
 *ngIf="topic && meeting_type"
-create="1"
+rid={{topic.id}}
+edit="1"
+delete="1"
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"},
 {"title":"{{meeting_name}}", "link":"/meeting/{{meeting_id}}"}]'
 title="{{topic.name}}"></app-breadcrumb>
