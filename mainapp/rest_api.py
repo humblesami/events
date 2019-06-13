@@ -125,7 +125,7 @@ def search(request):
                     'Event': ['name', 'description'],
                     'Topic': ['name', 'lead'],
                     'Committee': ['name'],
-                    'Profile': ['username'],
+                    'Profile': ['name', 'username', 'first_name', 'last_name', 'email'],
                     'MeetingDocument': ['name'],
                     'AgendaDocument': ['name'],
                     'SignDocument': ['name']

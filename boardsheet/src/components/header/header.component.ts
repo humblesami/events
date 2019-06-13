@@ -88,8 +88,6 @@ export class HeaderComponent implements OnInit {
             var success_cb = function (result) {
 				$('.searchbar-full-width').hide();
 				if(obj_this.content_search){
-                    obj_this.search_item_types=[];
-                    obj_this.search_results = {}
                     obj_this.doc_types = [];
                     obj_this.content_search_results = {};
 					result.forEach(item => {
@@ -108,6 +106,8 @@ export class HeaderComponent implements OnInit {
                     // console.log(obj_this.content_search_results, obj_this.doc_types);
 				}
 				else {
+                    obj_this.search_item_types=[];
+                    obj_this.search_results = {}
 					result.forEach(item => {                        
                         item['route'] = obj_this.route_map[item.model] + item.id;					
                         var item_type = item.model.split('.')[1]+'s';
