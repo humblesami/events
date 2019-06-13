@@ -1,3 +1,4 @@
+import os
 import base64
 import subprocess
 from PyPDF2 import PdfFileReader
@@ -6,7 +7,14 @@ from PIL import Image
 from django.db import models
 from mainapp import settings
 from django.core.files import File as DjangoFile
+from django.core.exceptions import ValidationError
 
+def validate_file_extension(value):
+    
+    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+    valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls', '.ppt', '.pptx']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError(u'Unsupported file extension. Only pdf and microsoft office documents(doc,docx,ppt.pptx,xls,xlsx) are allowed')
 
 def text_extractor(f):
     pdf = PdfFileReader(f)
@@ -25,7 +33,7 @@ class File(models.Model):
     content = models.CharField(max_length=30, blank=True)
     pdf_doc = models.FileField(upload_to='converted/', null=True)
     file_type = models.CharField(max_length=128, default='')
-    attachment = models.FileField(upload_to='files/', null=True)
+    attachment = models.FileField(upload_to='files/', validators=[validate_file_extension])
 
     def __str__(self):
         return self.name
@@ -53,7 +61,7 @@ class File(models.Model):
         ext = tmp[len(tmp) - 1]
         filename = self.attachment.name.replace("files/","").split(".")[0]
         pth = settings.BASE_DIR + self.attachment.url
-        if ext in ("doc","docx","ppt","pptx","pdf"):
+        if ext in ('doc','docx','ppt','pptx','pdf'):
             self.doc2pdf(pth,ext,filename)
         elif ext == "xls" or ext =="xlsx":
             self.excel2xhtml(pth,filename)
