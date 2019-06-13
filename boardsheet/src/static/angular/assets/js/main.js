@@ -2,28 +2,9 @@ var time_out_session = undefined;
 var session_time_limit = 600000;
 var is_mobile_device = undefined;
 var is_local_host = false;
-(function() {
-    var wl = window.location;
-    if(wl.toString().indexOf('localhost') > -1)
-    {
-        is_local_host = true;
-    }
-    if (wl.hash) {
-        window['pathname'] = wl.hash.substr(1, wl.hash.length);
-    } else {
-        window['pathname'] = wl.toString().replace(window.location.origin, '');
-    }
-    try
-    { 
-        document.createEvent("TouchEvent");
-        is_mobile_device = true;
-        window['is_mobile_device'] = 1;
-    }
-    catch(e)
-    {
-         return false; 
-    }
-})()
+var server_wait_loader = undefined;
+window['public_routes'] = ['/login', '/logout'];
+
 
 var dn_current_site_user = {
     cookie: {
@@ -39,15 +20,17 @@ var dn_current_site_user = {
         dn_current_site_user.cookie = localStorage.getItem('user');
         if (dn_current_site_user.cookie) {
             dn_current_site_user.cookie = JSON.parse(dn_current_site_user.cookie);
-            if (!dn_current_site_user.cookie.token) {
-                site_functions.go_to_login();
+            if (dn_current_site_user.cookie.token) {
+                $('body').removeClass('public').addClass('user');                
             }
             else{
-                $('body').removeClass('public').addClass('user');
+                $('body').removeClass('user').addClass('public');
+                site_functions.go_to_login();
             }
         }
         else
         {
+            $('body').removeClass('user').addClass('public');
             site_functions.go_to_login();
         }
     },
@@ -92,13 +75,6 @@ var dn_current_site_user = {
     }
 };
 
-function standeredTime(time) {
-    return moment(time).format('MMM DD YYYY, h:mm:ss A');
-}
-
-window['current_user'] = dn_current_site_user;
-var server_wait_loader = undefined;
-window['public_routes'] = ['/login', '/logout'];
 
 var site_functions = {
     processes: [],
@@ -252,14 +228,7 @@ var site_functions = {
         $(selector).toggle();
     }
 };
-window["functions"] = site_functions;
-site_functions['standeredTime'] = standeredTime;
-dn_current_site_user.initUserDataFromCookie();
 
-function getUrlLastItem() {
-    var point_id = window.location.toString().split("/");
-    return point_id[point_id.length - 1];
-}
 
 function addMainEventListeners() {
     $(document).on('mousedown touchstart', function(e) {
@@ -337,8 +306,7 @@ function addMainEventListeners() {
     });    
 }
 
-addMainEventListeners();
-(function() {    
+function setHeaderFixed() {    
     var showHeaderAt = 0;
     var win = $(window),
         body = $("body");
@@ -351,8 +319,8 @@ addMainEventListeners();
             }
         });
     }
-})();
-dn_current_site_user.verifyUserToken();
+}
+
 
 var public_methods = {
     'authsignup': {
@@ -472,3 +440,35 @@ function handleSessionExpiry() {
         }, session_time_limit);
     }
 }
+
+
+function check_if_touch_device() {
+    var wl = window.location;
+    if(wl.toString().indexOf('localhost') > -1)
+    {
+        is_local_host = true;
+    }
+    if (wl.hash) {
+        window['pathname'] = wl.hash.substr(1, wl.hash.length);
+    } else {
+        window['pathname'] = wl.toString().replace(window.location.origin, '');
+    }
+    try
+    { 
+        document.createEvent("TouchEvent");
+        is_mobile_device = true;
+        window['is_mobile_device'] = 1;
+    }
+    catch(e)
+    {
+         return false; 
+    }
+}
+
+window['current_user'] = dn_current_site_user;
+window["functions"] = site_functions;
+check_if_touch_device();
+addMainEventListeners();
+setHeaderFixed();
+dn_current_site_user.initUserDataFromCookie();
+dn_current_site_user.verifyUserToken();

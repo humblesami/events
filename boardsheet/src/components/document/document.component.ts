@@ -72,36 +72,6 @@ export class DocumentComponent implements OnInit {
         }
     }
 
-    loadLibs(libs_container){
-        var prefix = 'static/angular/assets/annotator';        
-        var libs = '';
-        libs += '<link href="' + prefix + '/shared/pdf.viewer.css" rel="stylesheet" type="text/css"  />';        
-
-        libs += '<link href="' + prefix + '/css/toolbar.css" rel="stylesheet" type="text/css" />';
-        libs += '<link href="' + prefix + '/css/custom.css" rel="stylesheet" type="text/css" />';
-
-        libs += '<script src="' + prefix + '/shared/pdf.viewer.js"></script>';
-        libs += '<script src="' + prefix + '/shared/rt_clipboard.js"></script>';
-        libs += '<script src="' + prefix + '/shared/color.js"></script>';
-        libs += '<script src="' + prefix + '/shared/jsonlib.js"></script>';
-        
-        libs += '<script src="' + prefix + '/modules/m0.js"></script>';
-        libs += '<script src="' + prefix + '/modules/m1.js"></script>';
-        libs += '<script src="' + prefix + '/modules/m2.js"></script>';
-        libs += '<script src="' + prefix + '/modules/m3.js"></script>';
-        libs += '<script src="' + prefix + '/modules/m4.js"></script>';
-
-        libs += '<script src="static/angular/assets/libs/js/jquery.mark.min.js"></script>';
-        libs += '<script src="static/angular/assets/libs/js/mark.min.js"></script>';
-        
-        
-        libs += '<script src="' + prefix + '/js/main.js"></script>';
-        libs += '<script src="' + prefix + '/js/annotator.js"></script>';
-
-        $(libs_container).removeAttr('uninitialized');
-        $(libs_container).append(libs);
-    }
-
     go_back()
     {
         this._location.back();

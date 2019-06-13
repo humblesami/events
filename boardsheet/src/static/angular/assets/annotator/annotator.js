@@ -1389,7 +1389,7 @@
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
                     var child_info = '<div>' + aComment.content + '</div>';
-                    aComment.date_time = window["functions"]['standeredTime'](aComment.date_time);
+                    aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
                     child_info += '<div class="user-time-info">';
                     child_info += '<span class"time">' + aComment.date_time + '</span>';
                     //child_info +='<span class="buttons">:</span>';

@@ -53,3 +53,9 @@ function hours_to_hoursNminutes(hours) {
     res = res +":"+ minutes;
     return res;
 }
+function standeredTime(time) {
+    return moment(time).format('MMM DD YYYY, h:mm:ss A');
+}
+window['dt_function'] = {
+    standeredTime: standeredTime,
+}
