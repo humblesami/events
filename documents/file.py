@@ -33,7 +33,7 @@ class File(models.Model):
     content = models.CharField(max_length=30, blank=True)
     pdf_doc = models.FileField(upload_to='converted/', null=True)
     file_type = models.CharField(max_length=128, default='')
-    attachment = models.FileField(upload_to='files/', validators=[validate_file_extension])
+    attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])
 
     def __str__(self):
         return self.name
