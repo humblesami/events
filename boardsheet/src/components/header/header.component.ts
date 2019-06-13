@@ -18,9 +18,25 @@ export class HeaderComponent implements OnInit {
 	content_search = false;
     search_key_word = '';
     global_search = true;
-    
+    search_results = {};
+    search_item_types = [];
     no_search = false;
-    
+    route_map = {
+        'meetings.Event': '/meeting/',
+        'meetings.Topic': '/topic/',
+        'resources.Folder': '/resource/',
+        'meetings.Committee': '/committees/',
+        'survey.Survey': '/survey/',
+		'meetings.NewsDocument': '/home/doc/',
+        'meetings.Profile': '/profile/',
+        'voting.Voting': '/voting/',
+
+        'voting.VotingDocument' : 'voting/doc/',
+        'meetings.MeetingDocument': '/meeting/doc/',
+        'resources.ResourceDocument': '/resource/doc/',
+        'meetings.SignDocument': '/signdoc/',
+        'meetings.AgendaDocument': '/topic/doc/',
+    };
 
     socketService : any
     constructor(private router: Router, private sserv : SocketService, private route: ActivatedRoute, private httpService: HttpService) {
@@ -60,56 +76,9 @@ export class HeaderComponent implements OnInit {
     doc_types = [];
     content_search_results = undefined;
 
-    search_results = {
-        meetings : [],
-        resources: [],
-        topics: [],
-        surveys: [],
-        committees:[],
-        documents: [],
-        users: [],
-        votings: [],
-        meeting_documents: [],
-        topic_documents: [],
-        resource_documents: [],
-        voting_documents: [],
-        sign_documents: [],
-        home_documents: []
-    };
-
-    route_map = {
-        'meetings.Event': ['/meeting/', 'meetings'],
-        'meetings.Topic': ['/topic/', 'topics'],
-        'resources.Folder': ['/resource/', 'resource'],
-        'meetings.Committee': ['/committees/', 'committee'],
-        'survey.Survey': ['/survey/', 'surveys'],
-		'meetings.NewsDocument': ['/home/doc/', 'document'],
-        'meetings.Profile': ['/profile/', 'user'],
-        'voting.Voting': ['/voting/', 'voting'],
-        
-        'voting.VotingDocument' : ['voting/doc/', 'voting_documents'],
-        'meetings.MeetingDocument': ['/meeting/doc/', 'meeting_documents'],
-        'resources.ResourceDocument': ['/resource/doc/', 'resource_documents'],
-        'meetings.SignDocument': ['/signdoc/', 'sign_documents'],
-        'meetings.AgendaDocument': ['/topic/doc/', 'topic_documents']
-    };
-
     search(){
         let obj_this = this;
     	obj_this.content_search = obj_this.is_content_search;
-
-        function add_result(item_type, item){
-            console.log(item_type, obj_this.search_results);
-            if(Array.isArray(obj_this.search_results[item_type]))
-            {
-                obj_this.search_results[item_type].push(item);
-            }
-            else
-            {
-                console.log(obj_this.search_results[item_type], 'is not array');
-            }
-        }
-
         let url = window.location + '';
         obj_this.search_key_word = obj_this.search_key_word.replace(/[^a-zA-Z0-9 ]/g, '');
         if(obj_this.search_key_word.length < 1) {
@@ -119,6 +88,8 @@ export class HeaderComponent implements OnInit {
             var success_cb = function (result) {
 				$('.searchbar-full-width').hide();
 				if(obj_this.content_search){
+                    obj_this.search_item_types=[];
+                    obj_this.search_results = {}
                     obj_this.doc_types = [];
                     obj_this.content_search_results = {};
 					result.forEach(item => {
@@ -134,15 +105,24 @@ export class HeaderComponent implements OnInit {
                             obj_this.content_search_results[item.file_type] = [item];
                         }
                     });
-                    console.log(obj_this.content_search_results, obj_this.doc_types);
+                    // console.log(obj_this.content_search_results, obj_this.doc_types);
 				}
 				else {
 					result.forEach(item => {                        
-						item['route'] = obj_this.route_map[item.model][0] + item.id;
-						let item_type = obj_this.route_map[item.model][1]
-						add_result(item_type, item);
-					});
-				}
+                        item['route'] = obj_this.route_map[item.model] + item.id;					
+                        var item_type = item.model.split('.')[1]+'s';
+						if(obj_this.search_results[item_type])
+                        {
+                            obj_this.search_results[item_type].push(item);
+                        }
+                        else
+                        {                            
+                            obj_this.search_item_types.push(item_type);
+                            obj_this.search_results[item_type] = [item];
+                        }
+                    });
+                    console.log(obj_this.search_results, obj_this.search_item_types);
+                }
                 if(result.length < 1) {
                     obj_this.no_search = true;
                 }

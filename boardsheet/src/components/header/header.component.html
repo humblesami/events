@@ -76,7 +76,7 @@
                 </div>
                 <div *ngIf="!no_search" class="container">
                     <h3 *ngIf="is_content_search" style="color: #696969">Search Results Based on Content of Documents.</h3>
-                    <div *ngIf="!content_search" class="row search-box-wrapper">
+                    <!-- <div *ngIf="!content_search" class="row search-box-wrapper">
                         <div *ngIf="search_results.users.length" class="col-sm">
                             <div class="result-box-info">
                                 <h2>Moderators</h2>
@@ -173,13 +173,25 @@
                                 </h3>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div *ngIf="content_search" class="row">
                         <div *ngFor="let doc_type of doc_types">
                             <div *ngIf="content_search_results[doc_type].length > 0" class="col-sm">
                                 <div class="result-box-info">
                                     <h2>{{doc_type | titlecase}} Documents</h2>
                                     <h3 *ngFor="let item of content_search_results[doc_type]">
+                                        <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div *ngIf="search_results" class="row">
+                        <div *ngFor="let item_type of search_item_types">
+                            <div *ngIf="search_results[item_type].length > 0" class="col-sm">
+                                <div class="result-box-info">
+                                    <h2>{{item_type}}</h2>
+                                    <h3 *ngFor="let item of search_results[item_type]">
                                         <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
                                     </h3>
                                 </div>
