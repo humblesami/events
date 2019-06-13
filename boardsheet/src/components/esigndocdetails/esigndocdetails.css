@@ -130,10 +130,17 @@
 .o_cp_right {
     display: none!important
 }
-
-#page_container1 {
-    height: calc(100vh - 225px);
+@media(min-width:548px){
+    #page_container1 {
+        height: calc(100vh - 306px);
+    }
 }
+@media(max-width:547px){
+    #page_container1 {
+        height: calc(100vh - 346px);
+    }
+}
+
 
 #nxxt_sign {
     top: 5px;

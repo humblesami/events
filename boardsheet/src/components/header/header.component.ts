@@ -18,46 +18,9 @@ export class HeaderComponent implements OnInit {
 	content_search = false;
     search_key_word = '';
     global_search = true;
-    search_results = {
-        meetings : [],
-        resources: [],
-        topics: [],
-        surveys: [],
-        committees:[],
-        documents: [],
-        users: [],
-        votings: [],
-		// signature_doc: [],
-		// resourse_doc:[],
-		// topic_doc:[],
-		// meeting_doc:[],
-        // home_doc:[],
-        // voting_doc:[],
-        // sign_doc: [],
-        meeting_documents: [],
-        topic_documents: [],
-        resource_documents: [],
-        voting_documents: [],
-        signature_documents: [],
-        home_documents: []
-    };
+    
     no_search = false;
-    route_map = {
-        'meetings.Event': ['/meeting/', 'meetings'],
-        'meetings.Topic': ['/topic/', 'topics'],
-        'resources.Folder': ['/resource/', 'resource'],
-        'meetings.Committee': ['/committees/', 'committee'],
-        'survey.Survey': ['/survey/', 'survey'],
-		'meetings.NewsDocument': ['/home/doc/', 'document'],
-        'meetings.Profile': ['/profile/', 'user'],
-        'voting.Voting': ['/voting/', 'voting'],
-
-        'voting.VotingDocument' : ['voting/doc/', 'voting_documents'],
-        'meetings.MeetingDocument': ['/meeting/doc/', 'meeting_documents'],
-        'resources.ResourceDocument': ['/resource/doc/', 'resource_documents'],
-        'meetings.SignDocument': ['/signdoc/', 'sign_documents'],
-        'meetings.AgendaDocument': ['/topic/doc/', 'topic_documents']
-    };
+    
 
     socketService : any
     constructor(private router: Router, private sserv : SocketService, private route: ActivatedRoute, private httpService: HttpService) {
@@ -97,37 +60,46 @@ export class HeaderComponent implements OnInit {
     doc_types = [];
     content_search_results = undefined;
 
+    search_results = {
+        meetings : [],
+        resources: [],
+        topics: [],
+        surveys: [],
+        committees:[],
+        documents: [],
+        users: [],
+        votings: [],
+        meeting_documents: [],
+        topic_documents: [],
+        resource_documents: [],
+        voting_documents: [],
+        sign_documents: [],
+        home_documents: []
+    };
+
+    route_map = {
+        'meetings.Event': ['/meeting/', 'meetings'],
+        'meetings.Topic': ['/topic/', 'topics'],
+        'resources.Folder': ['/resource/', 'resource'],
+        'meetings.Committee': ['/committees/', 'committee'],
+        'survey.Survey': ['/survey/', 'surveys'],
+		'meetings.NewsDocument': ['/home/doc/', 'document'],
+        'meetings.Profile': ['/profile/', 'user'],
+        'voting.Voting': ['/voting/', 'voting'],
+        
+        'voting.VotingDocument' : ['voting/doc/', 'voting_documents'],
+        'meetings.MeetingDocument': ['/meeting/doc/', 'meeting_documents'],
+        'resources.ResourceDocument': ['/resource/doc/', 'resource_documents'],
+        'meetings.SignDocument': ['/signdoc/', 'sign_documents'],
+        'meetings.AgendaDocument': ['/topic/doc/', 'topic_documents']
+    };
+
     search(){
         let obj_this = this;
     	obj_this.content_search = obj_this.is_content_search;
-        obj_this.search_results = {
-            meetings : [],
-            resources: [],
-            topics: [],
-            surveys: [],
-            committees:[],
-            documents: [],
-            users: [],
-            votings: [],
-            
-            // signature_doc: [],
-			// resourse_doc:[],
-			// topic_doc:[],
-			// meeting_doc:[],
-            // home_doc:[],
-            // voting_doc:[],
-            // sign_doc: [],
-
-            meeting_documents: [],
-            topic_documents: [],
-            resource_documents: [],
-            signature_documents: [],
-            voting_documents: [],
-            home_documents: []
-
-        };
 
         function add_result(item_type, item){
+            console.log(item_type, obj_this.search_results);
             if(Array.isArray(obj_this.search_results[item_type]))
             {
                 obj_this.search_results[item_type].push(item);
@@ -165,8 +137,7 @@ export class HeaderComponent implements OnInit {
                     console.log(obj_this.content_search_results, obj_this.doc_types);
 				}
 				else {
-					result.forEach(item => {
-                        console.log(item);
+					result.forEach(item => {                        
 						item['route'] = obj_this.route_map[item.model][0] + item.id;
 						let item_type = obj_this.route_map[item.model][1]
 						add_result(item_type, item);
