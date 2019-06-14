@@ -12,9 +12,9 @@ from django.core.exceptions import ValidationError
 def validate_file_extension(value):
     
     ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
-    valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls', '.ppt', '.pptx']
+    valid_extensions = ['.pdf', '.odt', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls', '.ppt', '.pptx']
     if not ext.lower() in valid_extensions:
-        raise ValidationError(u'Unsupported file extension. Only pdf and microsoft office documents(doc,docx,ppt.pptx,xls,xlsx) are allowed')
+        raise ValidationError(u'Unsupported file extension. Only pdf and microsoft office documents(odt, doc,docx,ppt.pptx,xls,xlsx) are allowed')
 
 def text_extractor(f):
     pdf = PdfFileReader(f)
@@ -61,7 +61,7 @@ class File(models.Model):
         ext = tmp[len(tmp) - 1]
         filename = self.attachment.name.replace("files/","").split(".")[0]
         pth = settings.BASE_DIR + self.attachment.url
-        if ext in ('doc','docx','ppt','pptx','pdf'):
+        if ext in ('odt', 'doc','docx','ppt','pptx','pdf'):
             self.doc2pdf(pth,ext,filename)
         elif ext == "xls" or ext =="xlsx":
             self.excel2xhtml(pth,filename)
