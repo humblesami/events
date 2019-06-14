@@ -1,0 +1,125 @@
+<div class="row d-flex justify-content-center">
+	<div class="col-sm-12 col-md-10 col-lg-8">
+		<div *ngIf="comments" class="comments main-container oe_read_only">
+			<div class="row row pt-5 pb-3">
+				<div class="btn-group col-sm-12">
+					<button [ngClass]="{active: comment_subtype === 1}" (click)="comment_subtype=1" class="btn btn-default btn-block">
+						Comments
+					</button>
+					<button [ngClass]="{active: comment_subtype === 2}" (click)="comment_subtype=2" class="btn btn-default btn-block">
+						Personal Notes
+					</button>
+				</div>
+			</div>
+			<div class="row">
+				<form class="col-lg-12">
+					<div class="form-group">
+						<div *ngIf="comment_subtype === 1">
+							<textarea name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="comment" placeholder="Add comments here."></textarea>
+						</div>
+						<div *ngIf="comment_subtype === 2">
+							<textarea name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="notes" placeholder="Add notes here"></textarea>
+						</div>
+						<button [disabled]="!new_comment" class="btn btn-primary" type = "submit" (click)="save_comment(null)" >Post</button>
+					</div>
+				</form>
+			</div>
+			
+			<div *ngIf="comment_subtype == 1" class="comments comments-container">
+				<div class="row" *ngFor="let c of comments">
+					<div id="{{c.id}}" *ngIf="c" class="col-lg-12">
+						<div class="CommentsWrapper">
+							<div class="comment">
+								<div class="CommentUserNameTimeWrap">
+									<div class="comment-user-pic">
+										<img src="static/assets/images/comment-user.png" alt="user" />
+									</div>
+								</div>
+								<div class="CommentsWrap">
+
+									<div class="mainthread">
+										<span class="comment-user" *ngIf="c.user">{{c.user.name}} : </span>
+										<div class="comment-body">
+											<div [innerHtml]="c.body.trim()"></div>
+										</div>
+									</div>
+									<div class="row comment_response main">
+										<span>{{c.create_date | date:'medium' }}</span>&nbsp;&nbsp;
+										<!-- <a *ngIf="0 && c.user.uid == myID" title="Delete comment" (click)="deleteComment(c.id, 'comment')" >
+											<i class="fa fa-trash" aria-hidden="true"></i>
+										</a> -->
+										<a title="Add reply" href="#">
+											Like
+										</a>
+										<a title="Add reply" (click)="commentReply(c)">
+											Reply
+										</a>
+										<div class="label replies-wrapper" title="Replies" *ngIf="c.children && c.children.length">
+											<div (click)="showReplies(c.id)">
+												<span *ngIf="!c['showRep']"><i class="fa fa-angle-down"></i></span>
+												<span *ngIf="c['showRep']"><i class="fa fa-angle-up"></i></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="reply-input">
+								<div *ngIf="c.active" class="reply-textarea-conatiner">
+									<textarea (keyup)="save_comment_key_up($event, c)" [(ngModel)]="new_reply"  class="form-control reply-box" rows="4" id="reply" placeholder="type here . . ."></textarea>
+								</div>
+
+								<div class="reply" *ngIf="c.children && c.children.length">
+
+									<div *ngIf="c['showRep']">
+										<div class="oform" *ngFor="let rep of c.children">
+											<div class="CommentUserNameTimeWrap">
+												<div class="commentreply-user-pic">
+													<img src="static/assets/images/comment-user.png" alt="user" />
+												</div>
+											</div>
+											<div class="ReplyMessageWrap">
+												<div class="reply message">
+													<span class="comment-user" *ngIf="rep.user">{{rep.user.name}} : </span>
+													<div class="comment-body">
+														<div [innerHtml]="rep.body.trim()"></div>
+													</div>
+												</div>
+												<div class="comment_response">
+													<span>{{c.create_date | date:'medium' }} </span>&nbsp;&nbsp;
+													<!-- <a title="Delete comment" (click)="deleteComment(rep.id, c.id)">
+														<i class="fa fa-trash" aria-hidden="true"></i>
+													</a> -->
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="comment_subtype == 2" class="container notes comments-container">
+				<div *ngFor="let c of notes">
+					<div *ngIf="c" class="row">
+						<div class="container">
+							<div class="row mainthread">
+								<span class="comment-user" *ngIf="c.user">{{c.user.name}} : </span>
+								<div class="comment-body">
+									<div [innerHtml]="c.body.trim()"></div>
+								</div>
+							</div>
+
+							<div class="row comment_response main">
+								<span>{{c.create_date | date:'medium'}} </span>
+								<!--<a title="Delete Note" (click)="deleteComment(c.id,  'note')" style="cursor: pointer">-->
+								<!--<i class="fa fa-trash" aria-hidden="true"></i>-->
+								<!--</a>-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

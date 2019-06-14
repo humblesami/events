@@ -1,0 +1,369 @@
+﻿<app-breadcrumb app="meetings" model="event" 
+*ngIf="meeting_object"
+rid="{{meeting_object.id}}" edit="1" delete="1" 
+routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
+title="{{meeting_object.name}}"></app-breadcrumb>
+
+<div class="router-outlet">
+    <div class="page-links">
+        <span class="prev next-prev-link" title="Privious">
+            <i class="fa fa-angle-left"></i>
+        </span>
+        <span class="next next-prev-link" title="Next">
+            <i class="fa fa-angle-right"></i>
+        </span>
+    </div>
+        <div class="container" *ngIf="meeting_object">
+        <div class=" form-details">
+            <div class="meeting-details-form">
+                <div class="d-flex justify-content-between">
+
+                    <div class="row note" *ngIf="conference_not_active">
+                        Meeting conference URL will be available 15 minutes before meeting start.
+                    </div>
+                    <div *ngIf="me && me.state && meeting_type == 'upcoming'">
+                        <div class="upcomingButton" id="tdmrb{{meeting_object.id}}">
+                            <button (click)="respond_invitation('accepted', meeting_object.id)" class="btn btn-primary">
+                                <i *ngIf="meeting_object.attendee_status == 'accepted' || meeting_object.status == 'Accept'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                                <span name="accepted">Accept</span>
+                            </button>
+                            <button (click)="respond_invitation('declined', meeting_object.id)" class="btn btn-primary">
+                                <i *ngIf="meeting_object.attendee_status == 'declined' || meeting_object.status == 'decline'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                                <span name="declined">Decline</span>
+                            </button>
+                            <button (click)="respond_invitation('tentative', meeting_object.id)" class="btn btn-primary">
+                                <i *ngIf="meeting_object.attendee_status == 'tentative' || meeting_object.status == 'tentative'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                                <span name="tentative">Tentative</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="" style="justify-content:flex-end;">
+                        <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
+                        <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
+                        <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
+                    </div>
+                </div>
+
+                
+                <div class="MainTitleHeadWrap">
+                    <div class="HeadingWrap">
+                        <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
+                    </div>
+                    <div class="MeetingBtnWrapper">
+                        <div class="btn-group">
+                            <a routerLink="/meetings/upcoming" class="btn">Upcoming</a>
+                            <a routerLink="/meetings/completed" class="btn">Completed</a>
+                            <a routerLink="/meetings/archived" class="btn">Archived</a>
+                            <a routerLink="/meetings/draft" class="btn">Draft</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="div1">
+
+                    <div class="row">
+                        <div *ngIf="me && me.state" class="col-md-4">
+                            <div class="meet-elements">
+                                My Status
+                            </div>
+                            <label class="meet-elementsInfo">
+                                {{me.state}}
+                            </label>
+                        </div>
+
+                        <!-- <div *ngIf="meeting_object.name" class="col-md-6">
+                                <div class="meet-elements">
+                                    Meeting Subject
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    {{meeting_object.name}}
+                                </label>
+                            </div> -->
+                    </div>
+                    
+<div class="row">
+                            <div *ngIf="meeting_object.start" class="col-md-6">
+                                    <div class="meet-elements">
+                                        Start Date & Time
+                                    </div>
+                                    <label class="meet-elementsInfo">
+                                        {{meeting_object.start | date:'medium' }}
+                                    </label>
+                                </div>
+
+                                <div *ngIf="meeting_object.stop" class="col-md-6">
+                                        <div class="meet-elements">
+                                            End Date & Time
+                                        </div>
+                                        <label class="meet-elementsInfo">
+                                            {{meeting_object.stop | date:'medium'}}
+                                        </label>
+                                    </div>
+                                    <div *ngIf="meeting_object.duration" class="col-md-6">
+                                            <div class="meet-elements">
+                                                Duration
+                                            </div>
+                                            <label class="meet-elementsInfo">
+                                                {{meeting_object.duration}}
+                                            </label>
+                                        </div>
+
+
+                    <!-- <div *ngIf="meeting_object.conference_status == 'active'"> -->
+
+                            <div class="col-md-6" *ngIf="meeting_object.video_call_link">
+                                <div class="meet-elements">
+                                    Video Call Link
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    <a href="{{meeting_object.video_call_link}}">{{meeting_object.video_call_link}}</a>
+                                </label>
+                            </div>
+
+                            <div class="col-md-6" *ngIf="meeting_object.conference_bridge_number">
+                                <div class="meet-elements">
+                                    Conference Bridge No.
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    {{meeting_object.conference_bridge_number}}
+                                </label>
+                            </div>
+
+                            <div class="col-md-6" *ngIf="meeting_object.pin">
+                                <div class="meet-elements">
+                                    Meeting PIN
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    {{meeting_object.pin}}
+                                </label>
+                            </div>
+
+
+
+                            <div *ngIf="meeting_object.location" class="col-md-6">
+                                <div class="meet-elements">
+                                    Location
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    {{meeting_object.location}}
+                                </label>
+                            </div>
+
+                            <div *ngIf="meeting_object.city" class="col-md-6">
+                                <div class="meet-elements">
+                                    City
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    {{meeting_object.city}}
+                                </label>
+                            </div>
+
+
+
+                            <div *ngIf="meeting_object.state" class="col-md-6">
+                                <div class="meet-elements">
+                                    State
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    {{meeting_object.state}}
+                                </label>
+                            </div>
+
+                            <div *ngIf="meeting_object.zip" class="col-md-6">
+                                <div class="meet-elements">
+                                    Zip Code
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    {{meeting_object.zip}}
+                                </label>
+                            </div>
+
+                            <div *ngIf="meeting_object.country" class="col-md-6">
+                                <div class="meet-elements">
+                                    Country
+                                </div>
+                                <label class="meet-elementsInfo">
+                                    {{meeting_object.country}}
+                                </label>
+                            </div>
+
+							<div  *ngIf="meeting_object.description" class="col-md-12">
+								<div class="meet-elements">
+									Description
+								</div>
+								<label class="meet-elementsInfo" [innerHtml]="meeting_object.description"></label>
+							</div>
+
+</div>
+
+
+                        
+
+                        
+
+                        
+                    <!-- </div> -->
+                </div>
+
+                <!-- <h2>Status {{meeting_object.conference_status}}</h2> -->				
+
+            </div>
+        </div>
+
+        <div *ngIf="meeting_object.topics && meeting_object.topics.length" class="title-wrapper">
+            <div class="modal-header">
+                Agenda Topics
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered boardsheet-table">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Title</th>
+                                <th>Lead</th>
+                                <th>Duration</th>
+                                <th>Attachment</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr style="cursor:pointer" routerLink="/topic/{{topic.id}}" *ngFor="let topic of meeting_object.topics">
+                                <td>{{topic.name}}</td>
+                                <td>{{topic.lead}}</td>
+                                <td >{{topic.duration}}</td>
+                                <td>
+                                    <div class="talbe-docs-wrapper">
+                                        <div *ngIf="topic.docs && topic.docs.length && topic.docs.length > 0">
+                                            <i class="fa fa-file"></i>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">
+            <div class="modal-header">
+                Roster
+            </div>
+            <div class="row">
+                <div class="kanban-card" *ngFor="let attendee of meeting_object.attendees">
+                    <a class="kanban-profiles-user-info-box">
+                        <div class="kanban-profiles-user-img">
+                            <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{attendee.photo}}">
+                        </div>
+                        <div class="meeting-details-roster-info-text">
+                            <h6>{{attendee.name}}</h6>
+                            <div *ngIf="attendee.response_by">Response By: {{attendee.response_by}}</div>
+                            <div *ngIf="attendee.email" class="">
+                                {{attendee.email}}
+                            </div>
+                            <div *ngIf="attendee.state" class="">
+                                <b>Status : </b> {{attendee.state}}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="meeting_object.surveys && meeting_object.surveys.length" class="title-wrapper">
+            <!--Surveys-->
+            <div class="modal-header">
+                Surveys
+            </div>
+            <div class="row">
+                <div class="kanban-card survey" *ngFor="let sur of meeting_object.surveys">
+                    <div class="SurveysInfoBox d-flex flex-wrap justify-content-between align-items-center">
+                        <div class="SurveysInfoBoxTitle">
+                            <span class="container">
+                                <h5>
+                                    <b>{{sur.name}}</b>
+                                </h5>
+                            </span>
+                        </div>
+                        <div class="">
+                            <button class="btn btn-primary" routerLink="/survey/{{sur.id}}">
+                                <span *ngIf = "sur.my_status == 'done'">Results</span>
+                                <span *ngIf = "sur.my_status == 'pending'">Start</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="meeting_object.votings && meeting_object.votings.length" class="title-wrapper">
+            <!--Votings-->
+            <div class="modal-header">
+                Approval/Voting
+            </div>
+            <div class="row">
+				<div class="kanban-card voting" *ngFor="let vote of meeting_object.votings">
+					<div class="VotingsInfoBox">
+						<div class="VotingsInfoBoxTitle ">
+							<h5>
+								<b>{{vote.name}}</b>
+							</h5>
+						</div>
+						<div class="bs-btnwrap">
+							<button class="btn btn-primary" routerLink="/voting/{{vote.id}}">
+								<span *ngIf = "vote.my_status != 'pending'">Results</span>
+								<span *ngIf = "vote.my_status == 'pending'">Start</span>
+							</button>
+						</div>
+					</div>
+				</div>
+            </div>
+        </div>
+
+        <div *ngIf="meeting_object.meeting_docs && meeting_object.meeting_docs.length" class="title-wrapper">
+            <div class="modal-header">
+                Meeting Documents
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4 col-lg-3" routerLink="/meeting/doc/{{doc.id}}" *ngFor="let doc of meeting_object.meeting_docs">
+                    <div class="DocumentWrapper gray-bge">
+                        <div class="DocIcon">
+                            <span class="rounded-circle"><i class="fa fa-file"></i></span>
+                        </div>
+                        <div class="DocInfoVertical">
+                            <div class="DocText">
+                                {{doc.name}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="meeting_object.sign_docs && meeting_object.sign_docs.length" class="DocumentsSignWrapper title-wrapper">
+            <div class="modal-header">
+                Documents To Sign
+            </div>
+            <div class="row docwrappercontainer">
+                <a class="col-sm-6 col-md-4 col-lg-4" routerLink="/signdoc/{{doc.id}}" *ngFor="let doc of meeting_object.sign_docs">
+                    <div class="DocumentWrapper signdocu gray-bg">
+                        <div class="DocIcon">
+                            <i class="fa fa-file"></i>
+                        </div>
+                        <div class="DocText">
+                            <div class="DocName">
+                                <h5>Title: {{doc.name}}</h5>
+                            </div>
+                            <div class="SignatureText font-11">
+                                <span>My Signature: </span>
+                                <span class="pending-status">{{doc.mp_signature_status}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <app-comments *ngIf="meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}"></app-comments>
+    </div>
+</div>

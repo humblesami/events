@@ -4,11 +4,6 @@
     <base href="/#/" />
 	<meta charset="utf-8" />	
 	<title>MeetVUE</title>
-	<script>
-	{% if not user %}
-		window.location = '/#/login';
-	{% endif %}
-	</script>
 	<script type="text/javascript" src="static/assets/libs/js/jquery-2.2.4.js"></script>
 	<script type="text/javascript" src="static/assets/config.js" id="config_script"></script>
 	<link rel="icon" type="image/x-icon" href="static/assets/favicon.ico" />
@@ -65,9 +60,6 @@
 
     <script src="static/assets/js/doc_preview.js"></script>
 	<app-root></app-root>
-
-	<script type="text/javascript" src="/static/build/runtime.js"></script>
-	<script type="text/javascript" src="/static/build/polyfills.js"></script>
-    <script type="text/javascript" src="/static/build/main.js"></script>
+    
 </body>
 </html>

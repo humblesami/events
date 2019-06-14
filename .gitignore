@@ -17,4 +17,5 @@ media/*
 */000*.py
 config.json
 */node_modules
-static/angular/build/static
+static/build/static
+package-lock.json

@@ -1,0 +1,78 @@
+﻿<app-paginator></app-paginator>
+<app-breadcrumb app="meetings" model="event" create="1" title="{{meeting_type}}"></app-breadcrumb>
+<div class="router-outlet">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="MainTitleHeadWrap">
+					<div class="HeadingWrap">
+						<img src="static/assets/images/meeting-icon.png" alt="" /> Meetings
+					</div>
+					<div class="MeetingBtnWrapper">
+						<div class="btn-group">
+							<a routerLink="/meetings/upcoming" class="btn">Upcoming</a>
+							<a routerLink="/meetings/completed" class="btn">Completed</a>
+							<a routerLink="/meetings/archived" class="btn">Archived</a>
+							<a routerLink="/meetings/draft" class="btn">Draft</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container" *ngIf="no_meet" >
+		<div class="row">
+			<div class="col-lg-12 ">
+				<div class="jumbotron text-center">
+					<h1>No Meetings</h1>
+					<hr>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="kanban-card" *ngFor="let meeting_object of meeting_list">
+				<div class="kanban-meeting-info">
+					<a class="kanban-upcoming-meeting" routerLink="/meeting/{{meeting_object.id}}">
+						<div class="CalendarDateWrapper">
+							<span *ngIf="meeting_object.start" class="CalendarDateWrap">
+								<span class="kanban-upcoming-meeting-date">
+									{{meeting_object.start_dt.day}}
+								</span>
+								<span>
+									{{meeting_object.start_dt.month_year}}
+								</span>
+								<span>
+									{{meeting_object.start_dt.time}}
+								</span>
+							</span>
+						</div>
+						<div class="Info">
+							<p *ngIf="meeting_object.name">
+								<b>{{meeting_object.name}}</b>
+							</p>
+							<span *ngIf="meeting_object.location">{{meeting_object.location}}</span>
+						</div>
+					</a>
+					<div *ngIf="meeting_type == 'upcoming'" class="upcomingButton btn-flex-1" id="tdmrb{{meeting_object.id}}">
+						<button (click)="respond_invitation('accepted', meeting_object.id)" class="btn btn-meeting">
+							<i *ngIf="meeting_object.attendee_status == 'accepted'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+							<span name="accepted">Accept</span>
+						</button>
+						<button (click)="respond_invitation('declined', meeting_object.id)" class="btn btn-meeting">
+							<i *ngIf="meeting_object.attendee_status == 'declined'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+							<span name="declined">Decline</span>
+						</button>
+						<button (click)="respond_invitation('tentative', meeting_object.id)" class="btn btn-meeting">
+							<i *ngIf="meeting_object.attendee_status == 'tentative'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+							<span name="tentative">Tentative</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
