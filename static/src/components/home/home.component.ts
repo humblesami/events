@@ -18,13 +18,6 @@ export class HomeComponent implements OnInit {
         public router: Router,
         private sanitizer: DomSanitizer,
         private socketService: SocketService) {
-        this.home_data = {
-            doc_ids: [],
-            photo: '',
-            news : {},
-            to_do_items: {}
-
-        }
         $('#collapsibleNavbar').children().eq(0).addClass('active');
     }
 
@@ -77,7 +70,7 @@ export class HomeComponent implements OnInit {
                 console.log("invalid data", home_data);
                 return;
             }
-            home_data  = {
+            home_data = {
                 news: home_data.news,
                 doc_ids: home_data.doc_ids,
                 video_ids: home_data.video_ids,
@@ -111,7 +104,6 @@ export class HomeComponent implements OnInit {
                 }
             });
             home_data.video_ids = valid_videos;
-
             obj_this.home_data = home_data;
             var to_do_items = obj_this.home_data.to_do_items;
             if (to_do_items.pending_meetings.length) {

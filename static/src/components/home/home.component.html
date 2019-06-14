@@ -1,17 +1,17 @@
 <app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1">
 </app-breadcrumb>
 <div class="router-outlet home-container" *ngIf="ng_init">
-    <div id="welcome">
+    <div id="welcome" *ngIf="home_data">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 WelcomeContent">
                 <h4 class="HomeTitle">
-                    <span>{{home_data.title}}</span>
+                    <span>{{home_data.news.name}}</span>
                 </h4>
                 <div class="HomePageDiscription">
                     <div *ngIf="home_data.description" class="HomePageContentText">
                         <div class="HomePageContentImg">                        
-                            <img width="100%" src="{{home_data.photo}}">
+                            <img width="100%" src="{{socketService.server_url}}{{home_data.news.photo}}">
                         </div>
                         <div id="home-content" [innerHtml]="home_data.description"></div>
                     </div>
@@ -82,9 +82,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div style="padding: 10%" *ngIf="!home_data.title && !home_data.description">
-            <h1>WELCOME<br>TO MeetVUE</h1>
         </div>
         <section *ngIf="home_data.doc_ids && home_data.doc_ids.length" class="HomepageDocumentSection">
             <div class="container">
@@ -280,6 +277,9 @@
                 <h1>Congratulations!<br>You have no task pending :)</h1>
             </div>
         </div>
+    </div>
+    <div id="welcome" *ngIf="!home_data">
+        <h3>Welcomr to boardsheet, no message updated yet</h3>
     </div>
     <div class="modal fade video" id="videoModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">

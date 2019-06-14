@@ -26,13 +26,7 @@ export class CalendarComponent implements OnInit {
     get_home_data() {
         var obj_this = this;
         var success_cb = function(home_data) {
-            if (!home_data['to_do_items']) {
-                console.log("invalid data", home_data);
-                return;
-            }
-            home_data = {
-                calendar: home_data.calendar
-            };
+            console.log(home_data);
             obj_this.home_data = home_data;
             obj_this.show_calendar();
         };
@@ -259,11 +253,10 @@ export class CalendarComponent implements OnInit {
             response: response,
             no_loader: 1
         };
-        var meeting_being_updated;
-        obj_this.home_data.to_do_items.pending_meetings.forEach((meeting: any) => {
-            if (meeting.id === meet_id) {
-                meeting_being_updated = meeting;
-            }
+        
+        let pending_meetings = obj_this.home_data.to_do_items.pending_meetings;
+        var meeting_being_updated = pending_meetings.filter(function(item){
+            return item.id == meet_id;
         });
         if (response) {
             let args = {
