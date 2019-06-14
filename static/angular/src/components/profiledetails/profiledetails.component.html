@@ -444,12 +444,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
     </div>
 
 
-    <div class="container">
-        <div class="row edit-buttons edit-mode">
-            <a class="btn btn-primary cancel" (click)="editProfile()" type="button">Cancel</a>
-            <a class="btn btn-primary save" (click)="onSubmit()" type="submit">Save</a>
-        </div>
+    <div class="container">        
         <div class="details-card edit-mode" *ngIf="edit_mode">
+            <div class="row edit-buttons edit-mode">
+                <a class="btn btn-primary cancel" (click)="editProfile()" type="button">Cancel</a>
+                <a class="btn btn-primary save" (click)="onSubmit()" type="submit">Save</a>
+            </div>
             <div class="row">
                 <div class="container row">
                     <div class="col-sm-9 UserProfileDiscription">
