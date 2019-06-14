@@ -60,7 +60,7 @@
 
 
 html, body{
-    height: 100%;    
+    height: 100%;
     overflow: hidden;
 }
 .form-control:focus,
@@ -68,7 +68,7 @@ html, body{
     outline: none;
     box-shadow: none;
 }
-.router-outlet{    
+.router-outlet{
     height: calc(100vh - 110px);
     overflow: auto;
     padding-top: 1%;
@@ -293,7 +293,7 @@ body.fixed .header-fixed {
 .breadcrumb {
     font-size: 1.5rem;
     font-weight: bold;
-    background: #f1f2f4;    
+    background: #f1f2f4;
 }
 
 
@@ -393,11 +393,6 @@ a,
 #main-div .img-thumbnail-sm {
     width: 28px;
     height: 28px;
-}
-
-#main-div .img-thumbnail-md {
-    width: 55px;
-    height: 60px;
 }
 
 .modal.fade .modal-dialog {
@@ -591,7 +586,7 @@ breadcrumb
     justify-content: space-between;
     flex-direction: row-reverse;
     align-items: center;
-    
+
     background: #f1f2f4;
     min-height: 40px;
     padding: 0 20px 0 15px;
@@ -826,6 +821,9 @@ last-login-details
     text-transform: capitalize;
     font-weight: 400;
 } */
+.kanban-profiles-user-img{
+	margin-right:15px;
+}
 
 .kanban-profiles-user-info-box {
     display: flex;
@@ -836,8 +834,35 @@ last-login-details
     align-items: flex-start;
     flex-wrap: wrap;
     height: 100%;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
 }
+.kanban-profiles-user-name{
+        margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 15px;
+    color: #4D4F5C;
+    font-weight: 500;
+    line-height:17px;
+    }
+
+.kanban-profiles-user-img{
+    margin-right: 15px;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    border-radius: 50%;
+    flex: 0 0 42px;
+}
+
+.kanban-profiles-user-img img{
+    max-width: 100%;
+}
+
+  .kanban-profiles-user-email{
+	font-size: 14px;
+	color: #43425D;
+  }
 
 .kanban-folder i {
     font-size: 30px;
@@ -1094,8 +1119,8 @@ th.fc-day-header.fc-widget-header {
     position: relative;
     z-index: 200;
 }
-    
-button.navbar-toggler {    
+
+button.navbar-toggler {
     padding: 0;
     z-index: 200;
     color: var(--toggle-menu-color);
@@ -1385,7 +1410,7 @@ input#search-box {
 
 .result-box-info h2{
     font-size: 1.2em;
-    margin:0 0 15px; 
+    margin:0 0 15px;
 }
 
 .result-box-info h3{
@@ -1556,7 +1581,7 @@ div#search-modal {
 
 .main-user-navbar {
     display: flex;
-    align-items: center;    
+    align-items: center;
 }
 
 .main-user-navbar button {
@@ -1832,7 +1857,7 @@ div#search-modal {
     overflow: hidden;
     opacity: 0.9;
     height: 36px;
-    margin-left: 5px;   
+    margin-left: 5px;
 }
 
 
@@ -2202,7 +2227,7 @@ div#search-modal {
 	}
 }
 
-.notification-container .chat-list , 
+.notification-container .chat-list ,
 .notification-container .notification-list{
     position: fixed;
     display: none;
@@ -2213,7 +2238,7 @@ div#search-modal {
     background: white;
     max-height: calc(100vh - 40px);
     overflow: auto;
-    box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19);    
+    box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19);
     padding: 10px;
     border: 1px solid #dadada;
 }
@@ -2242,11 +2267,11 @@ div#search-modal {
 }
 
 
-.notification-container .chat-list-close, 
+.notification-container .chat-list-close,
 .notification-container .notification-list-close{
 	cursor: pointer;
     background: red;
-    padding: 0 5px;    
+    padding: 0 5px;
     float: right;
     color: white;
 }
@@ -2370,7 +2395,7 @@ body.iframe {
     padding: 5px;
 }
 
-#call_modal .call_header buton{    
+#call_modal .call_header buton{
     cursor:pointer;
     padding: 5px;
     background: #c23616;
@@ -2383,7 +2408,7 @@ body.iframe {
 
 #call_modal .incoming_call_message
 {
-    text-align: center;    
+    text-align: center;
     padding: 20px;
 }
 
@@ -2395,7 +2420,7 @@ button
     padding-left: 0;
     list-style: none;
   }
-  
+
   .app-sidebar {
     position: fixed;
     top: 70px;
@@ -2414,21 +2439,21 @@ button
     transition: left 0.3s ease,
    width 0.3s ease;
   }
-  
+
   .app-sidebar::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   .app-sidebar::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
   }
-  
+
   @media print {
     .app-sidebar {
       display: none;
     }
   }
-  
+
   @media (max-width: 767px) {
     .app-sidebar__overlay {
       position: fixed;
@@ -2439,9 +2464,9 @@ button
       z-index: 9;
     }
   }
-  
-  
-  
+
+
+
   .app-menu {
     margin-bottom: 0;
   }
@@ -2477,7 +2502,7 @@ button
       text-decoration: none;
       color: #ffffff;
   }
-  
+
   .app-menu__icon {
         -webkit-box-flex: 0;
         -ms-flex: 0 0 auto;
@@ -2499,22 +2524,22 @@ button
         -ms-flex: 1 1 auto;
             flex: 1 1 auto;
   }
-  
+
   .treeview.is-expanded [data-toggle='treeview'] {
     border-left-color: #009688;
     background: #0d1214;
   }
-  
+
   .treeview.is-expanded .treeview-menu {
     max-height: 100vh;
   }
-  
+
   .treeview.is-expanded .treeview-indicator {
     -webkit-transform: rotate(90deg);
         -ms-transform: rotate(90deg);
             transform: rotate(90deg);
   }
-  
+
   .treeview-menu {
     max-height: 0;
     overflow: hidden;
@@ -2523,7 +2548,7 @@ button
     transition: max-height 0.3s ease;
     background: #2a383e;
   }
-  
+
   .treeview-item {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -2535,17 +2560,17 @@ button
     font-size: 1em;
     color: #fff;
   }
-  
+
   .treeview-item.active, .treeview-item:hover, .treeview-item:focus {
     background: #0d1214;
     text-decoration: none;
     color: #fff;
   }
-  
+
   .treeview-item .icon {
     margin-right: 5px;
   }
-  
+
   .treeview-indicator {
     -webkit-transform-origin: center;
         -ms-transform-origin: center;
@@ -2556,7 +2581,7 @@ button
     transition: transform 0.3s ease;
     transition: transform 0.3s ease, -webkit-transform 0.3s ease;
   }
-  
+
   @media (min-width: 768px) {
     .sidebar-mini.sidenav-toggled .app-sidebar__user-name,
     .sidebar-mini.sidenav-toggled .app-sidebar__user-designation,
@@ -2574,7 +2599,7 @@ button
       left: 0;
       width: 70px;
     }
-    
+
     .sidebar-mini.sidenav-toggled .app-menu__item:hover {
       overflow: visible;
     }
@@ -2653,27 +2678,27 @@ button
 
 
 @media (max-width: 767px) {
-    .sidebar-mini.sidenav-toggled .app-sidebar 
+    .sidebar-mini.sidenav-toggled .app-sidebar
     {
         width: 0;
     }
 }
-  
+
 .dropdown-menu {
     border-radius: 0;
 }
-  
+
   .dropdown-menu.dropdown-menu-right {
     left: auto;
     right: 0;
   }
-  
+
   .dropdown-item .fa,
   .dropdown-item .icon {
     margin-right: 5px;
     vertical-align: middle;
   }
-  
+
   .app-content {
     /* min-height: calc(100vh - 63px);*/
     margin-top: 0px;
@@ -2682,19 +2707,19 @@ button
     -o-transition: margin-left 0.3s ease;
     transition: margin-left 0.3s ease;
   }
-  
+
   @media (min-width: 768px) {
     .app-content {
       margin-left: 230px;
     }
   }
-  
+
   @media (max-width: 767px) {
     .app-content {
       min-width: 100%;
     }
   }
-  
+
 
 .bs-btnwrap{
     display: flex;
@@ -2749,6 +2774,10 @@ body.public .app-sidebar
 .HeadingWrap{
     color: #2B2B2B;
     font-size: 30px;
+}
+.HeadingWrap>img {
+    position: relative;
+    top: -2px;
 }
 
 .sidebar-mini.sidenav-toggled .app-sidebar
@@ -2808,7 +2837,7 @@ span.kanban-upcoming-meeting-date {
 .kanban-meeting-info{
     background:#F3F3F3;
     display: flex;
-    border-radius: 3px; 
+    border-radius: 3px;
     flex-direction: column;
 }
 .kanban-card.survey
@@ -2897,7 +2926,7 @@ span.kanban-upcoming-meeting-date {
 
 .PdfViewerWrapper{
     background: rgba(0, 0, 0, 0.02);
-    padding:20px 0; 
+    padding:20px 0;
 }
 
 .PdfViewerWrapper .pdfViewer .page {
@@ -2951,7 +2980,7 @@ span.kanban-upcoming-meeting-date {
     border: none;
     border-radius: 6px;
     padding-top:20px;
-    padding-bottom: 20px; 
+    padding-bottom: 20px;
     }
 .Modal-Folder-Box{
     padding: 0 30px;
@@ -2997,3 +3026,27 @@ span.kanban-upcoming-meeting-date {
 #CreateFolder button.close:hover{
     opacity: 0.5;
 }
+
+.VotingsInfoBox{
+    background: #F3F3F3;
+    min-height: 110px;
+}
+.UpdateAddSignBtn{
+	background: #4B74B5;
+    color: #ffffff;
+    display: block;
+    border-radius: 25px;
+    height: 36px;
+    line-height: 35px;
+    text-align: center;
+    font-size: 13px;
+}
+.UpdateAddSignBtn:hover{
+	background:#000000;
+	color:#ffffff;
+}
+.UpdateAddSignBtn i{
+	padding-right:5px;
+	font-size: 11px;
+}
+

@@ -22,7 +22,7 @@ h5, .h5 {
     border: 1px solid #A2A2A2;
     border-radius: 8px;
     padding: 10px 20px;
-    margin: 20px 0;
+    margin: 10px 0 20px 0;
 }
 .active{
     background-color: #9c4784 !important;
@@ -185,9 +185,6 @@ h5, .h5 {
 } */
 
 
-.kanban-profiles-user-img{
-    margin-right: 10px;
-}
 .kanban-profiles-user-info{
     flex: 1 1 auto;
 }

@@ -257,20 +257,15 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
 
 						<div class="row mb-2">
-                            <div *ngIf="my_profile" class="col-sm-12">
-                                <label>
-                                    <b>
-										<span  *ngIf="profile_data.signature_data">Update </span>
-										<span  *ngIf="!profile_data.signature_data">Add </span>
-										Signature</b>
-                                    <a
-                                        (click)='init_sign()'
-                                        class="fa fa-pen fa-lg init_sign"
-                                    >
-                                    </a>
-                                </label>
+                            <div *ngIf="my_profile" class="col-sm-3">
+                                <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
+									<i class="fa fa-pen"></i>
+									<span  *ngIf="profile_data.signature_data">Update </span>
+									<span  *ngIf="!profile_data.signature_data">Add </span>
+									Signature
+								</a>
                             </div>
-                            <div class="col-sm-12" style="display: flex;">
+                            <div class="col-sm-9" style="display: flex;">
                                 <div style="position:relative;cursor: pointer;">
                                     <img class="strt_sign profile " style="width: 100%;"
                                         *ngIf="profile_data.signature_data"

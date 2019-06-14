@@ -15,9 +15,15 @@ title="{{committee.name}}"></app-breadcrumb>
 
         <div class="container">
             <div *ngIf="committee" class="deatils-form">
-                <h2 class="heading-title">
-                    <span>{{committee.name}}</span>
-                </h2>
+				<div class="row">
+                    <div class="col-lg-12">
+                        <div class="MainTitleHeadWrap">
+                            <div class="HeadingWrap">
+                                <img src="static/angular/assets/images/committees.png" alt="" /> {{committee.name}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- <div class="row">
                         <div class="col-sm-4" style="border-right: 1px solid #cccccc;">
                             <label>

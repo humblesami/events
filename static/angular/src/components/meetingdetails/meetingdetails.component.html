@@ -81,9 +81,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </div> -->
                     </div>
                     
-
-                    <div class="row mt-4">
-                            <div *ngIf="meeting_object.start" class="col-md-4">
+<div class="row">
+                            <div *ngIf="meeting_object.start" class="col-md-6">
                                     <div class="meet-elements">
                                         Start Date & Time
                                     </div>
@@ -92,7 +91,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     </label>
                                 </div>
 
-                                <div *ngIf="meeting_object.stop" class="col-md-4">
+                                <div *ngIf="meeting_object.stop" class="col-md-6">
                                         <div class="meet-elements">
                                             End Date & Time
                                         </div>
@@ -100,7 +99,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                             {{meeting_object.stop | date:'medium'}}
                                         </label>
                                     </div>
-                                    <div *ngIf="meeting_object.duration" class="col-md-4">
+                                    <div *ngIf="meeting_object.duration" class="col-md-6">
                                             <div class="meet-elements">
                                                 Duration
                                             </div>
@@ -108,11 +107,11 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                                 {{meeting_object.duration}}
                                             </label>
                                         </div>
-                    </div>
+
 
                     <!-- <div *ngIf="meeting_object.conference_status == 'active'"> -->
-                        <div class="row">
-                            <div class="col-md-4" *ngIf="meeting_object.video_call_link">
+
+                            <div class="col-md-6" *ngIf="meeting_object.video_call_link">
                                 <div class="meet-elements">
                                     Video Call Link
                                 </div>
@@ -121,7 +120,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 </label>
                             </div>
 
-                            <div class="col-md-4" *ngIf="meeting_object.conference_bridge_number">
+                            <div class="col-md-6" *ngIf="meeting_object.conference_bridge_number">
                                 <div class="meet-elements">
                                     Conference Bridge No.
                                 </div>
@@ -130,7 +129,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 </label>
                             </div>
 
-                            <div class="col-md-4" *ngIf="meeting_object.pin">
+                            <div class="col-md-6" *ngIf="meeting_object.pin">
                                 <div class="meet-elements">
                                     Meeting PIN
                                 </div>
@@ -138,10 +137,10 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     {{meeting_object.pin}}
                                 </label>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div *ngIf="meeting_object.location" class="col-md-8">
+
+
+                            <div *ngIf="meeting_object.location" class="col-md-6">
                                 <div class="meet-elements">
                                     Location
                                 </div>
@@ -150,53 +149,54 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 </label>
                             </div>
 
-                            <div class="col-md-4">
+                            <div *ngIf="meeting_object.city" class="col-md-6">
                                 <div class="meet-elements">
                                     City
                                 </div>
                                 <label class="meet-elementsInfo">
-                                    Lahore
+                                    {{meeting_object.city}}
                                 </label>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-4">
+
+
+                            <div *ngIf="meeting_object.state" class="col-md-6">
                                 <div class="meet-elements">
                                     State
                                 </div>
                                 <label class="meet-elementsInfo">
-                                    Punjab
+                                    {{meeting_object.state}}
                                 </label>
                             </div>
 
-                            <div class="col-md-4">
+                            <div *ngIf="meeting_object.zip" class="col-md-6">
                                 <div class="meet-elements">
                                     Zip Code
                                 </div>
                                 <label class="meet-elementsInfo">
-                                    54000
+                                    {{meeting_object.zip}}
                                 </label>
                             </div>
 
-                            <div class="col-md-4">
+                            <div *ngIf="meeting_object.country" class="col-md-6">
                                 <div class="meet-elements">
                                     Country
                                 </div>
                                 <label class="meet-elementsInfo">
-                                    Pakistan
+                                    {{meeting_object.country}}
                                 </label>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div  *ngIf="meeting_object.description" class="col-md-12">
-                                <div class="meet-elements">
-                                    Description
-                                </div>
-                                <label class="meet-elementsInfo" [innerHtml]="meeting_object.description"></label>
-                            </div>
-                        </div>
+							<div  *ngIf="meeting_object.description" class="col-md-6">
+								<div class="meet-elements">
+									Description
+								</div>
+								<label class="meet-elementsInfo" [innerHtml]="meeting_object.description"></label>
+							</div>
+
+</div>
+
+
                         
 
                         
@@ -303,23 +303,21 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 Approval/Voting
             </div>
             <div class="row">
-                <div class="kanban-card survey" *ngFor="let vote of meeting_object.votings">
-                    <div class="SurveysInfoBox d-flex flex-wrap justify-content-between align-items-center">
-                        <div class="SurveysInfoBoxTitle">
-                            <span class="container">
-                                <h5>
-                                    <b>{{vote.name}}</b>
-                                </h5>
-                            </span>
-                        </div>
-                        <div class="">
-                            <button class="btn btn-primary" routerLink="/voting/{{vote.id}}">
-                                <span *ngIf = "vote.my_status != 'pending'">Results</span>
-                                <span *ngIf = "vote.my_status == 'pending'">Start</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+				<div class="kanban-card voting" *ngFor="let vote of meeting_object.votings">
+					<div class="VotingsInfoBox">
+						<div class="VotingsInfoBoxTitle ">
+							<h5>
+								<b>{{vote.name}}</b>
+							</h5>
+						</div>
+						<div class="bs-btnwrap">
+							<button class="btn btn-primary" routerLink="/voting/{{vote.id}}">
+								<span *ngIf = "vote.my_status != 'pending'">Results</span>
+								<span *ngIf = "vote.my_status == 'pending'">Start</span>
+							</button>
+						</div>
+					</div>
+				</div>
             </div>
         </div>
 
