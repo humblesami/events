@@ -3,8 +3,6 @@
 .vscode
 .idea
 */.idea
-*/odoochat/*config.js
-custom_base
 node_modules
 */__pycache__
 *pycache*
@@ -12,7 +10,6 @@ db.sqlite3
 db.*
 media
 media/*
-static/angular/static
 */migrations
 */migrations/*
 */migrations/*.py
@@ -20,5 +17,4 @@ static/angular/static
 */000*.py
 config.json
 */node_modules
-*/build/static
-*/build/assets
+static/angular/build/static
