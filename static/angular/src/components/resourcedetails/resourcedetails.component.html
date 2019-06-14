@@ -20,7 +20,7 @@
 
 <div class="router-outlet">
         
-  
+
     <!-- <link rel="stylesheet" href="static/angular/assets/css/components/resourcedetails.css"> -->
     <div *ngIf="folder">
        
@@ -40,14 +40,17 @@
             </div>
             <p></p>
             <h6 *ngIf="!(no_folders)">Sub Folders</h6>
-            <div class="row">
-                <div class="kanban-card" *ngFor="let folder of folder.sub_folders">
-                    <a routerLink="/resource/{{folder.id}}" class="kanban-folder">
-                        <i class="fa fa-folder"></i>
-                        <span>{{folder.name}}</span>
-                    </a>
-                </div>
-            </div>
+            <div class="row pl-3 pr-3">
+				<div class="col-md-3 kanban-folder-border" *ngFor="let folder of folder.sub_folders">
+					<a routerLink="/resource/{{folder.id}}" class="kanban-folder">
+
+						<span>{{folder.name}}</span>
+						<div class="Folderwrapper">
+								<img src="static/angular/assets/images/folder.png" alt="user" />
+						</div>
+					</a>
+				</div>
+			</div>
         </div>
     </div>
 </div>

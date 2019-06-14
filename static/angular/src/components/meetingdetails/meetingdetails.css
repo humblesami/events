@@ -10,20 +10,6 @@
 h5, .h5 {
     font-size: 0.898rem;
 }
-
-.meet-elements {
-    font-weight: bolder;
-    color: #3059C9;
-    font-size: 15px;
-    font-weight: 500;
-}
-.meet-elementsInfo{
-    display: block;
-    border: 1px solid #A2A2A2;
-    border-radius: 8px;
-    padding: 10px 20px;
-    margin: 10px 0 20px 0;
-}
 .active{
     background-color: #9c4784 !important;
     color: white;

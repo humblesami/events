@@ -1,4 +1,4 @@
-﻿<app-breadcrumb app="meetings" model="{{type}}" 
+﻿<app-breadcrumb app="meetings" model="{{type}}"
 rid="{{profile_data.id}}" *ngIf="!my_profile" edit="1" delete="1"
 routes='[{"title":"Profiles", "link":"/profiles"}, {"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
@@ -32,9 +32,10 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
-
-			<form class="details-card">
-                <div class="row">
+		</div>
+		<form class="details-card">
+			<div class="container">
+				<div class="row mb-5">
                     <div class="col-sm-12 col-md-3 col-lg-2">
                         <div class="ProfileUserNameJonbWrapper">
                             <div class="ProfileChangeSaveWrapper">
@@ -78,7 +79,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <div class="col-sm-12">
                                 <h3>Resume</h3>
                             </div>
-                            <a routerLink="/resume/doc/{{profile_data.resume.id}}" class="kanban-card">
+                            <a routerLink="/resume/doc/{{profile_data.resume.id}}" class="kanban-card profiledataresume">
                                 <div class="DocumentWrapper">
                                     <div class="DocIcon">
                                         <i class="fa fa-file"></i>
@@ -88,7 +89,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
-                        <div class="Pro-info">
+                        <div class="ProFileHeadWrap">
                             PERSONAL INFO
                         </div>
                         <div *ngIf="profile_data.email" class="row mb-2">
@@ -234,7 +235,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 {{profile_data.board_joing_date | date:'MMM dd,yyyy'}}
                             </div>
                         </div>
-                        <div *ngIf="profile_data.bio" class="row  mb-2">
+                        <div *ngIf="profile_data.bio" class="row  mb-3">
                             <div class="col-sm-3">
                                 <label for="website">
                                     <b>Bio</b>
@@ -279,172 +280,188 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
                     </div>
                 </div>
-                <div class="row">
-                    <div class="container">
+			</div>
+			<div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+				<div class="container">
+					<!-- Diversity Information -->
+					<div class="row assistant" *ngIf="admin_info">
+						<div class="col-sm-12">
+							<h3 class="clrBlue mb-5">
+								Diversity Information
+							</h3>
+						</div>
+						<div class="admin_info_after_name container">
+							<div *ngIf="profile_data.ethnicity" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Ethnicity</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.ethnicity}}
+								</div>
+							</div>
+							<div *ngIf="profile_data.gender" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Gender</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.gender}}
+								</div>
+							</div>
+							<div *ngIf="profile_data.veteran" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Veteran</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.veteran}}
+								</div>
+							</div>
 
 
-                        <!-- Diversity Information -->
-                        <div class="row assistant" *ngIf="admin_info">
-                            <div class="col-sm-12">
-                                <h3>
-                                    <b>Diversity Information</b>
-                                </h3>
-                            </div>
-                            <div class="admin_info_after_name container">
-                                <div *ngIf="profile_data.ethnicity" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Ethnicity</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.ethnicity}}
-                                    </div>
-                                </div>
-                                <div *ngIf="profile_data.gender" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Gender</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.gender}}
-                                    </div>
-                                </div>
-                                <div *ngIf="profile_data.veteran" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Veteran</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.veteran}}
-                                    </div>
-                                </div>
+							<div *ngIf="profile_data.disability" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Disability</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.disability}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+				<div class="container">
+					<!--Admin Details-->
+					<div class="row assistant" *ngIf="admin_info">
 
 
-                                <div *ngIf="profile_data.disability" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Disability</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.disability}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+						<div class="col-sm-12">
+							<h3 class="clrBlue mb-5">
+								Administrative Assistant
+							</h3>
+						</div>
 
-                        <!--Admin Details-->
-
-                        <div class="row assistant" *ngIf="admin_info">
-                            <div class="col-sm-12">
-                                <h3>
-                                    <b>Administrative Assistant</b>
-                                </h3>
-                            </div>
-                            <div class="container row">
-                                <div class="col-sm-2">
-									<div class="ProfileChangeSaveWrapper">
-										<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
+						<div class="col-sm-2">
+							<div class="ProfileUserNameJonbWrapper">
+								<div class="ProfileChangeSaveWrapper">
+									<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
 										<img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
+								</div>
+
+								<div  class="row" *ngIf="profile_data.name">
+									<div class="col-sm-12 UserProfileNameTittle">
+										{{profile_data.name}}
 									</div>
 								</div>
-                            </div>
-                            <div class="admin_info_after_name container">
-                                <div *ngIf="profile_data.admin_first_name" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>First Name</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.admin_first_name}}
-                                    </div>
-                                </div>
-                                <div *ngIf="profile_data.admin_last_name" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Last Name</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.admin_last_name}}
-                                    </div>
-                                </div>
-                                <div *ngIf="profile_data.admin_nick_name" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Nick Name</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.admin_nick_name}}
-                                    </div>
-                                </div>
 
+								<div *ngIf="profile_data.job_title" class="row">
+									<div class="col-sm-12 UserProfileDiscripTittle">
+										{{profile_data.job_title}}
+									</div>
+								</div>
+							</div>
+						</div>
+					<div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1">
+						<div class="admin_info_after_name">
+							<div class="ProFileHeadWrap">
+								BASIC INFO
+							</div>
+							<div *ngIf="profile_data.admin_first_name" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>First Name</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.admin_first_name}}
+								</div>
+							</div>
+							<div *ngIf="profile_data.admin_last_name" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Last Name</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.admin_last_name}}
+								</div>
+							</div>
+							<div *ngIf="profile_data.admin_nick_name" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Nick Name</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.admin_nick_name}}
+								</div>
+							</div>
 
-                                <div *ngIf="profile_data.admin_email" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Email</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.admin_email}}
-                                    </div>
-                                </div>
-                                <div *ngIf="profile_data.admin_cell_phone" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Cell Phone</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.admin_cell_phone}}
-                                    </div>
-                                </div>
-								<div *ngIf="profile_data.admin_fax" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Fax</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.admin_fax}}
-                                    </div>
-                                </div>
-                                <div *ngIf="profile_data.admin_fax" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Fax</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.admin_fax}}
-                                    </div>
-                                </div>
-                                <div *ngIf="profile_data.admin_work_phone" class="row">
-                                    <div class="col-sm-3">
-                                        <label>
-                                            <b>Work Phone</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        {{profile_data.admin_work_phone}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+							<div class="ProFileHeadWrap">
+								CONTACT INFO
+							</div>
+
+							<div *ngIf="profile_data.admin_email" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Email</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.admin_email}}
+								</div>
+							</div>
+							<div *ngIf="profile_data.admin_cell_phone" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Cell Phone</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.admin_cell_phone}}
+								</div>
+							</div>
+							<div *ngIf="profile_data.admin_fax" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Fax</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.admin_fax}}
+								</div>
+							</div>
+
+							<div *ngIf="profile_data.admin_work_phone" class="row">
+								<div class="col-sm-3">
+									<label>
+										<b>Work Phone</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.admin_work_phone}}
+								</div>
+							</div>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+
     </div>
 
 
-    <div class="container">        
+    <div class="container">
         <div class="details-card edit-mode" *ngIf="edit_mode">
             <div class="row edit-buttons edit-mode">
                 <a class="btn btn-primary cancel" (click)="editProfile()" type="button">Cancel</a>
@@ -461,7 +478,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
                         </div>
                         <input (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
-                        <div class="droppable_holder" holdertype="image"></div>
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -479,7 +495,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
-            <hr>
             <div class="row label-control-form">
                 <div class="container">
                     <div class="row">
@@ -718,8 +733,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
                             <input (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
                         </div>
-                        <div class="droppable_holder" holdertype="admin_image"></div>
-
                     </div>
                     <div class="row">
                         <div class="col-sm">

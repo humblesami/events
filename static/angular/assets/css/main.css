@@ -369,17 +369,29 @@ a,
 }
 .ProfileInfoTittleWrapper label, .ProfileInfoTittleWrapper label b{
 	color:#404040;
-	font-size:20px;
+	font-size:16px;
 	font-weight:400;
+	line-height: 20px;
 }
 
 .UserProfileDiscription{
 	color:#757575;
-	font-size:20px;
+	font-size:16px;
 	font-weight:400;
+	line-height: 20px;
 }
 
-.Pro-info{
+.pill{
+    border-radius: 50px;
+    background-color: #808080;
+    color: white;
+    font-size: 16px;
+    padding: 5px 20px 5px 20px;
+    margin-right: 5px;
+    display:inline-block;
+}
+
+.ProFileHeadWrap{
 	font-size:25px;
 	font-weight:700;
 	color:#3059C9;
@@ -395,6 +407,13 @@ a,
     height: 28px;
 }
 
+
+.BoderGrayTopWrap{
+	border-top:10px solid #F3F3F3;
+	padding-top:40px;
+	margin-top:10px;
+	padding-bottom:70px;
+}
 .modal.fade .modal-dialog {
     -webkit-transform: translate(0, 0);
     transform: translate(0, 0);
@@ -798,8 +817,13 @@ last-login-details
     display: flex;
     align-items: center;
     border-radius: 0;
-    border: 1px solid #A2A2A2;
     flex-direction: column;
+}
+.kanban-folder-border{
+	border: 1px solid #dee2e6!important;
+	position: relative;
+	margin-bottom: -1px;
+	margin-right: -1px;
 }
 
 .kanban-folder span {
@@ -3034,12 +3058,13 @@ span.kanban-upcoming-meeting-date {
 .UpdateAddSignBtn{
 	background: #4B74B5;
     color: #ffffff;
-    display: block;
+    display: inline-block;
     border-radius: 25px;
     height: 36px;
     line-height: 35px;
     text-align: center;
     font-size: 13px;
+    padding: 0 20px;
 }
 .UpdateAddSignBtn:hover{
 	background:#000000;
@@ -3050,3 +3075,30 @@ span.kanban-upcoming-meeting-date {
 	font-size: 11px;
 }
 
+.clrBlue{
+	color:#3059C9;
+}
+
+a.kanban-card.profiledataresume {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+a.kanban-card.profiledataresume .DocumentWrapper{
+	border:1px solid #A2A2A2;
+}
+
+
+
+.meet-elements {
+    font-weight: bolder;
+    color: #3059C9;
+    font-size: 15px;
+    font-weight: 500;
+}
+.meet-elementsInfo{
+	display: block;
+	border-bottom: 1px solid #A2A2A2;
+	border-radius: 0;
+	padding: 0 10px 8px 0px;
+	margin: 5px 0 25px 0;
+}

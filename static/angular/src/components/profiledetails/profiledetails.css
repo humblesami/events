@@ -15,14 +15,6 @@
     font-size: 1.7em;
 }
 
-.pill{
-    border-radius: 50px;
-    background-color: #808080;
-    color: white;
-    font-size: 16px;
-    padding: 5px 20px 5px 20px;
-    margin-right: 5px;
-}
 
 .label-control-form label{
     padding-top: 7px;
