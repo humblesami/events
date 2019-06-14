@@ -49,14 +49,42 @@ export class ProfileDetailsComponent implements OnInit {
         this.profile_data.login = this.last_login;  
         this.socketService = this.ss;      
         this.route.params.subscribe(params => this.get_data());        
-	}
+    }
+    on_file_drop(container, file_object){
+        let obj_this = this;
+        let cls = $(container).attr('holdertype');        
+        if(obj_this.profile_data[cls])
+        {
+            obj_this.profile_data[cls] = file_object.data;
+            obj_this.modified_profile_data[cls] = file_object.data;
+        }
+    }
 
-	editProfile() {        
+	editProfile() {     
+        let obj_this = this;   
         this.edit_mode = !this.edit_mode;
         if(this.edit_mode)
         {
             setTimeout(function(){            
                 $('.router-outlet input[type="text"]:visible:first').focus();
+                $('.droppable_holder').each(function(i, holder){                    
+                    holder.ondragover = function () 
+                    { 
+                        $(this).addClass('hover');
+                    }
+                    holder.ondragend = function () 
+                    {
+                        $(this).removeClass('hover');
+                    }
+                    holder.ondrop = function (e) {                        
+                        this.className = '';
+                        e.preventDefault();                        
+                        window['functions'].readFiles(e.dataTransfer.files, function(file_object){                            
+                            obj_this.on_file_drop(e.target, file_object);
+                        });
+                    };
+                });
+                // console.log(holder);                
             }, 20);
         }
         else

@@ -461,6 +461,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
                         </div>
                         <input (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
+                        <div class="droppable_holder" holdertype="image"></div>
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -717,6 +718,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/angular/assets/images/no-profile.png">
                             <input (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
                         </div>
+                        <div class="droppable_holder" holdertype="admin_image"></div>
+
                     </div>
                     <div class="row">
                         <div class="col-sm">

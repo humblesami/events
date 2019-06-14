@@ -81,7 +81,23 @@ var site_functions = {
     get_path: function() {
 
     },
-
+    readFiles: function(files, on_drop){        
+        for (var i = 0; i < files.length; i++) {
+            var file_name = files[i].name;
+            // document.getElementById('fileDragName').value = files[i].name;
+            // document.getElementById('fileDragSize').value = files[i].size
+            // document.getElementById('fileDragType').value = files[i].type
+            reader = new FileReader();
+            reader.onload = function(event) {
+                console.log('file name ='+ file_name);
+                if(on_drop)
+                {
+                    on_drop({name: file_name, data: event.target.result});
+                }         
+            }
+            reader.readAsDataURL(files[i]);
+        }
+    },
     go_to_login: function() {
         if(dn_current_site_user.cookie)
         {
@@ -231,6 +247,15 @@ var site_functions = {
 
 
 function addMainEventListeners() {
+    window.addEventListener("dragover",function(e){
+        e = e || event;
+        e.preventDefault();
+    },false);
+    window.addEventListener("drop",function(e){
+        console.log(34220008);
+        e = e || event;
+        e.preventDefault();
+    },false);
     $(document).on('mousedown touchstart', function(e) {
         var target = e.target;
         var showbtn = $(target).closest('.showmouseawaybutton');
