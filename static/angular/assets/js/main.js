@@ -472,3 +472,5 @@ addMainEventListeners();
 setHeaderFixed();
 dn_current_site_user.initUserDataFromCookie();
 dn_current_site_user.verifyUserToken();
+
+console.log('testing');

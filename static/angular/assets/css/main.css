@@ -1359,7 +1359,7 @@ input#search-box {
     justify-content: center;
     align-items: center;
     width: 100%;
-    z-index: 6;
+    z-index: 900;
     overflow: hidden;
     bottom: 0;
     left: 0;
@@ -1399,7 +1399,7 @@ input#search-box {
     color: #ffffff;
     font-size: 13px;
     font-weight: 500;
-    background: linear-gradient(to bottom,#af669a,#a1508a);
+    background: linear-gradient(to bottom,#6a6967,#6a6868);
 }
 .result-box-info h3 a:hover{
     background: linear-gradient(to bottom,#dddddd,#dddddd);
@@ -1680,12 +1680,12 @@ div#search-modal {
 
 .searchbar-full-width {
     position: absolute;
-    top: 50px;
-    background: linear-gradient(to bottom,#7c7bad,#7c7bad);
+    top: 70px;
+    background: linear-gradient(to bottom,#4b74b5,#4b74b5);
     width: 100%;
     left: 0;
     right: 0;
-    padding:3px 15px;
+    padding: 3px 15px;
     z-index: 2;
 }
 
@@ -2403,7 +2403,7 @@ button
     left: 0;
     width: 230px;
     overflow: auto;
-    z-index: 8;
+    z-index: 9097;
     background-color: var(--toggle-left-menu-bg);
     -webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
             box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
@@ -2483,6 +2483,7 @@ button
         -ms-flex: 0 0 auto;
         flex: 0 0 auto;
         width: 32px;
+        height:20px;
         margin-right: 13px;
         font-size: 22px;
   }
