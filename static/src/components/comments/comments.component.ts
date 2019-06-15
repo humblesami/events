@@ -31,37 +31,6 @@ export class CommentsComponent implements OnInit {
 
 	get_data(input_data) {
         var obj_this = this;
-        obj_this.socketService.server_events['comment_received'] = function (data) {
-			var container = $('.comments.main-container');
-			if(container.length < 1)
-			{
-				return;
-			}
-            if(data.subtype_id === 2) {
-				if(data.body && data.body.startsWith('<p>'))
-				{
-					data.body = $(data.body)[0].innerHTML;
-				}
-				obj_this.notes.splice(0, 0, data);
-			}
-			else if(data.subtype_id === 1)
-			{
-				if (obj_this.res_id != data.res_id || obj_this.res_model != data.res_model) {
-					return;
-				}
-				if (data.parent_id) {
-					for (var i in obj_this.comments) {
-						if (obj_this.comments[i].id == data.parent_id) {
-							obj_this.comments[i].children.push(data);
-							break;
-						}
-					}
-				}
-				else {
-					obj_this.comments.splice(0, 0, data);
-				}
-			}
-        };
         
         let on_comments_list = function(result){
             try {
@@ -74,13 +43,13 @@ export class CommentsComponent implements OnInit {
                             {                                
                                 item.body = $(item.body)[0].innerHTML;
                             }
-                            obj_this.comments.push(item);
+                            obj_this.add_item(item, obj_this.comments, 'read comment', 0);
                         } else if (item.subtype_id === 2) {
                             if(item.body && item.body.startsWith('<p>'))
                             {
                                 item.body = $(item.body)[0].innerHTML;
                             }
-                            obj_this.notes.push(item);
+                            obj_this.add_item(item, obj_this.notes, 'read note', 0);
                         }
                     }
                     if(item.children)
@@ -109,7 +78,26 @@ export class CommentsComponent implements OnInit {
             args: args
         }
 		this.httpService.get(input_data, on_comments_list,null);
-	}
+    }
+    
+    add_item(item, collection, add_type, at_start){
+        if(!item.user)
+        {
+            console.log('Bad item in '+add_type);
+            return;
+        }
+        else
+        {
+            if(at_start == 1)
+            {
+                collection.splice(0, 0, item);
+            }
+            else{
+                collection.push(item);
+            }
+            
+        }
+    }
 
 	showReplies(id) {
 		this.comments.forEach(com => {
@@ -150,13 +138,13 @@ export class CommentsComponent implements OnInit {
             res_app: obj_this.res_app,
 			subtype_id: obj_this.comment_subtype,
 			create_date : new Date(),
-			user: obj_this.socketService.user_data
+            user: obj_this.socketService.user_data,
+            user_id:  obj_this.socketService.user_data.id
         };
         if(item.subtype_id == 2)
         {
-			item['no_notify'] = 1;
-			item['body'] = obj_this.new_comment;
-			obj_this.notes.splice(0, 0, item);
+            item['body'] = obj_this.new_comment;
+            obj_this.add_item(item, obj_this.notes, 'created note', 1);
 			this.new_comment = '';
         }
         else
@@ -168,14 +156,16 @@ export class CommentsComponent implements OnInit {
                 if(!Array.isArray(parent_item.children))
                     parent_item.children = [item]
                 else
-                    parent_item.children.push(item);
+                {
+                    obj_this.add_item(item, parent_item.children, 'cr reply', 0);
+                }
                 this.new_reply = '';
                 item['reply'] = 1;
             }
             else
             {
                 item['body'] = obj_this.new_comment;
-                obj_this.comments.splice(0, 0, item);
+                obj_this.add_item(item, obj_this.comments, 'created comment', 1);
                 this.new_comment = '';
                 item['reply'] = false;
             }
@@ -186,6 +176,7 @@ export class CommentsComponent implements OnInit {
                 model: 'Comment',
                 method: 'add'
             },
+            no_loader: 1,
             params: item
         }
 		this.httpService.post(input_data, null, null);
@@ -252,7 +243,29 @@ export class CommentsComponent implements OnInit {
 			no_loader: 1
         };
         obj_this.get_data(input_data);
-        
+        obj_this.socketService.server_events['comment_received'] = function (data) {
+            console.log(data);
+			var container = $('.comments.main-container');
+			if(container.length < 1)
+			{
+				return;
+			}
+           
+            if (obj_this.res_id != data.res_id || obj_this.res_model != data.res_model) {
+                return;
+            }
+            if (data.parent_id) {
+                for (var i in obj_this.comments) {
+                    if (obj_this.comments[i].id == data.parent_id) {
+                        obj_this.add_item(data, obj_this.comments[i].children, 'rec reply', 0);
+                        break;
+                    }
+                }
+            }
+            else {
+                obj_this.add_item(data, obj_this.comments, 'rec comment', 1);
+            }
+        };
         function remove_notification()
         {
             obj_this.socketService.current_model = obj_this.res_model;
@@ -260,9 +273,11 @@ export class CommentsComponent implements OnInit {
             obj_this.socketService.removeNotification(obj_this.res_app, obj_this.res_model, obj_this.res_id);
         }
         obj_this.socketService.execute_on_verified(remove_notification);
+
     }
     
 	save_comment_key_up(e, parent){
+
 		let obj_this = this;
 		if(e.keyCode == 13 && !e.shiftKey){
 			e.preventDefault();

@@ -210,6 +210,7 @@ textarea.form-control.focus {
     color: #737373;
     line-height: 22px;
     font-size: 14px;
+    margin-top: -2px;
 }
 
 .comment {
@@ -220,8 +221,9 @@ textarea.form-control.focus {
     display: flex;
     align-items: flex-start;
 }
-.ReplyMessageWrap, .CommentsWrap{
+.CommentsWrap{
     flex: 1;
+    padding-left: 10px;
 }
 .CommentUserNameTimeWrap{
     display: flex;
@@ -231,15 +233,11 @@ textarea.form-control.focus {
     width: 30px;
     height: 30px;
     border-radius: 30px;
-    
-    margin-right:20px; 
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-right:10px; 
 }
-.comment-user-pic{
-    background: #4B74B5;
+.comment-user-pic img{
+    width: 30px;
+    border-radius: 100%;
 }
 .commentreply-user-pic{
     background: #737373;

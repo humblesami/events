@@ -5,7 +5,6 @@ from datetime import datetime
 from documents.file import File
 from mainapp import ws_methods
 from django.contrib import admin
-from django.contrib.auth.models import User as user_model
 from meetings.model_files.user import Profile, create_group
 
 
@@ -18,7 +17,7 @@ class NotificationType(models.Model):
 
 class Notification(models.Model):
     res_id = models.IntegerField()
-    user = models.ForeignKey(user_model, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     counter = models.IntegerField(default=1)
     notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE)
 
@@ -53,7 +52,10 @@ class Notification(models.Model):
 
         model = apps.get_model(res_app, res_model)
         obj_res = model.objects.get(pk=res_id)
+        sender_id = event_data.get('uid')
+       
         audience = obj_res.get_audience()
+
         if not audience:
             return 'No Audience'
 
@@ -77,6 +79,8 @@ class Notification(models.Model):
         else:
             notification_type = notification_type[0]
 
+        if sender_id in audience:
+            audience.remove(sender_id)
         for uid in audience:
             notification = Notification.objects.filter(
                 notification_type_id=notification_type.id,
@@ -145,7 +149,7 @@ class Comment(models.Model):
     subtype_id = models.IntegerField()
     body = models.TextField()
     parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(user_model, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     create_date = models.DateTimeField(null=True, auto_now_add=True)
 
     @classmethod
@@ -156,50 +160,58 @@ class Comment(models.Model):
             res_id=params['res_id'],
             subtype_id=params['subtype_id'],
         ).order_by('id')
-        try:
+        
+        parents = {
 
-            parents = {
-
+        }
+        comments = []
+        for obj in res:
+            user = obj.user
+            comment = obj.__dict__
+            del comment['_state']
+            comment['user'] = {
+                'id': user.id,
+                'photo': user.image.url,
+                'name': user.name
             }
-            comments = []
-            for obj in res:
-                comment = obj.__dict__
-                del comment['_state']
-                comment['create_date'] = str(comment['create_date'])
-                comment['children'] = []
-                parents[comment['id']] = comment
-                pk = comment['parent_id']
-                if not pk:
-                    parents[pk] = comment
-                    comments.append(comment)
-                else:
-                    parents[pk]['children'].append(comment)
-            comments.reverse()
-            res = comments
-        except:
-            res = []
+            comment['create_date'] = str(comment['create_date'])
+            comment['children'] = []
+            parents[comment['id']] = comment
+            pk = comment['parent_id']
+            if not pk:
+                parents[pk] = comment
+                comments.append(comment)
+            else:
+                parents[pk]['children'].append(comment)
+        comments.reverse()
+        res = comments
         return res
 
     @classmethod
     def add(cls, request, params):
         profile = Profile()
-
+        user = Profile.objects.get(pk=request.user.id)
         comment = Comment(
             res_app=params['res_app'],
             res_model=params['res_model'],
             res_id=params['res_id'],
             subtype_id=params['subtype_id'],
             body=params['body'],
-            user_id=request.user.id,
+            user_id=user.id,
             create_date=datetime.now()
         )
         if params.get('parent_id'):
             comment.parent_id=params['parent_id']
         comment.save()
         comment = comment.__dict__
+        comment['user'] = {
+            'id': user.id,
+            'photo': user.image.url,
+            'name': user.name
+        }
         del comment['_state']
         comment['create_date'] = str(datetime.now())
-        event_data = {'name': 'comment_received', 'data': comment}
+        event_data = {'name': 'comment_received', 'data': comment, 'uid' : request.user.id}
         Notification.add_notification(params, event_data)
         return 'done'
 
@@ -340,7 +352,7 @@ class AuthUserChat(models.Model):
                     'photo': friendObj.image.url
                 }
         if not req_user:
-            user_object = user_model.objects.get(pk=uid)
+            user_object = Profile.objects.get(pk=uid)
             if user_object.is_superuser:
                 profile_object = Profile(user_ptr=user_object, name=user_object.username)
                 profile_object.save()
