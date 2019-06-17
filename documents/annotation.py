@@ -256,6 +256,7 @@ class PointAnnotation(Annotation):
     x = models.IntegerField()
     y = models.IntegerField()
     my_notification = models.IntegerField()
+    comment_doc_id = models.CharField(max_length=128, null=True)
     pdf = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
@@ -271,17 +272,19 @@ class PointAnnotation(Annotation):
         uuid = point.get('uuid')
         page = point.get('page')
         type = point.get('type')
+        comment_doc_id = point.get('comment_doc_id')
         new_point = False
 
         doc_id = int(doc_id)
-        user_point = PointAnnotation.objects.filter(pdf_id=doc_id, uuid=uuid, created_by_id=user_id)
+        user_point = PointAnnotation.objects.filter(pdf_id=doc_id, uuid=uuid, created_by_id=user_id,
+        comment_doc_id=comment_doc_id)
         if user_point:
             user_point = user_point[0]
             return {'point_id': user_point.id, 'new_point': new_point}
         else:
             user_point = PointAnnotation(sub_type=sub_type, pdf_id=doc_id, x=x, y=y, my_notification=0,
                                 created_by_id=user_id, user_id=user_id, name=name, date_time=date_time,
-                                page=page, type=type, uuid=uuid)
+                                page=page, type=type, uuid=uuid, comment_doc_id=comment_doc_id)
             user_point.save()
             new_point = 1
             return {'point_id': user_point.id, 'new_point': new_point}
@@ -354,7 +357,7 @@ class PointAnnotation(Annotation):
                 comments_points.append({
                     'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
                     'date_time': str(point.date_time), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
-                    'class': 'Annotation', 'counter': 0, 'page': point.page, 'comments': []
+                    'class': 'Annotation', 'counter': 0, 'page': point.page, 'comment_doc_id': point.comment_doc_id, 'comments': []
                 })
                 comments = point.commentannotation_set.all()
                 for comment in comments:

@@ -56,6 +56,6 @@ function hours_to_hoursNminutes(hours) {
 function standeredTime(time) {
     return moment(time).format('MMM DD YYYY, h:mm:ss A');
 }
-window['dt_function'] = {
+window['dt_functions'] = {
     standeredTime: standeredTime,
 }

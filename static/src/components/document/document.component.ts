@@ -147,6 +147,7 @@ export class DocumentComponent implements OnInit {
 
     ngOnInit() {
         var obj_this = this;
+        window['init_doc_comments']();
 		var content = $("#content-wrapper");
 		var results;
 		var currentClass = "current";
