@@ -213,7 +213,7 @@ class Comment(models.Model):
         comment['create_date'] = str(datetime.now())
         event_data = {'name': 'comment_received', 'data': comment, 'uid' : request.user.id}
         Notification.add_notification(params, event_data)
-        return 'done'
+        return comment
 
 
 class Message(models.Model):

@@ -51,7 +51,7 @@
 										<!-- <a title="Add reply">
 											Like
 										</a> -->
-										<a title="Add reply" (click)="commentReply(c)">
+										<a *ngIf="c.id" title="Add reply" (click)="commentReply(c)">
 											Reply
 										</a>
 										<div class="label replies-wrapper" title="Replies" *ngIf="c.children && c.children.length">

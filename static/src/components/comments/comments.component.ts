@@ -179,7 +179,9 @@ export class CommentsComponent implements OnInit {
             no_loader: 1,
             params: item
         }
-		this.httpService.post(input_data, null, null);
+		this.httpService.post(input_data, function(data){
+            item['id'] = data.id;
+        }, null);
 	}
 
 	deleteComment(id, type) {
