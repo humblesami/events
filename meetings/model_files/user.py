@@ -40,47 +40,37 @@ ETHINICITY_CHOICES = (
     (8, _("I decline to answer"))
 )
 
-permission_set = {
-    'Director':{
-        'meetings':{
-            'event':{'view':1,}
-        },
-        'voting':{},
-        'authtoken':{
-            'token':{
-                'view':1,
-                'add':1,
-                'delete': 1,
-            }
-        },
-    },
-    'Staff': {
-         'meetings':{
-            'event':{'view':1,}
-        },
-        'voting':{},
-        'authtoken': {
-            'token': {
-                'view': 1,
-                'add': 1,
-                'delete': 1,
-            }
-        },
-    },
-    'Admin': {
-         'meetings':{
-            'event':{'view':1,}
-        },
-        'voting':{},
-        'authtoken': {
-            'token': {
-                'view': 1,
-                'add': 1,
-                'delete': 1,
-            }
-        },
-    }
-}
+from django.apps import apps
+
+def get_permission_set(group_name):
+    permission_set = {}    
+    all_models = apps.get_models()
+    perm_set = {}
+    if group_name == 'Admin':
+        perm_set = {
+            'view': 1,
+            'add': 1,
+            'update': 1
+        }
+    if group_name == 'Director' or group_name == 'Staff':
+        perm_set = {
+            'view': 1
+        }
+    
+    permission_set[group_name] = {}
+    for model_obj in all_models:
+        meta = model_obj._meta
+        parents = meta.parents
+        app_name = meta.app_label
+        model_name = meta.model_name
+        if not permission_set.get(app_name):
+            permission_set[app_name] = {}        
+        permission_set[app_name][model_name] = perm_set
+    
+    if group_name == 'Director' or group_name == 'Staff':
+        permission_set['meetings']['profile']['update'] = 1
+
+    return permission_set
 
 def create_group(obj, group_name):
     user_group = False
@@ -89,18 +79,21 @@ def create_group(obj, group_name):
         obj.groups.add(user_group)
         obj.save()
     except:
-        user_group = MeetingGroup.objects.create(name=group_name)
-        obj.groups.add(user_group)
-        obj.save()
-        group_permissions = permission_set[group_name]
-        for app_name in group_permissions:
-            for model_name in group_permissions[app_name]:
-                model_permissions = group_permissions[app_name][model_name]
-                content_id = ContentType.objects.filter(app_label=app_name, model=model_name)[0].id
-                for permission_type in model_permissions:
-                    code_name = permission_type+'_'+model_name
-                    permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)[0]
-                    user_group.permissions.add(permission)
+        try:
+            user_group = MeetingGroup.objects.create(name=group_name)
+            obj.groups.add(user_group)
+            obj.save()
+            group_permissions = get_permission_set(group_name)
+            for app_name in group_permissions:
+                for model_name in group_permissions[app_name]:
+                    model_permissions = group_permissions[app_name][model_name]
+                    content_id = ContentType.objects.filter(app_label=app_name, model=model_name)[0].id
+                    for permission_type in model_permissions:
+                        code_name = permission_type+'_'+model_name
+                        permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)[0]
+                        user_group.permissions.add(permission)
+        except:
+            pass
 
 
 class Profile(user_model):
@@ -331,7 +324,7 @@ class Director(Profile):
         created = self.pk
         super(Director, self).save(*args, **kwargs)
         if not created:
-            create_group(self, 'Director')
+            create_group(self, 'Director')            
 
 class Admin(Profile):
     objects = ManagerAdmin()
@@ -342,7 +335,7 @@ class Admin(Profile):
         created = self.pk
         super(Admin, self).save(*args, **kwargs)
         if not created:
-            create_group(self, 'Admin')
+            create_group(self, 'Admin')            
 
 class Staff(Profile):
     objects = ManagerStaff()
@@ -354,7 +347,7 @@ class Staff(Profile):
         created = self.pk
         super(Staff, self).save(*args, **kwargs)
         if not created:
-            create_group(self, 'Staff')
+            create_group(self, 'Staff')            
 
 
 # ////////////////////GROUPS//////////////////////////////////

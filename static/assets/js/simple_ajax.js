@@ -103,7 +103,7 @@ function dn_rpc_object(options) {
                 response.error = response;
             }            
 
-            hanldeError(response);
+            handleError(response);
         }
     };
     options.complete = function() {
@@ -127,7 +127,7 @@ function dn_rpc_object(options) {
                 err = {
                     error: err.responseText
                 }     
-                hanldeError(err);       
+                handleError(err);       
             }
             else{
                 console.log('Api failed to reach');
@@ -136,8 +136,13 @@ function dn_rpc_object(options) {
     };
 
 
-    function hanldeError(response)
+    function handleError(response)
     {
+        if(response.error && response.error.data)
+        {
+            console.log(response.error.data);
+            response.error = response.error.message;
+        }
         if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
             bootbox.alert('Token expired, please login again '+ options.url);
             window['functions'].go_to_login();

@@ -126,9 +126,14 @@ def search(request):
                     'Topic': ['name', 'lead'],
                     'Committee': ['name'],
                     'Profile': ['name', 'username', 'first_name', 'last_name', 'email'],
+                    
                     'MeetingDocument': ['name'],
                     'AgendaDocument': ['name'],
-                    'SignDocument': ['name']
+                    'SignDocument': ['name'],
+
+                    'News': ['name', 'description'],
+                    'NewsDocument': ['name'],
+                    'NewsVideo': ['name'],
                 },
             'resources':
                 {
@@ -137,7 +142,7 @@ def search(request):
                 },
             'survey':
                 {
-                    'Survey': ['name', 'description']
+                    'Survey': ['name', 'description'],
                 },
             'voting':
                 {
@@ -145,6 +150,47 @@ def search(request):
                     'VotingDocument': ['name']
                 }
         }
+
+        # extra_models = {}
+        # missing_models = {}
+        
+        # all_models = apps.get_models()
+        # for model_obj in all_models:
+        #     meta = model_obj._meta
+        #     parents = meta.parents
+        #     app_name = meta.app_label
+        #     model_name = meta.object_name
+        # #     # if not issubclass(model_obj, Searchable):
+        # #     #     try:
+        # #     #         if search_apps[app_name][model_name]:
+        # #     #             extra_models[model_name] = 1
+        # #     #     except:
+        # #     #         pass
+        # #     #     continue
+            
+        #     try:
+        #         is_model_present = search_apps[app_name][model_name]
+        #     except:
+        #         try:
+        #             is_app_present = missing_models[app_name]
+        #         except:
+        #             missing_models[app_name] = {}
+        #         try:
+        #             missing_models[app_name][model_name] = 1
+        #         except:
+        #             return 'Invalid assignment for '+app_name+'.'+model_name
+        
+        # if len(missing_models.keys()) > 0:
+        #     res = {
+        #         "error": {
+        #             "message": "Missing models", 
+        #             "data": {
+        #                 "missing": missing_models,
+        #                 "extra" : extra_models
+        #                 }
+        #             }
+        #         }
+        #     return res
     for app, models in search_apps.items():
         for model, fields in models.items():
             kwargs = {}
@@ -198,12 +244,15 @@ def produce_exception():
     return HttpResponse(errorMessage)
 
 def produce_result(res, args=None):
-    if type(res) == dict:
+    if isinstance(res, dict):
         if 'error' not in res:
             if 'data' in res:
                 res['error'] = ''
             else:
                 res = {'data': res, 'error': ''}
+        else:
+            # Return ERROR data as it is
+            pass
     elif type(res) == str:
         if res == 'done':
             res = {'error': '', 'data': 'done'}
