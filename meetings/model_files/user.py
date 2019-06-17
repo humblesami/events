@@ -136,7 +136,7 @@ class Profile(user_model):
     term_start_date = models.DateField( blank=True, null=True)
     term_end_date = models.DateField( blank=True, null=True)
     signature_data = models.BinaryField(default=b'', null=True, blank=True)
-    resume = models.OneToOneField(File, null=True, on_delete=models.CASCADE)
+    resume = models.OneToOneField(File, null=True, blank=True, on_delete=models.CASCADE)
     # user_type = models.CharField(max_length=50)
 
     def __str__(self):

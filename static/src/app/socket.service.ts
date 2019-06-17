@@ -603,11 +603,7 @@ export class SocketService {
             obj_this.update_unseen_message_count("receive-new-message", msg.sender, sender);
 
         };
-
-        obj_this.server_events['comment_received'] = function (data) {
-
-        };
-
+        
         obj_this.server_events['point_comment_received'] = function (data) {
             window['on_annotation_comment_received'](data);
         };

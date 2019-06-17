@@ -80,10 +80,19 @@ def emit_event(data, req_url=None):
     try:
         if not data:
             data = []
+        for ev in data:
+            audience = ev['audience']
+            for uid in audience:
+                try:
+                    test = int(uid)
+                    if test == 0:
+                        return 'Invalid user id '+uid+' in audience for '+en['name']
+                except:
+                    return 'Invalid user id '+uid+' in audience for '+en['name']                    
         data = json.dumps(data)
         if not req_url:
-            req_url = '/odoo_event'
-        data = quote(data)        
+            req_url = '/odoo_event'        
+        data = quote(data)
         url = socket_server['url'] + req_url + '?data=' + data
         try:
             r = requests.get(socket_server['url'])

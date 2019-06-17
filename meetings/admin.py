@@ -205,7 +205,7 @@ class DirectorAdmin(UserAdmin):
              'fields': (
                  'bio', 'location', 'birth_date', 'nick_name',
                  'job_title', 'department', 'work_phone', 'mobile_phone', 'website', 'fax',
-                 'board_joining_date', 'term_start_date', 'term_end_date','committees', 'resume'
+                 'board_joining_date', 'term_start_date', 'term_end_date','committees'
              )
          }
          ),

@@ -243,8 +243,9 @@ export class CommentsComponent implements OnInit {
 			no_loader: 1
         };
         obj_this.get_data(input_data);
+        // console.log(3232);
         obj_this.socketService.server_events['comment_received'] = function (data) {
-            console.log(data);
+            // console.log(data, 76);
 			var container = $('.comments.main-container');
 			if(container.length < 1)
 			{
