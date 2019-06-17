@@ -75,18 +75,25 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <h3>No login data</h3>
                         </div>
 
-						 <div *ngIf="profile_data.resume" class="row">
-                            <div class="col-sm-12">
+						 <div *ngIf="profile_data.resume"  class="row docwrappercontainer">
+							<div class="col-sm-12">
                                 <h3>Resume</h3>
                             </div>
-                            <a routerLink="/resume/doc/{{profile_data.resume.id}}" class="kanban-card profiledataresume">
-                                <div class="DocumentWrapper">
-                                    <div class="DocIcon">
-                                        <i class="fa fa-file"></i>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+							<div class="col-sm-12 mb-4">
+								<a routerLink="/resume/doc/{{profile_data.resume.id}}">
+									<div class="DocumentWrapper">
+										<div class="DocIcon">
+											<span class="rounded-circle">
+												<i class="icon-doc-file"></i>
+											</span>
+										</div>
+										<div class="DocInfoVertical">
+											<div class="DocText text-truncate">{{doc.name}}</div>
+										</div>
+									</div>
+								</a>
+							</div>
+						</div>
                     </div>
                     <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
                         <div class="ProFileHeadWrap">

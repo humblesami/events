@@ -25,32 +25,58 @@
     <div *ngIf="folder">
        
         <div class="cards container">
-            <h6 *ngIf="!(no_files)">Files</h6>
-            <div class="row">
-                <a style="cursor:pointer" *ngFor="let doc of folder.files" class="kanban-card" routerLink="/resource/doc/{{doc.id}}">
-                    <div class="DocumentWrapper gray-bg">
-                        <div class="DocIcon">
-                            <i class="fa fa-file"></i>
-                        </div>
-                        <div class="DocText">
-                            {{doc.name}}
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <p></p>
-            <h6 *ngIf="!(no_folders)">Sub Folders</h6>
-            <div class="row pl-3 pr-3">
-				<div class="col-md-3 kanban-folder-border" *ngFor="let folder of folder.sub_folders">
-					<a routerLink="/resource/{{folder.id}}" class="kanban-folder">
-
-						<span>{{folder.name}}</span>
-						<div class="Folderwrapper">
-								<img src="static/assets/images/folder.png" alt="user" />
+			<div class="row" *ngIf="!(no_files)">
+				<div class="col-lg-12">
+					<div class="MainTitleHeadWrap ResourcesHeadWrapper">
+						<div class="HeadingWrap">
+							<i class="icon-doc-file"></i> Files
+						</div>
+					</div>
+				</div>
+			</div>
+  			 <div class="row docwrappercontainer">
+				<div class="col-sm-6 col-md-4 col-lg-2 mb-4"  *ngFor="let doc of folder.files">
+					<a routerLink="/resource/doc/{{doc.id}}" class="">
+						<div class="DocumentWrapper">
+							<div class="DocIcon">
+								<span class="rounded-circle">
+									<i class="icon-doc-file"></i>
+								</span>
+							</div>
+							<div class="DocInfoVertical">
+								<div class="DocText text-truncate">{{doc.name}}</div>
+							</div>
+						</div>
+					</a>
+				</div>
+        	</div>
+			<div class="row" *ngIf="!(no_folders)">
+				<div class="col-lg-12">
+					<div class="MainTitleHeadWrap ResourcesHeadWrapper">
+						<div class="HeadingWrap ">
+							<i class="icon-folder"></i> Sub Folders
+						</div>
+					</div>
+				</div>
+			</div>
+            <h6 ></h6>
+			 <div class="row docwrappercontainer docs-colr-them">
+				<div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let folder of folder.sub_folders">
+					<a routerLink="/resource/{{folder.id}}" class="">
+						<div class="DocumentWrapper">
+							<div class="DocIcon">
+								<span class="rounded-circle">
+									<i class="icon-folder"></i>
+								</span>
+							</div>
+							<div class="DocInfoVertical">
+								<div class="DocText text-truncate">{{folder.name}}</div>
+							</div>
 						</div>
 					</a>
 				</div>
 			</div>
+
         </div>
     </div>
 </div>

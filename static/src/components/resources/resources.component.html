@@ -24,13 +24,18 @@
 		</div>
 	</div>
     <div class="cards container mt-4">
-        <div class="row">
-            <div class="col-md-3 mb-4" *ngFor="let folder of folders">
-                <a routerLink="/resource/{{folder.id}}" class="kanban-folder">
-                    
-                    <span>{{folder.name}}</span>
-                    <div class="Folderwrapper">
-                            <img src="static/assets/images/folder.png" alt="user" />
+        <div class="row docwrappercontainer">
+            <div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let folder of folders">
+                <a routerLink="/resource/{{folder.id}}" class="">
+					<div class="DocumentWrapper">
+						<div class="DocIcon">
+							<span class="rounded-circle">
+								<i class="icon-folder"></i>
+							</span>
+						</div>
+						<div class="DocInfoVertical">
+							<div class="DocText">{{folder.name}}</div>
+						</div>
                     </div>
                 </a>
             </div>
