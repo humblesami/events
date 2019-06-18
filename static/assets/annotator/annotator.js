@@ -687,7 +687,7 @@
                                 onAnnotationsDownloaded(annotaions_data, doc_data);
                             },
                             onError:function(er){
-                                console.log(er, 34444);
+                                console.log(er);
                             }
                         });
                         // onAnnotationsDownloaded([], doc_data);
@@ -1472,7 +1472,6 @@
 
                 //To show comments/notes on 4 buttons (2=>comment show/add, 2=>notes show/add)
                 $('body').on('click', '.toolbar:first .comment', function(e) {
-                    console.log(e.target);
                     UI.destroyEditOverlay();
                     if ($(this).is('.personal'))
                         slected_comment_type = 'notes';
@@ -4252,7 +4251,7 @@
                             // && e.target.nodeName.toLowerCase() !== 'textarea' 
                             // && e.target.nodeName.toLowerCase() !== 'input'
                             ) {
-                            console.log(1343, 77);
+                            // console.log(1343, 77);
                             deleteAnnotation();
                         }
                     }

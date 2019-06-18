@@ -211,6 +211,7 @@ class Comment(models.Model):
         }
         del comment['_state']
         comment['create_date'] = str(datetime.now())
+        comment['children'] = []
         event_data = {'name': 'comment_received', 'data': comment, 'uid' : request.user.id}
         Notification.add_notification(params, event_data)
         return comment
