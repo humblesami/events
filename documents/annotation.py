@@ -1,6 +1,7 @@
 from meetings.model_files.user import Profile
 from django.contrib.auth.models import User
 from mainapp import ws_methods
+from chat.models import Notification
 from django.db import models
 from .file import *
 import datetime
@@ -331,10 +332,24 @@ class PointAnnotation(Annotation):
                             for attendee in meeting_attendees:
                                 if user_id != attendee.id:
                                     attendees.append(attendee.id)
-                events = [
-                    {'name': 'point_comment_received', 'data': res, 'audience': attendees}
-                ]
-                res = ws_methods.emit_event(events)
+                # events = [
+                #     {'name': 'point_comment_received', 'data': res, 'audience': attendees}
+                # ]
+                # res = ws_methods.emit_event(events)
+                doc_type = params['doc_type']
+                res_id = params['parent_res_id']
+                res_model = ''
+                if doc_type == 'meeting':
+                    res_model = 'Event'
+                elif doc_type == 'topic':
+                    res_model = 'AgendaDocument'
+                res_details = {
+                    'res_app': 'meetings',
+                    'res_model': res_model,
+                    'res_id' : res_id
+                }
+                event_data = {'name': 'point_comment_received', 'data': res, 'uid' : request.user.id}
+                Notification.add_notification(res_details, event_data)
                 return res
         else:
             return 'Invalid Point'

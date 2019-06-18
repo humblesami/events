@@ -123,27 +123,27 @@ export class ProfileDetailsComponent implements OnInit {
 
 	bio_html = undefined;
 	get_data() {
-        const obj_this = this;
+		const obj_this = this;
         let id = this.route.snapshot.params.id;
 		// this.bread_crumb_items = this.httpService.make_bread_crumb();
-		var url = window.location.href.split("/")
-        var path =url[url.length-2]
-        if (path == "director"){
-			this.type = "director";
-			this.type_breadCrumb = 'directors';
-        }
-        if (path == "admin"){
-			this.type = "admin";
-			this.type_breadCrumb = 'admins';
-        }
-        if (path == "staff"){
-			this.type = "staff";
-			this.type_breadCrumb = 'staff';
-		}
-		if (!this.type_breadCrumb)
-		{
-			this.type_breadCrumb = window['current_user'].cookie['groups'][0].name.toLowerCase() + 's';
-		}
+		// var url = window.location.href.split("/")
+        // var path =url[url.length-2]
+        // if (path == "director"){
+		// 	this.type = "director";
+		// 	this.type_breadCrumb = 'directors';
+        // }
+        // if (path == "admin"){
+		// 	this.type = "admin";
+		// 	this.type_breadCrumb = 'admins';
+        // }
+        // if (path == "staff"){
+		// 	this.type = "staff";
+		// 	this.type_breadCrumb = 'staff';
+		// }
+		// if (!this.type_breadCrumb)
+		// {
+		// 	this.type_breadCrumb = window['current_user'].cookie['groups'][0].name.toLowerCase() + 's';
+		// }
         let input_data = undefined;
         if (id) {
 			obj_this.my_profile = false;
@@ -188,7 +188,15 @@ export class ProfileDetailsComponent implements OnInit {
 			if(result.profile.bio)
 			{
 				obj_this.bio_html = obj_this.sanitizer.bypassSecurityTrustHtml(result.profile.bio);				
-            }            
+			}
+			if (!obj_this.type_breadCrumb)
+			{
+				obj_this.type_breadCrumb = result.profile.group.toLowerCase();
+				if (obj_this.type_breadCrumb != 'staff')
+				{
+					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
+				}
+			}
 			obj_this.base_url = window['site_config'].server_base_url;
 		};
 		const failure_cb = function (error) {

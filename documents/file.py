@@ -141,8 +141,13 @@ class File(models.Model):
         pdf_doc = pdf_doc.read()
         pdf_doc = base64.b64encode(pdf_doc)
         result = pdf_doc.decode('utf-8')
+        breadcrumb = []
+        if file_obj._state:
+            if file_obj._state.fields_cache:
+                pass
         # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
-        doc = {'id': file_id, "doc": result, 'doc_nget-attendeesame': file_obj.name, 'type': file_obj.file_type}
+        doc = {'id': file_id, "doc": result, 'doc_name': file_obj.name, 
+        'type': file_obj.file_type, 'breadcrumb': breadcrumb}
         return {'data': doc}
 
 

@@ -40,7 +40,26 @@ class AgendaDocument(File):
         if not self.file_type:
             self.file_type = 'topic'
         super(AgendaDocument, self).save(*args, **kwargs)
+    
+    @property
+    def breadcrumb(self):
+        topic_obj = self.agenda
+        event_obj = topic_obj.event
+        data = []
 
+        if event_obj.exectime != 'ongoing':
+            data.append({event_obj.exectime:'meetings/' + event_obj.exectime})
+
+        data.append({event_obj.name: 'meeting/' + str(event_obj.id)})
+        data.append({topic_obj.name: 'topic/' + str(topic_obj.id)})
+        return data
+        
+
+    def get_audience(self):
+            res = []
+            for obj in self.agenda.event.attendees.all():
+                res.append(obj.id)
+            return res
 
 class SignDocument(SignDocument):
     send_to_all = models.BooleanField(blank=True, null=True)
