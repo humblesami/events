@@ -218,7 +218,6 @@ export class HeaderComponent implements OnInit {
     search_results_visibility()
     {
         let obj_this = this;
-        console.log($('.icon-search'));
         if (obj_this.search_results)
         {
             obj_this.show_search_results = true;
