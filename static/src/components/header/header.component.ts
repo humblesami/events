@@ -10,7 +10,7 @@ declare var $: any;
     templateUrl: './header.component.html'    
 })
 
-export class HeaderComponent implements OnInit {    
+export class HeaderComponent implements OnInit {
 	search_bar = false;
 	show_search_results = false;
     searchAble = true;
@@ -21,6 +21,7 @@ export class HeaderComponent implements OnInit {
     search_results = {};
     search_item_types = [];
     no_search = false;
+    results_visibility = false;
     route_map = {
         'meetings.Event': '/meeting/',
         'meetings.Topic': '/topic/',
@@ -214,13 +215,30 @@ export class HeaderComponent implements OnInit {
         togglerelated('.profile-menu.dropdown-menu');
     }
 
+    search_results_visibility()
+    {
+        let obj_this = this;
+        console.log($('.icon-search'));
+        if (obj_this.search_results)
+        {
+            obj_this.show_search_results = true;
+            obj_this.results_visibility = true;
+        }
+    }
+
     admin_url = '';
     ngOnInit() {
         var obj_this = this;
     	$(document).click(function (event) {
     		if(obj_this.show_search_results && !$(event).closest('.show_search_results').length){
-				obj_this.show_search_results = false;
-			}
-		})
+                obj_this.show_search_results = false;
+                obj_this.results_visibility = false;
+
+            }
+            else if (obj_this.results_visibility)
+            {
+                obj_this.show_search_results = true;
+            }
+        });
     }
 }
