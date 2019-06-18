@@ -33,6 +33,12 @@ class MeetingDocument(File):
             self.file_type = 'meeting'
         super(MeetingDocument, self).save(*args, **kwargs)
 
+    def get_audience(self):
+        res = []
+        for obj in self.meeting.attendees.all():
+            res.append(obj.id)
+        return res
+
 class AgendaDocument(File):
     agenda = models.ForeignKey(Topic, on_delete=models.CASCADE)
 
@@ -48,10 +54,10 @@ class AgendaDocument(File):
         data = []
 
         if event_obj.exectime != 'ongoing':
-            data.append({event_obj.exectime:'meetings/' + event_obj.exectime})
+            data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
 
-        data.append({event_obj.name: 'meeting/' + str(event_obj.id)})
-        data.append({topic_obj.name: 'topic/' + str(topic_obj.id)})
+        data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
+        data.append({'title': topic_obj.name, 'link': '/topic/' + str(topic_obj.id)})
         return data
         
 

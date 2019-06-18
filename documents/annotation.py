@@ -313,34 +313,34 @@ class PointAnnotation(Annotation):
                 res['point'] = point
                 point['id'] = point_id
                 res['new_point'] = new_point
-                doc = File.objects.get(pk=doc_id)
-                attendees = []
-                if doc:
-                    try:
-                        if doc.meetingdocument:
-                            meeting_doc = doc.meetingdocument
-                            if meeting_doc:
-                                meeting = meeting_doc.meeting
-                    except:
-                        if doc.agendadocument:
-                            agenda = doc.agendadocument.agenda
-                            if agenda:
-                                meeting = agenda.event
-                    if meeting:
-                        meeting_attendees = meeting.attendees.all()
-                        if meeting_attendees:
-                            for attendee in meeting_attendees:
-                                if user_id != attendee.id:
-                                    attendees.append(attendee.id)
-                # events = [
-                #     {'name': 'point_comment_received', 'data': res, 'audience': attendees}
-                # ]
-                # res = ws_methods.emit_event(events)
+                # doc = File.objects.get(pk=doc_id)
+                # attendees = []
+                # if doc:
+                #     try:
+                #         if doc.meetingdocument:
+                #             meeting_doc = doc.meetingdocument
+                #             if meeting_doc:
+                #                 meeting = meeting_doc.meeting
+                #     except:
+                #         if doc.agendadocument:
+                #             agenda = doc.agendadocument.agenda
+                #             if agenda:
+                #                 meeting = agenda.event
+                #     if meeting:
+                #         meeting_attendees = meeting.attendees.all()
+                #         if meeting_attendees:
+                #             for attendee in meeting_attendees:
+                #                 if user_id != attendee.id:
+                #                     attendees.append(attendee.id)
+                # # events = [
+                # #     {'name': 'point_comment_received', 'data': res, 'audience': attendees}
+                # # ]
+                # # res = ws_methods.emit_event(events)
                 doc_type = params['doc_type']
                 res_id = params['parent_res_id']
                 res_model = ''
                 if doc_type == 'meeting':
-                    res_model = 'Event'
+                    res_model = 'MeetingDocument'
                 elif doc_type == 'topic':
                     res_model = 'AgendaDocument'
                 res_details = {

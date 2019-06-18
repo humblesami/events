@@ -13,7 +13,8 @@ declare var $: any;
 export class DocumentComponent implements OnInit {
 
     page_num = 1;
-    doc_data: any;    
+    doc_data: any;  
+    breadcrumb: any;  
     total_pages = 0;
     annot_hidden = false;
     socketService : SocketService
@@ -116,9 +117,13 @@ export class DocumentComponent implements OnInit {
 
         var renderDoc = function(data){
             obj_this.doc_data = data;
+            if (data.breadcrumb)
+            {
+                obj_this.breadcrumb = JSON.stringify(data.breadcrumb)    
+            }
             var doc_data = {
                 doc:data.doc, 
-                id: doc_id, 
+                id: doc_id,
                 first_time: 1, 
                 // type : doc_type,
                 type : data.type,

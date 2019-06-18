@@ -1,7 +1,7 @@
-<app-breadcrumb app="meetings" model="event" 
-rid="28" 
-routes='[]'
-title="Document"></app-breadcrumb>
+<app-breadcrumb *ngIf="doc_data && breadcrumb" app="documents" model="file" 
+rid="doc_data.doc_name"
+routes="{{doc_data.breadcrumb}}"
+title="{{doc_data.doc_name}}"></app-breadcrumb>
 
 <div class="pdf-annotator" id="annotated-doc-conatiner" style="display:none;">
     <div class="toolbar topbar" style="display:none">
