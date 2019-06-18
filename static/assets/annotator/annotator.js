@@ -94,6 +94,40 @@
         return temp_key;
     }
 
+    var _slicedToArray = function() {
+        function sliceIterator(arr, i) {
+            var _arr = [];
+            var _n = true;
+            var _d = false;
+            var _e = undefined;
+            try {
+                for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+                    _arr.push(_s.value);
+                    if (i && _arr.length === i) break;
+                }
+            } catch (err) {
+                _d = true;
+                _e = err;
+            } finally {
+                try {
+                    if (!_n && _i["return"]) _i["return"]();
+                } finally {
+                    if (_d) throw _e;
+                }
+            }
+            return _arr;
+        }
+        return function(arr, i) {
+            if (Array.isArray(arr)) {
+                return arr;
+            } else if (Symbol.iterator in Object(arr)) {
+                return sliceIterator(arr, i);
+            } else {
+                throw new TypeError("Invalid attempt to destructure non-iterable instance");
+            }
+        };
+    }();
+
     function module0(module, exports, __webpack_require__) {
         try {
             'use strict';
@@ -127,46 +161,12 @@
                 
                 comment_list_div = comments_wrapper.find('.comment-list:first');
                 comment_list = comments_wrapper.find('.comment-list-container:first');
+                $('.toolbar:first .cursor:first').click();
             }
             
 
             var activeAnnotationItem = undefined;            
-            var comments_loaded = false;
-
-
-            var _slicedToArray = function() {
-                function sliceIterator(arr, i) {
-                    var _arr = [];
-                    var _n = true;
-                    var _d = false;
-                    var _e = undefined;
-                    try {
-                        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-                            _arr.push(_s.value);
-                            if (i && _arr.length === i) break;
-                        }
-                    } catch (err) {
-                        _d = true;
-                        _e = err;
-                    } finally {
-                        try {
-                            if (!_n && _i["return"]) _i["return"]();
-                        } finally {
-                            if (_d) throw _e;
-                        }
-                    }
-                    return _arr;
-                }
-                return function(arr, i) {
-                    if (Array.isArray(arr)) {
-                        return arr;
-                    } else if (Symbol.iterator in Object(arr)) {
-                        return sliceIterator(arr, i);
-                    } else {
-                        throw new TypeError("Invalid attempt to destructure non-iterable instance");
-                    }
-                };
-            }();
+            var comments_loaded = false;            
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule ? obj : {
@@ -3267,7 +3267,22 @@
                     function setAttributes(node, attributes) {
                         var attr = Object.keys(attributes);
                         attr.forEach(function(key) {
-                            node.setAttribute(keyCase(key), attributes[key]);
+                            try{
+                                var case_key = keyCase(key);
+                                var attrs_key = attributes[key];
+                                // console.log(case_key, attrs_key);
+                                if(case_key == 'd' && attrs_key == 'Z')
+                                {
+                                    console.log('Not valid')
+                                }
+                                else{
+                                    node.setAttribute(key, attrs_key);
+                                }
+                                // console.log('doneu');
+                            }
+                            catch(er){
+                                console.log(er, ' with ', node, key, keyCase(key), attributes[key]);
+                            }
                         });
                     }
                     module.exports = exports['default']; /***/
@@ -3320,8 +3335,28 @@
                         for (var i = 0, l = a.lines.length; i < l; i++) {
                             var p1 = a.lines[i];
                             var p2 = a.lines[i + 1];
-                            if (p1 && p1.length != 3 && p2 && p2.length != 3) {
-                                d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
+                            if(p1 && p2)
+                            {
+                                if (p1.length > 0 && p2.length>0) {
+                                    if(p1.length != 3 && p2 && p2.length != 3)
+                                    {
+                                        d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
+                                    }                                
+                                }
+                                else
+                                {
+                                    if(p1.x && p1.y && p2.x && p2.y)
+                                    {
+                                        d.push('M' + p1.x + ' ' + p1.y + ' ' + p2.x + ' ' + p2.y);
+                                    }
+                                    else
+                                    {
+                                        console.log('Invalid senario', p1.length, p2.length, p1, p2);
+                                    }
+                                }
+                            }
+                            else{
+                                // console.log('p1 and p2 must be defined');
                             }
                         }
 
@@ -5506,44 +5541,7 @@
             });;
             /* WEBPACK VAR INJECTION */
         }.call(exports, __webpack_require__(3)(module)))
-    }
-
-    $(function() {
-        var last_active_was_comment = false;
-        $(document).on('mouseup', '#viewer', function(e) {
-            if (e.button == 2)
-                return;
-            if (annotation_mode != 1)
-                return;
-            setTimeout(function() {
-                var selection = window.getSelection();
-                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
-                    var ctxMenu = $('.annotation-options.ContextMenuPopup');
-                    ctxMenu.css({
-                        'left': e.pageX - ctxMenu.width() / 2,
-                        'top': e.clientY + 12
-                    }).show();
-                    //console.log(ctxMenu.position());
-                    contextMenuShown = true;
-                } else {
-                    var pen_active = $('.toolbar .pen').hasClass('active');
-                    var cursor_active = $('.toolbar .cursor').hasClass('active');
-                    var comment_active = $('.toolbar .comment').hasClass('active');
-                    if (comment_active) {
-                        if (last_active_was_comment)
-                            last_active_was_comment = true;
-                        else {
-                            last_active_was_comment = false;
-                            if (!cursor_active)
-                                $('.toolbar .cursor').click();
-                        }
-                    } else if (!pen_active && !cursor_active) {
-                        $('.toolbar .cursor').click();
-                    }
-                }
-            }, 10);
-        });
-    });
+    }    
 
     function module3(module, exports) {
 
@@ -5701,6 +5699,42 @@
 
     }
 
+    $(function() {
+        var last_active_was_comment = false;
+        $(document).on('mouseup', '#viewer', function(e) {
+            if (e.button == 2)
+                return;
+            if (annotation_mode != 1)
+                return;
+            setTimeout(function() {
+                var selection = window.getSelection();
+                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
+                    var ctxMenu = $('.annotation-options.ContextMenuPopup');
+                    ctxMenu.css({
+                        'left': e.pageX - ctxMenu.width() / 2,
+                        'top': e.clientY + 12
+                    }).show();
+                    //console.log(ctxMenu.position());
+                    contextMenuShown = true;
+                } else {
+                    var pen_active = $('.toolbar .pen').hasClass('active');
+                    var cursor_active = $('.toolbar .cursor').hasClass('active');
+                    var comment_active = $('.toolbar .comment').hasClass('active');
+                    if (comment_active) {
+                        if (last_active_was_comment)
+                            last_active_was_comment = true;
+                        else {
+                            last_active_was_comment = false;
+                            if (!cursor_active)
+                                $('.toolbar .cursor').click();
+                        }
+                    } else if (!pen_active && !cursor_active) {
+                        $('.toolbar .cursor').click();
+                    }
+                }
+            }, 10);
+        });
+    });
     function loadAnnotationnModules(modules) { // webpackBootstrap
         // The module cache
         var installedModules = {};
@@ -5747,6 +5781,6 @@
         module2,
         module3,
         module4
-    ]);
+    ]);    
     window['pdf_js_module'] = pdf_js_module;
 })()
