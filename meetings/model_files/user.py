@@ -52,25 +52,26 @@ def get_permission_set(group_name):
             'add': 1,
             'change': 1
         }
-    if group_name == 'Director' or group_name == 'Staff':
+    elif group_name == 'Director' or group_name == 'Staff':
         perm_set = {
             'view': 1
         }
     
-    permission_set[group_name] = {}
+    group_permissions = {}
     for model_obj in all_models:
         meta = model_obj._meta
         parents = meta.parents
         app_name = meta.app_label
         model_name = meta.model_name
-        if not permission_set.get(app_name):
-            permission_set[app_name] = {}        
-        permission_set[app_name][model_name] = perm_set
+        if not group_permissions.get(app_name):
+            group_permissions[app_name] = {}        
+        group_permissions[app_name][model_name] = perm_set
     
     if group_name == 'Director' or group_name == 'Staff':
-        permission_set['meetings']['profile']['change'] = 1
-        permission_set['authtoken']['token']['add'] = 1
-    return permission_set
+        group_permissions['meetings']['profile'] = {'view': 1, 'change': 1 }
+        group_permissions['authtoken']['token'] = {'view': 1, 'add': 1 } 
+
+    return group_permissions
 
 def create_group(obj, group_name):
     user_group = False
