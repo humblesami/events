@@ -257,9 +257,9 @@ export class MessengerComponent implements OnInit {
         let obj_this = this;
         var res = new Promise<any>(function(resolve, reject) {
             window['functions'].get_file_binaries(event.target.files, resolve);
-        }).then(function(data){
+        }).then(function(data){            
             obj_this.attachments = obj_this.attachments.concat(data);        
-        })  ;
+        });
     }
     
     attach_btn_click(ev)

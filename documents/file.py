@@ -43,7 +43,7 @@ class File(models.Model):
         if self.pk is None:
             create = True
         super(File, self).save(*args, **kwargs)
-        if create:
+        if create and self.file_type != 'message':
             self.get_pdf()
             if self.html:
                 self.content = self.html

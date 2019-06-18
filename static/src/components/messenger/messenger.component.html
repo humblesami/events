@@ -60,14 +60,16 @@
                             <div class="msg-send-box-wrapper">
                                 <div  *ngIf="msg.body" class="msg-send-box-text" [innerHTML]="msg.body"></div>
                                 <div class="attachment_container">                                    
-                                    <a *ngFor="let doc of msg.attachments" contenteditable="false"
-                                    href="{{socketService.server_url}}{{doc.url}}"
-                                    target="__blank"
-                                    class="download" style="display: flex;">
-                                        <span class="file_name">
-                                            <i class="fa fa-download"></i>{{doc.name}}
-                                        </span>
-                                    </a>
+                                    <div *ngFor="let doc of msg.attachments">
+                                        <a *ngIf="doc.url" contenteditable="false"
+                                        href="{{socketService.server_url}}{{doc.url}}"
+                                        target="__blank"
+                                        class="download" style="display: flex;">
+                                            <span class="file_name">
+                                                <i class="fa fa-download"></i>{{doc.name}}
+                                            </span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <span class="msg_time_send">{{msg.create_date | date:'medium'}}</span>

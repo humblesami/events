@@ -70,7 +70,6 @@ def get_permission_set(group_name):
     if group_name == 'Director' or group_name == 'Staff':
         permission_set['meetings']['profile']['change'] = 1
         permission_set['authtoken']['token']['add'] = 1
-
     return permission_set
 
 def create_group(obj, group_name):
