@@ -323,4 +323,4 @@ admin.site.register(Committee,CommitteeAdmin)
 admin.site.register(Profile,UserAdmin)
 admin.site.register(SignDocument, SignDocumentForm)
 
-admin.site.site_header = "MeetVUE"
+admin.site.site_header = "BoardSheet"

@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"meetvue": {
+		"boardsheet": {
 			"root": "",
 			"sourceRoot": "src",
 			"projectType": "application",
@@ -47,18 +47,18 @@
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"options": {
-						"browserTarget": "meetvue:build"
+						"browserTarget": "boardsheet:build"
 					},
 					"configurations": {
 						"production": {
-							"browserTarget": "meetvue:build:production"
+							"browserTarget": "boardsheet:build:production"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "meetvue:build"
+						"browserTarget": "boardsheet:build"
 					}
 				},
 				"test": {
@@ -90,7 +90,7 @@
 				}
 			}
 		},
-		"meetvue-e2e": {
+		"boardsheet-e2e": {
 			"root": "e2e/",
 			"projectType": "application",
 			"architect": {
@@ -98,11 +98,11 @@
 					"builder": "@angular-devkit/build-angular:protractor",
 					"options": {
 						"protractorConfig": "e2e/protractor.conf.js",
-						"devServerTarget": "meetvue:serve"
+						"devServerTarget": "boardsheet:serve"
 					},
 					"configurations": {
 						"production": {
-							"devServerTarget": "meetvue:serve:production"
+							"devServerTarget": "boardsheet:serve:production"
 						}
 					}
 				},
@@ -118,5 +118,5 @@
 			}
 		}
 	},
-	"defaultProject": "meetvue"
+	"defaultProject": "boardsheet"
 }

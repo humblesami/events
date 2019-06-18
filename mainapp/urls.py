@@ -42,6 +42,6 @@ urlpatterns = [
 ]\
               # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-admin.site.site_header = 'MeetVUE'
-admin.site.site_title = "MeetVUE"
-admin.site.index_title = "Welcome to MeetVUE"
+admin.site.site_header = 'BoardSheet'
+admin.site.site_title = "BoardSheet"
+admin.site.index_title = "Welcome to BoardSheet"

@@ -50,7 +50,7 @@ def get_permission_set(group_name):
         perm_set = {
             'view': 1,
             'add': 1,
-            'update': 1
+            'change': 1
         }
     if group_name == 'Director' or group_name == 'Staff':
         perm_set = {
@@ -68,7 +68,8 @@ def get_permission_set(group_name):
         permission_set[app_name][model_name] = perm_set
     
     if group_name == 'Director' or group_name == 'Staff':
-        permission_set['meetings']['profile']['update'] = 1
+        permission_set['meetings']['profile']['change'] = 1
+        permission_set['authtoken']['token']['add'] = 1
 
     return permission_set
 
@@ -78,27 +79,24 @@ def create_group(obj, group_name):
         user_group = MeetingGroup.objects.get(name=group_name)
         obj.groups.add(user_group)
         obj.save()
-    except:
-        try:
-            user_group = MeetingGroup.objects.create(name=group_name)
-            obj.groups.add(user_group)
-            obj.save()
-            group_permissions = get_permission_set(group_name)
-            for app_name in group_permissions:
-                for model_name in group_permissions[app_name]:
-                    model_permissions = group_permissions[app_name][model_name]
-                    content_id = ContentType.objects.filter(app_label=app_name, model=model_name)[0].id
-                    for permission_type in model_permissions:
-                        code_name = permission_type+'_'+model_name
-                        permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)[0]
-                        user_group.permissions.add(permission)
-        except:
-            pass
+    except:        
+        user_group = MeetingGroup.objects.create(name=group_name)
+        obj.groups.add(user_group)
+        obj.save()
+        group_permissions = get_permission_set(group_name)
+        for app_name in group_permissions:
+            for model_name in group_permissions[app_name]:
+                model_permissions = group_permissions[app_name][model_name]
+                content_id = ContentType.objects.filter(app_label=app_name, model=model_name)[0].id
+                for permission_type in model_permissions:
+                    code_name = permission_type+'_'+model_name
+                    permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)[0]
+                    user_group.permissions.add(permission)        
 
 
 class Profile(user_model):
     class Meta:
-        verbose_name_plural = "MeetVUE  Users"
+        verbose_name_plural = "Boardsheet  Users"
     name = models.CharField(max_length=200, default='', blank=True)
     image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
     bio = models.TextField(max_length=500, blank=True)

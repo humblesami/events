@@ -100,4 +100,4 @@ function pull_code(req, res, callback)
 var webserver = http.createServer(app);
 var server_port = 5001;
 webserver.listen(server_port, "0.0.0.0");
-console.log("Listening MeetVUE:" + server_port);
+console.log("Listening Git:" + server_port);

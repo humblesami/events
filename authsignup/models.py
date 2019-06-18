@@ -8,13 +8,11 @@ class AuthUser(models.Model):
     def login_user(cls, request, params):
         username = params['login']
         password = params['password']
-        user = authenticate(request, username=username, password=password)
-        if not user:
-            return {'error': 'Invalid credentials'}
-        login(request, user)
+        user = authenticate(request, username=username, password=password)        
         if user and user.id:
             tokens = Token.objects.filter(user=user)
             if user.has_perm('authtoken.add_token'):
+                login(request, user)
                 if len(tokens) > 0:
                     tokens[0].delete()
                 token = Token.objects.create(user=user)
