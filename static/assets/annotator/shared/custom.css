@@ -407,7 +407,6 @@ body.pdf-viewer
 
 #content-wrapper {    
   width: 100%;
-  height: calc(100vh - 122px);
   overflow: auto;
 }
 #comment-wrapper {
@@ -416,8 +415,7 @@ body.pdf-viewer
     z-index: 3;
     display: none;
     background: #ffffff;
-    border-right: 1px solid #e6e6e6;
-    height: calc(100vh - 122px);
+    border-right: 1px solid #e6e6e6;    
     overflow: auto;
 }
 

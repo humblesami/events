@@ -867,23 +867,10 @@
                             if (pages_rendered == 1) {
                                 first_page_rendered = 1;
                                 if (doc_data && doc_data.first_time) {
-                                    var header_height = $('.headerheight').height();
-                                    var toolbar_rect = $('.topbar:first')[0].getBoundingClientRect();
-                                    var toolbar_height = toolbar_rect.height;
-                                    var height = header_height + toolbar_height;
-                                    var path_url = window['pathname'];
-                                    var ar_path = path_url.split('/');
-                                    //console.log(path_url);                                
-                                    if (ar_path[1] == 'iframe')
-                                        height += 137;
+                                    var height_to_minus = $('#viewer-wrapper').offset().top;                                  
                                     $('#viewer-wrapper').css({
-                                        height: 'calc(100vh - ' + height + 'px)'
+                                        height: 'calc(100vh - ' + height_to_minus + 'px)'
                                     });
-                                    // comments_wrapper.css({
-                                    //     top: (height + 2)
-                                    // });
-                                    // var c_div_height = 'calc(100vh - ' + (height + 55) + 'px)';
-                                    // comment_list_div.css('height', c_div_height);
                                     $('body').addClass('pdf-viewer');
                                 }
                                 $('#content-wrapper').show();

@@ -1,16 +1,14 @@
-import base64
 import io
-
+import base64
 from django.db import models
 from mainapp import ws_methods
 from documents.file import File
 from django.core.files.base import ContentFile
+from django.core.files import File as DjangoFile
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
 
-from django.core.files import File as DjangoFile
-from mainapp.ws_methods import queryset_to_list, obj_to_dict
 
 GENDER_CHOICES = (
     (1, _("Male")),
@@ -152,7 +150,7 @@ class Profile(user_model):
         profiles = Profile.objects.filter(groups__name__iexact=group)
         total_cnt = profiles.count()
         current_cnt = total_cnt
-        profiles = queryset_to_list(
+        profiles = ws_methods.queryset_to_list(
             profiles,fields=['username','image','email','id']
         )
         profiles_json = {'records': profiles, 'total': total_cnt, 'count': current_cnt}

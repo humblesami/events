@@ -31,7 +31,7 @@ class Notification(models.Model):
                 nt = obj.notification_type
                 note = nt.template
                 if obj.counter > 1:
-                    note = 'You have ' + str(obj.counter) + ' new '+note
+                    note = 'You have ' + str(obj.counter) + ' new '+note + ' on a '+nt.res_model
                 note = {
                     'res_id': obj.res_id,
                     'res_model': nt.res_model,
@@ -63,17 +63,13 @@ class Notification(models.Model):
         if not res_type:
             res_type = 'comment'
 
-        template = params.get('template')
-        if not template:
-            template = ' comment(s) '
-
         notification_type = NotificationType.objects.filter(
             res_app=res_app, res_model=res_model, res_type=res_type
         )
         if not notification_type:
             notification_type = NotificationType(
                 res_app=res_app, res_model=res_model,
-                res_type=res_type, template=template
+                res_type=res_type
             )
             notification_type.save()
         else:
@@ -99,7 +95,7 @@ class Notification(models.Model):
                 notification.save()
 
         if len(audience) > 0:
-            note = notification_type.template
+            note = ' You got new comment on a '+res_model
             note = {
                 'res_id': res_id,
                 'res_model': res_model,
