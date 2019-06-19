@@ -319,3 +319,31 @@ class VotingDocument(File):
         if not self.file_type:
             self.file_type = 'voting'
         super(VotingDocument, self).save(*args, **kwargs)
+    
+
+    @property
+    def breadcrumb(self):
+        voting_obj = self.voting
+        event_obj = {}
+        topic_data = {}
+        data = []
+        if voting_obj.topic:
+            topic_obj = voting_obj.topic
+            topic_data = {'title': topic_obj.name, 'link': '/topic/' + str(topic_obj.id)}
+            if topic_obj.event:
+                event_obj = topic_obj.event
+        if voting_obj.meeting:
+            event_obj = voting_obj.meeting
+        
+        if event_obj:
+                if event_obj.exectime != 'ongoing':
+                    data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
+                data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
+        if topic_data:
+            data.append(topic_data)
+        if not data:
+            data.append({'title': 'Resolutions', 'link': '/actions'})
+
+        data.append({'title': voting_obj.name, 'link': '/voting/' + str(voting_obj.id)})
+
+        return data

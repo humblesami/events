@@ -327,7 +327,7 @@ function addMainEventListeners() {
             handleSessionExpiry();
         }
         
-        hideSearchbar(e);
+        // hideSearchbar(e);
     });    
 }
 

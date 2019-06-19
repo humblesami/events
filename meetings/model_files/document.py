@@ -39,6 +39,18 @@ class MeetingDocument(File):
             res.append(obj.id)
         return res
 
+    
+    @property
+    def breadcrumb(self):
+        event_obj = self.meeting
+        data = []
+        if event_obj:
+            if event_obj.exectime != 'ongoing':
+                data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
+
+            data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
+            return data
+
 class AgendaDocument(File):
     agenda = models.ForeignKey(Topic, on_delete=models.CASCADE)
 
@@ -52,13 +64,13 @@ class AgendaDocument(File):
         topic_obj = self.agenda
         event_obj = topic_obj.event
         data = []
-
-        if event_obj.exectime != 'ongoing':
-            data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
-
-        data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
-        data.append({'title': topic_obj.name, 'link': '/topic/' + str(topic_obj.id)})
-        return data
+        if event_obj:
+            if event_obj.exectime != 'ongoing':
+                data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
+            data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
+            if topic_obj:
+                data.append({'title': topic_obj.name, 'link': '/topic/' + str(topic_obj.id)})
+            return data
         
 
     def get_audience(self):
@@ -76,6 +88,18 @@ class SignDocument(SignDocument):
             self.file_type = 'signature'
         super(SignDocument, self).save(*args, **kwargs)
 
+    
+    @property
+    def breadcrumb(self):
+        event_obj = self.meeting
+        data = []
+        if self.meeting:
+            if event_obj.exectime != 'ongoing':
+                data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
+            data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
+            return data
+
+
     @classmethod
     def get_records(cls, request, params):
         docs = SignDocument.objects.filter()
@@ -91,13 +115,16 @@ class SignDocument(SignDocument):
     def get_detail(cls, request, params):
         file_id = int(params['document_id'])
         token = params['token']
+        file_name = ''
         if token:
             signature = Signature.objects.filter(token=token)
             if not signature.exists():
                 return "Invalid Token"
             file_obj = signature[0].document
+            file_name = file_obj.name
         else:
             file_obj = cls.objects.filter(id=file_id)[0]
+            file_name = file_obj.name
         users = Profile.objects.all()
         users = queryset_to_list(users,fields=['id','username'])
         meetings = Event.objects.all()
@@ -111,6 +138,7 @@ class SignDocument(SignDocument):
 
         doc_data = cls.get_doc_data(request,file_obj,token)
         isAdmin = True
+        doc_data['doc_name'] = file_name
         doc_data["isAdmin"]=isAdmin
         doc_data["meetings"] =meetings
         doc_data["users"] =users

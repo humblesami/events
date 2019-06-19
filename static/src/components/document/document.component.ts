@@ -119,7 +119,7 @@ export class DocumentComponent implements OnInit {
             obj_this.doc_data = data;
             if (data.breadcrumb)
             {
-                obj_this.breadcrumb = JSON.stringify(data.breadcrumb)    
+                obj_this.breadcrumb = JSON.stringify(data.breadcrumb);
             }
             var doc_data = {
                 doc:data.doc, 

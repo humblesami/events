@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
 	content_search = false;
     search_key_word = '';
     global_search = true;
+    search_active = false;
     search_results = {};
     search_item_types = [];
     no_search = false;
@@ -87,7 +88,7 @@ export class HeaderComponent implements OnInit {
         }
         else {
             var success_cb = function (result) {
-				$('.searchbar-full-width').hide();
+                // $('.searchbar-full-width').hide();
 				if(obj_this.content_search){
                     obj_this.doc_types = [];
                     obj_this.content_search_results = {};
@@ -215,29 +216,46 @@ export class HeaderComponent implements OnInit {
         togglerelated('.profile-menu.dropdown-menu');
     }
 
+    search_bar_shown = false;
     search_results_visibility()
     {
         let obj_this = this;
+        if (!obj_this.search_bar_shown)
+        {
+            $(".searchbar-full-width")
+                    .show()
+                    .find("input:first")
+                    .focus();
+            obj_this.search_bar_shown = true;
+        }
+        else
+        {
+            $(".searchbar-full-width")
+                    .hide();
+            obj_this.search_bar_shown = false;
+        }
         if (obj_this.search_results)
         {
             obj_this.show_search_results = true;
-            obj_this.results_visibility = true;
         }
+    }
+
+    hide_search(){
+        let obj_this = this;
+        obj_this.show_search_results = false;
+        $(".searchbar-full-width").hide();
+        obj_this.search_bar_shown = false;
     }
 
     admin_url = '';
     ngOnInit() {
         var obj_this = this;
-    	$(document).click(function (event) {
-    		if(obj_this.show_search_results && !$(event).closest('.show_search_results').length){
-                obj_this.show_search_results = false;
-                obj_this.results_visibility = false;
-
-            }
-            else if (obj_this.results_visibility)
-            {
-                obj_this.show_search_results = true;
-            }
-        });
+    	// $(document).click(function (event) {
+    	// 	if(obj_this.show_search_results && !$(event).closest('.show_search_results').length){
+        //         obj_this.show_search_results = false;
+        //         obj_this.search_bar_shown = false;
+        //         $(".searchbar-full-width").hide();
+        //     }
+        // });
     }
 }

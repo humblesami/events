@@ -142,11 +142,22 @@ class File(models.Model):
         pdf_doc = base64.b64encode(pdf_doc)
         result = pdf_doc.decode('utf-8')
         breadcrumb = []
-        if file_obj._state:
-            if file_obj._state.fields_cache:
-                for model_name in file_obj._state.fields_cache:
-                    if file_obj._state.fields_cache[model_name]:
-                        breadcrumb = file_obj._state.fields_cache[model_name].breadcrumb
+        file_type = file_obj.file_type
+        if file_type == 'meeting':
+            breadcrumb = file_obj.meetingdocument.breadcrumb
+        elif file_type == 'topic':
+            breadcrumb = file_obj.agendadocument.breadcrumb
+        elif file_type == 'voting':
+            breadcrumb = file_obj.votingdocument.breadcrumb
+        elif file_type == 'resource':
+            breadcrumb = file_obj.resourcedocument.breadcrumb
+        elif file_type == 'home':
+            breadcrumb = file_obj.newsdocument.breadcrumb
+        # if file_obj._state:
+        #     if file_obj._state.fields_cache:
+        #         for model_name in file_obj._state.fields_cache:
+        #             if file_obj._state.fields_cache[model_name]:
+        #                 breadcrumb = file_obj._state.fields_cache[model_name].breadcrumb
         # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
         doc = {'id': file_id, "doc": result, 'doc_name': file_obj.name, 
         'type': file_obj.file_type, 'breadcrumb': breadcrumb}

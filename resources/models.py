@@ -17,7 +17,7 @@ class Folder(models.Model):
         folder = Folder.objects.get(pk=folder_id)
         obj['id'] = folder_id
         obj['name'] = folder.name
-        obj['parents'] = cls.get_ancestors(folder)
+        obj['parents'] = cls.get_ancestors(cls, folder)
 
         ar = []
         sub_folders = folder.folder_set.values()
@@ -28,8 +28,7 @@ class Folder(models.Model):
         obj['files'] = list(folder.resourcedocument_set.values())
         return obj
 
-    @classmethod
-    def get_ancestors(cls, folder_orm):
+    def get_ancestors(self, folder_orm):
         parents_list = []
         upper_folder = folder_orm.parent
         while upper_folder:
@@ -81,3 +80,17 @@ class ResourceDocument(File):
         super(ResourceDocument, self).save(*args, **kwargs)
     def __str__(self):
         return self.name
+    
+
+    @property
+    def breadcrumb(self):
+        folder_obj = self.folder
+        data = []
+        if folder_obj:
+            data.append({'title': folder_obj.name, 'link': '/resource/' + str(folder_obj.id)})
+            ancestors = Folder.get_ancestors(self, folder_obj)
+            for ancestor in ancestors:
+                data.append({'title': ancestor['name'], 'link': '/resource/' + str(ancestor['id'])})
+        data.append({'title': 'Resources', 'link': '/resources'})
+        data.reverse()
+        return data

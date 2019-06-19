@@ -36,13 +36,6 @@ title="{{bread_crumb.title}}"></app-breadcrumb>     -->
                             {{voting_object.my_status}}
                         </label>                        
                     </div>                    
-                    <div class="row" *ngIf="voting_object.signature_data">
-                        <div class="col-sm-8 " style="display: flex;">
-                            <div style="position:relative;cursor: pointer;">
-                                <img class="strt_sign_voting " style="width: 100%;" *ngIf="voting_object.signature_data" src="data:image/png;base64,{{voting_object.signature_data}}">
-                            </div>
-                        </div>
-                    </div>
                     <div *ngIf="voting_object.name && voting_object.name" class="row">
                         <div class="col-sm-3 meet-elements">
                             Subject
@@ -111,7 +104,13 @@ title="{{bread_crumb.title}}"></app-breadcrumb>     -->
                         <label class="col-sm-9" [innerHtml]="voting_object.description"></label>
                     </div>
                 </div>                
-                
+                <div class="row" *ngIf="voting_object.signature_data">
+                    <div class="col-sm-8 " style="display: flex;">
+                        <div style="position:relative;cursor: pointer;">
+                            <img class="strt_sign_voting " style="width: 100%;" *ngIf="voting_object.signature_data" src="data:image/png;base64,{{voting_object.signature_data}}">
+                        </div>
+                    </div>
+                </div>
                 <div style="display:none" class="title-wrapper voting-chart">
                     <div class="modal-header">
                         Graphical View

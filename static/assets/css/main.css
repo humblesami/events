@@ -924,7 +924,7 @@ last-login-details
 
 #server-wait {
     position: absolute;
-    z-index: 9091;
+    z-index: 99999;
     top: 0;
     left: 0;
     width: 100%;
@@ -1421,9 +1421,9 @@ input#search-box {
 } */
 
 .show_search_results{
-    height: 100vh;
+    height: calc(100vh - 121px);
     position: fixed;
-    top: 0;
+    top: 121px;
     background: rgba(224, 224, 224, 0.98);
     display: flex;
     justify-content: center;
@@ -1435,7 +1435,12 @@ input#search-box {
     left: 0;
     right: 0;
 }
-
+.show_search_results {
+    justify-content: center;
+    align-items: start;
+    overflow: auto;
+    padding: 30px 0;
+}
 .search-box-wrapper{
     background: #ffffff;
     border-radius: 3px;
@@ -1457,9 +1462,15 @@ input#search-box {
     font-size: 1.2em;
     margin:0 0 15px;
 }
+.search-result-title{
+    font-family: 'Roboto Condensed', sans-serif !important;
+    font-size: 1.3rem;
+    margin: 15px 0 5px;
+}
 
 .result-box-info h3{
     font-size: 0.795em;
+    margin:5px;
 }
 
 .result-box-info h3 a {
@@ -1495,18 +1506,18 @@ div#search-modal {
 
 .close-button{
     position: absolute;
-    top: 72px;
-    right: 23px;
-    background: rgba(0, 0, 0, 0.2901960784313726);
-    width: 50px;
-    height: 50px;
+    top: 19px;
+    right: 11px;
+    background: rgba(0, 0, 0, 0.5);
+    width: 22px;
+    height: 22px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 30px;
     color: rgba(255, 255, 255, 0.6392156862745098);
     cursor: pointer;
-    font-size: 30px;
+    font-size: 16px;
     z-index: 9999;
 }
 
@@ -1745,6 +1756,15 @@ div#search-modal {
     color: #333333;
     border: transparent;
 }
+.content_search{
+    background: #ffffff;
+}
+
+
+.result-box-info {
+    margin: 10px -5px;
+    position: relative;
+}
 
 .searchbar-full-width {
     position: absolute;
@@ -1754,7 +1774,7 @@ div#search-modal {
     left: 0;
     right: 0;
     padding: 3px 15px;
-    z-index: 2;
+    z-index: 9999;
 }
 
 .searchbar-full-width .lowerheader.input-group{
@@ -1845,12 +1865,7 @@ div#search-modal {
     padding-bottom: 10px;
 }
 
-.show_search_results {
-    justify-content: center;
-    align-items: start;
-    overflow: auto;
-    padding: 80px 0;
-}
+
 
 .navbar-collapse.show .main-nav {
     padding: 0 0 70px;

@@ -10,6 +10,7 @@ declare var $:any;
 })
 export class EsignDocDetailsComponent implements OnInit {
     doc: any;
+    doc_name: any;
 
     constructor(private httpService: HttpService, private route: ActivatedRoute) {
         // this.route.params.subscribe(params => this.get_data());
@@ -21,6 +22,7 @@ export class EsignDocDetailsComponent implements OnInit {
     }
 
     ngOnInit() {
+        var obj_this = this;
         var
             canvas,
             pdf_binary,
@@ -42,8 +44,9 @@ export class EsignDocDetailsComponent implements OnInit {
             var url = window.location.href.split("/");
             doc_id = url[url.length - 1]
         }
-        this.doc = {
-            "id": doc_id
+        obj_this.doc = {
+            "id": doc_id,
+            "doc_name": ''
         };
         // console.log($('#the-canvas'))
 
@@ -72,6 +75,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     send_to_all = data.send_to_all;
                     pdf_binary = data.pdf_binary;
                     isAdmin = data.isAdmin;
+                    obj_this.doc.doc_name = data.doc_name;
                     //setTimeout(function(){ showPDF(pdf_binary); }, 3000);
                     renderPDF(pdf_binary);
 

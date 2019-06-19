@@ -44,6 +44,9 @@
                 </div>        
             </div>
             
+        </div>
+    
+        <div>
             <div class="searchbar-full-width" style="display: none;">
                 <div class="lowerheader input-group">
                     <input id="search-box" type="text"
@@ -64,15 +67,11 @@
                         </span>
                     </div>        
                 </div>
-            </div>
-        </div>
-    
-        <div *ngIf="show_search_results">
-            <div class="show_search_results">
+                <div *ngIf="show_search_results && search_bar_shown" class="show_search_results">
                 <div *ngIf="no_search" class="no-search">
                     <h1>No Result Found!</h1>
                 </div>
-                <div class="close-button" (click)="show_search_results = false; search_key_word = '';">
+                <div *ngIf="!no_search" class="close-button" (click)="hide_search()">
                     <i class="fa fa-times"></i>
                 </div>
                 <div *ngIf="!no_search" class="container">
@@ -175,32 +174,42 @@
                             </div>
                         </div>
                     </div> -->
-                    <div *ngIf="content_search" class="row">
+                    <div *ngIf="content_search" class="row content_search">
+                            <!-- <div class="close-button" (click)="hide_search()">
+                             <i class="fa fa-times"></i>
+                            </div> -->
+                                    
                         <div *ngFor="let doc_type of doc_types">
                             <div *ngIf="content_search_results[doc_type].length > 0" class="col-sm">
                                 <div class="result-box-info">
                                     <h2>{{doc_type | titlecase}} Documents</h2>
                                     <h3 *ngFor="let item of content_search_results[doc_type]">
-                                        <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
+                                        <a (click)="hide_search()" routerLink="{{item.route}}">{{item.name}}</a>
                                     </h3>
                                 </div>
                             </div>
                         </div>                        
                     </div>
                     <div *ngIf="search_results" class="row">
-                        <div *ngFor="let item_type of search_item_types">
-                            <div *ngIf="search_results[item_type].length > 0" class="col-sm">
-                                <div class="result-box-info">
-                                    <h2>{{item_type}}</h2>
-                                    <h3 *ngFor="let item of search_results[item_type]">
-                                        <a (click)="show_search_results = false;" routerLink="{{item.route}}">{{item.name}}</a>
-                                    </h3>
+                        <div class="col-lg-12">
+                            <div class="row content_search" *ngFor="let item_type of search_item_types">
+                                <div *ngIf="search_results[item_type].length > 0" class="col-sm-12">
+                                    <h2 class="search-result-title">{{item_type}} ({{search_results[item_type].length}})</h2>
+                                    <div class="result-box-info d-flex flex-wrap">
+                                       
+                                        <h3 *ngFor="let item of search_results[item_type]">
+                                            <a (click)="hide_search()" routerLink="{{item.route}}">{{item.name}}</a>
+                                        </h3>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>                        
+                            </div>  
+                        </div>              
                     </div>
                 </div>
             </div>
+            </div>
+
+            
         </div>
     </div>
 </div>

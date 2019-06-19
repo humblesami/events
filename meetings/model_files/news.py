@@ -68,6 +68,14 @@ class NewsDocument(File):
         super(NewsDocument, self).save(*args, **kwargs)
 
 
+    @property
+    def breadcrumb(self):
+        data = []
+        data.append({'title': 'Home', 'link': '/'})
+        return data
+
+
+
 class NewsVideo(models.Model):
     name = models.CharField('Video Title', max_length=200)
     url = models.CharField('Video Link', max_length=500)
