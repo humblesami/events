@@ -407,7 +407,7 @@ class CommentAnnotation(models.Model):
                     res_model = 'AgendaDocument'
                     model = apps.get_model('meetings', res_model)
                     obj = model.objects.get(pk = doc_id)
-                    text += ' agenda topic document '+obj.name+ ' in '+obj.topic.meeting.name
+                    text += ' agenda topic document '+obj.name+ ' in '+obj.agenda.meeting.name
                 res_details = {
                     'res_app': 'meetings',
                     'res_model': res_model,

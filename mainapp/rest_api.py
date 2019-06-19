@@ -61,27 +61,6 @@ def secure(request):
     except:
         return produce_exception()
 
-
-# 'meeting_point.news': ['name', 'description'],
-                # 'meeting_point.news.video': ['name'],
-
-                # 'calendar.event': ['name', 'description'],
-                # 'survey.survey': ['title'],
-                #
-                # 'meeting_point.users': ['name', 'login'],
-                #
-                # 'meeting_point.topic': ['name', 'lead'],
-                # 'meeting_point.folder': ['name'],
-                # 'meeting_point.committee': ['name'],
-                #
-                # 'meeting_point.document': ['name'],
-                # # 'meeting_point.news.doc': ['name'],
-                # 'meeting_point.files': ['name'],
-                # 'meeting_point.doc': ['name'],
-                # 'meeting_point.topicdoc': ['name'],
-                # 'meeting_point.voting': ['name', 'description'],
-                # }
-
 @login_required()
 def search_session(request):
     try:
