@@ -19,6 +19,7 @@ class Notification(models.Model):
     res_id = models.IntegerField()
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     counter = models.IntegerField(default=1)
+    text = models.CharField(max_length=100, default='')
     notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE)
 
     @classmethod
@@ -43,7 +44,7 @@ class Notification(models.Model):
         return res
 
     @classmethod
-    def add_notification(cls, params, event_data):
+    def add_notification(cls, params, event_data, text=None):
 
         res_model = params['res_model']
         res_app = params['res_app']
@@ -86,6 +87,7 @@ class Notification(models.Model):
                 notification = Notification(
                     res_id=res_id,
                     user_id=uid,
+                    text=text,
                     notification_type_id=notification_type.id
                 )
                 notification.save()

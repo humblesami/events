@@ -13,12 +13,7 @@
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
-    var saveAnnotationsAtServer = function() {
-        console.log("Save annotation not defined");
-    };
-    var onAnnotationsDownloaded = function() {
-        console.log("onAnnotationsDownloaded not defined");
-    }
+    var annot_save_timeout = undefined;
 
     function initDocCookies(documentId) {
         localStorage.setItem(documentId + '/version', 0);
@@ -161,7 +156,15 @@
                 
                 comment_list_div = comments_wrapper.find('.comment-list:first');
                 comment_list = comments_wrapper.find('.comment-list-container:first');
-                $('.toolbar:first .cursor:first').click();
+                var cursor_button = $('.toolbar:first .cursor:first');
+                cursor_button.click();
+                cursor_button.click(function(e){
+                    if(e.screenX && e.screenX != 0 && e.screenY && e.screenY != 0){                        
+                        setTimeout(function(){
+                            saveAnnotationsAtServer();
+                        }, 10);
+                    }
+                })
             }
             
 
@@ -185,165 +188,11 @@
             var pdfStoreAdapter = _2.default.getStoreAdapter();
 
             (function() {
-                var message = '';
-                (function() {
-                    onAnnotationsDownloaded = function(data, doc_data) {
-                        var comments = data.comments;
-                        if (!Array.isArray(comments)) {
-                            comments = [];
-                            console.log("Why not comments");
-                        }                        
-                        var document_version = getDocumentVersion(documentId);
-                        if (!data.annotations) {
-                            data.annotations = [];
-                        }
-                        var message = undefined;
-                        var document_dirty = isDocumentDirty(documentId);
-                        var to_send = [];
-                        if (data.version > document_version) {
-                            if (document_dirty == 1) {
-                                message = "Document annotation version=" + data.version + " available from server,";
-                                message += "<br>You have older version=" + document_version + " at local.";
-                                message += "<br>If you download, it will discard your recent changes,";
-                                message += "<br>Do you still want to download?";
-                                bootbox.confirm(message, function(dr) {
-                                    if (dr) {
-                                        updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
-                                    } else {
-                                        updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
-                                    }
-                                });
-                            } else {
-                                updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
-                            }
-                        } else {
-                            updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
-                        }
-                    }
+                var message = '';                
 
-                    function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {        
-                        if (annotations.length == 0) {
-                            annotations = getLocalAnnotations();
-                        }
-                        if (annotations.length == 0 && comments.length == 0) {
-                            if (doc_data && doc_data.first_time) {
-                                render_details(doc_data);
-                            }
-                            return;
-                        }
-                        annotations = annotations.filter(function(annot) {
-                            return annot.type != 'point' || annot.sub_type
-                        });
-                        annotations = annotations.concat(comments);
-                        annotations.forEach(function(item) {
-                            item.class = 'Annotation';
-                        });
-                        var annotation_cookie = "";
-                        if (Array.isArray(annotations)) {
-                            annotation_cookie = JSON.stringify(annotations);
-                        } else {
-                            bootbox.alert("invalid annotations");
-                            return;
-                        }
-                        setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
-                        setDocVersion(documentId, version);
-                        unSetDocDirty(documentId);
-                        render_details(doc_data);
-                    }
-
-                })();
-
-                (function() {
-                    function onAnnotationsUploaded(data, reset) {
-                        if (data != "done") {
-                            if (isNaN(data)) {
-                                bootbox.alert("Could not save:");
-                                console.log(data);
-                                return;
-                            }
-                            var document_version = getDocumentVersion(documentId);
-                            message = "Server already has version=" + data;
-                            message += "<br>Do you want to overwrite server version with local=" + document_version + "?";
-                            bootbox.confirm(message, function(dr) {
-                                if (dr) {
-                                    document_version = data + 1;
-                                    setDocVersion(document_version);
-                                    saveAnnotationsAtServer();
-                                }
-                            });
-                        } else {
-                            if (reset == 'reset') {
-                                initDocCookies(documentId);
-                                render();
-                            } else
-                                unSetDocDirty(documentId);
-                            console.log("Saved");
-                        }
-                    }
-
-                    function onAnnotationSaveFailed(er) {
-                        console.log(er);
-                    }
-
-                    saveAnnotationsAtServer = function(save_type) {
-                        save_drawing(1);
-                        if (!documentId) {
-                            console.log("saveAnnotationsAtServer must be called after document id is set")
-                            return;
-                        }
-                        var document_dirty = isDocumentDirty(documentId);
-                        if (document_dirty != 1)
-                            return;
-
-                        var document_version = getDocumentVersion(documentId);
-                        var input_data = {
-                            id : doc_id,
-                            doc_id: documentId
-                        };
-                        delete input_data['reset'];
-                        if (save_type == 'reset') {
-                            input_data['reset'] = 1;
-                        } else {
-                            var annotationString = localStorage.getItem(documentId + '/annotations');
-                            if (!annotationString || annotationString == '[]') {
-                                console.log("No annotations");
-                                return;
-                            }
-                            if (document_version == 0) {
-                                setDocDirty(documentId);
-                                setDocVersion(documentId, 1);
-                            }
-                            input_data['annotations'] = annotationString;
-                            input_data['version'] = document_version;
-                        }
-                        let args = {
-                            app: 'documents',
-                            model: 'AnnotationDocument',
-                            method: 'add_annotation'
-                        }
-                        var final_input_data = {            
-                            args: args,
-                            params: input_data
-                        };
-                        // window['add_annotation'](final_input_data);
-                        dn_rpc_object({
-                            data: final_input_data,
-                            no_loader: 1,
-                            onSuccess: function(data) {
-                                onAnnotationsUploaded(data, save_type);
-                            },
-                            onError: onAnnotationSaveFailed,
-                            type: 'post'
-                        });
-                    }
-
-                    window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
-
-                    $('body').on('click', '.doc-saver', function() {
-                        saveAnnotationsAtServer();
-                    });
-
-                })();
+                $('body').on('click', '.doc-saver', function() {
+                    saveAnnotationsAtServer();
+                });
 
                 $('body').on('click', '.cb-container.autosave input', function() {
                     if ($(this).prop('checked'))
@@ -445,7 +294,164 @@
                         obj.append($('#applied_color').show());
                     });
                 }
-            });            
+            });
+
+            function onAnnotationsDownloaded(data, doc_data) {
+                var comments = data.comments;
+                if (!Array.isArray(comments)) {
+                    comments = [];
+                    console.log("Why not comments");
+                }                        
+                var document_version = getDocumentVersion(documentId);
+                if (!data.annotations) {
+                    data.annotations = [];
+                }
+                var message = undefined;
+                var document_dirty = isDocumentDirty(documentId);
+                var to_send = [];
+                if (data.version > document_version) {
+                    if (document_dirty == 1) {
+                        message = "Document annotation version=" + data.version + " available from server,";
+                        message += "<br>You have older version=" + document_version + " at local.";
+                        message += "<br>If you download, it will discard your recent changes,";
+                        message += "<br>Do you still want to download?";
+                        bootbox.confirm(message, function(dr) {
+                            if (dr) {
+                                updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
+                            } else {
+                                updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
+                            }
+                        });
+                    } else {
+                        updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
+                    }
+                } else {
+                    updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
+                }
+            }
+
+            function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {        
+                if (annotations.length == 0) {
+                    annotations = getLocalAnnotations();
+                }
+                if (annotations.length == 0 && comments.length == 0) {
+                    if (doc_data && doc_data.first_time) {
+                        render_details(doc_data);
+                    }
+                    return;
+                }
+                annotations = annotations.filter(function(annot) {
+                    return annot.type != 'point' || annot.sub_type
+                });
+                annotations = annotations.concat(comments);
+                annotations.forEach(function(item) {
+                    item.class = 'Annotation';
+                });
+                var annotation_cookie = "";
+                if (Array.isArray(annotations)) {
+                    annotation_cookie = JSON.stringify(annotations);
+                } else {
+                    bootbox.alert("invalid annotations");
+                    return;
+                }
+                setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
+                setDocVersion(documentId, version);
+                unSetDocDirty(documentId);
+                render_details(doc_data);
+            }
+            function saveAnnotationsAtServer(save_type) {
+                save_drawing(1);
+                if (!documentId) {
+                    console.log("saveAnnotationsAtServer must be called after document id is set")
+                    return;
+                }
+                var document_dirty = isDocumentDirty(documentId);
+                // console.log(document_dirty, 16);
+                if (document_dirty != 1)
+                    return;
+
+                var document_version = getDocumentVersion(documentId);
+                var input_data = {
+                    id : doc_id,
+                    doc_id: documentId
+                };
+                delete input_data['reset'];
+                if (save_type == 'reset') {
+                    input_data['reset'] = 1;
+                } else {
+                    var annotationString = localStorage.getItem(documentId + '/annotations');
+                    if (!annotationString || annotationString == '[]') {
+                        console.log("No annotations");
+                        return;
+                    }
+                    if (document_version == 0) {
+                        setDocDirty(documentId);
+                        setDocVersion(documentId, 1);
+                    }
+                    var ar_annotations = JSON.parse(annotationString);
+                    ar_annotations = ar_annotations.filter(function(obj){
+                        obj.type != 'point' || obj.sub_type == 'personal'
+                    });
+                    annotationString = JSON.stringify(ar_annotations);
+                    input_data['annotations'] = annotationString;
+                    input_data['version'] = document_version;
+                }
+                if(save_type == 'force')
+                {
+                    input_data['force'] = 1;
+                }
+                let args = {
+                    app: 'documents',
+                    model: 'AnnotationDocument',
+                    method: 'add_annotation'
+                }
+                var final_input_data = {            
+                    args: args,
+                    params: input_data
+                };
+                // window['add_annotation'](final_input_data);
+                dn_rpc_object({
+                    data: final_input_data,
+                    no_loader: 1,
+                    onSuccess: function(data) {
+                        onAnnotationsUploaded(data, save_type);
+                    },
+                    type: 'post'
+                });
+            }
+            function onAnnotationsUploaded(data, reset) {
+                if (data != "done") {
+                    console.log(data, 'Could not save')
+                    if(data.version)
+                    {
+                        data = data.version;
+                    }
+                    if (isNaN(data)) {
+                        bootbox.alert("Could not save:");
+                        console.log(data);
+                        return;
+                    }
+                    var document_version = getDocumentVersion(documentId);
+                    message = "Server already has version=" + data;
+                    message += "<br>Do you want to overwrite server version with local=" + document_version + "?";
+                    bootbox.confirm(message, function(dr) {
+                        if (dr) {
+                            document_version = data + 1;
+                            setDocVersion(document_version);
+                            saveAnnotationsAtServer('force');
+                        }
+                    });
+                } else {
+                    if (reset == 'reset') {
+                        initDocCookies(documentId);
+                        render();
+                    } else
+                        unSetDocDirty(documentId);
+                    console.log("Saved");
+                }
+            }
+            window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
+
 
             var setPen = function(a, b) {}
 
@@ -644,7 +650,7 @@
                     comment_list_div = comments_wrapper.find('.comment-list:first');
                     comment_list = comments_wrapper.find('.comment-list-container:first');
                     comment_doc_id = doc_data.type + '-' + doc_data.id + '.pdf';
-                    documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';
+                    documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';                    
                     doc_id = doc_data.id;
                     RENDER_OPTIONS.documentId = documentId;
                     comments_loaded = false;
@@ -2795,7 +2801,7 @@
                                                 if (is_comment && !received_comment) {
                                                     var args = {
                                                         app: 'documents',
-                                                        model: 'PointAnnotation',
+                                                        model: 'CommentAnnotation',
                                                         method: 'save_comment',
                                                     }
                                                     var options = {
@@ -2867,9 +2873,7 @@
                         else
                             res = JSON.parse(res);
                         return res;
-                    }
-
-                    var annot_save_timeout = undefined;
+                    }                    
 
                     function updateAnnotations(documentId, annotations, is_comment) {
                         var annotation_cookie = "";
@@ -2883,7 +2887,7 @@
                         clearTimeout(annot_save_timeout);
                         annot_save_timeout = setTimeout(function() {
                             saveAnnotationsAtServer();
-                        }, 30000);
+                        }, 3000);
                     }
 
                     function findAnnotationObject(documentId, annotationId) {

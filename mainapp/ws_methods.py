@@ -58,6 +58,9 @@ def execute_read(query):
     res = cr.dictfetchall()
     return res
 
+def set_obj_attrs(dict_key_values, py_obj):
+    for prop in dict_key_values:
+        py_obj. __setattr__(prop, dict_key_values[prop])
 
 def base64StringToFile(data, file_name):
     if 'data:' in data and ';base64,' in data:
@@ -87,9 +90,9 @@ def emit_event(data, req_url=None):
                 try:
                     test = int(uid)
                     if test == 0:
-                        return 'Invalid user id '+uid+' in audience for '+en['name']
+                        return 'Invalid user id '+uid+' in audience for '+ev['name']
                 except:
-                    return 'Invalid user id '+uid+' in audience for '+en['name']                    
+                    return 'Invalid user id '+uid+' in audience for '+ev['name']                    
         data = json.dumps(data)
         if not req_url:
             req_url = '/odoo_event'        

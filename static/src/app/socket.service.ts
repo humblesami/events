@@ -504,6 +504,7 @@ export class SocketService {
         };
 
         obj_this.server_events['notification_received'] = function (res) { 
+            console.log(res, 178);
             obj_this.add_item_in_notification_list(res);
         };
         

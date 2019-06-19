@@ -64,14 +64,20 @@ function dn_rpc_object(options) {
 
     var url_with_params = 'Nothing';
     options.beforeSend = function(a, b) {
-        url_with_params = b.url;
+        url_with_params = b.url.toString();
         if(site_config.trace_request)
         {
             if(api_url == '/rest/secure')
             {
                 url_with_params = url_with_params.replace('rest/secure','rest/secure1');
             }
-            console.log(url_with_params, input_data.args);
+            if(url_with_params.length < 1500)
+            {
+                console.log(url_with_params, input_data.args);    
+            }
+            else{
+                console.log(input_data.args);
+            }
         }
         if (!options.no_loader)
             site_functions.showLoader("ajax" + api_url);
@@ -166,7 +172,7 @@ function dn_rpc_object(options) {
             }                
         }
         console.log(input_data.args);
-        if(options.type == 'GET')
+        if(options.type == 'GET' && url_with_params.length < 1500)
         {
             console.log(url_with_params);
         }
