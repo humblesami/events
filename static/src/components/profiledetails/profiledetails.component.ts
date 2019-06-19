@@ -191,7 +191,8 @@ export class ProfileDetailsComponent implements OnInit {
 			}
 			if (!obj_this.type_breadCrumb)
 			{
-				obj_this.type_breadCrumb = result.profile.group.toLowerCase();
+				obj_this.type = result.profile.group.toLowerCase()
+				obj_this.type_breadCrumb = obj_this.type;
 				if (obj_this.type_breadCrumb != 'staff')
 				{
 					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
