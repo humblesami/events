@@ -395,8 +395,7 @@ class CommentAnnotation(models.Model):
                 res_model = ''
 
                 if len(comment_body) > 20:
-                    comment_body = '=> '+ comment_body[0: 20]
-                comment_body += '...'
+                    comment_body = '=> '+ comment_body[0: 20] + '...'                
                 text = 'You have new comment '+ comment_body +' on '
                 if doc_type == 'meeting':
                     res_model = 'MeetingDocument'
@@ -407,7 +406,7 @@ class CommentAnnotation(models.Model):
                     res_model = 'AgendaDocument'
                     model = apps.get_model('meetings', res_model)
                     obj = model.objects.get(pk = doc_id)
-                    text += ' agenda topic document '+obj.name+ ' in '+obj.agenda.event.name
+                    text += ' an agenda-topic-document '+obj.name+ ' in meeting=>'+obj.agenda.event.name
                 res_details = {
                     'res_app': 'meetings',
                     'res_model': res_model,
