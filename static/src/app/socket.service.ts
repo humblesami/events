@@ -503,9 +503,8 @@ export class SocketService {
             bootbox.alert(res);
         };
 
-        obj_this.server_events['notification_received'] = function (res) { 
-            console.log(res, 178);
-            obj_this.add_item_in_notification_list(res);
+        obj_this.server_events['notification_received'] = function (res) {             
+            obj_this.add_item_in_notification_list(res);            
         };
         
         obj_this.server_events['notification_updated'] = function (res) {
@@ -700,6 +699,19 @@ export class SocketService {
     
     add_item_in_notification_list(item) {
         var obj_this = this;
+        try{
+            item.body = item.body.trim();
+            if(item.body.length == 0)
+            {
+                console.log('Not notif text in',item);
+                return;
+            }
+        }
+        catch(er){
+            console.log(er, 'Invalid notif text '+item.body);
+            return;
+        }
+        
         let route = obj_this.model_routes[item.res_app][item.res_model];
         item.client_route = route + item.res_id;
         item.counter = 1;
