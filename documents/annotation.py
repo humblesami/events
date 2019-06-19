@@ -394,8 +394,9 @@ class CommentAnnotation(models.Model):
                 res_id = params['parent_res_id']
                 res_model = ''
 
-                if len(comment_body) > 10:
-                    comment_body = comment_body[0: 10]
+                if len(comment_body) > 20:
+                    comment_body = '=> '+ comment_body[0: 20]
+                comment_body += '...'
                 text = 'You have new comment '+ comment_body +' on '
                 if doc_type == 'meeting':
                     res_model = 'MeetingDocument'
