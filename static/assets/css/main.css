@@ -1687,9 +1687,6 @@ div#search-modal {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-.profile-menu.dropdown-menu .dropdown-item:first-child {
-    border-top:0px solid #F1F1F3;
-}
 
 .profile-menu.dropdown-menu .dropdown-item i{ display: inline-block; width: 20px; }
 
@@ -1718,11 +1715,12 @@ div#search-modal {
 }
 
 .profile-menu.dropdown-menu{
-    right: 20px;
+    right: 50%;
     left: auto;
-    padding:10px 15px;
+    padding: 15px;
     box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
+    top: 50px;
+    transform: translateX(15px);
 }
 
 .header-user-name{
@@ -2271,21 +2269,24 @@ div#search-modal {
 		transform: scale(1.1)
 	}
 }
+.notification-container{
+	position:relative;
+}
 
 .notification-container .chat-list ,
 .notification-container .notification-list{
-    position: fixed;
+    position: absolute;
     display: none;
     z-index: 99999;
     top: 50px;
-    right: 0;
-    width: 380px;
+    right: -10px;
+    max-width: 380px;
+    min-width:320px;
     background: white;
     max-height: calc(100vh - 40px);
-    overflow: auto;
-    box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 rgba(0, 0, 0, 0.19);
-    padding: 10px;
-    border: 1px solid #dadada;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border: 1px solid rgba(0,0,0,.25);
 }
 
 .notification-container .notification-list:first .list-group-item.online
@@ -2298,17 +2299,32 @@ div#search-modal {
 	border: 1px solid #dedede;
 	border-radius: 5px;
 }
-
+.notihead{
+	border-bottom: 1px solid #F1F1F3;
+    padding: 0 0 6px;
+    font-size: 15px;
+    color: #000000;
+    font-weight: 400;
+}
 .notification-container .contact{
 	cursor: pointer;
-	color: black;
-	font-weight: bolder;
+    color: black;
+    border: 0;
+    border-top: 1px solid #000000;
+    border-radius: 0;
+    padding: 6px 0;
+    font-size: 13px;
+    font-weight: 600;
 }
+.notification-container .contact:first-child{
+	border: 0;
+    }
 
 .notification-container .chat-items.list-group
 {
-    margin-top: 23px;
+    margin:0;
     padding: 0;
+    list-style:none;
 }
 
 
@@ -2319,6 +2335,33 @@ div#search-modal {
     padding: 0 5px;
     float: right;
     color: white;
+}
+
+ .arrow {
+	position: absolute;
+    display: block;
+    width: 1.7rem;
+    height: .7rem;
+    margin: 0 .3rem;
+    top: calc((.7rem + 1px) * -1);
+    right: calc(10% - 1.4rem);
+}
+ .arrow::before,
+ .arrow::after {
+ position: absolute;
+    display: block;
+    content: "";
+    border-color: transparent;
+    border-style: solid;
+    border-width: 0 .7rem .7rem .7rem;
+}
+.arrow::before {
+    top: 0;
+    border-bottom-color: rgba(0,0,0,.25);
+}
+.arrow::after {
+    top: 1px;
+    border-bottom-color: #fff;
 }
 
 .notification-container span.unseen{
@@ -3126,4 +3169,14 @@ a.kanban-card.profiledataresume .DocumentWrapper{
 	border-radius: 0;
 	padding: 0 10px 8px 0px;
 	margin: 5px 0 25px 0;
+}
+.bootbox.modal.fade.bootbox-alert.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

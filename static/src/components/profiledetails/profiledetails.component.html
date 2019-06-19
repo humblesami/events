@@ -476,7 +476,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
             </div>
             <div class="row">
                 <div class="container row">
-                    <div class="col-sm-9 UserProfileDiscription">
+                    <div class="col-sm-2 UserProfileDiscription mb-4">
                         <div *ngIf="modified_profile_data.image">
                             <img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
                         </div>
@@ -484,7 +484,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
                             <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
                         </div>
-                        <input (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
+                        <input class="pt-3" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -541,18 +541,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 type="text" placeholder="Enter Job Title" id="job-title" required>
                         </div>
                     </div>
-					<div class="row">
+					<div class="row mb-3">
                         <div class="col-sm-3">
                             <label for="board_joining_date">
                                 <b>Board Joining Date</b>
                             </label>
                         </div>
                         <div class="col-sm-9 UserProfileDiscription">
-                            <input value="{{profile_data.board_joining_date}}" (change)="modified_profile_data.board_joining_date = $event.target.value"
+                            <input class="form-control" value="{{profile_data.board_joining_date}}" (change)="modified_profile_data.board_joining_date = $event.target.value"
                                 type="date" placeholder="Enter Board Joining Date" id="board_joining_date" required>
                         </div>
                     </div>
-					<div class="row">
+					<div class="row mb-3">
                         <div class="col-sm-3">
                             <label for="term_start_date">
                                 <b>Term Start Date</b>
@@ -560,10 +560,10 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                         <div class="col-sm-9 UserProfileDiscription">
                             <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
-                                type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
+                                 class="form-control"  type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
                         </div>
                     </div>
-					<div class="row">
+					<div class="row mb-3">
                         <div class="col-sm-3">
                             <label for="term_end_date">
                                 <b>Term End Date</b>
@@ -571,7 +571,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                         <div class="col-sm-9 UserProfileDiscription">
                             <input value="{{profile_data.term_end_date}}" (change)="modified_profile_data.term_end_date = $event.target.value"
-                                type="date" placeholder="Enter End Start Date" id="term_end_date" required>
+                                class="form-control"  type="date" placeholder="Enter End Start Date" id="term_end_date" required>
                         </div>
                     </div>
                     <div class="row">
@@ -636,12 +636,13 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </label>
                         </div>
                         <div class="col-sm-9 UserProfileDiscription">
-                            <input (change)="addFile($event, '')" type="file" name="pic" />
+                            <input class="pt-3" (change)="addFile($event, '')" type="file" name="pic" />
                         </div>
                     </div>
 
                     <div class="row">
-                        <div *ngIf="my_profile" class="col-sm-2" style="border-right: 1px solid #cccccc;">
+
+                        <div class="pt-3" *ngIf="my_profile" class="col-sm-2" style="border-right: 1px solid #cccccc;">
                             <label>
                                 <b>Signature</b>
                                 <a
@@ -730,15 +731,15 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                     </div>
                     <div class="row">
-                        <div *ngIf="modified_profile_data.admin_image" class="col-sm-12">
+                        <div *ngIf="modified_profile_data.admin_image" class="col-sm-2 mb-4">
                             <img *ngIf="modified_profile_data.admin_image" class="img-thumbnail-lg" src="{{modified_profile_data.admin_image}}">
                             <img *ngIf="!modified_profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-                            <input (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
+                            <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
                         </div>
-                        <div *ngIf="!modified_profile_data.admin_image" class="col-sm-12">
+                        <div *ngIf="!modified_profile_data.admin_image" class="col-sm-2 mb-4">
                             <img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
                             <img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-                            <input (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
+                            <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
                         </div>
                     </div>
                     <div class="row">

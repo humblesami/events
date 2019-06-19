@@ -233,7 +233,8 @@ textarea.form-control.focus {
     width: 30px;
     height: 30px;
     border-radius: 30px;
-    margin-right:10px; 
+    margin-right:10px;
+    overflow: hidden;
 }
 .comment-user-pic img{
     width: 30px;

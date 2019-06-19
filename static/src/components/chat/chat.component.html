@@ -10,9 +10,11 @@
     </div>
     
     <div class="container right-panel notification-list hidemouseaway">
-        <div (click)="close_right_panel()" class="chat-list-close">
-            <i class="fas fa-times"></i>
-        </div>
+		<div class="arrow"></div>
+        <div class="notihead">Notification</div>
+		<!--<div (click)="close_right_panel()" class="chat-list-close">-->
+            <!--<i class="fas fa-times"></i>-->
+        <!--</div>-->
         <ul class="chat-items list-group">
             <li *ngFor="let note of socketService.notificationList">                
                 <a *ngIf="note.counter > 0"  class="list-group-item contact"                    
