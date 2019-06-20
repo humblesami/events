@@ -1,22 +1,20 @@
+import io
 import base64
 import datetime
-import io
-from random import randint
-
-from PyPDF2 import PdfFileReader, PdfFileWriter
-from django.db import models
-
-# Create your models here.
 from fpdf import FPDF
+from random import randint
+from PyPDF2 import PdfFileReader, PdfFileWriter
 
-from documents.file import File
+from django.db import models
 from django.core.files import File as DjangoFile
 
+
+from documents.file import File
 from mainapp.settings import MEDIA_ROOT
 from mainapp.ws_methods import queryset_to_list
 
 
-class SignDocument(File):
+class SignatureDoc(File):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     original_pdf = models.FileField(upload_to='original/')
 
@@ -27,7 +25,7 @@ class SignDocument(File):
         create = False
         if self.pk is None:
             create = True
-        super(SignDocument, self).save(*args, **kwargs)
+        super(SignatureDoc, self).save(*args, **kwargs)
         if create:
             self.original_pdf = self.pdf_doc
             self.save()
@@ -57,7 +55,7 @@ class SignDocument(File):
         signed_doc = self.get_signed_doc(file, self.signature_set.all())
         self.pdf_doc.save(self.original_pdf.name, DjangoFile(signed_doc))
 
-    def get_signed_doc(self, pdf, signatures):
+    def get_signed_doc(self, pdf, signatures, send_all=None):
 
         # pth = tempfile.gettempdir()
         # curr_dir = os.path.dirname(__file__)
@@ -128,7 +126,7 @@ class SignDocument(File):
                     h = s.height
 
                 pdf.image(MEDIA_ROOT + "/" + s.image.name, x=left, y=top, w=w, h=h)
-                if self.send_to_all:
+                if send_all:
                     pdf.set_xy(left + 50, top + h)
                     # pdf.ln(5)
                     pdf.set_font('Arial', 'U', 15)

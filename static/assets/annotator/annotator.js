@@ -2756,19 +2756,15 @@
                                                 user_name: values.user_name,
                                                 date_time: values.date_time,
                                             };
-                                            var doc_data = documentId.split('-');
-                                            var res_id = doc_data[1].split('.')[0];
-                                            var res_model = 'meeting_point.doc';
-                                            if (documentId.indexOf('topic') > -1)
-                                                res_model = 'meeting_point.topicdoc';
-
+                                            var doc_info = documentId.split('-');
+                                            var res_id = doc_info[1].split('.')[0];
                                             var input_data = {
-                                                doc_type: doc_data[0],
+                                                doc_type: doc_info[0],
                                                 doc_id: documentId,
-                                                comment_doc_id : comment_doc_id,
-                                                parent_res_id: res_id,
-                                                parent_res_model: res_model,
-                                                res_model: 'annotation.point',
+                                                document_id: doc_info[1],
+                                                res_id: res_id,
+                                                comment_doc_id : comment_doc_id,                                                
+                                                res_model: 'document.PointAnnotation',
                                             };
 
                                             var annotations = _getAnnotations(documentId);
@@ -2795,6 +2791,7 @@
                                                 }
                                                 point.comment = comment;
                                                 point.doc_id = documentId;
+                                                point.document_id = doc_info[1];
                                                 point.comment_doc_id = comment_doc_id;
                                                 input_data['point'] = point;
                                                 var is_comment = point.sub_type != 'personal';

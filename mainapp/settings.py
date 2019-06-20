@@ -37,18 +37,9 @@ EMAIL_USE_TLS = True
 # Application definition
 
 INSTALLED_APPS = [
-    'ngapp',
-    'corsheaders',
-    'chat',
-    'authsignup',
-    'my_admin',
-    'meetings.apps.MeetingConfig',
-    'voting',
-    'resources',
-    'bootstrapform',
-    'survey',
-    'documents',
-    'esign',
+    
+    'corsheaders',        
+    'bootstrapform',    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,6 +48,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    
+    'ngapp',
+    'my_admin',
+    'authsignup',
+    'documents',
+    'meetings.apps.MeetingConfig',
+    'chat',    
+    'voting',
+    'resources',
+    'survey',
+    'esign',
 ]
 
 REST_FRAMEWORK = {

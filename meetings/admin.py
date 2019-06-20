@@ -176,9 +176,7 @@ class UserAdmin(BaseUserAdmin):
     def image_tag(self, obj):
         if obj.image:
             return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.image))
-
     image_tag.short_description = ''
-    pass
 
 
 class AdminAdmin(UserAdmin):
@@ -262,9 +260,8 @@ class MeetingGroupAdmin(GroupAdmin):
         qs = MeetingGroup.objects.filter()
         return qs
 
-    def save_model(self, request, obj, form, change):
-        a=1
-        super(GroupAdmin, self).save_model(request, obj, form, change)
+    def save_model(self, request, obj, form, change):        
+        super(MeetingGroupAdmin, self).save_model(request, obj, form, change)
 
 
 class CommitteeAdmin(admin.ModelAdmin):
@@ -318,9 +315,9 @@ admin.site.register(AgendaDocument)
 admin.site.register(Admin,AdminAdmin)
 admin.site.register(Director,DirectorAdmin)
 admin.site.register(Staff,StaffAdmin)
+admin.site.register(Profile,UserAdmin)
 admin.site.register(MeetingGroup,MeetingGroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
-admin.site.register(Profile,UserAdmin)
 admin.site.register(SignDocument, SignDocumentForm)
 
 admin.site.site_header = "BoardSheet"

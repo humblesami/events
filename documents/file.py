@@ -1,11 +1,12 @@
 import os
 import base64
 import subprocess
-from PyPDF2 import PdfFileReader
 from fpdf import FPDF
 from PIL import Image
-from django.db import models
 from mainapp import settings
+from PyPDF2 import PdfFileReader
+
+from django.db import models
 from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
 
@@ -166,58 +167,17 @@ class File(models.Model):
                     group_name = group.name
                 breadcrumb.append({'title': group_name, 'link': '/profiles/' + group_name.lower()})
             breadcrumb.append({'title': profile_obj.name, 'link': '/' + group.name.lower() + '/' + str(profile_obj.id)})
-            # if file_obj.profiles:
-            #     pass
         # if file_obj._state:
         #     if file_obj._state.fields_cache:
         #         for model_name in file_obj._state.fields_cache:
         #             if file_obj._state.fields_cache[model_name]:
         #                 breadcrumb = file_obj._state.fields_cache[model_name].breadcrumb
         # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
-        doc = {'id': file_id, "doc": result, 'doc_name': file_obj.name, 
-        'type': file_obj.file_type, 'breadcrumb': breadcrumb}
+        doc = {
+            'id': file_id, 
+            "doc": result, 
+            'doc_name': file_obj.name, 
+            'type': file_obj.file_type,
+            'breadcrumb': breadcrumb
+        }
         return {'data': doc}
-
-
-#
-#
-# converted = False
-#             if file.pdf_doc:
-#                 converted = file['pdf_doc'].decode('utf-8')
-#             doc = {'id': doc_id, "doc": converted, 'doc_nget-attendeesame': file['name'], 'type': doc_type}
-#             if file.html:
-#                 doc['doc'] = file['html']
-#                 doc['excel'] = 1
-#
-#             if doc_type == 'resource':
-#                 props = ['parent_folder.name', 'parent_folder.id']
-#             elif doc_type == 'meeting':
-#                 attendeesList = file['meeting_id']['attendee_ids']
-#                 for obj in attendeesList:
-#                     attendees.append({"name":obj['display_name'],"id":obj['id']})
-#                 props = ['meeting_id.name', 'meeting_id.id']
-#             elif doc_type == 'topic':
-#                 attendeesList = file['topic_id']['meeting_id']['attendee_ids']
-#                 for obj in attendeesList:
-#                     attendees.append({"name": obj['display_name'], "id": obj['id']})
-#                 props = ['topic_id.name', 'topic_id.id']
-#             elif doc_type == 'signature':
-#                 props = ['meeting_id.name', 'meeting_id.id', 'mp_signature_status']
-#             elif doc_type == 'home':
-#                 props = ['name']
-#             elif doc_type == 'voting':
-#                 attendeesList = file['voting_id']['partner_ids']
-#                 for obj in attendeesList:
-#                     attendees.append({"name":obj['display_name'],"id":obj['id']})
-#                 props = ['voting_id.name', 'voting_id.id']
-#             else:
-#                 return ws_methods.http_response('Invalid document type ' + doc_type)
-#
-#             obj = ws_methods.object_to_json_object(file, props)
-#             for ke in obj:
-#                 doc[ke] = obj[ke]
-#             doc['uid'] = uid
-#             doc['model'] = model_name
-#             doc['attendees'] = attendees
-#             res = ws_methods.http_response('', doc)
-#             return res

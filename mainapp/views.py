@@ -1,10 +1,8 @@
 import os
-
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http.response import FileResponse, HttpResponse
-from django.shortcuts import render, get_object_or_404
 
-from documents.file import File
 from mainapp.settings import MEDIA_ROOT
 
 

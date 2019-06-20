@@ -16,7 +16,7 @@ find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 python manage.py migrate myproj --fake-initial
 python3 manage.py makemigrations
 python3 manage.py migrate
-python3 manage.py createsuperuser --username=sa --email=sami.akram@gmail.com
+python3 manage.py createsuperuser --username=sa --email=sami.akram@digitalnet.com
 
 
 find . -path "*/migrations/*.pyc"  -delete

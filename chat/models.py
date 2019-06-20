@@ -1,10 +1,14 @@
+import sys
 import base64
+import traceback
 from django.db import models
 from django.apps import apps
 from datetime import datetime
-from documents.file import File
 from mainapp import ws_methods
 from django.contrib import admin
+from django.contrib.auth.models import User
+
+from documents.file import File
 from meetings.model_files.user import Profile, create_group
 
 
@@ -322,55 +326,84 @@ class MessageDocument(File):
 class AuthUserChat(models.Model):
     @classmethod
     def verify_chat_user(cls, request, params):
-        uid = params['id']
-        uid = int(uid)
-        mp_users = Profile.objects.filter()
-        unseen_messages = 0
-        friend_list = {}
-        friend_ids = []
-        req_user = False
-        for friendObj in mp_users:
-            if friendObj.pk != uid:
-                id = friendObj.id
-                name = friendObj.fullname()
-                photo = friendObj.image.url
-                unseen = len(Message.objects.filter(sender=friendObj.id, read_status=False, to=uid))
-                unseen_messages += unseen
-                friend = {
-                    'id': id,
-                    'unseen': unseen,
-                    'name': name,
-                    'photo': photo
-                }
-                friend_list[id] = friend
-                friend_ids.append(id)
-            else:
-                req_user = {
-                    'id': uid,
-                    'name': friendObj.fullname(),
-                    'photo': friendObj.image.url
-                }
-        if not req_user:
-            user_object = Profile.objects.get(pk=uid)
-            if user_object.is_superuser:
-                profile_object = Profile(user_ptr=user_object, name=user_object.username)
-                profile_object.save()
-                create_group(user_object, 'Admin')
-                req_user = {
-                    'id': uid,
-                    'name': profile_object.name,
-                    'photo': profile_object.image.url
-                }
-        if not req_user:
-            return "user does not exist"
-        notifications = Notification.getMyNotifications(request, False)
         data = {
-            'friends' : friend_list,
-            'friendIds': friend_ids ,
-            'notifications': notifications,
-            'unseen': unseen_messages,
-            'user': req_user
+            'friends' : [],
+            'friendIds': [],
+            'notifications': [],
+            'unseen': 0,
+            'user': {
+                'id': request.user.id,
+                'name': 'Anonymous',
+                'photo': 'https://theareligroup.com/wp-content/uploads/2016/03/user-experiance-icon.png',
+            }
         }
+        try:
+            uid = params['id']
+            uid = int(uid)
+            mp_users = Profile.objects.filter()
+            unseen_messages = 0
+            friend_list = {}
+            friend_ids = []
+            for friendObj in mp_users:
+                if friendObj.pk != uid:
+                    id = friendObj.id
+                    name = friendObj.fullname()
+                    photo = friendObj.image.url
+                    unseen = len(Message.objects.filter(sender=friendObj.id, read_status=False, to=uid))
+                    unseen_messages += unseen
+                    friend = {
+                        'id': id,
+                        'unseen': unseen,
+                        'name': name,
+                        'photo': photo
+                    }
+                    friend_list[id] = friend
+                    friend_ids.append(id)                
+            
+            user_object = User.objects.get(pk=uid)
+            profile_object = Profile.objects.filter(pk = uid)
+            if not profile_object:
+                profile_object = Profile(user_ptr=user_object, name=user_object.username)            
+                profile_object.save()
+                if user_object.is_superuser:
+                    create_group(user_object, 'Admin')
+                else:
+                    create_group(user_object, 'Staff')
+            else:
+                profile_object = profile_object[0]
+                res = None
+                if not profile_object.groups.constrained_target:
+                    if profile_object.is_superuser:
+                        res = create_group(user_object, 'Admin')
+                    else:
+                        res = create_group(user_object, 'Director')
+                    if res != 'done':
+                        if res:
+                            data['message'] = {'error': res }
+                        else:
+                            data['message'] = {'error': 'Error in group creation' }
+            req_user = {
+                'id': uid,
+                'name': profile_object.name,
+                'photo': profile_object.image.url
+            }
+            notifications = Notification.getMyNotifications(request, False)
+            data = {
+                'friends' : friend_list,
+                'friendIds': friend_ids ,
+                'notifications': notifications,
+                'unseen': unseen_messages,
+                'user': req_user
+            }
+        except:
+            eg = traceback.format_exception(*sys.exc_info())
+            errorMessage = ''
+            cnt = 0
+            for er in eg:
+                cnt += 1
+                if not 'lib/python' in er:
+                    errorMessage += " " + er
+            data['message'] = {'error': errorMessage }
         return data
 
 

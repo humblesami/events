@@ -4,8 +4,9 @@ import datetime
 from django.apps import apps
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
-from .file import *
+from documents.file import File
 from chat.models import Notification
 from mainapp.ws_methods import set_obj_attrs
 from meetings.model_files.user import Profile
@@ -184,7 +185,7 @@ class AnnotationDocument(models.Model):
             client_item = next(item for item in user_annotations if item["uuid"] == obj.uuid)            
             for child in client_item['comments']:
                 child_to_save = CommentAnnotation(
-                    point_id_id=obj.id,
+                    point_id=obj.id,
                     body=child['body'],                     
                     user_id=child['commented_by'],
                     date_time=child['date_time'],
@@ -362,51 +363,60 @@ class PointAnnotation(Annotation):
 
 class CommentAnnotation(models.Model):
     body = models.CharField(max_length=500)
-    point_id = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
+    point = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     date_time = models.DateTimeField(auto_now_add=True)
     uuid = models.CharField(max_length=200)
 
     @classmethod
-    def save_comment(cls, request, params):
-        doc_id = params.get('parent_res_id')
+    def save_comment(cls, request, params):        
         user_id = request.user.id
         point = params.get('point')
         if point:
-            point['document_id'] = doc_id
-            user_point = PointAnnotation.save_point(point)
-            point_id = user_point.get('point_id')
-            new_point = user_point.get('new_point')
+            point_id = None
+            user_point = None
+            existing_point = None
+            if point.get('id'):
+                existing_point = PointAnnotation.objects.filter(pk = point['id'])
+            if existing_point:
+                user_point = existing_point[0]
+                point_id = user_point.id
+            else:
+                user_point = PointAnnotation.save_point(point)
+                point_id = user_point['point_id']
             comment = point.get('comment')
             comment_uuid = comment.get('uuid')
             comment_body = comment.get('content')
             comment_uid = comment.get('uid')
             comment_date_time = comment.get('date_time')
             if comment:
-                comment = CommentAnnotation(body=comment_body, point_id_id=point_id, user_id=comment_uid,
+                comment = CommentAnnotation(body=comment_body, point_id=point_id, user_id=comment_uid,
                                             date_time=comment_date_time, uuid=comment_uuid)
                 comment.save()
                 res = {}
                 res['point'] = point
                 point['id'] = point_id
-                res['new_point'] = new_point
+                if not existing_point:
+                    res['new_point'] = 1
                 doc_type = params['doc_type']
-                res_id = params['parent_res_id']
                 res_model = ''
+                res_id = params['res_id']
 
-                if len(comment_body) > 20:
+                if len(comment_body) > 20:                    
                     comment_body = '=> '+ comment_body[0: 20] + '...'                
                 text = 'You have new comment '+ comment_body +' on '
                 if doc_type == 'meeting':
                     res_model = 'MeetingDocument'
                     model = apps.get_model('meetings', res_model)
-                    obj = model.objects.get(pk = doc_id)
+                    obj = model.objects.get(pk = res_id)
                     text += ' meeting document '+obj.name+ ' in '+obj.meeting.name
                 elif doc_type == 'topic':
                     res_model = 'AgendaDocument'
                     model = apps.get_model('meetings', res_model)
-                    obj = model.objects.get(pk = doc_id)
+                    obj = model.objects.get(pk = res_id)
                     text += ' an agenda-topic-document '+obj.name+ ' in meeting=>'+obj.agenda.event.name
+                else:
+                    raise ValidationError('Invalid document type '+doc_type)
                 res_details = {
                     'res_app': 'meetings',
                     'res_model': res_model,
@@ -418,94 +428,3 @@ class CommentAnnotation(models.Model):
                 return res
         else:
             return 'Invalid Point'
-
-
-
-
-
-
-
-def add_drawing(cls, val, doc_id):
-    type = val.get('type')
-    name = val.get('class')
-    user = val.get('uid')
-    date_time = val.get('date_time')
-    page = val.get('page')
-    uuid = val.get('uuid')
-    width = val.get('width')
-    color = val.get('color')
-    lines = val.get('lines')
-    drawing = DrawingAnnotation(user_id=user, date_time=date_time, page=page,
-                                type=type, uuid=uuid, document_id=doc_id,
-                                width=width, color=color)
-    drawing.save()
-    if drawing:
-        # drawing = drawing[0]
-        for line in lines:
-            drawing_id = drawing.id
-            x = line[0]
-            y = line[1]
-            drawing_line = Line(drawing_id=drawing_id, x=x, y=y)
-            drawing_line.save()
-
-
-def old_methd(cls, doc, params):
-    values = json.loads(params['annotations'])
-    for val in values:
-        annotation_type = val.get('type')
-        name = val.get('class')
-        user = val.get('uid')
-        date_time = val.get('date_time')
-        page = val.get('page')
-        uuid = val.get('uuid')
-        sub_type = val.get('sub_type')
-        x = val.get('x')
-        y = val.get('y')
-
-        comments = val.get('comments')            
-
-        # if annotation_type in('strikeout', 'highlight', 'underline'):
-        #     RectangleAnnotation.add_rectangle(val, doc.id)
-        
-        # if annotation_type == 'drawing':
-        #     DrawingAnnotation.add_drawing(val, doc.id)
-
-        if annotation_type == 'point' and sub_type == 'personal':
-            point = PointAnnotation(name=name, user_id=user, date_time=date_time, page=page,
-                            type=type, uuid=uuid, sub_type=sub_type, x=x, y=y,
-                                    created_by_id=user, document_id = doc.id)
-            point.save()
-            point_id = point.pk
-            if comments:
-                for val in comments:
-                    body = val['content']
-                    uuid = val['uuid']
-                    date_time = val['date_time']
-                    commented_by = val['uid']
-                    comment_anno = CommentAnnotation(body=body, point_id_id=point_id, user_id=commented_by
-                                                    , date_time=date_time, uuid=uuid)
-                    comment_anno.save()
-                
-
-def add_rectangle(cls, val, doc_id):
-    type = val.get('type')
-    name = val.get('class')
-    user = val.get('uid')
-    date_time = val.get('date_time')
-    page = val.get('page')
-    uuid = val.get('uuid')
-    color = val.get('color')
-
-    dimensions = val.get('rectangles')
-    rectangle = RectangleAnnotation(name=name, user_id=user, date_time=date_time, page=page,
-                                    type=type, uuid=uuid, document_id=doc_id, color=color)
-    rectangle.save()        
-    for dimension in dimensions:
-        x = dimension.get('x')
-        y = dimension.get('y')
-        width = dimension.get('width')
-        height = dimension.get('height')
-        user_dimension = Dimension(rectangle_id=rectangle.id, x=x, y=y, width=width, height=height)
-        user_dimension.save()
-
-

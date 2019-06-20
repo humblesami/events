@@ -1,26 +1,29 @@
+import io
+import os
+import uuid
+import json
 import base64
 import datetime
-import io
-import json
-import os
 import threading
-import uuid
-from collections import OrderedDict
-from random import randint
 
-from PyPDF2 import PdfFileWriter, PdfFileReader
-from django.core.files import File as DjangoFile
-
-from PIL import ImageFont, Image, ImageDraw
-from django.db import models
 from fpdf import FPDF
+from random import randint
+from collections import OrderedDict
+from PIL import ImageFont, Image, ImageDraw
+from PyPDF2 import PdfFileWriter, PdfFileReader
+
+from django.core.files import File as DjangoFile
+from django.db import models
+
 
 from documents.file import File
-from esign.model_files.document import SignDocument
 from esign.model_files.signature import Signature
+from esign.model_files.document import SignatureDoc
+
 from mainapp.settings import MEDIA_ROOT
 from mainapp.ws_methods import queryset_to_list
-from meetings.model_files.user import Profile
+
+from .user import Profile
 from .event import Event
 from .topic import Topic
 
@@ -79,7 +82,7 @@ class AgendaDocument(File):
                 res.append(obj.id)
             return res
 
-class SignDocument(SignDocument):
+class SignDocument(SignatureDoc):
     send_to_all = models.BooleanField(blank=True, null=True)
     meeting = models.ForeignKey(Event, on_delete=models.CASCADE,blank=True, null=True)
 
@@ -87,7 +90,11 @@ class SignDocument(SignDocument):
         if not self.file_type:
             self.file_type = 'signature'
         super(SignDocument, self).save(*args, **kwargs)
-
+    
+    def embed_signatures(self):
+        file = self.original_pdf
+        signed_doc = self.get_signed_doc(file, self.signature_set.all())
+        self.pdf_doc.save(self.original_pdf.name, DjangoFile(signed_doc), self.send_to_all)
     
     @property
     def breadcrumb(self):
@@ -337,7 +344,8 @@ class SignDocument(SignDocument):
 
         return doc_data
 
-    def get_doc_data(request,doc,token=False):
+    @classmethod
+    def get_doc_data(cls, request, doc, token=False):
         pdf_doc = doc.pdf_doc.read()
         pdf_doc = base64.b64encode(pdf_doc)
         pdf_doc = pdf_doc.decode('utf-8')
@@ -365,7 +373,8 @@ class SignDocument(SignDocument):
             s["my_record"] = my_record
         return {"pdf_binary":pdf_doc,"doc_data":signatures}
 
-    def get_auto_sign( sign, date=""):
+    @classmethod
+    def get_auto_sign(cls, sign, date=""):
         curr_dir = os.path.dirname(__file__)
         pth = curr_dir.replace('model_files', 'static')
         font = ImageFont.truetype(pth + "/FREESCPT.TTF", 200)
@@ -394,7 +403,8 @@ class SignDocument(SignDocument):
         binary_signature = binary_signature.decode('utf-8')
         return binary_signature
 
-    def get_sign_text( sign, text):
+    @classmethod
+    def get_sign_text(cls, sign, text):
         curr_dir = os.path.dirname(__file__)
         pth = curr_dir.replace('model_files', 'static')
         font = ImageFont.truetype(pth + "/FREESCPT.TTF", 200)

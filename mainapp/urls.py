@@ -27,7 +27,7 @@ from .import rest_api
 
 urlpatterns = [
     url(r'', include('ngapp.urls')),
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls, name='admin'),
     path('rest/public', rest_api.public, name = 'public'),
     path('rest/secure', rest_api.secure, name = 'secure'),
     path('rest/secure1', rest_api.session, name = 'session'),

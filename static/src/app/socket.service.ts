@@ -376,6 +376,10 @@ export class SocketService {
             $.ajax(options);
 
             function onAuthenticated(data) {
+                if(data.message)
+                {
+                    console.log(data.message.error);
+                }
                 if(data.user && data.friends)
                 {
                     
