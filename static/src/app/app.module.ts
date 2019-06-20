@@ -56,7 +56,7 @@ import { RecorddetailsComponent } from '../components/recorddetails/recorddetail
 import { CalendarComponent } from '../components/calendar/calendar.component';
 import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.component';
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component';
-
+import { MentionModule } from 'angular-mentions';
 
 @NgModule({
     imports: [
@@ -64,7 +64,8 @@ import { SurveyresultsComponent } from '../components/surveyresults/surveyresult
         FormsModule,
         AppRoutingModule,
         HttpClientModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MentionModule
     ],
     declarations: [
         AppComponent,

@@ -149,7 +149,7 @@ export class DocumentComponent implements OnInit {
             window['functions'].hideLoader('loaddocwaiter');
         });        
     }
-
+    mentionConfig:any
     ngOnInit() {
         var obj_this = this;
         window['init_doc_comments']();
@@ -174,6 +174,20 @@ export class DocumentComponent implements OnInit {
 				$('.page-next-btn').attr("disabled", "disabled");
 			else
 				$('.page-next-btn').removeAttr('disabled');
-		});
+        });
+         obj_this.mentionConfig ={
+            items: [{id:1, name: 'Faizan'}, {id: 2, name: 'Sami'}],
+            insertHTML: true,
+            triggerChar: '@',
+            labelKey: 'name',
+            mentionSelect:function(val){
+                // obj_this.should_save = false;
+                setTimeout(function(){
+                    let val = $('.mention-div').text();
+                    $('.mention-div').html(val.replace('&lt','<').replace('&gt', '>'));                        
+                },10);                    
+                return '<a>'+val.name+'</a>';                    
+            }
+        };
     }
 }

@@ -15,10 +15,11 @@
 				<form class="col-lg-12">
 					<div class="form-group">
 						<div *ngIf="comment_subtype === 1">
-							<textarea name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="comment" placeholder="Add comments here."></textarea>
+							<textarea [mentionConfig]= "mentionConfig" name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="comment" placeholder="Add comments here."></textarea>
+							<!-- <div [mentionConfig]= "mentionConfig" placeholder="Add comments here." contenteditable="true" class="mention-div"></div> -->
 						</div>
 						<div *ngIf="comment_subtype === 2">
-							<textarea name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="notes" placeholder="Add notes here"></textarea>
+							<textarea [mentionConfig]= "mentionConfig" name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="notes" placeholder="Add notes here"></textarea>
 						</div>
 						<button [disabled]="!new_comment" class="btn btn-primary" type = "submit" (click)="save_comment(null)" >Post</button>
 					</div>
@@ -65,7 +66,8 @@
 							</div>
 							<div class="reply-input">
 								<div *ngIf="c.active" class="reply-textarea-conatiner">
-									<textarea (keyup)="save_comment_key_up($event, c)" [(ngModel)]="new_reply"  class="form-control reply-box" rows="4" id="reply" placeholder="type here . . ."></textarea>
+									<textarea [mentionConfig]= "mentionConfig" (keyup)="save_comment_key_up($event, c)" [(ngModel)]="new_reply"  class="form-control reply-box" rows="4" id="reply" placeholder="type here . . ."></textarea>
+									<!-- <div contenteditable="true" [mentionConfig]= "mentionConfig">Write Something Please </div> -->
 								</div>
 
 								<div class="reply" *ngIf="c.children && c.children.length">

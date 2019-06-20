@@ -364,6 +364,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 </a>
             </div>
         </div>
-        <app-comments *ngIf="meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}"></app-comments>
+        <app-comments *ngIf="meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}" [mention_list]="meeting_object.attendees"></app-comments>
     </div>
 </div>

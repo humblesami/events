@@ -372,7 +372,7 @@ class AuthUserChat(models.Model):
             else:
                 profile_object = profile_object[0]
                 res = None
-                if not profile_object.groups.constrained_target:
+                if not profile_object.groups.all():
                     if profile_object.is_superuser:
                         res = create_group(user_object, 'Admin')
                     else:

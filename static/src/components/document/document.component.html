@@ -204,7 +204,9 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                 </div>
             </div>
             <form class="comment-list-form">
-                <textarea id="commentText" placeholder="Add a Comment"></textarea>
+                <textarea id="commentText"
+                [mentionConfig] = "mentionConfig"
+                placeholder="Add a Comment"></textarea>
             </form>
         </div>
         <!--<div id="notification-wrapper">-->

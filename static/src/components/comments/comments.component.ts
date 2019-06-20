@@ -14,7 +14,8 @@ export class CommentsComponent implements OnInit {
 
     @Input() res_app: string;
     @Input() res_model: string;
-    @Input() res_id: string;    
+    @Input() res_id: string;
+    @Input() mention_list: any;
 
 	comments = [];
 	notes = [];
@@ -22,11 +23,14 @@ export class CommentsComponent implements OnInit {
 	comment_subtype = 1;
     new_comment = '';
     active_comment : any;
-
+    mentionConfig: any;
+    mentionedList: any;
+    should_save:boolean;
 	constructor(private httpService: HttpService,
 				private socketService: SocketService,
 				private route: ActivatedRoute) {
-                    
+                    this.mentionedList = []
+                    this.should_save = true;
                 }
 
 	get_data(input_data) {
@@ -237,6 +241,28 @@ export class CommentsComponent implements OnInit {
     
 	ngOnInit() {
         let obj_this = this;
+        if (obj_this.mention_list)
+        {
+            obj_this.mentionConfig = {
+                items: obj_this.mention_list,
+                insertHTML: true,
+                triggerChar: "@",
+                labelKey: 'name',
+                mentionSelect: function(val){
+                    obj_this.should_save = false;                    
+                    let in_list = obj_this.mentionedList.find(function(element) {
+                        return element == val.id;
+                    });
+                    if (!in_list)
+                    {
+                        obj_this.mentionedList.push(val.id)
+                    }
+                    let tag = $('<a mentioned_id="'+val.id+'" href="/#/'+val.group+'/'+val.id+'">'+val.name+'</a>');
+                    $('.mention-div').append(tag);
+                    return '';
+                }
+            }
+        }
 		let input_data = {
 			res_model: obj_this.res_model,
             res_id: obj_this.res_id,
@@ -281,10 +307,17 @@ export class CommentsComponent implements OnInit {
     
 	save_comment_key_up(e, parent){
 
-		let obj_this = this;
-		if(e.keyCode == 13 && !e.shiftKey){
-			e.preventDefault();
-			obj_this.save_comment(parent);
-		}
+        let obj_this = this;
+        if (obj_this.should_save)
+        {
+            if(e.keyCode == 13 && !e.shiftKey){
+                e.preventDefault();
+                obj_this.save_comment(parent);
+            }
+        }
+        else
+        {
+            obj_this.should_save = true;
+        }
 	}
 }

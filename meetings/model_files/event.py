@@ -189,6 +189,7 @@ class Event(models.Model):
             attendee['id'] = attendee['uid'] = attendee_obj.id
             attendee['name'] = attendee_obj.fullname()
             attendee['photo'] = attendee_obj.image.url
+            attendee['group'] = list(attendee_obj.groups.all())[0].name.lower()
             attendee['attendance_status'] = cls.get_attendance_status(meeting_id, attendee_obj.id)
             attendees.append(attendee)
         meeting_object['topics'] = topics

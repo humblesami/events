@@ -99,7 +99,12 @@ def create_group(obj, group_name):
                         content_id = content_id[0].id
                     for permission_type in model_permissions:
                         code_name = permission_type+'_'+model_name
-                        permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)[0]
+                        permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)
+                        if not permission:
+                            error_list.append('No permission entry for content_type_id='+str(content_id)+' for '+app_name+'.'+model_name)
+                            continue
+                        else:
+                            permission = permission[0]
                         user_group.permissions.add(permission)            
             if error_list:
                 user_group.delete()

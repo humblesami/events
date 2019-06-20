@@ -3195,3 +3195,7 @@ a.kanban-card.profiledataresume .DocumentWrapper{
     right: 0;
     bottom: 0;
 }
+[contenteditable=true]:empty:before{
+    content: attr(placeholder);
+    display: block; /* For Firefox */
+  }
