@@ -36,19 +36,19 @@ title="Surveys"></app-breadcrumb>
 			<div class="kanban-card" *ngFor="let survey of survey_data">
 				<div class="kanban-meeting-info">
 					<a class="kanban-upcoming-meeting" routerLink="/survey/{{survey.id}}">
-						<div class="CalendarDateWrapper">
-							<!-- <span *ngIf="survey.open_date" class="CalendarDateWrap">
-								<span class="kanban-upcoming-meeting-date">
-									{{voting.open_date.day}}
-								</span>
-								<span>
-									{{voting.open_date.month_year}}
-								</span>
-								<span>
-									{{voting.open_date.time}}
-								</span>
-							</span> -->
-						</div>
+						<!--<div class="CalendarDateWrapper">-->
+							<!--&lt;!&ndash; <span *ngIf="survey.open_date" class="CalendarDateWrap">-->
+								<!--<span class="kanban-upcoming-meeting-date">-->
+									<!--{{voting.open_date.day}}-->
+								<!--</span>-->
+								<!--<span>-->
+									<!--{{voting.open_date.month_year}}-->
+								<!--</span>-->
+								<!--<span>-->
+									<!--{{voting.open_date.time}}-->
+								<!--</span>-->
+							<!--</span> &ndash;&gt;-->
+						<!--</div>-->
 						<div class="Info">
 							<p *ngIf="survey.name">
 								<b>{{survey.name}}</b>

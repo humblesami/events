@@ -9,8 +9,14 @@
 {% endblock %}
 
 {% block body %}
-	<h1> {{survey.name}} </h1>
-	<div class="survey-description"> {{survey.description|safe}} </div>
+	<div class="col-lg-12 iframe-survey-head">
+		<h1 class="HeadingWrap">
+			{{survey.name}}
+		</h1>
+	</div>
+	<div class="col-lg-12">
+		<div class="survey-description"> {{survey.description|safe}} </div>
+	</div>
 	<div><form action="{% url 'survey-detail' id=survey.id %}" method="post">
 	    {% csrf_token %}
         {% for category in categories %}
@@ -36,16 +42,16 @@
                 </div>
             </div>
         {% empty %}
-            <h3> {% trans "Questions" %} </h3>
+				<div class="col-lg-12 iframe-survey-head"> <h3> {% trans "Questions" %} </h3></div>
             {% include "survey/question.html" %}
         {% endfor %}
 
-        <br>
-
-	    <input
-            class="btn btn-default btn-lg"
-	        type="submit"
-	        value="{% trans "I'm done!" %}"
-        >
+		<div class="col-lg-12">
+			<input
+				class="btn btn-default btn-lg"
+				type="submit"
+				value="{% trans "I'm done!" %}"
+				>
+		</div>
 	</form></div>
 {% endblock %}

@@ -79,7 +79,7 @@
 
 .comments  .title-wrapper .modal-header{
     margin:35px 0;
-    padding: 0;
+    padding: 0 0 15px;
     font-size: 30px;
     font-weight: 400;
     background: transparent !important;

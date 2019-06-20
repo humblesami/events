@@ -3,23 +3,23 @@
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/actions/surveys"}, {"title":"{{surveyDetails.name}}", "link":"/survey/{{surveyDetails.id}}"}]'
 title="Results"></app-breadcrumb>
 <div class="router-outlet">
-        <div class="col-sm-3" style="position: absolute; right:0%;">
-                <canvas id="progress-chart"></canvas>
-            </div>
+
   <div class="container" *ngIf="surveyDetails">
-      <div class="col-sm-9 UserProfileDiscription">
-          <h3>{{surveyDetails.name}}</h3>
-      </div>
+	  <div class="MainTitleHeadWrap">
+			<div class="HeadingWrap">
+				{{surveyDetails.name}}
+			</div>
+		</div>
       <div class="row">
 
-          <div class="col-sm-12 mr-b20" *ngIf="surveyDetails.questions">
-              <div *ngFor="let question of surveyDetails.questions" class="row">
-                  <div class="col-sm-3">
+          <div class="col-sm-8 mr-b20" *ngIf="surveyDetails.questions">
+              <div *ngFor="let question of surveyDetails.questions" class="row surveyDetailsquestions">
+                  <div class="col-sm-12">
                       <label>
-                          <b>Question</b>
+                          Question
                       </label>
                   </div>
-                  <div class="col-sm-9 UserProfileDiscription">
+                  <div class="col-sm-12 UserProfileDiscription">
                       <h4>{{question.name}}</h4>
                       <div *ngIf="question.choices" style="display: flex">
                           <div *ngFor="let choice of question.choices">
@@ -50,36 +50,41 @@ title="Results"></app-breadcrumb>
               <!-- <div *ngIf="topic.lead" class="row">
                   <div class="col-sm-3">
                       <label>
-                          <b>Lead</b>
+                          Lead
                       </label>
                   </div>
-                  <div class="col-sm-9 UserProfileDiscription">
+                  <div class="col-sm-12 UserProfileDiscription">
                       {{topic.lead}}
                   </div>
               </div>
               <div *ngIf="topic.duration" class="row">
                   <div class="col-sm-3">
                       <label>
-                          <b>Duration</b>
+                          Duration
                       </label>
                   </div>
-                  <div class="col-sm-9 UserProfileDiscription">
+                  <div class="col-sm-12 UserProfileDiscription">
                       {{topic.duration}}
                   </div>
               </div>
               <div *ngIf="topic.content" class="row">
                   <div class="col-sm-3">
                       <label>
-                          <b>Content</b>
+                          Content
                       </label>
                   </div>
-                  <div class="col-sm-9 UserProfileDiscription">
+                  <div class="col-sm-12 UserProfileDiscription">
                       {{topic.content}}
                   </div>
               </div> -->
 
               
           </div>
+		   <div class="col-sm-4">
+				<div class="sticky-top">
+		  			<canvas id="progress-chart"></canvas>
+	  			</div>
+			</div>
       </div>
   </div>
   <!-- <div class="container">
@@ -93,7 +98,7 @@ title="Results"></app-breadcrumb>
                       <div class="SurveysInfoBoxTitle">
                           <span class="container">
                               <h5>
-                                  <b>{{vote.name}}</b>
+                                  {{vote.name}}
                               </h5>
                           </span>
                       </div>
@@ -113,7 +118,7 @@ title="Results"></app-breadcrumb>
           <div class="row">
               <div class="col-sm-12">
                   <h4>
-                      <b>Documents</b>
+                      Documents
                   </h4>
                   <br>
               </div>

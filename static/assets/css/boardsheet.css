@@ -23,7 +23,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+.icon-calendar:before {
+  content: "\e90b";
+}
 .icon-action:before {
   content: "\e904";
 }

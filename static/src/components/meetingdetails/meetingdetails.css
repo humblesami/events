@@ -177,7 +177,7 @@ h5, .h5 {
 
 .title-wrapper .modal-header{
     margin:25px 0;
-    padding: 0;
+    padding: 0 0 15px;
     font-size: 30px;
     font-weight: 400;
     background: transparent !important;

@@ -20,16 +20,22 @@ title="e-Signature"></app-breadcrumb>
                     </div>
             </div>
     <div class="cards container mt-4">
-        <div class="row">
-            <div class="col-md-3 mb-4" *ngFor="let doc of docs">
-                <a routerLink="/signdoc/{{doc.id}}" class="kanban-folder">
-                    <span>{{doc.name}}</span>
-                    <div class="Folderwrapper">
-                        <i class="fa fa-file"></i>
-                    </div>
-                </a>
-            </div>
-        </div>
+		<div class="row docwrappercontainer">
+			<div class="col-sm-6 col-md-4 col-lg-2 mb-4"  *ngFor="let doc of docs">
+				<a routerLink="/signdoc/{{doc.id}}" class="">
+					<div class="DocumentWrapper">
+						<div class="DocIcon">
+							<span class="rounded-circle">
+								<i class="icon-doc-file"></i>
+							</span>
+						</div>
+						<div class="DocInfoVertical">
+							<div class="DocText text-truncate">{{doc.name}}</div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
     </div>
     <div class="container" *ngIf="!docs">
         <div class="row">

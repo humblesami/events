@@ -1,6 +1,6 @@
-
-/* @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i'); */
-
+:root{
+	--font-family: "Roboto-Condensed" !important;
+}
 @font-face {
   font-family: 'boardsheet';
   src:  url('../fonts/boardsheet.eot?3pm4ih');
@@ -25,6 +25,9 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.icon-calendar:before {
+  content: "\e90b";
 }
 .icon-doc-file:before {
   content: "\e90a";
@@ -76,7 +79,7 @@ html, body{
     padding-top: 1%;
 }
 body{
-    font-family: 'Roboto Condensed', sans-serif !important;
+    font-family: "Roboto-Condensed" !important;
     --toggle-left-menu-bg:#4B74B5;
     --toggle-menu-color:#757575;
     --menu-color-text: #ffffff;
@@ -1239,7 +1242,7 @@ button.navbar-toggler {
 }
 */
 
-#search-btn, .cursor_chooser, .notification-icon{
+#search-btn, .cursor_chooser, .notification-icon, .automanage{
 	background:transparent;
     padding: 0;
     color: #737373;
@@ -1255,7 +1258,14 @@ button.navbar-toggler {
 	position: relative;
 	margin: 0 5px;
 }
-#search-btn:hover i, .cursor_chooser:hover i, .notification-icon:hover i{
+
+.automanage a{
+	color: #737373;
+	display:block;
+	line-height:1;
+}
+
+#search-btn:hover i, .cursor_chooser:hover i, .notification-icon:hover i, .automanage:hover a{
     color: #3059C9;
 }
 
@@ -1463,7 +1473,7 @@ input#search-box {
     margin:0 0 15px;
 }
 .search-result-title{
-    font-family: 'Roboto Condensed', sans-serif !important;
+    font-family: "Roboto-Condensed" !important;
     font-size: 1.3rem;
     margin: 15px 0 5px;
 }
@@ -2873,6 +2883,12 @@ body.public .app-sidebar
     background: transparent;
     color: #3059C9;
 }
+.MeetingHeadWrapper .btn i, .MeetingBtnWrapper .btn i {
+    font-size: 15px;
+    padding-right: 5px;
+    position: relative;
+    top: -1px;
+}
 
 .HeadingWrap{
     color: #2B2B2B;
@@ -3198,4 +3214,4 @@ a.kanban-card.profiledataresume .DocumentWrapper{
 [contenteditable=true]:empty:before{
     content: attr(placeholder);
     display: block; /* For Firefox */
-  }
+}

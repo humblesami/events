@@ -105,7 +105,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Email Address:</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 {{profile_data.email}}
                             </div>
                         </div>
@@ -117,7 +117,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         <b>Department</b>
                                     </label>
                                 </div>
-                                <div class="col-sm-9 UserProfileDiscription">
+                                <div class="col-sm-12 UserProfileDiscription">
                                     {{profile_data.department}}
                                 </div>
                             </div>
@@ -127,7 +127,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         <b>Work Phone</b>
                                     </label>
                                 </div>
-                                <div class="col-sm-9 UserProfileDiscription">
+                                <div class="col-sm-12 UserProfileDiscription">
                                     {{profile_data.work_phone}}
                                 </div>
                             </div>
@@ -137,7 +137,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         <b>Cell Phone</b>
                                     </label>
                                 </div>
-                                <div class="col-sm-9 UserProfileDiscription">
+                                <div class="col-sm-12 UserProfileDiscription">
                                     {{profile_data.mobile_phone}}
                                 </div>
                             </div>
@@ -147,7 +147,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         <b>Fax</b>
                                     </label>
                                 </div>
-                                <div class="col-sm-9 UserProfileDiscription">
+                                <div class="col-sm-12 UserProfileDiscription">
                                     {{profile_data.fax}}
                                 </div>
                             </div>
@@ -157,7 +157,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         <b>Website</b>
                                     </label>
                                 </div>
-                                <div class="col-sm-9 UserProfileDiscription">
+                                <div class="col-sm-12 UserProfileDiscription">
                                     {{profile_data.website}}
                                 </div>
                             </div>
@@ -169,7 +169,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Nick Name</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 {{profile_data.nick_name}}
                             </div>
                         </div>
@@ -179,7 +179,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Email</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 {{profile_data.email}}
                             </div>
                         </div>
@@ -192,7 +192,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Job Title</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 {{profile_data.job_title}}
                             </div>
                         </div>
@@ -203,7 +203,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Board Joining Date</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 {{profile_data.board_joining_date | date:'MMM dd,yyyy'}}
                             </div>
                         </div>
@@ -216,7 +216,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Term Start Date</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 {{profile_data.term_start_date | date:'MMM dd,yyyy'}}
                             </div>
                         </div>
@@ -227,7 +227,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Term End Date</b>
                                 </label>s
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 {{profile_data.term_end_date| date:'MMM dd,yyyy'}}
                             </div>
                         </div>
@@ -238,7 +238,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Board Joing Date</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 {{profile_data.board_joing_date | date:'MMM dd,yyyy'}}
                             </div>
                         </div>
@@ -248,7 +248,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Bio</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription" [innerHtml]="bio_html"></div>
+                            <div class="col-sm-12 UserProfileDiscription" [innerHtml]="bio_html"></div>
                         </div>
                         <!--Committees-->
                         <div *ngIf="profile_data.committees && profile_data.committees.length > 0" class="row mb-2">
@@ -257,7 +257,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Committees</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 <span class="pill" *ngFor="let com of profile_data.committees">
                                     <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
                                 </span>
@@ -300,31 +300,31 @@ title="{{profile_data.name}}"></app-breadcrumb>
 						<div class="admin_info_after_name container">
 							<div *ngIf="profile_data.ethnicity" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Ethnicity</b>
+									<label class="question-label">
+                          <b>Ethnicity</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.ethnicity}}
 								</div>
 							</div>
 							<div *ngIf="profile_data.gender" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Gender</b>
+									<label class="question-label">
+                          <b>Gender</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.gender}}
 								</div>
 							</div>
 							<div *ngIf="profile_data.veteran" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Veteran</b>
+									<label class="question-label">
+                          <b>Veteran</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.veteran}}
 								</div>
 							</div>
@@ -332,11 +332,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 							<div *ngIf="profile_data.disability" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Disability</b>
+									<label class="question-label">
+                          <b>Disability</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.disability}}
 								</div>
 							</div>
@@ -384,31 +384,31 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							</div>
 							<div *ngIf="profile_data.admin_first_name" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>First Name</b>
+									<label class="question-label">
+                          <b>First Name</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.admin_first_name}}
 								</div>
 							</div>
 							<div *ngIf="profile_data.admin_last_name" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Last Name</b>
+									<label class="question-label">
+                          <b>Last Name</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.admin_last_name}}
 								</div>
 							</div>
 							<div *ngIf="profile_data.admin_nick_name" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Nick Name</b>
+									<label class="question-label">
+                          <b>Nick Name</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.admin_nick_name}}
 								</div>
 							</div>
@@ -419,42 +419,42 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 							<div *ngIf="profile_data.admin_email" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Email</b>
+									<label class="question-label">
+                          <b>Email</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.admin_email}}
 								</div>
 							</div>
 							<div *ngIf="profile_data.admin_cell_phone" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Cell Phone</b>
+									<label class="question-label">
+                          <b>Cell Phone</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.admin_cell_phone}}
 								</div>
 							</div>
 							<div *ngIf="profile_data.admin_fax" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Fax</b>
+									<label class="question-label">
+                          <b>Fax</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.admin_fax}}
 								</div>
 							</div>
 
 							<div *ngIf="profile_data.admin_work_phone" class="row">
 								<div class="col-sm-3">
-									<label>
-										<b>Work Phone</b>
+									<label class="question-label">
+                          <b>Work Phone</b>
 									</label>
 								</div>
-								<div class="col-sm-9 UserProfileDiscription">
+								<div class="col-sm-12 UserProfileDiscription">
 									{{profile_data.admin_work_phone}}
 								</div>
 							</div>
@@ -536,7 +536,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Job Title</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input value="{{profile_data.job_title}}" (change)="modified_profile_data.job_title = $event.target.value"
                                 type="text" placeholder="Enter Job Title" id="job-title" required>
                         </div>
@@ -547,7 +547,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Board Joining Date</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input class="form-control" value="{{profile_data.board_joining_date}}" (change)="modified_profile_data.board_joining_date = $event.target.value"
                                 type="date" placeholder="Enter Board Joining Date" id="board_joining_date" required>
                         </div>
@@ -558,7 +558,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Term Start Date</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
                                  class="form-control"  type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
                         </div>
@@ -569,7 +569,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Term End Date</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input value="{{profile_data.term_end_date}}" (change)="modified_profile_data.term_end_date = $event.target.value"
                                 class="form-control"  type="date" placeholder="Enter End Start Date" id="term_end_date" required>
                         </div>
@@ -580,7 +580,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Department</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input value="{{profile_data.department}}" (change)="modified_profile_data.department = $event.target.value"
                                 type="text" placeholder="Enter Department" id="department" required>
                         </div>
@@ -591,7 +591,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Work Phone</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input value="{{profile_data.work_phone}}" (change)="modified_profile_data.work_phone = $event.target.value"
                                 type="text" placeholder="Enter Work Phone" id="w-phone" required>
                         </div>
@@ -602,7 +602,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Cell Phone</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input value="{{profile_data.mobile_phone}}" (change)="modified_profile_data.mobile_phone = $event.target.value"
                                 type="text" placeholder="Enter Cell Phone" id="c-phone" required>
                         </div>
@@ -613,7 +613,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Fax</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input value="{{profile_data.fax}}" (change)="modified_profile_data.fax = $event.target.value"
                                 type="text" placeholder="Enter Fax" id="fax" required>
                         </div>
@@ -624,7 +624,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Website</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input value="{{profile_data.website}}" (change)="modified_profile_data.website = $event.target.value"
                                 type="text" placeholder="Enter Website" id="website" required>
                         </div>
@@ -635,7 +635,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <b>Resume</b>
                             </label>
                         </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                        <div class="col-sm-12 UserProfileDiscription">
                             <input class="pt-3" (change)="addFile($event, '')" type="file" name="pic" />
                         </div>
                     </div>
@@ -644,7 +644,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
                         <div class="pt-3" *ngIf="my_profile" class="col-sm-2" style="border-right: 1px solid #cccccc;">
                             <label>
-                                <b>Signature</b>
+                          <b>Signature</b>
                                 <a
                                     (click)='init_sign()'
                                     class="fa fa-pen fa-lg init_sign"
@@ -677,7 +677,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         <b>Ethnicity</b>
                                     </label>
                                 </div>
-                                <div class="col-sm-9 UserProfileDiscription">
+                                <div class="col-sm-12 UserProfileDiscription">
                                     <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
                                         <option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.name === profile_data.ethnicity">{{row.name}}</option>
                                     </select>
@@ -689,7 +689,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                             <b>Gender</b>
                                         </label>
                                     </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
+                                    <div class="col-sm-12 UserProfileDiscription">
                                         <select (change)="modified_profile_data.gender = $event.target.value" id='gender' requeired>
                                             <option *ngFor="let row of choice_fields.gender" value="{{row.id}}" [selected]="row.name === profile_data.gender">{{row.name}}</option>
                                         </select>
@@ -701,7 +701,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                             <b>Veteran</b>
                                         </label>
                                     </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
+                                    <div class="col-sm-12 UserProfileDiscription">
                                         <select (change)="modified_profile_data.veteran = $event.target.value" id='gender' requeired>
                                             <option *ngFor="let row of choice_fields.veteran" value="{{row.id}}" [selected]="row.name === profile_data.veteran">{{row.name}}</option>
                                         </select>
@@ -713,7 +713,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                             <b>Disability</b>
                                         </label>
                                     </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
+                                    <div class="col-sm-12 UserProfileDiscription">
                                         <select (change)="modified_profile_data.disability = $event.target.value" id='disability' requeired>
                                             <option *ngFor="let row of choice_fields.disability" value="{{row.id}}" [selected]="row.name === profile_data.disability">{{row.name}}</option>
                                         </select>
@@ -763,7 +763,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>E-mail</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 <input value="{{profile_data.admin_email}}" (change)="modified_profile_data.admin_email = $event.target.value"
                                     type="text" id="admin-e-mail" placeholder="" required>
                             </div>
@@ -774,7 +774,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Cell Phone</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 <input value="{{profile_data.admin_cell_phone}}" (change)="modified_profile_data.admin_cell_phone = $event.target.value"
                                     type="text" placeholder="" id="admin-cell" required>
                             </div>
@@ -785,7 +785,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Fax</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 <input value="{{profile_data.admin_fax}}" (change)="modified_profile_data.admin_fax = $event.target.value"
                                     type="text" placeholder="" id="admin-fax" required>
                             </div>
@@ -796,7 +796,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <b>Work Phone</b>
                                 </label>
                             </div>
-                            <div class="col-sm-9 UserProfileDiscription">
+                            <div class="col-sm-12 UserProfileDiscription">
                                 <input value="{{profile_data.admin_work_phone}}" (change)="modified_profile_data.admin_work_phone = $event.target.value"
                                     type="text" placeholder="" id="admin-work-phone" required>
                             </div>

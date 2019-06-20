@@ -11,10 +11,6 @@ h5, .h5 {
     font-size: 0.898rem;
 }
 
-.meet-elements {
-    border-right: 1px solid #cccccc;
-    font-weight: bolder;
-}
 
 .active{
     background-color: #9c4784 !important;
@@ -183,7 +179,7 @@ h5, .h5 {
 
 .title-wrapper .modal-header{
     margin:35px 0;
-    padding: 0;
+    padding: 0 0 15px;
     font-size: 30px;
     font-weight: 400;
     background: transparent !important;

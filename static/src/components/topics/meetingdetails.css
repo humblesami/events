@@ -11,11 +11,6 @@ h5, .h5 {
     font-size: 0.898rem;
 }
 
-.meet-elements {
-    border-right: 1px solid #cccccc;
-    font-weight: bolder;
-}
-
 .active{
     background-color: #9c4784 !important;
     color: white;
