@@ -153,6 +153,21 @@ class File(models.Model):
             breadcrumb = file_obj.resourcedocument.breadcrumb
         elif file_type == 'home':
             breadcrumb = file_obj.newsdocument.breadcrumb
+        elif file_type == 'resume':
+            breadcrumb.append({'title': 'Profiles', 'link': '/profiles/directors'})
+            profile_obj = file_obj.profile
+            groups = list(profile_obj.groups.all())
+            if groups:
+                group = groups[0]
+                group_name = ''
+                if group.name != 'Staff':
+                    group_name = group.name + 's'
+                else:
+                    group_name = group.name
+                breadcrumb.append({'title': group_name, 'link': '/profiles/' + group_name.lower()})
+            breadcrumb.append({'title': profile_obj.name, 'link': '/' + group.name.lower() + '/' + str(profile_obj.id)})
+            # if file_obj.profiles:
+            #     pass
         # if file_obj._state:
         #     if file_obj._state.fields_cache:
         #         for model_name in file_obj._state.fields_cache:
