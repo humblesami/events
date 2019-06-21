@@ -85,27 +85,27 @@ def create_group(obj, group_name):
             user_group = MeetingGroup.objects.create(name=group_name)
             obj.groups.add(user_group)
             obj.save()
-            group_permissions = get_permission_set(group_name)
-            a = 1
-            for app_name in group_permissions:
-                for model_name in group_permissions[app_name]:
-                    model_permissions = group_permissions[app_name][model_name]
+            # group_permissions = get_permission_set(group_name)
+            # a = 1
+            # for app_name in group_permissions:
+            #     for model_name in group_permissions[app_name]:
+            #         model_permissions = group_permissions[app_name][model_name]
                     
-                    content_id = ContentType.objects.filter(app_label=app_name, model=model_name)
-                    if not content_id:                        
-                        error_list.append('No content id for '+app_name+'.'+model_name)
-                        continue
-                    else:
-                        content_id = content_id[0].id
-                    for permission_type in model_permissions:
-                        code_name = permission_type+'_'+model_name
-                        permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)
-                        if not permission:
-                            error_list.append('No permission entry for content_type_id='+str(content_id)+' for '+app_name+'.'+model_name)
-                            continue
-                        else:
-                            permission = permission[0]
-                        user_group.permissions.add(permission)            
+            #         content_id = ContentType.objects.filter(app_label=app_name, model=model_name)
+            #         if not content_id:                        
+            #             error_list.append('No content id for '+app_name+'.'+model_name)
+            #             continue
+            #         else:
+            #             content_id = content_id[0].id
+            #         for permission_type in model_permissions:
+            #             code_name = permission_type+'_'+model_name
+            #             permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)
+            #             if not permission:
+            #                 error_list.append('No permission entry for content_type_id='+str(content_id)+' for '+app_name+'.'+model_name)
+            #                 continue
+            #             else:
+            #                 permission = permission[0]
+            #             user_group.permissions.add(permission)            
             if error_list:
                 user_group.delete()
                 return error_list
