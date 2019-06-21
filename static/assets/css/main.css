@@ -1,5 +1,5 @@
 :root{
-	--font-family: "Roboto-Condensed" !important;
+	--font-family: "Roboto-Condensed";
 }
 @font-face {
   font-family: 'boardsheet';
@@ -103,7 +103,7 @@ html, body{
     padding-top: 1%;
 }
 body{
-    font-family: "Roboto-Condensed" !important;
+    font-family: "Roboto-Condensed";
     --toggle-left-menu-bg:#4B74B5;
     --toggle-menu-color:#757575;
     --menu-color-text: #ffffff;
@@ -250,7 +250,6 @@ body.light .home{ background: rgba(233, 176, 103, 0.61); }
     box-shadow:none;
 }
 body {
-    font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     font-size: 13.5px;
     line-height: 1.42857143;
     color: #666666;
@@ -688,7 +687,9 @@ breadcrumb
 
 .breadcrumbSection .breadcrumb li,
 .breadcrumbSection .breadcrumb a {
-    font-size: .875rem;
+    font-size: .840rem;
+    font-family: "Roboto";
+    font-weight:600;
 }
 
 .breadcrumbSection .breadcrumb li {

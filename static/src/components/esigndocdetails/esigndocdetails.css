@@ -263,19 +263,20 @@
 
 .meetings_div{
     color: #404040;
-    font-size: 14px;
+    font-size: 12px;
     border-top: 1px solid #E1E1E1;
     margin: 20px 0;
     padding: 20px 0;
     border-bottom: 1px solid #E1E1E1;
 }
 .meetings_div strong{
-	font-weight: 600;
+	font-weight: 500;
 	padding-bottom: 10px;
 }
 
 .doc-subtitle{
-	font-weight: 600;
+	font-family: 'Roboto';
+	font-weight: 500;
 	display: block;
 	margin:7px 0px;
 }
