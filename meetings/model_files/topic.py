@@ -9,8 +9,16 @@ class Topic(models.Model):
     lead = models.CharField(max_length=200, blank=True)
     duration = models.DurationField(blank=True, null=True)
 
+
     def __str__(self):
         return self.name
+
+    
+    def get_attendees(self):
+        attendees_list = []
+        attendees_list = self.event.get_attendees()
+        return attendees_list
+
 
     @classmethod
     def get_details(cls, request, params):

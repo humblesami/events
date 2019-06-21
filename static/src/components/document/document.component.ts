@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import {SocketService} from "../../app/socket.service";
 import {HttpService} from "../../app/http.service";
@@ -11,18 +11,21 @@ declare var $: any;
     templateUrl: './document.component.html'
 })
 export class DocumentComponent implements OnInit {
-
     page_num = 1;
     doc_data: any;  
     breadcrumb: any;  
     total_pages = 0;
     annot_hidden = false;
+    mentionConfig = {};
+    mention_list = [];
+    should_save = false;
     socketService : SocketService
     constructor(private route: ActivatedRoute,
 				private ss:SocketService,
                 private httpService: HttpService,
                 private router: Router,
                 private _location: Location) {
+                    this.mention_list = []
 		this.socketService = ss;
         this.route.params.subscribe(params => this.loadDoc());
     }
@@ -85,6 +88,21 @@ export class DocumentComponent implements OnInit {
         obj_this.onLibsLoaded();
     }
 
+    placeCursorAtEnd() {
+        let contentEditableElement = $('.active-mention')[0];
+        var range,selection;
+        if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+        {
+            range = document.createRange();//Create a range (a range is a like the selection but invisible)
+            range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
+            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+            selection = window.getSelection();//get the selection object (allows you to change selection)
+            selection.removeAllRanges();//remove any selections already made
+            selection.addRange(range);//make the range you have just created the visible selection
+        }
+    }
+
+
     doc_models = {
 
     }
@@ -114,13 +132,30 @@ export class DocumentComponent implements OnInit {
                 params: {id : doc_id}
             }; 
         }      
-
         var renderDoc = function(data){
             obj_this.doc_data = data;
             if (data.breadcrumb)
             {
                 obj_this.breadcrumb = JSON.stringify(data.breadcrumb);
             }
+            obj_this.mention_list = data.mention_list;
+            // console.log(obj_this.mention_list);
+            obj_this.mentionConfig = {
+                items: obj_this.mention_list,
+                insertHTML: true,
+                triggerChar: "@",
+                labelKey: 'name',
+                mentionSelect: function(val){
+                    let el = $('.active-mention');                
+                    let tag = $('<a class="mention" mentioned_id="'+val.id+'" href="/#/'+val.group+'/'+val.id+'">'+val.name+'</a>');
+                    el.append(tag);
+                    el.html(el.html().replace('@', ''));
+                    obj_this.placeCursorAtEnd();
+                    window['should_save'] = false;
+                    // console.log(obj_this.mentionedList);
+                    return '';
+                }
+            };
             var doc_data = {
                 doc:data.doc, 
                 id: doc_id,
@@ -149,7 +184,13 @@ export class DocumentComponent implements OnInit {
             window['functions'].hideLoader('loaddocwaiter');
         });        
     }
-    mentionConfig:any
+    save_comment_key_up(e, parent){
+        if (!window['should_save'])
+        {
+            window['should_save'] = true;
+        }
+    }
+    
     ngOnInit() {
         var obj_this = this;
         window['init_doc_comments']();
@@ -158,7 +199,6 @@ export class DocumentComponent implements OnInit {
 		var currentClass = "current";
 		var offsetTop = 50;
         var currentIndex = 0;
-        
         var obj_this = this;
 		$('#viewer-wrapper').scroll(function() {
 			var scroll = $(this).scrollTop();
@@ -175,19 +215,5 @@ export class DocumentComponent implements OnInit {
 			else
 				$('.page-next-btn').removeAttr('disabled');
         });
-         obj_this.mentionConfig ={
-            items: [{id:1, name: 'Faizan'}, {id: 2, name: 'Sami'}],
-            insertHTML: true,
-            triggerChar: '@',
-            labelKey: 'name',
-            mentionSelect:function(val){
-                // obj_this.should_save = false;
-                setTimeout(function(){
-                    let val = $('.mention-div').text();
-                    $('.mention-div').html(val.replace('&lt','<').replace('&gt', '>'));                        
-                },10);                    
-                return '<a>'+val.name+'</a>';                    
-            }
-        };
     }
 }

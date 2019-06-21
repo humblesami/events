@@ -143,11 +143,14 @@ class File(models.Model):
         pdf_doc = base64.b64encode(pdf_doc)
         result = pdf_doc.decode('utf-8')
         breadcrumb = []
+        mention_list = []
         file_type = file_obj.file_type
         if file_type == 'meeting':
             breadcrumb = file_obj.meetingdocument.breadcrumb
+            mention_list = file_obj.meetingdocument.meeting.get_attendees()
         elif file_type == 'topic':
             breadcrumb = file_obj.agendadocument.breadcrumb
+            mention_list = file_obj.agendadocument.agenda.get_attendees()
         elif file_type == 'voting':
             breadcrumb = file_obj.votingdocument.breadcrumb
         elif file_type == 'resource':
@@ -178,6 +181,7 @@ class File(models.Model):
             "doc": result, 
             'doc_name': file_obj.name, 
             'type': file_obj.file_type,
-            'breadcrumb': breadcrumb
+            'breadcrumb': breadcrumb,
+            'mention_list': mention_list
         }
         return {'data': doc}

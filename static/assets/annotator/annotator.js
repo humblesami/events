@@ -1197,7 +1197,14 @@
                     }
                     if (!e.shiftKey && e.keyCode == 13) {
                         e.preventDefault();
-                        var commentValue = commentText[0].value; // commentText.val().trim();
+                        let el = $('.active-mention');
+                        var commentValue = el.html().replace('<div><br></div>', '');
+                        el.html('');
+                        if (!window['should_save'])
+                        {
+                            return;
+                        }
+                        // var commentValue = commentText[0].value; // commentText.val().trim();
                         commentValue = commentValue.substr(0, commentValue.length - 1);
                         if (commentValue == '') {
                             commentText.val('');

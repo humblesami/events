@@ -313,7 +313,7 @@ export class CommentsComponent implements OnInit {
                     // console.log(obj_this.mentionedList);
                     return '';
                 }
-            }
+            };
         }
 		let input_data = {
 			res_model: obj_this.res_model,

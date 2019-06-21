@@ -35,6 +35,19 @@ class Event(models.Model):
             res.append(obj.id)
         return res
     
+    
+    def get_attendees(self):
+        attendees_list = []
+        attendees = self.attendees.all()
+        for attendee in attendees:
+            group_name = ''
+            attendee_groups = attendee.groups.all()
+            if attendee_groups:
+                group_name = attendee_groups[0].name
+                attendees_list.append({'id': attendee.id, 'name': attendee.name, 'group': group_name})
+        return attendees_list
+
+    
     @property
     def exectime(self):
         current_date = timezone.now()
