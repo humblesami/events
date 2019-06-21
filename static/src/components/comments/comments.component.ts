@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
 import {ActivatedRoute} from "@angular/router";
+import { findLast } from '@angular/compiler/src/directive_resolver';
 declare var $: any;
 
 
@@ -24,12 +25,13 @@ export class CommentsComponent implements OnInit {
     new_comment = '';
     active_comment : any;
     mentionConfig: any;
-    mentionedList: any;
-    should_save:boolean;
+    // mentionedList: any;
+    post_btn_disable: boolean;
+    should_save: boolean;
 	constructor(private httpService: HttpService,
 				private socketService: SocketService,
 				private route: ActivatedRoute) {
-                    this.mentionedList = []
+                    // this.mentionedList = []
                     this.should_save = true;
                 }
 
@@ -121,6 +123,17 @@ export class CommentsComponent implements OnInit {
 		});
 	}
 
+    manage_comment()
+    {
+        $('.mention-div-reply').removeClass('active-mention');
+        $('.mention-div-comment').addClass('active-mention');
+    }
+    manage_reply_class()
+    {
+        $('.mention-div-comment').removeClass('active-mention');
+        $('.mention-div-reply').addClass('active-mention');
+    }
+
 	commentReply(comment) {
         this.new_reply = '';        
         if(this.active_comment)
@@ -129,13 +142,47 @@ export class CommentsComponent implements OnInit {
         this.active_comment = comment;        
         setTimeout(function(){
             $('.reply-box:first').focus();
+            $('.mention-div-reply').addClass('active-mention');
         }, 100);
+        $('.mention-div-comment').removeClass('active-mention');
         
-	}
+    }
 
+    save_comment_key_up(e, parent){
+        let obj_this = this;
+        if (e.currentTarget.textContent.length)
+        {
+            obj_this.post_btn_disable = true;
+        }
+        if (obj_this.should_save)
+        {
+            if(e.keyCode == 13 && !e.shiftKey){
+                e.preventDefault();                
+                obj_this.save_comment(parent);
+            }
+        }
+        else
+        {
+            obj_this.should_save = true;
+        }
+    }
+    
 	save_comment(parent_item)
 	{
-		let obj_this = this;
+        let mention_list = []
+        $('.active-mention a.mention').each(function(i, el){
+            let mentioned_id = $(el).attr('mentioned_id');
+            if(mention_list.indexOf(mentioned_id) == -1)
+            {
+                mention_list.push(mentioned_id);
+            }
+        });
+
+        let obj_this = this;
+        obj_this.new_comment = $('.active-mention').html().replace('<div><br></div>', '');
+        $('.active-mention').html('');
+        obj_this.new_reply = obj_this.new_comment;
+        obj_this.post_btn_disable = false;
 		let item = {
 			res_model: obj_this.res_model,
             res_id: obj_this.res_id,
@@ -143,6 +190,7 @@ export class CommentsComponent implements OnInit {
 			subtype_id: obj_this.comment_subtype,
 			create_date : new Date(),
             user: obj_this.socketService.user_data,
+            mentioned_ids: mention_list,
             user_id:  obj_this.socketService.user_data.id
         };
         if(item.subtype_id == 2)
@@ -249,16 +297,20 @@ export class CommentsComponent implements OnInit {
                 triggerChar: "@",
                 labelKey: 'name',
                 mentionSelect: function(val){
-                    obj_this.should_save = false;                    
-                    let in_list = obj_this.mentionedList.find(function(element) {
-                        return element == val.id;
-                    });
-                    if (!in_list)
-                    {
-                        obj_this.mentionedList.push(val.id)
-                    }
-                    let tag = $('<a mentioned_id="'+val.id+'" href="/#/'+val.group+'/'+val.id+'">'+val.name+'</a>');
-                    $('.mention-div').append(tag);
+                    obj_this.should_save = false;
+                    let el = $('.active-mention');
+                    // let in_list = obj_this.mentionedList.find(function(element) {
+                    //     return element == val.id;
+                    // });
+                    // if (!in_list)
+                    // {
+                    //     obj_this.mentionedList.push(val.id)
+                    // }
+                    let tag = $('<a class="mention" mentioned_id="'+val.id+'" href="/#/'+val.group+'/'+val.id+'">'+val.name+'</a>');
+                    el.append(tag);
+                    el.html(el.html().replace('@', ''));
+                    obj_this.placeCursorAtEnd();
+                    // console.log(obj_this.mentionedList);
                     return '';
                 }
             }
@@ -304,20 +356,19 @@ export class CommentsComponent implements OnInit {
         obj_this.socketService.execute_on_verified(remove_notification);
 
     }
-    
-	save_comment_key_up(e, parent){
 
-        let obj_this = this;
-        if (obj_this.should_save)
+    placeCursorAtEnd() {
+        let contentEditableElement = $('.active-mention')[0];
+        var range,selection;
+        if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
         {
-            if(e.keyCode == 13 && !e.shiftKey){
-                e.preventDefault();
-                obj_this.save_comment(parent);
-            }
+            range = document.createRange();//Create a range (a range is a like the selection but invisible)
+            range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
+            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+            selection = window.getSelection();//get the selection object (allows you to change selection)
+            selection.removeAllRanges();//remove any selections already made
+            selection.addRange(range);//make the range you have just created the visible selection
         }
-        else
-        {
-            obj_this.should_save = true;
-        }
-	}
+    }
+        
 }
