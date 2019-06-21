@@ -362,13 +362,14 @@ class AuthUserChat(models.Model):
             
             user_object = User.objects.get(pk=uid)
             profile_object = Profile.objects.filter(pk = uid)
+            res = False
             if not profile_object:
                 profile_object = Profile(user_ptr=user_object, name=user_object.username)            
                 profile_object.save()
                 if user_object.is_superuser:
-                    create_group(user_object, 'Admin')
+                    res = create_group(user_object, 'Admin')
                 else:
-                    create_group(user_object, 'Staff')
+                    res = create_group(user_object, 'Staff')
             else:
                 profile_object = profile_object[0]
                 res = None
@@ -376,12 +377,12 @@ class AuthUserChat(models.Model):
                     if profile_object.is_superuser:
                         res = create_group(user_object, 'Admin')
                     else:
-                        res = create_group(user_object, 'Director')
-                    if res != 'done':
-                        if res:
-                            data['message'] = {'error': res }
-                        else:
-                            data['message'] = {'error': 'Error in group creation' }
+                        res = create_group(user_object, 'Director')                    
+            if res != 'done':
+                if res:
+                    data['message'] = {'error': res }
+                else:
+                    data['message'] = {'error': 'Error in group creation' }
             req_user = {
                 'id': uid,
                 'name': profile_object.name,
