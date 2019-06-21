@@ -319,6 +319,7 @@ export class SocketService {
             console.log('Not authorized');
             return;
         }
+        console.log(authorized_user, 13);
         $('#main-div').show();
         for(var i = 0; i < authorized_user.groups.length; i++){
             if( authorized_user.groups[i].name == 'Admin'){
