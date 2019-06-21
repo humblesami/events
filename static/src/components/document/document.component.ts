@@ -194,12 +194,6 @@ export class DocumentComponent implements OnInit {
     ngOnInit() {
         var obj_this = this;
         window['init_doc_comments']();
-		var content = $("#content-wrapper");
-		var results;
-		var currentClass = "current";
-		var offsetTop = 50;
-        var currentIndex = 0;
-        var obj_this = this;
 		$('#viewer-wrapper').scroll(function() {
 			var scroll = $(this).scrollTop();
 			if(scroll == 0 )

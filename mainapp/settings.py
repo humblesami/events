@@ -78,7 +78,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
@@ -188,6 +188,6 @@ STATICFILES_DIRS = (
 )
 STATIC_URL = '/static/'
 
-
-X_FRAME_OPTIONS = 'ALLOW-FROM http://localhost:4200/'
+# X_FRAME_OPTIONS = 'ALLOW'
+# X_FRAME_OPTIONS = 'allow-from http://localhost:4200/'
 #X_FRAME_OPTIONS = 'allow-from https://example.com/

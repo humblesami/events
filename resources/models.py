@@ -72,7 +72,7 @@ class Folder(models.Model):
 
 class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
-    users = models.ManyToManyField (Profile, 'Access')
+    users = models.ManyToManyField (Profile, 'Access', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.file_type:
