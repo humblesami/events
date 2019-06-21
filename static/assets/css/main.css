@@ -26,6 +26,30 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon-calendar-empty:before {
+  content: "\e90c";
+}
+.icon-call-answer:before {
+  content: "\e90d";
+}
+.icon-close-envelope:before {
+  content: "\e90e";
+}
+.icon-draw-pencil:before {
+  content: "\e90f";
+}
+.icon-hotel:before {
+  content: "\e910";
+}
+.icon-user-single:before {
+  content: "\e911";
+}
+.icon-zoom-in:before {
+  content: "\e912";
+}
+.icon-zoom-out:before {
+  content: "\e913";
+}
 .icon-calendar:before {
   content: "\e90b";
 }

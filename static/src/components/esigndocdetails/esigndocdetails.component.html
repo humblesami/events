@@ -3,27 +3,79 @@
 rid="{{doc.id}}" delete="1" 
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Esignature", "link":"/actions/signdocs"}]'
 title="{{doc.doc_name}}"></app-breadcrumb>
-<div class="router-outlet">
+<div class="router-outlet p-0">
 
     <div name="id" class="e_sign_doc_id" invisible="1" ></div>
 
     <div class="sign-position dev_only" ></div>
-    <div class="meetings_div col-md-6">
-        <strong>Attach to meeting(Optional):</strong>
-    <select id="dropdown_meeting" style="width:50%"><option value="0">Select Meeting</option></select>
-    <br><strong class="check_box_send_all" >Send to all attendees:</strong>
-    <input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>
-    </div>
+    <!--<div class="meetings_div col-md-6">-->
+        <!--<strong>Attach to meeting(Optional):</strong>-->
+    <!--<select id="dropdown_meeting" style="width:50%"><option value="0">Select Meeting</option></select>-->
+    <!--<br><strong class="check_box_send_all" >Send to all attendees:</strong>-->
+    <!--<input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>-->
+    <!--</div>-->
     
     <div id="holder">
+	<div class="container-fluid">
+		<div class="row">
 
-        <div class="top_btns">
+			<div id="doc-side-scroll">
+				<div class="PdfButtonWrapper">
+					<div class="PdfVerticalButtonWrapper">
+						<div class="fields-title">
+							FIELDS
+						</div>
+
+                <div id="signature-position" class="drag docselectbtn position_btns sign_psition">
+                    <i class="icon-draw-pencil"></i> Signature
+                </div>
+                <div id="initial-position" class="drag docselectbtn position_btns initial_psition">
+                    <i>Ds</i> Initials
+                </div>
+                <div id="date-position" class="drag docselectbtn position_btns date_psition">
+                   <i class="icon-calendar-empty"></i> Date
+                </div>
+                <div id="text-position" class="drag docselectbtn position_btns name_psition">
+                   <i class="icon-user-single"></i> Name
+                </div>
+                <div id="name-position" class="drag docselectbtn position_btns email_psition">
+                  <i class="fa fa-envelope"></i>  Email
+                </div>
+                <div id="phone-position" class="drag docselectbtn position_btns phone_psition">
+                    <i class="icon-call-answer"></i> Phone
+                </div>
+                <div id="company-position" class="drag docselectbtn position_btns company_psition">
+                   <i class="icon-hotel"></i> Company
+                </div>
+
+				<div class="meetings_div">
+					<span class="doc-subtitle">Attach to meeting(Optional):</span>
+					<select id="dropdown_meeting"><option value="0">Select Meeting</option></select>
+					<div class="doc-subtitle">
+						<input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>
+						<strong class="check_box_send_all" >Send to all attendees:</strong>
+					</div>
+				</div>
+
+				<div id="save-doc-data" disabled="true" class="docselectbtn  save_doc_data">
+					Send
+				</div>
+
+                <!-- <div id="text-position"  class="drag docselectbtn position_btns text_psition">
+                Text
+                </div> -->
+					</div>
+            </div>
+
+			</div>
+			<div class="docWrapperContainer pr-0 pl-0">
+					<div class="top_btns">
             <div class="PdfTopBtnsWrapper">
                 <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev" ></div>
                 <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next" ></div>
                 <span class="pg_no"> <span style="font-weight: bold;" id="page_num" ></span> / <span id="page_count" ></span></span>
-                <div class="btn btn-sm doc_btn fa fa-minus" id="zoomOut" title="Zoom Out" ></div>
-                <div class="btn btn-sm doc_btn fa fa-plus" id="zoomIn" title="Zoom In" ></div>
+                <div class="btn btn-sm doc_btn icon-zoom-out" id="zoomOut" title="Zoom Out" ></div>
+                <div class="btn btn-sm doc_btn icon-zoom-in" id="zoomIn" title="Zoom In" ></div>
                 <span style="display: inline-block;" id="scaleSelectContainer">
                     <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
                         <option title="" value="0.5">50%</option>
@@ -37,41 +89,12 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                     </select>
                 </span>
             </div>
-            <div class="PdfButtonWrapper">
-                <div id="save-doc-data" style="float:left" disabled="true" class="btn btn-primary  save_doc_data">
-                    Send
-                </div>
-                <div id="signature-position" class="drag btn btn-primary position_btns sign_psition">
-                    Signature
-                </div>
-                <div id="initial-position" class="drag btn btn-primary position_btns initial_psition">
-                    Initials
-                </div>
 
-                <div id="date-position" class="drag btn btn-primary position_btns date_psition">
-                    Date
-                </div>
-                <div id="text-position" class="drag btn btn-primary position_btns name_psition">
-                    Name
-                </div>
-                <div id="name-position" class="drag btn btn-primary position_btns email_psition">
-                    Email
-                </div>
-                <div id="phone-position" class="drag btn btn-primary position_btns phone_psition">
-                    Phone
-                </div>
-                <div id="company-position" class="drag btn btn-primary position_btns company_psition">
-                    Company
-                </div>
-
-
-                <!-- <div id="text-position"  class="drag btn btn-primary position_btns text_psition">
-                Text
-                </div> -->
-            </div>
 
         </div>
-        
+
+
+
         <div id="viewer_container" style="position:relative;">
             <div id="nxxt_sign" style="display:none;background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START
                 SIGNING</div>
@@ -83,6 +106,11 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                 </div>
             </div>
         </div>
+
+			</div>
+		</div>
+	</div>
+
     </div>
 
 
