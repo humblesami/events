@@ -12,6 +12,25 @@ from documents.file import File
 from meetings.model_files.user import Profile, create_group
 
 
+# class PostAddress(models.Model):
+#     res_app = models.CharField(max_length=128)
+#     res_model = models.CharField(max_length=128)
+#     res_id = models.IntegerField()
+
+# class NotificationType(models.Model):
+#     name = models.CharField(max_length=100)        
+#     template = models.CharField(max_length=256)
+
+# class Notification(models.Model):    
+#     sender = models.ForeignKey(Profile, on_delete=models.CASCADE)    
+#     post_address = models.ForeignKey(PostAddress, on_delete=models.CASCADE)
+#     notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE)
+
+# class MyNotification(models.Model):
+#     user = models.IntegerField()
+#     counter = models.IntegerField(default=1)
+#     notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
+
 class NotificationType(models.Model):
     res_app = models.CharField(max_length=128)
     res_model = models.CharField(max_length=128)

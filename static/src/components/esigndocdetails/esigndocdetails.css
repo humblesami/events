@@ -45,15 +45,7 @@
     height: 29px;
 }
 
-.PdfButtonWrapper{
-	padding:80px 0 30px;
-	width: 75%;
-}
 
-.PdfButtonWrapper .btn {
-    min-width: 130px;
-    margin: 3px;
-}
 
 .sign-box.fa-lg {
     margin-left: 10px;
@@ -160,12 +152,23 @@
     height: calc(100vh - 112px);
     overflow-y:auto;
     width:22%;
-    margin:0;
     display: flex;
+    margin:0;
     flex-direction: column;
     align-items: center;
     border-right: 1px solid rgba(75, 116, 181, 0.33);
-    }
+}
+
+.PdfButtonWrapper{    
+    padding: 10px;
+    /*padding:80px 0 30px;*/    
+    width: 75%;
+}
+
+.PdfButtonWrapper .btn {
+    min-width: 130px;
+    margin: 3px;
+}
 
 #doc-side-scroll::-webkit-scrollbar, #page_container1::-webkit-scrollbar {
     width: 6px;
