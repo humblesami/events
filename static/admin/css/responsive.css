@@ -1,5 +1,9 @@
 /* Tablets */
 
+html, body{
+    height: 100%;
+}
+
 input[type="submit"], button {
     -webkit-appearance: none;
     appearance: none;
@@ -26,11 +30,7 @@ input[type="submit"], button {
     #container {
         min-width: 0;
     }
-
-    #content {
-        padding: 20px 30px 30px;
-    }
-
+    
     div.breadcrumbs {
         padding: 10px 30px;
     }
@@ -451,7 +451,7 @@ input[type="submit"], button {
 @media (max-width: 767px) {
     /* Layout */
 
-    #header, #content, #footer {
+    #header, #footer {
         padding: 15px;
     }
 
@@ -788,30 +788,30 @@ input[type="submit"], button {
 
     /* Submit row */
 
-    .submit-row {
+    /* .submit-row {
         padding: 10px 10px 0;
         margin: 0 0 15px;
         display: flex;
         flex-direction: column;
-    }
+    } */
 
-    .submit-row > * {
+    /* .submit-row > * {
         width: 100%;
-    }
+    } */
 
-    .submit-row input, .submit-row input.default, .submit-row a, .submit-row a.closelink {
+    /* .submit-row input, .submit-row input.default, .submit-row a, .submit-row a.closelink {
         float: none;
         margin: 0 0 10px;
         text-align: center;
-    }
+    } */
 
-    .submit-row a.closelink {
+    /* .submit-row a.closelink {
         padding: 10px 0;
-    }
+    } */
 
-    .submit-row p.deletelink-box {
+    /* .submit-row p.deletelink-box {
         order: 4;
-    }
+    } */
 
     /* Messages */
 

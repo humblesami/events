@@ -1,7 +1,6 @@
 @import url('widgets.css');
 
 /* FORM ROWS */
-
 .form-row {
     overflow: hidden;
     padding: 10px;
@@ -242,31 +241,32 @@ fieldset.monospace textarea {
 
 /* SUBMIT ROW */
 
-.submit-row {
-    padding: 10px 17px;
-    background: #f8f8f8;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    
+
+.submit-row
+{
     position: fixed;
     bottom: 0;
-    left: 0;
+    width: calc(100vw - 54px);
+    border-radius: 4px;
     z-index: 12;
-    width: 100%;
+    padding: 6px 7px;
+    background: #f8f8f8;
+    border: 1px solid rgb(236, 232, 232);
+    text-align: right;
 }
-
-body.popup .submit-row {
-    overflow: auto;
+body.change-form .submit-row
+{
+    width: calc(100vw - 83px);
 }
 
 .submit-row input {
-    height: 35px;
-    line-height: 15px;
+    /* height: 35px;
+    line-height: 15px; */
     margin: 0 0 0 5px;
 }
 
 .submit-row input.default {
-    margin: 0 0 0 8px;
+    /* margin: 0 0 0 8px; */
     text-transform: uppercase;
 }
 
@@ -531,12 +531,12 @@ form .related-widget-wrapper ul {
 }
 
 
-body.change-form #content{
-    height: calc(100vh - 156px);
+/* body.change-form #content{
+    height: calc(100vh - 146px);
     overflow: auto;
-}
+} */
 
 body.popup #content{
-    height: calc(100vh - 56px);
+    height: calc(100vh - 40px);
     overflow: auto;
 }

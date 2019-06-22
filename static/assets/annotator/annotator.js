@@ -149,8 +149,7 @@
                 commentText.focus(function() {
                     comment_item_focused = true;
                 });            
-                commentText.blur(function() {                
-                    // $('.comment.annotation_button').click();
+                commentText.blur(function() {
                     comment_item_focused = false;
                 });
                 
@@ -726,6 +725,7 @@
                 }
 
                 var scale_select = document.querySelector('.toolbar select.scale');
+                console.log(scale_select);
                 scale_select.addEventListener('change', handleScaleChange);
 
                 function handleScaleChange() {
@@ -1111,19 +1111,6 @@
 
                 $('body').on('click', '.toolbar.topbar:first button, .toolbar.annotation-options:first button', handleToolbarClick);
                 $('.toolbar:first .cursor').click();
-            })();
-
-            // Clear toolbar button
-            (function() {
-                function handleClearClick(e) {
-                    if (confirm('Are you sure you want to clear annotations?')) {
-                        for (var i = 0; i < NUM_PAGES; i++) {
-                            document.querySelector('div#pageContainer' + (i + 1) + ' svg.annotationLayer').innerHTML = '';
-                        }
-                        setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/annotations', '[]');
-                    }
-                }
-                //document.querySelector('a.clear').addEventListener('click', handleClearClick);
             })();
 
 
