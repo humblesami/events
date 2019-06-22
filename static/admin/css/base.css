@@ -775,7 +775,8 @@ table#change-history tbody th {
 }
 
 #content {
-    padding: 20px 40px;
+    padding: 20px;
+    padding-bottom: 30px;
 }
 
 .dashboard #content {
@@ -968,12 +969,6 @@ table#change-history tbody th {
 }
 
 /* POPUP */
-.popup #content {
-    padding: 10px;
-}
-.popup #content {
-    padding-bottom: 30px;
-}
 
 .popup #container {
     min-width: 0;

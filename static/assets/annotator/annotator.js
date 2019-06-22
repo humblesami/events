@@ -452,7 +452,8 @@
             window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
 
 
-            var setPen = function(a, b) {}
+            var setPen = function(a, b) {
+            }
 
             var vertical = 'top';
             var horizontal = 'left';
@@ -725,7 +726,6 @@
                 }
 
                 var scale_select = document.querySelector('.toolbar select.scale');
-                console.log(scale_select);
                 scale_select.addEventListener('change', handleScaleChange);
 
                 function handleScaleChange() {
@@ -977,9 +977,29 @@
 
                 setPen = function(size, color) {
                     var modified = false;
-                    if (size && typeof(size) != 'number') {
-                        size = parseInt(size);
+                    if(!size)
+                    {
+                        size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size');
+                        if(size)
+                        {
+                            size = parseInt(size);
+                        }
+                        if(!size)
+                        {
+                            size = 2;
+                        }
+                        setPen(size, color);
                     }
+                    if(!color)
+                    {
+                        color = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color');
+                        if(!color)
+                        {
+                            color = '000000';
+                        }
+                        setPen(size, color);
+                    }
+                    // console.log(size, color)
                     if (color && color.length == 6) {
                         color = '#' + color;
                     }
@@ -1028,6 +1048,7 @@
                     color_popup.find('div[hex="' + c_color + '"]:first').click();
                 }
                 $('body').on('click', '.toolbar .pen-color:first', handlePenColorChange);
+                // console.log(222);
                 $('body').on('change', '.toolbar .pen-size:first', handlePenSizeChange);
             })();
 
@@ -2878,7 +2899,7 @@
                         clearTimeout(annot_save_timeout);
                         annot_save_timeout = setTimeout(function() {
                             saveAnnotationsAtServer();
-                        }, 3000);
+                        }, 30000);
                     }
 
                     function findAnnotationObject(documentId, annotationId) {
@@ -4653,8 +4674,10 @@
                     function setPen() {
                         var penSize = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
                         var penColor = arguments.length <= 1 || arguments[1] === undefined ? '000000' : arguments[1];
-                        _penSize = parseInt(penSize, 10);
+                        _penSize = penSize;
                         _penColor = penColor;
+                        console.log(penColor, penSize, 1999);
+
                     }
                     /**
                      * Enable the pen behavior

@@ -97,9 +97,9 @@ form ul.inline li {
     margin-bottom: 0;
 }
 
-.colMS .aligned .vLargeTextField, .colMS .aligned .vXMLLargeTextField {
+/* .colMS .aligned .vLargeTextField, .colMS .aligned .vXMLLargeTextField {
     width: 350px;
-}
+} */
 
 form .aligned ul {
     margin-left: 160px;
@@ -161,9 +161,9 @@ form .aligned table p {
     margin-top: -4px;
 }
 
-.colM .aligned .vLargeTextField, .colM .aligned .vXMLLargeTextField {
+/* .colM .aligned .vLargeTextField, .colM .aligned .vXMLLargeTextField {
     width: 610px;
-}
+} */
 
 .checkbox-row p.help,
 .checkbox-row div.help {
@@ -349,7 +349,7 @@ body.change-form .submit-row
     width: 2.2em;
 }
 
-.vTextField {
+.vTextField,select {
     width: 20em;
 }
 
@@ -530,13 +530,12 @@ form .related-widget-wrapper ul {
     display: none !important;
 }
 
-
-/* body.change-form #content{
-    height: calc(100vh - 146px);
-    overflow: auto;
-} */
+body.change-form #content{
+    height: calc(100vh - 171px);
+    overflow-y: auto;
+} 
 
 body.popup #content{
-    height: calc(100vh - 40px);
+    height: calc(100vh - 50px);
     overflow: auto;
 }
