@@ -242,6 +242,32 @@ var site_functions = {
     },
     togglerelated: function(selector) {
         $(selector).toggle();
+    },
+    get_trace : function(skip){
+        var res = '';
+        var obj = {};
+        Error.captureStackTrace(obj);
+        var trace = obj.stack.split('\n');
+        for (var i in trace){
+            if(i == 0)
+            {
+                continue;
+            }
+            if(i == 1 && skip)
+            {
+                continue;
+            }
+            if(trace[i].indexOf('DocumentComponent.push') > - 1
+            ||  trace[i].indexOf('HTMLDocument.dispatch')> -1 
+            || trace[i].indexOf('ZoneDelegate.push')> -1)
+            {
+                break;
+            }
+            // var index = trace[i].indexOf('/assets');
+
+            res += '\n\n'+ trace[i];//.substr(index+8);
+        }
+        console.log(res);
     }
 };
 

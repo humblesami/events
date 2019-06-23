@@ -1,20 +1,29 @@
 (function() {
-    var annotation_user_m2;
     var annotation_mode = 0;
     var hand_drawings = [];
-    var comment_doc_id = false;
+    var shown_comment_type = false;
+    var slected_comment_type = false;
     var comment_sub_type = false;
     var contextMenuShown = false;
-    var shown_comment_type = false;
     var comment_item_focused = false;
-    var slected_comment_type = false;
     var select_comment_item = undefined;
     var handleAnnotationClick = undefined;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
-    var annot_save_timeout = undefined;
+    var saveAnnotationsAtServer = function() {
+        console.log("Save annotation not defined");
+    };
+    var onAnnotationsDownloaded = function() {
+        console.log("onAnnotationsDownloaded not defined");
+    }
 
+    function select_cursor()
+    {
+        console.log(45);
+        window['functions'].get_trace(1);
+        $('.topbar:first .cursor:first').click();
+    }
     function initDocCookies(documentId) {
         localStorage.setItem(documentId + '/version', 0);
         localStorage.setItem(documentId + '/scale', 1);
@@ -89,40 +98,6 @@
         return temp_key;
     }
 
-    var _slicedToArray = function() {
-        function sliceIterator(arr, i) {
-            var _arr = [];
-            var _n = true;
-            var _d = false;
-            var _e = undefined;
-            try {
-                for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-                    _arr.push(_s.value);
-                    if (i && _arr.length === i) break;
-                }
-            } catch (err) {
-                _d = true;
-                _e = err;
-            } finally {
-                try {
-                    if (!_n && _i["return"]) _i["return"]();
-                } finally {
-                    if (_d) throw _e;
-                }
-            }
-            return _arr;
-        }
-        return function(arr, i) {
-            if (Array.isArray(arr)) {
-                return arr;
-            } else if (Symbol.iterator in Object(arr)) {
-                return sliceIterator(arr, i);
-            } else {
-                throw new TypeError("Invalid attempt to destructure non-iterable instance");
-            }
-        };
-    }();
-
     function module0(module, exports, __webpack_require__) {
         try {
             'use strict';
@@ -138,37 +113,60 @@
             var dh = $(document).height();
             var dw = $(document).width();
             // var note_wrapper = $('#notification-wrapper');                
-            var commentText, comments_wrapper;
-            var comment_list_div;            
-            var comment_list;
-            
+            var comments_wrapper;// = $('#comment-wrapper');
+            var commentText;// = comments_wrapper.find('#commentText');
+            var comment_list_div;// = comments_wrapper.find('.comment-list:first');
+            var comment_list;// = comments_wrapper.find('.comment-list-container:first');
+
             window['init_doc_comments'] = function(){
                 comments_wrapper = $('#comment-wrapper');
                 commentText = comments_wrapper.find('#commentText');
-                // this.console.log(commentText[0], 622);
-                commentText.focus(function() {
-                    comment_item_focused = true;
-                });            
-                commentText.blur(function() {
-                    comment_item_focused = false;
-                });
-                
                 comment_list_div = comments_wrapper.find('.comment-list:first');
                 comment_list = comments_wrapper.find('.comment-list-container:first');
-                var cursor_button = $('.toolbar:first .cursor:first');
-                cursor_button.click();
-                cursor_button.click(function(e){
-                    if(e.screenX && e.screenX != 0 && e.screenY && e.screenY != 0){                        
-                        setTimeout(function(){
-                            saveAnnotationsAtServer();
-                        }, 10);
-                    }
-                })
+                commentText.focus(function() {
+                    comment_item_focused = true;
+                });
+                select_cursor();
             }
-            
+            var activeAnnotationItem = undefined;
+            var annotationBiengEdited = false;
+            var comments_loaded = false;
+            var force_download = 0;
+            var loadAnnotationsFromServer = undefined;
 
-            var activeAnnotationItem = undefined;            
-            var comments_loaded = false;            
+            var _slicedToArray = function() {
+                function sliceIterator(arr, i) {
+                    var _arr = [];
+                    var _n = true;
+                    var _d = false;
+                    var _e = undefined;
+                    try {
+                        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+                            _arr.push(_s.value);
+                            if (i && _arr.length === i) break;
+                        }
+                    } catch (err) {
+                        _d = true;
+                        _e = err;
+                    } finally {
+                        try {
+                            if (!_n && _i["return"]) _i["return"]();
+                        } finally {
+                            if (_d) throw _e;
+                        }
+                    }
+                    return _arr;
+                }
+                return function(arr, i) {
+                    if (Array.isArray(arr)) {
+                        return arr;
+                    } else if (Symbol.iterator in Object(arr)) {
+                        return sliceIterator(arr, i);
+                    } else {
+                        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+                    }
+                };
+            }();
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule ? obj : {
@@ -177,6 +175,9 @@
             }
 
             var UI = _2.default.UI;
+            var PAGE_HEIGHT = void 0;
+
+
             var RENDER_OPTIONS = {};
 
             _2.default.setStoreAdapter(new _2.default.LocalStoreAdapter());
@@ -187,11 +188,165 @@
             var pdfStoreAdapter = _2.default.getStoreAdapter();
 
             (function() {
-                var message = '';                
+                var message = '';
+                (function() {
+                    onAnnotationsDownloaded = function(data, doc_data) {
+                        var comments = data.comments;
+                        if (!Array.isArray(comments)) {
+                            comments = [];
+                            console.log("Why not comments");
+                        }                        
+                        var document_version = getDocumentVersion(documentId);
+                        if (!data.annotations) {
+                            data.annotations = [];
+                        }
+                        var message = undefined;
+                        var document_dirty = isDocumentDirty(documentId);
+                        var to_send = [];
+                        if (data.version > document_version) {
+                            if (document_dirty == 1) {
+                                message = "Document annotation version=" + data.version + " available from server,";
+                                message += "<br>You have older version=" + document_version + " at local.";
+                                message += "<br>If you download, it will discard your recent changes,";
+                                message += "<br>Do you still want to download?";
+                                bootbox.confirm(message, function(dr) {
+                                    if (dr) {
+                                        updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
+                                    } else {
+                                        updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
+                                    }
+                                });
+                            } else {
+                                updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
+                            }
+                        } else {
+                            updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
+                        }
+                    }
 
-                $('body').on('click', '.doc-saver', function() {
-                    saveAnnotationsAtServer();
-                });
+                    function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {        
+                        if (annotations.length == 0) {
+                            annotations = getLocalAnnotations();
+                        }
+                        if (annotations.length == 0 && comments.length == 0) {
+                            if (doc_data && doc_data.first_time) {
+                                render_details(doc_data);
+                            }
+                            return;
+                        }
+                        annotations = annotations.filter(function(annot) {
+                            return annot.type != 'point' || annot.sub_type
+                        });
+                        annotations = annotations.concat(comments);
+                        annotations.forEach(function(item) {
+                            item.class = 'Annotation';
+                        });
+                        var annotation_cookie = "";
+                        if (Array.isArray(annotations)) {
+                            annotation_cookie = JSON.stringify(annotations);
+                        } else {
+                            bootbox.alert("invalid annotations");
+                            return;
+                        }
+                        setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
+                        setDocVersion(documentId, version);
+                        unSetDocDirty(documentId);
+                        render_details(doc_data);
+                    }
+
+                })();
+
+                (function() {
+                    function onAnnotationsUploaded(data, reset) {
+                        if (data != "done") {
+                            if (isNaN(data)) {
+                                bootbox.alert("Could not save:");
+                                console.log(data);
+                                return;
+                            }
+                            var document_version = getDocumentVersion(documentId);
+                            message = "Server already has version=" + data;
+                            message += "<br>Do you want to overwrite server version with local=" + document_version + "?";
+                            bootbox.confirm(message, function(dr) {
+                                if (dr) {
+                                    document_version = data + 1;
+                                    setDocVersion(document_version);
+                                    saveAnnotationsAtServer();
+                                }
+                            });
+                        } else {
+                            if (reset == 'reset') {
+                                initDocCookies(documentId);
+                                render();
+                            } else
+                                unSetDocDirty(documentId);
+                            console.log("Saved");
+                        }
+                    }
+
+                    function onAnnotationSaveFailed(er) {
+                        console.log(er);
+                    }
+
+                    saveAnnotationsAtServer = function(save_type) {
+                        save_drawing(1);
+                        if (!documentId) {
+                            console.log("saveAnnotationsAtServer must be called after document id is set")
+                            return;
+                        }
+                        var document_dirty = isDocumentDirty(documentId);
+                        if (document_dirty != 1)
+                            return;
+
+                        var document_version = getDocumentVersion(documentId);
+                        var input_data = {
+                            id : doc_id,
+                            doc_id: documentId
+                        };
+                        delete input_data['reset'];
+                        if (save_type == 'reset') {
+                            input_data['reset'] = 1;
+                        } else {
+                            var annotationString = localStorage.getItem(documentId + '/annotations');
+                            if (!annotationString || annotationString == '[]') {
+                                console.log("No annotations");
+                                return;
+                            }
+                            if (document_version == 0) {
+                                setDocDirty(documentId);
+                                setDocVersion(documentId, 1);
+                            }
+                            input_data['annotations'] = annotationString;
+                            input_data['version'] = document_version;
+                        }
+                        let args = {
+                            app: 'documents',
+                            model: 'AnnotationDocument',
+                            method: 'add_annotation'
+                        }
+                        var final_input_data = {            
+                            args: args,
+                            params: input_data
+                        };
+                        // window['add_annotation'](final_input_data);
+                        dn_rpc_object({
+                            data: final_input_data,
+                            no_loader: 1,
+                            onSuccess: function(data) {
+                                onAnnotationsUploaded(data, save_type);
+                            },
+                            onError: onAnnotationSaveFailed,
+                            type: 'post'
+                        });
+                    }
+
+                    window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
+
+                    $('body').on('click', '.doc-saver', function() {
+                        saveAnnotationsAtServer();
+                    });
+
+                })();
 
                 $('body').on('click', '.cb-container.autosave input', function() {
                     if ($(this).prop('checked'))
@@ -264,16 +419,17 @@
                     }
                 } else {
                     $('.pdfViewer').css("cursor", "default");
-                    if ($target.closest('.annotation_button.prop').length > 0) {
-                        $('.topbar:first .pen:first').click();
-                    } else {
+                    // if ($target.closest('.annotation_button.prop').length > 0) 
+                    {
+                    //     $('.topbar:first .pen:first').click();
+                    // } else {
                         if (activePointId && $target.closest('#comment-wrapper').length == 0) {
                             activePointId = undefined;
                             $('.comment-list-form').hide();
                         } else {
                             var comment_active = $('.toolbar .comment').hasClass('active');
                             if (comment_active && $target.closest('#viewer').length == 0)
-                                $('.toolbar .cursor').click();
+                                select_cursor();
                         }
                     }
                 }
@@ -295,165 +451,15 @@
                 }
             });
 
-            function onAnnotationsDownloaded(data, doc_data) {
-                var comments = data.comments;
-                if (!Array.isArray(comments)) {
-                    comments = [];
-                    console.log("Why not comments");
-                }                        
-                var document_version = getDocumentVersion(documentId);
-                if (!data.annotations) {
-                    data.annotations = [];
-                }
-                var message = undefined;
-                var document_dirty = isDocumentDirty(documentId);
-                var to_send = [];
-                if (data.version > document_version) {
-                    if (document_dirty == 1) {
-                        message = "Document annotation version=" + data.version + " available from server,";
-                        message += "<br>You have older version=" + document_version + " at local.";
-                        message += "<br>If you download, it will discard your recent changes,";
-                        message += "<br>Do you still want to download?";
-                        bootbox.confirm(message, function(dr) {
-                            if (dr) {
-                                updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
-                            } else {
-                                updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
-                            }
-                        });
-                    } else {
-                        updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
-                    }
-                } else {
-                    updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
-                }
+            $('.notification-list:first').on('click, li.list-group-item contact', function() {
+                console.log(1344);
+            });
+
+            function onPenLeave() {
+
             }
 
-            function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {        
-                if (annotations.length == 0) {
-                    annotations = getLocalAnnotations();
-                }
-                if (annotations.length == 0 && comments.length == 0) {
-                    if (doc_data && doc_data.first_time) {
-                        render_details(doc_data);
-                    }
-                    return;
-                }
-                annotations = annotations.filter(function(annot) {
-                    return annot.type != 'point' || annot.sub_type
-                });
-                annotations = annotations.concat(comments);
-                annotations.forEach(function(item) {
-                    item.class = 'Annotation';
-                });
-                var annotation_cookie = "";
-                if (Array.isArray(annotations)) {
-                    annotation_cookie = JSON.stringify(annotations);
-                } else {
-                    bootbox.alert("invalid annotations");
-                    return;
-                }
-                setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
-                setDocVersion(documentId, version);
-                unSetDocDirty(documentId);
-                render_details(doc_data);
-            }
-            function saveAnnotationsAtServer(save_type) {
-                save_drawing(1);
-                if (!documentId) {
-                    console.log("saveAnnotationsAtServer must be called after document id is set")
-                    return;
-                }
-                var document_dirty = isDocumentDirty(documentId);
-                // console.log(document_dirty, 16);
-                if (document_dirty != 1)
-                    return;
-
-                var document_version = getDocumentVersion(documentId);
-                var input_data = {
-                    id : doc_id,
-                    doc_id: documentId
-                };
-                delete input_data['reset'];
-                if (save_type == 'reset') {
-                    input_data['reset'] = 1;
-                } else {
-                    var annotationString = localStorage.getItem(documentId + '/annotations');
-                    if (!annotationString || annotationString == '[]') {
-                        console.log("No annotations");
-                        return;
-                    }
-                    if (document_version == 0) {
-                        setDocDirty(documentId);
-                        setDocVersion(documentId, 1);
-                    }
-                    var ar_annotations = JSON.parse(annotationString);
-                    ar_annotations = ar_annotations.filter(function(obj){
-                        obj.type != 'point' || obj.sub_type == 'personal'
-                    });
-                    annotationString = JSON.stringify(ar_annotations);
-                    input_data['annotations'] = annotationString;
-                    input_data['version'] = document_version;
-                }
-                if(save_type == 'force')
-                {
-                    input_data['force'] = 1;
-                }
-                let args = {
-                    app: 'documents',
-                    model: 'AnnotationDocument',
-                    method: 'add_annotation'
-                }
-                var final_input_data = {            
-                    args: args,
-                    params: input_data
-                };
-                // window['add_annotation'](final_input_data);
-                dn_rpc_object({
-                    data: final_input_data,
-                    no_loader: 1,
-                    onSuccess: function(data) {
-                        onAnnotationsUploaded(data, save_type);
-                    },
-                    type: 'post'
-                });
-            }
-            function onAnnotationsUploaded(data, reset) {
-                if (data != "done") {
-                    console.log(data, 'Could not save')
-                    if(data.version)
-                    {
-                        data = data.version;
-                    }
-                    if (isNaN(data)) {
-                        bootbox.alert("Could not save:");
-                        console.log(data);
-                        return;
-                    }
-                    var document_version = getDocumentVersion(documentId);
-                    message = "Server already has version=" + data;
-                    message += "<br>Do you want to overwrite server version with local=" + document_version + "?";
-                    bootbox.confirm(message, function(dr) {
-                        if (dr) {
-                            document_version = data + 1;
-                            setDocVersion(document_version);
-                            saveAnnotationsAtServer('force');
-                        }
-                    });
-                } else {
-                    if (reset == 'reset') {
-                        initDocCookies(documentId);
-                        render();
-                    } else
-                        unSetDocDirty(documentId);
-                    console.log("Saved");
-                }
-            }
-            window['saveAnnotationsAtServer'] = saveAnnotationsAtServer;
-
-
-            var setPen = function(a, b) {
-            }
+            var setPen = function(a, b) {}
 
             var vertical = 'top';
             var horizontal = 'left';
@@ -641,7 +647,6 @@
             }
 
             function render(doc_data) {
-                annotation_user_m2 = window['current_user'].cookie;
                 site_functions.showLoader("renderdoc");
                 if (doc_data && doc_data.first_time) {
 
@@ -649,8 +654,8 @@
                     commentText = comments_wrapper.find('#commentText');
                     comment_list_div = comments_wrapper.find('.comment-list:first');
                     comment_list = comments_wrapper.find('.comment-list-container:first');
-                    comment_doc_id = doc_data.type + '-' + doc_data.id + '.pdf';
-                    documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';                    
+
+                    documentId = doc_data.type + '-' + doc_data.id + '.pdf';
                     doc_id = doc_data.id;
                     RENDER_OPTIONS.documentId = documentId;
                     comments_loaded = false;
@@ -693,7 +698,7 @@
                                 onAnnotationsDownloaded(annotaions_data, doc_data);
                             },
                             onError:function(er){
-                                console.log(er);
+                                console.log(er, 34444);
                             }
                         });
                         // onAnnotationsDownloaded([], doc_data);
@@ -873,10 +878,23 @@
                             if (pages_rendered == 1) {
                                 first_page_rendered = 1;
                                 if (doc_data && doc_data.first_time) {
-                                    var height_to_minus = $('#viewer-wrapper').offset().top;                                  
+                                    var header_height = $('.headerheight').height();
+                                    var toolbar_rect = $('.topbar:first')[0].getBoundingClientRect();
+                                    var toolbar_height = toolbar_rect.height;
+                                    var height = header_height + toolbar_height;
+                                    var path_url = window['pathname'];
+                                    var ar_path = path_url.split('/');
+                                    //console.log(path_url);                                
+                                    if (ar_path[1] == 'iframe')
+                                        height += 137;
                                     $('#viewer-wrapper').css({
-                                        height: 'calc(100vh - ' + height_to_minus + 'px)'
+                                        height: 'calc(100vh - ' + height + 'px)'
                                     });
+                                    // comments_wrapper.css({
+                                    //     top: (height + 2)
+                                    // });
+                                    // var c_div_height = 'calc(100vh - ' + (height + 55) + 'px)';
+                                    // comment_list_div.css('height', c_div_height);
                                     $('body').addClass('pdf-viewer');
                                 }
                                 $('#content-wrapper').show();
@@ -977,29 +995,9 @@
 
                 setPen = function(size, color) {
                     var modified = false;
-                    if(!size)
-                    {
-                        size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size');
-                        if(size)
-                        {
-                            size = parseInt(size);
-                        }
-                        if(!size)
-                        {
-                            size = 2;
-                        }
-                        setPen(size, color);
+                    if (size && typeof(size) != 'number') {
+                        size = parseInt(size);
                     }
-                    if(!color)
-                    {
-                        color = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color');
-                        if(!color)
-                        {
-                            color = '000000';
-                        }
-                        setPen(size, color);
-                    }
-                    // console.log(size, color)
                     if (color && color.length == 6) {
                         color = '#' + color;
                     }
@@ -1048,7 +1046,6 @@
                     color_popup.find('div[hex="' + c_color + '"]:first').click();
                 }
                 $('body').on('click', '.toolbar .pen-color:first', handlePenColorChange);
-                // console.log(222);
                 $('body').on('change', '.toolbar .pen-size:first', handlePenSizeChange);
             })();
 
@@ -1114,7 +1111,7 @@
                     var target = $(e.target);
                     target = target.closest('button');
                     if (target.hasClass('pen') && active_btn.hasClass('pen')) {
-                        $('.topbar:first .cursor').click();
+                        select_cursor();
                     } else {
                         var tooltype = $(e.target).closest('[data-tooltype]').data('tooltype');
                         if (tooltype)
@@ -1131,13 +1128,26 @@
                 }
 
                 $('body').on('click', '.toolbar.topbar:first button, .toolbar.annotation-options:first button', handleToolbarClick);
-                $('.toolbar:first .cursor').click();
+            })();
+
+            // Clear toolbar button
+            (function() {
+                function handleClearClick(e) {
+                    if (confirm('Are you sure you want to clear annotations?')) {
+                        for (var i = 0; i < NUM_PAGES; i++) {
+                            document.querySelector('div#pageContainer' + (i + 1) + ' svg.annotationLayer').innerHTML = '';
+                        }
+                        setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/annotations', '[]');
+                    }
+                }
+                //document.querySelector('a.clear').addEventListener('click', handleClearClick);
             })();
 
 
             // Comment stuff
             (function(window, document) {
-                
+                var obj_this = this;
+
                 function supportsComments(target) {
                     var type = target.getAttribute('data-pdf-annotate-type');
                     return ['point'].indexOf(type) > -1;
@@ -1152,7 +1162,10 @@
                     if (!annot_doc) {
                         return;
                     }
-                    if (annotation_mode != 1 || !annot_doc || data.point.comment_doc_id != comment_doc_id) {
+                    if (annotation_mode != 1 || !annot_doc || data.point.doc_id != documentId) {
+                        return;
+                    }
+                    if (annotation_mode != 1 || !annot_doc || data.point.doc_id != documentId) {
                         return;
                     }
                     var annot_id = comment_list.attr('annotation-id');
@@ -1205,14 +1218,7 @@
                     }
                     if (!e.shiftKey && e.keyCode == 13) {
                         e.preventDefault();
-                        let el = $('.active-mention');
-                        var commentValue = el.html().replace('<div><br></div>', '');
-                        el.html('');
-                        if (!window['should_save'])
-                        {
-                            return;
-                        }
-                        // var commentValue = commentText[0].value; // commentText.val().trim();
+                        var commentValue = commentText[0].value; // commentText.val().trim();
                         commentValue = commentValue.substr(0, commentValue.length - 1);
                         if (commentValue == '') {
                             commentText.val('');
@@ -1221,8 +1227,8 @@
                         //console.log(commentValue);
                         var comment = {
                             date_time: new Date(),
-                            user_name: annotation_user_m2.name,
-                            uid: annotation_user_m2.id,
+                            user_name: annotation_user.name,
+                            uid: annotation_user.id,
                             content: commentValue
                         };
                         //console.log(commentText.content)
@@ -1362,19 +1368,17 @@
                             var parent_height = parent.height();
                             var p_number = parent.closest('.page').index()
                             var page_top = parent_height * p_number;
-                            
+
                             var c_target = target1[0];
-                            if(c_target)
-                            {
-                                var my_top = parseFloat(c_target.style.top) - 100;
-                                var my_left = parseFloat(c_target.style.left) - 100;
-                                var scroll_to = page_top + my_top;
-    
-                                $('#viewer-wrapper').scrollLeft(my_left);
-                                $('#viewer-wrapper').animate({
-                                    scrollTop: scroll_to
-                                }, 500);
-                            }                                                        
+                            //console.log(c_target);
+                            var my_top = parseFloat(c_target.style.top) - 100;
+                            var my_left = parseFloat(c_target.style.left) - 100;
+                            var scroll_to = page_top + my_top;
+
+                            $('#viewer-wrapper').scrollLeft(my_left);
+                            $('#viewer-wrapper').animate({
+                                scrollTop: scroll_to
+                            }, 500);
                             UI.enableEdit(c_svg[0]);
                             handleAnnotationClick(c_svg[0]);
                         }, 15);
@@ -1395,7 +1399,7 @@
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
                     var child_info = '<div>' + aComment.content + '</div>';
-                    aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
+                    aComment.date_time = window["functions"]['standeredTime'](aComment.date_time);
                     child_info += '<div class="user-time-info">';
                     child_info += '<span class"time">' + aComment.date_time + '</span>';
                     //child_info +='<span class="buttons">:</span>';
@@ -1470,7 +1474,8 @@
                     });
                 }
 
-                function handleAnnotationBlur(target) {                    
+                function handleAnnotationBlur(target) {
+                    annotationBiengEdited = false;
                     activeAnnotationItem = false;
                 }
 
@@ -1478,8 +1483,7 @@
                 var wh = $(window).height();
                 var dh = $(document).height();
 
-                //To show comments/notes on 4 buttons (2=>comment show/add, 2=>notes show/add)
-                $('body').on('click', '.toolbar:first .comment', function(e) {
+                $('body').on('click', '.toolbar:first .comment', function() {
                     UI.destroyEditOverlay();
                     if ($(this).is('.personal'))
                         slected_comment_type = 'notes';
@@ -1512,6 +1516,9 @@
 
     function module2(module, exports, __webpack_require__) {
         var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */
+
+        var annotation_user_m2 = localStorage.getItem('user');
+        annotation_user_m2 = JSON.parse(annotation_user_m2);
 
         (function(module) {
             'use strict';
@@ -2771,15 +2778,18 @@
                                                 user_name: values.user_name,
                                                 date_time: values.date_time,
                                             };
-                                            var doc_info = documentId.split('-');
-                                            var res_id = doc_info[1].split('.')[0];
+                                            var doc_data = documentId.split('-');
+                                            var res_id = doc_data[1].split('.')[0];
+                                            var res_model = 'meeting_point.doc';
+                                            if (documentId.indexOf('topic') > -1)
+                                                res_model = 'meeting_point.topicdoc';
+
                                             var input_data = {
-                                                doc_type: doc_info[0],
+                                                doc_type: doc_data[0],
                                                 doc_id: documentId,
-                                                document_id: doc_info[1],
-                                                res_id: res_id,
-                                                comment_doc_id : comment_doc_id,                                                
-                                                res_model: 'document.PointAnnotation',
+                                                parent_res_id: res_id,
+                                                parent_res_model: res_model,
+                                                res_model: 'annotation.point',
                                             };
 
                                             var annotations = _getAnnotations(documentId);
@@ -2806,14 +2816,12 @@
                                                 }
                                                 point.comment = comment;
                                                 point.doc_id = documentId;
-                                                point.document_id = doc_info[1];
-                                                point.comment_doc_id = comment_doc_id;
                                                 input_data['point'] = point;
                                                 var is_comment = point.sub_type != 'personal';
                                                 if (is_comment && !received_comment) {
                                                     var args = {
                                                         app: 'documents',
-                                                        model: 'CommentAnnotation',
+                                                        model: 'PointAnnotation',
                                                         method: 'save_comment',
                                                     }
                                                     var options = {
@@ -2885,7 +2893,9 @@
                         else
                             res = JSON.parse(res);
                         return res;
-                    }                    
+                    }
+
+                    var annot_save_timeout = undefined;
 
                     function updateAnnotations(documentId, annotations, is_comment) {
                         var annotation_cookie = "";
@@ -3270,22 +3280,7 @@
                     function setAttributes(node, attributes) {
                         var attr = Object.keys(attributes);
                         attr.forEach(function(key) {
-                            try{
-                                var case_key = keyCase(key);
-                                var attrs_key = attributes[key];
-                                // console.log(case_key, attrs_key);
-                                if(case_key == 'd' && attrs_key == 'Z')
-                                {
-                                    console.log('Not valid')
-                                }
-                                else{
-                                    node.setAttribute(key, attrs_key);
-                                }
-                                // console.log('doneu');
-                            }
-                            catch(er){
-                                console.log(er, ' with ', node, key, keyCase(key), attributes[key]);
-                            }
+                            node.setAttribute(keyCase(key), attributes[key]);
                         });
                     }
                     module.exports = exports['default']; /***/
@@ -3338,28 +3333,8 @@
                         for (var i = 0, l = a.lines.length; i < l; i++) {
                             var p1 = a.lines[i];
                             var p2 = a.lines[i + 1];
-                            if(p1 && p2)
-                            {
-                                if (p1.length > 0 && p2.length>0) {
-                                    if(p1.length != 3 && p2 && p2.length != 3)
-                                    {
-                                        d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
-                                    }                                
-                                }
-                                else
-                                {
-                                    if(p1.x && p1.y && p2.x && p2.y)
-                                    {
-                                        d.push('M' + p1.x + ' ' + p1.y + ' ' + p2.x + ' ' + p2.y);
-                                    }
-                                    else
-                                    {
-                                        console.log('Invalid senario', p1.length, p2.length, p1, p2);
-                                    }
-                                }
-                            }
-                            else{
-                                // console.log('p1 and p2 must be defined');
+                            if (p1 && p1.length != 3 && p2 && p2.length != 3) {
+                                d.push('M' + p1[0] + ' ' + p1[1] + ' ' + p2[0] + ' ' + p2[1]);
                             }
                         }
 
@@ -4111,7 +4086,39 @@
                     Object.defineProperty(exports, "__esModule", {
                         value: true
                     });
-                    
+                    var _slicedToArray = function() {
+                        function sliceIterator(arr, i) {
+                            var _arr = [];
+                            var _n = true;
+                            var _d = false;
+                            var _e = undefined;
+                            try {
+                                for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+                                    _arr.push(_s.value);
+                                    if (i && _arr.length === i) break;
+                                }
+                            } catch (err) {
+                                _d = true;
+                                _e = err;
+                            } finally {
+                                try {
+                                    if (!_n && _i["return"]) _i["return"]();
+                                } finally {
+                                    if (_d) throw _e;
+                                }
+                            }
+                            return _arr;
+                        }
+                        return function(arr, i) {
+                            if (Array.isArray(arr)) {
+                                return arr;
+                            } else if (Symbol.iterator in Object(arr)) {
+                                return sliceIterator(arr, i);
+                            } else {
+                                throw new TypeError("Invalid attempt to destructure non-iterable instance");
+                            }
+                        };
+                    }();
                     exports.enableEdit = enableEdit;
                     exports.disableEdit = disableEdit;
                     exports.destroyEditOverlay = destroyEditOverlay;
@@ -4284,12 +4291,7 @@
                      * @param {Event} e The DOM event that needs to be handled
                      */
                     function handleDocumentKeyup(e) {
-                        // console.log(1343);
-                        if (overlay && e.keyCode === 46 
-                            // && e.target.nodeName.toLowerCase() !== 'textarea' 
-                            // && e.target.nodeName.toLowerCase() !== 'input'
-                            ) {
-                            // console.log(1343, 77);
+                        if (overlay && e.keyCode === 46 && e.target.nodeName.toLowerCase() !== 'textarea' && e.target.nodeName.toLowerCase() !== 'input') {
                             deleteAnnotation();
                         }
                     }
@@ -4674,10 +4676,8 @@
                     function setPen() {
                         var penSize = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
                         var penColor = arguments.length <= 1 || arguments[1] === undefined ? '000000' : arguments[1];
-                        _penSize = penSize;
+                        _penSize = parseInt(penSize, 10);
                         _penColor = penColor;
-                        console.log(penColor, penSize, 1999);
-
                     }
                     /**
                      * Enable the pen behavior
@@ -4737,7 +4737,6 @@
                      * @param {Event} The DOM event to be handled
                      */
                     function handleDocumentMouseup(e) {
-
                         if (input || !(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
                         }
@@ -5546,7 +5545,45 @@
             });;
             /* WEBPACK VAR INJECTION */
         }.call(exports, __webpack_require__(3)(module)))
-    }    
+    }
+
+    $(function() {
+        var last_active_was_comment = false;
+        $(document).on('mouseup', '#viewer', function(e) {
+            if (e.button == 2)
+                return;
+            if (annotation_mode != 1)
+                return;
+            setTimeout(function() {
+                var selection = window.getSelection();
+                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
+                    var ctxMenu = $('.annotation-options.ContextMenuPopup');
+                    ctxMenu.css({
+                        'left': e.pageX - ctxMenu.width() / 2,
+                        'top': e.clientY + 12
+                    }).show();
+                    //console.log(ctxMenu.position());
+                    contextMenuShown = true;
+                } else {
+                    var pen_active = $('.toolbar .pen').hasClass('active');
+                    var cursor_active = $('.toolbar .cursor').hasClass('active');
+                    var comment_active = $('.toolbar .comment').hasClass('active');
+                    if (comment_active) {
+                        if (last_active_was_comment)
+                            last_active_was_comment = true;
+                        else {
+                            last_active_was_comment = false;
+                            // if (!cursor_active)
+                            //     select_cursor();
+                        }
+                    }
+                    // else if (!pen_active && !cursor_active) {
+                    //     select_cursor();
+                    // }
+                }
+            }, 10);
+        });
+    });
 
     function module3(module, exports) {
 
@@ -5704,42 +5741,6 @@
 
     }
 
-    $(function() {
-        var last_active_was_comment = false;
-        $(document).on('mouseup', '#viewer', function(e) {
-            if (e.button == 2)
-                return;
-            if (annotation_mode != 1)
-                return;
-            setTimeout(function() {
-                var selection = window.getSelection();
-                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
-                    var ctxMenu = $('.annotation-options.ContextMenuPopup');
-                    ctxMenu.css({
-                        'left': e.pageX - ctxMenu.width() / 2,
-                        'top': e.clientY + 12
-                    }).show();
-                    //console.log(ctxMenu.position());
-                    contextMenuShown = true;
-                } else {
-                    var pen_active = $('.toolbar .pen').hasClass('active');
-                    var cursor_active = $('.toolbar .cursor').hasClass('active');
-                    var comment_active = $('.toolbar .comment').hasClass('active');
-                    if (comment_active) {
-                        if (last_active_was_comment)
-                            last_active_was_comment = true;
-                        else {
-                            last_active_was_comment = false;
-                            if (!cursor_active)
-                                $('.toolbar .cursor').click();
-                        }
-                    } else if (!pen_active && !cursor_active) {
-                        $('.toolbar .cursor').click();
-                    }
-                }
-            }, 10);
-        });
-    });
     function loadAnnotationnModules(modules) { // webpackBootstrap
         // The module cache
         var installedModules = {};
@@ -5786,6 +5787,6 @@
         module2,
         module3,
         module4
-    ]);    
+    ]);
     window['pdf_js_module'] = pdf_js_module;
 })()
