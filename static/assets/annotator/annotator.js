@@ -7,7 +7,12 @@
     var contextMenuShown = false;
     var comment_item_focused = false;
     var select_comment_item = undefined;
+    var activeAnnotationId = undefined;
+    var activeAnnotationItem = undefined;
+    var handleAnnotationBlur = undefined;
     var handleAnnotationClick = undefined;
+    var activate_annotation = undefined;
+    var handlePointAnnotationClick = undefined;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -20,8 +25,8 @@
 
     function select_cursor()
     {
-        console.log(45);
-        window['functions'].get_trace(1);
+        // console.log(45);
+        // window['functions'].get_trace(1);
         $('.topbar:first .cursor:first').click();
     }
     function initDocCookies(documentId) {
@@ -98,6 +103,11 @@
         return temp_key;
     }
 
+    function supportsComments(target) {
+        var type = target.getAttribute('data-pdf-annotate-type');
+        return ['point'].indexOf(type) > -1;
+    }
+
     function module0(module, exports, __webpack_require__) {
         try {
             'use strict';
@@ -107,7 +117,6 @@
             var _initColorPicker2 = _interopRequireDefault(_initColorPicker);
 
             var save_drawing = function() {};
-            var activeAnnotationId = undefined;
             var activePointId = undefined;
             var documentId = false;
             var dh = $(document).height();
@@ -128,7 +137,7 @@
                 });
                 select_cursor();
             }
-            var activeAnnotationItem = undefined;
+            
             var annotationBiengEdited = false;
             var comments_loaded = false;
             var force_download = 0;
@@ -1147,12 +1156,6 @@
             // Comment stuff
             (function(window, document) {
                 var obj_this = this;
-
-                function supportsComments(target) {
-                    var type = target.getAttribute('data-pdf-annotate-type');
-                    return ['point'].indexOf(type) > -1;
-                }
-
                 var on_annotation_comment_received = function(data) {
                     var annot_doc = $('#annotated-doc-conatiner');
                     if (annot_doc.length < 1) {
@@ -1379,7 +1382,6 @@
                             $('#viewer-wrapper').animate({
                                 scrollTop: scroll_to
                             }, 500);
-                            UI.enableEdit(c_svg[0]);
                             handleAnnotationClick(c_svg[0]);
                         }, 15);
                     } else {
@@ -1399,7 +1401,7 @@
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
                     var child_info = '<div>' + aComment.content + '</div>';
-                    aComment.date_time = window["functions"]['standeredTime'](aComment.date_time);
+                    aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
                     child_info += '<div class="user-time-info">';
                     child_info += '<span class"time">' + aComment.date_time + '</span>';
                     //child_info +='<span class="buttons">:</span>';
@@ -1417,35 +1419,15 @@
                     if (textBox)
                         onCOmmentAdded();
                 }
-
-                handleAnnotationClick = function(target) {
-                    activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
+                activate_annotation = function(target){
                     pdfStoreAdapter.getAnnotation(documentId, activeAnnotationId).then(function(item) {
                         activeAnnotationItem = item;
-                        if (supportsComments(target)) {
-                            activePointId = activeAnnotationId;
-                            pdfStoreAdapter.getComments(documentId, activeAnnotationId).then(renderComments).then(function() {
-                                if (item.counter > 0) {
-                                    var lenth = comments_wrapper.find('.comment-list-item').length;
-                                    lenth = lenth - item.counter - 1;
-                                    var new_comments = comments_wrapper.find('.comment-list-item:gt(' + lenth + ')');
-                                    new_comments.css({
-                                        'background': 'green',
-                                        color: 'white'
-                                    })
-                                    discard_point_notifications(item, item.counter);
-                                }
-                            });
-                            if (activeAnnotationItem.sub_type) {
-                                comment_list.removeAttr('annotation-id');
-                                showCommentsContainer('notes');
-                            } else {
-                                comment_list.attr('annotation-id', activeAnnotationId);
-                                $('#pdf-annotate-edit-overlay a').remove();
-                                showCommentsContainer('comments');
-                            }
-                            onCOmmentAdded();
-                        } else {
+                        if(supportsComments(target))
+                        {
+                            handlePointAnnotationClick(item);
+                        }
+                        else
+                        {
                             var ctxMenu = $('.colors.ContextMenuPopup:first');
                             var pos = $(target).position();
                             var tw = $('#pdf-annotate-edit-overlay:visible').width();
@@ -1463,8 +1445,6 @@
                                 $('#applied_color').hide();
                             } else
                                 selected.append($('#applied_color').show());
-
-
                             ctxMenu.css({
                                 'left': left_pos,
                                 'top': pos.top + 30
@@ -1473,8 +1453,32 @@
                         }
                     });
                 }
+                handlePointAnnotationClick = function(item) {
+                    activePointId = activeAnnotationId;
+                    pdfStoreAdapter.getComments(documentId, activeAnnotationId).then(renderComments).then(function() {
+                        if (item.counter > 0) {
+                            var lenth = comments_wrapper.find('.comment-list-item').length;
+                            lenth = lenth - item.counter - 1;
+                            var new_comments = comments_wrapper.find('.comment-list-item:gt(' + lenth + ')');
+                            new_comments.css({
+                                'background': 'green',
+                                color: 'white'
+                            })
+                            discard_point_notifications(item, item.counter);
+                        }
+                    });
+                    if (activeAnnotationItem.sub_type) {
+                        comment_list.removeAttr('annotation-id');
+                        showCommentsContainer('notes');
+                    } else {
+                        comment_list.attr('annotation-id', activeAnnotationId);
+                        $('#pdf-annotate-edit-overlay a').remove();
+                        showCommentsContainer('comments');
+                    }
+                    onCOmmentAdded();
+                }
 
-                function handleAnnotationBlur(target) {
+                handleAnnotationBlur = function () {
                     annotationBiengEdited = false;
                     activeAnnotationItem = false;
                 }
@@ -1492,8 +1496,6 @@
                     }
                     loadALlCommentsOnDocument();
                 });
-
-
                 UI.addEventListener('annotation:click', handleAnnotationClick);
                 UI.addEventListener('annotation:blur', handleAnnotationBlur);
             })(window, document);
@@ -1981,6 +1983,7 @@
                      * @param {Event} e The DOM event to be handled
                      */
                     document.addEventListener('click', function handleDocumentClick(e) {
+                        // console.log(7887);
                         if (!$('.toolbar .cursor').hasClass('active')) {
                             return;
                         }
@@ -1993,8 +1996,8 @@
                         } // Emit annotation:click if target was clicked
                         if (target) {
                             emitter.emit('annotation:click', target);
+                            clickNode = target;
                         }
-                        clickNode = target;
                     }); // var mouseOverNode;
                     // document.addEventListener('mousemove', function handleDocumentMousemove(e) {
                     //   var target = findAnnotationAtPoint(e.clientX, e.clientY);
@@ -2833,9 +2836,6 @@
                                                         no_loader:1,
                                                         onSuccess: function (annotaions_data) {
                                                             console.log('comment saved')
-                                                        },
-                                                        onError:function(er){
-                                                            console.log(er);
                                                         }
                                                     });
                                                 }
@@ -4159,7 +4159,7 @@
                      * @param {Element} target The annotation element to apply overlay for
                      */
                     function createEditOverlay(target) {
-                        //console.log(target);
+                        // console.log(targe166);
                         destroyEditOverlay();
                         overlay = document.createElement('div');
                         var anchor = document.createElement('a');
@@ -4486,19 +4486,23 @@
                      *
                      * @param {Element} e The annotation element that was clicked
                      */
-                    function handleAnnotationClick(target) {
+                    handleAnnotationClick =function(target) {
+                        //console.log(561);
+                        activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
                         createEditOverlay(target);
+                        activate_annotation(target);
                     }
                     /**
                      * Enable edit mode behavior.
                      */
                     function enableEdit(target) {
+                        // console.log(_enabled, 679);
+                        if (_enabled) {
+                            return;
+                        }
                         if (target) {
                             //console.log(target);
                             createEditOverlay(target);
-                            return;
-                        }
-                        if (_enabled) {
                             return;
                         }
                         _enabled = true;
@@ -5573,13 +5577,11 @@
                             last_active_was_comment = true;
                         else {
                             last_active_was_comment = false;
-                            // if (!cursor_active)
-                            //     select_cursor();
                         }
                     }
-                    // else if (!pen_active && !cursor_active) {
-                    //     select_cursor();
-                    // }
+                    else if (!pen_active && !cursor_active) {
+                        select_cursor();
+                    }
                 }
             }, 10);
         });

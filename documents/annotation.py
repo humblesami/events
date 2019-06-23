@@ -109,10 +109,10 @@ class AnnotationDocument(models.Model):
                 set_obj_attrs(new_annotation, annotation_to_save)
                 drawing_annotations.append(annotation_to_save)
             
-            elif user_annot['type'] == 'point':                
+            elif user_annot['type'] == 'point':
                 sub_type = user_annot['sub_type']
                 if sub_type != 'personal':
-                    raise ValidationError('Error in sub type')
+                    continue
                 annotation_to_save = PointAnnotation()
                 annotation_to_save.x = user_annot['x']
                 annotation_to_save.y = user_annot['y']
