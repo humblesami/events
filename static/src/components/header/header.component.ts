@@ -249,14 +249,6 @@ export class HeaderComponent implements OnInit {
 
     admin_url = '';
     ngOnInit() {
-        var search_active = false;
-        $("body").on("click", ".top-search-btn", function() {
-            $(".serach-input")
-                .toggleClass("active")
-                .focus();
-            $(".btn-search").toggleClass("animate");
-            $(".serach-input").val("");
-            search_active = true;
-        });
+        
     }
 }

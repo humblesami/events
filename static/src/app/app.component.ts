@@ -47,10 +47,18 @@ export class AppComponent {
             $(this).parent().toggleClass('is-expanded');
         });
 
-        
-        $('#rtc-container').mouseup(function(){
-            $('#rtc-container').removeClass('min').addClass('full');
-            window['rtc-call-max'] = 1;            
+        $('body').on('mouseup', '.navbar-toggler', function(e) {
+            window['functions'].togglerelated('.navbarNavDropdown');
         });
+
+        $("body").on("click", ".top-search-btn", function() {
+            $(".serach-input")
+                .toggleClass("active")
+                .focus();
+            $(".btn-search").toggleClass("animate");
+            $(".serach-input").val("");
+        });
+        
+        
     }
 }

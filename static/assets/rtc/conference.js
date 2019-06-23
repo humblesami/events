@@ -413,7 +413,11 @@
                 $('#rtc-container').removeClass('full').addClass('min');
                 window['rtc-call-max'] = undefined;                
             }
-        }        
+        }
+    });
+    $('#rtc-container').mouseup(function(){
+        $('#rtc-container').removeClass('min').addClass('full');
+        window['rtc-call-max'] = 1;            
     });
 })();
 //init_video_caller();

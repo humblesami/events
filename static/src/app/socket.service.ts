@@ -319,7 +319,15 @@ export class SocketService {
             console.log('Not authorized');
             return;
         }
-        console.log(authorized_user, 13);
+        let me = {
+            id:authorized_user.id,
+            group: undefined
+        }
+        if(authorized_user.groups.length > 0)
+        {
+            me.group = authorized_user.groups[0].name;
+        }
+        console.log(me);
         $('#main-div').show();
         for(var i = 0; i < authorized_user.groups.length; i++){
             if( authorized_user.groups[i].name == 'Admin'){
@@ -409,7 +417,7 @@ export class SocketService {
                 // console.log(obj_this.chat_users, 4509);
 
                 obj_this.notificationList = [];
-                // console.log(data.notifications);
+                data.notifications = data.notifications.list;
                 for(let i in data.notifications)
                 {
                     obj_this.add_item_in_notification_list(data.notifications[i]);
@@ -705,6 +713,11 @@ export class SocketService {
     add_item_in_notification_list(item) {
         var obj_this = this;
         try{
+            if(!item.body)
+            {
+                console.log(item, ' no body');
+                return;
+            }
             item.body = item.body.trim();
             if(item.body.length == 0)
             {

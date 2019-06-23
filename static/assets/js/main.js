@@ -271,10 +271,7 @@ function addMainEventListeners() {
         }
     });
 
-    $('body').on('mouseup', '.navbar-toggler', function(e) {
-        togglerelated = site_functions.togglerelated;
-        togglerelated('.navbarNavDropdown');
-    });
+    
     $('body').on('click', '.btnclosemodel', function() {
         $(this)
             .closest(".modal")
