@@ -252,7 +252,6 @@ function addMainEventListeners() {
         e.preventDefault();
     },false);
     window.addEventListener("drop",function(e){
-        console.log(34220008);
         e = e || event;
         e.preventDefault();
     },false);
@@ -270,14 +269,6 @@ function addMainEventListeners() {
                 $('.hidemouseaway').hide();
             }
         }
-        if(window['rtc-call-max'])
-        {
-            if($(target).closest('#rtc-container').length == 0)
-            {
-                $('#rtc-container').removeClass('full').addClass('min');
-                window['rtc-call-max'] = undefined;                
-            }
-        }        
     });
 
     $('body').on('mouseup', '.navbar-toggler', function(e) {
@@ -293,57 +284,13 @@ function addMainEventListeners() {
         $('body').removeClass('modal-open');
     });
 
-    var search_active = false;
-    $("body").on("click", ".top-search-btn", function() {
-        $(".serach-input")
-            .toggleClass("active")
-            .focus();
-        $(".btn-search").toggleClass("animate");
-        $(".serach-input").val("");
-        search_active = true;
-    });
-
-
-    function hideSearchbar(e) {
-        var $target = $(e.target);
-        var isSearchbarshown = $(".searchbar-full-width:visible").length > 0;
-        if (
-            isSearchbarshown &&
-            $target.closest(".searchbar-full-width").length == 0
-        )
-            $(".searchbar-full-width").hide();
-        else if ($target.closest("#search-btn").length > 0) {
-            $(".searchbar-full-width")
-                .show()
-                .find("input:first")
-                .focus();
-        }
-    }
-
     $(document).on("mouseup touchend keyup", function(e) {
         if(!is_local_host)
         {
             clearTimeout(time_out_session);
             handleSessionExpiry();
         }
-        
-        // hideSearchbar(e);
     });    
-}
-
-function setHeaderFixed() {    
-    var showHeaderAt = 0;
-    var win = $(window),
-        body = $("body");
-    if (win.width() > 0) {
-        win.on("scroll", function(e) {
-            if (win.scrollTop() > showHeaderAt) {
-                body.addClass("fixed");
-            } else {
-                body.removeClass("fixed");
-            }
-        });
-    }
 }
 
 
@@ -494,6 +441,5 @@ window['current_user'] = dn_current_site_user;
 window["functions"] = site_functions;
 check_if_touch_device();
 addMainEventListeners();
-setHeaderFixed();
 dn_current_site_user.initUserDataFromCookie();
 dn_current_site_user.verifyUserToken();

@@ -249,13 +249,14 @@ export class HeaderComponent implements OnInit {
 
     admin_url = '';
     ngOnInit() {
-        var obj_this = this;
-    	// $(document).click(function (event) {
-    	// 	if(obj_this.show_search_results && !$(event).closest('.show_search_results').length){
-        //         obj_this.show_search_results = false;
-        //         obj_this.search_bar_shown = false;
-        //         $(".searchbar-full-width").hide();
-        //     }
-        // });
+        var search_active = false;
+        $("body").on("click", ".top-search-btn", function() {
+            $(".serach-input")
+                .toggleClass("active")
+                .focus();
+            $(".btn-search").toggleClass("animate");
+            $(".serach-input").val("");
+            search_active = true;
+        });
     }
 }

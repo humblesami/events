@@ -2,12 +2,12 @@
     var annotation_user_m2;
     var annotation_mode = 0;
     var hand_drawings = [];
-    var shown_comment_type = false;
-    var slected_comment_type = false;
+    var comment_doc_id = false;
     var comment_sub_type = false;
     var contextMenuShown = false;
-    var comment_doc_id = false;
+    var shown_comment_type = false;
     var comment_item_focused = false;
+    var slected_comment_type = false;
     var select_comment_item = undefined;
     var handleAnnotationClick = undefined;
     var loadALlCommentsOnDocument = function() {
