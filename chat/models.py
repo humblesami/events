@@ -21,8 +21,8 @@ class NotificationType(models.Model):
     template = models.CharField(max_length=256, default='')
 
 class Notification(models.Model):
-    post_address = models.ForeignKey(PostAddress, on_delete=models.CASCADE, default=None)
-    notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE, default=None)
+    post_address = models.ForeignKey(PostAddress, on_delete=models.CASCADE, null=True)
+    notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE, null=True)
 
     def get_text(self):
         pass
@@ -309,7 +309,6 @@ class Comment(models.Model):
         Notification.add_notification(params, event_data)
         return comment
 
-
 class Message(models.Model):
     sender = models.IntegerField()
     to = models.IntegerField()
@@ -409,10 +408,8 @@ class Message(models.Model):
         message.save()
         return 'done'
 
-
 class MessageDocument(File):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
-
 
 class AuthUserChat(models.Model):
     @classmethod

@@ -1,9 +1,14 @@
 import os
 import glob
 
-res = glob.glob('' '*/migrations/*.py', recursive=True)
-for file_path in res:
-    if not file_path.endswith('\__init__.py') and file_path.endswith('/__init__.py'):
+res = glob.glob('*/migrations/*', recursive=True)
+for file_path in res:    
+    if file_path.endswith('__pycache__'):
+        file_path = file_path+'/*'
+        sub_res = glob.glob(file_path)
+        for file_path in sub_res:
+            os.remove(file_path)
+    elif not file_path.endswith('__init__.py'):
         os.remove(file_path)
 print ('done')
 

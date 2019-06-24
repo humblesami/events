@@ -1219,6 +1219,11 @@
                         console.log("Comment not added because, no active annotationId");
                         return;
                     }
+                    console.log('From Anotator..');
+                    if (window['should_save'])
+                    {
+                        return;
+                    }
                     if (!e.shiftKey && e.keyCode == 13) {
                         e.preventDefault();
                         var commentValue = commentText[0].value; // commentText.val().trim();
