@@ -536,6 +536,6 @@ body.change-form #content{
 } 
 
 body.popup #content{
-    height: calc(100vh - 50px);
+    height: calc(100vh - 70px);
     overflow: auto;
 }
