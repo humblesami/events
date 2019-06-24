@@ -417,10 +417,9 @@ export class SocketService {
                 // console.log(obj_this.chat_users, 4509);
 
                 obj_this.notificationList = [];
-                data.notifications = data.notifications.list;
-                for(let i in data.notifications)
+                for(let i in data.list)
                 {
-                    obj_this.add_item_in_notification_list(data.notifications[i]);
+                    obj_this.add_item_in_notification_list(data.list[i], null);
                 }
                 // console.log(1111, obj_this.notificationList);
                 obj_this.notificationList = obj_this.notificationList.reverse();
@@ -517,7 +516,7 @@ export class SocketService {
         };
 
         obj_this.server_events['notification_received'] = function (res) {             
-            obj_this.add_item_in_notification_list(res);            
+            obj_this.add_item_in_notification_list(res, 1);            
         };
         
         obj_this.server_events['notification_updated'] = function (res) {
@@ -710,7 +709,7 @@ export class SocketService {
         this.remove_item_from_notification_list(index);
     }
     
-    add_item_in_notification_list(item) {
+    add_item_in_notification_list(item, on_receive) {
         var obj_this = this;
         try{
             if(!item.body)
@@ -730,10 +729,26 @@ export class SocketService {
             return;
         }
         
-        let route = obj_this.model_routes[item.res_app][item.res_model];
-        item.client_route = route + item.res_id;
+        let route = obj_this.model_routes[item.address.res_app][item.address.res_model];        
+        
+        if (item.address.parent_post_id){
+            route += item.address.parent_id+'/';
+        }
+        item.client_route = route + item.address.res_id;
         item.counter = 1;
-        obj_this.notificationList.splice(0, 0, item);
+        if(on_receive)
+        {
+            for(var i in obj_this.notificationList)
+            {
+                if(item.id == obj_this.notificationList[i].id)
+                {
+                    obj_this.notificationList[i].text = item.text;
+                }
+            }
+        }
+        else{
+            obj_this.notificationList.push(item);
+        }
     }
 
     remove_item_from_notification_list(i) {

@@ -545,6 +545,20 @@
             function onDocLoaded() {
                 site_functions.hideLoader("renderdoc");
                 site_functions.hideLoader("loaddocwaiter");
+                var wls = window.location.toString();
+                var index = wls.indexOf('/doc');
+                wls = wls.substr(index+5);
+                var ar = wls.split('/');
+                if(ar.length > 1)
+                {
+                    try{
+                        var point_id = ar[1];
+                        console.log(point_id);
+                    }
+                    catch(er){
+                        console.log(er);
+                    }                    
+                }
             }
 
             function showHideAnnotations(rotate_degree) {
