@@ -740,8 +740,7 @@
                     rotate = parseInt(rotate, 10);
                     var vcw = $('#viewer').width();
                     var vuw = 0;
-                    vuw = scale / RENDER_OPTIONS.scale * vcw;
-                    viewerLeftMargin(vuw);
+                    vuw = scale / RENDER_OPTIONS.scale * vcw;                    
                     if (RENDER_OPTIONS.scale !== scale || RENDER_OPTIONS.rotate !== rotate) {
                         RENDER_OPTIONS.scale = scale;
                         RENDER_OPTIONS.rotate = rotate;
@@ -4496,10 +4495,12 @@
                      * @param {Element} e The annotation element that was clicked
                      */
                     handleAnnotationClick =function(target) {
-                        //console.log(561);
-                        activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
-                        createEditOverlay(target);
-                        activate_annotation(target);
+                        // console.log(561);
+                        setTimeout(function(){
+                            activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
+                            createEditOverlay(target);
+                            activate_annotation(target);
+                        }, 15);                        
                     }
                     /**
                      * Enable edit mode behavior.
