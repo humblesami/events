@@ -414,8 +414,7 @@ body.pdf-viewer
     z-index: 3;
     display: none;
     background: #ffffff;
-    border-right: 1px solid #e6e6e6;    
-    overflow: auto;
+    border-right: 1px solid #e6e6e6;
 }
 
 #notification-wrapper{
@@ -530,21 +529,21 @@ body.pdf-viewer
 }
 
 .comment-list
-{
-    overflow-y: scroll;
-    height: calc(100vh - 172px);
-    overflow: auto;
+{        
+    padding-bottom: 65px;
 }
 #comment-wrapper .comment-list-container {                
     width: 100%;
     padding-bottom: 65px;
+    overflow-y: scroll;
 }
 .comment-list-form
 {
     padding-left: 2px;
     width: 234px;
     position: absolute;
-    bottom: -4px;
+    bottom: 3px;
+    overflow-y: scroll;
 }
 
 #commentText {

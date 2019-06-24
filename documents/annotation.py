@@ -297,31 +297,58 @@ class PointAnnotation(Annotation):
     pdf = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
+    def notification_text(self):
+        parent_obj = None
+        if self.pdf.file_type == 'meeting':
+            parent_obj = self.pdf.meetingdocument
+        elif self.pdf.file_type == 'topic':
+            parent_obj = self.pdf.agendadocument
+        else:
+            return 'comment on unknown document'
+        return parent_obj.notification_text()
+
+    def get_audience(self):
+        parent_obj = None
+        if self.pdf.file_type == 'meeting':
+            parent_obj = self.pdf.meetingdocument
+        elif self.pdf.file_type == 'topic':
+            parent_obj = self.pdf.agendadocument
+        else:
+            return []
+        return parent_obj.get_audience()
+
+        # if self.pdf.file_type == 'topic':
+        #     return self.pdf.agendadocument.get_audience()
+        # elif self.pdf.file_type == 'meeting':
+        #     return self.pdf.meeting.get_audience()
+        # else:
+        #     return []
+
     @classmethod
     def save_point(cls, point):
         x = point.get('x')
         y = point.get('y')
         sub_type = ''
         date_time = point.get('date_time')
-        doc_id = point.get('document_id')
+        document_id = point.get('document_id')
         user_id = point.get('uid')
         name = point.get('class')
         uuid = point.get('uuid')
         page = point.get('page')
         type = point.get('type')
-        comment_doc_id = point.get('comment_doc_id')
+        comment_doc_name = point.get('comment_doc_name')
         new_point = False
 
-        doc_id = int(doc_id)
-        user_point = PointAnnotation.objects.filter(pdf_id=doc_id, uuid=uuid, created_by_id=user_id,
-        comment_doc_id=comment_doc_id)
+        document_id = int(document_id)
+        user_point = PointAnnotation.objects.filter(pdf_id=document_id, uuid=uuid, created_by_id=user_id,
+        comment_doc_id=comment_doc_name)
         if user_point:
             user_point = user_point[0]
             return {'point_id': user_point.id, 'new_point': new_point}
         else:
-            user_point = PointAnnotation(sub_type=sub_type, pdf_id=doc_id, x=x, y=y ,
+            user_point = PointAnnotation(sub_type=sub_type, pdf_id=document_id, x=x, y=y ,
                                 created_by_id=user_id, user_id=user_id, name=name, date_time=date_time,
-                                page=page, type=type, uuid=uuid, comment_doc_id=comment_doc_id)
+                                page=page, type=type, uuid=uuid, comment_doc_id=comment_doc_name)
             user_point.save()
             new_point = 1
             return {'point_id': user_point.id, 'new_point': new_point}
@@ -400,7 +427,7 @@ class CommentAnnotation(models.Model):
                     res['new_point'] = 1
                 doc_type = params['doc_type']
                 res_model = ''
-                res_id = params['res_id']
+                document_id = params['document_id']
 
                 if len(comment_body) > 20:                    
                     comment_body = '=> '+ comment_body[0: 20] + '...'                
@@ -408,19 +435,20 @@ class CommentAnnotation(models.Model):
                 if doc_type == 'meeting':
                     res_model = 'MeetingDocument'
                     model = apps.get_model('meetings', res_model)
-                    obj = model.objects.get(pk = res_id)
+                    obj = model.objects.get(pk = document_id)
                     text += ' meeting document '+obj.name+ ' in '+obj.meeting.name
                 elif doc_type == 'topic':
                     res_model = 'AgendaDocument'
                     model = apps.get_model('meetings', res_model)
-                    obj = model.objects.get(pk = res_id)
+                    obj = model.objects.get(pk = document_id)
                     text += ' an agenda-topic-document '+obj.name+ ' in meeting=>'+obj.agenda.event.name
                 else:
                     raise ValidationError('Invalid document type '+doc_type)
                 params = {
-                    'res_app': 'meetings',
-                    'res_model': res_model,
-                    'res_id' : res_id,
+                    'res_app': 'documents',
+                    'res_model': 'PointAnnotation',
+                    'res_id' : point_id,
+                    'parent_post_id': document_id,
                     'notification_type': 'comment'
                 }
                 event_data = {'name': 'point_comment_received', 'data': res, 'uid' : request.user.id}                
