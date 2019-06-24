@@ -76,7 +76,7 @@ class Notification(models.Model):
         for uid in audience:
             user_notification = UserNotification.objects.filter(sender_notification_id=sender_notification.id,user_id= uid)
             if not user_notification:
-                user_notification = UserNotification(sender_notification_id=notification.id,user_id= uid)
+                user_notification = UserNotification(sender_notification_id=sender_notification.id,user_id= uid)
                 user_notification.save()
 
         if len(audience) > 0:
