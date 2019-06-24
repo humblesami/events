@@ -132,8 +132,8 @@
             window['init_doc_comments'] = function(){
                 comments_wrapper = $('#comment-wrapper');
                 commentText = comments_wrapper.find('#commentText');
-                comment_list_div = comments_wrapper.find('.comment-list:first');
-                comment_list = comments_wrapper.find('.comment-list-container:first');
+                comment_list_div = comments_wrapper.find('.comment-list:first');                
+                comment_list = comments_wrapper.find('.comment-list-container:first');                
                 commentText.focus(function() {
                     comment_item_focused = true;
                 });
@@ -497,22 +497,9 @@
             }
 
             function hideComments() {
-                comments_wrapper.hide();
-                viewerLeftMargin();
+                comments_wrapper.hide();                
                 shown_comment_type = false;
                 localStorage.removeItem(documentId + '/shown_comment_type');
-            }
-
-            function viewerLeftMargin(vuw) {
-                // if (comments_wrapper.is(':visible')) {
-                //     var margin_left = parseFloat($('#viewer').css('margin-left'));
-                //     var comment_width = comments_wrapper.width();
-                //     if (margin_left < comment_width)
-                //         margin_left = comment_width;
-                //     $('#viewer').css('margin-left', margin_left + 'px');
-                // } else {
-                //     $('#viewer').css('margin-left', 'auto');
-                // }
             }
 
             function showCommentsContainer(comment_sub_type) {
@@ -525,12 +512,22 @@
                     comments_wrapper.find('.title:first').html('Comments');
                 }
                 comments_wrapper.show();
-                viewerLeftMargin();
                 if (!activePointId) {
                     $('.comment-list-form').hide();
                 } else
                     $('.comment-list-form').show();
                 shown_comment_type = slected_comment_type;
+
+                var ctop = $('.comment-header').offset().top;                
+                try{
+                    ctop = ctop + parseInt(comment_list.css('padding-bottom'))
+                }
+                catch(er){
+
+                }
+                ctop = ctop + 15;
+                comment_list.css({'height':'calc(100vh - '+ctop+'px)'});
+
                 localStorage.setItem(documentId + '/shown_comment_type', shown_comment_type);
             }
 
@@ -545,6 +542,20 @@
             function onDocLoaded() {
                 site_functions.hideLoader("renderdoc");
                 site_functions.hideLoader("loaddocwaiter");
+                var wls = window.location.toString();
+                var index = wls.indexOf('/doc');
+                wls = wls.substr(index+5);
+                var ar = wls.split('/');
+                if(ar.length > 1)
+                {
+                    try{
+                        var point_id = ar[1];
+                        console.log(point_id);
+                    }
+                    catch(er){
+                        console.log(er);
+                    }                    
+                }
             }
 
             function showHideAnnotations(rotate_degree) {
@@ -590,9 +601,8 @@
             }
 
             function onCOmmentAdded() {
-                commentText.val('');
-                commentText.parent().show();
-                comment_list.css('padding-bottom', '65px');
+                commentText.html('');
+                commentText.parent().show();                
                 comment_list_div.scrollTop(999999000);
                 commentText.focus();
             }
@@ -730,8 +740,7 @@
                     rotate = parseInt(rotate, 10);
                     var vcw = $('#viewer').width();
                     var vuw = 0;
-                    vuw = scale / RENDER_OPTIONS.scale * vcw;
-                    viewerLeftMargin(vuw);
+                    vuw = scale / RENDER_OPTIONS.scale * vcw;                    
                     if (RENDER_OPTIONS.scale !== scale || RENDER_OPTIONS.rotate !== rotate) {
                         RENDER_OPTIONS.scale = scale;
                         RENDER_OPTIONS.rotate = rotate;
@@ -1214,22 +1223,21 @@
 
                 var annotation_user = localStorage.getItem('user');
                 annotation_user = JSON.parse(annotation_user);
-                $('body').on('keyup', '#commentText', function(e) {
+                $('body').on('keyup', '#commentText', function(e) {                    
                     if (!activePointId) {
                         console.log("Comment not added because, no active annotationId");
                         return;
                     }
-                    console.log('From Anotator..');
                     if (window['should_save'])
                     {
                         return;
                     }
                     if (!e.shiftKey && e.keyCode == 13) {
                         e.preventDefault();
-                        var commentValue = commentText[0].value; // commentText.val().trim();
+                        var commentValue = commentText.html(); // commentText.val().trim();
                         commentValue = commentValue.substr(0, commentValue.length - 1);
                         if (commentValue == '') {
-                            commentText.val('');
+                            commentText.html('');
                             return;
                         }
                         //console.log(commentValue);
@@ -1289,7 +1297,6 @@
                         } else {
                             showCommentsContainer(slected_comment_type);
                             commentText.closest('form').hide();
-                            comment_list.css('padding-bottom', '5px');
                         }
                     }, 11);
                 }
@@ -2787,15 +2794,12 @@
                                                 date_time: values.date_time,
                                             };
                                             var doc_info = documentId.split('-');
-                                            var res_id = doc_info[1].split('.')[0];
                                             var input_data = {
                                                 doc_type: doc_info[0],
-                                                doc_id: documentId,
-                                                document_id: doc_info[1],
-                                                res_id: res_id,
-                                                comment_doc_id : comment_doc_id,                                                
-                                                res_model: 'document.PointAnnotation',
+                                                document_id: doc_info[1],                                              
+                                                comment_doc_name : comment_doc_id,                                                
                                             };
+                                            console.log(input_data);
 
                                             var annotations = _getAnnotations(documentId);
                                             var point = {};
@@ -4491,10 +4495,12 @@
                      * @param {Element} e The annotation element that was clicked
                      */
                     handleAnnotationClick =function(target) {
-                        //console.log(561);
-                        activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
-                        createEditOverlay(target);
-                        activate_annotation(target);
+                        // console.log(561);
+                        setTimeout(function(){
+                            activeAnnotationId = target.getAttribute('data-pdf-annotate-id');
+                            createEditOverlay(target);
+                            activate_annotation(target);
+                        }, 15);                        
                     }
                     /**
                      * Enable edit mode behavior.
