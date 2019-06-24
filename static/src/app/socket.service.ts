@@ -417,9 +417,10 @@ export class SocketService {
                 // console.log(obj_this.chat_users, 4509);
 
                 obj_this.notificationList = [];
-                for(let i in data.list)
+                data.notifications = data.notifications.list;
+                for(let i in data.notifications)
                 {
-                    obj_this.add_item_in_notification_list(data.list[i], null);
+                    obj_this.add_item_in_notification_list(data.notifications[i], null);
                 }
                 // console.log(1111, obj_this.notificationList);
                 obj_this.notificationList = obj_this.notificationList.reverse();
@@ -729,8 +730,7 @@ export class SocketService {
             return;
         }
         
-        let route = obj_this.model_routes[item.address.res_app][item.address.res_model];        
-        
+        let route = obj_this.model_routes[item.address.res_app][item.address.res_model];
         if (item.address.parent_post_id){
             route += item.address.parent_id+'/';
         }

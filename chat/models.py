@@ -29,17 +29,18 @@ class Notification(models.Model):
         return self.post_address.res_app+'.'+self.post_address.res_model+'.'+str(self.post_address.res_id)+'--'+self.notification_type.name
 
 
-    def get_senders(self):
-        senders = self.sendernotification_set.all()
+    def get_senders(self, uid):
+        sender_notifications = self.sendernotification_set.all()
         senders_list = []
-        for sender in senders:
-            senders_list.append(sender.sender.name)
+        for sender_notification in sender_notifications:
+            if sender_notification.sender.id != uid:
+                senders_list.append(sender_notification.sender.name)
         sender_name = ', '.join(senders_list)
         return sender_name
 
 
-    def get_text(self, res_obj):
-        sender_names = self.get_senders()
+    def get_text(self, res_obj, uid):
+        sender_names = self.get_senders(uid)
         notification_template = self.notification_type.template
         text = ''
         try:
@@ -81,7 +82,7 @@ class Notification(models.Model):
         if len(audience) > 0:
             client_object = {
                 'id': notification.id,
-                'body': notification.get_text(obj_res),
+                'body': notification.get_text(obj_res, sender.id),
                 'notification_type': notification_type.name,
                 'address': {
                     'res_id': post_address.res_id,
@@ -101,55 +102,8 @@ class Notification(models.Model):
 
     @classmethod
     def get_my_notifications(cls, request, params):
-        uid = request.user.id
-        objects = {}
-        notification_ids = []
-        records = UserNotification.objects.filter(read=False, user_id=uid)
-        for un in records:
-            sender_notification = un.sender_notification
-            sender = sender_notification.sender
-            notification = sender_notification.notification
-            index = notification_ids.index(notification.id)
-
-            senders = {}
-            if index > -1:
-                senders = objects[notification.id]['senders']
-                if not senders.get(sender.id):
-                    senders[sender.id] = { 'id': sender.id, 'name': sender.name}
-                continue
-            else:
-                senders[sender.id] = { 'id': sender.id, 'name': sender.name}
-            notification_ids.append(notification.id)
-            notification_type = notification.notification_type.name
-            address = notification.post_address
-            
-            model = apps.get_model(address.res_app, address.res_model)
-            obj_res = model.objects.get(pk=address.res_id)
-
-            client_object = {
-                'id': notification.id,
-                'body': notification.get_text(obj_res),
-                'notification_type': notification_type,
-                'address': {
-                    'res_id': address.res_id,
-                    'res_model': address.res_model,
-                    'res_app': address.res_app,
-                    'parent_post_id': address.parent_post_id
-                }
-            }
-            objects[notification.id] = client_object
-        array = []
-        for item in objects:
-            sender_array = []
-            for sender in item['senders']:
-                sender_array.append(sender)
-            item['senders'] = {
-                'objects': item['senders'],
-                'list': sender_array
-            }
-            array.append(item)
-        res = { 'ids': notification_ids, 'list': array, 'objects': objects}
-        return res    
+        res = cls.getMyNotifications(request, params)
+        return res
 
     @classmethod
     def get_notification_type(cls, name):
@@ -203,36 +157,35 @@ class Notification(models.Model):
             sender_notification = un.sender_notification
             sender = sender_notification.sender
             notification = sender_notification.notification
-            index = notification_ids.index(notification.id)
-
+            
             senders = {}
-            if index > -1:
+            if(objects.get(notification.id)):
                 senders = objects[notification.id]['senders']
                 if not senders.get(sender.id):
                     senders[sender.id] = { 'id': sender.id, 'name': sender.name}
                 continue
             else:
                 senders[sender.id] = { 'id': sender.id, 'name': sender.name}
+
             notification_ids.append(notification.id)
             notification_type = notification.notification_type.name
             address = notification.post_address
-            meta = {
-                'notification_type': notification_type,
+            model = apps.get_model(address.res_app, address.res_model)
+            obj_res = model.objects.get(pk=address.res_id)
+            client_object = {
+                'id': notification.id,                
+                'senders': senders,
+                'body': notification.get_text(obj_res, uid),
+                 'notification_type': notification_type,
                 'address': {
                     'res_id': address.res_id,
                     'res_model': address.res_model,
                     'res_app': address.res_app,
                 }
             }
-            client_object = {
-                'id': notification.id,
-                'meta': meta,
-                'senders': senders,
-                'body': notification.get_text()
-            }
             objects[notification.id] = client_object
         array = []
-        for item in objects:
+        for key, item in objects.items():
             sender_array = []
             for sender in item['senders']:
                 sender_array.append(sender)
@@ -254,10 +207,13 @@ class UserNotification(models.Model):
     sender_notification = models.ForeignKey(SenderNotification, on_delete=models.CASCADE)
 
     @classmethod
-    def mark_read(cls, params):        
+    def mark_read(cls, request, params):        
         res_id = params['res_id']
-        res_id = params['res_model']
-        res_id = params['res_app']
+        res_model = params['res_model']
+        res_app = params['res_app']
+        address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
+        if address:
+            pass
 
 class Comment(models.Model):
     res_id = models.IntegerField()
