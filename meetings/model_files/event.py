@@ -36,7 +36,7 @@ class Event(models.Model):
     
     @property
     def notification_text(self):
-        return ' an Event ' + self.name[0: 20] +'...'
+        return ' a meeting ' + self.name[0: 20] +'...'
 
     def get_audience(self):
         res = []

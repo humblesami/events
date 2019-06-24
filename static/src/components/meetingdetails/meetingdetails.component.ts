@@ -39,30 +39,6 @@ export class MeetingDetailsComponent implements OnInit {
         this.route.params.subscribe(params => this.get_data());
     }
 
-    mark_read(res_id)
-    {
-        let args = {
-            app: 'chat',
-            model: 'UserNotification',
-            method: 'mark_read'
-        }
-        let input_data = {
-            params: {
-                res_id: res_id, 
-                res_app: 'meetings',
-                res_model: 'Event'
-            },
-            args: args
-        };
-        let final_input_data = {
-            params: input_data,
-            args: args
-        };
-        this.httpService.get(input_data, function(data){
-            console.log(data);
-        }, null);
-    }
-
 	get_data() {
         let obj_this = this;
 		const page_url = window.location + '';
@@ -92,7 +68,6 @@ export class MeetingDetailsComponent implements OnInit {
                     $('.router-outlet').html('<h2 style="text-align:center">'+result.message+'</h2>');
                     return;
                 }
-                obj_this.mark_read(result.meeting.id);
                 var meeting_object = obj_this.meeting_object = result.meeting;
                 obj_this.next = result.next;
                 obj_this.prev = result.prev;                

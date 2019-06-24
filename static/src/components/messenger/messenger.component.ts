@@ -393,8 +393,7 @@ export class MessengerComponent implements OnInit {
 		}
         sender.messages.push(message);
         obj_this.socketService.update_unseen_message_count("receive-new-message", sender_id, sender);
-		if (is_chat_open) {			
-			
+		if (is_chat_open) {
             let args = {
                 app: 'chat',
                 model: 'message',
