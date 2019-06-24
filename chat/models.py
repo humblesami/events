@@ -72,7 +72,7 @@ class Notification(models.Model):
             return 'No Audience'
         audience.remove(sender.id)
         for uid in audience:
-            user_notification = UserNotification.objects.filter(sender_notification_id=sender_notification.id,user_id= uid)
+            user_notification = UserNotification.objects.filter(sender_notification_id=sender_notification.id,user_id= uid, read=False)
             if not user_notification:
                 user_notification = UserNotification(sender_notification_id=sender_notification.id,user_id= uid)
                 user_notification.save()
@@ -178,7 +178,7 @@ class Notification(models.Model):
                 'id': notification.id,                
                 'senders': senders,
                 'body': text,
-                'notification_type': notification_type,
+                 'notification_type': notification_type,
                 'address': {
                     'res_id': address.res_id,
                     'res_model': address.res_model,
@@ -252,7 +252,8 @@ class Comment(models.Model):
                     for obj3 in user_notifications:
                         obj3.read = True
                         obj3.save()
-                        read_ids.append(obj1.id)
+                        if not obj1.id in read_ids:
+                            read_ids.append(obj1.id)
         
 
         sql = "select un.id from chat_usernotification un "
