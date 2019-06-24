@@ -33,7 +33,7 @@ class Notification(models.Model):
         senders = self.sendernotification_set.all()
         senders_list = []
         for sender in senders:
-            senders_list.append(sender.name)
+            senders_list.append(sender.sender.name)
         sender_name = ', '.join(senders_list)
         return sender_name
 
@@ -43,7 +43,7 @@ class Notification(models.Model):
         notification_template = self.notification_type.template
         text = ''
         try:
-            text = res_obj.notification_text()
+            text = res_obj.notification_text
         except:
             tex = res_obj.name
         text = sender_names + ' ' + notification_template + text
@@ -52,7 +52,7 @@ class Notification(models.Model):
     @classmethod
     def add_notification(cls, sender, params, event_data, text=None):
         type_name = params['notification_type']
-        parent_post_id = params['parent_post_id']
+        parent_post_id = params.get('parent_post_id')
         res_model = params['res_model']
         res_app = params['res_app']
         res_id = params['res_id']
@@ -75,7 +75,7 @@ class Notification(models.Model):
         for uid in audience:
             user_notification = UserNotification.objects.filter(sender_notification_id=sender_notification.id,user_id= uid)
             if not user_notification:
-                user_notification = UserNotification(sender_notification_id=sender_notification.id,user_id= uid)
+                user_notification = UserNotification(sender_notification_id=notification.id,user_id= uid)
                 user_notification.save()
 
         if len(audience) > 0:
@@ -251,7 +251,7 @@ class SenderNotification(models.Model):
 class UserNotification(models.Model):
     read = models.BooleanField(default=False)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    sender_notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
+    sender_notification = models.ForeignKey(SenderNotification, on_delete=models.CASCADE)
 
     @classmethod
     def mark_read(cls, params):        
@@ -329,8 +329,10 @@ class Comment(models.Model):
         del comment['_state']
         comment['create_date'] = str(datetime.now())
         comment['children'] = []
+        param = params
+        param['notification_type'] = 'comment'
         event_data = {'name': 'comment_received', 'data': comment, 'uid' : request.user.id}
-        Notification.add_notification(params, event_data)
+        Notification.add_notification(request.user, param, event_data)
         return comment
 
 class Message(models.Model):
