@@ -29,26 +29,24 @@ class Notification(models.Model):
         return self.post_address.res_app+'.'+self.post_address.res_model+'.'+str(self.post_address.res_id)+'--'+self.notification_type.name
 
 
-    def get_senders(self, uid):
+    def get_meta(self, res_obj):
         sender_notifications = self.sendernotification_set.all()
         senders_list = []
         for sender_notification in sender_notifications:
-            if sender_notification.sender.id != uid:
-                senders_list.append(sender_notification.sender.name)
-        sender_name = ', '.join(senders_list)
-        return sender_name
+            senders_list.append(sender_notification.sender.name)
 
-
-    def get_text(self, res_obj, uid):
-        sender_names = self.get_senders(uid)
         notification_template = self.notification_type.template
-        text = ''
+        name_place = ''
         try:
-            text = res_obj.notification_text
+            name_place = res_obj.notification_text()
         except:
-            tex = res_obj.name
-        text = sender_names + ' ' + notification_template + text
-        return text
+            name_place = res_obj.name
+        meta = {
+            'senders': senders_list,
+            'template': notification_template,
+            'name_place': name_place
+        }
+        return meta
 
     @classmethod
     def add_notification(cls, sender, params, event_data, text=None):
@@ -79,10 +77,12 @@ class Notification(models.Model):
                 user_notification = UserNotification(sender_notification_id=sender_notification.id,user_id= uid)
                 user_notification.save()
 
+        meta = notification.get_meta(obj_res)
+        text = (' , ').join(meta['senders']) + ' '+meta['template'] + ' '+meta['name_place']
         if len(audience) > 0:
             client_object = {
                 'id': notification.id,
-                'body': notification.get_text(obj_res, sender.id),
+                'body': text,
                 'notification_type': notification_type.name,
                 'address': {
                     'res_id': post_address.res_id,
@@ -172,11 +172,13 @@ class Notification(models.Model):
             address = notification.post_address
             model = apps.get_model(address.res_app, address.res_model)
             obj_res = model.objects.get(pk=address.res_id)
+            meta = notification.get_meta(obj_res)
+            text = (' , ').join(meta['senders']) + ' '+meta['template'] + ' '+meta['name_place']
             client_object = {
                 'id': notification.id,                
                 'senders': senders,
-                'body': notification.get_text(obj_res, uid),
-                 'notification_type': notification_type,
+                'body': text,
+                'notification_type': notification_type,
                 'address': {
                     'res_id': address.res_id,
                     'res_model': address.res_model,

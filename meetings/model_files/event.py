@@ -33,10 +33,9 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
-    
-    @property
+
     def notification_text(self):
-        return ' a meeting ' + self.name[0: 20] +'...'
+        return ' meeting ' + self.name[0: 20] +'...'
 
     def get_audience(self):
         res = []

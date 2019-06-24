@@ -36,6 +36,9 @@ class MeetingDocument(File):
             self.file_type = 'meeting'
         super(MeetingDocument, self).save(*args, **kwargs)
 
+    def notification_text(self):
+        return ' document ' + self.name + ' in ' + self.meeting.notification_text()
+
     def get_audience(self):
         res = []
         for obj in self.meeting.attendees.all():
@@ -61,7 +64,10 @@ class AgendaDocument(File):
         if not self.file_type:
             self.file_type = 'topic'
         super(AgendaDocument, self).save(*args, **kwargs)
-    
+
+    def notification_text(self):
+        return ' document ' + self.name + ' in agenda topic '+self.agenda.name+ ' in ' + self.meeting.notification_text()
+
     @property
     def breadcrumb(self):
         topic_obj = self.agenda

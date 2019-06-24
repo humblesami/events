@@ -139,6 +139,9 @@
                 });
                 select_cursor();
             }
+
+            annotation_user_m2 = localStorage.getItem('user');
+            annotation_user_m2 = JSON.parse(annotation_user_m2);
             
             var annotationBiengEdited = false;
             var comments_loaded = false;
@@ -1529,10 +1532,7 @@
     }
 
     function module2(module, exports, __webpack_require__) {
-        var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */
-
-        var annotation_user_m2 = localStorage.getItem('user');
-        annotation_user_m2 = JSON.parse(annotation_user_m2);
+        var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */        
 
         (function(module) {
             'use strict';
