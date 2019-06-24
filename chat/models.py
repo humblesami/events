@@ -18,80 +18,20 @@ class PostAddress(models.Model):
 
 class NotificationType(models.Model):
     name = models.CharField(max_length=100, default='Unknown')
-    template = models.CharField(max_length=256, default='')
+    template = models.CharField(max_length=256, default='')    
 
 class Notification(models.Model):
     post_address = models.ForeignKey(PostAddress, on_delete=models.CASCADE, null=True)
     notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return self.post_address.res_app+'.'+self.post_address.res_model+'.'+str(self.post_address.res_id)+'--'+self.notification_type.name
+
     def get_text(self):
         pass
 
     @classmethod
-    def getMyNotifications(cls, request, params):
-        uid = request.user.id
-        objects = {}
-        notification_ids = []
-        records = UserNotification.objects.filter(read=False, user_id=uid)
-        for un in records:
-            sender_notification = un.sender_notification
-            sender = sender_notification.sender
-            notification = sender_notification.notification
-            index = notification_ids.index(notification.id)
-
-            senders = {}
-            if index > -1:
-                senders = objects[notification.id]['senders']
-                if not senders.get(sender.id):
-                    senders[sender.id] = { 'id': sender.id, 'name': sender.name}
-                continue
-            else:
-                senders[sender.id] = { 'id': sender.id, 'name': sender.name}
-            notification_ids.append(notification.id)
-            notification_type = notification.notification_type.name
-            address = notification.post_address
-            meta = {
-                'notification_type': notification_type,
-                'address': {
-                    'res_id': address.res_id,
-                    'res_model': address.res_model,
-                    'res_app': address.res_app,
-                }
-            }
-            client_object = {
-                'id': notification.id,
-                'meta': meta,
-                'senders': senders,
-                'body': notification.get_text()
-            }
-            objects[notification.id] = client_object
-        array = []
-        for item in objects:
-            sender_array = []
-            for sender in item['senders']:
-                sender_array.append(sender)
-            item['senders'] = {
-                'objects': item['senders'],
-                'list': sender_array
-            }
-            array.append(item)
-        res = { 'ids': notification_ids, 'list': array, 'objects': objects}
-        return res
-
-
-class SenderNotification(models.Model):
-    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
-    sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
-class UserNotification(models.Model):
-    read = models.BooleanField(default=False)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    sender_notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
-
-
-    @classmethod
     def add_notification(cls, sender, params, event_data, text=None):
-
         type_name = params['notification_type']
         res_model = params['res_model']
         res_app = params['res_app']
@@ -113,8 +53,10 @@ class UserNotification(models.Model):
             return 'No Audience'
 
         for uid in audience:
-            user_notification = UserNotification.objetcs.filter(notification_id=notification.id,sender_id=sender.id,user_id= uid)
-            user_notification.save()
+            user_notification = UserNotification.objects.filter(sender_notification_id=sender_notification.id,user_id= uid)
+            if not user_notification:
+                user_notification = UserNotification(sender_notification_id=sender_notification.id,user_id= uid)
+                user_notification.save()
 
         if len(audience) > 0:
             meta = {
@@ -128,7 +70,7 @@ class UserNotification(models.Model):
             client_object = {
                 'id': notification.id,
                 'notification_id': notification.id,
-                'senders': sender,
+                'sender': {'id': sender.id, 'name': sender.profile.name},
                 'body': notification.get_text()
             }
             events = [
@@ -189,17 +131,13 @@ class UserNotification(models.Model):
             }
             array.append(item)
         res = { 'ids': notification_ids, 'list': array, 'objects': objects}
-        return res
-
-    @classmethod
-    def mark_read(cls, params):
-        notification_id = params['res']
+        return res    
 
     @classmethod
     def get_notification_type(cls, name):
         notification_type = NotificationType.objects.filter(name=name)
         if not notification_type:
-            notification_type = PostAddress(name=name, template=name)
+            notification_type = NotificationType(name=name, template=name)
             notification_type.save()
         else:
             notification_type = notification_type[0]
@@ -227,13 +165,79 @@ class UserNotification(models.Model):
 
     @classmethod
     def get_sender_notification(cls, notification_id, sender_id):
-        sender_notification = SenderNotification.objects.filter(notification_type_id=notification_id, sender_id=sender_id)
+        sender_notification = SenderNotification.objects.filter(notification_id=notification_id, sender_id=sender_id)
         if not sender_notification:
-            sender_notification = SenderNotification(notification_type_id=notification_id, sender_id=sender_id)
+            sender_notification = SenderNotification(notification_id=notification_id, sender_id=sender_id)
             sender_notification.save()
         else:
             sender_notification = sender_notification[0]
         return sender_notification
+
+    @classmethod
+    def getMyNotifications(cls, request, params):
+        uid = request.user.id
+        objects = {}
+        notification_ids = []
+        records = UserNotification.objects.filter(read=False, user_id=uid)
+        for un in records:
+            sender_notification = un.sender_notification
+            sender = sender_notification.sender
+            notification = sender_notification.notification
+            index = notification_ids.index(notification.id)
+
+            senders = {}
+            if index > -1:
+                senders = objects[notification.id]['senders']
+                if not senders.get(sender.id):
+                    senders[sender.id] = { 'id': sender.id, 'name': sender.name}
+                continue
+            else:
+                senders[sender.id] = { 'id': sender.id, 'name': sender.name}
+            notification_ids.append(notification.id)
+            notification_type = notification.notification_type.name
+            address = notification.post_address
+            meta = {
+                'notification_type': notification_type,
+                'address': {
+                    'res_id': address.res_id,
+                    'res_model': address.res_model,
+                    'res_app': address.res_app,
+                }
+            }
+            client_object = {
+                'id': notification.id,
+                'meta': meta,
+                'senders': senders,
+                'body': notification.get_text()
+            }
+            objects[notification.id] = client_object
+        array = []
+        for item in objects:
+            sender_array = []
+            for sender in item['senders']:
+                sender_array.append(sender)
+            item['senders'] = {
+                'objects': item['senders'],
+                'list': sender_array
+            }
+            array.append(item)
+        res = { 'ids': notification_ids, 'list': array, 'objects': objects}
+        return res
+
+class SenderNotification(models.Model):
+    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+class UserNotification(models.Model):
+    read = models.BooleanField(default=False)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    sender_notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
+
+    @classmethod
+    def mark_read(cls, params):        
+        res_id = params['res_id']
+        res_id = params['res_model']
+        res_id = params['res_app']
 
 class Comment(models.Model):
     res_id = models.IntegerField()

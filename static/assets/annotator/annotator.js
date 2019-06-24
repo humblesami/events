@@ -1,10 +1,12 @@
 (function() {
+    var annotation_user_m2;
     var annotation_mode = 0;
     var hand_drawings = [];
     var shown_comment_type = false;
     var slected_comment_type = false;
     var comment_sub_type = false;
     var contextMenuShown = false;
+    var comment_doc_id = false;
     var comment_item_focused = false;
     var select_comment_item = undefined;
     var activeAnnotationId = undefined;
@@ -656,6 +658,7 @@
             }
 
             function render(doc_data) {
+                annotation_user_m2 = window['current_user'].cookie;
                 site_functions.showLoader("renderdoc");
                 if (doc_data && doc_data.first_time) {
 
@@ -663,8 +666,8 @@
                     commentText = comments_wrapper.find('#commentText');
                     comment_list_div = comments_wrapper.find('.comment-list:first');
                     comment_list = comments_wrapper.find('.comment-list-container:first');
-
-                    documentId = doc_data.type + '-' + doc_data.id + '.pdf';
+                    comment_doc_id = doc_data.type + '-' + doc_data.id + '.pdf';
+                    documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';                    
                     doc_id = doc_data.id;
                     RENDER_OPTIONS.documentId = documentId;
                     comments_loaded = false;
@@ -707,7 +710,7 @@
                                 onAnnotationsDownloaded(annotaions_data, doc_data);
                             },
                             onError:function(er){
-                                console.log(er, 34444);
+                                console.log(er);
                             }
                         });
                         // onAnnotationsDownloaded([], doc_data);
@@ -1165,10 +1168,7 @@
                     if (!annot_doc) {
                         return;
                     }
-                    if (annotation_mode != 1 || !annot_doc || data.point.doc_id != documentId) {
-                        return;
-                    }
-                    if (annotation_mode != 1 || !annot_doc || data.point.doc_id != documentId) {
+                    if (annotation_mode != 1 || !annot_doc || data.point.comment_doc_id != comment_doc_id) {
                         return;
                     }
                     var annot_id = comment_list.attr('annotation-id');
@@ -1235,8 +1235,8 @@
                         //console.log(commentValue);
                         var comment = {
                             date_time: new Date(),
-                            user_name: annotation_user.name,
-                            uid: annotation_user.id,
+                            user_name: annotation_user_m2.name,
+                            uid: annotation_user_m2.id,
                             content: commentValue
                         };
                         //console.log(commentText.content)
@@ -2786,18 +2786,15 @@
                                                 user_name: values.user_name,
                                                 date_time: values.date_time,
                                             };
-                                            var doc_data = documentId.split('-');
-                                            var res_id = doc_data[1].split('.')[0];
-                                            var res_model = 'meeting_point.doc';
-                                            if (documentId.indexOf('topic') > -1)
-                                                res_model = 'meeting_point.topicdoc';
-
+                                            var doc_info = documentId.split('-');
+                                            var res_id = doc_info[1].split('.')[0];
                                             var input_data = {
-                                                doc_type: doc_data[0],
+                                                doc_type: doc_info[0],
                                                 doc_id: documentId,
-                                                parent_res_id: res_id,
-                                                parent_res_model: res_model,
-                                                res_model: 'annotation.point',
+                                                document_id: doc_info[1],
+                                                res_id: res_id,
+                                                comment_doc_id : comment_doc_id,                                                
+                                                res_model: 'document.PointAnnotation',
                                             };
 
                                             var annotations = _getAnnotations(documentId);
@@ -2824,12 +2821,14 @@
                                                 }
                                                 point.comment = comment;
                                                 point.doc_id = documentId;
+                                                point.document_id = doc_info[1];
+                                                point.comment_doc_id = comment_doc_id;
                                                 input_data['point'] = point;
                                                 var is_comment = point.sub_type != 'personal';
                                                 if (is_comment && !received_comment) {
                                                     var args = {
                                                         app: 'documents',
-                                                        model: 'PointAnnotation',
+                                                        model: 'CommentAnnotation',
                                                         method: 'save_comment',
                                                     }
                                                     var options = {

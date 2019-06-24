@@ -417,14 +417,14 @@ class CommentAnnotation(models.Model):
                     text += ' an agenda-topic-document '+obj.name+ ' in meeting=>'+obj.agenda.event.name
                 else:
                     raise ValidationError('Invalid document type '+doc_type)
-                res_details = {
+                params = {
                     'res_app': 'meetings',
                     'res_model': res_model,
-                    'res_id' : res_id
+                    'res_id' : res_id,
+                    'notification_type': 'comment'
                 }
-                event_data = {'name': 'point_comment_received', 'data': res, 'uid' : request.user.id}
-                
-                Notification.add_notification(res_details, event_data, text)
+                event_data = {'name': 'point_comment_received', 'data': res, 'uid' : request.user.id}                
+                Notification.add_notification(request.user, params, event_data, text)
                 return res
         else:
             return 'Invalid Point'
