@@ -81,14 +81,13 @@ class Notification(models.Model):
         if len(audience) > 0:
             client_object = {
                 'id': notification.id,
-                'senders': senders,
                 'body': notification.get_text(obj_res),
                 'notification_type': notification_type.name,
                 'address': {
-                    'res_id': address.res_id,
-                    'res_model': address.res_model,
-                    'res_app': address.res_app,
-                    'parent_post_id': address.parent_post_id
+                    'res_id': post_address.res_id,
+                    'res_model': post_address.res_model,
+                    'res_app': post_address.res_app,
+                    'parent_post_id': post_address.parent_post_id
                 }
             }
             events = [
@@ -123,10 +122,13 @@ class Notification(models.Model):
             notification_ids.append(notification.id)
             notification_type = notification.notification_type.name
             address = notification.post_address
+            
+            model = apps.get_model(address.res_app, address.res_model)
+            obj_res = model.objects.get(pk=address.res_id)
+
             client_object = {
                 'id': notification.id,
-                'senders': senders,
-                'body': notification.get_text(),
+                'body': notification.get_text(obj_res),
                 'notification_type': notification_type,
                 'address': {
                     'res_id': address.res_id,
