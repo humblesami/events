@@ -12,6 +12,7 @@ from meetings.model_files.user import Profile, create_group
 
 
 class PostAddress(models.Model):
+    parent_post_id = models.IntegerField(null=True)
     res_app = models.CharField(max_length=128)
     res_model = models.CharField(max_length=128)
     res_id = models.IntegerField()
@@ -27,17 +28,36 @@ class Notification(models.Model):
     def __str__(self):
         return self.post_address.res_app+'.'+self.post_address.res_model+'.'+str(self.post_address.res_id)+'--'+self.notification_type.name
 
-    def get_text(self):
-        pass
+
+    def get_senders(self):
+        senders = self.sendernotification_set.all()
+        senders_list = []
+        for sender in senders:
+            senders_list.append(sender.name)
+        sender_name = ', '.join(senders_list)
+        return sender_name
+
+
+    def get_text(self, res_obj):
+        sender_names = self.get_senders()
+        notification_template = self.notification_type.template
+        text = ''
+        try:
+            text = res_obj.notification_text()
+        except:
+            tex = res_obj.name
+        text = sender_names + ' ' + notification_template + text
+        return text
 
     @classmethod
     def add_notification(cls, sender, params, event_data, text=None):
         type_name = params['notification_type']
+        parent_post_id = params['parent_post_id']
         res_model = params['res_model']
         res_app = params['res_app']
         res_id = params['res_id']
 
-        post_address = cls.get_post_address(res_app, res_model, res_id)
+        post_address = cls.get_post_address(res_app, res_model, res_id, parent_post_id)
         notification_type = cls.get_notification_type(type_name)
         notification = cls.get_notification(notification_type.id,post_address.id)
         sender_notification = cls.get_sender_notification(notification.id, sender.id)
@@ -51,7 +71,7 @@ class Notification(models.Model):
             return 'get audience not defined for '+res_app+'.'+res_model
         if not audience:
             return 'No Audience'
-
+        audience.remove(sender.id)
         for uid in audience:
             user_notification = UserNotification.objects.filter(sender_notification_id=sender_notification.id,user_id= uid)
             if not user_notification:
@@ -59,19 +79,17 @@ class Notification(models.Model):
                 user_notification.save()
 
         if len(audience) > 0:
-            meta = {
-                'notification_type': notification_type,
-                'address': {
-                    'res_id': res_id,
-                    'res_model': res_model,
-                    'res_app': res_app,
-                }
-            }
             client_object = {
                 'id': notification.id,
-                'notification_id': notification.id,
-                'sender': {'id': sender.id, 'name': sender.profile.name},
-                'body': notification.get_text()
+                'senders': senders,
+                'body': notification.get_text(obj_res),
+                'notification_type': notification_type.name,
+                'address': {
+                    'res_id': address.res_id,
+                    'res_model': address.res_model,
+                    'res_app': address.res_app,
+                    'parent_post_id': address.parent_post_id
+                }
             }
             events = [
                 {'name': 'notification_received', 'data': client_object, 'audience': audience},
@@ -105,19 +123,17 @@ class Notification(models.Model):
             notification_ids.append(notification.id)
             notification_type = notification.notification_type.name
             address = notification.post_address
-            meta = {
+            client_object = {
+                'id': notification.id,
+                'senders': senders,
+                'body': notification.get_text(),
                 'notification_type': notification_type,
                 'address': {
                     'res_id': address.res_id,
                     'res_model': address.res_model,
                     'res_app': address.res_app,
+                    'parent_post_id': address.parent_post_id
                 }
-            }
-            client_object = {
-                'id': notification.id,
-                'meta': meta,
-                'senders': senders,
-                'body': notification.get_text()
             }
             objects[notification.id] = client_object
         array = []
@@ -144,10 +160,12 @@ class Notification(models.Model):
         return notification_type
 
     @classmethod
-    def get_post_address(cls, res_app, res_model, res_id):
+    def get_post_address(cls, res_app, res_model, res_id, parent_post_id=None):
         post_address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
         if not post_address:
             post_address = PostAddress(res_app=res_app, res_model=res_model, res_id=res_id)
+            if parent_post_id:
+                post_address.parent_post_id = parent_post_id
             post_address.save()
         else:
             post_address = post_address[0]

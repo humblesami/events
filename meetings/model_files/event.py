@@ -29,6 +29,15 @@ class Event(models.Model):
     conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, null=True, blank=True)
     video_call_link = models.CharField(max_length=200, null=True, blank=True)
 
+
+    def __str__(self):
+        return self.name
+
+    
+    @property
+    def notification_text(self):
+        return ' an Event ' + self.name[0: 20] +'...'
+
     def get_audience(self):
         res = []
         for obj in self.attendees.all():
@@ -104,8 +113,6 @@ class Event(models.Model):
         return val
     location = property(_compute_address)
 
-    def __str__(self):
-        return self.name
 
     @classmethod
     def get_upcoming_public_events(cls, user_id):
