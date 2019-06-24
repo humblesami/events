@@ -6,7 +6,7 @@ from datetime import datetime
 from mainapp import ws_methods
 from django.contrib import admin
 from django.contrib.auth.models import User
-
+from django.db import connection
 from documents.file import File
 from meetings.model_files.user import Profile, create_group
 
@@ -234,6 +234,44 @@ class Comment(models.Model):
             subtype_id=params['subtype_id'],
         )
         
+        res_id = params['res_id']
+        res_model = params['res_model']
+        res_app = params['res_app']
+
+        read_ids = []
+        address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
+        if address:
+            address = address[0]
+            notifications = address.notification_set.all()
+            for obj1 in notifications:
+                sender_notifications = obj1.sendernotification_set.all()
+                for obj2 in sender_notifications:
+                    user_notifications = obj2.usernotification_set.filter(user_id=request.user.id)
+                    for obj3 in user_notifications:
+                        obj3.read = True
+                        obj3.save()
+                        read_ids.append(obj1.id)
+        
+
+        sql = "select un.id from chat_usernotification un "
+        sql += " join chat_sendernotification sn on sn.id = un.sender_notification_id"
+        sql += " join chat_notification n on sn.notification_id=n.id"
+        sql += " join chat_postaddress pa on pa.id=n.post_address_id"
+        sql += " where pa.res_app='meetings' and res_model='event' and res_id=1"
+        # objs = UserNotification.objects.raw(sql) 
+        
+        # with connection.cursor() as cursor:
+        #     cursor.execute(sql)
+        #     row = cursor.fetchall()
+
+        # sql1 = "update chat_usernotification set read=True where id in("+sql+")"
+
+        # with connection.cursor() as cursor:
+        #     cursor.execute(sql1)
+        #     row = cursor.fetchone()
+
+        # objs = UserNotification.objects.raw(sql)
+
         parents = {
 
         }
@@ -258,6 +296,7 @@ class Comment(models.Model):
                 parents[pk]['children'].append(comment)
         comments.reverse()
         res = comments
+        res = {'comments': comments, 'read_notification_ids': read_ids}
         return res
 
     @classmethod

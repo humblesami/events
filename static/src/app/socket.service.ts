@@ -755,6 +755,22 @@ export class SocketService {
         this.notificationList.splice(i, 1);
     }
 
+    mark_notifications_read(read_notification_ids){
+        console.log(read_notification_ids);
+        for(var i in read_notification_ids)
+        {
+            for(var j in this.notificationList)
+            {
+                if(read_notification_ids[i] == this.notificationList[j].id)
+                {
+                    let index = parseInt(j);
+                    this.notificationList.splice(index, 1);
+                    break;
+                }
+            }
+        }
+    }
+
     get_param(name, url)
     {
         try{

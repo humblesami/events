@@ -40,6 +40,10 @@ export class CommentsComponent implements OnInit {
         
         let on_comments_list = function(result){
             try {
+                console.log(result);
+                var read_notification_ids = result.read_notification_ids
+                obj_this.socketService.mark_notifications_read(read_notification_ids);
+                result = result.comments;
                 for(let i in result) {
                     var item = result[i];
                     if (item.subtype_id) {
