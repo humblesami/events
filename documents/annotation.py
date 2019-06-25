@@ -406,6 +406,7 @@ class CommentAnnotation(models.Model):
     def save_comment(cls, request, params):        
         user_id = request.user.id
         point = params.get('point')
+        mentioned_list = params.get('mentioned_list');
         if point:
             point_id = None
             user_point = None
@@ -460,7 +461,7 @@ class CommentAnnotation(models.Model):
                     'notification_type': 'comment'
                 }
                 event_data = {'name': 'point_comment_received', 'data': res, 'uid' : request.user.id}                
-                Notification.add_notification(request.user, params, event_data, text)
+                Notification.add_notification(request.user, params, event_data, mentioned_list)
                 return res
         else:
             return 'Invalid Point'
