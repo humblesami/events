@@ -5,7 +5,8 @@ from esign.model_files.document import SignatureDoc
 
 class SignatureDocForm(FileForm):
     def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ('original_pdf'',' 'Workflow_enabled')
+        kwargs['fields'] = ['name', 'attachment']
+        # self.exclude = ('original_pdf','workflow_enabled')
         form = super(SignatureDocForm, self).get_form(request, obj, **kwargs)
         return form
 

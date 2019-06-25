@@ -1,6 +1,6 @@
 from django import forms
-
 from documents.admin import FileForm
+from esign.admin import SignatureDocForm
 from meetings.model_files.committee import Committee
 from django.contrib import admin
 from django.utils.html import format_html
@@ -300,9 +300,8 @@ class MeetingDocumentForm(FileForm):
     pass
 
 
-class SignDocumentForm(FileForm):
+class SignDocumentForm(SignatureDocForm):
     def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ('send_to_all')
         form = super(SignDocumentForm, self).get_form(request, obj, **kwargs)
         return form
 
