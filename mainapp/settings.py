@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'resources',
     'survey',
     'esign',
+    'nested_admin',
 ]
 
 REST_FRAMEWORK = {

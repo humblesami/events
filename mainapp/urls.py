@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^esign/', include('esign.urls')),
     path('media/<str:folder>/<str:file>/', views.serve_protected_document, name='serve_protected_document'),
     url(r'^survey/', include('survey.urls')),
+    url(r'^nested_admin/', include('nested_admin.urls')),
 
 ]\
               # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -144,7 +144,7 @@ export class DocumentComponent implements OnInit {
                 items: obj_this.mention_list,
                 insertHTML: true,
                 triggerChar: "@",
-                dropUp: true,
+                // dropUp: true,
                 labelKey: 'name',
                 mentionSelect: function(val){
                     let el = $('.active-mention');                

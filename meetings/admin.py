@@ -15,65 +15,54 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
+import nested_admin
 
+# class TocArticleInline(nested_admin.NestedStackedInline):
+#     model = TocArticle
+#     sortable_field_name = "position"
 
-class TopicInline(admin.TabularInline):
-    model = Topic
-    # show_change_link = True
-    readonly_fields = ('Attachments','Edit')
-    extra = 0
+# class TocSectionInline(nested_admin.NestedStackedInline):
+#     model = TocSection
+#     sortable_field_name = "position"
+#     inlines = [TocArticleInline]
 
-    def Edit(self, obj):
-        html=""
-        if obj.id:
-            html = '<a class="related-widget-wrapper-link change-related" href="/admin/meetings/topic/%s/change">Edit</a>' % (obj.id)
-        return format_html(html)
-    def Attachments(self, obj):
-        html = "<div>"
-        for d in obj.agendadocument_set.all():
-            if d.pdf_doc:
-                html += '<a title="%s" class="fa  fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
-        html += '</div>'
+# class TableOfContentsAdmin(nested_admin.NestedModelAdmin):
+#     inlines = [TocSectionInline]
 
-        return format_html(html)
+# admin.site.register(TableOfContents, TableOfContentsAdmin)
 
-
-class MeetingDocInline(admin.TabularInline):
-    model = MeetingDocument
-    exclude=('html','content','pdf_doc', 'file_type')
-    readonly_fields = ('View',)
-    # show_change_link = True
-    extra = 0
-
-    def View(self,obj):
-        pdf_url = None
-        html = ''
-        if obj.pdf_doc:
-            pdf_url = obj.pdf_doc.url
-            if pdf_url:
-                html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(obj.pdf_doc.url)
-        return format_html(html)
-
-    def Edit(self,obj):
-        html = '<a href="/admin/meetings/meetingdocument/%s/change">Edit</a>' %(obj.id)
-        return format_html(html)
-
-
-class AgendaDocInline(MeetingDocInline):
+class TopicDocInline(nested_admin.NestedStackedInline):
     model = AgendaDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
+    extra = 0
+
+
+class TopicInline(nested_admin.NestedStackedInline):
+    model = Topic
+    inlines = [TopicDocInline]
+    extra = 0
+
+class MeetingDocInline(nested_admin.NestedStackedInline):
+    model = MeetingDocument
+    exclude=('html','content','pdf_doc', 'file_type')    
+    extra = 0
+
     # readonly_fields = ('View',)
     # show_change_link = True
-    # extra = 0
-    #
-    # def View(self, obj):
-    #     html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' % (
-    #         obj.pdf_doc.url)
+    # def View(self,obj):
+    #     pdf_url = None
+    #     html = ''
+    #     if obj.pdf_doc:
+    #         pdf_url = obj.pdf_doc.url
+    #         if pdf_url:
+    #             html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(obj.pdf_doc.url)
     #     return format_html(html)
-    #
 
+    # def Edit(self,obj):
+    #     html = '<a href="/admin/meetings/meetingdocument/%s/change">Edit</a>' %(obj.id)
+    #     return format_html(html)
 
-class EventAdmin(admin.ModelAdmin):
+class EventAdmin(nested_admin.NestedModelAdmin):
     fieldsets = [
         (None, {
             'fields': [
@@ -97,7 +86,8 @@ class EventAdmin(admin.ModelAdmin):
     filter_horizontal = ('attendees',)
     # autocomplete_fields = ('attendees',)
 
-    inlines = [TopicInline,MeetingDocInline]
+    inlines = [TopicInline, MeetingDocInline]
+    # extra = 0
     readonly_fields = ('docs',)
 
     def docs(self, obj):
@@ -109,26 +99,118 @@ class EventAdmin(admin.ModelAdmin):
 
         return format_html(html)
 
+# class TopicInline(admin.TabularInline):
+#     model = Topic
+#     # show_change_link = True
+#     readonly_fields = ('Attachments','Edit')
+#     extra = 0
 
-class TopicAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {
-            'fields': ['name', 'lead', 'duration']
-        })
-    ]
+#     def Edit(self, obj):
+#         html=""
+#         if obj.id:
+#             html = '<a class="related-widget-wrapper-link change-related" href="/admin/meetings/topic/%s/change">Edit</a>' % (obj.id)
+#         return format_html(html)
+#     def Attachments(self, obj):
+#         html = "<div>"
+#         for d in obj.agendadocument_set.all():
+#             if d.pdf_doc:
+#                 html += '<a title="%s" class="fa  fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
+#         html += '</div>'
 
-    # readonly_fields = ('docs',)
-    # show_change_link = True
-    inlines = [AgendaDocInline,]
+#         return format_html(html)
 
-    def docs(self, obj):
-        html = "<div>"
-        for d in obj.agendadocument_set.all():
-            if d.pdf_doc:
-                html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
-        html += '</div>'
 
-        return format_html(html)
+# class MeetingDocInline(admin.TabularInline):
+#     model = MeetingDocument
+#     exclude=('html','content','pdf_doc', 'file_type')
+#     readonly_fields = ('View',)
+#     # show_change_link = True
+#     extra = 0
+
+#     def View(self,obj):
+#         pdf_url = None
+#         html = ''
+#         if obj.pdf_doc:
+#             pdf_url = obj.pdf_doc.url
+#             if pdf_url:
+#                 html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(obj.pdf_doc.url)
+#         return format_html(html)
+
+#     def Edit(self,obj):
+#         html = '<a href="/admin/meetings/meetingdocument/%s/change">Edit</a>' %(obj.id)
+#         return format_html(html)
+
+
+# class AgendaDocInline(MeetingDocInline):
+#     model = AgendaDocument
+#     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
+#     # readonly_fields = ('View',)
+#     # show_change_link = True
+#     # extra = 0
+#     #
+#     # def View(self, obj):
+#     #     html = '<a class="fa fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' % (
+#     #         obj.pdf_doc.url)
+#     #     return format_html(html)
+#     #
+
+
+# class EventAdmin(admin.ModelAdmin):
+#     fieldsets = [
+#         (None, {
+#             'fields': [
+#                 'name',
+#                 'publish',
+#                 'start_date',
+#                 'end_date',
+#                 'attendees',
+#                 'description',
+#                 'pin',
+#                 'conference_bridge_number',
+#                 'video_call_link',
+#                 'country',
+#                 'state',
+#                 'zip',
+#                 'city',
+#                 'street',
+#             ]
+#         })
+#     ]
+#     filter_horizontal = ('attendees',)
+#     # autocomplete_fields = ('attendees',)
+
+#     inlines = [TopicInline,MeetingDocInline]
+#     readonly_fields = ('docs',)
+
+#     def docs(self, obj):
+#         html = "<div>"
+#         for d in obj.meetingdocument_set.all():
+#             if d.pdf_doc:
+#                 html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
+#         html += '</div>'
+
+#         return format_html(html)
+
+
+# class TopicAdmin(admin.ModelAdmin):
+#     fieldsets = [
+#         (None, {
+#             'fields': ['name', 'lead', 'duration']
+#         })
+#     ]
+
+#     # readonly_fields = ('docs',)
+#     # show_change_link = True
+#     inlines = [AgendaDocInline,]
+
+#     def docs(self, obj):
+#         html = "<div>"
+#         for d in obj.agendadocument_set.all():
+#             if d.pdf_doc:
+#                 html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
+#         html += '</div>'
+
+#         return format_html(html)
 
 
 class UserAdminForm(UserChangeForm):
@@ -308,7 +390,7 @@ class SignDocumentForm(SignatureDocForm):
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event,EventAdmin)
-admin.site.register(Topic,TopicAdmin)
+# admin.site.register(Topic,TopicAdmin)
 admin.site.register(MeetingDocument, MeetingDocumentForm)
 admin.site.register(AgendaDocument)
 admin.site.register(Admin,AdminAdmin)

@@ -17,3 +17,4 @@ fpdf==1.7.2
 
 django_countries==5.3.3
 django-bootstrap-form==3.4
+django-nested-admin==3.2.3
