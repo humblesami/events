@@ -14,6 +14,7 @@
     var handleAnnotationBlur = undefined;
     var handleAnnotationClick = undefined;
     var activate_annotation = undefined;
+    var mention_list = undefined;
     var handlePointAnnotationClick = undefined;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
@@ -1236,6 +1237,14 @@
                             window['should_save'] = true;
                             return;
                         }
+                        mention_list = []
+                        $('.active-mention a.mention').each(function(i, el){
+                            let mentioned_id = $(el).attr('mentioned_id');
+                            if(mention_list.indexOf(mentioned_id) == -1)
+                            {
+                                mention_list.push(mentioned_id);
+                            }
+                        });
                         e.preventDefault();
                         var commentValue = commentText.html(); // commentText.val().trim();
                         commentValue = commentValue.substr(0, commentValue.length - 1);
@@ -1425,7 +1434,7 @@
 						<div>` + aComment.content + `</div>
 
                     `;
-
+                    
                     $(child).attr('comment-id', aComment.uuid);
                     $(child).attr('annotation', aComment.annotation);
                     child.innerHTML = child_info;
@@ -2832,6 +2841,7 @@
                                                 point.document_id = doc_info[1];
                                                 point.comment_doc_id = comment_doc_id;
                                                 input_data['point'] = point;
+                                                input_data['mentioned_list'] = mention_list;
                                                 var is_comment = point.sub_type != 'personal';
                                                 if (is_comment && !received_comment) {
                                                     var args = {
@@ -2847,6 +2857,7 @@
                                                         data:options,
                                                         no_loader:1,
                                                         onSuccess: function (annotaions_data) {
+                                                            mention_list = [];
                                                             console.log('comment saved')
                                                         }
                                                     });
