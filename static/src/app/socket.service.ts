@@ -724,12 +724,19 @@ export class SocketService {
         obj_this.set_notification_text(item);
         if(on_receive)
         {
+            var in_list = false;
             for(var i in obj_this.notificationList)
-            {
+            {                
                 if(item.id == obj_this.notificationList[i].id)
                 {
                     obj_this.notificationList[i].text = item.text;
+                    in_list = true;
+                    break;
                 }
+            }
+            if(!in_list)
+            {
+                obj_this.notificationList.push(item);
             }
         }
         else{
