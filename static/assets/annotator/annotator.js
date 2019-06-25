@@ -613,7 +613,6 @@
             function discard_point_notifications(point, count) {
                 point.counter = 0;
                 embed_comment_count(point, 0);
-                window['socket_manager'].removeNotification('annotations', 'Point', point.id);
             }
 
             function embed_comment_count(point, count, cookie_only) {

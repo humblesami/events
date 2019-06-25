@@ -19,43 +19,22 @@ class PostAddress(models.Model):
 
 class NotificationType(models.Model):
     name = models.CharField(max_length=100, default='Unknown')
-    template = models.CharField(max_length=256, default='')    
+    template = models.CharField(max_length=256, default='')
 
 class Notification(models.Model):
     post_address = models.ForeignKey(PostAddress, on_delete=models.CASCADE, null=True)
     notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.post_address.res_app+'.'+self.post_address.res_model+'.'+str(self.post_address.res_id)+'--'+self.notification_type.name
-
-
-    @classmethod
-    def mark_read_notification(cls, request, params):
-        res_id = params['res_id']
-        res_model = params['res_model']
-        res_app = params['res_app']
-        read_ids = []
-        address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
-        if address:
-            address = address[0]
-            notifications = address.notification_set.all()
-            for obj1 in notifications:
-                sender_notifications = obj1.sendernotification_set.all()
-                for obj2 in sender_notifications:
-                    user_notifications = obj2.usernotification_set.filter(user_id=request.user.id)
-                    for obj3 in user_notifications:
-                        obj3.read = True
-                        obj3.save()
-                        if not obj1.id in read_ids:
-                            read_ids.append(obj1.id)
-        return read_ids
-
+        return self.post_address.res_app + '.' + self.post_address.res_model + '.' + str(
+            self.post_address.res_id) + '--' + self.notification_type.name
 
     def get_meta(self, res_obj):
-        sender_notifications = self.sendernotification_set.all()
+        #sender list would be same for all users/audience
+        user_notifications = self.usernotification_set.filter(read=False, notification_id=self.id)
         senders_list = []
-        for sender_notification in sender_notifications:
-            senders_list.append(sender_notification.sender.name)
+        for user_notification in user_notifications:
+            senders_list.append({'id': user_notification.sender.id, 'name': user_notification.sender.name})
 
         notification_template = self.notification_type.template
         name_place = ''
@@ -80,8 +59,7 @@ class Notification(models.Model):
 
         post_address = cls.get_post_address(res_app, res_model, res_id, parent_post_id)
         notification_type = cls.get_notification_type(type_name)
-        notification = cls.get_notification(notification_type.id,post_address.id)
-        sender_notification = cls.get_sender_notification(notification.id, sender.id)
+        notification = cls.get_notification(notification_type.id, post_address.id)
 
         model = apps.get_model(res_app, res_model)
         obj_res = model.objects.get(pk=res_id)
@@ -89,22 +67,21 @@ class Notification(models.Model):
         try:
             audience = obj_res.get_audience()
         except:
-            return 'get audience not defined for '+res_app+'.'+res_model
+            return 'get audience not defined for ' + res_app + '.' + res_model
         if not audience:
             return 'No Audience'
         audience.remove(sender.id)
         for uid in audience:
-            user_notification = UserNotification.objects.filter(sender_notification_id=sender_notification.id,user_id= uid, read=False)
-            if not user_notification:
-                user_notification = UserNotification(sender_notification_id=sender_notification.id,user_id= uid)
-                user_notification.save()
+            user_notification = UserNotification(notification_id=notification.id, sender_id=sender.id, user_id=uid)
+            user_notification.save()
 
         meta = notification.get_meta(obj_res)
-        text = (' , ').join(meta['senders']) + ' '+meta['template'] + ' '+meta['name_place']
+        text = ' ' + meta['template'] + ' ' + meta['name_place']
         if len(audience) > 0:
             client_object = {
                 'id': notification.id,
                 'body': text,
+                'senders': meta['senders'],
                 'notification_type': notification_type.name,
                 'address': {
                     'res_id': post_address.res_id,
@@ -120,11 +97,6 @@ class Notification(models.Model):
             res = ws_methods.emit_event(events)
         else:
             return 'No audience for the notification'
-        return res
-
-    @classmethod
-    def get_my_notifications(cls, request, params):
-        res = cls.getMyNotifications(request, params)
         return res
 
     @classmethod
@@ -150,8 +122,9 @@ class Notification(models.Model):
         return post_address
 
     @classmethod
-    def get_notification(cls, notification_type_id,post_address_id):
-        notification = Notification.objects.filter(notification_type_id=notification_type_id, post_address_id=post_address_id)
+    def get_notification(cls, notification_type_id, post_address_id):
+        notification = Notification.objects.filter(notification_type_id=notification_type_id,
+                                                   post_address_id=post_address_id)
         if not notification:
             notification = Notification(notification_type_id=notification_type_id, post_address_id=post_address_id)
             notification.save()
@@ -159,48 +132,59 @@ class Notification(models.Model):
             notification = notification[0]
         return notification
 
-    @classmethod
-    def get_sender_notification(cls, notification_id, sender_id):
-        sender_notification = SenderNotification.objects.filter(notification_id=notification_id, sender_id=sender_id)
-        if not sender_notification:
-            sender_notification = SenderNotification(notification_id=notification_id, sender_id=sender_id)
-            sender_notification.save()
-        else:
-            sender_notification = sender_notification[0]
-        return sender_notification
+
+class UserNotification(models.Model):
+    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='User')
+    read = models.BooleanField(default=False)
 
     @classmethod
-    def getMyNotifications(cls, request, params):
+    def mark_read_notification(cls, request, params):
+        res_id = params['res_id']
+        res_model = params['res_model']
+        res_app = params['res_app']
+
+        read_ids = []
+        address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
+        if address:
+            address = address[0]
+            notifications = address.notification_set.all()
+            for obj1 in notifications:
+                user_notifications = obj1.usernotification_set.filter(user_id=request.user.id,read=False,notification_id=obj1.id)
+                for obj3 in user_notifications:
+                    obj3.read = True
+                    obj3.save()
+                    if not obj1.id in read_ids:
+                        read_ids.append(obj1.id)
+        return read_ids
+
+    @classmethod
+    def get_my_notifications(cls, request, params):
         uid = request.user.id
         objects = {}
         notification_ids = []
         records = UserNotification.objects.filter(read=False, user_id=uid)
+
         for un in records:
-            sender_notification = un.sender_notification
-            sender = sender_notification.sender
-            notification = sender_notification.notification
-            
-            senders = {}
-            if(objects.get(notification.id)):
-                senders = objects[notification.id]['senders']
-                if not senders.get(sender.id):
-                    senders[sender.id] = { 'id': sender.id, 'name': sender.name}
+            notification = un.notification
+            if objects.get(notification.id):
                 continue
-            else:
-                senders[sender.id] = { 'id': sender.id, 'name': sender.name}
 
             notification_ids.append(notification.id)
             notification_type = notification.notification_type.name
+
             address = notification.post_address
             model = apps.get_model(address.res_app, address.res_model)
             obj_res = model.objects.get(pk=address.res_id)
             meta = notification.get_meta(obj_res)
-            text = (' , ').join(meta['senders']) + ' '+meta['template'] + ' '+meta['name_place']
+
+            text = ' ' + meta['template'] + ' ' + meta['name_place']
             client_object = {
-                'id': notification.id,                
-                'senders': senders,
+                'id': notification.id,
                 'body': text,
-                 'notification_type': notification_type,
+                'senders': meta['senders'],
+                'notification_type': notification_type,
                 'address': {
                     'res_id': address.res_id,
                     'res_model': address.res_model,
@@ -210,25 +194,9 @@ class Notification(models.Model):
             objects[notification.id] = client_object
         array = []
         for key, item in objects.items():
-            sender_array = []
-            for sender in item['senders']:
-                sender_array.append(sender)
-            item['senders'] = {
-                'objects': item['senders'],
-                'list': sender_array
-            }
             array.append(item)
-        res = { 'ids': notification_ids, 'list': array, 'objects': objects}
+        res = {'ids': notification_ids, 'list': array, 'objects': objects}
         return res
-
-class SenderNotification(models.Model):
-    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
-    sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
-class UserNotification(models.Model):
-    read = models.BooleanField(default=False)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    sender_notification = models.ForeignKey(SenderNotification, on_delete=models.CASCADE)
 
 
 class Comment(models.Model):
@@ -249,16 +217,14 @@ class Comment(models.Model):
             res_id=params['res_id'],
             subtype_id=params['subtype_id'],
         )
-        
-        read_ids = Notification.mark_read_notification(request=request, params=params)
 
         sql = "select un.id from chat_usernotification un "
         sql += " join chat_sendernotification sn on sn.id = un.sender_notification_id"
         sql += " join chat_notification n on sn.notification_id=n.id"
         sql += " join chat_postaddress pa on pa.id=n.post_address_id"
         sql += " where pa.res_app='meetings' and res_model='event' and res_id=1"
-        # objs = UserNotification.objects.raw(sql) 
-        
+        # objs = UserNotification.objects.raw(sql)
+
         # with connection.cursor() as cursor:
         #     cursor.execute(sql)
         #     row = cursor.fetchall()
@@ -270,10 +236,11 @@ class Comment(models.Model):
         #     row = cursor.fetchone()
 
         # objs = UserNotification.objects.raw(sql)
-
         parents = {
 
         }
+
+        read_ids = UserNotification.mark_read_notification(request, params)
         comments = []
         for obj in res:
             user = obj.user
@@ -312,7 +279,7 @@ class Comment(models.Model):
             create_date=datetime.now()
         )
         if params.get('parent_id'):
-            comment.parent_id=params['parent_id']
+            comment.parent_id = params['parent_id']
         comment.save()
         comment = comment.__dict__
         comment['user'] = {
@@ -325,7 +292,7 @@ class Comment(models.Model):
         comment['children'] = []
         param = params
         param['notification_type'] = 'comment'
-        event_data = {'name': 'comment_received', 'data': comment, 'uid' : request.user.id}
+        event_data = {'name': 'comment_received', 'data': comment, 'uid': request.user.id}
         Notification.add_notification(request.user, param, event_data)
         return comment
 
@@ -435,7 +402,7 @@ class AuthUserChat(models.Model):
     @classmethod
     def verify_chat_user(cls, request, params):
         data = {
-            'friends' : [],
+            'friends': [],
             'friendIds': [],
             'notifications': [],
             'unseen': 0,
@@ -466,13 +433,13 @@ class AuthUserChat(models.Model):
                         'photo': photo
                     }
                     friend_list[id] = friend
-                    friend_ids.append(id)                
-            
+                    friend_ids.append(id)
+
             user_object = User.objects.get(pk=uid)
-            profile_object = Profile.objects.filter(pk = uid)
+            profile_object = Profile.objects.filter(pk=uid)
             res = False
             if not profile_object:
-                profile_object = Profile(user_ptr=user_object, name=user_object.username)            
+                profile_object = Profile(user_ptr=user_object, name=user_object.username)
                 profile_object.save()
                 if user_object.is_superuser:
                     res = create_group(user_object, 'Admin')
@@ -485,21 +452,21 @@ class AuthUserChat(models.Model):
                     if profile_object.is_superuser:
                         res = create_group(user_object, 'Admin')
                     else:
-                        res = create_group(user_object, 'Director')                    
+                        res = create_group(user_object, 'Director')
             if res != 'done':
                 if res:
-                    data['message'] = {'error': res }
+                    data['message'] = {'error': res}
                 else:
-                    data['message'] = {'error': 'Error in group creation' }
+                    data['message'] = {'error': 'Error in group creation'}
             req_user = {
                 'id': uid,
                 'name': profile_object.name,
                 'photo': profile_object.image.url
             }
-            notifications = Notification.getMyNotifications(request, False)
+            notifications = UserNotification.get_my_notifications(request, False)
             data = {
-                'friends' : friend_list,
-                'friendIds': friend_ids ,
+                'friends': friend_list,
+                'friendIds': friend_ids,
                 'notifications': notifications,
                 'unseen': unseen_messages,
                 'user': req_user
@@ -512,7 +479,7 @@ class AuthUserChat(models.Model):
                 cnt += 1
                 if not 'lib/python' in er:
                     errorMessage += " " + er
-            data['message'] = {'error': errorMessage }
+            data['message'] = {'error': errorMessage}
         return data
 
 

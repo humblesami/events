@@ -40,7 +40,7 @@ export class CommentsComponent implements OnInit {
         
         let on_comments_list = function(result){
             try {
-                console.log(result);
+                // console.log(result);
                 var read_notification_ids = result.read_notification_ids
                 obj_this.socketService.mark_notifications_read(read_notification_ids);
                 result = result.comments;
@@ -351,14 +351,6 @@ export class CommentsComponent implements OnInit {
                 obj_this.add_item(data, obj_this.comments, 'rec comment', 1);
             }
         };
-        function remove_notification()
-        {
-            obj_this.socketService.current_model = obj_this.res_model;
-            obj_this.socketService.current_id = obj_this.res_id;
-            obj_this.socketService.removeNotification(obj_this.res_app, obj_this.res_model, obj_this.res_id);
-        }
-        obj_this.socketService.execute_on_verified(remove_notification);
-
     }
 
     placeCursorAtEnd() {

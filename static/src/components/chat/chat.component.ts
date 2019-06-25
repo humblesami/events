@@ -29,6 +29,9 @@ export class ChatComponent implements OnInit {
 	ngOnInit() {                
         var obj_this = this;
         var route = window['pathname'];
+        $('notification-list li').click(function(){
+            //mark_read()
+        });
         if(route == '/chat')
         {            
             //console.log("Loaded as route");

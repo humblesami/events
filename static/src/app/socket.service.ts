@@ -676,38 +676,22 @@ export class SocketService {
         return index;
     }
 
-	removeNotification(res_app, res_model, res_id){        
-		if(!this.verified)
-			return;
-		let index = -1;
-		let active_item = undefined;
-		for(let i in this.notificationList){
-            let item = this.notificationList[i];
-			item.active = false;
-			if(item.res_model == res_model && item.res_id == res_id) {
-				active_item = item;
-                index = parseInt(i);                
-			}
-        }        
-		if(!active_item)
-			return;
-    	
-        let input_data = {
-            no_notify:1,
-            res_model: res_model,
-            res_id:res_id,
-            res_app: res_app
-        }
-        if(active_item.counter > 0)
+    set_notification_text(item){
+        let obj_this = this;
+        item.senders = item.senders.filter(function(obj){
+            return obj.id != obj_this.user_data.id;
+        });
+        let senders = item.senders[0].name;
+        
+        for(var i=1; i<item.senders.length -2;i++)
         {
-            let args = {
-                app: 'chat',
-                model: 'Notification',
-                method: 'update_counter'
-            };
-            this.emit_server_event(input_data, args);
-        }            
-        this.remove_item_from_notification_list(index);
+            senders +=', '+item.senders[1];
+        } 
+        if(item.senders.length > 1)
+        {
+            senders += ' and '+senders[item.senders.length -1].name;
+        }
+        item.body = senders +item.body;
     }
     
     add_item_in_notification_list(item, on_receive) {
@@ -736,6 +720,7 @@ export class SocketService {
         }
         item.client_route = route + item.address.res_id;
         item.counter = 1;
+        obj_this.set_notification_text(item);
         if(on_receive)
         {
             for(var i in obj_this.notificationList)
@@ -756,7 +741,7 @@ export class SocketService {
     }
 
     mark_notifications_read(read_notification_ids){
-        console.log(read_notification_ids);
+        // console.log(read_notification_ids);
         for(var i in read_notification_ids)
         {
             for(var j in this.notificationList)
