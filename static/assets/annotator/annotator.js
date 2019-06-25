@@ -1415,13 +1415,17 @@
                     //console.log(aComment);
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
-                    var child_info = '<div>' + aComment.content + '</div>';
                     aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
-                    child_info += '<div class="user-time-info">';
-                    child_info += '<span class"time">' + aComment.date_time + '</span>';
-                    //child_info +='<span class="buttons">:</span>';
-                    child_info += '<span class="user">' + aComment.user_name + '</span>';
-                    child_info += '</div>';
+                    var child_info = `
+                    
+						<div class="user-time-info">
+							<span class"time">` + aComment.date_time + `</span>
+							<span class="user">` + aComment.user_name + `</span>
+						</div>
+						<div>` + aComment.content + `</div>
+
+                    `;
+
                     $(child).attr('comment-id', aComment.uuid);
                     $(child).attr('annotation', aComment.annotation);
                     child.innerHTML = child_info;
