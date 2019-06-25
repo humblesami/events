@@ -29,6 +29,28 @@ class Notification(models.Model):
         return self.post_address.res_app+'.'+self.post_address.res_model+'.'+str(self.post_address.res_id)+'--'+self.notification_type.name
 
 
+    @classmethod
+    def mark_read_notification(cls, request, params):
+        res_id = params['res_id']
+        res_model = params['res_model']
+        res_app = params['res_app']
+        read_ids = []
+        address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
+        if address:
+            address = address[0]
+            notifications = address.notification_set.all()
+            for obj1 in notifications:
+                sender_notifications = obj1.sendernotification_set.all()
+                for obj2 in sender_notifications:
+                    user_notifications = obj2.usernotification_set.filter(user_id=request.user.id)
+                    for obj3 in user_notifications:
+                        obj3.read = True
+                        obj3.save()
+                        if not obj1.id in read_ids:
+                            read_ids.append(obj1.id)
+        return read_ids
+
+
     def get_meta(self, res_obj):
         sender_notifications = self.sendernotification_set.all()
         senders_list = []
@@ -208,14 +230,6 @@ class UserNotification(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     sender_notification = models.ForeignKey(SenderNotification, on_delete=models.CASCADE)
 
-    @classmethod
-    def mark_read(cls, request, params):        
-        res_id = params['res_id']
-        res_model = params['res_model']
-        res_app = params['res_app']
-        address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
-        if address:
-            pass
 
 class Comment(models.Model):
     res_id = models.IntegerField()
@@ -236,25 +250,7 @@ class Comment(models.Model):
             subtype_id=params['subtype_id'],
         )
         
-        res_id = params['res_id']
-        res_model = params['res_model']
-        res_app = params['res_app']
-
-        read_ids = []
-        address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
-        if address:
-            address = address[0]
-            notifications = address.notification_set.all()
-            for obj1 in notifications:
-                sender_notifications = obj1.sendernotification_set.all()
-                for obj2 in sender_notifications:
-                    user_notifications = obj2.usernotification_set.filter(user_id=request.user.id)
-                    for obj3 in user_notifications:
-                        obj3.read = True
-                        obj3.save()
-                        if not obj1.id in read_ids:
-                            read_ids.append(obj1.id)
-        
+        read_ids = Notification.mark_read_notification(request=request, params=params)
 
         sql = "select un.id from chat_usernotification un "
         sql += " join chat_sendernotification sn on sn.id = un.sender_notification_id"
@@ -425,7 +421,7 @@ class Message(models.Model):
             return res
 
     @classmethod
-    def mark_read(cls, request, params):
+    def mark_read_message(cls, request, params):
         message_id = params['message_id']
         message = Message.objects.get(pk=message_id)
         message.read_status = True
