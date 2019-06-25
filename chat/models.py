@@ -55,7 +55,7 @@ class Notification(models.Model):
         return meta
 
     @classmethod
-    def add_notification(cls, sender, params, event_data, text=None):
+    def add_notification(cls, sender, params, event_data, mention_list=None):
         type_name = params['notification_type']
         parent_post_id = params.get('parent_post_id')
         res_model = params['res_model']
@@ -97,8 +97,15 @@ class Notification(models.Model):
             }
             events = [
                 {'name': 'notification_received', 'data': client_object, 'audience': audience},
-                {'name': event_data['name'], 'data': event_data['data'], 'audience': audience}
             ]
+            if mention_list:
+                events[0]['audience'] = list(set(events[0]['audience']) - set(mention_list))
+                clone = client_object.copy()
+                clone['notification_type'] = 'mention'
+                clone['body'] = ' mentioned you in ' +meta['template'] + ' ' + meta['name_place']
+                events.append({'name': 'notification_received', 'data': clone, 'audience': mention_list})
+
+            events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience})
             res = ws_methods.emit_event(events)
         else:
             return 'No audience for the notification'
