@@ -112,8 +112,7 @@ export class DocumentComponent implements OnInit {
         var obj_this = this;        
         var doc_type = obj_this.route.snapshot.params.doc_type;        
         let doc_id = obj_this.route.snapshot.params.res_id;
-        let point_id = undefined;
-        
+        let point_id = undefined;        
         
         let args = {
             app: 'documents',
