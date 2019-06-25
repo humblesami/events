@@ -124,7 +124,7 @@
             var documentId = false;
             var dh = $(document).height();
             var dw = $(document).width();
-            // var note_wrapper = $('#notification-wrapper');                
+            // var note_wrapper = $('#notification-wrapper');
             var comments_wrapper;// = $('#comment-wrapper');
             var commentText;// = comments_wrapper.find('#commentText');
             var comment_list_div;// = comments_wrapper.find('.comment-list:first');
@@ -133,8 +133,8 @@
             window['init_doc_comments'] = function(){
                 comments_wrapper = $('#comment-wrapper');
                 commentText = comments_wrapper.find('#commentText');
-                comment_list_div = comments_wrapper.find('.comment-list:first');                
-                comment_list = comments_wrapper.find('.comment-list-container:first');                
+                comment_list_div = comments_wrapper.find('.comment-list:first');
+                comment_list = comments_wrapper.find('.comment-list-container:first');
                 commentText.focus(function() {
                     comment_item_focused = true;
                 });
@@ -143,7 +143,7 @@
 
             annotation_user_m2 = localStorage.getItem('user');
             annotation_user_m2 = JSON.parse(annotation_user_m2);
-            
+
             var annotationBiengEdited = false;
             var comments_loaded = false;
             var force_download = 0;
@@ -210,7 +210,7 @@
                         if (!Array.isArray(comments)) {
                             comments = [];
                             console.log("Why not comments");
-                        }                        
+                        }
                         var document_version = getDocumentVersion(documentId);
                         if (!data.annotations) {
                             data.annotations = [];
@@ -239,7 +239,7 @@
                         }
                     }
 
-                    function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {        
+                    function updateLocalAnnotationsFromServer(annotations, version, comments, doc_data) {
                         if (annotations.length == 0) {
                             annotations = getLocalAnnotations();
                         }
@@ -339,7 +339,7 @@
                             model: 'AnnotationDocument',
                             method: 'add_annotation'
                         }
-                        var final_input_data = {            
+                        var final_input_data = {
                             args: args,
                             params: input_data
                         };
@@ -434,7 +434,7 @@
                     }
                 } else {
                     $('.pdfViewer').css("cursor", "default");
-                    // if ($target.closest('.annotation_button.prop').length > 0) 
+                    // if ($target.closest('.annotation_button.prop').length > 0)
                     {
                     //     $('.topbar:first .pen:first').click();
                     // } else {
@@ -501,7 +501,7 @@
             }
 
             function hideComments() {
-                comments_wrapper.hide();                
+                comments_wrapper.hide();
                 shown_comment_type = false;
                 localStorage.removeItem(documentId + '/shown_comment_type');
             }
@@ -522,7 +522,7 @@
                     $('.comment-list-form').show();
                 shown_comment_type = slected_comment_type;
 
-                var ctop = $('.comment-header').offset().top;                
+                var ctop = $('.comment-header').offset().top;
                 try{
                     ctop = ctop + parseInt(comment_list.css('padding-bottom'))
                 }
@@ -558,7 +558,7 @@
                     }
                     catch(er){
                         console.log(er);
-                    }                    
+                    }
                 }
             }
 
@@ -606,7 +606,7 @@
 
             function onCOmmentAdded() {
                 commentText.html('');
-                commentText.parent().show();                
+                commentText.parent().show();
                 comment_list_div.scrollTop(999999000);
                 commentText.focus();
             }
@@ -680,7 +680,7 @@
                     comment_list_div = comments_wrapper.find('.comment-list:first');
                     comment_list = comments_wrapper.find('.comment-list-container:first');
                     comment_doc_id = doc_data.type + '-' + doc_data.id + '.pdf';
-                    documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';                    
+                    documentId = doc_data.type + '-' + doc_data.id + '-' + annotation_user_m2.id + '.pdf';
                     doc_id = doc_data.id;
                     RENDER_OPTIONS.documentId = documentId;
                     comments_loaded = false;
@@ -700,10 +700,10 @@
                             model: 'AnnotationDocument',
                             method: 'get_annotations'
                         }
-                        var input_data = {            
+                        var input_data = {
                             args: args,
                             params: {
-                                id: doc_id, doc_id: documentId, 
+                                id: doc_id, doc_id: documentId,
                                 version: document_version
                             }
                         };
@@ -743,7 +743,7 @@
                     rotate = parseInt(rotate, 10);
                     var vcw = $('#viewer').width();
                     var vuw = 0;
-                    vuw = scale / RENDER_OPTIONS.scale * vcw;                    
+                    vuw = scale / RENDER_OPTIONS.scale * vcw;
                     if (RENDER_OPTIONS.scale !== scale || RENDER_OPTIONS.rotate !== rotate) {
                         RENDER_OPTIONS.scale = scale;
                         RENDER_OPTIONS.rotate = rotate;
@@ -908,7 +908,7 @@
                                     var height = header_height + toolbar_height;
                                     var path_url = window['pathname'];
                                     var ar_path = path_url.split('/');
-                                    //console.log(path_url);                                
+                                    //console.log(path_url);
                                     if (ar_path[1] == 'iframe')
                                         height += 137;
                                     $('#viewer-wrapper').css({
@@ -1226,7 +1226,7 @@
 
                 var annotation_user = localStorage.getItem('user');
                 annotation_user = JSON.parse(annotation_user);
-                $('body').on('keyup', '#commentText', function(e) {                    
+                $('body').on('keyup', '#commentText', function(e) {
                     if (!activePointId) {
                         console.log("Comment not added because, no active annotationId");
                         return;
@@ -1426,15 +1426,12 @@
                     child.className = 'comment-list-item';
                     aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
                     var child_info = `
-                    
 						<div class="user-time-info">
-							<span class"time">` + aComment.date_time + `</span>
 							<span class="user">` + aComment.user_name + `</span>
+							<span class"time">` + aComment.date_time + `</span>
 						</div>
 						<div>` + aComment.content + `</div>
-
                     `;
-                    
                     $(child).attr('comment-id', aComment.uuid);
                     $(child).attr('annotation', aComment.annotation);
                     child.innerHTML = child_info;
@@ -1545,7 +1542,7 @@
     }
 
     function module2(module, exports, __webpack_require__) {
-        var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */        
+        var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__; /* WEBPACK VAR INJECTION */
 
         (function(module) {
             'use strict';
@@ -1827,7 +1824,7 @@
                             /**
                              * Get all the comments on document
                              *
-                             * @param {String} documentId The ID for the document                         
+                             * @param {String} documentId The ID for the document
                              * @return {Promise}
                              */
                             value: function getAllComments(documentId) {
@@ -2634,7 +2631,7 @@
                         });
                         if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
                     } // StoreAdapter for working with localStorage
-                    // This is ideal for testing, examples, and prototyping                
+                    // This is ideal for testing, examples, and prototyping
 
                     var LocalStoreAdapter = function(_StoreAdapter) {
                         _inherits(LocalStoreAdapter, _StoreAdapter);
@@ -2809,8 +2806,8 @@
                                             var doc_info = documentId.split('-');
                                             var input_data = {
                                                 doc_type: doc_info[0],
-                                                document_id: doc_info[1],                                              
-                                                comment_doc_name : comment_doc_id,                                                
+                                                document_id: doc_info[1],
+                                                comment_doc_name : comment_doc_id,
                                             };
                                             console.log(input_data);
 

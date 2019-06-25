@@ -23,6 +23,7 @@
   background: linear-gradient(to bottom, #4b74b5, #4b74b5);
   padding: 5px 30px;
   border-radius: 30px;
+  flex-wrap:wrap;
   }
 .toolbar .spacer {
   display: inline-block;
@@ -268,6 +269,9 @@
   min-width: 15px
   }
 .topbar .paginator {
+display: flex;
+    justify-content: center;
+    align-items: center;
    }
 .topbar .paginator .pager {
   padding: 0 5px;
@@ -421,20 +425,26 @@ body.pdf-viewer {
     font-size: 13px;
     margin: 5px;
     padding: 8px;
-    white-space: pre-wrap;
+    /* white-space: pre-wrap; */
     line-height: 1.5;
     cursor: pointer;
-    /* background-color: #ffffff; */
     color: #000000;
   }
 .comment-list-item .user-time-info {
   font-size: 11px;
-  margin-top: 7px;
+  margin:0;
+  padding: 0 0 15px;
   }
 .comment-list-item .user-time-info .user {
-  float: right;
-  font-weight: 500;
+    font-size: .840rem;
+    font-family: "Roboto";
+    font-weight: 600;
   }
+
+ .comment-list-item .user-time-info span{
+ 	display:block;
+ }
+
 .comment-list-item .user-time-info .buttons {
   float: right;
   font-size: 16px;
@@ -499,6 +509,7 @@ Color Popup
 ==================================*/
 .doc-manage-btn-wrap {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
 	margin: 0 5px;
@@ -576,6 +587,9 @@ mark.current {
 .annotation-options {
   width: 220px;
   }
+  .annotation-options .Icon{
+  color:#000000;
+  }
 .textLayer > div::selection {
   background: silver;
   }
@@ -594,3 +608,7 @@ a.list-group-item.contact.active {
   padding: 20px;
   display: none;
   }
+
+.abcdef{
+position:relative;
+}
