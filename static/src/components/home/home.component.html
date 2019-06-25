@@ -96,12 +96,14 @@
                     <div class="row docwrappercontainer">
                         <a class="col-sm-6 col-md-4 col-lg-2" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids">
                             <div class="DocumentWrapper">
-                            <div class="DocIcon">
-                                <span class="rounded-circle"><i class="fa fa-file"></i></span>
-                            </div>
-                            <div class="DocInfoVertical">
-                                <div class="DocText">{{doc.name}}</div>
-                            </div>
+								<div class="DocIcon">
+									<span class="rounded-circle">
+										<i class="icon-doc-file"></i>
+									</span>
+								</div>
+								<div class="DocInfoVertical">
+									<div class="DocText">{{doc.name}}</div>
+                           		 </div>
                             </div>
                         </a>
                     </div>
@@ -130,147 +132,150 @@
         </div>
         <div id="to-do">
             <div *ngIf="home_data.to_do_items.pending_meetings && home_data.to_do_items.pending_meetings.length>0" class="">
-                <div class="container bordered">
-                <div class=" modal-header">
-                    Upcoming Meetings
+                <div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class=" modal-header">
+								Upcoming Meetings
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="kanban-card" *ngFor="let meeting_object of home_data.to_do_items.pending_meetings">
+							<div class="kanban-meeting-info">
+								<a class="kanban-upcoming-meeting" routerLink="/meeting/{{meeting_object.id}}">
+									<div class="CalendarDateWrapper">
+										<span *ngIf="meeting_object.start" class="CalendarDateWrap">
+											<span class="kanban-upcoming-meeting-date">
+												{{meeting_object.start_dt.day}}
+											</span>
+											<span>
+												{{meeting_object.start_dt.month_year}}
+											</span>
+											<span>
+												{{meeting_object.start_dt.time}}
+											</span>
+										</span>
+									</div>
+									<div class="Info">
+										<p *ngIf="meeting_object.name">
+											<b>{{meeting_object.name}}</b>
+										</p>
+										<span *ngIf="meeting_object.location">{{meeting_object.location}}</span>
+									</div>
+								</a>
+								<div class="upcomingButton btn-flex-1" id="tdmrb{{meeting_object.id}}">
+									<button (click)="respond_invitation('accepted', meeting_object.id)" class="btn btn-meeting">
+										<i *ngIf="meeting_object.attendee_status == 'accepted'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+										<span name="accepted">Accept</span>
+									</button>
+									<button (click)="respond_invitation('declined', meeting_object.id)" class="btn btn-meeting">
+										<i *ngIf="meeting_object.attendee_status == 'declined'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+										<span name="declined">Decline</span>
+									</button>
+									<button (click)="respond_invitation('tentative', meeting_object.id)" class="btn btn-meeting">
+										<i *ngIf="meeting_object.attendee_status == 'tentative'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+										<span name="tentative">Tentative</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
-                <div class="">
-                    <div class="container">
-                        <div class="row">
-                            <div class="kanban-card" *ngFor="let meeting_object of home_data.to_do_items.pending_meetings">
-                                <div class="kanban-meeting-info">
-                                    <a class="kanban-upcoming-meeting" routerLink="/meeting/{{meeting_object.id}}">
-                                        <div class="CalendarDateWrapper">
-                                            <span *ngIf="meeting_object.start" class="CalendarDateWrap">
-                                                <span class="kanban-upcoming-meeting-date">
-                                                    {{meeting_object.start_dt.day}}
-                                                </span>
-                                                <span>
-                                                    {{meeting_object.start_dt.month_year}}
-                                                </span>
-                                                <span>
-                                                    {{meeting_object.start_dt.time}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                        <div class="Info">
-                                            <p *ngIf="meeting_object.name">
-                                                <b>{{meeting_object.name}}</b>
-                                            </p>
-                                            <span *ngIf="meeting_object.location">{{meeting_object.location}}</span>
-                                        </div>
-                                    </a>
-                                    <div class="upcomingButton btn-flex-1" id="tdmrb{{meeting_object.id}}">
-                                        <button (click)="respond_invitation('accepted', meeting_object.id)" class="btn btn-meeting">
-                                            <i *ngIf="meeting_object.attendee_status == 'accepted'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                            <span name="accepted">Accept</span>
-                                        </button>
-                                        <button (click)="respond_invitation('declined', meeting_object.id)" class="btn btn-meeting">
-                                            <i *ngIf="meeting_object.attendee_status == 'declined'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                            <span name="declined">Decline</span>
-                                        </button>
-                                        <button (click)="respond_invitation('tentative', meeting_object.id)" class="btn btn-meeting">
-                                            <i *ngIf="meeting_object.attendee_status == 'tentative'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                            <span name="tentative">Tentative</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
+
             </div>
             <!--Surveys-->
             <div *ngIf="home_data.to_do_items.pending_surveys && home_data.to_do_items.pending_surveys.length" class="">
-                <div class="container bordered">
-                <div class="modal-header">
-                    Surveys
-                </div>
-                <div class="">
-                    <div class="container">
-                        <div class="row">
-                            <div class="kanban-card survey" *ngFor="let sur of home_data.to_do_items.pending_surveys">
-                            <div class="SurveysInfoBox">
-                                <div class="SurveysInfoBoxTitle">
-                                    <h5>
-                                        <b>{{sur.title}}</b>
-                                        <span *ngIf="sur.meeting_name"> Meeting: {{sur.meeting_name}}</span>
-                                    </h5>
-                                </div>
-                                <div class="SurveysInfoBoxBtn  btn-flex-1">
-                                    <button class="btn btn-meeting" routerLink="/home/survey/{{sur.id}}">                                                
-                                    <span>Start</span>
-                                    </button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class=" modal-header">
+								Surveys
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="kanban-card survey" *ngFor="let sur of home_data.to_do_items.pending_surveys">
+							<div class="SurveysInfoBox">
+								<div class="SurveysInfoBoxTitle">
+									<h5>
+										<b>{{sur.title}}</b>
+										<span *ngIf="sur.meeting_name"> Meeting: {{sur.meeting_name}}</span>
+									</h5>
+								</div>
+								<div class="SurveysInfoBoxBtn  btn-flex-1">
+									<button class="btn btn-meeting" routerLink="/home/survey/{{sur.id}}">
+									<span>Start</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
             </div>
             <!--Votings-->
             <div *ngIf="home_data.to_do_items.pending_votings && home_data.to_do_items.pending_votings.length" class="">
-                <div class="container bordered">
-                <div class="modal-header">
-                    Votings/Approvals
-                </div>
-                <div class="">
-                    <div class="container">
-                        <div class="row">
-                            <div class="kanban-card voting" *ngFor="let vote of home_data.to_do_items.pending_votings">
-                            <div class="VotingsInfoBox">
-                                <div class="VotingsInfoBoxTitle ">
-                                    <h5>
-                                        <b>{{vote.name}}</b>
-                                        <span *ngIf="vote.meeting_name"> Meeting: {{vote.meeting_name}}</span>
-                                        <div><strong>Voting Type :</strong><span style="display:inline-block;">{{vote.voting_type_name}}</span></div>
-                                    </h5>
-                                </div>
-                                <div class="bs-btnwrap">
-                                    <button class="btn" routerLink="/voting/{{vote.id}}">                                                
-                                    <span>Cast Vote</span>
-                                    </button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class=" modal-header">
+								 Votings/Approvals
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="kanban-card voting" *ngFor="let vote of home_data.to_do_items.pending_votings">
+							<div class="VotingsInfoBox">
+								<div class="VotingsInfoBoxTitle ">
+									<h5>
+										<b>{{vote.name}}</b>
+										<span *ngIf="vote.meeting_name"> Meeting: {{vote.meeting_name}}</span>
+										<div><strong>Voting Type :</strong><span style="display:inline-block;">{{vote.voting_type_name}}</span></div>
+									</h5>
+								</div>
+								<div class="bs-btnwrap">
+									<button class="btn" routerLink="/voting/{{vote.id}}">
+									<span>Cast Vote</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
             </div>
             <!--Documents-->
             <div *ngIf="home_data.to_do_items.pending_documents && home_data.to_do_items.pending_documents.length" class="DocumentsSignWrapper">
-                <div class="container bordered">
-                <div class="modal-header">
-                    Documents To Sign
-                </div>
-                <div class="">
-                    <div class="container">
-                        <div class="row">
-                            <div class="kanban-card" *ngFor="let doc of home_data.to_do_items.pending_documents">
-                            <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
-                                <div class="DocIcon">
-                                    <i class="fa fa-file"></i>
-                                </div>
-                                <div class="DocText">
-                                    <div class="DocName">
-                                        <h5>Title: {{doc.name}}</h5>
-                                    </div>
-                                    <div class="DocMeeting">
-                                        Meeting: {{doc.meeting__name}}
-                                    </div>
-                                    <div class="SignatureText font-11">
-                                        <span>My Signature: </span>
-                                        <span class="pending-status">{{doc.mp_signature_status}}</span>
-                                    </div>
-                                </div>
-                            </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class=" modal-header">
+								 Documents To Sign
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="kanban-card" *ngFor="let doc of home_data.to_do_items.pending_documents">
+							<a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
+								<div class="DocIcon">
+									<span class="rounded-circle">
+										<i class="icon-doc-file"></i>
+									</span>
+								</div>
+								<div class="DocText">
+									<div class="DocName">
+										<h5>Title: {{doc.name}}</h5>
+									</div>
+									<div class="DocMeeting">
+										Meeting: {{doc.meeting__name}}
+									</div>
+									<div class="SignatureText font-11">
+										<span>My Signature: </span>
+										<span class="pending-status">{{doc.mp_signature_status}}</span>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
                 </div>
             </div>
             <div class="res-message" *ngIf="!to_do_data">

@@ -173,10 +173,6 @@ h5, .h5 {
 } */
 
 
-.kanban-profiles-user-info{
-    flex: 1 1 auto;
-}
-
 .title-wrapper .modal-header{
     margin:35px 0;
     padding: 0 0 15px;

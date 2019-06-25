@@ -326,11 +326,13 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 Meeting Documents
             </div>
             <div class="row">
-                <div class="col-sm-6 col-md-4 col-lg-3" routerLink="/meeting/doc/{{doc.id}}" *ngFor="let doc of meeting_object.meeting_docs">
+                <div class="col-sm-6 col-md-4 col-lg-2 mb-4" routerLink="/meeting/doc/{{doc.id}}" *ngFor="let doc of meeting_object.meeting_docs">
                     <div class="DocumentWrapper gray-bge">
                         <div class="DocIcon">
-                            <span class="rounded-circle"><i class="fa fa-file"></i></span>
-                        </div>
+							<span class="rounded-circle">
+								<i class="icon-doc-file"></i>
+							</span>
+						</div>
                         <div class="DocInfoVertical">
                             <div class="DocText">
                                 {{doc.name}}
@@ -345,24 +347,28 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             <div class="modal-header">
                 Documents To Sign
             </div>
-            <div class="row docwrappercontainer">
-                <a class="col-sm-6 col-md-4 col-lg-4" routerLink="/signdoc/{{doc.id}}" *ngFor="let doc of meeting_object.sign_docs">
-                    <div class="DocumentWrapper signdocu gray-bg">
-                        <div class="DocIcon">
-                            <i class="fa fa-file"></i>
-                        </div>
-                        <div class="DocText">
-                            <div class="DocName">
-                                <h5>Title: {{doc.name}}</h5>
-                            </div>
-                            <div class="SignatureText font-11">
-                                <span>My Signature: </span>
-                                <span class="pending-status">{{doc.mp_signature_status}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+			<div class="row docwrappercontainer">
+				<div class="col-sm-6 col-md-4 col-lg-2 mb-4"   *ngFor="let doc of meeting_object.sign_docs">
+					<a routerLink="/signdoc/{{doc.id}}" class="">
+						<div class="DocumentWrapper">
+							<div class="DocIcon">
+								<span class="rounded-circle">
+									<i class="icon-doc-file"></i>
+								</span>
+							</div>
+							<div class="DocText">
+								<div class="DocName">
+									<h5>Title: {{doc.name}}</h5>
+								</div>
+								<div class="SignatureText font-11">
+									<span>My Signature: </span>
+									<span class="pending-status">{{doc.mp_signature_status}}</span>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+        	</div>
         </div>
         <app-comments *ngIf="meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}" [mention_list]="meeting_object.attendees"></app-comments>
     </div>

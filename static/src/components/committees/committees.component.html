@@ -19,7 +19,7 @@
                             {{committee.name}}
                         </a>
                     <div class="kanban-committees-info-box-img">
-                        <a  *ngFor="let member of committee.users; let index = index" routerLink="/profile/{{member.id}}">
+                        <a class="circle-imgwrap"  *ngFor="let member of committee.users; let index = index" routerLink="/profile/{{member.id}}">
                         <span *ngIf="index < 3">
                             <img title="{{member.username}}" class="img-thumbnail-sm" src="{{socketService.server_url}}{{member.image}}">
                         </span>

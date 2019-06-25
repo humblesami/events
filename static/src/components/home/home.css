@@ -78,12 +78,14 @@
 }
 
 .HomePageContentImg {
-    margin: 0px 0px 20px 20px;
-    flex-basis: 320px;
-    width: 320px;
-    float: right;
+    margin: 0px 20px 20px 0px;
+    flex-basis: 300px;
+    max-width: 300px;
+    float: left;
 }
-
+.HomePageContentImg img{
+	max-width:100%;
+	}
 .fc-more-cell{
 	background: darkgreen;
 	color: white;
@@ -188,9 +190,9 @@ btn.active{
 }
 
 #to-do .modal-header {
-    margin: 0px 15px 25px;
+    margin:25px 0;
     padding: 10px 0;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 500;
 }
 

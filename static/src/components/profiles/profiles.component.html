@@ -3,13 +3,23 @@
 <app-breadcrumb app="meetings" model="{{type}}" create="1" title="Profiles ({{type}})"></app-breadcrumb>
 <div class="router-outlet">
     <div  class="container">
-        <div class="MeetingHeadWrapper">
-            <div class="btn-group">
-                <a routerLink="/profiles/directors" class="btn">Directors</a>
-                <a routerLink="/profiles/admins" class="btn">Admins</a>
-                <a routerLink="/profiles/staff" class="btn">Staff</a>
-            </div>
-        </div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="MainTitleHeadWrap">
+					<div class="HeadingWrap">
+						<i class="icon-profile"></i> Profiles
+					</div>
+					<div class="MeetingBtnWrapper">
+						<div class="btn-group">
+							<a routerLink="/profiles/directors" class="btn">Directors</a>
+							<a routerLink="/profiles/admins" class="btn">Admins</a>
+							<a routerLink="/profiles/staff" class="btn">Staff</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
         <div class="row">
             <div class="kanban-profiles kanban-card" *ngFor="let profile of profiles_data">
                 <a class="kanban-profiles-user-info-box" routerLink="/{{type}}/{{profile.id}}">
