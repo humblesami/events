@@ -12,7 +12,6 @@ from meetings.model_files.user import Profile, create_group
 
 
 class PostAddress(models.Model):
-    parent_post_id = models.IntegerField(null=True)
     res_app = models.CharField(max_length=128)
     res_model = models.CharField(max_length=128)
     res_id = models.IntegerField()
@@ -43,26 +42,30 @@ class Notification(models.Model):
 
         notification_template = self.notification_type.template
         name_place = ''
+        post_meta = None
         try:
             name_place = res_obj.notification_text()
+            if hasattr(res_obj, 'get_meta'):
+                post_meta = res_obj.get_meta()
         except:
             name_place = res_obj.name
         meta = {
             'senders': senders_list,
             'template': notification_template,
-            'name_place': name_place
-        }
+            'name_place': ' => ' + name_place,
+            'info': post_meta
+        }        
         return meta
 
     @classmethod
-    def add_notification(cls, sender, params, event_data, mention_list=None):
+    def add_notification(cls, sender, params, event_data, mentioned_list=None):
         type_name = params['notification_type']
-        parent_post_id = params.get('parent_post_id')
+        file_type = params.get('file_type')
         res_model = params['res_model']
         res_app = params['res_app']
         res_id = params['res_id']
 
-        post_address = cls.get_post_address(res_app, res_model, res_id, parent_post_id)
+        post_address = cls.get_post_address(res_app, res_model, res_id)
         notification_type = cls.get_notification_type(type_name)
         notification = cls.get_notification(notification_type.id, post_address.id)
 
@@ -86,24 +89,24 @@ class Notification(models.Model):
             client_object = {
                 'id': notification.id,
                 'body': text,
-                'senders': meta['senders'],
+                'senders': meta['senders'],                
                 'notification_type': notification_type.name,
                 'address': {
                     'res_id': post_address.res_id,
                     'res_model': post_address.res_model,
                     'res_app': post_address.res_app,
-                    'parent_post_id': post_address.parent_post_id
+                    'info': meta['info']
                 }
             }
             events = [
                 {'name': 'notification_received', 'data': client_object, 'audience': audience},
             ]
-            if mention_list:
-                events[0]['audience'] = list(set(events[0]['audience']) - set(mention_list))
+            if mentioned_list:
+                events[0]['audience'] = list(set(events[0]['audience']) - set(mentioned_list))
                 clone = client_object.copy()
                 clone['notification_type'] = 'mention'
                 clone['body'] = ' mentioned you in ' +meta['template'] + ' ' + meta['name_place']
-                events.append({'name': 'notification_received', 'data': clone, 'audience': mention_list})
+                events.append({'name': 'notification_received', 'data': clone, 'audience': mentioned_list})
 
             events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience})
             res = ws_methods.emit_event(events)
@@ -122,12 +125,10 @@ class Notification(models.Model):
         return notification_type
 
     @classmethod
-    def get_post_address(cls, res_app, res_model, res_id, parent_post_id=None):
+    def get_post_address(cls, res_app, res_model, res_id):
         post_address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
         if not post_address:
-            post_address = PostAddress(res_app=res_app, res_model=res_model, res_id=res_id)
-            if parent_post_id:
-                post_address.parent_post_id = parent_post_id
+            post_address = PostAddress(res_app=res_app, res_model=res_model, res_id=res_id)            
             post_address.save()
         else:
             post_address = post_address[0]
@@ -201,6 +202,7 @@ class UserNotification(models.Model):
                     'res_id': address.res_id,
                     'res_model': address.res_model,
                     'res_app': address.res_app,
+                    'info': meta['info']
                 }
             }
             objects[notification.id] = client_object
@@ -280,6 +282,7 @@ class Comment(models.Model):
     @classmethod
     def add(cls, request, params):
         profile = Profile()
+        mentioned_list = params.get('mentioned_list')
         user = Profile.objects.get(pk=request.user.id)
         comment = Comment(
             res_app=params['res_app'],
@@ -305,7 +308,7 @@ class Comment(models.Model):
         param = params
         param['notification_type'] = 'comment'
         event_data = {'name': 'comment_received', 'data': comment, 'uid': request.user.id}
-        Notification.add_notification(request.user, param, event_data)
+        Notification.add_notification(request.user, param, event_data, mentioned_list)
         return comment
 
 class Message(models.Model):

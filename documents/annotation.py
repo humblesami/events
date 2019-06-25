@@ -297,6 +297,13 @@ class PointAnnotation(Annotation):
     pdf = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
+    def get_meta(self):
+        data = {
+            'post_parent_id': self.pdf.id,
+            'file_type': self.pdf.file_type
+        }
+        return data
+
     def notification_text(self):
         parent_obj = None
         if self.pdf.file_type == 'meeting':
@@ -449,6 +456,7 @@ class CommentAnnotation(models.Model):
                     'res_model': 'PointAnnotation',
                     'res_id' : point_id,
                     'parent_post_id': document_id,
+                    'file_type': doc_type,
                     'notification_type': 'comment'
                 }
                 event_data = {'name': 'point_comment_received', 'data': res, 'uid' : request.user.id}                

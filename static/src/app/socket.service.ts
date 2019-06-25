@@ -716,8 +716,12 @@ export class SocketService {
         }
         
         let route = obj_this.model_routes[item.address.res_app][item.address.res_model];
-        if (item.address.parent_post_id){
-            route += item.address.parent_id+'/';
+        if (item.address.info){
+            if(item.address.info.file_type)
+            {
+                route = '/'+ item.address.info.file_type + route + '/';
+            }
+            route += item.address.info.post_parent_id+'/';
         }
         item.client_route = route + item.address.res_id;
         item.counter = 1;
@@ -783,14 +787,12 @@ export class SocketService {
     model_routes = {
         'meetings':{
             'Event':'/meeting/',
-            'MeetingDocument':'/annotation/doc/',
-            'AgendaDocument':'/annotation/doc/'
         },
         'voting':{
             'Voting':'/voting/'
         },
-        'annotation':{
-            'Point': '/annotation/doc/discussion'
+        'documents':{
+            'PointAnnotation': '/doc'
         }
     }
     

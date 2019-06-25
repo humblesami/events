@@ -194,7 +194,7 @@ export class CommentsComponent implements OnInit {
 			subtype_id: obj_this.comment_subtype,
 			create_date : new Date(),
             user: obj_this.socketService.user_data,
-            mentioned_ids: mention_list,
+            mentioned_list: mention_list,
             user_id:  obj_this.socketService.user_data.id
         };
         if(item.subtype_id == 2)

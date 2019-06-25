@@ -26,6 +26,7 @@ export class DocumentComponent implements OnInit {
                 private router: Router,
                 private _location: Location) {
                     this.mention_list = []
+                    window['should_save'] = true;
 		this.socketService = ss;
         this.route.params.subscribe(params => this.loadDoc());
     }
@@ -143,6 +144,7 @@ export class DocumentComponent implements OnInit {
                 items: obj_this.mention_list,
                 insertHTML: true,
                 triggerChar: "@",
+                dropUp: true,
                 labelKey: 'name',
                 mentionSelect: function(val){
                     let el = $('.active-mention');                
@@ -151,7 +153,6 @@ export class DocumentComponent implements OnInit {
                     el.html(el.html().replace('@', ''));
                     obj_this.placeCursorAtEnd();
                     window['should_save'] = false;
-                    // console.log(obj_this.mentionedList);
                     return '';
                 }
             };
@@ -182,12 +183,6 @@ export class DocumentComponent implements OnInit {
         obj_this.httpService.get(input_data,renderDoc, function(){
             window['functions'].hideLoader('loaddocwaiter');
         });        
-    }
-    save_comment_key_up(e, parent){
-        if (!window['should_save'])
-        {
-            window['should_save'] = true;
-        }
     }
     
     ngOnInit() {

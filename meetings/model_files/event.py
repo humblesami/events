@@ -51,7 +51,7 @@ class Event(models.Model):
             group_name = ''
             attendee_groups = attendee.groups.all()
             if attendee_groups:
-                group_name = attendee_groups[0].name
+                group_name = attendee_groups[0].name.lower()
                 attendees_list.append({'id': attendee.id, 'name': attendee.name, 'group': group_name})
         return attendees_list
 

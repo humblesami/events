@@ -1230,11 +1230,12 @@
                         console.log("Comment not added because, no active annotationId");
                         return;
                     }
-                    if (window['should_save'])
-                    {
-                        return;
-                    }
                     if (!e.shiftKey && e.keyCode == 13) {
+                        if (!window['should_save'])
+                        {
+                            window['should_save'] = true;
+                            return;
+                        }
                         e.preventDefault();
                         var commentValue = commentText.html(); // commentText.val().trim();
                         commentValue = commentValue.substr(0, commentValue.length - 1);
