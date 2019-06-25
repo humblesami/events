@@ -681,20 +681,21 @@ export class SocketService {
         item.senders = item.senders.filter(function(obj){
             return obj.id != obj_this.user_data.id;
         });
+        let count = item.senders.length;
         let senders = item.senders[0].name;
         
-        for(var i=1; i<item.senders.length -2;i++)
+        for(var i=1; i<count -2;i++)
         {
             senders +=', '+item.senders[1];
-        } 
-        if(item.senders.length > 1)
+        }        
+        if(count > 1)
         {
-            senders += ' and '+senders[item.senders.length -1].name;
+            senders += ' and '+item.senders[count -1].name;
         }
-        item.body = senders +item.body;
+        item.body = senders +' '+item.body;
     }
     
-    add_item_in_notification_list(item, on_receive) {
+    add_item_in_notification_list(item, on_receive) {        
         var obj_this = this;
         try{
             if(!item.body)

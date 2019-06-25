@@ -34,7 +34,12 @@ class Notification(models.Model):
         user_notifications = self.usernotification_set.filter(read=False, notification_id=self.id)
         senders_list = []
         for user_notification in user_notifications:
-            senders_list.append({'id': user_notification.sender.id, 'name': user_notification.sender.name})
+            sender = {
+                'id': user_notification.sender.id,
+                'name': user_notification.sender.name
+            }
+            if sender not in senders_list:
+                senders_list.append(sender)
 
         notification_template = self.notification_type.template
         name_place = ''

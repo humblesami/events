@@ -336,7 +336,7 @@ export class CommentsComponent implements OnInit {
 				return;
 			}
            
-            if (obj_this.res_id != data.res_id || obj_this.res_model != data.res_model) {
+            if (obj_this.res_app != data.res_app || obj_this.res_id != data.res_id || obj_this.res_model != data.res_model) {
                 return;
             }
             if (data.parent_id) {
