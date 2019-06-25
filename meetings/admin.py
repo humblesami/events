@@ -31,18 +31,18 @@ import nested_admin
 
 # admin.site.register(TableOfContents, TableOfContentsAdmin)
 
-class TopicDocInline(nested_admin.NestedStackedInline):
+class TopicDocInline(nested_admin.NestedTabularInline):
     model = AgendaDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
     extra = 0
 
 
-class TopicInline(nested_admin.NestedStackedInline):
+class TopicInline(nested_admin.NestedTabularInline):
     model = Topic
     inlines = [TopicDocInline]
     extra = 0
 
-class MeetingDocInline(nested_admin.NestedStackedInline):
+class MeetingDocInline(nested_admin.NestedTabularInline):
     model = MeetingDocument
     exclude=('html','content','pdf_doc', 'file_type')    
     extra = 0
