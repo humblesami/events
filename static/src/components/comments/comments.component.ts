@@ -41,8 +41,7 @@ export class CommentsComponent implements OnInit {
         let on_comments_list = function(result){
             try {
                 // console.log(result);
-                var read_notification_ids = result.read_notification_ids
-                obj_this.socketService.mark_notifications_read(read_notification_ids);
+                var read_notification_ids = result.read_notification_ids;                
                 result = result.comments;
                 for(let i in result) {
                     var item = result[i];
@@ -293,6 +292,11 @@ export class CommentsComponent implements OnInit {
     
 	ngOnInit() {
         let obj_this = this;
+        let me_id = obj_this.socketService.user_data.id;
+        obj_this.mention_list = obj_this.mention_list.filter(function(obj){
+            return obj.id != me_id;
+        });
+        
         if (obj_this.mention_list)
         {
             obj_this.mentionConfig = {

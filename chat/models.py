@@ -57,6 +57,23 @@ class Notification(models.Model):
         }        
         return meta
 
+
+    @classmethod
+    def mark_read(cls, request, params):
+        notification_id = params['notification_id']
+        notification = Notification.objects.get(id=notification_id)
+        address = notification.post_address
+        notifications = address.notification_set.all()
+        read_ids = []
+        for obj1 in notifications:
+            user_notifications = obj1.usernotification_set.filter(user_id=request.user.id, read=False, notification_id=obj1.id)
+        for obj3 in user_notifications:
+            obj3.read = True
+            obj3.save()
+            if not obj1.id in read_ids:
+                read_ids.append(obj1.id)
+        return read_ids
+
     @classmethod
     def add_notification(cls, sender, params, event_data, mentioned_list=None):
         type_name = params['notification_type']
@@ -254,7 +271,7 @@ class Comment(models.Model):
 
         }
 
-        read_ids = UserNotification.mark_read_notification(request, params)
+        read_ids = [] #UserNotification.mark_read_notification(request, params)
         comments = []
         for obj in res:
             user = obj.user

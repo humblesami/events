@@ -17,7 +17,7 @@
         <!--</div>-->
         <ul class="chat-items list-group">
             <li *ngFor="let note of socketService.notificationList">                
-                <a *ngIf="note.counter > 0"  class="list-group-item contact"                    
+                <a class="list-group-item contact"                    
                     routerLink="{{note.client_route}}">
                     <div style="display: contents;" class="wrap">
                         {{ note.body }}

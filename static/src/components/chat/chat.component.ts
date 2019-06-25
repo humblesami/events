@@ -25,12 +25,68 @@ export class ChatComponent implements OnInit {
         var togglerelated = window['functions'].togglerelated;        
         togglerelated('.container.notification-list'); 
     }
-    
+
+    // mark_notifications_read1(read_notification_ids){
+    //     let obj_this = this;        
+    //     for(var i in read_notification_ids)
+    //     {
+    //         for(var j in obj_this.notificationList)
+    //         {
+    //             if(read_notification_ids[i] == obj_this.notificationList[j].id)
+    //             {
+    //                 let index = parseInt(j);
+    //                 obj_this.notificationList.splice(index, 1);
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
+
+    mark_notifications_read(li){
+        let obj_this = this;
+        let item = obj_this.socketService.notificationList[li.index()];
+        var options =
+        { 
+            data:{
+                params: {
+                    notification_id: item.id,
+                },
+                args : {
+                    app: 'chat',
+                    model: 'Notification',
+                    method: 'mark_read'
+                }                
+            },
+            onSuccess:function(read_notification_ids){
+                // if(read_notification_ids.length > 0)
+                // {
+                //     obj_this.socketService.remove_item_from_notification_list(li.index);
+                // }
+                let notificationList = obj_this.socketService.notificationList;                
+                for(var i in read_notification_ids)
+                {                    
+                    for(var j in notificationList)
+                    {
+                        if(read_notification_ids[i] == notificationList[j].id)
+                        {
+                            let index = parseInt(j);
+                            notificationList.splice(index, 1);
+                            break;
+                        }
+                    }
+                }
+                obj_this.socketService.notificationList = notificationList;
+                $('.notification-list').hide();
+            }
+        }
+        window['dn_rpc_object'](options);        
+    }
+
 	ngOnInit() {                
         var obj_this = this;
-        var route = window['pathname'];
-        $('notification-list li').click(function(){
-            //mark_read()
+        var route = window['pathname'];        
+        $('body').on('click', '.notification-list li', function(){                      
+            obj_this.mark_notifications_read($(this));
         });
         if(route == '/chat')
         {            
