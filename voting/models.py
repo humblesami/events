@@ -79,21 +79,21 @@ class Voting(models.Model):
     def mail_audience(self):
         res = []
         if self.meeting:
-            for obj in self.meeting.attendees.constrained_target:
+            for obj in self.meeting.attendees.all():
                 res.append(obj.profile.email)
         else:
-            for obj in self.respondents.constrained_target:
+            for obj in self.respondents.all():
                 res.append(obj.profile.email)
         return res
 
     def get_audience(self):
         res = []
         if self.meeting:
-            for obj in self.meeting.attendees.constrained_target.values():
-                res.append(obj['profile_id'])
+            for obj in self.meeting.attendees.all():
+                res.append(obj.profile.id)
         else:
-            for obj in self.respondents.constrained_target.values():
-                res.append(obj['profile_id'])
+            for obj in self.respondents.all():
+                res.append(obj.profile.id)
         return res
 
     @classmethod
