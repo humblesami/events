@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(function(){
+    console.log(232);
+});
+</script>
+</head>
+<body>
+voting-id: {{ voting_id }}
+
+
+choice-id: {{ choice_id }}
+<div id="div1"><h2>
+    {% if error %}
+        {{ error }}
+    {% elif success %}
+        {{ success }}
+    {% endif %}
+
+</h2></div>
+
+<button>Get External Content</button>
+
+</body>
+</html>

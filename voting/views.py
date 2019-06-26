@@ -1,3 +1,5 @@
+import sys
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Voting, VotingType, VotingChoice, VotingAnswer
@@ -25,6 +27,30 @@ def detail(request, voting_id):
         'userInfo': userInfo
     }
     return render(request, 'voting/detail.html', context)
+
+
+def respond(request, voting_id, choice_id):
+    context = {
+        'voting_id': voting_id,
+        'choice_id': choice_id,
+    }
+    user_id = request.user.id
+    if not user_id:
+        return HttpResponse('User not found..')
+    voting = Voting.objects.get(id=voting_id)
+    choice = voting.voting_type.votingchoice_set.filter(id=choice_id)
+    if not choice:
+        context['error'] = 'Error: Invalid voting choice'
+    res = None
+    if not voting.signature_required:
+        res = submit_choice(voting, choice_id, user_id, False)
+    if res:
+        if res == 'done':
+            context['success'] = 'Response submitted successfully'
+        else:
+            context['error'] = 'Response submitted successfully'
+    return render(request, 'token_submit.html', context)
+
 
 def answer(request, voting_id):
     user_id=request.user.id
@@ -112,15 +138,41 @@ def save_Choice(choice_id, voting_id, user_id, signature_data):
     voting_answer.save()
     update_my_status(choice_id, voting_id)
 
+def submit_choice(voting, choice_id, user_id, signature_data=None):
+    try:
+        if not signature_data:
+            if voting.signature_required:
+                return 'Error: Signature required to submbit'
+        voting_answer = VotingAnswer.objects.filter(voting_id=voting.id, user_id=user_id)
+        if not voting_answer:
+            voting_answer = VotingAnswer(voting_id=voting.id, user_id=user_id, user_answer_id=choice_id)
+        else:
+            voting_answer = voting_answer[0]
+            voting_answer.user_answer_id = int(choice_id)
+        if signature_data:
+            voting_answer.signature_data = signature_data
+        voting_answer.save()
+
+        return 'done'
+    except:
+        res = sys.exc_info()
+        res = res[1].args[0]
+        return res
+
+
 def update_Choice(choice_id, voting_id, user_id, signature_data):
-    voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=user_id)
-    voting_answer.user_answer_id = int(choice_id)
-    voting_answer.voting_id = voting_id
-    voting_answer.user_id = user_id
-    if signature_data:
-        voting_answer.signature_data = signature_data
-    voting_answer.save()
-    update_my_status(choice_id= choice_id, voting_id= voting_id)
+    try:
+        voting_answer = VotingAnswer.objects.get(voting_id=voting_id, user_id=user_id)
+        voting_answer.user_answer_id = int(choice_id)
+        voting_answer.voting_id = voting_id
+        voting_answer.user_id = user_id
+        if signature_data:
+            voting_answer.signature_data = signature_data
+        voting_answer.save()
+        update_my_status(choice_id=choice_id, voting_id=voting_id)
+    except:
+        return sys.exc_info()
+
 
 
 def topic(request, meeting_id):

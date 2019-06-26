@@ -32,12 +32,15 @@ def get_user_name(user):
         name = user.username
     return name
 
-def send_mail(mesgtosend):
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login("sami.akram@digitalnet.com", "asddsazx")
-    recievers = "sami.akram@digitalnet.com,zartash.baig@gmail.com,asfand.yar@digitalnet.com"
-    server.sendmail("Sami Akram", recievers, mesgtosend)
+from django.core.mail import send_mail
+def send_email(subject, html_message, recipients):
+    if not subject:
+        return 'No Subject to mail'
+    if not html_message:
+        return 'No message to send mail',
+    send_mail(subject, "", "sami@gmai.com",recipients
+              , fail_silently=False,
+              html_message=html_message)
 
 from mainapp.settings import SOCKET_SERVER_URL
 socket_server = {

@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Q
 from documents.file import File
 from django.db.models import Count
+from mainapp.ws_methods import send_email
 from meetings.models import Profile, Event, Topic
 
 
@@ -18,6 +19,7 @@ class VotingChoice(models.Model):
     def __str__(self):
         return self.name
 
+from mainapp.settings import server_base_url
 
 class Voting(models.Model):
     voting_type = models.ForeignKey(VotingType, on_delete=models.CASCADE)
@@ -35,6 +37,19 @@ class Voting(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        try:
+            super(Voting, self).save(*args, **kwargs)
+            recipients = self.mail_audience()
+            message = '<div>'
+            for vc in self.voting_type.votingchoice_set.all():
+                message += '<a style="padding:5px; margin:5px" href="'+server_base_url+'/#/voting/'+str(self.id)+'/'+vc.name.upper()+'">'+vc.name+'</a>'
+            message +='</div>'
+            send_email('Participate in Resolution '+self.name,message, recipients)
+            message = ''
+        except:
+            raise
 
     @classmethod
     def get_todo_votings(cls, uid):
@@ -60,6 +75,16 @@ class Voting(models.Model):
                         'my_status': my_status
                     })
         return pending_votings
+
+    def mail_audience(self):
+        res = []
+        if self.meeting:
+            for obj in self.meeting.attendees.constrained_target:
+                res.append(obj.profile.email)
+        else:
+            for obj in self.respondents.constrained_target:
+                res.append(obj.profile.email)
+        return res
 
     def get_audience(self):
         res = []
@@ -310,7 +335,6 @@ class VotingAnswer(models.Model):
                 'error': 'Invalid voting id'
             }
         return data
-
 
 class VotingDocument(File):
     voting = models.ForeignKey('Voting', on_delete=models.CASCADE)

@@ -154,12 +154,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+server_base_url = ''
 SOCKET_SERVER_URL = ''
 base_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = base_dir.replace('mainapp', '')
 with open(base_dir+'config.json') as f:
     configs = json.loads(f.read())
     SOCKET_SERVER_URL = configs['socket_url']
+    server_base_url = configs['server_base_url']
 
 if 'localhost' in SOCKET_SERVER_URL:
     AUTH_PASSWORD_VALIDATORS = []
