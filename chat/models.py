@@ -83,6 +83,10 @@ class Notification(models.Model):
         res_id = params['res_id']
 
         post_address = cls.get_post_address(res_app, res_model, res_id)
+        if mentioned_list:
+            mention_notification_type = cls.get_notification_type('mention')
+            mention_notification = cls.get_notification(mention_notification_type.id, post_address.id)
+
         notification_type = cls.get_notification_type(type_name)
         notification = cls.get_notification(notification_type.id, post_address.id)
 
@@ -96,6 +100,11 @@ class Notification(models.Model):
         if not audience:
             return 'No Audience'
         audience.remove(sender.id)
+        for uid in mentioned_list:
+            user_notification = UserNotification(notification_id=mention_notification.id, sender_id=sender.id, user_id=uid)
+            user_notification.save()
+
+        audience = list(set(audience) - set(mentioned_list))
         for uid in audience:
             user_notification = UserNotification(notification_id=notification.id, sender_id=sender.id, user_id=uid)
             user_notification.save()
@@ -119,13 +128,15 @@ class Notification(models.Model):
                 {'name': 'notification_received', 'data': client_object, 'audience': audience},
             ]
             if mentioned_list:
-                events[0]['audience'] = list(set(events[0]['audience']) - set(mentioned_list))
+                mention_meta = mention_notification.get_meta(obj_res)
                 clone = client_object.copy()
-                clone['notification_type'] = 'mention'
-                clone['body'] = ' mentioned you in ' +meta['template'] + ' ' + meta['name_place']
+                clone['id'] = mention_notification.id
+                clone['audience'] = mentioned_list
+                clone['notification_type'] = mention_notification_type.name
+                clone['body'] = ' ' + mention_meta['template'] + ' ' + mention_meta['name_place']
                 events.append({'name': 'notification_received', 'data': clone, 'audience': mentioned_list})
 
-            events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience})
+            events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience + mentioned_list})
             res = ws_methods.emit_event(events)
         else:
             return 'No audience for the notification'
@@ -134,8 +145,15 @@ class Notification(models.Model):
     @classmethod
     def get_notification_type(cls, name):
         notification_type = NotificationType.objects.filter(name=name)
+        template = ''
+        if name == 'comment':
+            template = 'commented on'
+        elif name == 'mention':
+            template = 'mentioned you'
+        else:
+            template = 'notified about'
         if not notification_type:
-            notification_type = NotificationType(name=name, template=name)
+            notification_type = NotificationType(name=name, template=template)
             notification_type.save()
         else:
             notification_type = notification_type[0]

@@ -177,7 +177,7 @@ export class CommentsComponent implements OnInit {
             let mentioned_id = $(el).attr('mentioned_id');
             if(mention_list.indexOf(mentioned_id) == -1)
             {
-                mention_list.push(mentioned_id);
+                mention_list.push(parseInt(mentioned_id));
             }
         });
 
