@@ -678,21 +678,25 @@ export class SocketService {
 
     set_notification_text(item){
         let obj_this = this;
-        item.senders = item.senders.filter(function(obj){
-            return obj.id != obj_this.user_data.id;
-        });
-        let count = item.senders.length;
-        let senders = item.senders[0].name;
-        
-        for(var i=1; i<count -2;i++)
+        if (obj_this.user_data.id in item.senders)
         {
-            senders +=', '+item.senders[1];
-        }        
-        if(count > 1)
-        {
-            senders += ' and '+item.senders[count -1].name;
+            item.senders = item.senders[obj_this.user_data.id]
+            item.senders = item.senders.filter(function(obj){
+                return obj.id != obj_this.user_data.id;
+            });
+            let count = item.senders.length;
+            let senders = item.senders[0].name;
+            
+            for(var i=1; i<count -1;i++)
+            {
+                senders +=', '+item.senders[i].name;
+            }        
+            if(count > 1)
+            {
+                senders += ' and '+item.senders[count -1].name;
+            }
+            item.body = senders +' '+item.body;
         }
-        item.body = senders +' '+item.body;
     }
     
     add_item_in_notification_list(item, on_receive) {        
@@ -733,7 +737,7 @@ export class SocketService {
             {                
                 if(item.id == obj_this.notificationList[i].id)
                 {
-                    obj_this.notificationList[i].text = item.text;
+                    obj_this.notificationList[i].body = item.body;
                     in_list = true;
                     break;
                 }

@@ -100,15 +100,19 @@ class Notification(models.Model):
         if not audience:
             return 'No Audience'
         audience.remove(sender.id)
+        senders_for_mention = {}
         if mentioned_list:
             for uid in mentioned_list:
                 user_notification = UserNotification(notification_id=mention_notification.id, sender_id=sender.id, user_id=uid)
                 user_notification.save()
+                senders_for_mention[uid] = UserNotification.get_senders(cls, uid, mention_notification.id)
             
             audience = list(set(audience) - set(mentioned_list))
+        senders_for_all = {}
         for uid in audience:
             user_notification = UserNotification(notification_id=notification.id, sender_id=sender.id, user_id=uid)
             user_notification.save()
+            senders_for_all[uid] = UserNotification.get_senders(cls, uid, notification.id)
 
         meta = notification.get_meta(obj_res)
         text = ' ' + meta['template'] + ' ' + meta['name_place']
@@ -116,7 +120,7 @@ class Notification(models.Model):
             client_object = {
                 'id': notification.id,
                 'body': text,
-                'senders': meta['senders'],                
+                'senders': senders_for_all,
                 'notification_type': notification_type.name,
                 'address': {
                     'res_id': post_address.res_id,
@@ -133,6 +137,7 @@ class Notification(models.Model):
                 clone = client_object.copy()
                 clone['id'] = mention_notification.id
                 clone['audience'] = mentioned_list
+                clone['senders'] = senders_for_mention
                 clone['notification_type'] = mention_notification_type.name
                 clone['body'] = ' ' + mention_meta['template'] + ' ' + mention_meta['name_place']
                 events.append({'name': 'notification_received', 'data': clone, 'audience': mentioned_list})
@@ -189,6 +194,18 @@ class UserNotification(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='User')
     read = models.BooleanField(default=False)
 
+    def get_senders(self, user_id, notification_id):
+        notification_senders = UserNotification.objects.filter(
+            read=False, user_id=user_id, notification_id=notification_id
+            ).values('sender__id', 'sender__name').distinct()
+        senders = []
+        for notification_sender in notification_senders:
+            senders.append({
+                'id': notification_sender['sender__id'], 
+                'name': notification_sender['sender__name']
+                })
+        return senders
+    
     @classmethod
     def mark_read_notification(cls, request, params):
         res_id = params['res_id']
@@ -228,12 +245,13 @@ class UserNotification(models.Model):
             model = apps.get_model(address.res_app, address.res_model)
             obj_res = model.objects.get(pk=address.res_id)
             meta = notification.get_meta(obj_res)
-
+            senders_for_all = {}
+            senders_for_all[request.user.id] = UserNotification.get_senders(cls, uid, notification.id)
             text = ' ' + meta['template'] + ' ' + meta['name_place']
             client_object = {
                 'id': notification.id,
                 'body': text,
-                'senders': meta['senders'],
+                'senders': senders_for_all,
                 'notification_type': notification_type,
                 'address': {
                     'res_id': address.res_id,
