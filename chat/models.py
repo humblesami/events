@@ -100,9 +100,10 @@ class Notification(models.Model):
         if not audience:
             return 'No Audience'
         audience.remove(sender.id)
-        for uid in mentioned_list:
-            user_notification = UserNotification(notification_id=mention_notification.id, sender_id=sender.id, user_id=uid)
-            user_notification.save()
+        if mentioned_list:
+            for uid in mentioned_list:
+                user_notification = UserNotification(notification_id=mention_notification.id, sender_id=sender.id, user_id=uid)
+                user_notification.save()
 
         audience = list(set(audience) - set(mentioned_list))
         for uid in audience:
