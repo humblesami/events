@@ -614,3 +614,7 @@ a.list-group-item.contact.active {
 .abcdef{
 position:relative;
 }
+button.pen.annotation_button.active
+{
+    background-color: darkgreen;
+}
