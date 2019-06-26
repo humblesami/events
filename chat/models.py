@@ -67,11 +67,11 @@ class Notification(models.Model):
         read_ids = []
         for obj1 in notifications:
             user_notifications = obj1.usernotification_set.filter(user_id=request.user.id, read=False, notification_id=obj1.id)
-        for obj3 in user_notifications:
-            obj3.read = True
-            obj3.save()
-            if not obj1.id in read_ids:
-                read_ids.append(obj1.id)
+            for obj3 in user_notifications:
+                obj3.read = True
+                obj3.save()
+                if not obj1.id in read_ids:
+                    read_ids.append(obj1.id)
         return read_ids
 
     @classmethod
