@@ -41,14 +41,15 @@ def respond(request, voting_id, choice_id):
     choice = voting.voting_type.votingchoice_set.filter(id=choice_id)
     if not choice:
         context['error'] = 'Error: Invalid voting choice'
-    res = None
-    if not voting.signature_required:
-        res = submit_choice(voting, choice_id, user_id, False)
-    if res:
-        if res == 'done':
-            context['success'] = 'Response submitted successfully'
-        else:
-            context['error'] = 'Response submitted successfully'
+    else:
+        res = None
+        if not voting.signature_required:
+            res = submit_choice(voting, choice_id, user_id, False)
+        if res:
+            if res == 'done':
+                context['success'] = 'Response submitted successfully'
+            else:
+                context['error'] = 'Response submitted successfully'
     return render(request, 'token_submit.html', context)
 
 
