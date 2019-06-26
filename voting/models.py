@@ -44,7 +44,7 @@ class Voting(models.Model):
             recipients = self.mail_audience()
             message = '<div>'
             for vc in self.voting_type.votingchoice_set.all():
-                message += '<a style="padding:5px; margin:5px" href="'+server_base_url+'/#/voting/'+str(self.id)+'/'+vc.name.upper()+'">'+vc.name+'</a>'
+                message += '<a style="padding:5px; margin:5px" href="'+server_base_url+'/voting/'+str(self.id)+'/'+str(vc.id)+'">'+vc.name.upper()+'</a>'
             message +='</div>'
             send_email('Participate in Resolution '+self.name,message, recipients)
             message = ''
