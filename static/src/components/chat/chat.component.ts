@@ -57,26 +57,20 @@ export class ChatComponent implements OnInit {
                     method: 'mark_read'
                 }                
             },
-            onSuccess:function(read_notification_ids){
-                // if(read_notification_ids.length > 0)
-                // {
-                //     obj_this.socketService.remove_item_from_notification_list(li.index);
-                // }
-                let notificationList = obj_this.socketService.notificationList;                
+            onSuccess:function(read_notification_ids){                                                
                 for(var i in read_notification_ids)
-                {                    
-                    for(var j in notificationList)
+                {
+                    let notificationList = obj_this.socketService.notificationList;
+                    let notif_count = notificationList.length;
+                    for(var j=0; j < notif_count; j++)
                     {
                         if(read_notification_ids[i] == notificationList[j].id)
                         {
-                            let index = parseInt(j);
-                            notificationList.splice(index, 1);
+                            obj_this.socketService.remove_item_from_notification_list(j);
                             break;
                         }
                     }
-                }
-                obj_this.socketService.notificationList = notificationList;
-                $('.notification-list').hide();
+                }                
             }
         }
         window['dn_rpc_object'](options);        

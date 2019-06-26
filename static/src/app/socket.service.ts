@@ -421,7 +421,7 @@ export class SocketService {
                 for(let i in data.notifications)
                 {
                     obj_this.add_item_in_notification_list(data.notifications[i], null);
-                }
+                }                
                 // console.log(1111, obj_this.notificationList);
                 obj_this.notificationList = obj_this.notificationList.reverse();
                 obj_this.registerEventListeners();
@@ -726,9 +726,9 @@ export class SocketService {
         item.client_route = route + item.address.res_id;
         item.counter = 1;
         obj_this.set_notification_text(item);
+        var in_list = false;
         if(on_receive)
         {
-            var in_list = false;
             for(var i in obj_this.notificationList)
             {                
                 if(item.id == obj_this.notificationList[i].id)
@@ -737,19 +737,22 @@ export class SocketService {
                     in_list = true;
                     break;
                 }
-            }
-            if(!in_list)
-            {
-                obj_this.notificationList.push(item);
-            }
+            }            
         }
-        else{
+        if(!in_list)
+        {
             obj_this.notificationList.push(item);
         }
     }
 
     remove_item_from_notification_list(i) {
-        this.notificationList.splice(i, 1);
+        this.notificationList.splice(i, 1);        
+        setTimeout(function(){
+            $('.notif:first').click();
+            setTimeout(function(){
+                $('.notif:first').click();
+            }, 5);
+        }, 10);
     }
 
     get_param(name, url)
