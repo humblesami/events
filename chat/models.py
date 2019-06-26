@@ -151,7 +151,7 @@ class Notification(models.Model):
         elif name == 'mention':
             template = 'mentioned you'
         else:
-            template = 'notified about'
+            template = name
         if not notification_type:
             notification_type = NotificationType(name=name, template=template)
             notification_type.save()
