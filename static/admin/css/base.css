@@ -984,3 +984,7 @@ li,a,button{
 tr.form-row{
     display: block;
 }
+
+table.djn-items.inline-related.djn-table.tabular.ui-sortable tr.form-row{
+    display: table-row;
+}
