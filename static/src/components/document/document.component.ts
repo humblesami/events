@@ -138,13 +138,15 @@ export class DocumentComponent implements OnInit {
             {
                 obj_this.breadcrumb = JSON.stringify(data.breadcrumb);
             }
-            obj_this.mention_list = data.mention_list;
+            obj_this.mention_list = data.mention_list.filter(function(obj){
+                return obj.id != obj_this.socketService.user_data.id;
+            });
             // console.log(obj_this.mention_list);
             obj_this.mentionConfig = {
                 items: obj_this.mention_list,
                 insertHTML: true,
                 triggerChar: "@",
-                // dropUp: true,
+                dropUp: true,
                 labelKey: 'name',
                 mentionSelect: function(val){
                     let el = $('.active-mention');                

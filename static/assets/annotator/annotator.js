@@ -529,7 +529,7 @@
                 catch(er){
 
                 }
-                ctop = ctop + 15;
+                ctop = ctop - 11;
                 comment_list.css({'height':'calc(100vh - '+ctop+'px)'});
 
                 localStorage.setItem(documentId + '/shown_comment_type', shown_comment_type);
@@ -2858,6 +2858,9 @@
                                                             console.log('comment saved')
                                                         }
                                                     });
+                                                    setTimeout(function(){
+                                                        $('.comment-list-container:first').scrollTop(9999);
+                                                    }, 10);                                                    
                                                 }
                                                 updateAnnotations(documentId, annotations, is_comment);
                                             } else {

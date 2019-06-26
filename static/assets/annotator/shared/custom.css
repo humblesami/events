@@ -464,13 +464,15 @@ body.pdf-viewer {
   padding-left: 2px;
   width: 234px;
   position: absolute;
-  bottom: 3px;
-  overflow-y: scroll;
+  bottom: 45px;
+  /*overflow-y: auto;*/
   }
 #commentText {
   width: 100%;
   resize: none;
+  min-height: 44px;
   border: indianred;
+  background-color: white;
   border: 1px solid darkturquoise;
   }
 /* #commentText:focus {

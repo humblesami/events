@@ -303,6 +303,7 @@ export class CommentsComponent implements OnInit {
                 items: obj_this.mention_list,
                 insertHTML: true,
                 triggerChar: "@",
+                dropUp: true,
                 labelKey: 'name',
                 mentionSelect: function(val){
                     obj_this.should_save = false;
