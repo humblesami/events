@@ -104,8 +104,8 @@ class Notification(models.Model):
             for uid in mentioned_list:
                 user_notification = UserNotification(notification_id=mention_notification.id, sender_id=sender.id, user_id=uid)
                 user_notification.save()
-
-        audience = list(set(audience) - set(mentioned_list))
+            
+            audience = list(set(audience) - set(mentioned_list))
         for uid in audience:
             user_notification = UserNotification(notification_id=notification.id, sender_id=sender.id, user_id=uid)
             user_notification.save()
@@ -136,8 +136,9 @@ class Notification(models.Model):
                 clone['notification_type'] = mention_notification_type.name
                 clone['body'] = ' ' + mention_meta['template'] + ' ' + mention_meta['name_place']
                 events.append({'name': 'notification_received', 'data': clone, 'audience': mentioned_list})
-
-            events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience + mentioned_list})
+                events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience + mentioned_list})
+            else:
+                events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience})
             res = ws_methods.emit_event(events)
         else:
             return 'No audience for the notification'
