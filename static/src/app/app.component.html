@@ -47,7 +47,7 @@
                        </span>
                        <span (click)="socketService.video_call.quit()">
                        <i class="fa fa-window-close"></i>
-                       </span>
+                       </span>                       
                     </div>
                     <div class="maximizer">
                        <span (click)="socketService.video_call.maximize()" >
@@ -125,6 +125,7 @@
                         autocorrect="off" autocapitalize="off" size="20"
                         style="display:none"
                         >
+                        <button id="toggle-camera" (click)="socketService.video_call.toggle_camera()">Toggle Camera</button>
                         <button id="open-room" style="display:none">Open Room</button>
                         <button id="share-screen" disabled="">Share Your Screen</button>
                         <button id="leave-room" (click)="socketService.video_call.terminate()">Hangup (Leave)</button>

@@ -43,10 +43,17 @@
                 <h2>{{active_chat_user.name}}</h2>
                 <div *ngIf="active_chat_user.online" class="userstat">Online</div>
                 <div *ngIf="!active_chat_user.online" class="userstat">Offline</div>
-                <div class="CallCircleIcon">
-                    <span style="cursor:pointer"
-                        (click)="socketService.video_call.init(active_chat_user.id)">
+                <div class="CallCircleIcon" style="cursor:pointer"
+                 (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">
+                    <span >
 						<i class="fa fa-phone"></i>
+					</span>
+                </div>
+
+                <div class="CallCircleIcon" style="cursor:pointer"
+                 (click)="socketService.video_call.init(active_chat_user.id)">
+                    <span >
+						<i class="fa fa-video"></i>
 					</span>
                 </div>
                 

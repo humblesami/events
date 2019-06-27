@@ -35,8 +35,18 @@ export class SocketService {
             caller : undefined,
             callee: undefined,
             timeout: 21000,
-            init: function(uid){
+            init: function(uid, audio_only){                
                 let video_call = this;
+                {
+                    if(audio_only)
+                    {
+                        video_call.is_audio = true;
+                    }
+                    else
+                    {
+                        video_call.is_audio = false;
+                    }
+                }
                 if(!obj_this.chat_users[uid].online)
                 {
                     video_call.show_notification(obj_this.chat_users[uid].name +' is not online yet, but will be informed when online')
@@ -124,7 +134,7 @@ export class SocketService {
                 
                 var params = {
                     uid: obj_this.user_data.id,
-                    room: video_call.id,
+                    room: video_call.id,                    
                     token: obj_this.user_data.token
                 };    
                 // console.log(params, 1577);
@@ -151,8 +161,9 @@ export class SocketService {
                             obj_this.emit_rtc_event('started_by_caller', data, [data.user_id]);
                         }
                     }
-                }                               
-                obj_this.rtc_multi_connector.init(params, on_started);
+                }
+                obj_this.rtc_multi_connector.call_is_audio = 1;                
+                obj_this.rtc_multi_connector.init(params, on_started, video_call.is_audio);
                 $('#ongoing_controls').show();
             },
 
@@ -224,7 +235,17 @@ export class SocketService {
                 }
             },
 
-            quit: function(request_type){                
+            toggle_camera: function(){
+                try{
+                    obj_this.rtc_multi_connector.toggle_camera();
+                }
+                catch(er){
+                    console.log(14, er);
+                }                
+                // 
+            },
+
+            quit: function(request_type){
                 let video_call = this;   
                 // console.log(obj_this.ongoing_call, request_type, 193);
                 if(obj_this.ongoing_call && request_type != 'terminating')
@@ -233,10 +254,11 @@ export class SocketService {
                 }
                 video_call.caller = undefined;
                 video_call.callee = undefined;
+                console.log(144, obj_this.ongoing_call, Date());
                 if(obj_this.ongoing_call)
                 {
                     try{
-                        obj_this.rtc_multi_connector.end_call();
+                        obj_this.rtc_multi_connector.stop_my_tracks();
                         obj_this.rtc_multi_connector.socket.disconnect();                        
                     }
                     catch(er)
@@ -364,7 +386,7 @@ export class SocketService {
                     else if(data.error)
                     {
                         // obj_this.user_data = undefined;
-                        console.log(data.error+' for ', authorized_user);
+                        // console.log(data.error+' for ', authorized_user);
                         socket_error += data.error;
                     }
                     else

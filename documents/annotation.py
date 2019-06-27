@@ -312,7 +312,9 @@ class PointAnnotation(Annotation):
             parent_obj = self.pdf.agendadocument
         else:
             return 'comment on unknown document'
-        return parent_obj.notification_text()
+        txt1 = parent_obj.notification_text()
+        txt2 = ' on point '+str(self.id)
+        return txt1 + txt2
 
     def get_audience(self):
         parent_obj = None
