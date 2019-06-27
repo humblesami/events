@@ -39,24 +39,25 @@
     <div class="chat chat-container-wrppaer">
         <div *ngIf="active_chat_user" class="card chat-full-height">
             <div class="chat-user-title">
-                <span (click)="hide_chat_box()" class="backchatlist"><i class="fas fa-arrow-left"></i></span>
-                <h2>{{active_chat_user.name}}</h2>
-                <div *ngIf="active_chat_user.online" class="userstat">Online</div>
-                <div *ngIf="!active_chat_user.online" class="userstat">Offline</div>
-                <div class="CallCircleIcon" style="cursor:pointer"
-                 (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">
-                    <span >
-						<i class="fa fa-phone"></i>
-					</span>
-                </div>
+                <div class="MessengerTitle">
+					<span (click)="hide_chat_box()" class="backchatlist"><i class="fas fa-arrow-left"></i></span>
+					<h2>{{active_chat_user.name}}</h2>
+					<div *ngIf="active_chat_user.online" class="userstat">Online</div>
+					<div *ngIf="!active_chat_user.online" class="userstat">Offline</div>
+				</div>
+                <div class="MessengerConnectWrap">
+					<div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">
+						<span >
+							<i class="fa fa-phone"></i>
+						</span>
+					</div>
+					<div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id)">
+						<span >
+							<i class="fa fa-video"></i>
+						</span>
+					</div>
+				</div>
 
-                <div class="CallCircleIcon" style="cursor:pointer"
-                 (click)="socketService.video_call.init(active_chat_user.id)">
-                    <span >
-						<i class="fa fa-video"></i>
-					</span>
-                </div>
-                
                 <div class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
             </div>			
             <div class="card-body msg_card_body meetVue-chat-body">

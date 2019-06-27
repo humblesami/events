@@ -439,11 +439,16 @@
 	white-space: nowrap;
 	text-align: left;
 }
+.MessengerTitle {
+    flex: 1;
+}
+.chat-user-title, .MessengerConnectWrap{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	}
 
 .CallCircleIcon{
-	position: absolute;
-    top: 8px;
-    right: 15px;
     width: 33px;
     height: 33px;
     background: #18af3b;
@@ -451,8 +456,10 @@
     color: #ffffff;
     font-size: 15px;
     display: flex;
+    margin:0 0 0 7px;
     justify-content: center;
     align-items: center;
+    cursor:pointer;
 }
 
 .messenger-container .messenger-body{
