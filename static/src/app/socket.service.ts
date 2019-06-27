@@ -162,7 +162,6 @@ export class SocketService {
                         }
                     }
                 }
-                obj_this.rtc_multi_connector.call_is_audio = 1;                
                 obj_this.rtc_multi_connector.init(params, on_started, video_call.is_audio);
                 $('#ongoing_controls').show();
             },
@@ -254,7 +253,6 @@ export class SocketService {
                 }
                 video_call.caller = undefined;
                 video_call.callee = undefined;
-                console.log(144, obj_this.ongoing_call, Date());
                 if(obj_this.ongoing_call)
                 {
                     try{
@@ -285,6 +283,10 @@ export class SocketService {
 
             show_notification: function(message){
                 window['bootbox'].alert(message);
+                setTimeout(function(){
+                    $('.bootbox.modal.fade.bootbox-alert.show').css('display','flex');
+                },151);
+                
             },
         };
         

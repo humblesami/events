@@ -60,18 +60,17 @@
                 video: true
             };
             
-            
             connection.sdpConstraints.mandatory = {
                 OfferToReceiveAudio: true,
-                OfferToReceiveVideo : true
+                OfferToReceiveVideo: true
             };
 
             if(is_audio_call)
             {
-                // connection.sdpConstraints.mandatory.OfferToReceiveVideo = false;
-                // connection.session.video = false;
+                connection.sdpConstraints.mandatory.OfferToReceiveVideo = false;
+                connection.session.video = false;
                 connection.mediaConstraints.video = false;
-            }            
+            }
             
             connection.videosContainer = document.getElementById('videos-container');
             connection.onstream = function(event) {
@@ -82,7 +81,8 @@
 
                 if(event.type === 'local' && event.stream.isVideo) {
                     RMCMediaTrack.cameraStream = event.stream;
-                    RMCMediaTrack.cameraTrack = event.stream.getVideoTracks()[0];                    
+                    RMCMediaTrack.cameraTrack = event.stream.getVideoTracks()[0];
+                    // RMCMediaTrack.cameraStream.mute();                    
                 }
             
                 event.mediaElement.removeAttribute('src');
@@ -123,34 +123,33 @@
                     // width: width,
                     showOnMouseEnter: false
                 });
-                
-                jq_media_el = $(mediaElement).uniqueId();
 
-                var video_track = event.stream.getVideoTracks()[0];
-                var audio_track = event.stream.getAudioTracks()[0];
-                video_caller.all_tracks[jq_media_el.attr('id')] = {
-                    'audio': audio_track,
-                    'video': video_track,
-                }
-                video_caller.my_tracks = {
-                    audio: audio_track,
-                    video: video_track
-                }
 
-                if(is_audio_call)
-                {
-                    video_track.mute();
-                }
+                // jq_media_el = $(mediaElement).uniqueId();
+                // var video_track = event.stream.getVideoTracks()[0];
+                // var audio_track = event.stream.getAudioTracks()[0];
+                // var event_stream = event.stream;
+                // video_caller.all_tracks[jq_media_el.attr('id')] = {
+                //     'audio': audio_track,
+                //     'video': video_track,
+                //     'stream': event_stream
+                // }
+
+                // if(is_audio_call)
+                // {
+                //     video_track.mute();
+                // }
+            
                 connection.videosContainer.appendChild(mediaElement);
             
                 setTimeout(function() {
                     mediaElement.media.play();
-                }, 3000);
+                }, 5000);
             
                 mediaElement.id = event.streamid;
             
                 if(event.type === 'local') {
-                    RMCMediaTrack.selfVideo = mediaElement.media;
+                RMCMediaTrack.selfVideo = mediaElement.media;
                 }
             
                 // to keep room-id in cache
@@ -395,35 +394,13 @@
                 });
             }
 
-            video_caller.all_tracks = {};            
-            video_caller.my_tracks = {};
-
-            video_caller.toggle_camera = function(){
-                if(!is_audio_call)
-                {
-                    RMCMediaTrack.cameraStream.getTracks().forEach(track => track.enabled = !track.enabled);
-                }
-            }
-            
-            video_caller.stop_all_tracks = function(){
-                try{
-                    
-                }
-                catch(er){
-                    console.log(er);
-                }
-            },
             video_caller.stop_my_tracks = function(){
                 try{
-                    console.log(is_audio_call, video_caller.my_tracks);
-                    video_caller.my_tracks.audio.stop();
-                    if(!is_audio_call)
-                    {
-                        video_caller.my_tracks.video.stop();
-                    }
+                    RMCMediaTrack.cameraTrack.stop();
+                    RMCMediaTrack.cameraStream.stop();
                 }
                 catch(er){
-                    console.log(er);
+                    
                 }
             }
         }
@@ -466,5 +443,4 @@
         $('#rtc-container').removeClass('min').addClass('full');
         window['rtc-call-max'] = 1;            
     });
-})();
-//init_video_caller();
+})();                            
