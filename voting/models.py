@@ -5,6 +5,8 @@ from django.db.models import Q
 from documents.file import File
 from django.db.models import Count
 from mainapp.ws_methods import send_email
+from emailthread.models import EmailThread
+from django.db.models.signals import m2m_changed
 from meetings.models import Profile, Event, Topic
 
 
@@ -41,15 +43,47 @@ class Voting(models.Model):
     def save(self, *args, **kwargs):
         try:
             super(Voting, self).save(*args, **kwargs)
-            recipients = self.mail_audience()
-            message = '<div>'
-            for vc in self.voting_type.votingchoice_set.all():
-                message += '<a style="padding:5px; margin:5px" href="'+server_base_url+'/voting/'+str(self.id)+'/'+str(vc.id)+'">'+vc.name.upper()+'</a>'
-            message +='</div>'
-            send_email('Participate in Resolution '+self.name,message, recipients)
-            message = ''
+            if self.meeting:
+                self.send_email_on_creation()
+            elif self.respondents:
+                self.send_email_on_creation()
         except:
             raise
+
+
+    def send_email_on_creation(self):
+        # instance.send_email_on_creation()
+        audience = self.get_audience()
+        choices_sets = self.voting_type.votingchoice_set.all()
+        choices = []
+        for choices_set in choices_sets:
+            choices.append({'id':choices_set.id, 'name': choices_set.name})
+        subject = self.name
+        data_for_template = {            
+            'id': self.id, 
+            'name': self.name,
+            'choices': choices,
+            'server_base_url': server_base_url                
+        }
+        params = {}
+        params['res_app'] = 'voting'
+        params['res_model'] = 'Voting'
+        params['res_id'] = self.id        
+        template_name = 'voting/submit_email.html'
+        EmailThread(subject, audience, data_for_template, template_name, True, params).start()
+        # recipients, tokens = self.mail_audience()
+        # token_counter = 0
+        # for recipient in recipients:
+        #     recipient_email = []
+        #     recipient_email.append(recipient)
+        #     message = '<div>'
+        #     for vc in self.voting_type.votingchoice_set.all():
+        #         message += '<a style="padding:5px; margin:5px" href="'+server_base_url+'/voting/'+str(self.id)+'/'+str(vc.id)+'/'+tokens[token_counter]+'">'+vc.name.upper()+'</a>'
+        #     message +='</div>'
+        #     send_email('Participate in Resolution '+self.name,message, recipient_email)
+        #     message = ''
+        #     token_counter += 1
+
 
     @classmethod
     def get_todo_votings(cls, uid):
@@ -78,13 +112,24 @@ class Voting(models.Model):
 
     def mail_audience(self):
         res = []
+        tokens = []
+        params = {}
+        params['res_app'] = 'voting'
+        params['res_model'] = 'Voting'
+        params['res_id'] = self.id
         if self.meeting:
             for obj in self.meeting.attendees.all():
                 res.append(obj.profile.email)
+                params['user'] = obj.profile
+                token = PostUserToken.create_token(params)
+                tokens.append(token)
         else:
             for obj in self.respondents.all():
                 res.append(obj.profile.email)
-        return res
+                params['user'] = obj.profile
+                token = PostUserToken.create_token(params)
+                tokens.append(token)
+        return res, tokens
 
     def get_audience(self):
         res = []
@@ -167,6 +212,14 @@ class Voting(models.Model):
             voting['voting_type']= list(VotingType.objects.filter(pk=voting['voting_type_id']).values('name'))[0]['name']
         votings_json = {'records': votings, 'total': 0, 'count': 0}
         return votings_json
+
+
+def respondents_saved(sender, instance, action, **kwargs):
+    if action == "post_add":
+        instance.send_email_on_creation()
+m2m_changed.connect(respondents_saved, sender=Voting.respondents.through)
+
+from restoken.models import PostUserToken
 
 class VotingAnswer(models.Model):
     voting = models.ForeignKey(Voting, on_delete = models.CASCADE, null=True)
@@ -313,6 +366,60 @@ class VotingAnswer(models.Model):
             return 'Invalid voting id'
 
         return res_data
+
+
+    @classmethod
+    def submit_public(cls, request, params):
+        token = params.get('token')
+        user_token = PostUserToken.validate_token(token)
+        if not user_token:
+            return { 'error': 'Invalid token'}
+
+        params['user_id'] = user_token.user.id
+        
+        voting_id = params.get('voting_id')
+        user_answer_id = params.get('choice_id')
+        
+        chart_data = []
+        res_data = {'error': 'Unknown result'}
+        if voting_id:
+            voting_object = Voting.objects.get(pk=voting_id)
+            if voting_object:
+                voting_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id = params['user_id'])
+                if user_answer_id:
+                    signature_data = ''
+                    if voting_object.signature_required:
+                        signature_data = params.get('signature_data')
+                        if not signature_data:
+                            return 'Please provide signature'
+                    if voting_answer:
+                        voting_answer = voting_answer[0]
+                        cls.update_Choice(voting_answer, user_answer_id, signature_data)
+                        res = 'Update'
+                    else:
+                        voting_answer = cls.save_Choice(user_answer_id, voting_id, params['user_id'], signature_data)
+                        res = 'Created'
+
+                voting_options = list(voting_object.voting_type.votingchoice_set.values())
+                for option in voting_options:
+                    chart_data.append({'option_name': option['name'], 'option_result': 0})
+
+                voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
+                    answer_count=Count('user_answer'))
+                if voting_results:
+                    for result in voting_results:
+                        for data in chart_data:
+                            if data['option_name'] == result['user_answer__name']:
+                                data['option_result'] = result['answer_count']
+                res_data = 'done'
+            else:
+                return 'Voting object not found'
+        else:
+            return 'Invalid voting id'
+
+        return res_data
+
+
 
     @classmethod
     def get_signature(cls, request, params):

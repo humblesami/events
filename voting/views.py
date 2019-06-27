@@ -1,16 +1,14 @@
 import sys
-
-from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Voting, VotingType, VotingChoice, VotingAnswer
-from meetings.model_files.topic import Topic
-from django.db.models import Count
-
 import base64
 import simplejson as json
+from django.db.models import Count
+from django.shortcuts import render
+from django.http import HttpResponse
+from restoken.models import PostUserToken
+from meetings.model_files.topic import Topic
+from .models import Voting, VotingType, VotingChoice, VotingAnswer
 
 
-# Create your views here.
 
 def index(request):
     lastest_voting_list = Voting.objects.all()
@@ -29,15 +27,17 @@ def detail(request, voting_id):
     return render(request, 'voting/detail.html', context)
 
 
-def respond(request, voting_id, choice_id):
-    context = {
-        'voting_id': voting_id,
-        'choice_id': choice_id,
-    }
-    user_id = request.user.id
-    if not user_id:
-        return HttpResponse('User not found..')
+def respond(request, voting_id, choice_id, token):
+    context = {}
+    user_token = None
     voting = Voting.objects.get(id=voting_id)
+    if voting.signature_required:
+        return respond_with_signature(request, voting, voting_id, choice_id, token)
+    user_token = PostUserToken.validate_token(token)    
+    if not user_token:
+        context['error'] = 'Error: Invalid Token or Expired'
+        return render(request, 'token_submit.html', context)
+    user_id = user_token.user.id
     choice = voting.voting_type.votingchoice_set.filter(id=choice_id)
     if not choice:
         context['error'] = 'Error: Invalid voting choice'
@@ -48,8 +48,22 @@ def respond(request, voting_id, choice_id):
         if res:
             if res == 'done':
                 context['success'] = 'Response submitted successfully'
+                context['voting_id'] = voting_id
+                context['choice_id'] = choice_id
+                context['token'] = token
+                context['signature_required'] = voting.signature_required
             else:
-                context['error'] = 'Response submitted successfully'
+                context['error'] = 'Response submitted successfully'    
+    return render(request, 'token_submit.html', context)
+
+def respond_with_signature(request, voting, voting_id, choice_id, token):
+    context = {}
+    user_token = None
+    voting = Voting.objects.get(id=voting_id)
+    context['voting_id'] = voting_id
+    context['choice_id'] = choice_id
+    context['token'] = token
+    context['signature_required'] = voting.signature_required
     return render(request, 'token_submit.html', context)
 
 

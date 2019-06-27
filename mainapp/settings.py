@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'survey',
     'esign',
     'nested_admin',
+    'restoken',
 ]
 
 REST_FRAMEWORK = {
@@ -102,6 +103,7 @@ TEMPLATES = [
             os.path.join(PROJECT_ROOT, '..', 'mainapp/templates'),
             os.path.join(PROJECT_ROOT, '..', 'voting/templates'),
             os.path.join(PROJECT_ROOT, '..', 'ngapp/templates'),
+            os.path.join(PROJECT_ROOT, '..', 'emailthread/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

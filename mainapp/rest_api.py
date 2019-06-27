@@ -16,6 +16,11 @@ public_methods = {
         'AuthUser':{
             'login_user': 1
         }
+    },
+    'voting':{
+        'VotingAnswer':{
+            'submit_public': 1
+        }
     }
 }
 
@@ -41,7 +46,7 @@ def public(request):
         res = method_to_call(request, params)
         return produce_result(res, args)
     except:
-        return produce_exception()
+        return produce_exception_public()
 
 
 @csrf_exempt
@@ -211,6 +216,8 @@ def session(request):
     except:
         return produce_exception()
 
+
+
 def produce_exception():
     eg = traceback.format_exception(*sys.exc_info())
     errorMessage = ''
@@ -221,6 +228,19 @@ def produce_exception():
             errorMessage += " " + er
     errorMessage = errorMessage.replace('\n', '<br/>')
     return HttpResponse(errorMessage)
+
+def produce_exception_public():
+    eg = traceback.format_exception(*sys.exc_info())
+    errorMessage = ''
+    cnt = 0
+    for er in eg:
+        cnt += 1
+        if not 'lib/python' in er:
+            errorMessage += " " + er
+    errorMessage = errorMessage.replace('\n', '<br/>')
+    res = {'error': errorMessage}
+    res = json.dumps(res)
+    return HttpResponse(res)
 
 def produce_result(res, args=None):
     if isinstance(res, dict):
