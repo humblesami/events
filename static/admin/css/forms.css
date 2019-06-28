@@ -520,3 +520,7 @@ form .related-widget-wrapper ul {
 .empty-form {
     display: none !important;
 }
+.calendarbox.module
+{
+	z-index:67;
+}

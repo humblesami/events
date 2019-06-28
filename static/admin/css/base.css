@@ -980,9 +980,14 @@ li,a,button{
 #content {
     padding: 15px 20px;
 }
+#content-main
+{
+	margin-bottom: 30px;
+}
+
 html, body{
-    height: 100%;
-    overflow-y: hidden;
+    /*height: 100%;
+    overflow-y: hidden;*/
 }
 
 
@@ -991,18 +996,19 @@ fieldset.module{
     overflow-x: auto;
     border: none;
 }
+#content
+{
+	/*overflow-y:auto;*/
+}
 body.model-admin #content {
     height: calc(100vh - 129px);
-    overflow-y: auto;
     width: calc(100vw - 40px);
 }
 body.change-form #content{
     height: calc(100vh - 182px);
-    overflow-y: auto;
 }
 body.popup #content{
     height: calc(100vh - 85px);
-    overflow-y: auto;
 }
 body.dashboard
 {
