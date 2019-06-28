@@ -2,7 +2,6 @@
   box-sizing: border-box;
   }
 .toolbar {
-  background-color: #ffffff;
   border-bottom: 1px solid #e6e6e6;
   padding: 0 5px;
   flex-wrap: wrap;
@@ -14,6 +13,7 @@
   position: relative;
   border: 0;
   color: #ffffff;
+  background-color: #fafafa;
   }
 .ToolBarWrapper {
   display: flex;
@@ -351,8 +351,8 @@ body.pdf-viewer {
   flex-direction: row-reverse;*/
   }
 #content-wrapper {
-  width: 100%;
-  overflow: auto;
+	position: relative;
+	height: calc(100vh - 167px);
   }
 #comment-wrapper {
   position: relative;
