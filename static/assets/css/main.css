@@ -3121,7 +3121,7 @@ span.kanban-upcoming-meeting-date {
 
 .PdfViewerWrapper{
     background: rgba(0, 0, 0, 0.02);
-    padding:20px 0;
+    padding:10px;
 }
 
 .PdfViewerWrapper .pdfViewer .page {

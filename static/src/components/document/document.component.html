@@ -7,8 +7,33 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
 
 <!-- <a routerLink="/resource/doc/1">Doc1</a>
 ----<a routerLink="/resource/doc/2">Doc2</a> -->
+ <div class="ToolPdfViwerWrapper">
+	 <div id="comment-wrapper">
+            <div class="header comment-header">
+                <span class="show-all-comments">
+                    <i class="fa fa-times-circle"></i>
+                </span>
+                <span class="title">Comments</span>
+            </div>
 
-    <div class="toolbar topbar" style="display:none">
+            <div class="comment-list">
+                <div class="comment-list-container">
+                    <div class="comment-list-item">No comments</div>
+                </div>
+            </div>
+            <form *ngIf="mention_list" class="comment-list-form">
+                <div class="abcdef"><div contenteditable="true" [mentionConfig]="mentionConfig" class="active-mention" id="commentText" (keyup)="save_comment_key_up" Placeholder="Add a Comment"></div>
+					</div>
+                <!-- <textarea id="commentText"
+                [mentionConfig] = "mentionConfig"
+                placeholder="Add a Comment"></textarea> -->
+            </form>
+        </div>
+
+
+
+    <div id="viewer-wrapper">
+		<div class="toolbar topbar" style="display:none">
 		<div class="ToolBarWrapper">
 			<div class="doc-manage-btn-wrap">
 				<a class="icon back" (click)="go_back()" title="Back">
@@ -162,33 +187,12 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
 
     </div>
 	</div>
-    <div id="viewer-wrapper">
         <div id="content-wrapper">
             <div class="PdfViewerWrapper">
                 <div id="viewer" class="pdfViewer"></div>
             </div>
         </div>
-        <div id="comment-wrapper">
-            <div class="header comment-header">
-                <span class="show-all-comments">
-                    <i class="fa fa-times-circle"></i>
-                </span>
-                <span class="title">Comments</span>
-            </div>
 
-            <div class="comment-list">
-                <div class="comment-list-container">
-                    <div class="comment-list-item">No comments</div>
-                </div>
-            </div>
-            <form *ngIf="mention_list" class="comment-list-form">
-                <div class="abcdef"><div contenteditable="true" [mentionConfig]="mentionConfig" class="active-mention" id="commentText" (keyup)="save_comment_key_up" Placeholder="Add a Comment"></div>
-					</div>
-                <!-- <textarea id="commentText"
-                [mentionConfig] = "mentionConfig"
-                placeholder="Add a Comment"></textarea> -->
-            </form>
-        </div>
         <!--<div id="notification-wrapper">-->
         <!--<div class="notification-list">-->
         <!--<div class="notification-list-container">-->
@@ -197,6 +201,9 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
         <!--</div>-->
         <!--</div>-->
     </div>
+
+ </div>
+
 
     <div class="toolbar annotation-options ContextMenuPopup">
         <div class="Button icon">

@@ -339,10 +339,16 @@ body.pdf-viewer {
   position: relative;
   width: 100%;
   }
+
+  .ToolPdfViwerWrapper{
+  display:flex;
+  }
+
 #viewer-wrapper {
   position: relative;
-  display: flex;
-  flex-direction: row-reverse;
+  flex:1;
+  /*display: flex;
+  flex-direction: row-reverse;*/
   }
 #content-wrapper {
   width: 100%;
@@ -350,7 +356,8 @@ body.pdf-viewer {
   }
 #comment-wrapper {
   position: relative;
-  width: 350px;
+  flex: 0 0 330px;
+  max-width: 330px;
   z-index: 3;
   display: none;
   background: #F8F8F8;
