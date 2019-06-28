@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    {% if id and token %}
+        <p>abcdef</p>
+        <h2>{{name}}</h2>
+        <a style="padding:5px; margin:5px" href="{{server_base_url}}/survey/{{id}}/{{token}}">Start Survey</a>
+    {% endif %}
+<div id="div1"><h2>
+    {% if error %}
+        {{ error }}
+    {% elif success %}
+        {{ success }}
+    {% endif %}
+
+</h2></div>
+</body>
+</html>

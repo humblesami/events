@@ -5,6 +5,9 @@ from ast import literal_eval
 from django.db.models import Q
 from django.urls import reverse
 from django.db.models import Count
+from mainapp import ws_methods
+from mainapp.settings import server_base_url
+from django.db.models.signals import m2m_changed
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -30,6 +33,17 @@ class Survey(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_audience(self):
+        res = []
+        if self.meeting:
+            for obj in self.meeting.attendees.all():
+                res.append(obj.profile.id)
+        else:
+            for obj in self.respondents.all():
+                res.append(obj.profile.id)
+        return res
+
 
     def latest_answer_date(self):
         """ Return the latest answer date.
@@ -198,3 +212,32 @@ class Survey(models.Model):
         except:
             return 'Something went wrong while getting survey results.'
         pass
+    
+
+    def survey_creation_email(self):
+        template_data = {            
+            'id': self.id, 
+            'name': self.name,
+            'server_base_url': server_base_url                
+        }
+        post_info = {}
+        post_info['res_app'] = self._meta.app_label
+        post_info['res_model'] = self._meta.model_name
+        post_info['res_id'] = self.id        
+        template_name = 'survey/survey_creation_email.html'
+        email_data = {
+            'subject': self.name,
+            'audience': self.get_audience(),
+            'post_info': post_info,
+            'template_data': template_data,
+            'template_name': template_name,
+            'token_required': True
+        }
+        ws_methods.send_email_on_creation(email_data)
+
+
+
+def respondent_saved(sender, instance, action, **kwargs):
+    if action == "post_add":
+        instance.survey_creation_email()
+m2m_changed.connect(respondent_saved, sender=Survey.respondents.through)

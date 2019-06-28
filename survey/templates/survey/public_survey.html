@@ -1,0 +1,36 @@
+{% extends 'survey/one_page_survey.html' %}
+{% load i18n %}
+{% if token %}
+{% block btn_submit %}
+<div class="col-lg-12">
+    <input type="hidden" id="survey_token" name="token" value="15"/>
+    <script>
+    (function(){
+        var str = window.location.toString()
+        var i = str.indexOf('survey');
+        var token = '';
+        if(i>-1)
+        {
+            str = str.substr(i)
+            var ar = str.split('/');
+            if(ar.length > 2)
+            {
+                token = ar[ar.length - 1];
+                if(token)
+                {
+                    document.getElementById('survey_token').value = token;
+                }
+            }
+            
+        }        
+
+    })()
+    </script>    
+    <input
+        class="btn btn-default btn-lg"
+        type="submit"
+        value="{% trans "I'm done!" %}"
+        >
+</div>
+{% endblock btn_submit %}
+{% endif %}
