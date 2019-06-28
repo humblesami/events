@@ -35,6 +35,7 @@ urlpatterns = [
     path('rest/search1', rest_api.search_session, name = 'search_session'),
 
     url(r'^voting/', include('voting.urls')),
+    url(r'^meeting/', include('meetings.urls')),
     url(r'^esign/', include('esign.urls')),
     path('media/<str:folder>/<str:file>/', views.serve_protected_document, name='serve_protected_document'),
     url(r'^survey/', include('survey.urls')),

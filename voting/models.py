@@ -4,10 +4,9 @@ from django.db import models
 from django.db.models import Q
 from documents.file import File
 from django.db.models import Count
-from mainapp.ws_methods import send_email
-from emailthread.models import EmailThread
 from django.db.models.signals import m2m_changed
 from meetings.models import Profile, Event, Topic
+from mainapp.ws_methods import send_email_on_creation
 
 
 class VotingType(models.Model):
@@ -44,53 +43,38 @@ class Voting(models.Model):
         try:
             super(Voting, self).save(*args, **kwargs)
             if self.meeting:
-                self.send_email_on_creation()
+                self.send_voting_creation_email()
             elif self.respondents:
-                self.send_email_on_creation()
+                self.send_voting_creation_email()
         except:
             raise
 
 
-    def send_email_on_creation(self):
-        # instance.send_email_on_creation()
-        audience = self.get_audience()
+    def send_voting_creation_email(self):
         choices_sets = self.voting_type.votingchoice_set.all()
         choices = []
         for choices_set in choices_sets:
             choices.append({'id':choices_set.id, 'name': choices_set.name})
-        subject = self.name
         template_data = {            
             'id': self.id, 
             'name': self.name,
             'choices': choices,
             'server_base_url': server_base_url                
         }
-        params = {}
-        params['res_app'] = 'voting'
-        params['res_model'] = 'Voting'
-        params['res_id'] = self.id        
+        post_info = {}
+        post_info['res_app'] = self._meta.app_label
+        post_info['res_model'] = self._meta.model_name
+        post_info['res_id'] = self.id        
         template_name = 'voting/submit_email.html'
-        thread_data = {
-            'subject': subject,
-            'audience': audience,
+        email_data = {
+            'subject': self.name,
+            'audience': self.get_audience(),
+            'post_info': post_info,
             'template_data': template_data,
             'template_name': template_name,
-            'token_required': True,
-            'params': params
+            'token_required': True
         }
-        EmailThread(thread_data).start()
-        # recipients, tokens = self.mail_audience()
-        # token_counter = 0
-        # for recipient in recipients:
-        #     recipient_email = []
-        #     recipient_email.append(recipient)
-        #     message = '<div>'
-        #     for vc in self.voting_type.votingchoice_set.all():
-        #         message += '<a style="padding:5px; margin:5px" href="'+server_base_url+'/voting/'+str(self.id)+'/'+str(vc.id)+'/'+tokens[token_counter]+'">'+vc.name.upper()+'</a>'
-        #     message +='</div>'
-        #     send_email('Participate in Resolution '+self.name,message, recipient_email)
-        #     message = ''
-        #     token_counter += 1
+        send_email_on_creation(email_data)
 
 
     @classmethod
@@ -224,7 +208,7 @@ class Voting(models.Model):
 
 def respondents_saved(sender, instance, action, **kwargs):
     if action == "post_add":
-        instance.send_email_on_creation()
+        instance.send_voting_creation_email()
 m2m_changed.connect(respondents_saved, sender=Voting.respondents.through)
 
 from restoken.models import PostUserToken

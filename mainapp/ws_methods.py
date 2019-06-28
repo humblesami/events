@@ -3,6 +3,7 @@ import sys
 import json
 import smtplib
 from datetime import datetime
+from emailthread.models import EmailThread
 from django.contrib.auth import login
 from django.core.files.base import ContentFile
 from rest_framework.authtoken.models import Token
@@ -427,6 +428,27 @@ def check_auth_token(request,values):
     login(request, user)
 
     return user.id
+
+
+def send_email_on_creation(email_data):
+    subject = email_data['subject']
+    post_info = email_data['post_info']
+    audience = email_data['audience']
+    template_data = email_data['template_data']
+    template_name = email_data['template_name']
+    token_required = email_data.get('token_required')
+    thread_data = {
+        'subject': subject,
+        'audience': audience,
+        'template_data': template_data,
+        'template_name': template_name,
+        'token_required': token_required,
+        'post_info': post_info
+    }
+    EmailThread(thread_data).start()
+
+
+
 #
 #
 # def authenticate(data):

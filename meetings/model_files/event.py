@@ -2,8 +2,10 @@ import datetime
 from django.db import models
 from mainapp import ws_methods
 from django.utils import timezone
+from mainapp.settings import server_base_url
 from meetings.model_files.user import Profile
 from django_countries.fields import CountryField
+from django.db.models.signals import m2m_changed
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
@@ -144,7 +146,11 @@ class Event(models.Model):
     def respond_invitation(cls, request, params):
         meeting_id = params['meeting_id']
         user_response = params['response']
-        user_id = request.user.id
+        user_id = 0
+        if request.user.id:
+            user_id = request.user.id
+        else:
+            user_id = params['user_id']
         invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
         if invitation_response:
             invitation_response = invitation_response[0]
@@ -208,7 +214,11 @@ class Event(models.Model):
             attendee['id'] = attendee['uid'] = attendee_obj.id
             attendee['name'] = attendee_obj.fullname()
             attendee['photo'] = attendee_obj.image.url
-            attendee['group'] = list(attendee_obj.groups.all())[0].name.lower()
+            groups = list(attendee_obj.groups.all())
+            group_name = ''
+            if len(groups) > 0:
+                group_name = groups[0].name.lower()
+            attendee['group'] = group_name
             attendee['attendance_status'] = cls.get_attendance_status(meeting_id, attendee_obj.id)
             attendees.append(attendee)
         meeting_object['topics'] = topics
@@ -316,6 +326,43 @@ class Event(models.Model):
         meetings = {'records': meetings, 'total': 0, 'count': 0}
         data = {'error': '', 'data': meetings}
         return data
+    
+
+    def response_invitation_email(self):
+        state_selection = []
+        for state in STATE_SELECTION:
+            if state[0] != 'needsAction':
+                if state[0] != 'tentative':
+                    state_selection.append({'name': state[1], 'value': state[0]})
+                else:
+                    state_selection.append({'name': 'Tentative', 'value': state[0]})
+        template_data = {            
+            'id': self.id, 
+            'name': self.name,
+            'response_invitations': state_selection,
+            'server_base_url': server_base_url                
+        }
+        post_info = {}
+        post_info['res_app'] = self._meta.app_label
+        post_info['res_model'] = self._meta.model_name
+        post_info['res_id'] = self.id        
+        template_name = 'event/response_invitation_email.html'
+        email_data = {
+            'subject': self.name,
+            'audience': self.get_audience(),
+            'post_info': post_info,
+            'template_data': template_data,
+            'template_name': template_name,
+            'token_required': True
+        }
+        ws_methods.send_email_on_creation(email_data)
+
+
+def attendees_saved(sender, instance, action, **kwargs):
+    if action == "post_add":
+        instance.response_invitation_email()
+m2m_changed.connect(attendees_saved, sender=Event.attendees.through)
+
 
 STATE_SELECTION = (
     ('needsAction', _("Needs Action")),
@@ -329,4 +376,3 @@ class Invitation_Response(models.Model):
     state = models.CharField(max_length=20,choices=STATE_SELECTION, blank=True, null=True)
     attendee = models.ForeignKey(Profile, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    pass

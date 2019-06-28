@@ -1,3 +1,5 @@
+import uuid
+import threading
 from django.db import models
 from meetings.model_files.user import Profile
 from django.contrib.auth.tokens import default_token_generator    
@@ -20,6 +22,8 @@ class PostUserToken(models.Model):
         res_model = params['res_model']
         res_id = params['res_id']
         user_id = params['user_id']
+        e = threading.Event()
+        e.wait(timeout=2)
         post_info = PostInfo.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
         if not post_info:
             post_info = PostInfo(res_app=res_app, res_model=res_model, res_id=res_id)
@@ -27,7 +31,7 @@ class PostUserToken(models.Model):
         else:
             post_info = post_info[0]
         user = Profile.objects.get(pk=user_id)
-        token = default_token_generator.make_token(user)
+        token = uuid.uuid4().hex[:20]
         user_token = PostUserToken(post_info_id=post_info.id, user_id=user_id, token=token)
         user_token.save()
         return user_token
