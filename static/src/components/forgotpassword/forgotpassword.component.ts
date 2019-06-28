@@ -27,7 +27,7 @@ export class ForgotpasswordComponent implements OnInit {
 	ngOnInit() {
         $(document).ready(function(){
             setTimeout(function(){
-                $('#server-wait').hide();
+                window['functions'].hideLoader('force');
             },100)
         });
     }

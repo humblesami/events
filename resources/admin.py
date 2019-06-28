@@ -36,6 +36,7 @@ class FolderAdmin(admin.ModelAdmin):
 
 
 class ResourceDocumentForm(FileForm):
+    autocomplete_fields = ['users']
     def get_form(self, request, obj=None, **kwargs):
         form = super(ResourceDocumentForm, self).get_form(request, obj, **kwargs)
         return form

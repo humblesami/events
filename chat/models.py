@@ -197,14 +197,16 @@ class UserNotification(models.Model):
     def get_senders(self, user_id, notification_id):
         notification_senders = UserNotification.objects.filter(
             read=False, user_id=user_id, notification_id=notification_id
-            ).values('sender__id', 'sender__name').distinct()
+            ).values('sender__id', 'sender__name')
+        count = notification_senders.count()
+        notification_senders = notification_senders.distinct()
         senders = []
         for notification_sender in notification_senders:
             senders.append({
                 'id': notification_sender['sender__id'], 
                 'name': notification_sender['sender__name']
                 })
-        return senders
+        return senders, count
     
     @classmethod
     def mark_read_notification(cls, request, params):
@@ -246,10 +248,11 @@ class UserNotification(models.Model):
             obj_res = model.objects.get(pk=address.res_id)
             meta = notification.get_meta(obj_res)
             senders_for_all = {}
-            senders_for_all[request.user.id] = UserNotification.get_senders(cls, uid, notification.id)
+            senders_for_all[request.user.id], count = UserNotification.get_senders(cls, uid, notification.id)
             text = ' ' + meta['template'] + ' ' + meta['name_place']
             client_object = {
                 'id': notification.id,
+                'count': count,
                 'body': text,
                 'senders': senders_for_all,
                 'notification_type': notification_type,

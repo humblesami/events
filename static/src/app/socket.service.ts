@@ -292,7 +292,8 @@ export class SocketService {
         
         if(!window['socket_manager'])
         {
-            window['socket_manager'] = obj_this;            
+            window['socket_manager'] = obj_this;
+            console.log(obj_this, 342);
         }
         this.site_config = window['site_config'];
         this.server_url = this.site_config.server_base_url;
@@ -752,8 +753,12 @@ export class SocketService {
             route += item.address.info.post_parent_id+'/';
         }
         item.client_route = route + item.address.res_id;
-        item.counter = 1;
+        // item.counter = 1;
         obj_this.set_notification_text(item);
+        if(!item.count)
+        {
+            item.count = 1;
+        }
         var in_list = false;
         if(on_receive)
         {
@@ -762,13 +767,14 @@ export class SocketService {
                 if(item.id == obj_this.notificationList[i].id)
                 {
                     obj_this.notificationList[i].body = item.body;
+                    item.count += 1;
                     in_list = true;
                     break;
                 }
             }            
         }
         if(!in_list)
-        {
+        {            
             obj_this.notificationList.push(item);
         }
     }

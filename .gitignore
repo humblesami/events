@@ -19,3 +19,4 @@ config.json
 */node_modules
 static/build/static
 package-lock.json
+mtest.py

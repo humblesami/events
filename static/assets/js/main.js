@@ -171,6 +171,7 @@ var site_functions = {
         var time_out = undefined;
         if (obj_this.processes.length == 0) {
             server_wait_loader.show();
+            server_wait_loader.shown = 1;
             time_out = setTimeout(function() {
                 obj_this.hideLoader(nam);
             }, 29000);
@@ -193,11 +194,12 @@ var site_functions = {
             this.processes = [];
             if (!nam)
                 console.trace();
-            else {
-                if (nam != 'force')
-                    console.log("Hidden from " + hiddenFrom);
+            else if (nam != 'force')
+            {
+                console.log("Force hidden from " + hiddenFrom);
             }
             server_wait_loader.hide();
+            server_wait_loader.shown = 0;
         }
         if (this.processes.length == 0) {
             //console.log("Already removed "+nam);
@@ -313,6 +315,7 @@ function addMainEventListeners() {
             clearTimeout(time_out_session);
             handleSessionExpiry();
         }
+        site_functions.hideLoader('force','');
     });    
 }
 
