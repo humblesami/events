@@ -1,9 +1,5 @@
 /* Tablets */
 
-html, body{
-    height: 100%;
-}
-
 input[type="submit"], button {
     -webkit-appearance: none;
     appearance: none;

@@ -23,6 +23,7 @@ class CategoryInline(admin.TabularInline):
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ("name", "is_published", "need_logged_user")
     list_filter = ("is_published", "need_logged_user")
+    autocomplete_fields = ['respondents']
     filter_horizontal = ('respondents',)
     inlines = [QuestionInline]
     actions = [make_published]

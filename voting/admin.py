@@ -25,6 +25,7 @@ class VotingDocInline(admin.TabularInline):
 
 class VotingAdmin(admin.ModelAdmin):
     inlines = [VotingDocInline,]
+    autocomplete_fields = ['respondents']
     filter_horizontal = ('respondents',)
     change_form_template = 'custom/change_form.html'
 
