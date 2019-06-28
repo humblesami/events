@@ -33,7 +33,7 @@ def respond(request, voting_id, choice_id, token):
     voting = Voting.objects.get(id=voting_id)
     if voting.signature_required:
         return respond_with_signature(request, voting, voting_id, choice_id, token)
-    user_token = PostUserToken.validate_token(token)    
+    user_token = PostUserToken.validate_token(token)
     if not user_token:
         context['error'] = 'Error: Invalid Token or Expired'
         return render(request, 'token_submit.html', context)
@@ -62,8 +62,12 @@ def respond_with_signature(request, voting, voting_id, choice_id, token):
     voting = Voting.objects.get(id=voting_id)
     context['voting_id'] = voting_id
     context['choice_id'] = choice_id
-    context['token'] = token
     context['signature_required'] = voting.signature_required
+    user_token = PostUserToken.validate_token(token)
+    if not user_token:
+        context['error'] = 'Invalid Token'
+        return render(request, 'token_submit.html', context)
+    context['token'] = token
     return render(request, 'token_submit.html', context)
 
 

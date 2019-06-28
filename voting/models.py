@@ -59,7 +59,7 @@ class Voting(models.Model):
         for choices_set in choices_sets:
             choices.append({'id':choices_set.id, 'name': choices_set.name})
         subject = self.name
-        data_for_template = {            
+        template_data = {            
             'id': self.id, 
             'name': self.name,
             'choices': choices,
@@ -70,7 +70,15 @@ class Voting(models.Model):
         params['res_model'] = 'Voting'
         params['res_id'] = self.id        
         template_name = 'voting/submit_email.html'
-        EmailThread(subject, audience, data_for_template, template_name, True, params).start()
+        thread_data = {
+            'subject': subject,
+            'audience': audience,
+            'template_data': template_data,
+            'template_name': template_name,
+            'token_required': True,
+            'params': params
+        }
+        EmailThread(thread_data).start()
         # recipients, tokens = self.mail_audience()
         # token_counter = 0
         # for recipient in recipients:

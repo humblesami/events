@@ -9,7 +9,7 @@
         <div id="choice_id">{{choice_id}}</div>
         <div id="user_token">{{token}}</div>
     </div>
-        {% if signature_required %}
+        {% if signature_required and token %}
 
         <link rel="stylesheet" type="text/css" href="/static/assets/css/roboto-condensed-fontface.css" />
         <link rel="stylesheet" type="text/css" href="/static/assets/libs/css/bootstrap-4.1.1.css" />
@@ -32,29 +32,26 @@
             </style>
             <script>
                 (function(){
-                    var voting = {
-                        voting_id: $('#voting_id').html(),
-                        choice_id: $('#choice_id').html(),
-                        token: $('#user_token').html()
-                    };
                     our_init_sign();
-                
                     function our_init_sign()
                 {                    
                     let sign_config = {
-                        // signature_data: obj_this.voting_object.signature_data,
                         on_signed: function(signature_data){
-                            voting.signature_data = signature_data;
-                            submit_response(voting);
+                            submit_response(signature_data);
                         }
                     }
-                    // console.log(3232);
                     window['init_sign'](sign_config);
                 }
-                    function submit_response(voting_response_data)
+                    function submit_response(signature_data)
                     {
+                        var voting = {
+                            voting_id: $('#voting_id').html(),
+                            choice_id: $('#choice_id').html(),
+                            token: $('#user_token').html(),
+                            signature_data: signature_data
+                        };
                         window['current_user'] = {};                 
-                        voting_response_data = {
+                        var voting_response_data = {
                             data:{
                                 args:{
                                     app:'voting',
@@ -62,7 +59,7 @@
                                     method:'submit_public'
                                 },
                                 no_loader:1,
-                                params: voting_response_data
+                                params: voting
                             },
                             url: '/rest/public',
                             onSuccess:function(data){

@@ -34,13 +34,14 @@ class PostUserToken(models.Model):
 
 
     @classmethod
-    def validate_token(cls, token):
+    def validate_token(cls, token, do_not_expire=None):
         if token:
             user_token = PostUserToken.objects.filter(token=token)
             if not user_token:
                 return False
             user_token1 = user_token[0]
-            # user_token.update(token='')
+            # if not do_not_expire:
+            #     user_token.update(token='')
             return user_token1
         else:
             return False
