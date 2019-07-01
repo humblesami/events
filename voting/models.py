@@ -79,7 +79,7 @@ class Voting(models.Model):
         post_info['res_id'] = self.id
         if action:
             template_name = 'voting/removed_from_voting_email.html'
-            token_required = False
+            token_required = 'remove'
         else:
             template_name = 'voting/submit_email.html'
             token_required = True
