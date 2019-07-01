@@ -225,7 +225,8 @@ input[type="range"]::-webkit-slider-thumb {
     bottom: 4px;
     right: 3px;
     z-index: 77;
-    height: 31px;
+    height: 200px;
+    width: 200px;
 }
 #rtc-container.full .maximizer
 {
@@ -314,10 +315,8 @@ div#ongoing_controls {
 
 #rtc-container.min .closer{
     position: absolute;
-    right: 25px;
-    top: auto;
-    bottom: -4px;
-    width: 70px;
+    right: 0;
+    /* width: 48px; */
     background: #000000;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -444,4 +443,11 @@ div#ongoing_controls {
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+#rtc-container.min #ongoing_controls{
+    display: none;
+}
+#rtc-container.min .media-container.self{
+    display: none;
 }

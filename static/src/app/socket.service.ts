@@ -35,8 +35,9 @@ export class SocketService {
             caller : undefined,
             callee: undefined,
             timeout: 21000,
-            init: function(uid, audio_only){                
+            init: function(uid, audio_only){
                 let video_call = this;
+                video_call.drag_enabled = false;
                 {
                     if(audio_only)
                     {
@@ -247,12 +248,13 @@ export class SocketService {
             },
 
             quit: function(request_type){
-                let video_call = this;   
+                let video_call = this;                
                 // console.log(obj_this.ongoing_call, request_type, 193);
                 if(obj_this.ongoing_call && request_type != 'terminating')
                 {
                     video_call.terminate();
                 }
+                video_call.drag_enabled = false;
                 video_call.caller = undefined;
                 video_call.callee = undefined;
                 if(obj_this.ongoing_call)
@@ -274,12 +276,21 @@ export class SocketService {
                 $('#rtc-container').hide();
             },
 
+            drag_enabled: false,
+
             minimize: function(){
                 $('#rtc-container').removeClass('full').addClass('min');
                 window['rtc-call-max'] = undefined;
+                $('#rtc-container').draggable({'continment':'.router-outlet'});                
+                this.drag_enabled = true;
             },
             maximize: function(){
-                $('#rtc-container').removeClass('min').addClass('full');
+                $('#rtc-container').removeClass('min').addClass('full'); 
+                if(this.drag_enabled)
+                {
+                    $('#rtc-container').css({'top':'70px', 'left':'px'}).draggable('disable');
+                    this.drag_enabled = false;
+                }
                 window['rtc-call-max'] = 1;
             },
 
