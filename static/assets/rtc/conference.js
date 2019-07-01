@@ -167,6 +167,7 @@
                 var my_controls = $('<div class="my_controls"></div>');
                 my_controls.append(mute_button);
 
+                // console.log(is_audio_call, 67);
                 if(!is_audio_call)
                 {
                     var hide_button = $('<button class="hide">Hide/Show</button>');

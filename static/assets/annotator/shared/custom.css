@@ -471,10 +471,9 @@ body.pdf-viewer {
   }
 .comment-list-form {
   padding-left: 2px;
-  width: 234px;
   position: absolute;
-  bottom: 45px;
-  /*overflow-y: auto;*/
+  bottom: 69px;
+  width: calc(100% - 15px);
   }
 #commentText {
   width: 100%;

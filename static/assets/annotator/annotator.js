@@ -1469,7 +1469,7 @@
                     var child_info = `
 						<div class="user-pic-time-infoWrapper">
 							<div class="userSmpic icon-user-single">
-								<img class="img-fluid" id="navbar-profile-img" src="http://localhost:8000/media/profile/5d8f3d0350d69b4f3d7a80c0e1a076e2.jpg">
+								<img class="img-fluid" id="navbar-profile-img" src="">
 							</div>
 							<div class="user-time-info">
 								<span class="user">` + aComment.user_name + `</span>
