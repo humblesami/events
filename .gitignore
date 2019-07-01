@@ -20,3 +20,4 @@ config.json
 static/build/static
 package-lock.json
 mtest.py
+error_log.txt
