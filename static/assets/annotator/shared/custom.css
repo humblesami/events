@@ -427,7 +427,7 @@ body.pdf-viewer {
   color: #757575;
   }
 #comment-wrapper .comment-list-item {
-      border-bottom: 1px solid #C9C9C9;
+    border-bottom: 1px solid #C9C9C9;
     border-radius: 0;
     font-size: 13px;
     margin: 5px;
@@ -441,6 +441,7 @@ body.pdf-viewer {
   font-size: 11px;
   margin:0;
   padding: 0 0 15px;
+      line-height: 1;
   }
 .comment-list-item .user-time-info .user {
     font-size: .840rem;
@@ -625,4 +626,41 @@ position:relative;
 button.pen.annotation_button.active
 {
     background-color: darkgreen;
+}
+
+.user-pic-time-infoWrapper{
+	display:flex;
+}
+.userSmpic {
+    width: 30px;
+    height: 30px;
+    position:relative;
+    background: #999999;
+    border-radius: 30px;
+    margin-right: 8px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #ffffff;
+	overflow:hidden;
+}
+.userSmpic.icon-user-single::before {
+    position: absolute;
+    z-index: 1;
+}
+
+.userSmpic img{
+	position:relative;
+	z-index:2;
+}
+
+.groupcomment .comment-list-item{
+	margin:0 0 0 20px !important;
+}
+.groupcomment .comment-list-item:first-child{
+	margin:0 !important;
+}
+
+.icon-user-single:{
+
 }

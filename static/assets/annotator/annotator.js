@@ -1467,9 +1467,14 @@
                     child.className = 'comment-list-item';
                     aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
                     var child_info = `
-						<div class="user-time-info">
-							<span class="user">` + aComment.user_name + `</span>
-							<span class"time">` + aComment.date_time + `</span>
+						<div class="user-pic-time-infoWrapper">
+							<div class="userSmpic icon-user-single">
+								<img class="img-fluid" id="navbar-profile-img" src="http://localhost:8000/media/profile/5d8f3d0350d69b4f3d7a80c0e1a076e2.jpg">
+							</div>
+							<div class="user-time-info">
+								<span class="user">` + aComment.user_name + `</span>
+								<span class"time">` + aComment.date_time + `</span>
+							</div>
 						</div>
 						<div>` + aComment.content + `</div>
                     `;
