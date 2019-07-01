@@ -40,11 +40,11 @@ export class SocketService {
                 {
                     if(audio_only)
                     {
-                        video_call.is_audio = true;
+                        video_call.is_audio_call = true;
                     }
                     else
                     {
-                        video_call.is_audio = false;
+                        video_call.is_audio_call = false;
                     }
                 }
                 if(!obj_this.chat_users[uid].online)
@@ -59,7 +59,8 @@ export class SocketService {
                 let data =  {
                     caller_id: obj_this.user_data.id,
                     callee_id: uid,
-                    call_id : call_id
+                    call_id : call_id,
+                    is_audio_call : video_call.is_audio_call
                 };
 
                 // console.log(video_call.caller, video_call.callee);
@@ -99,6 +100,7 @@ export class SocketService {
                 // console.log(data, 1334);
                 video_call.state = 'incoming';
                 video_call.id = data.call_id;
+                video_call.is_audio_call = data.is_audio_call;
                 video_call.caller = obj_this.chat_users[data.caller_id];
                 video_call.callee = obj_this.user_data;
                 video_call.initialize();
@@ -162,7 +164,7 @@ export class SocketService {
                         }
                     }
                 }
-                obj_this.rtc_multi_connector.init(params, on_started, video_call.is_audio);
+                obj_this.rtc_multi_connector.init(params, on_started, video_call.is_audio_call);
                 $('#ongoing_controls').show();
             },
 

@@ -111,6 +111,18 @@
         return ['point'].indexOf(type) > -1;
     }
 
+    var comments_wrapper;// = $('#comment-wrapper');
+    function on_leave_document() {        
+        if(comments_wrapper && comments_wrapper.length > 0)
+        {
+            $('#annotated-doc-conatiner').hide();
+            shown_comment_type = false;
+            comments_wrapper.hide();
+            $('.router-outlet').show();
+            saveAnnotationsAtServer('Leaving');
+        }
+    }
+    
     var scroll_div;
 
     function module0(module, exports, __webpack_require__) {
@@ -126,8 +138,7 @@
             var documentId = false;
             var dh = $(document).height();
             var dw = $(document).width();
-            // var note_wrapper = $('#notification-wrapper');
-            var comments_wrapper;// = $('#comment-wrapper');
+            // var note_wrapper = $('#notification-wrapper');            
             var commentText;// = comments_wrapper.find('#commentText');
             var comment_list_div;// = comments_wrapper.find('.comment-list:first');
             var comment_list;// = comments_wrapper.find('.comment-list-container:first');
@@ -141,6 +152,10 @@
                     comment_item_focused = true;
                 });
                 select_cursor();
+                
+                $(window).unbind("unload", on_leave_document);
+                $(window).bind("unload", on_leave_document);
+                
                 scroll_div = $('#content-wrapper');                
             }
 
@@ -407,11 +422,7 @@
                     });
                 });
 
-            })();
-
-            $(window).unload(function() {
-                on_leave_document();
-            });
+            })();            
 
             $('body').on('click', '.ContextMenuPopup.toolbar:first .copy:first', function() {
                 document.execCommand("copy");
@@ -537,15 +548,7 @@
                 //comment_list.css({'height':'calc(100vh - '+ctop+'px)'});
 
                 localStorage.setItem(documentId + '/shown_comment_type', shown_comment_type);
-            }
-
-            function on_leave_document() {
-                $('#annotated-doc-conatiner').hide();
-                shown_comment_type = false;
-                comments_wrapper.hide();
-                $('.router-outlet').show();
-                saveAnnotationsAtServer('Leaving');
-            }
+            }            
 
             function onDocLoaded() {
                 //site_functions.hideLoader("renderdoc");

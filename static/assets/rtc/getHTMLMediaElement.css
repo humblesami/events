@@ -146,8 +146,22 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
     height: 5em;
 }
 .media-container .media-box h2{
-    position: absolute;color: rgb(160, 160, 160);font-size: 20px;text-shadow: 1px 1px rgb(255, 255, 255);padding:0;margin:0;
-    position: absolute;color:white;font-size:17px;text-shadow: 1px 1px black;padding:0;margin:0;text-align: left; margin-top: 10px; margin-left: 10px; display: block; border: 0;line-height:1.5;z-index:1;
+    position: absolute;
+    color: rgb(160, 160, 160);
+    font-size: 20px;text-shadow: 1px 1px rgb(255, 255, 255);
+    padding:0;
+    margin:0;
+    position: absolute;    
+    font-size:17px;
+    text-shadow: 1px 1px black;
+    padding:0;margin:0;
+    text-align: left; 
+    margin-top: 10px; 
+    margin-left: 10px; 
+    display: block;
+    border: 0;
+    line-height:1.5;
+    z-index:1;
 }
 
 .volume-control .volume-slider, .media-controls .volume-slider {
@@ -388,7 +402,6 @@ div#ongoing_controls {
     height: 200px !important;
     bottom: 30px;
     left: 40px;
-    border: 0;
     background: #000000;
     padding: 0;
     border-radius: 0;
@@ -422,4 +435,13 @@ div#ongoing_controls {
 }
 .control.zoom-in{
    display: none;
+}
+
+.media-container{
+    border: 2px solid white;
+}
+.media-container .my_controls{
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }

@@ -2,6 +2,7 @@
     var video_caller = {};
     function setup_call(params, on_started, is_audio_call){
         function init_call(){
+            video_caller.all_tracks = {};
             document.getElementById('open-room').onclick = function() {        
                 disableInputButtons();            
                 var roomid = document.getElementById('room-id').value;
@@ -67,8 +68,8 @@
 
             if(is_audio_call)
             {
-                connection.sdpConstraints.mandatory.OfferToReceiveVideo = false;
-                connection.session.video = false;
+                // connection.sdpConstraints.mandatory.OfferToReceiveVideo = false;
+                // connection.session.video = false;
                 connection.mediaConstraints.video = false;
             }
             
@@ -78,7 +79,7 @@
                 if(existing && existing.parentNode) {
                 existing.parentNode.removeChild(existing);
                 }
-
+                
                 if(event.type === 'local' && event.stream.isVideo) {
                     RMCMediaTrack.cameraStream = event.stream;
                     RMCMediaTrack.cameraTrack = event.stream.getVideoTracks()[0];
@@ -111,10 +112,8 @@
                         // video.setAttribute('controls', true);
                     }
                 }
-                video.setAttribute('controls', true);
+                // video.setAttribute('controls', true);
                 video.srcObject = event.stream;
-                // event.stream.getVideoTracks()[0].enabled = true;
-                // event.stream.getAudioTracks()[0].enabled = true;
             
                 var width = parseInt(connection.videosContainer.clientWidth / 3) - 20;
                 var mediaElement = getHTMLMediaElement(video, {
@@ -122,25 +121,56 @@
                     buttons: ['full-screen'],
                     // width: width,
                     showOnMouseEnter: false
-                });
-
-
-                // jq_media_el = $(mediaElement).uniqueId();
-                // var video_track = event.stream.getVideoTracks()[0];
-                // var audio_track = event.stream.getAudioTracks()[0];
-                // var event_stream = event.stream;
-                // video_caller.all_tracks[jq_media_el.attr('id')] = {
-                //     'audio': audio_track,
-                //     'video': video_track,
-                //     'stream': event_stream
-                // }
-
-                // if(is_audio_call)
-                // {
-                //     video_track.mute();
-                // }
+                });                
+                
             
                 connection.videosContainer.appendChild(mediaElement);
+
+                try{
+                    var media_el_id = 'mel'+ Math.random().toString(16).substring(10);
+                    $(mediaElement).attr('mel_id', media_el_id);
+                    var audio_track, video_track;
+                    try{
+                        audio_track = event.stream.getAudioTracks()[0];
+                    }
+                    catch(er){
+                        console.log(er, 1444);
+                    }
+
+                    try{
+                        video_track = event.stream.getVideoTracks()[0];
+                    }
+                    catch(er){
+                        console.log(er, 1455);
+                    }
+
+                    var event_stream = event.stream;
+                    video_caller.all_tracks[media_el_id] = {
+                        'audio': audio_track,
+                        'stream': event_stream,
+                        event_type: event.type
+                    }
+                    if(!is_audio_call)
+                    {
+                        video_caller.all_tracks[media_el_id]['video'] = video_track;
+                    }
+                }
+                catch(er){
+                    console.log(er);
+                }
+
+                var mute_button = $('<button class="mute">Mute/Unmute</button>');
+                mute_button.click(function(){
+                    video_caller.mute_some_one(this);
+                });
+                var hide_button = $('<button class="hide">Hide/Show</button>');
+                hide_button.click(function(){
+                    video_caller.hide_some_one(this);
+                });
+                
+                var my_controls = $('<div class="my_controls"></div>');
+                my_controls.append(mute_button).append(hide_button);
+                $(mediaElement).append(my_controls);
             
                 setTimeout(function() {
                     mediaElement.media.play();
@@ -153,30 +183,7 @@
                 }
             
                 // to keep room-id in cache
-                localStorage.setItem(connection.socketMessageEvent, connection.sessionid);
-                /*if(event.type != 'local')
-                {
-					console.log(4554);
-					var $video  = $('video').last(),
-					$window = $(window);
-
-					$(window).resize(function(){
-
-						var height = $window.height();
-						$video.css('height', height);
-
-						var videoWidth = $video.width(),
-							windowWidth = $window.width(),
-						marginLeftAdjust =   (windowWidth - videoWidth) / 2;
-
-						$video.css({
-							'height': height,
-							'marginLeft' : marginLeftAdjust
-						});
-					}).resize();
-				}*/
-
-
+                localStorage.setItem(connection.socketMessageEvent, connection.sessionid);                
             };
             
             connection.onstreamended = function(event) {
@@ -396,11 +403,67 @@
 
             video_caller.stop_my_tracks = function(){
                 try{
-                    RMCMediaTrack.cameraTrack.stop();
-                    RMCMediaTrack.cameraStream.stop();
+                    // console.log(3232, video_caller.all_tracks);
+                    for(var ui_id in video_caller.all_tracks)
+                    {
+                        // console.log(video_caller.all_tracks[ui_id], 14);
+                        if(video_caller.all_tracks[ui_id].event_type != 'local')
+                        {
+                            continue;
+                        }
+                        if(video_caller.all_tracks[ui_id].audio)
+                        {
+                            video_caller.all_tracks[ui_id].audio.stop();
+                        }
+                        if(video_caller.all_tracks[ui_id].video)
+                        {
+                            video_caller.all_tracks[ui_id].video.stop();
+                        }
+                        video_caller.all_tracks[ui_id].stream.stop();
+                        break;                        
+                    }
                 }
                 catch(er){
-                    
+                    console.log(er, 34232);
+                }
+            }
+
+            video_caller.mute_some_one = function(el){
+                var mel_id = $(el).closest('.media-container').attr('mel_id');
+                if(video_caller.all_tracks[mel_id].audio)
+                {
+                    video_caller.all_tracks[mel_id].audio.enabled = !video_caller.all_tracks[mel_id].audio.enabled;
+                }
+            },
+
+            video_caller.hide_some_one = function(el){
+                var mel_id = $(el).closest('.media-container').attr('mel_id');
+                if(video_caller.all_tracks[mel_id].video)
+                {
+                    video_caller.all_tracks[mel_id].video.enabled = !video_caller.all_tracks[mel_id].video.enabled;
+                }
+            },
+
+            video_caller.toggle_camera = function(){
+                try{
+                    // console.log(3232, video_caller.all_tracks);
+                    for(var ui_id in video_caller.all_tracks)
+                    {
+                        console.log(video_caller.all_tracks[ui_id], 14);
+                        if(video_caller.all_tracks[ui_id].event_type != 'local')
+                        {
+                            continue;
+                        }
+                        if(video_caller.all_tracks[ui_id].video)
+                        {
+                            video_caller.all_tracks[ui_id].video.enabled = !video_caller.all_tracks[ui_id].video.enabled;
+                        }
+                    }
+                    // RMCMediaTrack.cameraTrack.stop();
+                    // RMCMediaTrack.cameraStream.stop();
+                }
+                catch(er){
+                    console.log(er, 34232);
                 }
             }
         }
