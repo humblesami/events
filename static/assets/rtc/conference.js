@@ -163,13 +163,19 @@
                 mute_button.click(function(){
                     video_caller.mute_some_one(this);
                 });
-                var hide_button = $('<button class="hide">Hide/Show</button>');
-                hide_button.click(function(){
-                    video_caller.hide_some_one(this);
-                });
-                
+
                 var my_controls = $('<div class="my_controls"></div>');
-                my_controls.append(mute_button).append(hide_button);
+                my_controls.append(mute_button);
+
+                if(!is_audio_call)
+                {
+                    var hide_button = $('<button class="hide">Hide/Show</button>');
+                    hide_button.click(function(){
+                        video_caller.hide_some_one(this);
+                    });
+                    my_controls.append(hide_button);
+                }
+                
                 $(mediaElement).append(my_controls);
             
                 setTimeout(function() {
