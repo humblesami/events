@@ -33,6 +33,14 @@ class Survey(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        try:
+            super(Survey, self).save(*args, **kwargs)
+            if self.meeting:
+                self.survey_creation_email()
+        except:
+            raise
     
     def get_audience(self):
         res = []

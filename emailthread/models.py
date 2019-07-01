@@ -3,6 +3,7 @@ from time import sleep
 from django.db import models
 from threading import Thread
 from django.core.mail import send_mail
+from meetings.model_files.user import Profile
 from restoken.models import PostUserToken
 from django.template.loader import render_to_string
 
@@ -21,15 +22,18 @@ class EmailThread(threading.Thread):
         subject = self.subject
         for user_id in self.user_ids:
             self.token_info['user_id'] = user_id
+            user = {}
             if self.token_required:
                 user_token = PostUserToken.create_token(self.token_info)
                 e = threading.Event()
                 e.wait(timeout=2)
                 if user_token:
                     self.template_data['token'] = user_token.token
+                    user = user_token.user
                 else:
                     html_message = render_to_string(self.template_name, {'error': 'Error in Generating Token.'})
-            user_email = []
-            user_email = user_token.user.email
+            else:
+                user = Profile.objects.get(pk=user_id)
+            user_email = user.email
             html_message = render_to_string(self.template_name, self.template_data)
             send_mail(self.subject, '', "sami@gmai.com", [user_email], html_message=html_message)

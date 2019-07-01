@@ -22,8 +22,6 @@ class PostUserToken(models.Model):
         res_model = params['res_model']
         res_id = params['res_id']
         user_id = params['user_id']
-        e = threading.Event()
-        e.wait(timeout=2)
         post_info = PostInfo.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
         if not post_info:
             post_info = PostInfo(res_app=res_app, res_model=res_model, res_id=res_id)

@@ -36,23 +36,35 @@ class Voting(models.Model):
     my_status = models.CharField(max_length=50, default='pending')
     respondents = models.ManyToManyField(Profile, blank=True)
 
+    previous_respondents = []
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
         try:
+            new_added_respondets = []
+            create = False
+            if self.pk is not None:
+                if self.meeting:
+                    new_added_respondets, removed_respondents = self.get_updated_audience()
+                elif len(self.respondents.all()) == 0:
+                    new_added_respondets, self.previous_respondents = self.get_updated_audience()
+            else:
+                create = True
             super(Voting, self).save(*args, **kwargs)
-            if self.meeting:
-                self.send_voting_creation_email()
-            elif self.respondents:
-                self.send_voting_creation_email()
+            if create:
+                new_added_respondets = self.get_audience()
+            
+            if new_added_respondets:
+                self.send_email_on_save(new_added_respondets)
         except:
             raise
 
 
-    def send_voting_creation_email(self):
+    def send_email_on_save(self, audience, action=None):
         choices_sets = self.voting_type.votingchoice_set.all()
         choices = []
+        token_required = False
         for choices_set in choices_sets:
             choices.append({'id':choices_set.id, 'name': choices_set.name})
         template_data = {            
@@ -64,15 +76,20 @@ class Voting(models.Model):
         post_info = {}
         post_info['res_app'] = self._meta.app_label
         post_info['res_model'] = self._meta.model_name
-        post_info['res_id'] = self.id        
-        template_name = 'voting/submit_email.html'
+        post_info['res_id'] = self.id
+        if action:
+            template_name = 'voting/removed_from_voting_email.html'
+            token_required = False
+        else:
+            template_name = 'voting/submit_email.html'
+            token_required = True
         email_data = {
             'subject': self.name,
-            'audience': self.get_audience(),
+            'audience': audience,
             'post_info': post_info,
             'template_data': template_data,
             'template_name': template_name,
-            'token_required': True
+            'token_required': token_required
         }
         send_email_on_creation(email_data)
 
@@ -123,6 +140,29 @@ class Voting(models.Model):
                 tokens.append(token)
         return res, tokens
 
+    
+    def get_updated_audience(self):
+        new_added_respondets = []
+        removed_respondents = []
+        voting_obj = Voting.objects.get(pk=self.id)
+        if voting_obj.meeting and self.meeting:
+            new_added_respondets = list(set(self.meeting.get_audience()) - set(voting_obj.meeting.get_audience()))
+            removed_respondents = list(set(voting_obj.meeting.get_audience()) - set(self.meeting.get_audience()))
+        elif voting_obj.respondents and self.meeting:
+            new_added_respondets = list(set(self.meeting.get_audience()) - set(voting_obj.get_audience()))
+            removed_respondents = list(set(voting_obj.get_audience()) - set(self.meeting.get_audience()))
+        else:
+            new_added_respondets = []
+            removed_respondents = voting_obj.meeting.get_audience()
+        # elif voting_obj.respondents and self.respondents:
+        #     new_added_respondets = list(set(self.get_audience()) - set(voting_obj.get_audience()))
+        #     removed_respondents = list(set(voting_obj.get_audience()) - set(self.get_audience()))
+        # elif voting_obj.meeting and self.respondents:
+        #     new_added_respondets = list(set(self.get_audience()) - set(voting_obj.meeting.get_audience()))
+        #     removed_respondents = list(set(voting_obj.meeting.get_audience()) - set(self.get_audience()))
+        return new_added_respondets, removed_respondents
+    
+    
     def get_audience(self):
         res = []
         if self.meeting:
@@ -205,10 +245,24 @@ class Voting(models.Model):
         votings_json = {'records': votings, 'total': 0, 'count': 0}
         return votings_json
 
-
-def respondents_saved(sender, instance, action, **kwargs):
+    
+def respondents_saved(sender, instance, action, model, pk_set, **kwargs):
+    if action == 'post_remove':
+        removed_respondents = list(pk_set)
+        instance.send_email_on_save(removed_respondents, 'removed')
     if action == "post_add":
-        instance.send_voting_creation_email()
+        new_added_respondets = list(pk_set)
+        if instance.previous_respondents:
+            removed_respondents = list(set(instance.previous_respondents) - set(new_added_respondets))
+            new_added_respondets = list(set(new_added_respondets) - set(instance.previous_respondents))
+            if new_added_respondets:
+                instance.send_email_on_save(new_added_respondets)
+            if removed_respondents:
+                instance.send_email_on_save(removed_respondents, 'removed')
+        else:
+            instance.send_email_on_save(new_added_respondets)
+
+
 m2m_changed.connect(respondents_saved, sender=Voting.respondents.through)
 
 from restoken.models import PostUserToken

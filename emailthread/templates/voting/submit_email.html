@@ -4,7 +4,6 @@
 </head>
 <body>
     {% if id and token %}
-        <p>abcdef</p>
         <h2>{{name}}</h2>
         {% for choice in choices %}
         <a style="padding:5px; margin:5px" href="{{server_base_url}}/voting/{{id}}/{{choice.id}}/{{token}}">{{choice.name}}</a>
