@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit {
                     element.url = obj_this.sanitizer.bypassSecurityTrustResourceUrl(element.url);
                     valid_videos.push(element);
                 } else {
-                    console.log(element.url + ' is not valid url');
+                    console.log(element.url + ' is not a valid url for video '+element.name);
                 }
             });
             home_data.video_ids = valid_videos;

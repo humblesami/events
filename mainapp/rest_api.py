@@ -14,7 +14,8 @@ from mainapp import ws_methods
 public_methods = {
     'authsignup':{
         'AuthUser':{
-            'login_user': 1
+            'login_user': 1,
+            'reset_password': 1
         }
     },
     'voting':{

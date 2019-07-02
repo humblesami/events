@@ -1,7 +1,7 @@
 import sys
 import json
 import base64
-import smtplib
+import traceback
 from django.apps import apps
 from datetime import datetime
 from django.contrib.auth import login
@@ -504,7 +504,15 @@ def get_user_info(users):
         users_info.append(user_info)
     return users_info
 
-
+def get_error_message():
+    eg = traceback.format_exception(*sys.exc_info())
+    errorMessage = ''
+    cnt = 0
+    for er in eg:
+        cnt += 1
+        if not 'lib/python' in er:
+            errorMessage += " " + er
+    return errorMessage
 #
 #
 # def authenticate(data):

@@ -27,6 +27,10 @@ export class HttpService {
         var options = this.makeOptions_secure('post', input_data,success_cb, failure_cb);        
         window['dn_rpc_object'](options);
     }
+    post_public(input_data: any, success_cb, failure_cb) {
+        var options = this.makeOptions_public(input_data,success_cb, failure_cb);        
+        window['dn_rpc_object'](options);
+    }
 
     authenticate(url: string, input_data: any, success_cb, failure_cb, complete_cb) {
         const httpservie = this;

@@ -17,11 +17,7 @@ export class ForgotpasswordComponent implements OnInit {
 	first = true;
 
 	constructor(
-		private formBuilder: FormBuilder,
-		private route: ActivatedRoute,
-		private router: Router,
 		private httpService: HttpService) {
-
 	}
 
 	ngOnInit() {
@@ -58,9 +54,9 @@ export class ForgotpasswordComponent implements OnInit {
             method: 'reset_password'
         }
 		let input_data = {
-            params: {username: obj_this.email,  },
-            args: args
+            params: {email: obj_this.email,  },
+			args: args,
         }; 
-        this.httpService.post(input_data, success_cb, failure_cb);        
+        this.httpService.post_public(input_data, success_cb, failure_cb);        
 	}
 }

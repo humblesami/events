@@ -1,12 +1,10 @@
+import os
 import sys
 import traceback
 import threading
-from time import sleep
-from django.db import models
-from threading import Thread
 from django.core.mail import send_mail
-from meetings.model_files.user import Profile
 from restoken.models import PostUserToken
+from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 
 def produce_exception(msg):
@@ -20,8 +18,26 @@ def produce_exception(msg):
                 errorMessage += " " + er
     else:
         errorMessage = msg
-    with open('error_log.txt', "a+") as f:
-        f.write(errorMessage + '\n')
+    try:
+        with open('error_log.txt', "a+") as f:
+            f.write(errorMessage + '\n')
+    except:
+        try:
+            dir = os.path.dirname(os.path.realpath(__file__))
+            ar = dir.split('\\')
+            ar = ar[:-1]
+            dir = ('\\').join(ar)
+            with open(dir + '\\error_log.txt', "a+") as f:
+                f.write(errorMessage + '\n')
+        except:
+            eg = traceback.format_exception(*sys.exc_info())
+            errorMessage = ''
+            cnt = 0
+            for er in eg:
+                cnt += 1
+                if not 'lib/python' in er:
+                    errorMessage += " " + er
+            return errorMessage
 
 
 
@@ -60,7 +76,7 @@ class EmailThread(threading.Thread):
                         else:
                             html_message = render_to_string(self.template_name, {'error': 'Error in Generating Token.'})
                 else:
-                    user = Profile.objects.get(pk=user_id)
+                    user = User.objects.get(pk=user_id)
                     e = threading.Event()
                     e.wait(timeout=2)
                 if user and user.email:

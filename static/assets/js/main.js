@@ -3,7 +3,7 @@ var session_time_limit = 600000;
 var is_mobile_device = undefined;
 var is_local_host = false;
 var server_wait_loader = undefined;
-window['public_routes'] = ['/login', '/logout'];
+window['public_routes'] = ['/login', '/logout','/reset_password'];
 
 
 var dn_current_site_user = {
