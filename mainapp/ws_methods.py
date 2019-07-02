@@ -1,10 +1,11 @@
-import base64
 import sys
 import json
+import base64
 import smtplib
+from django.apps import apps
 from datetime import datetime
-from emailthread.models import EmailThread
 from django.contrib.auth import login
+from emailthread.models import EmailThread
 from django.core.files.base import ContentFile
 from rest_framework.authtoken.models import Token
 
@@ -416,6 +417,16 @@ def queryset_to_list_search(queryset,fields=None,to_str=None,related=None):
 #     return host_url
 #
 #
+
+
+def get_model(app_name, model_name):
+    try:
+        model = apps.get_model(app_name, model_name)
+        return model
+    except:
+        return 'model not found'
+
+
 def check_auth_token(request,values):
     if request.user and not request.user.is_anonymous:
         return request.user.id
@@ -446,6 +457,31 @@ def send_email_on_creation(email_data):
         'post_info': post_info
     }
     EmailThread(thread_data).start()
+
+
+def get_user_by_token(request, kw=None):
+    token = ''
+    user = {}
+    if request.GET:
+        token = request.GET['token']
+    if not token:
+        if request.POST:
+            token = request.POST['token']
+    if 'token' in kw.keys() and not token:
+        token = kw['token']
+        post_user_token = get_model('restoken', 'PostUserToken')
+        if type(post_user_token) is str:
+            return 'Model not found'
+        user_token = post_user_token.validate_token(token, 1)
+        if not user_token:
+            return 'You are not authorized'
+        user = user_token.user
+    if not user:
+        user = request.user                        
+    if user and user.id:
+        return user
+    else:
+        return 'You are not authorized'
 
 
 

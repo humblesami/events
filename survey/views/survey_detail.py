@@ -4,10 +4,11 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import View
 from django.db.models import Count
+from django.http import HttpResponse
 from survey.forms import ResponseForm
 from survey.models import Category, Survey, Answer
 from ast import literal_eval
-from restoken.models import PostUserToken
+from mainapp.ws_methods import get_user_by_token
 
 class SurveyDetail(View):
     def get(self, request, *args, **kwargs):
@@ -18,9 +19,9 @@ class SurveyDetail(View):
             token = address[len(address)-1]
             if token:
                 kwargs['token'] = token
-        user = self.get_user(request, kwargs)
+        user = get_user_by_token(request, kwargs)
         if type(user) is str:
-            return user
+            return HttpResponse(user)
         survey = get_object_or_404(Survey, is_published=True, id=kwargs["id"])
         if survey.template is not None and len(survey.template) > 4:
             template_name = survey.template
@@ -66,31 +67,10 @@ class SurveyDetail(View):
 
         context = {"response_form": form, "survey": survey, "categories": categories, 'chart_data': chart_data}
 
-        return render(request, template_name, context)
-
-    def get_user(self, request, kw=None):
-        token = ''
-        if request.GET:
-            token = request.GET['token']
-        if not token:
-            if request.POST:
-                token = request.POST['token']
-        if kw and not token:
-            token = kw['token']
-        user = request.user
-        if not user.id:
-            if not token:
-                return 'You are not authorized'
-            else:
-                user_token = PostUserToken.validate_token(token, 1)
-                user = user_token.user
-        if user and user.id:
-            return user
-        else:
-            return 'You are not authorized'
+        return render(request, template_name, context)    
 
     def post(self, request, *args, **kwargs):
-        user = self.get_user(request)
+        user = get_user_by_token(request)
         if type(user) is str:
             return user
 

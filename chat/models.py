@@ -4,10 +4,10 @@ from django.db import models
 from django.apps import apps
 from datetime import datetime
 from mainapp import ws_methods
-from django.contrib import admin
-from django.contrib.auth.models import User
-from django.db import connection
 from documents.file import File
+from django.contrib import admin
+from django.db import connection
+from django.contrib.auth.models import User
 from meetings.model_files.user import Profile, create_group
 
 

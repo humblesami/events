@@ -246,7 +246,7 @@ class Voting(models.Model):
         return votings_json
 
     
-def respondents_saved(sender, instance, action, model, pk_set, **kwargs):
+def respondents_saved(sender, instance, action, pk_set, **kwargs):
     if action == 'post_remove':
         removed_respondents = list(pk_set)
         instance.send_email_on_save(removed_respondents, 'removed')

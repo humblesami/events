@@ -31,14 +31,30 @@ class Survey(models.Model):
         verbose_name = _("survey")
         verbose_name_plural = _("surveys")
 
+
+    previous_respondents = []
+
+
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
         try:
+            new_added_respondets = []
+            create = False
+            if self.pk is not None:
+                if self.meeting:
+                    new_added_respondets, removed_respondents = self.get_updated_audience()
+                elif len(self.respondents.all()) == 0:
+                    new_added_respondets, self.previous_respondents = self.get_updated_audience()
+            else:
+                create = True
             super(Survey, self).save(*args, **kwargs)
-            if self.meeting:
-                self.survey_creation_email()
+            if create:
+                new_added_respondets = self.get_audience()
+            
+            if new_added_respondets:
+                self.send_email_on_save(new_added_respondets)
         except:
             raise
     
@@ -51,6 +67,28 @@ class Survey(models.Model):
             for obj in self.respondents.all():
                 res.append(obj.profile.id)
         return res
+
+
+    def get_updated_audience(self):
+        new_added_respondets = []
+        removed_respondents = []
+        survey_obj = Survey.objects.get(pk=self.id)
+        if survey_obj.meeting and self.meeting:
+            new_added_respondets = list(set(self.meeting.get_audience()) - set(survey_obj.meeting.get_audience()))
+            removed_respondents = list(set(survey_obj.meeting.get_audience()) - set(self.meeting.get_audience()))
+        elif survey_obj.respondents and self.meeting:
+            new_added_respondets = list(set(self.meeting.get_audience()) - set(survey_obj.get_audience()))
+            removed_respondents = list(set(survey_obj.get_audience()) - set(self.meeting.get_audience()))
+        else:
+            new_added_respondets = []
+            removed_respondents = survey_obj.meeting.get_audience()
+        # elif survey_obj.respondents and self.respondents:
+        #     new_added_respondets = list(set(self.get_audience()) - set(survey_obj.get_audience()))
+        #     removed_respondents = list(set(survey_obj.get_audience()) - set(self.get_audience()))
+        # elif survey_obj.meeting and self.respondents:
+        #     new_added_respondets = list(set(self.get_audience()) - set(survey_obj.meeting.get_audience()))
+        #     removed_respondents = list(set(survey_obj.meeting.get_audience()) - set(self.get_audience()))
+        return new_added_respondets, removed_respondents
 
 
     def latest_answer_date(self):
@@ -222,7 +260,8 @@ class Survey(models.Model):
         pass
     
 
-    def survey_creation_email(self):
+    def send_email_on_save(self, audience, action=None):
+        token_required = False
         template_data = {            
             'id': self.id, 
             'name': self.name,
@@ -231,21 +270,38 @@ class Survey(models.Model):
         post_info = {}
         post_info['res_app'] = self._meta.app_label
         post_info['res_model'] = self._meta.model_name
-        post_info['res_id'] = self.id        
-        template_name = 'survey/survey_creation_email.html'
+        post_info['res_id'] = self.id
+        if action:
+            template_name = 'survey/removed_from_survey_email.html'
+            token_required = 'remove'
+        else:
+            template_name = 'survey/survey_creation_email.html'
+            token_required = True
         email_data = {
             'subject': self.name,
-            'audience': self.get_audience(),
+            'audience': audience,
             'post_info': post_info,
             'template_data': template_data,
             'template_name': template_name,
-            'token_required': True
+            'token_required': token_required
         }
         ws_methods.send_email_on_creation(email_data)
 
 
 
-def respondent_saved(sender, instance, action, **kwargs):
+def respondent_saved(sender, instance, action, pk_set, **kwargs):
+    if action == 'post_remove':
+        removed_respondents = list(pk_set)
+        instance.send_email_on_save(removed_respondents, 'removed')
     if action == "post_add":
-        instance.survey_creation_email()
+        new_added_respondets = list(pk_set)
+        if instance.previous_respondents:
+            removed_respondents = list(set(instance.previous_respondents) - set(new_added_respondets))
+            new_added_respondets = list(set(new_added_respondets) - set(instance.previous_respondents))
+            if new_added_respondets:
+                instance.send_email_on_save(new_added_respondets)
+            if removed_respondents:
+                instance.send_email_on_save(removed_respondents, 'removed')
+        else:
+            instance.send_email_on_save(new_added_respondets)
 m2m_changed.connect(respondent_saved, sender=Survey.respondents.through)

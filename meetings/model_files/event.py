@@ -328,7 +328,7 @@ class Event(models.Model):
         return data
     
 
-    def response_invitation_email(self):
+    def response_invitation_email(self, audience, action=None):
         state_selection = []
         for state in STATE_SELECTION:
             if state[0] != 'needsAction':
@@ -345,22 +345,32 @@ class Event(models.Model):
         post_info = {}
         post_info['res_app'] = self._meta.app_label
         post_info['res_model'] = self._meta.model_name
-        post_info['res_id'] = self.id        
-        template_name = 'event/response_invitation_email.html'
+        post_info['res_id'] = self.id
+        if action:
+            template_name = 'event/removed_from_meeting_email.html'
+            token_required = 'remove'
+        else:
+            template_name = 'event/response_invitation_email.html'
+            token_required = True
         email_data = {
             'subject': self.name,
-            'audience': self.get_audience(),
+            'audience': audience,
             'post_info': post_info,
             'template_data': template_data,
             'template_name': template_name,
-            'token_required': True
+            'token_required': token_required
         }
         ws_methods.send_email_on_creation(email_data)
 
 
-def attendees_saved(sender, instance, action, **kwargs):
+def attendees_saved(sender, instance, action, pk_set, **kwargs):
+    if action == 'post_remove':
+        removed_respondents = list(pk_set)
+        instance.response_invitation_email(removed_respondents, 'removed')
     if action == "post_add":
-        instance.response_invitation_email()
+        new_added_respondets = list(pk_set)
+        if new_added_respondets:
+            instance.response_invitation_email(new_added_respondets)
 m2m_changed.connect(attendees_saved, sender=Event.attendees.through)
 
 
