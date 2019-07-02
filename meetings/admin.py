@@ -31,7 +31,7 @@ class TopicInline(nested_admin.NestedTabularInline):
 
 class MeetingDocInline(nested_admin.NestedTabularInline):
     model = MeetingDocument
-    # exclude=('html','content','pdf_doc', 'file_type')
+    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
     extra = 0
 
 class EventAdmin(nested_admin.NestedModelAdmin):
