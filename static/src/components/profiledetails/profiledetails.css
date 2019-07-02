@@ -179,36 +179,3 @@ button:hover {
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
 }
-.edit-buttons a{
-    color: white;
-}
-.edit-buttons.edit-mode
-{
-   justify-content: center;
-    position: absolute;
-    z-index: 14;
-    width: 100%;
-    bottom: 0;
-    background: #fff;
-    border-top: 1px solid #cccccc;
-    left: 0;
-    padding: 7px;
-}
-.edit-buttons.edit-mode a
-{
-    color: white;
-    margin: 5px;
-    border: 1px solid white;
-    border-radius: 0.25rem;
-    min-width:100px;
-}
-.edit-buttons.edit-mode a.save{
-    background: #7c7bad;    
-}
-.edit-buttons.edit-mode a.cancel{
-    background: red;
-}
-.details-card.edit-mode
-{
-    margin-top:45px;
-}
