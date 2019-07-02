@@ -1,6 +1,7 @@
-<app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1">
+<app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1">        
 </app-breadcrumb>
-<div class="router-outlet home-container" *ngIf="ng_init">
+<div class="router-outlet home-container" *ngIf="ng_init">    
+    <button style="float:right" class="btn-primary" (click)="scroll_to_do()">Todo Items: {{to_do_count}}</button>
     <div id="welcome" *ngIf="home_data">
         <div class="container">
             <div class="row">
@@ -19,7 +20,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="HomeCalendarHead">
-                        <img src="static/assets/images/calendar.png" alt="Calendar" /> Calendar
+                        Calendar                        
                     </div>
                     <div class="home-calendarwrapper">
                         <div class="home-calendar">

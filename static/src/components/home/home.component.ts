@@ -63,6 +63,12 @@ export class HomeComponent implements OnInit {
         obj_this.router.navigate(['/upcoming/meeting/' + id]);
     }
 
+    scroll_to_do(){
+        $('.router-outlet').animate({
+            scrollTop: $('#to-do').position().top
+        }, 500);
+    }
+
     get_home_data() {
         var obj_this = this;
         var success_cb = function(home_data) {
