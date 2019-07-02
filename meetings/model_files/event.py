@@ -208,19 +208,10 @@ class Event(models.Model):
             voting['close_date'] = str(voting['close_date'])
         """attendee needs fix"""
         attendees = []
-        meeting_attendees = meeting_object_orm.attendees.all()
+        meeting_attendees = ws_methods.get_user_info( meeting_object_orm.attendees.all())
         for attendee_obj in meeting_attendees:
-            attendee = {}
-            attendee['id'] = attendee['uid'] = attendee_obj.id
-            attendee['name'] = attendee_obj.fullname()
-            attendee['photo'] = attendee_obj.image.url
-            groups = list(attendee_obj.groups.all())
-            group_name = ''
-            if len(groups) > 0:
-                group_name = groups[0].name.lower()
-            attendee['group'] = group_name
-            attendee['attendance_status'] = cls.get_attendance_status(meeting_id, attendee_obj.id)
-            attendees.append(attendee)
+            attendee_obj['attendance_status'] = cls.get_attendance_status(meeting_id, attendee_obj['id'])
+            attendees.append(attendee_obj)
         meeting_object['topics'] = topics
         meeting_object['meeting_docs'] = meeting_docs
         sign_docs =  meeting_object_orm.signdocument_set.all()

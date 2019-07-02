@@ -475,6 +475,10 @@ def get_user_by_token(request, kw=None):
         user_token = post_user_token.validate_token(token, 1)
         if not user_token:
             return 'You are not authorized'
+        if 'id' in kw.keys():
+            post_res_id = kw['id']
+            if int(post_res_id) != user_token.post_info.res_id:
+                return 'Token is not valid'
         user = user_token.user
     if not user:
         user = request.user                        
@@ -483,6 +487,22 @@ def get_user_by_token(request, kw=None):
     else:
         return 'You are not authorized'
 
+
+def get_user_info(users):
+    users_info = []
+    for user in users:
+        user_info = {}
+        user_info['id'] = user_info['uid'] = user.id
+        user_info['name'] = user.fullname()
+        user_info['photo'] = user_info['image'] = user.image.url
+        user_info['email'] = user.email
+        groups = list(user.groups.all())
+        group_name = ''
+        if len(groups) > 0:
+            group_name = groups[0].name.lower()
+        user_info['group'] = group_name
+        users_info.append(user_info)
+    return users_info
 
 
 #

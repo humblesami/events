@@ -179,9 +179,10 @@ class Profile(user_model):
         profiles = Profile.objects.filter(groups__name__iexact=group)
         total_cnt = profiles.count()
         current_cnt = total_cnt
-        profiles = ws_methods.queryset_to_list(
-            profiles,fields=['username','image','email','id']
-        )
+        # profiles = ws_methods.queryset_to_list(
+        #     profiles,fields=['username','image','email','id']
+        # )
+        profiles = ws_methods.get_user_info(profiles)
         profiles_json = {'records': profiles, 'total': total_cnt, 'count': current_cnt}
         return profiles_json
 

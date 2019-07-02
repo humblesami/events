@@ -1,6 +1,6 @@
 from meetings.model_files.user import Profile
 from django.db import models
-from mainapp.ws_methods import obj_to_dict, queryset_to_list
+from mainapp.ws_methods import obj_to_dict, queryset_to_list, get_user_info
 
 class Committee(models.Model):
     name = models.CharField(max_length=150)
@@ -18,15 +18,11 @@ class Committee(models.Model):
             committee_orm = Committee.objects.filter(pk=comm_id)[0]
             committee = obj_to_dict(
                 committee_orm,
-                fields=['id', 'name', 'description'],
-                related={
-                    'users': {'fields': ['id', 'username', 'image', 'groups']}
-                }
+                fields=['id', 'name', 'description']
             )
             if committee:
-                for user in committee['users']:
-                    user['group'] = user['groups'][0].name
-                    del user['groups']
+                committee_users = get_user_info( committee_orm.users.all())
+                committee['users'] = committee_users
 
                 data = {"committee": committee, "next": 0, "prev": 0}
                 return data
