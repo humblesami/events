@@ -426,12 +426,8 @@ body.pdf-viewer {
   color: #757575;
   }
 #comment-wrapper .comment-list-item {
-    border-bottom: 1px solid #C9C9C9;
-    border-radius: 0;
     font-size: 13px;
-    margin: 5px;
-    padding: 8px;
-    /* white-space: pre-wrap; */
+    padding: 15px 8px 6px;
     line-height: 1.5;
     cursor: pointer;
     color: #000000;
@@ -466,22 +462,35 @@ body.pdf-viewer {
 	width: 100%;
 	padding-bottom: 65px;
 	height: calc(100vh - 160px);
-	overflow: auto;
+	overflow-y: scroll;
+	background: #ffffff;
   }
 .comment-list-form {
-  padding-left: 2px;
-  position: absolute;
-  bottom: 69px;
-  width: calc(100% - 15px);
+	padding-left: 0px;
+	position: absolute;
+	bottom:65px;
+	width: calc(100% - 17px);
+	border-top: 1px solid hsla(0,0%,0%,.2);
+	background:#ffffff;
   }
+ .AddCommentTextWrap{
+	padding:5px;
+ }
+
 #commentText {
   width: 100%;
   resize: none;
+  max-height: 65px;
   min-height: 44px;
   border: indianred;
   background-color: white;
-  border: 1px solid darkturquoise;
+  padding:5px;
+  overflow:auto;
   }
+  .comment-list-container br{
+  display:none;
+  }
+
 /* #commentText:focus {
   outline: none;
   border-top: 1px solid #cccccc;
@@ -545,13 +554,11 @@ hr {
   margin: 5px 0;
   }
 .groupcomment {
-  border: 0px dotted #adadad;
-  margin: 5px;
-  border-radius: 5px;
-  background: #f1eeee;
-  padding: 5px;
+    margin: 0;
+    padding: 10px;
+    border-bottom: 1px solid #e8e6e6;
   }
-  }
+
 .btn-primary.strt_sign.pdfjs {
   cursor: pointer;
   height: 34px;
@@ -628,6 +635,7 @@ button.pen.annotation_button.active
 
 .user-pic-time-infoWrapper{
 	display:flex;
+	position:relative;
 }
 .userSmpic {
     width: 30px;
@@ -652,13 +660,16 @@ button.pen.annotation_button.active
 	z-index:2;
 }
 
-.groupcomment .comment-list-item{
-	margin:0 0 0 20px !important;
-}
-.groupcomment .comment-list-item:first-child{
-	margin:0 !important;
+/*
+.comment-list-item:nth-of-type(n+1) {
+  margin:0 0 0 20px !important;
 }
 
-.icon-user-single:{
+.comment-list-item:nth-of-type(1) {
+  margin:0px !important;
+}*/
 
+.comment-list-item>div>span {
+    padding-left: 38px;
+    display: block;
 }
