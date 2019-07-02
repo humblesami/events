@@ -108,22 +108,9 @@ export class CommentsComponent implements OnInit {
         }
     }
 
-	showReplies(id) {
-		this.comments.forEach(com => {
-			if (com.id === id) {
-				if (com['showRep']) {
-					com['showRep'] = !com['showRep'];
-				} else {
-					com['showRep'] = true;
-				}
-			} else {
-				if (com['showRep']) {
-					com['showRep'] = !com['showRep'];
-				} else {
-					com['showRep'] = false;
-				}
-			}
-		});
+	showReplies(evt, com) {
+        evt.preventDefault();
+        com['showRep'] = !com['showRep'];
 	}
 
     manage_comment()
@@ -137,30 +124,44 @@ export class CommentsComponent implements OnInit {
         $('.mention-div-reply').addClass('active-mention');
     }
 
-	commentReply(comment) {
+	commentReply(evt, comment) {
         this.new_reply = '';        
         if(this.active_comment)
             this.active_comment.active = false;
         comment.active = true;
-        this.active_comment = comment;        
-        setTimeout(function(){
+        let mention_reply = $('.mention-div-reply:first');
+        $(evt.target).closest('.CommentsWrapper').find('.comment:first').after(mention_reply);
+        mention_reply.show();
+        comment['showRep'] = true;
+        this.active_comment = comment;
+        //evt.preventDefault(); does not work
+        setTimeout(function(){                        
             $('.reply-box:first').focus();
             $('.mention-div-reply').addClass('active-mention');
         }, 100);
-        $('.mention-div-comment').removeClass('active-mention');
-        
+        $('.mention-div-comment').removeClass('active-mention');        
     }
 
     save_comment_key_up(e, parent){
         let obj_this = this;
-        if (e.currentTarget.textContent.length)
-        {
-            obj_this.post_btn_disable = true;
-        }
+        // if (e.currentTarget.textContent.length)
+        // {
+        //     obj_this.post_btn_disable = true;
+        // }
         if (obj_this.should_save)
         {
             if(e.keyCode == 13 && !e.shiftKey){
-                e.preventDefault();                
+                e.preventDefault();
+                if(parent == 'reply')
+                {
+                    // console.log(e.target, $(e.target).prev()[0]);
+                    let cid = $(e.target).prev().find('input.comment_id').val()
+                    let items = obj_this.comments.filter(function(item){
+                        return item.id == cid;
+                    });
+                    parent = items[0];
+                    // console.log(cid, parent);
+                }
                 obj_this.save_comment(parent);
             }
         }
@@ -225,6 +226,7 @@ export class CommentsComponent implements OnInit {
                 item['reply'] = false;
             }
         }
+        // console.log(obj_this.comments);
         let input_data = {
             args: {
                 app: 'chat',
@@ -289,6 +291,13 @@ export class CommentsComponent implements OnInit {
 	cancelComment() {
 		this.new_comment = '';
     }
+
+    comment_reply_keydown(e){
+        if(e.keyCode == 13 && !e.shiftKey)
+        {
+            e.preventDefault();
+        }
+    }
     
 	ngOnInit() {
         let obj_this = this;
@@ -296,7 +305,7 @@ export class CommentsComponent implements OnInit {
         obj_this.mention_list = obj_this.mention_list.filter(function(obj){
             return obj.id != me_id;
         });
-        
+
         if (obj_this.mention_list)
         {
             obj_this.mentionConfig = {

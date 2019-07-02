@@ -283,22 +283,6 @@ function addMainEventListeners() {
         e = e || event;
         e.preventDefault();
     },false);
-    $(document).on('mousedown touchstart', function(e) {
-        var target = e.target;
-        var showbtn = $(target).closest('.showmouseawaybutton');
-        if (showbtn && showbtn.length > 0) {
-            return;
-        } else 
-        {
-            var shownpanel = $(target).closest('.hidemouseaway');
-            if (shownpanel && shownpanel.length > 0)
-                return;
-            else {
-                $('.hidemouseaway').hide();
-            }
-        }
-    });
-
     
     $('body').on('click', '.btnclosemodel', function() {
         $(this)
@@ -316,7 +300,21 @@ function addMainEventListeners() {
             handleSessionExpiry();
         }
         site_functions.hideLoader('force','');
-    });    
+        var target = e.target;
+        var showbtn = $(target).closest('.showmouseawaybutton');
+        if (showbtn && showbtn.length > 0) {
+            return;
+        }
+        else 
+        {
+            var shownpanel = $(target).closest('.hidemouseaway');
+            if (shownpanel && shownpanel.length > 0)
+                return;
+            else {
+                $('.hidemouseaway').hide();
+            }
+        }
+    });
 }
 
 

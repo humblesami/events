@@ -15,11 +15,10 @@
 				<form class="col-lg-12">
 					<div class="form-group">
 						<div *ngIf="comment_subtype === 1">
-							<!-- <textarea [mentionConfig]= "mentionConfig" name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="comment" placeholder="Add comments here."></textarea> -->
-							<div [mentionConfig]= "mentionConfig" (click)="manage_comment()" (keyup)="save_comment_key_up($event, null)" placeholder="Add comments here." contenteditable="true" class="mention-div-comment active-mention form-control" rows="4" id="comment"></div>
+							<div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" (click)="manage_comment()" (keyup)="save_comment_key_up($event, null)" placeholder="Add comments here." contenteditable="true" class="mention-div-comment active-mention form-control" rows="4" id="comment"></div>
 						</div>
 						<div *ngIf="comment_subtype === 2">
-							<textarea [mentionConfig]= "mentionConfig" name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="notes" placeholder="Add notes here"></textarea>
+							<textarea (keydown)="comment_reply_keydown($event)" [mentionConfig]="mentionConfig" name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="notes" placeholder="Add notes here"></textarea>
 						</div>
 						<button [disabled]="!post_btn_disable" class="btn btn-primary" type = "submit" (click)="save_comment(null)" >Post</button>
 					</div>
@@ -38,25 +37,19 @@
 								</a>
 								<a routerLink="/profile/{{c.user.id}}" class="mainthread">
 									<span class="comment-user" *ngIf="c.user">{{c.user.name}} : </span>
-								</a>
-								<div class="CommentsWrap">
-									
+                                </a>
+                                <input type="hidden" class="comment_id" value="{{c.id}}" />
+								<div class="CommentsWrap">									
 									<div class="comment-body" [innerHtml]="c.body.trim()">
 									</div>
 									
 									<div class="row comment_response main">
-										<span>{{c.create_date | date:'medium' }}</span>&nbsp;&nbsp;
-										<!-- <a *ngIf="0 && c.user.uid == myID" title="Delete comment" (click)="deleteComment(c.id, 'comment')" >
-											<i class="fa fa-trash" aria-hidden="true"></i>
-										</a> -->
-										<!-- <a title="Add reply">
-											Like
-										</a> -->
-										<a *ngIf="c.id" title="Add reply" (click)="commentReply(c)">
+										<span>{{c.create_date | date:'medium' }}</span>&nbsp;&nbsp;										
+										<a *ngIf="c.id" class="comment-reply" title="Add reply" (click)="commentReply($event, c)">
 											Reply
 										</a>
 										<div class="label replies-wrapper" title="Replies" *ngIf="c.children && c.children.length">
-											<div (click)="showReplies(c.id)">
+											<div (click)="showReplies($event, c)">
 												<span *ngIf="!c['showRep']"><i class="fa fa-angle-down"></i></span>
 												<span *ngIf="c['showRep']"><i class="fa fa-angle-up"></i></span>
 											</div>
@@ -64,37 +57,25 @@
 									</div>
 								</div>
 							</div>
-							<div class="reply-input">
-								<div *ngIf="c.active" class="reply-textarea-conatiner">
-									<!-- <textarea [mentionConfig]= "mentionConfig" (keyup)="save_comment_key_up($event, c)" [(ngModel)]="new_reply"  class="form-control reply-box" rows="4" id="reply" placeholder="type here . . ."></textarea> -->
-									<div [mentionConfig]= "mentionConfig" (click)="manage_reply_class()" (keyup)="save_comment_key_up($event, c)" placeholder="Add comments here." contenteditable="true" class="mention-div-reply reply-box form-control" rows="4" id="comment"></div>
-								</div>
-
-								<div class="reply" *ngIf="c.children && c.children.length">
-
-									<div *ngIf="c['showRep']">
-										<div class="oform" *ngFor="let rep of c.children">
-											<div class="CommentUserNameTimeWrap">
-												<div class="comment-user-pic">
-													<img src="{{socketService.server_url}}{{rep.user.photo}}" alt="user" />
-												</div>
-											</div>
-											<div class="ReplyMessageWrap">
-												<div class="reply message">
-													<span class="comment-user" *ngIf="rep.user">{{rep.user.name}} : </span>
-													<div class="comment-body">
-														<div [innerHtml]="rep.body.trim()"></div>
-													</div>
-												</div>
-												<div class="comment_response">
-													<span>{{c.create_date | date:'medium' }} </span>&nbsp;&nbsp;
-													<!-- <a title="Delete comment" (click)="deleteComment(rep.id, c.id)">
-														<i class="fa fa-trash" aria-hidden="true"></i>
-													</a> -->
-												</div>
-											</div>
-										</div>
-									</div>
+							<div class="reply-input">								
+								<div class="reply" *ngIf="c['showRep'] && c.children && c.children.length">
+                                    <div class="comment" *ngFor="let rep of c.children">
+                                        <a routerLink="/profile/{{rep.user.id}}" class="CommentUserNameTimeWrap">
+                                            <div class="comment-user-pic">
+                                                <img src="{{socketService.server_url}}{{rep.user.photo}}" alt="user" />
+                                            </div>
+                                        </a>   
+                                        <a routerLink="/profile/{{rep.user.id}}" class="mainthread">
+                                            <span class="comment-user">{{rep.user.name}} : </span>
+                                        </a>
+                                        <div class="CommentsWrap">                                            
+                                            <div class="comment-body" [innerHtml]="rep.body.trim()">
+                                            </div>                                            
+                                            <div class="row comment_response main">
+                                                <span>{{rep.create_date | date:'medium' }}</span>&nbsp;&nbsp;                                                
+                                            </div>
+                                        </div>
+                                    </div>
 								</div>
 							</div>
 						</div>
@@ -122,6 +103,9 @@
 					</div>
 				</div>
 			</div>
-		</div>
+        </div>
+        
+        <div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" (click)="manage_reply_class()" (keyup)="save_comment_key_up($event, 'reply')" placeholder="Add comments here." contenteditable="true" 
+        class="mention-div-reply hidemouseaway reply-box form-control" rows="4" id="comment"></div>
 	</div>
 </div>

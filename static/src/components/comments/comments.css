@@ -112,11 +112,12 @@ textarea.form-control.focus {
     color: white;    
     border-radius: 25px;
     font-weight: bolder;
+    margin-left: 5px;
 }
 .CommentsWrapper {
-    background: #F3F3F3;
-    border: 1px solid #A2A2A2;
-    padding: 30px;
+    /* background: #F3F3F3; */
+    border: 1px solid #F0F0F0;
+    padding: 10px 10px 0 10px;
     margin-bottom: 20px;
 }
 
@@ -152,27 +153,34 @@ textarea.form-control.focus {
 	margin-bottom: 10px;
 	margin-top: 5px;
 }
-
+.comment_response a{
+    color: blue;
+    font-weight: bold;
+    margin-left: 10px;
+}
 .comments .label > div {
 	width: 35px;
 	text-align: center;
 }
 
+/*
 .comments .main.comment_response a 
 {
 	padding: 0 5px 0 5px;
 }
+*/
 
 .comments .reply-input {
-    margin: 10px 0 0 50px;
+    margin: 10px 0 0 20px;
 }
+/*
 .reply.message {
     background: #ffffff;
     border: 1px solid #E1E1E1;
     padding: 10px 15px;
     border-radius: 5px;
 }
-
+*/
 .comments .reply-body
 {
 	word-wrap: break-word;
@@ -217,6 +225,15 @@ textarea.form-control.focus {
     display: flex;
     align-items: flex-start;
 }
+.comments .comment{
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 10px;
+}
+.comments:last-child{
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
 .oform{
     display: flex;
     align-items: flex-start;
@@ -309,3 +326,15 @@ textarea.form-control.focus {
 .o_view_manager_content .comments .message.reply{	
     width: 90%;
 }*/
+
+.comments.main-container{
+    padding-bottom: 40px;
+}
+div#comment{
+    margin-bottom: 20px;
+}
+.mention-div-reply
+{
+    font-size: 0.8rem;
+    display: none;
+}
