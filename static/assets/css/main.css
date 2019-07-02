@@ -380,9 +380,6 @@ a,
     opacity: 1;
 }
 
-.modal-backdrop.fade {
-    opacity: .5;
-}
 
 #main-div {
     /*
@@ -449,17 +446,6 @@ a,
 	padding-top:40px;
 	margin-top:10px;
 	padding-bottom:70px;
-}
-.modal.fade .modal-dialog {
-    -webkit-transform: translate(0, 0);
-    transform: translate(0, 0);
-}
-
-.modal-dialog-centered {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-align: center;
-    align-items: center;
 }
 
 .navbar-collapse.show .main-nav {
@@ -782,7 +768,27 @@ last-login-details
 }
 
 .modal {
-    z-index: 31;
+    z-index: 22;
+}
+
+.modal-backdrop.fade {
+    opacity: .5;
+    z-index: 2;
+}
+
+.modal.fade .modal-dialog {
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+}
+.modal-dialog{
+    z-index: 23;
+}
+
+.modal-dialog-centered {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
 }
 
 .bootbox {
