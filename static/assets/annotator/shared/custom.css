@@ -357,12 +357,11 @@ body.pdf-viewer {
 #comment-wrapper {
   position: relative;
   flex: 0 0 330px;
-  max-width: 330px;
-  z-index: 3;
+  max-width: 330px;  
   display: none;
   background: #F8F8F8;
   border-right: 1px solid #e6e6e6;
-  }
+}
 #notification-wrapper {
   position: absolute;
   width: 50px;

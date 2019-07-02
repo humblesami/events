@@ -446,12 +446,6 @@ export class MessengerComponent implements OnInit {
 
 	ngOnInit() {        
         var obj_this = this;
-        $('#call_modal').keyup(function(){
-            $(this).css({
-                top: '6%',
-                left: '10%'
-            })
-        });
         for(var key in obj_this.socketService.chat_users)
         {
             obj_this.socketService.chat_users[key].messages = undefined;

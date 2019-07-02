@@ -38,16 +38,16 @@ export class SocketService {
             init: function(uid, audio_only){
                 let video_call = this;
                 video_call.drag_enabled = false;
+                video_call.maximize();
+                if(audio_only)
                 {
-                    if(audio_only)
-                    {
-                        video_call.is_audio_call = true;
-                    }
-                    else
-                    {
-                        video_call.is_audio_call = false;
-                    }
+                    video_call.is_audio_call = true;
                 }
+                else
+                {
+                    video_call.is_audio_call = false;
+                }
+                
                 if(!obj_this.chat_users[uid].online)
                 {
                     video_call.show_notification(obj_this.chat_users[uid].name +' is not online yet, but will be informed when online')
@@ -165,8 +165,8 @@ export class SocketService {
                         }
                     }
                 }
-                obj_this.rtc_multi_connector.init(params, on_started, video_call.is_audio_call);
-                $('#ongoing_controls').show();
+                $('#rtc-container').addClass('ongoing_call');
+                obj_this.rtc_multi_connector.init(params, on_started, video_call.is_audio_call);                
             },
 
             started_by_caller: function(data){
@@ -272,25 +272,26 @@ export class SocketService {
                 obj_this.video_call.state = 'available';                
                 obj_this.ongoing_call = undefined;                 
                 $('#videos-container').html('');
-                $('#ongoing_controls').hide();
-                $('#rtc-container').hide();
+                $('#rtc-container').removeClass('ongoing_call').hide();
             },
 
             drag_enabled: false,
 
             minimize: function(){
                 $('#rtc-container').removeClass('full').addClass('min');
-                window['rtc-call-max'] = undefined;
-                $('#rtc-container').draggable({'continment':'.router-outlet'});                
+                window['rtc-call-max'] = undefined;                
+                $('#rtc-container').draggable({'containment':[0, 0, '100vw', window.innerHeight - 10]});
+                $('#rtc-container').css({top:'unset',left:'unset',bottom:'10px',right:'10px'}).draggable('enable');
                 this.drag_enabled = true;
             },
-            maximize: function(){
-                $('#rtc-container').removeClass('min').addClass('full'); 
+            maximize: function(){                 
                 if(this.drag_enabled)
                 {
-                    $('#rtc-container').css({'top':'70px', 'left':'px'}).draggable('disable');
+                    $('#rtc-container').draggable('disable');
                     this.drag_enabled = false;
                 }
+                $('#rtc-container').css({top:0,left: 0});
+                $('#rtc-container').removeClass('min').addClass('full');
                 window['rtc-call-max'] = 1;
             },
 
@@ -306,7 +307,7 @@ export class SocketService {
         if(!window['socket_manager'])
         {
             window['socket_manager'] = obj_this;
-            console.log(obj_this, 342);
+            // console.log(obj_this, 342);
         }
         this.site_config = window['site_config'];
         this.server_url = this.site_config.server_base_url;

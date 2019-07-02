@@ -47,10 +47,6 @@ export class AppComponent {
             $(this).parent().toggleClass('is-expanded');
         });
 
-        $('body').on('mouseup', '.navbar-toggler', function(e) {
-            window['functions'].togglerelated('.navbarNavDropdown');
-        });
-
         $("body").on("click", ".top-search-btn", function() {
             $(".serach-input")
                 .toggleClass("active")

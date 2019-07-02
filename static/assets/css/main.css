@@ -231,26 +231,6 @@ body.light .home{ background: rgba(233, 176, 103, 0.61); }
 	}
 }
 
-#switcher {
-    display: none !important;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    display: flex;
-    position: fixed;
-    bottom: 1%;
-    left: 50%;
-    z-index: 999;
-    transform: translateX(-50%);
-  }
-  #switcher li {
-    width: 30px;
-    height: 30px;
-    margin: 0 15px 15px 0;
-    border: 3px solid black;
-  }
-
   #greenButton {
     background: #28a745;
   }
@@ -268,9 +248,6 @@ body.light .home{ background: rgba(233, 176, 103, 0.61); }
   }
   #redButton{
     background: #ff5733;
-}
-.navbarNavDropdown{
-    background-color: var(--toggle-left-menu-bg);
 }
 :focus {
     box-shadow: none;
@@ -334,10 +311,6 @@ mg {
     color: var(--menu-icon-color);
 }
 
-.hidemouseaway {
-    z-index: 9010;
-}
-
 
 /* Fixed version of the header */
 
@@ -346,7 +319,6 @@ body.fixed .header-fixed {
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 200;
 }
 
 .breadcrumb {
@@ -377,7 +349,6 @@ b {
     top: 15px;
     left: 30px;
     text-align: right;
-    z-index: 200;
 }
 
 .DocsBtn {
@@ -396,7 +367,7 @@ b {
     position: absolute;
     top: 0px;
     right: -2px;
-    z-index: 200;
+    z-index: 4;
 }
 
 button,
@@ -413,10 +384,14 @@ a,
     opacity: .5;
 }
 
-/* #main-div {
+#main-div {
+    /*
     padding-bottom: 20px;
-    padding-top: 10px;
-} */
+    padding-top: 10px;    
+    position: relative;
+    z-index: -1;
+    */
+}
 
 .ProfileChangeSaveWrapper{
 	border-radius:50%;
@@ -514,7 +489,6 @@ a,
     transform: scale(1);
 }
 .DocumentWrapper:hover{
-    z-index: 2;
     -webkit-transition: all 200ms ease-in;
     -webkit-transform: scale(1.1);
     -ms-transition: all 200ms ease-in;
@@ -639,7 +613,6 @@ button:focus {
     border-radius: 100%;
     margin-left: 2px;
     margin-top: 2px;
-    z-index: 45;
     cursor: pointer;
     position: relative;
 }
@@ -809,7 +782,7 @@ last-login-details
 }
 
 .modal {
-    z-index: 9999999;
+    z-index: 31;
 }
 
 .bootbox {
@@ -991,7 +964,7 @@ last-login-details
 
 #server-wait {
     position: absolute;
-    z-index: 99999;
+    z-index: 19;
     top: 0;
     left: 0;
     width: 100%;
@@ -1094,20 +1067,12 @@ last-login-details
     margin-top: 20px;
 }
 
-#setup-buttons {
-    z-index: 16;
-    text-align: center;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-}
-
 #backTop {
     display: none;
     position: fixed;
     bottom: 20px;
     right: 30px;
-    z-index: 99;
+    z-index: 8;
     font-size: 14px;
     border: none;
     outline: none;
@@ -1236,13 +1201,11 @@ th.fc-day-header.fc-widget-header {
 /*** Header ***/
 .brand-logo{
     padding: 0 25px;
-    position: relative;
-    z-index: 200;
+    position: relative;    
 }
 
 button.navbar-toggler {
     padding: 0;
-    z-index: 200;
     color: var(--toggle-menu-color);
     width: 50px;
 }
@@ -1255,18 +1218,6 @@ button.navbar-toggler {
     padding-left: 0;
     margin-bottom: 0;
     list-style: none;
-}
-
-.navbarNavDropdown {
-    position: fixed;
-    width: 240px;
-    top: 50px;
-    overflow-y: auto;
-    z-index: 99;
-    left: 0;
-    padding-bottom: 1rem;
-    border-right: 1px solid #e8e8e8;
-    bottom: 0;
 }
 /*
 .mobile-chatroom button, .navbar-profile-menu button{
@@ -1419,8 +1370,7 @@ button.navbar-toggler {
 
 
 .lowerheader{
-    position: relative;
-    z-index: 7;
+    position: relative;    
     padding: 5px;
     display: flex;
     flex-basis:360px;
@@ -1511,7 +1461,7 @@ input#search-box {
     justify-content: center;
     align-items: center;
     width: 100%;
-    z-index: 900;
+    z-index: 11;
     overflow: hidden;
     bottom: 0;
     left: 0;
@@ -1600,7 +1550,6 @@ div#search-modal {
     color: rgba(255, 255, 255, 0.6392156862745098);
     cursor: pointer;
     font-size: 16px;
-    z-index: 9999;
 }
 
 .close-button i.fa.fa-close {
@@ -1680,7 +1629,6 @@ div#search-modal {
     visibility: hidden;
     border-top-left-radius: 0rem  !important;
     border-bottom-left-radius: 0rem  !important;
-    z-index: 999;
 }
 
 ::-webkit-input-placeholder {
@@ -1703,7 +1651,6 @@ div#search-modal {
 .input.active {
     width: 100%;
     visibility: visible;
-    z-index: 9999;
 }
 
 .btn.animate {
@@ -1714,7 +1661,6 @@ div#search-modal {
 
 .topsearchbar .input-group-btn{
     position: relative;
-    z-index: 999;
 }
 
 .main-user-navbar {
@@ -1855,8 +1801,8 @@ div#search-modal {
     width: 100%;
     left: 0;
     right: 0;
+    z-index: 2;
     padding: 3px 15px;
-    z-index: 9999;
 }
 
 .searchbar-full-width .lowerheader.input-group{
@@ -1980,14 +1926,8 @@ div#search-modal {
     padding: 0;
     display: flex;
     height: 70px;
-    box-sizing: border-box;
-    position: fixed;
+    box-sizing: border-box;    
     width: 100%;
-    top: 0;
-    left: 0;
-    right:0;
-    z-index: 9020;
-    display: flex;
 }
 
 .profile-icon img
@@ -2081,7 +2021,6 @@ div#search-modal {
 	background: #f5f5f5;
 	border-bottom: none;
 	padding: 36px 0px 10px;
-	z-index: 100000;
 	overflow: hidden;
 }
 
@@ -2120,7 +2059,6 @@ div#search-modal {
 	border: none;
 	width: 20px;
 	background: transparent;
-	z-index: 2;
 	color: #ffffff;
 	font-size: 16px;
 }
@@ -2131,7 +2069,6 @@ div#search-modal {
 	height: 20px;
 	line-height: 20px;
 	cursor: pointer;
-	z-index: 1;
 	border: none;
 	width: 20px;
 	background: transparent;
@@ -2374,7 +2311,7 @@ div#search-modal {
 .notification-container .notification-list{
     position: absolute;
     display: none;
-    z-index: 99999;
+    z-index: 14;
     top: 50px;
     right: -10px;
     max-width: 380px;
@@ -2490,7 +2427,6 @@ div#search-modal {
     position: absolute;
     top: 0px;
     right: -2px;
-    z-index: 200;
 }
 .notification-container .un-read-msg{
     right:0 !important;
@@ -2563,40 +2499,6 @@ body.iframe {
 /** Notification **/
 
 
-#call_modal
-{
-    position: absolute;
-    top: 20px;
-    left: 14%;
-    border: 1px solid;
-    width: 70%;
-    background: white;
-    z-index: 9998;
-}
-#call_modal .call_header{
-    background: #bec3c9;
-    text-align:right;
-    color: white;
-    padding: 5px;
-}
-
-#call_modal .call_header buton{
-    cursor:pointer;
-    padding: 5px;
-    background: #c23616;
-    margin-left: 5px;
-}
-#call_modal .call_header buton:hover
-{
-    background: #09f;
-}
-
-#call_modal .incoming_call_message
-{
-    text-align: center;
-    padding: 20px;
-}
-
 button
 {cursor: pointer;}
 
@@ -2613,7 +2515,7 @@ button
     left: 0;
     width: 230px;
     overflow: auto;
-    z-index: 9097;
+    z-index: 3;
     background-color: var(--toggle-left-menu-bg);
     -webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
             box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
@@ -2646,7 +2548,6 @@ button
       left: 0;
       bottom: 0;
       right: 0;
-      z-index: 9;
     }
   }
 
@@ -2841,7 +2742,6 @@ button
       max-height: 100vh;
       opacity: 1;
       visibility: visible;
-      z-index: 10;
     }
     .sidebar-mini.sidenav-toggled .treeview .app-menu__label {
       border-bottom-right-radius: 0;
@@ -2853,7 +2753,6 @@ button
       padding: 12px 0;
       opacity: 0;
       border-bottom-right-radius: 4px;
-      z-index: 9;
       visibility: hidden;
       -webkit-transition: visibility 0.3s ease;
       -o-transition: visibility 0.3s ease;
@@ -3227,7 +3126,6 @@ span.kanban-upcoming-meeting-date {
     opacity: 1;
     cursor: pointer;
     font-size: 19px;
-    z-index: 900;
 }
 
 #CreateFolder button.close:hover{
