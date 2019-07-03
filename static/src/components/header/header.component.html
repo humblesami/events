@@ -19,12 +19,23 @@
                     <span class="cursor_chooser"><i class="icon-cursor" id="cursor_chooser"></i></span>
                     <canvas id="cursor_canvas" width="20" height="20" style="display:none" ></canvas>
                 </div>
-                <div class="messageicon-container mobile-chatroom nav-icon dropdown">
-                    <button routerLink="/messenger" class="showmouseawaybutton notification-icon">
+                <div 
+                    class="messageicon-container mobile-chatroom nav-icon dropdown"                                
+                    data-placement="bottom"
+                    (click)="show_messenger()"
+                    >
+                    <button class="notification-icon">
                         <i class="icon-chat"></i>
                     </button>
                     <span class="un-read-msg" *ngIf="socketService.unseen_messages !=0 ">{{socketService.unseen_messages}}</span>
                 </div>
+                <!-- <div class="hidden" id="messenger-icon-target">
+                    <div>
+                        <span>Hun</span>
+                        <li (click)="show_messenger()"></li>
+                    </div>                    
+                </div> -->
+
                 <app-chat></app-chat>
                 <div class="navbar-profile-menu dropdown">
                     <button class="profile-icon showmouseawaybutton" (click)="show_profile_menu($event)">

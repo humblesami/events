@@ -3268,4 +3268,16 @@ ul.dropdown-menu.scrollable-menu
 {
     margin-bottom: 100px;
 }
-
+.popup.messenger{
+    position: absolute;
+    z-index: 1;
+    right: 15px;
+    bottom: 15px;
+    width: 34%;
+    height: calc(100vh - 447px);
+    border: 1px solid;
+    display: none;
+}
+.row > .card{
+    margin: 10px;
+}

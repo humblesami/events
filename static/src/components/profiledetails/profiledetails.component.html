@@ -1,11 +1,11 @@
 ﻿<app-breadcrumb app="meetings" model="{{type}}"
 rid="{{profile_data.id}}" *ngIf="!my_profile && type_breadCrumb" edit="1" delete="1"
-routes='[{"title":"Profiles", "link":"/profiles"}, {"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
+routes='[{"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
 
 <app-breadcrumb app="meetings" model="{{type}}"
 rid="{{profile_data.id}}" *ngIf="my_profile && type_breadCrumb"
-routes='[{"title":"Profiles", "link":"/profiles"}, {"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
+routes='[{"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
 
 <div class="router-outlet">
@@ -75,7 +75,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <h3>No login data</h3>
                         </div>
 
-						 <div *ngIf="profile_data.resume"  class="row docwrappercontainer">
+						<div *ngIf="profile_data.resume"  class="row docwrappercontainer">
 							<div class="col-sm-12">
                                 <h3>Resume</h3>
                             </div>
@@ -88,7 +88,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 											</span>
 										</div>
 										<div class="DocInfoVertical">
-											<div class="DocText text-truncate">{{doc.name}}</div>
+											<div class="DocText text-truncate">{{profile_data.resume.name}}</div>
 										</div>
 									</div>
 								</a>
@@ -99,17 +99,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div class="ProFileHeadWrap">
                             PERSONAL INFO
                         </div>
-                        <div *ngIf="profile_data.email" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="w-phone">
-                                    <b>Email Address:</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.email}}
-                            </div>
-                        </div>
-
 
                         <div *ngIf="profile_data.department" class="row mb-2">
                                 <div class="col-sm-3">
@@ -207,8 +196,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 {{profile_data.board_joining_date | date:'MMM dd,yyyy'}}
                             </div>
                         </div>
-
-                        <!-- Term Date -->
 
                         <div *ngIf="profile_data.term_start_date" class="row mb-2">
                             <div class="col-sm-3">
@@ -661,7 +648,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </div>
                         </div>
                     </div>
-                    <!--Diversity Information-->
 
                     <div class="row" style="margin-top:20px;">
                         <div class="col-sm-12">
@@ -684,28 +670,28 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </div>
                             </div>
                             <div class="row">
-                                    <div class="col-sm-3">
-                                        <label for="gender">
-                                            <b>Gender</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        <select (change)="modified_profile_data.gender = $event.target.value" id='gender' requeired>
-                                            <option *ngFor="let row of choice_fields.gender" value="{{row.id}}" [selected]="row.name === profile_data.gender">{{row.name}}</option>
-                                        </select>
-                                    </div>
+                                <div class="col-sm-3">
+                                    <label for="gender">
+                                        <b>Gender</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    <select (change)="modified_profile_data.gender = $event.target.value" id='gender' requeired>
+                                        <option *ngFor="let row of choice_fields.gender" value="{{row.id}}" [selected]="row.name === profile_data.gender">{{row.name}}</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="row">
-                                    <div class="col-sm-3">
-                                        <label for="veteran">
-                                            <b>Veteran</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        <select (change)="modified_profile_data.veteran = $event.target.value" id='gender' requeired>
-                                            <option *ngFor="let row of choice_fields.veteran" value="{{row.id}}" [selected]="row.name === profile_data.veteran">{{row.name}}</option>
-                                        </select>
-                                    </div>
+                                <div class="col-sm-3">
+                                    <label for="veteran">
+                                        <b>Veteran</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    <select (change)="modified_profile_data.veteran = $event.target.value" id='gender' requeired>
+                                        <option *ngFor="let row of choice_fields.veteran" value="{{row.id}}" [selected]="row.name === profile_data.veteran">{{row.name}}</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="row">
                                     <div class="col-sm-3">

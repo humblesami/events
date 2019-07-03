@@ -246,9 +246,24 @@ export class HeaderComponent implements OnInit {
         $(".searchbar-full-width").hide();
         obj_this.search_bar_shown = false;
     }
+    
+    show_messenger(){
+        $('.popup.messenger').show();
+    }
 
     admin_url = '';
     ngOnInit() {
+        // setTimeout(function(){
+        //     $('.messageicon-container').popover({
+        //         html:true,
+        //         content: function() {
+        //             // var content = $(this).attr("content");
+        //             // console.log($(content)[0]);                    
+        //             // return content; // $(content)[0].outerHTML;
+        //             return $('#messenger-icon-target').html();
+        //         }
+        //     });
+        // }, 200);
         
     }
 }

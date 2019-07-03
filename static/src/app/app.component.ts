@@ -26,6 +26,10 @@ export class AppComponent {
 			document.getElementById("backTop").style.display = "none";
 		}
     }
+
+    close_messenger_popup(){
+        $('.popup.messenger').hide();
+    }
     
     odoo_build = window['odoo'] ? 1 : undefined;
     ngOnInit() {

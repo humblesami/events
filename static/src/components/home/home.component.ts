@@ -76,18 +76,6 @@ export class HomeComponent implements OnInit {
                 console.log("invalid data", home_data);
                 return;
             }
-            home_data = {
-                news: home_data.news,
-                doc_ids: home_data.doc_ids,
-                video_ids: home_data.video_ids,
-                to_do_items:{
-                    pending_meetings: home_data.to_do_items.pending_meetings,
-                    pending_surveys: home_data.to_do_items.pending_surveys,
-                    pending_documents:home_data.to_do_items.pending_documents,
-                    pending_votings: home_data.to_do_items.pending_votings
-                },
-                calendar: home_data.calendar
-            };
 
             // console.log(home_data);
             var result = home_data.to_do_items.pending_meetings;
@@ -108,22 +96,17 @@ export class HomeComponent implements OnInit {
                 } else {
                     console.log(element.url + ' is not a valid url for video '+element.name);
                 }
-            });
-            home_data.video_ids = valid_videos;
+            });            
             obj_this.home_data = home_data;
-            var to_do_items = obj_this.home_data.to_do_items;
-            if (to_do_items.pending_meetings.length) {
-                obj_this.to_do_data = true;
-
-            } else if (to_do_items.pending_surveys.length) {
-                obj_this.to_do_data = true;
-
-            } else if (to_do_items.pending_documents.length) {
-                obj_this.to_do_data = true;
-
-            } else if (to_do_items.pending_votings.length) {
-                obj_this.to_do_data = true;
-            }
+            home_data.video_ids = valid_videos;            
+            let to_do_items = home_data.to_do_items;
+            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
+            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
+            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
+            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
+            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
+            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
+            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
             obj_this.to_do_count = to_do_items.pending_documents.length + to_do_items.pending_meetings.length + to_do_items.pending_surveys.length + to_do_items.pending_votings.length;
         };
         let args = {
