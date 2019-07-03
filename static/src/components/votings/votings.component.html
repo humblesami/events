@@ -8,17 +8,17 @@ title="Resolutions"></app-breadcrumb>
 <div class="router-outlet">
 	<div class="container">
 		<div class="MainTitleHeadWrap">
-                <div class="HeadingWrap">
-                    <img src="static/assets/images/meeting-icon.png" alt="" /> Resolutions
-                </div>
-                <div class="MeetingBtnWrapper">
-                    <div class="btn-group">
-                        <a routerLink="/actions/votings" class="btn">Resolutions</a>
-                        <a routerLink="/actions/signdocs" class="btn">Esignature</a>
-                        <a routerLink="/actions/surveys" class="btn">Surveys</a>
-                    </div>
-                </div>
-            </div>
+				<div class="HeadingWrap">
+					<img src="static/assets/images/meeting-icon.png" alt="" /> Resolutions
+				</div>
+				<div class="MeetingBtnWrapper">
+					<div class="btn-group">
+						<a routerLink="/actions/votings" class="btn">Resolutions</a>
+						<a routerLink="/actions/signdocs" class="btn">Esignature</a>
+						<a routerLink="/actions/surveys" class="btn">Surveys</a>
+					</div>
+				</div>
+			</div>
 	</div>
 
 	<div class="container" *ngIf="no_meet" >
@@ -30,10 +30,11 @@ title="Resolutions"></app-breadcrumb>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="container">
-			<div class="row">
-				<div class="kanban-card" *ngFor="let voting of voting_data">
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-6 col-md-4 mb-4" *ngFor="let voting of voting_data">
+				<div class="kanban-card">
 					<div class="kanban-meeting-info">
 						<a class="kanban-upcoming-meeting" routerLink="/voting/{{voting.id}}">
 							<div class="CalendarDateWrapper">
@@ -61,5 +62,6 @@ title="Resolutions"></app-breadcrumb>
 					</div>
 				</div>
 			</div>
+		</div>
 	</div>
 </div>

@@ -21,28 +21,30 @@
 		</div>
 
         <div class="row">
-            <div class="kanban-profiles kanban-card" *ngFor="let profile of profiles_data">
-                <a class="kanban-profiles-user-info-box" routerLink="/{{type}}/{{profile.id}}">
-                    <div class="kanban-profiles-user-img">
-                        <img class="img-thumbnail-md"
-                        src="{{socketService.server_url}}{{profile.image}}">                        
-                    </div>
-                    <div class="kanban-profiles-user-info">
-                        <div class="kanban-profiles-user-InfoLIST">
-                                {{profile.name}}
-                        </div>
-                        <div *ngIf="profile.company" class="kanban-profiles-user-InfoLIST">
-                            <i class="fas fa-users"></i> {{profile.company}}
-                        </div>
-                        <div *ngIf="profile.mobile_phone" class="kanban-profiles-user-InfoLIST">
-                            <i class="fas fa-phone"></i> {{profile.mobile_phone}}
-                        </div>
-                        <div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
-                            <i class="fas fa-envelope"></i> {{profile.email}}
-                        </div>
-                    </div>
-                </a>
-            </div>
+			<div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of profiles_data">
+				<div class="kanban-profiles kanban-card" >
+					<a class="kanban-profiles-user-info-box" routerLink="/{{type}}/{{profile.id}}">
+						<div class="kanban-profiles-user-img">
+							<img class="img-thumbnail-md"
+							src="{{socketService.server_url}}{{profile.image}}">
+						</div>
+						<div class="kanban-profiles-user-info">
+							<div class="kanban-profiles-user-InfoLIST">
+									{{profile.name}}
+							</div>
+							<div *ngIf="profile.company" class="kanban-profiles-user-InfoLIST">
+								<i class="fas fa-users"></i> {{profile.company}}
+							</div>
+							<div *ngIf="profile.mobile_phone" class="kanban-profiles-user-InfoLIST">
+								<i class="fas fa-phone"></i> {{profile.mobile_phone}}
+							</div>
+							<div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
+								<i class="fas fa-envelope"></i> {{profile.email}}
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
         </div>
     </div>
 

@@ -88,10 +88,11 @@
             <div class="container">
                 <div class="row">
                 <div class="col-sm-12">
-                    <h4>
-                        <b>Documents</b>
-                    </h4>
-                    <br>
+                    <div class="main-heading">
+						<h1>
+                        	Documents
+                    	</h1>
+					</div>
                 </div>
                 <div class="col-sm-12">
                     <div class="row docwrappercontainer">
@@ -103,7 +104,7 @@
 									</span>
 								</div>
 								<div class="DocInfoVertical">
-									<div class="DocText">{{doc.name}}</div>
+									<div class="DocText p-0">{{doc.name}}</div>
                            		 </div>
                             </div>
                         </a>
@@ -111,14 +112,15 @@
                 </div>
                 </div>
             </div>
-        </section>
+
         <div *ngIf="home_data.video_ids && home_data.video_ids.length" class="container">
             <div class="row">
                 <div class="col-sm-12">
-                <h4>
-                    <b>Videos</b>
-                </h4>
-                <br>
+                <div class="main-heading">
+						<h1>
+                        	Videos
+                    	</h1>
+					</div>
                 </div>
                 <div class="col-sm-12">
                 <div class="row">
@@ -136,14 +138,16 @@
                 <div class="container">
 					<div class="row">
 						<div class="col-lg-12">
-							<div class=" modal-header">
-								Upcoming Meetings
+							<div class="main-heading">
+								<h1>
+									Upcoming Meetings
+								</h1>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="kanban-card" *ngFor="let meeting_object of home_data.to_do_items.pending_meetings">
-							<div class="kanban-meeting-info">
+						<div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let meeting_object of home_data.to_do_items.pending_meetings">
+							<div class="kanban-card kanban-meeting-info">
 								<a class="kanban-upcoming-meeting" routerLink="/meeting/{{meeting_object.id}}">
 									<div class="CalendarDateWrapper">
 										<span *ngIf="meeting_object.start" class="CalendarDateWrap">
@@ -218,26 +222,30 @@
             <div *ngIf="home_data.to_do_items.pending_votings && home_data.to_do_items.pending_votings.length" class="">
                 <div class="container">
 					<div class="row">
-						<div class="col-lg-12">
-							<div class=" modal-header">
-								 Votings/Approvals
+						<div class="col-sm-12">
+							<div class="main-heading">
+								<h1>
+									Approval/Voting
+								</h1>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="kanban-card voting" *ngFor="let vote of home_data.to_do_items.pending_votings">
-							<div class="VotingsInfoBox">
-								<div class="VotingsInfoBoxTitle ">
-									<h5>
-										<b>{{vote.name}}</b>
-										<span *ngIf="vote.meeting_name"> Meeting: {{vote.meeting_name}}</span>
-										<div><strong>Voting Type :</strong><span style="display:inline-block;">{{vote.voting_type_name}}</span></div>
-									</h5>
-								</div>
-								<div class="bs-btnwrap">
-									<button class="btn" routerLink="/voting/{{vote.id}}">
-									<span>Cast Vote</span>
-									</button>
+						<div class="col-sm-6 col-md-4 mb-4" *ngFor="let vote of home_data.to_do_items.pending_votings">
+							<div class="kanban-card voting">
+								<div class="VotingsInfoBox">
+									<div class="VotingsInfoBoxTitle ">
+										<h5>
+											<b>{{vote.name}}</b>
+											<span *ngIf="vote.meeting_name"> Meeting: {{vote.meeting_name}}</span>
+											<div><strong>Voting Type :</strong><span style="display:inline-block;">{{vote.voting_type_name}}</span></div>
+										</h5>
+									</div>
+									<div class="bs-btnwrap">
+										<button class="btn" routerLink="/voting/{{vote.id}}">
+										<span>Cast Vote</span>
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -283,7 +291,8 @@
                 <h1>Congratulations!<br>You have no task pending :)</h1>
             </div>
         </div>
-    </div>
+    	</section>
+	</div>
     <div id="welcome" *ngIf="!home_data">
         <h3>Welcomr to boardsheet, no message updated yet</h3>
     </div>

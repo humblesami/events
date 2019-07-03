@@ -6,76 +6,72 @@ delete="1"
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"},
 {"title":"{{meeting_name}}", "link":"/meeting/{{meeting_id}}"}]'
 title="{{topic.name}}"></app-breadcrumb>
-<div class="router-outlet">
-    <div class="container">
+<div class="router-outlet"><div class="container">
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="MainTitleHeadWrap">
+					<div class="HeadingWrap">
+						<i _ngcontent-c4="" class="icon-profile"></i> {{topic.name}}
+					</div>
+				</div>
+			</div>
+		</div>
         <div class="row">
 
             <div class="col-sm-12 mr-b20">
-                <div *ngIf="topic.name" class="row">
-                    <div class="col-sm-3">
-                        <label>
-                          <b>Name</b>
-                        </label>
-                    </div>
-                    <div class="col-sm-9 UserProfileDiscription">
-                        {{topic.name}}
-                    </div>
-                </div>
-                <div *ngIf="topic.lead" class="row">
-                    <div class="col-sm-3">
-                        <label>
-                          <b>Lead</b>
-                        </label>
-                    </div>
-                    <div class="col-sm-9 UserProfileDiscription">
-                        {{topic.lead}}
-                    </div>
-                </div>
-                <div *ngIf="topic.duration" class="row">
-                    <div class="col-sm-3">
-                        <label>
-                          <b>Duration</b>
-                        </label>
-                    </div>
-                    <div class="col-sm-9 UserProfileDiscription">
-                        {{topic.duration}}
-                    </div>
-                </div>
-                <div *ngIf="topic.content" class="row">
-                    <div class="col-sm-3">
-                        <label>
-                          <b>Content</b>
-                        </label>
-                    </div>
-                    <div class="col-sm-9 UserProfileDiscription">
-                        {{topic.content}}
-                    </div>
+                <div  class="row">
+					<div *ngIf="topic.name" class="col-md-6">
+						<div class="meet-elements">Name</div>
+						<label class="meet-elementsInfo">{{topic.name}}</label>
+					</div>
+					<div *ngIf="topic.lead" class="col-md-6">
+						<div class="meet-elements">Lead</div>
+						<label class="meet-elementsInfo">{{topic.name}}</label>
+					</div>
+					<div *ngIf="topic.duration" class="col-md-6">
+						<div class="meet-elements">Duration</div>
+						<label class="meet-elementsInfo">{{topic.duration}}</label>
+					</div>
+					<div *ngIf="topic.content" class="col-md-6">
+						<div class="meet-elements">Content</div>
+						<label class="meet-elementsInfo">{{topic.content}}</label>
+					</div>
+
                 </div>
 
-                
             </div>
         </div>
     </div>
     <div class="container">
         <div *ngIf="topic.votings && topic.votings.length" class="title-wrapper">
             <!--Votings-->
-            <div class="modal-header">
-                Approval/Voting
-            </div>
-            <div class="row">
+			<div class="row">
+                <div class="col-sm-12">
+                    <div class="main-heading">
+						<h1>
+                        	Approval/Voting
+                    	</h1>
+					</div>
+                </div>
+			</div>
 
-				<div class="kanban-card voting" *ngFor="let vote of topic.votings">
-					<div class="VotingsInfoBox">
-						<div class="VotingsInfoBoxTitle ">
-							<h5>
-								<b>{{vote.name}}</b>
-							</h5>
-						</div>
-						<div class="bs-btnwrap">
+            <div class="row">
+				<div class="col-sm-6 col-md-4 mb-4" *ngFor="let vote of topic.votings">
+					<div class="kanban-card voting">
+						<div class="VotingsInfoBox">
+							<div class="VotingsInfoBoxTitle ">
+								<h5>
+									<b>{{vote.name}}</b>
+								</h5>
+							</div>
+							<div class="bs-btnwrap">
 							<button class="btn btn-primary" routerLink="/voting/{{vote.id}}">
 								<span *ngIf = "vote.my_status != 'pending'">Results</span>
 								<span *ngIf = "vote.my_status == 'pending'">Start</span>
 							</button>
+						</div>
 						</div>
 					</div>
 				</div>
@@ -86,20 +82,24 @@ title="{{topic.name}}"></app-breadcrumb>
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4>
-                        <b>Documents</b>
-                    </h4>
-                    <br>
+                    <div class="main-heading">
+						<h1>
+                        	Documents
+                    	</h1>
+					</div>
                 </div>
                 <div class="col-sm-12">
-                    <div class="row">
-                        <a class="col-sm-6 col-md-4 col-lg-3" routerLink="/topic/doc/{{doc.id}}" *ngFor="let doc of topic.docs">
+					<div class="row docwrappercontainer">
+                        <a class="col-sm-6 col-md-4 col-lg-2" routerLink="/topic/doc/{{doc.id}}" *ngFor="let doc of topic.docs">
                             <div class="DocumentWrapper">
-                                    <div class="DocIcon">
-                                            <!-- doc_type='topic' doc_id='{{doc.id}}' -->
-                                    <i class="fa fa-file"></i>
-                                </div>
-                                <div class="DocText">{{doc.name}}</div>
+								<div class="DocIcon">
+									<span class="rounded-circle">
+										<i class="icon-doc-file"></i>
+									</span>
+								</div>
+								<div class="DocInfoVertical">
+									<div class="DocText">{{doc.name}}</div>
+                           		 </div>
                             </div>
                         </a>
                     </div>
