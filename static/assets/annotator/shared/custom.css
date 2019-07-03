@@ -464,6 +464,7 @@ body.pdf-viewer {
 	height: calc(100vh - 160px);
 	overflow-y: scroll;
 	background: #ffffff;
+	z-index:3;
   }
 .comment-list-form {
 	padding-left: 0px;
@@ -473,8 +474,7 @@ body.pdf-viewer {
 	border-top: 1px solid hsla(0,0%,0%,.2);
 	background:#ffffff;
   }
- .AddCommentTextWrap{
-	padding:5px;
+ .AddCommentTextWra{
  }
 
 #commentText {
@@ -484,14 +484,16 @@ body.pdf-viewer {
   min-height: 44px;
   border: indianred;
   background-color: white;
-  padding:5px;
+  padding:10px 17px 10px 10px;
   overflow:auto;
   }
+
+
+/*
   .comment-list-container br{
   display:none;
   }
-
-/* #commentText:focus {
+ #commentText:focus {
   outline: none;
   border-top: 1px solid #cccccc;
   box-shadow: transparent;

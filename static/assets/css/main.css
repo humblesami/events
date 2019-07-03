@@ -860,9 +860,6 @@ last-login-details
 
 .kanban-card {
     cursor: pointer;
-    -ms-flex: 0 0 33.333333%;
-    flex: 0 0 33.333333%;
-    max-width: 33.333333%;
     position: relative;
     width: 100%;
     min-height: 1px;
@@ -912,7 +909,7 @@ last-login-details
 
 .kanban-profiles-user-info-box {
     display: flex;
-    background: #f3f3f3;
+    background: #fdfdfd;
     border-radius: 3px;
     border: 1px solid #f1eeee;
     padding: 10px 10px 7px;
@@ -927,7 +924,7 @@ last-login-details
 }
 
 .kanban-profiles-user-name{
-        margin-bottom: 0;
+    margin-bottom: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -939,21 +936,23 @@ last-login-details
 
 .kanban-profiles-user-img{
     margin-right: 15px;
-    width: 42px;
-    height: 42px;
+    width: 55px;
+    height: 55px;
     overflow: hidden;
-    border-radius: 50%;
-    flex: 0 0 42px;
+    /* border-radius: 50%; */
+    flex: 0 0 55px;
 }
-
 .kanban-profiles-user-img img{
     max-width: 100%;
 }
-
-  .kanban-profiles-user-email{
+  .kanban-profiles-user-InfoLIST{
 	font-size: 14px;
 	color: #43425D;
   }
+.kanban-profiles-user-InfoLIST i {
+    font-size: 12px;
+    padding-right: 3px;
+    }
 
 .kanban-folder i {
     font-size: 30px;
@@ -1012,27 +1011,41 @@ last-login-details
     .DocumentWrapper {
         margin-left: 13px;
     }
-    .kanban-card {
+}
+@media (min-width: 576px){
+	.kanban-card {
         -ms-flex: 0 0 100%;
         flex: 0 0 100%;
         max-width: 100%;
     }
 }
-
-@media (min-width: 576px) and (max-width: 767px) {
-    .kanban-card {
+@media (min-width: 768px){
+	.kanban-card {
         -ms-flex: 0 0 100%;
         flex: 0 0 100%;
         max-width: 100%;
     }
 }
-
-@media (min-width: 768px) and (max-width: 991px) {
-    .kanban-card {
+@media (min-width: 992px){
+	.kanban-card {
         -ms-flex: 0 0 50%;
         flex: 0 0 50%;
         max-width: 50%;
     }
+}
+@media (min-width: 1200px){
+	.kanban-card {
+        -ms-flex: 0 0 33.333333%;
+		flex: 0 0 33.333333%;
+		max-width: 33.333333%;
+    }
+}
+@media (min-width: 1540px){
+	.kanban-card {
+		-ms-flex: 0 0 25%;
+		flex: 0 0 25%;
+		max-width: 25%;
+	}
 }
 
 #jitsi-meet-container {
@@ -3255,3 +3268,4 @@ ul.dropdown-menu.scrollable-menu
 {
     margin-bottom: 100px;
 }
+
