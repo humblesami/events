@@ -45,7 +45,7 @@
 					<div *ngIf="active_chat_user.online" class="userstat">Online</div>
 					<div *ngIf="!active_chat_user.online" class="userstat">Offline</div>
 				</div>
-                <div class="MessengerConnectWrap">
+                <div *ngIf="active_chat_user" class="MessengerConnectWrap">
 					<div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">
 						<span >
 							<i class="fa fa-phone"></i>
@@ -58,11 +58,11 @@
 					</div>
 				</div>
 
-                <div class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
+                <div  *ngIf="active_chat_user" class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
             </div>			
             <div class="card-body msg_card_body meetVue-chat-body">
                 <div class="messenger-body" *ngFor="let msg of active_chat_user.messages">
-                    <div *ngIf="msg.sender == socketService.user_data.id"
+                    <div *ngIf="socketService.user_data && msg.sender == socketService.user_data.id"
                             class="d-flex align-items-end justify-content-end mb-4">
                         <div class="msg_cotainer_send">
                             <div class="msg-send-box-wrapper">
@@ -83,7 +83,7 @@
                             <span class="msg_time_send">{{msg.create_date | date:'medium'}}</span>
                         </div>
                     </div>
-                    <div *ngIf="msg.sender != socketService.user_data.id"
+                    <div *ngIf="socketService.user_data && msg.sender != socketService.user_data.id"
                             class="d-flex align-items-end justify-content-start mb-4">
                         <div class="img_cont_msg">
                             <img src="{{socketService.server_url}}{{active_chat_user.photo}}" class="rounded-circle user_img_msg">

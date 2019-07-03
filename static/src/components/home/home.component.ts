@@ -64,8 +64,12 @@ export class HomeComponent implements OnInit {
     }
 
     scroll_to_do(){
-        $('.router-outlet').animate({
-            scrollTop: $('#to-do').position().top
+        if(!this.home_data)
+        {
+            return;
+        }
+        $('.router-outlet').animate({            
+            scrollTop: $('#to-do').position().top - 20
         }, 500);
     }
 
@@ -98,15 +102,8 @@ export class HomeComponent implements OnInit {
                 }
             });            
             obj_this.home_data = home_data;
-            home_data.video_ids = valid_videos;            
-            let to_do_items = home_data.to_do_items;
-            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
-            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
-            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
-            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
-            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
-            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
-            to_do_items.pending_meetings.push(to_do_items.pending_meetings[0]);
+            home_data.video_ids = valid_videos;
+            var to_do_items = home_data.to_do_items;
             obj_this.to_do_count = to_do_items.pending_documents.length + to_do_items.pending_meetings.length + to_do_items.pending_surveys.length + to_do_items.pending_votings.length;
         };
         let args = {

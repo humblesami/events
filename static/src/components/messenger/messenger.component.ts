@@ -413,11 +413,6 @@ export class MessengerComponent implements OnInit {
 		}
     }    
     
-    toggle_messenger(e)
-    {
-        var togglerelated = window['functions'].togglerelated;        
-        togglerelated('.messenger-container'); 
-    }
     update_emjoi_urls(messages)
     {
         var obj_this = this;
@@ -460,6 +455,7 @@ export class MessengerComponent implements OnInit {
                 obj_this.is_mobile_device = false;
             }            
         });
+        $('.popup.messenger').hide();
     }
 
     ngOnDestroy() {
@@ -467,5 +463,6 @@ export class MessengerComponent implements OnInit {
         // this.socketService.server_events['chat_message_received'] = function(){
         //     //alert(34233434);
         // };
+
     }
 }

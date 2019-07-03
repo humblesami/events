@@ -248,11 +248,14 @@ export class HeaderComponent implements OnInit {
     }
     
     show_messenger(){
-        $('.popup.messenger').show();
+        if($('.messenger-container').length == 1)
+        {
+            $('.popup.messenger').show();
+        }
     }
 
     admin_url = '';
-    ngOnInit() {
+    ngOnInit() {        
         // setTimeout(function(){
         //     $('.messageicon-container').popover({
         //         html:true,
