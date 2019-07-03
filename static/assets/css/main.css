@@ -3030,11 +3030,9 @@ span.kanban-upcoming-meeting-date {
 .btn-meeting:hover{
     background:#3059C9;
 }
-.res-message
-{
+.res-message{
     border: 2px solid;
     padding: 5%;
-    margin: 1%;
 }
 @media (max-width: 576px) {
     .main-nav-header img.logo
