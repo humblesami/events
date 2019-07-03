@@ -145,21 +145,36 @@ class Event(models.Model):
     @classmethod
     def respond_invitation(cls, request, params):
         meeting_id = params['meeting_id']
-        user_response = params['response']
+        user_response = params.get('response')
+        user_attendance = params.get('attendance')
+        response_by = params.get('response_by')
         user_id = 0
         if request.user.id:
             user_id = request.user.id
         else:
             user_id = params['user_id']
-        invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
-        if invitation_response:
-            invitation_response = invitation_response[0]
-            invitation_response.state = user_response
-            invitation_response.save()
-        else:
-            invitation_response = Invitation_Response(state= user_response, event_id = meeting_id, attendee_id = user_id)
-            invitation_response.save()
-        return 'done'
+        if user_response:
+            invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
+            if invitation_response:
+                invitation_response = invitation_response[0]
+                invitation_response.state = user_response
+                invitation_response.save()
+            else:
+                invitation_response = Invitation_Response(state= user_response, event_id = meeting_id, attendee_id = user_id)
+                invitation_response.save()
+            return 'done'
+        elif user_attendance:
+            user_id = params['user_id']
+            invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
+            if invitation_response:
+                invitation_response = invitation_response[0]
+                invitation_response.attendance = user_attendance
+                invitation_response.save()
+            else:
+                invitation_response = Invitation_Response(attendance= user_attendance, event_id = meeting_id, attendee_id = user_id)
+                invitation_response.save()
+            return 'done'
+        return 'Something Wrong in Response Invitation'
 
     @classmethod
     def get_details(cls, request, params):
@@ -191,7 +206,7 @@ class Event(models.Model):
         meeting_object['exectime'] = meeting_object_orm.exectime
 
         attendance_status = cls.get_attendance_status(meeting_id, user_id)
-        meeting_object['attendee_status'] = attendance_status
+        meeting_object['attendee_status'] = attendance_status['state']
 
         topic_orm = list(meeting_object_orm.topic_set.all())
         topics = []
@@ -210,7 +225,10 @@ class Event(models.Model):
         attendees = []
         meeting_attendees = ws_methods.get_user_info( meeting_object_orm.attendees.all())
         for attendee_obj in meeting_attendees:
-            attendee_obj['attendance_status'] = cls.get_attendance_status(meeting_id, attendee_obj['id'])
+            attendance_status = cls.get_attendance_status(meeting_id, attendee_obj['id'])
+            attendee_obj['attendance_status'] = attendance_status['state']
+            attendee_obj['response_by'] = attendance_status['response_by']
+            attendee_obj['attendance'] = attendance_status['attendance']
             attendees.append(attendee_obj)
         meeting_object['topics'] = topics
         meeting_object['meeting_docs'] = meeting_docs
@@ -261,9 +279,16 @@ class Event(models.Model):
     @classmethod
     def get_attendance_status(cls, meeting_id, uid):
         invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=uid)
-        attendance_status = 'needsAction'
+        attendance_status = {
+            'state': 'needsAction',
+            'response_by': '',
+            'attendance': ''
+        }
         if invitation_response:
-            attendance_status = list(invitation_response)[0].state
+            invitation_response = list(invitation_response)[0]
+            attendance_status['state'] = invitation_response.state
+            attendance_status['response_by'] = invitation_response.state_by
+            attendance_status['attendance'] = invitation_response.attendance
         return attendance_status
 
     @classmethod
@@ -280,9 +305,8 @@ class Event(models.Model):
         meeting['start'] = str(meeting_obj.start_date)
         meeting['stop'] = str(meeting_obj.end_date)
         meeting['location'] = meeting_obj.location
-
         attendance_status = cls.get_attendance_status(meeting_id, uid)
-        meeting['attendee_status'] = attendance_status
+        meeting['attendee_status'] = attendance_status['state']
         my_event = meeting_obj.attendees.filter(pk=request.user.id)
         if my_event:
             meeting['my_event'] = 1
@@ -304,7 +328,7 @@ class Event(models.Model):
             meeting['location'] = meeting_obj.location
 
             attendance_status = cls.get_attendance_status(meeting_id, uid)
-            meeting['attendee_status'] = attendance_status
+            meeting['attendee_status'] = attendance_status['state']
 
             res_meetings.append(meeting)
         return res_meetings
@@ -371,9 +395,16 @@ STATE_SELECTION = (
     ('declined', _("Declined")),
     ('accepted', _("Accepted")),
 )
+ATTENDANCE_SELECTION = (
+    ('absent', _("Absent")),
+    ('inperson', _("Inperson")),
+    ('online', _("Online")),
+)
 
 
 class Invitation_Response(models.Model):
     state = models.CharField(max_length=20,choices=STATE_SELECTION, blank=True, null=True)
+    state_by = models.CharField(max_length=20, blank=True, null=True)
     attendee = models.ForeignKey(Profile, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    attendance = models.CharField(max_length=20,choices=ATTENDANCE_SELECTION, blank=True, null=True)

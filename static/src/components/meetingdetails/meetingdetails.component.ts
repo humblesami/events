@@ -128,18 +128,27 @@ export class MeetingDetailsComponent implements OnInit {
 		return true;
 	}
 
-	respond_invitation(response: string, meet_id: string) {
+
+    respond_invitation(response: string, meet_id: string, action:string, user_id:string) 
+    {
 		let req_url = '/meeting/respond-invitation-json';
 		let obj_this = this;
 		let input_data = {
 			meeting_id: meet_id,
-			response: response,
-			no_loader: 1
-		};
-		obj_this.meeting_object.attendee_status = response;
-		obj_this.me.state = response;
-
-		var meeting_being_updated = obj_this.meeting_object;
+        };
+        if (action == 'state')
+        {
+            input_data['response'] = response;
+            obj_this.meeting_object.attendee_status = response;
+            obj_this.me.state = response;
+        }
+        else
+        {
+            input_data['attendance'] = response;
+            input_data['user_id'] = user_id;
+        }
+        var meeting_being_updated = obj_this.meeting_object;
+        meeting_being_updated.user_id = user_id
 
 		if (response) {
 			let args = {
@@ -149,10 +158,26 @@ export class MeetingDetailsComponent implements OnInit {
             }			
             let final_input_data = {
                 params: input_data,
-                args: args
+                args: args,
+                no_loader: 1,
             };
             obj_this.httpService.get(final_input_data, function (data) {
-				meeting_being_updated.attendee_status = response;
+                if (action == 'state')
+                {
+                    meeting_being_updated.attendee_status = response;
+                }
+                else
+                {
+                    let attendee = meeting_being_updated.attendees.find(function(attendee){
+                        if(attendee['id'] == meeting_being_updated.user_id){
+                        return attendee;
+                        }
+                        });
+                        if (attendee)
+                        {
+                            attendee['attendance'] = response;
+                        }
+                }
 			}, null);
 		}
 	}

@@ -23,15 +23,15 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </div>
                     <div *ngIf="me && me.state && meeting_type == 'upcoming'">
                         <div class="upcomingButton" id="tdmrb{{meeting_object.id}}">
-                            <button (click)="respond_invitation('accepted', meeting_object.id)" class="btn btn-primary">
+                            <button (click)="respond_invitation('accepted', meeting_object.id, 'state')" class="btn btn-primary">
                                 <i *ngIf="meeting_object.attendee_status == 'accepted' || meeting_object.status == 'Accept'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
                                 <span name="accepted">Accept</span>
                             </button>
-                            <button (click)="respond_invitation('declined', meeting_object.id)" class="btn btn-primary">
+                            <button (click)="respond_invitation('declined', meeting_object.id, 'state')" class="btn btn-primary">
                                 <i *ngIf="meeting_object.attendee_status == 'declined' || meeting_object.status == 'decline'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
                                 <span name="declined">Decline</span>
                             </button>
-                            <button (click)="respond_invitation('tentative', meeting_object.id)" class="btn btn-primary">
+                            <button (click)="respond_invitation('tentative', meeting_object.id, 'state')" class="btn btn-primary">
                                 <i *ngIf="meeting_object.attendee_status == 'tentative' || meeting_object.status == 'tentative'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
                                 <span name="tentative">Tentative</span>
                             </button>
@@ -251,9 +251,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 Roster
             </div>
             <div class="row">
-                <div class="kanban-card" *ngFor="let profile of meeting_object.attendees">
-                    <div routerLink="/{{profile.group}}/{{profile.id}}">
-                    <a class="kanban-profiles-user-info-box">
+                <div class="kanban-card card" *ngFor="let profile of meeting_object.attendees">
+                    <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
                         <div class="kanban-profiles-user-img">
                             <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
                         </div>
@@ -276,7 +275,22 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </div>
                         </div>
                     </a>
+                    
+                    <div *ngIf="meeting_type == 'completed' || meeting_type == 'ongoing'" id="tdmrb{{meeting_object.id}}">
+                        <button (click)="respond_invitation('absent', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
+                            <i *ngIf="profile.attendance == 'absent' || meeting_object.attendance == 'absent'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                            <span name="absent">Absent</span>
+                        </button>
+                        <button (click)="respond_invitation('inperson', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
+                            <i *ngIf="profile.attendance == 'inperson' || meeting_object.attendance == 'inperson'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                            <span name="inperson">Inperson</span>
+                        </button>
+                        <button (click)="respond_invitation('online', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
+                            <i *ngIf="profile.attendance == 'online' || meeting_object.attendance == 'online'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                            <span name="online">Online</span>
+                        </button>
                     </div>
+                    
                 </div>
             </div>
         </div>
