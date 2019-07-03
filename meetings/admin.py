@@ -74,6 +74,7 @@ class EventAdmin(nested_admin.NestedModelAdmin):
 
 class UserAdminForm(UserChangeForm):
     committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
+    
 
     class Meta:
         model = Profile
@@ -104,8 +105,8 @@ class UserAdmin(BaseUserAdmin):
     form = UserAdminForm
     fieldsets = (
         (None, {'fields': ('image_tag', 'image', 'username', 'password',)}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (None, {'fields': ('committees',)}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email',)}),
+        (None, {'fields': ('committees', 'company')}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', ),
         }),
@@ -113,6 +114,7 @@ class UserAdmin(BaseUserAdmin):
 
     )
     readonly_fields = ('image_tag',)
+
 
     def image_tag(self, obj):
         if obj.image:
@@ -124,10 +126,13 @@ class AdminAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (None, {'fields': ('committees',)}),
+        (None, {'fields': ('committees', 'company',)}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
 
     )
+    autocomplete_fields = ['committees']
+    filter_horizontal = ('committees',)
+    
 
     def get_queryset(self, request):
         qs = super(AdminAdmin, self).get_queryset(request)
@@ -144,7 +149,7 @@ class DirectorAdmin(UserAdmin):
              'fields': (
                  'bio', 'location', 'birth_date', 'nick_name',
                  'job_title', 'department', 'work_phone', 'mobile_phone', 'website', 'fax',
-                 'board_joining_date', 'term_start_date', 'term_end_date','committees'
+                 'board_joining_date', 'term_start_date', 'term_end_date','committees', 'company'
              )
          }
          ),
@@ -168,6 +173,7 @@ class DirectorAdmin(UserAdmin):
     )
     readonly_fields = ('image_tag','admin_image_html')
 
+
     def admin_image_html(self, obj):
         return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.admin_image))
 
@@ -184,8 +190,9 @@ class StaffAdmin(UserAdmin):
         (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (None, {'fields': ('committees',)}),
+        (None, {'fields': ('committees','company',)}),
     )
+
 
     def get_queryset(self, request):
         qs = super(StaffAdmin, self).get_queryset(request)
@@ -210,7 +217,7 @@ class CommitteeAdmin(admin.ModelAdmin):
     filter_horizontal = ('users',)
     fields= ('name', 'description', 'members', 'users')
     list_display= ('name', 'members')
-    
+    search_fields=('name',)
     readonly_fields = ('members',)
 
     def members(self,obj):

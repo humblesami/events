@@ -496,6 +496,8 @@ def get_user_info(users):
         user_info['name'] = user.fullname()
         user_info['photo'] = user_info['image'] = user.image.url
         user_info['email'] = user.email
+        user_info['company'] = user.company
+        user_info['mobile_phone'] = user.mobile_phone
         groups = list(user.groups.all())
         group_name = ''
         if len(groups) > 0:

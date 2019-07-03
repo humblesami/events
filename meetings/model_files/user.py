@@ -140,7 +140,7 @@ class Profile(user_model):
     gender = models.IntegerField(choices=GENDER_CHOICES, blank=True, null=True)
     veteran = models.IntegerField(choices=YES_NO_CHOICES, blank=True, null=True)
     disability = models.IntegerField(choices=YES_NO_CHOICES, blank=True, null=True)
-
+    company = models.CharField(max_length=128, blank=True, null=True)
     board_joining_date = models.DateField('board joining date', blank=True, null=True)
     admin_first_name = models.CharField(max_length=30, blank=True, null=True)
     admin_last_name = models.CharField(max_length=30, blank=True, null=True)

@@ -29,16 +29,15 @@
                     </div>
                     <div class="kanban-profiles-user-info">
                         <div class="kanban-profiles-user-InfoLIST">
-                            {{profile.username}}
-							Abdul Nafayh
+                                {{profile.name}}
                         </div>
-						<div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
-                            <i class="fas fa-users"></i> DigitalNet
+                        <div *ngIf="profile.company" class="kanban-profiles-user-InfoLIST">
+                            <i class="fas fa-users"></i> {{profile.company}}
+                        </div>
+                        <div *ngIf="profile.mobile_phone" class="kanban-profiles-user-InfoLIST">
+                            <i class="fas fa-phone"></i> {{profile.mobile_phone}}
                         </div>
                         <div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
-                            <i class="fas fa-phone"></i> 333-100-5055
-                        </div>
-						<div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
                             <i class="fas fa-envelope"></i> {{profile.email}}
                         </div>
                     </div>

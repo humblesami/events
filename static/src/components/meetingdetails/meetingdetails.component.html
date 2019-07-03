@@ -251,22 +251,32 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 Roster
             </div>
             <div class="row">
-                <div class="kanban-card" *ngFor="let attendee of meeting_object.attendees">
+                <div class="kanban-card" *ngFor="let profile of meeting_object.attendees">
+                    <div routerLink="/{{profile.group}}/{{profile.id}}">
                     <a class="kanban-profiles-user-info-box">
                         <div class="kanban-profiles-user-img">
-                            <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{attendee.photo}}">
+                            <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
                         </div>
-                        <div class="meeting-details-roster-info-text">
-                            <h6>{{attendee.name}}</h6>
-                            <div *ngIf="attendee.response_by">Response By: {{attendee.response_by}}</div>
-                            <div *ngIf="attendee.email" class="">
-                                {{attendee.email}}
+                        <div class="kanban-profiles-user-info">
+                            <div class="kanban-profiles-user-InfoLIST">
+                                    {{profile.name}}
                             </div>
-                            <div *ngIf="attendee.state" class="">
-                                <b>Status : </b> {{attendee.state}}
+                            <div *ngIf="profile.company" class="kanban-profiles-user-InfoLIST">
+                                <i class="fas fa-users"></i> {{profile.company}}
+                            </div>
+                            <div *ngIf="profile.mobile_phone" class="kanban-profiles-user-InfoLIST">
+                                <i class="fas fa-phone"></i> {{profile.mobile_phone}}
+                            </div>
+                            <div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
+                                <i class="fas fa-envelope"></i> {{profile.email}}
+                            </div>
+                            <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
+                            <div *ngIf="profile.state" class="">
+                                <b>Status : </b> {{profile.state}}
                             </div>
                         </div>
                     </a>
+                    </div>
                 </div>
             </div>
         </div>
