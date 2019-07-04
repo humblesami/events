@@ -61,20 +61,9 @@
 							<span *ngIf="meeting_object.location">{{meeting_object.location}}</span>
 						</div>
 					</a>
-					<div *ngIf="meeting_type == 'upcoming'" class="upcomingButton btn-flex-1" id="tdmrb{{meeting_object.id}}">
-						<button (click)="respond_invitation('accepted', meeting_object.id)" class="btn btn-meeting">
-							<i *ngIf="meeting_object.attendee_status == 'accepted'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-							<span name="accepted">Accept</span>
-						</button>
-						<button (click)="respond_invitation('declined', meeting_object.id)" class="btn btn-meeting">
-							<i *ngIf="meeting_object.attendee_status == 'declined'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-							<span name="declined">Decline</span>
-						</button>
-						<button (click)="respond_invitation('tentative', meeting_object.id)" class="btn btn-meeting">
-							<i *ngIf="meeting_object.attendee_status == 'tentative'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-							<span name="tentative">Tentative</span>
-						</button>
-					</div>
+					
+                    <app-meetingresponse *ngIf="meeting_type == 'upcoming'" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+					
 				</div>
 			</div>
 		</div>

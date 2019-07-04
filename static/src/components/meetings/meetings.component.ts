@@ -49,39 +49,7 @@ export class MeetingsComponent implements OnInit {
             obj_this.httpService.get(final_input_data, success_cb, null);
         }
     }
-
-    respond_invitation(response: string, meet_id: string) {
-        let req_url = '/meeting/respond-invitation-json';
-        let obj_this = this;
-        let input_data = {
-            meeting_id: meet_id,
-            response: response,
-			no_loader: 1
-        };
-
-        var meeting_being_updated;
-        obj_this.meeting_list.forEach((meeting: any) => {
-            if (meeting.id === meet_id) {
-                meeting_being_updated = meeting;
-            }
-        });
-        if (response) {
-            let args = {
-                app: 'meetings',
-                model: 'Event',
-                method: 'respond_invitation'
-            }			
-            let final_input_data = {
-                params: input_data,
-                args: args
-            };
-            obj_this.httpService.get(final_input_data, function(data){
-                meeting_being_updated.attendee_status = response;
-            }, null);
-        } 
-    }
     
-
     ngOnInit() {
         var url_segments = this.route.snapshot.url;
         this.meeting_type = url_segments[url_segments.length -1].path;

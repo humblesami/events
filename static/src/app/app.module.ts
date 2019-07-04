@@ -57,6 +57,7 @@ import { CalendarComponent } from '../components/calendar/calendar.component';
 import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.component';
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component';
 import { MentionModule } from 'angular-mentions';
+import { MeetingresponseComponent } from '../components/meetingresponse/meetingresponse.component';
 
 @NgModule({
     imports: [
@@ -108,6 +109,7 @@ import { MentionModule } from 'angular-mentions';
         CalendarComponent,
         BreadcrumbComponent,
         SurveyresultsComponent,
+        MeetingresponseComponent,
     ],
     providers:[
         AuthGuard,

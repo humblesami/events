@@ -266,7 +266,8 @@ export class CalendarComponent implements OnInit {
             }
             let final_input_data = {
                 params: input_data,
-                args: args
+                args: args,
+                no_loader:1,
             };
             obj_this.httpService.get(final_input_data, function(data) {
                 if (!window['is_popup']) {

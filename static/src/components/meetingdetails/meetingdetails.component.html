@@ -20,23 +20,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
                     <div class="row note" *ngIf="conference_not_active">
                         Meeting conference URL will be available 15 minutes before meeting start.
-                    </div>
-                    <div *ngIf="me && me.state && meeting_type == 'upcoming'">
-                        <div class="upcomingButton" id="tdmrb{{meeting_object.id}}">
-                            <button (click)="respond_invitation('accepted', meeting_object.id, 'state')" class="btn btn-primary">
-                                <i *ngIf="meeting_object.attendee_status == 'accepted' || meeting_object.status == 'Accept'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                <span name="accepted">Accept</span>
-                            </button>
-                            <button (click)="respond_invitation('declined', meeting_object.id, 'state')" class="btn btn-primary">
-                                <i *ngIf="meeting_object.attendee_status == 'declined' || meeting_object.status == 'decline'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                <span name="declined">Decline</span>
-                            </button>
-                            <button (click)="respond_invitation('tentative', meeting_object.id, 'state')" class="btn btn-primary">
-                                <i *ngIf="meeting_object.attendee_status == 'tentative' || meeting_object.status == 'tentative'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                <span name="tentative">Tentative</span>
-                            </button>
-                        </div>
-                    </div>
+                    </div>                    
                     <div class="" style="justify-content:flex-end;">
                         <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
                         <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
@@ -48,8 +32,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 <div class="MainTitleHeadWrap">
                     <div class="HeadingWrap">
                         <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
-                    </div>
-                    <div class="MeetingBtnWrapper">
+                    </div>                    
+                    <div class="MeetingBtnWrapper">                        
                         <div class="btn-group">
                             <a routerLink="/meetings/upcoming" class="btn">Upcoming</a>
                             <a routerLink="/meetings/completed" class="btn">Completed</a>
@@ -58,7 +42,9 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                         </div>
                     </div>
                 </div>
-
+                <div *ngIf="me_as_respondant && meeting_type == 'upcoming'">
+                    <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+                </div>
                 <div class="div1">
 
                     <div class="row">
@@ -278,18 +264,18 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                         </a>
 
                         <div *ngIf="meeting_type == 'completed' || meeting_type == 'ongoing'" id="tdmrb{{meeting_object.id}}">
-                            <button (click)="respond_invitation('absent', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
+                            <button (click)="mark_attendance('absent', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
                                 <i *ngIf="profile.attendance == 'absent' || meeting_object.attendance == 'absent'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
                                 <span name="absent">Absent</span>
                             </button>
-                            <button (click)="respond_invitation('inperson', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
+                            <button (click)="mark_attendance('inperson', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
                                 <i *ngIf="profile.attendance == 'inperson' || meeting_object.attendance == 'inperson'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
                                 <span name="inperson">Inperson</span>
                             </button>
-                            <button (click)="respond_invitation('online', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
+                            <button (click)="mark_attendance('online', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
                                 <i *ngIf="profile.attendance == 'online' || meeting_object.attendance == 'online'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
                                 <span name="online">Online</span>
-                            </button>
+                            </button>                            
                         </div>
                 	</div>
 				</div>

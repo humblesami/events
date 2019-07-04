@@ -1,0 +1,12 @@
+.upcomingButton button
+{
+    font-size: 0.85rem;
+}
+
+.upcomingButton button{
+    margin-right: 4px;
+}
+.upcomingButton button i {
+    font-size: 14px;
+    padding-right: 4px;
+}

@@ -3003,24 +3003,18 @@ span.kanban-upcoming-meeting-date {
     font-size: 16px;
     margin: 0 0 5px;
 }
-.upcomingButton button
-{
-    font-size: 0.85rem;
-}
 .upcomingButton{
     display: flex;
     border-top: 1px solid  rgba(99, 143, 201, 0.25);
     padding: 12px;
     flex: 1;
 }
-
-
-.upcomingButton button{
-    margin-right: 4px;
-}
-.upcomingButton button i {
-    font-size: 14px;
-    padding-right: 4px;
+.meeting-detail .upcomingButton{
+    display: block;
+    border-top: 0;
+    padding: 0 0 6px 0;
+    border-bottom: 1px solid rgba(99, 143, 201, 0.25);
+    margin: -15px 0 15px 0;
 }
 .btn-meeting{
     background: #638FC9;

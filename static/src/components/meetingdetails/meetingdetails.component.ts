@@ -21,7 +21,7 @@ export class MeetingDetailsComponent implements OnInit {
 	title = '';
 	flag = '';
 	first_time = true;
-	me: any;
+	me_as_respondant: any;
 	discussion_params = {
 		model:'Event',
 		app:'meetings'
@@ -89,24 +89,24 @@ export class MeetingDetailsComponent implements OnInit {
                 var uid = window['current_user'].cookie.id;
 
                 var pp = 0
-                var me = undefined;
+                var cur_user_object = undefined;
                 var myindex = -1;
                 var attendees = meeting_object.attendees
                 attendees.forEach(att => {
                     if (att.uid == uid) {
                         myindex = pp;
-                        me = att;
+                        cur_user_object = att;
                     }
                     pp++;
                 });
-                if(!me)
+                if(!cur_user_object)
                 {
                     console.log('Me not in attendees');
                     return;
                 }
                 attendees.splice(myindex, 1);
-                attendees.splice(0, 0, me);
-				obj_this.me = attendees[0];
+                attendees.splice(0, 0, cur_user_object);
+				obj_this.me_as_respondant = attendees[0];
             } catch (er) {
                 console.log(er);
             }
@@ -126,27 +126,17 @@ export class MeetingDetailsComponent implements OnInit {
 		// else
 		// console.log('Finished!!')
 		return true;
-	}
+    }
 
-
-    respond_invitation(response: string, meet_id: string, action:string, user_id:string) 
+    mark_attendance(response: string, meet_id: string, action:string, user_id:string) 
     {
 		let req_url = '/meeting/respond-invitation-json';
 		let obj_this = this;
 		let input_data = {
 			meeting_id: meet_id,
         };
-        if (action == 'state')
-        {
-            input_data['response'] = response;
-            obj_this.meeting_object.attendee_status = response;
-            obj_this.me.state = response;
-        }
-        else
-        {
-            input_data['attendance'] = response;
-            input_data['user_id'] = user_id;
-        }
+        input_data['attendance'] = response;
+        input_data['user_id'] = user_id;
         var meeting_being_updated = obj_this.meeting_object;
         meeting_being_updated.user_id = user_id
 
@@ -162,26 +152,18 @@ export class MeetingDetailsComponent implements OnInit {
                 no_loader: 1,
             };
             obj_this.httpService.get(final_input_data, function (data) {
-                if (action == 'state')
-                {
-                    meeting_being_updated.attendee_status = response;
-                }
-                else
-                {
-                    let attendee = meeting_being_updated.attendees.find(function(attendee){
-                        if(attendee['id'] == meeting_being_updated.user_id){
-                        return attendee;
-                        }
-                        });
-                        if (attendee)
-                        {
-                            attendee['attendance'] = response;
-                        }
-                }
+            let attendee = meeting_being_updated.attendees.filter(function(attendee){
+                return attendee.id == meeting_being_updated.user_id                        
+            });
+            if (attendee.length > 0)
+            {
+                attendee = attendee[0];
+                attendee.attendance = response;
+            }
 			}, null);
 		}
 	}
-
+    
 	ngOnInit() {
         
 	}
