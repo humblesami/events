@@ -211,15 +211,16 @@ export class MessengerComponent implements OnInit {
             obj_this.scrollToEnd();	
         },20);
 
-        var ww = $(window).width();
-		if(ww < 768){
-            obj_this.is_mobile_device = true;
-            $('.friends-chat-box').hide();
-			$('.chat-container-wrppaer').attr("id","mobi-active-chat").show();
-        }		
-        else{
-            obj_this.is_mobile_device = false;
-        }
+        // var ww = $(window).width();
+		// if(ww < 768){
+            
+        // }		
+        // else{
+        //     obj_this.is_mobile_device = false;
+        // }
+        obj_this.is_mobile_device = true;
+        $('.friends-chat-box').hide();
+        $('.chat-container-wrppaer').attr("id","mobi-active-chat").show();
 	}
 
 	send_message(input_data, force_post= false){        
@@ -445,16 +446,18 @@ export class MessengerComponent implements OnInit {
         {
             obj_this.socketService.chat_users[key].messages = undefined;
         }
-		$(document).ready(function(){
-			if($(window).width() <= 767){
-                $('.chat-container-wrppaer').hide();
-                obj_this.is_mobile_device = true;
-            }
-            else
-            {
-                obj_this.is_mobile_device = false;
-            }            
-        });
+        $('.chat-container-wrppaer').hide();
+        obj_this.is_mobile_device = true;
+		// $(document).ready(function(){
+		// 	if($(window).width() <= 767){
+        //         $('.chat-container-wrppaer').hide();
+        //         obj_this.is_mobile_device = true;
+        //     }
+        //     else
+        //     {
+        //         obj_this.is_mobile_device = false;
+        //     }            
+        // });
         $('.popup.messenger').hide();
     }
 
