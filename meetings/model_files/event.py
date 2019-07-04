@@ -343,6 +343,18 @@ class Event(models.Model):
         return data
     
 
+    @classmethod
+    def update_publish_status(cls, request, params):
+        meeting_id = params['meeting_id']
+        publish_status = params['publish_status']
+        meeting_obj = Event.objects.get(pk=meeting_id)
+        if meeting_obj:
+            meeting_obj.publish = publish_status
+            meeting_obj.save()
+            return 'done'
+        return 'Something went wrong while updating meeting publish status'
+
+
     def response_invitation_email(self, audience, action=None):
         state_selection = []
         for state in STATE_SELECTION:

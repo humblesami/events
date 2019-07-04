@@ -17,7 +17,8 @@ export class MeetingDetailsComponent implements OnInit {
 	new_reply = '';
 	next = '';
 	prev = '';
-	meeting_type: any;
+    meeting_type: any;
+    first_check = false;
 	title = '';
 	flag = '';
 	first_time = true;
@@ -69,6 +70,18 @@ export class MeetingDetailsComponent implements OnInit {
                     return;
                 }
                 var meeting_object = obj_this.meeting_object = result.meeting;
+                setTimeout(function(){
+                    obj_this.first_check = true;
+                    if (obj_this.meeting_object.publish)
+                    {
+                        $('.toggle_cb').prop('checked', true).change();
+                    }
+                    else
+                    {
+                        $('.toggle_cb').prop('checked', false).change();
+                    }
+                    obj_this.first_check = false;
+                },100);
                 obj_this.next = result.next;
                 obj_this.prev = result.prev;                
                 if (result.meeting && result.meeting.name) {
@@ -165,6 +178,41 @@ export class MeetingDetailsComponent implements OnInit {
 	}
     
 	ngOnInit() {
+        //[data-toggle="toggle"]
+        var obj_this = this;
+        setTimeout(function(){
+            $('.toggle_cb').change(function() {
+                if(!obj_this.first_check)
+                {
+                    let publish_status = $(this).prop('checked');
+                    let args = {
+                        app: 'meetings',
+                        model: 'Event',
+                        method: 'update_publish_status'
+                    }
+                    let input_data = {
+                        params: {meeting_id: obj_this.meeting_object.id,publish_status: publish_status},
+                        args: args,
+                        no_loader: 1
+                    };
+                    obj_this.httpService.get(input_data, null, null)
+                }                
+            });
+        }, 10);
+
+        // setTimeout(function(){
+        //     $('.toggle_cb').bootstrapToggle({
+                
+        //     });
+        //     $('#toggle-event').change(function() {
+        //         $('#console-event').html('Toggle: ' + $(this).prop('checked'))
+        //     });
+        //     function toggleToggler(){
+                
+        //     }
+        //     $('#toggle-event')
+        //     // obj_this.httpService.post();
+        // }, 20);
         
 	}
 

@@ -5,6 +5,9 @@ routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}
 title="{{meeting_object.name}}"></app-breadcrumb>
 
 <div class="router-outlet">
+    <input type="checkbox" class="toggle_cb"
+    data-on="Published" data-off="Unpublished"
+    checked data-toggle="toggle">
     <div class="page-links">
         <span class="prev next-prev-link" title="Privious">
             <i class="fa fa-angle-left"></i>
@@ -32,8 +35,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 <div class="MainTitleHeadWrap">
                     <div class="HeadingWrap">
                         <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
+                    </div>                    
                     </div>
-                </div>
                 <div *ngIf="me_as_respondant && meeting_type == 'upcoming'">
                     <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
                 </div>
@@ -230,7 +233,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
             <div class="row">
 				<div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of meeting_object.attendees">
-					<div class="card kanban-card attendee-card">
+                        <div class="card kanban-card attendee-card">
 						 <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
                             <div class="kanban-profiles-user-img">
                                 <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
@@ -266,16 +269,16 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     </div>
                             </div>
                         </a>
-                        
+
                         <div class="upcomingButton btn-flex-1" *ngIf="meeting_type == 'completed' || meeting_type == 'ongoing'" id="tdmrb{{meeting_object.id}}">                            
-                            <button (click)="mark_attendance('inperson', meeting_object.id, 'attendance',  profile.id)" class="btn btn-meeting">
-                                <i *ngIf="profile.attendance == 'inperson' || meeting_object.attendance == 'inperson' 
-                                "class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                <span name="absent">InPerson</span>
+                                <button (click)="mark_attendance('inperson', meeting_object.id, 'attendance',  profile.id)" class="btn btn-meeting">
+                                    <i *ngIf="profile.attendance == 'inperson' || meeting_object.attendance == 'inperson' 
+                                    "class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                                    <span name="absent">InPerson</span>
                             </button>
                             <button (click)="mark_attendance('online', meeting_object.id, 'attendance',  profile.id)" class="btn btn-meeting">
-                                <i *ngIf="profile.attendance == 'online' || meeting_object.attendance == 'online' 
-                                "class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
+                                    <i *ngIf="profile.attendance == 'online' || meeting_object.attendance == 'online' 
+                                    "class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
                                 <span name="online">Online</span>
                             </button>
                             <button (click)="mark_attendance('absent', meeting_object.id, 'attendance',  profile.id)" class="btn btn-meeting">
