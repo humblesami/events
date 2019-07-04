@@ -43,6 +43,7 @@ import { EsignDocDetailsComponent } from "src/components/esigndocdetails/esigndo
 import { RtcComponent } from '../components/rtc/rtc.component';
 import { SurveysComponent } from '../components/surveys/surveys.component'
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component'
+import { SupportComponent } from '../components/support/support.component';
 
 const appRoutes: Routes = [    
     { path: 'login', component: LoginComponent},
@@ -126,7 +127,7 @@ const appRoutes: Routes = [
     { path: 'survey/:id/results', component: SurveyresultsComponent},
     { path: 'signdoc/:id', component: EsignDocDetailsComponent, canActivate: [AuthGuard]},
 
-    
+    { path: 'support', component: SupportComponent},
     { path: 'rtc', component: RtcComponent},
 	// otherwise redirect to home
 	{ path: '**', component: PageNotFound }
