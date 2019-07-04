@@ -72,6 +72,12 @@ export class MeetingDetailsComponent implements OnInit {
                 var meeting_object = obj_this.meeting_object = result.meeting;
                 setTimeout(function(){
                     obj_this.first_check = true;
+                    $(function() {
+                        $('.toggle_cb').bootstrapToggle({
+                          on: 'Published',
+                          off: 'Unpublished'
+                        });
+                    })
                     if (obj_this.meeting_object.publish)
                     {
                         $('.toggle_cb').prop('checked', true).change();

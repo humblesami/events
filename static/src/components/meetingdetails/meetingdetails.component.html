@@ -5,9 +5,6 @@ routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}
 title="{{meeting_object.name}}"></app-breadcrumb>
 
 <div class="router-outlet">
-    <input type="checkbox" class="toggle_cb"
-    data-on="Published" data-off="Unpublished"
-    checked data-toggle="toggle">
     <div class="page-links">
         <span class="prev next-prev-link" title="Privious">
             <i class="fa fa-angle-left"></i>
@@ -17,6 +14,11 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         </span>
     </div>
         <div class="container" *ngIf="meeting_object">
+            <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
+                <input type="checkbox" class="toggle_cb"
+                data-on="Published" data-off="Unpublished"
+                checked data-toggle="toggle" data-size="normal">
+            </div>
         <div class=" form-details">
             <div class="meeting-details-form">
                 <div class="d-flex justify-content-between">
