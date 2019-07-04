@@ -7,39 +7,15 @@
             width: 100%;
         }
 
-<!--        .insert_after_field .module>h2 {-->
-<!--            display: none;-->
-<!--        }-->
 
         .insert_after_field .inline-related>h3 {
             display: none;
         }
     </style>
 
-    {% if option_data %}
-        <div class="voting-options-container">
-            {% load static %}            
-            <script src="{% static 'js/custom_signature.js' %}"></script>
-            <script src="{% static 'js/custom_voting.js' %}"></script>
-            {% for option in option_data %}
-                <button class="btn btn-primary {{option.name}}" data-id="{{option.id}}">{{option.name}}</button>
-                <!-- <input type="button" value="{{option.name}}" data-id="option.id"> -->
-            {% endfor %}
-            
-        </div>
-    {% endif %}
-
     {% if option_results %}
     {% load static %}            
-            <script src="{% static '/libs/jquery/chart.js' %}"></script>
-        <div style="display:flex" class="voting-results-container">
-            {% for result in option_results %}
-                <div style="widows: 200px;">
-                    <label>{{result.option_name}} : {{result.option_result}}   ({{result.option_perc}} %)</label>
-                </div>
-            {% endfor %}
-        </div>
-        <canvas id="myChart"></canvas>
+        <script src="{% static '/libs/jquery/chart.js' %}"></script>
     {% endif %}
 
     {% if fieldset.name %}<h1>{{ fieldset.name }}</h1>{% endif %}
