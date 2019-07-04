@@ -54,13 +54,12 @@ export class VotingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    window['json_functions'].find_activate_link('.MeetingBtnWrapper');
     let req_peram = (window.location + '').split('/');
         let flag = req_peram[req_peram.length - 1];
         this.meeting_type = flag;
         // console.log(flag)
         this.heading = flag + ' Votings';
-
-
         let obj_this = this;
         // let req_url = '/meeting/list-json';
         let input_data = { meeting_type: flag, paging : {offset: 0, limit: 10}};
@@ -97,5 +96,4 @@ export class VotingsComponent implements OnInit {
             }
         }
   }
-
 }

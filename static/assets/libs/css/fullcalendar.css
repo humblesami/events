@@ -168,7 +168,6 @@ body .fc { /* extra precedence to overcome jqui */
 
 .fc-state-hover,
 .fc-state-down,
-.fc-state-active,
 .fc-state-disabled {
 	color: #333333;
 	background-color: #e6e6e6;
@@ -1182,5 +1181,71 @@ tr.fc-year-week-days
 }
 .fc-day-grid-event > .fc-content
 {
+    color: white;
+}
+
+#calenderModal
+{
+    min-height: calc(100vh - 5px);
+}
+.CalendarDateWrapper {
+    white-space: nowrap;
+    width: 90px;
+}
+.CalendarDateWrap{
+    background: linear-gradient(to bottom,#ffffff,#ffffff);
+    color: #3059C9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 7px 5px;
+    font-size: 0.885em;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    border-radius: 50%;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
+    width: 86px;
+    height: 86px;
+}
+
+.fc-button-group {
+    display: flex;
+}
+
+#calendar{
+	margin:1rem;
+}
+.fc-toolbar button {
+    float: none;
+    border-radius: 3px;
+    background: #ffffff;
+    box-shadow: none;
+    margin: 3px;
+    border: 1px solid #c7c7c7;
+    padding: 0px 13px;
+    text-transform: capitalize;
+    color: #616161;
+}
+.fc-toolbar button:hover{
+    background-color: #f1f3f4;
+}
+th.fc-day-header.fc-widget-header {
+	padding: 10px;
+	background: #F5F6FA;
+	color: #A3A6B4;
+	font-weight: 500;
+	font-family: 'Roboto';
+	text-transform: uppercase;
+}
+.fc-year-monthly-name a {
+    color: grey;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+}
+.fc-toolbar button.fc-state-active, .fc-state-active {
+	background-color: #458aae;
+    background-image: none;
     color: white;
 }

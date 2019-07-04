@@ -78,5 +78,6 @@ export class EsignDocsComponent implements OnInit {
     }
 
     ngOnInit() {
+        window['json_functions'].find_activate_link('.MeetingBtnWrapper');
     }
 }

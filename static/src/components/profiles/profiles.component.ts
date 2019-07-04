@@ -46,17 +46,14 @@ export class ProfilesComponent implements OnInit {
             args: args
         };
         obj_this.httpService.get(final_input_data,
-            (result) => {                    
-                if(result)
-                {
-                    //console.log(result.records);
+            (result) => {
                     obj_this.profiles_data = result.records;
                     obj_this.httpService.total_records = result.total;
                     obj_this.profiles_data && obj_this.profiles_data.length > 0 ? obj_this.no_prof = false : obj_this.no_prof = true;                    
-                }                    
         }, (error) => {});
     }
 
     ngOnInit() {
+        window['json_functions'].find_activate_link('.MeetingBtnWrapper');
     }
 }

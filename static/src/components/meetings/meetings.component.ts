@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../app/http.service'
 import { Router, ActivatedRoute, Params } from '@angular/router';
+declare var $: any;
 
 @Component({
     styleUrls:['./meetings.css'],
@@ -79,6 +80,8 @@ export class MeetingsComponent implements OnInit {
             params: input_data,
             args: args
         };
+        
+        window['json_functions'].find_activate_link('.MeetingBtnWrapper');
         this.httpService.get(final_input_data, success_cb, failure_cb);
     }
 }

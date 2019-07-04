@@ -34,35 +34,30 @@ window['json_functions'] = {
 				return i;			
 		}
 		return -1;
-	}
+    },
+    url_last_segment: function(){
+        return this.last_segment(window.location.href,'/');
+    },
+    last_segment: function(full_str, separator){
+        return full_str.substring(full_str.lastIndexOf(separator) + 1)
+    },
+    get_url_path:function(){
+        var curl = window.location.origin;
+        curl = window.location.toString().replace(curl, '');
+        var i = curl.indexOf('#');
+        if(i == 1)
+        {
+            curl = curl.substr(2);
+        }
+        return curl;
+    },
+    find_activate_link: function(selector){
+        var path = this.get_url_path();
+        $(selector).find('a').each(function(i, el){
+            if($(el).attr('routerlink') == path)
+            {
+                $(el).addClass('active');
+            }
+        });
+    }
 }
-
-
-$(function() {
-    $('#greenButton').click(switchGreen);
-    $('#whiteButton').click(switchWhite);
-    $('#blueButton').click(switchBlue);
-    $('#lightButton').click(switchLight);
-    $('#orangeButton').click(switchOrange);
-    $('#redButton').click(switchRed);
-    
-
-    function switchGreen() {
-        $('body').attr('class', 'green');
-    }
-    function switchWhite() {
-        $('body').attr('class', 'white');
-    }
-    function switchBlue() {
-        $('body').attr('class', 'blue');
-    }
-    function switchLight() {
-        $('body').attr('class', 'light');
-    }
-    function switchOrange() {
-        $('body').attr('class', 'orange');
-    }
-    function switchRed() {
-        $('body').attr('class', 'red');
-    }
-});

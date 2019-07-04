@@ -713,27 +713,6 @@ a.kanban-committees-info-box-name {
 }
 
 
-/*=============================
-last-login-details
-=============================*/
-
-.last-login-details {
-    background: #f8f8f8;
-    padding-bottom: 10px;
-    /* box-shadow: 1px 1px 119px #00000038; */
-}
-
-.last-login-details h3 {
-    margin: 10px 0 !important;
-    padding: 0;
-    color: #313030;
-}
-
-.last-login-details span {
-    display: block;
-    color: #797979;
-}
-
 @media (max-width: 767px) {
     h1,
     .h1 {
@@ -808,7 +787,8 @@ last-login-details
     left: unset;
     top: 70px;
     right: 16px;
-    padding-right: 0 !important;
+    padding-right: 0; 
+    /* !important; */
     min-width: 20%;
 }
 
@@ -894,7 +874,8 @@ height:100%;
     flex-direction: column;
 }
 .kanban-folder-border{
-	border: 1px solid #dee2e6!important;
+    /* border: 1px solid #dee2e6!important; */
+    border: 1px solid #dee2e6;
 	position: relative;
 	margin-bottom: -1px;
 	margin-right: -1px;
@@ -1143,42 +1124,6 @@ height:100%;
 .del
 {
     cursor: pointer;
-}
-
-.fc-button-group {
-    display: flex;
-}
-
-#calendar{
-	margin:1rem;
-}
-.fc-toolbar button {
-    float: none !important;
-    border-radius: 3px !important;
-    background: #ffffff;
-    box-shadow: none;
-    margin: 3px !important;
-    border: 1px solid #c7c7c7;
-    padding: 0px 13px !important;
-    text-transform: capitalize;
-    color: #616161 !important;
-}
-.fc-toolbar button:hover{
-    background-color: #f1f3f4;
-}
-th.fc-day-header.fc-widget-header {
-	padding: 10px;
-	background: #F5F6FA;
-	color: #A3A6B4;
-	font-weight: 500;
-	font-family: 'Roboto';
-	text-transform: uppercase;
-}
-.fc-year-monthly-name a {
-    color: grey !important;
-    font-weight: 500 !important;
-    margin-bottom: 10px;
-    display: block;
 }
 
 .full-width-heading{
@@ -3331,4 +3276,8 @@ is_mobile_device
     position: absolute;
     z-index: 1;
     left:100px;
+}
+.btn-group .btn.active{
+    background-color: #6497ca;
+    color: white;
 }

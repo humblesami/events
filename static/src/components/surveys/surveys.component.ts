@@ -54,6 +54,7 @@ export class SurveysComponent implements OnInit {
   }
 
   ngOnInit() {
+    window['json_functions'].find_activate_link('.MeetingBtnWrapper');
     let req_peram = (window.location + '').split('/');
         let flag = req_peram[req_peram.length - 1];
         this.meeting_type = flag;

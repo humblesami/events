@@ -503,6 +503,16 @@ def get_user_info(users):
         if len(groups) > 0:
             group_name = groups[0].name.lower()
         user_info['group'] = group_name
+        user_committees =  obj_to_dict(user,
+            fields = [],
+            related={
+                'committees': {'fields': ['id', 'name']}
+            }
+        )
+        committees = []
+        for com in user_committees['committees']:
+            committees.append(com)
+        user_info['committees'] = committees
         users_info.append(user_info)
     return users_info
 

@@ -58,6 +58,7 @@ import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.compone
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component';
 import { MentionModule } from 'angular-mentions';
 import { MeetingresponseComponent } from '../components/meetingresponse/meetingresponse.component';
+import { ProfilecardComponent } from './profilecard/profilecard.component';
 
 @NgModule({
     imports: [
@@ -110,6 +111,7 @@ import { MeetingresponseComponent } from '../components/meetingresponse/meetingr
         BreadcrumbComponent,
         SurveyresultsComponent,
         MeetingresponseComponent,
+        ProfilecardComponent,
     ],
     providers:[
         AuthGuard,
