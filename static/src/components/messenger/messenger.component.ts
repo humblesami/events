@@ -113,6 +113,27 @@ export class MessengerComponent implements OnInit {
 		$('.friends-chat-box').show();
     }
 
+    scroll_to_end(selector)
+    {
+        if($(selector).length > 0)
+        {              
+            $(selector).css('visibility', 'hidden');
+            setTimeout(function(){
+                $(selector).stop().animate({
+                    scrollTop: $(selector)[0].scrollHeight
+                }, 50, function(){
+                    setTimeout(function(){
+                        $(selector).css('visibility', 'visible');
+                    }, 50)                    
+                });
+            }, 50);
+        }
+        else
+        {
+            console.log('Invalid selector '+selector+' to scroll');
+        }
+    }
+
 	onUserSelected(messages, already_fetched = 0) {        
         var obj_this = this;
 		$( ".msg_card_body").unbind( "scroll" );
@@ -158,11 +179,8 @@ export class MessengerComponent implements OnInit {
                 if(data.length > 0) {
                     obj_this.is_request_sent = false;
                     obj_this.update_emjoi_urls(data);
-                    obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);                            
-                    setTimeout(function () {
-                        var height = $($(".messenger-body")[data.length-1]).offset().top;
-                        $(".msg_card_body").scrollTop(height);
-                    }, 200);
+                    obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);
+                    obj_this.scroll_to_end(".msg_card_body");                    
                 }
                 else
                 {
@@ -208,19 +226,10 @@ export class MessengerComponent implements OnInit {
 			$('#send_btn').click(function(){
 				obj_this.prepare_message();
 			});
-            obj_this.scrollToEnd();	
-        },20);
-
-        // var ww = $(window).width();
-		// if(ww < 768){
-            
-        // }		
-        // else{
-        //     obj_this.is_mobile_device = false;
-        // }
-        obj_this.is_mobile_device = true;
+            obj_this.scroll_to_end(".msg_card_body");	
+        },20);        
         $('.friends-chat-box').hide();
-        $('.chat-container-wrppaer').attr("id","mobi-active-chat").show();
+        $('.chat-container-wrppaer').show();
 	}
 
 	send_message(input_data, force_post= false){        
@@ -353,21 +362,7 @@ export class MessengerComponent implements OnInit {
         obj_this.active_chat_user.messages.push(input_data);        
         $('.emoji-wysiwyg-editor').html("");        
         obj_this.attachments = [];
-		obj_this.scrollToEnd();
-	}
-
-	scrollToEnd() {
-		setTimeout(function () {
-            let message_body = $(".msg_card_body");
-            if(message_body.length > 0)
-            {
-                message_body.scrollTop(message_body[0].scrollHeight);
-            }
-            else
-            {
-                console.log('.msg_card_body not present');
-            }
-		}, 10);
+		obj_this.scroll_to_end(".msg_card_body");
 	}
 
 	receiveMessage(obj_this, message, sender_id) {        
@@ -448,16 +443,6 @@ export class MessengerComponent implements OnInit {
         }
         $('.chat-container-wrppaer').hide();
         obj_this.is_mobile_device = true;
-		// $(document).ready(function(){
-		// 	if($(window).width() <= 767){
-        //         $('.chat-container-wrppaer').hide();
-        //         obj_this.is_mobile_device = true;
-        //     }
-        //     else
-        //     {
-        //         obj_this.is_mobile_device = false;
-        //     }            
-        // });
         $('.popup.messenger').hide();
     }
 

@@ -10,10 +10,13 @@
 	width:280px;
 } */
 
-.chat-container-wrppaer{
-	width: calc(100% - 280px);
+.chat-container-wrppaer{	
 	position: relative;
 	border-left: 1px solid rgba(0, 0, 0, .20);
+    /* #mobi-active-chat{ */
+	width: 100%;
+	background: #ffffff;
+	height:calc(100% - 50px);
 }
 
 .messenger-container h3 {
@@ -535,12 +538,6 @@
 .messenger-container .messenger-container .backchatlist
 {
     cursor: pointer;
-}
-
-#mobi-active-chat{
-	width: 100%;
-	background: #ffffff;
-	height:calc(100% - 50px) !important;
 }
 
 .chat-selectBox{
