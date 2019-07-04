@@ -40,10 +40,10 @@
         <div *ngIf="active_chat_user" class="chat-full-height">
             <div class="chat-user-title">
                 <div class="MessengerTitle">
-					<span (click)="hide_chat_box()" class="backchatlist"><i class="fas fa-arrow-left"></i></span>
-					<h2>{{active_chat_user.name}}</h2>
-					<div *ngIf="active_chat_user.online" class="userstat">Online</div>
-					<div *ngIf="!active_chat_user.online" class="userstat">Offline</div>
+					<span class="backchatlist" (click)="hide_chat_box()"><i class="fas fa-arrow-left"></i></span>
+					<span class="user-name">{{active_chat_user.name}}</span>
+					<span class="status" *ngIf="active_chat_user.online" class="userstat">Online</span>
+					<span class="status" *ngIf="!active_chat_user.online" class="userstat">Offline</span>
 				</div>
                 <div *ngIf="active_chat_user" class="MessengerConnectWrap">
 					<div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">

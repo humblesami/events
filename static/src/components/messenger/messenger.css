@@ -444,6 +444,13 @@
 .MessengerTitle {
     flex: 1;
 }
+.MessengerTitle span{
+    margin-right: 5px;
+}
+.MessengerTitle span.user-name{
+    font-size: 1rem;
+    font-weight: bold;
+}
 .chat-user-title, .MessengerConnectWrap{
 	display: flex;
 	justify-content: space-between;
@@ -481,14 +488,14 @@
 	align-items: center;
 }
 
-.messenger-container .backchatlist{	
+/* .messenger-container .backchatlist{	
 	position: absolute;
     top: 50%;
     transform: translateY(-50%);
     font-size: 22px;
     left: 20px;
     color: #0099ff;
-}
+} */
 
 /*!* Responsive *!*/
 
@@ -496,7 +503,7 @@
 	.messenger-container .friends-chat-box{
 		height: calc(100vh - 80px);
 	}
-	.messenger-container .backchatlist{ display: block;}
+	/* .messenger-container .backchatlist{ display: block;} */
 	.messenger-container .chat-user-title{
 		border-bottom: 0;
 		-webkit-box-shadow: 0px 3px 6px 0px rgba(142,127,127,0.51);
@@ -535,9 +542,14 @@
 	margin: 0 5px;
 }
 .messenger-container .messenger-container .contact-item,
-.messenger-container .messenger-container .backchatlist
+.backchatlist
 {
     cursor: pointer;
+}
+
+.backchatlist{
+    padding: 5px;
+    color: #0099ff;
 }
 
 .chat-selectBox{
