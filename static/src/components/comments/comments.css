@@ -14,7 +14,7 @@
 
 .comments .btn-default{
     background-color: #646464;
-    padding: 15px;
+    padding: 8px 0 8px 0;
     color: #ffffff;
 }
 .comments .btn-default:nth-of-type(1){

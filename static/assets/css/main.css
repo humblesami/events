@@ -2951,7 +2951,7 @@ span.kanban-upcoming-meeting-date {
 .upcomingButton{
     display: flex;
     border-top: 1px solid  rgba(99, 143, 201, 0.25);
-    padding: 12px;
+    padding: 8px;
     flex: 1;
 }
 .meeting-detail .upcomingButton{

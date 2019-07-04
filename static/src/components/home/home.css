@@ -350,19 +350,6 @@ span.to-do-count {
     font-size: 16px;
     margin: 0 0 5px;
 }
-.upcomingButton button
-{
-    font-size: 0.85rem;
-}
-
-
-.upcomingButton button{
-    margin-right: 4px;
-}
-.upcomingButton button i {
-    font-size: 14px;
-    padding-right: 4px;
-}
 
 @media (max-width: 575px) {
 

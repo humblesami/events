@@ -51,8 +51,12 @@ window['json_functions'] = {
         }
         return curl;
     },
-    find_activate_link: function(selector){
-        var path = this.get_url_path();
+    find_activate_link: function(selector, path){
+        if(!path)
+        {
+            path = this.get_url_path();
+        }
+        console.log(selector, path);
         $(selector).find('a').each(function(i, el){
             if($(el).attr('routerlink') == path)
             {

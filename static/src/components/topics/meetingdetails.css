@@ -275,27 +275,6 @@ h5, .h5 {
 	width: 80%;
 }
 
-
-.upcomingButton button
-{
-    font-size: 0.85rem;
-}
-.upcomingButton{
-    display: flex;
-    margin-top: 5px;
-    margin-bottom: 10px;
-
-}
-
-.upcomingButton button{
-    margin-right: 4px;
-}
-
-.upcomingButton button i {
-    font-size: 14px;
-    padding-right: 4px;
-}
-
 .anchor-mb{
     margin-bottom: 0.5rem;
 }
