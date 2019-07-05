@@ -5,31 +5,40 @@ import json
 import base64
 import datetime
 import threading
-
 from fpdf import FPDF
-from random import randint
-from collections import OrderedDict
-from PIL import ImageFont, Image, ImageDraw
-from PyPDF2 import PdfFileWriter, PdfFileReader
-
-from django.core.files import File as DjangoFile
-from django.db import models
-
-
-from documents.file import File
-from esign.model_files.signature import Signature
-from esign.model_files.document import SignatureDoc
-
-from mainapp.settings import MEDIA_ROOT
-from mainapp.ws_methods import queryset_to_list
-
-from .user import Profile
 from .event import Event
 from .topic import Topic
+from .user import Profile
+from random import randint
+from django.db import models
+from mainapp import ws_methods
+from documents.file import File
+from django.db import transaction
+from collections import OrderedDict
+from mainapp.settings import MEDIA_ROOT
+from PIL import ImageFont, Image, ImageDraw
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from django.core.files import File as DjangoFile
+from esign.model_files.signature import Signature
+from esign.model_files.document import SignatureDoc
+from mainapp.ws_methods import queryset_to_list
+
 
 
 class MeetingDocument(File):
     meeting = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+
+    @property
+    def breadcrumb(self):
+        event_obj = self.meeting
+        data = []
+        if event_obj:
+            if event_obj.exectime != 'ongoing':
+                data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
+
+            data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
+            return data
 
     def save(self, *args, **kwargs):
         if not self.file_type:
@@ -45,17 +54,42 @@ class MeetingDocument(File):
             res.append(obj.id)
         return res
 
-    
-    @property
-    def breadcrumb(self):
-        event_obj = self.meeting
-        data = []
-        if event_obj:
-            if event_obj.exectime != 'ongoing':
-                data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
 
-            data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
-            return data
+    @classmethod
+    def upload_meeting_documents(cls, request, params):
+        attachments = params['attachments']
+        meeting_id = params['meeting_id']
+        meeting_docs = []
+        with transaction.atomic():
+            for attachment in attachments:
+                file_name = attachment['name']
+                doc_file = attachment['binary']
+                doc_file = ws_methods.base64StringToFile(doc_file, file_name)
+                meeting_doc = MeetingDocument(
+                    meeting_id=meeting_id,
+                    file_type='meeting',
+                    name=file_name,
+                    attachment=doc_file
+                )
+                meeting_doc.save()
+                meeting_doc = ws_methods.obj_to_dict(meeting_doc, 
+                fields=[
+                    'id', 
+                    'name', 
+                    'content', 
+                    'file_ptr_id', 
+                    'file_type', 
+                    'html',
+                    'meeting_id',
+                    'pdf_doc'
+                    ])
+                meeting_docs.append(meeting_doc)
+        if meeting_docs:        
+            return meeting_docs
+        else:
+            return 'Something went wrong while uploading meeting documents'
+
+
 
 class AgendaDocument(File):
     agenda = models.ForeignKey(Topic, on_delete=models.CASCADE)

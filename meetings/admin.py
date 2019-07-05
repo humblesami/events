@@ -39,7 +39,6 @@ class EventAdmin(nested_admin.NestedModelAdmin):
         (None, {
             'fields': [
                 'name',
-                'publish',
                 'start_date',
                 'end_date',
                 'attendees',

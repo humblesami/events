@@ -80,7 +80,8 @@ const appRoutes: Routes = [
 	{ path: 'upcoming/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
 	{ path: 'completed/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
 	{ path: 'draft/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
-	{ path: 'meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
+    { path: 'meeting/archived/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
+    { path: 'meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
 	
 	{ path: 'resource/:id', component: ResourceDetailsComponent, canActivate: [AuthGuard]},
 	{ path: 'home/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},

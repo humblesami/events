@@ -14,23 +14,28 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         </span>
     </div>
     <div class="container" *ngIf="meeting_object">            
-        <div class=" form-details">
-            <div class="meeting-details-form">
-                <div class="d-flex justify-content-between">
-                    <div class="row note" *ngIf="conference_not_active">
-                        Meeting conference URL will be available 15 minutes before meeting start.
+            <div class=" form-details">
+                <div class="meeting-details-form">
+                    <div class="d-flex justify-content-between">
+                        <div class="row note" *ngIf="conference_not_active">
+                            Meeting conference URL will be available 15 minutes before meeting start.
+                        </div>
+                        <div class="" style="justify-content:flex-end;">
+                            <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
+                            <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
+                            <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
+                        </div>
+                        <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
+                            <input type="checkbox" class="toggle_cb"
+                            data-on="Published" data-off="Unpublished"
+                            checked data-toggle="toggle" data-size="normal">
+                        </div>
+                        <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
+                                <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
+                                    <span name="archive">Move to Archive</span>
+                                </button>
+                            </div>
                     </div>
-                    <div class="" style="justify-content:flex-end;">
-                        <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
-                        <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
-                        <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
-                    </div>
-                    <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
-                        <input type="checkbox" class="toggle_cb"
-                        data-on="Published" data-off="Unpublished"
-                        checked data-toggle="toggle" data-size="normal">
-                    </div>
-                </div>
 
 
                 <div class="MainTitleHeadWrap">
@@ -235,7 +240,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             <div class="row">
 				<div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of meeting_object.attendees">
                         <div class="card kanban-card attendee-card">
-						 <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
+                            <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
                             <div class="kanban-profiles-user-img">
                                 <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
                             </div>
@@ -288,7 +293,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <span name="online">Absent</span>
                             </button>
                         </div>
-                	</div>
+                    </div>
 				</div>
             </div>
         </div>
@@ -324,9 +329,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="main-heading">
-						<h1>
-                        	Approval/Voting
-                    	</h1>
+						<h1>Approval/Voting</h1>
 					</div>
                 </div>
 			</div>
@@ -358,8 +361,10 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-2 mb-4" routerLink="/meeting/doc/{{doc.id}}" *ngFor="let doc of meeting_object.meeting_docs">
                     <div class="DocumentWrapper gray-bge">
-                        <div class="DocIcon">	
-                            <i class="icon-doc-file"></i>							
+                        <div class="DocIcon">
+							<span class="rounded-circle">
+								<i class="icon-doc-file"></i>
+							</span>
 						</div>
                         <div class="DocInfoVertical">
                             <div class="DocText">
@@ -369,6 +374,37 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
+        </div>
+        <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
+            <div class="call_container ">
+                <div *ngFor="let doc of attachments" contenteditable="false"
+                    class="doc-thumb" style="display: flex;">
+                    <span class="doc-thumb-icon"><i class="fa fa-2x fa-file"></i></span>
+                    <span class="file_name">{{doc.name}}</span>
+                    <span class="doc-thumb-close" (click)="remove_attachment($event)">
+                        <i class="del fas fa-times-circle"></i>
+                    </span>
+                </div>                                    
+            </div>
+        </div>
+        <div *ngIf="meeting_type && meeting_type != 'archive'" class="input-group">
+            <div class="input-group-append">
+                <label>
+                    Attach Meeting Documents
+                </label>
+                <form style="padding: 10px;border:1px solid" 
+                class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
+                    <input (change)="file_change($event)" id="msg_file" type="file" 
+                        accept=".pdf,.doc,.docx,.ppt" 
+                        multiple
+                        style="display:none"
+                    />
+                    <i class="fas fa-paperclip"></i>
+                </form>
+            </div>
+            <button class="btn btn-meeting" (click)="upload_doucments()">
+                <span>Upload Documents</span>
+            </button>
         </div>
 
         <div *ngIf="meeting_object.sign_docs && meeting_object.sign_docs.length" class="DocumentsSignWrapper title-wrapper">
@@ -395,8 +431,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 							</div>
 						</div>
 					</a>
-				</div>
-        	</div>
+                </div>
+            </div>
         </div>
         <app-comments *ngIf="meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}" [mention_list]="meeting_object.attendees"></app-comments>
     </div>

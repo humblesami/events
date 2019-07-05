@@ -87,9 +87,26 @@ export class MeetingDetailsComponent implements OnInit {
                         $('.toggle_cb').prop('checked', false).change();
                     }
                     obj_this.first_check = false;
+                    $('.toggle_cb').change(function() {
+                        if(!obj_this.first_check)
+                        {
+                            let publish_status = $(this).prop('checked');
+                            let args = {
+                                app: 'meetings',
+                                model: 'Event',
+                                method: 'update_publish_status'
+                            }
+                            let input_data = {
+                                params: {meeting_id: obj_this.meeting_object.id,publish_status: publish_status},
+                                args: args,
+                                no_loader: 1
+                            };
+                            obj_this.httpService.get(input_data, null, null)
+                        }                
+                    });
                 },100);
                 obj_this.next = result.next;
-                obj_this.prev = result.prev;                
+                obj_this.prev = result.prev;
                 if (result.meeting && result.meeting.name) {
                 } else {
                     obj_this.router.navigate(['/']);
@@ -147,6 +164,85 @@ export class MeetingDetailsComponent implements OnInit {
 		return true;
     }
 
+    move_to_archive(meeting_id:number)
+    {
+        let obj_this = this;
+        if (meeting_id)
+        {
+            let args = {
+                app: 'meetings',
+                model: 'Event',
+                method: 'move_to_archive'
+            }
+            let input_data = {
+                params: {meeting_id: meeting_id},
+                args: args,
+                no_loader: 1
+            };
+            if (obj_this.meeting_object.attendance_marked)
+            {
+                obj_this.httpService.get(input_data, function(data){
+                    var url = '/meeting/archived/' + meeting_id
+                    obj_this.router.navigate([url]);
+                }, null)
+            }
+        }
+    }
+    attachments = [];
+
+    file_change(event)
+    {
+        let obj_this = this;
+        var res = new Promise<any>(function(resolve, reject) {
+            window['functions'].get_file_binaries(event.target.files, resolve);
+        }).then(function(data){            
+            obj_this.attachments = obj_this.attachments.concat(data);
+        });
+    }
+
+
+    attach_btn_click(ev)
+    {
+        if(!$(ev.target).is('input'))
+        {
+            $(ev.target).closest('.attach_btn').find('input').click();
+        }        
+    }
+
+
+    remove_attachment(el){        
+        let obj_this = this;                
+        var i = $(el.target).closest('#attach_modal .doc-thumb').index();        
+        obj_this.attachments.splice(i, 1);        
+    }
+
+
+    upload_doucments()
+    {
+        var obj_this = this;
+        if (obj_this.attachments.length && obj_this.meeting_object)
+        {
+            let args = {
+                app: 'meetings',
+                model: 'MeetingDocument',
+                method: 'upload_meeting_documents'
+            }
+            let input_data = {
+                params: {
+                    meeting_id: obj_this.meeting_object.id,
+                    attachments: obj_this.attachments
+                },
+                args: args,
+                no_loader: 1
+            };
+            obj_this.httpService.get(input_data, function(data){
+                obj_this.meeting_object.meeting_docs = obj_this.meeting_object.meeting_docs.concat(data);
+                obj_this.attachments = []
+            }, null);
+        }
+    }
+
+
     mark_attendance(response: string, meet_id: string, action:string, user_id:string) 
     {
 		let req_url = '/meeting/respond-invitation-json';
@@ -185,41 +281,26 @@ export class MeetingDetailsComponent implements OnInit {
     
 	ngOnInit() {
         //[data-toggle="toggle"]
-        var obj_this = this;
-        setTimeout(function(){
-            $('.toggle_cb').change(function() {
-                if(!obj_this.first_check)
-                {
-                    let publish_status = $(this).prop('checked');
-                    let args = {
-                        app: 'meetings',
-                        model: 'Event',
-                        method: 'update_publish_status'
-                    }
-                    let input_data = {
-                        params: {meeting_id: obj_this.meeting_object.id,publish_status: publish_status},
-                        args: args,
-                        no_loader: 1
-                    };
-                    obj_this.httpService.get(input_data, null, null)
-                }                
-            });
-        }, 10);
-
+        // var obj_this = this;
         // setTimeout(function(){
-        //     $('.toggle_cb').bootstrapToggle({
-                
+        //     $('.toggle_cb').change(function() {
+        //         if(!obj_this.first_check)
+        //         {
+        //             let publish_status = $(this).prop('checked');
+        //             let args = {
+        //                 app: 'meetings',
+        //                 model: 'Event',
+        //                 method: 'update_publish_status'
+        //             }
+        //             let input_data = {
+        //                 params: {meeting_id: obj_this.meeting_object.id,publish_status: publish_status},
+        //                 args: args,
+        //                 no_loader: 1
+        //             };
+        //             obj_this.httpService.get(input_data, null, null)
+        //         }                
         //     });
-        //     $('#toggle-event').change(function() {
-        //         $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-        //     });
-        //     function toggleToggler(){
-                
-        //     }
-        //     $('#toggle-event')
-        //     // obj_this.httpService.post();
-        // }, 20);
-        
+        // }, 200);
 	}
 
 	ngOnDestroy() {

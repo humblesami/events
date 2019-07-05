@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from mainapp import ws_methods
+from django.db.models import Q
 from django.utils import timezone
 from mainapp.settings import server_base_url
 from meetings.model_files.user import Profile
@@ -57,6 +58,16 @@ class Event(models.Model):
                 attendees_list.append({'id': attendee.id, 'name': attendee.name, 'group': group_name})
         return attendees_list
 
+
+    @property
+    def attendance_marked(self):
+        attendance = Invitation_Response.objects.filter(
+            Q(event_id=self.id) & (Q(attendance__isnull=True) | Q(attendance='')))
+        if attendance:
+            return False
+        else:
+            return True
+
     
     @property
     def exectime(self):
@@ -65,8 +76,10 @@ class Event(models.Model):
             return 'draft'
         if self.start_date >= current_date:
             return 'upcoming'
-        elif self.end_date <= current_date:
+        elif self.end_date <= current_date  and self.archived == False:
             return 'completed'
+        elif self.end_date <= current_date  and self.archived == True:
+            return 'archived'
         elif self.start_date <= current_date and self.end_date >= current_date:
             return 'ongoing'
 
@@ -204,6 +217,7 @@ class Event(models.Model):
         meeting_object['start'] = meeting_object['start_date']
         meeting_object['stop'] = meeting_object['end_date']
         meeting_object['exectime'] = meeting_object_orm.exectime
+        meeting_object['attendance_marked'] = meeting_object_orm.attendance_marked
 
         attendance_status = cls.get_attendance_status(meeting_id, user_id)
         meeting_object['attendee_status'] = attendance_status['state']
@@ -344,6 +358,21 @@ class Event(models.Model):
     
 
     @classmethod
+    def move_to_archive(cls, request, params):
+        meeting_id = params['meeting_id']
+        meeting_obj = Event.objects.filter(pk=meeting_id, publish=True)
+        if meeting_obj:
+            meeting_obj = meeting_obj[0]
+            if not meeting_obj.attendance_marked:
+                return 'Please mark attendance before moving this meeting to Archive'
+            
+            meeting_obj.archived = True
+            meeting_obj.save()
+            return 'done'
+        return 'Something went wrong while moving meeting to archived'
+
+
+    @classmethod
     def update_publish_status(cls, request, params):
         meeting_id = params['meeting_id']
         publish_status = params['publish_status']
@@ -394,11 +423,19 @@ def attendees_saved(sender, instance, action, pk_set, **kwargs):
     if action == 'post_remove':
         removed_respondents = list(pk_set)
         instance.response_invitation_email(removed_respondents, 'removed')
+        Invitation_Response.objects.filter(attendee_id__in=removed_respondents).delete()
     if action == "post_add":
         new_added_respondets = list(pk_set)
         if new_added_respondets:
             instance.response_invitation_email(new_added_respondets)
+            respond_objs = []
+            for user_id in  new_added_respondets:
+                respond_obj = Invitation_Response(event_id=instance.id, attendee_id=user_id)
+                respond_objs.append(respond_obj)
+            if respond_objs:
+                Invitation_Response.objects.bulk_create(respond_objs)
 m2m_changed.connect(attendees_saved, sender=Event.attendees.through)
+
 
 
 STATE_SELECTION = (
