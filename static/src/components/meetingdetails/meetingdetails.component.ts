@@ -225,7 +225,8 @@ export class MeetingDetailsComponent implements OnInit {
             let args = {
                 app: 'meetings',
                 model: 'MeetingDocument',
-                method: 'upload_meeting_documents'
+                method: 'upload_meeting_documents',
+                post: 1
             }
             let input_data = {
                 params: {
@@ -268,13 +269,14 @@ export class MeetingDetailsComponent implements OnInit {
             };
             obj_this.httpService.get(final_input_data, function (data) {
             let attendee = meeting_being_updated.attendees.filter(function(attendee){
-                return attendee.id == meeting_being_updated.user_id                        
+                return attendee.id == meeting_being_updated.user_id
             });
             if (attendee.length > 0)
             {
                 attendee = attendee[0];
                 attendee.attendance = response;
             }
+            meeting_being_updated.attendance_marked = data.attendance_marked
 			}, null);
 		}
 	}

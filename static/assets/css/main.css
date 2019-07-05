@@ -2941,6 +2941,7 @@ span.kanban-upcoming-meeting-date {
     font-size: 15px;
     color: #43425D;
     line-height: 22px;
+    overflow: hidden;
 }
 .CalendarDateWrapper {
     white-space: nowrap;

@@ -177,16 +177,22 @@ class Event(models.Model):
                 invitation_response.save()
             return 'done'
         elif user_attendance:
+            data = {
+                'attendance_marked': False
+            }
             user_id = params['user_id']
             invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
             if invitation_response:
                 invitation_response = invitation_response[0]
                 invitation_response.attendance = user_attendance
                 invitation_response.save()
+                data['attendance_marked'] = invitation_response.event.attendance_marked
+                
             else:
                 invitation_response = Invitation_Response(attendance= user_attendance, event_id = meeting_id, attendee_id = user_id)
                 invitation_response.save()
-            return 'done'
+                data['attendance_marked'] = invitation_response.event.attendance_marked
+            return data
         return 'Something Wrong in Response Invitation'
 
     @classmethod
