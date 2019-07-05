@@ -391,7 +391,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 </div>                                    
             </div>
         </div>
-        <div *ngIf="meeting_type && meeting_type != 'archive'" class="input-group">
+        <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group">
             <div class="input-group-append">
                 <label>
                     Attach Meeting Documents
