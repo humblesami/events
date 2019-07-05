@@ -66,14 +66,22 @@
                     <input id="search-box" type="text"
                         pattern="[a-zA-Z ]*"
                         [(ngModel)]="search_key_word"
+                        (focus)="on_search_focus()"
                         (keyup.enter)="search()"
                         placeholder="Search"  aria-expanded="false" class="form-control" />
     
                     <div class="input-group-append">
                         <span class="input-group-text">
                             <input [(ngModel)]="is_content_search" type="checkbox" aria-label="Checkbox for following text input">
-                            <span style="margin-left: 10px;">In FIles</span>
+                            <span style="margin-left: 10px;">In Files</span>
                         </span>
+
+
+                        <span *ngIf="is_list_view" class="input-group-text">
+                            <input [(ngModel)]="is_list_view" type="checkbox" aria-label="Checkbox for following text input">
+                            <span style="margin-left: 10px;">in {{current_model}} only</span>
+                        </span>
+
                         <span class="input-group-text">
                             <button (click)="search()" class="btn btn-secondary" type="button">
                                 <i class="fa fa-search"></i>

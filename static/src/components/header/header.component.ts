@@ -23,6 +23,10 @@ export class HeaderComponent implements OnInit {
     search_item_types = [];
     no_search = false;
     results_visibility = false;
+    socketService : any;
+    current_model = '';
+    is_list_view = false;
+
     route_map = {
         'meetings.Event': '/meeting/',
         'meetings.Topic': '/topic/',
@@ -39,14 +43,21 @@ export class HeaderComponent implements OnInit {
         'meetings.SignDocument': '/signdoc/',
         'meetings.AgendaDocument': '/topic/doc/',
     };
-
-    socketService : any
+    
     constructor(private router: Router, private sserv : SocketService, private route: ActivatedRoute, private httpService: HttpService) {
         this.socketService = sserv;
-        this.route.data.subscribe(data => {
+        this.route.data.subscribe(data => {            
             if(!data.searchAble) {
                 this.searchAble = false;
             }
+        });
+    }
+
+    on_search_focus(){
+        console.log(this.route);
+        this.route.data.subscribe(data => {            
+            console.log(data.is_list_view, 1883, data);
+            this.is_list_view = data.is_list_view;          
         });
     }
 
@@ -79,8 +90,8 @@ export class HeaderComponent implements OnInit {
     content_search_results = undefined;
 
     search(){
-        let obj_this = this;
-    	obj_this.content_search = obj_this.is_content_search;
+        let obj_this = this;        
+        obj_this.content_search = obj_this.is_content_search;
         let url = window.location + '';
         obj_this.search_key_word = obj_this.search_key_word.replace(/[^a-zA-Z0-9 ]/g, '');
         if(obj_this.search_key_word.length < 1) {

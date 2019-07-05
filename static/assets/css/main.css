@@ -1442,12 +1442,10 @@ input#search-box {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 97%;
     z-index: 11;
     overflow: hidden;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    left: 47px;
 }
 .show_search_results {
     justify-content: center;

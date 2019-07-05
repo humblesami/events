@@ -56,12 +56,12 @@ const appRoutes: Routes = [
 	{ path: 'set-password', component: SetpasswordComponent},
 
 	{ path: 'my-profile', component: ProfileDetailsComponent, canActivate: [AuthGuard]},	
-	{ path: 'committees', data:{searchAble: true}, component: CommitteesComponent, canActivate: [AuthGuard]},
-    { path: 'profiles', data:{searchAble: true}, component: ProfilesComponent, canActivate: [AuthGuard]},
+	{ path: 'committees', data:{searchAble: true, is_list_view: 1}, component: CommitteesComponent, canActivate: [AuthGuard]},
+    { path: 'profiles', data:{searchAble: true, is_list_view: 1}, component: ProfilesComponent, canActivate: [AuthGuard]},
         
-    { path: 'profiles/directors', data:{searchAble: true}, component: ProfilesComponent, canActivate: [AuthGuard]},
-    { path: 'profiles/admins', data:{searchAble: true}, component: ProfilesComponent, canActivate: [AuthGuard]},
-    { path: 'profiles/staff', data:{searchAble: true}, component: ProfilesComponent, canActivate: [AuthGuard]},
+    { path: 'profiles/directors', data:{searchAble: true, is_list_view: 1}, component: ProfilesComponent, canActivate: [AuthGuard]},
+    { path: 'profiles/admins', data:{searchAble: true, is_list_view: 1}, component: ProfilesComponent, canActivate: [AuthGuard]},
+    { path: 'profiles/staff', data:{searchAble: true, is_list_view: 1}, component: ProfilesComponent, canActivate: [AuthGuard]},
         
     { path: 'profile/:id', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
 
@@ -71,11 +71,11 @@ const appRoutes: Routes = [
     
     { path: 'committees/:id', component: CommitteeDetailsComponent, canActivate: [AuthGuard]},
 
-	{ path: 'resources', data:{searchAble: true}, component: ResourcesComponent, canActivate: [AuthGuard]},
-	{ path: 'meetings/archived', data:{searchAble: true}, component: MeetingsComponent, canActivate: [AuthGuard]},
-	{ path: 'meetings/completed', data:{searchAble: true}, component: MeetingsComponent, canActivate: [AuthGuard]},
-    { path: 'meetings/upcoming', data:{searchAble: true}, component: MeetingsComponent, canActivate: [AuthGuard]},
-    { path: 'meetings/draft', data:{searchAble: true}, component: MeetingsComponent, canActivate: [AuthGuard]},
+	{ path: 'resources', data:{searchAble: true, is_list_view: 1}, component: ResourcesComponent, canActivate: [AuthGuard]},
+	{ path: 'meetings/archived', data:{searchAble: true, is_list_view: 1}, component: MeetingsComponent, canActivate: [AuthGuard]},
+	{ path: 'meetings/completed', data:{searchAble: true, is_list_view: 1}, component: MeetingsComponent, canActivate: [AuthGuard]},
+    { path: 'meetings/upcoming', data:{searchAble: true, is_list_view: 1}, component: MeetingsComponent, canActivate: [AuthGuard]},
+    { path: 'meetings/draft', data:{searchAble: true, is_list_view: 1}, component: MeetingsComponent, canActivate: [AuthGuard]},
 
 	{ path: 'upcoming/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
 	{ path: 'completed/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
@@ -112,14 +112,14 @@ const appRoutes: Routes = [
     { path: ':app/:model/details/:id', component: RecorddetailsComponent, canActivate: [AuthGuard]},
             
 
-    { path: 'surveys', data:{searchAble: true}, component: SurveysComponent, canActivate: [AuthGuard]},    
-    { path: 'signdocs', data:{searchAble: true}, component: EsignDocsComponent, canActivate: [AuthGuard]},
-    { path: 'votings', data:{searchAble: true}, component: VotingsComponent, canActivate: [AuthGuard]},
+    { path: 'surveys', data:{searchAble: true, is_list_view: 1}, component: SurveysComponent, canActivate: [AuthGuard]},    
+    { path: 'signdocs', data:{searchAble: true, is_list_view: 1}, component: EsignDocsComponent, canActivate: [AuthGuard]},
+    { path: 'votings', data:{searchAble: true, is_list_view: 1}, component: VotingsComponent, canActivate: [AuthGuard]},
     
-    { path: 'actions/surveys', data:{searchAble: true}, component: SurveysComponent, canActivate: [AuthGuard]},
-    { path: 'actions/signdocs', data:{searchAble: true}, component: EsignDocsComponent, canActivate: [AuthGuard]},
-    { path: 'actions/votings', data:{searchAble: true}, component: VotingsComponent, canActivate: [AuthGuard]},
-    { path: 'actions', data:{searchAble: true}, component: VotingsComponent, canActivate: [AuthGuard]},
+    { path: 'actions/surveys', data:{searchAble: true, is_list_view: 1}, component: SurveysComponent, canActivate: [AuthGuard]},
+    { path: 'actions/signdocs', data:{searchAble: true, is_list_view: 1}, component: EsignDocsComponent, canActivate: [AuthGuard]},
+    { path: 'actions/votings', data:{searchAble: true, is_list_view: 1}, component: VotingsComponent, canActivate: [AuthGuard]},
+    { path: 'actions', data:{searchAble: true, is_list_view: 1}, component: VotingsComponent, canActivate: [AuthGuard]},
 
 
 
