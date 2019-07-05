@@ -13,23 +13,22 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             <i class="fa fa-angle-right"></i>
         </span>
     </div>
-        <div class="container" *ngIf="meeting_object">
-            <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
-                <input type="checkbox" class="toggle_cb"
-                data-on="Published" data-off="Unpublished"
-                checked data-toggle="toggle" data-size="normal">
-            </div>
+    <div class="container" *ngIf="meeting_object">            
         <div class=" form-details">
             <div class="meeting-details-form">
                 <div class="d-flex justify-content-between">
-
                     <div class="row note" *ngIf="conference_not_active">
                         Meeting conference URL will be available 15 minutes before meeting start.
-                    </div>                    
+                    </div>
                     <div class="" style="justify-content:flex-end;">
                         <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
                         <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
                         <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
+                    </div>
+                    <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
+                        <input type="checkbox" class="toggle_cb"
+                        data-on="Published" data-off="Unpublished"
+                        checked data-toggle="toggle" data-size="normal">
                     </div>
                 </div>
 
@@ -359,10 +358,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-2 mb-4" routerLink="/meeting/doc/{{doc.id}}" *ngFor="let doc of meeting_object.meeting_docs">
                     <div class="DocumentWrapper gray-bge">
-                        <div class="DocIcon">
-							<span class="rounded-circle">
-								<i class="icon-doc-file"></i>
-							</span>
+                        <div class="DocIcon">	
+                            <i class="icon-doc-file"></i>							
 						</div>
                         <div class="DocInfoVertical">
                             <div class="DocText">
