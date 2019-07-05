@@ -2,17 +2,18 @@ import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 
 @Component({
-  selector: 'app-meetingresponse',
-  templateUrl: './meetingresponse.component.html',
-  styleUrls: ['./meetingresponse.component.css']
+    selector: 'app-meetingresponse',
+    templateUrl: './meetingresponse.component.html',
+    styleUrls: ['./meetingresponse.component.css']
 })
 export class MeetingresponseComponent implements OnInit {
 
     @Input() attendee_status: string;
     @Input() meeting_id: string;
 
-    constructor(private httpService: HttpService) {
-
+    httpService: HttpService;
+    constructor(private http_ervice: HttpService) {
+        this.httpService = http_ervice;
     }
 
     respond_invitation(response: string, meet_id: string) {
@@ -38,9 +39,9 @@ export class MeetingresponseComponent implements OnInit {
             obj_this.httpService.get(final_input_data, function(data) {
             }, null);
         }
-        }
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }

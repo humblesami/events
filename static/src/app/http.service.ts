@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { fail } from 'assert';
 
 @Injectable()
 export class HttpService {        
@@ -8,7 +7,7 @@ export class HttpService {
     count;
 
     constructor() {
-        this.server_url = window['server_url'];       
+        this.server_url = window['server_url'];
     }
 
     fetch_paged_data = function(off_set, limit){};
@@ -46,7 +45,9 @@ export class HttpService {
         options.onSuccess = function(data){            
             window['current_user'].onLogin(data);
             if(success_cb)
-            	success_cb(data);
+            {
+                success_cb(data);
+            }
         };
         options.type = 'get';
         options.onComplete = complete_cb;

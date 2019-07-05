@@ -386,7 +386,6 @@ export class SocketService {
         }).on('connect_error', function (err) {
             console.log('Socket connection failed '+complete_server_url+' please run socket server is up');
         });
-                   
         obj_this.socket.on('connect',function(){
             obj_this.socket.off('server_event');            
             authorized_user.socket_id = obj_this.socket.id;

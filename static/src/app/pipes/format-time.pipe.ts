@@ -1,13 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'formatTime'
-})
+@Pipe({name: 'formatTime'})
 export class FormatTimePipe implements PipeTransform {
-
-  transform(minutes: any, arg: any): string {
-      return decimal2time(minutes);
-  }
+    transform(minutes: any, arg: any): string {
+        return decimal2time(minutes);
+    }
 }
 
 function addZeroToUnder10(d)
