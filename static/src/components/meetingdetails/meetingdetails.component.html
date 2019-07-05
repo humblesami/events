@@ -1,6 +1,10 @@
 ﻿<app-breadcrumb app="meetings" model="event" 
-*ngIf="meeting_object"
+*ngIf="meeting_object && meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft' || meeting_type == 'ongoing'"
 rid="{{meeting_object.id}}" edit="1" delete="1" 
+routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
+title="{{meeting_object.name}}"></app-breadcrumb>
+<app-breadcrumb app="meetings" model="event" 
+*ngIf="meeting_object && meeting_type && meeting_type == 'archive' || meeting_type == 'completed'"
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
 
