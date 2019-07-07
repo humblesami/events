@@ -83,6 +83,7 @@ export class DocumentComponent implements OnInit {
     }
 
     loadDoc(){
+        console.log(Date(), new Date().getMilliseconds());
         var obj_this = this;
 		window['show_annotation'] = false;
         window['functions'].showLoader('loaddocwaiter');        
@@ -113,17 +114,17 @@ export class DocumentComponent implements OnInit {
         var obj_this = this;        
         var doc_type = obj_this.route.snapshot.params.doc_type;        
         let doc_id = obj_this.route.snapshot.params.res_id;
-        let point_id = undefined;        
-        
+        let point_id = undefined;
         let args = {
             app: 'documents',
             model: 'File',
             method: 'get_binary'
+            // method: 'get_file_data'
         }
         var input_data = {            
             args: args,
             params: {id : doc_id}
-        };  
+        };
         if(obj_this.route.toString().indexOf('discussion') > -1)
         {
             point_id = doc_id;
@@ -133,50 +134,59 @@ export class DocumentComponent implements OnInit {
             }; 
         }      
         var renderDoc = function(data){
+            data.file_type = doc_type;
             obj_this.doc_data = data;
+            
             if (data.breadcrumb)
             {
                 obj_this.breadcrumb = JSON.stringify(data.breadcrumb);
             }
-            obj_this.mention_list = data.mention_list.filter(function(obj){
-                return obj.id != obj_this.socketService.user_data.id;
-            });
-            // console.log(obj_this.mention_list);
-            obj_this.mentionConfig = {
-                items: obj_this.mention_list,
-                insertHTML: true,
-                triggerChar: "@",
-                dropUp: true,
-                labelKey: 'name',
-                mentionSelect: function(val){
-                    let el = $('.active-mention');                
-                    let tag = $('<a class="mention" mentioned_id="'+val.id+'" href="/#/'+val.group+'/'+val.id+'">'+val.name+'</a>');
-                    el.append(tag);
-                    el.html(el.html().replace('@', ''));
-                    obj_this.placeCursorAtEnd();
-                    window['should_save'] = false;
-                    return '';
-                }
-            };
+            if(data.mention_list)
+            {
+                obj_this.mention_list = data.mention_list.filter(function(obj){
+                    return obj.id != obj_this.socketService.user_data.id;
+                });
+                // console.log(obj_this.mention_list);
+                obj_this.mentionConfig = {
+                    items: obj_this.mention_list,
+                    insertHTML: true,
+                    triggerChar: "@",
+                    dropUp: true,
+                    labelKey: 'name',
+                    mentionSelect: function(val){
+                        let el = $('.active-mention');                
+                        let tag = $('<a class="mention" mentioned_id="'+val.id+'" href="/#/'+val.group+'/'+val.id+'">'+val.name+'</a>');
+                        el.append(tag);
+                        el.html(el.html().replace('@', ''));
+                        obj_this.placeCursorAtEnd();
+                        window['should_save'] = false;
+                        return '';
+                    }
+                };
+            }
+            
             var doc_data = {
-                doc:data.doc, 
                 id: doc_id,
                 first_time: 1, 
-                // type : doc_type,
-                type : data.type,
+                type : doc_type,
                 attendees: data.attendees,
                 mp_signature_status:data.mp_signature_status
             };
+            if(data.url)
+            {
+                doc_data['url'] = data.url;
+            }
+            else
+            {
+                doc_data['doc'] = data.doc;
+            }
             if (data.excel){
                 $('app-document .excel_doc').append(data.doc).show()
                 $('.loadingoverlay').hide();
             }
             else{
                 window['pdf_js_module'].render(doc_data);
-            }
-            
-            var c_path = window['pathname'];
-            $('.notification-list:first .list-group-item[ng-reflect-router-link="'+c_path+'"]').addClass('active');                
+            }                
         };
         if(!doc_type){
             //console.log("No doc_type");

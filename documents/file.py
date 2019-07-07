@@ -135,6 +135,19 @@ class File(models.Model):
             raise
 
     @classmethod
+    def get_file_data(cls, request, params):
+        file_id = int(params['id'])
+        file_obj = File.objects.get(id=file_id)
+        url = file_obj.pdf_doc.url
+        doc = {
+            'id': file_id,
+            "url": url,
+            'doc_name': file_obj.name,
+        }
+        return {'data': doc}
+
+
+    @classmethod
     def get_binary(cls, request, params):
         file_id = int(params['id'])
         file_obj = File.objects.get(id=file_id)
@@ -170,12 +183,6 @@ class File(models.Model):
                     group_name = group.name
                 breadcrumb.append({'title': group_name, 'link': '/profiles/' + group_name.lower()})
             breadcrumb.append({'title': profile_obj.name, 'link': '/' + group.name.lower() + '/' + str(profile_obj.id)})
-        # if file_obj._state:
-        #     if file_obj._state.fields_cache:
-        #         for model_name in file_obj._state.fields_cache:
-        #             if file_obj._state.fields_cache[model_name]:
-        #                 breadcrumb = file_obj._state.fields_cache[model_name].breadcrumb
-        # result = base64.b64encode(file_obj.pdf_doc.read()).decode('utf-8')
         doc = {
             'id': file_id, 
             "doc": result, 

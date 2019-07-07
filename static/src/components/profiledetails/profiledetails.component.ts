@@ -84,7 +84,7 @@ export class ProfileDetailsComponent implements OnInit {
                         });
                     };
                 });
-                // console.log(holder);                
+                // console.log(holder);
             }, 20);
         }
         else

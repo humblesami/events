@@ -551,22 +551,7 @@
             }            
 
             function onDocLoaded() {
-                //site_functions.hideLoader("renderdoc");
                 site_functions.hideLoader("loaddocwaiter");
-                var wls = window.location.toString();
-                var index = wls.indexOf('/doc');
-                wls = wls.substr(index+5);
-                var ar = wls.split('/');
-                if(ar.length > 1)
-                {
-                    try{
-                        var point_id = ar[1];
-                        console.log(point_id);
-                    }
-                    catch(er){
-                        console.log(er);
-                    }
-                }
             }
 
             function showHideAnnotations(rotate_degree) {
@@ -697,43 +682,40 @@
                     }
                     if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
                         var document_version = getDocumentVersion(documentId);
-                        var input_data = {
-                            id: doc_id,
-                            doc_id: documentId,
-                            version: document_version
-                        };
-                        let args = {
-                            app: 'documents',
-                            model: 'AnnotationDocument',
-                            method: 'get_annotations'
-                        }
-                        var input_data = {
-                            args: args,
-                            params: {
-                                id: doc_id, doc_id: documentId,
+                        
+                        
+                        render_details(doc_data);
+                        setTimeout(function(){
+                            var input_data = {
+                                id: doc_id,
+                                doc_id: documentId,
                                 version: document_version
+                            };
+                            let args = {
+                                app: 'documents',
+                                model: 'AnnotationDocument',
+                                method: 'get_annotations'
                             }
-                        };
-                        // let values = undefined;
-                        // let onSuccess = function(data){
-                        //     onAnnotationsDownloaded(data, doc_data);
-                        // }
-                        // window['get_annotations'](input_data, onSuccess);
-                        // input_data = {
-                        //     args: {},
-                        //     params: input_data
-                        // }
-                        dn_rpc_object({
-                            data:input_data,
-                            no_loader:1,
-                            onSuccess: function (annotaions_data) {
-                                onAnnotationsDownloaded(annotaions_data, doc_data);
-                            },
-                            onError:function(er){
-                                console.log(er);
-                            }
-                        });
-                        // onAnnotationsDownloaded([], doc_data);
+                            var input_data = {
+                                args: args,
+                                no_loader: 1,
+                                params: {
+                                    id: doc_id, doc_id: documentId,
+                                    version: document_version
+                                }
+                            };
+                            dn_rpc_object({
+                                data:input_data,
+                                no_loader:1,
+                                onSuccess: function (annotaions_data) {
+                                    doc_data.first_time = undefined;
+                                    onAnnotationsDownloaded(annotaions_data, doc_data);
+                                },
+                                onError:function(er){
+                                    console.log(er);
+                                }
+                            });
+                        }, 2000);
                     } else {
                         render_details(doc_data);
                     }
@@ -834,18 +816,25 @@
                         scale_select.val(RENDER_OPTIONS.scale);
 
                         if (doc_data.type) {
-                            if (doc_data.doc.startsWith('data:application/pdf;base64,')) {
-                                doc_data.doc = doc_data.doc.replace('data:application/pdf;base64,', '');
+                            if(!doc_data.url)
+                            {
+                                if (doc_data.doc.startsWith('data:application/pdf;base64,')) {
+                                    doc_data.doc = doc_data.doc.replace('data:application/pdf;base64,', '');
+                                }
+                                var raw = atob(doc_data.doc);
+                                var uint8Array = new Uint8Array(raw.length);
+                                for (var i = 0; i < raw.length; i++) {
+                                    uint8Array[i] = raw.charCodeAt(i);
+                                }
+                                doc_data.doc = uint8Array;
                             }
-                            var raw = atob(doc_data.doc);
-                            var uint8Array = new Uint8Array(raw.length);
-                            for (var i = 0; i < raw.length; i++) {
-                                uint8Array[i] = raw.charCodeAt(i);
+                            else
+                            {
+                                doc_data.doc = 'http://localhost:4200/static/assets/a.pdf';
                             }
-                            doc_data.doc = uint8Array;
                             RENDER_OPTIONS.document_data = doc_data;
-
                             PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
+                                console.log(Date(), new Date().getMilliseconds());
                                 pdf_doc_data = pdf_data;
                                 $('.page-count').html(pdf_doc_data.numPages);
                                 if (pdf_doc_data.numPages > 1)
@@ -906,32 +895,13 @@
 
                         function onPageDone(annotations_of_page, pange_number) {
                             pages_rendered++;
-                            if (pages_rendered == 1) {
+                            if (pange_number == 1) {
                                 first_page_rendered = 1;
                                 if (doc_data && doc_data.first_time) {
-                                    var header_height = $('.headerheight').height();
-                                    var toolbar_rect = $('.topbar:first')[0].getBoundingClientRect();
-                                    var toolbar_height = toolbar_rect.height;
-                                    var height = header_height + toolbar_height;
-                                    var path_url = window['pathname'];
-                                    var ar_path = path_url.split('/');
-                                    //console.log(path_url);
-                                    if (ar_path[1] == 'iframe')
-                                        height += 137;
-                                    // $('#viewer-wrapper').css({
-                                    //     height: 'calc(100vh - ' + height + 'px)'
-                                    // });
-                                    // $('#content-wrapper').css({
-                                    //     height: 'calc(100vh - ' + height + 'px)'
-                                    // });
-                                    // comments_wrapper.css({
-                                    //     top: (height + 2)
-                                    // });
-                                    // var c_div_height = 'calc(100vh - ' + (height + 55) + 'px)';
-                                    // comment_list_div.css('height', c_div_height);
                                     $('body').addClass('pdf-viewer');
                                 }
                                 $('#content-wrapper').show();
+                                console.log(Date(), new Date().getMilliseconds());
                                 onDocLoaded();
                             }
 
@@ -973,7 +943,7 @@
                         }
 
                         UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num) {
-                            onPageDone(cb_data, page_num);
+                            onPageDone(cb_data, page_num, 1);
                             for (var i = 2; i <= NUM_PAGES; i++) {
                                 UI.renderPage(i, RENDER_OPTIONS, function(cb_data, page_num) {
                                     onPageDone(cb_data, page_num);
