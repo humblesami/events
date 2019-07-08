@@ -975,10 +975,10 @@ height:100%;
     background: white;
 }
 
-#server-wait img {
+#server-wait .spinner-border {
     position: relative;
     top: calc(50vh - 110px);
-    left: calc(50% - 76px);
+    left: calc(50% - 10px);
 }
 
 .bootbox-close-button.close {
