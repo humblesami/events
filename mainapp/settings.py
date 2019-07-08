@@ -38,7 +38,8 @@ EMAIL_USE_TLS = True
 
 INSTALLED_APPS = [
     
-    'corsheaders',        
+    'my_admin',
+    'corsheaders',
     'bootstrapform',    
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,9 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    
+
     'ngapp',
-    'my_admin',
     'authsignup',
     'documents',
     'meetings.apps.MeetingConfig',
