@@ -830,7 +830,9 @@
                             }
                             else
                             {
-                                doc_data.doc = 'http://localhost:4200/static/assets/a.pdf';
+                                var doc_url =window['site_config'].server_base_url+doc_data.url;
+                                console.log(window['site_config'].server_base_url, doc_data.url, doc_url);
+                                doc_data.doc = doc_url;
                             }
                             RENDER_OPTIONS.document_data = doc_data;
                             PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
