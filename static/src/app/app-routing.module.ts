@@ -44,6 +44,7 @@ import { RtcComponent } from '../components/rtc/rtc.component';
 import { SurveysComponent } from '../components/surveys/surveys.component'
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component'
 import { SupportComponent } from '../components/support/support.component';
+import { RoutesRecognized } from "@angular/router";
 
 const appRoutes: Routes = [    
     { path: 'login', component: LoginComponent},
@@ -56,12 +57,12 @@ const appRoutes: Routes = [
 	{ path: 'set-password', component: SetpasswordComponent},
 
 	{ path: 'my-profile', component: ProfileDetailsComponent, canActivate: [AuthGuard]},	
-	{ path: 'committees', data:{searchAble: true, is_list_view: 1}, component: CommitteesComponent, canActivate: [AuthGuard]},
-    { path: 'profiles', data:{searchAble: true, is_list_view: 1}, component: ProfilesComponent, canActivate: [AuthGuard]},
-        
-    { path: 'profiles/directors', data:{searchAble: true, is_list_view: 1}, component: ProfilesComponent, canActivate: [AuthGuard]},
-    { path: 'profiles/admins', data:{searchAble: true, is_list_view: 1}, component: ProfilesComponent, canActivate: [AuthGuard]},
-    { path: 'profiles/staff', data:{searchAble: true, is_list_view: 1}, component: ProfilesComponent, canActivate: [AuthGuard]},
+	{ path: 'committees', data:{app:'meetings', model: 'Committee'}, component: CommitteesComponent, canActivate: [AuthGuard]},
+    { path: 'profiles', data:{app:'meetings', model: 'Profile'}, component: ProfilesComponent, canActivate: [AuthGuard]},
+
+    { path: 'profiles/directors', data:{app:'meetings', model: 'Profile'}, component: ProfilesComponent, canActivate: [AuthGuard]},
+    { path: 'profiles/admins', data:{app:'meetings', model: 'Profile'}, component: ProfilesComponent, canActivate: [AuthGuard]},
+    { path: 'profiles/staff', data:{app:'meetings', model: 'Profile'}, component: ProfilesComponent, canActivate: [AuthGuard]},
         
     { path: 'profile/:id', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
 
@@ -71,11 +72,11 @@ const appRoutes: Routes = [
     
     { path: 'committees/:id', component: CommitteeDetailsComponent, canActivate: [AuthGuard]},
 
-	{ path: 'resources', data:{searchAble: true, is_list_view: 1}, component: ResourcesComponent, canActivate: [AuthGuard]},
-	{ path: 'meetings/archived', data:{searchAble: true, is_list_view: 1}, component: MeetingsComponent, canActivate: [AuthGuard]},
-	{ path: 'meetings/completed', data:{searchAble: true, is_list_view: 1}, component: MeetingsComponent, canActivate: [AuthGuard]},
-    { path: 'meetings/upcoming', data:{searchAble: true, is_list_view: 1}, component: MeetingsComponent, canActivate: [AuthGuard]},
-    { path: 'meetings/draft', data:{searchAble: true, is_list_view: 1}, component: MeetingsComponent, canActivate: [AuthGuard]},
+	{ path: 'resources', data:{app:'resources', model: 'Folder', search_models:{resources: ['Folder', 'ResourceDocument']} }, component: ResourcesComponent, canActivate: [AuthGuard]},
+	{ path: 'meetings/archived', data:{app:'meetings', model: 'Event', search_models:{meetings: ['Event','Topic','MeetingDocument','AgendaDocument']} }, component: MeetingsComponent, canActivate: [AuthGuard]},
+	{ path: 'meetings/completed', data:{app:'meetings', model: 'Event', search_models:{meetings: ['Event','Topic','MeetingDocument','AgendaDocument']} }, component: MeetingsComponent, canActivate: [AuthGuard]},
+    { path: 'meetings/upcoming',data:{app:'meetings', model: 'Event', search_models:{meetings: ['Event','Topic','MeetingDocument','AgendaDocument']} }, component: MeetingsComponent, canActivate: [AuthGuard]},
+    { path: 'meetings/draft', data:{app:'meetings', model: 'Event', search_models:{meetings: ['Event','Topic','MeetingDocument','AgendaDocument']}}, component: MeetingsComponent, canActivate: [AuthGuard]},
 
 	{ path: 'upcoming/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
 	{ path: 'completed/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
@@ -87,7 +88,7 @@ const appRoutes: Routes = [
 	{ path: 'home/meeting/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
 	{ path: 'survey/:id', component: SurveyComponent, canActivate: [AuthGuard]},
 	{ path: 'home/survey/:id', component: SurveyComponent, canActivate: [AuthGuard]},
-	{ path: 'topic/:id', component: TopicsComponent, canActivate: [AuthGuard]},
+	{ path: 'topic/:id',  component: TopicsComponent, canActivate: [AuthGuard]},
 	
     { path: 'signature/doc/:res_id', component: SigndocComponent, canActivate: [AuthGuard]},
     
@@ -98,11 +99,10 @@ const appRoutes: Routes = [
     { path: 'chat', component: ChatComponent, canActivate: [AuthGuard]},
     { path: 'messenger', component: MessengerComponent, canActivate: [AuthGuard]},
 
-    { path: 'iframe/comments/:res_modal/:res_id/:token', component: CommentsComponent},
+    
     { path: 'comments/:res_modal', component: CommentsComponent, canActivate: [AuthGuard]},    
 
-	{ path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},	
-    
+	{ path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},    
 
 	{ path: 'meetings/completed/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
     { path: 'meetings/archived/:id', component: MeetingDetailsComponent, canActivate: [AuthGuard]},
@@ -112,15 +112,14 @@ const appRoutes: Routes = [
     { path: ':app/:model/details/:id', component: RecorddetailsComponent, canActivate: [AuthGuard]},
             
 
-    { path: 'surveys', data:{searchAble: true, is_list_view: 1}, component: SurveysComponent, canActivate: [AuthGuard]},    
-    { path: 'signdocs', data:{searchAble: true, is_list_view: 1}, component: EsignDocsComponent, canActivate: [AuthGuard]},
-    { path: 'votings', data:{searchAble: true, is_list_view: 1}, component: VotingsComponent, canActivate: [AuthGuard]},
+    { path: 'surveys', data:{app:'survey', model:'Survey', search_models: {survey: ['Survey','Question']} }, component: SurveysComponent, canActivate: [AuthGuard]},    
+    { path: 'signdocs', data:{app:'esign', model:'SignatureDoc'}, component: EsignDocsComponent, canActivate: [AuthGuard]},
+    { path: 'votings', data:{app:'voting', model:'Voting', search_models:{ voting:['Voting','VotingChoice','VotingType']} }, component: VotingsComponent, canActivate: [AuthGuard]},
     
-    { path: 'actions/surveys', data:{searchAble: true, is_list_view: 1}, component: SurveysComponent, canActivate: [AuthGuard]},
-    { path: 'actions/signdocs', data:{searchAble: true, is_list_view: 1}, component: EsignDocsComponent, canActivate: [AuthGuard]},
-    { path: 'actions/votings', data:{searchAble: true, is_list_view: 1}, component: VotingsComponent, canActivate: [AuthGuard]},
-    { path: 'actions', data:{searchAble: true, is_list_view: 1}, component: VotingsComponent, canActivate: [AuthGuard]},
-
+    { path: 'actions/surveys', data:{app:'survey', model:'Survey', search_models: {survey:['Survey','Question']} }, component: SurveysComponent, canActivate: [AuthGuard]},
+    { path: 'actions/signdocs', data:{app:'esign', model:'SignatureDoc'}, component: EsignDocsComponent, canActivate: [AuthGuard]},
+    { path: 'actions/votings', data:{app:'voting', model:'Voting', search_models: {voting: ['Voting','VotingChoice','VotingType']} }, component: VotingsComponent, canActivate: [AuthGuard]},
+    { path: 'actions', data:{app:'voting', model:'Voting', search_models:{survey:['Survey', 'Question'], esign: ['SignatureDoc'],voting: ['Voting','VotingChoice','VotingType']}}, component: VotingsComponent, canActivate: [AuthGuard]},
 
 
     { path: 'voting/:id', component: VotingdetailsComponent},
@@ -144,6 +143,7 @@ let routing_options = {
 @NgModule(routing_options)
 export class AppRoutingModule {
 	constructor(private router: Router, private socketService: SocketService) {
+        var crouter = router;
 		router.events.subscribe((event) => {
 			if (event instanceof NavigationStart) {  
                 // window.history.pushState(null,'',event.url);
@@ -154,18 +154,7 @@ export class AppRoutingModule {
                 $('body').removeClass('pdf-viewer');                
                 window['pathname'] = event.url
 			}
-			else if (event instanceof NavigationEnd) {
-                
-                // var pathVal = window.location.toString().replace(window.location.origin.toString(), '');
-                // if(pathVal == '/#/')
-                // {
-                //     window.history.pushState(null,'','/');
-                // }
-                // else
-                // {
-                //     pathVal = pathVal.replace('#/', '');
-                //     window.history.pushState(null,'',pathVal);
-                // }
+			else if (event instanceof NavigationEnd) {                
                 var next_url = event.url;
                 var current_url = localStorage.getItem('current_url');
                 if(!current_url)
@@ -174,8 +163,13 @@ export class AppRoutingModule {
                 }
                 localStorage.setItem('previous_url', current_url);
                 localStorage.setItem('current_url', next_url);
-                site_functions.hideLoader('route'+next_url);
-			}
+                site_functions.hideLoader('route'+next_url);                
+                
+            }
+            else if (event instanceof RoutesRecognized) {                
+                let route = event.state.root.firstChild;                
+                socketService.route_changed(route);
+            }
 		});
 	}
 }

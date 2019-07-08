@@ -5,6 +5,7 @@
     padding: 10px;
     font-size: 13px;
     border-bottom: 1px solid #eee;
+    overflow: hidden;
 }
 
 .form-row img, .form-row input {
@@ -342,6 +343,11 @@ fieldset.monospace textarea {
 
 .module table .vPositiveSmallIntegerField {
     width: 2.2em;
+}
+
+
+vTextField, select{
+	min-width: 280px;
 }
 
 tr .vTextField, tr select {

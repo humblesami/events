@@ -76,10 +76,9 @@
                             <span style="margin-left: 10px;">In Files</span>
                         </span>
 
-
-                        <span *ngIf="is_list_view" class="input-group-text">
-                            <input [(ngModel)]="is_list_view" type="checkbox" aria-label="Checkbox for following text input">
-                            <span style="margin-left: 10px;">in {{current_model}} only</span>
+                        <span *ngIf="can_be_type_specific" class="input-group-text">
+                            <input [(ngModel)]="type_applied" type="checkbox" aria-label="Checkbox for following text input">
+                            <span style="margin-left: 10px;">in {{socketService.active_route_snapshot.data.model}}s only</span>
                         </span>
 
                         <span class="input-group-text">

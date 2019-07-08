@@ -13,7 +13,6 @@ declare var $: any;
 export class HeaderComponent implements OnInit {
 	search_bar = false;
 	show_search_results = false;
-    searchAble = true;
 	is_content_search = false;
 	content_search = false;
     search_key_word = '';
@@ -23,9 +22,10 @@ export class HeaderComponent implements OnInit {
     search_item_types = [];
     no_search = false;
     results_visibility = false;
-    socketService : any;
+    socketService : SocketService;
     current_model = '';
-    is_list_view = false;
+    can_be_type_specific = false;
+    type_applied = false;
 
     route_map = {
         'meetings.Event': '/meeting/',
@@ -45,20 +45,19 @@ export class HeaderComponent implements OnInit {
     };
     
     constructor(private router: Router, private sserv : SocketService, private route: ActivatedRoute, private httpService: HttpService) {
-        this.socketService = sserv;
-        this.route.data.subscribe(data => {            
-            if(!data.searchAble) {
-                this.searchAble = false;
-            }
-        });
+        this.socketService = sserv;        
     }
 
     on_search_focus(){
-        console.log(this.route);
-        this.route.data.subscribe(data => {            
-            console.log(data.is_list_view, 1883, data);
-            this.is_list_view = data.is_list_view;          
-        });
+        let obj_this = this;
+        if(obj_this.socketService.active_route_snapshot.data.model)
+        {
+            obj_this.can_be_type_specific = true;
+        }
+        else{
+            obj_this.can_be_type_specific = false;
+            obj_this.type_applied = false;
+        }
     }
 
     settingDocRoute(file_type){
@@ -165,10 +164,9 @@ export class HeaderComponent implements OnInit {
                     obj_this.no_search = true;
                 }
                 else{
-                	obj_this.no_search = false;
+                    obj_this.no_search = false;
 				}
                 obj_this.show_search_results = true;
-                //console.log(obj_this.search_results)
             };
             var failure_cb = function (error) {
             };
@@ -176,25 +174,25 @@ export class HeaderComponent implements OnInit {
             let req_url = '/meeting_point/search-json';
             this.content_search ? req_url = '/meeting_point/search-docs':null ;
 
-            let input_data = { kw: obj_this.search_key_word, is_content_search: obj_this.is_content_search };
-            let search_model = '';
-            if(this.searchAble && !this.global_search) {
-                if(url.indexOf('meetings') !== -1 ){
-                    input_data['model'] = 'calendar.event';
-                } else if(url.indexOf('resources') !== -1 ) {
-                    input_data['model'] = 'meeting_point.folder';
-                } else if(url.indexOf('committees') !== -1 ) {
-                    input_data['model'] = 'meeting_point.committee';
-                } else if(url.indexOf('profiles') !== -1 ) {
-                    input_data['model'] = 'meeting_point.users';
+            let search_models = {};
+            if(obj_this.type_applied)
+            {
+                let search_data = obj_this.socketService.active_route_snapshot.data;
+                if(search_data.search_models)
+                {                    
+                    search_models = search_data.search_models;
                 }
-                else if(url.lastIndexOf('voting') !== -1){
-                    input_data['model'] = 'meeting_point.voting';
+                else if(search_data.model)
+                {
+                    search_models[search_data.app] = [search_data.model];
                 }
             }
-            else {
-                input_data['model'] = '';
-            }
+            let input_data = { 
+                kw: obj_this.search_key_word, 
+                is_content_search: obj_this.is_content_search,
+                search_models: search_models
+            };            
+            
             let args = {
                 app: 'meetings',
                 model: 'Abstract',

@@ -1440,12 +1440,9 @@ input#search-box {
     top: 121px;
     background: rgba(224, 224, 224, 0.98);
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 97%;
+    width: 91%;
     z-index: 11;
-    overflow: hidden;
-    left: 47px;
+    left: 8.5%;
 }
 .show_search_results {
     justify-content: center;

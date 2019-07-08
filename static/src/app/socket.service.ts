@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, RoutesRecognized, ActivatedRouteSnapshot } from "@angular/router";
 declare var $;
 
 @Injectable()
@@ -14,8 +14,7 @@ export class SocketService {
     user_photo = '';    
     on_verified = [];
     verified = false;
-    iframe_url = true;
-    current_route = '';
+    iframe_url = true;    
     not_public_url = 0;
     server_events = {};
     unseen_messages = 0;
@@ -23,11 +22,13 @@ export class SocketService {
 	notificationList = [];
     current_id = undefined;	      
     site_config = undefined;
-    current_model = undefined;
+    current_model = undefined;    
     video_call : any;
     ongoing_call : any;
     rtc_multi_connector : any;
-    constructor(private router: Router, route: ActivatedRoute) {                
+    active_route_snapshot : ActivatedRouteSnapshot;
+
+    constructor(private router: Router) {
         var obj_this = this;
         obj_this.video_call = {
             id: undefined,
@@ -349,6 +350,10 @@ export class SocketService {
         {
             $('#main-div').show();
         }
+    }
+
+    route_changed(route: ActivatedRouteSnapshot){
+        this.active_route_snapshot = route;
     }
 
     connect_socket(authorized_user){
@@ -689,7 +694,6 @@ export class SocketService {
 
     init_route(url){
         this.not_public_url = 0;
-        this.current_route = url;
         this.current_id = undefined;
         this.current_model = undefined;
         this.notificationList.forEach(function(el, i){

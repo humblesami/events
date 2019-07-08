@@ -978,11 +978,13 @@ input[type="submit"], button {
         font-size: 13px;
         word-break: break-word;
     }
-}
-@media (max-width: 767px) {
     .aligned .vCheckboxLabel{
         margin: 5px;
     }
+    .select2-container, vTextField, select
+	{
+		width: calc(100vw - 96px);
+	}
 }
 @media (min-width: 768px) {
     .aligned .vCheckboxLabel{
