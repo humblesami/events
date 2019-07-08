@@ -8,7 +8,7 @@ class FolderInline(admin.TabularInline):
     show_change_link = True
     verbose_name = "Sub Folder"
     verbose_name_plural = "Sub Folders"
-    extra = 0
+    extra = 1
 
 class FileInline(admin.TabularInline):
     model = ResourceDocument
@@ -16,7 +16,7 @@ class FileInline(admin.TabularInline):
     show_change_link = True
     exclude = ['pdf_doc','content', 'html', 'file_type']
     # readonly_fields = ('View',)
-    extra = 0
+    extra = 1
 
 class FolderAdmin(admin.ModelAdmin):
     fieldsets = [

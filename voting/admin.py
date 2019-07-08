@@ -20,7 +20,7 @@ class VotingDocInline(admin.TabularInline):
     exclude=('html','content','original_pdf','pdf_doc', 'file_type')
     # readonly_fields = ('View',)
     # show_change_link = True
-    extra = 0
+    extra = 1
 
 
 class VotingAdmin(admin.ModelAdmin):

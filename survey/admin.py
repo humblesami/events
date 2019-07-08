@@ -17,7 +17,7 @@ class QuestionInline(admin.TabularInline):
 class CategoryInline(admin.TabularInline):
     model = Category
     exclude = ['order', ]
-    extra = 0
+    extra = 1
 
 
 class SurveyAdmin(admin.ModelAdmin):
@@ -37,7 +37,7 @@ class SurveyAdmin(admin.ModelAdmin):
 class AnswerBaseInline(admin.StackedInline):
     fields = ("question", "body")
     readonly_fields = ("question",)
-    extra = 0
+    extra = 1
     model = Answer
 
 

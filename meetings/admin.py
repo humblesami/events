@@ -21,18 +21,18 @@ import nested_admin
 class TopicDocInline(nested_admin.NestedTabularInline):
     model = AgendaDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
-    extra = 0
+    extra = 1
 
 
 class TopicInline(nested_admin.NestedTabularInline):
     model = Topic
     inlines = [TopicDocInline]
-    extra = 0
+    extra = 1
 
 class MeetingDocInline(nested_admin.NestedTabularInline):
     model = MeetingDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
-    extra = 0
+    extra = 1
 
 class EventAdmin(nested_admin.NestedModelAdmin):
     fieldsets = [
@@ -59,7 +59,7 @@ class EventAdmin(nested_admin.NestedModelAdmin):
     # autocomplete_fields = ('attendees',)
 
     inlines = [TopicInline, MeetingDocInline]
-    # extra = 0
+    # extra = 1
     readonly_fields = ('docs',)
 
     def docs(self, obj):
@@ -231,13 +231,13 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 class NewsVideoInline(admin.TabularInline):
     model = NewsVideo
-    extra = 0
+    extra = 1
 
 
 class NewsDocumentInline(admin.TabularInline):
     model = NewsDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
-    extra = 0
+    extra = 1
 
 
 class NewsAdmin(admin.ModelAdmin):
