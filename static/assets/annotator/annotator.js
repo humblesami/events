@@ -834,7 +834,7 @@
                             }
                             RENDER_OPTIONS.document_data = doc_data;
                             PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
-                                console.log(Date(), new Date().getMilliseconds());
+                                console.log(Date(), new Date().getMilliseconds(), 'got doc data at client to show');
                                 pdf_doc_data = pdf_data;
                                 $('.page-count').html(pdf_doc_data.numPages);
                                 if (pdf_doc_data.numPages > 1)
@@ -3025,7 +3025,7 @@
                      *    - fulfilled: SVGElement
                      *    - rejected: Error
                      */
-                    function render(svg, viewport, data) {
+                    function render(svg, viewport, data) {                        
                         return new Promise(function(resolve, reject) { // Reset the content of the SVG
                             svg.innerHTML = '';
                             svg.setAttribute('data-pdf-annotate-container', true);

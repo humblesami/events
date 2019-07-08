@@ -134,6 +134,7 @@ export class DocumentComponent implements OnInit {
             }; 
         }      
         var renderDoc = function(data){
+            console.log(Date(), new Date().getMilliseconds(),  'doc data downloaded');
             data.file_type = doc_type;
             obj_this.doc_data = data;
             
@@ -185,6 +186,7 @@ export class DocumentComponent implements OnInit {
                 $('.loadingoverlay').hide();
             }
             else{
+                console.log(Date(), new Date().getMilliseconds(), 'started rendering');
                 window['pdf_js_module'].render(doc_data);
             }                
         };
