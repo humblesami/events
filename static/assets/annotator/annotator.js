@@ -746,6 +746,7 @@
 
             function render_details(doc_data) {
                 try {
+                    console.log(Date(), new Date().getMilliseconds(), 'reached render details');
                     var pdfData = false;
                     var pages_rendered = 0;
                     if (doc_data && doc_data.first_time) {
@@ -802,6 +803,7 @@
                                 doc_data.doc = doc_url;
                             }
                             RENDER_OPTIONS.document_data = doc_data;
+                            console.log(Date(), new Date().getMilliseconds(), 'going to get doc data');
                             PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
                                 console.log(Date(), new Date().getMilliseconds(), 'got doc data at client to show');
                                 pdf_doc_data = pdf_data;
@@ -870,7 +872,7 @@
                                     $('body').addClass('pdf-viewer');
                                 }
                                 $('#content-wrapper').show();
-                                console.log(Date(), new Date().getMilliseconds());
+                                console.log(Date(), new Date().getMilliseconds(), 'first page done');
                                 onDocLoaded();
                             }
 
