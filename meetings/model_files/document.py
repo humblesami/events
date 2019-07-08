@@ -65,6 +65,10 @@ class MeetingDocument(File):
                 file_name = attachment['name']
                 doc_file = attachment['binary']
                 doc_file = ws_methods.base64StringToFile(doc_file, file_name)
+                try:
+                    file_name = attachment['file_name']
+                except:
+                    pass
                 meeting_doc = MeetingDocument(
                     meeting_id=meeting_id,
                     file_type='meeting',
@@ -121,6 +125,47 @@ class AgendaDocument(File):
             for obj in self.agenda.event.attendees.all():
                 res.append(obj.id)
             return res
+
+    
+    @classmethod
+    def upload_agenda_documents(cls, request, params):
+        attachments = params['attachments']
+        topic_id = params['topic_id']
+        topic_docs = []
+        with transaction.atomic():
+            for attachment in attachments:
+                file_name = attachment['name']
+                doc_file = attachment['binary']
+                doc_file = ws_methods.base64StringToFile(doc_file, file_name)
+                try:
+                    file_name = attachment['file_name']
+                except:
+                    pass
+                topic_doc = AgendaDocument(
+                    agenda_id=topic_id,
+                    file_type='topic',
+                    name=file_name,
+                    attachment=doc_file
+                )
+                topic_doc.save()
+                topic_doc = ws_methods.obj_to_dict(topic_doc, 
+                fields=[
+                    'id', 
+                    'name', 
+                    'content', 
+                    'file_ptr_id', 
+                    'file_type', 
+                    'html',
+                    'meeting_id',
+                    'pdf_doc'
+                    ])
+                topic_docs.append(topic_doc)
+        if topic_docs:        
+            return topic_docs
+        else:
+            return 'Something went wrong while uploading agenda documents'
+
+
 
 class SignDocument(SignatureDoc):
     send_to_all = models.BooleanField(blank=True, null=True)

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from '../../app/http.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import {SocketService} from "../../app/socket.service";
+import { element } from '@angular/core/src/render3';
 declare var $: any;
 
 @Component({
@@ -190,12 +191,25 @@ export class MeetingDetailsComponent implements OnInit {
     }
     attachments = [];
 
+
+    doc_name_change(doc, e)
+    {
+        doc.name = e.target.value;
+    }
+
+
     file_change(event)
     {
         let obj_this = this;
         var res = new Promise<any>(function(resolve, reject) {
             window['functions'].get_file_binaries(event.target.files, resolve);
-        }).then(function(data){            
+        }).then(function(data){
+            data.forEach(element => {
+                let ar = element.name.split('.')
+                element.ext = ar[ar.length - 1];
+                element.name = element.name.replace('.' + element.ext, '');
+                element.file_name = element.name;
+            });
             obj_this.attachments = obj_this.attachments.concat(data);
         });
     }
@@ -220,6 +234,11 @@ export class MeetingDetailsComponent implements OnInit {
     upload_doucments()
     {
         var obj_this = this;
+        obj_this.attachments.forEach(element =>{
+            element.file_name = element.name;
+            element.name = element.name + '.' + element.ext;
+        });
+
         if (obj_this.attachments.length && obj_this.meeting_object)
         {
             let args = {

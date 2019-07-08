@@ -27,8 +27,14 @@ class Topic(models.Model):
             topic_orm = Topic.objects.get(pk=topic_id)
             topic = ws_methods.obj_to_dict(topic_orm, fields=['id', 'name', 'lead', 'duration', 'event__exectime', 'event__name', 'event__id'])
             topic['duration'] = str(topic['duration'])
-            meeting_docs = list(topic_orm.agendadocument_set.values())
-            topic['docs'] = meeting_docs
+            topic_docs = list(topic_orm.agendadocument_set.values())
+            meeting_type = ''
+            try:
+                meeting_type = topic_orm.event.exectime
+            except:
+                pass
+            topic['meeting_type'] = meeting_type
+            topic['docs'] = topic_docs
             return topic
         except:
             return 'someting went wrong..!'
