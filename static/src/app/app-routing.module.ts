@@ -149,7 +149,8 @@ export class AppRoutingModule {
                 // window.history.pushState(null,'',event.url);
                 socketService.init_route(event.url);
 				$('.hidemouseaway').hide();
-				$('#annotated-doc-conatiner').hide();
+                $('.searchbar-full-width').hide();
+                socketService.search_bar_shown = false;
                 site_functions.showLoader('route'+event.url);
                 $('body').removeClass('pdf-viewer');                
                 window['pathname'] = event.url

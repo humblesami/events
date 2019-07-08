@@ -27,6 +27,7 @@ export class SocketService {
     ongoing_call : any;
     rtc_multi_connector : any;
     active_route_snapshot : ActivatedRouteSnapshot;
+    search_bar_shown = false;
 
     constructor(private router: Router) {
         var obj_this = this;

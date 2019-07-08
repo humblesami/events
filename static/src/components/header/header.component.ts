@@ -225,23 +225,20 @@ export class HeaderComponent implements OnInit {
         togglerelated('.profile-menu.dropdown-menu');
     }
 
-    search_bar_shown = false;
     search_results_visibility()
     {
         let obj_this = this;
-        if (!obj_this.search_bar_shown)
+        $('.searchbar-full-width').show();
+        if (!obj_this.socketService.search_bar_shown)
         {
-            $(".searchbar-full-width")
-                    .show()
-                    .find("input:first")
-                    .focus();
-            obj_this.search_bar_shown = true;
+            $(".searchbar-full-width").show().find("input:first").focus();
+            obj_this.socketService.search_bar_shown = true;
         }
         else
         {
             $(".searchbar-full-width")
                     .hide();
-            obj_this.search_bar_shown = false;
+            obj_this.socketService.search_bar_shown = false;
         }
         if (obj_this.search_results)
         {
@@ -253,7 +250,7 @@ export class HeaderComponent implements OnInit {
         let obj_this = this;
         obj_this.show_search_results = false;
         $(".searchbar-full-width").hide();
-        obj_this.search_bar_shown = false;
+        obj_this.socketService.search_bar_shown = false;
     }
     
     show_messenger(){
