@@ -3,9 +3,14 @@ from django.db.models import Count
 from .models import *
 
 
+
+class VotingChoiceAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['voting_type']
+
+
 class ChoiceInline(admin.TabularInline):
     model = VotingChoice
-    extra = 3
+    extra = 1
 
 
 class VotingTypeAdmin(admin.ModelAdmin):
@@ -17,6 +22,7 @@ class VotingTypeAdmin(admin.ModelAdmin):
 
 class VotingDocInline(admin.TabularInline):
     model = VotingDocument
+    autocomplete_fields = ['voting']
     exclude=('html','content','original_pdf','pdf_doc', 'file_type')
     # readonly_fields = ('View',)
     # show_change_link = True
@@ -25,8 +31,8 @@ class VotingDocInline(admin.TabularInline):
 
 class VotingAdmin(admin.ModelAdmin):
     inlines = [VotingDocInline,]
-    autocomplete_fields = ['respondents']
-    filter_horizontal = ('respondents',)
+    search_fields = ['name']
+    autocomplete_fields = ['voting_type', 'meeting', 'topic', 'respondents']
     change_form_template = 'custom/change_form.html'
 
     def get_form(self, request, obj=None, **kwargs):
@@ -87,3 +93,4 @@ class VotingAnswerAdmin(admin.ModelAdmin):
 admin.site.register(Voting, VotingAdmin)
 admin.site.register(VotingType, VotingTypeAdmin)
 admin.site.register(VotingAnswer, VotingAnswerAdmin)
+admin.site.register(VotingChoice, VotingChoiceAdmin)

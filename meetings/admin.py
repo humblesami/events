@@ -18,6 +18,9 @@ sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
 
 
+class TopicAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
 class TopicDocInline(nested_admin.NestedTabularInline):
     model = AgendaDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
@@ -54,8 +57,8 @@ class EventAdmin(nested_admin.NestedModelAdmin):
             ]
         })
     ]
+    search_fields = ['name']
     autocomplete_fields = ['attendees']
-    filter_horizontal = ('attendees',)
     # autocomplete_fields = ('attendees',)
 
     inlines = [TopicInline, MeetingDocInline]
@@ -256,7 +259,7 @@ class SignDocumentForm(SignatureDocForm):
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event,EventAdmin)
-# admin.site.register(Topic,TopicAdmin)
+admin.site.register(Topic,TopicAdmin)
 admin.site.register(MeetingDocument, MeetingDocumentForm)
 admin.site.register(AgendaDocument)
 admin.site.register(Admin,AdminAdmin)
