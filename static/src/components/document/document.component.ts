@@ -118,8 +118,8 @@ export class DocumentComponent implements OnInit {
         let args = {
             app: 'documents',
             model: 'File',
-            method: 'get_binary'
-            // method: 'get_file_data'
+            // method: 'get_binary'
+            method: 'get_file_data'
         }
         var input_data = {            
             args: args,
