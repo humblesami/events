@@ -681,41 +681,8 @@
                         initDocCookies(documentId);
                     }
                     if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
-                        var document_version = getDocumentVersion(documentId);
-                        
-                        
-                        render_details(doc_data);
-                        setTimeout(function(){
-                            var input_data = {
-                                id: doc_id,
-                                doc_id: documentId,
-                                version: document_version
-                            };
-                            let args = {
-                                app: 'documents',
-                                model: 'AnnotationDocument',
-                                method: 'get_annotations'
-                            }
-                            var input_data = {
-                                args: args,
-                                no_loader: 1,
-                                params: {
-                                    id: doc_id, doc_id: documentId,
-                                    version: document_version
-                                }
-                            };
-                            dn_rpc_object({
-                                data:input_data,
-                                no_loader:1,
-                                onSuccess: function (annotaions_data) {
-                                    doc_data.first_time = undefined;
-                                    onAnnotationsDownloaded(annotaions_data, doc_data);
-                                },
-                                onError:function(er){
-                                    console.log(er);
-                                }
-                            });
-                        }, 2000);
+                        var document_version = getDocumentVersion(documentId);                                                
+                        render_details(doc_data);                        
                     } else {
                         render_details(doc_data);
                     }
@@ -923,6 +890,36 @@
                                 return;
                             }
                             var socket_manager = window['socket_manager'];
+                            var input_data = {
+                                id: doc_id,
+                                doc_id: documentId,
+                                version: document_version
+                            };
+                            let args = {
+                                app: 'documents',
+                                model: 'AnnotationDocument',
+                                method: 'get_annotations'
+                            }
+                            var input_data = {
+                                args: args,
+                                no_loader: 1,
+                                params: {
+                                    id: doc_id, doc_id: documentId,
+                                    version: document_version
+                                }
+                            };
+                            dn_rpc_object({
+                                data:input_data,
+                                no_loader:1,
+                                onSuccess: function (annotaions_data) {
+                                    doc_data.first_time = undefined;
+                                    onAnnotationsDownloaded(annotaions_data, doc_data);
+                                },
+                                onError:function(er){
+                                    console.log(er);
+                                }
+                            });
+
                             socket_manager.execute_on_verified(function(){
                                 var n_list = socket_manager.notificationList;
                                 $('.canvasWrapper .new_comments_count').each(function(i, el){
