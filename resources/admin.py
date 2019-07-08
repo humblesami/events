@@ -26,6 +26,7 @@ class FolderAdmin(admin.ModelAdmin):
             ]
         })
     ]
+    search_fields = ['name']
     readonly_fields = ['parent',]
     inlines = [FolderInline,FileInline]
     def get_queryset(self, request):
@@ -36,7 +37,7 @@ class FolderAdmin(admin.ModelAdmin):
 
 
 class ResourceDocumentForm(FileForm):
-    autocomplete_fields = ['users']
+    autocomplete_fields = ['users', 'folder']
     def get_form(self, request, obj=None, **kwargs):
         form = super(ResourceDocumentForm, self).get_form(request, obj, **kwargs)
         return form

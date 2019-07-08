@@ -2,7 +2,6 @@
 
 /* FORM ROWS */
 .form-row {
-    overflow: hidden;
     padding: 10px;
     font-size: 13px;
     border-bottom: 1px solid #eee;
@@ -345,8 +344,8 @@ fieldset.monospace textarea {
     width: 2.2em;
 }
 
-.vTextField,select {
-    width: 20em;
+tr .vTextField, tr select {
+    width: 10em;
 }
 
 .vIntegerField {
@@ -523,4 +522,7 @@ form .related-widget-wrapper ul {
 .calendarbox.module
 {
 	z-index:67;
+}
+.submit-row input[name="_continue"]{
+	display:none;
 }
