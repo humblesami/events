@@ -235,6 +235,7 @@ class UserNotification(models.Model):
         notification_ids = []
         records = UserNotification.objects.filter(read=False, user_id=uid)
 
+        not_found = {}
         for un in records:
             notification = un.notification
             if objects.get(notification.id):
@@ -245,29 +246,32 @@ class UserNotification(models.Model):
 
             address = notification.post_address
             model = apps.get_model(address.res_app, address.res_model)
-            obj_res = model.objects.get(pk=address.res_id)
-            meta = notification.get_meta(obj_res)
-            senders_for_all = {}
-            senders_for_all[request.user.id], count = UserNotification.get_senders(cls, uid, notification.id)
-            text = ' ' + meta['template'] + ' ' + meta['name_place']
-            client_object = {
-                'id': notification.id,
-                'count': count,
-                'body': text,
-                'senders': senders_for_all,
-                'notification_type': notification_type,
-                'address': {
-                    'res_id': address.res_id,
-                    'res_model': address.res_model,
-                    'res_app': address.res_app,
-                    'info': meta['info']
+            obj_res = model.objects.filter(pk=address.res_id)            
+            if obj_res:
+                meta = notification.get_meta(obj_res)
+                senders_for_all = {}
+                senders_for_all[request.user.id], count = UserNotification.get_senders(cls, uid, notification.id)
+                text = ' ' + meta['template'] + ' ' + meta['name_place']
+                client_object = {
+                    'id': notification.id,
+                    'count': count,
+                    'body': text,
+                    'senders': senders_for_all,
+                    'notification_type': notification_type,
+                    'address': {
+                        'res_id': address.res_id,
+                        'res_model': address.res_model,
+                        'res_app': address.res_app,
+                        'info': meta['info']
+                    }
                 }
-            }
-            objects[notification.id] = client_object
+                objects[notification.id] = client_object
+            else:
+                not_found[notification.id] = address.res_id
         array = []
         for key, item in objects.items():
             array.append(item)
-        res = {'ids': notification_ids, 'list': array, 'objects': objects}
+        res = {'ids': notification_ids, 'list': array, 'objects': objects, 'not_found': not_found}
         return res
 
 
