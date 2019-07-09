@@ -7,7 +7,7 @@ class Topic(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     lead = models.CharField(max_length=200, blank=True)
-    duration = models.DurationField(blank=True, null=True)
+    duration = models.DurationField(null=True)
 
 
     def __str__(self):

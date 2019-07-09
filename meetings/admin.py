@@ -64,6 +64,8 @@ class EventAdmin(nested_admin.NestedModelAdmin):
     inlines = [TopicInline, MeetingDocInline]
     # extra = 1
     readonly_fields = ('docs',)
+    change_form_template = 'custom/event_custom_change_form.html'
+    
 
     def docs(self, obj):
         html = "<div>"
