@@ -1,16 +1,19 @@
 <div class="breadcrumbSection">
+    
+    <div class="breadcrumb-container">
+        <ul class="breadcrumb">
+            <li *ngFor="let item of route_links" class="breadcrumb-item">
+                <a routerLink="{{item.link}}">
+                    {{item.title}}
+                </a>
+            </li>
+            <li class="breadcrumb-item active">{{title}}</li>
+        </ul>
+    </div>
     <div *ngIf="socketService && socketService.user_data && socketService.user_data.is_admin" class="edit-buttons">
         <a *ngIf="create" class="btn btn-primary" routerLink="/edit/{{app}}/{{model}}/add">Create</a>
         <a *ngIf="edit" class="btn btn-primary" routerLink="/edit/{{app}}/{{model}}/{{rid}}/change">Edit</a>
         <a *ngIf="delete" class="btn btn-danger" routerLink="/edit/{{app}}/{{model}}/{{rid}}/delete">Delete</a>        
     </div>
-
-    <ul class="breadcrumb">
-        <li *ngFor="let item of route_links" class="breadcrumb-item">
-            <a routerLink="{{item.link}}">
-                {{item.title}}
-            </a>
-        </li>
-        <li class="breadcrumb-item active">{{title}}</li>
-    </ul>
+    
 </div>

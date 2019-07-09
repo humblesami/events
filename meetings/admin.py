@@ -107,11 +107,10 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image', 'username', 'password',)}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email',)}),
-        (None, {'fields': ('committees', 'company')}),
+        (None, {'fields': ('committees', 'company', 'date_joined')}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', ),
         }),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
 
     )
     readonly_fields = ('image_tag',)
@@ -127,8 +126,7 @@ class AdminAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (None, {'fields': ('committees', 'company',)}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (None, {'fields': ('committees', 'company', 'date_joined')}),        
 
     )
     autocomplete_fields = ['committees']
@@ -150,7 +148,8 @@ class DirectorAdmin(UserAdmin):
              'fields': (
                  'bio', 'location', 'birth_date', 'nick_name',
                  'job_title', 'department', 'work_phone', 'mobile_phone', 'website', 'fax',
-                 'board_joining_date', 'term_start_date', 'term_end_date','committees', 'company'
+                 'board_joining_date', 'term_start_date', 'term_end_date','committees',
+                 'company', 'last_login'
              )
          }
          ),
@@ -170,7 +169,6 @@ class DirectorAdmin(UserAdmin):
              )
          }
          ),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     readonly_fields = ('image_tag','admin_image_html')
 

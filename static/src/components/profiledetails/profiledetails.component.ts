@@ -148,7 +148,7 @@ export class ProfileDetailsComponent implements OnInit {
         if (id) {
 			obj_this.my_profile = false;
 			input_data =
-			 { 
+			{ 
 				id: id,
 				type:this.type
 			};

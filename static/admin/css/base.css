@@ -985,22 +985,26 @@ body.dashboard #content-main
 #content{
     overflow: auto;
 }
+
+/*
 body.model-admin #content {    
     height: calc(100vh - 130px);
 }
+
 body.change-form #content
 {
     height: calc(100vh - 162px);
+} 
+body.popup #content{
+    overflow: auto;
+    height: calc(100vh - 60px);
 }
 body.change-list #content
 {
     height: calc(100vh - 153px);
 }
 
-body.popup #content{
-    overflow: auto;
-    height: calc(100vh - 60px);
-}
+
 body.dashboard  #content
 {
     height: calc(100vh - 133px);    
@@ -1009,6 +1013,8 @@ body.dashboard.app-*  #content
 {
     height: calc(100vh - 90px);
 }
+*/
+
 #content-related {
     float: left;
     width: 260px;

@@ -658,17 +658,11 @@ breadcrumb
 
 .breadcrumbSection {
     display: flex;
-    justify-content: space-between;
-    flex-direction: row-reverse;
+    justify-content: space-between;    
     align-items: center;
-
     background: #f1f2f4;
     min-height: 40px;
     padding: 0 20px 0 15px;
-}
-.breadcrumbSection>div
-{
-    float: left;
 }
 
 .breadcrumbSection .btn{
