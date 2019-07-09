@@ -430,10 +430,9 @@ a,
     border-radius: 50px;
     background-color: #808080;
     color: white;
-    font-size: 16px;
-    padding: 5px 20px 5px 20px;
-    margin-right: 5px;
-    display:inline-block;
+    padding: 2px 5px;
+    margin-left: 5px;
+    display: inline-block;
 }
 
 .ProFileHeadWrap{
@@ -2955,6 +2954,7 @@ span.kanban-upcoming-meeting-date {
     display: flex;
     border-top: 1px solid  rgba(99, 143, 201, 0.25);
     padding: 8px;
+    min-width: 5.4rem;
     flex: 1;
 }
 .meeting-detail .upcomingButton{

@@ -991,3 +991,10 @@ input[type="submit"], button {
         margin: 3px 5px 0 0
     }
 }
+.colMS {
+    margin: 0;
+}
+
+.colSM {
+    margin: 0;
+}

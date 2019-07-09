@@ -774,21 +774,7 @@ table#change-history tbody th {
     padding: 0;
 }
 
-.dashboard #content {
-    width: 600px;
-}
 
-#content-main {
-    float: left;
-    width: 100%;
-}
-
-#content-related {
-    float: right;
-    width: 260px;
-    position: relative;
-    margin-right: -300px;
-}
 
 #footer {
     clear: both;
@@ -797,18 +783,10 @@ table#change-history tbody th {
 
 /* COLUMN TYPES */
 
-.colMS {
-    margin-right: 300px;
-}
-
-.colSM {
-    margin-left: 300px;
-}
 
 .colSM #content-related {
     float: left;
-    margin-right: 0;
-    margin-left: -300px;
+    margin-right: 0;    
 }
 
 .colSM #content-main {
@@ -996,21 +974,43 @@ fieldset.module{
     overflow-x: auto;
     border: none;
 }
-#content
+#content-main {
+    float: left;
+    width: 100%;
+}
+body.dashboard #content-main
 {
-	/*overflow-y:auto;*/
+    width: 70%;
 }
-body.model-admin #content {
-    height: calc(100vh - 129px);
-    width: calc(100vw - 40px);
-}
-body.change-form #content{
-    height: calc(100vh - 182px);
-}
-body.popup #content{
-    height: calc(100vh - 85px);
-}
-body.dashboard
-{
+#content{
     overflow: auto;
+}
+body.model-admin #content {    
+    height: calc(100vh - 130px);
+}
+body.change-form #content
+{
+    height: calc(100vh - 162px);
+}
+body.change-list #content
+{
+    height: calc(100vh - 153px);
+}
+
+body.popup #content{
+    overflow: auto;
+    height: calc(100vh - 60px);
+}
+body.dashboard  #content
+{
+    height: calc(100vh - 133px);    
+}
+body.dashboard.app-*  #content
+{
+    height: calc(100vh - 90px);
+}
+#content-related {
+    float: left;
+    width: 260px;
+    position: relative;
 }

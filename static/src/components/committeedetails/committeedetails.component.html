@@ -60,18 +60,14 @@ title="{{committee.name}}"></app-breadcrumb>
                                                 <div *ngIf="profile.state" class="">
                                                     <b>Status : </b> {{profile.state}}
                                                 </div>
-                                                <div *ngIf="profile.committees && profile.committees.length > 0" class="row mb-2">
-                                                        <div class="col-sm-3">
-                                                            <label for="job-title">
-                                                                <b>Committees</b>
-                                                            </label>
-                                                        </div>
-                                                        <div class="col-sm-9 UserProfileDiscription">
-                                                            <span class="pill" *ngFor="let com of profile.committees">
-                                                                <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
+                                                <div *ngIf="profile.committees && profile.committees.length > 0">                                    
+                                                    <label for="job-title">
+                                                        <b>Committees</b>
+                                                    </label>
+                                                    <span class="pill" *ngFor="let com of profile.committees">
+                                                        <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </a>
                                     </div>

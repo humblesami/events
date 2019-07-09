@@ -75,9 +75,8 @@ class EventAdmin(nested_admin.NestedModelAdmin):
         return format_html(html)
 
 class UserAdminForm(UserChangeForm):
-    committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
-    
-
+    committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))    
+    autocomplete_fields = ['committees']
     class Meta:
         model = Profile
         fields = '__all__'
