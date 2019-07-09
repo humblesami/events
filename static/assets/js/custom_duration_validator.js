@@ -4,11 +4,11 @@ $(document).ready(function(){
         '.field-duration input:visible, .field-start_date input, .field-end_date input', 
         function()
         {
-            var topic_name = $(this).closest('tr').find('.field-name input:visible').val();
-            if(!topic_name)
-            {
-                return;
-            }
+            // var topic_name = $(this).closest('tr').find('.field-name input:visible').val();
+            // if(!topic_name)
+            // {
+            //     return;
+            // }
             if (!$(this).val())
             {
                 $('.submit-row input').attr('disabled', 'disabled');
@@ -51,7 +51,7 @@ $(document).ready(function(){
             {
                 $('.submit-row input').attr('disabled', 'disabled');
                 $(this).addClass('error');
-                $(this).focus();
+                // $(this).focus();
             }
             else
             {

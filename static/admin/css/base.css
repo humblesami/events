@@ -1020,3 +1020,6 @@ body.dashboard.app-*  #content
     width: 260px;
     position: relative;
 }
+.error{
+    border-color: red;
+}
