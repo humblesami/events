@@ -248,6 +248,7 @@ class UserNotification(models.Model):
             model = apps.get_model(address.res_app, address.res_model)
             obj_res = model.objects.filter(pk=address.res_id)            
             if obj_res:
+                obj_res = obj_res[0]
                 meta = notification.get_meta(obj_res)
                 senders_for_all = {}
                 senders_for_all[request.user.id], count = UserNotification.get_senders(cls, uid, notification.id)
