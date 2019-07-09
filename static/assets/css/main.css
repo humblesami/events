@@ -978,7 +978,7 @@ height:100%;
 
 #server-wait .spinner-border {
     position: relative;
-    top: calc(50vh - 110px);
+    top: calc(50vh - 9px);
     left: calc(50% - 10px);
 }
 

@@ -139,12 +139,44 @@ class File(models.Model):
         file_id = int(params['id'])
         file_obj = File.objects.get(id=file_id)
         url = file_obj.pdf_doc.url
+        breadcrumb = []
+        mention_list = []
+        file_type = file_obj.file_type
+        if file_type == 'meeting':
+            breadcrumb = file_obj.meetingdocument.breadcrumb
+            mention_list = file_obj.meetingdocument.meeting.get_attendees()
+        elif file_type == 'topic':
+            breadcrumb = file_obj.agendadocument.breadcrumb
+            mention_list = file_obj.agendadocument.agenda.get_attendees()
+        elif file_type == 'voting':
+            breadcrumb = file_obj.votingdocument.breadcrumb
+        elif file_type == 'resource':
+            breadcrumb = file_obj.resourcedocument.breadcrumb
+        elif file_type == 'home':
+            breadcrumb = file_obj.newsdocument.breadcrumb
+        elif file_type == 'resume':
+            breadcrumb.append({'title': 'Profiles', 'link': '/profiles/directors'})
+            profile_obj = file_obj.profile
+            groups = list(profile_obj.groups.all())
+            if groups:
+                group = groups[0]
+                group_name = ''
+                if group.name != 'Staff':
+                    group_name = group.name + 's'
+                else:
+                    group_name = group.name
+                breadcrumb.append({'title': group_name, 'link': '/profiles/' + group_name.lower()})
+            breadcrumb.append({'title': profile_obj.name, 'link': '/' + group.name.lower() + '/' + str(profile_obj.id)})
+
         doc = {
             'id': file_id,
             "url": url,
             'doc_name': file_obj.name,
+            'breadcrumb': breadcrumb,
+            'mention_list': mention_list
         }
         return {'data': doc}
+
 
 
     @classmethod

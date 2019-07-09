@@ -156,7 +156,7 @@
                 $(window).unbind("unload", on_leave_document);
                 $(window).bind("unload", on_leave_document);
                 
-                scroll_div = $('#content-wrapper');                
+                scroll_div = $('#content-wrapper');
             }
 
             annotation_user_m2 = localStorage.getItem('user');
@@ -308,11 +308,7 @@
                                 }
                             });
                         } else {
-                            if (reset == 'reset') {
-                                initDocCookies(documentId);
-                                render();
-                            } else
-                                unSetDocDirty(documentId);
+                            unSetDocDirty(documentId);
                             console.log("Saved");
                         }
                     }
@@ -388,18 +384,6 @@
 
                 $('body').on('click', '.toolbar .back', function() {
                     on_leave_document();
-                });
-
-                $('body').on('click', '.doc-clearer', function() {
-                    message = "Do you want to erase all annotations on document.";
-                    message += "<br>Warning: it will disable autosave to not affect the online vesion.";
-                    bootbox.confirm(message, function(dr) {
-                        if (dr) {
-                            resetCookies(documentId);
-                            $('.cb-container.autosave input').prop('checked', false);
-                            render();
-                        }
-                    });
                 });
 
                 $('body').on('click', '.doc-reseter', function() {
@@ -519,6 +503,9 @@
                 comments_wrapper.hide();
                 shown_comment_type = false;
                 localStorage.removeItem(documentId + '/shown_comment_type');
+                let cwr_top = scroll_div.offset().top;
+                // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
+                scroll_div.height(window.innerHeight - cwr_top);
             }
 
             function showCommentsContainer(comment_sub_type) {
@@ -545,13 +532,15 @@
 
                 }
                 ctop = ctop - 11;
-                //comment_list.css({'height':'calc(100vh - '+ctop+'px)'});
-
+                let cwr_top = scroll_div.offset().top;
+                // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
+                scroll_div.height(window.innerHeight - cwr_top);
                 localStorage.setItem(documentId + '/shown_comment_type', shown_comment_type);
             }            
 
-            function onDocLoaded() {
+            function onDocLoaded() {                
                 site_functions.hideLoader("loaddocwaiter");
+                site_functions.hideLoader("renderdoc");
             }
 
             function showHideAnnotations(rotate_degree) {
@@ -664,9 +653,8 @@
 
             function render(doc_data) {
                 annotation_user_m2 = window['current_user'].cookie;
-                //site_functions.showLoader("renderdoc");
-                if (doc_data && doc_data.first_time) {
-
+                site_functions.showLoader("renderdoc");                
+                if (doc_data && doc_data.first_time) {                    
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
                     comment_list_div = comments_wrapper.find('.comment-list:first');
@@ -746,72 +734,95 @@
 
             function render_details(doc_data) {
                 try {
-                    console.log(Date(), new Date().getMilliseconds(), 'reached render details');
+                    // console.log(Date(), new Date().getMilliseconds(), 'reached render details');
                     var pdfData = false;
+                    let cwr_top = scroll_div.offset().top;
+                    // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
+                    scroll_div.height(window.innerHeight - cwr_top);
                     var pages_rendered = 0;
                     if (doc_data && doc_data.first_time) {
-                        if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
-                            window['show_annotation'] = true;
-                        } else {
-                            window['show_annotation'] = false
-                        }
-                        $('.topbar:first .annotation_button').hide();
-                        $('#content-wrapper').hide();
-                        $('.strt_sign.pdfjs').hide();
-                        $('.sign_completed.pdfjs').hide();
-                        $('.router-outlet').hide();
-                        $('.doc-reseter').hide();
-                        $('.toolbar.topbar:first').show();
-                        $('#annotated-doc-conatiner').show();
-                        hideComments();
-                        init_ScaleRotate();
-                        var scale_select = $('.toolbar select.scale:first');
-                        RENDER_OPTIONS = {
-                            documentId: documentId,
-                            scale: getCookieStrict(documentId, documentId + '/scale'),
-                            rotate: getCookieStrict(documentId, documentId + '/rotate'),
-                            pdfDocument: null
-                        }
-                        if (!RENDER_OPTIONS.rotate) {
-                            RENDER_OPTIONS.rotate = 360;
-                            setCookieStrict(documentId, documentId + '/rotate', 360);
-                        }
+                        try{
 
-                        if (!RENDER_OPTIONS.scale) {
-                            RENDER_OPTIONS.scale = 1;
-                            setCookieStrict(documentId, documentId + '/scale', 1)
+                        
+                            if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
+                                window['show_annotation'] = true;
+                            } else {
+                                window['show_annotation'] = false
+                            }
+                            $('.topbar:first .annotation_button').hide();
+                            scroll_div.hide();
+                            $('.strt_sign.pdfjs').hide();
+                            $('.sign_completed.pdfjs').hide();
+                            $('.router-outlet').hide();
+                            $('.doc-reseter').hide();
+                            $('.toolbar.topbar:first').show();
+                            $('#annotated-doc-conatiner').show();
+                            hideComments();
+                            init_ScaleRotate();
+                            var scale_select = $('.toolbar select.scale:first');
+                            RENDER_OPTIONS = {
+                                documentId: documentId,
+                                scale: getCookieStrict(documentId, documentId + '/scale'),
+                                rotate: getCookieStrict(documentId, documentId + '/rotate'),
+                                pdfDocument: null
+                            }
+                            if (!RENDER_OPTIONS.rotate) {
+                                RENDER_OPTIONS.rotate = 360;
+                                setCookieStrict(documentId, documentId + '/rotate', 360);
+                            }
+
+                            if (!RENDER_OPTIONS.scale) {
+                                RENDER_OPTIONS.scale = 1;
+                                setCookieStrict(documentId, documentId + '/scale', 1)
+                            }
+                            scale_select.val(RENDER_OPTIONS.scale);
                         }
-                        scale_select.val(RENDER_OPTIONS.scale);
+                        catch(er){
+                            console.log(er);
+                        }
 
                         if (doc_data.type) {
-                            if(!doc_data.url)
-                            {
-                                if (doc_data.doc.startsWith('data:application/pdf;base64,')) {
-                                    doc_data.doc = doc_data.doc.replace('data:application/pdf;base64,', '');
+                            try{
+
+                                
+                                if(!doc_data.url)
+                                {
+                                    if (doc_data.doc.startsWith('data:application/pdf;base64,')) {
+                                        doc_data.doc = doc_data.doc.replace('data:application/pdf;base64,', '');
+                                    }
+                                    var raw = atob(doc_data.doc);
+                                    var uint8Array = new Uint8Array(raw.length);
+                                    for (var i = 0; i < raw.length; i++) {
+                                        uint8Array[i] = raw.charCodeAt(i);
+                                    }
+                                    doc_data.doc = uint8Array;
                                 }
-                                var raw = atob(doc_data.doc);
-                                var uint8Array = new Uint8Array(raw.length);
-                                for (var i = 0; i < raw.length; i++) {
-                                    uint8Array[i] = raw.charCodeAt(i);
+                                else
+                                {
+                                    if(window.location.toString().indexOf('4200') > -1)
+                                    {
+                                        doc_data.doc = site_config.site_url+'/static/assets/a.pdf';    
+                                    }
+                                    else{
+                                        var doc_url =window['site_config'].server_base_url+doc_data.url;
+                                        console.log(window['site_config'].server_base_url, doc_data.url, doc_url);
+                                        doc_data.doc = doc_url;
+                                    }
                                 }
-                                doc_data.doc = uint8Array;
+                                RENDER_OPTIONS.document_data = doc_data;
+                                console.log(Date(), new Date().getMilliseconds(), 'going to get doc data');
+                                PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
+                                    console.log(Date(), new Date().getMilliseconds(), 'got doc data at client to show');
+                                    pdf_doc_data = pdf_data;
+                                    $('.page-count').html(pdf_doc_data.numPages);
+                                    if (pdf_doc_data.numPages > 1)
+                                        $('.page-next-btn').removeAttr('disabled');
+                                    renderPdfData(pdf_doc_data);
+                                });
                             }
-                            else
-                            {
-                                var doc_url =window['site_config'].server_base_url+doc_data.url;
-                                console.log(window['site_config'].server_base_url, doc_data.url, doc_url);
-                                doc_data.doc = doc_url;
+                            catch(er){
+                                console.log(er);
                             }
-                            RENDER_OPTIONS.document_data = doc_data;
-                            console.log(Date(), new Date().getMilliseconds(), 'going to get doc data');
-                            PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
-                                console.log(Date(), new Date().getMilliseconds(), 'got doc data at client to show');
-                                pdf_doc_data = pdf_data;
-                                $('.page-count').html(pdf_doc_data.numPages);
-                                if (pdf_doc_data.numPages > 1)
-                                    $('.page-next-btn').removeAttr('disabled');
-                                renderPdfData(pdf_doc_data);
-                            });
                         } else {
                             bootbox.alert("Invalid document data ", doc_data);
                             onDocLoaded();
@@ -830,128 +841,149 @@
                     }
 
                     function renderPdfData(pdfContent) {
-                        if (!pdfContent) {
-                            alert("PDF not loaded");
-                            onDocLoaded();
-                            return;
-                        }
-                        RENDER_OPTIONS.pdfDocument = pdfContent;
-                        var viewer = document.getElementById('viewer');
-                        viewer.innerHTML = '';
-                        NUM_PAGES = pdfContent.pdfInfo.numPages;
-                        for (var i = 0; i < NUM_PAGES; i++) {
-                            var page = UI.createPage(i + 1);
-                            viewer.appendChild(page);
-                        }
-                        sclae_value = $('select.scale').val();
-                        var rotateBy = RENDER_OPTIONS.rotate;
+                        try{
 
-                        var rotate_degree = rotateBy % 360;
-                        showHideAnnotations(rotate_degree);
+                            if (!pdfContent) {
+                                alert("PDF not loaded");
+                                onDocLoaded();
+                                return;
+                            }
+                            RENDER_OPTIONS.pdfDocument = pdfContent;
+                            var viewer = document.getElementById('viewer');
+                            viewer.innerHTML = '';
+                            NUM_PAGES = pdfContent.pdfInfo.numPages;
+                            for (var i = 0; i < NUM_PAGES; i++) {
+                                var page = UI.createPage(i + 1);
+                                viewer.appendChild(page);
+                            }
+                            sclae_value = $('select.scale').val();
+                            var rotateBy = RENDER_OPTIONS.rotate;
 
-                        switch (rotate_degree) {
-                            case 90:
-                                vertical = 'right';
-                                horizontal = 'top';
-                                break;
-                            case 180:
-                                vertical = 'bottom';
-                                horizontal = 'right';
-                                break;
-                            case 270:
-                                vertical = 'left';
-                                horizontal = 'bottom';
-                                break;
+                            var rotate_degree = rotateBy % 360;
+                            showHideAnnotations(rotate_degree);
+
+                            switch (rotate_degree) {
+                                case 90:
+                                    vertical = 'right';
+                                    horizontal = 'top';
+                                    break;
+                                case 180:
+                                    vertical = 'bottom';
+                                    horizontal = 'right';
+                                    break;
+                                case 270:
+                                    vertical = 'left';
+                                    horizontal = 'bottom';
+                                    break;
+                            }
+                        }
+                        catch(er){
+                            console.log(er);
                         }
 
                         function onPageDone(annotations_of_page, pange_number) {
-                            pages_rendered++;
-                            if (pange_number == 1) {
-                                first_page_rendered = 1;
-                                if (doc_data && doc_data.first_time) {
-                                    $('body').addClass('pdf-viewer');
+                            try{
+                                pages_rendered++;
+                                if (pange_number == 1) {
+                                    first_page_rendered = 1;
+                                    if (doc_data && doc_data.first_time) {
+                                        $('body').addClass('pdf-viewer');
+                                    }
+                                    scroll_div.show();
+                                    // console.log(Date(), new Date().getMilliseconds(), 'first page done');                                    
                                 }
-                                $('#content-wrapper').show();
-                                console.log(Date(), new Date().getMilliseconds(), 'first page done');
-                                onDocLoaded();
+    
+                                if (annotation_mode == 1) {
+                                    addCommentCount(annotations_of_page, pange_number);
+                                }
+                                // console.log(pange_number, NUM_PAGES);
+                                if(pange_number == NUM_PAGES)
+                                {
+                                    on_document_rendered();
+                                }
                             }
-
-                            if (annotation_mode == 1) {
-                                addCommentCount(annotations_of_page, pange_number);
-                            }
-                            // console.log(pange_number, NUM_PAGES);
-                            if(pange_number == NUM_PAGES)
-                            {
-                                on_document_rendered();
+                            
+                            catch(er){
+                                console.log(er);
                             }
                         }
 
                         function on_document_rendered(){
-                            document_version = getDocumentVersion(documentId);
-                            if(!(doc_data && doc_data.first_time))
-                            {
-                                return;
-                            }
-                            var socket_manager = window['socket_manager'];
-                            var input_data = {
-                                id: doc_id,
-                                doc_id: documentId,
-                                version: document_version
-                            };
-                            let args = {
-                                app: 'documents',
-                                model: 'AnnotationDocument',
-                                method: 'get_annotations'
-                            }
-                            var input_data = {
-                                args: args,
-                                no_loader: 1,
-                                params: {
-                                    id: doc_id, doc_id: documentId,
-                                    version: document_version
+                            try{
+                                onDocLoaded();
+                                document_version = getDocumentVersion(documentId);
+                                if(!(doc_data && doc_data.first_time))
+                                {
+                                    return;
                                 }
-                            };
-                            dn_rpc_object({
-                                data:input_data,
-                                no_loader:1,
-                                onSuccess: function (annotaions_data) {
-                                    doc_data.first_time = undefined;
-                                    onAnnotationsDownloaded(annotaions_data, doc_data);
-                                },
-                                onError:function(er){
-                                    console.log(er);
+                                var socket_manager = window['socket_manager'];
+                                var input_data = {
+                                    id: doc_id,
+                                    doc_id: documentId,
+                                    version: document_version
+                                };
+                                let args = {
+                                    app: 'documents',
+                                    model: 'AnnotationDocument',
+                                    method: 'get_annotations'
+                                }
+                                var input_data = {
+                                    args: args,
+                                    no_loader: 1,
+                                    params: {
+                                        id: doc_id, doc_id: documentId,
+                                        version: document_version
+                                    }
+                                };
+                                dn_rpc_object({
+                                    data:input_data,
+                                    no_loader:1,
+                                    onSuccess: function (annotaions_data) {
+                                        doc_data.first_time = undefined;
+                                        onAnnotationsDownloaded(annotaions_data, doc_data);
+                                    },
+                                    onError:function(er){
+                                        console.log(er);
+                                    }
+                                });
+
+                                socket_manager.execute_on_verified(function(){
+                                    var n_list = socket_manager.notificationList;
+                                    $('.canvasWrapper .new_comments_count').each(function(i, el){
+                                        var address = {
+                                            res_app: 'documents',
+                                            res_model: 'PointAnnotation',
+                                            res_id: parseInt($(el).attr('db_id')),
+                                        }
+                                        for(var j in n_list){
+
+                                            if(n_list[j].address.res_app == address.res_app &&
+                                                n_list[j].address.res_model == address.res_model &&
+                                                n_list[j].address.res_id == address.res_id){
+                                                console.log(i, j, n_list[j].count, 134);
+                                                $(el).attr('counter',$(el).attr('counter') + n_list[j].count);
+                                            }
+                                        }
+                                    });
+                                })
+                            }
+                            catch(er){
+                                console.log(er);
+                            }
+                        }
+                        try{                        
+                            UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num) {
+                                onPageDone(cb_data, page_num, 1);
+                                for (var i = 2; i <= NUM_PAGES; i++) {
+                                    UI.renderPage(i, RENDER_OPTIONS, function(cb_data, page_num) {
+                                        onPageDone(cb_data, page_num);
+                                    });
                                 }
                             });
-
-                            socket_manager.execute_on_verified(function(){
-                                var n_list = socket_manager.notificationList;
-                                $('.canvasWrapper .new_comments_count').each(function(i, el){
-                                    var address = {
-                                        res_app: 'documents',
-                                        res_model: 'PointAnnotation',
-                                        res_id: parseInt($(el).attr('db_id')),
-                                    }
-                                    for(var j in n_list){
-
-                                        if(n_list[j].address.res_app == address.res_app &&
-                                            n_list[j].address.res_model == address.res_model &&
-                                            n_list[j].address.res_id == address.res_id){
-                                            console.log(i, j, n_list[j].count, 134);
-                                            $(el).attr('counter',$(el).attr('counter') + n_list[j].count);
-                                        }
-                                    }
-                                });
-                            })
                         }
-
-                        UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num) {
-                            onPageDone(cb_data, page_num, 1);
-                            for (var i = 2; i <= NUM_PAGES; i++) {
-                                UI.renderPage(i, RENDER_OPTIONS, function(cb_data, page_num) {
-                                    onPageDone(cb_data, page_num);
-                                });
-                            }
-                        });
+                        catch(er){
+                            console.log(er);
+                        }
                     }
                     if (window['show_annotation']) {
                         $('.annotationLayer').show();
@@ -3027,7 +3059,8 @@
                      *    - fulfilled: SVGElement
                      *    - rejected: Error
                      */
-                    function render(svg, viewport, data) {                        
+                    function render(svg, viewport, data) {
+
                         return new Promise(function(resolve, reject) { // Reset the content of the SVG
                             svg.innerHTML = '';
                             svg.setAttribute('data-pdf-annotate-container', true);

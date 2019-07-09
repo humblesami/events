@@ -56,7 +56,7 @@ window['json_functions'] = {
         {
             path = this.get_url_path();
         }
-        console.log(selector, path);
+        // console.log(selector, path);
         $(selector).find('a').each(function(i, el){
             if($(el).attr('routerlink') == path)
             {

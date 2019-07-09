@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
         'meetings.MeetingDocument': '/meeting/doc/',
         'resources.ResourceDocument': '/resource/doc/',
         'meetings.SignDocument': '/signdoc/',
-        'meetings.AgendaDocument': '/topic/doc/',
+        'meetings.AgendaDocument': '/topic/doc/',        
     };
     
     constructor(private router: Router, private sserv : SocketService, private route: ActivatedRoute, private httpService: HttpService) {
@@ -120,8 +120,12 @@ export class HeaderComponent implements OnInit {
 				else {
                     obj_this.search_item_types=[];
                     obj_this.search_results = {}
-					result.forEach(item => {                        
-                        item['route'] = obj_this.route_map[item.model] + item.id;					
+					result.forEach(item => {
+                        item['route'] = obj_this.route_map[item.model];
+                        if(item.model != 'meetings.News')
+                        {
+                            item['route'] += item.id;
+                        }
                         var item_type = item.model.split('.')[1]+'s';
                         if (item_type == 'Profiles')
                         {
@@ -158,7 +162,7 @@ export class HeaderComponent implements OnInit {
                             obj_this.search_results[item_type] = [item];
                         }
                     });
-                    console.log(obj_this.search_results, obj_this.search_item_types);
+                    // console.log(obj_this.search_results, obj_this.search_item_types);
                 }
                 if(result.length < 1) {
                     obj_this.no_search = true;

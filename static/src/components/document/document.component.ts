@@ -132,9 +132,9 @@ export class DocumentComponent implements OnInit {
                 args: args,
                 params: {id : doc_id}
             }; 
-        }      
+        }
         var renderDoc = function(data){
-            console.log(Date(), new Date().getMilliseconds(),  'doc data downloaded');
+            // console.log(Date(), data, new Date().getMilliseconds(),  'doc data downloaded');
             data.file_type = doc_type;
             obj_this.doc_data = data;
             
@@ -171,6 +171,7 @@ export class DocumentComponent implements OnInit {
                 first_time: 1, 
                 type : doc_type,
                 attendees: data.attendees,
+                doc_name: data.name,
                 mp_signature_status:data.mp_signature_status
             };
             if(data.url)
@@ -186,7 +187,7 @@ export class DocumentComponent implements OnInit {
                 $('.loadingoverlay').hide();
             }
             else{
-                console.log(Date(), new Date().getMilliseconds(), 'started rendering');
+                // console.log(Date(), new Date().getMilliseconds(), 'started rendering');
                 window['pdf_js_module'].render(doc_data);
             }                
         };
