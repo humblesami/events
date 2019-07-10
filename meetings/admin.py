@@ -13,9 +13,10 @@ from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.views.decorators.debug import sensitive_post_parameters
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
-
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
+from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 
 class TopicAdmin(admin.ModelAdmin):
@@ -76,6 +77,15 @@ class EventAdmin(nested_admin.NestedModelAdmin):
 
         return format_html(html)
 
+
+class UserCreateForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    class Meta:
+        model = Profile
+        fields = ('username', 'password1', 'password2', 'email')
+    
+
+
 class UserAdminForm(UserChangeForm):
     committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))    
     autocomplete_fields = ['committees']
@@ -104,8 +114,15 @@ class UserAdminForm(UserChangeForm):
 
 
 class UserAdmin(BaseUserAdmin):
-    verbose_name_plural = "AAAAAAAAA"
     form = UserAdminForm
+    add_form = UserCreateForm
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'password1', 'password2', 'email', ),
+        }),
+    )
     fieldsets = (
         (None, {'fields': ('image_tag', 'image', 'username', 'password',)}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email',)}),
@@ -125,6 +142,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 class AdminAdmin(UserAdmin):
+    # add_form = UserCreateForm
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
@@ -142,6 +160,7 @@ class AdminAdmin(UserAdmin):
 
 
 class DirectorAdmin(UserAdmin):
+    add_form = UserCreateForm
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
@@ -187,6 +206,7 @@ class DirectorAdmin(UserAdmin):
 
 
 class StaffAdmin(UserAdmin):
+    add_form = UserCreateForm
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),

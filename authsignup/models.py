@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from mainapp.settings import server_base_url
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
+from meetings.model_files.user import Profile
 
 # Create your models here.
 class AuthUser(models.Model):
@@ -13,6 +14,7 @@ class AuthUser(models.Model):
         password = params['password']
         user = authenticate(request, username=username, password=password)        
         if user and user.id:
+            name = Profile.objects.get(pk=user.id).fullname()
             tokens = Token.objects.filter(user=user)
             if user.has_perm('authtoken.add_token'):
                 login(request, user)
@@ -20,7 +22,7 @@ class AuthUser(models.Model):
                     tokens[0].delete()
                 token = Token.objects.create(user=user)
                 user_groups = list(user.groups.all().values())
-                return {'name': user.username, 'id': user.id, 'token': token.key, 'groups':user_groups }
+                return {'username': user.username, 'name': name, 'id': user.id, 'token': token.key, 'groups':user_groups }
             else:
                 return {'error': 'Not authorized to have token'}
         else:
