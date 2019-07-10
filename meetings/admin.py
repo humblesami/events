@@ -116,7 +116,7 @@ class UserAdminForm(UserChangeForm):
 class UserAdmin(BaseUserAdmin):
     form = UserAdminForm
     add_form = UserCreateForm
-
+    list_display = ('username', 'name', 'email', 'first_name', 'last_name', 'is_active')
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -124,7 +124,7 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
     fieldsets = (
-        (None, {'fields': ('image_tag', 'image', 'username', 'password',)}),
+        (None, {'fields': ('image_tag', 'image', )}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email',)}),
         (None, {'fields': ('committees', 'company', 'date_joined')}),
         (_('Permissions'), {
@@ -144,7 +144,7 @@ class UserAdmin(BaseUserAdmin):
 class AdminAdmin(UserAdmin):
     # add_form = UserCreateForm
     fieldsets = (
-        (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
+        (None, {'fields': ('image_tag', 'image','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (None, {'fields': ('committees', 'company', 'date_joined')}),        
 
@@ -162,7 +162,7 @@ class AdminAdmin(UserAdmin):
 class DirectorAdmin(UserAdmin):
     add_form = UserCreateForm
     fieldsets = (
-        (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
+        (None, {'fields': ('image_tag', 'image','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (None,
          {
@@ -208,7 +208,7 @@ class DirectorAdmin(UserAdmin):
 class StaffAdmin(UserAdmin):
     add_form = UserCreateForm
     fieldsets = (
-        (None, {'fields': ('image_tag', 'image','username', 'password','is_active')}),
+        (None, {'fields': ('image_tag', 'image','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
         (None, {'fields': ('committees','company',)}),
