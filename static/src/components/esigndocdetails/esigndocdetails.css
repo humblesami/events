@@ -138,12 +138,9 @@
 	height: calc(100vh - 154px);
 	text-align: center;
 	background: #f7f7f7;
-	padding: 20px 0;
+	padding-top: 1px;
  }
 
-.docWrapperContainer{
-	width: 78%;
-}
  #the-canvas{
  border:1px solid #dadada;
  }
@@ -160,9 +157,7 @@
 }
 
 .PdfButtonWrapper{    
-    padding: 10px;
-    /*padding:80px 0 30px;*/    
-    width: 75%;
+    padding: 10px 20px;    
 }
 
 .PdfButtonWrapper .btn {
@@ -249,7 +244,7 @@
     display: inline-block
 }
 
-.check_box_send_all,.PdfButtonWrapper{
+.check_box_send_all, #doc-side-scroll{
     display: none
 }
 
@@ -321,4 +316,8 @@
 #save-doc-data {
     width: 100%;
     margin-top:10px;
+}
+.docselectbtn
+{
+    cursor: pointer;
 }
