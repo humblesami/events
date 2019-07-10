@@ -18,7 +18,7 @@ class Event(models.Model):
     name = models.CharField(max_length=200)
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
-    attendees = models.ManyToManyField(Profile)
+    attendees = models.ManyToManyField(Profile, related_name="meetings")
     custom_message = models.CharField('Message', max_length=200, blank=True)
     street = models.CharField(max_length=150, blank=True)
     description = models.TextField(blank=True)
@@ -46,17 +46,25 @@ class Event(models.Model):
             res.append(obj.id)
         return res
     
-    
-    def get_attendees(self):
+    @classmethod
+    def get_attendees_list(cls, request, params):
+        meeting_id = params.get('meeting_id')
+        meeting = Event.objects.get(id=meeting_id)
+        return Event.attendees_to_list(meeting.attendees)
+
+
+    @classmethod
+    def attendees_to_list(cls, attendees):
         attendees_list = []
-        attendees = self.attendees.all()
         for attendee in attendees:
-            group_name = ''
             attendee_groups = attendee.groups.all()
             if attendee_groups:
                 group_name = attendee_groups[0].name.lower()
                 attendees_list.append({'id': attendee.id, 'name': attendee.name, 'group': group_name})
         return attendees_list
+
+    def get_attendees(self):
+        return Event.attendees_to_list(self.attendees)
 
 
     @property

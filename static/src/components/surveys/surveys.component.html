@@ -5,20 +5,20 @@ routes='[{"title":"Actions", "link":"/actions"}]'
 title="Surveys"></app-breadcrumb>
 <div class="router-outlet">
 
-        <div class="container">
-                <div class="MainTitleHeadWrap">
-                        <div class="HeadingWrap">
-                            <img src="static/assets/images/meeting-icon.png" alt="" /> Surveys
-                        </div>
-                        <div class="MeetingBtnWrapper">
-                            <div class="btn-group">
-                                <a routerLink="/votings" class="btn">Resolutions</a>
-                                <a routerLink="/signdocs" class="btn">Esignature</a>
-                                <a routerLink="/surveys" class="btn">Surveys</a>
-                            </div>
-                        </div>
-                    </div>
+    <div class="container">
+        <div class="MainTitleHeadWrap">
+            <div class="HeadingWrap">
+                <img src="static/assets/images/meeting-icon.png" alt="" /> Surveys
             </div>
+            <div class="row MeetingBtnWrapper">
+                <div class="btn-group">
+                    <a routerLink="/votings" class="btn">Resolutions</a>
+                    <a routerLink="/signdocs" class="btn">Esignature</a>
+                    <a routerLink="/surveys" class="btn">Surveys</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 	<div class="container" *ngIf="no_meet" >
 		<div class="row">
@@ -33,31 +33,35 @@ title="Surveys"></app-breadcrumb>
 
 	<div class="container">
 		<div class="row">
-			<div class="kanban-card" *ngFor="let survey of survey_data">
-				<div class="kanban-meeting-info">
-					<a class="kanban-upcoming-meeting" routerLink="/survey/{{survey.id}}">
-						<!--<div class="CalendarDateWrapper">-->
-							<!--&lt;!&ndash; <span *ngIf="survey.open_date" class="CalendarDateWrap">-->
-								<!--<span class="kanban-upcoming-meeting-date">-->
-									<!--{{voting.open_date.day}}-->
-								<!--</span>-->
-								<!--<span>-->
-									<!--{{voting.open_date.month_year}}-->
-								<!--</span>-->
-								<!--<span>-->
-									<!--{{voting.open_date.time}}-->
-								<!--</span>-->
-							<!--</span> &ndash;&gt;-->
-						<!--</div>-->
-						<div class="Info">
-							<p *ngIf="survey.name">
-								<b>{{survey.name}}</b>
-							</p>
-							<span *ngIf="survey.description"><strong>Survey Description: </strong>{{survey.description}}</span>
-						</div>
-					</a>
-				</div>
-			</div>
-		</div>
+            <div class="col-sm-6 col-md-4 mb-4" *ngFor="let survey of survey_data">
+                <div class="kanban-card">
+                    <div class="kanban-meeting-info">
+                        <div class="kanban-upcoming-meeting" routerLink="/survey/{{survey.id}}">                                                        
+                            <div *ngIf="survey.open_date" class="CalendarDateWrapper">
+                                <span class="CalendarDateWrap">
+                                    <span class="kanban-upcoming-meeting-date">
+                                        11 {{survey.open_date.day}} 11
+                                    </span>
+                                        <span>
+                                        22 {{survey.open_date.month_year}} 22
+                                    </span>
+                                    <span>
+                                        33 {{survey.open_date.time}} 33
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="Info">
+                                <p *ngIf="survey.name">
+                                    <b>{{survey.name}}</b>
+                                </p>
+                                <span *ngIf="survey.description">
+                                    Description: {{survey.description}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</div>
 </div>

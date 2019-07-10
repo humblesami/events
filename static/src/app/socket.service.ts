@@ -443,7 +443,7 @@ export class SocketService {
                 }
                 console.log("Authenticated\n\n");
                 obj_this.user_data.photo = data.user.photo;
-                obj_this.user_photo = obj_this.server_url + data.user.photo;
+                obj_this.user_photo = obj_this.server_url + data.user.photo;                
                 obj_this.verified = true;
                 if(!data.unseen && data.unseen != 0)
                 {

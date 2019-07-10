@@ -484,6 +484,8 @@ class AuthUserChat(models.Model):
             'friendIds': [],
             'notifications': [],
             'unseen': 0,
+            'committees': [],
+            'meetings': [],
             'user': {
                 'id': request.user.id,
                 'name': 'Anonymous',
@@ -497,6 +499,8 @@ class AuthUserChat(models.Model):
             unseen_messages = 0
             friend_list = {}
             friend_ids = []
+            committees = []
+            meetings = []
             for friendObj in mp_users:
                 if friendObj.pk != uid:
                     id = friendObj.id
@@ -541,13 +545,23 @@ class AuthUserChat(models.Model):
                 'name': profile_object.name,
                 'photo': profile_object.image.url
             }
+            committee_objects = profile_object.committees.all()
+            for obj in committee_objects:
+                committees.append({'id': obj.id, 'name': obj.name})
+            meeting_objects = profile_object.meetings.all()
+            for obj in meeting_objects:
+                meetings.append({'id': obj.id, 'name': obj.name})
+            for com in committee_objects:
+                committees.append({'id': com.id, 'name': com.name})
             notifications = UserNotification.get_my_notifications(request, False)
             data = {
                 'friends': friend_list,
                 'friendIds': friend_ids,
                 'notifications': notifications,
                 'unseen': unseen_messages,
-                'user': req_user
+                'user': req_user,
+                'committees': committees,
+                'meetings': meetings,
             }
         except:
             eg = traceback.format_exception(*sys.exc_info())

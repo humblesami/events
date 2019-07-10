@@ -628,3 +628,18 @@
     left:0;
     z-index: 1;
 }
+.chatgroup
+{
+    margin-top:4px;
+}
+.chatgroup span{
+    
+}
+.chatgroup .create{
+    height: 20px;
+    width: 20px;
+    border: 2px silver solid;
+    border-radius: 50%;
+    background:green;
+    color: white;
+}

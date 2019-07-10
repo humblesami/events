@@ -21,7 +21,7 @@ class Committee(models.Model):
                 fields=['id', 'name', 'description']
             )
             if committee:
-                committee_users = get_user_info( committee_orm.users.all())
+                committee_users = get_user_info(committee_orm.users.all())
                 committee['users'] = committee_users
 
                 data = {"committee": committee, "next": 0, "prev": 0}

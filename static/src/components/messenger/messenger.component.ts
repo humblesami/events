@@ -113,6 +113,12 @@ export class MessengerComponent implements OnInit {
 		$('.friends-chat-box').show();
     }
 
+    show_users_list(){
+        let args = {
+            method: 'get_attendees_list'
+        }
+    }
+
     scroll_to_end(selector)
     {
         if($(selector).length > 0)

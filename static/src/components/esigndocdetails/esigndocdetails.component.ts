@@ -97,13 +97,10 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     if (doc_data.length == 0) {
                         $('.PdfButtonWrapper').parent().show();
-                        var left_width = $('.PdfButtonWrapper').parent().width();
-                        var full_width = $('.PdfButtonWrapper').parent().parent().width();
-                        var right_width = full_width - left_width -1;
-                        $('.docWrapperContainer').width(right_width);
+                        $('.docWrapperContainer').width('78%');
                     } else {
                         $('.PdfButtonWrapper').parent().hide();
-                        $('.docWrapperContainer').width('auto');
+                        $('.docWrapperContainer').width('100%');
                     }
                     //loadSignatures(data);
                 }

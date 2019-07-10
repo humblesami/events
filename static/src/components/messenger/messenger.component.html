@@ -1,10 +1,13 @@
 <div class="messenger-container">
     <div class="chat friends-chat-box">
         <div class="contacts_card">
-            <div class="MessengerWrap"><h1 class="MessengerText">Messenger</h1></div>
             <div class="card-header MessengerSearchWrap">
                 <div class="input-group">
                     <div class="input-group-prepend">
+                        <span class="chatgroup">
+                            <button (click)="show_users_list()" class="create glyphicon glyphicon-plus"></button>
+                            <span>New Group</span>
+                        </span>
                         <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
                     </div>
                     <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">
