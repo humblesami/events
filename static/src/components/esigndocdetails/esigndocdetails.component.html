@@ -16,102 +16,90 @@ title="{{doc.doc_name}}"></app-breadcrumb>
     <!--</div>-->
     
     <div id="holder">
-	<div class="container-fluid">
-		<div class="row">
+        <div class="container-fluid">
+            <div class="row">
 
-			<div id="doc-side-scroll">
-				<div class="PdfButtonWrapper">
-					<div class="PdfVerticalButtonWrapper">
-						<div class="fields-title">
-							FIELDS
-						</div>
-FIELDS
-                <div id="signature-position" class="drag docselectbtn position_btns sign_psition">
-                    <i class="icon-draw-pencil"></i> Signature
+                <div id="doc-side-scroll">
+                    <div class="PdfButtonWrapper">
+                        <div class="PdfVerticalButtonWrapper">
+                            <div class="fields-title">
+                                FIELDS
+                            </div>
+                            <div id="signature-position" class="drag docselectbtn position_btns sign_psition">
+                                <i class="icon-draw-pencil"></i> Signature
+                            </div>
+                            <div id="initial-position" class="drag docselectbtn position_btns initial_psition">
+                                <i>Ds</i> Initials
+                            </div>
+                            <div id="date-position" class="drag docselectbtn position_btns date_psition">
+                                <i class="icon-calendar-empty"></i> Date
+                            </div>
+                            <div id="text-position" class="drag docselectbtn position_btns name_psition">
+                                <i class="icon-user-single"></i> Name
+                            </div>
+                            <div id="name-position" class="drag docselectbtn position_btns email_psition">
+                                <i class="fa fa-envelope"></i>  Email
+                            </div>
+                            <div id="phone-position" class="drag docselectbtn position_btns phone_psition">
+                                <i class="icon-call-answer"></i> Phone
+                            </div>
+                            <div id="company-position" class="drag docselectbtn position_btns company_psition">
+                                <i class="icon-hotel"></i> Company
+                            </div>
+            
+                            <div class="meetings_div">
+                                <span class="doc-subtitle">Attach to meeting(Optional):</span>
+                                <select id="dropdown_meeting"><option value="0">Select Meeting</option></select>
+                                <div class="doc-subtitle">
+                                    <input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>
+                                    <strong class="check_box_send_all" >Send to all attendees:</strong>
+                                </div>
+                            </div>
+            
+                            <button id="save-doc-data" class="btn btn-primary save_doc_data">
+                                Send
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div id="initial-position" class="drag docselectbtn position_btns initial_psition">
-                    <i>Ds</i> Initials
-                </div>
-                <div id="date-position" class="drag docselectbtn position_btns date_psition">
-                   <i class="icon-calendar-empty"></i> Date
-                </div>
-                <div id="text-position" class="drag docselectbtn position_btns name_psition">
-                   <i class="icon-user-single"></i> Name
-                </div>
-                <div id="name-position" class="drag docselectbtn position_btns email_psition">
-                  <i class="fa fa-envelope"></i>  Email
-                </div>
-                <div id="phone-position" class="drag docselectbtn position_btns phone_psition">
-                    <i class="icon-call-answer"></i> Phone
-                </div>
-                <div id="company-position" class="drag docselectbtn position_btns company_psition">
-                   <i class="icon-hotel"></i> Company
-                </div>
+                <div class="docWrapperContainer pr-0 pl-0">
+                    <div class="top_btns">
+                        <div class="PdfTopBtnsWrapper">
+                            <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev" ></div>
+                            <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next" ></div>
+                            <span class="pg_no"> <span style="font-weight: bold;" id="page_num" ></span> / <span id="page_count" ></span></span>
+                            <div class="btn btn-sm doc_btn icon-zoom-out" id="zoomOut" title="Zoom Out" ></div>
+                            <div class="btn btn-sm doc_btn icon-zoom-in" id="zoomIn" title="Zoom In" ></div>
+                            <span style="display: inline-block;" id="scaleSelectContainer">
+                                <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
+                                    <option title="" value="0.5">50%</option>
+                                    <option title="" value="0.75">75%</option>
+                                    <option title="" value="1">100%</option>
+                                    <option title="" value="1.25">125%</option>
+                                    <option title="" value="1.5">150%</option>
+                                    <option title="" value="2">200%</option>
+                                    <option title="" value="3">300%</option>
+                                    <option title="" value="4">400%</option>
+                                </select>
+                            </span>
+                        </div>
+                    </div>
 
-				<div class="meetings_div">
-					<span class="doc-subtitle">Attach to meeting(Optional):</span>
-					<select id="dropdown_meeting"><option value="0">Select Meeting</option></select>
-					<div class="doc-subtitle">
-						<input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>
-						<strong class="check_box_send_all" >Send to all attendees:</strong>
-					</div>
-				</div>
+                    <div id="viewer_container" style="position:relative;">
+                        <div id="nxxt_sign" style="display:none;background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START
+                            SIGNING</div>
 
-				<div id="save-doc-data" disabled="true" class="docselectbtn  save_doc_data">
-					Send
-				</div>
+                        <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
 
-                <!-- <div id="text-position"  class="drag docselectbtn position_btns text_psition">
-                Text
-                </div> -->
-					</div>
-            </div>
-
-			</div>
-			<div class="docWrapperContainer pr-0 pl-0">
-					<div class="top_btns">
-            <div class="PdfTopBtnsWrapper">
-                <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev" ></div>
-                <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next" ></div>
-                <span class="pg_no"> <span style="font-weight: bold;" id="page_num" ></span> / <span id="page_count" ></span></span>
-                <div class="btn btn-sm doc_btn icon-zoom-out" id="zoomOut" title="Zoom Out" ></div>
-                <div class="btn btn-sm doc_btn icon-zoom-in" id="zoomIn" title="Zoom In" ></div>
-                <span style="display: inline-block;" id="scaleSelectContainer">
-                    <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
-                        <option title="" value="0.5">50%</option>
-                        <option title="" value="0.75">75%</option>
-                        <option title="" value="1">100%</option>
-                        <option title="" value="1.25">125%</option>
-                        <option title="" value="1.5">150%</option>
-                        <option title="" value="2">200%</option>
-                        <option title="" value="3">300%</option>
-                        <option title="" value="4">400%</option>
-                    </select>
-                </span>
-            </div>
-
-
-        </div>
-
-
-
-        <div id="viewer_container" style="position:relative;">
-            <div id="nxxt_sign" style="display:none;background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START
-                SIGNING</div>
-
-            <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
-
-                <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
-                    <canvas id="the-canvas" ></canvas>
+                            <div id="page_container" style="overflow-y:auto;overflow-x:auto;text-align: initial;position:relative;display: inline-block;">
+                                <canvas id="the-canvas" ></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-			</div>
-		</div>
-	</div>
 
     </div>
-
 
 </div>

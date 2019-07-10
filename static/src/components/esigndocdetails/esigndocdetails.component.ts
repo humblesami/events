@@ -481,9 +481,8 @@ export class EsignDocDetailsComponent implements OnInit {
         });
         //End Dragable
 
-        $(document).off("click", ".top_btns .save_doc_data")
-        $(document).on("click", ".top_btns .save_doc_data", function(e) {
-            console.log(7777777777777);
+        $(document).off("click", ".save_doc_data")
+        $(document).on("click", ".save_doc_data", function(e) {            
             var new_divs = $('.new_sign');
             var snd_to_all = $("#check_box_send_all").is(':checked');
             if (new_divs.length == 0 && !snd_to_all) {

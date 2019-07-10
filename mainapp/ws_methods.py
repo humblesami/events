@@ -467,7 +467,7 @@ def get_user_by_token(request, kw=None):
     if not token:
         if request.POST:
             token = request.POST['token']
-    if 'token' in kw.keys() and not token:
+    if not token and kw.get('token'):
         token = kw['token']
         post_user_token = get_model('restoken', 'PostUserToken')
         if type(post_user_token) is str:

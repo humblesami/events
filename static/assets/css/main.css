@@ -100,7 +100,7 @@ html, body{
 .router-outlet{
     height: calc(100vh - 110px);
     overflow: auto;
-    padding-top: 1%;
+    padding-top: 5px;
 }
 body{
     font-family: "Roboto-Condensed";

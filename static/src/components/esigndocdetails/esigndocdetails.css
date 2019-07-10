@@ -166,8 +166,7 @@
 }
 
 .PdfButtonWrapper .btn {
-    min-width: 130px;
-    margin: 3px;
+    width: 100%;
 }
 
 #doc-side-scroll::-webkit-scrollbar, #page_container1::-webkit-scrollbar {
@@ -268,9 +267,6 @@
     color: #404040;
     font-size: 12px;
     border-top: 1px solid #E1E1E1;
-    margin: 20px 0;
-    padding: 20px 0;
-    border-bottom: 1px solid #E1E1E1;
 }
 .meetings_div strong{
 	font-weight: 500;
@@ -290,14 +286,8 @@
 }
 
 .meetings_div select{
-	display: block;
-    height: 35px;
-    line-height: 35px;
-    padding: 0 15px !important;
-    font-size: 15px;
-    outline: transparent;
-    width: 100% !important;
-    margin-bottom: 10px;
+    font-size: 16px;
+    width: 100%;
 }
 .PdfVerticalButtonWrapper{
     display: block;
@@ -307,7 +297,6 @@
 	color:#404040;
 	font-size:20px;
 	border-bottom:1px solid #E1E1E1;
-	padding: 15px 0 8px;
 	margin: 0 0 10px;
 
 }
@@ -329,15 +318,7 @@
 .PdfVerticalButtonWrapper .docselectbtn:hover{
 	color:#000000;
 }
-div#save-doc-data {
-    background: #4B74B5;
-    color: #ffffff;
-    border-radius: 25px;
-    display: block;
-    min-width: 130px;
-    text-align: center;
-    height: 40px;
-    line-height: 40px;
-    font-size: 16px;
-    margin: 10px 20px;
+#save-doc-data {
+    width: 100%;
+    margin-top:10px;
 }

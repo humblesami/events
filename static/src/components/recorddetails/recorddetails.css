@@ -1,11 +1,11 @@
 #record_details_iframe{
-	width: 100%;
-    height: calc(100vh - 96px);
-    border: 0;
-    padding-top: 10px;
+	width:100%;
+	border: 0;
+	margin-top: -5px;
+    height: calc(100vh - 115px);
 }
 
-#container-main{
+/* #container-main{
 	min-height:auto;
     padding: 19px;
     margin-bottom: 20px;
@@ -13,4 +13,4 @@
     border:0;
     border-radius: 40;
     box-shadow:none;
-}
+} */
