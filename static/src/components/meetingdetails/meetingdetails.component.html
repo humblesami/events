@@ -1,17 +1,14 @@
 ﻿<app-breadcrumb app="meetings" model="event" 
-*ngIf="meeting_object && meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft' || meeting_type == 'ongoing'"
+*ngIf="meeting_type == 'upcoming' || meeting_type == 'draft' || meeting_type == 'ongoing'"
 rid="{{meeting_object.id}}" edit="1" delete="1" 
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
 <app-breadcrumb app="meetings" model="event" 
-*ngIf="meeting_object && meeting_type && meeting_type == 'archive' || meeting_type == 'completed'"
+*ngIf="meeting_type == 'archive' || meeting_type == 'completed'"
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
 
 <div class="router-outlet">
-
-        22 -{{meeting_status}} --22
-
     <div class="page-links">
         <span class="prev next-prev-link" title="Privious">
             <i class="fa fa-angle-left"></i>
@@ -33,26 +30,23 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
                         </div>
                         <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
-                            <div>
-                                <div class="meet-elements">
+                            <div class="meet-elements">
+                                <span>
                                     Meeting Status
-                                </div>
+                                </span>
+                                <span *ngIf="meeting_status == 'Published'" class="badge badge-success">{{meeting_status}}</span>
+                                <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning">{{meeting_status}}</span>
                             </div>
-                            <div>
-                                11 -{{meeting_status}} -- {{meeting_status == 'Published'}} --11
-                                <span *ngIf="meeting_status == 'Published'" class="badge badge-success">{{meeting_object.meeting_status}}</span>
-                                <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning">{{meeting_object.meeting_status}}</span>
+                            <div class="publish_toggler" (click)="on_publish_changed()">
+                                <input type="checkbox" class="toggle_cb" checked
+                                data-toggle="toggle" data-size="normal">
                             </div>
-                            
-                            <input type="checkbox" class="toggle_cb"
-                            data-on="Published" data-off="Unpublished"
-                            checked data-toggle="toggle" data-size="normal">
                         </div>
                         <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
-                                <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
-                                    <span name="archive">Move to Archive</span>
-                                </button>
-                            </div>
+                            <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
+                                <span name="archive">Move to Archive</span>
+                            </button>
+                        </div>
                     </div>
 
 

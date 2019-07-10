@@ -18,9 +18,9 @@ export class MeetingDetailsComponent implements OnInit {
 	new_reply = '';
 	next = '';
 	prev = '';
-    meeting_type: any;
 	title = '';
     flag = '';
+    meeting_type = '';
     meeting_status = '';
 	first_time = true;
 	me_as_respondant: any;
@@ -39,6 +39,38 @@ export class MeetingDetailsComponent implements OnInit {
     {	
         this.socketService = this.ss;
         this.route.params.subscribe(params => this.get_data());
+    }
+
+    on_publish_changed(){
+        let obj_this = this;
+        let is_published = obj_this.meeting_object.publish;
+        if (is_published)
+        {
+            obj_this.meeting_status = 'Unpublished';
+            obj_this.meeting_type = 'draft';
+            $('li.breadcrumb-item a').last().html('Draft Meetings');
+        }
+        else
+        {
+            obj_this.meeting_status = 'Published';
+            obj_this.meeting_type = 'upcoming';
+            $('li.breadcrumb-item a').last().html('Upcoming Meetings');
+        }
+        console.log(is_published, obj_this.meeting_status);
+        obj_this.meeting_object.publish = !is_published;
+        let args = {
+            app: 'meetings',
+            model: 'Event',
+            method: 'update_publish_status'
+        }
+        let input_data = {
+            params: {meeting_id: obj_this.meeting_object.id,publish_status: obj_this.meeting_object.publish},
+            args: args,
+            no_loader: 1
+        };
+        obj_this.httpService.get(input_data, function(){}, function(){
+            obj_this.meeting_object.publish = !obj_this.meeting_object.publish;
+        });
     }
 
 	get_data() {
@@ -61,32 +93,7 @@ export class MeetingDetailsComponent implements OnInit {
             args: args
         };
         
-        function on_publish_changed(){
-            if (obj_this.meeting_object.publish)
-            {
-                obj_this.meeting_status = 'Unpublished';                
-            }
-            else
-            {
-                obj_this.meeting_status = 'Published';                
-            }
-            console.log(obj_this.meeting_object.publish, obj_this.meeting_status);
-            obj_this.meeting_object.publish = !obj_this.meeting_object.publish;
-
-            let args = {
-                app: 'meetings',
-                model: 'Event',
-                method: 'update_publish_status'
-            }
-            let input_data = {
-                params: {meeting_id: obj_this.meeting_object.id,publish_status: obj_this.meeting_object.publish},
-                args: args,
-                no_loader: 1
-            };
-            obj_this.httpService.get(input_data, function(){}, function(){                
-                obj_this.meeting_object.publish = !obj_this.meeting_object.publish;
-            });
-        }
+        
 
         let on_data = function(result) {
 
@@ -100,21 +107,19 @@ export class MeetingDetailsComponent implements OnInit {
                 
                 setTimeout(function(){
                     $('.toggle_cb').bootstrapToggle({
-                        on: 'Published',
-                        off: 'Unpublished'
-                    });                
+                        off: 'Unpublish',
+                        on: 'Publish'
+                    });
                     if (obj_this.meeting_object.publish)
                     {
-                        $('.toggle_cb').prop('checked', true).change();
-                        obj_this.meeting_status = 'Published'
+                        $('.toggle_cb').prop('checked', false).change();
+                        obj_this.meeting_status = 'Published';
                     }
                     else
                     {
-                        $('.toggle_cb').prop('checked', false).change();
                         obj_this.meeting_status = 'Unpublished';
-                        
-                    }                
-                    $('.toggle_cb').change(on_publish_changed);                
+                    }
+                                
                 }, 100);
 
                 obj_this.next = result.next;
