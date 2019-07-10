@@ -144,7 +144,8 @@ export class EsignDocDetailsComponent implements OnInit {
                     pageNum = 1;
                 }
                 renderPage(pageNum);
-                toggleNextButton()
+                $('.docWrapperContainer').show();
+                toggleNextButton();
             });
         }
 

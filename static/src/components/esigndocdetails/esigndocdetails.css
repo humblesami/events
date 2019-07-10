@@ -2,7 +2,7 @@
 	position:relative;
 }
 .position_btns {
-    z-index: 999
+    z-index: 3
 }
 
 .top_btns {
@@ -63,7 +63,7 @@
 }
 
 .youtubeVideoModal {
-    z-index: 9008!important;
+    z-index: 646 !important;
 }
 
 @media (max-width: 540px) {
@@ -320,4 +320,7 @@
 .docselectbtn
 {
     cursor: pointer;
+}
+.docWrapperContainer{
+    display: none;
 }
