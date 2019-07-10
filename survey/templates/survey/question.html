@@ -27,23 +27,21 @@
 					{% for data in chart_data %}
 						{% if data.question == form.label|safe %}
 							<div style="display:flex" class="voting-results-container">
+								<script>
 								{% for result in data.question_data %}
-									<div style="widows: 200px;">
-										<script>
-											var option_name = "{{result.option_name}}";
-											var option_result = "{{result.option_result}}";
+									var option_name = "{{result.option_name}}";
+									var option_result = "{{result.option_result}}";
 
-											if(window['chartData'])
-											{
-												window['chartData'].push({'option_name':option_name, 'option_result': option_result })
-											}
-											else
-											{
-												window['chartData'] = [{'option_name': option_name, 'option_result': option_result }]
-											}
-										</script>
-									</div>
+									if(window['chartData'])
+									{
+										window['chartData'].push({'option_name':option_name, 'option_result': option_result })
+									}
+									else
+									{
+										window['chartData'] = [{'option_name': option_name, 'option_result': option_result }]
+									}
 								{% endfor %}
+								</script>
 							</div>
 						{% endif %}
 					{% endfor %}
