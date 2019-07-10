@@ -1,5 +1,5 @@
 var time_out_session = undefined;
-var session_time_limit = 600000;
+var session_time_limit = 1800000;
 var is_mobile_device = undefined;
 var is_local_host = false;
 var server_wait_loader = undefined;

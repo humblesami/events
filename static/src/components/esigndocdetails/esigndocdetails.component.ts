@@ -32,13 +32,15 @@ export class EsignDocDetailsComponent implements OnInit {
             meeting_id,
             meetings,
             req_url,
-            doc_id = $('.e_sign_doc_id').first().html(),
+            
+            ctx,
             isAdmin,
             pdfDoc,
             scale,
             pageNum,
             token = $('.sign_token').val() || "",
-            ctx;
+            doc_id = $('.e_sign_doc_id').first().html();
+            
 
         if (!doc_id) {
             var url = window.location.href.split("/");
@@ -106,11 +108,8 @@ export class EsignDocDetailsComponent implements OnInit {
                     //loadSignatures(data);
                 }
             })
-
         }
-
         loadData();
-
 
         function toggleNextButton() {
             var d = $.grep(doc_data, function(v) {
