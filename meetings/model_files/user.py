@@ -5,6 +5,7 @@ import traceback
 from django.db import models
 from mainapp import ws_methods
 from documents.file import File
+from mainapp.settings import server_base_url
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
 from django.utils.translation import gettext_lazy as _
@@ -320,11 +321,38 @@ class Profile(user_model):
                 'photo': self.image.url,
                 'name': self.fullname()
             }
+            self.password_reset_on_creation_email()
             events = [
                 {'name': 'new_friend', 'data': user_data, 'audience': ['all_online']}
             ]
             ws_methods.emit_event(events)
             self.is_staff = True
+
+
+    def password_reset_on_creation_email(self):
+        try:
+            if not self.email:
+                return 'User email not exists in system'
+
+            thread_data = {}
+            thread_data['subject'] = 'Password Rest'
+            thread_data['audience'] = [self.id]
+            thread_data['template_data'] = {
+                'url': server_base_url+'/reset/password/'
+            }
+            thread_data['template_name'] = 'user/user_creation_password_reset.html'
+            thread_data['token_required'] = 1
+            thread_data['post_info'] = {
+                'res_app': 'meetings',
+                'res_model': 'Profile',
+                'res_id': self.id
+            }
+            ws_methods.send_email_on_creation(thread_data)
+            return 'done'
+        except:
+            res = ws_methods.get_error_message()
+            return res
+
 
 # class Resume(File):
 #     user = models.ForeignKey(Profile, on_delete=models.CASCADE)

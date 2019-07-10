@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from '../../app/http.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import {SocketService} from "../../app/socket.service";
-import { element } from '@angular/core/src/render3';
+
 declare var $: any;
 
 @Component({
@@ -19,9 +19,9 @@ export class MeetingDetailsComponent implements OnInit {
 	next = '';
 	prev = '';
     meeting_type: any;
-    first_check = false;
 	title = '';
-	flag = '';
+    flag = '';
+    meeting_status = '';
 	first_time = true;
 	me_as_respondant: any;
 	discussion_params = {
@@ -61,6 +61,32 @@ export class MeetingDetailsComponent implements OnInit {
             args: args
         };
         
+        function on_publish_changed(){
+            if (obj_this.meeting_object.publish)
+            {
+                obj_this.meeting_status = 'Unpublished';                
+            }
+            else
+            {
+                obj_this.meeting_status = 'Published';                
+            }
+            console.log(obj_this.meeting_object.publish, obj_this.meeting_status);
+            obj_this.meeting_object.publish = !obj_this.meeting_object.publish;
+
+            let args = {
+                app: 'meetings',
+                model: 'Event',
+                method: 'update_publish_status'
+            }
+            let input_data = {
+                params: {meeting_id: obj_this.meeting_object.id,publish_status: obj_this.meeting_object.publish},
+                args: args,
+                no_loader: 1
+            };
+            obj_this.httpService.get(input_data, function(){}, function(){                
+                obj_this.meeting_object.publish = !obj_this.meeting_object.publish;
+            });
+        }
 
         let on_data = function(result) {
 
@@ -71,41 +97,26 @@ export class MeetingDetailsComponent implements OnInit {
                     return;
                 }
                 var meeting_object = obj_this.meeting_object = result.meeting;
+                
                 setTimeout(function(){
-                    obj_this.first_check = true;
-                    $(function() {
-                        $('.toggle_cb').bootstrapToggle({
-                          on: 'Published',
-                          off: 'Unpublished'
-                        });
-                    })
+                    $('.toggle_cb').bootstrapToggle({
+                        on: 'Published',
+                        off: 'Unpublished'
+                    });                
                     if (obj_this.meeting_object.publish)
                     {
                         $('.toggle_cb').prop('checked', true).change();
+                        obj_this.meeting_status = 'Published'
                     }
                     else
                     {
                         $('.toggle_cb').prop('checked', false).change();
-                    }
-                    obj_this.first_check = false;
-                    $('.toggle_cb').change(function() {
-                        if(!obj_this.first_check)
-                        {
-                            let publish_status = $(this).prop('checked');
-                            let args = {
-                                app: 'meetings',
-                                model: 'Event',
-                                method: 'update_publish_status'
-                            }
-                            let input_data = {
-                                params: {meeting_id: obj_this.meeting_object.id,publish_status: publish_status},
-                                args: args,
-                                no_loader: 1
-                            };
-                            obj_this.httpService.get(input_data, null, null)
-                        }                
-                    });
-                },100);
+                        obj_this.meeting_status = 'Unpublished';
+                        
+                    }                
+                    $('.toggle_cb').change(on_publish_changed);                
+                }, 100);
+
                 obj_this.next = result.next;
                 obj_this.prev = result.prev;
                 if (result.meeting && result.meeting.name) {

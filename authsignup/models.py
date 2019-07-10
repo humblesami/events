@@ -54,7 +54,7 @@ class AuthUser(models.Model):
                 'res_model': 'Profile',
                 'res_id': user.id
             }
-            res = ws_methods.send_email_on_creation(thread_data)
+            ws_methods.send_email_on_creation(thread_data)
             return 'done'
         except:
             res = ws_methods.get_error_message()

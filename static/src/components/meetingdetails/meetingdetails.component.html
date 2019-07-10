@@ -9,6 +9,9 @@ routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}
 title="{{meeting_object.name}}"></app-breadcrumb>
 
 <div class="router-outlet">
+
+        22 -{{meeting_status}} --22
+
     <div class="page-links">
         <span class="prev next-prev-link" title="Privious">
             <i class="fa fa-angle-left"></i>
@@ -30,6 +33,17 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
                         </div>
                         <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
+                            <div>
+                                <div class="meet-elements">
+                                    Meeting Status
+                                </div>
+                            </div>
+                            <div>
+                                11 -{{meeting_status}} -- {{meeting_status == 'Published'}} --11
+                                <span *ngIf="meeting_status == 'Published'" class="badge badge-success">{{meeting_object.meeting_status}}</span>
+                                <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning">{{meeting_object.meeting_status}}</span>
+                            </div>
+                            
                             <input type="checkbox" class="toggle_cb"
                             data-on="Published" data-off="Unpublished"
                             checked data-toggle="toggle" data-size="normal">

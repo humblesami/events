@@ -104,6 +104,7 @@ TEMPLATES = [
             os.path.join(PROJECT_ROOT, '..', 'voting/templates'),
             os.path.join(PROJECT_ROOT, '..', 'ngapp/templates'),
             os.path.join(PROJECT_ROOT, '..', 'emailthread/templates'),
+            os.path.join(PROJECT_ROOT, '..', 'authsignup/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

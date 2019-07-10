@@ -386,7 +386,7 @@ class Event(models.Model):
         if meeting_obj:
             meeting_obj.publish = publish_status
             meeting_obj.save()
-            return 'done'
+            return {'publish': publish_status}
         return 'Something went wrong while updating meeting publish status'
 
 
