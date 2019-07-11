@@ -116,89 +116,15 @@ body{
     --DocIcon-bg:#E9F6FF;
 }
 
-body.green{
-    --toggle-left-menu-bg:#28a745;
-    --toggle-menu-color:#ffffff;
-    --menu-color-text: #ffffff;
-    --menu-icon-color:#ffffff;
-    --header-bg-color: linear-gradient(to right, #28a745, #2a9eb0) ;
-    --header-icon-color:rgba(0, 0, 0, 0.2);
+.fs-12{ font-size:12px }
+.fs-13{ font-size:13px }
+.fs-14{ font-size:14px }
+.fs-15{ font-size:15px }
+.fs-16{ font-size:16px }
+.fs-17{ font-size:17px }
+.fs-18{ font-size:18px }
+.fs-19{ font-size:19px }
 
-	--color-main-bg: #24262d;
-    --button-bg: #132f6e;
-    --DocIcon-bg:#28a745;
-
-}
-body.green .home{ background: rgb(206, 255, 245); }
-  body.white {
-    --toggle-left-menu-bg:#ffffff;
-    --toggle-menu-color:#333333;
-    --menu-color-text: #333333;
-    --menu-icon-color:#333333;
-    --header-bg-color: linear-gradient(to right, #ffffff, #ffffff) ;
-    --header-icon-color:rgba(0, 0, 0, 0.2);
-
-	--color-main-bg: #24262d;
-    --button-bg: #132f6e;
-    --DocIcon-bg:#333333;
-}
-  body.white .MainHeader.navbar .navbar-nav h3{
-    color: #333333 !important;
-}
-body.white .header-fixed{
-    border-bottom: 1px solid #dddddd;
-}
-  body.blue {
-    --toggle-left-menu-bg:#2930b4;
-    --toggle-menu-color:#ffffff;
-    --menu-color-text: #ffffff;
-    --menu-icon-color:#ffffff;
-    --header-bg-color:  linear-gradient(to right, #2930b4, #2a9eb0);
-    --header-icon-color:rgba(0, 0, 0, 0.2);
-
-	--color-main-bg: #24262d;
-    --button-bg: #132f6e;
-    --DocIcon-bg:#2930b4;
-  }
-body.light{
-    --toggle-left-menu-bg:#E9B067;
-    --toggle-menu-color:#ffffff;
-    --menu-color-text: #ffffff;
-    --menu-icon-color:#ffffff;
-    --header-bg-color:  linear-gradient(to right, #E9B067, #E9B067);
-    --header-icon-color:rgba(0, 0, 0, 0.2);
-
-	--color-main-bg: #24262d;
-    --button-bg: #132f6e;
-    --DocIcon-bg:#E9B067;
-  }
-body.light .home{ background: rgba(233, 176, 103, 0.61); }
-
-  body.orange {
-        --toggle-left-menu-bg:#FF766E;
-        --toggle-menu-color:#ffffff;
-        --menu-color-text: #ffffff;
-        --menu-icon-color:#ffffff;
-        --header-bg-color: linear-gradient(to right, #FF766E, #FF766E) ;
-        --header-icon-color:rgba(0, 0, 0, 0.2);
-
-        --color-main-bg: #24262d;
-        --button-bg: #132f6e;
-        --DocIcon-bg:#FF766E;
-    }
-
-    body.red {
-        --toggle-left-menu-bg:#d00000;
-        --toggle-menu-color:#ffffff;
-        --menu-color-text: #ffffff;
-        --menu-icon-color:#ffffff;
-        --header-bg-color: linear-gradient(to right, #d00000, #e60000) ;
-        --header-icon-color:rgba(0, 0, 0, 0.2);
-
-        --color-main-bg: #24262d;
-        --button-bg: #132f6e;
-        --DocIcon-bg:#d00000;
-    }
 
 /*
 @media (min-width: 576px){
@@ -937,11 +863,11 @@ height:100%;
     max-width: 100%;
 }
   .kanban-profiles-user-InfoLIST{
-	font-size: 14px;
+	font-size: 13px;
 	color: #43425D;
   }
 .kanban-profiles-user-InfoLIST i {
-    font-size: 12px;
+    font-size: 11px;
     padding-right: 3px;
     }
 
@@ -2965,7 +2891,21 @@ span.kanban-upcoming-meeting-date {
 }
 .btn-meeting:hover{
     background:#3059C9;
+    color:#ffffff;
 }
+.ChoseButtonHeadWrap .meeting-detail .upcomingButton {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+.ChoseButtonHeadWrap .meeting-detail .upcomingButton button {
+    background: #638FC9;
+    color: #fff;
+    border-color: #638FC9;
+    min-width: 110px;
+    font-size: 0.85rem;
+}
+
 .res-message{
     border: 2px solid;
     padding: 5%;
@@ -3277,6 +3217,7 @@ is_mobile_device
 .btn-group .btn.active{
     background-color: #6497ca;
     color: white;
+    border-color: #6497ca;
 }
 .toggle-off{
     background-color:#f1f2f4

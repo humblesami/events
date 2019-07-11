@@ -67,12 +67,18 @@ form ul.inline li {
 /* ALIGNED FIELDSETS */
 
 .aligned label {
-    float: left;
+    display:block;
     width: 160px;
     word-wrap: break-word;
     line-height: 1;
 }
-
+input[type=text], input[type=password], input[type=email], input[type=url], input[type=number], input[type=tel], textarea, select, .vTextField {
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+    padding: 5px 6px;
+    margin-top: 0;
+}
 .aligned label:not(.vCheckboxLabel):after {
     content: '';
     display: inline-block;
