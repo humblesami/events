@@ -138,7 +138,7 @@ class UserAdmin(BaseUserAdmin):
     def image_tag(self, obj):
         if obj.image:
             return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.image))
-    image_tag.short_description = ''
+    image_tag.short_description = 'Photo'
 
 
 class AdminAdmin(UserAdmin):
@@ -163,17 +163,10 @@ class DirectorAdmin(UserAdmin):
     add_form = UserCreateForm
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','is_active')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (None,
-         {
-             'fields': (
-                 'bio', 'location', 'birth_date', 'nick_name',
-                 'job_title', 'department', 'work_phone', 'mobile_phone', 'website', 'fax',
-                 'board_joining_date', 'term_start_date', 'term_end_date','committees',
-                 'company', 'last_login'
-             )
-         }
-         ),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
+                                         'location', 'bio')}),
+        (_('Work info'), {'fields': ( 'job_title', 'company', 'department', 'work_phone', 'fax', 'website')}),
+        (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
         (_('Diversity Information'),
          {
              'fields': (
@@ -184,20 +177,20 @@ class DirectorAdmin(UserAdmin):
         (_('Administrative Assistant'),
          {
              'fields': (
-                 'admin_image_html', 'admin_image', 'admin_first_name', 'admin_last_name',
+                 'admin_image_tag', 'admin_image', 'admin_first_name', 'admin_last_name',
                  'admin_nick_name', 'admin_cell_phone', 'admin_email', 'admin_work_phone',
                  'admin_fax', 'mail_to_assistant'
              )
          }
          ),
     )
-    readonly_fields = ('image_tag','admin_image_html')
+    readonly_fields = ('image_tag','admin_image_tag')
 
 
-    def admin_image_html(self, obj):
+    def admin_image_tag(self, obj):
         return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.admin_image))
 
-    admin_image_html.short_description = ''
+    admin_image_tag.short_description = 'Photo'
 
     def get_queryset(self, request):
         qs = super(DirectorAdmin, self).get_queryset(request)
