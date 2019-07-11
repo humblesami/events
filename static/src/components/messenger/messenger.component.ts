@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
+import { Select2Module, Select2OptionData } from 'ng2-select2';
 
 declare var $: any;
 
@@ -16,7 +17,9 @@ export class MessengerComponent implements OnInit {
 	is_minimize = true;
 	chat_initilized = 0;
 	searchVal = '';
-	is_request_sent = true;
+    is_request_sent = true;
+    public friend_list: Array<Select2OptionData>;
+    public options: Select2Options;
 
 	constructor(
 		private sanitizer: DomSanitizer,
@@ -36,8 +39,20 @@ export class MessengerComponent implements OnInit {
                 {
                     console.log(er);
                 }
-			};
-			
+            };
+            var ar = [];
+            for(var key in obj_this.socketService.chat_users)
+            {
+                ar.push({
+                    id:key,
+                    text:obj_this.socketService.chat_users[key].name
+                });
+            }
+            obj_this.options = {
+                multiple: true,
+                width: '200px',
+            }
+            obj_this.friend_list = ar;
 
 			if(!obj_this.socketService.user_data)
 			{
@@ -450,6 +465,25 @@ export class MessengerComponent implements OnInit {
         $('.chat-container-wrppaer').hide();
         obj_this.is_mobile_device = true;
         $('.popup.messenger').hide();
+        // this.exampleData = [
+        //     {
+        //     id: 'basic1',
+        //     text: 'Basic 1'
+        //     },
+        //     {
+        //     id: 'basic2',
+        //     disabled: true,
+        //     text: 'Basic 2'
+        //     },
+        //     {
+        //     id: 'basic3',
+        //     text: 'Basic 3'
+        //     },
+        //     {
+        //     id: 'basic4',
+        //     text: 'Basic 4'
+        //     }
+        // ];
     }
 
     ngOnDestroy() {

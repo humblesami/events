@@ -10,9 +10,12 @@
                         </span>
                         <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
                     </div>
-                    <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">
+                    <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">                    
                 </div>
             </div>
+            
+            <select2 [data]="friend_list" [options]="options"></select2>
+
             <div class="card-body contacts_body">
                 <ul class="contacts">
                     <li *ngFor="let uid of socketService.keys_chat_users"
