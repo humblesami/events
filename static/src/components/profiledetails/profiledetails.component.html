@@ -511,12 +511,15 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     <div class="row">
                         <div class="col-sm">
                             <label for="name">
-                                <b>Name</b>
+                                <b>First Name</b>
                             </label>
-                            <input value="{{profile_data.name}}" (change)="modified_profile_data.name = $event.target.value"
-                                type="text" placeholder="Enter Name" id="name">
-                            <input value="{{profile_data.nick_name}}" (change)="modified_profile_data.nick_name = $event.target.value"
-                                type="text" placeholder="Enter Nick" id="nick">
+                            <input value="{{profile_data.first_name}}" (change)="modified_profile_data.first_name = $event.target.value"
+                                type="text" placeholder="Enter First Name" id="first_name">
+                                <label for="name">
+                                    <b>Last Name</b>
+                                </label>
+                            <input value="{{profile_data.last_name}}" (change)="modified_profile_data.last_name = $event.target.value"
+                                type="text" placeholder="Enter Last Name" id="last_name">
 
                             <label for="email">
                                 <b>Email</b>
