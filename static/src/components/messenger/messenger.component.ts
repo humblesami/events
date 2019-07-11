@@ -18,8 +18,8 @@ export class MessengerComponent implements OnInit {
 	chat_initilized = 0;
 	searchVal = '';
     is_request_sent = true;
-    public friend_list: Array<Select2OptionData>;
-    public options: Select2Options;
+    // public friend_list: Array<Select2OptionData>;
+    // public options: Select2Options;
     chat_groups = [];
 
 	constructor(
@@ -52,11 +52,11 @@ export class MessengerComponent implements OnInit {
                     text:obj_this.socketService.chat_users[key].name
                 });
             }
-            obj_this.options = {
-                multiple: true,
-                width: '100%',
-            }
-            obj_this.friend_list = ar;
+            // obj_this.options = {
+            //     multiple: true,
+            //     width: '100%',
+            // }
+            // obj_this.friend_list = ar;
 
 			if(!obj_this.socketService.user_data)
 			{
@@ -83,27 +83,27 @@ export class MessengerComponent implements OnInit {
             console.log('group name required');
             return;
         }
-        obj_this.socketService.chat_users[obj_this.group_name] = {
-            id:this.group_name,
-            name: this.group_name,
-            messages: [],
-            online: 1,
-            memebers: obj_this.friend_list,
-            photo: '/static/assets/images/chat-group.png'
-        };
-        obj_this.socketService.keys_chat_users.unshift(obj_this.group_name);
-        let input_data= {
-            args:{
-                app:'chat',
-                model:'Message',
-                method:'create_chat_group'
-            },
-            params:{
-                name: obj_this.group_name,
-                members:obj_this.friend_list.concat(obj_this.socketService.user_data)
-            }
-        }
-        obj_this.httpService.post(input_data,null, null);
+        // obj_this.socketService.chat_users[obj_this.group_name] = {
+        //     id:this.group_name,
+        //     name: this.group_name,
+        //     messages: [],
+        //     online: 1,
+        //     memebers: obj_this.friend_list,
+        //     photo: '/static/assets/images/chat-group.png'
+        // };
+        // obj_this.socketService.keys_chat_users.unshift(obj_this.group_name);
+        // let input_data= {
+        //     args:{
+        //         app:'chat',
+        //         model:'Message',
+        //         method:'create_chat_group'
+        //     },
+        //     params:{
+        //         name: obj_this.group_name,
+        //         members:obj_this.friend_list.concat(obj_this.socketService.user_data)
+        //     }
+        // }
+        // obj_this.httpService.post(input_data,null, null);
     }
     
 	select_chat_user(target_id) {        
