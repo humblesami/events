@@ -99,59 +99,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div class="ProFileHeadWrap">
                             PERSONAL INFO
                         </div>
-
-                        <div *ngIf="profile_data.department" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="department">
-                                        <b>Department</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.department}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.work_phone" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="w-phone">
-                                        <b>Work Phone</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.work_phone}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.mobile_phone" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="c-phone">
-                                        <b>Cell Phone</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.mobile_phone}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.fax" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="fax">
-                                        <b>Fax</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.fax}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.website" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="website">
-                                        <b>Website</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.website}}
-                                </div>
-                            </div>
-
-
                         <div *ngIf="profile_data.nick_name" class="row mb-2">
                             <div class="col-sm-3">
                                 <label for="department">
@@ -162,71 +109,44 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 {{profile_data.nick_name}}
                             </div>
                         </div>
-                        <div *ngIf="profile_data.email" class="row mb-2">
+                        <div *ngIf="profile_data.mobile_phone" class="row mb-2">
                             <div class="col-sm-3">
-                                <label for="w-phone">
-                                    <b>Email</b>
+                                <label for="mobile-phone">
+                                    <b>Mobile Phone</b>
                                 </label>
+                            </div>
+                            <div class="col-sm-9 UserProfileDiscription">
+                                {{profile_data.mobile_phone}}
+                            </div>
+                        </div>
+                        <div *ngIf="profile_data.email" class="row mb-2">
+                        <div class="col-sm-3">
+                            <label for="email">
+                                <b>Email</b>
+                            </label>
                             </div>
                             <div class="col-sm-9 UserProfileDiscription">
                                 {{profile_data.email}}
                             </div>
                         </div>
-
-
-
-                        <div *ngIf="profile_data.job_title" class="row mb-2">
+                        <div *ngIf="profile_data.birth_date" class="row mb-2">
                             <div class="col-sm-3">
-                                <label for="job-title">
-                                    <b>Job Title</b>
+                                <label for="birth_date">
+                                    <b>Birth Date</b>
                                 </label>
                             </div>
                             <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.job_title}}
+                                {{profile_data.birth_date}}
                             </div>
                         </div>
-
-						<div *ngIf="profile_data.board_joining_date" class="row mb-2">
+                        <div *ngIf="profile_data.location" class="row mb-2">
                             <div class="col-sm-3">
-                                <label for="website">
-                                    <b>Board Joining Date</b>
+                                <label for="location">
+                                    <b>Location</b>
                                 </label>
                             </div>
                             <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.board_joining_date | date:'MMM dd,yyyy'}}
-                            </div>
-                        </div>
-
-                        <div *ngIf="profile_data.term_start_date" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="website">
-                                    <b>Term Start Date</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.term_start_date | date:'MMM dd,yyyy'}}
-                            </div>
-                        </div>
-
-                        <div *ngIf="profile_data.term_end_date" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="website">
-                                    <b>Term End Date</b>
-                                </label>s
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.term_end_date| date:'MMM dd,yyyy'}}
-                            </div>
-                        </div>
-
-                        <div *ngIf="profile_data.board_joing_date" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="website">
-                                    <b>Board Joing Date</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.board_joing_date | date:'MMM dd,yyyy'}}
+                                {{profile_data.location}}
                             </div>
                         </div>
                         <div *ngIf="profile_data.bio" class="row  mb-3">
@@ -236,19 +156,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </label>
                             </div>
                             <div class="col-sm-9 UserProfileDiscription" [innerHtml]="bio_html"></div>
-                        </div>
-                        <!--Committees-->
-                        <div *ngIf="profile_data.committees && profile_data.committees.length > 0" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="job-title">
-                                    <b>Committees</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                <span class="pill" *ngFor="let com of profile_data.committees">
-                                    <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
-                                </span>
-                            </div>
                         </div>
 
 						<div class="row mb-2">
@@ -274,8 +181,151 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
                     </div>
                 </div>
-			</div>
-			<div *ngIf="profile_data.group=='Director'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+            </div>
+            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                <div class="container">
+                    <!-- Wrok Information -->
+                    <div class="row assistant" *ngIf="admin_info">
+                        <div class="col-sm-12">
+                            <h3 class="clrBlue mb-5">
+                                    WORK INFO
+                            </h3>
+                        </div>
+                        <div class="admin_info_after_name container">
+                            <div *ngIf="profile_data.company" class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label for="company">
+                                        <b>Company</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.company}}
+                                </div>
+                            </div>
+                            <div *ngIf="profile_data.job_title" class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label for="job-title">
+                                        <b>Job Title</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.job_title}}
+                                </div>
+                            </div>
+                            <div *ngIf="profile_data.department" class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label for="department">
+                                        <b>Department</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.department}}
+                                </div>
+                            </div>
+                            <div *ngIf="profile_data.work_phone" class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label for="w-phone">
+                                        <b>Work Phone</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.work_phone}}
+                                </div>
+                            </div>
+                            <div *ngIf="profile_data.fax" class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label for="fax">
+                                        <b>Fax</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.fax}}
+                                </div>
+                            </div>
+                            <div *ngIf="profile_data.website" class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label for="website">
+                                        <b>Website</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.website}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                    <div class="container">
+                        <!-- Wrok Information -->
+                        <div class="row assistant" *ngIf="admin_info">
+                            <div class="col-sm-12">
+                                <h3 class="clrBlue mb-5">
+                                        BOARD INFO
+                                </h3>
+                            </div>
+                            <div class="admin_info_after_name container">
+                                <div *ngIf="profile_data.committees && profile_data.committees.length > 0" class="admin_info_after_name container">
+                                        <div class="col-sm-3">
+                                            <label for="job-title">
+                                                <b>Committees</b>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-9 UserProfileDiscription">
+                                            <span class="pill" *ngFor="let com of profile_data.committees">
+                                                <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="profile_data.board_joining_date" class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="website">
+                                                <b>Board Joining Date</b>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-9 UserProfileDiscription">
+                                            {{profile_data.board_joining_date | date:'MMM dd,yyyy'}}
+                                        </div>
+                                    </div>
+                    
+                                    <div *ngIf="profile_data.term_start_date" class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="website">
+                                                <b>Term Start Date</b>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-9 UserProfileDiscription">
+                                            {{profile_data.term_start_date | date:'MMM dd,yyyy'}}
+                                        </div>
+                                    </div>
+                    
+                                    <div *ngIf="profile_data.term_end_date" class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="website">
+                                                <b>Term End Date</b>
+                                            </label>s
+                                        </div>
+                                        <div class="col-sm-9 UserProfileDiscription">
+                                            {{profile_data.term_end_date| date:'MMM dd,yyyy'}}
+                                        </div>
+                                    </div>
+                    
+                                    <div *ngIf="profile_data.board_joing_date" class="row mb-2">
+                                        <div class="col-sm-3">
+                                            <label for="website">
+                                                <b>Board Joing Date</b>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-9 UserProfileDiscription">
+                                            {{profile_data.board_joing_date | date:'MMM dd,yyyy'}}
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+			<div *ngIf="my_profile || socketService.user_data.is_admin" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
 				<div class="container">
 					<!-- Diversity Information -->
 					<div class="row assistant" *ngIf="admin_info">
@@ -353,46 +403,17 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 								<div  class="row" *ngIf="profile_data.name">
 									<div class="col-sm-12 UserProfileNameTittle">
-										{{profile_data.name}}
-									</div>
-								</div>
-
-								<div *ngIf="profile_data.job_title" class="row">
-									<div class="col-sm-12 UserProfileDiscripTittle">
-										{{profile_data.job_title}}
+										{{profile_data.admin_full_name}}
 									</div>
 								</div>
 							</div>
 						</div>
 					<div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1">
 						<div class="admin_info_after_name">
-							<div class="ProFileHeadWrap">
-								BASIC INFO
-							</div>
-							<div *ngIf="profile_data.admin_first_name" class="row">
-								<div class="col-sm-3">
-									<label class="question-label">
-                          <b>First Name</b>
-									</label>
-								</div>
-								<div class="col-sm-9 UserProfileDiscription">
-									{{profile_data.admin_first_name}}
-								</div>
-							</div>
-							<div *ngIf="profile_data.admin_last_name" class="row">
-								<div class="col-sm-3">
-									<label class="question-label">
-                          <b>Last Name</b>
-									</label>
-								</div>
-								<div class="col-sm-9 UserProfileDiscription">
-									{{profile_data.admin_last_name}}
-								</div>
-							</div>
 							<div *ngIf="profile_data.admin_nick_name" class="row">
 								<div class="col-sm-3">
 									<label class="question-label">
-                          <b>Nick Name</b>
+                                        <b>Nick Name</b>
 									</label>
 								</div>
 								<div class="col-sm-9 UserProfileDiscription">
@@ -400,14 +421,10 @@ title="{{profile_data.name}}"></app-breadcrumb>
 								</div>
 							</div>
 
-							<div class="ProFileHeadWrap">
-								CONTACT INFO
-							</div>
-
 							<div *ngIf="profile_data.admin_email" class="row">
 								<div class="col-sm-3">
 									<label class="question-label">
-                          <b>Email</b>
+                                        <b>Email</b>
 									</label>
 								</div>
 								<div class="col-sm-9 UserProfileDiscription">
@@ -417,7 +434,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<div *ngIf="profile_data.admin_cell_phone" class="row">
 								<div class="col-sm-3">
 									<label class="question-label">
-                          <b>Cell Phone</b>
+                                        <b>Cell Phone</b>
 									</label>
 								</div>
 								<div class="col-sm-9 UserProfileDiscription">
@@ -427,7 +444,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<div *ngIf="profile_data.admin_fax" class="row">
 								<div class="col-sm-3">
 									<label class="question-label">
-                          <b>Fax</b>
+                                        <b>Fax</b>
 									</label>
 								</div>
 								<div class="col-sm-9 UserProfileDiscription">
@@ -547,7 +564,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                         <div class="col-sm-9 UserProfileDiscription">
                             <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
-                                 class="form-control"  type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
+                                class="form-control"  type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
                         </div>
                     </div>
 					<div class="row mb-3">
@@ -649,7 +666,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                     </div>
 
-                    <div *ngIf="profile_data.group=='Director'">                    
+                    <div>
                         <div class="row" style="margin-top:20px;">
                             <div class="col-sm-12">
                                 <h3>
@@ -710,7 +727,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
                         <!--Admin block-->
 
-                        <div class="row" style="margin-top:20px;">
+                        <div *ngIf="profile_data.group=='Director'" class="row" style="margin-top:20px;">
                             <div class="col-sm-12">
                                 <h3>
                                     <b>Administrative Assistant</b>

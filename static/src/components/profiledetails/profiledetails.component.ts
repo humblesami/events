@@ -12,7 +12,7 @@ declare var $:any;
 })
 export class ProfileDetailsComponent implements OnInit {
 	edit_mode: boolean;
-	my_profile = true;
+	my_profile = false;
 	last_login = {
 		last: {
 			login_time: '',
@@ -145,18 +145,14 @@ export class ProfileDetailsComponent implements OnInit {
 		// 	this.type_breadCrumb = window['current_user'].cookie['groups'][0].name.toLowerCase() + 's';
 		// }
         let input_data = undefined;
-        if (id) {
-			obj_this.my_profile = false;
-			input_data =
-			{ 
-				id: id,
-				type:this.type
-			};
-        }
-        else
-        {
-            input_data= {};
-        }
+        if (id == obj_this.socketService.user_data.id || id == undefined) {
+			obj_this.my_profile = true;	
+		}
+		input_data =
+		{ 
+			id: id,
+			type:this.type
+		};
 		let args = {
             app: 'meetings',
             model: 'Profile',
@@ -226,6 +222,25 @@ export class ProfileDetailsComponent implements OnInit {
         };
 		this.httpService.post(final_input_data,
 			(data: any) => {
+				let obj_this = this;
+				let profile = data.profile_data;
+				var user_cookie = localStorage.getItem('user');                
+                let cuser = undefined;
+                if(user_cookie)
+                {
+                    cuser = JSON.parse(user_cookie);
+				}
+				if (cuser)
+				{
+					profile.token = cuser.token;
+					let value = JSON.stringify(profile);
+					localStorage.setItem('user', value);
+					obj_this.socketService.user_data.groups = profile.groups;
+					obj_this.socketService.user_data.name = profile.name;
+					obj_this.socketService.user_data.photo = profile.photo;
+					obj_this.socketService.user_photo = obj_this.base_url + profile.photo;
+
+				}
                 obj_this.edit_mode = false;
                 obj_this.modified_profile_data = {};
 				const x = document.getElementById('slot-select-success');

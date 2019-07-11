@@ -174,6 +174,11 @@ class Profile(user_model):
             name = user.username
         return name
 
+    @property
+    def admin_full_name(self):
+        return self.admin_first_name + ' ' + self.admin_last_name
+
+
     @classmethod
     def get_records(cls, request, params):
         group = params.get('type')
@@ -203,10 +208,16 @@ class Profile(user_model):
                 profile_orm = profile_object
         else:
             profile_orm = profile_orm[0]
+            admin_full_name = ''
+            try:
+                admin_full_name = profile_orm.admin_full_name
+            except:
+                pass
         profile = ws_methods.obj_to_dict(
             profile_orm,
             fields=[
-                'id', 'name', 'email', 'image', 'bio', 'location', 'birth_date', 'nick_name', 'job_title', 'department',
+                'id', 'name', 'first_name', 'last_name', 'email', 'image', 'bio', 'location', 'birth_date', 
+                'nick_name', 'company', 'job_title', 'department',
                 'work_phone', 'mobile_phone', 'website', 'fax', 'ethnicity', 'gender', 'veteran',
                 'disability', 'board_joining_date', 'admin_first_name', 'admin_last_name', 'admin_nick_name',
                 'admin_cell_phone', 'admin_email', 'admin_work_phone', 'admin_fax', 'admin_image', 'mail_to_assistant',
@@ -225,6 +236,7 @@ class Profile(user_model):
         profile['veteran'] = profile_orm.get_veteran_display()
         profile['signature_data'] = profile_orm.signature_data.decode()
         profile['group'] = profile['groups'][0].name
+        profile['admin_full_name'] = admin_full_name
         del profile['groups']
         resume = profile_orm.resume
         if resume:
@@ -287,7 +299,14 @@ class Profile(user_model):
             profile.admin_image.save(file_name, data, save=True)
 
         profile.save()
-        return 'done'
+        data = {
+            'id': profile.id,
+            'name': profile.name,
+            'photo': profile.image.url,
+            'groups': list(profile.groups.all().values('id', 'name')),
+            'username': profile.username
+        }
+        return {'profile_data': data}
 
 
     @classmethod

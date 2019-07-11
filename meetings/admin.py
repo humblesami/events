@@ -145,8 +145,17 @@ class AdminAdmin(UserAdmin):
     # add_form = UserCreateForm
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','is_active')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (None, {'fields': ('committees', 'company', 'date_joined')}),        
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
+                                         'location', 'bio')}),
+        (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
+        (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
+        (_('Diversity Information'),
+         {
+             'fields': (
+                 'ethnicity', 'gender', 'veteran', 'disability'
+             )
+         }
+         )
 
     )
     autocomplete_fields = ['committees']
@@ -165,7 +174,7 @@ class DirectorAdmin(UserAdmin):
         (None, {'fields': ('image_tag', 'image','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
                                          'location', 'bio')}),
-        (_('Work info'), {'fields': ( 'job_title', 'company', 'department', 'work_phone', 'fax', 'website')}),
+        (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
         (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
         (_('Diversity Information'),
          {
@@ -202,9 +211,17 @@ class StaffAdmin(UserAdmin):
     add_form = UserCreateForm
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','is_active')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (None, {'fields': ('committees','company',)}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
+                                         'location', 'bio')}),
+        (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
+        (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
+        (_('Diversity Information'),
+         {
+             'fields': (
+                 'ethnicity', 'gender', 'veteran', 'disability'
+             )
+         }
+         )
     )
 
 
