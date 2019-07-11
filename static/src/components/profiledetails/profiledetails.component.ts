@@ -163,7 +163,8 @@ export class ProfileDetailsComponent implements OnInit {
             args: args
         }; 
 			
-		const success_cb = function (result) {			
+		const success_cb = function (result) {	
+			obj_this.base_url = window['site_config'].server_base_url;		
 			if(result.profile.admin_email || result.profile.admin_cell_phone
 				|| result.profile.admin_fax || result.profile.admin_work_phone
 				|| result.profile.admin_image || result.profile.admin_first_name
@@ -194,7 +195,6 @@ export class ProfileDetailsComponent implements OnInit {
 					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
 				}
 			}
-			obj_this.base_url = window['site_config'].server_base_url;
 		};
 		const failure_cb = function (error) {
 		};
