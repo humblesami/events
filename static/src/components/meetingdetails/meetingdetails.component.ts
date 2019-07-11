@@ -49,14 +49,14 @@ export class MeetingDetailsComponent implements OnInit {
             obj_this.meeting_status = 'Unpublished';
             obj_this.meeting_type = 'draft';
             obj_this.title = 'Draft';
-            $('li.breadcrumb-item a').last().html('Draft Meetings');
+            $('li.breadcrumb-item a').last().html('Draft Meetings').attr('href','/meetings/draft');
         }
         else
         {
             obj_this.meeting_status = 'Published';
             obj_this.meeting_type = 'upcoming';
             obj_this.title = 'Upcoming';
-            $('li.breadcrumb-item a').last().html('Upcoming Meetings');
+            $('li.breadcrumb-item a').last().html('Upcoming Meetings').attr('href','/meetings/upcoming');
         }
         obj_this.meeting_object.publish = !is_published;
         let args = {
