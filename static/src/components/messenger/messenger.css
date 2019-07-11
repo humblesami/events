@@ -632,8 +632,17 @@
 {
     margin-top:4px;
 }
-.chatgroup span{
-    
+.yt1Zfc{
+    background-color: #0f9d58;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    cursor: pointer;    
+    width: 36px;
+    height: 36px;
+    color: white;
+    position: absolute;
+    right: 16px;
+    border: 0;
 }
 .chatgroup .create{
     height: 20px;

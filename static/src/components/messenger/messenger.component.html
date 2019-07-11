@@ -10,10 +10,19 @@
                         </span>
                         <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
                     </div>
-                    <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">                    
+                    <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">
                 </div>
             </div>
             
+            <button (click)="create_chat_room()"  class="PD7XNe yt1Zfc" aria-label="Create group.">
+                <div class="aLkERb">
+                    <svg width="24px" height="24px" viewBox="0 0 24 24" class="pTh3n mMlCCe">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path>
+                    </svg>
+                </div>
+            </button>
+
+            <input [(ngModel)]="group_name" type="text" class="form-control">
             <select2 [data]="friend_list" [options]="options"></select2>
 
             <div class="card-body contacts_body">
@@ -25,12 +34,11 @@
                             <a class="contact-item d-flex align-items-center bd-highlight">
                                 <div class="img_cont">
                                     <img src="{{socketService.server_url}}{{socketService.chat_users[uid].photo}}" class="rounded-circle user_img">
-                                    <span [ngClass]="[socketService.chat_users[uid].online ? '': 'offline']" class="online_icon"></span>
+                                    <span class="online_icon"></span>
                                 </div>
                                 <div class="user_info">
                                     <span>{{ socketService.chat_users[uid].name }}</span>
                                     <p *ngIf="socketService.chat_users[uid].online">Online</p>
-                                    <p *ngIf="!socketService.chat_users[uid].online">Offline</p>
                                 </div>
                                 <span class="unseen" *ngIf="socketService.chat_users[uid].unseen">
                                     {{socketService.chat_users[uid].unseen}}
@@ -49,7 +57,6 @@
 					<span class="backchatlist" (click)="hide_chat_box()"><i class="fas fa-arrow-left"></i></span>
 					<span class="user-name">{{active_chat_user.name}}</span>
 					<span class="status" *ngIf="active_chat_user.online" class="userstat">Online</span>
-					<span class="status" *ngIf="!active_chat_user.online" class="userstat">Offline</span>
 				</div>
                 <div *ngIf="active_chat_user" class="MessengerConnectWrap">
 					<div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">

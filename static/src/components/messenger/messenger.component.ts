@@ -20,6 +20,7 @@ export class MessengerComponent implements OnInit {
     is_request_sent = true;
     public friend_list: Array<Select2OptionData>;
     public options: Select2Options;
+    chat_groups = [];
 
 	constructor(
 		private sanitizer: DomSanitizer,
@@ -40,6 +41,9 @@ export class MessengerComponent implements OnInit {
                     console.log(er);
                 }
             };
+            socketService.server_events['chat_group_created'] = function(data){
+                console.log(data);
+            };
             var ar = [];
             for(var key in obj_this.socketService.chat_users)
             {
@@ -50,7 +54,7 @@ export class MessengerComponent implements OnInit {
             }
             obj_this.options = {
                 multiple: true,
-                width: '200px',
+                width: '100%',
             }
             obj_this.friend_list = ar;
 
@@ -67,6 +71,39 @@ export class MessengerComponent implements OnInit {
         {
             console.log(113, er);
         }        
+    }
+
+    group_name = ''
+
+    create_chat_room()
+    {       
+        let obj_this = this; 
+        if(!obj_this.group_name)
+        {
+            console.log('group name required');
+            return;
+        }
+        obj_this.socketService.chat_users[obj_this.group_name] = {
+            id:this.group_name,
+            name: this.group_name,
+            messages: [],
+            online: 1,
+            memebers: obj_this.friend_list,
+            photo: '/static/assets/images/chat-group.png'
+        };
+        obj_this.socketService.keys_chat_users.unshift(obj_this.group_name);
+        let input_data= {
+            args:{
+                app:'chat',
+                model:'Message',
+                method:'create_chat_group'
+            },
+            params:{
+                name: obj_this.group_name,
+                members:obj_this.friend_list.concat(obj_this.socketService.user_data)
+            }
+        }
+        obj_this.httpService.post(input_data,null, null);
     }
     
 	select_chat_user(target_id) {        

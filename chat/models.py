@@ -374,22 +374,36 @@ class Comment(models.Model):
         Notification.add_notification(request.user, param, event_data, mentioned_list)
         return comment
 
+
+class ChatGroup(models.Model):
+    name = models.CharField(max_length=100)
+    members = models.ManyToManyField(User, related_name='chat_groups')
+    active = models.BooleanField(default=True)
+    create_time = models.DateTimeField(null=True, auto_now_add=True)
+    create_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    @classmethod
+    def get_messages(cls, request, params):
+        chat_group_id = params.get('group_id')
+        offset = 0
+        messages = Message.objects.filter(chat_group_id=chat_group_id).order_by('-id')[offset: offset + 20][::-1]
+        messages = Message.get_processed_messages(messages)
+        return messages
+
+
 class Message(models.Model):
     sender = models.IntegerField()
     to = models.IntegerField()
     body = models.TextField()
     read_status = models.BooleanField(default=False)
     create_date = models.DateTimeField(null=True, auto_now_add=True)
+    chat_group = models.ForeignKey(ChatGroup, null=True, on_delete=models.CASCADE)
 
     @classmethod
-    def get_message_list(cls, uid, target_id, offset):
-        uid = int(uid)
-        target_id = int(target_id)
-        user_ids = [target_id, uid]
+    def get_processed_messages(cls, messages, uid):
         ar = []
-        messages = Message.objects.filter(sender__in=user_ids, to__in=user_ids).order_by('-id')[offset: offset + 20][::-1]
         for obj in messages:
-            if obj.to == uid and not obj.read_status:
+            if obj.sender != uid and not obj.read_status:
                 obj.read_status = True
                 obj.save()
             dict_obj = {
@@ -406,6 +420,16 @@ class Message(models.Model):
                     'url': att.attachment.url
                 })
             ar.append(dict_obj)
+        return ar
+
+    @classmethod
+    def get_message_list(cls, uid, target_id, offset):
+        uid = int(uid)
+        target_id = int(target_id)
+        user_ids = [target_id, uid]
+        ar = []
+        messages = Message.objects.filter(sender__in=user_ids, to__in=user_ids).order_by('-id')[offset: offset + 20][::-1]
+        ar = cls.get_processed_messages(messages)
         return ar
 
     @classmethod
@@ -471,6 +495,23 @@ class Message(models.Model):
         message = Message.objects.get(pk=message_id)
         message.read_status = True
         message.save()
+        return 'done'
+
+    @classmethod
+    def create_chat_group(cls, request, params):
+        events = []
+        audience = []
+        uid = request.user.id
+        for obj in params.get('members'):
+            if uid != obj['id']:
+                audience.append(obj['id'])
+        chat_group = ChatGroup(
+            name = params['name'],
+        )
+        chat_group.save()
+        chat_group.members.set(audience)
+        chat_group.save()
+        events.append({'name': 'chat_group_created', 'data': params, 'audience': audience})
         return 'done'
 
 class MessageDocument(File):
@@ -554,6 +595,10 @@ class AuthUserChat(models.Model):
             for com in committee_objects:
                 committees.append({'id': com.id, 'name': com.name})
             notifications = UserNotification.get_my_notifications(request, False)
+            chat_groups = profile_object.chat_groups.filter(active=True)
+            chat_groups_list = []
+            for obj in chat_groups:
+                chat_groups_list.append({'id':obj.id, 'name': obj.name})
             data = {
                 'friends': friend_list,
                 'friendIds': friend_ids,
@@ -562,6 +607,7 @@ class AuthUserChat(models.Model):
                 'user': req_user,
                 'committees': committees,
                 'meetings': meetings,
+                'chat_groups': chat_groups_list
             }
         except:
             eg = traceback.format_exception(*sys.exc_info())
@@ -576,6 +622,7 @@ class AuthUserChat(models.Model):
 
 
 admin.site.register(Comment)
+admin.site.register(ChatGroup)
 admin.site.register(Message)
 admin.site.register(Notification)
 admin.site.register(NotificationType)
