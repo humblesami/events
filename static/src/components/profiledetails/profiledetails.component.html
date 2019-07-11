@@ -285,7 +285,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                             </label>
                                         </div>
                                         <div class="col-sm-9 UserProfileDiscription">
-                                            {{profile_data.board_joining_date | date:'MMM dd,yyyy'}}
+                                            {{profile_data.board_joining_date | date:'medium' }}
                                         </div>
                                     </div>
                     
@@ -296,7 +296,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                             </label>
                                         </div>
                                         <div class="col-sm-9 UserProfileDiscription">
-                                            {{profile_data.term_start_date | date:'MMM dd,yyyy'}}
+                                            {{profile_data.term_start_date | date:'medium' }}
                                         </div>
                                     </div>
                     
@@ -307,18 +307,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                             </label>s
                                         </div>
                                         <div class="col-sm-9 UserProfileDiscription">
-                                            {{profile_data.term_end_date| date:'MMM dd,yyyy'}}
+                                            {{profile_data.term_end_date | date:'medium' }}
                                         </div>
                                     </div>
                     
-                                    <div *ngIf="profile_data.board_joing_date" class="row mb-2">
+                                    <div *ngIf="profile_data.board_joinig_date" class="row mb-2">
                                         <div class="col-sm-3">
                                             <label for="website">
-                                                <b>Board Joing Date</b>
+                                                <b>Board Joinig Date</b>
                                             </label>
                                         </div>
                                         <div class="col-sm-9 UserProfileDiscription">
-                                            {{profile_data.board_joing_date | date:'MMM dd,yyyy'}}
+                                            {{profile_data.board_joinig_date | date:'MMM dd,yyyy'}}
                                         </div>
                                     </div>
                             </div>
@@ -566,7 +566,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </label>
                         </div>
                         <div class="col-sm-9 UserProfileDiscription">
-                            <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
+                                <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
                                 class="form-control"  type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
                         </div>
                     </div>
