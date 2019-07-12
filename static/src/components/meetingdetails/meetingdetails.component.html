@@ -54,14 +54,11 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     <div class="HeadingWrap">
                         <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
                     </div>
-
-				<div class="MeetingBtnWrapper" id="tdmrb{{voting_object.id}}">
-						<div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
-                    <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
-                	</div>
-				</div>
-
-
+                    <div class="MeetingBtnWrapper" id="tdmrb{{meeting_object.id}}">
+                        <div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
+                            <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+                        </div>
+                    </div>
 				</div>
 
                 <div class="div1">
@@ -232,18 +229,18 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr style="cursor:pointer" routerLink="/topic/{{topic.id}}" *ngFor="let topic of meeting_object.topics">
-                                <td>{{topic.name}}</td>
-                                <td>{{topic.lead}}</td>
-                                <td >{{topic.duration}}</td>
-                                <td>
-                                    <div class="talbe-docs-wrapper">
-                                        <div *ngIf="topic.docs && topic.docs.length && topic.docs.length > 0">
-                                            <i class="fa fa-file"></i>
+                                <tr style="cursor:pointer" routerLink="/topic/{{topic.id}}" *ngFor="let topic of meeting_object.topics">
+                                    <td>{{topic.name}}</td>
+                                    <td>{{topic.lead}}</td>
+                                    <td >{{topic.duration}}</td>
+                                    <td>
+                                        <div class="talbe-docs-wrapper">
+                                            <div *ngIf="topic.docs && topic.docs.length && topic.docs.length > 0">
+                                                <i class="fa fa-file"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -257,50 +254,50 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of meeting_object.attendees">
-                        <div class="kanban-card">
-                                <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
-                                    <div class="kanban-profiles-user-img">
-                                        <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
-                                    </div>
-                                    <div class="kanban-profiles-user-info">
-                                        <div class="kanban-profiles-user-InfoLIST">
-                                            {{profile.name}}
-                                        </div>
-                                        <div *ngIf="profile.company" class="kanban-profiles-user-InfoLIST">
-                                            <i class="fas fa-users"></i>
-                                            <span >
-                                                {{profile.company}}
-                                            </span>
-                                        </div>
-                                        <div *ngIf="profile.mobile_phone" class="kanban-profiles-user-InfoLIST">
-                                            <i class="fas fa-phone"></i>
-                                            <span >
-                                                {{profile.mobile_phone}}
-                                            </span>
-                                        </div>                                                                                
-                                        <div *ngIf="profile.committees && profile.committees.length > 0">
-                                            <label for="job-title">
-                                                <b>Committees</b>
-                                            </label>
-                                            <!-- <span *ngIf="profile.committees && profile.committees.length > 0"> -->
-                                            <span class="pill" *ngFor="let com of profile.committees">
-                                                <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
-                                            </span>
-                                            <!-- </span> -->
-                                        </div>
-                                        <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
-                                        <div *ngIf="profile.state" class="">
-                                            <b>Status : </b> {{profile.state}}
-                                        </div>
-                                        <div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
-                                            <i class="fas fa-envelope"></i>
-                                            <span>
-                                                {{profile.email}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
+                    <div class="kanban-card">
+                        <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
+                            <div class="kanban-profiles-user-img">
+                                <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
                             </div>
+                            <div class="kanban-profiles-user-info">
+                                <div class="kanban-profiles-user-InfoLIST">
+                                    {{profile.name}}
+                                </div>
+                                <div *ngIf="profile.company" class="kanban-profiles-user-InfoLIST">
+                                    <i class="fas fa-users"></i>
+                                    <span >
+                                        {{profile.company}}
+                                    </span>
+                                </div>
+                                <div *ngIf="profile.mobile_phone" class="kanban-profiles-user-InfoLIST">
+                                    <i class="fas fa-phone"></i>
+                                    <span >
+                                        {{profile.mobile_phone}}
+                                    </span>
+                                </div>
+                                <div *ngIf="profile.committees && profile.committees.length > 0">
+                                    <label for="job-title">
+                                        <b>Committees</b>
+                                    </label>
+                                    <!-- <span *ngIf="profile.committees && profile.committees.length > 0"> -->
+                                    <span class="pill" *ngFor="let com of profile.committees">
+                                        <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
+                                    </span>
+                                    <!-- </span> -->
+                                </div>
+                                <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
+                                <div *ngIf="profile.state" class="">
+                                    <b>Status : </b> {{profile.state}}
+                                </div>
+                                <div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>
+                                        {{profile.email}}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

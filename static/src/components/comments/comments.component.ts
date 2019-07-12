@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
 import {ActivatedRoute} from "@angular/router";
-import { findLast } from '@angular/compiler/src/directive_resolver';
 declare var $: any;
 
 
@@ -348,8 +347,8 @@ export class CommentsComponent implements OnInit {
 			if(container.length < 1)
 			{
 				return;
-			}
-           
+            }
+            
             if (obj_this.res_app != data.res_app || obj_this.res_id != data.res_id || obj_this.res_model != data.res_model) {
                 return;
             }

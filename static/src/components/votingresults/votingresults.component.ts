@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpService} from '../../app/http.service';
 import {ActivatedRoute} from '@angular/router';
-import { concat } from 'rxjs/internal/observable/concat';
+import {BreadcrumbComponent} from '../breadcrumb/breadcrumb.component';
 declare var $: any;
 
 @Component({
@@ -67,6 +67,7 @@ export class VotingresultsComponent implements OnInit {
                     });
                 }
             },
-            (error: any) => {});
+            (error: any) => {}
+        );
     }
 }

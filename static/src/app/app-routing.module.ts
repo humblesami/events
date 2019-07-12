@@ -3,7 +3,7 @@ import {CommentsComponent} from "../components/comments/comments.component";
 declare var $: any;
 
 import { NgModule } from '@angular/core';
-import { Routes, Router,RouterModule, NavigationStart, NavigationEnd} from '@angular/router';
+import { Routes, Router,RouterModule, RoutesRecognized, NavigationStart, NavigationEnd} from '@angular/router';
 
 import { AuthGuard } from './auth.guard';
 import { PageNotFound } from './pagenotfound';
@@ -45,7 +45,7 @@ import { RtcComponent } from '../components/rtc/rtc.component';
 import { SurveysComponent } from '../components/surveys/surveys.component'
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component'
 import { SupportComponent } from '../components/support/support.component';
-import { RoutesRecognized } from "@angular/router";
+
 
 const appRoutes: Routes = [    
     { path: 'login', component: LoginComponent},
