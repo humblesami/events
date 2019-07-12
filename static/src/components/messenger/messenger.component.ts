@@ -2,7 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
-import { Select2Module, Select2OptionData } from 'ng2-select2';
+// import {MatChipsModule} from '@angular/material/chips';
+// import {MatAutocompleteSelectedEvent, MatRadioModule, MatAutocomplete, MatChipInputEvent} from '@angular/material';
+
+class abc{
+    constructor(_a, _b){
+        this.a = _a;
+        this.b = _b;
+    }
+    a: string;
+    b: number;
+}
 
 declare var $: any;
 
@@ -21,6 +31,18 @@ export class MessengerComponent implements OnInit {
     // public friend_list: Array<Select2OptionData>;
     // public options: Select2Options;
     chat_groups = [];
+    
+    people$ = [
+        {
+            name:'sami',
+            id:1
+        },
+        {
+            name:'fazi',
+            id:2
+        }
+    ];
+    selectedPeople = [];
 
 	constructor(
 		private sanitizer: DomSanitizer,
@@ -29,6 +51,11 @@ export class MessengerComponent implements OnInit {
 		var obj_this = this;
 		obj_this.socketService = ss;
         var socketService = ss;
+
+        var b = new abc('sami', 23);
+        console.log(b);
+
+
 		function registerChatEventListeners()
 		{
 			socketService.server_events['chat_message_received'] = function (msg) {

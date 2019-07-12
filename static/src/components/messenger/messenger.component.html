@@ -22,8 +22,18 @@
                 </div>
             </button>
 
-            <!-- <input [(ngModel)]="group_name" type="text" class="form-control"> -->
-            <!-- <select2 [data]="friend_list" [options]="options"></select2> -->
+            <div class="row p-1 m-1">
+                <ng-select
+                    [items]="people$"
+                    [multiple]="true"
+                    [closeOnSelect]="false"
+                    [hideSelected]="true"
+                    bindLabel="name"
+                    placeholder="Select people"
+                    [(ngModel)]="selectedPeople">
+                </ng-select>
+            </div>
+            
 
             <div class="card-body contacts_body">
                 <ul class="contacts">

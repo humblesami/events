@@ -59,22 +59,22 @@ import { SurveyresultsComponent } from '../components/surveyresults/surveyresult
 import { MentionModule } from 'angular-mentions';
 import { MeetingresponseComponent } from '../components/meetingresponse/meetingresponse.component';
 import { SupportComponent } from '../components/support/support.component';
-import { Select2Module } from 'ng2-select2';
 import { MyprofileeditComponent } from '../components/myprofileedit/myprofileedit.component';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
     imports: [
         AppRoutingModule,
         BrowserModule,
+        NgSelectModule,
         FormsModule,        
         HttpClientModule,
         ReactiveFormsModule,
         MentionModule,
         RouterModule,
         RouterTestingModule,
-        Select2Module
     ],
     declarations: [
         AppComponent,
