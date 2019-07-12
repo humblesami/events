@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
-// import {MatChipsModule} from '@angular/material/chips';
-// import {MatAutocompleteSelectedEvent, MatRadioModule, MatAutocomplete, MatChipInputEvent} from '@angular/material';
 
 class abc{
     constructor(_a, _b){
@@ -28,11 +26,9 @@ export class MessengerComponent implements OnInit {
 	chat_initilized = 0;
 	searchVal = '';
     is_request_sent = true;
-    // public friend_list: Array<Select2OptionData>;
-    // public options: Select2Options;
     chat_groups = [];
     
-    people$ = [
+    people_list = [
         {
             name:'sami',
             id:1
@@ -40,8 +36,17 @@ export class MessengerComponent implements OnInit {
         {
             name:'fazi',
             id:2
+        },
+        {
+            name:'imran',
+            id:3
+        },
+        {
+            name:'noman',
+            id:4
         }
     ];
+
     selectedPeople = [];
 
 	constructor(
