@@ -60,6 +60,7 @@ import { MentionModule } from 'angular-mentions';
 import { MeetingresponseComponent } from '../components/meetingresponse/meetingresponse.component';
 import { SupportComponent } from '../components/support/support.component';
 import { Select2Module } from 'ng2-select2';
+import { MyprofileeditComponent } from '../components/myprofileedit/myprofileedit.component';
 
 @NgModule({
     imports: [
@@ -113,7 +114,8 @@ import { Select2Module } from 'ng2-select2';
         BreadcrumbComponent,
         SurveyresultsComponent,
         MeetingresponseComponent,
-        SupportComponent,        
+        SupportComponent,
+        MyprofileeditComponent,        
     ],
     providers:[
         AuthGuard,

@@ -21,6 +21,7 @@ import { CommitteeDetailsComponent } from '../components/committeedetails/commit
 import { MeetingsComponent } from '../components/meetings/meetings.component';
 import { MeetingDetailsComponent } from '../components/meetingdetails/meetingdetails.component';
 import { ProfileDetailsComponent } from '../components/profiledetails/profiledetails.component';
+import { MyprofileeditComponent } from '../components/myprofileedit/myprofileedit.component';
 import { ProfilesComponent } from '../components/profiles/profiles.component';
 import { ResourcesComponent } from '../components/resources/resources.component';
 import { ResourceDetailsComponent } from '../components/resourcedetails/resourcedetails.component';
@@ -56,7 +57,8 @@ const appRoutes: Routes = [
 	{ path: 'forgot-password', component: ForgotpasswordComponent},
 	{ path: 'set-password', component: SetpasswordComponent},
 
-	{ path: 'my-profile', component: ProfileDetailsComponent, canActivate: [AuthGuard]},	
+    { path: 'my-profile', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
+    { path: 'my-profile/edit', component: MyprofileeditComponent, canActivate: [AuthGuard]},
 	{ path: 'committees', data:{app:'meetings', model: 'Committee'}, component: CommitteesComponent, canActivate: [AuthGuard]},
     { path: 'profiles', data:{app:'meetings', model: 'Profile'}, component: ProfilesComponent, canActivate: [AuthGuard]},
 

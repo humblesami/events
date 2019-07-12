@@ -1,17 +1,18 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpService } from '../../app/http.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SocketService } from 'src/app/socket.service';
 declare var $:any;
 
 @Component({
-	styleUrls:['./profiledetails.css'],
-	templateUrl: 'profiledetails.component.html'
+    selector: 'app-myprofileedit',
+    templateUrl: './myprofileedit.component.html',
+    styleUrls: ['./myprofileedit.component.css']
 })
-export class ProfileDetailsComponent implements OnInit {
-	edit_mode = false;
+export class MyprofileeditComponent implements OnInit {
+    edit_mode = true;
 	my_profile = false;
 	last_login = {
 		last: {
@@ -43,8 +44,8 @@ export class ProfileDetailsComponent implements OnInit {
 
 	constructor(private httpService: HttpService, private formBuilder: FormBuilder, 
         private route: ActivatedRoute, private sanitizer: DomSanitizer,
-    private ss: SocketService) {
-        this.edit_mode = false;
+        private router: Router,
+    private ss: SocketService) {        
         this.profile_data = {};
         this.profile_data.login = this.last_login;  
         this.socketService = this.ss;      
@@ -89,6 +90,25 @@ export class ProfileDetailsComponent implements OnInit {
 	get_data() {
 		const obj_this = this;
         let id = this.route.snapshot.params.id;
+		// this.bread_crumb_items = this.httpService.make_bread_crumb();
+		// var url = window.location.href.split("/")
+        // var path =url[url.length-2]
+        // if (path == "director"){
+		// 	this.type = "director";
+		// 	this.type_breadCrumb = 'directors';
+        // }
+        // if (path == "admin"){
+		// 	this.type = "admin";
+		// 	this.type_breadCrumb = 'admins';
+        // }
+        // if (path == "staff"){
+		// 	this.type = "staff";
+		// 	this.type_breadCrumb = 'staff';
+		// }
+		// if (!this.type_breadCrumb)
+		// {
+		// 	this.type_breadCrumb = window['current_user'].cookie['groups'][0].name.toLowerCase() + 's';
+		// }
         let input_data = undefined;
         if (id == obj_this.socketService.user_data.id || id == undefined) {
 			obj_this.my_profile = true;	
@@ -117,11 +137,10 @@ export class ProfileDetailsComponent implements OnInit {
 			)
 			{
 				obj_this.admin_info = true;
-            }
-            console.log(result);
+            }			
             if(result.choice_fields)
-            {
-                obj_this.choice_fields = result.choice_fields;            
+			{
+                obj_this.choice_fields = result.choice_fields;
             }
             
 			for(var key in result.profile){
@@ -148,8 +167,62 @@ export class ProfileDetailsComponent implements OnInit {
 		const failure_cb = function (error) {
 		};
 		this.httpService.get(input_data, success_cb, failure_cb);
+	}
+
+	onSubmit() {
+		this.submitted = true;
+		const obj_this = this;
+		const form_data = obj_this.modified_profile_data;
+		const input_data = {};
+		for (const key in form_data) {
+			if(obj_this.modified_profile_data[key] != '')
+				input_data[key] = obj_this.modified_profile_data[key];			
+        }
+        let args = {
+            app: 'meetings',
+            model: 'Profile',
+			method: 'update_profile',
+			post: 1,
+        }
+        let final_input_data = {
+            params: input_data,
+            args: args
+        };
+		this.httpService.post(final_input_data,
+			(data: any) => {
+				let obj_this = this;
+				let profile = data.profile_data;
+				var user_cookie = localStorage.getItem('user');                
+                let cuser = undefined;
+                if(user_cookie)
+                {
+                    cuser = JSON.parse(user_cookie);
+				}
+				if (cuser)
+				{
+					profile.token = cuser.token;
+					let value = JSON.stringify(profile);
+					localStorage.setItem('user', value);
+					obj_this.socketService.user_data.groups = profile.groups;
+					obj_this.socketService.user_data.name = profile.name;
+					obj_this.socketService.user_data.photo = profile.photo;
+					obj_this.socketService.user_photo = obj_this.base_url + profile.photo;
+
+				}
+                obj_this.router.navigate(['/my-profile']);
+			},
+			(error) => {
+                const x = document.getElementById('slot-select-error');
+                if(x)
+                {
+                    x.className = 'snackbar-error show';
+                    setTimeout(function () {
+                        x.className = x.className.replace('show', '');
+                    }, 3000);   
+                }
+				
+            });
     }
-    
     init_sign()
     {
         let obj_this = this;
