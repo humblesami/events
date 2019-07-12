@@ -44,10 +44,10 @@
                             <a class="contact-item d-flex align-items-center bd-highlight">
                                 <div class="img_cont">
                                     <img src="{{socketService.server_url}}{{socketService.chat_users[uid].photo}}" class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
+                                    <span *ngIf="socketService.chat_users[uid].online" class="online_icon"></span>
                                 </div>
                                 <div class="user_info">
-                                    <span>{{ socketService.chat_users[uid].name }}</span>
+                                    <span>{{ socketService.chat_users[uid].name }}</span>                                    
                                     <p *ngIf="socketService.chat_users[uid].online">Online</p>
                                 </div>
                                 <span class="unseen" *ngIf="socketService.chat_users[uid].unseen">
