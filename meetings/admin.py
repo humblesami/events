@@ -142,20 +142,19 @@ class UserAdmin(BaseUserAdmin):
 
 
 class AdminAdmin(UserAdmin):
-    # add_form = UserCreateForm
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                         'location', 'bio')}),
+                                        'location', 'bio')}),
         (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
         (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
         (_('Diversity Information'),
-         {
-             'fields': (
-                 'ethnicity', 'gender', 'veteran', 'disability'
-             )
-         }
-         )
+        {
+            'fields': (
+                'ethnicity', 'gender', 'veteran', 'disability'
+            )
+        }
+        )
 
     )
     autocomplete_fields = ['committees']
@@ -173,25 +172,25 @@ class DirectorAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                         'location', 'bio')}),
+                                        'location', 'bio')}),
         (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
         (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
         (_('Diversity Information'),
-         {
-             'fields': (
-                 'ethnicity', 'gender', 'veteran', 'disability'
-             )
-         }
-         ),
+        {
+            'fields': (
+                'ethnicity', 'gender', 'veteran', 'disability'
+            )
+        }
+        ),
         (_('Administrative Assistant'),
-         {
-             'fields': (
-                 'admin_image_tag', 'admin_image', 'admin_first_name', 'admin_last_name',
-                 'admin_nick_name', 'admin_cell_phone', 'admin_email', 'admin_work_phone',
-                 'admin_fax', 'mail_to_assistant'
-             )
-         }
-         ),
+        {
+            'fields': (
+                'admin_image_tag', 'admin_image', 'admin_first_name', 'admin_last_name',
+                'admin_nick_name', 'admin_cell_phone', 'admin_email', 'admin_work_phone',
+                'admin_fax'
+            )
+        }
+        ),
     )
     readonly_fields = ('image_tag','admin_image_tag')
 
@@ -212,16 +211,16 @@ class StaffAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image','is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                         'location', 'bio')}),
+                                        'location', 'bio')}),
         (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
         (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
         (_('Diversity Information'),
-         {
-             'fields': (
-                 'ethnicity', 'gender', 'veteran', 'disability'
-             )
-         }
-         )
+        {
+            'fields': (
+                'ethnicity', 'gender', 'veteran', 'disability'
+            )
+        }
+        )
     )
 
 

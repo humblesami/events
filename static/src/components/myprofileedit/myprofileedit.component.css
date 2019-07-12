@@ -200,3 +200,28 @@ last-login-details
     display: block;
     color: #797979;
 }
+input[type="date"] {
+    position: relative;
+    width: 150px; height: 20px;
+    color: white;
+}
+
+input[type="date"]:before {
+    position: absolute;
+    top: 3px; left: 3px;
+    content: attr(data-date);
+    display: inline-block;
+    color: black;
+}
+
+input[type="date"]::-webkit-datetime-edit, input::-webkit-inner-spin-button, input::-webkit-clear-button {
+    display: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 3px;
+    right: 0;
+    color: black;
+    opacity: 1;
+}

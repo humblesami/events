@@ -81,6 +81,10 @@ var site_functions = {
     get_path: function() {
 
     },
+    moment: function(value, format)
+    {
+        return moment(value, format);
+    },
     readFiles: function(files, on_drop){        
         for (var i = 0; i < files.length; i++) {
             var file_name = files[i].name;

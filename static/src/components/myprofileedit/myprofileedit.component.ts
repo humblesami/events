@@ -60,7 +60,20 @@ export class MyprofileeditComponent implements OnInit {
             obj_this.modified_profile_data[cls] = file_object.data;
         }
     }
-
+	input_date_format(){
+		setTimeout(function(){
+		$("#board_joining_date, #term_start_date, #term_end_date").on("change", function() {
+			if (this.value)
+			{
+				this.setAttribute(
+					"data-date",
+					window['functions'].moment(this.value, "YYYY-MM-DD")
+					.format( this.getAttribute("data-date-format") )
+				)
+			}
+		}).trigger("change")
+		}, 100);
+	}
 	addFile(event, filter){
 		const obj_this = this;
 		var element = event.target;
@@ -128,7 +141,7 @@ export class MyprofileeditComponent implements OnInit {
             args: args
         }; 
 			
-		const success_cb = function (result) {	
+		const success_cb = function (result) {
 			obj_this.base_url = window['site_config'].server_base_url;		
 			if(result.profile.admin_email || result.profile.admin_cell_phone
 				|| result.profile.admin_fax || result.profile.admin_work_phone
@@ -163,6 +176,7 @@ export class MyprofileeditComponent implements OnInit {
 					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
 				}
 			}
+			obj_this.input_date_format();
 		};
 		const failure_cb = function (error) {
 		};

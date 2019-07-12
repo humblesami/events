@@ -10,8 +10,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 <a class="btn btn-primary cancel" routerLink="/my-profile" type="button">Cancel</a>
                 <a class="btn btn-primary save" (click)="onSubmit()" type="submit">Save</a>
             </div>
-            <div class="row">
-                <div class="container row">
+            <div>
+                <div class="row">
                     <div class="col-sm-2 UserProfileDiscription mb-4">
                         <div *ngIf="modified_profile_data.image">
                             <img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
@@ -23,25 +23,55 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <input class="pt-3" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="container" *ngIf="last_login.login_time">
-                        <div class="row last-login-details">
-                            <div class="col-sm-12">
-                                <h3>Last Login Details</h3>
-                                <span *ngIf="last_login.login_time">Login Time: {{last_login.login_time | date:'MMM dd,yyyy hh:mm:ss A'}}</span>
-                                <span *ngIf="last_login.platform">OS: {{last_login.platform}}</span>
-                                <span *ngIf="last_login.browser">Browser: {{last_login.browser}}</span>
-                                <span *ngIf="last_login.ip">IP: {{last_login.ip}}</span>
-                                <span *ngIf="last_login.location">Location: {{last_login.location}}</span>
-                            </div>
+                <div class="row">
+                    <label for="website">
+                        <b>Resume</b>
+                    </label>
+                    <input (change)="addFile($event, '')" type="file" name="pic" />
+                </div>
+                <div class="row">
+                    <div *ngIf="my_profile" class="col-sm-2">
+                        <label>
+                            <b>Signature</b>
+                            <a
+                                (click)='init_sign()'
+                                class="fa fa-pen init_sign"
+                            >
+                            </a>
+                        </label>
+                    </div>
+
+                    <div>
+                        <div style="position:relative;cursor: pointer;">
+                            <img class="strt_sign profile " style="width: 100%;"
+                                *ngIf="profile_data.signature_data"
+                                src="data:image/png;base64,{{profile_data.signature_data}}"
+                            />
                         </div>
                     </div>
                 </div>
+                
+                <div class="row" *ngIf="last_login.login_time">
+                    <div class="row last-login-details">
+                        <div class="col-sm-12">
+                            <h3>Last Login Details</h3>
+                            <span *ngIf="last_login.login_time">Login Time: {{last_login.login_time | date:'MMM dd,yyyy hh:mm:ss A'}}</span>
+                            <span *ngIf="last_login.platform">OS: {{last_login.platform}}</span>
+                            <span *ngIf="last_login.browser">Browser: {{last_login.browser}}</span>
+                            <span *ngIf="last_login.ip">IP: {{last_login.ip}}</span>
+                            <span *ngIf="last_login.location">Location: {{last_login.location}}</span>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
-            <div class="row label-control-form">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm">
+            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                <div class="ProFileHeadWrap">
+                    PERSONAL INFO
+                </div>
+                <div class="row label-control-form">
+                    <div class="container">
+                        <div class="row">
                             <label for="name">
                                 <b>First Name</b>
                             </label>
@@ -52,223 +82,166 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </label>
                             <input value="{{profile_data.last_name}}" (change)="modified_profile_data.last_name = $event.target.value"
                                 type="text" placeholder="Enter Last Name" id="last_name">
-
+                            <label for="c-phone">
+                                <b>Cell Phone</b>
+                            </label>
+                            <input value="{{profile_data.mobile_phone}}" (change)="modified_profile_data.mobile_phone = $event.target.value"
+                                type="text" placeholder="Enter Cell Phone" id="c-phone" required>
                             <label for="email">
                                 <b>Email</b>
                             </label>
                             <input value="{{profile_data.email}}" (change)="modified_profile_data.email = $event.target.value"
                                 type="text" placeholder="Enter Email" id="email">
-
-							<label for="bio">
+                            <label for="location">
+                                    <b>Location</b>
+                                </label>
+            
+                            <input value="{{profile_data.location}}" (change)="modified_profile_data.location = $event.target.value"
+                                type="text" placeholder="Enter Location" id="location">
+                            <label for="bio">
                                 <b>Bio</b>
                             </label>
-
+        
                             <input value="{{profile_data.bio}}" (change)="modified_profile_data.bio = $event.target.value"
                                 type="text" placeholder="Enter Bio" id="bio">
                         </div>
                     </div>
-
-
-                    <div class="row">
-                        <div class="col-sm-3">
+                </div>
+            </div>
+            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                <div class="ProFileHeadWrap">
+                    WORK INFO
+                </div>
+                <div class="row label-control-form">
+                    <div class="container">
+                        <div class="row">
+                            <label for="company">
+                                <b>Company</b>
+                            </label>
+                            <input value="{{profile_data.company}}" (change)="modified_profile_data.company = $event.target.value"
+                                type="text" placeholder="Enter Company" id="company">
                             <label for="job-title">
                                 <b>Job Title</b>
                             </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
                             <input value="{{profile_data.job_title}}" (change)="modified_profile_data.job_title = $event.target.value"
-                                type="text" placeholder="Enter Job Title" id="job-title" required>
-                        </div>
-                    </div>
-					<div class="row mb-3">
-                        <div class="col-sm-3">
-                            <label for="board_joining_date">
-                                <b>Board Joining Date</b>
-                            </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
-                            <input class="form-control" value="{{profile_data.board_joining_date}}" (change)="modified_profile_data.board_joining_date = $event.target.value"
-                                type="date" placeholder="Enter Board Joining Date" id="board_joining_date" required>
-                        </div>
-                    </div>
-					<div class="row mb-3">
-                        <div class="col-sm-3">
-                            <label for="term_start_date">
-                                <b>Term Start Date</b>
-                            </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
-                                <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
-                                class="form-control"  type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
-                        </div>
-                    </div>
-					<div class="row mb-3">
-                        <div class="col-sm-3">
-                            <label for="term_end_date">
-                                <b>Term End Date</b>
-                            </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
-                            <input value="{{profile_data.term_end_date}}" (change)="modified_profile_data.term_end_date = $event.target.value"
-                                class="form-control"  type="date" placeholder="Enter End Start Date" id="term_end_date" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                                type="text" placeholder="Enter Job Title" id="job_title">
                             <label for="department">
                                 <b>Department</b>
                             </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
                             <input value="{{profile_data.department}}" (change)="modified_profile_data.department = $event.target.value"
                                 type="text" placeholder="Enter Department" id="department" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label for="w-phone">
+                            <label for="work_phone">
                                 <b>Work Phone</b>
                             </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
                             <input value="{{profile_data.work_phone}}" (change)="modified_profile_data.work_phone = $event.target.value"
-                                type="text" placeholder="Enter Work Phone" id="w-phone" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label for="c-phone">
-                                <b>Cell Phone</b>
-                            </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
-                            <input value="{{profile_data.mobile_phone}}" (change)="modified_profile_data.mobile_phone = $event.target.value"
-                                type="text" placeholder="Enter Cell Phone" id="c-phone" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                                type="text" placeholder="Enter Work Phone" id="work_phone">
                             <label for="fax">
-                                <b>Fax</b>
-                            </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+                                    <b>Fax</b>
+                                </label>
+            
                             <input value="{{profile_data.fax}}" (change)="modified_profile_data.fax = $event.target.value"
-                                type="text" placeholder="Enter Fax" id="fax" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                                type="text" placeholder="Enter Fax" id="fax">
                             <label for="website">
                                 <b>Website</b>
                             </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
+        
                             <input value="{{profile_data.website}}" (change)="modified_profile_data.website = $event.target.value"
-                                type="text" placeholder="Enter Website" id="website" required>
+                                type="text" placeholder="Enter Website" id="website">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label for="website">
-                                <b>Resume</b>
+                </div>
+            </div>
+            <div *ngIf="profile_data && socketService.user_data.is_admin" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                <div class="ProFileHeadWrap">
+                    BOARD INFO
+                </div>
+                <div class="row label-control-form">
+                    <div class="container">
+                        <div class="row">
+                            <label for="board_joining_date">
+                                <b>Board Joining Date</b>
                             </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
-                            <input class="pt-3" (change)="addFile($event, '')" type="file" name="pic" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="pt-3" *ngIf="my_profile" class="col-sm-2" style="border-right: 1px solid #cccccc;">
-                            <label>
-                                <b>Signature</b>
-                                <a
-                                    (click)='init_sign()'
-                                    class="fa fa-pen fa-lg init_sign"
-                                >
-                                </a>
+                            <input class="form-control" value="{{profile_data.board_joining_date}}" (change)="modified_profile_data.board_joining_date = $event.target.value"
+                                type="date" data-date-format="YYYY-MM-DD" placeholder="Enter Board Joining Date" id="board_joining_date" required>
+                            <label for="term_start_date">
+                                <b>Term Start Date</b>
                             </label>
+                                <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
+                                class="form-control" data-date-format="YYYY-MM-DD"  type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
+                            <label for="term_end_date">
+                                <b>Term End Date</b>
+                            </label>
+                            <input value="{{profile_data.term_end_date}}" (change)="modified_profile_data.term_end_date = $event.target.value"
+                                class="form-control" data-date-format="YYYY-MM-DD" type="date" placeholder="Enter End Start Date" id="term_end_date" required>
                         </div>
-                        <div class="col-sm-8 " style="display: flex;">
-                            <div style="position:relative;cursor: pointer;">
-                                <img class="strt_sign profile " style="width: 100%;"
-                                    *ngIf="profile_data.signature_data"
-                                    src="data:image/png;base64,{{profile_data.signature_data}}"
-                                />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="my_profile || socketService.user_data.is_admin" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                <div class="ProFileHeadWrap">
+                    DIVERSITY INFO
+                </div>
+                <div>
+                    <div class="container">
+                        <div>
+                            <div class="row" *ngIf="choice_fields.ethnicity">
+                                <div class="col-sm-3">
+                                    <label for="ethnicity">
+                                        <b>Ethnicity</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
+                                        <option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.name === profile_data.ethnicity">{{row.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="gender">
+                                        <b>Gender</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    <select (change)="modified_profile_data.gender = $event.target.value" id='gender' requeired>
+                                        <option *ngFor="let row of choice_fields.gender" value="{{row.id}}" [selected]="row.name === profile_data.gender">{{row.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="veteran">
+                                        <b>Veteran</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    <select (change)="modified_profile_data.veteran = $event.target.value" id='gender' requeired>
+                                        <option *ngFor="let row of choice_fields.veteran" value="{{row.id}}" [selected]="row.name === profile_data.veteran">{{row.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label for="disability">
+                                        <b>Disability</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    <select (change)="modified_profile_data.disability = $event.target.value" id='disability' requeired>
+                                        <option *ngFor="let row of choice_fields.disability" value="{{row.id}}" [selected]="row.name === profile_data.disability">{{row.name}}</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div>
-                        <div class="row" style="margin-top:20px;">
-                            <div class="col-sm-12">
-                                <h3>
-                                    <b>Diversity Information</b>
-                                </h3>
-                            </div>
-                        </div>
-                        <div class="admin_info_after_name">
-                                <div class="row" *ngIf="choice_fields.ethnicity">
-                                    <div class="col-sm-3">
-                                        <label for="ethnicity">
-                                            <b>Ethnicity</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
-                                            <option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.name === profile_data.ethnicity">{{row.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <label for="gender">
-                                            <b>Gender</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        <select (change)="modified_profile_data.gender = $event.target.value" id='gender' requeired>
-                                            <option *ngFor="let row of choice_fields.gender" value="{{row.id}}" [selected]="row.name === profile_data.gender">{{row.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <label for="veteran">
-                                            <b>Veteran</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        <select (change)="modified_profile_data.veteran = $event.target.value" id='gender' requeired>
-                                            <option *ngFor="let row of choice_fields.veteran" value="{{row.id}}" [selected]="row.name === profile_data.veteran">{{row.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                        <div class="col-sm-3">
-                                            <label for="disability">
-                                                <b>Disability</b>
-                                            </label>
-                                        </div>
-                                        <div class="col-sm-9 UserProfileDiscription">
-                                            <select (change)="modified_profile_data.disability = $event.target.value" id='disability' requeired>
-                                                <option *ngFor="let row of choice_fields.disability" value="{{row.id}}" [selected]="row.name === profile_data.disability">{{row.name}}</option>
-                                            </select>
-                                        </div>
-                                </div>
-                            </div>
-
-                        <!--Admin block-->
-
-                        <div *ngIf="profile_data.group=='Director'" class="row" style="margin-top:20px;">
-                            <div class="col-sm-12">
-                                <h3>
-                                    <b>Administrative Assistant</b>
-                                </h3>
-                            </div>
-                        </div>
+                </div>
+            </div>
+            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                <div class="ProFileHeadWrap">
+                    ADMINISTRATIVE ASSISTANT
+                </div>
+                <div class="row label-control-form">
+                    <div class="container">
                         <div class="row">
                             <div *ngIf="modified_profile_data.admin_image" class="col-sm-2 mb-4">
                                 <img *ngIf="modified_profile_data.admin_image" class="img-thumbnail-lg" src="{{modified_profile_data.admin_image}}">
@@ -280,66 +253,48 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
                                 <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm">
-                                <input value="{{profile_data.admin_first_name}}" (change)="modified_profile_data.admin_first_name = $event.target.value"
-                                    type="text" placeholder="First Name" required>
-                            </div>
-                            <div class="col-sm">
-                                <input value="{{profile_data.admin_last_name}}" (change)="modified_profile_data.admin_last_name = $event.target.value"
-                                    type="text" placeholder="Last Name" required>
-                            </div>
-                            <div class="col-sm">
-                                <input value="{{profile_data.admin_nick_name}}" (change)="modified_profile_data.admin_nick_name = $event.target.value"
-                                    type="text" placeholder="Nick Name" required>
-                            </div>
-                        </div>
-                        <div class="admin_info_after_name">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label for="admin-e-mail">
-                                        <b>E-mail</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    <input value="{{profile_data.admin_email}}" (change)="modified_profile_data.admin_email = $event.target.value"
-                                        type="text" id="admin-e-mail" placeholder="" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label for="admin-cell">
-                                        <b>Cell Phone</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    <input value="{{profile_data.admin_cell_phone}}" (change)="modified_profile_data.admin_cell_phone = $event.target.value"
-                                        type="text" placeholder="" id="admin-cell" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label for="admin-fax">
-                                        <b>Fax</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    <input value="{{profile_data.admin_fax}}" (change)="modified_profile_data.admin_fax = $event.target.value"
-                                        type="text" placeholder="" id="admin-fax" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label for="admin-work-phone">
-                                        <b>Work Phone</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    <input value="{{profile_data.admin_work_phone}}" (change)="modified_profile_data.admin_work_phone = $event.target.value"
-                                        type="text" placeholder="" id="admin-work-phone" required>
-                                </div>
-                            </div>
+                            <label for="admin-first-name">
+                                <b>First Name</b>
+                            </label>
+                            <input value="{{profile_data.admin_first_name}}" (change)="modified_profile_data.admin_first_name = $event.target.value"
+                                type="text" placeholder="First Name" required>
+                            <label for="admin-last-name">
+                                <b>Last Name</b>
+                            </label>
+                            <input value="{{profile_data.admin_last_name}}" (change)="modified_profile_data.admin_last_name = $event.target.value"
+                                type="text" placeholder="Last Name" required>
+                            <label for="admin-nick-name">
+                                <b>Nick Name</b>
+                            </label>
+                            <input value="{{profile_data.admin_nick_name}}" (change)="modified_profile_data.admin_nick_name = $event.target.value"
+                                type="text" placeholder="Nick Name" required>
+                            <label for="admin-e-mail">
+                                <b>E-mail</b>
+                            </label>
+                            <input value="{{profile_data.admin_email}}" (change)="modified_profile_data.admin_email = $event.target.value"
+                                type="text" id="admin-e-mail" placeholder="" required>
+                            <label for="admin-cell">
+                                <b>Mobile Phone</b>
+                            </label>
+                            <input value="{{profile_data.admin_cell_phone}}" (change)="modified_profile_data.admin_cell_phone = $event.target.value"
+                                type="text" placeholder="" id="admin-cell" required>
+                            <label for="admin-fax">
+                                <b>Fax</b>
+                            </label>
+                            <input value="{{profile_data.admin_fax}}" (change)="modified_profile_data.admin_fax = $event.target.value"
+                                type="text" placeholder="" id="admin-fax" required>
+                            <label for="admin-work-phone">
+                                <b>Work Phone</b>
+                            </label>
+                            <input value="{{profile_data.admin_work_phone}}" (change)="modified_profile_data.admin_work_phone = $event.target.value"
+                                type="text" placeholder="" id="admin-work-phone" required>
+                            <!-- <label for="mail-to-assistant">
+                                <b>Mail to Assistant</b>
+                            </label>
+                            <select (change)="modified_profile_data.mail_to_assistant = $event.target.value" id='mail_to_assistant' requeired>
+                                <option ng-value="true" [selected]="true == profile_data.mail_to_assistant">Yes</option>
+                                <option ng-value="false" [selected]="null == profile_data.mail_to_assistant">No</option>
+                            </select> -->
                         </div>
                     </div>
                 </div>
