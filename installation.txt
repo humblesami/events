@@ -2,6 +2,8 @@ pip3 install Django==2.2
 django-admin startproject myproject
 pip3 install -r requirements.txt
 
+apt-get install python3-pypdf2
+
 To use postgresql use following in settings
 DATABASES = {
 	'default': {
@@ -14,6 +16,8 @@ DATABASES = {
 
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 python manage.py migrate myproj --fake-initial
+
+
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py createsuperuser --username=sa --email=sami.akram@digitalnet.com
