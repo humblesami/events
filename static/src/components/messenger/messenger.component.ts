@@ -2,15 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
-
-class abc{
-    constructor(_a, _b){
-        this.a = _a;
-        this.b = _b;
-    }
-    a: string;
-    b: number;
-}
+import {User, ChatGroup, ChatClient, Message } from '../../app/models/chat';
 
 declare var $: any;
 
@@ -21,33 +13,14 @@ declare var $: any;
 })
 export class MessengerComponent implements OnInit {	    
     socketService : SocketService;
-	active_chat_user = undefined;
 	is_minimize = true;
 	chat_initilized = 0;
 	searchVal = '';
     is_request_sent = true;
     chat_groups = [];
     
-    people_list = [
-        {
-            name:'sami',
-            id:1
-        },
-        {
-            name:'fazi',
-            id:2
-        },
-        {
-            name:'imran',
-            id:3
-        },
-        {
-            name:'noman',
-            id:4
-        }
-    ];
-
-    selectedPeople = [];
+    people_list: Array<User>;
+    selectedPeople : Array<User>;
 
 	constructor(
 		private sanitizer: DomSanitizer,
@@ -56,10 +29,6 @@ export class MessengerComponent implements OnInit {
 		var obj_this = this;
 		obj_this.socketService = ss;
         var socketService = ss;
-
-        var b = new abc('sami', 23);
-        console.log(b);
-
 
 		function registerChatEventListeners()
 		{
@@ -77,19 +46,15 @@ export class MessengerComponent implements OnInit {
                 console.log(data);
             };
             var ar = [];
+            // obj_this.people_list = new Array<User>();
             for(var key in obj_this.socketService.chat_users)
             {
-                ar.push({
-                    id:key,
-                    text:obj_this.socketService.chat_users[key].name
-                });
+                var obj = new User(key,
+                    obj_this.socketService.chat_users[key].name,
+                    obj_this.socketService.chat_users[key].photo)
+                ar.push(obj);
             }
-            // obj_this.options = {
-            //     multiple: true,
-            //     width: '100%',
-            // }
-            // obj_this.friend_list = ar;
-
+            obj_this.people_list = ar;
 			if(!obj_this.socketService.user_data)
 			{
 				console.log("No user data is socket service yet");
@@ -104,8 +69,7 @@ export class MessengerComponent implements OnInit {
             console.log(113, er);
         }        
     }
-
-    group_name = ''
+    group_name = '';
 
     create_chat_room()
     {       
@@ -115,28 +79,47 @@ export class MessengerComponent implements OnInit {
             console.log('group name required');
             return;
         }
-        // obj_this.socketService.chat_users[obj_this.group_name] = {
-        //     id:this.group_name,
-        //     name: this.group_name,
-        //     messages: [],
-        //     online: 1,
-        //     memebers: obj_this.friend_list,
-        //     photo: '/static/assets/images/chat-group.png'
-        // };
-        // obj_this.socketService.keys_chat_users.unshift(obj_this.group_name);
-        // let input_data= {
-        //     args:{
-        //         app:'chat',
-        //         model:'Message',
-        //         method:'create_chat_group'
-        //     },
-        //     params:{
-        //         name: obj_this.group_name,
-        //         members:obj_this.friend_list.concat(obj_this.socketService.user_data)
-        //     }
-        // }
-        // obj_this.httpService.post(input_data,null, null);
+        let input_data= {
+            args:{
+                app:'chat',
+                model:'ChatGroup',
+                method:'create'
+            },
+            params:{
+                name: obj_this.group_name,
+                members: obj_this.selectedPeople
+            }
+        }
+        obj_this.httpService.post(input_data,function(created_chat_group){
+            obj_this.chat_groups.push(created_chat_group);
+        }, null);
     }
+
+    
+    select_chat_group(selected_group: ChatGroup){
+        let obj_this = this;
+        this.active_chat_user = selected_group;
+        let args = {
+            app: 'chat',
+            model: 'ChatGroup',
+            method: 'get_messages'
+        }
+        let input_data = {
+            params: {group_id: selected_group.id},
+            args: args
+        };
+        var call_on_user_selected_event = function(data){
+            if(!Array.isArray(data))
+            {
+                data = [];
+            }
+            obj_this.is_request_sent = false;
+            obj_this.active_chat_user.messages = [];
+            obj_this.onGroupSelected(data);
+        }
+        input_data['no_loader'] = 1;
+        obj_this.httpService.get(input_data, call_on_user_selected_event, call_on_user_selected_event);
+    }    
     
 	select_chat_user(target_id) {        
         var obj_this = this;     
@@ -224,6 +207,106 @@ export class MessengerComponent implements OnInit {
         }
     }
 
+    active_chat_user: ChatClient;
+
+    onGroupSelected(messages, already_fetched = 0) {
+        var obj_this = this;
+		$( ".msg_card_body").unbind( "scroll" );
+		$(".msg_card_body").scroll(function(){
+            let scroll_top = $(".msg_card_body").scrollTop();
+            if(!obj_this.active_chat_user)
+            {
+                console.log('Invalid chat user');
+                return;
+            }
+            if(!obj_this.active_chat_user.messages)
+            {
+                // console.log('No chat user messages');
+                obj_this.active_chat_user.messages = [];                
+            }
+			if(scroll_top < 2){
+                get_old_messages();
+			}
+        });
+
+        function get_old_messages(){            
+            obj_this.is_request_sent = false;
+            if(obj_this.active_chat_user.read || obj_this.is_request_sent){                    
+                return;
+            }
+            obj_this.is_request_sent = true;
+            let params = {
+                target_id: obj_this.active_chat_user.id, 
+                offset: obj_this.active_chat_user.messages.length
+            };
+
+            let args = {
+                app: 'chat',
+                model: 'message',
+                method: 'get_old_messages'
+            }
+            let input_data = {
+                params: params,
+                args: args
+            };
+            let on_success = function(data){
+                // console.log(params.offset, data);
+                if(data.length > 0) {
+                    obj_this.is_request_sent = false;
+                    obj_this.update_emjoi_urls(data);
+                    obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);
+                    obj_this.scroll_to_end(".msg_card_body");                    
+                }
+                else
+                {
+                    obj_this.active_chat_user.read = true;
+                }
+            };
+            input_data['no_loader'] = 1;
+            obj_this.httpService.get(input_data, on_success, null);
+        }
+        //waiting because [data-emojiable=true] needs to render
+        setTimeout(function(){
+            var emoji_config = {
+                emojiable_selector: "[data-emojiable=true]",
+                assetsPath: "/static/assets/emoji/images",
+                popupButtonClasses: "far fa-smile"
+            };            
+            var emojiPicker = new window["EmojiPicker"](emoji_config);
+            emojiPicker.discover();
+            
+            if(already_fetched != 1)
+            {
+                obj_this.update_emjoi_urls(messages);		     
+                obj_this.active_chat_user.messages = messages;
+            }
+            
+            obj_this.socketService.update_unseen_message_count(
+                "user-selected",            
+                obj_this.active_chat_user.id,
+                obj_this.active_chat_user
+            );
+            
+            var emoji_editor = $('.emoji-wysiwyg-editor');            
+            emoji_editor.unbind('keyup');            
+            emoji_editor.keyup(function(e){                
+				if(e.keyCode == 13 && !e.shiftKey)
+				{
+					obj_this.prepare_message();
+				}
+				$('.emoji-menu').hide();
+            });
+
+            $('#send_btn').unbind('click');
+			$('#send_btn').click(function(){
+				obj_this.prepare_message();
+			});
+            obj_this.scroll_to_end(".msg_card_body");	
+        },20);        
+        $('.friends-chat-box').hide();
+        $('.chat-container-wrppaer').show();
+    }
+
 	onUserSelected(messages, already_fetched = 0) {        
         var obj_this = this;
 		$( ".msg_card_body").unbind( "scroll" );
@@ -274,7 +357,7 @@ export class MessengerComponent implements OnInit {
                 }
                 else
                 {
-                    obj_this.active_chat_user.read = 1;
+                    obj_this.active_chat_user.read = true;
                 }
             };
             input_data['no_loader'] = 1;
@@ -390,7 +473,7 @@ export class MessengerComponent implements OnInit {
                 message_content = message_content.slice(0, -15);
                 if(message_content.endsWith('<div><br></div>'))
                 {
-                	message_content = message_content.slice(0, -15);
+                    message_content = message_content.slice(0, -15);
                 }
 			}
             if(message_content){
@@ -434,8 +517,8 @@ export class MessengerComponent implements OnInit {
                 });
                 if(that_message.length > 0)
                 {
-                    that_message = that_message[0];
-                    that_message.attachments = data.attachments;
+                    let recent_message = that_message[0];
+                    recent_message.attachments = that_message[0].attachments;
                 }
                 else{
                     console.log('No.. cant lost the message');
@@ -449,12 +532,13 @@ export class MessengerComponent implements OnInit {
             message_content = obj_this.sanitizer.bypassSecurityTrustHtml(message_content);
         }
         input_data.body = message_content;
-        obj_this.active_chat_user.messages.push(input_data);        
+        let message_obj = new Message(obj_this.active_chat_user,message_content, Date(), obj_this.attachments);
+        obj_this.active_chat_user.messages.push(message_obj);        
         $('.emoji-wysiwyg-editor').html("");        
         obj_this.attachments = [];
 		obj_this.scroll_to_end(".msg_card_body");
-	}
-
+    }
+    
 	receiveMessage(obj_this, message, sender_id) {        
         let sender = obj_this.socketService.chat_users[sender_id];
         if(!sender)

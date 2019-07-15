@@ -2,7 +2,11 @@
     width:200px; 
     height:200px; 
     border: 10px dashed #ccc;
-  }
-  .droppable_holder.hover { 
+}
+.droppable_holder.hover { 
     border: 10px dashed #0c0; 
-  }
+}
+.upcomingButton button
+{
+    margin-right: 8px;
+}

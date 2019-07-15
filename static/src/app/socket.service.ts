@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import {User, ChatGroup } from '../app/models/chat';
 import { Router, ActivatedRoute, RoutesRecognized, ActivatedRouteSnapshot } from "@angular/router";
 declare var $;
+
 
 @Injectable()
 export class SocketService {
@@ -28,6 +30,7 @@ export class SocketService {
     rtc_multi_connector : any;
     active_route_snapshot : ActivatedRouteSnapshot;
     search_bar_shown = false;
+    chat_groups: Array<ChatGroup>;
 
     constructor(private router: Router) {
         var obj_this = this;
@@ -442,10 +445,12 @@ export class SocketService {
                     return;
                 }
                 console.log("Authenticated\n\n");
+                obj_this.chat_groups = data.chat_groups;
                 obj_this.user_data.photo = obj_this.server_url + data.user.photo;
                 obj_this.user_photo = obj_this.server_url + data.user.photo;
                 localStorage.setItem('user', JSON.stringify(obj_this.user_data));
-                
+                obj_this.chat_groups = data.chat_groups;
+
                 obj_this.verified = true;
                 if(!data.unseen && data.unseen != 0)
                 {
@@ -458,8 +463,9 @@ export class SocketService {
                 {
                     chat_user_keys.push(c);
                 }
-                obj_this.chat_users = data.friends;                
+                obj_this.chat_users = data.friends;
                 obj_this.keys_chat_users = chat_user_keys;
+
                 // console.log(obj_this.chat_users, 4509);
 
                 obj_this.notificationList = [];

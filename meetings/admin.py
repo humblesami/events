@@ -85,7 +85,6 @@ class UserCreateForm(UserCreationForm):
         fields = ('username', 'password1', 'password2', 'email')
     
 
-
 class UserAdminForm(UserChangeForm):
     committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))    
     autocomplete_fields = ['committees']
@@ -116,6 +115,13 @@ class UserAdminForm(UserChangeForm):
 class UserAdmin(BaseUserAdmin):
     form = UserAdminForm
     add_form = UserCreateForm
+
+    def admin_image_tag(self, obj):
+        return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.admin_image))
+
+    admin_image_tag.short_description = 'Photo'
+    readonly_fields = ('image_tag', 'admin_image_tag')
+
     list_display = ('username', 'name', 'email', 'first_name', 'last_name', 'is_active')
     add_fieldsets = (
         (None, {
@@ -124,15 +130,29 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
     fieldsets = (
-        (None, {'fields': ('image_tag', 'image', )}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email',)}),
-        (None, {'fields': ('committees', 'company', 'date_joined')}),
-        (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', ),
-        }),
-
+        (None, {'fields': ('image_tag', 'image', 'is_active')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
+                                         'location', 'bio')}),
+        (_('Work info'), {'fields': ('company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
+        (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
+        (_('Diversity Information'),
+         {
+             'fields': (
+                 'ethnicity', 'gender', 'veteran', 'disability'
+             )
+         }
+         ),
+        (_('Administrative Assistant'),
+         {
+             'fields': (
+                 'admin_image_tag', 'admin_image', 'admin_first_name', 'admin_last_name',
+                 'admin_nick_name', 'admin_cell_phone', 'admin_email', 'admin_work_phone',
+                 'admin_fax'
+             )
+         }
+         ),
     )
-    readonly_fields = ('image_tag',)
+
 
 
     def image_tag(self, obj):
@@ -142,21 +162,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 class AdminAdmin(UserAdmin):
-    fieldsets = (
-        (None, {'fields': ('image_tag', 'image','is_active')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                        'location', 'bio')}),
-        (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
-        (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
-        (_('Diversity Information'),
-        {
-            'fields': (
-                'ethnicity', 'gender', 'veteran', 'disability'
-            )
-        }
-        )
 
-    )
     autocomplete_fields = ['committees']
     filter_horizontal = ('committees',)
     
@@ -169,36 +175,6 @@ class AdminAdmin(UserAdmin):
 
 class DirectorAdmin(UserAdmin):
     add_form = UserCreateForm
-    fieldsets = (
-        (None, {'fields': ('image_tag', 'image','is_active')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                        'location', 'bio')}),
-        (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
-        (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
-        (_('Diversity Information'),
-        {
-            'fields': (
-                'ethnicity', 'gender', 'veteran', 'disability'
-            )
-        }
-        ),
-        (_('Administrative Assistant'),
-        {
-            'fields': (
-                'admin_image_tag', 'admin_image', 'admin_first_name', 'admin_last_name',
-                'admin_nick_name', 'admin_cell_phone', 'admin_email', 'admin_work_phone',
-                'admin_fax'
-            )
-        }
-        ),
-    )
-    readonly_fields = ('image_tag','admin_image_tag')
-
-
-    def admin_image_tag(self, obj):
-        return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.admin_image))
-
-    admin_image_tag.short_description = 'Photo'
 
     def get_queryset(self, request):
         qs = super(DirectorAdmin, self).get_queryset(request)
@@ -208,21 +184,6 @@ class DirectorAdmin(UserAdmin):
 
 class StaffAdmin(UserAdmin):
     add_form = UserCreateForm
-    fieldsets = (
-        (None, {'fields': ('image_tag', 'image','is_active')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                        'location', 'bio')}),
-        (_('Work info'), {'fields': ( 'company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
-        (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
-        (_('Diversity Information'),
-        {
-            'fields': (
-                'ethnicity', 'gender', 'veteran', 'disability'
-            )
-        }
-        )
-    )
-
 
     def get_queryset(self, request):
         qs = super(StaffAdmin, self).get_queryset(request)

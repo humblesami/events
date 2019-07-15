@@ -118,7 +118,7 @@ export class ProfileDetailsComponent implements OnInit {
 			{
 				obj_this.admin_info = true;
             }
-            console.log(result);
+            // console.log(result);
             if(result.choice_fields)
             {
                 obj_this.choice_fields = result.choice_fields;            

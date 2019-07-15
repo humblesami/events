@@ -16,9 +16,11 @@ class PostAddress(models.Model):
     res_model = models.CharField(max_length=128)
     res_id = models.IntegerField()
 
+
 class NotificationType(models.Model):
     name = models.CharField(max_length=100, default='Unknown')
     template = models.CharField(max_length=256, default='')
+
 
 class Notification(models.Model):
     post_address = models.ForeignKey(PostAddress, on_delete=models.CASCADE, null=True)
@@ -380,14 +382,45 @@ class ChatGroup(models.Model):
     members = models.ManyToManyField(User, related_name='chat_groups')
     active = models.BooleanField(default=True)
     create_time = models.DateTimeField(null=True, auto_now_add=True)
-    create_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    @classmethod
+    def create(cls, request, params):
+        events = []
+        audience = []
+        uid = request.user.id
+        me_added = False
+        member_ids = []
+        for obj in params.get('members'):
+            member_ids.append(obj['id'])
+            if uid != obj['id']:
+                audience.append(obj['id'])
+            else:
+                me_added = True
+        chat_group = ChatGroup(
+            name=params['name'],
+            created_by_id = uid
+        )
+        chat_group.save()
+        if not me_added:
+            member_ids.append(uid)
+        chat_group.members.set(member_ids)
+        chat_group.save()
+        events.append({'name': 'chat_group_created', 'data': params, 'audience': audience})
+
+        created_chat_group = {
+            'name': params['name'],
+            'id': chat_group.id,
+            'members': params.get('members')
+        }
+        return { 'error': '', 'data': created_chat_group }
 
     @classmethod
     def get_messages(cls, request, params):
         chat_group_id = params.get('group_id')
         offset = 0
         messages = Message.objects.filter(chat_group_id=chat_group_id).order_by('-id')[offset: offset + 20][::-1]
-        messages = Message.get_processed_messages(messages)
+        messages = Message.get_processed_messages(messages, request.user.id)
         return messages
 
 
@@ -429,7 +462,7 @@ class Message(models.Model):
         user_ids = [target_id, uid]
         ar = []
         messages = Message.objects.filter(sender__in=user_ids, to__in=user_ids).order_by('-id')[offset: offset + 20][::-1]
-        ar = cls.get_processed_messages(messages)
+        ar = cls.get_processed_messages(messages, uid)
         return ar
 
     @classmethod
@@ -495,23 +528,6 @@ class Message(models.Model):
         message = Message.objects.get(pk=message_id)
         message.read_status = True
         message.save()
-        return 'done'
-
-    @classmethod
-    def create_chat_group(cls, request, params):
-        events = []
-        audience = []
-        uid = request.user.id
-        for obj in params.get('members'):
-            if uid != obj['id']:
-                audience.append(obj['id'])
-        chat_group = ChatGroup(
-            name = params['name'],
-        )
-        chat_group.save()
-        chat_group.members.set(audience)
-        chat_group.save()
-        events.append({'name': 'chat_group_created', 'data': params, 'audience': audience})
         return 'done'
 
 class MessageDocument(File):
@@ -598,7 +614,9 @@ class AuthUserChat(models.Model):
             chat_groups = profile_object.chat_groups.filter(active=True)
             chat_groups_list = []
             for obj in chat_groups:
-                chat_groups_list.append({'id':obj.id, 'name': obj.name})
+                unseen = len(Message.objects.filter(chat_group_id=obj.id, read_status=False))
+                chat_group = {'id':obj.id, 'name': obj.name, 'unseen': unseen}
+                chat_groups_list.append(chat_group)
             data = {
                 'friends': friend_list,
                 'friendIds': friend_ids,
