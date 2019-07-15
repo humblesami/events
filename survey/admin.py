@@ -27,6 +27,7 @@ class SurveyAdmin(admin.ModelAdmin):
     filter_horizontal = ('respondents',)
     inlines = [QuestionInline]
     actions = [make_published]
+    change_form_template = "custom/survey_custom_change_form.html"
 
     def get_form(self, request, obj=None, **kwargs):
         self.exclude = ("template","need_logged_user","display_by_question", )
