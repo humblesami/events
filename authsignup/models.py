@@ -14,7 +14,11 @@ class AuthUser(models.Model):
         password = params['password']
         user = authenticate(request, username=username, password=password)        
         if user and user.id:
-            name = Profile.objects.get(pk=user.id).name
+            name = ''
+            try:
+                name = Profile.objects.get(pk=user.id).name
+            except:
+                name = user.username
             tokens = Token.objects.filter(user=user)
             if user.has_perm('authtoken.add_token'):
                 login(request, user)
