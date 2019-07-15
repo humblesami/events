@@ -694,14 +694,15 @@ a.kanban-committees-info-box-name {
 	padding: 15px;
 }
 .kanban-card {
-	cursor: pointer;
+    cursor: pointer;
+    min-width: 280px;
 	/*    position: relative;
     width: 100%;
     min-height: 1px;
     padding-right: 15px;
     padding-left: 15px;
     margin-bottom: 30px;
-*/
+*/    
 	height: 100%;
 }
 .kanban-folder {
@@ -2475,16 +2476,26 @@ body.public .app-sidebar {
 	border-bottom: 1px solid #E1E1E1;
 	margin-top: 1.3rem;
 	margin-bottom: 1.3rem;
-	padding-bottom: 0.7rem;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+	padding-bottom: 0.7rem;	
+}
+@media(min-width:768px)
+{
+    .MainTitleHeadWrap {        
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+.MeetingBtnWrapper .btn-group
+{
+    overflow: auto;
 }
 .MeetingHeadWrapper .btn,
 .MeetingBtnWrapper .btn {
 	border: 1px solid #D7DAE2;
 	background: transparent;
-	color: #3059C9;
+    color: #3059C9;
+    font-size: inherit;    
 }
 .MeetingHeadWrapper .btn i,
 .MeetingBtnWrapper .btn i {
@@ -2594,19 +2605,11 @@ span.kanban-upcoming-meeting-date {
 	margin: 0 0 5px;
 }
 .upcomingButton {
-	display: flex;
-	border-top: 1px solid rgba(99, 143, 201, 0.25);
-	padding: 8px;
-	min-width: 5.4rem;
-	flex: 1;
+    display: flex;
+    padding: 5px;
+    min-width: 280px;
 }
-.meeting-detail .upcomingButton {
-	display: block;
-	border-top: 0;
-	padding: 0 0 6px 0;
-	border-bottom: 1px solid rgba(99, 143, 201, 0.25);
-	margin: -15px 0 15px 0;
-}
+
 .btn-meeting {
 	background: #638FC9;
 	color: #ffffff;
