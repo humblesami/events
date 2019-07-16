@@ -155,13 +155,15 @@ function on_add_choice_click(el){
     parent.find('button').remove();
     if (el.value == 'radio' || el.value == 'select-multiple')
     {
-      append_choices(parent,parent.next().find('.vLargeTextField').val())
-      var add_choices_btn = $('<br><button class="add_choices_btn" type="button">Add Choices</button>');
+      parent.find('.choice_list').show();
+      var add_choices_btn = $('<div><button class="add_choices_btn" type="button">Add Choices</button></div>');
       parent.append(add_choices_btn);
       add_choices_btn.click(on_add_choice_click);
+      append_choices(parent,parent.next().find('.vLargeTextField').val())
     }
     else
     {
+      parent.find('.choice_list').hide();
       parent.find('button').remove();
     }
     $('.add-row').click(function(){
