@@ -100,16 +100,19 @@
 
 function on_add_choice_click(el){
   let element = this;
-  let choices = $(element).parent().next().find('.vLargeTextField').text()
+  let choices = $(element).parent().next().find('textarea').val();
   config = {
   on_load: function(){
       $(document).ready(function(){
-        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" id="example"/>');          
-        $('#example').tagsInput();
+        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input"/>');          
+        // console.log($('.tag_input').length, 11);
+        $('.tag_input').tagsInput();
+        // console.log($('.tag_input').length, 12);
       })
     },
     on_save:function(){
-      let choices = $('#example').val()
+      // console.log($('.tag_input').length, 13);
+      let choices = $('.tag_input').val()
       let parent = $(element).parent();
       append_choices(parent, choices);
     }
@@ -117,12 +120,12 @@ function on_add_choice_click(el){
   window['init_sign'](config);
 }
 
-  
   selectionEvent();
   function append_choices(el, choices)
   {
     let selection_value = el.find('select')[0].value;
       let choices_list = choices_to_list(choices);
+      el.next().find('textarea').val(choices);
       el.find('.choice_list').remove();
       for (let i in choices_list)
       {
@@ -135,7 +138,6 @@ function on_add_choice_click(el){
           el.append('<div class="choice_list"><input name="'+choices_list[i]+'" type="checkbox" disabled><label for="scales">'+choices_list[i]+'</label></div>');
         }
       }
-      el.next().find('.vLargeTextField').val(choices);
   }
   function choices_to_list(choices)
   {
@@ -148,6 +150,7 @@ function on_add_choice_click(el){
       return [];
     }
   }
+  // console.log('abc', 2134);
   function addChoicesButton(el){
     $('#questions-group table tr td:nth-child(4)').hide();
     $('#questions-group table tr th:nth-child(4)').hide();
@@ -159,7 +162,7 @@ function on_add_choice_click(el){
       var add_choices_btn = $('<div><button class="add_choices_btn" type="button">Add Choices</button></div>');
       parent.append(add_choices_btn);
       add_choices_btn.click(on_add_choice_click);
-      append_choices(parent,parent.next().find('.vLargeTextField').val())
+      append_choices(parent,parent.next().find('textarea').val())
     }
     else
     {
