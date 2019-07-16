@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {User, ChatGroup } from '../app/models/chat';
+import { ChatGroup, ChatUser } from '../app/models/chat';
 import { Router, ActivatedRoute, RoutesRecognized, ActivatedRouteSnapshot } from "@angular/router";
 declare var $;
 
@@ -358,7 +358,7 @@ export class SocketService {
 
     route_changed(route: ActivatedRouteSnapshot){
         this.active_route_snapshot = route;
-    }
+    }    
 
     connect_socket(authorized_user){
         var obj_this = this;
@@ -446,10 +446,11 @@ export class SocketService {
                 }
                 console.log("Authenticated\n\n");
                 obj_this.chat_groups = data.chat_groups;
+                console.log(obj_this.chat_groups, 672);
+                
                 obj_this.user_data.photo = obj_this.server_url + data.user.photo;
                 obj_this.user_photo = obj_this.server_url + data.user.photo;
-                localStorage.setItem('user', JSON.stringify(obj_this.user_data));
-                obj_this.chat_groups = data.chat_groups;
+                localStorage.setItem('user', JSON.stringify(obj_this.user_data));                
 
                 obj_this.verified = true;
                 if(!data.unseen && data.unseen != 0)
