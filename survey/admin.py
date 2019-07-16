@@ -5,6 +5,8 @@ from django.contrib import admin
 from survey.models import Answer, Category, Question, Response, Survey
 
 from .actions import make_published
+from django.db import models
+from django.forms import Textarea
 
 
 class QuestionInline(admin.TabularInline):
@@ -12,6 +14,11 @@ class QuestionInline(admin.TabularInline):
     exclude = ['order', 'category', 'required', ]
     ordering = ["category", ]
     extra = 1
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(
+                        attrs={'rows': 3,
+                                'cols': 40,})},
+    }
 
 
 class CategoryInline(admin.TabularInline):
@@ -27,6 +34,11 @@ class SurveyAdmin(admin.ModelAdmin):
     filter_horizontal = ('respondents',)
     inlines = [QuestionInline]
     actions = [make_published]
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(
+                        attrs={'rows': 4,
+                                'cols': 40,})},
+    }
     change_form_template = "custom/survey_custom_change_form.html"
 
     def get_form(self, request, obj=None, **kwargs):
