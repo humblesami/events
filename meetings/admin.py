@@ -117,7 +117,7 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserCreateForm
 
     def admin_image_tag(self, obj):
-        return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.admin_image))
+        return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" /><div><span class="btn btn-link administrator_image_upload">Edit</span></div>' % (obj.admin_image))
 
     admin_image_tag.short_description = 'Photo'
     readonly_fields = ('image_tag', 'admin_image_tag')
@@ -152,12 +152,13 @@ class UserAdmin(BaseUserAdmin):
          }
          ),
     )
+    change_form_template = "custom/profile_custom_change_form.html"
 
 
 
     def image_tag(self, obj):
         if obj.image:
-            return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" />' % (obj.image))
+            return format_html('<img style="width:150px;border-radius:92px" src="/media/%s" /><div><span class="btn btn-link profile_image_upload">Edit</span></div>' % (obj.image))
     image_tag.short_description = 'Photo'
 
 
