@@ -137,7 +137,7 @@ class UserAdmin(BaseUserAdmin):
                                          'location', 'resume')}),
         (_('Bio'), {'fields': ('bio',)}),
         (_('Work info'), {'fields': ('company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
-        (_('Board info'), {'fields': ('committees', 'board_joining_date', 'term_start_date', 'term_end_date')}),
+        (_('Board info'), {'fields': ('board_joining_date', 'term_start_date', 'term_end_date')}),
         (_('Diversity Information'),
          {
              'fields': (
@@ -171,10 +171,6 @@ class UserAdmin(BaseUserAdmin):
 
 
 class AdminAdmin(UserAdmin):
-
-    autocomplete_fields = ['committees']
-    filter_horizontal = ('committees',)
-    
 
     def get_queryset(self, request):
         qs = super(AdminAdmin, self).get_queryset(request)
