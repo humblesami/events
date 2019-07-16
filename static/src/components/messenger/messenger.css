@@ -652,3 +652,6 @@
     background:green;
     color: white;
 }
+.chat-group-setup{
+    display: none;
+}

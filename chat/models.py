@@ -615,7 +615,12 @@ class AuthUserChat(models.Model):
             chat_groups_list = []
             for obj in chat_groups:
                 unseen = len(Message.objects.filter(chat_group_id=obj.id, read_status=False))
-                chat_group = {'id':obj.id, 'name': obj.name, 'unseen': unseen}
+                chat_group = {
+                    'id':obj.id, 'name': obj.name, 'unseen': unseen,
+                    'photo': '/static/assets/images/group.jpeg',
+                    'members': [],
+                    'is_group': True
+                }
                 chat_groups_list.append(chat_group)
             data = {
                 'friends': friend_list,

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
-import {User, ChatGroup, ChatClient, Message } from '../../app/models/chat';
+import { ChatGroup, ChatClient, Message, ChatUser } from '../../app/models/chat';
 
 declare var $: any;
 
@@ -19,8 +19,8 @@ export class MessengerComponent implements OnInit {
     is_request_sent = true;
     chat_groups = [];
     
-    people_list: Array<User>;
-    selectedPeople : Array<User>;
+    people_list: Array<ChatUser>;
+    selectedPeople : Array<ChatUser>;
 
 	constructor(
 		private sanitizer: DomSanitizer,
@@ -29,6 +29,15 @@ export class MessengerComponent implements OnInit {
 		var obj_this = this;
 		obj_this.socketService = ss;
         var socketService = ss;
+
+
+        function cast_list_chat_users(ar: Array<ChatUser>){
+            obj_this.people_list = ar;
+        }
+
+        function cast_chat_groups(ar: Array<ChatGroup>){
+            obj_this.chat_groups = ar;
+        }
 
 		function registerChatEventListeners()
 		{
@@ -46,15 +55,12 @@ export class MessengerComponent implements OnInit {
                 console.log(data);
             };
             var ar = [];
-            // obj_this.people_list = new Array<User>();
+            obj_this.people_list = new Array<ChatUser>();
             for(var key in obj_this.socketService.chat_users)
             {
-                var obj = new User(key,
-                    obj_this.socketService.chat_users[key].name,
-                    obj_this.socketService.chat_users[key].photo)
-                ar.push(obj);
+                let obj_user = obj_this.socketService.chat_users[key] as ChatUser;                
+                obj_this.people_list.push(obj_user);
             }
-            obj_this.people_list = ar;
 			if(!obj_this.socketService.user_data)
 			{
 				console.log("No user data is socket service yet");
@@ -72,7 +78,8 @@ export class MessengerComponent implements OnInit {
     group_name = '';
 
     create_chat_room()
-    {       
+    {
+        $('.chat-group-setup').hide();
         let obj_this = this; 
         if(!obj_this.group_name)
         {
@@ -92,7 +99,9 @@ export class MessengerComponent implements OnInit {
         }
         obj_this.httpService.post(input_data,function(created_chat_group){
             obj_this.chat_groups.push(created_chat_group);
-        }, null);
+        }, function(){
+            $('.chat-group-setup').show();
+        });
     }
 
     
@@ -181,9 +190,7 @@ export class MessengerComponent implements OnInit {
     }
 
     show_users_list(){
-        let args = {
-            method: 'get_attendees_list'
-        }
+        $('.chat-group-setup').show();        
     }
 
     scroll_to_end(selector)
@@ -526,17 +533,31 @@ export class MessengerComponent implements OnInit {
             }
         }
 
+        
+
         obj_this.send_message(input_data, force_post);
         if(message_content)
         {
             message_content = obj_this.sanitizer.bypassSecurityTrustHtml(message_content);
         }
         input_data.body = message_content;
-        let message_obj = new Message(obj_this.active_chat_user,message_content, Date(), obj_this.attachments);
+        let obj_message = {
+            id: null,
+            from: obj_this.active_chat_user,
+            body: message_content,
+            date_time: Date(), 
+            attachments: obj_this.attachments,
+            uuid: input_data.uuid
+        } 
+        let message_obj = obj_this.cast_message(obj_message);
         obj_this.active_chat_user.messages.push(message_obj);        
         $('.emoji-wysiwyg-editor').html("");        
         obj_this.attachments = [];
 		obj_this.scroll_to_end(".msg_card_body");
+    }
+
+    cast_message(message: Message){
+        return message;
     }
     
 	receiveMessage(obj_this, message, sender_id) {        
