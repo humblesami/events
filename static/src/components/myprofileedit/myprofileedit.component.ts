@@ -14,6 +14,10 @@ declare var $:any;
 export class MyprofileeditComponent implements OnInit {
     edit_mode = true;
 	my_profile = false;
+	selectedEthnicity = [];
+	selectedGender = [];
+	selectedVeteran = [];
+	selectedDisability = [];
 	last_login = {
 		last: {
 			login_time: '',
@@ -167,6 +171,22 @@ export class MyprofileeditComponent implements OnInit {
 			{
 				obj_this.bio_html = obj_this.sanitizer.bypassSecurityTrustHtml(result.profile.bio);				
 			}
+			if (result.profile.ethnicity)
+			{
+				obj_this.selectedEthnicity = result.profile.ethnicity;
+			}
+			if (result.profile.veteran)
+			{
+				obj_this.selectedVeteran = result.profile.veteran;
+			}
+			if (result.profile.gender)
+			{
+				obj_this.selectedGender = result.profile.gender;
+			}
+			if (result.profile.disability)
+			{
+				obj_this.selectedDisability = result.profile.disability;
+			}
 			if (!obj_this.type_breadCrumb)
 			{
 				obj_this.type = result.profile.group.toLowerCase()
@@ -176,6 +196,7 @@ export class MyprofileeditComponent implements OnInit {
 					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
 				}
 			}
+			console.log(result.profile.ethnicity);
 			obj_this.input_date_format();
 		};
 		const failure_cb = function (error) {
@@ -260,8 +281,25 @@ export class MyprofileeditComponent implements OnInit {
             }            
         }
         window['init_sign'](sign_config);
-    }
+	}
+	setEthnicity()
+	{
+		this.modified_profile_data['ethnicity'] = this.selectedEthnicity['id'];
+	}
+	setGender()
+	{
+		this.modified_profile_data['gender'] = this.selectedGender['id'];
+	}
+	setVeteran()
+	{
+		this.modified_profile_data['veteran'] = this.selectedVeteran['id'];
+	}
+	setDisability()
+	{
+		this.modified_profile_data['disability'] = this.selectedDisability['id'];
+	}
 
+	
 	ngOnInit(){
 
 	}

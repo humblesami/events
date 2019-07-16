@@ -165,9 +165,22 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </label>
                                 </div>
                                 <div class="col-sm-9 UserProfileDiscription">
-                                    <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
-                                        <option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.name === profile_data.ethnicity">{{row.name}}</option>
-                                    </select>
+                                    <!-- <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
+                                        <option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.id === profile_data.ethnicity.id">{{row.name}}</option>
+                                    </select> -->
+
+                                    <ng-select
+                                    [items]="choice_fields.ethnicity"
+                                    [multiple]="false"
+                                    [closeOnSelect]="true"
+                                    [hideSelected]="true"
+                                    bindLabel="name"
+                                    (change)="setEthnicity()"
+                                    placeholder="Select Ethnicity"
+                                    [(ngModel)]="selectedEthnicity"
+                                    >
+                                    </ng-select>
+
                                 </div>
                             </div>
                             <div class="row">
@@ -177,9 +190,20 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </label>
                                 </div>
                                 <div class="col-sm-9 UserProfileDiscription">
-                                    <select (change)="modified_profile_data.gender = $event.target.value" id='gender' requeired>
-                                        <option *ngFor="let row of choice_fields.gender" value="{{row.id}}" [selected]="row.name === profile_data.gender">{{row.name}}</option>
-                                    </select>
+                                    <!-- <select (change)="modified_profile_data.gender = $event.target.value" id='gender' requeired>
+                                        <option *ngFor="let row of choice_fields.gender" value="{{row.id}}" [selected]="row.id === profile_data.gender.id">{{row.name}}</option>
+                                    </select> -->
+                                    <ng-select
+                                    [items]="choice_fields.gender"
+                                    [multiple]="false"
+                                    [closeOnSelect]="true"
+                                    [hideSelected]="true"
+                                    bindLabel="name"
+                                    (change)="setGender()"
+                                    placeholder="Select Gender"
+                                    [(ngModel)]="selectedGender"
+                                    >
+                                    </ng-select>
                                 </div>
                             </div>
                             <div class="row">
@@ -189,9 +213,20 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </label>
                                 </div>
                                 <div class="col-sm-9 UserProfileDiscription">
-                                    <select (change)="modified_profile_data.veteran = $event.target.value" id='gender' requeired>
-                                        <option *ngFor="let row of choice_fields.veteran" value="{{row.id}}" [selected]="row.name === profile_data.veteran">{{row.name}}</option>
-                                    </select>
+                                    <!-- <select (change)="modified_profile_data.veteran = $event.target.value" id='gender' requeired>
+                                        <option *ngFor="let row of choice_fields.veteran" value="{{row.id}}" [selected]="row.id === profile_data.veteran.id">{{row.name}}</option>
+                                    </select> -->
+                                    <ng-select
+                                    [items]="choice_fields.veteran"
+                                    [multiple]="false"
+                                    [closeOnSelect]="true"
+                                    [hideSelected]="true"
+                                    bindLabel="name"
+                                    (change)="setVeteran()"
+                                    placeholder="Select Veteran"
+                                    [(ngModel)]="selectedVeteran"
+                                    >
+                                    </ng-select>
                                 </div>
                             </div>
                             <div class="row">
@@ -201,9 +236,20 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </label>
                                 </div>
                                 <div class="col-sm-9 UserProfileDiscription">
-                                    <select (change)="modified_profile_data.disability = $event.target.value" id='disability' requeired>
-                                        <option *ngFor="let row of choice_fields.disability" value="{{row.id}}" [selected]="row.name === profile_data.disability">{{row.name}}</option>
-                                    </select>
+                                    <!-- <select (change)="modified_profile_data.disability = $event.target.value" id='disability' requeired>
+                                        <option *ngFor="let row of choice_fields.disability" value="{{row.id}}" [selected]="row.id === profile_data.disability.id">{{row.name}}</option>
+                                    </select> -->
+                                    <ng-select
+                                    [items]="choice_fields.disability"
+                                    [multiple]="false"
+                                    [closeOnSelect]="true"
+                                    [hideSelected]="true"
+                                    bindLabel="name"
+                                    (change)="setDisability()"
+                                    placeholder="Select Disability"
+                                    [(ngModel)]="selectedDisability"
+                                    >
+                                    </ng-select>
                                 </div>
                             </div>
                         </div>

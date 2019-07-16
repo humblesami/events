@@ -230,10 +230,22 @@ class Profile(user_model):
         if not profile['name']:
             profile['name'] = profile_orm.fullname()
         # profile['date_joined'] = str(profile['date_joined'])
-        profile['disability'] = profile_orm.get_disability_display()
-        profile['ethnicity'] = profile_orm.get_ethnicity_display()
-        profile['gender'] = profile_orm.get_gender_display()
-        profile['veteran'] = profile_orm.get_veteran_display()
+        profile['disability'] = {
+            'id': profile_orm.disability,
+            'name': profile_orm.get_disability_display()
+        }
+        profile['ethnicity'] = {
+            'id': profile_orm.ethnicity,
+            'name': profile_orm.get_ethnicity_display()
+        } 
+        profile['gender'] = {
+            'id': profile_orm.gender,
+            'name': profile_orm.get_gender_display()
+        }  
+        profile['veteran'] = {
+            'id': profile_orm.veteran,
+            'name': profile_orm.get_veteran_display()
+        }
         profile['signature_data'] = profile_orm.signature_data.decode()
         profile['group'] = profile['groups'][0].name
         profile['admin_full_name'] = admin_full_name
