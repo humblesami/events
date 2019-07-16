@@ -77,6 +77,14 @@ export class MessengerComponent implements OnInit {
     }
     group_name = '';
 
+    leave_group(){
+
+    }
+
+    show_member_list(){
+        
+    }
+
     create_chat_room()
     {
         $('.chat-group-setup').hide();
