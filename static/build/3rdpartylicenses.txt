@@ -278,9 +278,6 @@ MIT
 @angular/forms
 MIT
 
-angular-mentions
-MIT
-
 rxjs-compat
 Apache-2.0
                                Apache License
@@ -488,6 +485,9 @@ Apache-2.0
 
 
 @ng-select/ng-select
+MIT
+
+angular-mentions
 MIT
 
 core-js
