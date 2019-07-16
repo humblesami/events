@@ -18,7 +18,25 @@
 							<div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" (click)="manage_comment()" (keyup)="save_comment_key_up($event, null)" placeholder="Add comments here." contenteditable="true" class="mention-div-comment active-mention form-control" rows="4" id="comment"></div>
 						</div>
 						<div *ngIf="comment_subtype === 2">
-							<textarea (keydown)="comment_reply_keydown($event)" [mentionConfig]="mentionConfig" name="hj" [(ngModel)]="new_comment" (keyup)="save_comment_key_up($event, null)" class="form-control" rows="4" id="notes" placeholder="Add notes here"></textarea>
+							<div 
+							(keydown)="comment_reply_keydown($event)" 
+							[mentionConfig]= "mentionConfig" 
+							name="hj" (click)="manage_comment()" 
+							(keyup)="save_comment_key_up($event, null)" 
+							placeholder="Add notes here"
+							contenteditable="true" 
+							class="mention-div-comment active-mention form-control" 
+							rows="4" 
+							id="notes"></div>
+							<!-- <textarea 
+							(keydown)="comment_reply_keydown($event)" 
+							[mentionConfig]="mentionConfig"  
+							[(ngModel)]="new_comment" 
+							(keyup)="save_comment_key_up($event, null)" 
+							class="mention-div-comment active-mention form-control"  
+							rows="4" 
+							id="notes" 
+							placeholder="Add notes here"></textarea> -->
 						</div>
 						<button [disabled]="!post_btn_disable" class="btn btn-primary" type = "submit" (click)="save_comment(null)" >Post</button>
 					</div>
