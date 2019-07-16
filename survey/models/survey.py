@@ -107,7 +107,13 @@ class Survey(models.Model):
     @classmethod
     def get_records(cls, request, params):
         surveys = []
-        survey_obj = Survey.objects.filter()
+        uid = request.user.id
+        survey_obj = Survey.objects.filter(
+            (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+                |
+                (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+                |
+                Q(respondents__id=uid))
         for survey in survey_obj:
             surveys.append({
                 'id': survey.id,
@@ -119,10 +125,18 @@ class Survey(models.Model):
 
     @classmethod
     def get_details(cls, request, params):
+        uid = request.user.id
         survey_id = params.get('survey_id')
         if survey_id:
-            survey_obj = Survey.objects.filter(pk=survey_id)
+            survey_obj = Survey.objects.filter(
+                (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+                |
+                (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+                |
+                Q(respondents__id=uid),pk=survey_id)
             # survey = ws_methods.obj_to_dict(survey_obj)
+            if not survey_obj:
+                return 'Survey not Found...'
             survey = list(survey_obj)[0]
             questions = survey.questions.all()
             survey_questions = []
