@@ -214,13 +214,13 @@ class Survey(models.Model):
                     results_visibility = True
             if results_visibility:
                 survey = Survey.objects.filter(pk=survey_id)
-            else:
-                survey = Survey.objects.filter(
-                    (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-                    |
-                    (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-                    |
-                    Q(respondents__id=uid), pk=survey_id)
+            # else:
+            #     survey = Survey.objects.filter(
+            #         (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+            #         |
+            #         (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+            #         |
+            #         Q(respondents__id=uid), pk=survey_id)
             if survey:
                 survey = survey[0]
                 survey_results = {
