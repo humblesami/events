@@ -87,6 +87,8 @@ class Survey(models.Model):
             removed_respondents = list(set(survey_obj.meeting.get_audience()) - set(self.get_audience()))
         return new_added_respondets, removed_respondents
 
+    def is_respondent(self, user):
+        return user.id in self.get_audience()
 
     def latest_answer_date(self):
         """ Return the latest answer date.
