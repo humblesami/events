@@ -58,7 +58,7 @@ body {
 
 :focus { box-shadow: none; outline: none; }
 .btn.focus, .btn:focus { outline: 0; box-shadow: none; }
-body { font-size: 13.5px; line-height: 1.42857143; color: #666666; }
+body { font-size:0.898rem; color: #666666; }
 pre,
 code,
 kbd,
@@ -78,7 +78,7 @@ img { max-width: 100%; }
 }
 .main-heading h1 {
 	color: #2B2B2B;
-	font-size: 30px;
+	font-size: 1.666rem;
 	margin: 0;
 	padding: 0;
 }
@@ -157,12 +157,13 @@ button, a, .DocumentWrapper { cursor: pointer; }
 	line-height: 20px;
 }
 .pill {
-	border-radius: 50px;
+	border-radius: 4px;
 	background-color: #808080;
 	color: white;
-	padding: 2px 5px;
+	padding: .1rem .4rem;
 	margin-left: 5px;
 	display: inline-block;
+	font-size: .8rem;
 }
 .ProFileHeadWrap {
 	font-size: 25px;
@@ -193,50 +194,28 @@ button, a, .DocumentWrapper { cursor: pointer; }
 	margin-bottom: 30px;
 }
 .DocumentWrapper {
-	text-align: center;
-	width: 150px;
-	height: 160px;
-	background-color: whitesmoke;
-	border: 1px solid #c0c0c0;
+	background-color: #E9F6FF;
 }
-.DocumentWrapper:hover {
-	-webkit-transition: all 200ms ease-in;
-	-webkit-transform: scale(1.1);
-	-ms-transition: all 200ms ease-in;
-	-ms-transform: scale(1.1);
-	-moz-transition: all 200ms ease-in;
-	-moz-transform: scale(1.1);
-	transition: all 200ms ease-in;
-	transform: scale(1.1);
-}
-.DocText {
+
+.DocText, .DocInfoVertical {
 	color: #ffffff;
 	font-size: 13px;
 	font-weight: 400;
 	text-transform: capitalize;
 	font-family: 'Roboto', sans-serif;
 	background: #606060;
-	padding: 15px;
+	padding:13px;
+	transition: all 0.2s ease;
 }
+
 .DocumentWrapper:hover .DocText {
 	background: #2699FB
 }
 .DocIcon {
-	/* text-align: center;
-    position: relative;
-    background:var(--DocIcon-bg);
-    transition: all 0.2s ease; */
-	border: 1px solid #cfcfcf;
-	border-radius: 50%;
-	background: white;
-	height: 8rem;
-	width: 80%;
-	height: 80%;
-	margin-top: 2%;
-	margin-left: 10%;
+	display: flex;
 	align-items: center;
 	justify-content: center;
-	display: flex;
+	height:100px;
 }
 /* .DocIcon span.rounded-circle {
     background: #ffffff;
@@ -251,33 +230,17 @@ button, a, .DocumentWrapper { cursor: pointer; }
 } */
 
 .DocIcon i {
-	font-size: 5rem;
+	font-size: 3rem;
 	color: #477eba;
 }
 span.rounded-circle img {
 	width: 24px;
 }
-.DocumentWrapper:hover .DocIcon {
-	background: #7FC4FD;
-}
+
 .DocumentWrapper:hover .DocInfoVertical {
-	background: #2699FB;
-	margin-top: 6px;
-	width: 102%;
-	margin-left: -1%;
+	background: #638fc9;
 }
-.row.docwrappercontainer.docs-colr-them .DocIcon {
-	background: #9e9e9e;
-}
-.row.docwrappercontainer.docs-colr-them .DocumentWrapper:hover .DocIcon {
-	background: #272626;
-}
-.row.docwrappercontainer.docs-colr-them .DocText {
-	background: #9383535;
-}
-.row.docwrappercontainer.docs-colr-them .DocumentWrapper:hover .DocText {
-	background: #000000;
-}
+
 .btn-primary {
 	color: #ffffff;
 	border-color: #4b74b5;
@@ -1486,16 +1449,16 @@ div#search-modal {
 @media (max-width: 575.98px) {
 	.nav-icon button,
 	.cursor_chooser,
-	.main-user-navbar button {
+	.main-user-navbar button, .automanage, #search-btn {
 		font-size: 10px;
-		width: 26px;
-		height: 26px;
+		width: 18px;
+		height: 18px;
 		margin: 0 3px;
 	}
 	.profile-icon img {
-		width: 26px;
-		border-radius: 26px !important;
-		height: 26px;
+		width: 18px;
+		border-radius: 20px !important;
+		height: 18px;
 		margin-left: 2px;
 	}
 }
@@ -2382,6 +2345,7 @@ span.kanban-upcoming-meeting-date {
 	margin-bottom: 3px;
 }
 .kanban-meeting-info {
+	font-family: 'Roboto', sans-serif;
 	background: #F3F3F3;
 	display: flex;
 	border-radius: 3px;
@@ -2437,6 +2401,7 @@ span.kanban-upcoming-meeting-date {
 	background: #3059C9;
 	color: #ffffff;
 }
+
 .ChoseButtonHeadWrap .meeting-detail .upcomingButton {
 	border: 0;
 	margin: 0;

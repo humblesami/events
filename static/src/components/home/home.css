@@ -42,13 +42,6 @@
 .HomepageDocumentSection{
     margin-bottom:5rem;
 }
-
-.DocInfoVertical{
-    background: #606060;
-    padding: 15px;
-    transition: all 0.2s ease;
-}
-
 .WelcomeContent{
     padding-bottom:30px;
     -webkit-flex:1 1 auto;
