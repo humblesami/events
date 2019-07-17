@@ -79,15 +79,12 @@ class Survey(models.Model):
         elif survey_obj.respondents and self.meeting:
             new_added_respondets = list(set(self.meeting.get_audience()) - set(survey_obj.get_audience()))
             removed_respondents = list(set(survey_obj.get_audience()) - set(self.meeting.get_audience()))
-        else:
-            new_added_respondets = []
-            removed_respondents = survey_obj.meeting.get_audience()
-        # elif survey_obj.respondents and self.respondents:
-        #     new_added_respondets = list(set(self.get_audience()) - set(survey_obj.get_audience()))
-        #     removed_respondents = list(set(survey_obj.get_audience()) - set(self.get_audience()))
-        # elif survey_obj.meeting and self.respondents:
-        #     new_added_respondets = list(set(self.get_audience()) - set(survey_obj.meeting.get_audience()))
-        #     removed_respondents = list(set(survey_obj.meeting.get_audience()) - set(self.get_audience()))
+        elif survey_obj.respondents and self.respondents:
+            new_added_respondets = list(set(self.get_audience()) - set(survey_obj.get_audience()))
+            removed_respondents = list(set(survey_obj.get_audience()) - set(self.get_audience()))
+        elif survey_obj.meeting and self.respondents:
+            new_added_respondets = list(set(self.get_audience()) - set(survey_obj.meeting.get_audience()))
+            removed_respondents = list(set(survey_obj.meeting.get_audience()) - set(self.get_audience()))
         return new_added_respondets, removed_respondents
 
 
@@ -106,21 +103,29 @@ class Survey(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
-        res = {
-            'app': cls._meta.app_label,
-            'model': cls._meta.model_name,
-            'user': request.user,
-            'permissions': ['view'],
-        }
-        has_permission = ws_methods.has_permission(res)
+        # res = {
+        #     'app': cls._meta.app_label,
+        #     'model': cls._meta.model_name,
+        #     'user': request.user,
+        #     'permissions': ['view'],
+        # }
+        # has_permission = ws_methods.has_permission(res)
         surveys = []
         uid = request.user.id
-        survey_obj = Survey.objects.filter(
-            (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-                |
-                (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-                |
-                Q(respondents__id=uid))
+        groups = request.user.groups.values('name')
+        results_visibility = False
+        for group in groups:
+            if group['name'] in ['Admin', 'Staff']:
+                results_visibility = True
+        if results_visibility:
+            survey_obj = Survey.objects.all()
+        else:
+            survey_obj = Survey.objects.filter(
+                (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+                    |
+                    (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+                    |
+                    Q(respondents__id=uid))
         for survey in survey_obj:
             surveys.append({
                 'id': survey.id,
@@ -135,12 +140,20 @@ class Survey(models.Model):
         uid = request.user.id
         survey_id = params.get('survey_id')
         if survey_id:
-            survey_obj = Survey.objects.filter(
-                (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-                |
-                (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-                |
-                Q(respondents__id=uid),pk=survey_id)
+            groups = request.user.groups.values('name')
+            results_visibility = False
+            for group in groups:
+                if group['name'] in ['Admin', 'Staff']:
+                    results_visibility = True
+            if results_visibility:
+                survey_obj = Survey.objects.filter(pk=survey_id)
+            else:
+                survey_obj = Survey.objects.filter(
+                    (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+                    |
+                    (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+                    |
+                    Q(respondents__id=uid),pk=survey_id)
             # survey = ws_methods.obj_to_dict(survey_obj)
             if not survey_obj:
                 return 'Survey not Found...'
@@ -154,12 +167,14 @@ class Survey(models.Model):
                 if question_dict['choices']:
                     question_dict['choices'] = question_dict['choices'].split(',')
                 survey_questions.append(question_dict)
+            is_respondent = request.user.id in survey.get_audience()
             survey = survey.__dict__
             if survey['_state']:
                 del survey['_state']
             survey['questions'] = survey_questions
             survey['open_date'] = str(survey['open_date'])
             survey['close_date'] = str(survey['close_date'])
+            survey['is_respondent'] = is_respondent
             return survey
         else:
             return 'Invalid Survey ID'
@@ -192,12 +207,20 @@ class Survey(models.Model):
         try:
             survey_id = params['survey_id']
             uid = request.user.id
-            survey = Survey.objects.filter(
-                (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-                |
-                (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-                |
-                Q(respondents__id=uid), pk=survey_id)
+            groups = request.user.groups.values('name')
+            results_visibility = False
+            for group in groups:
+                if group['name'] in ['Admin', 'Staff']:
+                    results_visibility = True
+            if results_visibility:
+                survey = Survey.objects.filter(pk=survey_id)
+            else:
+                survey = Survey.objects.filter(
+                    (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+                    |
+                    (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+                    |
+                    Q(respondents__id=uid), pk=survey_id)
             if survey:
                 survey = survey[0]
                 survey_results = {

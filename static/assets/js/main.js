@@ -384,7 +384,7 @@ window.addEventListener('message', function receiveMessage(evt) {
             switch(model)
             {
                 case 'survey':
-                    window.location = `/#/survey/${id}`;
+                    window.location = `/#/survey/${id}/results`;
             }
         } else {
             switch (model) {

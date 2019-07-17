@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpService} from '../../app/http.service';
 import {ActivatedRoute} from '@angular/router';
+import {Router} from '@angular/router';
 declare var $: any;
 
 @Component({
@@ -15,7 +16,8 @@ export class SurveyComponent implements OnInit {
         title: ''
     };
 
-    constructor(private httpService : HttpService, private route: ActivatedRoute,) { }
+	constructor(private httpService : HttpService, private route: ActivatedRoute,
+		public router: Router,) { }
 
 	ngOnInit() {
 		const obj_this = this;
@@ -53,6 +55,7 @@ export class SurveyComponent implements OnInit {
 				}
 			},
 			(error: any) => {
+				obj_this.router.navigate(['/surveys'])
 			});
 	}
 }

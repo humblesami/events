@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpService} from '../../app/http.service';
 import {ActivatedRoute} from '@angular/router';
+import {Router} from '@angular/router';
+import { SocketService } from 'src/app/socket.service';
 declare var $: any;
 
 @Component({
@@ -11,8 +13,13 @@ declare var $: any;
 export class SurveyresultsComponent implements OnInit {
   surveyDetails: any;
   data_loaded = false;
+  socketService: SocketService;
 
-  constructor(private httpService: HttpService, private route: ActivatedRoute, ) { }
+  constructor(private httpService: HttpService, 
+    private route: ActivatedRoute, private ss: SocketService,
+    public router: Router) { 
+    this.socketService = this.ss;
+  }
 
   ngOnInit() {
     const obj_this = this;
@@ -33,6 +40,7 @@ export class SurveyresultsComponent implements OnInit {
       }, 100)
     };
     const failure_cb = function (error) {
+      obj_this.router.navigate(['/survey/'+obj_this.route.snapshot.params.id]);
     };
     let args = {
       app: 'survey',

@@ -10,7 +10,7 @@ title="{{surveyDetails.name}}"></app-breadcrumb>
 					<div class="row d-flex justify-content-between mb-3" *ngIf="surveyDetails.is_published">
 						<div class="col">
 							<div class="survey-top-buttons" id="tdmrb{{surveyDetails.id}}">
-								<a *ngIf="surveyDetails" id="{{surveyDetails.id}}" class="btn btn-primary" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Start Survey</a>
+								<a *ngIf="surveyDetails && surveyDetails.is_respondent" id="{{surveyDetails.id}}" class="btn btn-primary" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Start Survey</a>
 								<a *ngIf="surveyDetails" id="{{surveyDetails.id+surveyDetails.name}}" class="btn btn-primary" routerLink='/survey/{{surveyDetails.id}}/results'>Survey Results</a>
 							</div>
 						</div>
