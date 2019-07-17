@@ -525,6 +525,23 @@ def get_error_message():
         if not 'lib/python' in er:
             errorMessage += " " + er
     return errorMessage
+
+
+def has_permission(res):
+    user_permission = False
+    model = res['model']
+    permissions = res['permissions']
+    user = res['user']
+    groups = user.groups.all()
+    for group in groups:
+        for permission_type in permissions:
+            permission = group.permissions.filter(codename=permission_type+'_'+model)
+            if permission:
+                user_permission = True
+    return user_permission
+
+
+
 #
 #
 # def authenticate(data):

@@ -25,7 +25,16 @@
         }        
 
     })()
-    </script>    
+    </script> 
+    <input type="text" style="display: none" id="iframe_detector" name="is_iframe" />
+    <script>
+        (function(){
+            if(window.self !== window.top)
+            {
+                document.getElementById('iframe_detector').value = 1;
+            }
+        })()
+    </script>
     <input
         class="btn btn-default btn-lg"
         type="submit"

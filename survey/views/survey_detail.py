@@ -9,6 +9,8 @@ from survey.forms import ResponseForm
 from survey.models import Category, Survey, Answer
 from ast import literal_eval
 from mainapp.ws_methods import get_user_by_token
+from django.template.response import SimpleTemplateResponse, TemplateResponse
+import json
 
 class SurveyDetail(View):
     def get(self, request, *args, **kwargs):
@@ -114,6 +116,16 @@ class SurveyDetail(View):
                             del request.session["next"]
                         return redirect(next_)
                     else:
+                        if request.POST.get('is_iframe'):
+                            popup_response_data = json.dumps(
+                                {
+                                    'action': 'survey_submit',
+                                    'value': str(survey.id),
+                                    'obj': str(survey.name),
+                                    'new_value': str(survey.id),
+                                })
+                            return TemplateResponse(request, 'admin/popup_response.html',
+                            {'popup_response_data': popup_response_data,})
                         return redirect(
                             "survey-confirmation", uuid=response.interview_uuid
                         )

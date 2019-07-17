@@ -379,6 +379,13 @@ window.addEventListener('message', function receiveMessage(evt) {
                     break;
             }
 
+        } else if(action == 'survey_submit')
+        {
+            switch(model)
+            {
+                case 'survey':
+                    window.location = `/#/survey/${id}`;
+            }
         } else {
             switch (model) {
                 case 'event':

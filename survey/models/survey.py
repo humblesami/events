@@ -106,6 +106,13 @@ class Survey(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
+        res = {
+            'app': cls._meta.app_label,
+            'model': cls._meta.model_name,
+            'user': request.user,
+            'permissions': ['view'],
+        }
+        has_permission = ws_methods.has_permission(res)
         surveys = []
         uid = request.user.id
         survey_obj = Survey.objects.filter(
