@@ -263,7 +263,9 @@ class Profile(user_model):
 
     @classmethod
     def update_profile(cls, request, params):
-        user_id = request.user.id
+        user_id = params.get('user_id')
+        if not user_id:
+            user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
 
         for key in params:

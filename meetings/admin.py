@@ -19,6 +19,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.forms import Textarea
+from documents.file import File
 
 
 class TopicAdmin(admin.ModelAdmin):
@@ -80,6 +81,7 @@ class EventAdmin(nested_admin.NestedModelAdmin):
         return format_html(html)
 
 
+
 class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
     class Meta:
@@ -88,7 +90,7 @@ class UserCreateForm(UserCreationForm):
     
 
 class UserAdminForm(UserChangeForm):
-    committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))    
+    committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
     autocomplete_fields = ['committees']
     class Meta:
         model = Profile
@@ -134,7 +136,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image', 'is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                         'location', 'resume')}),
+                                         'location',)}),
         (_('Bio'), {'fields': ('bio',)}),
         (_('Work info'), {'fields': ('company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
         (_('Board info'), {'fields': ('board_joining_date', 'term_start_date', 'term_end_date')}),
