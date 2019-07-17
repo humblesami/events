@@ -32,8 +32,7 @@
                         </svg>
                     </div>
                 </button>
-            </div>            
-            
+            </div>
 
             <div class="card-body contacts_body">
                 <ul class="chat-groups-container">
@@ -77,6 +76,7 @@
             </div>
         </div>
     </div>
+
     <div class="chat chat-container-wrppaer">
         <div *ngIf="active_chat_user" class="chat-full-height">
             <div class="chat-user-title">
@@ -85,24 +85,24 @@
 					<span class="user-name">{{active_chat_user.name}}</span>
 					<span class="status" *ngIf="active_chat_user.online" class="userstat">Online</span>
 				</div>
-                <div *ngIf="active_chat_user" class="MessengerConnectWrap">
-                    <div *ngIf="!active_chat_user.is_group">
-                        <div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">
-                            <span >
-                                <i class="fa fa-phone"></i>
-                            </span>
-                        </div>
-                        <div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id)">
-                            <span >
-                                <i class="fa fa-video"></i>
-                            </span>
-                        </div>
+                <div *ngIf="active_chat_user && !active_chat_user.is_group" class="MessengerConnectWrap">                    
+                    <div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">
+                        <span >
+                            <i class="fa fa-phone"></i>
+                        </span>
                     </div>
-                    <div *ngIf="active_chat_user.is_group">
-                        <button (click)="leave_group()">Leave</button>
-                        <button (click)="show_member_list()">Members</button>
+                    <div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id)">
+                        <span >
+                            <i class="fa fa-video"></i>
+                        </span>
                     </div>
-				</div>
+                </div>
+
+                <div *ngIf="active_chat_user && active_chat_user.is_group" class="MessengerConnectWrap">                    
+                    <button (click)="leave_group()">Leave</button>
+                    <button (click)="show_member_list()">Members</button>
+                </div>
+                
                 <div  *ngIf="active_chat_user" class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
             </div>			
             <div class="card-body msg_card_body meetVue-chat-body">
@@ -190,4 +190,18 @@
             <h3>Welcome to BoardSheet</h3>
         </div>
     </div>
+
+    <div class="group-details-container" *ngIf="group_details && group_details.show_members">
+        <div class="MessengerTitle">
+            <span class="backchatlist" (click)="close_members_list()">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+        </div>
+        <ul class="contacts">
+            <li *ngFor="let member of group_details.members">
+                {{member.name}}
+            </li>
+        </ul>
+    </div>
+
 </div>

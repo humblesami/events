@@ -379,10 +379,10 @@ class Comment(models.Model):
 
 class ChatGroup(models.Model):
     name = models.CharField(max_length=100)
-    members = models.ManyToManyField(User, related_name='chat_groups')
+    members = models.ManyToManyField(Profile, related_name='chat_groups')
     active = models.BooleanField(default=True)
     create_time = models.DateTimeField(null=True, auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
     @classmethod
     def create(cls, request, params):
@@ -413,7 +413,40 @@ class ChatGroup(models.Model):
             'id': chat_group.id,
             'members': params.get('members')
         }
-        return { 'error': '', 'data': created_chat_group }
+        events = [
+            {'name': 'chat_group_created', 'data': created_chat_group, 'audience': audience}
+        ]
+        res = ws_methods.emit_event(events)
+        if res == 'done':
+            return { 'error': '', 'data': created_chat_group }
+        else:
+            return res
+
+    @classmethod
+    def get_details(cls, request, params):
+        group_id = params['group_id']
+        group_obj = ChatGroup.objects.get(pk = group_id)
+        group_members = []
+        for mem in group_obj.members.all():
+            group_members.append({
+                'id': mem.id,
+                'name': mem.name,
+                'photo': mem.image.url,
+            })
+        group = {
+            'id': group_obj.id,
+            'name': group_obj.name,
+            'members': group_members,
+            'created_by': {
+                'id': group_obj.created_by.id,
+                'name': group_obj.created_by.name,
+                'photo': group_obj.created_by.image.url,
+            },
+            'is_group': True,
+            'show_members': True,
+            'create_time': str(group_obj.create_time),
+        }
+        return group
 
     @classmethod
     def get_messages(cls, request, params):
@@ -426,11 +459,62 @@ class ChatGroup(models.Model):
 
 class Message(models.Model):
     sender = models.IntegerField()
-    to = models.IntegerField()
+    to = models.IntegerField(null=True)
     body = models.TextField()
     read_status = models.BooleanField(default=False)
     create_date = models.DateTimeField(null=True, auto_now_add=True)
     chat_group = models.ForeignKey(ChatGroup, null=True, on_delete=models.CASCADE)
+
+    @classmethod
+    def send(cls, request, params):
+        uid = request.user.id
+        group_id = params.get('group_id')
+        target_id = params.get('to')
+        body = params['body']
+        message = Message(sender=uid, body=body, create_date=datetime.now())
+        if group_id:
+            message.chat_group_id = group_id
+        else:
+            message.target_id = target_id
+        message.save()
+        attachment_urls = []
+        attachments = params.get('attachments')
+        if attachments:
+            for attachment in attachments:
+                file_name = attachment['name']
+                doc = MessageDocument(
+                    message_id=message.id,
+                    file_type='message',
+                    name=file_name
+                )
+
+                image_data = attachment['binary']
+                image_data = ws_methods.base64StringToFile(image_data, file_name)
+
+                doc.attachment.save(file_name, image_data, save=True)
+                attachment_urls.append({
+                    'name': file_name,
+                    'url': doc.attachment.url
+                })
+
+        message = message.__dict__
+        message['attachments'] = attachment_urls
+        message['create_date'] = str(datetime.now())
+
+        del message['_state']
+        message['uuid'] = params['uuid']
+        events = [
+            {'name': 'chat_message_received', 'data': message, 'audience': [target_id]}
+        ]
+        if group_id:
+            events = [
+                {'name': 'group_chat_message_received', 'data': message, 'room': {'type': 'chat_room', 'id': group_id} }
+            ]
+        res = ws_methods.emit_event(events)
+        if res == 'done':
+            return message
+        else:
+            return res
 
     @classmethod
     def get_processed_messages(cls, messages, uid):
@@ -444,6 +528,7 @@ class Message(models.Model):
                 'body': obj.body,
                 'to': obj.to,
                 'sender': obj.sender,
+                'chat_group_id': obj.chat_group.id,
                 'create_date': str(obj.create_date),
                 'attachments': []
             }
@@ -479,48 +564,6 @@ class Message(models.Model):
         offset = params['offset']
         data = cls.get_message_list(uid, target_id, offset)
         return data
-
-    @classmethod
-    def send(cls, request, params):
-        uid = request.user.id
-        target_id = params['to']
-        body = params['body']
-        message = Message(to=target_id, sender=uid, body=body, create_date=datetime.now())
-        message.save()
-        attachment_urls = []
-        attachments = params.get('attachments')
-        if attachments:
-            for attachment in attachments:
-                file_name = attachment['name']
-                doc = MessageDocument(
-                    message_id=message.id,
-                    file_type='message',
-                    name=file_name
-                )
-
-                image_data = attachment['binary']
-                image_data = ws_methods.base64StringToFile(image_data, file_name)
-
-                doc.attachment.save(file_name, image_data, save=True)
-                attachment_urls.append({
-                    'name': file_name,
-                    'url': doc.attachment.url
-                })
-
-        message = message.__dict__
-        message['attachments'] = attachment_urls
-        message['create_date'] = str(datetime.now())
-
-        del message['_state']
-        message['uuid'] = params['uuid']
-        events = [
-            {'name': 'chat_message_received', 'data': message, 'audience': [target_id]}
-        ]
-        res = ws_methods.emit_event(events)
-        if res == 'done':
-            return message
-        else:
-            return res
 
     @classmethod
     def mark_read_message(cls, request, params):

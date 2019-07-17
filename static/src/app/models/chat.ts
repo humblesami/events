@@ -3,13 +3,9 @@ export class Attachment{
     name: string;
     url: string;
     message: Message;
-    constructor(a: number, b: string, c: string, d: Message)
+    constructor()
     {
-        console.log('Message constructor');
-        this.id = a;
-        this.name = b;
-        this.url = c;
-        this.message = d;
+        console.log('Message constructor');        
     }
 }
 
@@ -31,6 +27,7 @@ export class ChatClient{
     photo:string;
     read:Boolean;
     unseen: number;
+    is_group: Boolean;
     messages:Array<Message>;
     constructor(){
         console.log('Chat client constructor');
@@ -52,15 +49,12 @@ export class UserMessage extends Message{
 }
 
 export class ChatUser extends ChatClient{
-    constructor(){
-        super();
-        console.log('Chat user constructor');
-    }
+    
 }
 
 export class ChatGroup extends ChatClient{        
     members: Array<ChatUser>;
-    is_group: Boolean;
+    show_members: Boolean;
     constructor(){
         super()
         console.log('Chat Group constructor');      

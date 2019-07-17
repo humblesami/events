@@ -521,10 +521,10 @@ export class SocketService {
         }
     }
 
-    update_unseen_message_count(event, target_id, target) {        
+    update_unseen_message_count(event, target) {        
         if(!target)
         {
-            console.log('Selection failed for id='+target_id, target);
+            console.log('Selection failed for', target);
             return;
         }
         if(!target.unseen && target.unseen != 0)
@@ -657,17 +657,6 @@ export class SocketService {
                 window["current_user"].go_to_login();
                 return;
             }
-        };
-
-        obj_this.server_events['chat_message_received'] = function (msg) {
-            let sender = obj_this.chat_users[msg.sender];
-            if(!sender)
-            {
-                console.log(obj_this.chat_users, ' Dev issue as '+msg.sender+' not found');
-                return;
-            }
-            obj_this.update_unseen_message_count("receive-new-message", msg.sender, sender);
-
         };
 
         obj_this.server_events['point_comment_received'] = function (data) {

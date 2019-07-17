@@ -655,3 +655,14 @@
 .chat-group-setup{
     display: none;
 }
+
+.group-details-container
+{
+    position: absolute;
+    left: 0;
+    top: 30px;
+    z-index: 9;
+    width: 100%;
+    height: calc(100% - 30px);
+    background: white;
+}
