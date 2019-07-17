@@ -1,97 +1,5 @@
-:root {
-	--font-family: "Roboto-Condensed";
-}
-@font-face {
-	font-family: 'boardsheet';
-	src: url('../fonts/boardsheet.eot?3pm4ih');
-	src: url('../fonts/boardsheet.eot?3pm4ih#iefix') format('embedded-opentype'), url('../fonts/boardsheet.ttf?3pm4ih') format('truetype'), url('../fonts/boardsheet.woff?3pm4ih') format('woff'), url('../fonts/boardsheet.svg?3pm4ih#icomoon') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-[class^="icon-"],
-[class*=" icon-"] {
-	/* use !important to prevent issues with browser extensions that change fonts */
-	font-family: 'boardsheet' !important;
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	/* Better Font Rendering =========== */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-.icon-calendar-empty:before {
-	content: "\e90c";
-}
-.icon-call-answer:before {
-	content: "\e90d";
-}
-.icon-close-envelope:before {
-	content: "\e90e";
-}
-.icon-draw-pencil:before {
-	content: "\e90f";
-}
-.icon-hotel:before {
-	content: "\e910";
-}
-.icon-user-single:before {
-	content: "\e911";
-}
-.icon-zoom-in:before {
-	content: "\e912";
-}
-.icon-zoom-out:before {
-	content: "\e913";
-}
-.icon-calendar:before {
-	content: "\e90b";
-}
-.icon-doc-file:before {
-	content: "\e90a";
-}
-.icon-action:before {
-	content: "\e904";
-}
-.icon-committees:before {
-	content: "\e905";
-}
-.icon-dashboard:before {
-	content: "\e906";
-}
-.icon-folder:before {
-	content: "\e907";
-}
-.icon-meeting:before {
-	content: "\e908";
-}
-.icon-profile:before {
-	content: "\e909";
-}
-.icon-chat:before {
-	content: "\e900";
-}
-.icon-cursor:before {
-	content: "\e901";
-}
-.icon-noti:before {
-	content: "\e902";
-}
-.icon-search:before {
-	content: "\e903";
-}
-html,
-body {
-	height: 100%;
-	overflow: hidden;
-}
-.form-control:focus,
-.form-control.focus {
-	outline: none;
-	box-shadow: none;
-}
+html, body { height: 100%; overflow: hidden; }
+.form-control:focus, .form-control.focus { outline: none; box-shadow: none; }
 .router-outlet {
 	height: calc(100vh - 110px);
 	overflow: auto;
@@ -109,30 +17,14 @@ body {
 	--button-bg: #132f6e;
 	--DocIcon-bg: #E9F6FF;
 }
-.fs-12 {
-	font-size: 12px
-}
-.fs-13 {
-	font-size: 13px
-}
-.fs-14 {
-	font-size: 14px
-}
-.fs-15 {
-	font-size: 15px
-}
-.fs-16 {
-	font-size: 16px
-}
-.fs-17 {
-	font-size: 17px
-}
-.fs-18 {
-	font-size: 18px
-}
-.fs-19 {
-	font-size: 19px
-}
+.fs-12 { font-size: 12px }
+.fs-13 { font-size: 13px }
+.fs-14 { font-size: 14px }
+.fs-15 { font-size: 15px }
+.fs-16 { font-size: 16px }
+.fs-17 { font-size: 17px }
+.fs-18 { font-size: 18px }
+.fs-19 { font-size: 19px }
 /*
 @media (min-width: 576px){
 	.container {
@@ -164,59 +56,20 @@ body {
 	}
 }*/
 
-#greenButton {
-	background: #28a745;
-}
-#whiteButton {
-	background: white;
-}
-#blueButton {
-	background: blue;
-}
-#orangeButton {
-	background: #FF766E;
-}
-#lightButton {
-	background: #E9B067;
-}
-#redButton {
-	background: #ff5733;
-}
-:focus {
-	box-shadow: none;
-	outline: none;
-}
-.btn.focus,
-.btn:focus {
-	outline: 0;
-	box-shadow: none;
-}
-body {
-	font-size: 13.5px;
-	line-height: 1.42857143;
-	color: #666666;
-}
+:focus { box-shadow: none; outline: none; }
+.btn.focus, .btn:focus { outline: 0; box-shadow: none; }
+body { font-size: 13.5px; line-height: 1.42857143; color: #666666; }
 pre,
 code,
 kbd,
 samp {
 	font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
-body.lightblue {
-	background: #edf2f6;
-}
-body.hidden {
-	overflow: hidden;
-}
-h5 {
-	font-size: 0.859rem;
-}
-mg {
-	max-width: 100%;
-}
-.mr-b20 {
-	margin-bottom: 20px;
-}
+body.lightblue { background: #edf2f6; }
+body.hidden { overflow: hidden; }
+h5 { font-size: 0.859rem; }
+img { max-width: 100%; }
+.mr-b20 { margin-bottom: 20px; }
 .main-heading {
 	border-bottom: 1px solid #E1E1E1;
 	margin-top: 1.3rem;
@@ -235,24 +88,12 @@ mg {
 	color: #ffffff;
 }
 .MainHeader.navbar .navbar-nav a,
-.dropdown-menu-list a.nav-sub-link {
-	color: var(--menu-color-text);
-}
-.MainHeader.navbar .navbar-nav a:hover {
-	background-color: rgba(0, 0, 0, 0.2);
-}
+.dropdown-menu-list a.nav-sub-link { color: var(--menu-color-text); }
+.MainHeader.navbar .navbar-nav a:hover { background-color: rgba(0, 0, 0, 0.2); }
 .MainHeader.navbar .navbar-nav a i,
-.dropdown-menu-list a.nav-sub-link i {
-	color: var(--menu-icon-color);
-}
+.dropdown-menu-list a.nav-sub-link i { color: var(--menu-icon-color); }
 /* Fixed version of the header */
 
-body.fixed .header-fixed {
-	position: fixed;
-	width: 100%;
-	top: 0;
-	left: 0;
-}
 .breadcrumb {
 	font-size: 1.5rem;
 	font-weight: bold;
@@ -262,12 +103,8 @@ body.fixed .header-fixed {
 
 /* AppComponent's private CSS styles */
 
-a:hover {
-	text-decoration: none;
-}
-b {
-	font-weight: 500;
-}
+a:hover { text-decoration: none; }
+b { font-weight: 500; }
 .notification-icon span {
 	padding: 2px 4px;
 	background: #dc3545;
@@ -294,22 +131,9 @@ b {
 	right: -2px;
 	z-index: 4;
 }
-button,
-a,
-.DocumentWrapper {
-	cursor: pointer;
-}
-.fade.in {
-	opacity: 1;
-}
-#main-div {
-	/*
-    padding-bottom: 20px;
-    padding-top: 10px;
-    position: relative;
-    z-index: -1;
-    */
-}
+button, a, .DocumentWrapper { cursor: pointer; }
+.fade.in { opacity: 1; }
+
 .ProfileChangeSaveWrapper {
 	border-radius: 50%;
 	overflow: hidden;
@@ -1086,15 +910,9 @@ button.navbar-toggler {
 	display: inline-block;
 	font-size: 15px;
 }
-.MainHeader.navbar .navbar-brand {
-	padding: 7px 14px;
-}
-.MainHeader.navbar .navbar-brand img {
-	width: 25px;
-}
-.MainHeader.navbar .navbar-nav a.active {
-	color: #ffffff;
-}
+.MainHeader.navbar .navbar-brand { padding: 7px 14px; }
+.MainHeader.navbar .navbar-brand img { width: 25px; }
+.MainHeader.navbar .navbar-nav a.active { color: #ffffff; }
 .nav-sub-link {
 	/* color: black !important; */
 	width: 100%;
