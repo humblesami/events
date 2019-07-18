@@ -4,6 +4,296 @@ import { Router, ActivatedRoute, RoutesRecognized, ActivatedRouteSnapshot } from
 declare var $;
 
 
+class VideoCall{
+    id: string;
+    message: string;
+    caller : ChatUser;
+    callee: ChatUser;
+    timeout: number;
+    state: string;
+    obj_this: SocketService;
+    is_audio_call: Boolean; 
+    incoming_call : string;
+    drag_enabled: Boolean;
+    constructor(socketService: SocketService){
+        this.obj_this = socketService
+        this.timeout = 21000;        
+        this.state = 'available';
+    }
+    init(uid, audio_only){
+        let obj_this = this.obj_this;
+        let video_call = this;
+        video_call.drag_enabled = false;
+        video_call.maximize();
+        if(audio_only)
+        {
+            video_call.is_audio_call = true;
+        }
+        else
+        {
+            video_call.is_audio_call = false;
+        }
+        
+        if(!obj_this.chat_users[uid].online)
+        {
+            video_call.show_notification(obj_this.chat_users[uid].name +' is not online yet, but will be informed when online')
+            return;
+        }
+        let call_id = obj_this.user_data.id+'-'+uid+'-call';                
+        video_call.caller = obj_this.user_data;
+        video_call.callee = obj_this.chat_users[uid];
+        video_call.id = call_id; 
+        let data =  {
+            caller_id: obj_this.user_data.id,
+            callee_id: uid,
+            call_id : call_id,
+            is_audio_call : video_call.is_audio_call
+        };
+
+        // console.log(video_call.caller, video_call.callee);
+        if(obj_this.chat_users[uid].online){
+            obj_this.emit_rtc_event('incoming_call', data, [uid]);                    
+            video_call.message = 'Calling...';
+        }
+        else
+        {
+            video_call.message = "Called person is not online but will be informed about your call when he/she will be online";                    
+        }
+        video_call.state = 'outgoing';
+        video_call.initialize();                
+        
+        
+        setTimeout(function(){
+            // console.log(video_call.state, video_call.callee.id, 727);
+            if(video_call.state == 'outgoing')
+            {
+                video_call.cancel('Not available');
+            }
+        }, video_call.timeout);
+    }
+
+    initialize(){
+        this.maximize();
+        $('#rtc-container').show();                
+    }
+    
+    show_incoming_call(data){
+        let obj_this = this.obj_this;
+        var video_call = this;
+        if(obj_this.ongoing_call || video_call.state != 'available')
+        {
+            video_call.show_notification('Another incoming call');
+            return;
+        }
+        // console.log(data, 1334);
+        video_call.state = 'incoming';
+        video_call.id = data.call_id;
+        video_call.is_audio_call = data.is_audio_call;
+        video_call.caller = obj_this.chat_users[data.caller_id];
+        video_call.callee = obj_this.user_data;
+        video_call.initialize();
+    }
+    
+
+    accept(){
+        let obj_this = this.obj_this;
+        var data = { 
+            user_id: obj_this.user_data.id
+        };
+        var video_call = this;
+        obj_this.emit_rtc_event('accepted', data, [video_call.caller.id]);
+        video_call.state = 'accepted';
+        video_call.message = 'Connecting caller';
+    }
+
+    accepted(data){
+        this.start_for_me(data);
+    }
+
+    start_for_me(data){
+        let obj_this = this.obj_this;
+        var video_call = this;
+        video_call.state = 'ongoing';
+        if(!video_call.id)
+        {
+            console.log(video_call.state, 'Invalid call id, it must has been alreasy set');
+            // console.log(video_call, video_call.incoming);
+            return;
+        }
+        
+        var params = {
+            uid: obj_this.user_data.id,
+            room: video_call.id,                    
+            token: obj_this.user_data.token
+        };    
+        // console.log(params, 1577);
+        if(!obj_this.rtc_multi_connector)
+        {
+            obj_this.rtc_multi_connector = window['video_caller'];
+        }
+        obj_this.ongoing_call = video_call.id;
+        // console.log(obj_this.rtc_multi_connector, 190);
+
+        var on_started = undefined;
+        if(video_call.caller.id == params.uid)
+        {
+            on_started = function(){
+                // console.log(data, 14);
+                if(data)
+                {
+                    data = {
+                        create_time: Date(), 
+                        room: video_call.id,
+                        user_id: data.user_id
+                    }
+                    // console.log(data, 14889);
+                    obj_this.emit_rtc_event('started_by_caller', data, [data.user_id]);
+                }
+            }
+        }
+        $('#rtc-container').addClass('ongoing_call');
+        obj_this.rtc_multi_connector.init(params, on_started, video_call.is_audio_call);                
+    }
+
+    started_by_caller(data){
+        let video_call = this;
+        video_call.start_for_me(data);
+    }
+    
+    same(val){
+        return val;
+    }
+
+    cancel(message=undefined){
+        let obj_this = this.obj_this;
+        let video_call = this;
+        // console.log('Cancelling', this.caller.id, this.callee.id);
+        obj_this.emit_rtc_event('cancelled', '', [video_call.callee.id]);
+        this.quit();
+    }
+
+    cancelled(data){
+        // console.log('Cancelled', this.caller.id, this.callee.id);
+        this.quit();
+    }
+
+    reject(){
+        let obj_this = this.obj_this;
+        var video_call = this;
+        var data = { message: 'Sorry busy'};
+        if(!video_call.caller.id)
+        {
+            console.log('No caller id to send in reject');
+        }
+        obj_this.emit_rtc_event('rejected', data, [video_call.caller.id]);
+        this.quit();
+    }
+
+    rejected(data){
+        if(this.state == 'outgoing')
+        {
+            this.show_notification('User is busy, try later');
+        }
+        else
+        {
+            console.log(this.state, ' Not calling how cancelled');
+        }
+        this.quit(data.message);
+    }
+
+    terminate(){
+        let obj_this = this.obj_this;
+        var data = { 
+            user_id: obj_this.user_data.id, 
+            room_id: this.id
+        };
+        obj_this.socket.emit('call_terminated', data);
+        // console.log(obj_this.ongoing_call, this, 568);
+        this.quit('terminating');
+    }
+
+    terminated(data){
+        let obj_this = this.obj_this;
+        if(obj_this.ongoing_call)
+        {
+            console.log('Leaving now');
+            // console.log(obj_this.ongoing_call, this, 189);
+            this.quit();
+        }
+        else
+        {
+            console.log('Already left');
+        }
+    }
+
+    toggle_camera(){
+        let obj_this = this.obj_this;
+        try{
+            obj_this.rtc_multi_connector.toggle_camera();
+        }
+        catch(er){
+            console.log(14, er);
+        }                
+        // 
+    }
+
+    quit(request_type=undefined){
+        let obj_this = this.obj_this;
+        let video_call = this;                
+        // console.log(obj_this.ongoing_call, request_type, 193);
+        if(obj_this.ongoing_call && request_type != 'terminating')
+        {
+            video_call.terminate();
+        }
+        video_call.drag_enabled = false;
+        video_call.caller = undefined;
+        video_call.callee = undefined;
+        if(obj_this.ongoing_call)
+        {
+            try{
+                obj_this.rtc_multi_connector.stop_my_tracks();
+                obj_this.rtc_multi_connector.socket.disconnect();                        
+            }
+            catch(er)
+            {
+                console.log('error in rtc end call', er);
+            }                    
+        }
+        
+        video_call.state = 'available';                
+        obj_this.ongoing_call = undefined;                 
+        $('#videos-container').html('');
+        $('#rtc-container').removeClass('ongoing_call').hide();
+    }    
+
+    minimize(){
+        $('#rtc-container').removeClass('full').addClass('min');
+        window['rtc-call-max'] = undefined;                
+        $('#rtc-container').draggable({'containment':[0, 0, '100vw', window.innerHeight - 10]});
+        $('#rtc-container').css({top:'unset',left:'unset',bottom:'10px',right:'10px'}).draggable('enable');
+        this.drag_enabled = true;
+    }
+
+    maximize(){                 
+        if(this.drag_enabled)
+        {
+            $('#rtc-container').draggable('disable');
+            this.drag_enabled = false;
+        }
+        $('#rtc-container').css({top:0,left: 0});
+        $('#rtc-container').removeClass('min').addClass('full');
+        window['rtc-call-max'] = 1;
+    }
+
+    show_notification(message){
+        window['bootbox'].alert(message);
+        setTimeout(function(){
+            $('.bootbox.modal.fade.bootbox-alert.show').css('display','flex');
+        },151);
+        
+    }
+}
+
 @Injectable()
 export class SocketService {
     
@@ -34,280 +324,7 @@ export class SocketService {
 
     constructor(private router: Router) {
         var obj_this = this;
-        obj_this.video_call = {
-            id: undefined,
-            message: undefined,
-            caller : undefined,
-            callee: undefined,
-            timeout: 21000,
-            init: function(uid, audio_only){
-                let video_call = this;
-                video_call.drag_enabled = false;
-                video_call.maximize();
-                if(audio_only)
-                {
-                    video_call.is_audio_call = true;
-                }
-                else
-                {
-                    video_call.is_audio_call = false;
-                }
-                
-                if(!obj_this.chat_users[uid].online)
-                {
-                    video_call.show_notification(obj_this.chat_users[uid].name +' is not online yet, but will be informed when online')
-                    return;
-                }
-                let call_id = obj_this.user_data.id+'-'+uid+'-call';                
-                video_call.caller = obj_this.user_data;
-                video_call.callee = obj_this.chat_users[uid];
-                video_call.id = call_id; 
-                let data =  {
-                    caller_id: obj_this.user_data.id,
-                    callee_id: uid,
-                    call_id : call_id,
-                    is_audio_call : video_call.is_audio_call
-                };
-
-                // console.log(video_call.caller, video_call.callee);
-                if(obj_this.chat_users[uid].online){
-                    obj_this.emit_rtc_event('incoming_call', data, [uid]);                    
-                    video_call.message = 'Calling...';
-                }
-                else
-                {
-                    video_call.message = "Called person is not online but will be informed about your call when he/she will be online";                    
-                }
-                video_call.state = 'outgoing';
-                video_call.initialize();                
-                
-                
-                setTimeout(function(){
-                    // console.log(video_call.state, video_call.callee.id, 727);
-                    if(video_call.state == 'outgoing')
-                    {
-                        video_call.cancel('Not available');
-                    }
-                }, video_call.timeout);
-            },
-
-            initialize: function(){
-                this.maximize();
-                $('#rtc-container').show();                
-            },
-            
-            show_incoming_call: function(data){                
-                var video_call = this;
-                if(obj_this.ongoing_call || video_call.state != 'available')
-                {
-                    video_call.show_notification('Another incoming call');
-                    return;
-                }
-                // console.log(data, 1334);
-                video_call.state = 'incoming';
-                video_call.id = data.call_id;
-                video_call.is_audio_call = data.is_audio_call;
-                video_call.caller = obj_this.chat_users[data.caller_id];
-                video_call.callee = obj_this.user_data;
-                video_call.initialize();
-            },
-
-            incoming_call : undefined,
-            state: 'available',
-
-            accept: function(){
-                var data = { 
-                    user_id: obj_this.user_data.id
-                };
-                var video_call = this;
-                obj_this.emit_rtc_event('accepted', data, [video_call.caller.id]);
-                video_call.state = 'accepted';
-                video_call.message = 'Connecting caller';
-            },
-
-            accepted: function(data){
-                this.start_for_me(data);
-            },
-
-            start_for_me: function(data){
-                // console.log(data, 156);
-                var video_call = obj_this.video_call;
-                video_call.state = 'ongoing';
-                if(!video_call.id)
-                {
-                    console.log(video_call.state, 'Invalid call id, it must has been alreasy set');
-                    // console.log(video_call, video_call.incoming);
-                    return;
-                }
-                
-                var params = {
-                    uid: obj_this.user_data.id,
-                    room: video_call.id,                    
-                    token: obj_this.user_data.token
-                };    
-                // console.log(params, 1577);
-                if(!obj_this.rtc_multi_connector)
-                {
-                    obj_this.rtc_multi_connector = window['video_caller'];
-                }
-                obj_this.ongoing_call = video_call.id;
-                // console.log(obj_this.rtc_multi_connector, 190);
-
-                var on_started = undefined;
-                if(video_call.caller.id == params.uid)
-                {
-                    on_started = function(){
-                        // console.log(data, 14);
-                        if(data)
-                        {
-                            data = {
-                                create_time: Date(), 
-                                room: video_call.id,
-                                user_id: data.user_id
-                            }
-                            // console.log(data, 14889);
-                            obj_this.emit_rtc_event('started_by_caller', data, [data.user_id]);
-                        }
-                    }
-                }
-                $('#rtc-container').addClass('ongoing_call');
-                obj_this.rtc_multi_connector.init(params, on_started, video_call.is_audio_call);                
-            },
-
-            started_by_caller: function(data){
-                let video_call = this;
-                video_call.start_for_me(data);
-            },
-            
-            same: function(val){
-                return val;
-            },
-
-            cancel: function(){
-                let video_call = this;
-                // console.log('Cancelling', this.caller.id, this.callee.id);
-                obj_this.emit_rtc_event('cancelled', '', [video_call.callee.id]);
-                this.quit();
-            },
-
-            cancelled: function(data){
-                // console.log('Cancelled', this.caller.id, this.callee.id);
-                this.quit();
-            },
-
-            reject: function(){
-                var video_call = this;
-                var data = { message: 'Sorry busy'};
-                if(!video_call.caller.id)
-                {
-                    console.log('No caller id to send in reject');
-                }
-                obj_this.emit_rtc_event('rejected', data, [video_call.caller.id]);
-                this.quit();
-            },
-
-            rejected: function(data){
-                if(this.state == 'outgoing')
-                {
-                    this.show_notification('User is busy, try later');
-                }
-                else
-                {
-                    console.log(this.state, ' Not calling how cancelled');
-                }
-                this.quit(data.message);
-            },
-
-            terminate: function(){
-                // console.log('Do terminate');
-                var data = { 
-                    user_id: obj_this.user_data.id, 
-                    room_id: this.id
-                };
-                obj_this.socket.emit('call_terminated', data);
-                // console.log(obj_this.ongoing_call, this, 568);
-                this.quit('terminating');
-            },
-
-            terminated: function(data){
-                if(obj_this.ongoing_call)
-                {
-                    console.log('Leaving now');
-                    // console.log(obj_this.ongoing_call, this, 189);
-                    this.quit();
-                }
-                else
-                {
-                    console.log('Already left');
-                }
-            },
-
-            toggle_camera: function(){
-                try{
-                    obj_this.rtc_multi_connector.toggle_camera();
-                }
-                catch(er){
-                    console.log(14, er);
-                }                
-                // 
-            },
-
-            quit: function(request_type){
-                let video_call = this;                
-                // console.log(obj_this.ongoing_call, request_type, 193);
-                if(obj_this.ongoing_call && request_type != 'terminating')
-                {
-                    video_call.terminate();
-                }
-                video_call.drag_enabled = false;
-                video_call.caller = undefined;
-                video_call.callee = undefined;
-                if(obj_this.ongoing_call)
-                {
-                    try{
-                        obj_this.rtc_multi_connector.stop_my_tracks();
-                        obj_this.rtc_multi_connector.socket.disconnect();                        
-                    }
-                    catch(er)
-                    {
-                        console.log('error in rtc end call', er);
-                    }                    
-                }
-                
-                obj_this.video_call.state = 'available';                
-                obj_this.ongoing_call = undefined;                 
-                $('#videos-container').html('');
-                $('#rtc-container').removeClass('ongoing_call').hide();
-            },
-
-            drag_enabled: false,
-
-            minimize: function(){
-                $('#rtc-container').removeClass('full').addClass('min');
-                window['rtc-call-max'] = undefined;                
-                $('#rtc-container').draggable({'containment':[0, 0, '100vw', window.innerHeight - 10]});
-                $('#rtc-container').css({top:'unset',left:'unset',bottom:'10px',right:'10px'}).draggable('enable');
-                this.drag_enabled = true;
-            },
-            maximize: function(){                 
-                if(this.drag_enabled)
-                {
-                    $('#rtc-container').draggable('disable');
-                    this.drag_enabled = false;
-                }
-                $('#rtc-container').css({top:0,left: 0});
-                $('#rtc-container').removeClass('min').addClass('full');
-                window['rtc-call-max'] = 1;
-            },
-
-            show_notification: function(message){
-                window['bootbox'].alert(message);
-                setTimeout(function(){
-                    $('.bootbox.modal.fade.bootbox-alert.show').css('display','flex');
-                },151);
-                
-            },
-        };
+        window['video_call'] = new VideoCall(obj_this)        
         
         if(!window['socket_manager'])
         {
@@ -446,7 +463,7 @@ export class SocketService {
                 }
                 console.log("Authenticated\n\n");
                 obj_this.chat_groups = data.chat_groups;
-                // console.log(obj_this.chat_groups, 672);
+                console.log(obj_this.chat_groups, 672);
                 
                 obj_this.user_data.photo = obj_this.server_url + data.user.photo;
                 obj_this.user_photo = obj_this.server_url + data.user.photo;
@@ -578,22 +595,22 @@ export class SocketService {
         };
 
         obj_this.server_events['incoming_call'] = function (data){
-            obj_this.video_call.show_incoming_call(data);
+            window['video_call'].show_incoming_call(data);
         };
         obj_this.server_events['cancelled'] = function(data){
-            obj_this.video_call.cancelled(data);
+            window['video_call'].cancelled(data);
         };        
         obj_this.server_events['call_terminated'] = function(data){
-            obj_this.video_call.terminated(data);
+            window['video_call'].terminated(data);
         };
         obj_this.server_events['rejected'] = function(data){
-            obj_this.video_call.rejected(data);
+            window['video_call'].rejected(data);
         };
         obj_this.server_events['accepted'] = function(data){
-            obj_this.video_call.accepted(data);
+            window['video_call'].accepted(data);
         };
         obj_this.server_events['started_by_caller'] = function(data){
-            obj_this.video_call.started_by_caller(data);
+            window['video_call'].started_by_caller(data);
         };
         
         
@@ -657,26 +674,6 @@ export class SocketService {
                 window["current_user"].go_to_login();
                 return;
             }
-        };
-
-        obj_this.server_events['chat_message_received'] = function (msg) {
-            let sender = obj_this.chat_users[msg.sender];
-            if(!sender)
-            {
-                console.log(obj_this.chat_users, ' Dev issue as '+msg.sender+' not found');
-                return;
-            }
-            obj_this.update_unseen_message_count("receive-new-message", sender);
-        };
-
-        obj_this.server_events['chat_message_received'] = function (msg) {
-            let sender = obj_this.chat_users[msg.sender];
-            if(!sender)
-            {
-                console.log(obj_this.chat_users, ' Dev issue as '+msg.sender+' not found');
-                return;
-            }
-            obj_this.update_unseen_message_count("receive-new-message", sender);
         };
 
         obj_this.server_events['point_comment_received'] = function (data) {
@@ -862,3 +859,4 @@ export class SocketService {
         this.user_data = undefined;
     }
 }
+

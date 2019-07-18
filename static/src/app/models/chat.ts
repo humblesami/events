@@ -14,7 +14,7 @@ export class Message{
     from: ChatClient;
     body:string;
     date_time: string;
-    uuid: string;
+    uuid: string;    
     attachments:Array<Attachment>;
     constructor(){
         console.log('message constructor');
@@ -45,6 +45,7 @@ export class ChatGroupMessage extends Message{
 
 
 export class UserMessage extends Message{
+    sender: number;
     receiver: ChatUser;
 }
 
@@ -55,6 +56,7 @@ export class ChatUser extends ChatClient{
 export class ChatGroup extends ChatClient{        
     members: Array<ChatUser>;
     show_members: Boolean;
+    created_by: ChatUser;
     constructor(){
         super()
         console.log('Chat Group constructor');      

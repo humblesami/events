@@ -386,7 +386,6 @@ class ChatGroup(models.Model):
 
     @classmethod
     def create(cls, request, params):
-        events = []
         audience = []
         uid = request.user.id
         me_added = False
@@ -406,7 +405,6 @@ class ChatGroup(models.Model):
             member_ids.append(uid)
         chat_group.members.set(member_ids)
         chat_group.save()
-        events.append({'name': 'chat_group_created', 'data': params, 'audience': audience})
 
         created_chat_group = {
             'name': params['name'],
@@ -421,6 +419,73 @@ class ChatGroup(models.Model):
             return { 'error': '', 'data': created_chat_group }
         else:
             return res
+
+    @classmethod
+    def add_members(cls, request, params):
+        audience = []
+        uid = request.user.id
+        member_ids = []
+        group_id = params['group_id']
+        for obj in params.get('members'):
+            member_ids.append(obj['id'])
+            audience.append(obj['id'])
+
+        chat_group = ChatGroup.objects.get(pk=group_id)
+        existing_members_ids = []
+        for mem in chat_group.members:
+            existing_members_ids.append(mem.id)
+        member_ids = member_ids + existing_members_ids
+        chat_group.members.set(member_ids)
+        chat_group.save()
+
+        group_members = []
+        for mem in chat_group.members.all():
+            group_members.append({
+                'id': mem.id,
+                'name': mem.name,
+                'photo': mem.image.url,
+            })
+        group = {
+            'id': chat_group.id,
+            'name': chat_group.name,
+            'members': group_members,
+            'created_by': {
+                'id': chat_group.created_by.id,
+                'name': chat_group.created_by.name,
+                'photo': chat_group.created_by.image.url,
+            },
+            'is_group': True,
+            'create_time': str(chat_group.create_time),
+        }
+
+        event1 = {
+            'name': 'chat_group_created',
+            'data': group,
+            'audience': member_ids
+        }
+        event2 = {
+            'name': 'members_added_to_group',
+            'data': group,
+            'audience': existing_members_ids
+        }
+        events = [ event1, event2]
+        res = ws_methods.emit_event(events)
+        if res == 'done':
+            return {'error': '', 'data': group}
+        else:
+            return res
+
+
+    @classmethod
+    def remove_member(cls, request, params):
+        member_id = params['member_id']
+        group_id = params['group_id']
+        chat_group = ChatGroup.objects.get(pk = group_id)
+        all_member_set = set(chat_group.members.all())
+        removed_member_set = set(Profile.objects.filter(id=member_id))
+        remaining_members = all_member_set - removed_member_set
+        chat_group.members.set(remaining_members)
+        return 'done'
 
     @classmethod
     def get_details(cls, request, params):
@@ -475,7 +540,7 @@ class Message(models.Model):
         if group_id:
             message.chat_group_id = group_id
         else:
-            message.target_id = target_id
+            message.to = target_id
         message.save()
         attachment_urls = []
         attachments = params.get('attachments')
@@ -520,7 +585,7 @@ class Message(models.Model):
     def get_processed_messages(cls, messages, uid):
         ar = []
         for obj in messages:
-            if obj.sender != uid and not obj.read_status:
+            if obj.to and obj.sender != uid and not obj.read_status:
                 obj.read_status = True
                 obj.save()
             dict_obj = {
@@ -528,10 +593,17 @@ class Message(models.Model):
                 'body': obj.body,
                 'to': obj.to,
                 'sender': obj.sender,
-                'chat_group_id': obj.chat_group.id,
                 'create_date': str(obj.create_date),
                 'attachments': []
             }
+            if obj.chat_group:
+                status = obj.messagestatus_set.filter(message_id=obj.id, user_id=uid)
+                if status:
+                    status = status[0]
+                    if not status.read:
+                        status.read = True
+                        status.save()
+                dict_obj['chat_group_id'] = obj.chat_group.id
             for att in MessageDocument.objects.filter(message_id=obj.id):
                 dict_obj['attachments'].append({
                     'name': att.name,
@@ -567,11 +639,26 @@ class Message(models.Model):
 
     @classmethod
     def mark_read_message(cls, request, params):
+        uid = request.user.id
         message_id = params['message_id']
         message = Message.objects.get(pk=message_id)
-        message.read_status = True
-        message.save()
+        if message.to == uid:
+            message.read_status = True
+            message.save()
+        elif message.chat_group:
+            status = MessageStatus.objects.filter(message_id=message_id, user_id=uid)
+            if status:
+                status = status[0]
+                if not status.read:
+                    status.read = True
+                    status.save()
         return 'done'
+
+
+class MessageStatus(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    read = models.BooleanField(default=False)
 
 class MessageDocument(File):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
@@ -657,11 +744,16 @@ class AuthUserChat(models.Model):
             chat_groups = profile_object.chat_groups.filter(active=True)
             chat_groups_list = []
             for obj in chat_groups:
-                unseen = len(Message.objects.filter(chat_group_id=obj.id, read_status=False))
+                unseen = len(MessageStatus.objects.filter(message__chat_group_id=obj.id, read=False))
                 chat_group = {
                     'id':obj.id, 'name': obj.name, 'unseen': unseen,
                     'photo': '/static/assets/images/group.jpeg',
                     'members': [],
+                    'created_by': {
+                        'id': obj.created_by.id,
+                        'name': obj.created_by.name,
+                        'photo': obj.created_by.image.url,
+                    },
                     'is_group': True
                 }
                 chat_groups_list.append(chat_group)
@@ -688,7 +780,6 @@ class AuthUserChat(models.Model):
 
 
 admin.site.register(Comment)
-admin.site.register(ChatGroup)
 admin.site.register(Message)
 admin.site.register(Notification)
 admin.site.register(NotificationType)
