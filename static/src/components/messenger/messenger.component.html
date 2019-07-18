@@ -5,7 +5,7 @@
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="chatgroup">
-                            <button (click)="show_users_list()" class="create glyphicon glyphicon-plus"></button>
+                            <button (click)="show_group_setup(null, null)" class="create glyphicon glyphicon-plus"></button>
                             <span>New Group</span>
                         </span>
                         <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
@@ -14,29 +14,53 @@
                 </div>
             </div>
 
-            <div class="row p-1 m-1 chat-group-setup" style="border:1px solid">
+            <div *ngIf="can_edit_group" class="row p-1 m-1 chat-group-setup" style="border:1px solid">
                 <input [(ngModel)]="group_name" class="group-name" />
                 <ng-select
                     [items]="people_list"
                     [multiple]="true"
-                    [closeOnSelect]="false"
-                    [hideSelected]="true"
+                    [closeOnSelect]="false"                    
                     bindLabel="name"
                     placeholder="Select people"
                     [(ngModel)]="selectedPeople">
                 </ng-select>
-                <button (click)="create_chat_room()" class="PD7XNe yt1Zfc" aria-label="Create group.">
-                    <div class="aLkERb">
+                <button (click)="create_chat_room()" class="" aria-label="Create group.">
+                    <div class="">
                         <svg width="24px" height="24px" viewBox="0 0 24 24" class="pTh3n mMlCCe">
                             <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path>
                         </svg>
                     </div>
+                </button>                
+            </div>
+
+            <div *ngIf="!can_edit_group && selected_chat_group" class="chat-group-setup">                
+                <button (click)="close_group_setup()" class="" aria-label="Create group.">
+                    <div class="">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" class="pTh3n mMlCCe">
+                            
+                        </svg>
+                    </div>
                 </button>
+                <ul class="contacts">
+                    <li *ngFor="let member of selected_chat_group.members">
+                        <div >
+                            <a class="contact-item d-flex align-items-center bd-highlight">
+                                <div class="img_cont">
+                                    <img src="{{socketService.server_url}}{{member.photo}}" class="rounded-circle user_img">                            
+                                </div>
+                                <div class="user_info">
+                                    <span>{{ member.name }}</span>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
             </div>
 
             <div class="card-body contacts_body">
+                <hr/>
                 <ul class="chat-groups-container">
-                    <li *ngFor="let cg of socketService.chat_groups" (click)="select_chat_group(cg)">
+                    <li *ngFor="let cg of socketService.chat_groups" (click)="select_chat_group(cg, $event)">
                         <div>
                             <a class="contact-item d-flex align-items-center bd-highlight">
                                 <div class="img_cont">
@@ -48,10 +72,15 @@
                                 <span class="unseen" *ngIf="cg.unseen">
                                     {{cg.unseen}}
                                 </span>
+                                -----------
+                                <span class="setup" (click)="show_group_setup(cg, $event)">
+                                    Members
+                                </span>
                             </a>
                         </div>
-                    </li>
+                    </li>                    
                 </ul>
+                <hr/>
                 <ul class="contacts">
                     <li *ngFor="let uid of socketService.keys_chat_users"
                         (click)="select_chat_user(uid)"
@@ -128,6 +157,7 @@
                             <span class="msg_time_send">{{msg.create_date | date:'medium'}}</span>
                         </div>
                     </div>
+                    
                     <div *ngIf="socketService.user_data && msg.sender != socketService.user_data.id"
                             class="d-flex align-items-end justify-content-start mb-4">
                         <div class="img_cont_msg">
@@ -191,17 +221,29 @@
         </div>
     </div>
 
-    <div class="group-details-container" *ngIf="group_details && group_details.show_members">
+    <!-- <div class="group-details-container" *ngIf="group_details && group_details.show_members">
         <div class="MessengerTitle">
             <span class="backchatlist" (click)="close_members_list()">
                 <i class="fas fa-arrow-left"></i>
             </span>
         </div>
+
         <ul class="contacts">
             <li *ngFor="let member of group_details.members">
-                {{member.name}}
+                <div >
+                    <a class="contact-item d-flex align-items-center bd-highlight">
+                        <div class="img_cont">
+                            <img src="{{socketService.server_url}}{{member.photo}}" class="rounded-circle user_img">                            
+                        </div>
+                        <div class="user_info">
+                            <span>{{ member.name }}</span>
+                            <button (click)="remove_member(member.id)" *ngIf="group_moderator">Remove</button>
+                        </div>
+                    </a>
+                </div>
             </li>
         </ul>
-    </div>
+
+    </div> -->
 
 </div>
