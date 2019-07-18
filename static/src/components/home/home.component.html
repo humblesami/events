@@ -1,7 +1,11 @@
 <app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1">        
 </app-breadcrumb>
 <div class="router-outlet home-container" *ngIf="ng_init">    
-    <button *ngIf="home_data && to_do_count" style="float:right" class="btn-primary" (click)="scroll_to_do()">Todo Items: {{to_do_count}}</button>
+    <div class="container">
+		<div class="todoitembtn">
+			<button *ngIf="home_data && to_do_count" (click)="scroll_to_do()">Todo Items: {{to_do_count}}</button>
+		</div>
+	</div>
     <div id="welcome" *ngIf="home_data">
         <div class="container">
             <div class="row">

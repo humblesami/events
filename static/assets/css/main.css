@@ -2706,3 +2706,17 @@ is_mobile_device .popup-closer {
     height: 405px;
     overflow-y: auto;
 }
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    text-overflow: '';
+    background-image: url(../images/arrow-down.png) !important;
+    background-repeat: no-repeat !important;
+    background-position: right 15px center !important;
+    display: block;
+    width: 100%;
+    padding-right:17px;
+}

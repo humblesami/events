@@ -40,7 +40,7 @@
 }
 
 .HomepageDocumentSection{
-    margin-bottom:5rem;
+    margin-bottom:1rem;
 }
 .WelcomeContent{
     padding-bottom:30px;
@@ -517,6 +517,47 @@ ul {list-style-type: none;}
   background: #1abc9c;
   color: white !important
 }
+
+.todoitembtn{
+	position: relative;
+}
+.todoitembtn:before{
+	display: block;
+    content: "";
+    position: absolute;
+    top: 50%;
+    height: 1px;
+    left: 0;
+    right: 0;
+    background: #dddddd;
+    transform: translateY(-50%);
+}
+.todoitembtn button{
+	webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #4b74b5;
+    bottom: 0;
+    color: #ffffff;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    font-size: 15px;
+    font-weight: 400;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    padding: 7px 25px;
+    transition: background-color .1s linear,color .1s linear!important;
+    border: 0 solid;
+    flex: 0 auto;
+    margin: 15px auto;
+    border-radius: 3px;
+    position:relative;
+    z-index:2;
+}
+
 
 /* Add media queries for smaller screens */
 @media screen and (max-width:720px) {
