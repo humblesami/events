@@ -38,71 +38,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <input class="pt-3" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
                                 </div>
                             </div>
-                            <div *ngIf="profile_data.resume"  class="row docwrappercontainer">
-                                <div class="col-sm-12">
-                                    <h3>Resume</h3>
-                                </div>
-                                <div class="col-sm-12 mb-4">
-                                    <a routerLink="/resume/doc/{{profile_data.resume.id}}">
-                                        <div class="DocumentWrapper">
-                                            <div class="DocIcon">
-                                                <span class="rounded-circle">
-                                                    <i class="icon-doc-file"></i>
-                                                </span>
-                                            </div>
-                                            <div class="DocInfoVertical text-truncate">
-                                                {{profile_data.resume.name}}
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <span (click)="edit_resume()">Edit Resume</span>
-                                    <input (change)="addFile($event, '')" 
-                                    type="file" 
-                                    name="edit_resume" 
-                                    class='edit_resume' style="display: none"/>
-                                </div>
-                            </div>
-                            <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
-                                <div class="col-sm-12">
-                                    <span (click)="add_resume()">Add Resume</span>
-                                    <input (change)="addFile($event, '')" 
-                                    type="file" 
-                                    name="add_resume" 
-                                    class='add_resume' style="display: none"/>
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div *ngIf="profile_data && my_profile" class="col-sm-3">
-                                    <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
-                                        <i class="fa fa-pen"></i>
-                                        <span  *ngIf="profile_data && profile_data.signature_data">Update </span>
-                                        <span  *ngIf="profile_data && !profile_data.signature_data">Add </span>
-                                        Signature
-                                    </a>
-                                </div>
-                                <div class="col-sm-9" style="display: flex;">
-                                    <div style="position:relative;cursor: pointer;">
-                                        <img class="strt_sign profile " style="width: 100%;"
-                                            *ngIf="profile_data.signature_data"
-                                            src="data:image/png;base64,{{profile_data.signature_data}}"
-                                        />
-            
+                            <div class="row" *ngIf="last_login.login_time">
+                                <div class="row last-login-details">
+                                    <div class="col-sm-12">
+                                        <h3>Last Login Details</h3>
+                                        <span *ngIf="last_login.login_time">Login Time: {{last_login.login_time | date:'MMM dd,yyyy hh:mm:ss A'}}</span>
+                                        <span *ngIf="last_login.platform">OS: {{last_login.platform}}</span>
+                                        <span *ngIf="last_login.browser">Browser: {{last_login.browser}}</span>
+                                        <span *ngIf="last_login.ip">IP: {{last_login.ip}}</span>
+                                        <span *ngIf="last_login.location">Location: {{last_login.location}}</span>
                                     </div>
                                 </div>
                             </div>
-                                
-                                <div class="row" *ngIf="last_login.login_time">
-                                    <div class="row last-login-details">
-                                        <div class="col-sm-12">
-                                            <h3>Last Login Details</h3>
-                                            <span *ngIf="last_login.login_time">Login Time: {{last_login.login_time | date:'MMM dd,yyyy hh:mm:ss A'}}</span>
-                                            <span *ngIf="last_login.platform">OS: {{last_login.platform}}</span>
-                                            <span *ngIf="last_login.browser">Browser: {{last_login.browser}}</span>
-                                            <span *ngIf="last_login.ip">IP: {{last_login.ip}}</span>
-                                            <span *ngIf="last_login.location">Location: {{last_login.location}}</span>
-                                        </div>
-                                    </div>
-                                </div>
                                 
                             </div>
                         <div class="row">
@@ -138,6 +85,58 @@ title="{{profile_data.name}}"></app-breadcrumb>
         
                             <input value="{{profile_data.bio}}" (change)="modified_profile_data.bio = $event.target.value"
                                 type="text" placeholder="Enter Bio" id="bio">
+                        </div>
+                        <div *ngIf="profile_data.resume"  class="row docwrappercontainer">
+                            <div class="col-sm-12">
+                                <h3>Resume</h3>
+                            </div>
+                            <div class="col-sm-12 mb-4">
+                                <a routerLink="/resume/doc/{{profile_data.resume.id}}">
+                                    <div class="DocumentWrapper">
+                                        <div class="DocIcon">
+                                            <span class="rounded-circle">
+                                                <i class="icon-doc-file"></i>
+                                            </span>
+                                        </div>
+                                        <div class="DocInfoVertical text-truncate">
+                                            {{profile_data.resume.name}}
+                                        </div>
+                                    </div>
+                                </a>
+                                <span (click)="edit_resume()">Edit Resume</span>
+                                <input (change)="addFile($event, '')" 
+                                type="file" 
+                                name="edit_resume" 
+                                class='edit_resume' style="display: none"/>
+                            </div>
+                        </div>
+                        <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
+                            <div class="col-sm-12">
+                                <span (click)="add_resume()">Add Resume</span>
+                                <input (change)="addFile($event, '')" 
+                                type="file" 
+                                name="add_resume" 
+                                class='add_resume' style="display: none"/>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div *ngIf="profile_data && my_profile" class="col-sm-3">
+                                <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
+                                    <i class="fa fa-pen"></i>
+                                    <span  *ngIf="profile_data && profile_data.signature_data">Update </span>
+                                    <span  *ngIf="profile_data && !profile_data.signature_data">Add </span>
+                                    Signature
+                                </a>
+                            </div>
+                            <div class="col-sm-9" style="display: flex;">
+                                <div style="position:relative;cursor: pointer;">
+                                    <img class="strt_sign profile " style="width: 100%;"
+                                        *ngIf="profile_data.signature_data"
+                                        src="data:image/png;base64,{{profile_data.signature_data}}"
+                                    />
+        
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
