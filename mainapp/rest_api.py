@@ -15,7 +15,8 @@ public_methods = {
     'authsignup':{
         'AuthUser':{
             'login_user': 1,
-            'reset_password': 1
+            'reset_password': 1,
+            'set_password': 1
         }
     },
     'voting':{

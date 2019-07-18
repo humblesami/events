@@ -37,6 +37,12 @@ class AuthUser(models.Model):
         logout(request)
         return {'error':'', 'data': 'ok'}
 
+
+    @classmethod
+    def set_password(cls, request, params):
+        pass
+
+
     @classmethod
     def reset_password(cls, request, params):
         try:

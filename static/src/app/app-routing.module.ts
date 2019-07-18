@@ -55,7 +55,8 @@ const appRoutes: Routes = [
     { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard]},
 
 	{ path: 'forgot-password', component: ForgotpasswordComponent},
-	{ path: 'set-password', component: SetpasswordComponent},
+    { path: 'set-password', component: SetpasswordComponent},
+    { path: 'set-password/:token', component: SetpasswordComponent},
 
     { path: 'my-profile', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
     { path: 'my-profile/edit', component: MyprofileeditComponent, canActivate: [AuthGuard]},
