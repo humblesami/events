@@ -55,11 +55,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                             </div>
                                         </div>
                                     </a>
-                                    <span (click)="add_resume()">Edit Resume</span>
+                                    <span (click)="edit_resume()">Edit Resume</span>
                                     <input (change)="addFile($event, '')" 
                                     type="file" 
-                                    name="add_resume" 
-                                    class='add_resume' style="display: none"/>
+                                    name="edit_resume" 
+                                    class='edit_resume' style="display: none"/>
                                 </div>
                             </div>
                             <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">

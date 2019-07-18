@@ -287,6 +287,9 @@ export class MyprofileeditComponent implements OnInit {
 	add_resume(){
 		$('.add_resume').trigger('click');
 	}
+	edit_resume(){
+		$('.edit_resume').trigger('click');
+	}
 
 
     init_sign()
