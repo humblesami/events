@@ -50,7 +50,7 @@ class Event(models.Model):
     def get_attendees_list(cls, request, params):
         meeting_id = params.get('meeting_id')
         meeting = Event.objects.get(id=meeting_id)
-        return Event.attendees_to_list(meeting.attendees)
+        return Event.attendees_to_list(meeting.attendees.all())
 
 
     @classmethod
@@ -64,7 +64,7 @@ class Event(models.Model):
         return attendees_list
 
     def get_attendees(self):
-        return Event.attendees_to_list(self.attendees)
+        return Event.attendees_to_list(self.attendees.all())
 
 
     @property
