@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import {Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 declare var $: any;
 
 @Component({
@@ -21,33 +22,37 @@ export class SetpasswordComponent implements OnInit {
 	special_regex = /^(?=.*[@~`!@#$%^&*()_=+\\';:"\/?>.<,-])/
 	min_length_regex = /^(?=.{8,})/
 
-	constructor(private router: Router, private httpService: HttpService) {}
+	constructor(private router: Router, private httpService: HttpService, private route: ActivatedRoute) {}
 
 	submit_password() {
+		var obj_this = this;
 		var bootbox = window['bootbox'] ;
 		if(!obj_this.all_regex.test(this.new_password) && this.new_password != this.confirm_new_password)
 		{
 			return;
 		}
-		var obj_this = this;
 		obj_this.loading = true;
-		var token = new URLSearchParams(window.location.search).get('token');
-		var db = new URLSearchParams(window.location.search).get('db');
-		if(!token || !db){
+		var token = obj_this.route.snapshot.params.token;
+		// var token = new URLSearchParams(window.location.search).get('token');
+		// var db = new URLSearchParams(window.location.search).get('db');
+		if(!token){
 			bootbox.alert('Invalid perameters in set password request. Please contact your admin.');
 			return;
 		}
         			
         let input_data = {
             token: token,
-            db: db,
             password: this.new_password,
         }
 
 		var success_cb = function(result) {
+			console.log(result);
 			obj_this.loading = false;
-			bootbox.alert('Password is successfully updated');
-			window['function'].go_to_login();
+			bootbox.alert('Password is successfully updated', function(){
+				obj_this.router.navigate(['/login']);
+			});
+			
+			// window['function'].go_to_login();
 		};
 		var failure_cb = function(error) {
 			obj_this.error = error;
@@ -64,13 +69,13 @@ export class SetpasswordComponent implements OnInit {
 		let args = {
             app: 'authsignup',
             model: 'AuthUser',
-            method: 'change_password'
+            method: 'set_password'
         }			
         let final_input_data = {
             params: input_data,
             args: args
         };
-        obj_this.httpService.post(final_input_data, success_cb, failure_cb);
+        obj_this.httpService.post_public(final_input_data, success_cb, failure_cb);
 	}
 
 	ngOnInit() {

@@ -5,6 +5,7 @@ from mainapp.settings import server_base_url
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
 from meetings.model_files.user import Profile
+from restoken.models import PostUserToken
 
 # Create your models here.
 class AuthUser(models.Model):
@@ -40,8 +41,18 @@ class AuthUser(models.Model):
 
     @classmethod
     def set_password(cls, request, params):
-        pass
+        password = params['password']
+        token= params['token']
+        user_token = PostUserToken.validate_token(token) 
+        if user_token:
+            user = user_token.user
+            user.set_password(password)
+            user.save()
 
+            return 'done'
+            
+        else:
+            return 'Something Wents Wrong'
 
     @classmethod
     def reset_password(cls, request, params):
