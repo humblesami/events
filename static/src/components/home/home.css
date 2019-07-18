@@ -536,7 +536,7 @@ ul {list-style-type: none;}
 	webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    background-color: #4b74b5;
+    background-color: #638FC9;
     bottom: 0;
     color: #ffffff;
     cursor: pointer;
@@ -553,11 +553,13 @@ ul {list-style-type: none;}
     border: 0 solid;
     flex: 0 auto;
     margin: 15px auto;
-    border-radius: 3px;
+    border-radius: 20px;
     position:relative;
     z-index:2;
 }
-
+.todoitembtn button:hover{
+	background-color: #4b74b5;
+}
 
 /* Add media queries for smaller screens */
 @media screen and (max-width:720px) {
