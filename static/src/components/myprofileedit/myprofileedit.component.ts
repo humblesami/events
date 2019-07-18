@@ -267,7 +267,8 @@ export class MyprofileeditComponent implements OnInit {
 					obj_this.socketService.user_photo = obj_this.base_url + profile.photo;
 
 				}
-                obj_this.router.navigate(['/my-profile']);
+				// obj_this.router.navigate(['/my-profile']);
+				obj_this.activeModal.close('Close click')
 			},
 			(error) => {
                 const x = document.getElementById('slot-select-error');
@@ -280,7 +281,14 @@ export class MyprofileeditComponent implements OnInit {
                 }
 				
             });
-    }
+	}
+	
+	
+	add_resume(){
+		$('.add_resume').trigger('click');
+	}
+
+
     init_sign()
     {
         let obj_this = this;

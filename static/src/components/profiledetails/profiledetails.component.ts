@@ -83,6 +83,7 @@ export class ProfileDetailsComponent implements OnInit {
 			section: section,
 			user_id: this.route.snapshot.params.id
 		}
+		modalRef.result.then(() => { this.get_data(); }, () => { console.log('Something went wrong while edting profile..')})
 	}
 
 	edit_personal_info()
