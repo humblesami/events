@@ -104,7 +104,7 @@ function on_add_choice_click(el){
   config = {
   on_load: function(){
       $(document).ready(function(){
-        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input"/>');          
+        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input"/>');
         // console.log($('.tag_input').length, 11);
         $('.tag_input').tagsInput();
         // console.log($('.tag_input').length, 12);
@@ -129,7 +129,7 @@ function on_add_choice_click(el){
       append_choices(parent, choices);
     }
   }
-  window['init_sign'](config);
+  window['init_popup'](config);
 }
   selectionEvent();
   function append_choices(el, choices)

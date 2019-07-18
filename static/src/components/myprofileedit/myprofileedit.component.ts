@@ -1,20 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpService } from '../../app/http.service';
 import { ActivatedRoute,Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SocketService } from 'src/app/socket.service';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { template } from '@angular/core/src/render3';
 declare var $:any;
 
 @Component({
     selector: 'app-myprofileedit',
     templateUrl: './myprofileedit.component.html',
-    styleUrls: ['./myprofileedit.component.css']
+	styleUrls: ['./myprofileedit.component.css'],
+// 	template: `
+//     <div class="modal-header">
+//     	<h4 class="modal-title">Hi there!</h4>
+//       	<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+//         	<span aria-hidden="true">&times;</span>
+//       	</button>
+//     </div>
+//     <div class="modal-body">
+      	
+//     </div>
+//     <div class="modal-footer">
+//       	<button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+//     </div>
+//   `
 })
 export class MyprofileeditComponent implements OnInit {
+	@Input() public edit_info;
     edit_mode = true;
 	my_profile = false;
 	selectedEthnicity = [];
+	section = '';
+	user_id = undefined;
 	selectedGender = [];
 	selectedVeteran = [];
 	selectedDisability = [];
@@ -49,11 +68,11 @@ export class MyprofileeditComponent implements OnInit {
 	constructor(private httpService: HttpService, private formBuilder: FormBuilder, 
         private route: ActivatedRoute, private sanitizer: DomSanitizer,
         private router: Router,
-    private ss: SocketService) {        
+    private ss: SocketService,public activeModal: NgbActiveModal) {
         this.profile_data = {};
         this.profile_data.login = this.last_login;  
         this.socketService = this.ss;      
-        this.route.params.subscribe(params => this.get_data());        
+        // this.route.params.subscribe(params => this.get_data());
     }
     on_file_drop(container, file_object){
         let obj_this = this;
@@ -105,8 +124,11 @@ export class MyprofileeditComponent implements OnInit {
 
 	bio_html = undefined;
 	get_data() {
+
 		const obj_this = this;
-        let id = this.route.snapshot.params.id;
+		// let id = this.route.snapshot.params.id;
+		console.log(obj_this.edit_info.user_id);
+		let id = obj_this.edit_info.user_id;
 		// this.bread_crumb_items = this.httpService.make_bread_crumb();
 		// var url = window.location.href.split("/")
         // var path =url[url.length-2]
@@ -146,6 +168,7 @@ export class MyprofileeditComponent implements OnInit {
         }; 
 			
 		const success_cb = function (result) {
+			console.log(this.edit_info,123123);
 			obj_this.base_url = window['site_config'].server_base_url;		
 			if(result.profile.admin_email || result.profile.admin_cell_phone
 				|| result.profile.admin_fax || result.profile.admin_work_phone
@@ -301,7 +324,12 @@ export class MyprofileeditComponent implements OnInit {
 
 	
 	ngOnInit(){
-
+		if (this.edit_info)
+		{
+			this.section = this.edit_info.section
+			this.get_data()
+		}
+		// console.log(this.edit_info);
 	}
 
 	ngOnChanges(){

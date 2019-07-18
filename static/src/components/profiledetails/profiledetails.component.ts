@@ -4,11 +4,28 @@ import { HttpService } from '../../app/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SocketService } from 'src/app/socket.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MyprofileeditComponent } from '../myprofileedit/myprofileedit.component';
+import { template } from '@angular/core/src/render3';
 declare var $:any;
 
 @Component({
 	styleUrls:['./profiledetails.css'],
-	templateUrl: 'profiledetails.component.html'
+	templateUrl: 'profiledetails.component.html',
+// 	template: `
+//     <div class="modal-header">
+//     	<h4 class="modal-title">Hi there!</h4>
+//       	<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+//         	<span aria-hidden="true">&times;</span>
+//       	</button>
+//     </div>
+//     <div class="modal-body">
+      	
+//     </div>
+//     <div class="modal-footer">
+//       	<button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+//     </div>
+//   `
 })
 export class ProfileDetailsComponent implements OnInit {
 	edit_mode = false;
@@ -43,7 +60,7 @@ export class ProfileDetailsComponent implements OnInit {
 
 	constructor(private httpService: HttpService, private formBuilder: FormBuilder, 
         private route: ActivatedRoute, private sanitizer: DomSanitizer,
-    private ss: SocketService) {
+    private ss: SocketService, private modalService: NgbModal) {
         this.edit_mode = false;
         this.profile_data = {};
         this.profile_data.login = this.last_login;  
@@ -58,7 +75,60 @@ export class ProfileDetailsComponent implements OnInit {
             obj_this.profile_data[cls] = file_object.data;
             obj_this.modified_profile_data[cls] = file_object.data;
         }
-    }
+	}
+
+	open(section) {
+		const modalRef = this.modalService.open(MyprofileeditComponent);
+		modalRef.componentInstance.edit_info = {
+			section: section,
+			user_id: this.route.snapshot.params.id
+		}
+	}
+
+	edit_personal_info()
+	{
+		let config = {
+			on_load: function(){
+				$(document).ready(function(){
+					$('#signModal .modal-body').html(
+						`
+						<div class="row label-control-form">
+							<div class="container">
+								<div class="row">
+									<label for="name">
+										<b>First Name</b>
+									</label>
+									<input type="text" placeholder="Enter First Name" id="first_name">
+										<label for="name">
+											<b>Last Name</b>
+										</label>
+									<input type="text" placeholder="Enter Last Name" id="last_name">
+									<label for="c-phone">
+										<b>Cell Phone</b>
+									</label>
+									<input type="text" placeholder="Enter Cell Phone" id="c-phone" required>
+									<label for="email">
+										<b>Email</b>
+									</label>
+									<input type="text" placeholder="Enter Email" id="email">
+									<label for="location">
+											<b>Location</b>
+										</label>
+					
+									<input type="text" placeholder="Enter Location" id="location">
+								</div>
+							</div>
+						</div>
+						`
+						);
+				});
+			},
+			on_save:function(){
+
+			}
+		}
+		window['init_popup'](config);
+	}
 
 	addFile(event, filter){
 		const obj_this = this;
@@ -123,7 +193,7 @@ export class ProfileDetailsComponent implements OnInit {
             });
     }
 
-
+	
 	add_resume(){
 		$('.add_resume').trigger('click');
 	}
@@ -219,7 +289,7 @@ export class ProfileDetailsComponent implements OnInit {
     }
 
 	ngOnInit(){
-
+		
 	}
 
 	ngOnChanges(){

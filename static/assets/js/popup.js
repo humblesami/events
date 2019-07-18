@@ -1,5 +1,5 @@
 
-function init_sign(config) {
+function init_popup(config) {
     var sign_lib = 0;    
     $('#signModal').remove();
     $('body').append(`<div class="modal fade" id="signModal" role="dialog" style="z-index:1053" aria-hidden="true">
@@ -64,4 +64,4 @@ function init_sign(config) {
     // $('#signModal').hide();
 
 };
-window['init_sign'] = init_sign;
+window['init_popup'] = init_popup;

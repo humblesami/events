@@ -111,6 +111,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
                         <div class="ProFileHeadWrap">
                             PERSONAL INFO
+                            <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
                         </div>
                         <!-- <div *ngIf="profile_data.nick_name" class="row mb-2">
                             <div class="col-sm-3">
@@ -202,6 +203,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div class="col-sm-12">
                             <h3 class="clrBlue mb-5">
                                     WORK INFO
+                                    <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('work')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                             </h3>
                         </div>
                         <div class="admin_info_after_name container">
@@ -275,7 +277,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div class="row assistant" *ngIf="admin_info">
                             <div class="col-sm-12">
                                 <h3 class="clrBlue mb-5">
-                                        BOARD INFO
+                                    BOARD INFO
+                                    <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                                 </h3>
                             </div>
                             <div class="admin_info_after_name container">
@@ -345,6 +348,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div class="col-sm-12">
                             <h3 class="clrBlue mb-5">
                                 DIVERSITY INFO
+                                <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('diversity')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                             </h3>
                         </div>
                         <div class="admin_info_after_name container">
@@ -403,7 +407,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
                         <div class="col-sm-12">
                             <h3 class="clrBlue mb-5">
-                                Administrative Assistant
+                                ADMINISTRATIVE ASSISTANT
+                                <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('administrative')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                             </h3>
                         </div>
 

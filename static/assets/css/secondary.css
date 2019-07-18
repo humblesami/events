@@ -10,3 +10,7 @@
 {
     margin-right: 8px;
 }
+.modal-backdrop
+{
+    z-index: 10 !important;
+}
