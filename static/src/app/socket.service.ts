@@ -319,9 +319,11 @@ export class SocketService {
         this.media_url = this.server_url + '/media';
         this.user_photo = this.media_url + '/profile/ETjUSr1v2n.png';
         var url = window['pathname'];
-        var res = window['public_routes'].indexOf(url);
+
+        let public_routes = ['/login','/forgot-password', '/logout','/reset_password','/set-password'];
+        var res = public_routes.indexOf(url);
         if(res == -1)
-        {            
+        {
             try
             {
                 var user_cookie = localStorage.getItem('user');                

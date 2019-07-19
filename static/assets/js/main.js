@@ -3,8 +3,6 @@ var session_time_limit = 1800000;
 var is_mobile_device = undefined;
 var is_local_host = false;
 var server_wait_loader = undefined;
-window['public_routes'] = ['/login', '/logout','/reset_password'];
-
 
 var dn_current_site_user = {
     cookie: {
@@ -103,7 +101,7 @@ var site_functions = {
         }
     },
     go_to_login: function() {
-        if(dn_current_site_user.cookie)
+        if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
         {
             dn_current_site_user.logout();
         }
@@ -297,12 +295,8 @@ function addMainEventListeners() {
         $('body').removeClass('modal-open');
     });
 
-    $(document).on("mouseup touchend keyup", function(e) {
-        if(!is_local_host)
-        {
-            clearTimeout(time_out_session);
-            handleSessionExpiry();
-        }
+    $(document).on("mouseup touchend keyup", function(e) {        
+        handleSessionExpiry();        
         site_functions.hideLoader('force','');
         var target = e.target;
         var showbtn = $(target).closest('.showmouseawaybutton');
@@ -424,30 +418,17 @@ window.addEventListener('message', function receiveMessage(evt) {
 }, false);
 
 
-time_out_session = setTimeout(function() {
-    if(!is_local_host)
-    {
-        site_functions.go_to_login();
-    }    
-}, session_time_limit);
-
-
 function handleSessionExpiry() {
     if(is_local_host)
     {
-        return;
+        //return;
     }
-    var pathoo = window.location.toString().split('/');
-    var pathoo = '/' + pathoo[pathoo.length - 1];
-    pathoo = public_routes.indexOf(pathoo) == -1
-
-    if (time_out_session && pathoo) {
-        time_out_session = setTimeout(function() {
-            site_functions.go_to_login();
-        }, session_time_limit);
-    }
+    clearTimeout(time_out_session);
+    time_out_session = setTimeout(function() {
+        site_functions.go_to_login();
+    }, session_time_limit);
 }
-
+handleSessionExpiry();
 
 function check_if_touch_device() {
     var wl = window.location;
