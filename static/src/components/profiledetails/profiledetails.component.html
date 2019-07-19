@@ -1,5 +1,5 @@
 ﻿<app-breadcrumb app="meetings" model="{{type}}"
-rid="{{profile_data.id}}" *ngIf="!my_profile && type_breadCrumb" edit="1" delete="1"
+rid="{{profile_data.id}}" *ngIf="!my_profile && type_breadCrumb" delete="1"
 routes='[{"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
 
@@ -25,9 +25,9 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     <div class="HeadingWrap">
                         <img src="static/assets/images/face-scan.png" alt="" /> Profile
                     </div>
-                    <div *ngIf="my_profile" class="edit-buttons">
+                    <!-- <div *ngIf="my_profile" class="edit-buttons">
                         <a class="btn btn-primary" routerLink="/my-profile/edit">Edit</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
