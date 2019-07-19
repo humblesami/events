@@ -119,8 +119,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 class='add_resume' style="display: none"/>
                             </div>
                         </div>
-                        <div class="row mb-2">
-                            <div *ngIf="profile_data && my_profile" class="col-sm-3">
+                        <div *ngIf="profile_data && my_profile" class="row mb-2">
+                            <div class="col-sm-3">
                                 <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
                                     <i class="fa fa-pen"></i>
                                     <span  *ngIf="profile_data && profile_data.signature_data">Update </span>

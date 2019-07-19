@@ -172,7 +172,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <div class="col-sm-9 UserProfileDiscription" [innerHtml]="bio_html"></div>
                         </div>
 
-                        <div class="row mb-2">
+                        <div *ngIf="my_profile" class="row mb-2">
                             <div *ngIf="my_profile" class="col-sm-3">
                                 <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
                                     <i class="fa fa-pen"></i>
@@ -278,7 +278,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <div class="col-sm-12">
                                 <h3 class="clrBlue mb-5">
                                     BOARD INFO
-                                    <span *ngIf="socketService.user_data.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                                    <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                                 </h3>
                             </div>
                             <div class="admin_info_after_name container">
