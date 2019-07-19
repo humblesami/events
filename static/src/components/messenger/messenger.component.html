@@ -42,7 +42,7 @@
                 </button>
             </div>
 
-            <div *ngIf="!can_edit_group && selected_chat_group" class="chat-group-setup">                
+            <div *ngIf="!can_edit_group && selected_chat_group" class="chat-group-setup">
                 <button (click)="close_group_setup()" class="" aria-label="Create group.">
                     <div class="">
                         <svg width="24px" height="24px" viewBox="0 0 24 24" class="pTh3n mMlCCe">
@@ -50,6 +50,7 @@
                         </svg>
                     </div>
                 </button>
+                <span>{{selected_chat_group.name}}</span>
                 <ul class="contacts">
                     <li *ngFor="let member of selected_chat_group.members">
                         <div >

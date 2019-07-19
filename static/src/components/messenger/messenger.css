@@ -16,7 +16,7 @@
     /* #mobi-active-chat{ */
 	width: 100%;
 	background: #ffffff;
-	height:calc(100% - 50px);
+	height: 100%;
 }
 
 .messenger-container h3 {

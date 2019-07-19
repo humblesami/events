@@ -161,7 +161,7 @@ export class MessengerComponent implements OnInit {
     }
 
     
-    remove_member(user_id){
+    leave_group(){
         let obj_this = this;
         let input_data = {
             args:{
@@ -171,19 +171,27 @@ export class MessengerComponent implements OnInit {
             },
             params: {
                 group_id: obj_this.active_chat_user.id,
-                member_id: user_id
+                member_id: obj_this.socketService.user_data.id
             }
         }
-        obj_this.httpService.post(input_data, function(data){
-            // console.log(data, 14);
-            obj_this.active_chat_user = obj_this.group_details = data;
+        obj_this.httpService.post(input_data, function(data){                        
+            var all_groups = obj_this.socketService.chat_groups;
+            for(var i =0; i < all_groups.length; i++)
+            {
+                if(all_groups[i].id == input_data.params.group_id)
+                {
+                    all_groups.splice(i, 1);
+                    break;
+                }
+            }
+            obj_this.active_chat_user = undefined;
+            obj_this.selected_chat_group = undefined;
+            $('.chat-container-wrppaer').hide();
+            $('.chat-setup-container').show();
+            $('.contacts-container').show();
         } , function(){
             console.log('Group members not fetched');
         });
-    }
-
-    leave_group(){
-        this.remove_member(this.socketService.user_data.id);
     }
 
     close_members_list(){
@@ -275,7 +283,10 @@ export class MessengerComponent implements OnInit {
         obj_this.can_edit_group = group.created_by && group.created_by.id == obj_this.socketService.user_data.id;
         function on_group_setup_shown(){
             obj_this.selected_chat_group = group;
-            obj_this.selectedPeople = group.members;
+            let my_id = obj_this.socketService.user_data.id;
+            obj_this.selectedPeople = group.members.filter(function(item){
+                return item.id != my_id;
+            });
             $('.chat-container-wrppaer').show();
             $('.chat-group-setup').show();
             $('.chat-group-setup').find('.group-name:first').attr('readonly', 'readonly').val(group.name);
