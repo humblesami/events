@@ -148,11 +148,11 @@ export class AppRoutingModule {
 	constructor(private router: Router, private socketService: SocketService) {
         var crouter = router;
 		router.events.subscribe((event) => {
-			if (event instanceof NavigationStart) {  
-                // window.history.pushState(null,'',event.url);
+			if (event instanceof NavigationStart) {
                 socketService.init_route(event.url);
 				$('.hidemouseaway').hide();
                 $('.searchbar-full-width').hide();
+                $('.modal:visible button.close:first').click();
                 socketService.search_bar_shown = false;
                 site_functions.showLoader('route'+event.url);
                 $('body').removeClass('pdf-viewer');                

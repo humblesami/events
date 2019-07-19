@@ -2,21 +2,21 @@
 rid="{{profile_data.id}}" *ngIf="my_profile && type_breadCrumb"
 routes='[{"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
- -->
+-->
 
 <div class="modal-header">
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true">&times;</span>
     </button>
-  </div>
-  <div class="modal-body">
+</div>
+<div class="modal-body">
 
 
 <div class="router-outlet">
     <div class="container">
         <div class="details-card edit-mode" *ngIf="edit_mode">
             <div class="row edit-buttons edit-mode">
-                <!-- <a class="btn btn-primary cancel" routerLink="/my-profile" type="button">Cancel</a> -->
+                <a class="btn btn-primary cancel" (click)="onCancel()" type="button">Cancel</a>
                 <a class="btn btn-primary save" (click)="onSubmit()" type="submit">Save</a>
             </div>
             <div *ngIf="section=='personal'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
@@ -103,16 +103,22 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         </div>
                                     </div>
                                 </a>
-                                <span (click)="edit_resume()">Edit Resume</span>
-                                <input (change)="addFile($event, '')" 
-                                type="file" 
-                                name="edit_resume" 
-                                class='edit_resume' style="display: none"/>
+                                <div class="resume-edit-control">
+                                    <a class="edit link" (click)="add_resume()">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <input (change)="addFile($event, '')" 
+                                    type="file" 
+                                    name="edit_resume" 
+                                    class='edit_resume' style="display: none"/>
+                                </div>
                             </div>
                         </div>
                         <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
-                            <div class="col-sm-12">
-                                <span (click)="add_resume()">Add Resume</span>
+                            <div class="resume-edit-control">
+                                <a class="edit link" (click)="add_resume()">
+                                    <i class="far fa-edit"></i>
+                                </a>
                                 <input (change)="addFile($event, '')" 
                                 type="file" 
                                 name="add_resume" 
@@ -184,7 +190,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
-            <div *ngIf="profile_data && socketService.user_data.is_admin && section=='board'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+            <div *ngIf="profile_data && socketService.is_admin && section=='board'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
                 <div class="ProFileHeadWrap">
                     BOARD INFO
                 </div>
@@ -231,7 +237,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
-            <div *ngIf="(my_profile || socketService.user_data.is_admin) && section == 'diversity'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+            <div *ngIf="(my_profile || socketService.is_admin) && section == 'diversity'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
                 <div class="ProFileHeadWrap">
                     DIVERSITY INFO
                 </div>

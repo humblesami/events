@@ -200,3 +200,11 @@ last-login-details
     display: block;
     color: #797979;
 }
+.docwrappercontainer .resume-edit-control
+{
+    text-align: center;    
+    position: absolute;
+    top: -9px;
+    font-size: 20px;
+    right: 11px;
+}

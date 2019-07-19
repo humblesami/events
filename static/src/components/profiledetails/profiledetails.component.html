@@ -91,16 +91,22 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         </div>
                                     </div>
                                 </a>
-                                <span (click)="add_resume()">Edit Resume</span>
-                                <input (change)="addFile($event, '')" 
-                                type="file" 
-                                name="add_resume" 
-                                class='add_resume' style="display: none"/>
+                                <div class="resume-edit-control">
+                                        <a class="edit link" (click)="add_resume()">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <input (change)="addFile($event, '')" 
+                                        type="file" 
+                                        name="add_resume" 
+                                        class='add_resume' style="display: none"/>
+                                </div>                                
                             </div>
                         </div>
                         <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
-                            <div class="col-sm-12">
-                                <span (click)="add_resume()">Add Resume</span>
+                            <div class="resume-edit-control">
+                                <a class="edit link" (click)="add_resume()">
+                                    <i class="far fa-edit"></i>
+                                </a>
                                 <input (change)="addFile($event, '')" 
                                 type="file" 
                                 name="add_resume" 
@@ -111,18 +117,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
                         <div class="ProFileHeadWrap">
                             PERSONAL INFO
-                            <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
+                            <span *ngIf="socketService.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
                         </div>
-                        <!-- <div *ngIf="profile_data.nick_name" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="department">
-                                    <b>Nick Name</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.nick_name}}
-                            </div>
-                        </div> -->
                         <div *ngIf="profile_data.mobile_phone" class="row mb-2">
                             <div class="col-sm-3">
                                 <label for="mobile-phone">
@@ -173,7 +169,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
 
                         <div *ngIf="my_profile" class="row mb-2">
-                            <div *ngIf="my_profile" class="col-sm-3">
+                            <div class="col-sm-3">
                                 <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
                                     <i class="fa fa-pen"></i>
                                     <span  *ngIf="profile_data.signature_data">Update </span>
@@ -203,7 +199,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div class="col-sm-12">
                             <h3 class="clrBlue mb-5">
                                     WORK INFO
-                                    <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('work')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                                    <span *ngIf="my_profile || socketService.is_admin" (click)="open('work')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                             </h3>
                         </div>
                         <div class="admin_info_after_name container">
@@ -278,7 +274,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <div class="col-sm-12">
                                 <h3 class="clrBlue mb-5">
                                     BOARD INFO
-                                    <span *ngIf="socketService.user_data.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                                    <span *ngIf="my_profile || socketService.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                                 </h3>
                             </div>
                             <div class="admin_info_after_name container">
@@ -341,14 +337,14 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                     </div>
             </div>
-            <div *ngIf="my_profile || socketService.user_data.is_admin" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+            <div *ngIf="my_profile || socketService.is_admin" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
                 <div class="container">
                     <!-- Diversity Information -->
                     <div class="row assistant" *ngIf="admin_info">
                         <div class="col-sm-12">
                             <h3 class="clrBlue mb-5">
                                 DIVERSITY INFO
-                                <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('diversity')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                                <span *ngIf="my_profile || socketService.is_admin" (click)="open('diversity')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                             </h3>
                         </div>
                         <div class="admin_info_after_name container">
@@ -408,7 +404,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div class="col-sm-12">
                             <h3 class="clrBlue mb-5">
                                 ADMINISTRATIVE ASSISTANT
-                                <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('administrative')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                                <span *ngIf="my_profile || socketService.is_admin" (click)="open('administrative')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                             </h3>
                         </div>
 

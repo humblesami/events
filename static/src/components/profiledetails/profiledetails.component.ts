@@ -12,20 +12,6 @@ declare var $:any;
 @Component({
 	styleUrls:['./profiledetails.css'],
 	templateUrl: 'profiledetails.component.html',
-// 	template: `
-//     <div class="modal-header">
-//     	<h4 class="modal-title">Hi there!</h4>
-//       	<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-//         	<span aria-hidden="true">&times;</span>
-//       	</button>
-//     </div>
-//     <div class="modal-body">
-      	
-//     </div>
-//     <div class="modal-footer">
-//       	<button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
-//     </div>
-//   `
 })
 export class ProfileDetailsComponent implements OnInit {
 	edit_mode = false;
@@ -78,12 +64,16 @@ export class ProfileDetailsComponent implements OnInit {
 	}
 
 	open(section) {
+        let obj_this = this;
 		const modalRef = this.modalService.open(MyprofileeditComponent);
 		modalRef.componentInstance.edit_info = {
 			section: section,
 			user_id: this.route.snapshot.params.id
-		}
-		modalRef.result.then(() => { this.get_data(); }, () => { console.log('Something went wrong while edting profile..')})
+        }
+        function on_modal_opened(){
+            obj_this.get_data();                        
+        }
+		modalRef.result.then(on_modal_opened, () => { console.log('Something went wrong while edting profile..')})
 	}
 
 	edit_personal_info()

@@ -10,7 +10,7 @@
             <li class="breadcrumb-item active">{{title}}</li>
         </ul>
     </div>
-    <div *ngIf="socketService && socketService.user_data && socketService.user_data.is_admin" class="edit-buttons">
+    <div *ngIf="socketService && socketService.is_admin" class="edit-buttons">
         <a *ngIf="create" class="btn btn-primary" routerLink="/edit/{{app}}/{{model}}/add">Create</a>
         <a *ngIf="edit" class="btn btn-primary" routerLink="/edit/{{app}}/{{model}}/{{rid}}/change">Edit</a>
         <a *ngIf="delete" class="btn btn-danger" routerLink="/edit/{{app}}/{{model}}/{{rid}}/delete">Delete</a>        
