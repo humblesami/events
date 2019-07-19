@@ -346,7 +346,14 @@ export class MyprofileeditComponent implements OnInit {
 	}
 	setCommittees()
 	{
-		this.modified_profile_data['committees'] = this.selectedCommittees;
+        if (this.selectedCommittees.length)
+        {
+            this.modified_profile_data['committees'] = this.selectedCommittees;
+        }
+        else
+        {
+            this.modified_profile_data['committees'] = 'removed_all';
+        }
 	}
 
 	
