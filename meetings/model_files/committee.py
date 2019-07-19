@@ -1,10 +1,9 @@
-from meetings.model_files.user import Profile
 from django.db import models
-from mainapp.ws_methods import obj_to_dict, queryset_to_list, get_user_info
+from mainapp import ws_methods
 
 class Committee(models.Model):
     name = models.CharField(max_length=150)
-    users = models.ManyToManyField(Profile, blank=True, related_name="committees")
+    users = models.ManyToManyField('meetings.Profile', blank=True, related_name="committees")
     description = models.TextField(max_length=500, default='', blank=True)
     allUser = models.BooleanField('All Users', default=False)
 
@@ -16,12 +15,12 @@ class Committee(models.Model):
         comm_id = params.get('id')
         if comm_id:
             committee_orm = Committee.objects.filter(pk=comm_id)[0]
-            committee = obj_to_dict(
+            committee = ws_methods.obj_to_dict(
                 committee_orm,
                 fields=['id', 'name', 'description']
             )
             if committee:
-                committee_users = get_user_info(committee_orm.users.all())
+                committee_users = ws_methods.get_user_info(committee_orm.users.all())
                 committee['users'] = committee_users
 
                 data = {"committee": committee, "next": 0, "prev": 0}
@@ -36,7 +35,7 @@ class Committee(models.Model):
         committees_orm = Committee.objects.filter()
         total_cnt = committees_orm.count()
         current_cnt = total_cnt
-        committees = queryset_to_list(
+        committees = ws_methods.queryset_to_list(
             committees_orm,
             fields=['id', 'name', 'description'],
             related={

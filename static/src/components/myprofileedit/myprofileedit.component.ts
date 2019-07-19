@@ -37,6 +37,7 @@ export class MyprofileeditComponent implements OnInit {
 	selectedGender = [];
 	selectedVeteran = [];
 	selectedDisability = [];
+	selectedCommittees;
 	last_login = {
 		last: {
 			login_time: '',
@@ -168,7 +169,6 @@ export class MyprofileeditComponent implements OnInit {
         }; 
 			
 		const success_cb = function (result) {
-			console.log(this.edit_info,123123);
 			obj_this.base_url = window['site_config'].server_base_url;		
 			if(result.profile.admin_email || result.profile.admin_cell_phone
 				|| result.profile.admin_fax || result.profile.admin_work_phone
@@ -210,6 +210,10 @@ export class MyprofileeditComponent implements OnInit {
 			{
 				obj_this.selectedDisability = result.profile.disability;
 			}
+			if (result.profile.committees)
+			{
+				obj_this.selectedCommittees = result.profile.committees;
+			}
 			if (!obj_this.type_breadCrumb)
 			{
 				obj_this.type = result.profile.group.toLowerCase()
@@ -235,7 +239,8 @@ export class MyprofileeditComponent implements OnInit {
 		for (const key in form_data) {
 			if(obj_this.modified_profile_data[key] != '')
 				input_data[key] = obj_this.modified_profile_data[key];			
-        }
+		}
+		input_data['user_id'] = obj_this.user_id;
         let args = {
             app: 'meetings',
             model: 'Profile',
@@ -332,12 +337,17 @@ export class MyprofileeditComponent implements OnInit {
 	{
 		this.modified_profile_data['disability'] = this.selectedDisability['id'];
 	}
+	setCommittees()
+	{
+		this.modified_profile_data['committees'] = this.selectedCommittees;
+	}
 
 	
 	ngOnInit(){
 		if (this.edit_info)
 		{
-			this.section = this.edit_info.section
+			this.section = this.edit_info.section;
+			this.user_id = this.edit_info.user_id;
 			this.get_data()
 		}
 		// console.log(this.edit_info);

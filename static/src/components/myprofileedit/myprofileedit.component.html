@@ -183,7 +183,54 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>
+            <div *ngIf="profile_data && socketService.user_data.is_admin && section=='board'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                <div class="ProFileHeadWrap">
+                    BOARD INFO
+                </div>
+                <div class="row label-control-form">
+                    <div class="container">
+                        <div class="col-sm-9 UserProfileDiscription">
+                            <!-- <select (change)="modified_profile_data.gender = $event.target.value" id='gender' requeired>
+                                <option *ngFor="let row of choice_fields.gender" value="{{row.id}}" [selected]="row.id === profile_data.gender.id">{{row.name}}</option>
+                            </select> -->
+                            <ng-select
+                            [items]="choice_fields.committees"
+                            [multiple]="true"
+                            [closeOnSelect]="false"
+                            [hideSelected]="true"
+                            bindLabel="name"
+                            [searchable] = "true"
+                            (change)="setCommittees()"
+                            placeholder="Select Committees"
+                            [(ngModel)]="selectedCommittees"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="row">
+                            <label for="board_joining_date">
+                                <b>Board Joining Date</b>
+                            </label>
+                            <input class="form-control" value="{{profile_data.board_joining_date}}" (change)="modified_profile_data.board_joining_date = $event.target.value"
+                                type="date" data-date-format="YYYY-MM-DD" placeholder="Enter Board Joining Date" id="board_joining_date" required>
+                        <div class="row">
+                            <label for="term_start_date">
+                                <b>Term Start Date</b>
+                            </label>
+                                <input value="{{profile_data.term_start_date}}" (change)="modified_profile_data.term_start_date = $event.target.value"
+                                class="form-control" data-date-format="YYYY-MM-DD"  type="date" placeholder="Enter Term Start Date" id="term_start_date" required>
+                        </div>
+                        <div class="row">
+                            <label for="term_end_date">
+                                <b>Term End Date</b>
+                            </label>
+                            <input value="{{profile_data.term_end_date}}" (change)="modified_profile_data.term_end_date = $event.target.value"
+                                class="form-control" data-date-format="YYYY-MM-DD" type="date" placeholder="Enter End Start Date" id="term_end_date" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div *ngIf="(my_profile || socketService.user_data.is_admin) && section == 'diversity'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
                 <div class="ProFileHeadWrap">
                     DIVERSITY INFO

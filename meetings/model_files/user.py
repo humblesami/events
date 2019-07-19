@@ -5,6 +5,7 @@ import traceback
 from django.db import models
 from mainapp import ws_methods
 from documents.file import File
+from meetings.model_files.committee import Committee
 from mainapp.settings import server_base_url
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
@@ -257,7 +258,15 @@ class Profile(user_model):
         disability = ws_methods.choices_to_list(profile_orm._meta.get_field('disability').choices)
         ethnicity = ws_methods.choices_to_list(profile_orm._meta.get_field('ethnicity').choices)
         veteran = ws_methods.choices_to_list(profile_orm._meta.get_field('veteran').choices)
-        choice_fields = {'gender': gender, 'disability': disability, 'ethnicity': ethnicity, 'veteran': veteran}
+        committees = list(Committee.objects.values('id', 'name'))
+        choice_fields = {
+            'gender': gender, 
+            'disability': disability, 
+            'ethnicity': ethnicity, 
+            'veteran': veteran,
+            'committees': committees
+            }
+
         data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
         return data
 
@@ -269,9 +278,26 @@ class Profile(user_model):
         profile = Profile.objects.get(pk=user_id)
 
         for key in params:
-            if key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume':
+            if key != 'committees' and key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume':
                 setattr(profile, key, params[key])
 
+        if params.get('committees'):
+            committee_ids = []
+            committees = params.get('committees')
+            for committee in committees:
+                committee_ids.append(committee['id'])
+            
+            all_committees = Committee.objects.filter(pk__in=committee_ids)
+            current_committees = profile.committees.all()
+            new_committees = set(all_committees) - set(current_committees)
+            removed_committees = set(current_committees) - set(all_committees)
+            for committee in new_committees:
+                committee.users.add(user_id)
+                committee.save()
+
+            for committee in removed_committees:
+                committee.users.remove(user_id)
+                committee.save()
 
         if params.get('resume'):
             image_data = params['resume']

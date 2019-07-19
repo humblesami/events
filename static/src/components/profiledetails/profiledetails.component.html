@@ -278,7 +278,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <div class="col-sm-12">
                                 <h3 class="clrBlue mb-5">
                                     BOARD INFO
-                                    <span *ngIf="my_profile || socketService.user_data.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                                    <span *ngIf="socketService.user_data.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
                                 </h3>
                             </div>
                             <div class="admin_info_after_name container">
