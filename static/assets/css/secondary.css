@@ -20,3 +20,13 @@
     background-color: grey;
     color: white;
 }
+
+.popup.messenger .messenger-container {
+    height: calc(100vh - 157px);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+hr{
+    margin: 0;
+}

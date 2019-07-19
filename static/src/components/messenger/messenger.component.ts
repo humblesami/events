@@ -45,10 +45,10 @@ export class MessengerComponent implements OnInit {
                 }
             };
 
-            socketService.server_events['members_added_to_group'] = function(data){
+            socketService.server_events['chat_group_members_updated'] = function(data){
                 var index = -1;
                 var all_groups = obj_this.socketService.chat_groups;
-                for(var i =0;i< all_groups.length;i++)
+                for(var i =0; i < all_groups.length; i++)
                 {
                     if(all_groups[i].id == data.id)
                     {
@@ -138,6 +138,14 @@ export class MessengerComponent implements OnInit {
         obj_this.httpService.post(input_data, function(data){
             obj_this.group_moderator = obj_this.socketService.user_data.id == data.created_by.id;
             obj_this.active_chat_user = obj_this.group_details = data;
+            var all_chat_groups = obj_this.socketService.chat_groups;
+            for(var n=0; n< all_chat_groups.length; n++)
+            {
+                if(all_chat_groups[n].id == data.id)
+                {
+                    all_chat_groups[n] = data;
+                }
+            }
             if(call_back)
             {
                 call_back(data);
@@ -152,45 +160,6 @@ export class MessengerComponent implements OnInit {
         $('.chat-group-setup').hide();
     }
 
-    can_edit_group: Boolean;
-    selected_chat_group: ChatGroup;
-    show_group_setup(group: ChatGroup, e){
-        let obj_this = this;
-        obj_this.can_edit_group = false;
-        if(!group)
-        {
-            $('.chat-group-setup').show();
-            obj_this.can_edit_group = true;
-            $('.chat-group-setup').find('.group-name:first').removeAttr('readonly').val('').focus();            
-            obj_this.selectedPeople = [];            
-            return;
-        }
-        obj_this.selected_chat_group = group;
-        console.log(obj_this.selected_chat_group, 822);
-        if(group.created_by && group.created_by.id == obj_this.socketService.user_data.id)
-        {
-            obj_this.can_edit_group = true;   
-        }
-        else
-        {
-
-        }
-        if(group.members.length == 0)
-        {
-            $('.chat-container-wrppaer').hide();
-            obj_this.show_member_list(group, function(data: ChatGroup){
-                group = data;
-                obj_this.selectedPeople = group.members;                
-                $('.chat-container-wrppaer').show();
-                $('.chat-group-setup').show();
-                obj_this.selected_chat_group = group;
-                $('.chat-group-setup').find('.group-name:first').attr('readonly', 'readonly').val(group.name);
-            });
-        }
-        else{
-            obj_this.selectedPeople = group.members;            
-        }
-    }
     
     remove_member(user_id){
         let obj_this = this;
@@ -218,14 +187,15 @@ export class MessengerComponent implements OnInit {
     }
 
     close_members_list(){
-        this.group_details.show_members = false;
-        // console.log(this.group_details, 133);
+        this.group_detail_mode = 0;
+        this.group_details.show_members = false;        
     }    
 
     create_chat_room()
     {
         $('.chat-group-setup').hide();
-        let obj_this = this; 
+        let obj_this = this;
+        obj_this.group_detail_mode = 1;
         if(!obj_this.group_name)
         {
             console.log('group name required');
@@ -248,14 +218,16 @@ export class MessengerComponent implements OnInit {
         }, function(){
             $('.chat-group-setup').show();
         });
-    }    
+    }
+    
     
     select_chat_group(selected_group: ChatGroup, e){
+        let obj_this = this;        
+        obj_this.group_detail_mode = 1;
         if(e && e.target && $(e.target).hasClass('setup'))
         {
             return;
-        }
-        let obj_this = this;        
+        }        
         if(!selected_group.is_group)
         {
             selected_group.is_group = true;
@@ -282,6 +254,67 @@ export class MessengerComponent implements OnInit {
         }
         input_data['no_loader'] = 1;
         obj_this.httpService.get(input_data, call_on_user_selected_event, call_on_user_selected_event);
+    }
+
+    can_edit_group: Boolean;
+    group_detail_mode = 0;
+    selected_chat_group: ChatGroup;
+    show_group_setup(group: ChatGroup, e){
+        let obj_this = this;
+        obj_this.group_detail_mode = 1;
+        obj_this.can_edit_group = false;
+        if(!group)
+        {
+            $('.chat-group-setup').show();            
+            $('.chat-group-setup').find('.group-name:first').removeAttr('readonly').val('').focus();
+            obj_this.selectedPeople = []; 
+            obj_this.can_edit_group = true;
+            obj_this.selected_chat_group = undefined;
+            return;
+        }
+        obj_this.can_edit_group = group.created_by && group.created_by.id == obj_this.socketService.user_data.id;
+        function on_group_setup_shown(){
+            obj_this.selected_chat_group = group;
+            obj_this.selectedPeople = group.members;
+            $('.chat-container-wrppaer').show();
+            $('.chat-group-setup').show();
+            $('.chat-group-setup').find('.group-name:first').attr('readonly', 'readonly').val(group.name);
+        }
+
+        if(group.members.length == 0)
+        {
+            $('.chat-container-wrppaer').hide();
+            obj_this.show_member_list(group, function(data: ChatGroup){
+                group = data;
+                on_group_setup_shown();
+            });
+        }
+        else{
+            obj_this.selectedPeople = group.members;
+            on_group_setup_shown();
+        }
+    }
+
+    update_chat_group_members(){
+        let obj_this = this;
+        let input_data= {
+            args:{
+                app:'chat',
+                model:'ChatGroup',
+                method:'update_members'
+            },
+            params:{
+                group_id: obj_this.selected_chat_group.id,
+                members: obj_this.selectedPeople
+            }
+        }
+        obj_this.httpService.post(input_data,function(){
+            obj_this.selected_chat_group.members = obj_this.selectedPeople;
+            obj_this.selected_chat_group = undefined;
+            obj_this.group_detail_mode = 0;
+        }, function(){
+            $('.chat-group-setup').show();
+        });
     }
     
 	select_chat_user(target_id) {        

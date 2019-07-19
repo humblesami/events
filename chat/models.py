@@ -421,6 +421,51 @@ class ChatGroup(models.Model):
             return res
 
     @classmethod
+    def update_members(cls, request, params):
+        uid = request.user.id
+        member_ids = []
+        group_id = params['group_id']
+        for obj in params.get('members'):
+            member_ids.append(obj['id'])
+
+        chat_group = ChatGroup.objects.get(pk=group_id)
+        chat_group.members.set(member_ids)
+        chat_group.save()
+
+        group_members = []
+        for mem in chat_group.members.all():
+            group_members.append({
+                'id': mem.id,
+                'name': mem.name,
+                'photo': mem.image.url,
+            })
+        group = {
+            'id': chat_group.id,
+            'name': chat_group.name,
+            'members': group_members,
+            'created_by': {
+                'id': chat_group.created_by.id,
+                'name': chat_group.created_by.name,
+                'photo': chat_group.created_by.image.url,
+            },
+            'is_group': True,
+            'create_time': str(chat_group.create_time),
+        }
+
+        event1 = {
+            'name': 'chat_group_members_updated',
+            'data': group,
+            'audience': member_ids
+        }
+        events = [event1]
+        res = ws_methods.emit_event(events)
+        if res == 'done':
+            return {'error': '', 'data': group}
+        else:
+            return res
+
+
+    @classmethod
     def add_members(cls, request, params):
         audience = []
         uid = request.user.id

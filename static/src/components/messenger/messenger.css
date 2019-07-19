@@ -23,17 +23,7 @@
     padding-top: 10px;
     text-align: center;
 }
-.messenger-container .contacts_body{
-	padding: 0;
-    overflow-y: auto;
-    white-space: nowrap;
-    height: calc(100vh - 174px);
-}
-.messenger-container .contacts_body ul
-{
-    margin: 0;
-    padding: 0;
-}
+
 .messenger-container .msg_card_body{
 	overflow-y: auto;
 }
@@ -665,4 +655,16 @@
     width: 100%;
     height: calc(100% - 30px);
     background: white;
+}
+
+.messenger-container .contacts_body {
+    padding: 0;
+    overflow-y: auto;
+    height: calc(100vh - 210px);
+}
+
+.messenger-container .contacts_body ul
+{
+    margin: 0;
+    padding: 0;
 }

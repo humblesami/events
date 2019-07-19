@@ -1,19 +1,22 @@
 <div class="messenger-container">
-    <div class="chat friends-chat-box">
-        <div class="contacts_card">
-            <div class="card-header MessengerSearchWrap">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="chatgroup">
-                            <button (click)="show_group_setup(null, null)" class="create glyphicon glyphicon-plus"></button>
-                            <span>New Group</span>
-                        </span>
-                        <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-                    </div>
-                    <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">
-                </div>
-            </div>
 
+    <div class="chat-setup-container chat friends-chat-box">
+        <div class="card-header MessengerSearchWrap">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="chatgroup">
+                        <button (click)="show_group_setup(null, null)" class="create glyphicon glyphicon-plus"></button>
+                        <span>New Group</span>
+                    </span>
+                    <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+                </div>
+                <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="group-setup-container" *ngIf="group_detail_mode == 1">
             <div *ngIf="can_edit_group" class="row p-1 m-1 chat-group-setup" style="border:1px solid">
                 <input [(ngModel)]="group_name" class="group-name" />
                 <ng-select
@@ -24,13 +27,19 @@
                     placeholder="Select people"
                     [(ngModel)]="selectedPeople">
                 </ng-select>
-                <button (click)="create_chat_room()" class="" aria-label="Create group.">
+                <button *ngIf="!selected_chat_group" (click)="create_chat_room()" class="" aria-label="Create group.">
+                    Create Group
+                </button>
+                <button *ngIf="selected_chat_group" (click)="update_chat_group_members()" class="" aria-label="Create group.">
+                    Update Group Members
+                </button>
+                <button (click)="close_group_setup()" class="" aria-label="Create group.">
                     <div class="">
                         <svg width="24px" height="24px" viewBox="0 0 24 24" class="pTh3n mMlCCe">
-                            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path>
+                            
                         </svg>
                     </div>
-                </button>                
+                </button>
             </div>
 
             <div *ngIf="!can_edit_group && selected_chat_group" class="chat-group-setup">                
@@ -56,64 +65,65 @@
                     </li>
                 </ul>
             </div>
-
-            <div class="card-body contacts_body">
-                <hr/>
-                <ul class="chat-groups-container">
-                    <li *ngFor="let cg of socketService.chat_groups" (click)="select_chat_group(cg, $event)">
-                        <div>
-                            <a class="contact-item d-flex align-items-center bd-highlight">
-                                <div class="img_cont">
-                                    <img src="static/assets/images/group.jpeg" class="rounded-circle user_img">                                        
-                                </div>
-                                <div class="user_info">
-                                    <span>{{ cg.name }}</span>
-                                </div>
-                                <span class="unseen" *ngIf="cg.unseen">
-                                    {{cg.unseen}}
-                                </span>
-                                -----------
-                                <span class="setup" (click)="show_group_setup(cg, $event)">
-                                    Members
-                                </span>
-                            </a>
-                        </div>
-                    </li>                    
-                </ul>
-                <hr/>
-                <ul class="contacts">
-                    <li *ngFor="let uid of socketService.keys_chat_users"
-                        (click)="select_chat_user(uid)"
-                        [ngClass]="[active_chat_user && uid == active_chat_user.id ? 'active': '']">                                
-                        <div *ngIf="socketService.chat_users[uid].name.toLowerCase().indexOf(searchVal.toLowerCase()) > -1">
-                            <a class="contact-item d-flex align-items-center bd-highlight">
-                                <div class="img_cont">
-                                    <img src="{{socketService.server_url}}{{socketService.chat_users[uid].photo}}" class="rounded-circle user_img">
-                                    <span *ngIf="socketService.chat_users[uid].online" class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>{{ socketService.chat_users[uid].name }}</span>
-                                    <p *ngIf="socketService.chat_users[uid].online">Online</p>
-                                </div>
-                                <span class="unseen" *ngIf="socketService.chat_users[uid].unseen">
-                                    {{socketService.chat_users[uid].unseen}}
-                                </span>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
         </div>
+        
+        
+        <div class="contacts-container card-body contacts_body">
+            <ul class="chat-groups-container">
+                <li *ngFor="let cg of socketService.chat_groups" (click)="select_chat_group(cg, $event)">
+                    <div>
+                        <a class="contact-item d-flex align-items-center bd-highlight">
+                            <div class="img_cont">
+                                <img src="static/assets/images/group.jpeg" class="rounded-circle user_img">                                        
+                            </div>
+                            <div class="user_info">
+                                <span>{{ cg.name }}</span>
+                            </div>
+                            <span class="unseen" *ngIf="cg.unseen">
+                                {{cg.unseen}}
+                            </span>
+                            -----------
+                            <span class="setup" (click)="show_group_setup(cg, $event)">
+                                Members
+                            </span>
+                        </a>
+                    </div>
+                </li>                    
+            </ul>
+            <hr/>
+            <ul class="contacts">
+                <li *ngFor="let uid of socketService.keys_chat_users"
+                    (click)="select_chat_user(uid)"
+                    [ngClass]="[active_chat_user && uid == active_chat_user.id ? 'active': '']">                                
+                    <div *ngIf="socketService.chat_users[uid].name.toLowerCase().indexOf(searchVal.toLowerCase()) > -1">
+                        <a class="contact-item d-flex align-items-center bd-highlight">
+                            <div class="img_cont">
+                                <img src="{{socketService.server_url}}{{socketService.chat_users[uid].photo}}" class="rounded-circle user_img">
+                                <span *ngIf="socketService.chat_users[uid].online" class="online_icon"></span>
+                            </div>
+                            <div class="user_info">
+                                <span>{{ socketService.chat_users[uid].name }}</span>
+                                <p *ngIf="socketService.chat_users[uid].online">Online</p>
+                            </div>
+                            <span class="unseen" *ngIf="socketService.chat_users[uid].unseen">
+                                {{socketService.chat_users[uid].unseen}}
+                            </span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
     </div>
 
     <div class="chat chat-container-wrppaer">
         <div *ngIf="active_chat_user" class="chat-full-height">
             <div class="chat-user-title">
                 <div class="MessengerTitle">
-					<span class="backchatlist" (click)="hide_chat_box()"><i class="fas fa-arrow-left"></i></span>
-					<span class="user-name">{{active_chat_user.name}}</span>
-					<span class="status" *ngIf="active_chat_user.online" class="userstat">Online</span>
-				</div>
+                    <span class="backchatlist" (click)="hide_chat_box()"><i class="fas fa-arrow-left"></i></span>
+                    <span class="user-name">{{active_chat_user.name}}</span>
+                    <span class="status" *ngIf="active_chat_user.online" class="userstat">Online</span>
+                </div>
                 <div *ngIf="active_chat_user && !active_chat_user.is_group" class="MessengerConnectWrap">                    
                     <div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">
                         <span >
