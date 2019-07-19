@@ -152,12 +152,7 @@
 .messenger-container .user_info{
 	margin-top: auto;
     margin-bottom: auto;
-    margin-left: 15px;
-    line-height: 1.0em;
-    display: flex;
-    flex-direction: column;
-	justify-content: center;
-	text-transform: capitalize;
+    margin-left: 5px;
 }
 .messenger-container .user_info span{
 	color: rgba(0, 0, 0, 1);
@@ -667,4 +662,9 @@
 {
     margin: 0;
     padding: 0;
+}
+span.setup {
+    margin-left: 5px;
+    border: 1px solid silver;
+    padding: 5px;
 }
