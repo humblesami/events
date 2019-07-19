@@ -66,7 +66,7 @@ class AuthUser(models.Model):
             thread_data['subject'] = 'Password Rest'
             thread_data['audience'] = [user.id]
             thread_data['template_data'] = {
-                'url': server_base_url+'/reset/password/'
+                'url': server_base_url+'/#/set-password/'
             }
             thread_data['template_name'] = 'user/reset_password.html'
             thread_data['token_required'] = 1
