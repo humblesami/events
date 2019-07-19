@@ -19,6 +19,15 @@
         <div class="group-setup-container" *ngIf="group_detail_mode == 1">
             <div *ngIf="can_edit_group" class="row p-1 m-1 chat-group-setup" style="border:1px solid">
                 <input [(ngModel)]="group_name" class="group-name" />
+                <button *ngIf="!selected_chat_group" (click)="create_chat_room()" class="" aria-label="Create group.">
+                    Create
+                </button>
+                <button *ngIf="selected_chat_group" (click)="update_chat_group_members()" class="" aria-label="Create group.">
+                    Update
+                </button>
+                <button (click)="close_group_setup()" class="" aria-label="Create group.">
+                    Close
+                </button>
                 <ng-select
                     [items]="people_list"
                     [multiple]="true"
@@ -26,29 +35,12 @@
                     bindLabel="name"
                     placeholder="Select people"
                     [(ngModel)]="selectedPeople">
-                </ng-select>
-                <button *ngIf="!selected_chat_group" (click)="create_chat_room()" class="" aria-label="Create group.">
-                    Create Group
-                </button>
-                <button *ngIf="selected_chat_group" (click)="update_chat_group_members()" class="" aria-label="Create group.">
-                    Update Group Members
-                </button>
-                <button (click)="close_group_setup()" class="" aria-label="Create group.">
-                    <div class="">
-                        <svg width="24px" height="24px" viewBox="0 0 24 24" class="pTh3n mMlCCe">
-                            
-                        </svg>
-                    </div>
-                </button>
+                </ng-select>                
             </div>
 
             <div *ngIf="!can_edit_group && selected_chat_group" class="chat-group-setup">
                 <button (click)="close_group_setup()" class="" aria-label="Create group.">
-                    <div class="">
-                        <svg width="24px" height="24px" viewBox="0 0 24 24" class="pTh3n mMlCCe">
-                            
-                        </svg>
-                    </div>
+                    Close
                 </button>
                 <span>{{selected_chat_group.name}}</span>
                 <ul class="contacts">
@@ -231,30 +223,5 @@
             <h3>Welcome to BoardSheet</h3>
         </div>
     </div>
-
-    <!-- <div class="group-details-container" *ngIf="group_details && group_details.show_members">
-        <div class="MessengerTitle">
-            <span class="backchatlist" (click)="close_members_list()">
-                <i class="fas fa-arrow-left"></i>
-            </span>
-        </div>
-
-        <ul class="contacts">
-            <li *ngFor="let member of group_details.members">
-                <div >
-                    <a class="contact-item d-flex align-items-center bd-highlight">
-                        <div class="img_cont">
-                            <img src="{{socketService.server_url}}{{member.photo}}" class="rounded-circle user_img">                            
-                        </div>
-                        <div class="user_info">
-                            <span>{{ member.name }}</span>
-                            <button (click)="remove_member(member.id)" *ngIf="group_moderator">Remove</button>
-                        </div>
-                    </a>
-                </div>
-            </li>
-        </ul>
-
-    </div> -->
 
 </div>
