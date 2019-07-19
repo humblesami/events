@@ -280,24 +280,29 @@ class Profile(user_model):
         for key in params:
             if key != 'committees' and key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume':
                 setattr(profile, key, params[key])
+        committees = params.get('committees')
+        if committees:
+            if committees != 'removed_all':
+                committee_ids = []
+                for committee in committees:
+                    committee_ids.append(committee['id'])
+                
+                all_committees = Committee.objects.filter(pk__in=committee_ids)
+                current_committees = profile.committees.all()
+                new_committees = set(all_committees) - set(current_committees)
+                removed_committees = set(current_committees) - set(all_committees)
+                for committee in new_committees:
+                    committee.users.add(user_id)
+                    committee.save()
 
-        if params.get('committees'):
-            committee_ids = []
-            committees = params.get('committees')
-            for committee in committees:
-                committee_ids.append(committee['id'])
-            
-            all_committees = Committee.objects.filter(pk__in=committee_ids)
-            current_committees = profile.committees.all()
-            new_committees = set(all_committees) - set(current_committees)
-            removed_committees = set(current_committees) - set(all_committees)
-            for committee in new_committees:
-                committee.users.add(user_id)
-                committee.save()
-
-            for committee in removed_committees:
-                committee.users.remove(user_id)
-                committee.save()
+                for committee in removed_committees:
+                    committee.users.remove(user_id)
+                    committee.save()
+            else:
+                current_committees = profile.committees.all()
+                for committee in current_committees:
+                    committee.users.remove(user_id)
+                    committee.save()
 
         if params.get('resume'):
             image_data = params['resume']

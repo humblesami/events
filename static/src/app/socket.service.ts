@@ -379,6 +379,7 @@ export class SocketService {
         }
         console.log(me);
         $('#main-div').show();
+        authorized_user.is_admin = 0;
         for(var i = 0; i < authorized_user.groups.length; i++){
             if( authorized_user.groups[i].name == 'Admin'){
                 authorized_user.is_admin = 1;

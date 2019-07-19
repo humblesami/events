@@ -223,7 +223,6 @@ export class MyprofileeditComponent implements OnInit {
 					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
 				}
 			}
-			console.log(result.profile.ethnicity);
 			obj_this.input_date_format();
 		};
 		const failure_cb = function (error) {
@@ -254,24 +253,24 @@ export class MyprofileeditComponent implements OnInit {
 		this.httpService.post(final_input_data,
 			(data: any) => {
 				let obj_this = this;
-				let profile = data.profile_data;
-				var user_cookie = localStorage.getItem('user');                
-                let cuser = undefined;
-                if(user_cookie)
-                {
-                    cuser = JSON.parse(user_cookie);
-				}
-				if (cuser)
-				{
-					profile.token = cuser.token;
-					let value = JSON.stringify(profile);
-					localStorage.setItem('user', value);
-					obj_this.socketService.user_data.groups = profile.groups;
-					obj_this.socketService.user_data.name = profile.name;
-					obj_this.socketService.user_data.photo = profile.photo;
-					obj_this.socketService.user_photo = obj_this.base_url + profile.photo;
+				// let profile = data.profile_data;
+				// var user_cookie = localStorage.getItem('user');                
+                // let cuser = undefined;
+                // if(user_cookie)
+                // {
+                //     cuser = JSON.parse(user_cookie);
+				// }
+				// if (cuser)
+				// {
+				// 	profile.token = cuser.token;
+				// 	let value = JSON.stringify(profile);
+				// 	localStorage.setItem('user', value);
+				// 	obj_this.socketService.user_data.groups = profile.groups;
+				// 	obj_this.socketService.user_data.name = profile.name;
+				// 	obj_this.socketService.user_data.photo = profile.photo;
+				// 	obj_this.socketService.user_photo = obj_this.base_url + profile.photo;
 
-				}
+				// }
 				// obj_this.router.navigate(['/my-profile']);
 				obj_this.activeModal.close('Close click')
 			},
@@ -339,7 +338,14 @@ export class MyprofileeditComponent implements OnInit {
 	}
 	setCommittees()
 	{
-		this.modified_profile_data['committees'] = this.selectedCommittees;
+		if (this.selectedCommittees.length)
+		{
+			this.modified_profile_data['committees'] = this.selectedCommittees;
+		}
+		else
+		{
+			this.modified_profile_data['committees'] = 'removed_all';
+		}
 	}
 
 	
