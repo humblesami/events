@@ -73,6 +73,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </label>
                             <input value="{{profile_data.email}}" (change)="modified_profile_data.email = $event.target.value"
                                 type="text" placeholder="Enter Email" id="email">
+                            <label for="birth_date">
+                                <b>Date of Birth</b>
+                            </label>
+                            <input value="{{profile_data.birth_date}}" (change)="modified_profile_data.birth_date = $event.target.value"
+                                class="form-control" data-date-format="YYYY-MM-DD" type="date" placeholder="Enter Date of Birth" id="birth_date">
                             <label for="location">
                                     <b>Location</b>
                                 </label>
@@ -407,6 +412,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </label>
                             <input value="{{profile_data.admin_work_phone}}" (change)="modified_profile_data.admin_work_phone = $event.target.value"
                                 type="text" placeholder="" id="admin-work-phone" required>
+                            <label for="mail-to-assistant">
+                                <b>Email To Assistant</b>
+                            </label>
+                            <input  checked="{{profile_data.mail_to_assistant}}" (change)="mail_to_assistant_change($event.target.value)"
+                                type="checkbox" id="mail-to-assistant" required>
                             <!-- <label for="mail-to-assistant">
                                 <b>Mail to Assistant</b>
                             </label>

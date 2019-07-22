@@ -214,6 +214,14 @@ export class MyprofileeditComponent implements OnInit {
 			{
 				obj_this.selectedCommittees = result.profile.committees;
 			}
+			if (result.profile.mail_to_assistant)
+			{
+				$('#mail-to-assistant').prop('checked', true)
+			}
+			else
+			{
+				$('#mail-to-assistant').prop('checked', false)
+			}
 			if (!obj_this.type_breadCrumb)
 			{
 				obj_this.type = result.profile.group.toLowerCase()
@@ -229,6 +237,13 @@ export class MyprofileeditComponent implements OnInit {
 		const failure_cb = function (error) {
 		};
 		this.httpService.get(input_data, success_cb, failure_cb);
+	}
+
+	mail_to_assistant_change(value)
+	{
+		let obj_this = this;
+		let mail_to_assistant = $('#mail-to-assistant').prop('checked');
+		obj_this.modified_profile_data['mail_to_assistant'] = mail_to_assistant;
 	}
 
 	onSubmit() {
