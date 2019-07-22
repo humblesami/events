@@ -87,7 +87,22 @@ class UserCreateForm(UserCreationForm):
     class Meta:
         model = Profile
         fields = ('username', 'password1', 'password2', 'email')
+
+    class Media:
+        js=('admin/js/jquery.min.js', 'admin/js/user_creation_password_validation.js',)
     
+    def save(self, commit=True):
+        user = super(UserCreateForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+        return user
+
+    def clean_email(self):
+        if Profile.objects.filter(email=self.cleaned_data['email']).exists():
+            raise forms.ValidationError(u'This email already exists.')
+            
+        return self.cleaned_data['email']
 
 class UserAdminForm(UserChangeForm):
     committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
