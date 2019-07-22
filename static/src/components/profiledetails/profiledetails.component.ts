@@ -70,10 +70,12 @@ export class ProfileDetailsComponent implements OnInit {
 			section: section,
 			user_id: this.route.snapshot.params.id
         }
-        function on_modal_opened(){
-            obj_this.get_data();                        
+        function on_modal_opened(a){
+			if (a=='saved'){
+				obj_this.get_data();
+			}
         }
-		modalRef.result.then(on_modal_opened, () => { console.log('Something went wrong while edting profile..')})
+		modalRef.result.then(on_modal_opened, () => { })
 	}
 
 	edit_personal_info()
@@ -269,7 +271,8 @@ export class ProfileDetailsComponent implements OnInit {
                         post: 1,
                     },
                     params: {
-                        signature_data: signature_data
+						signature_data: signature_data,
+						user_id: obj_this.route.snapshot.params.id
                     }
                 }, null, function(){
 

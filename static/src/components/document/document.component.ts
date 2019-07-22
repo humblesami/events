@@ -121,6 +121,10 @@ export class DocumentComponent implements OnInit {
             // method: 'get_binary'
             method: 'get_file_data'
         }
+        if (window.location.toString().indexOf('4200') > -1)
+        {
+            args.method = 'get_binary';
+        }
         var input_data = {            
             args: args,
             params: {id : doc_id}

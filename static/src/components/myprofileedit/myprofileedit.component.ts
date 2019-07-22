@@ -277,7 +277,7 @@ export class MyprofileeditComponent implements OnInit {
                 }				
                 
 				// obj_this.router.navigate(['/my-profile']);
-				obj_this.activeModal.close('Close click')
+				obj_this.activeModal.close('saved')
 			},
 			(error) => {
                 const x = document.getElementById('slot-select-error');

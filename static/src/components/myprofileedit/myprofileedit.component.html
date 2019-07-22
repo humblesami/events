@@ -115,9 +115,10 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </div>
                         </div>
                         <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
-                            <div class="resume-edit-control">
-                                <a class="edit link" (click)="add_resume()">
+                            <div>
+                                <a style="position: inherit !important" class="edit link resume-edit-control" (click)="add_resume()">
                                     <i class="far fa-edit"></i>
+                                    Add Resume
                                 </a>
                                 <input (change)="addFile($event, '')" 
                                 type="file" 

@@ -315,10 +315,9 @@ class Profile(user_model):
             resume_file = profile.resume # File.objects.filter(user_id=user_id)
             if not resume_file:
                 file_name = 'resume_' + str(user_id) + '.pdf'
-                resume_file = File(name=file_name, file_type='resume')
             else:
                 file_name = resume_file.name
-
+            resume_file = File(name=file_name, file_type='resume')
             resume_file.attachment.save(file_name, jango_file)
             resume_file.save()
 
@@ -356,7 +355,9 @@ class Profile(user_model):
 
     @classmethod
     def save_signature(cls, request, params):
-        user_id = request.user.id
+        user_id = params.get('user_id')
+        if not user_id:
+            user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
         signature_data = params['signature_data']
         signature_data = signature_data.encode()
