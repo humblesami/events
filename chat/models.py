@@ -568,7 +568,7 @@ class ChatGroup(models.Model):
 
 
 class Message(models.Model):
-    sender = models.IntegerField()
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
     to = models.IntegerField(null=True)
     body = models.TextField()
     read_status = models.BooleanField(default=False)
@@ -581,7 +581,7 @@ class Message(models.Model):
         group_id = params.get('group_id')
         target_id = params.get('to')
         body = params['body']
-        message = Message(sender=uid, body=body, create_date=datetime.now())
+        message = Message(sender_id=uid, body=body, create_date=datetime.now())
         if group_id:
             message.chat_group_id = group_id
         else:
@@ -607,22 +607,31 @@ class Message(models.Model):
                     'url': doc.attachment.url
                 })
 
-        message = message.__dict__
-        message['attachments'] = attachment_urls
-        message['create_date'] = str(datetime.now())
+        message_dict = message.__dict__
+        message_dict['sender'] = {
+            'id': message.sender.id,
+            'name': message.sender.name,
+            'photo': message.sender.image.url,
+        }
+        message_dict['chat_group'] = {
+            'id': message.chat_group.id,
+            'name': message.chat_group.name,
+        }
+        message_dict['attachments'] = attachment_urls
+        message_dict['create_date'] = str(datetime.now())
 
-        del message['_state']
-        message['uuid'] = params['uuid']
+        del message_dict['_state']
+        message_dict['uuid'] = params['uuid']
         events = [
-            {'name': 'chat_message_received', 'data': message, 'audience': [target_id]}
+            {'name': 'chat_message_received', 'data': message_dict, 'audience': [target_id]}
         ]
         if group_id:
             events = [
-                {'name': 'group_chat_message_received', 'data': message, 'room': {'type': 'chat_room', 'id': group_id} }
+                {'name': 'group_chat_message_received', 'data': message_dict, 'room': {'type': 'chat_room', 'id': group_id} }
             ]
         res = ws_methods.emit_event(events)
         if res == 'done':
-            return message
+            return message_dict
         else:
             return res
 
@@ -630,14 +639,18 @@ class Message(models.Model):
     def get_processed_messages(cls, messages, uid):
         ar = []
         for obj in messages:
-            if obj.to and obj.sender != uid and not obj.read_status:
+            if obj.to and obj.sender.id != uid and not obj.read_status:
                 obj.read_status = True
                 obj.save()
             dict_obj = {
                 'id': obj.id,
                 'body': obj.body,
                 'to': obj.to,
-                'sender': obj.sender,
+                'sender': {
+                    'id': obj.sender.id,
+                    'name': obj.sender.name,
+                    'photo': obj.sender.image.url
+                },
                 'create_date': str(obj.create_date),
                 'attachments': []
             }
@@ -648,7 +661,10 @@ class Message(models.Model):
                     if not status.read:
                         status.read = True
                         status.save()
-                dict_obj['chat_group_id'] = obj.chat_group.id
+                dict_obj['chat_group'] = {
+                    'id': obj.chat_group.id,
+                    'name': obj.chat_group.name
+                }
             for att in MessageDocument.objects.filter(message_id=obj.id):
                 dict_obj['attachments'].append({
                     'name': att.name,
@@ -663,7 +679,7 @@ class Message(models.Model):
         target_id = int(target_id)
         user_ids = [target_id, uid]
         ar = []
-        messages = Message.objects.filter(sender__in=user_ids, to__in=user_ids).order_by('-id')[offset: offset + 20][::-1]
+        messages = Message.objects.filter(sender_id__in=user_ids, to__in=user_ids).order_by('-id')[offset: offset + 20][::-1]
         ar = cls.get_processed_messages(messages, uid)
         return ar
 
@@ -729,7 +745,7 @@ class AuthUserChat(models.Model):
             uid = int(uid)
             mp_users = Profile.objects.filter()
             unseen_messages = 0
-            friend_list = {}
+            chat_users = []
             friend_ids = []
             committees = []
             meetings = []
@@ -738,7 +754,7 @@ class AuthUserChat(models.Model):
                     id = friendObj.id
                     name = friendObj.fullname()
                     photo = friendObj.image.url
-                    unseen = len(Message.objects.filter(sender=friendObj.id, read_status=False, to=uid))
+                    unseen = len(Message.objects.filter(sender_id=friendObj.id, read_status=False, to=uid))
                     unseen_messages += unseen
                     friend = {
                         'id': id,
@@ -746,7 +762,7 @@ class AuthUserChat(models.Model):
                         'name': name,
                         'photo': photo
                     }
-                    friend_list[id] = friend
+                    chat_users.append(friend)
                     friend_ids.append(id)
 
             user_object = User.objects.get(pk=uid)
@@ -803,7 +819,7 @@ class AuthUserChat(models.Model):
                 }
                 chat_groups_list.append(chat_group)
             data = {
-                'friends': friend_list,
+                'friends': chat_users,
                 'friendIds': friend_ids,
                 'notifications': notifications,
                 'unseen': unseen_messages,

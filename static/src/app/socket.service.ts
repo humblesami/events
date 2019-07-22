@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChatGroup, ChatUser } from '../app/models/chat';
+import { ChatGroup, ChatUser, AppUser, ChatClient } from '../app/models/chat';
 import { Router, ActivatedRoute, RoutesRecognized, ActivatedRouteSnapshot } from "@angular/router";
 declare var $;
 
@@ -9,18 +9,19 @@ export class SocketService {
     
     io: any;
     socket:any;
-    user_data:any;
-    chat_users = {};    
+    user_data: AppUser;
+    chat_clients: Array<ChatClient>;
+    chat_groups: Array<ChatGroup>;
+    chat_users: Array<ChatUser>;
     server_url = '';
     media_url = '';
-    user_photo = '';    
+    user_photo = '';
     on_verified = [];
     verified = false;
     iframe_url = true;    
     not_public_url = 0;
     server_events = {};
     unseen_messages = 0;
-    keys_chat_users = [];
 	notificationList = [];
     current_id = undefined;	      
     site_config = undefined;
@@ -29,8 +30,7 @@ export class SocketService {
     ongoing_call : any;
     rtc_multi_connector : any;
     active_route_snapshot : ActivatedRouteSnapshot;
-    search_bar_shown = false;
-    chat_groups: Array<ChatGroup>;
+    search_bar_shown = false;    
 
     constructor(private router: Router) {
         var obj_this = this;
@@ -360,7 +360,8 @@ export class SocketService {
 
     route_changed(route: ActivatedRouteSnapshot){
         this.active_route_snapshot = route;
-    }    
+    }   
+    
     is_admin = false;
     connect_socket(authorized_user){
         var obj_this = this;
@@ -447,12 +448,10 @@ export class SocketService {
                     return;
                 }
                 console.log("Authenticated\n\n");
-                obj_this.chat_groups = data.chat_groups;
-                // console.log(obj_this.chat_groups, 672);
                 
                 obj_this.user_data.photo = obj_this.server_url + data.user.photo;
                 obj_this.user_photo = obj_this.server_url + data.user.photo;
-                localStorage.setItem('user', JSON.stringify(obj_this.user_data));                
+                localStorage.setItem('user', JSON.stringify(obj_this.user_data));
 
                 obj_this.verified = true;
                 if(!data.unseen && data.unseen != 0)
@@ -460,14 +459,19 @@ export class SocketService {
                     data.unseen = 0;
                     console.log('Please ask to add unseen attribute from service developer of get_user_data');
                 }
+
                 obj_this.unseen_messages = data.unseen;
-                var chat_user_keys = [];
-                for(var c in data.friends)
+                obj_this.chat_clients = new Array<ChatClient>();
+                for(var kk in data.chat_groups)
                 {
-                    chat_user_keys.push(c);
+                    obj_this.chat_clients.push(data.chat_groups[kk]);
                 }
+                for(var km in data.friends)
+                {
+                    obj_this.chat_clients.push(data.friends[km]);
+                }
+                obj_this.chat_groups = data.chat_groups;
                 obj_this.chat_users = data.friends;
-                obj_this.keys_chat_users = chat_user_keys;
 
                 // console.log(obj_this.chat_users, 4509);
 
@@ -514,6 +518,11 @@ export class SocketService {
         });        
     }
 
+    add_chat_user(chat_cleint: ChatClient)
+    {
+        this.chat_users.push(chat_cleint);
+    }
+
     execute_on_verified = function(method){        
         if(this.verified)
             method();
@@ -523,7 +532,7 @@ export class SocketService {
         }
     }
 
-    update_unseen_message_count(event, target) {        
+    update_unseen_message_count(event, target: ChatClient) {        
         if(!target)
         {
             console.log('Selection failed for', target);
@@ -598,42 +607,37 @@ export class SocketService {
             obj_this.video_call.started_by_caller(data);
         };
         
-        
-        
-
-        function updateUserStatus(user)
+        function updateUserStatus(user: ChatClient)
         {
             if(obj_this.user_data.id == user.id)
             {
                 console.log(user , "Should never happen now");
                 return;
             }
-            if(!obj_this.chat_users[user.id])
-            {
-                console.log(user.id + ' not found in list -- ', obj_this.chat_users);
+            var temp = obj_this.chat_users.filter(function(item){
+                return item.id == user.id;
+            });
+            if(temp.length == 0){
+                console.log(user , " not found");
                 return;
-                //pending to add this user in list
             }
-            else
-            {
-                obj_this.chat_users[user.id].online = user.online;
-            }
+            let client = temp[0] as ChatClient;
+            client.online = user.online;
         }
 
         obj_this.server_events['friend_joined'] = updateUserStatus;
 
         obj_this.server_events['user_left'] = updateUserStatus;
 
-        obj_this.server_events['new_friend'] = function(friend){
-            obj_this.chat_users[friend.id] = friend;
-            obj_this.keys_chat_users.push(friend.id);
+        obj_this.server_events['new_friend'] = function(friend: ChatClient){
+            obj_this.chat_users.push(friend);
         }
         obj_this.server_events['friend_removed'] = function(friend_id){
-            for(var i=0;i<obj_this.keys_chat_users.length;i++)
+            for(var i=0;i<obj_this.chat_users.length;i++)
             {
-                if(obj_this.keys_chat_users[i] == friend_id)
+                if(obj_this.chat_users[i].id == friend_id)
                 {
-                    obj_this.keys_chat_users.splice(i, 1);
+                    obj_this.chat_users.splice(i, 1);
                     break;
                 }
             }

@@ -13,39 +13,61 @@ export class Message{
     id: number;
     from: ChatClient;
     body:string;
-    date_time: string;
-    uuid: string;    
+    create_date: string;
+    uuid: string;
+    sender: BaseClient;
     attachments:Array<Attachment>;
     constructor(){
         console.log('message constructor');
     }    
 }
 
-export class ChatClient{
+export class BaseClient{
+    id: number;
+    name: string;
+    photo:string;    
+    constructor(){
+        console.log('Base client constructor');
+    }
+}
+
+export class UserGroup{
+    id: number;
+    name: string;
+}
+
+export class AppUser extends BaseClient{
+    is_admin: Boolean;
+    token: string;
+    groups: Array<UserGroup>;
+    constructor(){
+        super();
+        console.log('App User constructor');
+    }
+}
+
+export class ChatClient extends BaseClient{
     id: number;
     name: string;
     photo:string;
     read:Boolean;
     unseen: number;
     is_group: Boolean;
+    online: Boolean;
     messages:Array<Message>;
     constructor(){
+        super();
         console.log('Chat client constructor');
-    }
-    add_message(message: Message){
-        this.messages.push(message);
-    }
+    }    
 }
-
 
 export class ChatGroupMessage extends Message{    
     parent_message: Message;
-    group: ChatGroup;
+    chat_group: ChatGroup;
 }
 
-
 export class UserMessage extends Message{
-    sender: number;
+    sender: ChatUser;
     receiver: ChatUser;
 }
 
