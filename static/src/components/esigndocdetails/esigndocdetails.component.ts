@@ -299,7 +299,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     //w:this.width,
                     //h:this.height,
                     class: "saved_sign",
-                    style: "cursor:pointer;width:190px;height:40px;border:2px dotted gray;font-weight: bold;color:black;z-index:2;overflow:hidden",
+                    style: "cursor:pointer;width:190px;height:40px;border:2px dotted gray;font-weight: bold;color:black;z-index:1;overflow:hidden",
                     //text: this.name
                 });
                 if (this.type == 'sign' && !this.signed) {
@@ -475,7 +475,10 @@ export class EsignDocDetailsComponent implements OnInit {
 
             new_signature.prepend('<i class="fa fa-pen  edit_sign" style="color:black;float:left" aria-hidden="true"/>');
             new_signature.prepend('<i class="fa fa-times  fa-lg del_sign" style="color:black;float:left" aria-hidden="true"/>');
-            var dropdown = $('<select id="dropdown" style="width:50%"></select>');
+            var dropdown = $('<select class="dropdown" style="width:50%"></select>');
+            dropdown.css({
+                width:90+'%',
+            });
             var _users = false;
             var meeting_id = $('#dropdown_meeting').val();
             if (!meeting_id || meeting_id == 0) {
@@ -488,7 +491,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 var meet_users = m[0].attendees;
                 _users = meet_users;
             }
-            new_signature.append("<div><h4>Select User</h4></div>").append(dropdown);
+            new_signature.append(dropdown);
             dropdown.append($("<option />").val(0).text("Select User"));
             $.each(_users, function() {
                 dropdown.append($("<option />").val(this.id).text(this.username));
@@ -516,7 +519,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
             });
 
-            $(this).append(new_signature);
+            $(this).append(new_signature);            
             $(".save_doc_data").removeAttr('disabled');
         }
 
