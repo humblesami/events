@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { HttpService } from "../../app/http.service";
+import { SocketService } from "../../app/socket.service";
 declare var $:any;
 
 
@@ -12,7 +13,7 @@ export class EsignDocDetailsComponent implements OnInit {
     doc: any;
     doc_name: any;
     selectedDisability = [];
-    constructor(private httpService: HttpService, private route: ActivatedRoute) {
+    constructor(private httpService: HttpService, private route: ActivatedRoute, private socketService: SocketService) {
         // this.route.params.subscribe(params => this.get_data());
     }
 
@@ -358,6 +359,20 @@ export class EsignDocDetailsComponent implements OnInit {
                     div.css({
                         background: "rgba(230, 81, 81, 0.9)"
                     });
+                }
+                if (obj_this.socketService.is_admin)
+                {
+                    if(this.signed)
+                    {
+                        div.html('<img src="'+window['site_config'].server_base_url+this.image+'" height="100%"/>');
+                    }
+                }
+                else
+                {
+                    if(this.signed && this.my_record)
+                    {
+                        div.html('<img src="'+window['site_config'].server_base_url+this.image+'" height="100%"/>');
+                    }
                 }
 
                 if (this.page == pageNum) {
