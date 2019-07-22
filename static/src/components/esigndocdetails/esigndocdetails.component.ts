@@ -11,7 +11,7 @@ declare var $:any;
 export class EsignDocDetailsComponent implements OnInit {
     doc: any;
     doc_name: any;
-
+    selectedDisability = [];
     constructor(private httpService: HttpService, private route: ActivatedRoute) {
         // this.route.params.subscribe(params => this.get_data());
     }
@@ -446,7 +446,9 @@ export class EsignDocDetailsComponent implements OnInit {
                 position: 'absolute',
                 left: percent_left + "%",
                 top: percent_top + "%",
-                overflow: 'hidden'
+                overflow: 'hidden',
+                width: 160,
+                height: 100
             });
             // console.log(percent_left, percent_top);
             //new_signature.append('<i class="fa fa-pen  fa-lg  edit_sign" style="color:black;float:right;margin-right:10px;" aria-hidden="true"/>');
@@ -458,11 +460,46 @@ export class EsignDocDetailsComponent implements OnInit {
 
             new_signature.prepend('<i class="fa fa-pen  edit_sign" style="color:black;float:left" aria-hidden="true"/>');
             new_signature.prepend('<i class="fa fa-times  fa-lg del_sign" style="color:black;float:left" aria-hidden="true"/>');
-
+            var dropdown = $('<select id="dropdown" style="width:50%"></select>');
+            var _users = false;
+            var meeting_id = $('#dropdown_meeting').val();
+            if (!meeting_id || meeting_id == 0) {
+                meeting_id = false
+                _users = users;
+            } else {
+                var m = $.grep(meetings, function(v) {
+                    return v.id == meeting_id;
+                });
+                var meet_users = m[0].attendees;
+                _users = meet_users;
+            }
+            new_signature.append("<div><h4>Select User</h4></div>").append(dropdown);
+            dropdown.append($("<option />").val(0).text("Select User"));
+            $.each(_users, function() {
+                dropdown.append($("<option />").val(this.id).text(this.username));
+            });
+            var selected = new_signature.attr("user");
+            if (selected) {
+                //            dropdown[0].selectedIndex = selected;
+                dropdown.val(selected)
+            }
             new_signature.attr({
                 "page": pageNum
             }).resizable();
 
+            dropdown.change(function() {
+
+                var user = dropdown.val();
+                if (user != 0) {
+                    var name = dropdown.find('option:selected').text();
+                    new_signature.attr("user", user)
+                    new_signature.find('.user_name').remove();
+                    new_signature.append(`<div class='user_name'>${name}</div>`)
+                }
+
+                $('.youtubeVideoModal').modal('hide');
+
+            });
 
             $(this).append(new_signature);
             $(".save_doc_data").removeAttr('disabled');
@@ -1084,64 +1121,64 @@ export class EsignDocDetailsComponent implements OnInit {
             sign.removeClass("new_sign");
         });
 
-        $(document).off("click", ".new_sign")
-        $(document).on("click", ".new_sign", function(e) {
-            var sign = $(this);
+        // $(document).off("click", ".new_sign")
+        // $(document).on("click", ".new_sign", function(e) {
+        //     var sign = $(this);
 
-            var selected = sign.attr("user");
-            if ($(e.target).is(".ui-resizable-handle,.del_sign")) {
-                return;
-            }
-            window["doc_preview"].image("uuuu");
-            var body = $('.youtubeVideoModal .modal-body:last');
+        //     var selected = sign.attr("user");
+        //     if ($(e.target).is(".ui-resizable-handle,.del_sign")) {
+        //         return;
+        //     }
+        //     window["doc_preview"].image("uuuu");
+        //     var body = $('.youtubeVideoModal .modal-body:last');
 
-            var dropdown = $('<select id="dropdown" style="width:50%"></select>');
+        //     var dropdown = $('<select id="dropdown" style="width:50%"></select>');
 
-            var save_btn = $('<br><span class="btn btn-primary btn-sm DocsBtn">Ok</span>');
-            var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">Cancel</span>');
-            var _users = false;
-            var meeting_id = $('#dropdown_meeting').val();
-            if (!meeting_id || meeting_id == 0) {
-                meeting_id = false
-                _users = users;
-            } else {
-                var m = $.grep(meetings, function(v) {
-                    return v.id == meeting_id;
-                });
-                var meet_users = m[0].attendees;
-                _users = meet_users;
-            }
-            body.html("<h3>Select User</h3>").append(dropdown) //.append(input_email).append(input_name);
-            body.append(save_btn);
-            body.append(cancel_btn);
-            dropdown.append($("<option />").val(0).text("Select User"));
+        //     var save_btn = $('<br><span class="btn btn-primary btn-sm DocsBtn">Ok</span>');
+        //     var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">Cancel</span>');
+        //     var _users = false;
+        //     var meeting_id = $('#dropdown_meeting').val();
+        //     if (!meeting_id || meeting_id == 0) {
+        //         meeting_id = false
+        //         _users = users;
+        //     } else {
+        //         var m = $.grep(meetings, function(v) {
+        //             return v.id == meeting_id;
+        //         });
+        //         var meet_users = m[0].attendees;
+        //         _users = meet_users;
+        //     }
+        //     body.html("<h3>Select User</h3>").append(dropdown) //.append(input_email).append(input_name);
+        //     body.append(save_btn);
+        //     body.append(cancel_btn);
+        //     dropdown.append($("<option />").val(0).text("Select User"));
 
-            $.each(_users, function() {
-                dropdown.append($("<option />").val(this.id).text(this.username));
-            });
-            if (selected) {
-                //            dropdown[0].selectedIndex = selected;
-                dropdown.val(selected)
-            }
+        //     $.each(_users, function() {
+        //         dropdown.append($("<option />").val(this.id).text(this.username));
+        //     });
+        //     if (selected) {
+        //         //            dropdown[0].selectedIndex = selected;
+        //         dropdown.val(selected)
+        //     }
 
-            cancel_btn.click(function(evt) {
-                evt.preventDefault()
-                $('.youtubeVideoModal').modal('hide');
-            })
-            save_btn.click(function() {
+        //     cancel_btn.click(function(evt) {
+        //         evt.preventDefault()
+        //         $('.youtubeVideoModal').modal('hide');
+        //     })
+        //     save_btn.click(function() {
 
-                var user = dropdown.val();
-                if (user != 0) {
-                    var name = dropdown.find('option:selected').text();
-                    sign.attr("user", user)
-                    sign.find('.user_name').remove();
-                    sign.append(`<div class='user_name'>${name}</div>`)
-                }
+        //         var user = dropdown.val();
+        //         if (user != 0) {
+        //             var name = dropdown.find('option:selected').text();
+        //             sign.attr("user", user)
+        //             sign.find('.user_name').remove();
+        //             sign.append(`<div class='user_name'>${name}</div>`)
+        //         }
 
-                $('.youtubeVideoModal').modal('hide');
+        //         $('.youtubeVideoModal').modal('hide');
 
-            });
-        });
+        //     });
+        // });
 
 
         $("#nxxt_sign").click(function() {

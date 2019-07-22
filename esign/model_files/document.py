@@ -73,7 +73,7 @@ class SignatureDoc(File):
 
         input = PdfFileReader(open(pth, "rb"))
         # Addition of code for orientation correction Asfand
-        pageValue = input.getPage(0)
+        pageValue = input.pages[0]
         pageOrientation = pageValue.get('/Rotate')
         page = input.getPage(0).mediaBox
         zAxis = page.getUpperRight_x()
