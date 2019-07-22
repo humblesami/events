@@ -79,12 +79,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
             
                             <input value="{{profile_data.location}}" (change)="modified_profile_data.location = $event.target.value"
                                 type="text" placeholder="Enter Location" id="location">
-                            <label for="bio">
-                                <b>Bio</b>
-                            </label>
-        
-                            <input value="{{profile_data.bio}}" (change)="modified_profile_data.bio = $event.target.value"
-                                type="text" placeholder="Enter Bio" id="bio">
                         </div>
                         <div *ngIf="profile_data.resume"  class="row docwrappercontainer">
                             <div class="col-sm-12">
@@ -144,6 +138,24 @@ title="{{profile_data.name}}"></app-breadcrumb>
         
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="section=='bio'" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
+                <div class="ProFileHeadWrap">
+                    Bio
+                </div>
+                <div class="row label-control-form">
+                    <div class="container">
+                        <div class="row">
+                            <label for="bio">
+                                <b>Bio</b>
+                            </label>
+                            <textarea value="{{profile_data.bio}}" (change)="modified_profile_data.bio = $event.target.value"
+                            class="form-control" placeholder="Enter Bio" id="bio">
+
+                            </textarea>
                         </div>
                     </div>
                 </div>
@@ -370,11 +382,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </label>
                             <input value="{{profile_data.admin_last_name}}" (change)="modified_profile_data.admin_last_name = $event.target.value"
                                 type="text" placeholder="Last Name" required>
-                            <label for="admin-nick-name">
+                            <!-- <label for="admin-nick-name">
                                 <b>Nick Name</b>
                             </label>
                             <input value="{{profile_data.admin_nick_name}}" (change)="modified_profile_data.admin_nick_name = $event.target.value"
-                                type="text" placeholder="Nick Name" required>
+                                type="text" placeholder="Nick Name" required> -->
                             <label for="admin-e-mail">
                                 <b>E-mail</b>
                             </label>

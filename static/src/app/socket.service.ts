@@ -361,7 +361,7 @@ export class SocketService {
     route_changed(route: ActivatedRouteSnapshot){
         this.active_route_snapshot = route;
     }    
-    is_admin=false;
+    is_admin = false;
     connect_socket(authorized_user){
         var obj_this = this;
         if(!authorized_user)
@@ -379,7 +379,6 @@ export class SocketService {
         }
         console.log(me);
         $('#main-div').show();
-        authorized_user.is_admin = 0;
         for(var i = 0; i < authorized_user.groups.length; i++){
             if( authorized_user.groups[i].name == 'Admin'){
                 obj_this.is_admin = true;
