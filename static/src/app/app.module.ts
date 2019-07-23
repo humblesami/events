@@ -64,6 +64,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MentionModule } from 'angular-mentions';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { DateAgoPipe } from './pipes/date-ago.pipe';
 
 @NgModule({
     imports: [
@@ -121,7 +122,8 @@ import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
         SurveyresultsComponent,
         MeetingresponseComponent,
         SupportComponent,
-        ProfileeditComponent,        
+        ProfileeditComponent,
+        DateAgoPipe,        
     ],
     providers:[
         AuthGuard,
