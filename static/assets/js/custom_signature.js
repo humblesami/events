@@ -132,8 +132,7 @@ jQuery(document).ready(function(e) {
 
 function init_sign(config) {
     var sign_lib = 0;    
-    $('#signModal').remove();
-    console.log(34232);
+    $('#signModal').remove();    
     $('body').append(`<div class="modal fade" id="signModal" role="dialog" style="z-index:1053" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">

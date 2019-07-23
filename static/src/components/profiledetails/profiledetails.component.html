@@ -34,7 +34,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
         
         <form class="details-card">
             <div class="container">
-                <div class="row mb-5">
+                <div class="row mb-3">
                     <div class="col-sm-12 col-md-3 col-lg-2">
                         <div class="ProfileUserNameJonbWrapper">
                             <div class="ProfileChangeSaveWrapper">
@@ -156,12 +156,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </label>
                             </div>
                             <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.location | firstToUpper}}
+                                    {{profile_data.location}}
                             </div>
                         </div>
 
-                        <div *ngIf="my_profile" class="row mb-2">
-                            <div class="col-sm-3">
+                        <div *ngIf="my_profile" class="">
+                            <div class="">
                                 <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
                                     <i class="fa fa-pen"></i>
                                     <span  *ngIf="profile_data.signature_data">Update </span>
