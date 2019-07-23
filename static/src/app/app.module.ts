@@ -65,6 +65,7 @@ import { MentionModule } from 'angular-mentions';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { StringFirstToUpperPipe } from './pipes/string-first-to-upper.pipe';
 
 @NgModule({
     imports: [
@@ -123,7 +124,8 @@ import { DateAgoPipe } from './pipes/date-ago.pipe';
         MeetingresponseComponent,
         SupportComponent,
         ProfileeditComponent,
-        DateAgoPipe,        
+        DateAgoPipe,
+        StringFirstToUpperPipe,        
     ],
     providers:[
         AuthGuard,
