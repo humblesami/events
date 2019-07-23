@@ -323,6 +323,9 @@ class Profile(user_model):
             resume_file.attachment.save(file_name, jango_file)
             resume_file.save()
             profile.resume = resume_file
+        elif 'resume' in params:
+            profile.resume = None
+            profile.save();
 
         if params.get('image'):
             image_data = params['image']

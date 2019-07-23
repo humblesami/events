@@ -124,6 +124,7 @@ export class ProfileeditComponent implements OnInit {
 			}
 			else{
 				obj_this.modified_profile_data['resume'] = fileReader.result;
+				obj_this.profile_data['resume'] = fileReader.result;
 			}
 		};
 		fileReader.onerror = function (error) {
@@ -231,6 +232,11 @@ export class ProfileeditComponent implements OnInit {
 		obj_this.modified_profile_data['mail_to_assistant'] = mail_to_assistant;
 	}
 
+	update_image()
+	{
+		$('.update_image:first').click();
+	}
+
 	onSubmit() {
 		this.submitted = true;
 		const obj_this = this;
@@ -297,7 +303,12 @@ export class ProfileeditComponent implements OnInit {
 	add_resume(){
 		$('.add_resume').trigger('click');
 	}
-	edit_resume(){
+	edit_resume(e){
+		if ($(e).hasClass('fa-trash-alt'))
+		{
+			this.modified_profile_data['resume'] = null;
+			return;
+		}
 		$('.edit_resume').trigger('click');
     }
     onCancel(){

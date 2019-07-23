@@ -18,6 +18,8 @@ class Survey(models.Model):
     close_date = models.DateTimeField(auto_now_add=True)
     description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Publish"), default=False)
+    open_date = models.DateTimeField()
+    close_date = models.DateTimeField()
     need_logged_user = models.BooleanField(
         _("Only authenticated users can see it and answer it"), default=True)
     display_by_question = models.BooleanField(_("Display by question"), default=False)

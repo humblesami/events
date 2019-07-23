@@ -187,9 +187,9 @@ export class ProfileDetailsComponent implements OnInit {
     }
 
 	
-	add_resume(){
-		$('.add_resume').trigger('click');
-	}
+	// add_resume(){
+	// 	$('.add_resume').trigger('click');
+	// }
 
 	bio_html = undefined;
 	get_data() {
@@ -229,7 +229,7 @@ export class ProfileDetailsComponent implements OnInit {
             {
                 obj_this.choice_fields = result.choice_fields;            
             }
-            
+            obj_this.profile_data['resume'] = null;
 			for(var key in result.profile){
 				obj_this.profile_data[key] = result.profile[key];
 			}

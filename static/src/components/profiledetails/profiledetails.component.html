@@ -91,7 +91,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         </div>
                                     </div>
                                 </a>
-                                <div *ngIf="my_profile || socketService.is_admin" class="resume-edit-control">
+                                <!-- <div *ngIf="my_profile || socketService.is_admin" class="resume-edit-control">
                                         <a class="edit link" (click)="add_resume()">
                                             <i class="far fa-edit"></i>
                                         </a>
@@ -99,10 +99,10 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         type="file" 
                                         name="add_resume" 
                                         class='add_resume' style="display: none"/>
-                                </div>                                
+                                </div>                                 -->
                             </div>
                         </div>
-                        <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
+                        <!-- <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
                             <div *ngIf="my_profile || socketService.is_admin" class="resume-edit-control">
                                 <a class="edit link" (click)="add_resume()">
                                     <i class="far fa-edit"></i>
@@ -112,7 +112,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 name="add_resume" 
                                 class='add_resume' style="display: none"/>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
                         <div class="ProFileHeadWrap">
@@ -161,14 +161,14 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </div>
 
                         <div *ngIf="my_profile" class="">
-                            <div class="">
+                            <!-- <div class="">
                                 <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
                                     <i class="fa fa-pen"></i>
                                     <span  *ngIf="profile_data.signature_data">Update </span>
                                     <span  *ngIf="!profile_data.signature_data">Add </span>
                                     Signature
                                 </a>
-                            </div>
+                            </div> -->
                             <div class="col-sm-9" style="display: flex;">
                                 <div style="position:relative;cursor: pointer;">
                                     <img class="strt_sign profile " style="width: 100%;"

@@ -28,6 +28,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         <div>
                             <div class="row">
                                 <div class="col-sm-2 UserProfileDiscription mb-4">
+                                    <i class="far fa-edit" (click)="update_image()"></i>
                                     <div *ngIf="modified_profile_data.image">
                                         <img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
                                     </div>
@@ -35,7 +36,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
                                         <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
                                     </div>
-                                    <input class="pt-3" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
+                                    <input class="pt-3 update_image" style="display: none" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
                                 </div>
                             </div>
                             <div class="row" *ngIf="last_login.login_time">
@@ -103,7 +104,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </div>
                                 </a>
                                 <div class="resume-edit-control">
-                                    <a class="edit link" (click)="add_resume()">
+                                    <a class="edit link" (click)="edit_resume($event.target)">
+                                        <i style="margin-right: 10px" class="far fa-trash-alt"></i>
                                         <i class="far fa-edit"></i>
                                     </a>
                                     <input (change)="addFile($event, '')" 

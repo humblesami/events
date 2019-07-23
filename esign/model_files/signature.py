@@ -5,6 +5,8 @@ from esign.model_files.document import SignatureDoc
 
 class Signature(models.Model):
     name = models.CharField(max_length=200, blank=True)
+    open_date = models.DateTimeField()
+    close_date = models.DateTimeField()
     token = models.CharField(max_length=200, blank=True)
     email = models.CharField(max_length=200, blank=True)
     type = models.CharField(max_length=200, blank=True)
