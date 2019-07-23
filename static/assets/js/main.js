@@ -29,7 +29,10 @@ var dn_current_site_user = {
         else
         {
             $('body').removeClass('user').addClass('public');
-            site_functions.go_to_login();
+            if(!site_functions.is_public_route())
+            {
+                site_functions.go_to_login();
+            }
         }
     },
     onLogin: function(data) {        
@@ -75,8 +78,25 @@ var dn_current_site_user = {
 };
 
 
+
 var site_functions = {
     processes: [],
+    is_public_route: function(url){
+        if(!url)
+        {
+            url = window['pathname'];
+        }
+        let public_routes = ['/login','/forgot-password', '/logout','/reset_password','/set-password'];        
+        var res = public_routes.indexOf(url);
+        if(res == -1)
+        {
+            return false;
+        }
+        else        
+        {
+            return true;
+        }
+    },
     get_path: function() {
 
     },
@@ -102,6 +122,8 @@ var site_functions = {
         }
     },
     go_to_login: function() {
+        // console.trace();
+        // alert(444);
         if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
         {
             dn_current_site_user.logout();
@@ -425,7 +447,7 @@ function handleSessionExpiry() {
         //return;
     }
     clearTimeout(time_out_session);
-    time_out_session = setTimeout(function() {
+    time_out_session = setTimeout(function() {        
         site_functions.go_to_login();
     }, session_time_limit);
 }
@@ -450,7 +472,7 @@ function check_if_touch_device() {
     }
     catch(e)
     {
-         return false; 
+        return false; 
     }
 }
 

@@ -51,8 +51,6 @@ export class SetpasswordComponent implements OnInit {
 			bootbox.alert('Password is successfully updated', function(){
 				obj_this.router.navigate(['/login']);
 			});
-			
-			// window['function'].go_to_login();
 		};
 		var failure_cb = function(error) {
 			obj_this.error = error;

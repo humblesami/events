@@ -318,11 +318,8 @@ export class SocketService {
         this.server_url = this.site_config.server_base_url;
         this.media_url = this.server_url + '/media';
         this.user_photo = this.media_url + '/profile/ETjUSr1v2n.png';
-        var url = window['pathname'];
-
-        let public_routes = ['/login','/forgot-password', '/logout','/reset_password','/set-password'];
-        var res = public_routes.indexOf(url);
-        if(res == -1)
+        var res = window['functions'].is_public_route();        
+        if(!res)
         {
             try
             {
@@ -649,7 +646,7 @@ export class SocketService {
             if(res == 'Invalid Token')
             {
                 console.log('Unauthorized due to invalid token');
-                window["current_user"].go_to_login();
+                window["functions"].go_to_login();
                 return;
             }
             else
@@ -660,7 +657,7 @@ export class SocketService {
             var href = window.location.toString();
             if(href.indexOf('172.16') == -1 || href.indexOf('localhost') == -1)
             {
-                window["current_user"].go_to_login();
+                window["functions"].go_to_login();
                 return;
             }
         };

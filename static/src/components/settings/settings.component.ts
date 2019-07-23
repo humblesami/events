@@ -48,7 +48,7 @@ export class SettingsComponent implements OnInit {
         var success_cb = function(result) {
             obj_this.loading = false;
 			bootbox.alert('Password is successfully updated');
-            window["current_user"].go_to_login();            
+            window["functions"].go_to_login();            
         };
         var failure_cb = function(error) {
             obj_this.error = error;
