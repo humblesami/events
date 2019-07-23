@@ -126,6 +126,7 @@ export class ProfileeditComponent implements OnInit {
 				obj_this.modified_profile_data['resume'] = fileReader.result;
 				obj_this.profile_data['resume'] = fileReader.result;
 			}
+			obj_this.resumeUpload()
 		};
 		fileReader.onerror = function (error) {
 			console.log('Error: ', error);
@@ -237,6 +238,42 @@ export class ProfileeditComponent implements OnInit {
 		$('.update_image:first').click();
 	}
 
+	resumeUpload() {
+		this.submitted = true;
+		const obj_this = this;
+		const form_data = obj_this.modified_profile_data;
+		const input_data = {};
+		for (const key in form_data) {
+			if(obj_this.modified_profile_data[key] != '')
+				input_data[key] = obj_this.modified_profile_data[key];			
+		}
+		input_data['user_id'] = obj_this.route.snapshot.params.id;
+        let args = {
+            app: 'meetings',
+            model: 'Profile',
+			method: 'update_profile',
+			post: 1,
+        }
+        let final_input_data = {
+            params: input_data,
+            args: args
+        };
+		this.httpService.post(final_input_data,
+			(data: any) => {
+				obj_this.get_data();
+			},
+			(error) => {
+                const x = document.getElementById('slot-select-error');
+                if(x)
+                {
+                    x.className = 'snackbar-error show';
+                    setTimeout(function () {
+                        x.className = x.className.replace('show', '');
+                    }, 3000);   
+                }
+				
+            });
+    }
 	onSubmit() {
 		this.submitted = true;
 		const obj_this = this;

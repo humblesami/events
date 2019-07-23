@@ -17,6 +17,8 @@ from mainapp.ws_methods import queryset_to_list
 class SignatureDoc(File):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     original_pdf = models.FileField(upload_to='original/')
+    open_date = models.DateTimeField(null=True)
+    close_date = models.DateTimeField(null=True)
 
     # my_signature_status
     # pending_signatures
