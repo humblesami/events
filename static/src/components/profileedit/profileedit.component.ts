@@ -81,12 +81,12 @@ export class ProfileeditComponent implements OnInit {
                 let overlay = $('<input class="date-overlay" style="'+overlay_style+'" value="'+prev_val+'" />');
 
                 overlay.css({left:$(el).position().left, top:$(el).position().top});                
-                // overlay.focus(function(){
-                //     $(el).focus();
-                // });
+                overlay.focus(function(){
+                    $(el).focus();
+                });
                 overlay.blur(function(e){
-                    if(prev_val != overlay.val() && overlay.val().length == 10)
-                    {
+                    if(prev_val != overlay.val() && (overlay.val().length == 10 || overlay.val().length == 0))
+                    {                        
                         prev_val = overlay.val();
                         el.value = prev_val;
                     }
@@ -94,6 +94,11 @@ export class ProfileeditComponent implements OnInit {
 
                 $(el).parent().append(overlay);
                 $(el).change(function() {
+                    if(!el.value)
+                    {
+                        overlay.val('');
+                        return;
+                    }
                     let st_date = window['dt_functions'].standardDate(el.value);
                     prev_val = st_date;
                     overlay.val(st_date);
@@ -128,10 +133,7 @@ export class ProfileeditComponent implements OnInit {
 
 	bio_html = undefined;
 	get_data() {
-
-		const obj_this = this;
-		// let id = this.route.snapshot.params.id;
-		console.log(obj_this.edit_info.user_id);
+		const obj_this = this;		
 		let id = obj_this.edit_info.user_id;
         let input_data = undefined;
         if (id == obj_this.socketService.user_data.id || id == undefined) {

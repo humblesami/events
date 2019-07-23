@@ -279,6 +279,8 @@ class Profile(user_model):
 
         for key in params:
             if key != 'committees' and key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume':
+                if params[key] == '' and not profile._meta._forward_fields_map[key].max_length:
+                    params[key] = None
                 setattr(profile, key, params[key])
         committees = params.get('committees')
         if committees:
@@ -320,9 +322,7 @@ class Profile(user_model):
             resume_file = File(name=file_name, file_type='resume')
             resume_file.attachment.save(file_name, jango_file)
             resume_file.save()
-
             profile.resume = resume_file
-            profile.save()
 
         if params.get('image'):
             image_data = params['image']
