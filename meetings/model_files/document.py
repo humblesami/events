@@ -218,7 +218,7 @@ class SignDocument(SignatureDoc):
             file_obj = cls.objects.filter(id=file_id)[0]
             file_name = file_obj.name
         users = Profile.objects.all()
-        users = queryset_to_list(users,fields=['id','username'])
+        users = queryset_to_list(users,fields=['id','name'])
         meetings = Event.objects.all()
         meetings = queryset_to_list(meetings,fields=['id','name'],related={'attendees':{'fields':['id','username']}})
         meeting_id = False

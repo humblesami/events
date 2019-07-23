@@ -32,7 +32,7 @@ export class EsignDocDetailsComponent implements OnInit {
             let sign = $('.active_signature');
             sign.attr("user", obj_this.selectedUser['id']);
             sign.find('.user_name').remove();
-            sign.append(`<div class='user_name'>${obj_this.selectedUser['username']}</div>`);
+            sign.append(`<div class='user_name'>${obj_this.selectedUser['name']}</div>`);
             sign.removeClass('active_signature');
         }
         $('#select_user_modal').modal('hide');     
@@ -86,7 +86,7 @@ export class EsignDocDetailsComponent implements OnInit {
             if (selected)
             {                
                 let user_name = sign.find('.user_name').text();
-                obj_this.selectedUser = {id: parseInt(selected), username: user_name}
+                obj_this.selectedUser = {id: parseInt(selected), name: user_name}
                 user_index = obj_this.users_list.findIndex(x => x.id ===parseInt(selected));                
                 var selected_option = $('.ng-select-user-list .ng-option').eq(user_index);
                 var num = obj_this.users_list.length;
@@ -916,7 +916,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 });
 
             } else {
-                body.append('<h3>Username:</h3>' + usr_name);
+                body.append('<h3>Name:</h3>' + usr_name);
                 if (isAdmin) {
                     body.append(del_btn);
                 }
@@ -979,7 +979,7 @@ export class EsignDocDetailsComponent implements OnInit {
             var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
             var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">Cancel</span>');
             input_date.val($.datepicker.formatDate('dd/mm/yy', new Date()));
-            body.html("<h3>Username:</h3>" + usr_name + "<h3>Date:</h3>").append(input_date);
+            body.html("<h3>Name:</h3>" + usr_name + "<h3>Date:</h3>").append(input_date);
 
 
             if (my_record == "true") {
@@ -1064,7 +1064,7 @@ export class EsignDocDetailsComponent implements OnInit {
             var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
             var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
             var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">Cancel</span>');
-            body.html(`<h3>Username:</h3>${usr_name}`);
+            body.html(`<h3>Name:</h3>${usr_name}`);
 
 
             if (my_record == "true") {
