@@ -84,7 +84,6 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                             </span>
                         </div>
                     </div>
-
                     <div id="viewer_container" style="position:relative;">
                         <div id="nxxt_sign" style="display:none;background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 99;width:140px;padding: 10px;cursor: pointer;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START
                             SIGNING</div>
@@ -102,4 +101,27 @@ title="{{doc.doc_name}}"></app-breadcrumb>
 
     </div>
 
+</div>
+<div class="modal fade" id="select_user_modal" tabindex="-1" role="dialog" aria-labelledby="SelectUserModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="ng-select-user-list">
+                <ng-select
+                [items]="users_list"
+                [multiple]="false"
+                [closeOnSelect]="true"
+                [hideSelected]="false"
+                [isOpen]="true"
+                bindLabel="username"
+                [searchable] = "true"
+                (change)="setUserSelection()"
+                placeholder="Select User"                
+                [(ngModel)]="selectedUser"
+                >
+                </ng-select>
+            </div>
+        </div>
+    </div>
+    </div>
 </div>
