@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SocketService } from 'src/app/socket.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MyprofileeditComponent } from '../myprofileedit/myprofileedit.component';
+import { ProfileeditComponent } from '../profileedit/profileedit.component';
 import { template } from '@angular/core/src/render3';
 declare var $:any;
 
@@ -65,7 +65,7 @@ export class ProfileDetailsComponent implements OnInit {
 
 	open(section) {
         let obj_this = this;
-		const modalRef = this.modalService.open(MyprofileeditComponent);
+		const modalRef = this.modalService.open(ProfileeditComponent);
 		modalRef.componentInstance.edit_info = {
 			section: section,
 			user_id: this.route.snapshot.params.id

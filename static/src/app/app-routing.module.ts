@@ -21,7 +21,7 @@ import { CommitteeDetailsComponent } from '../components/committeedetails/commit
 import { MeetingsComponent } from '../components/meetings/meetings.component';
 import { MeetingDetailsComponent } from '../components/meetingdetails/meetingdetails.component';
 import { ProfileDetailsComponent } from '../components/profiledetails/profiledetails.component';
-import { MyprofileeditComponent } from '../components/myprofileedit/myprofileedit.component';
+import { ProfileeditComponent } from '../components/profileedit/profileedit.component';
 import { ProfilesComponent } from '../components/profiles/profiles.component';
 import { ResourcesComponent } from '../components/resources/resources.component';
 import { ResourceDetailsComponent } from '../components/resourcedetails/resourcedetails.component';
@@ -59,8 +59,7 @@ const appRoutes: Routes = [
     { path: 'set-password/:token', component: SetpasswordComponent},
 
     { path: 'my-profile', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
-    { path: 'my-profile/edit', component: MyprofileeditComponent, canActivate: [AuthGuard]},
-	{ path: 'committees', data:{app:'meetings', model: 'Committee'}, component: CommitteesComponent, canActivate: [AuthGuard]},
+    { path: 'my-profile/edit', component: ProfileeditComponent, canActivate: [AuthGuard]},	
     { path: 'profiles', data:{app:'meetings', model: 'Profile'}, component: ProfilesComponent, canActivate: [AuthGuard]},
 
     { path: 'profiles/directors', data:{app:'meetings', model: 'Profile'}, component: ProfilesComponent, canActivate: [AuthGuard]},
@@ -73,6 +72,7 @@ const appRoutes: Routes = [
     { path: 'admin/:id', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
     { path: 'staff/:id', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
     
+    { path: 'committees', data:{app:'meetings', model: 'Committee'}, component: CommitteesComponent, canActivate: [AuthGuard]},
     { path: 'committees/:id', component: CommitteeDetailsComponent, canActivate: [AuthGuard]},
 
 	{ path: 'resources', data:{app:'resources', model: 'Folder', search_models:{resources: ['Folder', 'ResourceDocument']} }, component: ResourcesComponent, canActivate: [AuthGuard]},

@@ -58,7 +58,7 @@ import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.compone
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component';
 import { MeetingresponseComponent } from '../components/meetingresponse/meetingresponse.component';
 import { SupportComponent } from '../components/support/support.component';
-import { MyprofileeditComponent } from '../components/myprofileedit/myprofileedit.component';
+import { ProfileeditComponent } from '../components/profileedit/profileedit.component';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MentionModule } from 'angular-mentions';
@@ -121,7 +121,7 @@ import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
         SurveyresultsComponent,
         MeetingresponseComponent,
         SupportComponent,
-        MyprofileeditComponent,        
+        ProfileeditComponent,        
     ],
     providers:[
         AuthGuard,

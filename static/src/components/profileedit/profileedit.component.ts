@@ -9,9 +9,9 @@ import { template } from '@angular/core/src/render3';
 declare var $:any;
 
 @Component({
-    selector: 'app-myprofileedit',
-    templateUrl: './myprofileedit.component.html',
-	styleUrls: ['./myprofileedit.component.css'],
+    selector: 'app-profileedit',
+    templateUrl: './profileedit.component.html',
+	styleUrls: ['./profileedit.component.css'],
 // 	template: `
 //     <div class="modal-header">
 //     	<h4 class="modal-title">Hi there!</h4>
@@ -27,7 +27,7 @@ declare var $:any;
 //     </div>
 //   `
 })
-export class MyprofileeditComponent implements OnInit {
+export class ProfileeditComponent implements OnInit {
 	@Input() public edit_info;
     edit_mode = true;
 	my_profile = false;
