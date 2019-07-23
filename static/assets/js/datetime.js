@@ -58,4 +58,5 @@ function standeredTime(time) {
 }
 window['dt_functions'] = {
     standeredTime: standeredTime,
+    standardDate: getDateString
 }

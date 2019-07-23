@@ -200,19 +200,21 @@ last-login-details
     display: block;
     color: #797979;
 }
-input[type="date"] {
-    position: relative;
-    width: 150px; height: 20px;
-    color: white;
-}
 
-input[type="date"]:before {
+/* input[type="date"]:before {
     position: absolute;
     top: 3px; left: 3px;
     content: attr(data-date);
     display: inline-block;
     color: black;
+} */
+
+/* input[type="date"] {
+    position: relative;
+    width: 150px; height: 20px;
+    color: white;
 }
+
 
 input[type="date"]::-webkit-datetime-edit, input::-webkit-inner-spin-button, input::-webkit-clear-button {
     display: none;
@@ -224,6 +226,53 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     right: 0;
     color: black;
     opacity: 1;
+} */
+
+input[type="date"] {
+    position: relative;
+}
+
+/* create a new arrow, because we are going to mess up the native one
+see "List of symbols" below if you want another, you could also try to add a font-awesome icon.. */
+input[type="date"]:after {
+    content: "\25BC"; 
+    color: #555;
+    padding: 0 5px;
+}
+
+/* change color of symbol on hover */
+input[type="date"]:hover:after {
+    color: #bf1400;
+}
+
+/* make the native arrow invisible and stretch it over the whole field so you can click anywhere in the input field to trigger the native datepicker*/
+input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    color: transparent;
+    background: transparent;
+}
+
+/* adjust increase/decrease button */
+input[type="date"]::-webkit-inner-spin-button {
+    z-index: 1;
+}
+
+ /* adjust clear button */
+input[type="date"]::-webkit-clear-button {
+    z-index: 1;
+}
+
+.date-overlay{
+    position: absolute;
+    border: 0px;
+    padding: 5px;
+    margin: 3px 0px 0px 5px;
 }
 
 .docwrappercontainer .resume-edit-control

@@ -12,20 +12,6 @@ declare var $:any;
     selector: 'app-profileedit',
     templateUrl: './profileedit.component.html',
 	styleUrls: ['./profileedit.component.css'],
-// 	template: `
-//     <div class="modal-header">
-//     	<h4 class="modal-title">Hi there!</h4>
-//       	<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-//         	<span aria-hidden="true">&times;</span>
-//       	</button>
-//     </div>
-//     <div class="modal-body">
-      	
-//     </div>
-//     <div class="modal-footer">
-//       	<button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
-//     </div>
-//   `
 })
 export class ProfileeditComponent implements OnInit {
 	@Input() public edit_info;
@@ -86,17 +72,34 @@ export class ProfileeditComponent implements OnInit {
     }
 	input_date_format(){
 		setTimeout(function(){
-		$("#board_joining_date, #term_start_date, #term_end_date").on("change", function() {
-			if (this.value)
-			{
-				this.setAttribute(
-					"data-date",
-					window['functions'].moment(this.value, "YYYY-MM-DD")
-					.format( this.getAttribute("data-date-format") )
-				)
-			}
-		}).trigger("change")
-		}, 100);
+            $('input[type="date"]').each(function(i, el){
+                // console.log($(el).position().top, 334);
+                $(el).parent().css('position', 'relative');
+                let prev_val = el.value;
+                let overlay_style= 'position: absolute;';
+                overlay_style += 'border: 0px;padding: 5px;margin: 3px 0px 0px 5px;';
+                let overlay = $('<input class="date-overlay" style="'+overlay_style+'" value="'+prev_val+'" />');
+
+                overlay.css({left:$(el).position().left, top:$(el).position().top});                
+                // overlay.focus(function(){
+                //     $(el).focus();
+                // });
+                overlay.blur(function(e){
+                    if(prev_val != overlay.val() && overlay.val().length == 10)
+                    {
+                        prev_val = overlay.val();
+                        el.value = prev_val;
+                    }
+                });
+
+                $(el).parent().append(overlay);
+                $(el).change(function() {
+                    let st_date = window['dt_functions'].standardDate(el.value);
+                    prev_val = st_date;
+                    overlay.val(st_date);
+                })
+            })            
+        }, 100);
 	}
 	addFile(event, filter){
 		const obj_this = this;
@@ -130,25 +133,6 @@ export class ProfileeditComponent implements OnInit {
 		// let id = this.route.snapshot.params.id;
 		console.log(obj_this.edit_info.user_id);
 		let id = obj_this.edit_info.user_id;
-		// this.bread_crumb_items = this.httpService.make_bread_crumb();
-		// var url = window.location.href.split("/")
-        // var path =url[url.length-2]
-        // if (path == "director"){
-		// 	this.type = "director";
-		// 	this.type_breadCrumb = 'directors';
-        // }
-        // if (path == "admin"){
-		// 	this.type = "admin";
-		// 	this.type_breadCrumb = 'admins';
-        // }
-        // if (path == "staff"){
-		// 	this.type = "staff";
-		// 	this.type_breadCrumb = 'staff';
-		// }
-		// if (!this.type_breadCrumb)
-		// {
-		// 	this.type_breadCrumb = window['current_user'].cookie['groups'][0].name.toLowerCase() + 's';
-		// }
         let input_data = undefined;
         if (id == obj_this.socketService.user_data.id || id == undefined) {
 			obj_this.my_profile = true;	
@@ -231,7 +215,6 @@ export class ProfileeditComponent implements OnInit {
 					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
 				}
 			}
-			console.log(result.profile.ethnicity);
 			obj_this.input_date_format();
 		};
 		const failure_cb = function (error) {
@@ -252,8 +235,10 @@ export class ProfileeditComponent implements OnInit {
 		const form_data = obj_this.modified_profile_data;
 		const input_data = {};
 		for (const key in form_data) {
-			if(obj_this.modified_profile_data[key] != '')
-				input_data[key] = obj_this.modified_profile_data[key];			
+			if(obj_this.profile_data[key] || obj_this.modified_profile_data[key])
+            {
+                input_data[key] = obj_this.modified_profile_data[key];
+            }
 		}
 		input_data['user_id'] = obj_this.user_id;
         let args = {
@@ -302,8 +287,7 @@ export class ProfileeditComponent implements OnInit {
                     setTimeout(function () {
                         x.className = x.className.replace('show', '');
                     }, 3000);   
-                }
-				
+                }				
             });
 	}
 	
@@ -324,7 +308,7 @@ export class ProfileeditComponent implements OnInit {
         let obj_this = this;
         let sign_config = {
             signature_data: obj_this.profile_data.signature_data,            
-            on_signed: function(signature_data){
+            on_signed: function(signature_data) {
                 obj_this.profile_data.signature_data = signature_data;
                 obj_this.httpService.post({
                     args: {
@@ -345,19 +329,44 @@ export class ProfileeditComponent implements OnInit {
 	}
 	setEthnicity()
 	{
-		this.modified_profile_data['ethnicity'] = this.selectedEthnicity['id'];
+        if(!this.selectedEthnicity)
+        {
+            this.modified_profile_data['ethnicity'] = null;
+        }
+        else
+        {
+            this.modified_profile_data['ethnicity'] = this.selectedEthnicity['id'];
+        }
 	}
 	setGender()
 	{
-		this.modified_profile_data['gender'] = this.selectedGender['id'];
+        if(!this.selectedGender)
+        {
+            this.modified_profile_data['gender'] = null;
+        }
+		else{
+            this.modified_profile_data['gender'] = this.selectedGender['id'];
+        }
 	}
 	setVeteran()
 	{
-		this.modified_profile_data['veteran'] = this.selectedVeteran['id'];
+        if(!this.selectedVeteran)
+        {
+            this.modified_profile_data['veteran'] = null;
+        }
+		else{
+            this.modified_profile_data['veteran'] = this.selectedVeteran['id'];
+        }
 	}
 	setDisability()
 	{
-		this.modified_profile_data['disability'] = this.selectedDisability['id'];
+        if(!this.selectedDisability)
+        {
+            this.modified_profile_data['disability'] = null;
+        }
+		else{
+            this.modified_profile_data['disability'] = this.selectedDisability['id'];
+        }
 	}
 	setCommittees()
 	{
@@ -378,15 +387,6 @@ export class ProfileeditComponent implements OnInit {
 			this.section = this.edit_info.section;
 			this.user_id = this.edit_info.user_id;
 			this.get_data()
-		}
-		// console.log(this.edit_info);
-	}
-
-	ngOnChanges(){
-        console.log("ngOnChanges")
-	}
-	ngDoCheck(){
-		
-	}
-	
+		}		
+	}	
 }
