@@ -91,6 +91,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <h3>Resume</h3>
                             </div>
                             <div class="col-sm-12 mb-4">
+                                <div *ngIf="delete_confirm">
+                                    <span>Do you really want to delete this resume?</span>
+                                    <button class="btn btn-primary" (click)="delete_confirmed()">Yes</button>
+                                    <button class="btn btn-primary" (click)="delete_cancelled()">No</button>
+                                </div>
                                 <a routerLink="/resume/doc/{{profile_data.resume.id}}">
                                     <div class="DocumentWrapper">
                                         <div class="DocIcon">

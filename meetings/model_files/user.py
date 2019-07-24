@@ -217,7 +217,7 @@ class Profile(user_model):
         profile = ws_methods.obj_to_dict(
             profile_orm,
             fields=[
-                'id', 'name', 'first_name', 'last_name', 'email', 'image', 'bio', 'location', 'birth_date', 
+                'id', 'name', 'username', 'first_name', 'last_name', 'email', 'image', 'bio', 'location', 'birth_date', 
                 'nick_name', 'company', 'job_title', 'department',
                 'work_phone', 'mobile_phone', 'website', 'fax', 'ethnicity', 'gender', 'veteran',
                 'disability', 'board_joining_date', 'admin_first_name', 'admin_last_name', 'admin_nick_name',

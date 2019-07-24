@@ -19,6 +19,7 @@ export class ProfileeditComponent implements OnInit {
 	my_profile = false;
 	selectedEthnicity = [];
 	section = '';
+	delete_confirm = false;
 	user_id = undefined;
 	selectedGender = [];
 	selectedVeteran = [];
@@ -285,6 +286,10 @@ export class ProfileeditComponent implements OnInit {
                 input_data[key] = obj_this.modified_profile_data[key];
             }
 		}
+		if (input_data['resume'] == 'removed')
+		{
+			input_data['resume'] = null;
+		}
 		input_data['user_id'] = obj_this.user_id;
         let args = {
             app: 'meetings',
@@ -335,15 +340,25 @@ export class ProfileeditComponent implements OnInit {
                 }				
             });
 	}
-	
+	delete_confirmed()
+	{
+		this.modified_profile_data['resume'] = 'removed';
+		this.profile_data['resume'] = null;
+		this.delete_confirm = false;
+	}
+	delete_cancelled()
+	{
+		this.delete_confirm = false;
+	}
 	
 	add_resume(){
 		$('.add_resume').trigger('click');
 	}
 	edit_resume(e){
+		let obj_this = this;
 		if ($(e).hasClass('fa-trash-alt'))
 		{
-			this.modified_profile_data['resume'] = null;
+			obj_this.delete_confirm = true;
 			return;
 		}
 		$('.edit_resume').trigger('click');
