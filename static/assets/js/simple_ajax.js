@@ -10,6 +10,7 @@ function dn_rpc_object(options) {
         return;
     }
     var input_data = options.data;
+    console.log(input_data);
     if (input_data.no_loader)
         options.no_loader = 1;
 
@@ -179,6 +180,7 @@ function dn_rpc_object(options) {
         response.error = response.error.replace(/<br\/>/g, "\n");
         console.log(response.error);
     }
+    console.log(options,12435);
     $.ajax(options);
 }
 $(function(){
