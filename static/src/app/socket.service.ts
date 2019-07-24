@@ -30,7 +30,13 @@ export class SocketService {
     ongoing_call : any;
     rtc_multi_connector : any;
     active_route_snapshot : ActivatedRouteSnapshot;
-    search_bar_shown = false;    
+    search_bar_shown = false;
+
+    get_user_by_id(uid:number){
+        return this.chat_users.find(function(item){
+            return item.id == uid;
+        })
+    }
 
     constructor(private router: Router) {
         var obj_this = this;
@@ -52,15 +58,16 @@ export class SocketService {
                 {
                     video_call.is_audio_call = false;
                 }
-                
-                if(!obj_this.chat_users[uid].online)
+
+                var the_user = obj_this.get_user_by_id(uid)
+                if(!the_user.online)
                 {
-                    video_call.show_notification(obj_this.chat_users[uid].name +' is not online yet, but will be informed when online')
+                    video_call.show_notification(the_user.name +' is not online yet, but will be informed when online')
                     return;
                 }
                 let call_id = obj_this.user_data.id+'-'+uid+'-call';                
                 video_call.caller = obj_this.user_data;
-                video_call.callee = obj_this.chat_users[uid];
+                video_call.callee = the_user;
                 video_call.id = call_id; 
                 let data =  {
                     caller_id: obj_this.user_data.id,
@@ -70,7 +77,7 @@ export class SocketService {
                 };
 
                 // console.log(video_call.caller, video_call.callee);
-                if(obj_this.chat_users[uid].online){
+                if(the_user.online){
                     obj_this.emit_rtc_event('incoming_call', data, [uid]);                    
                     video_call.message = 'Calling...';
                 }
@@ -107,7 +114,7 @@ export class SocketService {
                 video_call.state = 'incoming';
                 video_call.id = data.call_id;
                 video_call.is_audio_call = data.is_audio_call;
-                video_call.caller = obj_this.chat_users[data.caller_id];
+                video_call.caller = obj_this.get_user_by_id(data.caller_id);
                 video_call.callee = obj_this.user_data;
                 video_call.initialize();
             },
@@ -604,43 +611,6 @@ export class SocketService {
             obj_this.video_call.started_by_caller(data);
         };
         
-        function updateUserStatus(user: ChatClient)
-        {
-            if(obj_this.user_data.id == user.id)
-            {
-                console.log(user , "Should never happen now");
-                return;
-            }
-            var temp = obj_this.chat_users.filter(function(item){
-                return item.id == user.id;
-            });
-            if(temp.length == 0){
-                console.log(user , " not found");
-                return;
-            }
-            let client = temp[0] as ChatClient;
-            client.online = user.online;
-        }
-
-        obj_this.server_events['friend_joined'] = updateUserStatus;
-
-        obj_this.server_events['user_left'] = updateUserStatus;
-
-        obj_this.server_events['new_friend'] = function(friend: ChatClient){
-            obj_this.chat_users.push(friend);
-        }
-        obj_this.server_events['friend_removed'] = function(friend_id){
-            for(var i=0;i<obj_this.chat_users.length;i++)
-            {
-                if(obj_this.chat_users[i].id == friend_id)
-                {
-                    obj_this.chat_users.splice(i, 1);
-                    break;
-                }
-            }
-            delete obj_this.chat_users[friend_id];
-        }
-        
 
         obj_this.server_events['error'] = function (res) {
             if(res == 'Invalid Token')
@@ -660,26 +630,6 @@ export class SocketService {
                 window["functions"].go_to_login();
                 return;
             }
-        };
-
-        obj_this.server_events['chat_message_received'] = function (msg) {
-            let sender = obj_this.chat_users[msg.sender];
-            if(!sender)
-            {
-                console.log(obj_this.chat_users, ' Dev issue as '+msg.sender+' not found');
-                return;
-            }
-            obj_this.update_unseen_message_count("receive-new-message", sender);
-        };
-
-        obj_this.server_events['chat_message_received'] = function (msg) {
-            let sender = obj_this.chat_users[msg.sender];
-            if(!sender)
-            {
-                console.log(obj_this.chat_users, ' Dev issue as '+msg.sender+' not found');
-                return;
-            }
-            obj_this.update_unseen_message_count("receive-new-message", sender);
         };
 
         obj_this.server_events['point_comment_received'] = function (data) {

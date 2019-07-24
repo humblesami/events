@@ -5,13 +5,11 @@ from django.http.response import FileResponse, HttpResponse
 
 from mainapp.settings import MEDIA_ROOT
 
-
-@login_required()
 def serve_protected_document(request,folder, file):
-    # document = get_object_or_404(File, attachment="converted/" + file)
-
+    if not request.user.id:
+        referer_address = request.META['HTTP_REFERER']
+        if not referer_address.endswith('localhost:4200/'):
+            return ''
     path = MEDIA_ROOT + '/' + folder + '/' +file
     response = FileResponse(open(path,'rb'))
-    # response["Content-Disposition"] = "attachment; filename=" + file
-
     return response

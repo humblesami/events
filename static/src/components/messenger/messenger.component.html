@@ -1,11 +1,11 @@
-<div class="messenger-container">
+<div class="messenger-container" *ngIf="user">
 
-    <div class="chat-setup-container chat friends-chat-box">
+    <div class="chat-setup-container chat friends-chat-box" *ngIf="chat_mode == 'none'">
         <div class="card-header MessengerSearchWrap">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="chatgroup">
-                        <button (click)="show_group_setup(null, null)" class="create glyphicon glyphicon-plus"></button>
+                        <button (click)="group_create_mode()" class="create glyphicon glyphicon-plus"></button>
                         <span>New Group</span>
                     </span>
                     <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
@@ -16,8 +16,8 @@
 
         <hr/>
 
-        <div class="group-setup-container" *ngIf="group_detail_mode == 1">
-            <div *ngIf="can_edit_group" class="row p-1 m-1 chat-group-setup" style="border:1px solid">
+        <div class="group-setup-container">
+            <div *ngIf="group_mode == 'edit'" class="row p-1 m-1 chat-group-setup" style="border:1px solid">
                 <input [(ngModel)]="group_name" class="group-name" />
                 <button *ngIf="!selected_chat_group" (click)="create_chat_room()" class="" aria-label="Create group.">
                     Create
@@ -35,10 +35,10 @@
                     bindLabel="name"
                     placeholder="Select people"
                     [(ngModel)]="selectedPeople">
-                </ng-select>                
+                </ng-select>
             </div>
 
-            <div *ngIf="!can_edit_group && selected_chat_group" class="chat-group-setup">
+            <div *ngIf="group_mode == 'view' && selected_chat_group" class="chat-group-setup">
                 <button (click)="close_group_setup()" class="" aria-label="Create group.">
                     Close
                 </button>
@@ -63,7 +63,7 @@
         
         <div class="contacts-container card-body contacts_body">
             <ul class="chat-groups-container">
-                <li *ngFor="let cg of socketService.chat_groups" (click)="select_chat_group(cg, $event)">
+                <li *ngFor="let cg of socketService.chat_groups" (click)="start_group_chat(cg, $event)">
                     <div *ngIf="cg.name.toLowerCase().indexOf(searchVal.toLowerCase()) > -1">
                         <a class="contact-item d-flex align-items-center bd-highlight">
                             <div class="img_cont">
@@ -76,7 +76,7 @@
                                 {{cg.unseen}}
                             </span>
                             <span style="width:50px"></span>
-                            <span class="setup" (click)="show_group_setup(cg, $event)">
+                            <span class="setup" (click)="show_group_members(cg, $event)">
                                 Members
                             </span>
                         </a>
@@ -109,11 +109,11 @@
 
     </div>
 
-    <div class="chat chat-container-wrppaer">
-        <div *ngIf="active_chat_user" class="chat-full-height">
+    <div class="chat chat-container-wrppaer" *ngIf="active_chat_user">
+        <div class="chat-full-height">
             <div class="chat-user-title">
                 <div class="MessengerTitle">
-                    <span class="backchatlist" (click)="hide_chat_box()"><i class="fas fa-arrow-left"></i></span>
+                    <span class="backchatlist" (click)="set_chat_mode('none')"><i class="fas fa-arrow-left"></i></span>
                     <span class="user-name">{{active_chat_user.name}}</span>
                     <span class="status" *ngIf="active_chat_user.online" class="userstat">Online</span>
                 </div>
@@ -134,11 +134,11 @@
                     <button (click)="leave_group()">Leave</button>
                 </div>
                 
-                <div  *ngIf="active_chat_user" class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
+                <div *ngIf="active_chat_user" class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
             </div>			
             <div class="card-body msg_card_body meetVue-chat-body">
                 <div class="messenger-body" *ngFor="let msg of active_chat_user.messages">
-                    <div *ngIf="socketService.user_data && msg.sender.id == socketService.user_data.id"
+                    <div *ngIf="msg.sender.id == user.id"
                             class="d-flex align-items-end justify-content-end mb-4">
                         <div class="msg_cotainer_send">
                             <div class="msg-send-box-wrapper">
@@ -160,7 +160,7 @@
                         </div>
                     </div>
                     
-                    <div *ngIf="socketService.user_data && msg.sender.id != socketService.user_data.id"
+                    <div *ngIf="msg.sender.id != user.id"
                             class="d-flex align-items-end justify-content-start mb-4">
                         <div class="img_cont_msg">
                             <img *ngIf="!msg.chat_group" src="{{socketService.server_url}}{{msg.sender.photo}}" class="rounded-circle user_img_msg" />

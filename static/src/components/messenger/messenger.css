@@ -340,7 +340,6 @@
 	-webkit-order: 3;
 	order: 2;
 	position: relative;
-	-webkit-flex: none;
 	flex: none;
 	width: 100%;
 	box-sizing: border-box;	
@@ -636,9 +635,6 @@
     border-radius: 50%;
     background:green;
     color: white;
-}
-.chat-group-setup{
-    display: none;
 }
 
 .group-details-container

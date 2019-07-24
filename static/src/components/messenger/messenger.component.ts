@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
-import { ChatGroup, BaseClient, ChatClient, Message, ChatUser, ChatGroupMessage, UserMessage } from '../../app/models/chat';
+import { AppUser, ChatGroup, BaseClient, ChatClient, Message, ChatUser, ChatGroupMessage, UserMessage } from '../../app/models/chat';
 
 declare var $: any;
 
@@ -15,7 +15,8 @@ export class MessengerComponent implements OnInit {
     socketService : SocketService;
 	is_minimize = true;
 	chat_initilized = 0;
-	searchVal = '';
+    searchVal = '';
+    user: AppUser;
     is_request_sent = true;
     people_list: Array<ChatUser>;
     selectedPeople : Array<ChatUser>;
@@ -27,13 +28,9 @@ export class MessengerComponent implements OnInit {
 		var obj_this = this;
 		obj_this.socketService = ss;
         var socketService = ss;
-
-        function cast_list_chat_users(ar: Array<ChatUser>){
-            obj_this.people_list = ar;
-        }
-
 		function registerChatEventListeners()
 		{
+            obj_this.user = socketService.user_data;
 			socketService.server_events['chat_message_received'] = function (msg) {
                 try{
                     // console.log(msg, 'chat_message_received');
@@ -43,7 +40,43 @@ export class MessengerComponent implements OnInit {
                 {
                     console.log(er);
                 }
-            };
+            }
+
+            socketService.server_events['friend_joined'] = updateUserStatus;
+
+            socketService.server_events['user_left'] = updateUserStatus;
+
+            socketService.server_events['new_friend'] = function(friend: ChatClient){
+                socketService.chat_users.push(friend);
+            }
+            socketService.server_events['friend_removed'] = function(friend_id){
+                for(var i=0;i<socketService.chat_users.length;i++)
+                {
+                    if(socketService.chat_users[i].id == friend_id)
+                    {
+                        socketService.chat_users.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            
+            function updateUserStatus(user: ChatClient)
+            {
+                if(obj_this.user.id == user.id)
+                {
+                    console.log(user , "Should never happen now");
+                    return;
+                }
+                var temp = socketService.chat_users.filter(function(item){
+                    return item.id == user.id;
+                });
+                if(temp.length == 0){
+                    console.log(user , " not found");
+                    return;
+                }
+                let client = temp[0] as ChatClient;
+                client.online = user.online;
+            }
 
             socketService.server_events['chat_group_members_updated'] = function(data){
                 var index = -1;
@@ -87,14 +120,13 @@ export class MessengerComponent implements OnInit {
                     console.log(er);
                 }
             };
-            var ar = [];
             obj_this.people_list = new Array<ChatUser>();            
             for(var key in obj_this.socketService.chat_users)
             {
                 let obj_user = obj_this.socketService.chat_users[key] as ChatUser;                
                 obj_this.people_list.push(obj_user);
             }
-			if(!obj_this.socketService.user_data)
+			if(!obj_this.user)
 			{
 				console.log("No user data is socket service yet");
 				return;
@@ -114,65 +146,14 @@ export class MessengerComponent implements OnInit {
     }
 
     group_name = '';
-    group_moderator = false;
-    group_details: ChatGroup;
-
-    activate_chat_user(chat_client: ChatClient){        
-        this.active_chat_user = chat_client;
-        // console.log(chat_client, 156);
-    }
-    deslect_chat_user(){
-        this.active_chat_user = undefined;
-        this.selected_chat_group = undefined;
-    }
-
     add_message(chat_client: ChatClient, message: Message){        
         chat_client.messages.push(message);
         // console.log(345, chat_client.messages);
     }
-    
-    show_member_list(chat_group: ChatGroup, call_back=undefined){
-        let obj_this = this;
-        if(chat_group)
-        {
-            obj_this.activate_chat_user(chat_group);
-        }
-        obj_this.group_details = obj_this.active_chat_user as ChatGroup;
-        obj_this.group_details.show_members = true;
-        let input_data = {
-            args:{
-                app:'chat',
-                model:'ChatGroup',
-                method:'get_details'
-            },
-            params: {
-                group_id: obj_this.active_chat_user.id
-            }
-        }
-        obj_this.httpService.post(input_data, function(data){
-            obj_this.group_moderator = obj_this.socketService.user_data.id == data.created_by.id;            
-            obj_this.activate_chat_user(data as ChatGroup);
-            obj_this.group_details  = obj_this.active_chat_user as ChatGroup;
-            var all_chat_groups = obj_this.socketService.chat_groups;
-            for(var n=0; n< all_chat_groups.length; n++)
-            {
-                if(all_chat_groups[n].id == data.id)
-                {
-                    all_chat_groups[n] = data;
-                }
-            }
-            if(call_back)
-            {
-                call_back(data);
-            }
-        } , function(){
-            console.log('Group members not fetched');
-        });        
-    }
 
     close_group_setup()
     {
-        $('.chat-group-setup').hide();
+        this.switch_group_mode('none');
     }
 
     
@@ -186,7 +167,7 @@ export class MessengerComponent implements OnInit {
             },
             params: {
                 group_id: obj_this.active_chat_user.id,
-                member_id: obj_this.socketService.user_data.id
+                member_id: obj_this.user.id
             }
         }
         obj_this.httpService.post(input_data, function(data){                        
@@ -199,25 +180,26 @@ export class MessengerComponent implements OnInit {
                     break;
                 }
             }
-            obj_this.deslect_chat_user();
-            $('.chat-container-wrppaer').hide();
-            $('.chat-setup-container').show();
-            $('.contacts-container').show();
+            obj_this.set_chat_mode('none');
         } , function(){
             console.log('Group members not fetched');
         });
     }
 
-    close_members_list(){
-        this.group_detail_mode = 0;
-        this.group_details.show_members = false;        
-    }    
+    switch_group_mode(mode: string)
+    {
+        this.group_mode = mode;
+        if(mode == 'none')
+        {
+            this.selected_chat_group = undefined;
+        }
+        this.selectedPeople = [];
+        // console.log(this.group_mode, this.selected_chat_group);
+    }
 
     create_chat_room()
     {
-        $('.chat-group-setup').hide();
         let obj_this = this;
-        obj_this.group_detail_mode = 1;
         if(!obj_this.group_name)
         {
             console.log('group name required');
@@ -236,16 +218,15 @@ export class MessengerComponent implements OnInit {
         }
         obj_this.httpService.post(input_data,function(created_chat_group){
             obj_this.socketService.chat_groups.push(created_chat_group);
-            created_chat_group.created_by = obj_this.socketService.user_data;
+            created_chat_group.created_by = obj_this.user;
         }, function(){
-            $('.chat-group-setup').show();
+            
         });
     }
     
     
-    select_chat_group(selected_group: ChatGroup, e){
-        let obj_this = this;        
-        obj_this.group_detail_mode = 1;
+    start_group_chat(selected_group: ChatGroup, e){
+        let obj_this = this; 
         if(e && e.target && $(e.target).hasClass('setup'))
         {
             return;
@@ -254,6 +235,7 @@ export class MessengerComponent implements OnInit {
         {
             selected_group.is_group = true;
         }
+        obj_this.switch_group_mode('chat');
         obj_this.activate_chat_user(selected_group);
         // console.log(obj_this.active_chat_user, 155);
         let args = {
@@ -279,45 +261,47 @@ export class MessengerComponent implements OnInit {
     }
 
     can_edit_group: Boolean;
-    group_detail_mode = 0;
+    group_mode = 'none';
     selected_chat_group: ChatGroup;
-    show_group_setup(group: ChatGroup, e){
+    group_create_mode(){
+        this.switch_group_mode('edit');
+    }
+    
+    show_group_members(group: ChatGroup){
         let obj_this = this;
-        obj_this.group_detail_mode = 1;
-        obj_this.can_edit_group = false;
-        if(!group)
-        {
-            $('.chat-group-setup').show();            
-            $('.chat-group-setup').find('.group-name:first').removeAttr('readonly').val('').focus();
-            obj_this.selectedPeople = []; 
-            obj_this.can_edit_group = true;
-            obj_this.selected_chat_group = undefined;
-            return;
+        var mode = obj_this.user.id !== group.created_by.id ? 'view': 'edit';
+        this.switch_group_mode(mode);
+
+        let input_data = {
+            args:{
+                app:'chat',
+                model:'ChatGroup',
+                method:'get_details'
+            },
+            params: {
+                group_id: group.id
+            }
         }
-        obj_this.can_edit_group = group.created_by && group.created_by.id == obj_this.socketService.user_data.id;
-        function on_group_setup_shown(){
-            obj_this.selected_chat_group = group;
-            let my_id = obj_this.socketService.user_data.id;
-            obj_this.selectedPeople = group.members.filter(function(item){
+        obj_this.httpService.post(input_data, function(data){
+            obj_this.selected_chat_group = data as ChatGroup;
+            var all_chat_groups = obj_this.socketService.chat_groups;
+            for(var n=0; n < all_chat_groups.length; n++)
+            {
+                if(all_chat_groups[n].id == data.id)
+                {
+                    all_chat_groups[n] = data;
+                    break;
+                }
+            }
+            let my_id = obj_this.user.id;
+            var ar = obj_this.selected_chat_group.members.filter(function(item){
                 return item.id != my_id;
             });
-            $('.chat-container-wrppaer').show();
-            $('.chat-group-setup').show();
-            $('.chat-group-setup').find('.group-name:first').attr('readonly', 'readonly').val(group.name);
-        }
-
-        if(group.members.length == 0)
-        {
-            $('.chat-container-wrppaer').hide();
-            obj_this.show_member_list(group, function(data: ChatGroup){
-                group = data;
-                on_group_setup_shown();
-            });
-        }
-        else{
-            obj_this.selectedPeople = group.members;
-            on_group_setup_shown();
-        }
+            // console.log(ar, 133);
+            obj_this.selectedPeople = ar;
+        } , function(){
+            console.log('Group members not fetched');
+        });
     }
 
     update_chat_group_members(){
@@ -334,11 +318,19 @@ export class MessengerComponent implements OnInit {
             }
         }
         obj_this.httpService.post(input_data,function(){
-            obj_this.selected_chat_group.members = obj_this.selectedPeople;
-            obj_this.selected_chat_group = undefined;
-            obj_this.group_detail_mode = 0;
+            let all_chat_groups = obj_this.socketService.chat_groups;
+            for(var n = 0; n < all_chat_groups.length; n++)
+            {
+                if(all_chat_groups[n].id == input_data.params.group_id)
+                {
+                    all_chat_groups[n].members = obj_this.selectedPeople;
+                    break;
+                }
+            }
+            
+            obj_this.switch_group_mode('none');
         }, function(){
-            $('.chat-group-setup').show();
+
         });
     }
     
@@ -384,12 +376,25 @@ export class MessengerComponent implements OnInit {
             input_data['no_loader'] = 1;
             obj_this.httpService.get(input_data, call_on_user_selected_event, call_on_user_selected_event);
         }
-	}
+    }
+    
+    activate_chat_user(chat_client: ChatClient){        
+        this.active_chat_user = chat_client;
+        // console.log(chat_client, 1999);
+        this.set_chat_mode('active');
+    }
 
-	hide_chat_box(){
-        this.deslect_chat_user();
-		$('.friends-chat-box').show();
-    }    
+    set_chat_mode(mode: string){
+        this.chat_mode = mode;
+        if(mode == 'none')
+        {
+            console.log(mode, 19);
+            this.active_chat_user = undefined;
+            this.selected_chat_group = undefined;
+        }
+    }
+
+    chat_mode = 'none';
 
     scroll_to_end(selector)
     {
@@ -510,9 +515,7 @@ export class MessengerComponent implements OnInit {
 				obj_this.prepare_message();
 			});
             obj_this.scroll_to_end(".msg_card_body");	
-        },20);        
-        $('.friends-chat-box').hide();
-        $('.chat-container-wrppaer').show();
+        },20);
     }
 
 	onUserSelected(messages: Array<Message>, already_fetched = 0) {        
@@ -611,9 +614,7 @@ export class MessengerComponent implements OnInit {
 				obj_this.prepare_message();
 			});
             obj_this.scroll_to_end(".msg_card_body");	
-        },20);        
-        $('.friends-chat-box').hide();
-        $('.chat-container-wrppaer').show();
+        },20);
 	}
 
 	send_message(input_data, force_post= false){   
@@ -754,7 +755,7 @@ export class MessengerComponent implements OnInit {
             from: obj_this.active_chat_user,
             body: message_content,
             create_date: Date(),
-            sender: obj_this.socketService.user_data as BaseClient,
+            sender: obj_this.user as BaseClient,
             attachments: obj_this.attachments,
             uuid: input_data.uuid
         };
@@ -827,7 +828,7 @@ export class MessengerComponent implements OnInit {
 
     receiveGroupMessage(obj_this, message: ChatGroupMessage, sender_id: number) {    
         try{            
-            if(message.sender.id == obj_this.socketService.user_data.id)
+            if(message.sender.id == obj_this.user.id)
             {
                 return;
             }
@@ -916,16 +917,7 @@ export class MessengerComponent implements OnInit {
 
 	ngOnInit() {        
         var obj_this = this;
-        // for(var key in obj_this.socketService.chat_users)
-        // {
-        //     obj_this.socketService.chat_users[key].messages = undefined;
-        // }
-        $('.chat-container-wrppaer').hide();
         obj_this.is_mobile_device = true;
         $('.popup.messenger').hide();        
-    }
-
-    ngOnDestroy() {
-        this.deslect_chat_user();
     }
 }
