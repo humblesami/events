@@ -111,6 +111,7 @@ export class DocumentComponent implements OnInit {
     
     onLibsLoaded()
     {
+        console.log(Date(), new Date().getMilliseconds(), ' doc reached');
         var obj_this = this;        
         var doc_type = obj_this.route.snapshot.params.doc_type;        
         let doc_id = obj_this.route.snapshot.params.res_id;
@@ -191,7 +192,7 @@ export class DocumentComponent implements OnInit {
                 $('.loadingoverlay').hide();
             }
             else{
-                // console.log(Date(), new Date().getMilliseconds(), 'started rendering');
+                console.log(Date(), new Date().getMilliseconds(), 'started rendering');
                 window['pdf_js_module'].render(doc_data);
             }                
         };
@@ -199,9 +200,10 @@ export class DocumentComponent implements OnInit {
             //console.log("No doc_type");
             return;
         }
+        
         obj_this.httpService.get(input_data,renderDoc, function(){
             window['functions'].hideLoader('loaddocwaiter');
-        });        
+        });
     }
     
     ngOnInit() {

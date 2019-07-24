@@ -34,7 +34,7 @@ urlpatterns = [
     path('rest/search', rest_api.search_ws, name = 'search_ws'),
     path('rest/search1', rest_api.search_session, name = 'search_session'),
 
-    url(r'^', include('authsignup.urls')),
+    url(r'^account/', include('authsignup.urls')),
     url(r'^voting/', include('voting.urls')),
     url(r'^meeting/', include('meetings.urls')),
     url(r'^esign/', include('esign.urls')),
@@ -42,8 +42,7 @@ urlpatterns = [
     url(r'^survey/', include('survey.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
 
-]\
-              # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 admin.site.site_header = 'BoardSheet'
 admin.site.site_title = "BoardSheet"

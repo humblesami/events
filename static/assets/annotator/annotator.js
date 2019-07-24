@@ -885,12 +885,13 @@
                             try{
                                 pages_rendered++;
                                 if (pange_number == 1) {
+                                    
                                     first_page_rendered = 1;
                                     if (doc_data && doc_data.first_time) {
                                         $('body').addClass('pdf-viewer');
                                     }
                                     scroll_div.show();
-                                    // console.log(Date(), new Date().getMilliseconds(), 'first page done');                                    
+                                    console.log(Date(), new Date().getMilliseconds(), 'first page done');
                                 }
     
                                 if (annotation_mode == 1) {
@@ -900,6 +901,7 @@
                                 if(pange_number == NUM_PAGES)
                                 {
                                     on_document_rendered();
+                                    console.log(Date(), new Date().getMilliseconds(), 'document done');
                                 }
                             }
                             

@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
         }
 
     ngOnInit() {        
+        $('body').show();
         this.socketService.user_data = undefined;        
         $(document).ready(function(){
             setTimeout(function(){
@@ -70,7 +71,7 @@ export class LoginComponent implements OnInit {
         };
         input_data['app_name'] = window['site_config'].app_name;
         var success_cb = function (user) {
-        	obj_this.socketService.connect_socket(user);
+            obj_this.socketService.connect_socket(user);
             obj_this.loading = false;
             obj_this.router.navigate([obj_this.returnUrl]);
         };

@@ -14,7 +14,11 @@ var dn_current_site_user = {
     socket: {},
     time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     verifyUserToken: function() {
-        var user_info = dn_current_site_user.cookie;
+        if(site_functions.is_public_route())
+        {
+            return;
+        }
+        var user_info = dn_current_site_user.cookie;        
         dn_current_site_user.cookie = localStorage.getItem('user');
         if (dn_current_site_user.cookie) {
             dn_current_site_user.cookie = JSON.parse(dn_current_site_user.cookie);
@@ -28,11 +32,7 @@ var dn_current_site_user = {
         }
         else
         {
-            $('body').removeClass('user').addClass('public');
-            if(!site_functions.is_public_route())
-            {
-                site_functions.go_to_login();
-            }
+            $('body').removeClass('user').addClass('public');            
         }
     },
     onLogin: function(data) {        
@@ -52,7 +52,11 @@ var dn_current_site_user = {
         {            
             return;
         }
-        $('body').removeClass('user').addClass('public');        
+        if(window.location.toString().indexOf('login') == -1)
+        {
+            $('body').hide();
+            $('body').removeClass('user').addClass('public');            
+        }
         localStorage.removeItem("user");
         dn_current_site_user.cookie = undefined;
         if (window['socket_manager']) {
@@ -85,8 +89,12 @@ var site_functions = {
         if(!url)
         {
             url = window['pathname'];
+            if(!url)
+            {
+                site_functions.get_path_name();
+            }
         }
-        let public_routes = ['/login','/forgot-password', '/logout','/reset_password','/set-password'];        
+        let public_routes = ['/account/login','/account/forgot-password','/account/reset-password', '/login','/forgot-password', '/logout','/reset_password','/set-password'];        
         var res = public_routes.indexOf(url);
         if(res == -1)
         {
@@ -97,8 +105,18 @@ var site_functions = {
             return true;
         }
     },
-    get_path: function() {
-
+    get_path_name: function() {
+        var wl = window.location;
+        if(wl.toString().indexOf('localhost') > -1)
+        {
+            is_local_host = true;
+        }
+        if (wl.hash) {
+            window['pathname'] = wl.hash.substr(1, wl.hash.length);
+        } else {
+            window['pathname'] = wl.toString().replace(window.location.origin, '');
+        }
+        return window['pathname'];
     },
     moment: function(value, format)
     {
@@ -126,11 +144,17 @@ var site_functions = {
         // alert(444);
         if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
         {
-            dn_current_site_user.logout();
+            dn_current_site_user.logout();            
         }
         if(!window.location.toString().endsWith('login'))
         {
-            window.location = '/#/login';
+            if(window.location.toString().indexOf('4200') == -1)
+            {
+                window.location = window['site_config'].server_base_url+'/account/login';
+            }
+            else{
+                window.location = '/#/login';
+            }
         }
     },
 
