@@ -23,7 +23,12 @@ public_methods = {
         'VotingAnswer':{
             'submit_public': 1
         }
-    }
+    },
+    'meetings':{
+        'SignDocument':{
+            'get_details': 1,
+        }
+    },
 }
 
 @csrf_exempt

@@ -108,6 +108,7 @@
                     data: input_data
                 }
                 options.onSuccess = function(data){
+                    form.find('button[type="submit"]:first').removeAttr('disabled');
                     dn_current_site_user.onLogin(data);
                     var return_url = new URL(window.location.toString());
                     return_url = return_url.searchParams.get("next");
@@ -123,6 +124,7 @@
                 };
                 options.type = 'get';
                 options.onError = function(data){
+                    form.find('button[type="submit"]:first').removeAttr('disabled');
                     form.find('.login-feedback').html(data);
                 };
                 window['dn_rpc_object'](options);

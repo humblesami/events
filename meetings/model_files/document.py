@@ -17,6 +17,7 @@ from django.db import transaction
 from collections import OrderedDict
 from mainapp.settings import MEDIA_ROOT
 from PIL import ImageFont, Image, ImageDraw
+from mainapp.settings import server_base_url
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from django.core.files import File as DjangoFile
 from esign.model_files.signature import Signature
@@ -333,31 +334,52 @@ class SignDocument(SignatureDoc):
                            'height': s['height'], 'width': s['width'], 'zoom': s['zoom'], 'type': s['type'],
                            'token': token})
                     obj.save()
-        #         user_email = doc.signature_ids.filtered(lambda r: r.token == token)[0].user_id.email
-        #         email = doc.signature_ids.filtered(lambda r: r.token == token)[0].email
-        #         mail = False
-        #
-        #         if not doc.workflow_enabled:
-        #             mail = True
-        #         elif doc.workflow_enabled:
-        #             if doc.signature_set.filter(token != token).__len__() == 0:
-        #                 mail = True
-        #             else:
-        #                 all_signed = True
-        #                 for s in doc.signature_set.filter(token != token):
-        #                     if not s.image:
-        #                         all_signed = False
-        #                         break
-        #                 if all_signed:
-        #                     mail = True
-        #         if mail:
-        #             email_data.append(
-        #                 {'user_email': user_email, 'email': email, 'token': token,
-        #                  'subject': params['subject'], 'message': params['message']})
-        #
-        # t = threading.Thread(target=cls.send_mails_thread, args=([email_data]))
-        # t.start()
-
+            #     # user_email = doc.signature_ids.filtered(lambda r: r.token == token)[0].user_id.email
+            #     # email = doc.signature_ids.filtered(lambda r: r.token == token)[0].email
+            #     sign_user_ids = doc.signature_set.filter(token=token).values('user').distinct()
+            #     respondents = []
+            #     for sign_user_id in sign_user_ids:
+            #         respondents.append(sign_user_id['user'])
+            #     # email = doc.signature_set.filter(token=token)[0].email
+            #     mail = False
+        
+            #     if not doc.workflow_enabled:
+            #         mail = True
+            #     elif doc.workflow_enabled:
+            #         if doc.signature_set.filter(token != token).__len__() == 0:
+            #             mail = True
+            #         else:
+            #             all_signed = True
+            #             for s in doc.signature_set.filter(token != token):
+            #                 if not s.image:
+            #                     all_signed = False
+            #                     break
+            #             if all_signed:
+            #                 mail = True
+            #     if mail:
+            #         email_data.append(
+            #             {'user_email': user_email, 'email': email, 'token': token,
+            #              'subject': params['subject'], 'message': params['message']})
+        
+        template_data = {            
+            'subject': params['subject'],
+            'message': params['message'],
+            'url': server_base_url+'/esign/sign-doc/'
+        }
+        post_info = {}
+        post_info['res_app'] = cls._meta.app_label
+        post_info['res_model'] = cls._meta.model_name
+        post_info['res_id'] = doc.id
+        template_name = 'esign/esign_request.html'
+        email_data = {
+            'subject': params['subject'],
+            'audience': user_ids,
+            'post_info': post_info,
+            'template_data': template_data,
+            'template_name': template_name,
+            'token_required': True
+        }
+        ws_methods.send_email_on_creation(email_data)
         doc_data = cls.get_doc_data(request,doc)
         return doc_data
 
