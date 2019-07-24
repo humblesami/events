@@ -613,10 +613,11 @@ class Message(models.Model):
             'name': message.sender.name,
             'photo': message.sender.image.url,
         }
-        message_dict['chat_group'] = {
-            'id': message.chat_group.id,
-            'name': message.chat_group.name,
-        }
+        if message.chat_group:
+            message_dict['chat_group'] = {
+                'id': message.chat_group.id,
+                'name': message.chat_group.name,
+            }
         message_dict['attachments'] = attachment_urls
         message_dict['create_date'] = str(datetime.now())
 

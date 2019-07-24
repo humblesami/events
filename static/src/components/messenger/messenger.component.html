@@ -18,7 +18,7 @@
 
         <div class="group-setup-container">
             <div *ngIf="group_mode == 'edit'" class="row p-1 m-1 chat-group-setup" style="border:1px solid">
-                <input [(ngModel)]="group_name" class="group-name" />
+                <input readonly [(ngModel)]="group_name" class="group-name" />
                 <button *ngIf="!selected_chat_group" (click)="create_chat_room()" class="" aria-label="Create group.">
                     Create
                 </button>

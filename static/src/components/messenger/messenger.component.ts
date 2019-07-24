@@ -34,7 +34,7 @@ export class MessengerComponent implements OnInit {
 			socketService.server_events['chat_message_received'] = function (msg) {
                 try{
                     // console.log(msg, 'chat_message_received');
-                    obj_this.receiveMessage(obj_this, msg, msg.sender.id);
+                    obj_this.receiveMessage(msg, msg.sender.id);
                 }
                 catch(er)
                 {
@@ -50,7 +50,7 @@ export class MessengerComponent implements OnInit {
                 socketService.chat_users.push(friend);
             }
             socketService.server_events['friend_removed'] = function(friend_id){
-                for(var i=0;i<socketService.chat_users.length;i++)
+                for(var i = 0; i < socketService.chat_users.length; i++)
                 {
                     if(socketService.chat_users[i].id == friend_id)
                     {
@@ -113,7 +113,7 @@ export class MessengerComponent implements OnInit {
             socketService.server_events['group_chat_message_received'] = function(msg){
                 try{
                     //console.log('redifen chat_message_received');
-                    obj_this.receiveGroupMessage(obj_this, msg, msg.sender.id);
+                    obj_this.receiveGroupMessage(msg, msg.sender.id);
                 }
                 catch(er)
                 {
@@ -121,9 +121,9 @@ export class MessengerComponent implements OnInit {
                 }
             };
             obj_this.people_list = new Array<ChatUser>();            
-            for(var key in obj_this.socketService.chat_users)
+            for(var ind in obj_this.socketService.chat_users)
             {
-                let obj_user = obj_this.socketService.chat_users[key] as ChatUser;                
+                let obj_user = obj_this.socketService.chat_users[ind] as ChatUser;                
                 obj_this.people_list.push(obj_user);
             }
 			if(!obj_this.user)
@@ -270,8 +270,8 @@ export class MessengerComponent implements OnInit {
     show_group_members(group: ChatGroup){
         let obj_this = this;
         var mode = obj_this.user.id !== group.created_by.id ? 'view': 'edit';
-        this.switch_group_mode(mode);
-
+        obj_this.switch_group_mode(mode);
+        obj_this.group_name = group.name;
         let input_data = {
             args:{
                 app:'chat',
@@ -388,7 +388,7 @@ export class MessengerComponent implements OnInit {
         this.chat_mode = mode;
         if(mode == 'none')
         {
-            console.log(mode, 19);
+            // console.log(mode, 19);
             this.active_chat_user = undefined;
             this.selected_chat_group = undefined;
         }
@@ -766,8 +766,9 @@ export class MessengerComponent implements OnInit {
 		obj_this.scroll_to_end(".msg_card_body");
     }    
     
-	receiveMessage(obj_this, message: UserMessage, sender_id: number) {        
-        let sender = obj_this.socketService.chat_users[sender_id];
+	receiveMessage(message, sender_id: number) {   
+        let obj_this = this;     
+        let sender = obj_this.socketService.get_user_by_id(sender_id);
         if(!sender)
         {
             console.log(obj_this.socketService.chat_users, ' Dev issue as '+sender_id+' not found');
@@ -826,8 +827,9 @@ export class MessengerComponent implements OnInit {
         }, null);
     }
 
-    receiveGroupMessage(obj_this, message: ChatGroupMessage, sender_id: number) {    
-        try{            
+    receiveGroupMessage(message, sender_id: number) {    
+        try{       
+            let obj_this = this;
             if(message.sender.id == obj_this.user.id)
             {
                 return;
