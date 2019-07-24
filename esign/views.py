@@ -43,8 +43,8 @@ def save_sign_data(request):
     except:
         return produce_exception()
 
-# @csrf_exempt
-# @api_view(["GET", "POST"])
+@csrf_exempt
+@api_view(["GET", "POST"])
 def get_signature(request):
     try:
         kw = request.POST
@@ -63,8 +63,8 @@ def get_signature(request):
     except:
         return produce_exception()
 
-# @csrf_exempt
-# @api_view(["GET", "POST"])
+@csrf_exempt
+@api_view(["GET", "POST"])
 def save_signature(request):
     try:
         kw = request.POST
