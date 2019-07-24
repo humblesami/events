@@ -45,7 +45,7 @@
                                 <button type="submit" class="login-btn">Login</button>
                             </div>
                             <div class="form-group text-center">
-                                <a class="forgot" href="/account/forgot-password">Forgot Password?</a>
+                                <a class="forgot" href="/accounts/forgot-password">Forgot Password?</a>
                             </div>                            
                         </form>
                     </div>
@@ -109,7 +109,17 @@
                 }
                 options.onSuccess = function(data){
                     dn_current_site_user.onLogin(data);
-                    window.location = "/";
+                    var return_url = new URL(window.location.toString());
+                    return_url = return_url.searchParams.get("next");
+                    console.log(return_url);
+                    if(return_url)
+                    {
+                        window.location = return_url;
+                    }
+                    else
+                    {
+                        window.location = "/";
+                    }
                 };
                 options.type = 'get';
                 options.onError = function(data){

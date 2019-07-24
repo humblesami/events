@@ -94,7 +94,7 @@ var site_functions = {
                 site_functions.get_path_name();
             }
         }
-        let public_routes = ['/account/login','/account/forgot-password','/account/reset-password', '/login','/forgot-password', '/logout','/reset_password','/set-password'];        
+        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset_password','/set-password'];        
         var res = public_routes.indexOf(url);
         if(res == -1)
         {
@@ -150,7 +150,7 @@ var site_functions = {
         {
             if(window.location.toString().indexOf('4200') == -1)
             {
-                window.location = window['site_config'].server_base_url+'/account/login';
+                window.location = window['site_config'].server_base_url+'/accounts/login';
             }
             else{
                 window.location = '/#/login';
