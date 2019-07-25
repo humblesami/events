@@ -970,7 +970,8 @@ html, body{
 
 
 fieldset.module{
-    width: 100%;    
+    width: 100%;
+    overflow-x: auto;
     border: none;
 }
 #content-main {
