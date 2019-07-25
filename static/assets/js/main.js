@@ -94,16 +94,15 @@ var site_functions = {
                 site_functions.get_path_name();
             }
         }
-        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset_password','/set-password'];        
-        var res = public_routes.indexOf(url);
-        if(res == -1)
+        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset_password','/set-password','/signdoc'];
+        for (var i in public_routes)
         {
-            return false;
+            if (url.startsWith(public_routes[i]))
+            {
+                return true;
+            }
         }
-        else        
-        {
-            return true;
-        }
+        return false;
     },
     get_path_name: function() {
         var wl = window.location;
