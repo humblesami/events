@@ -25,6 +25,13 @@ def get_sign_doc_data(request):
             if user_token:
                 user_signature = Signature.objects.filter(document_id=kw['params']['document_id'],
                 user_id=user_token.user.id)
+                sign_status = True
+                for sign in user_signature:
+                    if not sign.image:
+                        sign_status = False
+                        break
+                if sign_status:
+                    return produce_result({'data':'done'})
                 if user_signature:
                     kw['params']['token'] = user_signature[0].token
             else:

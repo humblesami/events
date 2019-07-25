@@ -134,6 +134,11 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                 },
                 onSuccess: function(data) {
+                    if(obj_this.is_public && data == 'done')
+                    {
+                        $('#holder').hide();
+                        $('body').prepend('<h1>You have Completed You Signatures</h1>');
+                    }
                     doc_data = data.doc_data
                     obj_this.users_list = users = data.users;
                     meetings = data.meetings;
@@ -1204,10 +1209,10 @@ export class EsignDocDetailsComponent implements OnInit {
             });
             if (d.length == 0) {
                 $(this).hide();
-                if (obj_this.is_public)
-                {
-                    window.location.href = window['site_config'].server_base_url+'/response-sumbitted'
-                }
+                // if (obj_this.is_public)
+                // {
+                //     window.location.href = window['site_config'].server_base_url+'/response-sumbitted'
+                // }
                 return;
             }
             var sign = d[0];
