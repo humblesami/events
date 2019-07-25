@@ -213,7 +213,7 @@ class SignDocument(SignatureDoc):
             signature = Signature.objects.filter(token=token)
             if not signature.exists():
                 return "Invalid Token"
-            file_obj = signature[0].document
+            file_obj = cls.objects.filter(id=file_id)[0]
             file_name = file_obj.name
         else:
             file_obj = cls.objects.filter(id=file_id)[0]
@@ -224,6 +224,7 @@ class SignDocument(SignatureDoc):
         meetings = queryset_to_list(meetings,fields=['id','name'],related={'attendees':{'fields':['id','username']}})
         meeting_id = False
         send_to_all = False
+
         if file_obj.meeting:
             meeting_id = file_obj.meeting.id
         if file_obj.send_to_all:
@@ -364,7 +365,7 @@ class SignDocument(SignatureDoc):
         template_data = {            
             'subject': params['subject'],
             'message': params['message'],
-            'url': server_base_url+'/esign/sign-doc/'
+            'url': 'http://localhost:4200/#/signdoc/'+str(doc.id)+'/'
         }
         post_info = {}
         post_info['res_app'] = cls._meta.app_label
@@ -458,7 +459,7 @@ class SignDocument(SignatureDoc):
         pdf_doc = pdf_doc.decode('utf-8')
 
         signatures = doc.signature_set.all()
-        signatures = queryset_to_list(signatures,fields=['user__id','user__username','id','type','page','field_name','zoom','width','height','top','left','image'])
+        signatures = queryset_to_list(signatures,fields=['user__id','user__username','id','type','page','field_name','zoom','width','height','top','left','image','token'])
         uid = False
         if token:
             signs = doc.signature_set.filter(token=token)
@@ -484,22 +485,19 @@ class SignDocument(SignatureDoc):
     def get_auto_sign(cls, sign, date=""):
         curr_dir = os.path.dirname(__file__)
         pth = curr_dir.replace('model_files', 'static')
-        font = ImageFont.truetype(pth + "/FREESCPT.TTF", 200)
+                
         txt = sign.user.username or sign.name
         if sign.type == "initial":
             txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
-        if sign.type == "date":
-            font = ImageFont.truetype(pth + "/ubuntu.regular.ttf", 200)
+        if sign.type == "date":            
             txt = date
 
-        sz = font.getsize(txt)
-        sz = (sz[0] + 50, sz[1])
         # if sz[0] < 100:
-        #     sz=(150,50)
+        sz = (150,28)
         img = Image.new('RGB', sz, (255, 255, 255))
         d = ImageDraw.Draw(img)
 
-        d.text((40, 0), txt, (0, 0, 0), font=font)
+        d.text((40, 0), txt, (0, 0, 0))
 
         img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
         img.save(img_path)

@@ -12,7 +12,7 @@ declare var $:any;
 export class EsignDocDetailsComponent implements OnInit {
     doc: any;
     doc_name: any;
-
+    is_public = false;
     users_list = [];
     selectedUser: any;
 
@@ -62,8 +62,13 @@ export class EsignDocDetailsComponent implements OnInit {
             
 
         if (!doc_id) {
-            var url = window.location.href.split("/");
-            doc_id = url[url.length - 1]
+            var route_token = obj_this.route.snapshot.params.token;
+            doc_id = obj_this.route.snapshot.params.id;
+            if (route_token)
+            {
+                token = obj_this.route.snapshot.params.token;
+                obj_this.is_public = true;
+            }
         }
         obj_this.doc = {
             "id": doc_id,
@@ -110,9 +115,10 @@ export class EsignDocDetailsComponent implements OnInit {
         function loadData() {
             $('#loaderContainerajax').show();
             $(".o_loading").show();
-
+            let url = '';
+            url = get_url('/esign/get_details');
             window['dn_rpc_object']({
-                url: '/esign/get_details',
+                url: url,
                 data: {
                     args: {
                         app: "meetings",
@@ -681,9 +687,11 @@ export class EsignDocDetailsComponent implements OnInit {
                         return;
                     }
                 }
+                let url = '';
+                url = get_url('/esign/save_sign_data');
                 if (arr.length != 0 || snd_to_all) {
                     window['dn_rpc_object']({
-                        url: '/esign/save_sign_data',
+                        url: url,
                         data: {
                             args: {
                                 app: "meetings",
@@ -785,9 +793,10 @@ export class EsignDocDetailsComponent implements OnInit {
                 //            body.append(hidden_image_container);
                 //            hidden_image_container.html(hidden_image);
 
-
+                let url = '';
+                url = get_url('/esign/get_signature');
                 window['dn_rpc_object']({
-                    url: '/esign/get_signature',
+                    url: url,
                     data: {
                         args: {
                             app: "meetings",
@@ -814,8 +823,10 @@ export class EsignDocDetailsComponent implements OnInit {
                 auto_sign.click(function(e) {
                     $('#loaderContainerajax').show();
                     auto_clicked = true;
+                    let url = '';
+                    url = get_url('/esign/save_signature');
                     window['dn_rpc_object']({
-                        url: '/esign/save_signature',
+                        url: url,
                         data: {
                             args: {
                                 app: "meetings",
@@ -873,9 +884,10 @@ export class EsignDocDetailsComponent implements OnInit {
                     //                if(auto_clicked){
                     //                type="auto";
                     //                }
-
+                    let url = '';
+                    url = get_url('/esign/save_signature');
                     window['dn_rpc_object']({
-                        url: '/esign/save_signature',
+                        url: url,
                         data: {
                             args: {
                                 app: "meetings",
@@ -938,8 +950,10 @@ export class EsignDocDetailsComponent implements OnInit {
 
             del_btn.click(function(e) {
                 if (confirm('Delete it permanently?')) {
+                    let url = '';
+                    url = get_url('/esign/delete_signature');
                     window['dn_rpc_object']({
-                        url: '/esign/delete_signature',
+                        url: url,
                         data: {
                             args: {
                                 app: "meetings",
@@ -948,6 +962,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             params: {
                                 signature_id: signature_id,
                                 document_id: doc_id,
+                                token: token,
                                 url: url
                             }
                         },
@@ -993,8 +1008,10 @@ export class EsignDocDetailsComponent implements OnInit {
 
             save_btn.click(function(e) {
                 var date = input_date.val();
+                let url = '';
+                url = get_url('/esign/save_signature');
                 window['dn_rpc_object']({
-                    url: '/esign/save_signature',
+                    url: url,
                     data: {
                         args: {
                             app: "meetings",
@@ -1025,8 +1042,10 @@ export class EsignDocDetailsComponent implements OnInit {
 
             del_btn.click(function(e) {
                 if (confirm('Delete it permanently?')) {
+                    let url = '';
+                    url = get_url('/esign/delete_signature');
                     window['dn_rpc_object']({
-                        url: '/esign/delete_signature',
+                        url: url,
                         data: {
                             args: {
                                 app: "meetings",
@@ -1035,6 +1054,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             params: {
                                 signature_id: signature_id,
                                 document_id: doc_id,
+                                token: token,
                                 url: url
                             }
                         },
@@ -1084,9 +1104,10 @@ export class EsignDocDetailsComponent implements OnInit {
                     alert("Enter text")
                     return;
                 }
-
+                let url = '';
+                url = get_url('/esign/save_signature');
                 window['dn_rpc_object']({
-                    url: '/esign/save_signature',
+                    url: url,
                     data: {
                         args: {
                             app: "meetings",
@@ -1117,8 +1138,10 @@ export class EsignDocDetailsComponent implements OnInit {
 
             del_btn.click(function(e) {
                 if (confirm('Delete it permanently?')) {
+                    let url = '';
+                    url = get_url('/esign/delete_signature');
                     window['dn_rpc_object']({
-                        url: '/esign/delete_signature',
+                        url: url,
                         data: {
                             args: {
                                 app: "meetings",
@@ -1127,6 +1150,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             params: {
                                 signature_id: signature_id,
                                 document_id: doc_id,
+                                token: token,
                                 url: url
                             }
                         },
@@ -1229,6 +1253,15 @@ export class EsignDocDetailsComponent implements OnInit {
         var new_height = parseFloat(this.prev_height) + 20;
         $('.router-outlet').css('height', new_height);
         // console.log(this.prev_height, new_height);
+        
+        function get_url(url)
+        {
+            if (obj_this.is_public)
+            {
+                return url + '_public';
+            }
+            return url;
+        }
 
     }
     prev_height = '';
