@@ -28,3 +28,7 @@
 hr{
     margin: 0;
 }
+body.public .app-sidebar
+{
+	display:none;
+}
