@@ -52,7 +52,7 @@
         }    
     }
     
-    function is_public_route(url){    
+    function is_public_route(url){
         if(!url)
         {
             url = get_path_name();

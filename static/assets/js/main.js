@@ -88,13 +88,9 @@ var site_functions = {
     is_public_route: function(url){
         if(!url)
         {
-            url = window['pathname'];
-            if(!url)
-            {
-                site_functions.get_path_name();
-            }
+            url = get_path_name();
         }
-        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset_password','/set-password','/signdoc'];
+        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset-password'];
         for (var i in public_routes)
         {
             if (url.startsWith(public_routes[i]))
