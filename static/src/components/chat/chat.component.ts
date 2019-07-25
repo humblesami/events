@@ -26,25 +26,12 @@ export class ChatComponent implements OnInit {
         togglerelated('.container.notification-list'); 
     }
 
-    // mark_notifications_read1(read_notification_ids){
-    //     let obj_this = this;        
-    //     for(var i in read_notification_ids)
-    //     {
-    //         for(var j in obj_this.notificationList)
-    //         {
-    //             if(read_notification_ids[i] == obj_this.notificationList[j].id)
-    //             {
-    //                 let index = parseInt(j);
-    //                 obj_this.notificationList.splice(index, 1);
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
-
     mark_notifications_read(li){
         let obj_this = this;
         let item = obj_this.socketService.notificationList[li.index()];
+        if(!item.id){
+            return;
+        }
         var options =
         { 
             data:{

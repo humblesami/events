@@ -5,6 +5,7 @@
         var public_route = is_public_route();        
         if(public_route)
         {
+            $('body').removeClass('user').addClass('public');
             return;
         }     
         var user_cookie = localStorage.getItem('user');
@@ -24,16 +25,18 @@
                         {
                             er = er.responseJSON.detail;
                         }
-                        error = er;
+                        error = er;                        
                         console.log(er);
                     },
                     complete:function(){
+                        // console.log(error, 444);
                         if(!error)
                         {
                             $('body').removeClass('public').addClass('user');
+                            // console.log(document.body.classList);
                         }
                         else{
-                            $('body').removeClass('user').addClass('public');
+                            $('body').removeClass('user').addClass('public');                            
                             go_to_login();                            
                         }
                     }

@@ -12,29 +12,7 @@ var dn_current_site_user = {
         photo: false
     },
     socket: {},
-    time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    verifyUserToken: function() {
-        if(site_functions.is_public_route())
-        {
-            return;
-        }
-        var user_info = dn_current_site_user.cookie;        
-        dn_current_site_user.cookie = localStorage.getItem('user');
-        if (dn_current_site_user.cookie) {
-            dn_current_site_user.cookie = JSON.parse(dn_current_site_user.cookie);
-            if (dn_current_site_user.cookie.token) {
-                $('body').removeClass('public').addClass('user');                
-            }
-            else{
-                $('body').removeClass('user').addClass('public');
-                site_functions.go_to_login();
-            }
-        }
-        else
-        {
-            $('body').removeClass('user').addClass('public');            
-        }
-    },
+    time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,    
     onLogin: function(data) {        
         if (time_out_session) {
             clearTimeout(time_out_session);

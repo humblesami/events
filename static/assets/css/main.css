@@ -2237,9 +2237,7 @@ i.icon-folder.app-menu__icon {
 body.public .app-content {
 	margin-left: 0 !important;
 }
-body.public .app-sidebar {
-	display: none !important;
-}
+
 .MeetingHeadWrapper {
 	display: flex;
 	justify-content: flex-end;
