@@ -1,5 +1,9 @@
 from django.contrib.auth import logout
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+
 from restoken.models import PostUserToken
 
 def login(request, next=None):
@@ -13,6 +17,11 @@ def logout_user(request):
 def forgot_password(request):
     context = {}
     return render(request, 'password_reset.html', context)
+
+@csrf_exempt
+@api_view(["GET", "POST"])
+def verify_token(request):
+    return HttpResponse('done')
 
 def reset_password(request, token):
     context = {}

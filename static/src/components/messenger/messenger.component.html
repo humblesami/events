@@ -18,13 +18,20 @@
 
         <div class="group-setup-container">
             <div *ngIf="group_mode == 'edit'" class="row p-1 m-1 chat-group-setup" style="border:1px solid">
-                <input readonly [(ngModel)]="group_name" class="group-name" />
-                <button *ngIf="!selected_chat_group" (click)="create_chat_room()" class="" aria-label="Create group.">
-                    Create
-                </button>
-                <button *ngIf="selected_chat_group" (click)="update_chat_group_members()" class="" aria-label="Create group.">
-                    Update
-                </button>
+                <div *ngIf="!selected_chat_group">
+                    <input id="group_name" [(ngModel)]="group_name" class="group-name" />
+                    <button (click)="create_chat_room()" class="" aria-label="Create group.">
+                        Create
+                    </button>
+                </div>
+                <div *ngIf="selected_chat_group">
+                    <input readonly [(ngModel)]="group_name" class="group-name" />
+                    <button (click)="update_chat_group_members()" class="" aria-label="Create group.">
+                        Update
+                    </button>
+                </div>
+                
+                
                 <button (click)="close_group_setup()" class="" aria-label="Create group.">
                     Close
                 </button>
@@ -33,6 +40,7 @@
                     [multiple]="true"
                     [closeOnSelect]="false"                    
                     bindLabel="name"
+                    (change)="clean_member_selection()"
                     placeholder="Select people"
                     [(ngModel)]="selectedPeople">
                 </ng-select>

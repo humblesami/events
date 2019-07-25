@@ -42,6 +42,17 @@ export class MessengerComponent implements OnInit {
                 }
             }
 
+            socketService.server_events['group_chat_message_received'] = function(msg){
+                try{
+                    //console.log('redifen chat_message_received');
+                    obj_this.receiveGroupMessage(msg, msg.sender.id);
+                }
+                catch(er)
+                {
+                    console.log(er);
+                }
+            };
+
             socketService.server_events['friend_joined'] = updateUserStatus;
 
             socketService.server_events['user_left'] = updateUserStatus;
@@ -110,16 +121,7 @@ export class MessengerComponent implements OnInit {
                 }
             }
 
-            socketService.server_events['group_chat_message_received'] = function(msg){
-                try{
-                    //console.log('redifen chat_message_received');
-                    obj_this.receiveGroupMessage(msg, msg.sender.id);
-                }
-                catch(er)
-                {
-                    console.log(er);
-                }
-            };
+            
             obj_this.people_list = new Array<ChatUser>();            
             for(var ind in obj_this.socketService.chat_users)
             {
@@ -264,7 +266,12 @@ export class MessengerComponent implements OnInit {
     group_mode = 'none';
     selected_chat_group: ChatGroup;
     group_create_mode(){
+        this.group_name = '';
+        this.selected_chat_group = undefined;
         this.switch_group_mode('edit');
+        setTimeout(function(){
+            $('#group_name').focus()
+        },100);
     }
     
     show_group_members(group: ChatGroup){
@@ -299,6 +306,10 @@ export class MessengerComponent implements OnInit {
             });
             // console.log(ar, 133);
             obj_this.selectedPeople = ar;
+            if(mode == 'edit')
+            {
+                $('input[role="combobox"]:visible:first').focus();
+            }
         } , function(){
             console.log('Group members not fetched');
         });
@@ -392,6 +403,10 @@ export class MessengerComponent implements OnInit {
             this.active_chat_user = undefined;
             this.selected_chat_group = undefined;
         }
+    }
+
+    clean_member_selection(){
+        $('input[role="combobox"]:visible:first').val('');
     }
 
     chat_mode = 'none';

@@ -505,4 +505,3 @@ window["functions"] = site_functions;
 check_if_touch_device();
 addMainEventListeners();
 dn_current_site_user.initUserDataFromCookie();
-dn_current_site_user.verifyUserToken();

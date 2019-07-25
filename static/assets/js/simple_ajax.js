@@ -31,7 +31,7 @@ function dn_rpc_object(options) {
     }
     if(ajax_user.cookie && ajax_user.cookie.token)
     {
-        options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;            
+        options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;
     }
     else if(api_url.endsWith('/secure'))
     {
