@@ -2647,9 +2647,7 @@ ul.dropdown-menu.scrollable-menu {
 	z-index: 8;
 	width: calc(100vw - 3rem);
 }
-body.public .popup.messenger {
-	display: none !important;
-}
+
 .popup.messenger {
 	width: 320px;
 }
