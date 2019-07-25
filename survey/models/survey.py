@@ -18,16 +18,16 @@ class Survey(models.Model):
     close_date = models.DateTimeField(auto_now_add=True)
     description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Publish"), default=False)
+    meeting = models.ForeignKey('meetings.Event', on_delete=models.CASCADE, null=True, blank=True)
+    topic = models.ForeignKey('meetings.Topic', on_delete=models.CASCADE, null=True, blank=True)
     open_date = models.DateTimeField(null=True)
     close_date = models.DateTimeField(null=True)
+    respondents = models.ManyToManyField('meetings.Profile', blank=True)
     need_logged_user = models.BooleanField(
         _("Only authenticated users can see it and answer it"), default=True)
     display_by_question = models.BooleanField(_("Display by question"), default=False)
-    meeting = models.ForeignKey('meetings.Event', on_delete=models.CASCADE, null=True, blank=True)
-    topic = models.ForeignKey('meetings.Topic', on_delete=models.CASCADE, null=True, blank=True)
     # voting = models.ForeignKey('voting.Voting', on_delete=models.CASCADE, null=True, blank=True)
     template = models.CharField(_("Template"), max_length=255, null=True, blank=True)
-    respondents = models.ManyToManyField('meetings.Profile', blank=True)
 
     class Meta(object):
         verbose_name = _("survey")

@@ -541,3 +541,6 @@ form .related-widget-wrapper ul {
 {
     margin: 0;
 }
+tr.form-row{
+	display: contents;
+}
