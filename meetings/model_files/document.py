@@ -512,16 +512,13 @@ class SignDocument(SignatureDoc):
     def get_sign_text(cls, sign, text):
         curr_dir = os.path.dirname(__file__)
         pth = curr_dir.replace('model_files', 'static')
-        font = ImageFont.truetype(pth + "/FREESCPT.TTF", 200)
-
-        sz = font.getsize(text)
-        sz = (sz[0] + 50, sz[1])
+        sz = (185, 25)
         # if sz[0] < 100:
         #     sz=(150,50)
         img = Image.new('RGB', sz, (255, 255, 255))
         d = ImageDraw.Draw(img)
 
-        d.text((40, 0), text, (0, 0, 0), font=font)
+        d.text((5, 0), text, (0, 0, 0))
 
         img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
         img.save(img_path)

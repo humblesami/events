@@ -162,7 +162,6 @@ export class EsignDocDetailsComponent implements OnInit {
                         $('.PdfButtonWrapper').parent().hide();
                         $('.docWrapperContainer').width('100%');
                     }
-                    //loadSignatures(data);
                 }
             })
         }
@@ -716,6 +715,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             $(".save_doc_data").attr('disabled', 'disabled');
                             new_divs.hide().removeClass("new_sign");
                             $('.youtubeVideoModal').modal('hide');
+                            $("#nxxt_sign").click();
                         }
                     })
 
@@ -843,6 +843,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         onSuccess: function(data) {
                             load_signature(data);
+                            $("#nxxt_sign").click();
                         }
                     })
                 });
@@ -908,6 +909,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             loadData();
                             $('.youtubeVideoModal').modal('hide');
                             $('#loaderContainerajax').hide();
+                            $("#nxxt_sign").click();
                             // web_client.do_notify(_("Success"), "Signature saved");
                         }
                     })
@@ -968,6 +970,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         onSuccess: function(data) {
                             loadData();
+                            $("#nxxt_sign").click();
 
                             // web_client.do_notify(_("Success"), "Signature saved");
                         }
@@ -1030,6 +1033,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         // doc_data = data.doc_data;
                         // renderPDF(data.pdf_binary);
                         loadData();
+                        $("#nxxt_sign").click();
                     }
                 })
                 $('.youtubeVideoModal').modal('hide');
@@ -1062,6 +1066,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             // doc_data = data.doc_data;
                             // renderPDF(data.pdf_binary);
                             loadData();
+                            $("#nxxt_sign").click();
                         }
                     })
                     $('.youtubeVideoModal').modal('hide');
@@ -1126,6 +1131,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         // doc_data = data.doc_data;
                         // renderPDF(data.pdf_binary);
                         loadData();
+                        $("#nxxt_sign").click();
                     }
                 })
                 $('.youtubeVideoModal').modal('hide');
@@ -1158,6 +1164,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             // doc_data = data.doc_data;
                             // renderPDF(data.pdf_binary);
                             loadData();
+                            $("#nxxt_sign").click();
                         }
                     })
                     $('.youtubeVideoModal').modal('hide');
@@ -1193,7 +1200,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 return !v.signed && v.my_record;
             });
             if (d.length == 0) {
-                alert("No Pending Signatures")
+                $(this).hide();
                 return;
             }
             var sign = d[0];

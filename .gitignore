@@ -21,3 +21,4 @@ static/build/static
 package-lock.json
 mtest.py
 error_log.txt
+meetings/static/*.png
