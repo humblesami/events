@@ -86,9 +86,10 @@ var dn_current_site_user = {
 var site_functions = {
     processes: [],
     is_public_route: function(url){
+        // console.log(3232);
         if(!url)
         {
-            url = get_path_name();
+            url = site_functions.get_path_name();
         }
         let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset-password'];
         for (var i in public_routes)
