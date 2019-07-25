@@ -39,6 +39,7 @@ urlpatterns = [
     url(r'^meeting/', include('meetings.urls')),
     url(r'^esign/', include('esign.urls')),
     path('media/<str:folder>/<str:file>/', views.serve_protected_document, name='serve_protected_document'),
+    path('response-sumbitted', views.response_submitted, name='response_submitted'),
     url(r'^survey/', include('survey.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
 

@@ -2,6 +2,7 @@
 import { ActivatedRoute } from "@angular/router";
 import { HttpService } from "../../app/http.service";
 import { SocketService } from "../../app/socket.service";
+import { Router } from "@angular/router";
 declare var $:any;
 
 
@@ -16,7 +17,10 @@ export class EsignDocDetailsComponent implements OnInit {
     users_list = [];
     selectedUser: any;
 
-    constructor(private httpService: HttpService, private route: ActivatedRoute, private socketService: SocketService) {
+    constructor(private httpService: HttpService, 
+        private route: ActivatedRoute, 
+        private socketService: SocketService,
+        private router: Router) {
         // this.route.params.subscribe(params => this.get_data());
     }
 
@@ -235,7 +239,7 @@ export class EsignDocDetailsComponent implements OnInit {
             $('.new_sign').hide();
             var selector = '.new_sign[page=' + pageNum + ']';
             $(selector).show();
-
+            
             //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
             setTimeout(function() {
                 loadSignatures({
@@ -437,7 +441,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     $('#page_container').append(div);
                 }
             });
-
         }
 
         ///////////////////////DRAG AND DROOP//////////////////////////
@@ -1201,6 +1204,10 @@ export class EsignDocDetailsComponent implements OnInit {
             });
             if (d.length == 0) {
                 $(this).hide();
+                if (obj_this.is_public)
+                {
+                    window.location.href = window['site_config'].server_base_url+'/response-sumbitted'
+                }
                 return;
             }
             var sign = d[0];
