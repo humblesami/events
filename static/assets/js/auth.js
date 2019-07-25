@@ -57,7 +57,7 @@
         {
             url = get_path_name();
         }
-        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset-password'];
+        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/signdoc'];
         for (var i in public_routes)
         {
             if (url.startsWith(public_routes[i]))
