@@ -151,7 +151,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('image_tag', 'image', 'is_active')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                         'location',)}),
+                                         'location', 'two_factor_auth')}),
         (_('Bio'), {'fields': ('bio',)}),
         (_('Work info'), {'fields': ('company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
         (_('Board info'), {'fields': ('board_joining_date', 'term_start_date', 'term_end_date')}),
