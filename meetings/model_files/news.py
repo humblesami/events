@@ -6,6 +6,8 @@ from mainapp.ws_methods import obj_to_dict, queryset_to_list
 from meetings.model_files.document import SignDocument
 from meetings.model_files.event import Event
 from survey.models import Survey
+from django.db.models import Q
+
 
 class News(models.Model):
     name = models.CharField(max_length=200)
@@ -45,7 +47,8 @@ class News(models.Model):
 
         voting_model = apps.get_model('voting', 'Voting')
         esign_doc_model = apps.get_model('meetings', 'SignDocument')
-        sign_doc_ids = SignDocument.objects.filter(signature__image='',signature__user=request.user)
+        sign_doc_ids = SignDocument.objects.filter(
+            Q(signature__user_id=request.user.id) & (Q(signature__image='') | Q(signature__image=None))).distinct()
         sign_doc_ids = queryset_to_list(sign_doc_ids,fields=['id','name','meeting__name'])
         home_object['to_do_items'] = {
             'pending_meetings':  Event.get_pending_meetings(uid),
