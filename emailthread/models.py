@@ -87,3 +87,22 @@ class EmailThread(threading.Thread):
                     produce_exception('User Not Found..!')
         except:
             produce_exception('')
+
+
+class ThreadEmail(threading.Thread):
+    def __init__(self, thread_data):
+        self.subject = thread_data['subject']
+        self.emails = thread_data['emails']
+        self.template_data = thread_data['template_data']
+        self.template_name = thread_data['template_name']
+        threading.Thread.__init__(self)
+
+
+    def run (self):
+        try:
+            subject = self.subject
+            html_message = render_to_string(self.template_name, self.template_data)
+            send_mail(self.subject, '', "sami@gmai.com", self.emails, html_message=html_message)
+        except:
+            pass
+            produce_exception('')
