@@ -14,7 +14,6 @@ input[type="submit"], button {
 
     td, th {
         padding: 10px;
-        font-size: 14px;
     }
 
     .small {
@@ -997,4 +996,8 @@ input[type="submit"], button {
 
 .colSM {
     margin: 0;
+}
+#content h1:first-child
+{
+	font-size: 1.5rem;
 }

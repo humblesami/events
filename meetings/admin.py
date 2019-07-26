@@ -89,7 +89,7 @@ class UserCreateForm(UserCreationForm):
         fields = ('username', 'password1', 'password2', 'email')
 
     class Media:
-        js=('admin/js/jquery.min.js', 'admin/js/user_creation_password_validation.js',)
+        js=('admin/js/user_creation_password_validation.js',)
     
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=False)
