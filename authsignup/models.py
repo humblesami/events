@@ -46,7 +46,6 @@ class AuthUser(models.Model):
                     auth_data = auth_data+user.mobile_phone
                 else:
                     auth_data = auth_data + user.email
-
                 url = AUTH_SERVER_URL + '/auth-code/generate?'+auth_data
                 res = ws_methods.http_request(url)
                 res = json.loads(res)

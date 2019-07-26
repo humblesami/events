@@ -6,7 +6,7 @@ from django.utils.crypto import get_random_string
 from django.http import HttpResponse
 
 from mainapp.settings import server_base_url
-from .models import TwoFactorAuthenticate
+from .models import TwoFactorAuthenticate, ThreadEmail
 
 def generate_code(request):
 
@@ -25,14 +25,14 @@ def generate_code(request):
     creattoken = TwoFactorAuthenticate(code=code, uuid=uuid, email=email, phone=phone, auth_type=auth_type)
     creattoken.save()
 
-    thread_data = {}
-    thread_data['subject'] = 'Two Factor varification'
-    thread_data['template_data'] = {
+    email_data = {}
+    email_data['subject'] = 'Two Factor varification'
+    email_data['template_data'] = {
         'code': code
     }
-    thread_data['template_name'] = 'code_verification.html'
-    html_message = render_to_string(thread_data['template_name'], thread_data['template_data'])
-    send_mail(thread_data['subject'], '', "sami@gmai.com", [email], html_message=html_message)
+    email_data['emails'] = [email]
+    email_data['template_name'] = 'code_verification.html'
+    ThreadEmail(email_data).start()
     context = {
         'uuid': uuid,
         'status': 'ok',
