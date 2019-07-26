@@ -381,7 +381,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </h3>
                         </div>
                         <div class="admin_info_after_name container">
-                            <div *ngIf="profile_data.ethnicity" class="row">
+                            <div *ngIf="profile_data.ethnicity.name" class="row">
                                 <div class="col-sm-3">
                                     <label class="question-label">
                                         <b>Ethnicity</b>
@@ -391,7 +391,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     {{profile_data.ethnicity.name}}
                                 </div>
                             </div>
-                            <div *ngIf="profile_data.gender" class="row">
+                            <div *ngIf="profile_data.gender.name" class="row">
                                 <div class="col-sm-3">
                                     <label class="question-label">
                                         <b>Gender</b>
@@ -401,7 +401,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     {{profile_data.gender.name}}
                                 </div>
                             </div>
-                            <div *ngIf="profile_data.veteran" class="row">
+                            <div *ngIf="profile_data.veteran.name" class="row">
                                 <div class="col-sm-3">
                                     <label class="question-label">
                                         <b>Veteran</b>
@@ -413,7 +413,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </div>
 
 
-                            <div *ngIf="profile_data.disability" class="row">
+                            <div *ngIf="profile_data.disability.name" class="row">
                                 <div class="col-sm-3">
                                     <label class="question-label">
                                         <b>Disability</b>
