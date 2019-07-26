@@ -85,6 +85,31 @@ title="{{profile_data.name}}"></app-breadcrumb>
             
                             <input value="{{profile_data.location}}" (change)="modified_profile_data.location = $event.target.value"
                                 type="text" placeholder="Enter Location" id="location">
+                            <div *ngIf="my_profile && choice_fields.two_factor_auth" class="row">
+                                <div class="col-sm-8">
+                                    <label for="ethnicity">
+                                        <b>Two Factor Authentication</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    <!-- <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
+                                        <option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.id === profile_data.ethnicity.id">{{row.name}}</option>
+                                    </select> -->
+
+                                    <ng-select
+                                    [items]="choice_fields.two_factor_auth"
+                                    [multiple]="false"
+                                    [closeOnSelect]="true"
+                                    [hideSelected]="true"
+                                    bindLabel="name"
+                                    (change)="setTowFactorAuth()"
+                                    placeholder="Select Authentication Type"
+                                    [(ngModel)]="selectedTwoFactorAuth"
+                                    >
+                                    </ng-select>
+
+                                </div>
+                            </div>
                         </div>
                         <div *ngIf="profile_data.resume"  class="row docwrappercontainer">
                             <div class="col-sm-12">

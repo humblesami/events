@@ -25,7 +25,7 @@ class Folder(models.Model):
             sub_folder = {'id': sub['id'], 'name': sub['name'], 'parent_id': folder.id}
             ar.append(sub_folder)
         obj['sub_folders'] = ar
-        obj['files'] = list(folder.resourcedocument_set.values())
+        obj['files'] = list(folder.resourcedocument_set.filter(users__id=request.user.id).values())
         return obj
 
     def get_ancestors(self, folder_orm):
@@ -63,7 +63,10 @@ class Folder(models.Model):
     @classmethod
     def get_records(cls, request, params):
         total_cnt = Folder.objects.filter(parent__isnull = True).count()
-        folder = Folder.objects.filter(parent__isnull=True).values('name', 'id')
+        # folder = Folder.objects.filter(parent__isnull=True).values('name', 'id')
+        folder = Folder.objects.filter(parent__isnull=True,resourcedocument__users__id=request.user.id).distinct().values('name', 'id')
+        # if folder:
+        #     folder = folder.values('id', 'name')
         folder = list(folder)
         current_cnt = len(folder)
         folderObject = {'records':folder, 'total':total_cnt, 'count':current_cnt}

@@ -169,6 +169,16 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     {{profile_data.location}}
                             </div>
                         </div>
+                        <div *ngIf="my_profile && profile_data.two_factor_auth" class="row mb-2">
+                            <div class="col-sm-3">
+                                <label for="location">
+                                    <b>Two Factor Authentication</b>
+                                </label>
+                            </div>
+                            <div class="col-sm-9 UserProfileDiscription">
+                                    {{profile_data.two_factor_auth.name}}
+                            </div>
+                        </div>
 
                         <div *ngIf="my_profile" class="">
                             <!-- <div class="">

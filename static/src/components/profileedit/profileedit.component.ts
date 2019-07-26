@@ -24,6 +24,7 @@ export class ProfileeditComponent implements OnInit {
 	selectedGender = [];
 	selectedVeteran = [];
 	selectedDisability = [];
+	selectedTwoFactorAuth = [];
 	selectedCommittees;
 	last_login = {
 		last: {
@@ -183,25 +184,29 @@ export class ProfileeditComponent implements OnInit {
 			{
 				obj_this.bio_html = obj_this.sanitizer.bypassSecurityTrustHtml(result.profile.bio);				
 			}
-			if (result.profile.ethnicity)
+			if (result.profile.ethnicity.id)
 			{
 				obj_this.selectedEthnicity = result.profile.ethnicity;
 			}
-			if (result.profile.veteran)
+			if (result.profile.veteran.id)
 			{
 				obj_this.selectedVeteran = result.profile.veteran;
 			}
-			if (result.profile.gender)
+			if (result.profile.gender.id)
 			{
 				obj_this.selectedGender = result.profile.gender;
 			}
-			if (result.profile.disability)
+			if (result.profile.disability.id)
 			{
 				obj_this.selectedDisability = result.profile.disability;
 			}
 			if (result.profile.committees)
 			{
 				obj_this.selectedCommittees = result.profile.committees;
+			}
+			if (result.profile.two_factor_auth.id)
+			{
+				obj_this.selectedTwoFactorAuth = result.profile.two_factor_auth;
 			}
 			if (result.profile.mail_to_assistant)
 			{
@@ -442,6 +447,17 @@ export class ProfileeditComponent implements OnInit {
         else
         {
             this.modified_profile_data['committees'] = 'removed_all';
+        }
+	}
+	setTowFactorAuth()
+	{
+		if (this.selectedTwoFactorAuth)
+        {
+            this.modified_profile_data['two_factor_auth'] = this.selectedTwoFactorAuth['id'];
+        }
+        else
+        {
+            this.modified_profile_data['two_factor_auth'] = null;
         }
 	}
 

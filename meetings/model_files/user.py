@@ -41,6 +41,10 @@ ETHINICITY_CHOICES = (
     (7, _("Two or more races")),
     (8, _("I decline to answer"))
 )
+TWO_FACTOR_CHOICES = (
+    (1, _("Email")),
+    (2, _("Phone"))
+)
 
 from django.apps import apps
 
@@ -157,6 +161,7 @@ class Profile(user_model):
     term_end_date = models.DateField( blank=True, null=True)
     signature_data = models.BinaryField(default=b'', null=True, blank=True)
     resume = models.OneToOneField(File, null=True, blank=True, on_delete=models.CASCADE)
+    two_factor_auth = models.IntegerField(choices=TWO_FACTOR_CHOICES, blank=True, null=True)
     # user_type = models.CharField(max_length=50)
 
     def __str__(self):
@@ -247,6 +252,10 @@ class Profile(user_model):
             'id': profile_orm.veteran,
             'name': profile_orm.get_veteran_display()
         }
+        profile['two_factor_auth'] = {
+            'id': profile_orm.two_factor_auth,
+            'name': profile_orm.get_two_factor_auth_display()
+        }
         profile['signature_data'] = profile_orm.signature_data.decode()
         profile['group'] = profile['groups'][0].name
         profile['admin_full_name'] = admin_full_name
@@ -258,13 +267,15 @@ class Profile(user_model):
         disability = ws_methods.choices_to_list(profile_orm._meta.get_field('disability').choices)
         ethnicity = ws_methods.choices_to_list(profile_orm._meta.get_field('ethnicity').choices)
         veteran = ws_methods.choices_to_list(profile_orm._meta.get_field('veteran').choices)
+        two_factor_auth = ws_methods.choices_to_list(profile_orm._meta.get_field('two_factor_auth').choices)
         committees = list(Committee.objects.values('id', 'name'))
         choice_fields = {
             'gender': gender, 
             'disability': disability, 
             'ethnicity': ethnicity, 
             'veteran': veteran,
-            'committees': committees
+            'committees': committees,
+            'two_factor_auth': two_factor_auth
             }
 
         data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
