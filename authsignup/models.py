@@ -24,7 +24,7 @@ class AuthUser(models.Model):
             uuid = request.session.get('uuid')
             if not uuid:
                 return {'error': 'No request id found'}
-            url = AUTH_SERVER_URL + '/auth-code/verify?code='+auth_code+'&uuid='+ uuid
+            url = AUTH_SERVER_URL + '/auth-code/verify?code=' + auth_code + '&uuid=' + uuid
             res = ws_methods.http_request(url)
             if res != 'ok':
                 return {'error': res}
@@ -40,20 +40,22 @@ class AuthUser(models.Model):
             if user.two_factor_auth:
                 auth_type = user.get_two_factor_auth_display()
             if auth_type:
-                auth_type = auth_type.lower()
-                auth_data =  auth_type.lower()+'='
-                if auth_type == 'phone':
-                    auth_data = auth_data+user.mobile_phone
-                else:
-                    auth_data = auth_data + user.email
-                url = AUTH_SERVER_URL + '/auth-code/generate?'+auth_data
-                res = ws_methods.http_request(url)
-                res = json.loads(res)
-                if res.get('status') == 'ok':
+                referer_address = request.META['HTTP_REFERER']
+                if not referer_address.endswith('localhost:4200/'):
+                    auth_type = auth_type.lower()
+                    auth_data = '&address='
+                    if auth_type == 'phone':
+                        auth_data = 'auth_type='+ auth_type + auth_data + user.mobile_phone
+                    else:
+                        auth_data = 'auth_type='+ auth_type + auth_data + user.email
+                    url = AUTH_SERVER_URL + '/auth-code/generate?' + auth_data
+                    res = ws_methods.http_request(url)
+                    try:
+                        res = json.loads(res)
+                    except:
+                        return res
                     request.session['uuid'] = res.get('uuid')
                     return 'done'
-                else:
-                    return res
         if user and user.id:
             name = ''
             try:
@@ -76,21 +78,19 @@ class AuthUser(models.Model):
     @classmethod
     def logout_user(cls, request, params):
         logout(request)
-        return {'error':'', 'data': 'ok'}
+        return {'error': '', 'data': 'ok'}
 
 
     @classmethod
     def set_password(cls, request, params):
         password = params['password']
-        token= params['token']
-        user_token = PostUserToken.validate_token(token) 
+        token = params['token']
+        user_token = PostUserToken.validate_token(token)
         if user_token:
             user = user_token.user
             user.set_password(password)
             user.save()
-
             return 'done'
-            
         else:
             return 'Something Wents Wrong'
 
@@ -106,7 +106,7 @@ class AuthUser(models.Model):
             thread_data['subject'] = 'Password Rest'
             thread_data['audience'] = [user.id]
             thread_data['template_data'] = {
-                'url': server_base_url+'/#/set-password/'
+                'url': server_base_url + '/#/set-password/'
             }
             thread_data['template_name'] = 'user/reset_password.html'
             thread_data['token_required'] = 1
