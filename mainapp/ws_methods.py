@@ -85,44 +85,40 @@ def choices_to_list(choice_list):
     return  lst
 
 
+from urllib.parse import urlsplit
+
+def http_request(req_url):
+    try:
+        host_url = "{0.scheme}://{0.netloc}/".format(urlsplit(req_url))
+        try:
+            r = requests.get(host_url)
+            r.raise_for_status() # Raises a HTTPError if the status is 4xx, 5xxx
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            res = host_url + " is not available"
+        except requests.exceptions.HTTPError:
+            res = 'httperror'
+        else:
+            res = requests.get(req_url)
+            res = res._content.decode("utf-8")
+        return res
+    except:
+        res = 'socket request failed because ' + str(sys.exc_info())
+        print(res)
+    return res
+
+
 def emit_event(data, req_url=None):
     try:
         if not data:
             data = []
-        # for ev in data:
-        #     audience = ev['audience']
-        #     for uid in audience:
-        #         try:
-        #             test = int(uid)
-        #             if test == 0:
-        #                 return 'Invalid user id '+uid+' in audience for '+ev['name']
-        #         except:
-        #             return 'Invalid user id '+uid+' in audience for '+ev['name']                    
-        data = json.dumps(data)
+            data = json.dumps(data)
         if not req_url:
-            req_url = '/odoo_event'        
-        data = quote(data)
-        url = socket_server['url'] + req_url + '?data=' + data
-        try:
-            r = requests.get(socket_server['url'])
-            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            res = socket_server['url'] + " is not available"
-            print(res)
-            res = 'done'
-        except requests.exceptions.HTTPError:
-            res = 'httperror'
-            print(res)
-        else:
-            res = requests.get(url)
-            res = res._content.decode("utf-8")
-            return res
-        return res
-
+            req_url = '/odoo_event'
+            data = quote(data)
+            url = socket_server['url'] + req_url + '?data=' + data
+        return http_request(url)
     except:
-        res = 'socket request failed because ' + str(sys.exc_info())
-        print(res)
-        return 'done'
+        return 'Error in given data or url'
 
 
 def obj_to_dict(obj,fields=None,to_str=None,related=None):

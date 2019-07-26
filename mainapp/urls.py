@@ -42,6 +42,7 @@ urlpatterns = [
     path('response-sumbitted', views.response_submitted, name='response_submitted'),
     url(r'^survey/', include('survey.urls')),
     url(r'^nested_admin/', include('nested_admin.urls')),
+    url('auth-code/', include('authcode.urls')),
 
 ] # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

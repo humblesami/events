@@ -18,6 +18,10 @@ def forgot_password(request):
     context = {}
     return render(request, 'password_reset.html', context)
 
+def verify_code(request):
+    context = {}
+    return render(request, 'verify_code.html', context)
+
 @csrf_exempt
 @api_view(["GET", "POST"])
 def verify_token(request):

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
+    'authcode',
     'ngapp',
     'authsignup',
     'documents',
@@ -165,7 +166,7 @@ with open(base_dir+'config.json') as f:
     configs = json.loads(f.read())
     SOCKET_SERVER_URL = configs['socket_url']
     server_base_url = configs['server_base_url']
-
+    AUTH_SERVER_URL = configs['auth_server_url']
 # if 'localhost' in SOCKET_SERVER_URL:
 AUTH_PASSWORD_VALIDATORS = []
 

@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 from mainapp import ws_methods
 from django.contrib.auth.models import User
@@ -7,13 +9,52 @@ from django.contrib.auth import authenticate, login, logout
 from meetings.model_files.user import Profile
 from restoken.models import PostUserToken
 
+
+from mainapp.settings import AUTH_SERVER_URL
+
 # Create your models here.
 class AuthUser(models.Model):
     @classmethod
     def login_user(cls, request, params):
-        username = params['login']
-        password = params['password']
-        user = authenticate(request, username=username, password=password)        
+        username = params.get('login')
+        password = params.get('password')
+        auth_code = params.get('auth_code')
+        user = None
+        if auth_code:
+            uuid = request.session.get('uuid')
+            if not uuid:
+                return {'error': 'No request id found'}
+            url = AUTH_SERVER_URL + '/auth-code/verify?code='+auth_code+'&uuid='+ uuid
+            res = ws_methods.http_request(url)
+            if res != 'ok':
+                return {'error': res}
+            user = request.user
+        else:
+            user = authenticate(request, username=username, password=password)
+            if user and user.id:
+                user = Profile.objects.get(pk=user.id)
+            else:
+                return 'Invalid credentials'
+
+            auth_type = None
+            if user.two_factor_auth:
+                auth_type = user.get_two_factor_auth_display()
+            if auth_type:
+                auth_type = auth_type.lower()
+                auth_data =  auth_type.lower()+'='
+                if auth_type == 'phone':
+                    auth_data = auth_data+user.mobile_phone
+                else:
+                    auth_data = auth_data + user.email
+
+                url = AUTH_SERVER_URL + '/auth-code/generate?'+auth_data
+                res = ws_methods.http_request(url)
+                res = json.loads(res)
+                if res.get('status') == 'ok':
+                    request.session['uuid'] = res.get('uuid')
+                    return 'done'
+                else:
+                    return res
         if user and user.id:
             name = ''
             try:
@@ -80,11 +121,3 @@ class AuthUser(models.Model):
         except:
             res = ws_methods.get_error_message()
             return res
-
-    # @classmethod
-    # def verify(cls, request, params):
-    #     user = request.user
-    #     if user.id:
-    #         return { 'name' : user.username, 'id' : user.id }
-    #     else:
-    #         return {'error': 'Unauthorized user'}
