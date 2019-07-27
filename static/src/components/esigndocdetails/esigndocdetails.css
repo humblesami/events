@@ -157,6 +157,10 @@
     border-right: 1px solid rgba(75, 116, 181, 0.33);
 }
 
+.docWrapperContainer{
+    width: 78%;
+} 
+
 .PdfButtonWrapper{    
     padding: 10px 20px;    
 }
@@ -244,9 +248,12 @@
     display: inline-block
 }
 
-.check_box_send_all, #doc-side-scroll{
+.check_box_send_all{
     display: none
 }
+/* .check_box_send_all, #doc-side-scroll{
+    display: none
+} */
 
 .o_cp_buttons, .o_cp_pager{
     display:none !important;
@@ -332,7 +339,7 @@
 .docselectbtn{
     cursor: pointer;
 }
-
+/* 
 .docWrapperContainer{
     display: none;
-}
+} */

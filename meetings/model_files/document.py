@@ -4,7 +4,6 @@ import uuid
 import json
 import base64
 import datetime
-import threading
 from fpdf import FPDF
 from .event import Event
 from .topic import Topic
@@ -25,10 +24,8 @@ from esign.model_files.document import SignatureDoc
 from mainapp.ws_methods import queryset_to_list
 
 
-
 class MeetingDocument(File):
     meeting = models.ForeignKey(Event, on_delete=models.CASCADE)
-
 
     @property
     def breadcrumb(self):
@@ -233,11 +230,11 @@ class SignDocument(SignatureDoc):
         doc_data = cls.get_doc_data(request,file_obj,token)
         isAdmin = True
         doc_data['doc_name'] = file_name
-        doc_data["isAdmin"]=isAdmin
-        doc_data["meetings"] =meetings
-        doc_data["users"] =users
-        doc_data["meeting_id"] =meeting_id
-        doc_data["send_to_all"] =send_to_all
+        doc_data["isAdmin"]= isAdmin
+        doc_data["meetings"] = meetings
+        doc_data["users"] = users
+        doc_data["meeting_id"] = meeting_id
+        doc_data["send_to_all"] = send_to_all
         return doc_data
 
     @classmethod
@@ -259,14 +256,9 @@ class SignDocument(SignatureDoc):
     @classmethod
     def save_sign_data(cls, request, params):
         doc_id = int(params['document_id'])
-        work_flow_enabled = params['work_flow_enabled']
         meeting_id = params['meeting_id']
         send_to_all = params['send_to_all']
         doc = cls.objects.filter(id=doc_id)[0]
-        if work_flow_enabled:
-            doc.workflow_enabled=True
-        if not work_flow_enabled:
-            doc.workflow_enabled=False
         if send_to_all:
             doc.send_to_all=True
         if not send_to_all:
@@ -296,27 +288,6 @@ class SignDocument(SignatureDoc):
                            'zoom': 300
                            })
                     obj.save()
-
-            #         user_email = p.email
-            #         email = False
-            #         mail = False
-            #
-            #         if not doc.workflow_enabled:
-            #             mail = True
-            #         elif doc.workflow_enabled:
-            #             if doc.signature_set.filter(token != token).__len__() == 0:
-            #                 mail = True
-            #             else:
-            #                 all_signed = True
-            #                 for s in doc.signature_set.filter(token != token):
-            #                     if not s.image:
-            #                         all_signed = False
-            #                         break
-            #                 if all_signed:
-            #                     mail = True
-            #         if mail:
-            #             email_data.append(
-            #                 {'user_email': user_email, 'email': email, 'token': token, 'subject': params['subject'], 'message': params['message']})
                     if c == 1:
                         c = 0
                         sign_top += 15
@@ -335,37 +306,11 @@ class SignDocument(SignatureDoc):
                            'height': s['height'], 'width': s['width'], 'zoom': s['zoom'], 'type': s['type'],
                            'token': token})
                     obj.save()
-            #     # user_email = doc.signature_ids.filtered(lambda r: r.token == token)[0].user_id.email
-            #     # email = doc.signature_ids.filtered(lambda r: r.token == token)[0].email
-            #     sign_user_ids = doc.signature_set.filter(token=token).values('user').distinct()
-            #     respondents = []
-            #     for sign_user_id in sign_user_ids:
-            #         respondents.append(sign_user_id['user'])
-            #     # email = doc.signature_set.filter(token=token)[0].email
-            #     mail = False
-        
-            #     if not doc.workflow_enabled:
-            #         mail = True
-            #     elif doc.workflow_enabled:
-            #         if doc.signature_set.filter(token != token).__len__() == 0:
-            #             mail = True
-            #         else:
-            #             all_signed = True
-            #             for s in doc.signature_set.filter(token != token):
-            #                 if not s.image:
-            #                     all_signed = False
-            #                     break
-            #             if all_signed:
-            #                 mail = True
-            #     if mail:
-            #         email_data.append(
-            #             {'user_email': user_email, 'email': email, 'token': token,
-            #              'subject': params['subject'], 'message': params['message']})
-        
+
         template_data = {            
             'subject': params['subject'],
             'message': params['message'],
-            'url': server_base_url + '/#/signdoc/'+str(doc.id)+'/'
+            'url': server_base_url + '/#/token-sign-doc/'+str(doc.id)+'/'
         }
         post_info = {}
         post_info['res_app'] = cls._meta.app_label

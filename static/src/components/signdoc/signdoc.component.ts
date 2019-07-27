@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { ActivatedRoute } from '@angular/router';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
 declare var $: any;
 
 @Component({

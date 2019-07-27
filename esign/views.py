@@ -1,12 +1,10 @@
 import json
-import base64
 from django.apps import apps
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from mainapp.rest_api import produce_result, produce_exception
 from mainapp.ws_methods import check_auth_token, queryset_to_list
-from restoken.models import PostUserToken
 from meetings.model_files.user import Profile
 from meetings.model_files.event import Event
 from meetings.model_files.document import SignDocument
@@ -98,8 +96,6 @@ def get_signature_public(request):
     return get_sign_doc_signature(request)
 
 
-
-
 def save_signature_data(request):
     try:
         kw = request.POST
@@ -134,9 +130,6 @@ def save_sign_data_public(request):
     return save_signature_data(request)
 
 
-
-
-
 def save_user_signatuer(request):
     try:
         kw = request.POST
@@ -164,7 +157,6 @@ def save_user_signatuer(request):
         return produce_result(res, args)
     except:
         return produce_exception()
-
 
 
 @csrf_exempt
@@ -209,8 +201,6 @@ def delete_signature(request):
 
 def delete_signature_public(request):
     return delete_user_signature(request)
-
-
 
 
 def sign_doc_public(request, token):

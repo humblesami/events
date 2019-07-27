@@ -78,7 +78,7 @@ export class EsignDocDetailsComponent implements OnInit {
             "id": doc_id,
             "doc_name": ''
         };
-        // console.log($('#the-canvas'))
+        // console.log(obj_this.socketService.user_data, 444);
 
         $('#select_user_modal').on('shown.bs.modal', function () {
             var sign = $('.active_signature:first');            
@@ -164,13 +164,13 @@ export class EsignDocDetailsComponent implements OnInit {
                     if (send_to_all) {
                         $('#check_box_send_all').prop('checked', true);
                     }
-                    if (doc_data.length == 0) {
-                        $('.PdfButtonWrapper').parent().show();
-                        $('.docWrapperContainer').width('78%');
-                    } else {
-                        $('.PdfButtonWrapper').parent().hide();
-                        $('.docWrapperContainer').width('100%');
-                    }
+                    // if (doc_data.length == 0) {
+                    //     $('.PdfButtonWrapper').parent().show();
+                    //     $('.docWrapperContainer').width('78%');
+                    // } else {
+                    //     $('.PdfButtonWrapper').parent().hide();
+                    //     $('.docWrapperContainer').width('100%');
+                    // }
                 }
             })
         }
@@ -592,18 +592,10 @@ export class EsignDocDetailsComponent implements OnInit {
                 snd_to_all = false
             }
 
-
-            //body.html("<h3>Select User</h3>").append(dropdown)
-            //.append(input_email).append(input_name);
             body.append("<h3>Subject</h3>").append(input_subject);
             body.append("<h3>Message</h3>").append(email_body);
             body.append(save_btn);
             body.append(cancel_btn);
-
-            //        input_email.click(function(e)
-            //        {
-            //        dropdown[0].selectedIndex = 0;
-            //        });
             cancel_btn.click(function(evt) {
                 evt.preventDefault()
                 $('.youtubeVideoModal').modal('hide');
@@ -611,8 +603,6 @@ export class EsignDocDetailsComponent implements OnInit {
             save_btn.click(function(e) {
                 var arr = [];
                 var isEmpty = false;
-                //            var work_flow_enabled=$('.e_sign_wrk_flow input')[0].checked;
-
                 var subject = input_subject[0].value;
                 var message = email_body[0].value;
                 var email = input_email[1].value;
@@ -709,7 +699,6 @@ export class EsignDocDetailsComponent implements OnInit {
                                 token: token,
                                 'data': JSON.stringify(arr),
                                 url: url,
-                                work_flow_enabled: false,
                                 meeting_id: meeting_id,
                                 subject: subject,
                                 message: message,
@@ -717,8 +706,6 @@ export class EsignDocDetailsComponent implements OnInit {
                             }
                         },
                         onSuccess: function(data) {
-                            //     doc_data = data.doc_data;
-                            // renderPage(pageNum);
                             loadData();
                             $(".save_doc_data").attr('disabled', 'disabled');
                             new_divs.hide().removeClass("new_sign");
@@ -726,7 +713,6 @@ export class EsignDocDetailsComponent implements OnInit {
                             $("#nxxt_sign").click();
                         }
                     })
-
                 }
             });
         });
@@ -742,8 +728,6 @@ export class EsignDocDetailsComponent implements OnInit {
             var usr_name = $(this).attr("name");
             window["doc_preview"].image("uuuu");
             var body = $('.youtubeVideoModal .modal-body:last');
-            var content = $('.youtubeVideoModal .modal-content:last');
-            var footer = $('<div class="modal-footer" style="text-align: left;"></div>');
             var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
             var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">Cancel</span>');
             var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
@@ -827,7 +811,6 @@ export class EsignDocDetailsComponent implements OnInit {
 
 
                 var auto_clicked = false;
-
                 auto_sign.click(function(e) {
                     $('#loaderContainerajax').show();
                     auto_clicked = true;
@@ -866,7 +849,6 @@ export class EsignDocDetailsComponent implements OnInit {
                         return;
                     if (this.files.length < 1)
                         return;
-                    var file_tag = this;
                     var reader = new FileReader();
                     auto_clicked = false;
 
@@ -890,9 +872,9 @@ export class EsignDocDetailsComponent implements OnInit {
                         return;
                     }
                     dataURL = dataURL.replace('data:image/png;base64,', '');
-                    //                if(auto_clicked){
-                    //                type="auto";
-                    //                }
+                    if(auto_clicked){
+                        type="auto";
+                    }
                     let url = '';
                     url = get_url('/esign/save_signature');
                     window['dn_rpc_object']({

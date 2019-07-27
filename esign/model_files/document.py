@@ -8,10 +8,8 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 from django.db import models
 from django.core.files import File as DjangoFile
 
-
 from documents.file import File
 from mainapp.settings import MEDIA_ROOT
-from mainapp.ws_methods import queryset_to_list
 
 
 class SignatureDoc(File):
@@ -58,21 +56,7 @@ class SignatureDoc(File):
         self.pdf_doc.save(self.original_pdf.name, DjangoFile(signed_doc))
 
     def get_signed_doc(self, pdf, signatures, send_all=None):
-
-        # pth = tempfile.gettempdir()
-        # curr_dir = os.path.dirname(__file__)
-        # pth = curr_dir.replace('models', 'doc_signs')
-        #
-        # file = pdf
-        # pdf_doc = base64.b64decode(file)
-        # # f = base64.decodestring(file)
-        #
-        # fobj = tempfile.NamedTemporaryFile(delete=False)
-        # fname1 = fobj.name
-        # fobj.write(pdf_doc)
-        # fobj.close()
         pth = MEDIA_ROOT + "/"+pdf.name
-
         input = PdfFileReader(open(pth, "rb"))
         # Addition of code for orientation correction Asfand
         pageValue = input.pages[0]

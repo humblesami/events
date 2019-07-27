@@ -3,7 +3,7 @@ import base64
 import subprocess
 from fpdf import FPDF
 from PIL import Image
-from mainapp import settings
+from mainapp import settings, ws_methods
 from PyPDF2 import PdfFileReader
 
 from django.db import models
@@ -40,21 +40,25 @@ class File(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        create = False
-        if self.pk is None:
-            create = True
-        super(File, self).save(*args, **kwargs)
-        if create and self.file_type != 'message':
-            self.get_pdf()
-            if self.html:
-                self.content = self.html
-            else:
-                if not self.pdf_doc:
-                    raise Exception('File conversion failed')
-                if not self.pdf_doc.file:
-                    raise Exception('File conversion failed.')
-                self.content = text_extractor(self.pdf_doc)
-            self.save()
+        try:
+            create = False
+            if self.pk is None:
+                create = True
+            super(File, self).save(*args, **kwargs)
+            if create and self.file_type != 'message':
+                self.get_pdf()
+                if self.html:
+                    self.content = self.html
+                else:
+                    if not self.pdf_doc:
+                        raise Exception('File conversion failed')
+                    if not self.pdf_doc.file:
+                        raise Exception('File conversion failed.')
+                    self.content = text_extractor(self.pdf_doc)
+                self.save()
+        except:
+            res = ws_methods.get_error_message()
+            a = 1
 
 
     def get_pdf(self):

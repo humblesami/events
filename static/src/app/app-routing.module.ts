@@ -129,7 +129,7 @@ const appRoutes: Routes = [
     { path: 'voting/:id/results', component: VotingresultsComponent},
     { path: 'survey/:id/results', component: SurveyresultsComponent},
     { path: 'signdoc/:id', component: EsignDocDetailsComponent, canActivate: [AuthGuard]},
-    { path: 'signdoc/:id/:token', component: EsignDocDetailsComponent},
+    { path: 'token-sign-doc/:id/:token', component: EsignDocDetailsComponent},
 
     { path: 'support', component: SupportComponent},
     { path: 'rtc', component: RtcComponent},
