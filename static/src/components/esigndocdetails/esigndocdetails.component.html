@@ -17,8 +17,7 @@ title="{{doc.doc_name}}"></app-breadcrumb>
     
     <div id="holder">
         <div class="container-fluid">
-            <div class="row">
-
+            <div class="row doc-container" [ngClass]="{admin: socketService.is_admin}">
                 <div id="doc-side-scroll">
                     <div class="PdfButtonWrapper">
                         <div class="PdfVerticalButtonWrapper">
@@ -85,7 +84,7 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                         </div>
                     </div>
                     <div id="viewer_container" style="position:relative;">
-                        <div id="nxxt_sign" style="display:none;background:rgba(228, 21, 21, 0.9);color:white;position:absolute;z-index: 1;width:140px;padding: 10px;cursor: pointer;border-bottom-right-radius: 78px;border-top-right-radius: 78px;">START
+                        <div id="nxxt_sign">START
                             SIGNING</div>
 
                         <div id="page_container1" style="overflow-y:auto;overflow-x:auto;position:relative;">
@@ -98,7 +97,6 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                 </div>
             </div>
         </div>
-
     </div>
 
 </div>

@@ -1,6 +1,10 @@
 from django.contrib import admin
 from documents.admin import FileForm
-from esign.model_files.document import SignatureDoc
+from esign.model_files.document import SignatureDoc, Signature
+
+
+class SignatureAdmin(admin.ModelAdmin):
+    list_display = ['user', 'token', 'document']
 
 
 class SignatureDocForm(FileForm):
@@ -11,3 +15,4 @@ class SignatureDocForm(FileForm):
         return form
 
 admin.site.register(SignatureDoc, SignatureDocForm)
+admin.site.register(Signature, SignatureAdmin)

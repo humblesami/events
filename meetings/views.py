@@ -1,4 +1,9 @@
+import json
+
+from django.http import HttpResponse
 from django.shortcuts import render
+
+from meetings.model_files.topic import Topic
 from .model_files.event import Event, STATE_SELECTION
 from restoken.models import PostUserToken
 
@@ -35,4 +40,22 @@ def response_invitation(request, meeting_id, response, token):
     else:
         context['error'] = 'Invalid Token'
     return render(request, 'response_submit.html', context)
-    
+
+
+def topic(request, meeting_id):
+    all_topics = []
+    if meeting_id:
+        topics = Topic.objects.filter(event=meeting_id)
+        if topics:
+            for topic in topics:
+                all_topics.append({'id': topic.id, 'name': topic.name})
+        else:
+            all_topics.append({'id': '', 'name': '---------'})
+    else:
+        all_topics.append({'id': '', 'name': '---------'})
+    data = {
+        'topics': all_topics
+    }
+    res_data = json.dumps(data)
+    return HttpResponse(res_data)
+

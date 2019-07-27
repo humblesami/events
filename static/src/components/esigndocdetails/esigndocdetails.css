@@ -157,10 +157,6 @@
     border-right: 1px solid rgba(75, 116, 181, 0.33);
 }
 
-.docWrapperContainer{
-    width: 78%;
-} 
-
 .PdfButtonWrapper{    
     padding: 10px 20px;    
 }
@@ -196,6 +192,15 @@
 #nxxt_sign {
     top: 5px;
     display: none;
+    background: rgba(228, 21, 21, 0.9);
+    color: white;
+    position: absolute;
+    z-index: 2;
+    width: 140px;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom-right-radius: 78px;
+    border-top-right-radius: 78px;
 }
 
 @media screen and (max-width: 600px) {
@@ -336,10 +341,31 @@
     text-transform: uppercase;
 }
 
+.saved_sign{
+    cursor:pointer;
+    width:190px;
+    height:40px;
+    border:2px dotted gray;
+    font-weight: bold;
+    color:black;
+    z-index:1;
+    overflow:hidden
+}
+
 .docselectbtn{
     cursor: pointer;
 }
-/* 
-.docWrapperContainer{
+
+.doc-container .docWrapperContainer{
     display: none;
-} */
+}
+.doc-container.admin .doc-side-scroll{
+    display: block;
+}
+
+.doc-container .docWrapperContainer{
+    width: 100%;
+}
+.doc-container.admin .docWrapperContainer{
+    width: 78%;
+}

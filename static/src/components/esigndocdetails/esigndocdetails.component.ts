@@ -16,12 +16,14 @@ export class EsignDocDetailsComponent implements OnInit {
     is_public = false;
     users_list = [];
     selectedUser: any;
+    socketService: SocketService;
 
     constructor(private httpService: HttpService, 
         private route: ActivatedRoute, 
-        private socketService: SocketService,
+        private ss: SocketService,
         private router: Router) {
         // this.route.params.subscribe(params => this.get_data());
+        this.socketService = ss;
     }
 
     get_data() {
@@ -57,13 +59,12 @@ export class EsignDocDetailsComponent implements OnInit {
             req_url,
             
             ctx,
-            isAdmin,
             pdfDoc,
             scale,
             pageNum,
             token = $('.sign_token').val() || "",
-            doc_id = $('.e_sign_doc_id').first().html();
-            
+            doc_id = $('.e_sign_doc_id').first().html(),
+            isAdmin = obj_this.socketService.is_admin;
 
         if (!doc_id) {
             var route_token = obj_this.route.snapshot.params.token;
@@ -124,10 +125,6 @@ export class EsignDocDetailsComponent implements OnInit {
             window['dn_rpc_object']({
                 url: url,
                 data: {
-                    args: {
-                        app: "meetings",
-                        model: "SignDocument"
-                    },
                     params: {
                         document_id: doc_id,
                         token: token,
@@ -145,7 +142,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
                     pdf_binary = data.pdf_binary;
-                    isAdmin = data.isAdmin;
                     obj_this.doc.doc_name = data.doc_name;
                     //setTimeout(function(){ showPDF(pdf_binary); }, 3000);
                     renderPDF(pdf_binary);
@@ -164,13 +160,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     if (send_to_all) {
                         $('#check_box_send_all').prop('checked', true);
                     }
-                    // if (doc_data.length == 0) {
-                    //     $('.PdfButtonWrapper').parent().show();
-                    //     $('.docWrapperContainer').width('78%');
-                    // } else {
-                    //     $('.PdfButtonWrapper').parent().hide();
-                    //     $('.docWrapperContainer').width('100%');
-                    // }
                 }
             })
         }
@@ -366,7 +355,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     //w:this.width,
                     //h:this.height,
                     class: "saved_sign",
-                    style: "cursor:pointer;width:190px;height:40px;border:2px dotted gray;font-weight: bold;color:black;z-index:1;overflow:hidden",
                     //text: this.name
                 });
                 if (this.type == 'sign' && !this.signed) {

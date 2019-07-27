@@ -8,7 +8,7 @@ from mainapp.ws_methods import check_auth_token, queryset_to_list
 from meetings.model_files.user import Profile
 from meetings.model_files.event import Event
 from meetings.model_files.document import SignDocument
-from .model_files.signature import Signature
+from esign.model_files.document import Signature
 from restoken.models import PostUserToken
 
 

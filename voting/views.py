@@ -5,9 +5,7 @@ from django.db.models import Count
 from django.shortcuts import render
 from django.http import HttpResponse
 from restoken.models import PostUserToken
-from meetings.model_files.topic import Topic
-from .models import Voting, VotingType, VotingChoice, VotingAnswer
-
+from .models import Voting, VotingChoice, VotingAnswer
 
 
 def index(request):
@@ -197,22 +195,5 @@ def update_Choice(choice_id, voting_id, user_id, signature_data):
 
 
 
-def topic(request, meeting_id):
-    all_topics = []
-    if meeting_id:
-        topics = Topic.objects.filter(event=meeting_id)
-        if topics:
-            for topic in topics:
-                all_topics.append({'id': topic.id, 'name': topic.name})
-        else:
-            all_topics.append({'id': '', 'name': '---------'})
-    else:
-        all_topics.append({'id': '', 'name': '---------'})
-    data ={
-        'topics': all_topics
-    }
-    res_data =json.dumps(data)
-    return HttpResponse(res_data)
-    
 
 

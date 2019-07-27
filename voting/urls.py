@@ -9,5 +9,4 @@ urlpatterns = [
     path('<int:voting_id>/<int:choice_id>/<str:token>', views.respond, name = 'response'),
     path('<int:voting_id>', views.detail, name = 'detail'),
     path('<int:voting_id>/answer', views.answer, name = 'answer'),
-    path('<int:meeting_id>/topic', views.topic, name='topic')
 ]

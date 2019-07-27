@@ -124,13 +124,12 @@ const appRoutes: Routes = [
     { path: 'actions/votings', data:{app:'voting', model:'Voting', search_models: {voting: ['Voting','VotingChoice','VotingType']} }, component: VotingsComponent, canActivate: [AuthGuard]},
     { path: 'actions', data:{app:'voting', model:'Voting', search_models:{survey:['Survey', 'Question'], esign: ['SignatureDoc'],voting: ['Voting','VotingChoice','VotingType']}}, component: VotingsComponent, canActivate: [AuthGuard]},
 
-
     { path: 'voting/:id', component: VotingdetailsComponent},
     { path: 'voting/:id/results', component: VotingresultsComponent},
     { path: 'survey/:id/results', component: SurveyresultsComponent},
     { path: 'signdoc/:id', component: EsignDocDetailsComponent, canActivate: [AuthGuard]},
     { path: 'token-sign-doc/:id/:token', component: EsignDocDetailsComponent},
-
+    
     { path: 'support', component: SupportComponent},
     { path: 'rtc', component: RtcComponent},
 	// otherwise redirect to home

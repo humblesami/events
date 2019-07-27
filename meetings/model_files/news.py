@@ -1,8 +1,7 @@
 from django.apps import apps
 from django.db import models
 from documents.file import File
-from esign.model_files.signature import Signature
-from mainapp.ws_methods import obj_to_dict, queryset_to_list
+from mainapp.ws_methods import queryset_to_list
 from meetings.model_files.document import SignDocument
 from meetings.model_files.event import Event
 from survey.models import Survey
