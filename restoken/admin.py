@@ -1,3 +1,8 @@
 from django.contrib import admin
+from restoken.models import PostUserToken
 
-# Register your models here.
+
+class TokenAdmin(admin.ModelAdmin):
+    list_display = ('post_info', 'user', 'token')
+
+admin.site.register(PostUserToken, TokenAdmin)

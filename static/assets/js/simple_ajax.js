@@ -171,11 +171,15 @@ function dn_rpc_object(options) {
                 }                        
             }                
         }
-        console.log(input_data.args);
-        if(options.type == 'GET' && url_with_params.length < 1500)
+        if(!site_config.trace_request)
         {
-            console.log(url_with_params);
+            console.log(input_data.args);
+            if(options.type == 'GET' && url_with_params.length < 1500)
+            {
+                console.log(url_with_params);
+            }
         }
+        
         response.error = response.error.replace(/<br\/>/g, "\n");
         console.log(response.error);
     }

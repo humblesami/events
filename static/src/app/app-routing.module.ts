@@ -129,7 +129,7 @@ const appRoutes: Routes = [
     { path: 'survey/:id/results', component: SurveyresultsComponent},
     { path: 'signdoc/:id', component: EsignDocDetailsComponent, canActivate: [AuthGuard]},
     { path: 'token-sign-doc/:id/:token', component: EsignDocDetailsComponent},
-    
+
     { path: 'support', component: SupportComponent},
     { path: 'rtc', component: RtcComponent},
 	// otherwise redirect to home
@@ -149,6 +149,7 @@ export class AppRoutingModule {
         var crouter = router;
 		router.events.subscribe((event) => {
 			if (event instanceof NavigationStart) {
+                console.log(event, router.routerState);
                 socketService.init_route(event.url);
 				$('.hidemouseaway').hide();
                 $('.searchbar-full-width').hide();

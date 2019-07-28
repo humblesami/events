@@ -55,8 +55,8 @@ export class EsignDocsComponent implements OnInit {
     {
         const obj_this = this;        
         let args = {
-            app: 'meetings',
-            model: 'SignDocument',
+            app: 'esign',
+            model: 'SignatureDoc',
             method: 'get_records'
         }			
         let final_input_data = {

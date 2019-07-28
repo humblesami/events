@@ -356,10 +356,10 @@
     cursor: pointer;
 }
 
-.doc-container .docWrapperContainer{
+.doc-container #doc-side-scroll{
     display: none;
 }
-.doc-container.admin .doc-side-scroll{
+.doc-container.admin #doc-side-scroll{
     display: block;
 }
 

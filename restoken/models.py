@@ -8,13 +8,14 @@ class PostInfo(models.Model):
     res_app = models.CharField(max_length=128)
     res_model = models.CharField(max_length=128)
     res_id = models.IntegerField()
+    def __str__(self):
+        return self.res_app + '.'+self.res_model + '.'+str(self.res_id)
 
 
 class PostUserToken(models.Model):
     post_info = models.ForeignKey(PostInfo, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     token = models.CharField(max_length=128)
-
 
     @classmethod
     def create_token(cls, params):
@@ -34,7 +35,6 @@ class PostUserToken(models.Model):
         user_token.save()
         return user_token
 
-
     @classmethod
     def validate_token(cls, token, do_not_expire=None):
         if token:
@@ -47,6 +47,21 @@ class PostUserToken(models.Model):
             return user_token1
         else:
             return False
+
+    @classmethod
+    def validate_token_for_post(cls, token, post_info):
+        if token:
+            post_info = PostInfo.obejcts.get(res_app=post_info.get('app'), res_model=post_info.get('model'),res_id=post_info.get('id'))
+            if not post_info:
+                return 'Not token for the post '+ post_info.get('app')+'.'+ post_info.get('model')+'.' + post_info.get('id')
+
+            user_token = PostUserToken.objects.filter(token=token, post_info_id=post_info.id)
+            if not user_token:
+                return 'Token not found'
+            user_token = user_token[0]
+            return user_token
+        else:
+            return 'No token given to verify'
 
         
 

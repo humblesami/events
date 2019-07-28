@@ -62,6 +62,7 @@ export class EsignDocDetailsComponent implements OnInit {
             pdfDoc,
             scale,
             pageNum,
+            ajax_options,
             token = $('.sign_token').val() || "",
             doc_id = $('.e_sign_doc_id').first().html(),
             isAdmin = obj_this.socketService.is_admin;
@@ -121,10 +122,14 @@ export class EsignDocDetailsComponent implements OnInit {
             $('#loaderContainerajax').show();
             $(".o_loading").show();
             let url = '';
-            url = get_url('/esign/get_details');
-            window['dn_rpc_object']({
-                url: url,
+            ajax_options = {
                 data: {
+                    args:{
+                        app: 'meetings',
+                        model: 'SignDocument',
+                        method: 'get_detail'
+                    },
+
                     params: {
                         document_id: doc_id,
                         token: token,
@@ -161,7 +166,12 @@ export class EsignDocDetailsComponent implements OnInit {
                         $('#check_box_send_all').prop('checked', true);
                     }
                 }
-            })
+            };
+            if(token)
+            {
+                ajax_options.url = '/rest/public';
+            }
+            window['dn_rpc_object'](ajax_options)
         }
         loadData();
 
@@ -415,7 +425,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         background: "rgba(230, 81, 81, 0.9)"
                     });
                 }
-                if (obj_this.socketService.is_admin)
+                if (isAdmin)
                 {
                     if(this.signed)
                     {
@@ -745,8 +755,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     body.append(del_btn);
                 }
 
-
-
                 var myCanvas = signature_editor.find('canvas')[0];
                 var canvas_context = myCanvas.getContext('2d');
                 var img = new Image();
@@ -772,15 +780,12 @@ export class EsignDocDetailsComponent implements OnInit {
                 //            var hidden_image = $('<img style="max-height:100%;max-width:100%" />');
                 //            body.append(hidden_image_container);
                 //            hidden_image_container.html(hidden_image);
-
-                let url = '';
-                url = get_url('/esign/get_signature');
-                window['dn_rpc_object']({
-                    url: url,
+                ajax_options = {
                     data: {
                         args: {
-                            app: "meetings",
-                            model: "SignDocument"
+                            app: "esign",
+                            model: "SignatureDoc",
+                            method: "get_signature"
                         },
                         params: {
                             signature_id: signature_id,
@@ -792,7 +797,11 @@ export class EsignDocDetailsComponent implements OnInit {
                             load_signature(data);
                         }, 200);
                     }
-                })
+                };
+                if(token){
+                    ajax_options.url = '/rest/public';
+                }
+                window['dn_rpc_object'](ajax_options)
 
 
                 var dataURL = '';

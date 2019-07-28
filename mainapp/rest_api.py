@@ -26,9 +26,17 @@ public_methods = {
     },
     'meetings':{
         'SignDocument':{
-            'get_details': 1,
+            'get_detail': 1,
         }
     },
+    'esign':{
+        'SignDocument':{
+            'get_detail': 1,
+        },
+        'SignatureDoc':{
+            'get_signature': 1
+        }
+    }
 }
 
 @csrf_exempt

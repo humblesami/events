@@ -7,8 +7,7 @@ from mainapp.rest_api import produce_result, produce_exception
 from mainapp.ws_methods import check_auth_token, queryset_to_list
 from meetings.model_files.user import Profile
 from meetings.model_files.event import Event
-from meetings.model_files.document import SignDocument
-from esign.model_files.document import Signature
+from meetings.model_files.document import SignDocument, Signature
 from restoken.models import PostUserToken
 
 

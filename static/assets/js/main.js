@@ -114,7 +114,7 @@ var site_functions = {
         }
     },
     go_to_login: function() {
-        // console.trace();
+        console.trace();
         // alert(444);
         if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
         {
