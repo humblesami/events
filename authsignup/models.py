@@ -80,6 +80,20 @@ class AuthUser(models.Model):
         logout(request)
         return {'error': '', 'data': 'ok'}
 
+    @classmethod
+    def change_password(cls, request, params):
+        old_password = params['old']
+        new_password = params['new']
+
+        username = request.user.username
+        user = authenticate(request, username=username, password=old_password)
+        if user and user.id:
+            user = request.user
+            user.set_password(new_password)
+            user.save()
+            return 'done'
+        else:
+            return 'Wrong old password'
 
     @classmethod
     def set_password(cls, request, params):
@@ -92,7 +106,13 @@ class AuthUser(models.Model):
             user.save()
             return 'done'
         else:
-            return 'Something Wents Wrong'
+            if request.user.id:
+                user = request.user
+                user.set_password(password)
+                user.save()
+                return 'done'
+            else:
+                return 'Something Wents Wrong'
 
     @classmethod
     def reset_password(cls, request, params):

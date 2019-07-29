@@ -74,6 +74,7 @@ site_config.public_urls = ['login']
 site_config['app_name'] = 'MeetingPoint';
 if(current_site_base_url.indexOf('localhost') > -1)
 {
+    site_config.is_localhost = 1;
     site_config.trace_request = 1;
 }
 window['site_config'] = site_config;

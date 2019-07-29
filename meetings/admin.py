@@ -77,18 +77,10 @@ class EventAdmin(nested_admin.NestedModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     email = forms.EmailField(required=True)
-    fields = ('email', 'first_name', 'last_name', 'mobile_phone')
+    fields = ('email', 'first_name', 'last_name', 'mobile_phone', 'groups')
 
     class Media:
-        js=('admin/js/user_creation_password_validation.js',)
-    
-    def save(self, commit=True):
-        user = super(UserAdmin, self).save(commit=False)
-        user.email = self.cleaned_data["email"]
-        user.set_password(123)
-        if commit:
-            user.save()
-        return user
+        js=('admin/js/set_group_in_user_creation.js',)
 
     def clean_email(self):
         if Profile.objects.filter(email=self.cleaned_data['email']).exists():

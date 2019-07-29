@@ -14,7 +14,7 @@
     else
     {
         model = path[3]
-        action = path[length-2]
+        action = path[length-2];
         id = path[4]
     }
     

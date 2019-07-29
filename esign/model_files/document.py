@@ -176,8 +176,53 @@ class SignatureDoc(File):
             file_name = file_obj.name
 
         doc_data = cls.get_doc_data(request, file_obj, token)
+        if type(doc_data) is str:
+            return doc_data
         doc_data['doc_name'] = file_name
         return doc_data
+
+    @classmethod
+    def get_doc_data(cls, request, doc, token=False):
+        pdf_doc = doc.pdf_doc.read()
+        pdf_doc = base64.b64encode(pdf_doc)
+        pdf_doc = pdf_doc.decode('utf-8')
+
+        user = False
+        uid = False
+        if token:
+            post_info = {
+                'id': doc.id,
+                'model': 'SignatureDoc',
+                'app': 'esign'
+            }
+            user_token = PostUserToken.validate_token_for_post(token, post_info)
+            if user_token:
+                user = user_token.user
+        else:
+            user = request.user
+        uid = user.id
+        if not user.id:
+            return 'Invalid user access for signs'
+
+        signatures = doc.signature_set.filter(user_id=uid)
+        signatures = queryset_to_list(signatures,
+                                      fields=['user__id', 'user__username', 'id', 'type', 'page', 'field_name', 'zoom',
+                                              'width', 'height', 'top', 'left', 'image'])
+        for s in signatures:
+            signed = False
+            my_record = False
+            s["name"] = s["user__username"]
+            if s["image"]:
+                signed = True
+            if token:
+                if (uid == s["user__id"] and s["user__id"]):
+                    my_record = True
+            else:
+                if (request.user.id == s["user__id"]):
+                    my_record = True
+            s["signed"] = signed
+            s["my_record"] = my_record
+        return {"pdf_binary": pdf_doc, "doc_data": signatures}
 
     @classmethod
     def get_signature(cls, request, params):

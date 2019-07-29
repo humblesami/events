@@ -167,6 +167,27 @@ class Profile(user_model):
     def __str__(self):
         return self.fullname()
 
+    def save(self, *args, **kwargs):
+        creating = False
+        if not self.pk:
+            creating = True
+            self.username = self.email
+            self.is_staff = True
+        self.name = self.fullname()
+        super(Profile, self).save(*args, **kwargs)
+        if creating:
+            user_data = {
+                'id': self.pk,
+                'photo': self.image.url,
+                'name': self.fullname()
+            }
+            self.password_reset_on_creation_email()
+            events = [
+                {'name': 'new_friend', 'data': user_data, 'audience': ['all_online']}
+            ]
+            ws_methods.emit_event(events)
+            self.is_staff = True
+
     def fullname(self):
         user = self
         name = False
@@ -387,26 +408,6 @@ class Profile(user_model):
             {'name': 'friend_removed', 'data': uid, 'audience': ['all_online']}
         ]
         ws_methods.emit_event(events)
-
-    def save(self, *args, **kwargs):
-        creating = False
-        if not self.pk:
-            creating = True
-        self.name = self.fullname()
-        super(Profile, self).save(*args, **kwargs)
-        if creating:
-            user_data = {
-                'id': self.pk,
-                'photo': self.image.url,
-                'name': self.fullname()
-            }
-            self.password_reset_on_creation_email()
-            events = [
-                {'name': 'new_friend', 'data': user_data, 'audience': ['all_online']}
-            ]
-            ws_methods.emit_event(events)
-            self.is_staff = True
-
 
     def password_reset_on_creation_email(self):
         try:

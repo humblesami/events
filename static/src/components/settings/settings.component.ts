@@ -26,25 +26,35 @@ export class SettingsComponent implements OnInit {
     constructor(private router: Router, private httpService: HttpService) {}
 
     submit_password() {
-		var bootbox = window['bootbox'];
-		if(!this.old_password)
-		{
-			bootbox.alert('Please provide your previous password.')
-			return;
-		}
-		if(!this.all_regex.test(this.new_password) || this.new_password != this.confirm_new_password)
-		{
-			bootbox.alert('Please follow the rules to set your new password.')
-			return;
-		}
+        var bootbox = window['bootbox'];
+        if(!window['site_config'].is_localhost)
+        {
+            if(!this.old_password)
+            {
+                bootbox.alert('Please provide your previous password.')
+                return;
+            }
+            if(!this.all_regex.test(this.new_password) || this.new_password != this.confirm_new_password)
+            {
+                bootbox.alert('Please follow the rules to set your new password.')
+                return;
+            }
+        }
+		
         var obj_this = this;
         this.loading = true;
-        let req_url = '/dn_base/change_password';
         let input_data = {
-            old: this.old_password,
-            new: this.new_password,
-            app_name: 'MeetingPoint'
+            args:{
+                app: 'authsignup',
+                model:'AuthUser',
+                method:'change_password',
+            },
+            params:{
+                old: this.old_password,
+                new: this.new_password,                
+            }
         };
+
         var success_cb = function(result) {
             obj_this.loading = false;
 			bootbox.alert('Password is successfully updated');
@@ -59,7 +69,7 @@ export class SettingsComponent implements OnInit {
         var complete_cb = function() {
             obj_this.loading = false;
         };
-        this.httpService.authenticate(req_url, input_data, success_cb, failure_cb, complete_cb);
+        this.httpService.post(input_data, success_cb, failure_cb);
     }
 
     ngOnInit() {

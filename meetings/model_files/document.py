@@ -6,7 +6,6 @@ import base64
 import datetime
 from fpdf import FPDF
 
-from restoken.models import PostUserToken
 from .event import Event
 from .topic import Topic
 from .user import Profile
@@ -14,10 +13,11 @@ from random import randint
 from django.db import models
 from mainapp import ws_methods
 from documents.file import File
+from PIL import Image, ImageDraw
 from django.db import transaction
 from collections import OrderedDict
 from mainapp.settings import MEDIA_ROOT
-from PIL import ImageFont, Image, ImageDraw
+from restoken.models import PostUserToken
 from mainapp.settings import server_base_url
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from django.core.files import File as DjangoFile
@@ -216,10 +216,10 @@ class SignDocument(SignatureDoc):
         if file_obj.send_to_all:
             send_to_all = file_obj.send_to_all
 
-        doc_data = cls.get_doc_data(request,file_obj,token)
-        isAdmin = True
+        doc_data = SignatureDoc.get_doc_data(request,file_obj,token)
+        if type(doc_data) is str:
+            return doc_data
         doc_data['doc_name'] = file_name
-        doc_data["isAdmin"]= isAdmin
         doc_data["meetings"] = meetings
         doc_data["users"] = users
         doc_data["meeting_id"] = meeting_id
@@ -281,7 +281,7 @@ class SignDocument(SignatureDoc):
         template_data = {            
             'subject': params['subject'],
             'message': params['message'],
-            'url': server_base_url + '/#/token-sign-doc/'+str(doc.id)+'/'
+            'url': 'http://localhost:4200/#/token-sign-doc/'+str(doc.id)+'/'
         }
         post_info = {}
         post_info['res_app'] = 'esign'
@@ -297,7 +297,7 @@ class SignDocument(SignatureDoc):
             'token_required': True
         }
         ws_methods.send_email_on_creation(email_data)
-        doc_data = cls.get_doc_data(request,doc)
+        doc_data = SignatureDoc.get_doc_data(request,doc)
         return doc_data
 
     @classmethod
@@ -347,9 +347,10 @@ class SignDocument(SignatureDoc):
                 sign.image.save("sign"+".png", jango_file)
 
         doc.embed_signatures()
-        doc_data = cls.get_doc_data(request,doc, token)
+        doc_data = SignatureDoc.get_doc_data(request,doc, token)
+        if type(doc_data) is str:
+            return doc_data
         doc_data["signature"] = binary_signature
-
         return doc_data
 
     @classmethod
@@ -361,40 +362,8 @@ class SignDocument(SignatureDoc):
         # doc.emit_data_update(doc)
         sign.delete()
         doc.embed_signatures()
-        doc_data = cls.get_doc_data(request,doc)
-
+        doc_data = SignatureDoc.get_doc_data(request,doc)
         return doc_data
-
-    @classmethod
-    def get_doc_data(cls, request, doc, token=False):
-        pdf_doc = doc.pdf_doc.read()
-        pdf_doc = base64.b64encode(pdf_doc)
-        pdf_doc = pdf_doc.decode('utf-8')
-
-        signatures = doc.signature_set.all()
-        signatures = queryset_to_list(signatures,fields=['user__id','user__username','id','type','page','field_name','zoom','width','height','top','left','image'])
-        uid = False
-        if token:
-            user_token = PostUserToken.validate_token(token)
-            if user_token:
-                signs = doc.signature_set.filter(user_id=user_token.user.id)
-                if signs:
-                    uid = signs[0].user.id
-        for s in signatures:
-            signed = False
-            my_record = False
-            s["name"]=s["user__username"]
-            if s["image"]:
-                signed = True
-            if token:
-                if (uid == s["user__id"] and s["user__id"]):
-                    my_record = True
-            else:
-                if (request.user.id == s["user__id"]):
-                    my_record = True
-            s["signed"] = signed
-            s["my_record"] = my_record
-        return {"pdf_binary":pdf_doc,"doc_data":signatures}
 
 
     @classmethod

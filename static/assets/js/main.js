@@ -114,7 +114,7 @@ var site_functions = {
         }
     },
     go_to_login: function() {
-        console.trace();
+        // console.trace();
         // alert(444);
         if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
         {
@@ -356,41 +356,35 @@ window.addEventListener('message', function receiveMessage(evt) {
             model,
             action
         } = evt.data;
-        //console.log(evt.data, model);
+        var redirect_url = '';
         if (action === 'change') {
             switch (model) {
                 case 'event':
-                    window.location = `/#/meeting/${id}`;
+                    redirect_url = `/#/meeting/${id}`;
                     break;
                 case 'news':
-                    window.location = `/#/`;
+                    redirect_url = `/#/`;
                     break;
                 case 'committee':
-                    window.location = `/#/committees/${id}`;
+                    redirect_url = `/#/committees/${id}`;
                     break;
                 case 'voting':
-                    window.location = `/#/voting/${id}`;
+                    redirect_url = `/#/voting/${id}`;
                     break;
                 case 'survey':
-                    window.location = `/#/survey/${id}`;
+                    redirect_url = `/#/survey/${id}`;
                     break;
-                case 'director':
-                    window.location = `/#/director/${id}`;
-                    break;
-                case 'admin':
-                    window.location = `/#/admin/${id}`;
-                    break;
-                case 'staff':
-                    window.location = `/#/staff/${id}`;
-                    break;
+                case 'profile':
+                    redirect_url = `/#/profile/${id}`;
+                    break;                
                 case 'folder':
-                    window.location = `/#/resource/${id}`;
+                    redirect_url = `/#/resource/${id}`;
                     break;
                 case 'signdoc':
-                    window.location = `/#/signdoc/${id}`;
+                    redirect_url = `/#/signdoc/${id}`;
                     break;
                 case 'signdocument':
-                    window.location = `/#/signdoc/${id}`;
+                    redirect_url = `/#/signdoc/${id}`;
                     break;
             }
 
@@ -399,43 +393,53 @@ window.addEventListener('message', function receiveMessage(evt) {
             switch(model)
             {
                 case 'survey':
-                    window.location = `/#/survey/${id}/results`;
+                    redirect_url = `/#/survey/${id}/results`;
             }
         } else {
             switch (model) {
                 case 'event':
-                        window.location = `/#/meetings/upcoming`;
+                        redirect_url = `/#/meetings/upcoming`;
                         break;
                 case 'committee':
-                        window.location = `/#/committees`;
+                        redirect_url = `/#/committees`;
                         break;
                 case 'voting':
-                        window.location = `/#/votings`;
+                        redirect_url = `/#/votings`;
                         break;
                 case 'survey':
-                        window.location = `/#/surveys`;
+                        redirect_url = `/#/surveys`;
                         break;
-                case 'director':
-                    window.location = `/#/profiles/directors`;
-                    break;
-                case 'admin':
-                    window.location = `/#/profiles/admins`;
-                    break;
-                case 'staff':
-                    window.location = `/#/profiles/staff`;
+                case 'profile':
+                    var user_type = '';
+                    (function(){
+                        var current_url = window.location.toString();
+                        var arrr = current_url.split('/');
+                        user_type = arrr[arrr.length - 2];
+                        if(user_type != 'staff')
+                        {
+                            user_type += 's';
+                        }
+                    })()
+                    redirect_url = `/#/profiles/`+user_type;
                     break;
                 case 'folder':
-                    window.location = `/#/resources`;
+                    redirect_url = `/#/resources`;
                     break;
                 case 'signdoc':
-                    window.location = `/#/signdocs`;
+                    redirect_url = `/#/signdocs`;
                     break;
                 case 'signdocument':
-                    window.location = `/#/signdocs`;
+                    redirect_url = `/#/signdocs`;
                     break;
             }
         }
+        // console.log(redirect_url, 233);
+        if(redirect_url)
+        {
+            window.location = redirect_url;
+        }
     }
+    
 }, false);
 
 

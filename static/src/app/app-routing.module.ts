@@ -149,7 +149,7 @@ export class AppRoutingModule {
         var crouter = router;
 		router.events.subscribe((event) => {
 			if (event instanceof NavigationStart) {
-                console.log(event, router.routerState);
+                // console.log(event, router.routerState);
                 socketService.init_route(event.url);
 				$('.hidemouseaway').hide();
                 $('.searchbar-full-width').hide();

@@ -140,8 +140,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     {
                         $('#holder').hide();
                         $('body').prepend('<h1>You have Completed You Signatures</h1>');
-                    }
-                    doc_data = data.doc_data
+                    }                    
+                    doc_data = data.doc_data;
+                    console.log(doc_data, 11);
                     obj_this.users_list = users = data.users;
                     meetings = data.meetings;
                     meeting_id = data.meeting_id;
@@ -251,9 +252,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 });
             }, 200);
             $('#loaderContainerajax').hide();
-            $(".o_loading").hide()
-
-            // loadSignatures({"doc_data":doc_data});
+            $(".o_loading").hide();
         }
 
 
@@ -316,8 +315,6 @@ export class EsignDocDetailsComponent implements OnInit {
                         height: h
                     });
                 });
-                //setTimeout(function(){ loadSignatures({"doc_data":doc_data}); }, 500);
-                //    loadSignatures({"doc_data":doc_data});
             });
         }
 
@@ -348,12 +345,11 @@ export class EsignDocDetailsComponent implements OnInit {
         });
 
         function loadSignatures(data) {
-
             doc_data = data.doc_data;
-
             var height = canvas.height;
+            // console.log(doc_data);
             $.each(doc_data, function() {
-
+                // console.log(this);
                 var div = $('<div></div>', {
                     id: this.id,
                     signed: this.signed,
