@@ -72,7 +72,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <label for="email">
                                 <b>Email</b>
                             </label>
-                            <input value="{{profile_data.email}}" (change)="modified_profile_data.email = $event.target.value"
+                            <input value="{{profile_data.email}}" [readonly]="true" (change)="modified_profile_data.email = $event.target.value"
                                 type="text" placeholder="Enter Email" id="email">
                             <label for="birth_date">
                                 <b>Date of Birth</b>

@@ -119,16 +119,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             PERSONAL INFO
                             <span *ngIf="my_profile || socketService.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
                         </div>
-                        <div *ngIf="profile_data.username" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="username">
-                                    <b>User Name</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.username}}
-                            </div>
-                        </div>
                         <div *ngIf="profile_data.mobile_phone" class="row mb-2">
                             <div class="col-sm-3">
                                 <label for="mobile-phone">
