@@ -37,8 +37,8 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     </div>
                     <div class="doc-manage-btn-wrap">
                         <div class="paginator">
-                            <span (click)="changePage(page_num-1)" class="pager prev page-prev-btn" disabled=""><i _ngcontent-c1="" class="fa fa-arrow-up"></i></span>
-                            <span (click)="changePage(page_num+1)" class="pager next page-next-btn" disabled=""><i _ngcontent-c1="" class="fa fa-arrow-down"></i></span>
+                            <span (click)="changePage(page_num-1)" class="pager prev page-prev-btn" disabled=""><i class="fa fa-arrow-up"></i></span>
+                            <span (click)="changePage(page_num+1)" class="pager next page-next-btn" disabled=""><i class="fa fa-arrow-down"></i></span>
     
                             <input (change)="changePage(page_num)" (blur)="changePage(page_num)" (keyup.enter)="changePage(page_num)" class="form-control" [(ngModel)]="page_num" type="number" class="page-number" value="1">
                             <span>of <span class="page-count">1</span></span>

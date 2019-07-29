@@ -32,3 +32,25 @@ body.public .app-sidebar
 {
 	display:none;
 }
+.saved_sign{
+    cursor:pointer;
+    width:190px;
+    height:40px;
+    border:2px dotted gray;
+    font-weight: bold;
+    color:black;
+    z-index:1;
+    overflow:hidden;
+    background-color: antiquewhite;
+}
+body.public .router-outlet{
+    height: 100vh !important;
+}
+body.user #viewer_container{
+    height: calc(100vh - 158px);
+    overflow-y: auto;
+}
+body.public #viewer_container{
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+}

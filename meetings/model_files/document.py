@@ -281,7 +281,7 @@ class SignDocument(SignatureDoc):
         template_data = {            
             'subject': params['subject'],
             'message': params['message'],
-            'url': 'http://localhost:4200/#/token-sign-doc/'+str(doc.id)+'/'
+            'url': server_base_url + '/#/token-sign-doc/'+str(doc.id)+'/'
         }
         post_info = {}
         post_info['res_app'] = 'esign'

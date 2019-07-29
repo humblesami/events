@@ -135,8 +135,7 @@
     display: none!important
 }
 
-#page_container1 {
-	height: calc(100vh - 154px);
+#page_container1 {	
 	text-align: center;
 	background: #f7f7f7;
 	padding-top: 1px;
@@ -339,17 +338,6 @@
     width: 100%;
     margin-top:10px;
     text-transform: uppercase;
-}
-
-.saved_sign{
-    cursor:pointer;
-    width:190px;
-    height:40px;
-    border:2px dotted gray;
-    font-weight: bold;
-    color:black;
-    z-index:1;
-    overflow:hidden
 }
 
 .docselectbtn{

@@ -189,6 +189,7 @@ class SignatureDoc(File):
 
         user = False
         uid = False
+        signatures = None
         if token:
             post_info = {
                 'id': doc.id,
@@ -198,13 +199,14 @@ class SignatureDoc(File):
             user_token = PostUserToken.validate_token_for_post(token, post_info)
             if user_token:
                 user = user_token.user
+                signatures = doc.signature_set.filter(user_id=uid)
         else:
             user = request.user
+            signatures = doc.signature_set.all()
         uid = user.id
         if not user.id:
             return 'Invalid user access for signs'
 
-        signatures = doc.signature_set.filter(user_id=uid)
         signatures = queryset_to_list(signatures,
                                       fields=['user__id', 'user__username', 'id', 'type', 'page', 'field_name', 'zoom',
                                               'width', 'height', 'top', 'left', 'image'])
@@ -214,11 +216,12 @@ class SignatureDoc(File):
             s["name"] = s["user__username"]
             if s["image"]:
                 signed = True
+            sign_user_id = s["user__id"]
             if token:
-                if (uid == s["user__id"] and s["user__id"]):
+                if (uid == sign_user_id and sign_user_id):
                     my_record = True
             else:
-                if (request.user.id == s["user__id"]):
+                if (uid == sign_user_id):
                     my_record = True
             s["signed"] = signed
             s["my_record"] = my_record

@@ -142,7 +142,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         $('body').prepend('<h1>You have Completed You Signatures</h1>');
                     }                    
                     doc_data = data.doc_data;
-                    console.log(doc_data, 11);
+                    // console.log(doc_data, 11);
                     obj_this.users_list = users = data.users;
                     meetings = data.meetings;
                     meeting_id = data.meeting_id;
@@ -1245,8 +1245,8 @@ export class EsignDocDetailsComponent implements OnInit {
         // console.log(document.getElementById('the-canvas'))
         // document.writeln('<script src="static/assets/js/viewer.js"></script>');
         this.prev_height = $('.router-outlet').css('height');
-        var new_height = parseFloat(this.prev_height) + 20;
-        $('.router-outlet').css('height', new_height);
+        var new_height = parseFloat(this.prev_height) + 20;        
+        $('.router-outlet').css('height', new_height);        
         // console.log(this.prev_height, new_height);
         
         function get_url(url)
