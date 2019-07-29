@@ -74,19 +74,27 @@ class EventAdmin(nested_admin.NestedModelAdmin):
         return format_html(html)
 
 
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields=('email', 'first_name', 'last_name', 'mobile_phone')
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['email'].required = True
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+
+
 class UserAdmin(admin.ModelAdmin):
     search_fields = ('name',)
+    form = UserForm
     email = forms.EmailField(required=True)
     fields = ('email', 'first_name', 'last_name', 'mobile_phone', 'groups')
 
     class Media:
         js=('admin/js/set_group_in_user_creation.js',)
 
-    def clean_email(self):
-        if Profile.objects.filter(email=self.cleaned_data['email']).exists():
-            raise forms.ValidationError(u'This email already exists.')
-            
-        return self.cleaned_data['email']
 
 
 class MeetingGroupAdmin(GroupAdmin):
