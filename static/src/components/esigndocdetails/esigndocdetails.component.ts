@@ -789,6 +789,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         params: {
                             signature_id: signature_id,
+                            document_id: doc_id,
                             token: token
                         }
                     },

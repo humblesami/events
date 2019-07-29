@@ -309,11 +309,8 @@ class SignDocument(SignatureDoc):
         uid = False
         sign = Signature.objects.filter(id=signature_id)[0]
         if token:
-            sign1 = Signature.objects.filter(token=token)
-            if not sign1.exists():
-                return "Unauthorized"
-            if sign1:
-                uid = sign1[0].user.id
+            sign1 = doc.signature_set.get(id=signature_id)
+            uid = sign1.user.id
             if uid != sign.user.id:
                 return "Unauthorized"
         else:
@@ -328,7 +325,7 @@ class SignDocument(SignatureDoc):
             sign.image.save(params['filename'], jango_file)
         else:
             if params['type'] == "auto":
-                binary_signature = cls.get_auto_sign(sign)
+                binary_signature = SignatureDoc.get_auto_sign(sign)
                 # sign.write({'draw_signature': binary_signature})
             if params['type'] == "draw":
                 binary_signature = params['binary_signature']
@@ -375,12 +372,14 @@ class SignDocument(SignatureDoc):
         pdf_doc = pdf_doc.decode('utf-8')
 
         signatures = doc.signature_set.all()
-        signatures = queryset_to_list(signatures,fields=['user__id','user__username','id','type','page','field_name','zoom','width','height','top','left','image','token'])
+        signatures = queryset_to_list(signatures,fields=['user__id','user__username','id','type','page','field_name','zoom','width','height','top','left','image'])
         uid = False
         if token:
-            signs = doc.signature_set.filter(token=token)
-            if signs:
-                uid = signs[0].user.id
+            user_token = PostUserToken.validate_token(token)
+            if user_token:
+                signs = doc.signature_set.filter(user_id=user_token.user.id)
+                if signs:
+                    uid = signs[0].user.id
         for s in signatures:
             signed = False
             my_record = False
@@ -388,7 +387,7 @@ class SignDocument(SignatureDoc):
             if s["image"]:
                 signed = True
             if token:
-                if (uid == s["user__id"] and s["user__id"]) or token == s["token"]:
+                if (uid == s["user__id"] and s["user__id"]):
                     my_record = True
             else:
                 if (request.user.id == s["user__id"]):
@@ -397,32 +396,6 @@ class SignDocument(SignatureDoc):
             s["my_record"] = my_record
         return {"pdf_binary":pdf_doc,"doc_data":signatures}
 
-    @classmethod
-    def get_auto_sign(cls, sign, date=""):
-        curr_dir = os.path.dirname(__file__)
-        pth = curr_dir.replace('model_files', 'static')
-                
-        txt = sign.user.username or sign.name
-        if sign.type == "initial":
-            txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
-        if sign.type == "date":            
-            txt = date
-
-        # if sz[0] < 100:
-        sz = (150,28)
-        img = Image.new('RGB', sz, (255, 255, 255))
-        d = ImageDraw.Draw(img)
-
-        d.text((40, 0), txt, (0, 0, 0))
-
-        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
-        img.save(img_path)
-
-        res = open(img_path, 'rb')
-        read = res.read()
-        binary_signature = base64.encodebytes(read)
-        binary_signature = binary_signature.decode('utf-8')
-        return binary_signature
 
     @classmethod
     def get_sign_text(cls, sign, text):

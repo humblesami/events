@@ -86,7 +86,8 @@ class UserCreateForm(UserCreationForm):
     email = forms.EmailField(required=True)
     class Meta:
         model = Profile
-        fields = ('username', 'password1', 'password2', 'email')
+        fields = ('username', 'email')
+        exclude = ('password1', 'password2')
 
     class Media:
         js=('admin/js/user_creation_password_validation.js',)
@@ -94,6 +95,7 @@ class UserCreateForm(UserCreationForm):
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
+        user.set_password(123)
         if commit:
             user.save()
         return user

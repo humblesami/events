@@ -140,8 +140,6 @@ def save_user_signatuer(request):
             if user_token:
                 user_signature = Signature.objects.filter(document_id=kw['params']['document_id'],
                 user_id=user_token.user.id)
-                if user_signature:
-                    kw['params']['token'] = user_signature[0].token
             else:
                 return 'Unauthorized'
         

@@ -1,4 +1,5 @@
 import io
+import os
 import base64
 import datetime
 
@@ -6,7 +7,7 @@ from fpdf import FPDF
 from random import randint
 from django.contrib.auth.models import User
 from PyPDF2 import PdfFileReader, PdfFileWriter
-
+from PIL import ImageFont, Image, ImageDraw
 from django.db import models
 from django.core.files import File as DjangoFile
 
@@ -210,6 +211,35 @@ class SignatureDoc(File):
             if sign.type == 'initial':
                 image = cls.get_auto_sign(sign)
         return {"signature": image}
+
+
+    @classmethod
+    def get_auto_sign(cls, sign, date=""):
+        curr_dir = os.path.dirname(__file__)
+        pth = curr_dir.replace('model_files', 'static')
+                
+        txt = sign.user.username or sign.name
+        if sign.type == "initial":
+            txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
+        if sign.type == "date":            
+            txt = date
+
+        # if sz[0] < 100:
+        sz = (150,28)
+        img = Image.new('RGB', sz, (255, 255, 255))
+        d = ImageDraw.Draw(img)
+
+        d.text((40, 0), txt, (0, 0, 0))
+
+        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+        img.save(img_path)
+
+        res = open(img_path, 'rb')
+        read = res.read()
+        binary_signature = base64.encodebytes(read)
+        binary_signature = binary_signature.decode('utf-8')
+        return binary_signature
+
 
     @classmethod
     def get_records(cls, request, params):
