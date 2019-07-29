@@ -1,25 +1,18 @@
 from django import forms
+from django.contrib import admin
 from documents.admin import FileForm
 from esign.admin import SignatureDocForm
-from meetings.model_files.committee import Committee
-from django.contrib import admin
 from django.utils.html import format_html
+from django.contrib.auth.admin import GroupAdmin
 from django.utils.decorators import method_decorator
-from meetings.model_files.document import MeetingDocument,AgendaDocument
-from django.contrib.auth.forms import UserChangeForm
-from django.utils.translation import gettext_lazy as _
-from meetings.model_files.user import Profile,Admin,Director,Staff,MeetingGroup
-from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument
-from django.contrib.admin.widgets import FilteredSelectMultiple
+from meetings.model_files.committee import Committee
+from meetings.model_files.user import Profile,MeetingGroup
 from django.views.decorators.debug import sensitive_post_parameters
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
+from meetings.model_files.document import MeetingDocument,AgendaDocument
+from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument
+
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
-from django.contrib.auth.forms import UserCreationForm
-from django.core.exceptions import ValidationError
-from django.db import models
-from django.forms import Textarea
-from documents.file import File
 
 
 class TopicAdmin(admin.ModelAdmin):
@@ -81,19 +74,16 @@ class EventAdmin(nested_admin.NestedModelAdmin):
         return format_html(html)
 
 
-
-class UserCreateForm(UserCreationForm):
+class UserAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
     email = forms.EmailField(required=True)
-    class Meta:
-        model = Profile
-        fields = ('username', 'email')
-        exclude = ('password1', 'password2')
+    fields = ('email', 'first_name', 'last_name', 'mobile_phone')
 
     class Media:
         js=('admin/js/user_creation_password_validation.js',)
     
     def save(self, commit=True):
-        user = super(UserCreateForm, self).save(commit=False)
+        user = super(UserAdmin, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         user.set_password(123)
         if commit:
@@ -105,114 +95,6 @@ class UserCreateForm(UserCreationForm):
             raise forms.ValidationError(u'This email already exists.')
             
         return self.cleaned_data['email']
-
-class UserAdminForm(UserChangeForm):
-    committees = forms.ModelMultipleChoiceField(queryset=Committee.objects.all(),required=False,widget=FilteredSelectMultiple(verbose_name=_('Committees'),is_stacked=False ))
-    autocomplete_fields = ['committees']
-    class Meta:
-        model = Profile
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(UserAdminForm, self).__init__(*args, **kwargs)
-
-        if self.instance and self.instance.pk:
-            self.fields['committees'].initial = self.instance.committees.all()
-
-    def save(self, commit=True):
-        user = super(UserAdminForm, self).save(commit=False)
-
-        if commit:
-            user.save()
-
-        if user.pk:
-            # user.committees = self.cleaned_data['committees']
-            user.committees.set(self.cleaned_data['committees'])
-            self.save_m2m()
-
-        return user
-
-
-class UserAdmin(BaseUserAdmin):
-    form = UserAdminForm
-    add_form = UserCreateForm
-
-    def admin_image_tag(self, obj):
-        return format_html('<img class="admin_photo" style="width:150px;border-radius:92px" src="/media/%s" /><div><span class="btn btn-link administrator_image_upload">Edit</span></div>' % (obj.admin_image))
-
-    admin_image_tag.short_description = 'Photo'
-    readonly_fields = ('image_tag', 'admin_image_tag')
-
-    list_display = ('username', 'name', 'email', 'first_name', 'last_name', 'is_active')
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'email', ),
-        }),
-    )
-    fieldsets = (
-        (None, {'fields': ('image_tag', 'image', 'is_active')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'mobile_phone', 'email', 'birth_date',
-                                         'location', 'two_factor_auth')}),
-        (_('Bio'), {'fields': ('bio',)}),
-        (_('Work info'), {'fields': ('company', 'job_title', 'department', 'work_phone', 'fax', 'website')}),
-        (_('Board info'), {'fields': ('board_joining_date', 'term_start_date', 'term_end_date')}),
-        (_('Diversity Information'),
-         {
-             'fields': (
-                 'ethnicity', 'gender', 'veteran', 'disability'
-             )
-         }
-         ),
-        (_('Administrative Assistant'),
-         {
-             'fields': (
-                 'admin_image_tag', 'admin_image', 'admin_first_name', 'admin_last_name',
-                 'admin_nick_name', 'admin_cell_phone', 'admin_email', 'admin_work_phone',
-                 'admin_fax'
-             )
-         }
-         ),
-    )
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(
-                        attrs={'rows': 5,
-                                'cols': 40,})},
-    }
-    change_form_template = "custom/profile_custom_change_form.html"
-
-
-
-    def image_tag(self, obj):
-        if obj.image:
-            return format_html('<img class="user_photo" style="width:150px;border-radius:92px" src="/media/%s" /><div><span class="btn btn-link profile_image_upload">Edit</span></div>' % (obj.image))
-    image_tag.short_description = 'Photo'
-
-
-class AdminAdmin(UserAdmin):
-
-    def get_queryset(self, request):
-        qs = super(AdminAdmin, self).get_queryset(request)
-        qs = qs.filter(groups__name__in=['Admin'])
-        return qs
-
-
-class DirectorAdmin(UserAdmin):
-    add_form = UserCreateForm
-
-    def get_queryset(self, request):
-        qs = super(DirectorAdmin, self).get_queryset(request)
-        qs = qs.filter(groups__name__in=['Director'])
-        return qs
-
-
-class StaffAdmin(UserAdmin):
-    add_form = UserCreateForm
-
-    def get_queryset(self, request):
-        qs = super(StaffAdmin, self).get_queryset(request)
-        qs = qs.filter(groups__name__in=['Staff'])
-        return qs
 
 
 class MeetingGroupAdmin(GroupAdmin):
@@ -275,12 +157,8 @@ admin.site.register(Event,EventAdmin)
 admin.site.register(Topic,TopicAdmin)
 admin.site.register(MeetingDocument, MeetingDocumentForm)
 admin.site.register(AgendaDocument)
-admin.site.register(Admin,AdminAdmin)
-admin.site.register(Director,DirectorAdmin)
-admin.site.register(Staff,StaffAdmin)
 admin.site.register(Profile,UserAdmin)
 admin.site.register(MeetingGroup,MeetingGroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
 admin.site.register(SignDocument, SignDocumentForm)
-
 admin.site.site_header = "BoardSheet"
