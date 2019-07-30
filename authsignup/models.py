@@ -45,8 +45,12 @@ class AuthUser(models.Model):
                     auth_type = auth_type.lower()
                     auth_data = '&address='
                     if auth_type == 'phone':
+                        if not user.mobile_phone:
+                            return 'User phone does not exist to send code, please ask admin to set it for you'
                         auth_data = 'auth_type='+ auth_type + auth_data + user.mobile_phone
                     else:
+                        if not user.email:
+                            return 'User email does not exist to send code, please ask admin to set it for you'
                         auth_data = 'auth_type='+ auth_type + auth_data + user.email
                     url = AUTH_SERVER_URL + '/auth-code/generate?' + auth_data
                     res = ws_methods.http_request(url)

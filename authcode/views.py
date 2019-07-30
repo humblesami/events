@@ -1,12 +1,8 @@
 import json
-from signalwire.rest import Client as signalwire_client
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.crypto import get_random_string
 from django.http import HttpResponse
-
-from mainapp.settings import server_base_url
+from django.utils.crypto import get_random_string
 from .models import TwoFactorAuthenticate, ThreadEmail
+from signalwire.rest import Client as signalwire_client
 
 def generate_code(request):
 
@@ -22,7 +18,7 @@ def generate_code(request):
 
     if auth_type == 'email':
         if not address:
-            return HttpResponse('Invalid email address in profile')
+            return HttpResponse('Email address not provided for dual factor authentication')
         auth_code_object = TwoFactorAuthenticate(code=code, uuid=uuid, email=address, auth_type=auth_type)
         auth_code_object.save()
 
