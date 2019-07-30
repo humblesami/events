@@ -72,5 +72,4 @@ class ThreadEmail(threading.Thread):
             html_message = render_to_string(self.template_name, self.template_data)
             send_mail(self.subject, '', "sami@gmai.com", self.emails, html_message=html_message)
         except:
-            pass
-            produce_exception('')
+            produce_exception()

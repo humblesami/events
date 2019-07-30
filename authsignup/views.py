@@ -1,10 +1,11 @@
-from django.contrib.auth import logout
-from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
-
+from django.http import HttpResponse
+from django.contrib.auth import logout
 from restoken.models import PostUserToken
+from meetings.model_files.user import Profile
+from rest_framework.decorators import api_view
+from django.views.decorators.csrf import csrf_exempt
+
 
 def login(request, next=None):
     context = {}
@@ -20,6 +21,12 @@ def forgot_password(request):
 
 def verify_code(request):
     context = {}
+    username = request.session.get('username')
+    if username:
+        del request.session['username']
+        user = Profile.objects.get(username=username)
+        auth_type = user.get_two_factor_auth_display()
+        context = {'message': 'Please check your '+auth_type+' to get latest verification code just received'}
     return render(request, 'verify_code.html', context)
 
 @csrf_exempt

@@ -52,10 +52,11 @@ class AuthUser(models.Model):
                     res = ws_methods.http_request(url)
                     try:
                         res = json.loads(res)
+                        request.session['uuid'] = res['uuid']
+                        request.session['username'] = user.username
+                        return 'done'
                     except:
                         return res
-                    request.session['uuid'] = res.get('uuid')
-                    return 'done'
         if user and user.id:
             name = ''
             try:
