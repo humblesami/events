@@ -1,10 +1,10 @@
 .droppable_holder{
-    width:200px; 
-    height:200px; 
+    width:200px;
+    height:200px;
     border: 10px dashed #ccc;
 }
-.droppable_holder.hover { 
-    border: 10px dashed #0c0; 
+.droppable_holder.hover {
+    border: 10px dashed #0c0;
 }
 .upcomingButton button
 {
@@ -22,7 +22,7 @@
 }
 
 .popup.messenger .messenger-container {
-    height: calc(100vh - 157px);    
+    height: calc(100vh - 157px);
 }
 
 hr{
@@ -54,7 +54,8 @@ body.public #viewer_container{
     height: calc(100vh - 50px);
     overflow-y: auto;
 }
-.router-outlet
+.sidebar-mini.sidenav-toggled .app-sidebar
 {
-    padding-bottom: 30px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
