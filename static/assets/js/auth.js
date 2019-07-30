@@ -52,8 +52,8 @@
                         // console.log(error, public_route);
                         if(!error)
                         {
+                            localStorage.getItem('last_activity', Date());
                             window['add_user_class']();
-                            // console.log(document.body.classList);
                         }
                         else{
                             go_to_login();
