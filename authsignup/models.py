@@ -103,6 +103,7 @@ class AuthUser(models.Model):
         if user_token:
             user = user_token.user
             user.set_password(password)
+            user.email_verfied = True
             user.save()
             return 'done'
         else:

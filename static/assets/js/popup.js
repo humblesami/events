@@ -9,14 +9,14 @@ function init_popup(config) {
                 <div class="DocsButtonWrapper">
                 
                 </div>
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close">×</button>
                 </div>
                 <div id="signature-body" class="modal-body" >
                 
                 </div>
                 <div class="modal-footer">
                     <span class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</span>    
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" id="close-btn">Close</button>
                 </div>
             </div>
         </div>
@@ -53,10 +53,16 @@ function init_popup(config) {
         if (config.on_save)
         {
             config.on_save();
+        }        
+    });
+
+    $('#close-btn, .close').click(function(){
+        if (config.on_close)
+        {
+            config.on_close();
         }
         $('#signModal').modal('hide');
     });
-
 
     $('#signModal').modal('show');
     

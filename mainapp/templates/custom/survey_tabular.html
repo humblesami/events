@@ -120,6 +120,7 @@ function on_add_choice_click(el){
       {
         parent.find('.choice_error').remove();
         $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
+        $('#signModal').modal('hide');
       }
       append_choices(parent, choices);
     }

@@ -49,7 +49,7 @@ def generate_code(request):
     context = json.dumps(context)
     return HttpResponse(context)
 
-def send_sms():
+def send_sms(address):
     return ''
 
 def verify_code(request):

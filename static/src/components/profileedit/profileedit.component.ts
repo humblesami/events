@@ -20,6 +20,7 @@ export class ProfileeditComponent implements OnInit {
 	selectedEthnicity = [];
 	section = '';
 	delete_confirm = false;
+	mobile_verification_code = undefined;
 	user_id = undefined;
 	selectedGender = [];
 	selectedVeteran = [];
@@ -451,9 +452,46 @@ export class ProfileeditComponent implements OnInit {
 	}
 	setTowFactorAuth()
 	{
-		if (this.selectedTwoFactorAuth)
+		let obj_this = this;
+		if (obj_this.selectedTwoFactorAuth)
         {
-            this.modified_profile_data['two_factor_auth'] = this.selectedTwoFactorAuth['id'];
+			if(!obj_this.profile_data.mobile_verified && obj_this.selectedTwoFactorAuth['name'].toLowerCase() == 'phone')
+			{
+				let config = {
+					on_load: function(){
+						$(document).ready(function(){
+							$('#signModal .modal-body').html(`
+							<input type="text" name="verification_code" id="verification_code"
+							placeholder="Please Enter Mobile Verification Code"
+							class="form-control verification-code" required/>
+							<small style="display: none;" id="code-error" class="text-danger">
+								You can not select tow factor authentication type phone untill you verify your phone number
+							</small>
+							`);
+						});
+					},
+					on_save:function(){
+						obj_this.mobile_verification_code = $('#verification_code').val();
+						if(!obj_this.mobile_verification_code)
+						{
+							obj_this.selectedTwoFactorAuth = [];
+							$('#code-error').show();
+						}
+						else
+						{
+							/* Send SMS and verify verification code here */
+							$('#code-error').hide();
+							obj_this.modified_profile_data['two_factor_auth'] = obj_this.selectedTwoFactorAuth['id'];
+							$('#signModal').modal('hide');
+						}
+					},
+					on_close: function(){
+						obj_this.selectedTwoFactorAuth = obj_this.profile_data.two_factor_auth;
+						obj_this.selectedTwoFactorAuth = [];
+					}
+				}
+				window['init_popup'](config);
+			}
         }
         else
         {

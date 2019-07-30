@@ -162,6 +162,8 @@ class Profile(user_model):
     signature_data = models.BinaryField(default=b'', null=True, blank=True)
     resume = models.OneToOneField(File, null=True, blank=True, on_delete=models.CASCADE)
     two_factor_auth = models.IntegerField(choices=TWO_FACTOR_CHOICES, blank=True, null=True)
+    email_verified = models.BooleanField(null=True, default=False)
+    mobile_verified = models.BooleanField(null=True, default=False)
     # user_type = models.CharField(max_length=50)
 
     def __str__(self):
@@ -253,7 +255,7 @@ class Profile(user_model):
                 'work_phone', 'mobile_phone', 'website', 'fax', 'ethnicity', 'gender', 'veteran',
                 'disability', 'board_joining_date', 'admin_first_name', 'admin_last_name', 'admin_nick_name',
                 'admin_cell_phone', 'admin_email', 'admin_work_phone', 'admin_fax', 'admin_image', 'mail_to_assistant',
-                'term_start_date', 'term_end_date', 'date_joined', 'groups'
+                'term_start_date', 'term_end_date', 'date_joined', 'groups', 'email_verified', 'mobile_verified'
             ],
             related={
                 'committees': {'fields': ['id', 'name']}
