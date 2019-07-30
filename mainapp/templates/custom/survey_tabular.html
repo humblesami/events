@@ -80,13 +80,6 @@
     $('#questions-group .field-type select:visible').each(
       function(i, el){
         addChoicesButton(el)
-        // if (el.value == 'radio' || el.value == 'select-multiple')
-        // {
-        //   var parent = $(el).parent();
-        //   var add_choices_btn = $('<button class="add_choices_btn" type="button">Add Choices</button>');
-        //   parent.append(add_choices_btn);
-        //   add_choices_btn.click(on_add_choice_click);
-        // }
       }
     ).change(function(){
       addChoicesButton(this);
@@ -165,7 +158,7 @@ function on_add_choice_click(el){
     if (el.value == 'radio' || el.value == 'select-multiple')
     {
       parent.find('.choice_list').show();
-      var add_choices_btn = $('<div><button class="add_choices_btn" type="button">Add Choices</button></div>');
+      var add_choices_btn = $('<div><button style="background: rgb(65, 118, 144) !important" class="btn btn-primary add_choices_btn" type="button">Add Choices</button></div>');
       parent.append(add_choices_btn);
       add_choices_btn.click(on_add_choice_click);
       append_choices(parent,parent.next().find('textarea').val())
