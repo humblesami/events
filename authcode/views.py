@@ -1,5 +1,5 @@
 import json
-
+from signalwire.rest import Client as signalwire_client
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.crypto import get_random_string
@@ -35,22 +35,26 @@ def generate_code(request):
         email_data['template_name'] = 'code_verification.html'
         ThreadEmail(email_data).start()
     elif auth_type == 'phone':
-        try:
-            send_sms(address)
-        except:
-            pass
-        code = '123'
+        send_sms(code)
         auth_code_object = TwoFactorAuthenticate(code=code, uuid=uuid, phone=address, auth_type=auth_type)
         auth_code_object.save()
+    
     context = {
         'uuid': uuid,
         'status': 'ok',
-    }
+        }
+
     context = json.dumps(context)
     return HttpResponse(context)
 
-def send_sms(address):
-    return ''
+def send_sms(code):
+    client = signalwire_client("485323ec-133a-4f88-929f-afd8f7bd71af","PT92c704ccd2e86c3e93bfd8c8a32f7e63c7bb19fac091e61e" , signalwire_space_url= 'digitalnet.signalwire.com')    
+    message = client.messages.create(
+                              from_='+12029168484',
+                              body= code ,
+                              to='+12029168484'
+                          )
+    return(message.Status.SENT)
 
 def verify_code(request):
     req = request.GET

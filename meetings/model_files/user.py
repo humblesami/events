@@ -1,14 +1,16 @@
 import io
 import sys
+import json
 import base64
 import traceback
 from django.db import models
 from mainapp import ws_methods
 from documents.file import File
-from meetings.model_files.committee import Committee
+from mainapp.settings import AUTH_SERVER_URL
 from mainapp.settings import server_base_url
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
+from meetings.model_files.committee import Committee
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
@@ -393,6 +395,50 @@ class Profile(user_model):
             'username': profile.username
         }
         return {'profile_data': data}
+
+
+    @classmethod
+    def authenticate_mobile(cls, request, params):
+        auth_code = params['verification_code']
+        if auth_code:
+            uuid = request.session.get('uuid')
+            if not uuid:
+                return {'error': 'No request id found'}
+            url = AUTH_SERVER_URL + '/auth-code/verify?code=' + auth_code + '&uuid=' + uuid
+            res = ws_methods.http_request(url)
+            if res != 'ok':
+                return {'error': res}
+            user = request.user
+            user = Profile.objects.get(pk=user.id)
+            if user:
+                user.mobile_verified = True
+            return 'done'
+
+
+    @classmethod
+    def send_mobile_verfication_code(cls, request, params):
+        user = request.user
+        user = Profile.objects.get(pk=user.id)
+        mobile_phone = params['mobile_phone']
+        if mobile_phone:
+            auth_type = 'phone'
+            referer_address = request.META['HTTP_REFERER']
+            if not referer_address.endswith('localhost:4200/'):
+                auth_type = auth_type.lower()
+                auth_data = '&address='
+                auth_data = 'auth_type='+ auth_type + auth_data + mobile_phone
+                url = AUTH_SERVER_URL + '/auth-code/generate?' + auth_data
+                res = ws_methods.http_request(url)
+                try:
+                    res = json.loads(res)
+                except:
+                    return res
+                request.session['uuid'] = res.get('uuid')
+                user.mobile_phone = mobile_phone
+                user.save()
+                return 'done'
+            else:
+                return 'Invalid host.'
 
 
     @classmethod

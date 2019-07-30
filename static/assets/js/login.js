@@ -6,9 +6,9 @@
     $('.login-form:first input').keyup(function(){
         $(this).find('.login-feedback').html('');
     });
-    $('.login-form:first').submit(function(e){
+    var form  = $('.login-form:first');
+    form.submit(function(e){
         e.preventDefault();
-        var form  = $(this);
         form.find('button[type="submit"]:first').attr('disabled', 'disabled');
         var input_data = {
             args:{
@@ -44,9 +44,9 @@
             form.find('.login-feedback').html(data);
         };
         options.onComplete = function(data){
-            console.log(4444);
             form.find('button[type="submit"]:first').removeAttr('disabled');
         };
         window['dn_rpc_object'](options);
-    })
+    });
+    form.find('button[type="submit"]:first').removeAttr('disabled');
 })()

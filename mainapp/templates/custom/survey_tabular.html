@@ -80,13 +80,6 @@
     $('#questions-group .field-type select:visible').each(
       function(i, el){
         addChoicesButton(el)
-        // if (el.value == 'radio' || el.value == 'select-multiple')
-        // {
-        //   var parent = $(el).parent();
-        //   var add_choices_btn = $('<button class="add_choices_btn" type="button">Add Choices</button>');
-        //   parent.append(add_choices_btn);
-        //   add_choices_btn.click(on_add_choice_click);
-        // }
       }
     ).change(function(){
       addChoicesButton(this);
@@ -99,14 +92,13 @@ function on_add_choice_click(el){
   config = {
   on_load: function(){
       $(document).ready(function(){
-        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input"/>');
-        // console.log($('.tag_input').length, 11);
-        $('.tag_input').tagsInput();
-        // console.log($('.tag_input').length, 12);
+        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input" placeholder="Pres Enter to Add your choices"/><button class="btn btn-primary">Add Choice</button>');
+        $('.tag_input').tagsInput({
+          placeholder: 'Type your choice and press enter to add it.'
+        });
       })
     },
     on_save:function(){
-      // console.log($('.tag_input').length, 13);
       let choices = $('.tag_input').val()
       choices_list = choices_to_list(choices);
       let parent = $(element).parent();
@@ -166,7 +158,7 @@ function on_add_choice_click(el){
     if (el.value == 'radio' || el.value == 'select-multiple')
     {
       parent.find('.choice_list').show();
-      var add_choices_btn = $('<div><button class="add_choices_btn" type="button">Add Choices</button></div>');
+      var add_choices_btn = $('<div><button style="background: rgb(65, 118, 144) !important" class="btn btn-primary add_choices_btn" type="button">Add Choices</button></div>');
       parent.append(add_choices_btn);
       add_choices_btn.click(on_add_choice_click);
       append_choices(parent,parent.next().find('textarea').val())
