@@ -44,7 +44,6 @@
             form.find('.login-feedback').html(data);
         };
         options.onComplete = function(data){
-            console.log(4444);
             form.find('button[type="submit"]:first').removeAttr('disabled');
         };
         window['dn_rpc_object'](options);
