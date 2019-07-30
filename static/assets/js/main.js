@@ -19,7 +19,7 @@ var dn_current_site_user = {
         localStorage.setItem('user', data);
         refreshSession();
         localStorage.setItem('last_activity', Date());
-        window['add_user_class']();
+        $('body').removeClass('public').addClass('user');
     },
     logout: function(navigate) {
         if(!dn_current_site_user.cookie)

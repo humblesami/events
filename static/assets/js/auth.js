@@ -23,7 +23,7 @@
                 var time_now = new Date();
                 last_activity = new Date(last_activity);
                 var diff = (time_now - last_activity) /1000;
-                console.log(last_activity.toString(), time_now.toDateString(), diff);
+                console.log('Time diff last activity', diff);
                 if(diff > 30)
                 {
                     go_to_login();
