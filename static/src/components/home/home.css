@@ -553,7 +553,6 @@ ul {list-style-type: none;}
     margin: 15px auto;
     border-radius: 20px;
     position:relative;
-    z-index:2;
 }
 .todoitembtn button:hover{
 	background-color: #4b74b5;
