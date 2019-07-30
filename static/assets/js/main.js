@@ -14,16 +14,12 @@ var dn_current_site_user = {
     socket: {},
     time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,    
     onLogin: function(data) {        
-        if (time_out_session) {
-            clearTimeout(time_out_session);
-        }
-        time_out_session = setTimeout(function() {
-            site_functions.go_to_login();
-        }, session_time_limit);
         dn_current_site_user.cookie = data;
         data = JSON.stringify(data);        
         localStorage.setItem('user', data);
-        $('body').removeClass('public').addClass('user');
+        refreshSession();
+        localStorage.setItem('last_activity', Date());
+        window['add_user_class']();
     },
     logout: function(navigate) {
         if(!dn_current_site_user.cookie)
@@ -114,8 +110,8 @@ var site_functions = {
         }
     },
     go_to_login: function() {
-        // console.trace();
-        // alert(444);
+        localStorage.removeItem('user');
+        $('body').removeClass('user').addClass('public');
         if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
         {
             dn_current_site_user.logout();            
@@ -317,7 +313,12 @@ function addMainEventListeners() {
     });
 
     $(document).on("mouseup touchend keyup", function(e) {        
-        handleSessionExpiry();        
+        refreshSession();
+        if(!site_functions.is_public_route())
+        {
+            localStorage.setItem('last_activity', Date());
+        }
+        
         site_functions.hideLoader('force','');
         var target = e.target;
         var showbtn = $(target).closest('.showmouseawaybutton');
@@ -443,17 +444,19 @@ window.addEventListener('message', function receiveMessage(evt) {
 }, false);
 
 
-function handleSessionExpiry() {
+function refreshSession() {
     if(is_local_host)
     {
         //return;
     }
-    clearTimeout(time_out_session);
+    if(time_out_session)
+    {
+        clearTimeout(time_out_session);
+    }
     time_out_session = setTimeout(function() {        
         site_functions.go_to_login();
     }, session_time_limit);
 }
-handleSessionExpiry();
 
 function check_if_touch_device() {
     var wl = window.location;
@@ -483,3 +486,4 @@ window["functions"] = site_functions;
 check_if_touch_device();
 addMainEventListeners();
 dn_current_site_user.initUserDataFromCookie();
+refreshSession();
