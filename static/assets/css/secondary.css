@@ -54,3 +54,7 @@ body.public #viewer_container{
     height: calc(100vh - 50px);
     overflow-y: auto;
 }
+.router-outlet
+{
+    padding-bottom: 30px;
+}
