@@ -15,7 +15,7 @@ function init_popup(config) {
                 
                 </div>
                 <div class="modal-footer">
-                    <span class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</span>    
+                    <span class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</span>
                 <button type="button" class="btn btn-default" id="close-btn">Close</button>
                 </div>
             </div>
@@ -44,12 +44,9 @@ function init_popup(config) {
         {
             config.on_load();
         }
-        $('#save-sig').click(function (e) {
-            
-        });
     };
 
-    $('#save-sig').click(function(){
+    $('#save-sig').click(function(){        
         if (config.on_save)
         {
             config.on_save();
