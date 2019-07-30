@@ -16,28 +16,29 @@
     <script>
         console.log(Date());
     </script>
+    <link rel="stylesheet" href="/static/assets/css/login-only.css" />
     <div class="router-outlet Login-form-wrapper">
-<!--        <span class="loginshape01"><img async class="img-fluid" src="/static/assets/images/loginshape-01.png" /> </span>-->
-<!--        <span class="loginshape02"><img async class="img-fluid" src="/static/assets/images/loginshape-02.png" /> </span>-->
-<!--        <span class="loginshape03"><img async class="img-fluid" src="/static/assets/images/loginshape-03.png" /> </span>-->
+        <span class="loginshape01"><img class="img-fluid" src_url="/static/assets/images/loginshape-01.png" /> </span>
+        <span class="loginshape02"><img class="img-fluid" src_url="/static/assets/images/loginshape-02.png" /> </span>
+        <span class="loginshape03"><img class="img-fluid" src_url="/static/assets/images/loginshape-03.png" /> </span>
         <div class="container">
             <div class="row d-flex justify-content-center align-items-center">
                 <div class="col-sm-10 col-md-5 col-xl-5">
                     <div class="login-form-div">
                         <form class="login-form">
                             <a href="/#/" class="login-logo">
-<!--                                <img async class="img-fluid" src="/static/assets/images/login-logo.png" />-->
+                                <img class="img-fluid" src_url="/static/assets/images/login-logo.png" />
                             </a>
                             <div class="member-login-box">
-<!--                                <img async src="/static/assets/images/member-icon.png" />-->
+                                <img src_url="/static/assets/images/member-icon.png" />
                                 <span>Member Login</span>
                             </div>
                             <div class="form-group input-label-icon">
-<!--                                <img async class="img-fluid user-icon" src="/static/assets/images/login-user.png" />-->
+                                <img class="img-fluid user-icon" src_url="/static/assets/images/login-user.png" />
                                 <input id="username" placeholder="Username" type="text" formControlName="username" class="form-control" />
                             </div>
                             <div class="form-group input-label-icon">
-                                <img async class="img-fluid" src="/static/assets/images/lock-icon.png" />
+                                <img class="img-fluid" src_url="/static/assets/images/lock-icon.png" />
                                 <input id="password" placeholder="Password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                             </div>
                             <div class="login-feedback"
@@ -53,7 +54,7 @@
                     </div>
                 </div>
                 <div class="col-md-7 text-center d-none d-md-block d-lg-block">
-<!--                    <img async class="img-key" src="/static/assets/images/login-vector.png" />-->
+                    <img class="img-key" src_url="/static/assets/images/login-vector.png" />
                 </div>
             </div>
         </div>
@@ -91,56 +92,7 @@
 	<script async type="text/javascript" src="/static/assets/js/json.js"></script>
     <script type="text/javascript" src="/static/assets/js/simple_ajax.js"></script>
     <script type="text/javascript" src="/static/assets/js/simple_ajax.js"></script>
-    <script>
-        (function(){            
-            $('.login-form:first input').keyup(function(){
-                $(this).find('.login-feedback').html('');
-            });
-            $('.login-form:first').submit(function(e){
-                e.preventDefault();
-                var form  = $(this);
-                form.find('button[type="submit"]:first').attr('disabled', 'disabled');
-                var input_data = {                    
-                    args:{
-                        app: 'authsignup',
-                        model: 'AuthUser',
-                        method: 'login_user',
-                    },
-                    params: {
-                        login: form.find('#username').val(),
-                        password: form.find('#password').val(),
-                    }
-                }
-                form.find('.login-feedback').html('');
-                var options = {
-                    url: '/rest/public',
-                    data: input_data
-                }
-                options.onSuccess = function(data){
-                    form.find('button[type="submit"]:first').removeAttr('disabled');
-                    if(data == 'done')
-                    {
-                        window.location = '/accounts/verify-auth-code';
-                    }
-                    else
-                    {
-                        dn_current_site_user.onLogin(data);
-                        window.location = "/";
-                    }
-                };
-                options.type = 'get';
-                options.onError = function(data){
-                    form.find('button[type="submit"]:first').removeAttr('disabled');
-                    form.find('.login-feedback').html(data);
-                };
-                options.onComplete = function(data){
-                    console.log(4444);
-                    form.find('button[type="submit"]:first').removeAttr('disabled');
-                };
-                window['dn_rpc_object'](options);
-            })
-        })()
-    </script>
+    <script type="text/javascript" src="/static/assets/js/login.js"></script>
     <script async type="text/javascript" src="/static/assets/js/main.js"></script>
     <script async type="text/javascript" src="/static/assets/js/datetime.js"></script>
 
@@ -151,7 +103,7 @@
 
 	<script async type="text/javascript" src="/static/assets/libs/js/jquery-ui.min.js"></script>
     <script async type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    
+
 	<script async src="/static/assets/libs/toggler/toggler.js"></script>
 	<script async type="text/javascript" src="/static/assets/libs/js/bootbox.js"></script>
 	<script async type="text/javascript" src="/static/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
@@ -162,7 +114,7 @@
     <link href="/static/assets/libs/toggler/toggler.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/assets/libs/select2/select2.css" />
     <link rel="stylesheet" href="/static/assets/libs/select2/default.theme.css" />
-    
+
     <script async type="text/javascript" src="/static/assets/libs/select2/select2.js"></script>
 
     <script async type="text/javascript" src="/static/assets/emoji/js/emoji-picker.js"></script>
@@ -172,7 +124,7 @@
 	<script async type="text/javascript" src="/static/assets/annotator/shared/pdf.viewer.js"></script>
 	<script async type="text/javascript" src="/static/assets/annotator/annotator.js"></script>
 
-	<script async type="text/javascript" src="/static/assets/js/custom_chart.js"></script>	
+	<script async type="text/javascript" src="/static/assets/js/custom_chart.js"></script>
     <script async type="text/javascript" src="/static/assets/js/custom_signature.js"></script>
 	<script async type="text/javascript" src="/static/assets/js/popup.js"></script>
 
