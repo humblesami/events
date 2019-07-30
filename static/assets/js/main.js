@@ -480,7 +480,12 @@ function check_if_touch_device() {
         return false; 
     }
 }
-
+$(function(){
+    if($('body').hasClass('user'))
+    {
+        localStorage.setItem('last_activity', Date());
+    }
+})
 window['current_user'] = dn_current_site_user;
 window["functions"] = site_functions;
 check_if_touch_device();

@@ -52,12 +52,12 @@
                         // console.log(error, public_route);
                         if(!error)
                         {
-                            localStorage.getItem('last_activity', Date());
+                            localStorage.setItem('last_activity', Date());
                             window['add_user_class']();
                         }
                         else{
                             go_to_login();
-                            return;                           
+                            return;
                         }
                     }
                 }
