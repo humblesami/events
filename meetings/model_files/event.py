@@ -398,6 +398,37 @@ class Event(models.Model):
         return 'Something went wrong while updating meeting publish status'
 
 
+    @classmethod
+    def get_roster_details(cls, request, params):
+        meeting_id = params['meeting_id']
+        offset = params['offset']
+        limit = params['limit']
+        meeting_obj = Event.objects.get(pk=meeting_id)
+        data = {
+            'attendees': [],
+            'total': 0
+        }
+        attendees_list = []
+        if meeting_obj:
+            attendees = meeting_obj.attendees.all()
+            total = len(attendees)
+            attendees = attendees[offset: offset+limit]
+            for attendee in attendees:
+                attendee_data = ws_methods.obj_to_dict(
+                    attendee, 
+                    fields=['id', 'name', 'email', 'mobile_phone', 'company'],
+                    related={
+                        'invitation_response_set': {'fields': 'attendance'}
+                    })
+                attendee_data['attendance'] = attendee_data['invitation_response_set'][0]['attendance']
+                del attendee_data['invitation_response_set']
+                attendees_list.append(attendee_data)
+            data['attendees'] = attendees_list
+            data['total'] = total
+        return data
+            
+
+
     def response_invitation_email(self, audience, action=None):
         state_selection = []
         for state in STATE_SELECTION:
