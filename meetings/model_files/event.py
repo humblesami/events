@@ -162,7 +162,28 @@ class Event(models.Model):
 
         pending_meetings = cls.get_meeting_summaries(meetings, uid)
         return pending_meetings
+ 
 
+    # working on meeting attendees attendance
+    @classmethod
+    def mark_attendance(cls, request, params):                 
+        meeting_id = params.get('meeting_id')
+        attendances = params.get('attendance_data')
+        if not meeting_id:
+            meeting_id = 4
+        if not attendances:
+            attendances = [{'id':1, 'attendance':'inperson'},{'id':2, 'attendance':'online'},{'id':4, 'attendance':'inperson'}]
+        for atten in attendances:
+            check_meeting = Invitation_Response.objects.filter(event_id = meeting_id , attendee= atten['id'])
+            if check_meeting:
+                check_meeting[0].attendance = atten['attendance']
+                check_meeting[0].save()
+            else:
+                return 'Error'
+        
+        return 'Done'
+
+    
     @classmethod
     def respond_invitation(cls, request, params):
         meeting_id = params['meeting_id']

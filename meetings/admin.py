@@ -9,7 +9,7 @@ from meetings.model_files.committee import Committee
 from meetings.model_files.user import Profile,MeetingGroup
 from django.views.decorators.debug import sensitive_post_parameters
 from meetings.model_files.document import MeetingDocument,AgendaDocument
-from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument
+from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument, Invitation_Response
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
@@ -147,6 +147,8 @@ class SignDocumentForm(SignatureDocForm):
         form = super(SignDocumentForm, self).get_form(request, obj, **kwargs)
         return form
 
+class AttendeeAdmin(admin.ModelAdmin):    
+    list_display= ('event', 'attendee', 'state', 'attendance')
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event,EventAdmin)
@@ -157,4 +159,5 @@ admin.site.register(Profile,UserAdmin)
 admin.site.register(MeetingGroup,MeetingGroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
 admin.site.register(SignDocument, SignDocumentForm)
+admin.site.register(Invitation_Response, AttendeeAdmin)
 admin.site.site_header = "BoardSheet"
