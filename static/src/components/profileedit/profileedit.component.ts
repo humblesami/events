@@ -562,6 +562,10 @@ export class ProfileeditComponent implements OnInit {
 			{
 				obj_this.setting_two_factor_auth();
 			}
+			else
+			{
+				this.modified_profile_data['two_factor_auth'] = obj_this.selectedTwoFactorAuth['id'];
+			}
         }
         else
         {
