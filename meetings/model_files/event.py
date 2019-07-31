@@ -453,18 +453,21 @@ class Event(models.Model):
     def search_roster(cls, request, params):
         key_word = params['key_word']
         meeting_id = params['meeting_id']
+        offset = params['offset']
+        limit = params['limit']
         data = {
             'attendees': [],
             'total': 0
         }
-        attendees = Profile.objects.filter(
-        Q(meetings__id=meeting_id) & (
+        meeting_obj = Event.objects.get(pk=meeting_id)
+        attendees = meeting_obj.attendees
+        attendees = attendees.filter(
             Q(name__contains=key_word) |
             Q(email__contains=key_word) |
             Q(mobile_phone__contains=key_word) |
             Q(company__contains=key_word) |
             Q(invitation_response__attendance__contains=key_word)
-        )).distinct()
+        ).distinct()
         if attendees:
             total = len(attendees)
             attendees_list = []
