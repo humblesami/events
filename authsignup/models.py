@@ -8,9 +8,13 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
 from meetings.model_files.user import Profile
 from restoken.models import PostUserToken
-
-
 from mainapp.settings import AUTH_SERVER_URL
+
+
+class DualAuth(models.Model):
+    uuid = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 # Create your models here.
 class AuthUser(models.Model):
@@ -21,14 +25,15 @@ class AuthUser(models.Model):
         auth_code = params.get('auth_code')
         user = None
         if auth_code:
-            uuid = request.session.get('uuid')
+            uuid = params.get('uuid')
             if not uuid:
                 return {'error': 'No request id found'}
             url = AUTH_SERVER_URL + '/auth-code/verify?code=' + auth_code + '&uuid=' + uuid
             res = ws_methods.http_request(url)
             if res != 'ok':
                 return {'error': res}
-            user = request.user
+            dual_auth = DualAuth.objects.get(uuid=uuid)
+            user = dual_auth.user
         else:
             user = authenticate(request, username=username, password=password)
             if user and user.id:
@@ -43,24 +48,33 @@ class AuthUser(models.Model):
                 referer_address = request.META['HTTP_REFERER']
                 if not referer_address.endswith('localhost:4200/'):
                     auth_type = auth_type.lower()
-                    auth_data = '&address='
+                    address_to_send_code = ''
                     if auth_type == 'phone':
                         if not user.mobile_phone:
                             return 'User phone does not exist to send code, please ask admin to set it for you'
-                        auth_data = 'auth_type='+ auth_type + auth_data + user.mobile_phone
+                        address_to_send_code = user.mobile_phone
                     else:
                         if not user.email:
                             return 'User email does not exist to send code, please ask admin to set it for you'
-                        auth_data = 'auth_type='+ auth_type + auth_data + user.email
+                        address_to_send_code = user.email
+
+                    if not address_to_send_code:
+                        return 'No address given to send code'
+                    auth_data = 'auth_type=' + auth_type + '&address=' + address_to_send_code
                     url = AUTH_SERVER_URL + '/auth-code/generate?' + auth_data
                     res = ws_methods.http_request(url)
                     try:
                         res = json.loads(res)
-                        request.session['uuid'] = res['uuid']
-                        request.session['username'] = user.username
-                        return 'done'
+                        res['address'] = address_to_send_code[:2]+'****'+address_to_send_code[-2:]
+                        res['auth_type'] = auth_type
+                        dual_auth = DualAuth(
+                            user_id = user.id,
+                            uuid = res['uuid']
+                        )
+                        dual_auth.save()
                     except:
                         return res
+                    return res
         if user and user.id:
             name = ''
             try:

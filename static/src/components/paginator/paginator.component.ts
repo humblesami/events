@@ -10,6 +10,8 @@ export class PaginatorComponent implements OnInit {
 
     off_set = 0;
     limit = 10;
+    total_records = 0;
+    count = 0;
     limit_options = [
         10,
         20,

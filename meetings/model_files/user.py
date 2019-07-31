@@ -10,10 +10,16 @@ from mainapp.settings import AUTH_SERVER_URL
 from mainapp.settings import server_base_url
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
+from django.core.exceptions import ValidationError
 from meetings.model_files.committee import Committee
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
+
+TWO_FACTOR_CHOICES = (
+    (1, _("Email")),
+    (2, _("Phone"))
+)
 
 
 GENDER_CHOICES = (
@@ -42,10 +48,6 @@ ETHINICITY_CHOICES = (
     (6, _("White")),
     (7, _("Two or more races")),
     (8, _("I decline to answer"))
-)
-TWO_FACTOR_CHOICES = (
-    (1, _("Email")),
-    (2, _("Phone"))
 )
 
 from django.apps import apps
@@ -173,6 +175,9 @@ class Profile(user_model):
 
     def save(self, *args, **kwargs):
         creating = False
+        if self.two_factor_auth and self.two_factor_auth == 2 and not self.mobile_verified:
+            return
+            # raise ValidationError('Phone needs to be verified')
         if not self.pk:
             creating = True
             self.username = self.email

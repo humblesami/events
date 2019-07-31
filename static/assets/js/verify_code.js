@@ -1,14 +1,14 @@
 (function(){
-    $('.Login-form-wrapper img').each(function(i, el){
-        $(el).attr('src', $(el).attr('src_url'));
-    });
-
     $('.login-form:first input').keyup(function(){
         $(this).find('.login-feedback').html('');
-    });
-    var form  = $('.login-form:first');
-    form.submit(function(e){
+    });    
+    var auth_code_data = localStorage.getItem('auth_code_data');
+    auth_code_data = JSON.parse(auth_code_data);
+    var auth_code_message = 'Please check your '+auth_code_data.auth_type+' to get latest verification code just received';
+    $('.auth_code_message').html(auth_code_message);
+    $('.login-form:first').submit(function(e){
         e.preventDefault();
+        var form  = $(this);
         form.find('button[type="submit"]:first').attr('disabled', 'disabled');
         var input_data = {
             args:{
@@ -17,8 +17,8 @@
                 method: 'login_user',
             },
             params: {
-                login: form.find('#username').val(),
-                password: form.find('#password').val(),
+                auth_code: form.find('#auth_code').val(),
+                uuid: auth_code_data.uuid
             }
         }
         form.find('.login-feedback').html('');
@@ -28,16 +28,16 @@
         }
         options.onSuccess = function(data){
             form.find('button[type="submit"]:first').removeAttr('disabled');
-            // console.log(data);
-            if(data.uuid && data.auth_type && data.status)
-            {            
-                data = JSON.stringify(data);
-                localStorage.setItem('auth_code_data', data);            
-                window.location = '/accounts/verify-auth-code';
+            dn_current_site_user.onLogin(data);
+            var return_url = new URL(window.location.toString());
+            return_url = return_url.searchParams.get("next");
+            console.log(return_url);
+            if(return_url)
+            {
+                window.location = return_url;
             }
             else
             {
-                dn_current_site_user.onLogin(data);
                 window.location = "/";
             }
         };
@@ -47,9 +47,9 @@
             form.find('.login-feedback').html(data);
         };
         options.onComplete = function(data){
+            console.log(4444);
             form.find('button[type="submit"]:first').removeAttr('disabled');
         };
         window['dn_rpc_object'](options);
-    });
-    form.find('button[type="submit"]:first').removeAttr('disabled');
+    })
 })()

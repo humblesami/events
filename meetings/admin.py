@@ -77,7 +77,7 @@ class EventAdmin(nested_admin.NestedModelAdmin):
 class UserForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields=('email', 'first_name', 'last_name', 'mobile_phone')
+        fields= ('email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth')
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
@@ -89,13 +89,9 @@ class UserForm(forms.ModelForm):
 class UserAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     form = UserForm
-    email = forms.EmailField(required=True)
-    fields = ('email', 'first_name', 'last_name', 'mobile_phone', 'groups')
-
+    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth')
     class Media:
         js=('admin/js/set_group_in_user_creation.js',)
-
-
 
 class MeetingGroupAdmin(GroupAdmin):
 

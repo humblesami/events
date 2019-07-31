@@ -19,14 +19,14 @@ def forgot_password(request):
     context = {}
     return render(request, 'password_reset.html', context)
 
-def verify_code(request):
+def load_verify_code_page(request):
     context = {}
-    username = request.session.get('username')
-    if username:
-        del request.session['username']
-        user = Profile.objects.get(username=username)
-        auth_type = user.get_two_factor_auth_display()
-        context = {'message': 'Please check your '+auth_type+' to get latest verification code just received'}
+    # username = request.session.get('username')
+    # if username:
+    #     del request.session['username']
+    #     user = Profile.objects.get(username=username)
+    #     auth_type = user.get_two_factor_auth_display()
+    #     context = {'message': 'Please check your '+auth_type+' to get latest verification code just received'}
     return render(request, 'verify_code.html', context)
 
 @csrf_exempt

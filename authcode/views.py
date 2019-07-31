@@ -4,8 +4,8 @@ from django.utils.crypto import get_random_string
 from .models import TwoFactorAuthenticate, ThreadEmail
 from signalwire.rest import Client as signalwire_client
 
-def generate_code(request):
 
+def generate_code(request):
     req = request.GET
     address = req.get('address')
     auth_type = req.get('auth_type')
@@ -34,12 +34,11 @@ def generate_code(request):
         send_sms(code)
         auth_code_object = TwoFactorAuthenticate(code=code, uuid=uuid, phone=address, auth_type=auth_type)
         auth_code_object.save()
-    
+
     context = {
         'uuid': uuid,
         'status': 'ok',
-        }
-
+    }
     context = json.dumps(context)
     return HttpResponse(context)
 

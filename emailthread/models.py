@@ -7,7 +7,8 @@ from restoken.models import PostUserToken
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 
-def produce_exception(msg):
+
+def produce_exception(msg=None):
     if not msg:
         eg = traceback.format_exception(*sys.exc_info())
         errorMessage = ''
@@ -19,7 +20,11 @@ def produce_exception(msg):
     else:
         errorMessage = msg
     try:
-        with open('error_log.txt', "a+") as f:
+        dir = os.path.dirname(os.path.realpath(__file__))
+        ar = dir.split('/')
+        ar = ar[:-1]
+        dir = ('/').join(ar)
+        with open(dir+'/error_log.txt', "a+") as f:
             f.write(errorMessage + '\n')
     except:
         try:
@@ -38,7 +43,6 @@ def produce_exception(msg):
                 if not 'lib/python' in er:
                     errorMessage += " " + er
             return errorMessage
-
 
 
 class EmailThread(threading.Thread):

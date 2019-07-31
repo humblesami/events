@@ -45,8 +45,6 @@ def produce_exception(msg=None):
             return errorMessage
 
 
-
-
 class TwoFactorAuthenticate(models.Model):
     code = models.CharField(max_length=10)
     uuid = models.CharField(max_length=10)
@@ -57,8 +55,6 @@ class TwoFactorAuthenticate(models.Model):
 
 def __str__(self):
     return self.code
-
-
 
 
 class ThreadEmail(threading.Thread):

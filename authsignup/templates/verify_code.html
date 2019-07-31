@@ -34,7 +34,7 @@
                             <div class="member-login-box">
                                 <img async src="/static/assets/images/member-icon.png" />
                                 <span>Enter Your Varification Code</span>
-                                <span>{{message}}</span>
+                                <span class="auth_code_message"></span>
                             </div>
                             <div class="form-group input-label-icon">
                                 <img async class="img-fluid" src="/static/assets/images/lock-icon.png" />
@@ -78,58 +78,7 @@
 
 	<script async type="text/javascript" src="/static/assets/js/json.js"></script>
     <script type="text/javascript" src="/static/assets/js/simple_ajax.js"></script>
-    <script>
-        (function(){
-            $('.login-form:first input').keyup(function(){
-                $(this).find('.login-feedback').html('');
-            });
-            $('.login-form:first').submit(function(e){
-                e.preventDefault();
-                var form  = $(this);
-                form.find('button[type="submit"]:first').attr('disabled', 'disabled');
-                var input_data = {
-                    args:{
-                        app: 'authsignup',
-                        model: 'AuthUser',
-                        method: 'login_user',
-                    },
-                    params: {
-                        auth_code: form.find('#auth_code').val(),
-                    }
-                }
-                form.find('.login-feedback').html('');
-                var options = {
-                    url: '/rest/public',
-                    data: input_data
-                }
-                options.onSuccess = function(data){
-                    form.find('button[type="submit"]:first').removeAttr('disabled');
-                    dn_current_site_user.onLogin(data);
-                    var return_url = new URL(window.location.toString());
-                    return_url = return_url.searchParams.get("next");
-                    console.log(return_url);
-                    if(return_url)
-                    {
-                        window.location = return_url;
-                    }
-                    else
-                    {
-                        window.location = "/";
-                    }
-                };
-                options.type = 'get';
-                options.onError = function(data){
-                    form.find('button[type="submit"]:first').removeAttr('disabled');
-                    form.find('.login-feedback').html(data);
-                };
-                options.onComplete = function(data){
-                    console.log(4444);
-                    form.find('button[type="submit"]:first').removeAttr('disabled');
-                };
-                window['dn_rpc_object'](options);
-            })
-        })()
-    </script>
+    <script type="text/javascript" src="/static/assets/js/verify_code.js"></script>
     <script async type="text/javascript" src="/static/assets/js/main.js"></script>
     <script async type="text/javascript" src="/static/assets/js/datetime.js"></script>
 
