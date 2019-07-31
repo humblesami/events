@@ -13,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Survey(models.Model):
-
     name = models.CharField(_("Name"), max_length=400)
     open_date = models.DateTimeField(auto_now_add=True)
     close_date = models.DateTimeField(auto_now_add=True)
@@ -34,9 +33,7 @@ class Survey(models.Model):
         verbose_name = _("survey")
         verbose_name_plural = _("surveys")
 
-
     previous_respondents = []
-
 
     def __str__(self):
         return self.name
@@ -55,12 +52,12 @@ class Survey(models.Model):
             super(Survey, self).save(*args, **kwargs)
             if create:
                 new_added_respondets = self.get_audience()
-            
+
             if new_added_respondets:
                 self.send_email_on_save(new_added_respondets)
         except:
             raise
-    
+
     def get_audience(self):
         res = []
         if self.meeting:
@@ -146,7 +143,9 @@ class Survey(models.Model):
                 'is_published': survey.is_published,
                 'is_attempted': attempted,
                 'meeting': meeting,
-                'is_respondent': request.user.id in survey.get_audience()
+                'is_respondent': request.user.id in survey.get_audience(),
+                'open_date': str(survey.open_date),
+                'close_date': str(survey.close_date),
             })
         surveys_json = {'records': surveys, 'total': 0, 'count': 0}
         return surveys_json
@@ -326,14 +325,13 @@ class Survey(models.Model):
         except:
             return 'Something went wrong while getting survey results.'
         pass
-    
 
     def send_email_on_save(self, audience, action=None):
         token_required = False
-        template_data = {            
-            'id': self.id, 
+        template_data = {
+            'id': self.id,
             'name': self.name,
-            'server_base_url': server_base_url                
+            'server_base_url': server_base_url
         }
         post_info = {}
         post_info['res_app'] = self._meta.app_label

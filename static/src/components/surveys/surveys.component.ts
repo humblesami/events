@@ -67,12 +67,12 @@ export class SurveysComponent implements OnInit {
         let input_data = { meeting_type: flag, paging : {offset: 0, limit: 10}};
         var success_cb = function (result) {
             // console.log(result)
-            // for(var i in result.records)
-            // {
-            //     var open_date = result.records[i]['open_date'];
-            //     open_date= window['functions'].meeting_time(open_date);
-            //     result.records[i]['open_date'] = open_date;
-            // }
+            for(var i in result.records)
+            {
+                var open_date = result.records[i]['open_date'];
+                open_date= window['functions'].meeting_time(open_date);
+                result.records[i]['open_date'] = open_date;
+            }
             obj_this.survey_data = result.records;
             obj_this.httpService.total_records = result.total;
             obj_this.survey_data.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;

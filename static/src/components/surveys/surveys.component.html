@@ -36,25 +36,25 @@ title="Surveys"></app-breadcrumb>
             <div class="col-sm-6 col-md-4 mb-4" *ngFor="let survey of survey_data">
                 <div class="kanban-card">
                     <div class="kanban-meeting-info">
-                        <div class="kanban-upcoming-meeting" routerLink="/survey/{{survey.id}}">                                                        
+                        <div class="kanban-upcoming-meeting" routerLink="/survey/{{survey.id}}">
                             <div *ngIf="survey.open_date" class="CalendarDateWrapper">
                                 <span class="CalendarDateWrap">
                                     <span class="kanban-upcoming-meeting-date">
-                                        11 {{survey.open_date.day}} 11
+                                        {{survey.open_date.day}}
                                     </span>
                                         <span>
-                                        22 {{survey.open_date.month_year}} 22
+                                        {{survey.open_date.month_year}}
                                     </span>
                                     <span>
-                                        33 {{survey.open_date.time}} 33
+                                        {{survey.open_date.time}}
                                     </span>
                                 </span>
                             </div>
                             <div class="Info">
-                                <p *ngIf="survey.name">
+                                <p class="text-truncate" *ngIf="survey.name">
                                     <b>{{survey.name}}</b>
                                 </p>
-                                <span *ngIf="!survey.meeting.name && survey.description">
+                                <span class=" text-truncate" *ngIf="survey.description">
                                     Description: {{survey.description}}
                                 </span>
                                 <span *ngIf="survey.meeting && survey.meeting.name">

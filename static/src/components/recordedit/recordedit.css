@@ -1,6 +1,5 @@
 #record_edit_iframe{
 	width:100%;
 	border: 0;
-	margin-top: -5px;
-    height: calc(100vh - 115px);
+    height: calc(100vh - 121px);
 }
