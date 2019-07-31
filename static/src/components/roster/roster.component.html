@@ -1,6 +1,49 @@
-<div class="router-outlet">    
-    <app-paginator 
+<div class="router-outlet">
+    <table class="roster">
+        <thead>
+            <tr>
+                <th>Attendee</th>
+                <th>Absent</th>
+                <th>InPerson</th>
+                <th>Online</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let obj of attendees">
+                <td>
+                    <img src="{{server_url}}{{obj.photo}}" />
+                    {{obj.name}}                    
+                </td>                
+                <td>
+                    <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" />                    
+                    <input *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
+                    <input type="hidden" value="absent" />
+                    <input type="hidden" value="{{obj.id}}" />
+                </td>
+                <td>
+                    <input *ngIf="obj.attendance=='inperson'" checked type="radio" name="{{obj.id}}" />
+                    <input *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
+                    <input type="hidden" value="inperson" />
+                    <input type="hidden" value="{{obj.id}}" />
+                </td>
+                <td>
+                    <input *ngIf="obj.attendance=='online'" checked type="radio" name="{{obj.id}}" />
+                    <input *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
+                    <input type="hidden" value="online" />
+                    <input type="hidden" value="{{obj.id}}" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h3>Total attendees: {{total_records}}</h3>
+    <button (click)="submit_attendance()">Submit Attendance</button>
+    <style>
+        table.roster td, table.roster th{
+            border: 1px solid;
+        }
+    </style>
+    <app-paginator *ngIf="attendees && attendees.length > 0"
         (changedLimit)=changedLimit($event)
-        (changedOffset)="changedOffset($event)" total_records="total_records" offset="offset"></app-paginator>
-    <button (click)="show_offset()" class="btn btn-primary">Click Me!</button>
+        (changedOffset)="changedOffset($event)" count="{{count}}" total="{{total_records}}" 
+        offset="{{offset}}"></app-paginator>    
 </div>

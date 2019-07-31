@@ -7,15 +7,15 @@ import { HttpService } from '../../app/http.service';
     templateUrl: './paginator.component.html'
 })
 export class PaginatorComponent implements OnInit {
-    @Input() off_set: number;
-    @Input() total_records: number;
+    @Input() offset: number;
+    @Input() count: number
+    @Input() total: number;
     @Output() changedOffset: EventEmitter<number> =   new EventEmitter();
     @Output() changedLimit: EventEmitter<number> = new EventEmitter()
-    limit = 10;
-    count = 0;
+    limit = 2;
     limit_options = [
+        2,
         10,
-        20,
         50,
         100
     ]
@@ -25,18 +25,24 @@ export class PaginatorComponent implements OnInit {
         this.httpService = httpServ;
     }
 
-    change_page(change){
+    change_page(change: number){
+        this.offset = this.offset + change * this.limit;
+        console.log(this.offset, change, this.limit)
+        if(this.offset < 0)
+        {
+            this.offset = 0;
+        }
+        if(this.offset + this.limit > this.total)
+        {
+            return;
+        }
         if(isNaN(change))
         {
             change = 3;
         }
-        this.off_set += Number(change);
-        this.off_set < 0 ? this.off_set = 0 : this.off_set;
-        this.httpService.fetch_paged_data(Number(this.off_set), Number(this.limit));
-        this.changedOffset.emit(Number(this.off_set));
+        this.changedOffset.emit(this.offset);
     }
-    change_limit() {
-        this.httpService.fetch_paged_data(Number(this.off_set), Number(this.limit));
+    change_offset() {        
         this.changedLimit.emit(Number(this.limit))
     }
 
