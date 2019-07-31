@@ -3,6 +3,13 @@
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/actions/surveys"}, {"title":"{{surveyDetails.name}}", "link":"/survey/{{surveyDetails.id}}"}]'
 title="Results"></app-breadcrumb>
 <div class="router-outlet">
+<div class="row d-flex justify-content-between mb-3">
+    <div class="col">
+        <div class="survey-top-buttons">
+            <a *ngIf="surveyDetails && surveyDetails.is_respondent && surveyDetails.is_open" id="{{surveyDetails.id}}" class="btn btn-primary" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Reattempt Survey</a>
+        </div>
+    </div>
+</div>
 
   <div class="container" *ngIf="surveyDetails">
 	  <div class="MainTitleHeadWrap">

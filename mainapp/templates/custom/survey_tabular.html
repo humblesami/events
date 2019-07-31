@@ -92,13 +92,13 @@ function on_add_choice_click(el){
   config = {
   on_load: function(){
       $(document).ready(function(){
-        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input" placeholder="Pres Enter to Add your choices"/><button class="btn btn-primary">Add Choice</button>');
+        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input" placeholder="Pres Enter to Add your choices"/>');
         $('.tag_input').tagsInput({
           placeholder: 'Type your choice and press enter to add it.'
         });
-      })
+      });
     },
-    on_save:function(){
+    on_close:function(){
       let choices = $('.tag_input').val()
       choices_list = choices_to_list(choices);
       let parent = $(element).parent();
@@ -162,6 +162,9 @@ function on_add_choice_click(el){
       parent.append(add_choices_btn);
       add_choices_btn.click(on_add_choice_click);
       append_choices(parent,parent.next().find('textarea').val())
+      setTimeout(() => {
+        $('.add_choices_btn').click();
+      }, 100);
     }
     else
     {

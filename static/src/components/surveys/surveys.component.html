@@ -54,9 +54,20 @@ title="Surveys"></app-breadcrumb>
                                 <p *ngIf="survey.name">
                                     <b>{{survey.name}}</b>
                                 </p>
-                                <span *ngIf="survey.description">
+                                <span *ngIf="!survey.meeting.name && survey.description">
                                     Description: {{survey.description}}
                                 </span>
+                                <span *ngIf="survey.meeting && survey.meeting.name">
+                                    Meeting: {{survey.meeting.name}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-between mb-3" *ngIf="survey.is_published">
+                            <div class="col">
+                                <div class="survey-top-buttons" id="tdmrb{{survey.id}}">
+                                    <a *ngIf="survey && survey.is_respondent && !survey.is_attempted" id="{{survey.id}}" class="btn btn-primary" routerLink='/survey/survey/details/{{survey.id}}'>Start Survey</a>
+                                    <a *ngIf="survey && survey.is_attempted" id="{{survey.id+survey.name}}" class="btn btn-primary" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
+                                </div>
                             </div>
                         </div>
                     </div>

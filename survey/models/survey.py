@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import pytz
 from django.db import models
 from ast import literal_eval
 from django.db.models import Q
@@ -131,10 +132,21 @@ class Survey(models.Model):
                     |
                     Q(respondents__id=uid))
         for survey in survey_obj:
+            attempted = False
+            question_answered = survey.questions.filter(answers__isnull=False, answers__response__user__id=uid)
+            if question_answered:
+                attempted = True
+            meeting = {}
+            if survey.meeting:
+                meeting = {'id': survey.meeting.id, 'name': survey.meeting.name}
             surveys.append({
                 'id': survey.id,
                 'name': survey.name,
-                'description': survey.description
+                'description': survey.description,
+                'is_published': survey.is_published,
+                'is_attempted': attempted,
+                'meeting': meeting,
+                'is_respondent': request.user.id in survey.get_audience()
             })
         surveys_json = {'records': surveys, 'total': 0, 'count': 0}
         return surveys_json
@@ -227,10 +239,18 @@ class Survey(models.Model):
             #         Q(respondents__id=uid), pk=survey_id)
             if survey:
                 survey = survey[0]
+                is_open = False
+                utc=pytz.UTC
+                now = datetime.datetime.now().replace(tzinfo=utc)
+                survey.close_date = survey.close_date.replace(tzinfo=utc)
+                if survey.close_date > now:
+                    is_open = True
                 survey_results = {
                     'id': survey.id,
                     'name': survey.name,
                     'questions': [],
+                    'is_open': is_open,
+                    'is_respondent': request.user.id in survey.get_audience(),
                     'progess_data': []
                 }
                 questions = survey.questions.all()
