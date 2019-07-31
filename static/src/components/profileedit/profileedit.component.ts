@@ -237,8 +237,7 @@ export class ProfileeditComponent implements OnInit {
 	{
 		let obj_this = this;
 		let mail_to_assistant = $('#mail-to-assistant').prop('checked');
-		obj_this.modified_profile_data['mail_to_assistant'] = mail_to_assistant;
-		this.setTowFactorAuth();
+		obj_this.modified_profile_data['mail_to_assistant'] = mail_to_assistant;		
 	}
 
 	update_image()
@@ -289,8 +288,6 @@ export class ProfileeditComponent implements OnInit {
 		this.modified_profile_data['mobile_phone'] = val;
 		this.profile_data.mobile_phone = val;
 		this.profile_data.mobile_verified = false;
-		this.setting_two_factor_auth();
-		
 	}
 
 	onSubmit() {
@@ -461,8 +458,8 @@ export class ProfileeditComponent implements OnInit {
         {
             this.modified_profile_data['committees'] = 'removed_all';
         }
-	}
-
+    }
+    verification_id: string;
 
 	setting_two_factor_auth()
 	{
@@ -474,83 +471,63 @@ export class ProfileeditComponent implements OnInit {
 			return;
 		}
 		let args = {
-			app: 'meetings',
-			model: 'Profile',
+			app: 'authsignup',
+			model: 'AuthUser',
 			method: 'send_mobile_verfication_code'
 		}
 		let final_input_data = {
 			params: {mobile_phone: obj_this.profile_data.mobile_phone},
 			args: args
-		}
-		obj_this.httpService.get(final_input_data,null, null);
-		let config = {
-			on_load: function(){
-				$(document).ready(function(){
-					$('#signModal .modal-body').html(`
-					<input type="text" name="verification_code" id="verification_code"
-					placeholder="Please Enter Mobile Verification Code"
-					class="form-control verification-code" required/>
-					<small style="display: none;" id="code-error" class="text-danger">
-						You can not select tow factor authentication type phone untill you verify your phone number
-					</small>
-					`);
-					setTimeout(() => {
-						$('#verification_code').keyup(function(e){
-							if(e.keyCode == 13)
-							{
-								$('#save-sig').click();
-							}
-							if(!$(this).val())
-							{
-								$('#code-error').show()
-								$('#code-error').text('Please Provide a verification code.');
-							}
-							else
-							{
-								$('#code-error').hide();
-							}
-						});
-					}, 100);
-				});
-			},
-			on_save:function(){						
-				obj_this.mobile_verification_code = $('#verification_code').val();
-				if(!obj_this.mobile_verification_code)
-				{
-					obj_this.selectedTwoFactorAuth = [];
-					$('#code-error').show();
-				}
-				else
-				{
-					let input_data = {
-						verification_code: obj_this.mobile_verification_code,
-					}
-					let args = {
-						app: 'meetings',
-						model: 'Profile',
-						method: 'authenticate_mobile'
-					}
-					let final_input_data = {
-						params: input_data,
-						args: args
-					}
-					obj_this.httpService.get(final_input_data, function(data){
-						$('#code-error').hide();
-						obj_this.modified_profile_data['two_factor_auth'] = obj_this.selectedTwoFactorAuth['id'];
-						obj_this.modified_profile_data['mobile_verified'] = true;
-						$('#signModal').modal('hide');
-					},function(err){
-						$('#code-error').show()
-						$('#code-error').text(err);
-					});
-				}
-			},
-			on_close: function(){
-				obj_this.selectedTwoFactorAuth = obj_this.profile_data.two_factor_auth;
-				obj_this.selectedTwoFactorAuth = [];
-			}
-		}
-		window['init_popup'](config);
+        }
+        console.log(final_input_data);
+		obj_this.httpService.get(final_input_data,function(data){            
+            obj_this.verification_id = data.uuid;
+
+            let config = {
+                on_load: function(){
+                    obj_this.load_verification_popup();
+                },
+                on_save:function(){						
+                    obj_this.mobile_verification_code = $('#verification_code').val();
+                    if(!obj_this.mobile_verification_code)
+                    {
+                        obj_this.selectedTwoFactorAuth = [];
+                        $('#code-error').show();
+                    }
+                    else
+                    {
+                        let input_data = {
+                            uuid: obj_this.verification_id,
+                            verification_code: obj_this.mobile_verification_code,
+                        }
+                        let args = {
+                            app: 'authsignup',
+                            model: 'AuthUser',
+                            method: 'authenticate_mobile'
+                        }
+                        let final_input_data = {
+                            params: input_data,
+                            args: args
+                        }
+                        obj_this.httpService.get(final_input_data, function(data){
+                            $('#code-error').hide();
+                            obj_this.modified_profile_data['two_factor_auth'] = obj_this.selectedTwoFactorAuth['id'];
+                            obj_this.modified_profile_data['mobile_verified'] = true;
+                            $('#signModal').modal('hide');
+                        },function(err){
+                            $('#code-error').show()
+                            $('#code-error').text(err);
+                        });
+                    }
+                },
+                on_close: function(){
+                    obj_this.selectedTwoFactorAuth = obj_this.profile_data.two_factor_auth;
+                    obj_this.selectedTwoFactorAuth = [];
+                }
+            }
+            window['init_popup'](config);
+
+        }, null);		
 	}
 
 	setTowFactorAuth()
@@ -571,8 +548,36 @@ export class ProfileeditComponent implements OnInit {
         {
             this.modified_profile_data['two_factor_auth'] = null;
         }
-	}
-
+    }
+    
+    load_verification_popup(){
+        setTimeout(function(){
+            $('#signModal .modal-body').html(`
+                <input type="text" name="verification_code" id="verification_code"
+                placeholder="Please Enter Mobile Verification Code"
+                class="form-control verification-code" required/>
+                <small style="display: none;" id="code-error" class="text-danger">
+                    You can not select tow factor authentication type phone untill you verify your phone number
+                </small>
+            `);
+            $('#verification_code').keyup(function(e){
+                if(e.keyCode == 13)
+                {
+                    $('#save-sig').click();
+                }
+                if(!$(this).val())
+                {
+                    $('#code-error').show()
+                    $('#code-error').text('Please Provide a verification code.');
+                }
+                else
+                {
+                    $('#code-error').hide();
+                }
+            });
+        }, 100)        
+        
+    }
 	
 	ngOnInit(){
 		if (this.edit_info)
@@ -580,6 +585,6 @@ export class ProfileeditComponent implements OnInit {
 			this.section = this.edit_info.section;
 			this.user_id = this.edit_info.user_id;
 			this.get_data()
-		}		
+        }            
 	}	
 }

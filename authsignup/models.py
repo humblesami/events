@@ -26,14 +26,10 @@ class AuthUser(models.Model):
         user = None
         if auth_code:
             uuid = params.get('uuid')
-            if not uuid:
-                return {'error': 'No request id found'}
-            url = AUTH_SERVER_URL + '/auth-code/verify?code=' + auth_code + '&uuid=' + uuid
-            res = ws_methods.http_request(url)
-            if res != 'ok':
-                return {'error': res}
-            dual_auth = DualAuth.objects.get(uuid=uuid)
-            user = dual_auth.user
+            res = cls.verify_code(uuid, auth_code)
+            if type(res) is str:
+                return res
+            user = res
         else:
             user = authenticate(request, username=username, password=password)
             if user and user.id:
@@ -57,23 +53,7 @@ class AuthUser(models.Model):
                         if not user.email:
                             return 'User email does not exist to send code, please ask admin to set it for you'
                         address_to_send_code = user.email
-
-                    if not address_to_send_code:
-                        return 'No address given to send code'
-                    auth_data = 'auth_type=' + auth_type + '&address=' + address_to_send_code
-                    url = AUTH_SERVER_URL + '/auth-code/generate?' + auth_data
-                    res = ws_methods.http_request(url)
-                    try:
-                        res = json.loads(res)
-                        res['address'] = address_to_send_code[:2]+'****'+address_to_send_code[-2:]
-                        res['auth_type'] = auth_type
-                        dual_auth = DualAuth(
-                            user_id = user.id,
-                            uuid = res['uuid']
-                        )
-                        dual_auth.save()
-                    except:
-                        return res
+                    res = cls.send_verification_code(auth_type, address_to_send_code, user.id)
                     return res
         if user and user.id:
             name = ''
@@ -93,6 +73,65 @@ class AuthUser(models.Model):
                 return {'error': 'Not authorized to have token'}
         else:
             return {'error': 'Invalid credentials'}
+
+    @classmethod
+    def send_verification_code(cls, auth_type, address_to_send_code, user_id):
+        if not address_to_send_code:
+            return 'No address given to send code'
+        auth_data = 'auth_type=' + auth_type + '&address=' + address_to_send_code
+        url = AUTH_SERVER_URL + '/auth-code/generate?' + auth_data
+        res = ws_methods.http_request(url)
+        try:
+            res = json.loads(res)
+        except:
+            return res
+        res['address'] = address_to_send_code[:2] + '****' + address_to_send_code[-2:]
+        res['auth_type'] = auth_type
+        dual_auth = DualAuth(
+            user_id=user_id,
+            uuid=res['uuid']
+        )
+        dual_auth.save()
+        return res
+
+    @classmethod
+    def verify_code(cls, uuid, auth_code):
+        if not uuid:
+            return {'error': 'No request id found'}
+        url = AUTH_SERVER_URL + '/auth-code/verify?code=' + auth_code + '&uuid=' + uuid
+        res = ws_methods.http_request(url)
+        if res != 'ok':
+            return res
+        dual_auth = DualAuth.objects.get(uuid=uuid)
+        user = dual_auth.user
+        return user
+
+    @classmethod
+    def authenticate_mobile(cls, request, params):
+        auth_code = params['verification_code']
+        uuid = params['uuid']
+        res = cls.verify_code(uuid, auth_code)
+        if type(res) is str:
+            return res
+        user = Profile.objects.get(pk=res.id)
+        if user:
+            user.mobile_verified = True
+        return 'done'
+
+    @classmethod
+    def send_mobile_verfication_code(cls, request, params):
+        user = request.user
+        user = Profile.objects.get(pk=user.id)
+        mobile_phone = params['mobile_phone']
+        if mobile_phone:
+            auth_type = 'phone'
+            auth_type = auth_type.lower()
+            address_to_send_code = mobile_phone
+            user_id = user.id
+            res = cls.send_verification_code(auth_type, address_to_send_code, user_id)
+            return res
+        else:
+            return 'Please provide mobile number.'
 
     @classmethod
     def logout_user(cls, request, params):

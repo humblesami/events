@@ -223,7 +223,6 @@ def produce_exception():
         cnt += 1
         if not 'lib/python' in er:
             errorMessage += " " + er
-    errorMessage = errorMessage.replace('\n', '<br/>')
     return HttpResponse(errorMessage)
 
 def produce_exception_public():
@@ -234,7 +233,6 @@ def produce_exception_public():
         cnt += 1
         if not 'lib/python' in er:
             errorMessage += " " + er
-    errorMessage = errorMessage.replace('\n', '<br/>')
     res = {'error': errorMessage}
     res = json.dumps(res)
     return HttpResponse(res)
