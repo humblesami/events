@@ -183,7 +183,7 @@ class Event(models.Model):
         
         return 'Done'
 
-    
+
     @classmethod
     def respond_invitation(cls, request, params):
         meeting_id = params['meeting_id']
@@ -448,6 +448,40 @@ class Event(models.Model):
             data['total'] = total
         return data
             
+
+    @classmethod
+    def search_roster(cls, request, params):
+        key_word = params['key_word']
+        meeting_id = params['meeting_id']
+        data = {
+            'attendees': [],
+            'total': 0
+        }
+        attendees = Profile.objects.filter(
+        Q(meetings__id=meeting_id) & (
+            Q(name__contains=key_word) |
+            Q(email__contains=key_word) |
+            Q(mobile_phone__contains=key_word) |
+            Q(company__contains=key_word) |
+            Q(invitation_response__attendance__contains=key_word)
+        )).distinct()
+        if attendees:
+            total = len(attendees)
+            attendees_list = []
+            for attendee in attendees:
+                attendee_data = ws_methods.obj_to_dict(
+                attendee,
+                fields=['id', 'name', 'mobile_phone', 'email', 'company'],
+                related={
+                    'invitation_response_set': {'fields': 'attendance'}
+                        })
+                attendee_data['attendance'] = attendee_data['invitation_response_set'][0]['attendance']
+                del attendee_data['invitation_response_set']
+                attendees_list.append(attendee_data)
+            data['attendees'] = attendees_list
+            data['total'] = total
+            return data
+        return data
 
 
     def response_invitation_email(self, audience, action=None):
