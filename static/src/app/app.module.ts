@@ -15,6 +15,15 @@ import { HttpService } from './http.service';
 import { AppComponent }         from './app.component';
 import { AppRoutingModule }     from './app-routing.module';
 import { AuthGuard } from './auth.guard';
+
+import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MentionModule } from 'angular-mentions';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { StringFirstToUpperPipe } from './pipes/string-first-to-upper.pipe';
+
 import { LoginComponent }   from '../components/login/login.component';
 import { HomeComponent }   from '../components/home/home.component';
 import { PageNotFound } from './pagenotfound';
@@ -59,13 +68,8 @@ import { SurveyresultsComponent } from '../components/surveyresults/surveyresult
 import { MeetingresponseComponent } from '../components/meetingresponse/meetingresponse.component';
 import { SupportComponent } from '../components/support/support.component';
 import { ProfileeditComponent } from '../components/profileedit/profileedit.component';
-import { RouterModule } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MentionModule } from 'angular-mentions';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { DateAgoPipe } from './pipes/date-ago.pipe';
-import { StringFirstToUpperPipe } from './pipes/string-first-to-upper.pipe';
+import { RosterComponent } from '../components/roster/roster.component';
+
 
 @NgModule({
     imports: [
@@ -125,7 +129,8 @@ import { StringFirstToUpperPipe } from './pipes/string-first-to-upper.pipe';
         SupportComponent,
         ProfileeditComponent,
         DateAgoPipe,
-        StringFirstToUpperPipe,        
+        StringFirstToUpperPipe,
+        RosterComponent,        
     ],
     providers:[
         AuthGuard,

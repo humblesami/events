@@ -300,6 +300,9 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
+
+            <app-roster meeting_id="{{meeting_object.id}}"></app-roster>
+
         </div>
 
         <div *ngIf="meeting_object.surveys && meeting_object.surveys.length" class="title-wrapper">
