@@ -47,8 +47,8 @@
                             <div class="form-group text-center pl-5 pr-5 mb-2">
                                 <button type="submit" disabled class="login-btn">Login</button>
                             </div>
-                            <div class="form-group text-center">
-                                <a class="forgot" href="/#/forgot-password">Forgot Password?</a>
+                            <div style="display:none" class="form-group forgot text-center">
+                            <a class="forgot" href="/#/forgot-password">Forgot Password?</a>
                             </div>
                         </form>
                     </div>
@@ -135,6 +135,7 @@
     <link rel="stylesheet" type="text/css" href="/static/assets/css/secondary.css" />
     <script>
         console.log(Date());
+        $('.form-group.forgot').show();
     </script>
 </body>
 </html>

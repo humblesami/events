@@ -56,7 +56,7 @@ const appRoutes: Routes = [
 
 	{ path: 'forgot-password', component: ForgotpasswordComponent},
     { path: 'set-password', component: SetpasswordComponent},
-    { path: 'set-password/:token', component: SetpasswordComponent},
+    { path: 'reset-password/:token', component: SetpasswordComponent},
 
     { path: 'my-profile', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
     { path: 'my-profile/edit', component: ProfileeditComponent, canActivate: [AuthGuard]},	
