@@ -8,7 +8,10 @@ import { template } from '@angular/core/src/render3';
 @Component({
   selector: 'app-profilesummary',
   templateUrl: './profilesummary.component.html',
-  styleUrls: ['./profilesummary.component.css', '../profiledetails/profiledetails.css']
+  styleUrls: ['./profilesummary.component.css', 
+              '../profiledetails/profiledetails.css',
+              '../roster/roster.component.css'
+            ]
 })
 export class ProfilesummaryComponent implements OnInit {
   @Input() user_id: number;

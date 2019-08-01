@@ -142,6 +142,6 @@ import { ProfilesummaryComponent } from '../components/profilesummary/profilesum
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [MessageiconComponent, MessengerComponent, ChatComponent, CommentsComponent,DocumentComponent, ProfilesummaryComponent ],
+    entryComponents: [MessageiconComponent, MessengerComponent, ChatComponent, CommentsComponent,DocumentComponent, ProfilesummaryComponent, RosterComponent ],
 })
 export class AppModule { }

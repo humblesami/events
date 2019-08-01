@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { ChatUser } from 'src/app/models/chat';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal,NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/socket.service';
 import { ProfilesummaryComponent } from '../profilesummary/profilesummary.component';
 declare var $: any;
@@ -18,8 +18,10 @@ export class RosterComponent implements OnInit {
     limit: number;
     total_records : number;
     server_url = window['server_url'];
-    constructor(private httpService: HttpService, private modalService: NgbModal,
-        private socketService: SocketService) { 
+    constructor(private httpService: HttpService, 
+                private modalService: NgbModal,
+                public activeModal: NgbActiveModal,
+                private socketService: SocketService) { 
         this.offset = 0;
         this.limit = 2;
         this.total_records = 0;    

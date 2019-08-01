@@ -9,8 +9,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr (click)="open(obj.id)" *ngFor="let obj of attendees">
-                <td>
+            <tr *ngFor="let obj of attendees">
+                <td (click)="open(obj.id)">
                     <img class="roster-images" src="{{socketService.server_url}}{{obj.photo}}" />
                     {{obj.name}}                    
                 </td>                
@@ -46,3 +46,4 @@
         (changedLimit)=changedLimit($event)
         (changedOffset)="changedOffset($event)" count="{{total_records}}"></app-paginator>    
 </div>
+<button type="button" class="btn btn-outline-dark close-btn" (click)="activeModal.close('Close click')">Close</button>

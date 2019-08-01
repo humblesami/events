@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpService } from '../../app/http.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import {SocketService} from "../../app/socket.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RosterComponent } from '../roster/roster.component';
 
 declare var $: any;
 
@@ -35,11 +37,17 @@ export class MeetingDetailsComponent implements OnInit {
 				private router: Router,
 				private httpService: HttpService,
 				private sanitizer: DomSanitizer,
-                private ss: SocketService) 
+                private ss: SocketService,
+                private modalService: NgbModal) 
     {	
         this.socketService = this.ss;
         this.route.params.subscribe(params => this.get_data());
     }
+
+    open(meeting_id) {
+		const modalRef = this.modalService.open(RosterComponent);
+		modalRef.componentInstance.meeting_id = meeting_id;
+	}
 
     on_publish_changed(){
         let obj_this = this;

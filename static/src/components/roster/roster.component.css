@@ -2,3 +2,9 @@
     height: 100px;
     width: 100px;
 }
+.close-btn
+{
+    width: 100%;
+    background-color: #21375a !important;
+    color: white;
+}
