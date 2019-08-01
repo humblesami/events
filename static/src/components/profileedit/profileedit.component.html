@@ -236,6 +236,20 @@ title="{{profile_data.name}}"></app-breadcrumb>
         
                             <input value="{{profile_data.website}}" (change)="modified_profile_data.website = $event.target.value"
                                 type="text" placeholder="Enter Website" id="website">
+                            <div class="UserProfileDiscription">                                
+                                <ng-select
+                                [items]="choice_fields.groups"
+                                [multiple]="true"
+                                [closeOnSelect]="false"
+                                [hideSelected]="true"
+                                bindLabel="name"
+                                [searchable] = "true"
+                                (change)="setGroups()"
+                                placeholder="Select Groups"
+                                [(ngModel)]="selectedGroups"
+                                >
+                                </ng-select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -278,7 +292,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </label>
                         <input value="{{profile_data.term_end_date}}" (change)="modified_profile_data.term_end_date = $event.target.value"
                             class="form-control" data-date-format="YYYY-MM-DD" type="date" placeholder="Enter End Start Date" id="term_end_date" required>
-                        </div>
+                    </div>
                     </div>
                 </div>
             </div>

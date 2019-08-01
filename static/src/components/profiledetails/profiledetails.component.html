@@ -286,6 +286,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     {{profile_data.website}}
                                 </div>
                             </div>
+                            <div *ngIf="profile_data.groups && profile_data.groups.length > 0" class="admin_info_after_name container">
+                                <div class="col-sm-3">
+                                    <label for="job-title">
+                                        <b>Role</b>
+                                    </label>
+                                </div>
+                                <div class="col-sm-9 UserProfileDiscription">
+                                    <span class="pill" *ngFor="let group of profile_data.groups">
+                                        <span style="cursor: pointer" routerLink="/profiles/{{group.name | lowercase}}">{{group.name}}</span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -356,18 +368,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                             {{profile_data.board_joinig_date | date:'MMM dd,yyyy'}}
                                         </div>
                                     </div>
-                                <div *ngIf="profile_data.groups && profile_data.groups.length > 0" class="admin_info_after_name container">
-                                    <div class="col-sm-3">
-                                        <label for="job-title">
-                                            <b>Role</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        <span class="pill" *ngFor="let group of profile_data.groups">
-                                            <span style="cursor: pointer" routerLink="/profiles/{{group.name | lowercase}}">{{group.name}}</span>
-                                        </span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

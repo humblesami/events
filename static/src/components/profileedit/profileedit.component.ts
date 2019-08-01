@@ -185,6 +185,10 @@ export class ProfileeditComponent implements OnInit {
 			{
 				obj_this.bio_html = obj_this.sanitizer.bypassSecurityTrustHtml(result.profile.bio);				
 			}
+			if(result.profile.groups)
+			{
+				obj_this.selectedGroups = result.profile.groups;
+			}
 			if (result.profile.ethnicity.id)
 			{
 				obj_this.selectedEthnicity = result.profile.ethnicity;
@@ -448,6 +452,17 @@ export class ProfileeditComponent implements OnInit {
             this.modified_profile_data['disability'] = this.selectedDisability['id'];
         }
 	}
+	setGroups()
+	{
+        if (this.selectedGroups.length)
+        {
+            this.modified_profile_data['groups'] = this.selectedGroups;
+        }
+        else
+        {
+            this.modified_profile_data['groups'] = null;
+        }
+    }
 	setCommittees()
 	{
         if (this.selectedCommittees.length)

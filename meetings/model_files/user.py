@@ -4,7 +4,6 @@ import base64
 import traceback
 from django.db import models
 from django.db.models import UniqueConstraint
-
 from mainapp import ws_methods
 from documents.file import File
 from mainapp.settings import server_base_url
@@ -310,13 +309,15 @@ class Profile(user_model):
         veteran = ws_methods.choices_to_list(profile_orm._meta.get_field('veteran').choices)
         two_factor_auth = ws_methods.choices_to_list(profile_orm._meta.get_field('two_factor_auth').choices)
         committees = list(Committee.objects.values('id', 'name'))
+        groups = list(group_model.objects.all().values('id', 'name'))
         choice_fields = {
             'gender': gender, 
             'disability': disability, 
             'ethnicity': ethnicity, 
             'veteran': veteran,
             'committees': committees,
-            'two_factor_auth': two_factor_auth
+            'two_factor_auth': two_factor_auth,
+            'groups': groups
             }
 
         data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
@@ -340,7 +341,7 @@ class Profile(user_model):
             user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
         for key in params:
-            if key != 'committees' and key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume':
+            if key != 'committees' and key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume' and key != 'groups':
                 if params[key] == '' and not profile._meta._forward_fields_map[key].max_length:
                     params[key] = None
                 setattr(profile, key, params[key])
@@ -406,6 +407,16 @@ class Profile(user_model):
             data = ContentFile(base64.b64decode(imgstr))
             file_name = 'admin_image_'+str(user_id) + '.' + ext
             profile.admin_image.save(file_name, data, save=True)
+        
+        groups = profile.groups.all()
+        for group in groups:
+            group.user_set.remove(user_id)
+            group.save()
+        groups = params.get('groups')        
+        if groups:
+            for group in groups:
+                profile.groups.add(group['id'])
+                profile.save()
 
         profile.save()
         data = {
