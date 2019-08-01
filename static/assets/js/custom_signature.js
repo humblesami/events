@@ -156,7 +156,7 @@ function init_sign(config) {
                 <div class="modal-footer">
                 <span class="btn btn-danger btn-sm DocsBtn" id="clear-sig">Clear</span>
                     <span class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</span>    
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

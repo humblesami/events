@@ -16,7 +16,7 @@ function init_popup(config) {
                 </div>
                 <div class="modal-footer">
                     <span class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</span>
-                <button type="button" class="btn btn-default" id="close-btn">Close</button>
+                <button type="button" class="btn btn-sm btn-default" id="close-btn">Close</button>
                 </div>
             </div>
         </div>
