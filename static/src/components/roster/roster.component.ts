@@ -16,6 +16,7 @@ export class RosterComponent implements OnInit {
     @Input() meeting_id: number;
     offset: number;
     limit: number;
+    key_word: string;
     total_records : number;
     server_url = window['server_url'];
     constructor(private httpService: HttpService, 
@@ -39,7 +40,11 @@ export class RosterComponent implements OnInit {
         console.log(this.limit, this.offset, 144);
         this.get_data();
     }
-
+    roster_search(data)
+    {
+        this.key_word = data;
+        this.get_data();
+    }
     attendees : Array<ChatUser>;
     count: number;
 
@@ -50,6 +55,11 @@ export class RosterComponent implements OnInit {
 	}
 
     get_data(){
+        function success(data){
+            obj_this.total_records = Number(data.total);
+            obj_this.count = data.attendees.length;
+            obj_this.attendees = data.attendees;
+        }
         let obj_this = this;
         let input_data = {
             meeting_id: obj_this.meeting_id,
@@ -65,11 +75,13 @@ export class RosterComponent implements OnInit {
             params: input_data,
             args: args
         }
-        obj_this.httpService.get(final_input, (data)=>{
-            obj_this.total_records = Number(data.total);
-            obj_this.count = data.attendees.length;
-            obj_this.attendees = data.attendees;
-        }, null)
+        if(obj_this.key_word)
+        {
+            input_data['key_word'] = obj_this.key_word;
+            args['method'] = 'search_roster';
+            obj_this.key_word = undefined;
+        }
+        obj_this.httpService.get(final_input, success, null)
     }
 
     submit_attendance(){

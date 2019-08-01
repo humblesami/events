@@ -475,12 +475,13 @@ class Event(models.Model):
             for attendee in attendees:
                 attendee_data = ws_methods.obj_to_dict(
                 attendee,
-                fields=['id', 'name', 'mobile_phone', 'email', 'company', 'photo'],
+                fields=['id', 'name', 'mobile_phone', 'email', 'company', 'image'],
                 related={
                     'invitation_response_set': {'fields': 'attendance'}
                         })
                 attendee_data['attendance'] = attendee_data['invitation_response_set'][0]['attendance']
                 del attendee_data['invitation_response_set']
+                attendee_data['photo'] = attendee_data['image']
                 attendees_list.append(attendee_data)
             data['attendees'] = attendees_list
             data['total'] = total
