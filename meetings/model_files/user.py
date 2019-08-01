@@ -313,6 +313,17 @@ class Profile(user_model):
         data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
         return data
 
+
+    @classmethod
+    def get_profile_summary(cls, request, params):
+        user_id = params['user_id']
+        profile_obj = Profile.objects.get(pk=user_id)
+        profile = ws_methods.obj_to_dict(
+            profile_obj,
+            fields=['id', 'name', 'first_name', 'last_name', 'photo', 'mobile_phone', 'email', 'location', 'birth_date']
+            )
+        return profile
+
     @classmethod
     def update_profile(cls, request, params):
         user_id = params.get('user_id')

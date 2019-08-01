@@ -1,6 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { ChatUser } from 'src/app/models/chat';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SocketService } from 'src/app/socket.service';
+import { ProfilesummaryComponent } from '../profilesummary/profilesummary.component';
 declare var $: any;
 
 @Component({
@@ -15,10 +18,11 @@ export class RosterComponent implements OnInit {
     limit: number;
     total_records : number;
     server_url = window['server_url'];
-    constructor(private httpService: HttpService) {
+    constructor(private httpService: HttpService, private modalService: NgbModal,
+        private socketService: SocketService) { 
         this.offset = 0;
         this.limit = 2;
-        this.total_records = 0;        
+        this.total_records = 0;    
     }
     changedOffset(data)
     {
@@ -37,13 +41,19 @@ export class RosterComponent implements OnInit {
     attendees : Array<ChatUser>;
     count: number;
 
+    open(user_id) {
+        let obj_this = this;
+		const modalRef = this.modalService.open(ProfilesummaryComponent);
+		modalRef.componentInstance.user_id = user_id;
+	}
+
     get_data(){
         let obj_this = this;
         let input_data = {
             meeting_id: obj_this.meeting_id,
             offset: obj_this.offset,
             limit: obj_this.limit
-        }        
+        }
         let args = {
             app: 'meetings',
             model: 'Event',
@@ -53,10 +63,8 @@ export class RosterComponent implements OnInit {
             params: input_data,
             args: args
         }
-        // console.log(input_data);
         obj_this.httpService.get(final_input, (data)=>{
             obj_this.total_records = Number(data.total);
-            // console.log(obj_this.total_records, 444);
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;
         }, null)

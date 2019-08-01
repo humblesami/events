@@ -69,6 +69,7 @@ import { MeetingresponseComponent } from '../components/meetingresponse/meetingr
 import { SupportComponent } from '../components/support/support.component';
 import { ProfileeditComponent } from '../components/profileedit/profileedit.component';
 import { RosterComponent } from '../components/roster/roster.component';
+import { ProfilesummaryComponent } from '../components/profilesummary/profilesummary.component';
 
 
 @NgModule({
@@ -130,7 +131,8 @@ import { RosterComponent } from '../components/roster/roster.component';
         ProfileeditComponent,
         DateAgoPipe,
         StringFirstToUpperPipe,
-        RosterComponent,        
+        RosterComponent,
+        ProfilesummaryComponent,        
     ],
     providers:[
         AuthGuard,
@@ -140,6 +142,6 @@ import { RosterComponent } from '../components/roster/roster.component';
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [MessageiconComponent, MessengerComponent, ChatComponent, CommentsComponent,DocumentComponent ],    
+    entryComponents: [MessageiconComponent, MessengerComponent, ChatComponent, CommentsComponent,DocumentComponent, ProfilesummaryComponent ],
 })
 export class AppModule { }

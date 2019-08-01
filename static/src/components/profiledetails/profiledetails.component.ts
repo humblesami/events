@@ -6,7 +6,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { SocketService } from 'src/app/socket.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileeditComponent } from '../profileedit/profileedit.component';
-import { template } from '@angular/core/src/render3';
 declare var $:any;
 
 @Component({

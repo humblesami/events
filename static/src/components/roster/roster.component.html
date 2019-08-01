@@ -9,9 +9,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let obj of attendees">
+            <tr (click)="open(obj.id)" *ngFor="let obj of attendees">
                 <td>
-                    <img src="{{server_url}}{{obj.photo}}" />
+                    <img class="roster-images" src="{{socketService.server_url}}{{obj.photo}}" />
                     {{obj.name}}                    
                 </td>                
                 <td>

@@ -4,8 +4,7 @@ import { HttpService } from '../../app/http.service';
 import { ActivatedRoute,Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SocketService } from 'src/app/socket.service';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { template } from '@angular/core/src/render3';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 declare var $:any;
 
 @Component({
