@@ -77,13 +77,25 @@ class EventAdmin(nested_admin.NestedModelAdmin):
 class UserForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields= ('email', 'first_name', 'last_name', 'mobile_phone', 'groups', 'two_factor_auth')
+        fields = ('email', 'first_name', 'last_name', 'mobile_phone', 'groups', 'two_factor_auth')
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['email'].required = True
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
+
+    def save(self, commit=True):
+        user = super(UserForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+        return user
+
+    def clean_email(self):
+        if Profile.objects.filter(email=self.cleaned_data['email']).exists():
+            raise forms.ValidationError(u'This email already exists.')
+        return self.cleaned_data['email']
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -93,6 +105,12 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth', 'is_superuser')
     class Media:
         js=('admin/js/profile_change_form.js',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        if not obj:
+            kwargs.update({ 'exclude': getattr(kwargs, 'exclude', tuple()) + ('two_factor_auth',), })
+        form = super(UserAdmin, self).get_form(request, obj, **kwargs)
+        return form
 
 class MeetingGroupAdmin(GroupAdmin):
 

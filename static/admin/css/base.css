@@ -15,11 +15,6 @@ body {
 
 /* LINKS */
 
-a:link, a:visited {
-    color: #447e9b;
-    text-decoration: none;
-}
-
 a:focus, a:hover {
     color: #036;
 }
@@ -30,11 +25,6 @@ a:focus {
 
 a img {
     border: none;
-}
-
-a.section:link, a.section:visited {
-    color: #fff;
-    text-decoration: none;
 }
 
 a.section:focus, a.section:hover {
