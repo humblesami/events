@@ -3,6 +3,8 @@ import sys
 import base64
 import traceback
 from django.db import models
+from django.db.models import UniqueConstraint
+
 from mainapp import ws_methods
 from documents.file import File
 from mainapp.settings import server_base_url
@@ -166,6 +168,8 @@ class Profile(user_model):
     email_verified = models.BooleanField(null=True, default=False)
     mobile_verified = models.BooleanField(null=True, default=False)
     # user_type = models.CharField(max_length=50)
+
+    UniqueConstraint(fields=['email'], name='unique_email')
 
     def __str__(self):
         return self.fullname()

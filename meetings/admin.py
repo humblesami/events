@@ -90,7 +90,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     autocomplete_fields = ['groups']
     form = UserForm
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth')
+    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth', 'is_superuser')
     class Media:
         js=('admin/js/profile_change_form.js',)
 
