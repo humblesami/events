@@ -11,13 +11,13 @@
         <div class="odoo-navigation-range-label">
             
         </div>
-        <button [disabled]="offset === 1"
+        <button [disabled]="offset <= 0"
         (click)="change_page(-1)"
         class="odoo-navigation-navigation-previous">
             <i class="fa fa-chevron-left"></i>
         </button>
         <span>{{page_number}}</span>
-        <button [disabled]="offset + limit > total"
+        <button [disabled]="offset + limit >= total"
             (click)="change_page(1)"
             class="odoo-navigation-navigation-next">
             <i class="fa fa-chevron-right"></i>

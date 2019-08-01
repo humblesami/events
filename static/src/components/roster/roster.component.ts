@@ -33,10 +33,6 @@ export class RosterComponent implements OnInit {
         console.log(this.limit, this.offset, 144);
         this.get_data();
     }
-    show_offset()
-    {
-        console.log(this.offset);
-    }
 
     attendees : Array<ChatUser>;
     count: number;
@@ -47,7 +43,7 @@ export class RosterComponent implements OnInit {
             meeting_id: obj_this.meeting_id,
             offset: obj_this.offset,
             limit: obj_this.limit
-        }
+        }        
         let args = {
             app: 'meetings',
             model: 'Event',
@@ -57,6 +53,7 @@ export class RosterComponent implements OnInit {
             params: input_data,
             args: args
         }
+        // console.log(input_data);
         obj_this.httpService.get(final_input, (data)=>{
             obj_this.total_records = Number(data.total);
             // console.log(obj_this.total_records, 444);

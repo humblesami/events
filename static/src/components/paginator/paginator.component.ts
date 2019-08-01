@@ -23,20 +23,20 @@ export class PaginatorComponent implements OnInit {
     page_number: number;
     constructor(private httpServ : HttpService) {
         this.httpService = httpServ;
-        this.offset = 1;        
+        this.offset = 0;        
         this.page_number = 1;
     }
 
     offset: number;
 
     change_page(change: number){
-        // console.log(this.offset, this.limit, this.total);
-        if(change <= 1 && this.offset < 1)
+        console.log(change, this.offset, this.limit, this.total);
+        if(change <= 1 && this.offset < 0)
         {
-            this.offset = 1;
+            this.offset = 0;
             return;
         }
-        else if(change >= 1 && this.offset + this.limit > this.total)
+        else if(change >= 1 && this.offset + this.limit >= this.total)
         {
             return;
         }
@@ -44,9 +44,9 @@ export class PaginatorComponent implements OnInit {
             let new_val = change * this.limit;        
             this.offset = this.offset + new_val;
             this.page_number += change;
-        }
-        // console.log(this.offset, 199);
-        this.changedOffset.emit(this.offset);
+            this.changedOffset.emit(this.offset);
+            console.log(this.offset, this.limit, this.total);        
+        }        
     }
     change_limit(e){
         this.limit = $(e.target).val();
