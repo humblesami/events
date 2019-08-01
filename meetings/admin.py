@@ -61,7 +61,7 @@ class EventAdmin(nested_admin.NestedModelAdmin):
     inlines = [TopicInline, MeetingDocInline]
     # extra = 1
     readonly_fields = ('docs',)
-    change_form_template = 'custom/event_custom_change_form.html'
+    change_form_template = 'event_custom_change_form.html'
     
 
     def docs(self, obj):
@@ -77,7 +77,7 @@ class EventAdmin(nested_admin.NestedModelAdmin):
 class UserForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields= ('email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth')
+        fields= ('email', 'first_name', 'last_name', 'mobile_phone', 'groups', 'two_factor_auth')
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
@@ -88,10 +88,11 @@ class UserForm(forms.ModelForm):
 
 class UserAdmin(admin.ModelAdmin):
     search_fields = ('name',)
+    autocomplete_fields = ['groups']
     form = UserForm
     list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth')
     class Media:
-        js=('admin/js/set_group_in_user_creation.js',)
+        js=('admin/js/profile_change_form.js',)
 
 class MeetingGroupAdmin(GroupAdmin):
 

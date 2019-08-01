@@ -125,6 +125,7 @@ form .aligned div.help {
     padding-left: 10px;
 }
 
+form .aligned div.help,
 form .aligned label + p.help,
 form .aligned label + div.help {
     margin-left: 0;
