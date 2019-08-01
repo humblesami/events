@@ -11,19 +11,27 @@ declare var $: any;
 
 export class RosterComponent implements OnInit {
     @Input() meeting_id: number;
-    offset = 0;
-    limit = 0;
-    total_records = 0;
+    offset: number;
+    limit: number;
+    total_records : number;
     server_url = window['server_url'];
-    constructor(private httpService: HttpService) { }
+    constructor(private httpService: HttpService) {
+        this.offset = 0;
+        this.limit = 2;
+        this.total_records = 0;        
+    }
     changedOffset(data)
     {
-        this.offset = data;
+        this.offset = Number(data);
+        // console.log(this.offset, 1008);
         this.get_data();
     }
     changedLimit(data)
     {
-        this.limit = data;
+        this.limit = Number(data);
+        this.offset = 0;
+        console.log(this.limit, this.offset, 144);
+        this.get_data();
     }
     show_offset()
     {
@@ -37,8 +45,8 @@ export class RosterComponent implements OnInit {
         let obj_this = this;
         let input_data = {
             meeting_id: obj_this.meeting_id,
-            offset: 0,
-            limit: 2
+            offset: obj_this.offset,
+            limit: obj_this.limit
         }
         let args = {
             app: 'meetings',
@@ -50,10 +58,10 @@ export class RosterComponent implements OnInit {
             args: args
         }
         obj_this.httpService.get(final_input, (data)=>{
-            obj_this.total_records = data.total;
+            obj_this.total_records = Number(data.total);
+            // console.log(obj_this.total_records, 444);
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;
-            console.log(data,  obj_this.total_records, obj_this.count, 1009);                      
         }, null)
     }
 
@@ -66,7 +74,6 @@ export class RosterComponent implements OnInit {
             }
             attendance_data.push(obj);                        
         });
-        console.log(attendance_data);
         let obj_this = this;
         let input_data = {
             meeting_id: obj_this.meeting_id,

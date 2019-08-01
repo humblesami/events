@@ -9,16 +9,15 @@
     </div>
     <div class="odoo-navigation-range-actions">
         <div class="odoo-navigation-range-label">
-            <!-- <span *ngIf="total > 0">{{offset + 1}}</span>
-            <span *ngIf="total <= 0">0</span> -->
-            {{count}} of {{total}} starting from -- {{offset + 1}} --
+            
         </div>
-        <button [disabled]="offset === 0"
+        <button [disabled]="offset === 1"
         (click)="change_page(-1)"
         class="odoo-navigation-navigation-previous">
             <i class="fa fa-chevron-left"></i>
         </button>
-        <button [disabled]="offset+count >= total"
+        <span>{{page_number}}</span>
+        <button [disabled]="offset + limit > total"
             (click)="change_page(1)"
             class="odoo-navigation-navigation-next">
             <i class="fa fa-chevron-right"></i>

@@ -41,9 +41,8 @@
         table.roster td, table.roster th{
             border: 1px solid;
         }
-    </style>
+    </style>    
     <app-paginator *ngIf="attendees && attendees.length > 0"
         (changedLimit)=changedLimit($event)
-        (changedOffset)="changedOffset($event)" count="{{count}}" total="{{total_records}}" 
-        offset="{{offset}}"></app-paginator>    
+        (changedOffset)="changedOffset($event)" count="{{total_records}}"></app-paginator>    
 </div>

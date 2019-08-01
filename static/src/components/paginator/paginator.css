@@ -112,7 +112,10 @@
 	background: transparent;
     border: none;
 }
-
+.odoo-navigation-navigation-previous:disabled, .odoo-navigation-navigation-next:disabled
+{
+    background-color: grey;
+}
 .custom-select {
 	border-radius: 0;
 	border-top: none;

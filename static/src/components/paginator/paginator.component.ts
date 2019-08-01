@@ -7,10 +7,8 @@ declare var $: any;
     styleUrls:['./paginator.css'],
     templateUrl: './paginator.component.html'
 })
-export class PaginatorComponent implements OnInit {
-    @Input() offset: number;
-    @Input() count: number
-    @Input() total: number;
+export class PaginatorComponent implements OnInit {    
+    @Input() count: number;
     @Output() changedOffset: EventEmitter<number> =   new EventEmitter();
     @Output() changedLimit: EventEmitter<number> = new EventEmitter()
     limit = 2;
@@ -21,32 +19,43 @@ export class PaginatorComponent implements OnInit {
         100
     ]
     httpService:any
-
+    total: number;
+    page_number: number;
     constructor(private httpServ : HttpService) {
         this.httpService = httpServ;
+        this.offset = 1;        
+        this.page_number = 1;
     }
 
+    offset: number;
+
     change_page(change: number){
-        this.offset = this.offset + change * this.limit;
-        console.log(this.offset, change, this.limit)
-        if(this.offset < 0)
+        // console.log(this.offset, this.limit, this.total);
+        if(change <= 1 && this.offset < 1)
         {
-            this.offset = 0;
+            this.offset = 1;
+            return;
         }
-        if(this.offset + this.limit > this.total)
+        else if(change >= 1 && this.offset + this.limit > this.total)
         {
             return;
         }
-        if(isNaN(change))
-        {
-            change = 3;
+        else{
+            let new_val = change * this.limit;        
+            this.offset = this.offset + new_val;
+            this.page_number += change;
         }
+        // console.log(this.offset, 199);
         this.changedOffset.emit(this.offset);
     }
     change_limit(e){
-        this.limit = $(e.target).val()
+        this.limit = $(e.target).val();
+        this.changedLimit.emit(this.limit);
+        console.log(this.limit, this.offset, 1411);
     }
     ngOnInit() {
+        this.total = Number(this.count);
+        // console.log(this.count, 199);
     }
 
 }
