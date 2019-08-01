@@ -1,6 +1,7 @@
 /*global opener */
 (function() {
-    var path = window.location.pathname.split('/')
+    var path = window.location.pathname.split('/');
+    var initData = JSON.parse(document.getElementById('django-admin-popup-response-constants').dataset.popupResponse);
     var length = path.length
     var model = '';
     var action = '';
@@ -18,6 +19,6 @@
         id = path[4]
     }
     
-    var data = {"model":model,"action":action,"id":id}
+    var data = {"model":model,"action":action,"id":id, "obj": initData.obj}
     window.parent.postMessage(data, '*');
 })();

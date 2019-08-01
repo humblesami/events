@@ -5,7 +5,6 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('logout', views.logout_user, name='logout'),
     path('verify-token', views.verify_token, name='verify_token'),
-    path('forgot-password', views.forgot_password, name='forgot_password'),
     path('verify-auth-code', views.load_verify_code_page, name='verify_code'),
     path('reset-password/<str:token>', views.reset_password, name='password_reset'),
 ]

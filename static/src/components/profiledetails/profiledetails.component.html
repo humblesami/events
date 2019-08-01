@@ -1,9 +1,9 @@
-﻿<app-breadcrumb app="meetings" model="{{type}}"
+﻿<app-breadcrumb app="meetings" model="profile"
 rid="{{profile_data.id}}" *ngIf="!my_profile && type_breadCrumb" delete="1"
 routes='[{"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>
 
-<app-breadcrumb app="meetings" model="{{type}}"
+<app-breadcrumb app="meetings" model="profile"
 rid="{{profile_data.id}}" *ngIf="my_profile && type_breadCrumb"
 routes='[{"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
 title="{{profile_data.name}}"></app-breadcrumb>

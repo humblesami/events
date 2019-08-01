@@ -84,6 +84,7 @@ class UserForm(forms.ModelForm):
         self.fields['email'].required = True
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
+        self.fields['groups'].required = True
 
     def save(self, commit=True):
         user = super(UserForm, self).save(commit=False)
@@ -93,7 +94,7 @@ class UserForm(forms.ModelForm):
         return user
 
     def clean_email(self):
-        if Profile.objects.filter(email=self.cleaned_data['email']).exists():
+        if not self.instance.pk and Profile.objects.filter(email=self.cleaned_data['email']).exists():
             raise forms.ValidationError(u'This email already exists.')
         return self.cleaned_data['email']
 

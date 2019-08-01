@@ -22,8 +22,8 @@ export class ProfilesComponent implements OnInit {
     get_data(){
         var obj_this = this;
         var url = window.location.href.split("/")
-        var path =url[url.length-1]
-            obj_this.type = "director"
+        var path = url[url.length-1]
+        obj_this.type = "";
         if (path == "directors"){
             obj_this.type = "director"
         }

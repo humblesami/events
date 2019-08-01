@@ -411,17 +411,7 @@ window.addEventListener('message', function receiveMessage(evt) {
                         redirect_url = `/#/surveys`;
                         break;
                 case 'profile':
-                    var user_type = '';
-                    (function(){
-                        var current_url = window.location.toString();
-                        var arrr = current_url.split('/');
-                        user_type = arrr[arrr.length - 2];
-                        if(user_type != 'staff')
-                        {
-                            user_type += 's';
-                        }
-                    })()
-                    redirect_url = `/#/profiles/`+user_type;
+                    redirect_url = `/#/profiles`;
                     break;
                 case 'folder':
                     redirect_url = `/#/resources`;

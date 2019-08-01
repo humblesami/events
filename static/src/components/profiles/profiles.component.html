@@ -1,4 +1,4 @@
-﻿<app-breadcrumb app="meetings" model="{{type}}" create="1" title="Profiles ({{type}})"></app-breadcrumb>
+﻿<app-breadcrumb app="meetings" model="profile" create="1" title="Profiles"></app-breadcrumb>
 <div class="router-outlet">
     <div  class="container">
 		<div class="row">
@@ -59,6 +59,12 @@
                                 <i class="fas fa-envelope"></i>
                                 <span>
                                     {{profile.email}}
+                                </span>
+                            </div>
+                            <div *ngIf="!type && profile.group" class="kanban-profiles-user-InfoLIST">
+                                <!-- <i class="fas fa-envelope"></i> -->
+                                <span>
+                                    Role: {{profile.group}}
                                 </span>
                             </div>
                         </div>

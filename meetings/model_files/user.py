@@ -224,7 +224,11 @@ class Profile(user_model):
     @classmethod
     def get_records(cls, request, params):
         group = params.get('type')
-        profiles = Profile.objects.filter(groups__name__iexact=group)
+        profiles = []
+        if group:
+            profiles = Profile.objects.filter(groups__name__iexact=group)
+        else:
+            profiles = Profile.objects.filter()
         total_cnt = profiles.count()
         current_cnt = total_cnt
         # profiles = ws_methods.queryset_to_list(
@@ -334,7 +338,6 @@ class Profile(user_model):
         if not user_id:
             user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
-
         for key in params:
             if key != 'committees' and key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume':
                 if params[key] == '' and not profile._meta._forward_fields_map[key].max_length:
