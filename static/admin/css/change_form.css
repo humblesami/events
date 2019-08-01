@@ -380,7 +380,9 @@ tr .vTextField, tr select {
 }
 
 .inline-group thead th {
-    padding: 8px 10px;
+    padding: 13px;
+    background: #477eba;
+    color: #ffffff !important;
 }
 
 .inline-group .aligned label {
@@ -437,6 +439,7 @@ tr .vTextField, tr select {
 
 .inline-group .tabular tr.has_original td {
     padding-top: 2em;
+    border:0;
 }
 
 .inline-group .tabular tr td.original {
@@ -455,9 +458,9 @@ tr .vTextField, tr select {
     left: 0;
     padding: 2px 9px;
     overflow: hidden;
-    font-size: 9px;
-    font-weight: bold;
-    color: #666;
+    color: #3059C9;
+    font-size: 15px;
+    font-weight: 500;
 }
 
 .inline-group ul.tools {

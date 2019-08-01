@@ -1,4 +1,4 @@
-/*@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&display=swap');*/
+import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&display=swap');*/
 body{
     font-size: 0.898rem;
     color: #666666;
@@ -29,6 +29,10 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
     outline: 0;
 }
 
+ select:focus, .vTextField:focus {
+    border-bottom: 1px solid #A2A2A2;
+    outline: 0;
+}
 .form-row{ border:0; padding:0 0 20px; }
 
 .aligned label{
@@ -51,22 +55,6 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 	width: 100%;
 }
 
-.field-two_factor_auth{
-	border-bottom: 1px solid #A2A2A2;
-	margin:5px 0 0;
-	padding:0;
-}
-.field-two_factor_auth select {
-	display: block;
-	border:0;
-	border-radius: 0;
-	padding: 0 10px 3px 0px;
-	margin: 0;
-	font-size: 0.898rem;
-	color: #666666;
-	width: 100%;
-}
-
 .aligned .form-row textarea, #questions-group  textarea{
 	display: block;
 	width: 100%;
@@ -79,13 +67,24 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 	border-bottom: 1px solid #A2A2A2;
 	height: 60px;
 }
+.aligned select{
+	border:0;
+	border-radius: 0;
+	padding: 0 10px 8px 0px;
+	margin: 5px 0 0 0;
+	font-size: 0.898rem;
+	color: #666666;
+	border-bottom: 1px solid #A2A2A2;
+	width: 100% !important;
+}
+
 
 .module h2, .module caption, .inline-group h2{
 	color: #2B2B2B;
 	font-size: 30px;
 	background: transparent;
 	border-bottom: 1px solid #dadada;
-	margin: 0 0 1rem;
+	margin: 2rem 0px;
 	padding: 0 0 1rem;
 	line-height: 1;
 }
@@ -109,8 +108,8 @@ p.datetime input[type="text"].vTimeField{
 	margin: 0 1%;
 }
 
-.datetime span{
-	margin-right:20px;
+.datetime span .date-icon {
+    margin-right: 20px;
 }
 .module caption, .inline-group h2{
 	letter-spacing:inherit;
