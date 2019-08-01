@@ -8226,7 +8226,7 @@ module.exports = ".roster-images{\n    height: 100px;\n    width: 100px;\n}\n.cl
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"router-outlet\">\n    <table class=\"roster\">\n        <thead>\n            <tr>\n                <th>Attendee</th>\n                <th>Absent</th>\n                <th>InPerson</th>\n                <th>Online</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr *ngFor=\"let obj of attendees\">\n                <td (click)=\"open(obj.id)\">\n                    <img class=\"roster-images\" src=\"{{socketService.server_url}}{{obj.photo}}\" />\n                    {{obj.name}}                    \n                </td>                \n                <td>\n                    <input *ngIf=\"obj.attendance=='absent'\" checked type=\"radio\" name=\"{{obj.id}}\" />                    \n                    <input *ngIf=\"obj.attendance!='absent'\" type=\"radio\" name=\"{{obj.id}}\" />\n                    <input type=\"hidden\" value=\"absent\" />\n                    <input type=\"hidden\" value=\"{{obj.id}}\" />\n                </td>\n                <td>\n                    <input *ngIf=\"obj.attendance=='inperson'\" checked type=\"radio\" name=\"{{obj.id}}\" />\n                    <input *ngIf=\"obj.attendance!='inperson'\" type=\"radio\" name=\"{{obj.id}}\" />\n                    <input type=\"hidden\" value=\"inperson\" />\n                    <input type=\"hidden\" value=\"{{obj.id}}\" />\n                </td>\n                <td>\n                    <input *ngIf=\"obj.attendance=='online'\" checked type=\"radio\" name=\"{{obj.id}}\" />\n                    <input *ngIf=\"obj.attendance!='online'\" type=\"radio\" name=\"{{obj.id}}\" />\n                    <input type=\"hidden\" value=\"online\" />\n                    <input type=\"hidden\" value=\"{{obj.id}}\" />\n                </td>\n            </tr>\n        </tbody>\n    </table>\n    <h3>Total attendees: {{total_records}}</h3>\n    <button (click)=\"submit_attendance()\">Submit Attendance</button>\n    <style>\n        table.roster td, table.roster th{\n            border: 1px solid;\n        }\n    </style>    \n    <app-paginator *ngIf=\"attendees && attendees.length > 0\"\n        (changedLimit)=changedLimit($event)\n        (changedOffset)=\"changedOffset($event)\" count=\"{{total_records}}\"></app-paginator>    \n</div>\n<button type=\"button\" class=\"btn btn-outline-dark close-btn\" (click)=\"activeModal.close('Close click')\">Close</button>"
+module.exports = "<div class=\"router-outlet\">\n    <input type=\"text\" placeholder=\"Search...\" (change)=\"roster_search($event.target.value)\"/>\n    <table class=\"roster\">\n        <thead>\n            <tr>\n                <th>Attendee</th>\n                <th>Absent</th>\n                <th>InPerson</th>\n                <th>Online</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr *ngFor=\"let obj of attendees\">\n                <td (click)=\"open(obj.id)\">\n                    <img class=\"roster-images\" src=\"{{socketService.server_url}}{{obj.photo}}\" />\n                    {{obj.name}}                    \n                </td>                \n                <td>\n                    <input *ngIf=\"obj.attendance=='absent'\" checked type=\"radio\" name=\"{{obj.id}}\" />                    \n                    <input *ngIf=\"obj.attendance!='absent'\" type=\"radio\" name=\"{{obj.id}}\" />\n                    <input type=\"hidden\" value=\"absent\" />\n                    <input type=\"hidden\" value=\"{{obj.id}}\" />\n                </td>\n                <td>\n                    <input *ngIf=\"obj.attendance=='inperson'\" checked type=\"radio\" name=\"{{obj.id}}\" />\n                    <input *ngIf=\"obj.attendance!='inperson'\" type=\"radio\" name=\"{{obj.id}}\" />\n                    <input type=\"hidden\" value=\"inperson\" />\n                    <input type=\"hidden\" value=\"{{obj.id}}\" />\n                </td>\n                <td>\n                    <input *ngIf=\"obj.attendance=='online'\" checked type=\"radio\" name=\"{{obj.id}}\" />\n                    <input *ngIf=\"obj.attendance!='online'\" type=\"radio\" name=\"{{obj.id}}\" />\n                    <input type=\"hidden\" value=\"online\" />\n                    <input type=\"hidden\" value=\"{{obj.id}}\" />\n                </td>\n            </tr>\n        </tbody>\n    </table>\n    <h3>Total attendees: {{total_records}}</h3>\n    <button (click)=\"submit_attendance()\">Submit Attendance</button>\n    <style>\n        table.roster td, table.roster th{\n            border: 1px solid;\n        }\n    </style>    \n    <app-paginator *ngIf=\"attendees && attendees.length > 0\"\n        (changedLimit)=changedLimit($event)\n        (changedOffset)=\"changedOffset($event)\" count=\"{{total_records}}\"></app-paginator>    \n</div>\n<button type=\"button\" class=\"btn btn-outline-dark close-btn\" (click)=\"activeModal.close('Close click')\">Close</button>"
 
 /***/ }),
 
@@ -8281,12 +8281,21 @@ var RosterComponent = /** @class */ (function () {
         console.log(this.limit, this.offset, 144);
         this.get_data();
     };
+    RosterComponent.prototype.roster_search = function (data) {
+        this.key_word = data;
+        this.get_data();
+    };
     RosterComponent.prototype.open = function (user_id) {
         var obj_this = this;
         var modalRef = this.modalService.open(_profilesummary_profilesummary_component__WEBPACK_IMPORTED_MODULE_4__["ProfilesummaryComponent"]);
         modalRef.componentInstance.user_id = user_id;
     };
     RosterComponent.prototype.get_data = function () {
+        function success(data) {
+            obj_this.total_records = Number(data.total);
+            obj_this.count = data.attendees.length;
+            obj_this.attendees = data.attendees;
+        }
         var obj_this = this;
         var input_data = {
             meeting_id: obj_this.meeting_id,
@@ -8302,11 +8311,12 @@ var RosterComponent = /** @class */ (function () {
             params: input_data,
             args: args
         };
-        obj_this.httpService.get(final_input, function (data) {
-            obj_this.total_records = Number(data.total);
-            obj_this.count = data.attendees.length;
-            obj_this.attendees = data.attendees;
-        }, null);
+        if (obj_this.key_word) {
+            input_data['key_word'] = obj_this.key_word;
+            args['method'] = 'search_roster';
+            obj_this.key_word = undefined;
+        }
+        obj_this.httpService.get(final_input, success, null);
     };
     RosterComponent.prototype.submit_attendance = function () {
         var attendance_data = [];
