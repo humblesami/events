@@ -1,6 +1,10 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&display=swap');
-body {
-    font-family: 'Roboto Condensed', sans-serif;
+/*@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i&display=swap');*/
+body{
+    font-size: 0.898rem;
+    color: #666666;
+    }
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, label, input, textarea, select, .form-row p, form .button {
+    font-family: "Roboto-Condensed";
 }
 
 #container{width:100%;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}
@@ -8,6 +12,16 @@ body {
 @media (min-width:768px){#container{max-width:720px}}
 @media (min-width:992px){#container{max-width:960px}}
 @media (min-width:1200px){#container{max-width:1140px}}
+
+
+#content h1 {
+    color: #2B2B2B;
+    font-size: 1.666rem;
+    border-bottom: 1px solid #E1E1E1;
+    margin-top: 1.3rem;
+    margin-bottom: 1.3rem;
+    padding-bottom: 0.7rem;
+}
 
 input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=url]:focus, input[type=number]:focus, input[type=tel]:focus, textarea:focus, select:focus, .vTextField:focus {
     border-color: transparent;
@@ -25,16 +39,32 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 	width:100%;
 }
 
-.aligned .form-row input[type="text"] {
-    display: block;
-    border:0;
-    border-radius: 0;
-    padding: 0 10px 8px 0px;
-    margin: 5px 0 0 0;
-        font-size: 0.898rem;
-    color: #666666;
-        border-bottom: 1px solid #A2A2A2;
-    width: 100%;
+.aligned .form-row input[type="text"], .aligned .form-row input[type="email"]{
+	display: block;
+	border:0;
+	border-radius: 0;
+	padding: 0 10px 8px 0px;
+	margin: 5px 0 0 0;
+	font-size: 0.898rem;
+	color: #666666;
+	border-bottom: 1px solid #A2A2A2;
+	width: 100%;
+}
+
+.field-two_factor_auth{
+	border-bottom: 1px solid #A2A2A2;
+	margin:5px 0 0;
+	padding:0;
+}
+.field-two_factor_auth select {
+	display: block;
+	border:0;
+	border-radius: 0;
+	padding: 0 10px 3px 0px;
+	margin: 0;
+	font-size: 0.898rem;
+	color: #666666;
+	width: 100%;
 }
 
 .aligned .form-row textarea, #questions-group  textarea{
@@ -81,4 +111,8 @@ p.datetime input[type="text"].vTimeField{
 
 .datetime span{
 	margin-right:20px;
+}
+.module caption, .inline-group h2{
+	letter-spacing:inherit;
+    text-transform: capitalize;
 }
