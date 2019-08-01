@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
+declare var $: any;
 
 @Component({
     selector: 'app-paginator',
@@ -42,10 +43,9 @@ export class PaginatorComponent implements OnInit {
         }
         this.changedOffset.emit(this.offset);
     }
-    change_offset() {        
-        this.changedLimit.emit(Number(this.limit))
+    change_limit(e){
+        this.limit = $(e.target).val()
     }
-
     ngOnInit() {
     }
 

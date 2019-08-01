@@ -2,7 +2,7 @@
     <div class="odoo-navigation-page-size-label">Items per page:</div>
     <div class="odoo-navigation-page-size-select m">
         <div class="odoo-navigation-mat-form-field-flex">
-            <select (change)="change_limit()" [(ngModel)]="limit" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+            <select (change)="change_limit($event)" [(ngModel)]="limit" class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
                 <option *ngFor="let opt of limit_options">{{opt}}</option>
             </select>
         </div>
@@ -11,7 +11,7 @@
         <div class="odoo-navigation-range-label">
             <!-- <span *ngIf="total > 0">{{offset + 1}}</span>
             <span *ngIf="total <= 0">0</span> -->
-            {{count}} of {{total}} starting from -- {{offset}} --
+            {{count}} of {{total}} starting from -- {{offset + 1}} --
         </div>
         <button [disabled]="offset === 0"
         (click)="change_page(-1)"
