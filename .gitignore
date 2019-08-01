@@ -18,6 +18,7 @@ media/*
 config.json
 */node_modules
 static/build/static
+static/build/*.map
 package-lock.json
 mtest.py
 error_log.txt
