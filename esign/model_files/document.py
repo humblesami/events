@@ -199,7 +199,7 @@ class SignatureDoc(File):
             user_token = PostUserToken.validate_token_for_post(token, post_info)
             if user_token:
                 user = user_token.user
-                signatures = doc.signature_set.filter(user_id=uid)
+                signatures = doc.signature_set.filter(user_id=user.id)
         else:
             user = request.user
             signatures = doc.signature_set.all()

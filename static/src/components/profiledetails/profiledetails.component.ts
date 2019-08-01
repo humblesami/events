@@ -222,7 +222,16 @@ export class ProfileDetailsComponent implements OnInit {
 			)
 			{
 				obj_this.admin_info = true;
-            }
+			}
+			if(result.profile.groups)
+			{
+				for (let i = 0; i < result.profile.groups.length; i++) {
+					if(result.profile.groups[i].name != 'Staff')
+					{
+						result.profile.groups[i].name += 's';
+					}
+				}
+			}
             // console.log(result);
             if(result.choice_fields)
             {

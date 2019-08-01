@@ -25,6 +25,7 @@ export class ProfileeditComponent implements OnInit {
 	selectedVeteran = [];
 	selectedDisability = [];
 	selectedTwoFactorAuth = [];
+	selectedGroups = [];
 	selectedCommittees;
 	last_login = {
 		last: {

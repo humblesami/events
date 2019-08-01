@@ -270,7 +270,8 @@ class Profile(user_model):
                 'term_start_date', 'term_end_date', 'date_joined', 'groups', 'email_verified', 'mobile_verified'
             ],
             related={
-                'committees': {'fields': ['id', 'name']}
+                'committees': {'fields': ['id', 'name']},
+                'groups': {'fields': ['id', 'name']}
             }
         )
         if not profile['name']:
@@ -297,9 +298,9 @@ class Profile(user_model):
             'name': profile_orm.get_two_factor_auth_display()
         }
         profile['signature_data'] = profile_orm.signature_data.decode()
-        profile['group'] = profile['groups'][0].name
+        if profile['groups']:
+            profile['group'] = profile['groups'][0]['name']
         profile['admin_full_name'] = admin_full_name
-        del profile['groups']
         resume = profile_orm.resume
         if resume:
             profile['resume'] = {'id': resume.id}
