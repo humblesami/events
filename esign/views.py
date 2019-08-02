@@ -53,6 +53,7 @@ def get_details(request):
     return get_sign_doc_data(request)
 
 
+@csrf_exempt
 def get_details_public(request):
     return get_sign_doc_data(request)
 
@@ -91,6 +92,7 @@ def get_sign_doc_signature(request):
 def get_signature(request):
     return get_sign_doc_signature(request)
 
+@csrf_exempt
 def get_signature_public(request):
     return get_sign_doc_signature(request)
 
@@ -125,6 +127,7 @@ def save_sign_data(request):
     return save_signature_data(request)
 
 
+@csrf_exempt
 def save_sign_data_public(request):
     return save_signature_data(request)
 
@@ -161,7 +164,7 @@ def save_user_signatuer(request):
 def save_signature(request):
     return save_user_signatuer(request)
 
-
+@csrf_exempt
 def save_signature_public(request):
     return save_user_signatuer(request)
 
@@ -196,10 +199,7 @@ def delete_signature(request):
     return delete_user_signature(request)
 
 
-def delete_signature_public(request):
-    return delete_user_signature(request)
-
-
+@csrf_exempt
 def sign_doc_public(request, token):
     context = {}
     if token:

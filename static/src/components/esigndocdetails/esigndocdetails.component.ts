@@ -76,6 +76,8 @@ export class EsignDocDetailsComponent implements OnInit {
                 obj_this.is_public = true;
             }
         }
+
+        console.log(token, 1334);
         obj_this.doc = {
             "id": doc_id,
             "doc_name": ''
@@ -686,6 +688,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
                 let url = '';
                 url = get_url('/esign/save_sign_data');
+
                 if (arr.length != 0 || snd_to_all) {
                     window['dn_rpc_object']({
                         url: url,
@@ -697,7 +700,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             params: {
                                 document_id: doc_id,
                                 token: token,
-                                'data': JSON.stringify(arr),
+                                data: JSON.stringify(arr),
                                 url: url,
                                 meeting_id: meeting_id,
                                 subject: subject,
@@ -1257,7 +1260,7 @@ export class EsignDocDetailsComponent implements OnInit {
         
         function get_url(url)
         {
-            if (obj_this.is_public)
+            if (token)
             {
                 return url + '_public';
             }

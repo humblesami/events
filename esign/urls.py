@@ -11,6 +11,5 @@ urlpatterns = [
     path('save_signature', views.save_signature, name='save_signature'),
     path('save_signature_public', views.save_signature_public, name='save_signature'),
     path('delete_signature', views.delete_signature, name='delete_signature'),
-    path('delete_signature_public', views.delete_signature_public, name='delete_signature'),
     path('sign-doc/<str:token>', views.sign_doc_public, name='sign_doc_public'),
 ]
