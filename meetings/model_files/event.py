@@ -416,29 +416,24 @@ class Event(models.Model):
         meeting_id = params['meeting_id']
         offset = params['offset']
         limit = params['limit']
-        meeting_obj = Event.objects.get(pk=meeting_id)
         data = {
             'attendees': [],
             'total': 0
         }
         attendees_list = []
-        if meeting_obj:
-            attendees = meeting_obj.attendees.all()
-            total = len(attendees)
-            attendees = attendees[offset: offset+limit]
-            for attendee in attendees:
-                attendee_data = ws_methods.obj_to_dict(
-                    attendee, 
-                    fields=['id', 'name', 'email', 'mobile_phone', 'company', 'image'],
-                    related={
-                        'invitation_response_set': {'fields': 'attendance'}
-                    })
-                attendee_data['attendance'] = attendee_data['invitation_response_set'][0]['attendance']
-                del attendee_data['invitation_response_set']
-                attendee_data['photo'] = attendee_data['image']
-                attendees_list.append(attendee_data)
-            data['attendees'] = attendees_list
-            data['total'] = total
+        records = Invitation_Response.objects.filter(event_id=meeting_id)
+        total = len(records)
+        records = records[offset: offset+limit]
+        for obj in records:
+            attendee_data = ws_methods.obj_to_dict(
+                obj.attendee,
+                fields=['id', 'name', 'email', 'mobile_phone', 'company', 'image']
+            )
+            attendee_data['attendance'] = obj.attendance
+            attendee_data['photo'] = attendee_data['image']
+            attendees_list.append(attendee_data)
+        data['attendees'] = attendees_list
+        data['total'] = total
         return data
             
 
