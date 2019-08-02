@@ -7,7 +7,9 @@ from mainapp.settings import MEDIA_ROOT
 
 def serve_protected_document(request,folder, file):
     if not request.user.id:
-        referer_address = request.META['HTTP_REFERER']
+        referer_address = request.META.get('HTTP_REFERER')
+        if not referer_address:
+            return ''
         if not referer_address.endswith('localhost:4200/'):
             return ''
     path = MEDIA_ROOT + '/' + folder + '/' +file
