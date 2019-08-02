@@ -330,8 +330,9 @@ class Profile(user_model):
         profile_obj = Profile.objects.get(pk=user_id)
         profile = ws_methods.obj_to_dict(
             profile_obj,
-            fields=['id', 'name', 'first_name', 'last_name', 'photo', 'mobile_phone', 'email', 'location', 'birth_date']
+            fields=['id', 'name', 'first_name', 'last_name', 'image', 'mobile_phone', 'email']
             )
+        profile['photo'] = profile['image']
         return profile
 
     @classmethod
