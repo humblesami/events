@@ -4,14 +4,13 @@
         <div class="card-header MessengerSearchWrap">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="chatgroup">
-                        <button (click)="group_create_mode()" class="create glyphicon glyphicon-plus"></button>
-                        <span>New Group</span>
-                    </span>
                     <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
                 </div>
                 <input [(ngModel)]="searchVal" type="text" placeholder="Search or start new chat" name="" class="form-control search">
             </div>
+			<span class="chatgroup">
+				<button (click)="group_create_mode()" class="create"> <img src="static/assets/images/add-group.svg" alt="" /> Create New Group</button>
+			</span>
         </div>
 
         <hr/>

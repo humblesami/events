@@ -2682,12 +2682,13 @@ is_mobile_device .popup-closer {
     justify-content: space-between;
     align-items: center;
     position:relative;
-    margin:-1px;
+    margin:0 -1px;
 }
 .full-messger-link{
 	color: #ffffff;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
+    font-size:.8rem;
     display: inline-block;
     padding: 0.3rem 0.7rem;
     border-radius: 0.3rem;

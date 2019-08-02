@@ -33,12 +33,10 @@
 }
 .messenger-container .search{
 	border-radius: 0px 5px 5px 0px !important;
-	background-color: #f5f6f7;
+	background-color: #EBEBEB;
 	border-style: none;
 	box-sizing: border-box;
 	font-size: 13px;
-	height: 30px;
-	line-height: 30px;
 	padding: 0 4px;
 }
 .messenger-container .search:focus{
@@ -73,13 +71,17 @@
     color: #bec3c9 !important;
     cursor: pointer;
 
-    background-color: #f5f6f7;
+    background-color: #EBEBEB;
     border-style: none;
     box-sizing: border-box;
     font-size: 12px;
-    height: 30px;
-    line-height: 30px;
+
 }
+.messenger-container .search .messenger-container .search_btn{
+	height: 40px;
+    line-height: 40px;
+}
+
 .messenger-container .contacts{
 	list-style: none;
 	padding: 0;
@@ -87,7 +89,7 @@
 .messenger-container .contacts li a{
 	display: block;
     margin: 0;
-    padding: 6px 10px;
+    padding:.3rem .5rem;
 	background-color: #ffffff;
 	position: relative;
 }
@@ -374,7 +376,7 @@
 
 .messenger-container .MessengerSearchWrap {
     display: block;
-    padding: 12px 12px;
+    padding:.5rem;
     position: relative;
     background: transparent;
     border-style: none;
@@ -614,7 +616,8 @@
 }
 .chatgroup
 {
-    margin-top:4px;
+    padding:.8rem 0 .3rem;
+    display:block;
 }
 .yt1Zfc{
     background-color: #0f9d58;
@@ -628,13 +631,18 @@
     right: 16px;
     border: 0;
 }
+
 .chatgroup .create{
-    height: 20px;
-    width: 20px;
-    border: 2px silver solid;
-    border-radius: 50%;
-    background:green;
-    color: white;
+	background: transparent;
+    border: 0;
+    color: #000;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 21px;
+}
+
+.chatgroup .create i{
+	color:#000000;
 }
 
 .group-details-container
