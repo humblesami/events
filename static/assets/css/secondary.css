@@ -59,3 +59,7 @@ body.public #viewer_container{
     overflow-y: auto;
     overflow-x: hidden;
 }
+#server-wait
+{
+    z-index: 27;
+}
