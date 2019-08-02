@@ -188,8 +188,8 @@ def delete_user_signature(request):
         args = kw['args']
         params = kw['params']
         model = apps.get_model(args['app'], args['model'])
-        res = model.delete_signature(request, params)
-        return produce_result(res, args)
+        res = model.del_sign(request, params)
+        return 'done'
     except:
         return produce_exception()
 

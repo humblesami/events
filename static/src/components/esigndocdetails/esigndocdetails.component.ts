@@ -729,6 +729,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 return;
             }
             var signature_id = $(this).attr("id");
+            var signature_dom = $(this);
             var usr_name = $(this).attr("name");
             window["doc_preview"].image("uuuu");
             var body = $('.youtubeVideoModal .modal-body:last');
@@ -947,9 +948,8 @@ export class EsignDocDetailsComponent implements OnInit {
             del_btn.click(function(e) {
                 if (confirm('Delete it permanently?')) {
                     let url = '';
-                    url = get_url('/esign/delete_signature');
                     window['dn_rpc_object']({
-                        url: url,
+                        url: '/esign/delete_signature',
                         data: {
                             args: {
                                 app: "meetings",
@@ -963,10 +963,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             }
                         },
                         onSuccess: function(data) {
-                            loadData();
-                            $("#nxxt_sign").click();
-
-                            // web_client.do_notify(_("Success"), "Signature saved");
+                            signature_dom.remove();
                         }
                     })
 

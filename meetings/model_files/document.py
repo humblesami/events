@@ -354,6 +354,12 @@ class SignDocument(SignatureDoc):
         return doc_data
 
     @classmethod
+    def del_sign(cls, request, params):
+        signature_id = int(params['signature_id'])
+        sign = Signature.objects.filter(id=signature_id)
+        sign.delete()
+
+    @classmethod
     def delete_signature(cls, request, params):
         signature_id = int(params['signature_id'])
         sign = Signature.objects.filter(id=signature_id)
