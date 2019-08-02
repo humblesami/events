@@ -298,20 +298,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 </div>
                             </div>
                         </a>
-                        <div *ngIf="meeting_type == 'completed' || meeting_type == 'ongoing'" id="tdmrb{{meeting_object.id}}">
-                            <button (click)="mark_attendance('absent', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
-                                <i *ngIf="profile.attendance == 'absent' || meeting_object.attendance == 'absent'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                <span name="absent">Absent</span>
-                            </button>
-                            <button (click)="mark_attendance('inperson', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
-                                <i *ngIf="profile.attendance == 'inperson' || meeting_object.attendance == 'inperson'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                <span name="inperson">Inperson</span>
-                            </button>
-                            <button (click)="mark_attendance('online', meeting_object.id, 'attendance', profile.id)" class="btn btn-primary">
-                                <i *ngIf="profile.attendance == 'online' || meeting_object.attendance == 'online'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>
-                                <span name="online">Online</span>
-                            </button>                            
-                        </div>
                     </div>
                 </div>
             </div>

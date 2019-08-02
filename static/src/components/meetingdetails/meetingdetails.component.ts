@@ -287,66 +287,7 @@ export class MeetingDetailsComponent implements OnInit {
         }
     }
 
-
-    mark_attendance(response: string, meet_id: string, action:string, user_id:string) 
-    {
-		let req_url = '/meeting/respond-invitation-json';
-		let obj_this = this;
-		let input_data = {
-			meeting_id: meet_id,
-        };
-        input_data['attendance'] = response;
-        input_data['user_id'] = user_id;
-        var meeting_being_updated = obj_this.meeting_object;
-        meeting_being_updated.user_id = user_id
-
-		if (response) {
-			let args = {
-                app: 'meetings',
-                model: 'Event',
-                method: 'respond_invitation'
-            }			
-            let final_input_data = {
-                params: input_data,
-                args: args,
-                no_loader: 1,
-            };
-            obj_this.httpService.get(final_input_data, function (data) {
-            let attendee = meeting_being_updated.attendees.filter(function(attendee){
-                return attendee.id == meeting_being_updated.user_id
-            });
-            if (attendee.length > 0)
-            {
-                attendee = attendee[0];
-                attendee.attendance = response;
-            }
-            meeting_being_updated.attendance_marked = data.attendance_marked
-			}, null);
-		}
-	}
-    
 	ngOnInit() {
-        //[data-toggle="toggle"]
-        // var obj_this = this;
-        // setTimeout(function(){
-        //     $('.toggle_cb').change(function() {
-        //         if(!obj_this.first_check)
-        //         {
-        //             let publish_status = $(this).prop('checked');
-        //             let args = {
-        //                 app: 'meetings',
-        //                 model: 'Event',
-        //                 method: 'update_publish_status'
-        //             }
-        //             let input_data = {
-        //                 params: {meeting_id: obj_this.meeting_object.id,publish_status: publish_status},
-        //                 args: args,
-        //                 no_loader: 1
-        //             };
-        //             obj_this.httpService.get(input_data, null, null)
-        //         }                
-        //     });
-        // }, 200);
 	}
 
 	ngOnDestroy() {

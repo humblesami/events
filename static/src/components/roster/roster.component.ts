@@ -66,6 +66,7 @@ export class RosterComponent implements OnInit {
             obj_this.total_records = Number(data.total);            
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;
+            obj_this.attendance_data = data.attendees;
             obj_this.httpService.changePaginator(data.total);
         }
         let obj_this = this;
@@ -95,7 +96,7 @@ export class RosterComponent implements OnInit {
 
     update_attendance(attendee_id: number, val){
         let attendee = this.attendance_data.find(x=>x.id == attendee_id);
-        console.log(attendee);
+        // console.log(attendee);
         if(attendee)
         {
             attendee.attendance = val; 
@@ -111,6 +112,7 @@ export class RosterComponent implements OnInit {
             meeting_id: obj_this.meeting_id,
             attendance_data: obj_this.attendance_data,
         }
+        // console.log(input_data, 222);
         let args = {
             app: 'meetings',
             model: 'Event',
