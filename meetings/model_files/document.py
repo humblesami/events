@@ -32,6 +32,7 @@ class MeetingDocument(File):
     def breadcrumb(self):
         event_obj = self.meeting
         data = []
+        data = []
         if event_obj:
             if event_obj.exectime != 'ongoing':
                 data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
@@ -297,77 +298,6 @@ class SignDocument(SignatureDoc):
             'token_required': True
         }
         ws_methods.send_email_on_creation(email_data)
-        doc_data = SignatureDoc.get_doc_data(request,doc)
-        return doc_data
-
-    @classmethod
-    def save_signature(cls, request, params):
-        doc_id = int(params['document_id'])
-        doc = cls.objects.filter(id=doc_id)[0]
-        signature_id = params['signature_id']
-        token = params.get('token')
-        uid = False
-        sign = Signature.objects.filter(id=signature_id)[0]
-        if token:
-            sign1 = doc.signature_set.get(id=signature_id)
-            uid = sign1.user.id
-            if uid != sign.user.id:
-                return "Unauthorized"
-        else:
-            if request.user.id != 1:
-                if request.user.id != sign.user.id:
-                    return "Unauthorized"
-        binary_signature = ""
-        if params['type'] == "upload":
-            binary_signature = params['binary_signature']
-            binary_data = io.BytesIO(base64.b64decode(binary_signature))
-            jango_file = DjangoFile(binary_data)
-            sign.image.save(params['filename'], jango_file)
-        else:
-            if params['type'] == "auto":
-                binary_signature = SignatureDoc.get_auto_sign(sign)
-                # sign.write({'draw_signature': binary_signature})
-            if params['type'] == "draw":
-                binary_signature = params['binary_signature']
-                binary_data = io.BytesIO(base64.b64decode(binary_signature))
-                jango_file = DjangoFile(binary_data)
-                sign.image.save("sign"+".png", jango_file)
-            if params['type'] == "date":
-                # dt=kw['date']
-                dt = datetime.datetime.today().strftime('%b,%d  %Y')
-                binary_signature = cls.get_auto_sign(sign, dt)
-                binary_data = io.BytesIO(base64.b64decode(binary_signature))
-                jango_file = DjangoFile(binary_data)
-                sign.image.save("sign"+".png", jango_file)
-            if params['type'] == "text":
-                text = params['text']
-                binary_signature = cls.get_sign_text(sign, text)
-                binary_data = io.BytesIO(base64.b64decode(binary_signature))
-                jango_file = DjangoFile(binary_data)
-                sign.image.save("sign"+".png", jango_file)
-
-        doc.embed_signatures()
-        doc_data = SignatureDoc.get_doc_data(request,doc, token)
-        if type(doc_data) is str:
-            return doc_data
-        doc_data["signature"] = binary_signature
-        return doc_data
-
-    @classmethod
-    def del_sign(cls, request, params):
-        signature_id = int(params['signature_id'])
-        sign = Signature.objects.filter(id=signature_id)
-        sign.delete()
-
-    @classmethod
-    def delete_signature(cls, request, params):
-        signature_id = int(params['signature_id'])
-        sign = Signature.objects.filter(id=signature_id)
-        doc_id = params['document_id']
-        doc = cls.objects.filter(id=doc_id)[0]
-        # doc.emit_data_update(doc)
-        sign.delete()
-        doc.embed_signatures()
         doc_data = SignatureDoc.get_doc_data(request,doc)
         return doc_data
 

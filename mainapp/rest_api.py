@@ -30,11 +30,12 @@ public_methods = {
         }
     },
     'esign':{
-        'SignDocument':{
-            'get_detail': 1,
-        },
         'SignatureDoc':{
-            'get_signature': 1
+            'get_signature': 1,
+            'get_detail': 1
+        },
+        'Signature':{
+            'save_signature':1,
         }
     }
 }

@@ -65,8 +65,8 @@ export class EsignDocDetailsComponent implements OnInit {
             pageNum,
             ajax_options,
             token = $('.sign_token').val() || "",
-            doc_id = $('.e_sign_doc_id').first().html(),
-            isAdmin = obj_this.socketService.is_admin;
+            doc_id,
+            isAdmin = obj_this.socketService.is_admin;            
 
         if (!doc_id) {
             var route_token = obj_this.route.snapshot.params.token;
@@ -77,8 +77,8 @@ export class EsignDocDetailsComponent implements OnInit {
                 obj_this.is_public = true;
             }
         }
+        console.log(doc_id, doc_data, 833, token);
 
-        console.log(token, 1334);
         obj_this.doc = {
             "id": doc_id,
             "doc_name": ''
@@ -173,11 +173,10 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                 }
             };
-            if(token)
-            {
+            if(token){
                 ajax_options.url = '/rest/public';
             }
-            window['dn_rpc_object'](ajax_options)
+            window['dn_rpc_object'](ajax_options);
         }
         loadData();
 
@@ -605,6 +604,7 @@ export class EsignDocDetailsComponent implements OnInit {
             })
             save_btn.click(function(e) {
                 var arr = [];
+                console.log(3232);
                 var isEmpty = false;
                 var subject = input_subject[0].value;
                 var message = email_body[0].value;
@@ -688,15 +688,13 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                 }
                 let url = '';
-                url = get_url('/esign/save_sign_data');
-
                 if (arr.length != 0 || snd_to_all) {
-                    window['dn_rpc_object']({
-                        url: url,
+                    ajax_options = {                        
                         data: {
                             args: {
                                 app: "meetings",
-                                model: "SignDocument"
+                                model: "SignDocument",
+                                method:"save_sign_data",
                             },
                             params: {
                                 document_id: doc_id,
@@ -709,14 +707,15 @@ export class EsignDocDetailsComponent implements OnInit {
                                 send_to_all: snd_to_all
                             }
                         },
-                        onSuccess: function(data) {
+                        onSuccess: function(data) {                            
                             loadData();
                             $(".save_doc_data").attr('disabled', 'disabled');
                             new_divs.hide().removeClass("new_sign");
                             $('.youtubeVideoModal').modal('hide');
                             $("#nxxt_sign").click();
                         }
-                    })
+                    }
+                    window['dn_rpc_object'](ajax_options);
                 }
             });
         });
@@ -780,13 +779,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     canvas_context.drawImage(img, 0, 0, signature_editor.width(), signature_editor.height());
 
                 };
-
-                //            var hidden_image_container = '<div id="hidden_img_cont" ';
-                //            var hic_style =' style="visibility:hidden;height:'+signature_editor.height()+'px;width:'+signature_editor.width()+'px"';
-                //            hidden_image_container = $(hidden_image_container + hic_style + '/>');
-                //            var hidden_image = $('<img style="max-height:100%;max-width:100%" />');
-                //            body.append(hidden_image_container);
-                //            hidden_image_container.html(hidden_image);
                 ajax_options = {
                     data: {
                         args: {
@@ -809,7 +801,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 if(token){
                     ajax_options.url = '/rest/public';
                 }
-                window['dn_rpc_object'](ajax_options)
+                window['dn_rpc_object'](ajax_options);
 
 
                 var dataURL = '';
@@ -820,13 +812,13 @@ export class EsignDocDetailsComponent implements OnInit {
                     $('#loaderContainerajax').show();
                     auto_clicked = true;
                     let url = '';
-                    url = get_url('/esign/save_signature');
-                    window['dn_rpc_object']({
-                        url: url,
+                    
+                    ajax_options = {
                         data: {
                             args: {
-                                app: "meetings",
-                                model: "SignDocument"
+                                app: "esign",
+                                model: "Signature",
+                                method:"save_signature"
                             },
                             params: {
                                 signature_id: signature_id,
@@ -838,10 +830,15 @@ export class EsignDocDetailsComponent implements OnInit {
                             }
                         },
                         onSuccess: function(data) {
-                            load_signature(data);
+                            // load_signature(data);
+                            signature_dom.find('img:first').src = data;
                             $("#nxxt_sign").click();
                         }
-                    })
+                    }
+                    if(token){
+                        ajax_options.url = '/rest/public';
+                    }
+                    window['dn_rpc_object'](ajax_options);
                 });
 
                 signature_editor.mousedown(function() {
@@ -881,13 +878,13 @@ export class EsignDocDetailsComponent implements OnInit {
                         type="auto";
                     }
                     let url = '';
-                    url = get_url('/esign/save_signature');
-                    window['dn_rpc_object']({
+                    ajax_options = {
                         url: url,
                         data: {
                             args: {
-                                app: "meetings",
-                                model: "SignDocument"
+                                app: "esign",
+                                model: "Signature",
+                                method:"save_signature"                                
                             },
                             params: {
                                 signature_id: signature_id,
@@ -899,16 +896,20 @@ export class EsignDocDetailsComponent implements OnInit {
                             }
                         },
                         onSuccess: function(data) {
-                            doc_data = data.doc_data;
+                            // doc_data = data.doc_data;
                             // renderPDF(data.pdf_binary);
-                            loadData();
+                            // loadData();
+                            signature_dom.find('img:first').src = data;
                             $('.youtubeVideoModal').modal('hide');
                             $('#loaderContainerajax').hide();
                             $("#nxxt_sign").click();
                             // web_client.do_notify(_("Success"), "Signature saved");
                         }
-                    })
-
+                    }
+                    if(token){
+                        ajax_options.url = '/rest/public';
+                    }
+                    window['dn_rpc_object'](ajax_options);
                 });
 
                 cancel_btn.click(function(evt) {
@@ -948,24 +949,23 @@ export class EsignDocDetailsComponent implements OnInit {
             del_btn.click(function(e) {
                 if (confirm('Delete it permanently?')) {
                     let url = '';
-                    window['dn_rpc_object']({
-                        url: '/esign/delete_signature',
+                    ajax_options = {
                         data: {
                             args: {
-                                app: "meetings",
-                                model: "SignDocument"
+                                app: "esign",
+                                model: "Signature",
+                                method: "del_sign"
                             },
                             params: {
                                 signature_id: signature_id,
                                 document_id: doc_id,
-                                token: token,
-                                url: url
                             }
                         },
                         onSuccess: function(data) {
                             signature_dom.remove();
                         }
-                    })
+                    }
+                    window['dn_rpc_object'](ajax_options);
 
                     $('.youtubeVideoModal').modal('hide');
                 }
@@ -978,6 +978,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 return;
             }
             var signature_id = $(this).attr("id");
+            var signature_dom = $(this);
             var usr_name = $(this).attr("name");
             window["doc_preview"].image("uuuu");
             var body = $('.youtubeVideoModal .modal-body:last');
@@ -1003,13 +1004,12 @@ export class EsignDocDetailsComponent implements OnInit {
             save_btn.click(function(e) {
                 var date = input_date.val();
                 let url = '';
-                url = get_url('/esign/save_signature');
-                window['dn_rpc_object']({
-                    url: url,
+                ajax_options = {
                     data: {
                         args: {
-                            app: "meetings",
-                            model: "SignDocument"
+                            app: "esign",
+                            model: "Signature",
+                            method: "save_signature"
                         },
                         params: {
                             signature_id: signature_id,
@@ -1023,10 +1023,15 @@ export class EsignDocDetailsComponent implements OnInit {
                     onSuccess: function(data) {
                         // doc_data = data.doc_data;
                         // renderPDF(data.pdf_binary);
-                        loadData();
+                        // loadData();
+                        signature_dom.find('img:first').src = data;
                         $("#nxxt_sign").click();
                     }
-                })
+                }
+                if(token){
+                    ajax_options.url = '/rest/public';
+                }
+                window['dn_rpc_object'](ajax_options);
                 $('.youtubeVideoModal').modal('hide');
             });
 
@@ -1038,28 +1043,27 @@ export class EsignDocDetailsComponent implements OnInit {
             del_btn.click(function(e) {
                 if (confirm('Delete it permanently?')) {
                     let url = '';
-                    url = get_url('/esign/delete_signature');
-                    window['dn_rpc_object']({
-                        url: url,
+                    ajax_options = {                        
                         data: {
                             args: {
-                                app: "meetings",
-                                model: "SignDocument"
+                                app: "esign",
+                                model: "Signature",
+                                method: "del_sign"
                             },
                             params: {
                                 signature_id: signature_id,
                                 document_id: doc_id,
-                                token: token,
-                                url: url
                             }
                         },
                         onSuccess: function(data) {
                             // doc_data = data.doc_data;
                             // renderPDF(data.pdf_binary);
-                            loadData();
+                            // loadData();
+                            signature_dom.remove();
                             $("#nxxt_sign").click();
                         }
-                    })
+                    }
+                    window['dn_rpc_object'](ajax_options);
                     $('.youtubeVideoModal').modal('hide');
                 }
             });
@@ -1071,6 +1075,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 return;
             }
             var signature_id = $(this).attr("id");
+            var signature_dom = $(this);
             var usr_name = $(this).attr("name");
             var field_name = $(this).attr("field_name");
             window["doc_preview"].image("uuuu");
@@ -1101,13 +1106,13 @@ export class EsignDocDetailsComponent implements OnInit {
                     return;
                 }
                 let url = '';
-                url = get_url('/esign/save_signature');
-                window['dn_rpc_object']({
+                ajax_options = {
                     url: url,
                     data: {
                         args: {
-                            app: "meetings",
-                            model: "SignDocument"
+                            app: "esign",
+                            model: "Signature",
+                            method:"save_signature"
                         },
                         params: {
                             signature_id: signature_id,
@@ -1121,10 +1126,15 @@ export class EsignDocDetailsComponent implements OnInit {
                     onSuccess: function(data) {
                         // doc_data = data.doc_data;
                         // renderPDF(data.pdf_binary);
-                        loadData();
+                        // loadData();
+                        signature_dom.find('img:first').src = data;
                         $("#nxxt_sign").click();
                     }
-                })
+                }
+                if(token){
+                    ajax_options.url = '/rest/public';
+                }
+                window['dn_rpc_object'](ajax_options);
                 $('.youtubeVideoModal').modal('hide');
             });
 
@@ -1136,28 +1146,27 @@ export class EsignDocDetailsComponent implements OnInit {
             del_btn.click(function(e) {
                 if (confirm('Delete it permanently?')) {
                     let url = '';
-                    url = get_url('/esign/delete_signature');
-                    window['dn_rpc_object']({
-                        url: url,
+                    ajax_options = {
                         data: {
                             args: {
-                                app: "meetings",
-                                model: "SignDocument"
+                                app: "esign",
+                                model: "Signature",
+                                method:"del_sign"
                             },
                             params: {
                                 signature_id: signature_id,
                                 document_id: doc_id,
-                                token: token,
-                                url: url
                             }
                         },
                         onSuccess: function(data) {
                             // doc_data = data.doc_data;
                             // renderPDF(data.pdf_binary);
-                            loadData();
+                            // loadData();
+                            signature_dom.remove()
                             $("#nxxt_sign").click();
                         }
-                    })
+                    }
+                    window['dn_rpc_object'](ajax_options);
                     $('.youtubeVideoModal').modal('hide');
                 }
             });
@@ -1242,7 +1251,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 obj_this.users_list = obj_this.all_users_list;
                 $('.check_box_send_all').hide();
             } else {
-                window['dn_rpc_object']({                    
+                ajax_options = {                    
                     data: {
                         args: {
                             app: "meetings",
@@ -1256,7 +1265,11 @@ export class EsignDocDetailsComponent implements OnInit {
                     onSuccess:function(data){
                         obj_this.users_list = data;
                     }
-                });
+                };
+                if(token){
+                    ajax_options.url = '/rest/public';
+                }
+                window['dn_rpc_object'](ajax_options);
             }
         });
 

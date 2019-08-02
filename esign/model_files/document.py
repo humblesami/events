@@ -171,13 +171,14 @@ class SignatureDoc(File):
                 user = res.user
         if not user.id:
             return 'Unauthorized request'
-        file_obj = cls.objects.get(id=file_id)
+        file_obj = SignatureDoc.objects.get(id=file_id)
         file_name = file_obj.name
 
-        doc_data = cls.get_doc_data(request, file_obj, token)
+        doc_data = SignatureDoc.get_doc_data(request, file_obj, token)
         if type(doc_data) is str:
             return doc_data
         doc_data['doc_name'] = file_name
+        doc_data['id'] = file_id
         return doc_data
 
     @classmethod
@@ -197,7 +198,7 @@ class SignatureDoc(File):
             user_token = PostUserToken.validate_token_for_post(token, post_info)
             if user_token:
                 user = user_token.user
-                signatures = []
+                signatures = doc.signature_set.filter(user_id=user.id)
         else:
             user = request.user
             group = Group.objects.get(name="Admin")
@@ -225,7 +226,7 @@ class SignatureDoc(File):
                     my_record = True
             s["signed"] = signed
             s["my_record"] = my_record
-        return {"pdf_binary": pdf_doc, "doc_data": signatures}
+        return {"pdf_binary": pdf_doc, "doc_data": signatures, 'id': doc.id}
 
     @classmethod
     def get_signature(cls, request, params):
@@ -257,7 +258,7 @@ class SignatureDoc(File):
         else:
             image = None
             if sign.type == 'initial':
-                image = cls.get_auto_sign(sign)
+                image = SignatureDoc.get_auto_sign(sign)
         return {"signature": image}
 
 
@@ -307,7 +308,7 @@ class Signature(models.Model):
     type = models.CharField(max_length=200, blank=True)
     field_name = models.CharField(max_length=200, blank=True)
     text = models.CharField(max_length=200, blank=True)
-    image = models.ImageField(upload_to='profile/', blank=True, null=True)
+    image = models.ImageField(upload_to='esign/', blank=True, null=True)
     date = models.DateField(null=True, blank=True)
 
     document = models.ForeignKey(SignatureDoc, on_delete=models.CASCADE)
@@ -318,3 +319,74 @@ class Signature(models.Model):
     zoom = models.FloatField(null=True, blank=True)
     height = models.FloatField(null=True, blank=True)
     width = models.FloatField(null=True, blank=True)
+    signed_at = models.DateTimeField(null=True)
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='admin')
+
+
+    @classmethod
+    def del_sign(cls, request, params):
+        signature_id = int(params['signature_id'])        
+        sign = Signature.objects.get(id=signature_id)
+        if sign.signed_at:
+            return 'Can not be deleted executed signature from doucment'
+        if sign.created_by:
+            if sign.created_by.id == request.user.id:
+                sign.delete()
+                return 'done'
+            else:
+                return 'Unauthorized'
+        else:
+            sign.delete()
+            return 'done'
+
+    @classmethod
+    def save_signature(cls, request, params):
+        doc_id = int(params['document_id'])
+        doc = SignatureDoc.objects.get(id=doc_id)
+        signature_id = params['signature_id']
+        token = params.get('token')
+        uid = False
+        sign = Signature.objects.get(id=signature_id)
+        if token:
+            token = PostUserToken.objects.get(token=token)
+            user = token.user
+            if user.id != sign.user_id:
+                return 'Invalid user'
+            post_info = token.post_info
+            if post_info.res_id != doc_id:
+                return 'Invalid doc access'
+        else:
+            if request.user.id != 1:
+                if request.user.id != sign.user.id:
+                    return "Unauthorized"
+        binary_signature = ""
+        sign.signed_at = datetime.datetime.now()
+        if params['type'] == "upload":
+            binary_signature = params['binary_signature']
+            binary_data = io.BytesIO(base64.b64decode(binary_signature))
+            jango_file = DjangoFile(binary_data)
+            sign.image.save(params['filename'], jango_file)
+        else:
+            if params['type'] == "auto":
+                binary_signature = SignatureDoc.get_auto_sign(sign)
+                # sign.write({'draw_signature': binary_signature})
+            if params['type'] == "draw":
+                binary_signature = params['binary_signature']
+                binary_data = io.BytesIO(base64.b64decode(binary_signature))
+                jango_file = DjangoFile(binary_data)
+                sign.image.save("sign"+".png", jango_file)
+            if params['type'] == "date":
+                # dt=kw['date']
+                dt = datetime.datetime.today().strftime('%b,%d  %Y')
+                binary_signature = SignatureDoc.get_auto_sign(sign, dt)
+                binary_data = io.BytesIO(base64.b64decode(binary_signature))
+                jango_file = DjangoFile(binary_data)
+                sign.image.save("sign"+".png", jango_file)
+            if params['type'] == "text":
+                text = params['text']
+                binary_signature = SignatureDoc.get_sign_text(sign, text)
+                binary_data = io.BytesIO(base64.b64decode(binary_signature))
+                jango_file = DjangoFile(binary_data)
+                sign.image.save("sign"+".png", jango_file)
+            sign.save()
+        return { 'image': binary_signature}
