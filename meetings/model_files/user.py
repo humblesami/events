@@ -409,15 +409,16 @@ class Profile(user_model):
             file_name = 'admin_image_'+str(user_id) + '.' + ext
             profile.admin_image.save(file_name, data, save=True)
         
-        groups = profile.groups.all()
-        for group in groups:
-            group.user_set.remove(user_id)
-            group.save()
-        groups = params.get('groups')        
-        if groups:
+        if 'groups' in params:            
+            groups = profile.groups.all()
             for group in groups:
-                profile.groups.add(group['id'])
-                profile.save()
+                group.user_set.remove(user_id)
+                group.save()  
+            groups = params.get('groups')
+            if groups:
+                for group in groups:
+                    profile.groups.add(group['id'])
+                    profile.save()
 
         profile.save()
         data = {

@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'esign',
     'nested_admin',
     'restoken',
+    'actions'
 ]
 
 REST_FRAMEWORK = {

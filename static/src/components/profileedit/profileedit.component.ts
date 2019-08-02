@@ -292,6 +292,7 @@ export class ProfileeditComponent implements OnInit {
 		this.modified_profile_data['mobile_phone'] = val;
 		this.profile_data.mobile_phone = val;
 		this.profile_data.mobile_verified = false;
+		this.setting_two_factor_auth();
 	}
 
 	onSubmit() {
@@ -494,7 +495,6 @@ export class ProfileeditComponent implements OnInit {
 			params: {mobile_phone: obj_this.profile_data.mobile_phone},
 			args: args
         }
-        console.log(final_input_data);
 		obj_this.httpService.get(final_input_data,function(data){            
             obj_this.verification_id = data.uuid;
 
