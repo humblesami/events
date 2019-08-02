@@ -15,6 +15,7 @@ export class EsignDocDetailsComponent implements OnInit {
     doc_name: any;
     is_public = false;
     users_list = [];
+    all_users_list = [];
     selectedUser: any;
     socketService: SocketService;
 
@@ -146,7 +147,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     doc_data = data.doc_data;
                     // console.log(doc_data, 11);
-                    obj_this.users_list = users = data.users;
+                    obj_this.all_users_list = obj_this.users_list = users = data.users;
                     meetings = data.meetings;
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
@@ -1241,9 +1242,24 @@ export class EsignDocDetailsComponent implements OnInit {
 
         $('#dropdown_meeting').change(function() {
             if ($('#dropdown_meeting').val() == 0) {
+                obj_this.users_list = obj_this.all_users_list;
                 $('.check_box_send_all').hide();
             } else {
-                $('.check_box_send_all').show();
+                window['dn_rpc_object']({                    
+                    data: {
+                        args: {
+                            app: "meetings",
+                            model: "Event",
+                            method: "get_attendees_list",
+                        },
+                        params: {
+                            meeting_id: $('#dropdown_meeting').val(),
+                        }
+                    },
+                    onSuccess:function(data){
+                        obj_this.users_list = data;
+                    }
+                });
             }
         });
 

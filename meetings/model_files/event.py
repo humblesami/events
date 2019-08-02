@@ -167,21 +167,13 @@ class Event(models.Model):
     # working on meeting attendees attendance
     @classmethod
     def mark_attendance(cls, request, params):                 
-        meeting_id = params.get('meeting_id')
-        attendances = params.get('attendance_data')
-        if not meeting_id:
-            meeting_id = 4
-        if not attendances:
-            attendances = [{'id':1, 'attendance':'inperson'},{'id':2, 'attendance':'online'},{'id':4, 'attendance':'inperson'}]
+        meeting_id = params['meeting_id']
+        attendances = params['attendance_data']
         for atten in attendances:
-            check_meeting = Invitation_Response.objects.filter(event_id = meeting_id , attendee= atten['id'])
-            if check_meeting:
-                check_meeting[0].attendance = atten['attendance']
-                check_meeting[0].save()
-            else:
-                return 'Error'
-        
-        return 'Done'
+            check_meeting = Invitation_Response.objects.get(event_id = meeting_id , attendee= atten['id'])
+            check_meeting.attendance = atten['attendance']
+            check_meeting.save()
+        return 'done'
 
 
     @classmethod
