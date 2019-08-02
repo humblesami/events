@@ -63,10 +63,10 @@ export class RosterComponent implements OnInit {
 
     get_data(){
         function success(data){            
-            obj_this.total_records = Number(data.total);
-            obj_this.httpService.changePaginator(data.total);
+            obj_this.total_records = Number(data.total);            
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;
+            obj_this.httpService.changePaginator(data.total);
         }
         let obj_this = this;
         let input_data = {

@@ -26,7 +26,7 @@ export class PaginatorComponent implements OnInit {
             obj_this.count = data;
             // console.log(3331, obj_this.count);
         }
-        console.log(Date(), new Date().getMilliseconds(), 113);
+        // console.log(Date(), new Date().getMilliseconds(), 113);
         this.httpService = httpServ;
         this.offset = 0;        
         this.page_number = 1;        

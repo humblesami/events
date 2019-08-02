@@ -121,6 +121,7 @@ export class EsignDocDetailsComponent implements OnInit {
         function loadData() {
             $('#loaderContainerajax').show();
             $(".o_loading").show();
+            console.log('Loading doc data', Date());
             let url = '';
             ajax_options = {
                 data: {
@@ -140,7 +141,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     {
                         $('#holder').hide();
                         $('body').prepend('<h1>You have Completed You Signatures</h1>');
-                    }                    
+                    }
                     doc_data = data.doc_data;
                     // console.log(doc_data, 11);
                     obj_this.users_list = users = data.users;
@@ -150,6 +151,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     pdf_binary = data.pdf_binary;
                     obj_this.doc.doc_name = data.doc_name;
                     //setTimeout(function(){ showPDF(pdf_binary); }, 3000);
+                    console.log('Starting render doc data', Date());
                     renderPDF(pdf_binary);
 
                     if (meetings) {
@@ -203,6 +205,7 @@ export class EsignDocDetailsComponent implements OnInit {
             window["PDFJS"].getDocument({
                 data: pdfData
             }).then(function getPdf(_pdfDoc) {
+                console.log('Got doc to render', Date());
                 pdfDoc = _pdfDoc;
                 if (!pageNum) {
                     pageNum = 1;
@@ -226,6 +229,7 @@ export class EsignDocDetailsComponent implements OnInit {
         function renderPage(num) {
             // Using promise to fetch the page
             pdfDoc.getPage(num).then(function(page) {
+                console.log('Got page to render', Date());
                 var viewport = page.getViewport(scale);
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
@@ -235,6 +239,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     viewport: viewport
                 };
                 page.render(renderContext);
+                console.log('Page rendered', Date());
             });
             // Update page counters
             pageNum = num;
@@ -246,7 +251,7 @@ export class EsignDocDetailsComponent implements OnInit {
             $(selector).show();
             
             //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
-            setTimeout(function() {
+            setTimeout(function() {                
                 loadSignatures({
                     "doc_data": doc_data
                 });
@@ -440,6 +445,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     $('#page_container').append(div);
                 }
             });
+            console.log('Signatures loaded', Date());
         }
 
         ///////////////////////DRAG AND DROOP//////////////////////////
