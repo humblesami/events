@@ -12,6 +12,12 @@ export class HttpService {
 
     fetch_paged_data = function(off_set, limit){};
 
+    changePaginator(total: number)
+    {
+        // console.log(Date(), new Date().getMilliseconds(), 1771);
+        // console.log('Not implemented')
+    }
+
     search(input_data: any, success_cb, failure_cb)
     {
         var options = this.makeOptions_search('get', input_data, success_cb, failure_cb);

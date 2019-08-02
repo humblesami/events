@@ -27,6 +27,7 @@ export class RosterComponent implements OnInit {
         this.limit = 2;
         this.total_records = 0;    
     }
+    attendance_data = [];
     changedOffset(data)
     {
         this.offset = Number(data);
@@ -37,14 +38,10 @@ export class RosterComponent implements OnInit {
     {
         this.limit = Number(data);
         this.offset = 0;
-        console.log(this.limit, this.offset, 144);
+        // console.log(this.limit, this.offset, 144);
         this.get_data();
     }
-    roster_search(data)
-    {
-        this.key_word = data;
-        this.get_data();
-    }
+    
     attendees : Array<ChatUser>;
     count: number;
 
@@ -52,11 +49,22 @@ export class RosterComponent implements OnInit {
         let obj_this = this;
 		const modalRef = this.modalService.open(ProfilesummaryComponent);
 		modalRef.componentInstance.user_id = user_id;
-	}
+    }
+    
+    roster_search(e){
+        if(e.keyCode == 13)
+        {
+            this.offset = 0;
+            this.key_word = e.target.value;
+            this.get_data();
+        }
+        // console.log(32312, e.keyCode);
+    }
 
     get_data(){
-        function success(data){
+        function success(data){            
             obj_this.total_records = Number(data.total);
+            obj_this.httpService.changePaginator(data.total);
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;
         }
@@ -73,30 +81,35 @@ export class RosterComponent implements OnInit {
         }
         let final_input = {
             params: input_data,
-            args: args
+            args: args,
+            no_loader:1
         }
         if(obj_this.key_word)
         {
-            input_data['key_word'] = obj_this.key_word;
+            input_data['key_word'] = obj_this.key_word;            
             args['method'] = 'search_roster';
-            obj_this.key_word = undefined;
+            // obj_this.key_word = undefined;
         }
         obj_this.httpService.get(final_input, success, null)
     }
 
-    submit_attendance(){
-        var attendance_data = [];
-        $('table.roster input:checked').each(function(i, el){
-            let obj ={
-                id: $(el).next().next().val(),
-                attendance: $(el).next().val()
-            }
-            attendance_data.push(obj);                        
-        });
+    update_attendance(attendee_id: number, val){
+        let attendee = this.attendance_data.find(x=>x.id == attendee_id);
+        console.log(attendee);
+        if(attendee)
+        {
+            attendee.attendance = val; 
+        }
+        else{
+            this.attendance_data.push({id: attendee_id, attendance: val});
+        }
+    }
+
+    submit_attendance(){        
         let obj_this = this;
         let input_data = {
             meeting_id: obj_this.meeting_id,
-            attendance_data: attendance_data,            
+            attendance_data: obj_this.attendance_data,
         }
         let args = {
             app: 'meetings',
@@ -107,10 +120,11 @@ export class RosterComponent implements OnInit {
             params: input_data,
             args: args
         }
+        // console.log(final_input);
         obj_this.httpService.post(final_input, function(data){
             console.log(data);
-        }
-        , null);
+        }, null);
+        obj_this.activeModal.close('Close click');
     }
 
     ngOnInit() {

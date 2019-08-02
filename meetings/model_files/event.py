@@ -471,6 +471,7 @@ class Event(models.Model):
         ).distinct()
         if attendees:
             total = len(attendees)
+            attendees = attendees[offset: offset + limit]
             attendees_list = []
             for attendee in attendees:
                 attendee_data = ws_methods.obj_to_dict(

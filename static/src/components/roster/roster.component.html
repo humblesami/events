@@ -1,50 +1,53 @@
-<div class="router-outlet">
-    <input type="text" placeholder="Search..." (change)="roster_search($event.target.value)"/>
-    <table class="roster">
-        <thead>
-            <tr>
-                <th>Attendee</th>
-                <th>Absent</th>
-                <th>InPerson</th>
-                <th>Online</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let obj of attendees">
-                <td (click)="open(obj.id)">
-                    <img class="roster-images" src="{{socketService.server_url}}{{obj.photo}}" />
-                    {{obj.name}}                    
-                </td>                
-                <td>
-                    <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" />                    
-                    <input *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
-                    <input type="hidden" value="absent" />
-                    <input type="hidden" value="{{obj.id}}" />
-                </td>
-                <td>
-                    <input *ngIf="obj.attendance=='inperson'" checked type="radio" name="{{obj.id}}" />
-                    <input *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
-                    <input type="hidden" value="inperson" />
-                    <input type="hidden" value="{{obj.id}}" />
-                </td>
-                <td>
-                    <input *ngIf="obj.attendance=='online'" checked type="radio" name="{{obj.id}}" />
-                    <input *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
-                    <input type="hidden" value="online" />
-                    <input type="hidden" value="{{obj.id}}" />
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <h3>Total attendees: {{total_records}}</h3>
-    <button (click)="submit_attendance()">Submit Attendance</button>
-    <style>
-        table.roster td, table.roster th{
-            border: 1px solid;
-        }
-    </style>    
-    <app-paginator *ngIf="attendees && attendees.length > 0"
-        (changedLimit)=changedLimit($event)
-        (changedOffset)="changedOffset($event)" count="{{total_records}}"></app-paginator>    
+<div style="padding:10px">
+    <input type="text" placeholder="Search..." (keyup)="roster_search($event)"/>
+    <div class="roster-router-outlet">
+        <table class="roster">
+            <thead>
+                <tr>
+                    <th>Attendee</th>
+                    <th>Absent</th>
+                    <th>InPerson</th>
+                    <th>Online</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let obj of attendees">
+                    <td (click)="open(obj.id)">
+                        <img class="roster-images" src="{{socketService.server_url}}{{obj.photo}}" />
+                        {{obj.name}}                    
+                    </td>                
+                    <td>
+                        <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" />                    
+                        <input (click)="update_attendance(obj.id,'absent')" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
+                        <input type="hidden" value="absent" />
+                        <input type="hidden" value="{{obj.id}}" />
+                    </td>
+                    <td>
+                        <input *ngIf="obj.attendance=='inperson'" checked type="radio" name="{{obj.id}}" />
+                        <input (click)="update_attendance(obj.id,'inperson')" *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
+                        <input type="hidden" value="inperson" />
+                        <input type="hidden" value="{{obj.id}}" />
+                    </td>
+                    <td>
+                        <input *ngIf="obj.attendance=='online'" checked type="radio" name="{{obj.id}}" />
+                        <input (click)="update_attendance(obj.id,'online')" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
+                        <input type="hidden" value="online" />
+                        <input type="hidden" value="{{obj.id}}" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>        
+        <style>
+            table.roster td, table.roster th{
+                border: 1px solid;
+            }
+        </style>
+    </div>
+    <app-paginator count="{{total_records}}" *ngIf="attendees && attendees.length > 0"            
+            (changedLimit)="changedLimit($event)"            
+            (changedOffset)="changedOffset($event)"></app-paginator>
+    <div style="text-align:center;">
+        <button type="button" class="btn btn-outline-dark" (click)="submit_attendance()">Submit and Close</button>
+        <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+    </div>
 </div>
-<button type="button" class="btn btn-outline-dark close-btn" (click)="activeModal.close('Close click')">Close</button>
