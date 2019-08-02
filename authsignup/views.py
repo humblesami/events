@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import logout
+from werkzeug.utils import redirect
+
 from restoken.models import PostUserToken
 from meetings.model_files.user import Profile
 from rest_framework.decorators import api_view
@@ -13,7 +15,7 @@ def login(request, next=None):
 
 def logout_user(request):
     logout(request)
-    return render(request, 'login.html', {})
+    return redirect('/accounts/login')
 
 def forgot_password(request):
     context = {}

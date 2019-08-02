@@ -38,9 +38,7 @@ var dn_current_site_user = {
             window['socket_manager'].close_socket();
             window['socket_manager'].user_data = undefined;
         }
-        setTimeout(function() {
-            bootbox.hideAll();
-        }, 500);
+        bootbox.hideAll();
     },
     initUserDataFromCookie: function() {
         var user_info = localStorage.getItem("user");
@@ -114,13 +112,13 @@ var site_functions = {
         $('body').removeClass('user').addClass('public');
         if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
         {
-            dn_current_site_user.logout();            
+            dn_current_site_user.logout();          
         }
         if(!window.location.toString().endsWith('login'))
         {
             if(window.location.toString().indexOf('4200') == -1)
             {
-                window.location = window['site_config'].server_base_url+'/accounts/login';
+                window.location = window['site_config'].server_base_url+'/accounts/logout';
             }
             else{
                 window.location = '/#/login';
