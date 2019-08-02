@@ -170,7 +170,7 @@ class Event(models.Model):
         meeting_id = params['meeting_id']
         attendances = params['attendance_data']
         for atten in attendances:
-            check_meeting = Invitation_Response.objects.get(event_id = meeting_id , attendee= atten['id'])
+            check_meeting = Invitation_Response.objects.get(event_id = meeting_id , attendee_id= atten['id'])
             check_meeting.attendance = atten['attendance']
             check_meeting.save()
         return 'done'
