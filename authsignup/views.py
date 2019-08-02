@@ -1,10 +1,8 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import logout
-from werkzeug.utils import redirect
 
 from restoken.models import PostUserToken
-from meetings.model_files.user import Profile
+from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 
