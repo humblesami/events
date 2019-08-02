@@ -5,7 +5,7 @@ import datetime
 
 from fpdf import FPDF
 from random import randint
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from PIL import ImageFont, Image, ImageDraw
 from django.db import models
@@ -169,11 +169,10 @@ class SignatureDoc(File):
                 return res
             else:
                 user = res.user
-            file_obj = cls.objects.filter(id=file_id)[0]
-            file_name = file_obj.name
-        else:
-            file_obj = cls.objects.filter(id=file_id)[0]
-            file_name = file_obj.name
+        if not user.id:
+            return 'Unauthorized request'
+        file_obj = cls.objects.get(id=file_id)
+        file_name = file_obj.name
 
         doc_data = cls.get_doc_data(request, file_obj, token)
         if type(doc_data) is str:
@@ -188,7 +187,6 @@ class SignatureDoc(File):
         pdf_doc = pdf_doc.decode('utf-8')
 
         user = False
-        uid = False
         signatures = None
         if token:
             post_info = {
@@ -199,13 +197,15 @@ class SignatureDoc(File):
             user_token = PostUserToken.validate_token_for_post(token, post_info)
             if user_token:
                 user = user_token.user
-                signatures = doc.signature_set.filter(user_id=user.id)
+                signatures = []
         else:
             user = request.user
-            signatures = doc.signature_set.all()
+            group = Group.objects.get(name="Admin")
+            if user in group.user_set.all():
+                signatures = doc.signature_set.all()
+            else:
+                signatures = doc.signature_set.filter(user_id=user.id)
         uid = user.id
-        if not user.id:
-            return 'Invalid user access for signs'
 
         signatures = queryset_to_list(signatures,
                                       fields=['user__id', 'user__username', 'id', 'type', 'page', 'field_name', 'zoom',
