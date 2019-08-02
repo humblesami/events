@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.utils.crypto import get_random_string
 from .models import TwoFactorAuthenticate, ThreadEmail
 from signalwire.rest import Client as signalwire_client
-
+from twilio.twiml.messaging_response import Message, MessagingResponse
 
 def generate_code(request):
     req = request.GET
@@ -31,7 +31,7 @@ def generate_code(request):
         email_data['template_name'] = 'code_verification.html'
         ThreadEmail(email_data).start()
     elif auth_type == 'phone':
-        send_sms(code)
+        send_sms(code, address)
         auth_code_object = TwoFactorAuthenticate(code=code, uuid=uuid, phone=address, auth_type=auth_type)
         auth_code_object.save()
 
@@ -42,15 +42,26 @@ def generate_code(request):
     context = json.dumps(context)
     return HttpResponse(context)
 
-def send_sms(code):
-    client = signalwire_client("485323ec-133a-4f88-929f-afd8f7bd71af","PT92c704ccd2e86c3e93bfd8c8a32f7e63c7bb19fac091e61e" , signalwire_space_url= 'digitalnet.signalwire.com')    
+def send_sms(code, phone):
+    phone = phone.strip()
+    phone='+'+phone
+    client = signalwire_client("def68a3b-3fae-49cc-8e4b-eb8be8c16fd5","PTc6483de7e249e14075792ca6dda9bfd466a922dc5db2def9" , signalwire_space_url= 'odunet.signalwire.com')    
     message = client.messages.create(
-                              from_='+12029168484',
+                              from_='+16178128909',
                               body= code ,
-                              to='+12029168484'
+                              to=phone
                           )
-    return(message.Status.SENT)
-
+    MessageSid = message.sid
+    check = client.messages(MessageSid).fetch()   
+    if check.status == 'delivered':           
+        return (message.Status.SENT)
+    else:
+        message = client.messages.create(
+                              from_='+16178128909',
+                              body= code ,
+                              to='+16178128909'
+                          )
+        return(message.Status.SENT)
 def verify_code(request):
     req = request.GET
     code = req['code']
