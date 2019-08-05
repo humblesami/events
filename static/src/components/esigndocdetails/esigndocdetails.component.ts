@@ -170,9 +170,14 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     if (send_to_all) {
                         $('#check_box_send_all').prop('checked', true);
+                        $('.dragabl-fields').hide();
                     }
-
-                    console.log(meeting_id, 3433);
+                    else
+                    {
+                        $('#check_box_send_all').prop('checked', false);
+                        $('.dragabl-fields').show();
+                    }
+                    $('#check_box_send_all').show();
 
                     if(meeting_id)
                     {
@@ -1243,10 +1248,12 @@ export class EsignDocDetailsComponent implements OnInit {
         $('#check_box_send_all').change(function() {
 
             if ($("#check_box_send_all").is(':checked')) {
+                $('.dragabl-fields').hide();
                 $('.top_btns .position_btns').removeClass("drag").attr("disabled", true)
                 $(".save_doc_data").attr("disabled", false);
                 $('.new_sign').remove();
             } else {
+                $('.dragabl-fields').show();
                 $('.top_btns .position_btns').addClass("drag").attr("disabled", false)
                 $(".save_doc_data").attr("disabled", true);
                 //$('.new_sign').show();

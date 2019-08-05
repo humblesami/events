@@ -9,7 +9,7 @@ class Actions(models.Model):
     close_date = models.DateTimeField(default=None)
     meeting = models.ForeignKey(Event, null=True, on_delete=models.CASCADE, blank=True)
     name = models.CharField(_("Name"), max_length=400)
-    description = models.TextField(_("Description"))
+    description = models.TextField(_("Description"), default='')
     respondents = models.ManyToManyField('meetings.Profile', blank=True)
 
     def __str__(self):

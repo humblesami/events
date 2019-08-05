@@ -20,7 +20,7 @@ title="{{doc.doc_name}}"></app-breadcrumb>
             <div class="row doc-container" [ngClass]="{admin: socketService.is_admin}">
                 <div id="doc-side-scroll">
                     <div class="PdfButtonWrapper">
-                        <div class="PdfVerticalButtonWrapper">
+                        <div class="PdfVerticalButtonWrapper dragabl-fields">
                             <div class="fields-title">
                                 FIELDS
                             </div>
@@ -45,20 +45,19 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                             <div id="company-position" class="drag docselectbtn position_btns company_psition">
                                 <i class="icon-hotel"></i> Company
                             </div>
-            
-                            <div class="meetings_div">
-                                <span class="doc-subtitle">Attach to meeting(Optional):</span>
-                                <select id="dropdown_meeting"><option value="0">Select Meeting</option></select>
-                                <div class="doc-subtitle">
-                                    <input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>
-                                    <strong class="check_box_send_all" >Send to all attendees:</strong>
-                                </div>
-                            </div>
-            
-                            <button id="save-doc-data" class="btn btn-primary save_doc_data">
-                                Send
-                            </button>
                         </div>
+                        <div class="meetings_div">
+                            <span class="doc-subtitle">Attach to meeting(Optional):</span>
+                            <select id="dropdown_meeting"><option value="0">Select Meeting</option></select>
+                            <div class="doc-subtitle">
+                                <input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>
+                                <strong class="check_box_send_all" >Send to all attendees:</strong>
+                            </div>
+                        </div>
+        
+                        <button id="save-doc-data" class="btn btn-primary save_doc_data">
+                            Send
+                        </button>
                     </div>
                 </div>
                 <div class="docWrapperContainer pr-0 pl-0">
