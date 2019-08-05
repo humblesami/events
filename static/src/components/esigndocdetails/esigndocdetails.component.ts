@@ -192,6 +192,25 @@ export class EsignDocDetailsComponent implements OnInit {
         }
         loadData();
 
+        function on_sign_saved(signature_dom, data){
+            // console.log(signature_dom[0], data)
+            var sign_img = signature_dom.find('img:first');
+            var sign_img_src = 'data:image/png;base64,' + data.image;
+            if(sign_img.length > 0)
+            {
+                sign_img[0].src = sign_img_src;
+            }
+            else{
+                if(signature_dom && signature_dom.length > 0)
+                {
+                    signature_dom.html('<img src="'+sign_img_src+'" height="100%">');
+                }
+                else{
+                    console.log('Invalid signature dom');
+                }
+            }
+        }
+
         function toggleNextButton() {
             var d = $.grep(doc_data, function(v) {
                 return !v.signed && v.my_record;
@@ -731,8 +750,9 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
             });
         });
-        $(document).off("click", ".saved_sign.is_sign,.saved_sign.is_initial")
-        $(document).on("click", ".saved_sign.is_sign,.saved_sign.is_initial", function() {
+        
+        $(document).off("click", ".saved_sign")
+        $(document).on("click", ".saved_sign", function() {
             var login = $(this).attr("login");
             var my_record = $(this).attr("my_record");
 
@@ -777,17 +797,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 var canvas_context = myCanvas.getContext('2d');
                 var img = new Image();
                 img.onload = function() {
-                    //                diffy = diffy/2;
-                    //                var hidden_image_height = hidden_image.height();
-                    //                var hidden_image_width = hidden_image.width();
-                    //                var diffx = signature_editor.width() - hidden_image_width;
-                    //                var diffy = signature_editor.height() - hidden_image_height;
-                    //                diffx = diffx/2;
-                    //                diffy = diffy/2;
-                    //                canvas_context.drawImage(img, diffx, diffy,hidden_image_width,hidden_image_height);
-
-                    //                myCanvas.height=hidden_image_height;
-                    //                myCanvas.width=hidden_image_width;
                     canvas_context.drawImage(img, 0, 0, signature_editor.width(), signature_editor.height());
 
                 };
@@ -795,7 +804,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     data: {
                         args: {
                             app: "esign",
-                            model: "SignatureDoc",
+                            model: "Signature",
                             method: "get_signature"
                         },
                         params: {
@@ -817,8 +826,6 @@ export class EsignDocDetailsComponent implements OnInit {
 
 
                 var dataURL = '';
-
-
                 var auto_clicked = false;
                 auto_sign.click(function(e) {
                     $('#loaderContainerajax').show();
@@ -843,7 +850,8 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         onSuccess: function(data) {
                             // load_signature(data);
-                            signature_dom.find('img:first').src = data;
+                            on_sign_saved(signature_dom, data);
+                            // signature_dom.find('img:first')[0].src = 'data:image/png;base64,' + data.image;
                             $("#nxxt_sign").click();
                         }
                     }
@@ -911,7 +919,8 @@ export class EsignDocDetailsComponent implements OnInit {
                             // doc_data = data.doc_data;
                             // renderPDF(data.pdf_binary);
                             // loadData();
-                            signature_dom.find('img:first').src = data;
+                            on_sign_saved(signature_dom, data);
+                            // signature_dom.find('img:first')[0].src = 'data:image/png;base64,' + data.image;
                             $('.youtubeVideoModal').modal('hide');
                             $('#loaderContainerajax').hide();
                             $("#nxxt_sign").click();
@@ -983,206 +992,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
             });
         });
-        $(document).off("click", ".saved_sign.is_date")
-        $(document).on("click", ".saved_sign.is_date", function(e) {
-            var my_record = $(this).attr("my_record");
-            if (my_record == "false" && !isAdmin) {
-                return;
-            }
-            var signature_id = $(this).attr("id");
-            var signature_dom = $(this);
-            var usr_name = $(this).attr("name");
-            window["doc_preview"].image("uuuu");
-            var body = $('.youtubeVideoModal .modal-body:last');
-            var content = $('.youtubeVideoModal .modal-content:last');
-            var footer = $('<div class="modal-footer" style="text-align: left;"></div>');
-            var input_date = $('<input id="date" disabled placeholder="Date" style="width:50%"/>');
-            var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
-            var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
-            var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">Cancel</span>');
-            input_date.val($.datepicker.formatDate('dd/mm/yy', new Date()));
-            body.html("<h3>Name:</h3>" + usr_name + "<h3>Date:</h3>").append(input_date);
 
-
-            if (my_record == "true") {
-                body.append(save_btn);
-            }
-
-            if (isAdmin) {
-                body.append(del_btn);
-
-            }
-
-            save_btn.click(function(e) {
-                var date = input_date.val();
-                let url = '';
-                ajax_options = {
-                    data: {
-                        args: {
-                            app: "esign",
-                            model: "Signature",
-                            method: "save_signature"
-                        },
-                        params: {
-                            signature_id: signature_id,
-                            document_id: doc_id,
-                            token: token,
-                            date: date,
-                            type: "date",
-                            url: url
-                        }
-                    },
-                    onSuccess: function(data) {
-                        // doc_data = data.doc_data;
-                        // renderPDF(data.pdf_binary);
-                        // loadData();
-                        signature_dom.find('img:first').src = data;
-                        $("#nxxt_sign").click();
-                    }
-                }
-                if(token){
-                    ajax_options.url = '/rest/public';
-                }
-                window['dn_rpc_object'](ajax_options);
-                $('.youtubeVideoModal').modal('hide');
-            });
-
-            cancel_btn.click(function(evt) {
-                evt.preventDefault();
-                $('.youtubeVideoModal').modal('hide');
-            });
-
-            del_btn.click(function(e) {
-                if (confirm('Delete it permanently?')) {
-                    let url = '';
-                    ajax_options = {                        
-                        data: {
-                            args: {
-                                app: "esign",
-                                model: "Signature",
-                                method: "del_sign"
-                            },
-                            params: {
-                                signature_id: signature_id,
-                                document_id: doc_id,
-                            }
-                        },
-                        onSuccess: function(data) {
-                            // doc_data = data.doc_data;
-                            // renderPDF(data.pdf_binary);
-                            // loadData();
-                            signature_dom.remove();
-                            $("#nxxt_sign").click();
-                        }
-                    }
-                    window['dn_rpc_object'](ajax_options);
-                    $('.youtubeVideoModal').modal('hide');
-                }
-            });
-        });
-        $(document).off("click", ".saved_sign.is_text")
-        $(document).on("click", ".saved_sign.is_text", function(e) {
-            var my_record = $(this).attr("my_record");
-            if (my_record == "false" && !isAdmin) {
-                return;
-            }
-            var signature_id = $(this).attr("id");
-            var signature_dom = $(this);
-            var usr_name = $(this).attr("name");
-            var field_name = $(this).attr("field_name");
-            window["doc_preview"].image("uuuu");
-            var body = $('.youtubeVideoModal .modal-body:last');
-            var content = $('.youtubeVideoModal .modal-content:last');
-            var input_text = $(`<input id="text"  placeholder=${field_name} style="width:50%"/>`);
-            var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
-            var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
-            var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">Cancel</span>');
-            body.html(`<h3>Name:</h3>${usr_name}`);
-
-
-            if (my_record == "true") {
-
-                body.append(`<h3>${field_name}:</h3>`).append(input_text);
-                body.append(save_btn);
-            }
-
-            if (isAdmin) {
-                body.append(del_btn);
-
-            }
-
-            save_btn.click(function(e) {
-                var text = input_text.val();
-                if (text == "") {
-                    alert("Enter text")
-                    return;
-                }
-                let url = '';
-                ajax_options = {
-                    url: url,
-                    data: {
-                        args: {
-                            app: "esign",
-                            model: "Signature",
-                            method:"save_signature"
-                        },
-                        params: {
-                            signature_id: signature_id,
-                            document_id: doc_id,
-                            token: token,
-                            text: text,
-                            type: "text",
-                            url: url
-                        }
-                    },
-                    onSuccess: function(data) {
-                        // doc_data = data.doc_data;
-                        // renderPDF(data.pdf_binary);
-                        // loadData();
-                        signature_dom.find('img:first').src = data;
-                        $("#nxxt_sign").click();
-                    }
-                }
-                if(token){
-                    ajax_options.url = '/rest/public';
-                }
-                window['dn_rpc_object'](ajax_options);
-                $('.youtubeVideoModal').modal('hide');
-            });
-
-            cancel_btn.click(function(evt) {
-                evt.preventDefault();
-                $('.youtubeVideoModal').modal('hide');
-            });
-
-            del_btn.click(function(e) {
-                if (confirm('Delete it permanently?')) {
-                    let url = '';
-                    ajax_options = {
-                        data: {
-                            args: {
-                                app: "esign",
-                                model: "Signature",
-                                method:"del_sign"
-                            },
-                            params: {
-                                signature_id: signature_id,
-                                document_id: doc_id,
-                            }
-                        },
-                        onSuccess: function(data) {
-                            // doc_data = data.doc_data;
-                            // renderPDF(data.pdf_binary);
-                            // loadData();
-                            signature_dom.remove()
-                            $("#nxxt_sign").click();
-                        }
-                    }
-                    window['dn_rpc_object'](ajax_options);
-                    $('.youtubeVideoModal').modal('hide');
-                }
-            });
-        });
         $(document).off("click", ".new_sign .del_sign")
         $(document).on("click", ".new_sign .del_sign", function(e) {            
             var sign = $($(this)[0].parentElement);

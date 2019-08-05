@@ -227,67 +227,6 @@ class SignatureDoc(File):
             s["my_record"] = my_record
         return {"pdf_binary": pdf_doc, "doc_data": signatures, 'id': doc.id}
 
-    @classmethod
-    def get_signature(cls, request, params):
-        token = params.get('token')
-        user = request.user
-        if not user.id:
-            if not token:
-                return 'Not authorized to get signature'
-            else:
-                post_info = {
-                    'id': params['document_id'],
-                    'model': 'SignatureDoc',
-                    'app': 'esign'
-                }
-                res = PostUserToken.validate_token_for_post(token, post_info)
-                if type(res) is str:
-                    return res
-                else:
-                    user = res.user
-        signature_id = params['signature_id']
-        sign = Signature.objects.get(id=signature_id)
-        if sign.user.id != user.id:
-            return 'Invalid user to get signature'
-        image = sign.image
-        if image:
-            image = sign.image.read()
-            image = base64.b64encode(image)
-            image = image.decode('utf-8')
-        else:
-            image = None
-            if sign.type == 'initial':
-                image = SignatureDoc.get_auto_sign(sign)
-        return {"signature": image}
-
-
-    @classmethod
-    def get_auto_sign(cls, sign, date=""):
-        curr_dir = os.path.dirname(__file__)
-        pth = curr_dir.replace('model_files', 'static')
-                
-        txt = sign.user.username or sign.name
-        if sign.type == "initial":
-            txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
-        if sign.type == "date":            
-            txt = date
-
-        # if sz[0] < 100:
-        sz = (150,28)
-        img = Image.new('RGB', sz, (255, 255, 255))
-        d = ImageDraw.Draw(img)
-
-        d.text((40, 0), txt, (0, 0, 0))
-
-        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
-        img.save(img_path)
-
-        res = open(img_path, 'rb')
-        read = res.read()
-        binary_signature = base64.encodebytes(read)
-        binary_signature = binary_signature.decode('utf-8')
-        return binary_signature
-
 
     @classmethod
     def get_records(cls, request, params):
@@ -339,6 +278,28 @@ class Signature(models.Model):
             return 'done'
 
     @classmethod
+    def get_sign_text(cls, sign, text):
+        curr_dir = os.path.dirname(__file__)
+        pth = curr_dir.replace('model_files', 'static')
+        sz = (185, 25)
+        # if sz[0] < 100:
+        #     sz=(150,50)
+        img = Image.new('RGB', sz, (255, 255, 255))
+        d = ImageDraw.Draw(img)
+
+        d.text((5, 0), text, (0, 0, 0))
+
+        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+        img.save(img_path)
+
+        res = open(img_path, 'rb')
+        read = res.read()
+        binary_signature = base64.encodebytes(read)
+        binary_signature = binary_signature.decode('utf-8')
+        return binary_signature
+
+
+    @classmethod
     def save_signature(cls, request, params):
         doc_id = int(params['document_id'])
         doc = SignatureDoc.objects.get(id=doc_id)
@@ -367,7 +328,7 @@ class Signature(models.Model):
             sign.image.save(params['filename'], jango_file)
         else:
             if params['type'] == "auto":
-                binary_signature = SignatureDoc.get_auto_sign(sign)
+                binary_signature = cls.get_auto_sign(sign)
                 # sign.write({'draw_signature': binary_signature})
             if params['type'] == "draw":
                 binary_signature = params['binary_signature']
@@ -377,15 +338,75 @@ class Signature(models.Model):
             if params['type'] == "date":
                 # dt=kw['date']
                 dt = datetime.datetime.today().strftime('%b,%d  %Y')
-                binary_signature = SignatureDoc.get_auto_sign(sign, dt)
+                binary_signature = cls.get_auto_sign(sign, dt)
                 binary_data = io.BytesIO(base64.b64decode(binary_signature))
                 jango_file = DjangoFile(binary_data)
                 sign.image.save("sign"+".png", jango_file)
             if params['type'] == "text":
                 text = params['text']
-                binary_signature = SignatureDoc.get_sign_text(sign, text)
+                binary_signature = cls.get_sign_text(sign, text)
                 binary_data = io.BytesIO(base64.b64decode(binary_signature))
                 jango_file = DjangoFile(binary_data)
                 sign.image.save("sign"+".png", jango_file)
             sign.save()
         return { 'image': binary_signature}
+
+    @classmethod
+    def get_signature(cls, request, params):
+        token = params.get('token')
+        user = request.user
+        if not user.id:
+            if not token:
+                return 'Not authorized to get signature'
+            else:
+                post_info = {
+                    'id': params['document_id'],
+                    'model': 'SignatureDoc',
+                    'app': 'esign'
+                }
+                res = PostUserToken.validate_token_for_post(token, post_info)
+                if type(res) is str:
+                    return res
+                else:
+                    user = res.user
+        signature_id = params['signature_id']
+        sign = Signature.objects.get(id=signature_id)
+        if sign.user.id != user.id:
+            return 'Invalid user to get signature'
+        image = sign.image
+        if image:
+            image = sign.image.read()
+            image = base64.b64encode(image)
+            image = image.decode('utf-8')
+        else:
+            image = None
+            if sign.type == 'initial':
+                image = cls.get_auto_sign(sign)
+        return {"signature": image}
+
+    @classmethod
+    def get_auto_sign(cls, sign, date=""):
+        curr_dir = os.path.dirname(__file__)
+        pth = curr_dir.replace('model_files', 'static')
+
+        txt = sign.user.username or sign.name
+        if sign.type == "initial":
+            txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
+        if sign.type == "date":
+            txt = date
+
+        # if sz[0] < 100:
+        sz = (150, 28)
+        img = Image.new('RGB', sz, (255, 255, 255))
+        d = ImageDraw.Draw(img)
+
+        d.text((40, 0), txt, (0, 0, 0))
+
+        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+        img.save(img_path)
+
+        res = open(img_path, 'rb')
+        read = res.read()
+        binary_signature = base64.encodebytes(read)
+        binary_signature = binary_signature.decode('utf-8')
+        return binary_signature

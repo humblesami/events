@@ -58,45 +58,6 @@ def get_details_public(request):
     return get_sign_doc_data(request)
 
 
-def get_sign_doc_signature(request):
-    try:
-        kw = request.POST
-        if not kw:
-            kw = request.GET
-        kw = json.loads(kw['input_data'])
-        if not request.user.id:
-            user_token = PostUserToken.validate_token(kw['params']['token'])
-            if user_token:
-                user_signature = Signature.objects.filter(id=kw['params']['signature_id'],
-                user_id=user_token.user.id)
-                if user_signature:
-                    kw['params']['token'] = user_signature[0].token
-            else:
-                return 'Unauthorized'
-        
-        if not kw["params"]["token"]:
-            uid = check_auth_token(request, kw)
-            if not uid:
-                return "Unauthorized"
-        args = kw['args']
-        params = kw['params']
-        model = apps.get_model(args['app'], args['model'])
-        res = model.get_signature(request, params)
-        return produce_result(res, args)
-    except:
-        return produce_exception()
-
-
-@csrf_exempt
-@api_view(["GET", "POST"])
-def get_signature(request):
-    return get_sign_doc_signature(request)
-
-@csrf_exempt
-def get_signature_public(request):
-    return get_sign_doc_signature(request)
-
-
 @csrf_exempt
 def sign_doc_public(request, token):
     context = {}

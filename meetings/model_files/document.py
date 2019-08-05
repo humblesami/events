@@ -302,27 +302,6 @@ class SignDocument(SignatureDoc):
         return doc_data
 
 
-    @classmethod
-    def get_sign_text(cls, sign, text):
-        curr_dir = os.path.dirname(__file__)
-        pth = curr_dir.replace('model_files', 'static')
-        sz = (185, 25)
-        # if sz[0] < 100:
-        #     sz=(150,50)
-        img = Image.new('RGB', sz, (255, 255, 255))
-        d = ImageDraw.Draw(img)
-
-        d.text((5, 0), text, (0, 0, 0))
-
-        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
-        img.save(img_path)
-
-        res = open(img_path, 'rb')
-        read = res.read()
-        binary_signature = base64.encodebytes(read)
-        binary_signature = binary_signature.decode('utf-8')
-        return binary_signature
-
     def add_pages_for_sign( self):
         if not self.original_pdf or not self.signature_set.all().exists():
             return
