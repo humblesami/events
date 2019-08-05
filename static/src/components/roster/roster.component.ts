@@ -62,13 +62,14 @@ export class RosterComponent implements OnInit {
     }
 
     get_data(){
+        let obj_this = this;
         function success(data){            
             obj_this.total_records = Number(data.total);            
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;
+            // console.log(obj_this.attendees);
             obj_this.httpService.changePaginator(data.total);
-        }
-        let obj_this = this;
+        }        
         let input_data = {
             meeting_id: obj_this.meeting_id,
             offset: obj_this.offset,

@@ -1,6 +1,6 @@
 <div style="padding:10px">
     <input type="text" placeholder="Search..." (keyup)="roster_search($event)"/>
-    <div class="roster-router-outlet">
+    <div>
         <table class="roster">
             <thead>
                 <tr>
@@ -10,7 +10,7 @@
                     <th>Online</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="roster-router-outlet">
                 <tr *ngFor="let obj of attendees">
                     <td (click)="open(obj.id)">
                         <img class="roster-images" src="{{socketService.server_url}}{{obj.photo}}" />

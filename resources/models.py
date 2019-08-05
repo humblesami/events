@@ -64,7 +64,7 @@ class Folder(models.Model):
     def get_records(cls, request, params):
         total_cnt = Folder.objects.filter(parent__isnull = True).count()
         # folder = Folder.objects.filter(parent__isnull=True).values('name', 'id')
-        folder = Folder.objects.filter(parent__isnull=True,resourcedocument__users__id=request.user.id).distinct().values('name', 'id')
+        folder = Folder.objects.filter(parent__isnull=True).values('name', 'id') #,resourcedocument__users__id=request.user.id).distinct()
         # if folder:
         #     folder = folder.values('id', 'name')
         folder = list(folder)

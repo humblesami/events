@@ -8,12 +8,21 @@
     background-color: #21375a !important;
     color: white;
 }
-.roster-router-outlet
-{
-    overflow: auto;
-    padding-top:5px;
-    height: calc(100vh - 200px);
-}
+
 table.roster{
     width:100%;
+}
+.roster tbody {
+    display:block;
+    padding-top:5px;
+    height: calc(100vh - 300px);
+    overflow:auto;
+}
+.roster thead, .roster tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;/* even columns width , fix width of table too*/
+}
+.roster thead {
+    width: calc( 100% - 1em )/* scrollbar is average 1em/16px width, remove it from thead width */
 }

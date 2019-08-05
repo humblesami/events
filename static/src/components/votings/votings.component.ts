@@ -3,24 +3,24 @@ import { HttpService } from "../../app/http.service";
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
-  selector: 'app-votings',
-  templateUrl: './votings.component.html',
-  styleUrls: ['./votings.css']
+    selector: 'app-votings',
+    templateUrl: './votings.component.html',
+    styleUrls: ['./votings.css']
 })
 export class VotingsComponent implements OnInit {
 
-  no_meet = false;
-  voting_data: any;
-  active_meeting: any;
-  show = false;
-  meeting_type: string;
-  heading = 'Home';
-  bread_crumb = {
-  items: [],
-  title: ''
-  };
+    no_meet = false;
+    voting_data: any;
+    active_meeting: any;
+    show = false;
+    meeting_type: string;
+    heading = 'Home';
+    bread_crumb = {
+    items: [],
+    title: ''
+};
 
-  constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
+constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
     const obj_this = this;
     this.httpService.fetch_paged_data = function(off_set, limit){
         let req_peram = (window.location + '').split('/');
@@ -51,9 +51,9 @@ export class VotingsComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data, success_cb, null);
     }
-  }
+}
 
-  ngOnInit() {
+ngOnInit() {
     window['json_functions'].find_activate_link('.MeetingBtnWrapper');
     let req_peram = (window.location + '').split('/');
         let flag = req_peram[req_peram.length - 1];
@@ -95,5 +95,5 @@ export class VotingsComponent implements OnInit {
                 obj_this.bread_crumb.title = page_title + ' Votings';
             }
         }
-  }
+    }
 }
