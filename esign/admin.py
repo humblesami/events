@@ -8,11 +8,12 @@ class SignatureAdmin(admin.ModelAdmin):
 
 
 class SignatureDocForm(FileForm):
-    def get_form(self, request, obj=None, **kwargs):
-        kwargs['fields'] = ['name', 'attachment']
-        # self.exclude = ('original_pdf','workflow_enabled')
-        form = super(SignatureDocForm, self).get_form(request, obj, **kwargs)
-        return form
+    change_form_template = 'admin/actions_change_form.html'
+    # def get_form(self, request, obj=None, **kwargs):
+    #     kwargs['fields'] = ['name', 'attachment']
+    #     # self.exclude = ('original_pdf','workflow_enabled')
+    #     form = super(SignatureDocForm, self).get_form(request, obj, **kwargs)
+    #     return form
 
 admin.site.register(SignatureDoc, SignatureDocForm)
 admin.site.register(Signature, SignatureAdmin)

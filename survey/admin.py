@@ -51,7 +51,7 @@ class SurveyAdmin(admin.ModelAdmin):
                         attrs={'rows': 4,
                                 'cols': 40,})},
     }
-    change_form_template = "custom/survey_custom_change_form.html"
+    change_form_template = "survey_custom_change_form.html"
 
     def get_form(self, request, obj=None, **kwargs):
         self.exclude = ("template","need_logged_user","display_by_question", )

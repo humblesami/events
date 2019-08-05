@@ -161,11 +161,22 @@ class NewsAdmin(admin.ModelAdmin):
 class MeetingDocumentForm(FileForm):
     pass
 
-
 class SignDocumentForm(SignatureDocForm):
     def get_form(self, request, obj=None, **kwargs):
         form = super(SignDocumentForm, self).get_form(request, obj, **kwargs)
         return form
+    pass
+
+class AdminSignDoc(admin.ModelAdmin):
+    fields = [
+        'name',
+        'meeting',
+        'send_to_all',
+        'open_date',
+        'close_date',
+        'attachment',
+    ]
+    change_form_template = 'admin/actions_change_form.html'
 
 class AttendeeAdmin(admin.ModelAdmin):    
     list_display= ('event', 'attendee', 'state', 'attendance')
@@ -178,6 +189,7 @@ admin.site.register(AgendaDocument)
 admin.site.register(Profile,UserAdmin)
 admin.site.register(MeetingGroup,MeetingGroupAdmin)
 admin.site.register(Committee,CommitteeAdmin)
-admin.site.register(SignDocument, SignDocumentForm)
+# admin.site.register(SignDocument)
+admin.site.register(SignDocument, AdminSignDoc)
 admin.site.register(Invitation_Response, AttendeeAdmin)
 admin.site.site_header = "BoardSheet"

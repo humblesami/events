@@ -3,9 +3,11 @@ from meetings.model_files.event import Event
 from django.utils.translation import ugettext_lazy as _
 
 class Actions(models.Model):
-    open_date = models.DateTimeField()
-    close_date = models.DateTimeField()
-    meeting = models.ForeignKey(Event, null=True, on_delete=models.CASCADE, blank=True, related_name='actions')
+    class Meta:
+        abstract = True
+    open_date = models.DateTimeField(default=None)
+    close_date = models.DateTimeField(default=None)
+    meeting = models.ForeignKey(Event, null=True, on_delete=models.CASCADE, blank=True)
     name = models.CharField(_("Name"), max_length=400)
     description = models.TextField(_("Description"))
     respondents = models.ManyToManyField('meetings.Profile', blank=True)

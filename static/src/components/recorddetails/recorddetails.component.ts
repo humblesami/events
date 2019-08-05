@@ -21,6 +21,7 @@ export class RecorddetailsComponent implements OnInit {
     this.model= this.route.snapshot.params.model;
     // let temp = window.location.hash.split("edit")[1]
     this.url = window['site_config'].server_base_url+"/" + this.model + "/" + this.id;
+        
     this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.url)
     // $('html').css('overflow', 'hidden');
     $('#record_details_iframe').load(function(){

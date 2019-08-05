@@ -1,6 +1,6 @@
 ﻿<app-breadcrumb app="meetings" model="signdocument" 
 *ngIf="doc && !is_public"
-rid="{{doc.id}}" delete="1" 
+rid="{{doc.id}}" delete="1" edit="1"
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Esignature", "link":"/actions/signdocs"}]'
 title="{{doc.doc_name}}"></app-breadcrumb>
 <div class="router-outlet p-0">

@@ -48,7 +48,7 @@ class VotingAdmin(admin.ModelAdmin):
                 'respondents',
                 ]})]
     autocomplete_fields = ['voting_type', 'respondents']
-    change_form_template = 'custom/actions_change_form.html'
+    change_form_template = 'admin/actions_change_form.html'
 
     def get_form(self, request, obj=None, **kwargs):
         self.exclude = ("my_status",)

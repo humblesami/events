@@ -23,9 +23,13 @@ class AuthUser(models.Model):
     def do_login(cls, request, user, name):
         tokens = Token.objects.filter(user=user)
         login(request, user)
-        if len(tokens) > 0:
-            tokens[0].delete()
-        token = Token.objects.create(user=user)
+        # if len(tokens) > 0:
+        #     tokens[0].delete()
+        token = Token.objects.filter(user=user)
+        if token:
+            token = token[0]
+        else:
+            token = Token.objects.create(user=user)
         user_groups = list(user.groups.all().values())
         return {'username': user.username, 'name': name, 'id': user.id, 'token': token.key, 'groups':user_groups }
 
