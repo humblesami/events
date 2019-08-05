@@ -32,8 +32,23 @@ class VotingDocInline(admin.TabularInline):
 class VotingAdmin(admin.ModelAdmin):
     inlines = [VotingDocInline,]
     search_fields = ['name']
+    fieldsets = [
+        (None, {
+            'fields': [
+                'voting_type',
+                'name',
+                'description',
+                'meeting',
+                'topic',
+                'open_date',
+                'close_date',
+                'signature_required',
+                'enable_discussion',
+                'public_visibility',
+                'respondents',
+                ]})]
     autocomplete_fields = ['voting_type', 'meeting', 'topic', 'respondents']
-    change_form_template = 'custom/change_form.html'
+    change_form_template = 'custom/actions_change_form.html'
 
     def get_form(self, request, obj=None, **kwargs):
         self.exclude = ("my_status",)

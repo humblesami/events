@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.db.models.signals import m2m_changed
 from meetings.models import Profile, Event, Topic
 from mainapp.ws_methods import send_email_on_creation
+from actions.models import Actions
 
 
 class VotingType(models.Model):
@@ -22,13 +23,10 @@ class VotingChoice(models.Model):
 
 from mainapp.settings import server_base_url
 
-class Voting(models.Model):
+class Voting(Actions):
     voting_type = models.ForeignKey(VotingType, on_delete=models.CASCADE)
     name = models.CharField('Title', max_length=200)
-    meeting = models.ForeignKey(Event, null=True, on_delete=models.SET_NULL, blank=True)
     topic = models.ForeignKey(Topic, null=True, on_delete=models.SET_NULL, blank=True)
-    open_date = models.DateTimeField('Start Date')
-    close_date = models.DateTimeField('End Date')
     signature_required = models.BooleanField('Signature Required', blank=True, default=False)
     enable_discussion = models.BooleanField('Enable Discussion', blank=True, default=False)
     public_visibility = models.BooleanField('Results Visible To All', blank=True, default=False)

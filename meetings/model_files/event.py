@@ -37,6 +37,19 @@ class Event(models.Model):
         return self.name
 
 
+    # def save(self, *args, **kwargs):
+    #     super(Event, self).save(*args, **kwargs)
+    #     actions = self.actions.filter(meeting_id=self.id)
+    #     if not actions:
+    #         model = ws_methods.get_model('actions', 'Actions')
+    #         actions = model(meeting_id=self.id, open_date=self.start_date, close_date=self.end_date)
+    #         actions.save()
+    #     else:
+    #         actions = actions[0]
+    #         actions.open_date = self.start_date
+    #         actions.close_date = self.end_date
+    #         actions.save()
+
     def notification_text(self):
         return ' meeting ' + self.name[0: 20] +'...'
 
@@ -258,7 +271,11 @@ class Event(models.Model):
             topic['docs'] = list(t.agendadocument_set.values())
             topics.append(topic)
         meeting_docs = list(meeting_object_orm.meetingdocument_set.values())
-        votings = list(meeting_object_orm.voting_set.values())
+        votings = []
+        try:
+            votings = list(meeting_object_orm.actions.all()[0].voting.values())
+        except:
+            pass
         for voting in votings:
             voting['open_date'] = str(voting['open_date'])
             voting['close_date'] = str(voting['close_date'])
@@ -276,12 +293,15 @@ class Event(models.Model):
         sign_docs =  meeting_object_orm.signdocument_set.all()
         sign_docs = ws_methods.queryset_to_list(sign_docs, fields=['id','pdf_doc','name'])
         meeting_object['sign_docs'] = sign_docs
-        surveys = meeting_object_orm.survey_set.all()
-        surveys = ws_methods.queryset_to_list(surveys, fields=['id', 'name'],
-        related = {
-            'responses': {'fields': ['id', 'user']}
-        }
-       )
+        surveys = []
+        try:
+            surveys = meeting_object_orm.actions.all()[0].survey_set.all()
+            surveys = ws_methods.queryset_to_list(surveys, fields=['id', 'name'],
+            related = {
+                'responses': {'fields': ['id', 'user']}
+                })
+        except:
+            pass
         meeting_object['surveys'] = surveys
         for survey in surveys:
             if not survey['responses']:
@@ -416,6 +436,7 @@ class Event(models.Model):
         meeting_id = params['meeting_id']
         offset = params['offset']
         limit = params['limit']
+        meeting_obj = Event.objects.get(pk=meeting_id)
         data = {
             'attendees': [],
             'total': 0
@@ -428,12 +449,12 @@ class Event(models.Model):
             attendee_data = ws_methods.obj_to_dict(
                 obj.attendee,
                 fields=['id', 'name', 'email', 'mobile_phone', 'company', 'image']
-            )
+                )
             attendee_data['attendance'] = obj.attendance
             attendee_data['photo'] = attendee_data['image']
             attendees_list.append(attendee_data)
-        data['attendees'] = attendees_list
-        data['total'] = total
+            data['attendees'] = attendees_list
+            data['total'] = total
         return data
             
 

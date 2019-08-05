@@ -10,18 +10,14 @@ from mainapp import ws_methods
 from mainapp.settings import server_base_url
 from django.db.models.signals import m2m_changed
 from django.utils.translation import ugettext_lazy as _
+from actions.models import Actions
 
 
-class Survey(models.Model):
+class Survey(Actions):
     name = models.CharField(_("Name"), max_length=400)
-    open_date = models.DateTimeField(auto_now_add=True)
-    close_date = models.DateTimeField(auto_now_add=True)
     description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Publish"), default=False)
-    meeting = models.ForeignKey('meetings.Event', on_delete=models.CASCADE, null=True, blank=True)
     topic = models.ForeignKey('meetings.Topic', on_delete=models.CASCADE, null=True, blank=True)
-    open_date = models.DateTimeField(null=True)
-    close_date = models.DateTimeField(null=True)
     respondents = models.ManyToManyField('meetings.Profile', blank=True)
     need_logged_user = models.BooleanField(
         _("Only authenticated users can see it and answer it"), default=True)
