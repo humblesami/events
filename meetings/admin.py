@@ -177,6 +177,8 @@ class AdminSignDoc(admin.ModelAdmin):
         'attachment',
     ]
     change_form_template = 'admin/actions_change_form.html'
+    class Media:
+        js=('admin/js/meeting_sign_doc.js',)
 
 class AttendeeAdmin(admin.ModelAdmin):    
     list_display= ('event', 'attendee', 'state', 'attendance')

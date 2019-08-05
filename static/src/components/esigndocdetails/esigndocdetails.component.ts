@@ -171,6 +171,13 @@ export class EsignDocDetailsComponent implements OnInit {
                     if (send_to_all) {
                         $('#check_box_send_all').prop('checked', true);
                     }
+
+                    console.log(meeting_id, 3433);
+
+                    if(meeting_id)
+                    {
+                        $('.form-row.field-send_to_all input[type="checkbox"]').show();
+                    }
                 }
             };
             if(token){

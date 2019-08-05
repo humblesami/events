@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $('.field-meeting select').on('change', function(){
-        console.log(11222,342343);
+//        console.log(11222,342343);
         let meeting_id = $(this).val();
         if (meeting_id)
         {
