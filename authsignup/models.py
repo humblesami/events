@@ -18,6 +18,17 @@ class DualAuth(models.Model):
 
 # Create your models here.
 class AuthUser(models.Model):
+
+    @classmethod
+    def do_login(cls, request, user, name):
+        tokens = Token.objects.filter(user=user)
+        login(request, user)
+        if len(tokens) > 0:
+            tokens[0].delete()
+        token = Token.objects.create(user=user)
+        user_groups = list(user.groups.all().values())
+        return {'username': user.username, 'name': name, 'id': user.id, 'token': token.key, 'groups':user_groups }
+
     @classmethod
     def login_user(cls, request, params):
         username = params.get('login')
@@ -33,6 +44,8 @@ class AuthUser(models.Model):
         else:
             user = authenticate(request, username=username, password=password)
             if user and user.id:
+                if user.is_superuser:
+                    return cls.do_login(request, user, user.username)
                 user = Profile.objects.get(pk=user.id)
             else:
                 return 'Invalid credentials'
@@ -61,16 +74,7 @@ class AuthUser(models.Model):
                 name = Profile.objects.get(pk=user.id).name
             except:
                 name = user.username
-            tokens = Token.objects.filter(user=user)
-            if user.has_perm('authtoken.add_token'):
-                login(request, user)
-                if len(tokens) > 0:
-                    tokens[0].delete()
-                token = Token.objects.create(user=user)
-                user_groups = list(user.groups.all().values())
-                return {'username': user.username, 'name': name, 'id': user.id, 'token': token.key, 'groups':user_groups }
-            else:
-                return {'error': 'Not authorized to have token'}
+            return cls.do_login(request, user, name)
         else:
             return {'error': 'Invalid credentials'}
 

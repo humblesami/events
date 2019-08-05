@@ -17,7 +17,6 @@ from mainapp.settings import MEDIA_ROOT
 from mainapp.ws_methods import queryset_to_list
 from restoken.models import PostUserToken
 
-
 class SignatureDoc(File):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     original_pdf = models.FileField(upload_to='original/')

@@ -14,11 +14,8 @@ from actions.models import Actions
 
 
 class Survey(Actions):
-    name = models.CharField(_("Name"), max_length=400)
-    description = models.TextField(_("Description"))
     is_published = models.BooleanField(_("Publish"), default=False)
     topic = models.ForeignKey('meetings.Topic', on_delete=models.CASCADE, null=True, blank=True)
-    respondents = models.ManyToManyField('meetings.Profile', blank=True)
     need_logged_user = models.BooleanField(
         _("Only authenticated users can see it and answer it"), default=True)
     display_by_question = models.BooleanField(_("Display by question"), default=False)
