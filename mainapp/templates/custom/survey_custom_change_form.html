@@ -2,6 +2,8 @@
 
 {% load i18n admin_urls static admin_modify %}
 {% block field_sets %}
+    {% load static %}
+        <script src="/static/admin/js/actions_change_form.js"></script>
     {% for fieldset in adminform %}
         {#  Custom fieldsets template #}
         {% include "custom/survey_fieldset.html" with inline_admin_formsets=inline_admin_formsets %}

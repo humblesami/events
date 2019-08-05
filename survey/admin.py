@@ -30,10 +30,22 @@ class CategoryInline(admin.TabularInline):
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ("name", "is_published", "need_logged_user")
     list_filter = ("is_published", "need_logged_user")
-    autocomplete_fields = ['respondents', 'meeting', 'topic']
+    autocomplete_fields = ['respondents']
     filter_horizontal = ('respondents',)
     inlines = [QuestionInline]
     actions = [make_published]
+    fieldsets = [
+        (None, {
+            'fields': [
+                'name',
+                'description',
+                'is_published',
+                'meeting',
+                'topic',
+                'open_date',
+                'close_date',
+                'respondents',
+                ]})]
     formfield_overrides = {
         models.TextField: {'widget': Textarea(
                         attrs={'rows': 4,

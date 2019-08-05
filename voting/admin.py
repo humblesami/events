@@ -47,7 +47,7 @@ class VotingAdmin(admin.ModelAdmin):
                 'public_visibility',
                 'respondents',
                 ]})]
-    autocomplete_fields = ['voting_type', 'meeting', 'topic', 'respondents']
+    autocomplete_fields = ['voting_type', 'respondents']
     change_form_template = 'custom/actions_change_form.html'
 
     def get_form(self, request, obj=None, **kwargs):

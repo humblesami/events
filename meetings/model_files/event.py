@@ -498,6 +498,26 @@ class Event(models.Model):
         return data
 
 
+    @classmethod
+    def get_action_dates(cls, request, params):
+        meeting_id = params['meeting_id']
+        meeting = Event.objects.get(pk=meeting_id)
+        if meeting:
+            start_date = meeting.start_date.date()
+            start_time = meeting.start_date.time()
+            end_date = meeting.end_date.date()
+            end_time = meeting.end_date.time()
+            data = {
+                'open_date': '%04d'%start_date.year + '-' + '%02d'%start_date.month + '-' + '%02d'%start_date.day,
+                'open_time':  '%02d'%start_time.hour + ':' + '%02d'%start_time.minute + ':' + '%02d'%start_time.second,
+                'close_date': '%04d'%end_date.year + '-' + '%02d'%end_date.month + '-' + '%02d'%end_date.day,
+                'close_time': '%02d'%end_time.hour + ':' + '%02d'%end_time.minute + ':' + '%02d'%end_time.second
+            }
+            return data
+        else:
+            return 'done'
+
+
     def response_invitation_email(self, audience, action=None):
         state_selection = []
         for state in STATE_SELECTION:
