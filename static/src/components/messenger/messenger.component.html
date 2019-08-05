@@ -16,7 +16,7 @@
         <hr/>
 
         <div class="group-setup-container">
-            <div *ngIf="group_mode == 'edit'" class="row p-1 m-1 chat-group-setup" style="border:1px solid">
+            <div *ngIf="group_mode == 'edit'" class="row p-1 m-1 chat-group-setup">
                 <div *ngIf="!selected_chat_group">
                     <input id="group_name" [(ngModel)]="group_name" class="group-name" />
                     <button (click)="create_chat_room()" class="" aria-label="Create group.">
@@ -52,7 +52,7 @@
                 <span>{{selected_chat_group.name}}</span>
                 <ul class="contacts">
                     <li *ngFor="let member of selected_chat_group.members">
-                        <div >
+                        <div>
                             <a class="contact-item d-flex align-items-center bd-highlight">
                                 <div class="img_cont">
                                     <img src="{{socketService.server_url}}{{member.photo}}" class="rounded-circle user_img">                            

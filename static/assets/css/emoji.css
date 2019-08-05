@@ -78,13 +78,10 @@ img.emoji {
     content: none;
 }
 
-.emoji-wysiwyg-editor {
+.emoji-wysiwyg-editor, #message_input_box {
     padding: 6px;
     padding-right: 35px;
     margin-bottom: 0px;
-    min-height: 35px; /* 35 */
-    /* height: 30px; */
-    max-height: 284px;
     overflow: auto;
     line-height: 17px;
     border: 1px solid #d2dbe3;
@@ -95,8 +92,9 @@ img.emoji {
     transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
     -webkit-user-select: text;
     word-wrap: break-word;
-    height: 60px;
-    
+    min-height: 40px;
+    max-height:200px;
+
 }
 
 .emoji-wysiwyg-editor.parent-has-scroll {

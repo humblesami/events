@@ -2677,12 +2677,13 @@ is_mobile_device .popup-closer {
 }
 .messenger-head {
     background: #1A407D;
-    padding: 0.5rem 1rem;
+    padding: 0rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position:relative;
     margin:0 -1px;
+    height: 50px;
 }
 .full-messger-link{
 	color: #ffffff;
