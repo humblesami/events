@@ -20,7 +20,7 @@ class TopicAdmin(admin.ModelAdmin):
 
 class TopicDocInline(nested_admin.NestedTabularInline):
     model = AgendaDocument
-    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
+    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at')
     extra = 1
 
 
@@ -31,7 +31,7 @@ class TopicInline(nested_admin.NestedTabularInline):
 
 class MeetingDocInline(nested_admin.NestedTabularInline):
     model = MeetingDocument
-    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
+    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at')
     extra = 1
 
 class EventAdmin(nested_admin.NestedModelAdmin):
@@ -150,7 +150,7 @@ class NewsVideoInline(admin.TabularInline):
 
 class NewsDocumentInline(admin.TabularInline):
     model = NewsDocument
-    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type')
+    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at')
     extra = 1
 
 
