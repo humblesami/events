@@ -107,7 +107,11 @@ var site_functions = {
             reader.readAsDataURL(files[i]);
         }
     },
-    go_to_login: function() {
+    go_to_login: function(force) {
+        if(!force && window.location.toString().indexOf('localhost:4200') > -1)
+        {
+            return;
+        }
         localStorage.removeItem('user');
         $('body').removeClass('user').addClass('public');
         if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
