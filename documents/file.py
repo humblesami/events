@@ -46,16 +46,17 @@ class File(models.Model):
                 create = True
             super(File, self).save(*args, **kwargs)
             if create and self.file_type != 'message':
-                self.get_pdf()
-                if self.html:
-                    self.content = self.html
-                else:
-                    if not self.pdf_doc:
-                        raise Exception('File conversion failed')
-                    if not self.pdf_doc.file:
-                        raise Exception('File conversion failed.')
-                    self.content = text_extractor(self.pdf_doc)
-                self.save()
+                ws_methods.document_thread(self)
+                # self.get_pdf()
+                # if self.html:
+                #     self.content = self.html
+                # else:
+                #     if not self.pdf_doc:
+                #         raise Exception('File conversion failed')
+                #     if not self.pdf_doc.file:
+                #         raise Exception('File conversion failed.')
+                #     self.content = text_extractor(self.pdf_doc)
+                # self.save()
         except:
             res = ws_methods.get_error_message()
             a = 1
