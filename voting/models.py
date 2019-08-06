@@ -179,7 +179,10 @@ class Voting(Actions):
 
         voting_object['voting_docs'] = []
         try:
-            voting_object['voting_docs'] = list(voting_object_orm.votingdocument_set.all().values())
+            voting_docs = list(voting_object_orm.votingdocument_set.all().values())
+            for doc in voting_docs:
+                doc['created_at'] = str(doc['created_at'])
+                voting_object['voting_docs'].append(doc)
         except:
             pass
         voting_object['voting_type'] = {

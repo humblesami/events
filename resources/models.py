@@ -25,7 +25,11 @@ class Folder(models.Model):
             sub_folder = {'id': sub['id'], 'name': sub['name'], 'parent_id': folder.id}
             ar.append(sub_folder)
         obj['sub_folders'] = ar
-        obj['files'] = list(folder.resourcedocument_set.filter(users__id=request.user.id).values())
+        obj['files'] = []
+        resource_files = list(folder.resourcedocument_set.filter(users__id=request.user.id).values())
+        for file in resource_files:
+            file['created_at'] = str(file['created_at'])
+            obj['files'].append(file)
         return obj
 
     def get_ancestors(self, folder_orm):

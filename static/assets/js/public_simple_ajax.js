@@ -14,10 +14,10 @@ function dn_rpc_object(options) {
     if (input_data.no_loader)
         options.no_loader = 1;
 
-    var user_cooike = localStorage.getItem('user');
-    if (user_cooike)
+    var user_cookie = localStorage.getItem('user');
+    if (user_cookie)
     {
-        user_cooike = JSON.parse(user_cooike);
+        user_cookie = JSON.parse(user_cookie);
     }    
     options.no_loader = 1;    
     if(user_cookie)
