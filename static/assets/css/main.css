@@ -176,7 +176,7 @@ button, a, .DocumentWrapper { cursor: pointer; }
 	height: 28px;
 }
 .BoderGrayTopWrap {
-	border-top: 10px solid #F3F3F3;	
+	border-top: 10px solid #F3F3F3;
 	padding-bottom: 20px;
 }
 .navbar-collapse.show .main-nav {
@@ -478,14 +478,14 @@ a.kanban-committees-info-box-name {
 }
 .kanban-card {
     cursor: pointer;
-    min-width: 280px;
+    min-width: 245px;
 	/*    position: relative;
     width: 100%;
     min-height: 1px;
     padding-right: 15px;
     padding-left: 15px;
     margin-bottom: 30px;
-*/    
+*/
 	height: 100%;
 }
 .kanban-folder {
@@ -529,7 +529,6 @@ a.kanban-committees-info-box-name {
 	padding: 10px 10px 7px;
 	align-items: flex-start;
 	height: 100%;
-	background:#F3F3F3;
 }
 .kanban-profiles-user-info {
 	flex: 1 1 auto;
@@ -2252,11 +2251,11 @@ body.public .app-content {
 	border-bottom: 1px solid #E1E1E1;
 	margin-top: 1.3rem;
 	margin-bottom: 1.3rem;
-	padding-bottom: 0.7rem;	
+	padding-bottom: 0.7rem;
 }
 @media(min-width:768px)
 {
-    .MainTitleHeadWrap {        
+    .MainTitleHeadWrap {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -2271,7 +2270,7 @@ body.public .app-content {
 	border: 1px solid #D7DAE2;
 	background: transparent;
     color: #3059C9;
-    font-size: inherit;    
+    font-size: inherit;
 }
 .MeetingHeadWrapper .btn i,
 .MeetingBtnWrapper .btn i {
@@ -2639,7 +2638,7 @@ ul.dropdown-menu.scrollable-menu {
 	right: 1.5rem;
 	bottom: 5px;
 	height: calc(100vh - 8rem) !important;
-	border-radius:0.3rem;
+	border-radius: 0.5rem;
 	box-shadow: 0 0.1875rem 0.375rem rgba(33, 37, 41, 0.1);
 	border: 1px solid #dadada;;
 	background: #fff;
@@ -2653,6 +2652,7 @@ ul.dropdown-menu.scrollable-menu {
 }
 .popup.messenger .messenger-container {
 	height: calc(100vh - 130px);
+	border-radius: 0.5rem;
 	overflow: hidden;
 }
 .popup.messenger .messenger-container .chat-full-height {
@@ -2716,7 +2716,7 @@ button.popup-closer {
 .toggle-off {
 	background-color: #f1f2f4
 }
-.messenger-container .contacts_bodyul{    
+.messenger-container .contacts_bodyul{
     height: 405px;
     overflow-y: auto;
 }

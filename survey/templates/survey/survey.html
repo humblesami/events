@@ -44,6 +44,13 @@
         {% empty %}
 				<div class="col-lg-12 iframe-survey-head"> <h3> {% trans "Questions" %} </h3></div>
             {% include "survey/question.html" %}
+				<script>
+				(function(){
+				console.log($('textarea').length);
+					$('textarea').attr({rows:5})
+				})()
+
+				</script>
         {% endfor %}
 		{% block btn_submit %}
 		<input type="text" id="iframe_detector" name="is_iframe" />
