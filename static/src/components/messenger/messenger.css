@@ -681,7 +681,7 @@
 .messenger-container .contacts_body {
     padding: 0;
     overflow-y: auto;
-    height: calc(100vh - 276px);
+    height: calc(100vh - 326px);
 }
 
 .messenger-container .contacts_body ul
@@ -701,4 +701,19 @@ a.contact-item {
 
 .chat-group-setup{
 	background:#ebebeb;
+}
+
+.messenger-navbar{
+    background: #638FC9;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.messenger-navbar .messenger-navbar-wrap {
+    flex: 1;
+    text-align: center;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

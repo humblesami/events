@@ -276,16 +276,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                         {{profile.mobile_phone}}
                                     </span>
                                 </div>
-                                <div *ngIf="profile.committees && profile.committees.length > 0">
-                                    <label for="job-title">
-                                        <b>Committees</b>
-                                    </label>
-                                    <!-- <span *ngIf="profile.committees && profile.committees.length > 0"> -->
-                                    <span class="pill" *ngFor="let com of profile.committees">
-                                        <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
-                                    </span>
-                                    <!-- </span> -->
-                                </div>
                                 <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
                                 <div *ngIf="profile.state" class="">
                                     <b>Status : </b> {{profile.state}}
@@ -295,6 +285,9 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <span>
                                         {{profile.email}}
                                     </span>
+                                </div>
+								<div class="">
+                                    <b>Attendace : </b> Absent
                                 </div>
                             </div>
                         </a>
@@ -389,7 +382,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                         </div>
                     </a>
                 </div>
-                
             </div>
         </div>
 
@@ -417,10 +409,10 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 <label>
                     Attach Meeting Documents
                 </label>
-                <form style="padding: 10px;border:1px solid" 
+                <form style="padding: 10px;border:1px solid"
                 class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
-                    <input (change)="file_change($event)" id="msg_file" type="file" 
-                        accept=".pdf,.doc,.docx,.ppt" 
+                    <input (change)="file_change($event)" id="msg_file" type="file"
+                        accept=".pdf,.doc,.docx,.ppt"
                         multiple
                         style="display:none"
                     />

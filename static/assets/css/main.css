@@ -529,6 +529,7 @@ a.kanban-committees-info-box-name {
 	padding: 10px 10px 7px;
 	align-items: flex-start;
 	height: 100%;
+	background:#F3F3F3;
 }
 .kanban-profiles-user-info {
 	flex: 1 1 auto;
