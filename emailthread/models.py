@@ -131,9 +131,9 @@ class DocumentThread(threading.Thread):
                 if not self.doc_obj.pdf_doc.file:
                     produce_exception('File conversion failed.')
                 self.doc_obj.content = self.text_extractor(self.doc_obj.pdf_doc)
+                self.doc_obj.uplaod_status = True
             self.doc_obj.save()
         except:
-            pass
             produce_exception('')
 
     def get_pdf(self, doc):
