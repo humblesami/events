@@ -45,7 +45,11 @@ export class EsignDocDetailsComponent implements OnInit {
         $('#select_user_modal').modal('hide');     
     }
 
+    isAdmin = false;
 
+    toggle_admin_mode(bool){           
+        this.isAdmin = bool;
+    }
 
     ngOnInit() {
         var obj_this = this;
@@ -65,8 +69,7 @@ export class EsignDocDetailsComponent implements OnInit {
             pageNum,
             ajax_options,
             token = $('.sign_token').val() || "",
-            doc_id,
-            isAdmin = obj_this.socketService.is_admin;            
+            doc_id;
 
         if (!doc_id) {
             var route_token = obj_this.route.snapshot.params.token;
@@ -77,13 +80,13 @@ export class EsignDocDetailsComponent implements OnInit {
                 obj_this.is_public = true;
             }
         }
-        console.log(doc_id, doc_data, 833, token);
+        // console.log(doc_id, doc_data, 833, token);
 
         obj_this.doc = {
             "id": doc_id,
             "doc_name": ''
         };
-        // console.log(obj_this.socketService.user_data, 444);
+        // console.log(obj_this.socketService.user_data, 444);       
 
         $('#select_user_modal').on('shown.bs.modal', function () {
             var sign = $('.active_signature:first');            
@@ -382,6 +385,7 @@ export class EsignDocDetailsComponent implements OnInit {
             zoom(scale);
         });
 
+
         function loadSignatures(data) {
             doc_data = data.doc_data;
             var height = canvas.height;
@@ -427,7 +431,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 if (this.type == 'text') {
                     div.addClass("is_text");
                 }
-                div.attr('data_type', this.type);
 
 
                 var h, w, perc, diff;
@@ -460,7 +463,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         background: "rgba(230, 81, 81, 0.9)"
                     });
                 }
-                if (isAdmin)
+                if (obj_this.isAdmin)
                 {
                     if(this.signed)
                     {
@@ -479,7 +482,17 @@ export class EsignDocDetailsComponent implements OnInit {
                     $('#page_container').append(div);
                 }
             });
-            console.log('Signatures loaded', Date());
+            var my_records = $('.sign_container[my_record="true"]');
+            console.log(my_records.length, 1233);
+            if(my_records.length == 0)
+            {
+                obj_this.isAdmin = obj_this.socketService.is_admin;
+            }
+            else
+            {
+                obj_this.isAdmin = false;
+            }
+            console.log('Signatures loaded',obj_this.isAdmin, Date());
         }
 
         ///////////////////////DRAG AND DROOP//////////////////////////
@@ -757,7 +770,7 @@ export class EsignDocDetailsComponent implements OnInit {
             // console.log(4234343);
             var sign_container = $(this);            
             var my_record = sign_container.attr("my_record");
-            if (my_record == "false" && !isAdmin) {
+            if (my_record == "false" && !obj_this.isAdmin) {
                 return;
             }
             var is_signed = sign_container.attr('signed').toString();
@@ -772,42 +785,88 @@ export class EsignDocDetailsComponent implements OnInit {
 
             var signature_data;
 
-            function get_signature()
+            function remove_sign(){
+                ajax_options = {
+                    data: {
+                        args: {
+                            app: "esign",
+                            model: "Signature",
+                            method:"del_sign"
+                        },
+                        params: {
+                            signature_id: signature_id,
+                        }
+                    },
+                    onSuccess: function(data) {                        
+                        sign_container.remove();                        
+                    }
+                }
+                $('#signModal').modal('hide');
+                window['dn_rpc_object'](ajax_options);
+            }
+
+            if(obj_this.isAdmin && is_signed == "false")
+            {
+                let popup_config = {
+                    on_load: function(){
+                        // console.log(117);
+                        var disabled = '';
+                        if(!sign_container.hasClass('is_date'))
+                        {
+                            disabled = 'disabled';
+                        }
+                        $('#signModal .modal-body').html(`
+                            <button class="remove">Remove</button>
+                        `);
+                        $('#signModal button.remove').click(remove_sign);
+                    },
+                    hide_on_save: true,
+                    on_shown: function(){
+                        $('#signModal button.remove').click(remove_sign);
+                    }
+                }
+                window['init_popup'](popup_config);
+                return;
+            }
+
+            function get_signature_data()
             {
                 ajax_options = {
                     data: {
                         args: {
                             app: "esign",
                             model: "Signature",
-                            method:"get_signature"
+                            method:"load_signature"
                         },
                         params: {
                             signature_id: signature_id,
                             document_id: doc_id,
                             token: token,
-                            sign_type: sign_container.attr('data_type')
+                            sign_type: sign_container.attr('signtype')
                         }
                     },
                     onSuccess: function(data) {                        
-                        on_sign_got(data.image);
+                        on_sign_got(data);
                     }
                 }
                 if(token){
                     ajax_options.url = '/rest/public';
                 }
-                ajax_options.data.params.type = sign_container.attr('data_type');
+                console.log(ajax_options.data.params);
                 window['dn_rpc_object'](ajax_options);
             }
+            
+            get_signature_data();
 
             function on_sign_got(sign_data)
             {
                 if(sign_container.hasClass('is_initial') || sign_container.hasClass('is_sign'))
                 {
                     let sign_config = {
-                        signature_data: sign_data,
+                        signature_data: sign_data.image,
                         on_signed: function(new_sign){
                             signature_data = new_sign;
-                            submit_response(new_sign);
+                            submit_response(new_sign, sign_data.text);
                         }
                     }
                     window['init_sign'](sign_config);
@@ -823,12 +882,12 @@ export class EsignDocDetailsComponent implements OnInit {
                                 disabled = 'disabled';
                             }
                             $('#signModal .modal-body').html(`
-                                <input id="sign_data" value="`+sign_data+`" `+disabled+` />
+                                <input id="sign_data" value="`+sign_data.text+`" `+disabled+` />
                             `);
                         },
                         on_save:function(){
-                            sign_data = $('#signModal .modal-body #sign_data').val();
-                            submit_response(sign_data)
+                            var sign_data_text = $('#signModal .modal-body #sign_data').val();
+                            submit_response(sign_data.image, sign_data_text);
                         },
                         hide_on_save: true,
                     }
@@ -836,7 +895,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
             }
 
-            function submit_response(response_data)
+            function submit_response(response_data, sign_data_text)
             {
                 ajax_options = {
                     data: {
@@ -848,7 +907,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         params: {
                             signature_id: signature_id,
                             document_id: doc_id,
-                            token: token,
+                            token: token,                            
                             binary_signature: response_data,
                         }
                     },
@@ -860,7 +919,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 if(token){
                     ajax_options.url = '/rest/public';
                 }
-                ajax_options.data.params.type = sign_container.attr('data_type');
+                ajax_options.data.params.type = sign_container.attr('signtype');
                 window['dn_rpc_object'](ajax_options);
             }
             return;
@@ -893,7 +952,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 signature_editor.after(clear_btn);
                 signature_editor.signature();
                 body.append(save_btn);
-                if (isAdmin) {
+                if (obj_this.isAdmin) {
                     body.append(del_btn);
                 }
 
@@ -1052,7 +1111,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
             } else {
                 body.append('<h3>Name:</h3>' + usr_name);
-                if (isAdmin) {
+                if (obj_this.isAdmin) {
                     body.append(del_btn);
                 }
             }

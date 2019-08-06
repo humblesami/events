@@ -24,29 +24,30 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                             <div class="fields-title">
                                 FIELDS
                             </div>
-                            <div id="signature-position" class="drag docselectbtn position_btns sign_psition">
+                            <div id="signature-position" signtype="signature" class="drag docselectbtn position_btns sign_psition">
                                 <i class="icon-draw-pencil"></i> Signature
                             </div>
-                            <div id="initial-position" class="drag docselectbtn position_btns initial_psition">
+                            <div id="initial-position" signtype="initials" class="drag docselectbtn position_btns initial_psition">
                                 <i>Ds</i> Initials
                             </div>
-                            <div id="date-position" class="drag docselectbtn position_btns date_psition">
+                            <div id="date-position" signtype="date" class="drag docselectbtn position_btns date_psition">
                                 <i class="icon-calendar-empty"></i> Date
                             </div>
-                            <div id="text-position" class="drag docselectbtn position_btns name_psition">
+                            <div id="text-position" signtype="name" class="drag docselectbtn position_btns name_psition">
                                 <i class="icon-user-single"></i> Name
                             </div>
-                            <div id="name-position" class="drag docselectbtn position_btns email_psition">
+                            <div id="name-position" signtype="email" class="drag docselectbtn position_btns email_psition">
                                 <i class="fa fa-envelope"></i>  Email
                             </div>
-                            <div id="phone-position" class="drag docselectbtn position_btns phone_psition">
+                            <div id="phone-position" signtype="phone" class="drag docselectbtn position_btns phone_psition">
                                 <i class="icon-call-answer"></i> Phone
                             </div>
-                            <div id="company-position" class="drag docselectbtn position_btns company_psition">
+                            <div id="company-position" signtype="company" class="drag docselectbtn position_btns company_psition">
                                 <i class="icon-hotel"></i> Company
                             </div>
                         </div>
                         <div class="meetings_div">
+                            <input *ngIf="socketService.is_admin" [(ngModel)]="isAdmin" type="checkbox" /> Admin Mode
                             <span class="doc-subtitle">Attach to meeting(Optional):</span>
                             <select id="dropdown_meeting"><option value="0">Select Meeting</option></select>
                             <div class="doc-subtitle">

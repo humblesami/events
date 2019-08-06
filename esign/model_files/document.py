@@ -3,6 +3,7 @@ import os
 import base64
 import datetime
 
+from django.apps import apps
 from fpdf import FPDF
 from random import randint
 from django.contrib.auth.models import User, Group
@@ -355,6 +356,58 @@ class Signature(models.Model):
         return { 'image': binary_signature}
 
     @classmethod
+    def load_signature(cls, request, params):
+        token = params.get('token')
+        sign_type = params.get('sign_type')
+        user = request.user
+        if not user.id:
+            if not token:
+                return 'Not authorized to get signature'
+            else:
+                post_info = {
+                    'id': params['document_id'],
+                    'model': 'SignatureDoc',
+                    'app': 'esign'
+                }
+                res = PostUserToken.validate_token_for_post(token, post_info)
+                if type(res) is str:
+                    return res
+                else:
+                    user = res.user
+        signature_id = params['signature_id']
+        sign = Signature.objects.get(id=signature_id)
+        if sign.user.id != user.id:
+            return 'Invalid user to get signature'
+        res = ''
+        model = apps.get_model('meetings', 'Profile')
+        profile = model.objects.get(pk=sign.user.id)
+        if sign_type == 'date':
+            res = str(datetime.datetime.now())
+        elif sign_type == 'email':
+            res = profile.email
+        elif sign_type == 'company':
+            res = profile.compnay
+        elif sign_type == 'name':
+            res = profile.fullname()
+        elif sign_type == 'phone':
+            res = profile.mobile_phone
+        image = ''
+        if res:
+            img = Image.new('RGB', (60, 30), 'black')
+            drawing = ImageDraw.Draw(img)
+            drawing.text((40, 0), res, (0, 0, 0))
+            curr_dir = os.path.dirname(__file__)
+            pth = curr_dir.replace('model_files', 'static')
+            img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+            img.save(img_path)
+
+            image = open(img_path, 'rb')
+            read = image.read()
+            binary_signature = base64.encodebytes(read)
+            binary_signature = binary_signature.decode('utf-8')
+        return {"image": binary_signature, 'text': res}
+
+    @classmethod
     def get_signature(cls, request, params):
         token = params.get('token')
         user = request.user
@@ -410,7 +463,6 @@ class Signature(models.Model):
 
         res = open(img_path, 'rb')
         read = res.read()
-        binary_signature = base64.encodebytes(read)
         binary_signature = base64.encodebytes(read)
         binary_signature = binary_signature.decode('utf-8')
         return { 'image': binary_signature }

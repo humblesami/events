@@ -439,6 +439,10 @@ export class SocketService {
             $.ajax(options);
 
             function onAuthenticated(data) {
+                if(!data.user)
+                {
+                    console.log('Invalid user data', data);
+                }
                 if(data.message)
                 {
                     console.log(data.message.error);

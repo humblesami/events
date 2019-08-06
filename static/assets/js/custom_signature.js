@@ -132,8 +132,8 @@ jQuery(document).ready(function(e) {
 
 function init_sign(config) {
     var sign_lib = 0;    
-    $('#signModal').remove();    
-    $('body').append(`<div class="modal fade" id="signModal" role="dialog" style="z-index:1053" aria-hidden="true">
+    $('#signature_modal').remove();    
+    $('body').append(`<div class="modal fade" id="signature_modal" role="dialog" style="z-index:1053" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -249,7 +249,7 @@ function init_sign(config) {
                 dataURL = dataURL.replace('data:image/png;base64,', '');
             }
             config.on_signed(dataURL);
-            $('#signModal .modal-footer button').click();
+            $('#signature_modal .modal-footer button').click();
         });
 
         draw_sign_btn.click(function () {
@@ -269,13 +269,13 @@ function init_sign(config) {
 
         img.onload = function () {
             canvas_context.drawImage(img, 0, 0,signature_editor.width(),signature_editor.height());
-            // $('#signModal').show();
+            // $('#signature_modal').show();
         };
     };
 
-    $('#signModal').modal('show');
-    $( "#signModal" ).on('shown.bs.modal', setup_signature);
-    // $('#signModal').hide();
+    $('#signature_modal').modal('show');
+    $( "#signature_modal" ).on('shown.bs.modal', setup_signature);
+    // $('#signature_modal').hide();
 
 };
 window['init_sign'] = init_sign;
