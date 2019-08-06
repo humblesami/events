@@ -34,7 +34,7 @@ urlpatterns = [
     path('rest/search', rest_api.search_ws, name = 'search_ws'),
     path('rest/search1', rest_api.search_session, name = 'search_session'),
 
-    url(r'^accounts/', include('authsignup.urls')),
+    url(r'^user/', include('authsignup.urls')),
     url(r'^voting/', include('voting.urls')),
     url(r'^meeting/', include('meetings.urls')),
     url(r'^esign/', include('esign.urls')),

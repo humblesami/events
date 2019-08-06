@@ -13,7 +13,7 @@ def login(request, next=None):
 
 def logout_user(request):
     logout(request)
-    return redirect('/accounts/login')
+    return redirect('/user/login')
 
 def forgot_password(request):
     context = {}

@@ -30,10 +30,10 @@
             form.find('button[type="submit"]:first').removeAttr('disabled');
             // console.log(data);
             if(data.uuid && data.auth_type && data.status)
-            {            
+            {
                 data = JSON.stringify(data);
-                localStorage.setItem('auth_code_data', data);            
-                window.location = '/accounts/verify-auth-code';
+                localStorage.setItem('auth_code_data', data);
+                window.location = '/user/verify-auth-code';
             }
             else
             {

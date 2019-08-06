@@ -178,19 +178,25 @@ class Profile(user_model):
         if self.two_factor_auth and self.two_factor_auth == 2 and not self.mobile_verified:
             return
             # raise ValidationError('Phone needs to be verified')
-        if not self.pk:
+        profile_obj = Profile.objects.filter(pk=self.pk)
+        password = ''
+        if not profile_obj:
             creating = True
-            self.username = self.email
+            if self.pk and self.user_ptr and self.user_ptr.is_superuser:
+                password = self.password
+                if self.user_ptr.is_superuser:
+                    self.is_superuser = True
+                if self.user_ptr.email:
+                    self.email = self.user_ptr.email
+                self.username = self.user_ptr.username
             self.is_staff = True
-        else:
-            profile_obj = Profile.objects.filter(pk=self.pk)
-            if profile_obj:
-                profile_obj = profile_obj[0]
-                if profile_obj.email != self.email:
-                    self.email = profile_obj.email
         self.name = self.fullname()
         super(Profile, self).save(*args, **kwargs)
         if creating:
+            if self.is_superuser:
+                # self.set_password(password)
+                self.user_ptr.set_password(password)
+                self.user_ptr.save()
             user_data = {
                 'id': self.pk,
                 'photo': self.image.url,
@@ -210,10 +216,13 @@ class Profile(user_model):
             name = user.first_name
             if user.last_name:
                 name += ' ' + user.last_name
-        elif user.last_name:
+        if user.last_name:
             name += user.last_name
-        else:
-            name = user.username
+        if not name:
+            if not self.name:
+                name = user.username
+            else:
+                name = self.name
         return name
 
     @property

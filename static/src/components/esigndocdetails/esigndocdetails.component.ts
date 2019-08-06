@@ -278,7 +278,7 @@ export class EsignDocDetailsComponent implements OnInit {
             pageNum = num;
             document.getElementById('page_num').textContent = pageNum;
             document.getElementById('page_count').textContent = pdfDoc.numPages;
-            $('.saved_sign').hide();
+            $('.sign_container').hide();
             $('.new_sign').hide();
             var selector = '.new_sign[page=' + pageNum + ']';
             $(selector).show();
@@ -326,9 +326,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     viewport: viewport
                 };
                 page.render(renderContext);
-                //  $('.saved_sign').hide();
+                //  $('.sign_container').hide();
                 //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
-                var saved_new_signs = $('.saved_sign:visible,.new_sign');
+                var saved_new_signs = $('.sign_container:visible,.new_sign');
                 $.each(saved_new_signs, function() {
                     var h, w, perc;
                     if (pre_width > canvas.width) {
@@ -398,7 +398,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     field_name: this.field_name,
                     //w:this.width,
                     //h:this.height,
-                    class: "saved_sign",
+                    class: "sign_container",
                     //text: this.name
                 });
                 if (this.type == 'sign' && !this.signed) {
@@ -750,17 +750,105 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
             });
         });
-        
-        $(document).off("click", ".saved_sign")
-        $(document).on("click", ".saved_sign", function() {
-            var login = $(this).attr("login");
-            var my_record = $(this).attr("my_record");
 
+        $(document).off("click", ".sign_container")
+        $(document).on("click", ".sign_container", function() {
+            console.log(4234343);
+            var sign_container = $(this);
+            var login = sign_container.attr("login");            
+            var my_record = sign_container.attr("my_record");            
             if (my_record == "false" && !isAdmin) {
                 return;
             }
-            var signature_id = $(this).attr("id");
-            var signature_dom = $(this);
+            var signature_id = sign_container.attr("id");
+            var signature_dom = sign_container;
+
+            var signature_data;            
+            function get_signature()
+            {
+                ajax_options = {
+                    data: {
+                        args: {
+                            app: "esign",
+                            model: "Signature",
+                            method: "get_signature"
+                        },
+                        params: {
+                            signature_id: signature_id,
+                            document_id: doc_id,
+                            token: token
+                        }
+                    },
+                    onSuccess: function(sign_data) {
+                        console.log(sign_data);
+                        if(sign_container.hasClass('is_initial') || sign_container.hasClass('is_sign'))
+                        {
+                            let sign_config = {
+                                signature_data: sign_data,
+                                on_signed: function(new_sign){
+                                    signature_data = new_sign;
+                                    submit_response(new_sign);
+                                }
+                            }
+                            window['init_sign'](sign_config);
+                        }
+                        else
+                        {
+                            if(sign_container.hasClass('is_date') || sign_container.hasClass('is_text'))
+                            {
+                                let popup_config = {
+                                    on_load: function(){
+                                        console.log(117);
+                                        $('#signModal .modal-body').html(`
+                                            <input value="`+sign_data+`" />
+                                        `);
+                                    },
+                                    on_save:function(){
+                                        console.log(4343);
+                                    },
+                                    hide_on_save: true,                                    
+                                }
+                                window['init_popup'](popup_config);
+                            }
+                        }
+                    }
+                };
+                window['dn_rpc_object'](ajax_options);
+            }
+
+            function submit_response(response_data)
+            {
+                ajax_options = {
+                    data: {
+                        args: {
+                            app: "esign",
+                            model: "Signature",
+                            method:"save_signature"
+                        },
+                        params: {
+                            signature_id: signature_id,
+                            document_id: doc_id,
+                            token: token,
+                            binary_signature: response_data,
+                        }
+                    },
+                    onSuccess: function(data) {                        
+                        on_sign_saved(signature_dom, data);
+                        $("#nxxt_sign").click();
+                    }
+                }
+                if(token){
+                    ajax_options.url = '/rest/public';
+                }
+                if(sign_container.hasClass('is_date'))
+                {
+                    ajax_options.params.type = 'date';
+                }
+                window['dn_rpc_object'](ajax_options);
+            }
+            get_signature();
+            return;
+
             var usr_name = $(this).attr("name");
             window["doc_preview"].image("uuuu");
             var body = $('.youtubeVideoModal .modal-body:last');
@@ -1049,7 +1137,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     top: top - $('#page_container1').scrollTop() + "px"
                 }, 1000);
 
-                $(`.saved_sign[id=${sign.id}]:visible`).css({
+                $(`.sign_container[id=${sign.id}]:visible`).css({
                     border: "solid 3px yellow"
                 })
             }, 600);

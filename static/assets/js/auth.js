@@ -15,7 +15,7 @@
         if (user_cookie) {
             var last_activity = localStorage.getItem('last_activity');
             if(!last_activity)
-            {             
+            {
                 go_to_login();
                 return;
             }
@@ -34,7 +34,7 @@
             if (user_cookie.token) {
                 var error = undefined;
                 var ajax_options = {
-                    url: site_config.server_base_url + '/accounts/verify-token',                    
+                    url: site_config.server_base_url + '/user/verify-token',
                     async: false,
                     headers: {
                         Authorization:
@@ -45,7 +45,7 @@
                         {
                             er = er.responseJSON.detail;
                         }
-                        error = er;                        
+                        error = er;
                         console.log(er);
                     },
                     complete:function(){
@@ -70,15 +70,15 @@
         else
         {
             go_to_login();
-        }    
+        }
     }
-    
+
     function is_public_route(url){
         if(!url)
         {
             url = get_path_name();
         }
-        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
+        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
         for (var i in public_routes)
         {
             if (url.startsWith(public_routes[i]))
@@ -90,7 +90,7 @@
         }
         return false;
     }
-    function get_path_name() {    
+    function get_path_name() {
         if(wl.toString().indexOf('localhost') > -1)
         {
             is_local_host = true;
@@ -109,12 +109,12 @@
         {
             if(wl_str.indexOf('4200') == -1)
             {
-                window.location = window['site_config'].server_base_url+'/accounts/login';
+                window.location = window['site_config'].server_base_url+'/user/login';
             }
             else{
                 window.location = '/#/login';
             }
         }
     }
-    verifyUserToken(); 
+    verifyUserToken();
 })()
