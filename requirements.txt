@@ -6,8 +6,9 @@ signalwire==1.3
 django_countries==5.3.3
 django-bootstrap-form==3.4
 django-nested-admin==3.2.3
+fpdf==1.7.2
+pypdf2==1.26.0
 pillow==3.4.1
 #sudo apt-get update
 #sudo apt-get install build-essential libpoppler-cpp-dev pkg-config python-dev
 pdftotext
-fpdf==1.7.2
