@@ -23,7 +23,7 @@ class VotingTypeAdmin(admin.ModelAdmin):
 class VotingDocInline(admin.TabularInline):
     model = VotingDocument
     autocomplete_fields = ['voting']
-    exclude=('html','content','original_pdf','pdf_doc', 'file_type')
+    exclude=('html','content','original_pdf','pdf_doc', 'file_type', 'uplaod_status', 'created_at')
     # readonly_fields = ('View',)
     # show_change_link = True
     extra = 1
