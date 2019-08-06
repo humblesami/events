@@ -296,7 +296,7 @@ class Signature(models.Model):
         read = res.read()
         binary_signature = base64.encodebytes(read)
         binary_signature = binary_signature.decode('utf-8')
-        return binary_signature
+        return { 'image': binary_signature }
 
 
     @classmethod
@@ -382,7 +382,7 @@ class Signature(models.Model):
             image = None
             if sign.type == 'initial':
                 image = cls.get_auto_sign(sign)
-        return {"signature": image}
+        return {"image": image}
 
     @classmethod
     def get_auto_sign(cls, sign, date=""):
@@ -408,5 +408,6 @@ class Signature(models.Model):
         res = open(img_path, 'rb')
         read = res.read()
         binary_signature = base64.encodebytes(read)
+        binary_signature = base64.encodebytes(read)
         binary_signature = binary_signature.decode('utf-8')
-        return binary_signature
+        return { 'image': binary_signature }

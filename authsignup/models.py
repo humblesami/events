@@ -20,16 +20,19 @@ class DualAuth(models.Model):
 class AuthUser(models.Model):
 
     @classmethod
-    def do_login(cls, request, user, name):
-        tokens = Token.objects.filter(user=user)
+    def do_login(cls, request, user, name, referer_address):
         login(request, user)
-        # if len(tokens) > 0:
-        #     tokens[0].delete()
         token = Token.objects.filter(user=user)
         if token:
             token = token[0]
+
+        if 'localhost' in referer_address:
+            if not token:
+                token = Token.objects.create(user=user)
         else:
+            token.delete()
             token = Token.objects.create(user=user)
+
         user_groups = list(user.groups.all().values())
         return {'username': user.username, 'name': name, 'id': user.id, 'token': token.key, 'groups':user_groups }
 
@@ -38,6 +41,7 @@ class AuthUser(models.Model):
         username = params.get('login')
         password = params.get('password')
         auth_code = params.get('auth_code')
+        referer_address = request.META['HTTP_REFERER']
         user = None
         if auth_code:
             uuid = params.get('uuid')
@@ -48,9 +52,14 @@ class AuthUser(models.Model):
         else:
             user = authenticate(request, username=username, password=password)
             if user and user.id:
-                if user.is_superuser:
-                    return cls.do_login(request, user, user.username)
-                user = Profile.objects.get(pk=user.id)
+                profile = Profile.objects.filter(pk=user.id)
+                if (not profile) and user.is_superuser:
+                    profile = Profile(user_ptr=user)
+                    profile.password = password
+                    profile.save()
+                else:
+                    profile = profile[0]
+                user = profile
             else:
                 return 'Invalid credentials'
 
@@ -58,7 +67,6 @@ class AuthUser(models.Model):
             if user.two_factor_auth:
                 auth_type = user.get_two_factor_auth_display()
             if auth_type:
-                referer_address = request.META['HTTP_REFERER']
                 if not referer_address.endswith('localhost:4200/'):
                     auth_type = auth_type.lower()
                     address_to_send_code = ''
@@ -78,7 +86,7 @@ class AuthUser(models.Model):
                 name = Profile.objects.get(pk=user.id).name
             except:
                 name = user.username
-            return cls.do_login(request, user, name)
+            return cls.do_login(request, user, name, referer_address)
         else:
             return {'error': 'Invalid credentials'}
 
@@ -193,7 +201,7 @@ class AuthUser(models.Model):
             thread_data['subject'] = 'Password Rest'
             thread_data['audience'] = [user.id]
             thread_data['template_data'] = {
-                'url': server_base_url + '/accounts/reset-password/'
+                'url': server_base_url + '/user/reset-password/'
             }
             thread_data['template_name'] = 'user/reset_password.html'
             thread_data['token_required'] = 1

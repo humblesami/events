@@ -19,7 +19,7 @@
                     data: input_data
                 }
                 options.onSuccess = function(data){
-                    window.location = '/accounts/login';
+                    window.location = '/user/login';
                 };
                 options.type = 'get';
                 options.onError = function(data){

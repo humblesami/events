@@ -357,3 +357,6 @@
 .doc-container.admin .docWrapperContainer{
     width: 78%;
 }
+.sign_container{
+    cursor: pointer;
+}

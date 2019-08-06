@@ -4,42 +4,40 @@ function dn_rpc_object(options) {
     {
         api_url = '/rest/secure';
     }
-    var req_url = site_config.server_base_url + api_url;
+    var server_base_url = window.location.origin.toString();
+    var req_url = server_base_url + api_url;
     if (!options.data) {
         console.log('No data and arguments for request ',options);
         return;
     }
-    var input_data = options.data;
-    console.log(input_data);
+    var input_data = options.data;    
     if (input_data.no_loader)
         options.no_loader = 1;
 
-    var ajax_user = window['current_user'];    
-
-    //console.log(input_data);
-    if (input_data.no_loader)
+    var user_cooike = localStorage.getItem('user');
+    if (user_cooike)
     {
-        options.no_loader = 1;
+        user_cooike = JSON.parse(user_cooike);
+    }    
+    options.no_loader = 1;    
+    if(user_cookie)
+    {
+        input_data["auth_token"] = user_cookie.token;
     }
-    // if(ajax_user.cookie)
-    // {
-    //     input_data["auth_token"] = ajax_user.cookie.token;
-    // }
     
     var args_data = {input_data : JSON.stringify(input_data)};
-    // options.headers = {
+    options.headers = {
         
-    // }
-    // if(ajax_user.cookie && ajax_user.cookie.token)
-    // {
-    //     options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;            
-    // }
-    // else if(api_url.endsWith('/secure'))
-    // {
-    //     console.log(ajax_user.cookie, ' Invalid token for', input_data.args);
-    //     window['functions'].go_to_login();
-    //     return;
-    // }
+    }
+    if(user_cookie && user_cookie.token)
+    {
+        options.headers ['Authorization'] = 'Token '+user_cookie.token;
+    }
+    else if(api_url.endsWith('/secure'))
+    {
+        console.log(user_cookie, ' Invalid token for', input_data.args);        
+        return;
+    }
 
     options.data = args_data;
     options.dataType = 'json';
@@ -66,7 +64,7 @@ function dn_rpc_object(options) {
     var url_with_params = 'Nothing';
     options.beforeSend = function(a, b) {
         url_with_params = b.url.toString();
-        if(site_config.trace_request)
+        if(options.trace)
         {
             if(api_url == '/rest/secure')
             {
@@ -80,8 +78,8 @@ function dn_rpc_object(options) {
                 console.log(input_data.args);
             }
         }
-        // if (!options.no_loader)
-        //     showLoader("ajax" + api_url);
+        if (!options.no_loader)
+            site_functions.showLoader("ajax" + api_url);
         if (options.type == 'post')
             url_with_params = options;
     };
@@ -100,8 +98,6 @@ function dn_rpc_object(options) {
                 {
                     console.log(response, er);
                 }
-            } else if(site_config.show_logs.indexOf('ajax_success')){
-                console.log(response);
             }
         }
         else {
@@ -116,15 +112,14 @@ function dn_rpc_object(options) {
     options.complete = function() {
         if (options.onComplete)
             options.onComplete();
-        // if (!options.no_loader)
-            // site_functions.hideLoader("ajax" + api_url);        
+        if (!options.no_loader)
+            site_functions.hideLoader("ajax" + api_url);        
     };
     options.error = function(err) {                
         if(err.responseText == '{"detail":"Invalid token."}' || 
             err.responseText == '{"detail":"Authentication credentials were not provided."}')
         {
-            console.log(input_data.args.method + ' needs login to be accessed');
-            // window['functions'].go_to_login();
+            console.log(input_data.args.method + ' needs login to be accessed');            
             return;
         }
         else
@@ -151,15 +146,14 @@ function dn_rpc_object(options) {
             response.error = response.error.message;
         }
         if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
-            bootbox.alert('Token expired, please login again '+ options.url);
-            window['functions'].go_to_login();
+            console.log('Token expired, please login again '+ options.url);            
             return;
         } else if (response.error.indexOf('not allowed to access') > -1) {
             bootbox.alert("Contact admin for permissions" + response.error);
         } else {                                
             if(response.error.indexOf('Unauthorized') > -1)
             {
-                window['functions'].go_to_login();
+                console.log('Unauthorized request to access resources')
                 return;
             }
             else if(options.onError) {
@@ -172,15 +166,18 @@ function dn_rpc_object(options) {
                 }                        
             }                
         }
-        console.log(input_data.args);
-        if(options.type == 'GET' && url_with_params.length < 1500)
+        if(!options.trace)
         {
-            console.log(url_with_params);
+            console.log(input_data.args);
+            if(options.type == 'GET' && url_with_params.length < 1500)
+            {
+                console.log(url_with_params);
+            }
         }
+        
         response.error = response.error.replace(/<br\/>/g, "\n");
         console.log(response.error);
     }
-    console.log(options,12435);
     $.ajax(options);
 }
 $(function(){
@@ -193,70 +190,4 @@ $(function(){
         }
     }    
 });
-var showLoader = function(nam) {
-    if(!server_wait_loader)
-    {
-        server_wait_loader = window['loader'];
-        if(!server_wait_loader)
-        {
-            return;
-        }            
-    }
-    var obj_this = this;
-    var time_out = undefined;
-    if (obj_this.processes.length == 0) {
-        server_wait_loader.show();
-        server_wait_loader.shown = 1;
-        time_out = setTimeout(function() {
-            obj_this.hideLoader(nam);
-        }, 29000);
-    }
-    obj_this.processes.push({
-        name: nam,
-        time_out: time_out
-    });
-    //console.log(nam, new Date().getMilliseconds());
-}
-var hideLoader = function(nam, hiddenFrom) {
-    if(!server_wait_loader){
-        server_wait_loader = window['loader'];
-        if(!server_wait_loader)
-        {
-            return;
-        } 
-    }
-    if (!nam || nam == 'force') {
-        this.processes = [];
-        if (!nam)
-            console.trace();
-        else if (nam != 'force')
-        {
-            console.log("Force hidden from " + hiddenFrom);
-        }
-        server_wait_loader.hide();
-        server_wait_loader.shown = 0;
-    }
-    if (this.processes.length == 0) {
-        //console.log("Already removed "+nam);
-        return;
-    }
-    var found = false;
-    for (var i = this.processes.length - 1; i >= 0; i--) {
-        if (this.processes[i].name == nam) {
-            found = true;
-            clearTimeout(this.processes[i].time_out);
-            this.processes.splice(i, 1);
-            break;
-        }
-    }
-    if (found) {
-        //console.log(this.processes, " removed "+ nam);
-    } else {
-        console.log(nam + " not found");
-    }
-    if (this.processes.length == 0) {
-        server_wait_loader.hide();
-    }
-    //console.log(nam, new Date().getMilliseconds());
-}
 window['dn_rpc_object'] = dn_rpc_object;

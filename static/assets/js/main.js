@@ -12,10 +12,10 @@ var dn_current_site_user = {
         photo: false
     },
     socket: {},
-    time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,    
-    onLogin: function(data) {        
+    time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    onLogin: function(data) {
         dn_current_site_user.cookie = data;
-        data = JSON.stringify(data);        
+        data = JSON.stringify(data);
         localStorage.setItem('user', data);
         refreshSession();
         localStorage.setItem('last_activity', Date());
@@ -23,13 +23,13 @@ var dn_current_site_user = {
     },
     logout: function(navigate) {
         if(!dn_current_site_user.cookie)
-        {            
+        {
             return;
         }
         if(window.location.toString().indexOf('login') == -1)
         {
             $('body').hide();
-            $('body').removeClass('user').addClass('public');            
+            $('body').removeClass('user').addClass('public');
         }
         localStorage.removeItem("user");
         dn_current_site_user.cookie = undefined;
@@ -63,7 +63,7 @@ var site_functions = {
         {
             url = site_functions.get_path_name();
         }
-        let public_routes = ['/accounts/login','/accounts/forgot-password','/accounts/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
+        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
         for (var i in public_routes)
         {
             if (url.startsWith(public_routes[i]))
@@ -90,7 +90,7 @@ var site_functions = {
     {
         return moment(value, format);
     },
-    readFiles: function(files, on_drop){        
+    readFiles: function(files, on_drop){
         for (var i = 0; i < files.length; i++) {
             var file_name = files[i].name;
             // document.getElementById('fileDragName').value = files[i].name;
@@ -102,7 +102,7 @@ var site_functions = {
                 if(on_drop)
                 {
                     on_drop({name: file_name, data: event.target.result});
-                }         
+                }
             }
             reader.readAsDataURL(files[i]);
         }
@@ -112,13 +112,13 @@ var site_functions = {
         $('body').removeClass('user').addClass('public');
         if(dn_current_site_user.cookie && dn_current_site_user.cookie.token)
         {
-            dn_current_site_user.logout();          
+            dn_current_site_user.logout();
         }
         if(!window.location.toString().endsWith('login'))
         {
             if(window.location.toString().indexOf('4200') == -1)
             {
-                window.location = window['site_config'].server_base_url+'/accounts/logout';
+                window.location = window['site_config'].server_base_url+'/user/logout';
             }
             else{
                 window.location = '/#/login';
@@ -126,18 +126,18 @@ var site_functions = {
         }
     },
 
-    
+
     get_file_binaries(files, resolve){
         var res_binaries = [];
         var len = files.length;
-        for (var i = 0; i < files.length; i++) {            
+        for (var i = 0; i < files.length; i++) {
             setupReader(files[i]);
         }
         function setupReader(file) {
             var name = file.name;
             var reader = new FileReader();
-            reader.onload = function(){            
-                var dataURL = reader.result;            
+            reader.onload = function(){
+                var dataURL = reader.result;
                 res_binaries.push({
                     name: name,
                     binary : dataURL
@@ -182,7 +182,7 @@ var site_functions = {
             if(!server_wait_loader)
             {
                 return;
-            }            
+            }
         }
         var obj_this = this;
         var time_out = undefined;
@@ -205,7 +205,7 @@ var site_functions = {
             if(!server_wait_loader)
             {
                 return;
-            } 
+            }
         }
         if (!nam || nam == 'force') {
             this.processes = [];
@@ -277,7 +277,7 @@ var site_functions = {
                 continue;
             }
             if(trace[i].indexOf('DocumentComponent.push') > - 1
-            ||  trace[i].indexOf('HTMLDocument.dispatch')> -1 
+            ||  trace[i].indexOf('HTMLDocument.dispatch')> -1
             || trace[i].indexOf('ZoneDelegate.push')> -1)
             {
                 break;
@@ -300,7 +300,7 @@ function addMainEventListeners() {
         e = e || event;
         e.preventDefault();
     },false);
-    
+
     $('body').on('click', '.btnclosemodel', function() {
         $(this)
             .closest(".modal")
@@ -310,20 +310,20 @@ function addMainEventListeners() {
         $('body').removeClass('modal-open');
     });
 
-    $(document).on("mouseup touchend keyup", function(e) {        
+    $(document).on("mouseup touchend keyup", function(e) {
         refreshSession();
         if(!site_functions.is_public_route())
         {
             localStorage.setItem('last_activity', Date());
         }
-        
+
         site_functions.hideLoader('force','');
         var target = e.target;
         var showbtn = $(target).closest('.showmouseawaybutton');
         if (showbtn && showbtn.length > 0) {
             return;
         }
-        else 
+        else
         {
             var shownpanel = $(target).closest('.hidemouseaway');
             if (shownpanel && shownpanel.length > 0)
@@ -375,7 +375,7 @@ window.addEventListener('message', function receiveMessage(evt) {
                     break;
                 case 'profile':
                     redirect_url = `/#/profile/${id}`;
-                    break;                
+                    break;
                 case 'folder':
                     redirect_url = `/#/resource/${id}`;
                     break;
@@ -428,7 +428,7 @@ window.addEventListener('message', function receiveMessage(evt) {
             window.location = redirect_url;
         }
     }
-    
+
 }, false);
 
 
@@ -441,7 +441,7 @@ function refreshSession() {
     {
         clearTimeout(time_out_session);
     }
-    time_out_session = setTimeout(function() {        
+    time_out_session = setTimeout(function() {
         site_functions.go_to_login();
     }, session_time_limit);
 }
@@ -458,14 +458,14 @@ function check_if_touch_device() {
         window['pathname'] = wl.toString().replace(window.location.origin, '');
     }
     try
-    { 
+    {
         document.createEvent("TouchEvent");
         is_mobile_device = true;
         window['is_mobile_device'] = 1;
     }
     catch(e)
     {
-        return false; 
+        return false;
     }
 }
 $(function(){
