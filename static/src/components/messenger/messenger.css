@@ -708,6 +708,7 @@ a.contact-item {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+    padding: 0 1rem;
 }
 .messenger-navbar .messenger-navbar-wrap {
     flex: 1;
