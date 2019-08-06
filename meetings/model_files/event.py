@@ -281,7 +281,10 @@ class Event(models.Model):
             attendee_obj['attendance'] = attendance_status['attendance']
             attendees.append(attendee_obj)
         meeting_object['topics'] = topics
-        meeting_object['meeting_docs'] = meeting_docs
+        meeting_object['meeting_docs'] = []
+        for doc in meeting_docs:
+            doc['created_at'] = str(doc['created_at'])
+            meeting_object['meeting_docs'].append(doc)
         sign_docs =  meeting_object_orm.signdocument_set.all()
         sign_docs = ws_methods.queryset_to_list(sign_docs, fields=['id','pdf_doc','name'])
         meeting_object['sign_docs'] = sign_docs

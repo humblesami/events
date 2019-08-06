@@ -427,6 +427,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 if (this.type == 'text') {
                     div.addClass("is_text");
                 }
+                div.attr('data_type', this.type);
 
 
                 var h, w, perc, diff;
@@ -753,17 +754,24 @@ export class EsignDocDetailsComponent implements OnInit {
 
         $(document).off("click", ".sign_container")
         $(document).on("click", ".sign_container", function() {
-            console.log(4234343);
-            var sign_container = $(this);
-            var login = sign_container.attr("login");            
-            var my_record = sign_container.attr("my_record");            
+            // console.log(4234343);
+            var sign_container = $(this);            
+            var my_record = sign_container.attr("my_record");
             if (my_record == "false" && !isAdmin) {
                 return;
             }
+            var is_signed = sign_container.attr('signed').toString();
+            if(is_signed == "true")
+            {
+                return;
+            }
+            
+            var login = sign_container.attr("login");
             var signature_id = sign_container.attr("id");
             var signature_dom = sign_container;
 
-            var signature_data;            
+            var signature_data;
+
             function get_signature()
             {
                 ajax_options = {
@@ -771,49 +779,61 @@ export class EsignDocDetailsComponent implements OnInit {
                         args: {
                             app: "esign",
                             model: "Signature",
-                            method: "get_signature"
+                            method:"get_signature"
                         },
                         params: {
                             signature_id: signature_id,
                             document_id: doc_id,
-                            token: token
+                            token: token,
+                            sign_type: sign_container.attr('data_type')
                         }
                     },
-                    onSuccess: function(sign_data) {
-                        console.log(sign_data);
-                        if(sign_container.hasClass('is_initial') || sign_container.hasClass('is_sign'))
-                        {
-                            let sign_config = {
-                                signature_data: sign_data,
-                                on_signed: function(new_sign){
-                                    signature_data = new_sign;
-                                    submit_response(new_sign);
-                                }
-                            }
-                            window['init_sign'](sign_config);
-                        }
-                        else
-                        {
-                            if(sign_container.hasClass('is_date') || sign_container.hasClass('is_text'))
-                            {
-                                let popup_config = {
-                                    on_load: function(){
-                                        console.log(117);
-                                        $('#signModal .modal-body').html(`
-                                            <input value="`+sign_data+`" />
-                                        `);
-                                    },
-                                    on_save:function(){
-                                        console.log(4343);
-                                    },
-                                    hide_on_save: true,                                    
-                                }
-                                window['init_popup'](popup_config);
-                            }
+                    onSuccess: function(data) {                        
+                        on_sign_got(data.image);
+                    }
+                }
+                if(token){
+                    ajax_options.url = '/rest/public';
+                }
+                ajax_options.data.params.type = sign_container.attr('data_type');
+                window['dn_rpc_object'](ajax_options);
+            }
+
+            function on_sign_got(sign_data)
+            {
+                if(sign_container.hasClass('is_initial') || sign_container.hasClass('is_sign'))
+                {
+                    let sign_config = {
+                        signature_data: sign_data,
+                        on_signed: function(new_sign){
+                            signature_data = new_sign;
+                            submit_response(new_sign);
                         }
                     }
-                };
-                window['dn_rpc_object'](ajax_options);
+                    window['init_sign'](sign_config);
+                }
+                else
+                {
+                    let popup_config = {
+                        on_load: function(){
+                            // console.log(117);
+                            var disabled = '';
+                            if(!sign_container.hasClass('is_date'))
+                            {
+                                disabled = 'disabled';
+                            }
+                            $('#signModal .modal-body').html(`
+                                <input id="sign_data" value="`+sign_data+`" `+disabled+` />
+                            `);
+                        },
+                        on_save:function(){
+                            sign_data = $('#signModal .modal-body #sign_data').val();
+                            submit_response(sign_data)
+                        },
+                        hide_on_save: true,
+                    }
+                    window['init_popup'](popup_config);
+                }
             }
 
             function submit_response(response_data)
@@ -840,13 +860,9 @@ export class EsignDocDetailsComponent implements OnInit {
                 if(token){
                     ajax_options.url = '/rest/public';
                 }
-                if(sign_container.hasClass('is_date'))
-                {
-                    ajax_options.params.type = 'date';
-                }
+                ajax_options.data.params.type = sign_container.attr('data_type');
                 window['dn_rpc_object'](ajax_options);
             }
-            get_signature();
             return;
 
             var usr_name = $(this).attr("name");
