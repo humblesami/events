@@ -216,7 +216,7 @@ export class HeaderComponent implements OnInit {
 
     signout(){
         var obj_this = this;
-        window['functions'].go_to_login();
+        window['functions'].go_to_login(1);
     }
     
     change_cursor()

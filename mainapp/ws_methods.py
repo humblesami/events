@@ -5,7 +5,7 @@ import traceback
 from django.apps import apps
 from datetime import datetime
 from django.contrib.auth import login
-from emailthread.models import EmailThread
+from emailthread.models import EmailThread, DocumentThread
 from django.core.files.base import ContentFile
 from rest_framework.authtoken.models import Token
 
@@ -435,6 +435,10 @@ def check_auth_token(request,values):
     login(request, user)
 
     return user.id
+
+
+def document_thread(doc):
+    DocumentThread(doc).start()
 
 
 def send_email_on_creation(email_data):

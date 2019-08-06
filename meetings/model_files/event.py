@@ -37,18 +37,10 @@ class Event(models.Model):
         return self.name
 
 
-    # def save(self, *args, **kwargs):
-    #     super(Event, self).save(*args, **kwargs)
-    #     actions = self.actions.filter(meeting_id=self.id)
-    #     if not actions:
-    #         model = ws_methods.get_model('actions', 'Actions')
-    #         actions = model(meeting_id=self.id, open_date=self.start_date, close_date=self.end_date)
-    #         actions.save()
-    #     else:
-    #         actions = actions[0]
-    #         actions.open_date = self.start_date
-    #         actions.close_date = self.end_date
-    #         actions.save()
+    def save(self, *args, **kwargs):
+        a=1
+        super(Event, self).save(*args, **kwargs)
+        a = 2
 
     def notification_text(self):
         return ' meeting ' + self.name[0: 20] +'...'

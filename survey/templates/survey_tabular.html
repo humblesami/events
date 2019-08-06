@@ -161,9 +161,12 @@ function on_add_choice_click(el){
       var add_choices_btn = $('<div><button style="background: rgb(65, 118, 144) !important" class="btn btn-primary add_choices_btn" type="button">Add Choices</button></div>');
       parent.append(add_choices_btn);
       add_choices_btn.click(on_add_choice_click);
-      append_choices(parent,parent.next().find('textarea').val())
+      append_choices(parent,parent.next().find('textarea').val());
       setTimeout(() => {
-        $('.add_choices_btn').click();
+        if (!parent.next().find('textarea').val())
+        {
+          $('.add_choices_btn').click();
+        }
       }, 100);
     }
     else
