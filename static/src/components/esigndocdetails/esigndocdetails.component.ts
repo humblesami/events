@@ -748,7 +748,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 $('#signModal').modal('hide');
                 window['dn_rpc_object'](ajax_options);
             }
-            console.log(obj_this.isAdmin && (is_signed == "false" || my_record == "true"), 133);
             if(obj_this.isAdmin && (is_signed == "false" || my_record == "true"))
             {
                 let popup_config = {
@@ -809,6 +808,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     let sign_config = {
                         signature_data: sign_data.image,
                         on_signed: function(new_sign){
+                            console.log(1154, new_sign);
                             signature_data = new_sign;
                             submit_response(new_sign, sign_data.text);
                         }
@@ -911,7 +911,7 @@ export class EsignDocDetailsComponent implements OnInit {
             var top = canvas.height * (sign.top / 100);
 
             var left = canvas.width * (sign.left / 100);
-            // renderPage(sign.page);
+            renderPage(sign.page);
             $('html, #page_container1').animate({
                 scrollTop: top - 150,
                 scrollLeft: left - 150,

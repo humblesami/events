@@ -154,8 +154,8 @@ function init_sign(config) {
                     
                 </div>
                 <div class="modal-footer">
-                <span class="btn btn-danger btn-sm DocsBtn" id="clear-sig">Clear</span>
-                    <span class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</span>    
+                <button class="btn btn-danger btn-sm DocsBtn" id="clear-sig">Clear</button>
+                <button class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</button>
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -194,6 +194,7 @@ function init_sign(config) {
 
     function setup_signature(){
         var save_btn = $('#save-sig');
+        console.log(save_btn.length, 93);
         var upload_clicker = $('#upload-sig-btn');
         var upload_btn = $('#upload-sig');
 
@@ -235,6 +236,7 @@ function init_sign(config) {
         });
 
         save_btn.click(function (e) {
+            console.log(e, 55);
             var type = "draw";
             dataURL = myCanvas.toDataURL();
             $('.strt_sign.pdfjs').hide();            
