@@ -360,10 +360,11 @@
     cursor: pointer;    
 }
 .new_sign, .sign_container{    
-    width: 250px;
+    padding: 5px;
 }
 .sign_container[signed="true"]{    
     border: 1px dotted;
+    background: white;
 }
 .sign_container img{
     max-width: inherit;

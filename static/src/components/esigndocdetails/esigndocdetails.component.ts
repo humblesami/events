@@ -210,7 +210,7 @@ export class EsignDocDetailsComponent implements OnInit {
             // console.log(signature_dom[0], data)
             var sign_img = signature_dom.find('img:first');
             var sign_img_src = 'data:image/png;base64,' + data.image;
-            signature_dom.attr('signed','true').css('background','transparent');
+            signature_dom.attr('signed','true').css('background','white');
             if(sign_img.length > 0)
             {
                 sign_img[0].src = sign_img_src;
@@ -218,7 +218,7 @@ export class EsignDocDetailsComponent implements OnInit {
             else{
                 if(signature_dom && signature_dom.length > 0)
                 {
-                    signature_dom.html('<img src="'+sign_img_src+'" width="100%" />');
+                    signature_dom.html('<img src="'+sign_img_src+'" style="width:calc(100% - 10px)" />');
                 }
                 else{
                     console.log('Invalid signature dom');
@@ -443,7 +443,8 @@ export class EsignDocDetailsComponent implements OnInit {
                     top: this.top + "%",
                     left: this.left + "%",
                     position: 'absolute',                    
-                    height: h
+                    height: h,
+                    width: w,
                 });
                 if (!this.signed && this.my_record) {
                     div.css({
@@ -454,14 +455,14 @@ export class EsignDocDetailsComponent implements OnInit {
                 {
                     if(this.signed)
                     {
-                        div.html('<img src="'+window['site_config'].server_base_url+this.image+'" height="100%"/>');
+                        div.html('<img src="'+window['site_config'].server_base_url+this.image+'" style="height:calc(100% - 10px)"/>');
                     }
                 }
                 else
                 {
                     if(this.signed && this.my_record)
                     {
-                        div.html('<img src="'+window['site_config'].server_base_url+this.image+'" height="100%"/>');
+                        div.html('<img src="'+window['site_config'].server_base_url+this.image+'" style="height:calc(100% - 10px)"/>');
                     }
                 }
 
@@ -492,9 +493,7 @@ export class EsignDocDetailsComponent implements OnInit {
             scroll: true,
             start: function(event, ui) {
                 //$(this).data("startingScrollTop", $(this).parent().scrollTop());
-                $(ui.helper).css({
-                    height: '50px',
-                    padding: 0,
+                $(ui.helper).css({                                        
                     background: 'rgba(255, 235, 235, 0.9)',
                     color: 'black'
                 });
@@ -565,9 +564,7 @@ export class EsignDocDetailsComponent implements OnInit {
             // console.log(percent_left, percent_top);
             //new_signature.append('<i class="fa fa-pen  fa-lg  edit_sign" style="color:black;float:right;margin-right:10px;" aria-hidden="true"/>');
             if (new_signature.hasClass("text_psition")) {
-
                 new_signature.html('<input style="display:inline;width:90%" type="text" placeholder="Field Name"/>');
-
             }
 
             new_signature.prepend('<i class="fa fa-pen  edit_sign" style="color:black;float:left" aria-hidden="true"/>');

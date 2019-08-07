@@ -256,7 +256,7 @@ class SignDocument(SignatureDoc):
                         sign_left = 51
 
                     token = str(uuid.uuid4())
-                    obj = Signature(**{'document': doc, 'user_id': p.id, 'type': "sign", 'token': token,
+                    obj = Signature(**{'document': doc, 'user_id': p.id, 'type': "signature", 'token': token,
                            'left': sign_left, 'top': sign_top, 'height': 40, 'width': 140,
                            'zoom': 300
                            })
