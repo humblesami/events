@@ -37,8 +37,12 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     </div>
                     <div class="doc-manage-btn-wrap">
                         <div class="paginator">
-                            <span (click)="changePage(page_num-1)" class="pager prev page-prev-btn" disabled=""><i class="fa fa-arrow-up"></i></span>
-                            <span (click)="changePage(page_num+1)" class="pager next page-next-btn" disabled=""><i class="fa fa-arrow-down"></i></span>
+                            <span (click)="changePage(page_num-1)" class="pager prev page-prev-btn" disabled="">
+								<img src="static/assets/images/docs/docs-arrow-up.svg" alt="">
+							</span>
+                            <span (click)="changePage(page_num+1)" class="pager next page-next-btn" disabled="">
+								<img src="static/assets/images/docs/docs-arrow-down.svg" alt="">
+							</span>
     
                             <input (change)="changePage(page_num)" (blur)="changePage(page_num)" (keyup.enter)="changePage(page_num)" class="form-control" [(ngModel)]="page_num" type="number" class="page-number" value="1">
                             <span>of <span class="page-count">1</span></span>
@@ -53,24 +57,14 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     <div class="doc-manage-btn-wrap">
                         <button class="cursor annotation_button" type="button" title="Cursor" data-tooltype="cursor">
                             <div class="Icon">
-                                <svg viewBox="0 0 24 24" id="ic_select_black_24px" width="100%" height="100%">
-                                    <g fill="none" fill-rule="evenodd">
-                                        <path d="M11.022 14.577l-2.92 1.047a1 1 0 0 1-1.33-1.036L7.817 3.465a1 1 0 0 1 1.701-.614l7.95 7.92a1 1 0 0 1-.37 1.651l-2.96 1.061 2.576 7.078a.996.996 0 0 1-.596 1.278l-1.23.448a.996.996 0 0 1-1.278-.596z" fill="currentColor"></path>
-                                        <path d="M0 0h24v24H0z"></path>
-                                    </g>
-                                </svg>
+                                <img src="static/assets/images/docs/docs-pointer.svg" alt="">
                             </div>
                         </button>
                     </div>
                     <div class="doc-manage-btn-wrap">
                         <button class="pen annotation_button" type="button" title="Pen Tool" data-tooltype="draw">
                             <div class="Icon">
-                                <svg viewBox="0 0 24 24" id="ic_annotation_freehand_black_24px" width="100%" height="100%">
-                                    <g fill="none" fill-rule="evenodd">
-                                        <path d="M0 0h24v24H0z"></path>
-                                        <path fill="currentColor" d="M9.662 8.523l4.242-4.243 7.071 7.071-4.242 4.243a1 1 0 0 1-1.414 0L9.662 9.937a1 1 0 0 1 0-1.414zm-.707 2.121l5.656 5.657L9.6 18.807a1 1 0 0 1-1.154-.187l-1.81-1.81a1 1 0 0 1-.186-1.154zm-2.829 7.071l1.414 1.414c-1.32 1.037-2.144 1.39-2.474 1.06-.33-.33.023-1.154 1.06-2.474z"></path>
-                                    </g>
-                                </svg>
+                                 <img src="static/assets/images/docs/docs-write-pen.svg" alt="">
                             </div>
                         </button>
                     </div>
@@ -91,7 +85,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     <div class="doc-manage-btn-wrap">
                         <button class="comment annotation_button" style="padding-top: 0" type="button" title="Show all comments">
                             <span class="Icon">
-                                <i class="fas fa-comments"></i>
+                                <img src="static/assets/images/docs/docs-comment.svg" alt="">
                             </span>
                         </button>
                         <button data-tooltype="point" class="add-point-button annotation_button comment" title="Add new comment point">
@@ -152,22 +146,12 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     <div class="doc-manage-btn-wrap">
                         <a href="javascript://" class="rotate-ccw doc-manage-btn-wrap" title="Rotate Counter Clockwise">
                             <div class="Icon">
-                                <svg viewBox="0 0 24 24" id="ic_rotate_left_black_24px" width="100%" height="100%">
-                                    <g fill="none" fill-rule="evenodd">
-                                        <path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.49-1.72 1.02-2.47zM6.09 13H4.07c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.87-1.59-1.01-2.47zm1.01 5.32c1.16.9 2.51 1.44 3.9 1.61V17.9c-.87-.15-1.71-.49-2.46-1.03zM13 4.07V1L8.45 5.55 13 10V6.09c2.84.48 5 2.94 5 5.91s-2.16 5.43-5 5.91v2.02c3.95-.49 7-3.85 7-7.93s-3.05-7.44-7-7.93z" fill="currentColor" fill-rule="nonzero"></path>
-                                        <path d="M0 0h24v24H0z"></path>
-                                    </g>
-                                </svg>
+                                <img src="static/assets/images/docs/docs-rotate-left.svg" alt="">
                             </div>
                         </a>
                         <a href="javascript://" class="rotate-cw doc-manage-btn-wrap" title="Rotate Clockwise">
                             <div class="Icon">
-                                <svg viewBox="0 0 24 24" id="ic_rotate_right_black_24px" width="100%" height="100%">
-                                    <g fill="none" fill-rule="evenodd">
-                                        <path d="M15.55 5.55L11 1v3.07C7.06 4.56 4 7.92 4 12s3.05 7.44 7 7.93v-2.02c-2.84-.48-5-2.94-5-5.91s2.16-5.43 5-5.91V10zM19.93 11a7.906 7.906 0 0 0-1.62-3.89l-1.42 1.42c.54.75.88 1.6 1.02 2.47zM13 17.9v2.02c1.39-.17 2.74-.71 3.9-1.61l-1.44-1.44c-.75.54-1.59.89-2.46 1.03zm3.89-2.42l1.42 1.41c.9-1.16 1.45-2.5 1.62-3.89h-2.02c-.14.87-.48 1.72-1.02 2.48z" fill="currentColor" fill-rule="nonzero"></path>
-                                        <path d="M0 0h24v24H0z"></path>
-                                    </g>
-                                </svg>
+                                <img src="static/assets/images/docs/docs-rotate-right.svg" alt="">
                             </div>
                         </a>
                     </div>

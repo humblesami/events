@@ -137,11 +137,11 @@
     background-color: black;
 }
 .Icon {
-    width: 24px;
+    /* width: 24px;
     height: 24px;
     color: #ffffff;
     pointer-events: none;
-    text-align:center;
+    text-align:center; */
 }
 .cb-container {
     position: relative;
