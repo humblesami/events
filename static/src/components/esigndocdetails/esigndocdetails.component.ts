@@ -210,6 +210,7 @@ export class EsignDocDetailsComponent implements OnInit {
             // console.log(signature_dom[0], data)
             var sign_img = signature_dom.find('img:first');
             var sign_img_src = 'data:image/png;base64,' + data.image;
+            signature_dom.attr('signed','true').css('background','transparent');
             if(sign_img.length > 0)
             {
                 sign_img[0].src = sign_img_src;
@@ -217,12 +218,12 @@ export class EsignDocDetailsComponent implements OnInit {
             else{
                 if(signature_dom && signature_dom.length > 0)
                 {
-                    signature_dom.html('<img src="'+sign_img_src+'" height="100%">');
+                    signature_dom.html('<img src="'+sign_img_src+'" width="100%" />');
                 }
                 else{
                     console.log('Invalid signature dom');
                 }
-            }
+            }            
         }
 
         function toggleNextButton() {
@@ -478,7 +479,7 @@ export class EsignDocDetailsComponent implements OnInit {
             {
                 obj_this.isAdmin = false;
             }
-            console.log('Signatures loaded',obj_this.isAdmin, Date());
+            // console.log('Signatures loaded',obj_this.isAdmin, Date());
         }
 
         ///////////////////////DRAG AND DROOP//////////////////////////
@@ -857,9 +858,18 @@ export class EsignDocDetailsComponent implements OnInit {
                             binary_signature: response_data,
                         }
                     },
-                    onSuccess: function(data) {                        
+                    onSuccess: function(data) {
+                        for(var i =0;i<doc_data.length;i++)
+                        {
+                            // console.log(signature_dom.attr('id'), doc_data[i].id);
+                            if(doc_data[i].id == signature_dom.attr('id'))
+                            {
+                                doc_data[i].image = 'data:image/png;base64,' + data.image;
+                                break;
+                            }
+                        }
                         on_sign_saved(signature_dom, data);
-                        $("#nxxt_sign").click();
+                        // $("#nxxt_sign").click();
                     }
                 }
                 if(token){
