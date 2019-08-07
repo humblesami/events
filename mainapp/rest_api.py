@@ -32,10 +32,13 @@ public_methods = {
     'esign':{
         'SignatureDoc':{
             'get_signature': 1,
-            'get_detail': 1
+            'get_doc_data': 1,
+            'get_detail': 1,
         },
         'Signature':{
             'save_signature':1,
+            'get_signature': 1,
+            'load_signature':1,
         }
     }
 }
@@ -222,7 +225,7 @@ def produce_exception():
     cnt = 0
     for er in eg:
         cnt += 1
-        if not 'lib/python' in er and not 'lib\site-packages' in er:
+        if not 'lib/python' in er and not 'Programs\Python' in er:
             errorMessage += " " + er
     return HttpResponse(errorMessage)
 
@@ -232,7 +235,7 @@ def produce_exception_public():
     cnt = 0
     for er in eg:
         cnt += 1
-        if not 'lib/python' in er and not 'lib\site-packages' in er:
+        if not 'lib/python' in er and not 'Programs\Python' in er:
             errorMessage += " " + er
     res = {'error': errorMessage}
     res = json.dumps(res)

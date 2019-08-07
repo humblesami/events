@@ -30,8 +30,13 @@ ALLOWED_HOSTS = ['172.16.21.170', '172.16.21.171', 'localhost', 'meetvue.com', '
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
+import sys
+python_path = sys.base_exec_prefix
 EMAIL_HOST_USER = 'sami.akram@digitalnet.com'
 EMAIL_HOST_PASSWORD = 'asddsazx'
+if 'Ghulam Fareed' in python_path:
+    EMAIL_HOST_USER = 'farid.alvi@digitalnet.com'
+    EMAIL_HOST_PASSWORD = 'farid999000'
 EMAIL_USE_TLS = True
 
 # Application definition

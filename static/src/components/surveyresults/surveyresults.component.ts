@@ -26,6 +26,7 @@ export class SurveyresultsComponent implements OnInit {
     const input_data = {survey_id : obj_this.route.snapshot.params.id};
     const success_cb = function (result) {
       obj_this.surveyDetails = result;
+      console.log(result)
       setTimeout(function(){
         for(let question in obj_this.surveyDetails.questions)
         {

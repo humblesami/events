@@ -359,6 +359,13 @@
 .sign_container{
     cursor: pointer;    
 }
-.sign_container[signed="false"]{    
-    width: 150px;
+.new_sign, .sign_container{    
+    padding: 5px;
+}
+.sign_container[signed="true"]{    
+    border: 1px dotted;
+    background: white;
+}
+.sign_container img{
+    max-width: inherit;
 }

@@ -13,4 +13,20 @@
     <link rel="stylesheet" type="text/css" href="/static/admin/css/change_form.css" />
     <link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css" />
     <link rel="stylesheet" type="text/css" href="/static/admin/css/secondary.css" />
+    <div class="modal fade" id="signModal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div id="signature-body" class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <span class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</span>
+                    <button type="button" class="btn btn-sm btn-default" id="close-btn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
