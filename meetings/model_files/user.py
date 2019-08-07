@@ -194,12 +194,11 @@ class Profile(user_model):
             if not self.username:
                 self.username = self.email
         self.name = self.fullname()
-        random_password = uuid.uuid4().hex[:8]
-        self.set_password(random_password)
         super(Profile, self).save(*args, **kwargs)
         if creating:
             if self.is_superuser:
-                # self.set_password(password)
+                random_password = uuid.uuid4().hex[:8]
+                self.set_password(random_password)
                 self.user_ptr.set_password(password)
                 self.user_ptr.save()
             user_data = {
