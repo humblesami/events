@@ -250,9 +250,10 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
         <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">
             <div class="modal-header">
-                Roster
+                Rostera
             </div>
             <button class="btn btn-primary" (click)="open(meeting_object.id)">Mark Attendance</button>
+            <button class="btn btn-primary" (click)="openngx(meeting_object.id)">Mark Attendance NGX Pagination</button>
             <div class="row">
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of meeting_object.attendees">
                     <div class="kanban-card">

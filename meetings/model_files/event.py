@@ -435,7 +435,7 @@ class Event(models.Model):
     def get_roster_details(cls, request, params):
         meeting_id = params['meeting_id']
         offset = params['offset']
-        limit = params['limit']
+        limit = int(params['limit'])
         meeting_obj = Event.objects.get(pk=meeting_id)
         data = {
             'attendees': [],
@@ -456,14 +456,43 @@ class Event(models.Model):
             data['attendees'] = attendees_list
             data['total'] = total
         return data
-            
+    
+    # @classmethod
+    # def get_roster_details(cls, request, params):
+    #     meeting_id = params['meeting_id']
+    #     # offset = params['offset']
+    #     # limit = params['limit']
+    #     meeting_obj = Event.objects.get(pk=meeting_id)
+    #     data = {
+    #     'attendees': [],
+    #     'total': 0
+    #     }
+    #     attendees_list = []
+    #     if meeting_obj:
+    #         attendees = meeting_obj.attendees.all()
+    #         total = len(attendees)
+    #     # attendees = attendees[offset: offset+limit]
+    #     for attendee in attendees:
+    #         attendee_data = ws_methods.obj_to_dict(
+    #         attendee, 
+    #         fields=['id', 'name', 'email', 'mobile_phone', 'company', 'image'],
+    #         related={
+    #         'invitation_response_set': {'fields': 'attendance'}
+    #         })
+    #         attendee_data['attendance'] = attendee_data['invitation_response_set'][0]['attendance']
+    #         del attendee_data['invitation_response_set']
+    #         attendee_data['photo'] = attendee_data['image']
+    #         attendees_list.append(attendee_data)
+    #         data['attendees'] = attendees_list
+    #         data['total'] = total
+    #     return data
 
     @classmethod
     def search_roster(cls, request, params):
         key_word = params['key_word']
         meeting_id = params['meeting_id']
-        offset = params['offset']
-        limit = params['limit']
+        # offset = params['offset']
+        # limit = params['limit']
         data = {
             'attendees': [],
             'total': 0
@@ -479,7 +508,7 @@ class Event(models.Model):
         ).distinct()
         if attendees:
             total = len(attendees)
-            attendees = attendees[offset: offset + limit]
+            # attendees = attendees[offset: offset + limit]
             attendees_list = []
             for attendee in attendees:
                 attendee_data = ws_methods.obj_to_dict(

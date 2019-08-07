@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {SocketService} from "../../app/socket.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RosterComponent } from '../roster/roster.component';
+import { NgxpagerosterComponent } from '../ngxpageroster/ngxpageroster.component';
 
 declare var $: any;
 
@@ -46,6 +47,10 @@ export class MeetingDetailsComponent implements OnInit {
 
     open(meeting_id) {
 		const modalRef = this.modalService.open(RosterComponent);
+		modalRef.componentInstance.meeting_id = meeting_id;
+    }
+    openngx(meeting_id) {
+		const modalRef = this.modalService.open(NgxpagerosterComponent);
 		modalRef.componentInstance.meeting_id = meeting_id;
 	}
 

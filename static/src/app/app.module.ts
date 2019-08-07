@@ -70,7 +70,9 @@ import { SupportComponent } from '../components/support/support.component';
 import { ProfileeditComponent } from '../components/profileedit/profileedit.component';
 import { RosterComponent } from '../components/roster/roster.component';
 import { ProfilesummaryComponent } from '../components/profilesummary/profilesummary.component';
-
+import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxpagerosterComponent } from '../components/ngxpageroster/ngxpageroster.component';
+import * as rxjs from 'rxjs';
 
 @NgModule({
     imports: [
@@ -84,6 +86,8 @@ import { ProfilesummaryComponent } from '../components/profilesummary/profilesum
         RouterModule,
         RouterTestingModule,
         NgbModule,
+        BrowserModule, 
+        NgxPaginationModule,
     ],
     declarations: [
         AppComponent,
@@ -132,7 +136,9 @@ import { ProfilesummaryComponent } from '../components/profilesummary/profilesum
         DateAgoPipe,
         StringFirstToUpperPipe,
         RosterComponent,
-        ProfilesummaryComponent,        
+        ProfilesummaryComponent,
+        NgxpagerosterComponent,       
+ 
     ],
     providers:[
         AuthGuard,
@@ -142,6 +148,6 @@ import { ProfilesummaryComponent } from '../components/profilesummary/profilesum
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [MessageiconComponent, MessengerComponent, ChatComponent, CommentsComponent,DocumentComponent, ProfilesummaryComponent, RosterComponent ],
+    entryComponents: [MessageiconComponent, MessengerComponent, ChatComponent, CommentsComponent,DocumentComponent, ProfilesummaryComponent, RosterComponent, NgxpagerosterComponent],
 })
 export class AppModule { }
