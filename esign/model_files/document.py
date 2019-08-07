@@ -225,6 +225,7 @@ class SignatureDoc(File):
                 if (uid == sign_user_id):
                     my_record = True
             s["signed"] = signed
+            s['signtype'] = s["type"]
             s["my_record"] = my_record
         return {"pdf_binary": pdf_doc, "doc_data": signatures, 'id': doc.id}
 
@@ -244,7 +245,7 @@ class SignatureDoc(File):
 class Signature(models.Model):
     name = models.CharField(max_length=200, blank=True)
     email = models.CharField(max_length=200, blank=True)
-    type = models.CharField(max_length=200, blank=True)
+    type = models.CharField(max_length=200)
     field_name = models.CharField(max_length=200, blank=True)
     text = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='esign/', blank=True, null=True)
@@ -306,10 +307,8 @@ class Signature(models.Model):
     @classmethod
     def save_signature(cls, request, params):
         doc_id = int(params['document_id'])
-        doc = SignatureDoc.objects.get(id=doc_id)
         signature_id = params['signature_id']
         token = params.get('token')
-        uid = False
         sign = Signature.objects.get(id=signature_id)
         if token:
             token = PostUserToken.objects.get(token=token)
@@ -323,36 +322,11 @@ class Signature(models.Model):
             if request.user.id != 1:
                 if request.user.id != sign.user.id:
                     return "Unauthorized"
-        binary_signature = ""
         sign.signed_at = datetime.datetime.now()
-        if params['type'] == "upload":
-            binary_signature = params['binary_signature']
-            binary_data = io.BytesIO(base64.b64decode(binary_signature))
-            jango_file = DjangoFile(binary_data)
-            sign.image.save(params['filename'], jango_file)
-        else:
-            if params['type'] == "auto":
-                binary_signature = cls.get_auto_sign(sign)
-                # sign.write({'draw_signature': binary_signature})
-            if params['type'] == "draw":
-                binary_signature = params['binary_signature']
-                binary_data = io.BytesIO(base64.b64decode(binary_signature))
-                jango_file = DjangoFile(binary_data)
-                sign.image.save("sign"+".png", jango_file)
-            if params['type'] == "date":
-                # dt=kw['date']
-                dt = datetime.datetime.today().strftime('%b,%d  %Y')
-                binary_signature = cls.get_auto_sign(sign, dt)
-                binary_data = io.BytesIO(base64.b64decode(binary_signature))
-                jango_file = DjangoFile(binary_data)
-                sign.image.save("sign"+".png", jango_file)
-            if params['type'] == "text":
-                text = params['text']
-                binary_signature = cls.get_sign_text(sign, text)
-                binary_data = io.BytesIO(base64.b64decode(binary_signature))
-                jango_file = DjangoFile(binary_data)
-                sign.image.save("sign"+".png", jango_file)
-            sign.save()
+        binary_signature = params['binary_signature']
+        binary_data = io.BytesIO(base64.b64decode(binary_signature))
+        jango_file = DjangoFile(binary_data)
+        sign.image.save('sign_image.png', jango_file)
         return { 'image': binary_signature}
 
     @classmethod
@@ -385,20 +359,24 @@ class Signature(models.Model):
             res = str(datetime.datetime.now())
         elif sign_type == 'email':
             res = profile.email
-        elif sign_type == 'company':
-            res = profile.compnay
         elif sign_type == 'name':
             res = profile.fullname()
-        elif sign_type == 'phone':
-            res = profile.mobile_phone
-        image = ''
+        else:
+            try:
+                if sign_type == 'company':
+                    res = profile.compnay
+                elif sign_type == 'phone':
+                    res = profile.mobile_phone
+            except:
+                pass
+        binary_signature = ''
         if res:
             img = Image.new('RGB', (60, 30), 'black')
             drawing = ImageDraw.Draw(img)
             drawing.text((40, 0), res, (0, 0, 0))
             curr_dir = os.path.dirname(__file__)
             pth = curr_dir.replace('model_files', 'static')
-            img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+            img_path = pth + "/tempsignload" + str(request.user.id) + ".png"
             img.save(img_path)
 
             image = open(img_path, 'rb')

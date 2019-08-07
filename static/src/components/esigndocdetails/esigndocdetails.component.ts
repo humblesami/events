@@ -405,33 +405,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     class: "sign_container",
                     //text: this.name
                 });
-                if (this.type == 'sign' && !this.signed) {
-                    div.html("Signature:" + this.name)
-                }
-                if (this.type == 'initial' && !this.signed) {
-                    div.html("Initials:" + this.name)
-                }
-                if (this.type == 'date' && !this.signed) {
-                    div.html("Date:" + this.name)
-                }
-                if (this.type == 'text' && !this.signed) {
-                    div.html(this.field_name + ":" + this.name)
-                }
-
-
-                if (this.type == 'sign') {
-                    div.addClass("is_sign");
-                }
-                if (this.type == 'initial') {
-                    div.addClass("is_initial");
-                }
-                if (this.type == 'date') {
-                    div.addClass("is_date");
-                }
-                if (this.type == 'text') {
-                    div.addClass("is_text");
-                }
-
+                var show_text = this.type.charAt(0).toUpperCase() + this.type.slice(1);
+                div.html(show_text + ":" + this.name);
+                div.attr('signtype', this.type);
 
                 var h, w, perc, diff;
                 if (this.zoom > canvas.width) {
@@ -649,7 +625,7 @@ export class EsignDocDetailsComponent implements OnInit {
             })
             save_btn.click(function(e) {
                 var arr = [];
-                console.log(3232);
+                // console.log(3232);
                 var isEmpty = false;
                 var subject = input_subject[0].value;
                 var message = email_body[0].value;
@@ -675,40 +651,8 @@ export class EsignDocDetailsComponent implements OnInit {
                         }
                         var type;
                         var field_name = "";
-                        if (sign.hasClass("sign_psition")) {
-                            type = "sign"
-                        }
-                        if (sign.hasClass("initial_psition")) {
-                            type = "initial"
-                        }
-                        if (sign.hasClass("date_psition")) {
-                            type = "date"
-                        }
-                        if (sign.hasClass("name_psition")) {
-                            type = "text"
-                            field_name = "Name"
-                        }
-                        if (sign.hasClass("email_psition")) {
-                            type = "text"
-                            field_name = "Email"
-                        }
-                        if (sign.hasClass("phone_psition")) {
-                            type = "text"
-                            field_name = "Phone"
-                        }
-                        if (sign.hasClass("company_psition")) {
-                            type = "text"
-                            field_name = "Company"
-                        }
-                        if (sign.hasClass("text_psition")) {
-                            type = "text";
-                            field_name = sign.find('input').val();
-                            if (field_name == "") {
-                                isEmpty = true;
-
-                                return;
-                            }
-                        }
+                        type = sign.attr('signtype')
+                        field_name = type.charAt(0).toUpperCase() + type.slice(1);
 
                         var obj = {
                             document_id: doc_id,
@@ -774,10 +718,10 @@ export class EsignDocDetailsComponent implements OnInit {
                 return;
             }
             var is_signed = sign_container.attr('signed').toString();
-            if(is_signed == "true")
-            {
-                return;
-            }
+            // if(is_signed == "true")
+            // {
+            //     return;
+            // }
             
             var login = sign_container.attr("login");
             var signature_id = sign_container.attr("id");
@@ -886,8 +830,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             `);
                         },
                         on_save:function(){
-                            var sign_data_text = $('#signModal .modal-body #sign_data').val();
-                            submit_response(sign_data.image, sign_data_text);
+                            submit_response(sign_data.image, sign_data.text);
                         },
                         hide_on_save: true,
                     }
@@ -897,6 +840,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
             function submit_response(response_data, sign_data_text)
             {
+                console.log(response_data, sign_data_text);
                 ajax_options = {
                     data: {
                         args: {
@@ -1196,7 +1140,7 @@ export class EsignDocDetailsComponent implements OnInit {
             var top = canvas.height * (sign.top / 100);
 
             var left = canvas.width * (sign.left / 100);
-            renderPage(sign.page);
+            // renderPage(sign.page);
             $('html, #page_container1').animate({
                 scrollTop: top - 150,
                 scrollLeft: left - 150,
