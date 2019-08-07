@@ -179,13 +179,12 @@ function init_sign(config) {
         clear_btn.click();
 
         if (signature_value && signature_value.length > 0) {
-            if(config.include_prefix)
+            var binary_prefix = 'data:image/png;base64,';
+            if (signature_value.startsWith('data:'))
             {
-                dataURL = signature_value;
+                binary_prefix = '';
             }
-            else{
-                dataURL = 'data:image/png;base64,' + signature_value;
-            }
+            dataURL = binary_prefix + signature_value;
             img.src = dataURL;
         }
     }

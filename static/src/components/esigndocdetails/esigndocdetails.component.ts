@@ -855,6 +855,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             binary_signature: response_data,
                         }
                     },
+                    type:"POST",
                     onSuccess: function(data) {
                         for(var i =0;i<doc_data.length;i++)
                         {

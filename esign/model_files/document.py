@@ -280,31 +280,6 @@ class Signature(models.Model):
             return 'done'
 
     @classmethod
-    def get_sign_text(cls, sign, text):
-        curr_dir = os.path.dirname(__file__)
-        pth = curr_dir.replace('model_files', 'static')
-        font = ImageFont.truetype(pth + "/FREESCPT.TTF", 200)
-        sz = font.getsize(text)
-        sz = (sz[0] + 50, sz[1])
-        # sz = (185, 25)
-        # if sz[0] < 100:
-        #     sz=(150,50)
-        img = Image.new('RGB', sz, (255, 255, 255))
-        d = ImageDraw.Draw(img)
-
-        d.text((40, 0), text, (0, 0, 0), font=font)
-
-        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
-        img.save(img_path)
-
-        res = open(img_path, 'rb')
-        read = res.read()
-        binary_signature = base64.encodebytes(read)
-        binary_signature = binary_signature.decode('utf-8')
-        return { 'image': binary_signature }
-
-
-    @classmethod
     def save_signature(cls, request, params):
         doc_id = int(params['document_id'])
         signature_id = params['signature_id']
@@ -325,19 +300,21 @@ class Signature(models.Model):
         sign.signed_at = datetime.datetime.now()
         binary_signature = ''
         curr_dir = os.path.dirname(__file__)
-        pth = curr_dir.replace('esign/model_files', 'static/assets/fonts')
+        font_directory = curr_dir.replace('esign/model_files', 'static/assets/fonts')
         sign_type = params['sign_type']
         if sign_type != 'initials' and sign_type != 'signature':
             text = params['text']
-            font = ImageFont.truetype(pth + "/roboto-v19-latin-regular.ttf", 48)
+            font = ImageFont.truetype(font_directory + "/roboto-v19-latin-regular.ttf", 48)
             sz = font.getsize(text)
             sz = (sz[0] + 50, sz[1])
             img = Image.new('RGB', sz, (255,255,255))
             drawing = ImageDraw.Draw(img)
             drawing.text((0, -10), text, (0,0,0), font)
             curr_dir = os.path.dirname(__file__)
-            pth = curr_dir.replace('model_files', 'static')
-            img_path = pth + "/tempsignload" + str(request.user.id) + ".png"
+            signature_directory = curr_dir.replace('model_files', 'static')
+            if not os.path.exists(signature_directory):
+                os.makedirs(signature_directory)
+            img_path = signature_directory + "/tempsignload" + str(request.user.id) + ".png"
             img.save(img_path)
 
             image = open(img_path, 'rb')
@@ -423,36 +400,30 @@ class Signature(models.Model):
         sign = Signature.objects.get(id=signature_id)
         if sign.user.id != user.id:
             return 'Invalid user to get signature'
-        image = sign.image
-        if image:
-            image = sign.image.read()
-            image = base64.b64encode(image)
-            image = image.decode('utf-8')
-        else:
-            image = None
-            if sign.type == 'initials':
-                image = cls.get_auto_sign(sign)
+        image = ''
+        if sign.image:
+            image = sign.image
         return {"image": image}
 
     @classmethod
-    def get_auto_sign(cls, sign, date=""):
+    def get_auto_sign(cls, request, params):
+        signature_id = params['signature_id']
+        sign = Signature.objects.get(id=signature_id)
         curr_dir = os.path.dirname(__file__)
-        pth = curr_dir.replace('model_files', 'static')
-
-        txt = sign.user.username or sign.name
+        directory = curr_dir.replace('model_files', 'static')
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        txt = params.get('name')
+        if not txt:
+            txt = sign.user.username
         if sign.type == "initials":
             txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
-        if sign.type == "date":
-            txt = date
-
         # if sz[0] < 100:
         sz = (150, 28)
         img = Image.new('RGB', sz, (255, 255, 255))
         d = ImageDraw.Draw(img)
-
         d.text((40, 0), txt, (0, 0, 0))
-
-        img_path = pth + "/pic" + str(randint(1, 99)) + ".png"
+        img_path = directory + "/pic" + str(randint(1, 99)) + ".png"
         img.save(img_path)
 
         res = open(img_path, 'rb')

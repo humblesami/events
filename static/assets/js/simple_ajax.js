@@ -42,20 +42,23 @@ function dn_rpc_object(options) {
 
     options.data = args_data;
     options.dataType = 'json';
-    if(req_url.indexOf('localhost')> -1)
-    {
-        if(input_data.args && input_data.args.post)
+    if(!options.type)
+    {   
+        if(req_url.indexOf('localhost')> -1)
+        {
+            if(input_data.args && input_data.args.post)
+            {
+                options.type = 'POST';
+            }
+            else
+            {            
+                options.type = 'GET';
+            }
+        }
+        else
         {
             options.type = 'POST';
         }
-        else
-        {            
-            options.type = 'GET';
-        }
-    }
-    else
-    {
-        options.type = 'POST';
     }
     //options.contentType = "application/json; charset=utf-8";    
 
