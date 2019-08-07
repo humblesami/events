@@ -324,13 +324,17 @@ class Signature(models.Model):
                     return "Unauthorized"
         sign.signed_at = datetime.datetime.now()
         binary_signature = ''
-
+        curr_dir = os.path.dirname(__file__)
+        pth = curr_dir.replace('esign/model_files', 'static/assets/fonts')
         sign_type = params['sign_type']
-        if sign_type != 'initial' and sign_type != 'signature':
+        if sign_type != 'initials' and sign_type != 'signature':
             text = params['text']
-            img = Image.new('RGB', (60, 30), 'black')
+            font = ImageFont.truetype(pth + "/roboto-v19-latin-regular.ttf",20)
+            sz = font.getsize(text)
+            sz = (sz[0] + 50, sz[1])
+            img = Image.new('RGB', sz, (255,255,255))
             drawing = ImageDraw.Draw(img)
-            drawing.text((40, 0), text, (255, 255, 255))
+            drawing.text((40, 0), text, font)
             curr_dir = os.path.dirname(__file__)
             pth = curr_dir.replace('model_files', 'static')
             img_path = pth + "/tempsignload" + str(request.user.id) + ".png"
@@ -371,10 +375,12 @@ class Signature(models.Model):
         if sign.user.id != user.id:
             return 'Invalid user to get signature'
         res = ''
+        model = apps.get_model('meetings', 'Profile')
+        profile = model.objects.get(pk=sign.user.id)
         binary_signature = ''
         model = apps.get_model('meetings', 'Profile')
         profile = model.objects.get(pk=sign.user.id)
-        if sign_type == 'initial' or sign_type == 'signature':
+        if sign_type == 'initials' or sign_type == 'signature':
             if sign.image:
                 binary_signature = sign.image.read()
                 binary_signature = base64.b64encode(binary_signature)
@@ -424,7 +430,7 @@ class Signature(models.Model):
             image = image.decode('utf-8')
         else:
             image = None
-            if sign.type == 'initial':
+            if sign.type == 'initials':
                 image = cls.get_auto_sign(sign)
         return {"image": image}
 
@@ -434,7 +440,7 @@ class Signature(models.Model):
         pth = curr_dir.replace('model_files', 'static')
 
         txt = sign.user.username or sign.name
-        if sign.type == "initial":
+        if sign.type == "initials":
             txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
         if sign.type == "date":
             txt = date
