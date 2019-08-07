@@ -1,5 +1,6 @@
 import io
 import sys
+import uuid
 import base64
 import traceback
 from django.db import models
@@ -193,6 +194,8 @@ class Profile(user_model):
             if not self.username:
                 self.username = self.email
         self.name = self.fullname()
+        random_password = uuid.uuid4().hex[:8]
+        self.set_password(random_password)
         super(Profile, self).save(*args, **kwargs)
         if creating:
             if self.is_superuser:
@@ -204,7 +207,7 @@ class Profile(user_model):
                 'photo': self.image.url,
                 'name': self.fullname()
             }
-            self.password_reset_on_creation_email()
+            self.password_reset_on_creation_email(random_password)
             events = [
                 {'name': 'new_friend', 'data': user_data, 'audience': ['all_online']}
             ]
@@ -461,7 +464,7 @@ class Profile(user_model):
         ]
         ws_methods.emit_event(events)
 
-    def password_reset_on_creation_email(self):
+    def password_reset_on_creation_email(self, random_password):
         try:
             if not self.email:
                 return 'User email not exists in system'
@@ -470,7 +473,8 @@ class Profile(user_model):
             thread_data['subject'] = 'Password Rest'
             thread_data['audience'] = [self.id]
             thread_data['template_data'] = {
-                'url': server_base_url+'/user/reset-password/'
+                'url': server_base_url+'/user/reset-password/',
+                'password': random_password
             }
             thread_data['template_name'] = 'user/user_creation_password_reset.html'
             thread_data['token_required'] = 1
