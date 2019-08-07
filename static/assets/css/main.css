@@ -191,6 +191,14 @@ button, a, .DocumentWrapper { cursor: pointer; }
 }
 .DocumentWrapper {
 	background-color: #E9F6FF;
+	position:relative;
+	display:block;
+}
+.doc-uplaod-status{
+	position:absolute;
+	top:5px;
+	left:5px;
+	line-height: 1;
 }
 
 .DocText, .DocInfoVertical {

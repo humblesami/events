@@ -361,8 +361,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let doc of meeting_object.meeting_docs">
-                    <a routerLink="/meeting/doc/{{doc.id}}" class="DocumentWrapper gray-bge fas" *ngIf="doc && doc.uplaod_status">
-                        <div class="DocIcon">
+                    <a routerLink="/meeting/doc/{{doc.id}}" class="DocumentWrapper gray-bge" *ngIf="doc && doc.uplaod_status">
+						<div class="DocIcon">
 							<span class="rounded-circle">
 								<i class="icon-doc-file"></i>
 							</span>
@@ -371,7 +371,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 {{doc.name}}
                         </div>
                     </a>
-                    <a class="DocumentWrapper gray-bge fas fa-exclamation-circle" *ngIf="doc && !doc.uplaod_status">
+                    <a class="DocumentWrapper gray-bge" *ngIf="doc && !doc.uplaod_status">
+						<span class="doc-uplaod-status"><i class="fas fa-exclamation-circle"></i></span>
                         <div class="DocIcon">
                             <span class="rounded-circle">
                                 <i class="icon-doc-file"></i>
