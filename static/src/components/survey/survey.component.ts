@@ -35,6 +35,7 @@ export class SurveyComponent implements OnInit {
         obj_this.httpService.get(final_input_data,
 			(result: any) => {
 				obj_this.surveyDetails = result;
+				//dconsole.log(result)
 					window["functions"].hideLoader('survey-iframe');
 				// if(obj_this.surveyDetails['url']){
                 //     $('#survey-iframe').attr('src',obj_this.surveyDetails['url']);

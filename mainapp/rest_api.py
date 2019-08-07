@@ -222,7 +222,7 @@ def produce_exception():
     cnt = 0
     for er in eg:
         cnt += 1
-        if not 'lib/python' in er and not 'lib\site-packages' in er:
+        if not 'lib/python' in er and not 'Programs\Python' in er:
             errorMessage += " " + er
     return HttpResponse(errorMessage)
 
@@ -232,7 +232,7 @@ def produce_exception_public():
     cnt = 0
     for er in eg:
         cnt += 1
-        if not 'lib/python' in er and not 'lib\site-packages' in er:
+        if not 'lib/python' in er and not 'Programs\Python' in er:
             errorMessage += " " + er
     res = {'error': errorMessage}
     res = json.dumps(res)

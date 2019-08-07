@@ -2,7 +2,7 @@ html, body { height: 100%; overflow: hidden; }
 .form-control:focus, .form-control.focus { outline: none; box-shadow: none; }
 .router-outlet {
 	height: calc(100vh - 110px);
-	overflow: auto;
+	overflow-x: hidden;
 	padding-top: 5px;
 }
 body {
@@ -236,7 +236,9 @@ span.rounded-circle img {
 .DocumentWrapper:hover .DocInfoVertical {
 	background: #638fc9;
 }
-
+.ml-25{
+	margin-left: 25% !important;
+}
 .btn-primary {
 	color: #ffffff;
 	border-color: #4b74b5;

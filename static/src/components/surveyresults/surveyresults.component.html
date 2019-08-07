@@ -6,7 +6,7 @@ title="Results"></app-breadcrumb>
 <div class="row d-flex justify-content-between mb-3">
     <div class="col">
         <div class="survey-top-buttons">
-            <a *ngIf="surveyDetails && surveyDetails.is_respondent && surveyDetails.is_open" id="{{surveyDetails.id}}" class="btn btn-primary" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Reattempt Survey</a>
+            <a *ngIf="surveyDetails && surveyDetails.is_respondent && surveyDetails.is_open" id="{{surveyDetails.id}}" class="btn btn-primary ml-3" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Reattempt Survey</a>
         </div>
     </div>
 </div>
@@ -18,42 +18,48 @@ title="Results"></app-breadcrumb>
 			</div>
 		</div>
       <div class="row">
-
-          <div class="col-sm-8 mr-b20" *ngIf="surveyDetails.questions">
-              <div *ngFor="let question of surveyDetails.questions" class="row surveyDetailsquestions">
-                  <div class="col-sm-12">
-                      <label>
-                          Question
-                      </label>
-                  </div>
-                  <div class="col-sm-9 UserProfileDiscription">
-                      <h4>{{question.name}}</h4>
-                      <div *ngIf="question.choices" style="display: flex">
-                          <div *ngFor="let choice of question.choices">
-                            <label>
-                                {{choice}}&nbsp;&nbsp;
-                            </label>
-                          </div>
-                      </div>
-                      <div *ngIf="question.user_answers">
-                          <div *ngFor="let answer of question.user_answers" style="display: flex">
-                            <div class="col-sm-4" style="border-right: 1px solid #cccccc;">
-                              <label>
-                                  {{answer.answers}}&nbsp;&nbsp;
-                              </label>
-                            </div>
-                            <div class="col-sm-4">
+            <div class="col-sm-12">
+                <h3 class="text-primary">
+                    Question
+                </h3>
+            </div>
+            <div class="col-sm-12 mr-b20" *ngIf="surveyDetails.questions">
+                <div *ngFor="let question of surveyDetails.questions" class="row surveyDetailsquestions">
+                  
+                  <div class="col-sm-12 UserProfileDiscription">
+                      <h4 class="my-4 text-primary font-weight-bold">{{question.name}}</h4>
+                        <div *ngIf="question.choices" style="display: flex">
+                            <div *ngFor="let choice of question.choices">
                                 <label>
-                                    {{answer.user_name}}&nbsp;&nbsp;
+                                    {{choice}}&nbsp;&nbsp;
                                 </label>
-                              </div>
-                          </div>
-                      </div>
-                      <div *ngIf="question.chart_data && question.chart_data.length">
+                            </div>
+                        </div>
+                        <div *ngIf="question.user_answers">
+                            <div *ngFor="let answer of question.user_answers" style="display: flex">
+                                <div class="col-sm-4 border border-right-0 py-3">
+                                    <div class="row" *ngIf="answer.user">
+                                        <div class="col-sm-4">
+                                            <img src="{{socketService.server_url}}{{answer.user.photo}}" alt="user" class="rounded-circle">
+                                        </div>
+                                        <div class="col-sm-8 mt-3">
+                                            <label>
+                                                {{answer.user.name}}
+                                            </label>
+                                            <h5>{{answer.user.email}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 border py-3 font-weight-light">
+                                    {{answer.answers}}
+                                </div>
+                            </div>
+                        </div>
+                      <div *ngIf="question.chart_data && question.chart_data.length" class="w-50 ml-25">
                         <canvas id="chartData-{{question.id}}"></canvas>
                       </div>
-                  </div>
-              </div>
+                </div>
+            </div>
               <!-- <div *ngIf="topic.lead" class="row">
                   <div class="col-sm-3">
                       <label>
@@ -86,12 +92,12 @@ title="Results"></app-breadcrumb>
               </div> -->
 
               
-          </div>
-		   <div class="col-sm-4">
+            </div>
+		   <!-- <div class="col-sm-4">
 				<div class="sticky-top">
 		  			<canvas id="progress-chart"></canvas>
 	  			</div>
-			</div>
+			</div> -->
       </div>
   </div>
   <!-- <div class="container">

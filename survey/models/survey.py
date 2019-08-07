@@ -252,13 +252,25 @@ class Survey(Actions):
                     if question.type in ('radio', 'select-multiple'):
                         question_choices = question.choices.split(',')
                     answers = list(question.answers.values('body', 'response__user__username').annotate(answer_count=Count('body')))
+                    answer_objects = question.answers.all()
+                    cnt = 0
                     for answer in answers:
                         user_answer = answer['body']
                         if question.type == 'select-multiple':
                             user_answer = literal_eval(user_answer)
+                        profile_model = ws_methods.get_model('meetings', 'Profile')
+                        user_response = answer_objects[cnt].response
+                        answer_user = profile_model.objects.get(pk=user_response.user.id)
+                        cnt += 1
                         user_answers.append({
                             'answers': user_answer,
-                            'user_name': answer['response__user__username']
+                            'user_name': answer['response__user__username'],
+                            'user': {
+                                'id': answer_user.id,
+                                'name': answer_user.fullname(),
+                                'email': answer_user.email,
+                                'photo': answer_user.image.url,
+                            }
                         })
                     question_data = []
                     chart_data = []
