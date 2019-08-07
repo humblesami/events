@@ -371,9 +371,15 @@ class Signature(models.Model):
         if sign.user.id != user.id:
             return 'Invalid user to get signature'
         res = ''
+        binary_signature = ''
         model = apps.get_model('meetings', 'Profile')
         profile = model.objects.get(pk=sign.user.id)
-        if sign_type == 'date':
+        if sign_type == 'initial' or sign_type == 'signature':
+            if sign.image:
+                binary_signature = sign.image.read()
+                binary_signature = base64.b64encode(binary_signature)
+                binary_signature = binary_signature.decode('utf-8')
+        elif sign_type == 'date':
             res = str(datetime.datetime.now())
         elif sign_type == 'email':
             res = profile.email
@@ -387,7 +393,6 @@ class Signature(models.Model):
                     res = profile.mobile_phone
             except:
                 pass
-        binary_signature = ''
         return {"image": binary_signature, 'text': res}
 
     @classmethod

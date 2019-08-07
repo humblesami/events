@@ -141,22 +141,22 @@ function init_sign(config) {
                         <span class="btn btn-primary btn-sm DocsBtn" id="draw-sig">Draw</span>
                         <button id="upload-sig-btn" class="btn btn-sm btn-primary DocsBtn o_select_file_button" title="Select" type="button">Upload</button>
                         <input id="upload-sig" accept=".jpg,.png,.jpeg" style="display:none" type="file">
-                        <span class="btn btn-primary btn-sm DocsBtn" id="auto-sig">Auto</span>
+                        <span class="btn btn-primary btn-sm DocsBtn" id="auto-signature-btn">Auto</span>
                         <!-- <span class="btn btn-primary btn-sm DocsBtn" id="insert-sig">Insert</span> -->
                     </div>   
                 <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
                 <div id="signature-body" class="modal-body" >
                     
-                    <div id="signature_editor" class="kbw-signature">
+                    <div id="signature-editor-div" class="kbw-signature">
                         <canvas height="100" width="100"></canvas>
                     </div>
                     
                 </div>
                 <div class="modal-footer">
-                <button class="btn btn-danger btn-sm DocsBtn" id="clear-sig">Clear</button>
-                <button class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</button>
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button class="btn btn-danger btn-sm DocsBtn" id="clear-signature-btn">Clear</button>
+                <button class="btn btn-primary btn-sm DocsBtn" id="save-signature-btn">Save</button>
+                <button class="btn btn-sm btn-default" id="close-signature-btn" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -166,13 +166,12 @@ function init_sign(config) {
     var doc_id = 0;
     var img = new Image();
     
-    var signature_editor = $('#signature_editor');
-    var auto_sign = $('#auto-sig');
+    var signature_editor = $('#signature-editor-div');
+    var auto_sign = $('#auto-signature-btn');
     var insert_sign = $('#insert-sig');
 
     function load_signature(signature_value) {
-        var clear_btn = $('#clear-sig');
-        //console.log(signature_editor.find('canvas')[0], 199);
+        var clear_btn = $('#clear-signature-btn');
         signature_editor.find('canvas').sign({
             resetButton: clear_btn,
             lineWidth:4
@@ -193,12 +192,12 @@ function init_sign(config) {
 
 
     function setup_signature(){
-        var save_btn = $('#save-sig');
+        var save_btn = $('#save-signature-btn');
         console.log(save_btn.length, 93);
         var upload_clicker = $('#upload-sig-btn');
         var upload_btn = $('#upload-sig');
 
-        var clear_btn = $('#clear-sig');
+        var clear_btn = $('#clear-signature-btn');
         var draw_sign_btn = $('#draw-sig');
         
         load_signature(config.signature_data);
@@ -235,8 +234,7 @@ function init_sign(config) {
             load_signature(config.signature);
         });
 
-        save_btn.click(function (e) {
-            console.log(e, 55);
+        save_btn.click(function (e) {            
             var type = "draw";
             dataURL = myCanvas.toDataURL();
             $('.strt_sign.pdfjs').hide();            
@@ -251,19 +249,15 @@ function init_sign(config) {
                 dataURL = dataURL.replace('data:image/png;base64,', '');
             }
             config.on_signed(dataURL);
-            $('#signature_modal .modal-footer button').click();
+            $('#signature_modal #close-signature-btn').click();
         });
 
         draw_sign_btn.click(function () {
             clear_btn.click();
         });        
 
-        var myCanvas = signature_editor.find('canvas')[0];
-        //var myCanvas1 = $('canvas.jSignature')[0]
+        var myCanvas = signature_editor.find('canvas')[0];        
         var canvas_context = myCanvas.getContext('2d');
-        //var canvas_context1 = myCanvas1.getContext('2d');
-
-        //console.log(signature_editor.find('canvas')[0]);
         signature_editor.find('canvas').sign({
             resetButton: clear_btn,
             lineWidth:4

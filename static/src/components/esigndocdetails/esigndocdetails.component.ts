@@ -808,7 +808,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     let sign_config = {
                         signature_data: sign_data.image,
                         on_signed: function(new_sign){
-                            console.log(1154, new_sign);
+                            // console.log(1154, new_sign);
                             signature_data = new_sign;
                             submit_response(new_sign, sign_data.text);
                         }
@@ -841,7 +841,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
             function submit_response(response_data, sign_data_text)
             {
-                console.log(response_data, sign_data_text);
+                // console.log(response_data, sign_data_text);
                 ajax_options = {
                     data: {
                         args: {
