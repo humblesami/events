@@ -61,9 +61,11 @@
             backgroundColor: 'rgb(255, 99, 132)',
             data: chartData,
             options: {
+                aspectRatio: 1,
                 legend: {
                     display: false
-                }
+                },
+                responsive: true,
             }
         });
     }

@@ -112,11 +112,12 @@ title="{{voting_object.name}}"></app-breadcrumb>
                     <div class="modal-header">
                         Graphical View
                     </div>
-                    <div class="row mt-5 mb-5 d-flex justify-content-center">
-                        <div class="col-sm-12 col-md-7 col-lg-8">
-							<canvas id="myChart"></canvas>
-						</div>
-					</div>
+                    <div class="canvas_warpper">
+                        <div class="canvas_container">
+                            <canvas id="myChart" ></canvas>
+                        </div>
+                    </div>
+					
                 </div>
 
                 <div *ngIf="voting_object.voting_docs && voting_object.voting_docs.length" class="title-wrapper">
