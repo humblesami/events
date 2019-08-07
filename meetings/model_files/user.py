@@ -214,10 +214,8 @@ class Profile(user_model):
         name = False
         if user.first_name:
             name = user.first_name
-            if user.last_name:
-                name += ' ' + user.last_name
         if user.last_name:
-            name += user.last_name
+            name += ' ' + user.last_name
         if not name:
             if not self.name:
                 name = user.username
