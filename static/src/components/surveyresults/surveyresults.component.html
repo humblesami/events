@@ -56,7 +56,11 @@ title="Results"></app-breadcrumb>
                             </div>
                         </div>
                       <div *ngIf="question.chart_data && question.chart_data.length" class="w-50 ml-25">
-                        <canvas id="chartData-{{question.id}}"></canvas>
+                            <div class="canvas_warpper">
+                                    <div class="canvas_container">
+                                        <canvas id="chartData-{{question.id}}"></canvas>
+                                    </div>
+                                </div>
                       </div>
                 </div>
             </div>
