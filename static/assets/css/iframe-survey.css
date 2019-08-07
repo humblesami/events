@@ -73,7 +73,7 @@ input[type=checkbox]{
 	padding: 9px;
 	border-radius: 3px;
 	display: inline-block;
-    position: relative;   
+    position: relative;
     margin: 0px 5px 20px 0px;
     cursor: pointer;
   }
@@ -105,14 +105,5 @@ input[type='radio']:after {
 input[type='radio']:checked:after {
     width: 20px;
     height: 20px;
-    border-radius: 50%;
-    top: -3px;
-    left: -1px;
-    position: relative;
     background-color: #000;
-    content: '';
-    display: inline-block;
-    visibility: visible;
-    border: 2px solid #4b74b5;
-    
 }

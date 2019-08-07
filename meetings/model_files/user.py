@@ -190,6 +190,8 @@ class Profile(user_model):
                     self.email = self.user_ptr.email
                 self.username = self.user_ptr.username
             self.is_staff = True
+            if not self.username:
+                self.username = self.email
         self.name = self.fullname()
         super(Profile, self).save(*args, **kwargs)
         if creating:
