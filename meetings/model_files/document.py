@@ -278,6 +278,7 @@ class SignDocument(SignatureDoc):
                            'left': s['left'], 'top': s['top'], 'page': s['page'],
                            'height': s['height'], 'width': s['width'], 'zoom': s['zoom'], 'type': s['type']
                         })
+                    obj.created_by_id = request.user.id
                     obj.save()
         template_data = {            
             'subject': params['subject'],
