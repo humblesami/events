@@ -4,17 +4,9 @@ rid="{{doc.id}}" delete="1" edit="1"
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Esignature", "link":"/actions/signdocs"}]'
 title="{{doc.doc_name}}"></app-breadcrumb>
 <div class="router-outlet p-0">
-
+    <link rel="stylesheet" href="/static/assets/css/esigndocdetails.css" />    
     <div name="id" class="e_sign_doc_id" invisible="1" ></div>
-
-    <div class="sign-position dev_only" ></div>
-    <!--<div class="meetings_div col-md-6">-->
-        <!--<strong>Attach to meeting(Optional):</strong>-->
-    <!--<select id="dropdown_meeting" style="width:50%"><option value="0">Select Meeting</option></select>-->
-    <!--<br><strong class="check_box_send_all" >Send to all attendees:</strong>-->
-    <!--<input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>-->
-    <!--</div>-->
-    
+    <div class="sign-position dev_only" ></div>        
     <div id="holder">
         <div class="container-fluid">
             <div class="row doc-container" [ngClass]="{admin: socketService.is_admin}">

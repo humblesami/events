@@ -103,7 +103,6 @@
 .DocsBtn {
     min-width: 85px;
     margin: 2px;
-    margin-top: 20px;
 }
 
 .DocsButtonWrapper .btn:first-child,
@@ -358,5 +357,8 @@
     width: 78%;
 }
 .sign_container{
-    cursor: pointer;
+    cursor: pointer;    
+}
+.sign_container[signed="false"]{    
+    width: 150px;
 }

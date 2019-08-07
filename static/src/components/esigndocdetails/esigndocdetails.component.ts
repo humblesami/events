@@ -7,7 +7,7 @@ declare var $:any;
 
 
 @Component({
-    styleUrls: ['./esigndocdetails.css'],
+    styleUrls: [],
     templateUrl: 'esigndocdetails.component.html'
 })
 export class EsignDocDetailsComponent implements OnInit {
@@ -117,6 +117,17 @@ export class EsignDocDetailsComponent implements OnInit {
             }
         });
         
+
+        function enable_disable_save_doc(enable=undefined){
+            if(enable)
+            {
+                $(".save_doc_data").removeAttr('disabled');
+            }
+            else
+            {
+                $(".save_doc_data").attr('disabled', 'disabled');
+            }
+        }
 
         $('#select_user_modal').on('hidden.bs.modal', function () {
             obj_this.selectedUser = undefined;
@@ -430,8 +441,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 div.css({
                     top: this.top + "%",
                     left: this.left + "%",
-                    position: 'absolute',
-                    width: w,
+                    position: 'absolute',                    
                     height: h
                 });
                 if (!this.signed && this.my_record) {
@@ -459,7 +469,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
             });
             var my_records = $('.sign_container[my_record="true"]');
-            console.log(my_records.length, 1233);
+            // console.log(my_records.length, 1233);
             if(my_records.length == 0)
             {
                 obj_this.isAdmin = obj_this.socketService.is_admin;
@@ -483,7 +493,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 //$(this).data("startingScrollTop", $(this).parent().scrollTop());
                 $(ui.helper).css({
                     height: '50px',
-                    width: '150px',
                     padding: 0,
                     background: 'rgba(255, 235, 235, 0.9)',
                     color: 'black'
@@ -569,8 +578,8 @@ export class EsignDocDetailsComponent implements OnInit {
 
             new_signature.addClass('active_signature');
             $(this).append(new_signature);            
-            $('#select_user_modal').modal('show');
-            $(".save_doc_data").removeAttr('disabled');
+            $('#select_user_modal').modal('show');            
+            enable_disable_save_doc(1);
         }
 
         $("#page_container1").droppable({
@@ -698,7 +707,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         onSuccess: function(data) {                            
                             loadData();
-                            $(".save_doc_data").attr('disabled', 'disabled');
+                            enable_disable_save_doc();
                             new_divs.hide().removeClass("new_sign");
                             $('.youtubeVideoModal').modal('hide');
                             $("#nxxt_sign").click();
@@ -752,12 +761,6 @@ export class EsignDocDetailsComponent implements OnInit {
             {
                 let popup_config = {
                     on_load: function(){
-                        // console.log(117);
-                        var disabled = '';
-                        if(!sign_container.hasClass('is_date'))
-                        {
-                            disabled = 'disabled';
-                        }
                         $('#signModal .modal-body').html(`
                             <button class="remove">Remove</button>
                         `);
@@ -803,7 +806,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
             function on_sign_got(sign_data)
             {
-                if(sign_container.attr('signtype') == 'initial' || sign_container.attr('signtype') == 'signature')
+                if(sign_container.attr('signtype') == 'initials' || sign_container.attr('signtype') == 'signature')
                 {
                     let sign_config = {
                         signature_data: sign_data.image,
@@ -820,13 +823,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     let popup_config = {
                         on_load: function(){
                             // console.log(117);
-                            var disabled = '';
-                            if(!sign_container.hasClass('is_date'))
-                            {
-                                disabled = 'disabled';
-                            }
+                            var read_only = sign_container.attr('signtype') == 'date' ? 'disabled' : '';                            
                             $('#signModal .modal-body').html(`
-                                <input id="sign_data" value="`+sign_data.text+`" `+disabled+` />
+                                <input id="sign_data" value="`+sign_data.text+`" `+read_only+` />
                             `);
                         },
                         on_save:function(){
@@ -876,7 +875,7 @@ export class EsignDocDetailsComponent implements OnInit {
             var sign = $($(this)[0].parentElement);
             var new_divs = $('.new_sign:visible');
             if (new_divs.length == 1) {
-                $(".save_doc_data").attr('disabled', 'disabled');
+                enable_disable_save_doc();
             }
             sign.fadeOut();
             sign.removeClass("new_sign");
@@ -936,12 +935,12 @@ export class EsignDocDetailsComponent implements OnInit {
         $('#check_box_send_all').change(function() {
 
             if ($("#check_box_send_all").is(':checked')) {
-                $('.dragabl-fields').hide();
-                $(".save_doc_data").attr("disabled", false);
+                $('.dragabl-fields').hide();                
+                enable_disable_save_doc(1);
                 $('.new_sign').remove();
             } else {
                 $('.dragabl-fields').show();
-                $(".save_doc_data").attr("disabled", true);
+                enable_disable_save_doc();
                 //$('.new_sign').show();
             }
         })
