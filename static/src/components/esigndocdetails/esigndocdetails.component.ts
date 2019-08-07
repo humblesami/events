@@ -748,8 +748,8 @@ export class EsignDocDetailsComponent implements OnInit {
                 $('#signModal').modal('hide');
                 window['dn_rpc_object'](ajax_options);
             }
-
-            if(obj_this.isAdmin && is_signed == "false")
+            console.log(obj_this.isAdmin && (is_signed == "false" || my_record == "true"), 133);
+            if(obj_this.isAdmin && (is_signed == "false" || my_record == "true"))
             {
                 let popup_config = {
                     on_load: function(){
@@ -830,7 +830,8 @@ export class EsignDocDetailsComponent implements OnInit {
                             `);
                         },
                         on_save:function(){
-                            submit_response(sign_data.image, sign_data.text);
+                            var sign_text = $('#signModal #sign_data').val();
+                            submit_response(sign_data.image, sign_text);
                         },
                         hide_on_save: true,
                     }
@@ -851,7 +852,9 @@ export class EsignDocDetailsComponent implements OnInit {
                         params: {
                             signature_id: signature_id,
                             document_id: doc_id,
-                            token: token,                            
+                            token: token,
+                            text: sign_data_text,
+                            sign_type: sign_container.attr('signtype'),
                             binary_signature: response_data,
                         }
                     },
@@ -866,238 +869,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 ajax_options.data.params.type = sign_container.attr('signtype');
                 window['dn_rpc_object'](ajax_options);
             }
-            return;
-
-            var usr_name = $(this).attr("name");
-            window["doc_preview"].image("uuuu");
-            var body = $('.youtubeVideoModal .modal-body:last');
-            var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Save</span>');
-            var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">Cancel</span>');
-            var del_btn = $('<span style="float:right" class="btn btn-primary btn-sm DocsBtn">Remove</span>');
-
-            var signature_editor = $('<div id="signature_editor_esign"></div>');
-
-            var clear_btn = $('<span class="btn btn-danger btn-sm DocsBtn">Clear</span>');
-            var draw_sign_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Draw</span>');
-            var upload_btn = $('<input accept=".jpg,.png,.jpeg" style="display:none" type="file"></input>');
-
-            var auto_sign = $('<span class="btn btn-primary btn-sm DocsBtn">Auto</span>');
-            var top_div = $('<div class="DocsButtonWrapper" style="font-size:14px; height:auto" />');
-            var upload_clicker = $('<button class="btn btn-sm btn-primary o_select_file_button DocsBtn"title="Select" type="button">Upload</button>');
-            upload_clicker = $(upload_clicker);
-            upload_clicker.click(function() {
-                upload_btn.click();
-            });
-
-            top_div.append(draw_sign_btn).append(upload_clicker).append(auto_sign).append(upload_btn);
-            if (my_record == "true") {
-                body.append(signature_editor);
-                signature_editor.before(top_div);
-                signature_editor.after(clear_btn);
-                signature_editor.signature();
-                body.append(save_btn);
-                if (obj_this.isAdmin) {
-                    body.append(del_btn);
-                }
-
-                var myCanvas = signature_editor.find('canvas')[0];
-                var canvas_context = myCanvas.getContext('2d');
-                var img = new Image();
-                img.onload = function() {
-                    canvas_context.drawImage(img, 0, 0, signature_editor.width(), signature_editor.height());
-
-                };
-                ajax_options = {
-                    data: {
-                        args: {
-                            app: "esign",
-                            model: "Signature",
-                            method: "get_signature"
-                        },
-                        params: {
-                            signature_id: signature_id,
-                            document_id: doc_id,
-                            token: token
-                        }
-                    },
-                    onSuccess: function(data) {
-                        setTimeout(function() {
-                            load_signature(data);
-                        }, 200);
-                    }
-                };
-                if(token){
-                    ajax_options.url = '/rest/public';
-                }
-                window['dn_rpc_object'](ajax_options);
-
-
-                var dataURL = '';
-                var auto_clicked = false;
-                auto_sign.click(function(e) {
-                    $('#loaderContainerajax').show();
-                    auto_clicked = true;
-                    let url = '';
-                    
-                    ajax_options = {
-                        data: {
-                            args: {
-                                app: "esign",
-                                model: "Signature",
-                                method:"save_signature"
-                            },
-                            params: {
-                                signature_id: signature_id,
-                                document_id: doc_id,
-                                token: token,
-                                binary_signature: "",
-                                type: "auto",
-                                url: url
-                            }
-                        },
-                        onSuccess: function(data) {
-                            // load_signature(data);
-                            on_sign_saved(signature_dom, data);
-                            // signature_dom.find('img:first')[0].src = 'data:image/png;base64,' + data.image;
-                            $("#nxxt_sign").click();
-                        }
-                    }
-                    if(token){
-                        ajax_options.url = '/rest/public';
-                    }
-                    window['dn_rpc_object'](ajax_options);
-                });
-
-                signature_editor.mousedown(function() {
-                    auto_clicked = false;
-
-                });
-
-                upload_btn.change(function() {
-                    if (!this.files)
-                        return;
-                    if (this.files.length < 1)
-                        return;
-                    var reader = new FileReader();
-                    auto_clicked = false;
-
-                    var upload_file = this.files[0];
-                    reader.readAsDataURL(upload_file);
-                    reader.onload = function() {
-                        var dataURL = reader.result;
-                        //                    hidden_image.attr('src',dataURL);
-                        canvas_context.clearRect(0, 0, myCanvas.width, myCanvas.height);
-                        img.src = dataURL + "";
-                    }
-                });
-
-                save_btn.click(function(e) {
-                    $('#loaderContainerajax').show();
-                    var type = "draw";
-                    dataURL = myCanvas.toDataURL();
-                    var empty_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXAAAADGCAYAAADL/dvjAAAGpUlEQVR4Xu3UgQkAMAwCwXb/oS10i4fLBHIG77YdR4AAAQI5gWvAc50JTIAAgS9gwD0CAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIGHA/QIAAgaiAAY8WJzYBAgQMuB8gQIBAVMCAR4sTmwABAgbcDxAgQCAqYMCjxYlNgAABA+4HCBAgEBUw4NHixCZAgIAB9wMECBCIChjwaHFiEyBAwID7AQIECEQFDHi0OLEJECBgwP0AAQIEogIGPFqc2AQIEDDgfoAAAQJRAQMeLU5sAgQIPKoZFdyfj3q2AAAAAElFTkSuQmCC"
-                    if (dataURL == empty_url) {
-                        alert('Draw signature');
-                        return;
-                    }
-                    dataURL = dataURL.replace('data:image/png;base64,', '');
-                    if(auto_clicked){
-                        type="auto";
-                    }
-                    let url = '';
-                    ajax_options = {
-                        url: url,
-                        data: {
-                            args: {
-                                app: "esign",
-                                model: "Signature",
-                                method:"save_signature"                                
-                            },
-                            params: {
-                                signature_id: signature_id,
-                                document_id: doc_id,
-                                token: token,
-                                binary_signature: dataURL,
-                                type: type,
-                                url: url
-                            }
-                        },
-                        onSuccess: function(data) {
-                            // doc_data = data.doc_data;
-                            // renderPDF(data.pdf_binary);
-                            // loadData();
-                            on_sign_saved(signature_dom, data);
-                            // signature_dom.find('img:first')[0].src = 'data:image/png;base64,' + data.image;
-                            $('.youtubeVideoModal').modal('hide');
-                            $('#loaderContainerajax').hide();
-                            $("#nxxt_sign").click();
-                            // web_client.do_notify(_("Success"), "Signature saved");
-                        }
-                    }
-                    if(token){
-                        ajax_options.url = '/rest/public';
-                    }
-                    window['dn_rpc_object'](ajax_options);
-                });
-
-                cancel_btn.click(function(evt) {
-                    evt.preventDefault();
-                    $('.youtubeVideoModal').modal('hide');
-                });
-
-                clear_btn.click(function() {
-                    signature_editor.signature('clear');
-                });
-
-                draw_sign_btn.click(function() {
-                    signature_editor.signature('clear');
-                });
-
-            } else {
-                body.append('<h3>Name:</h3>' + usr_name);
-                if (obj_this.isAdmin) {
-                    body.append(del_btn);
-                }
-            }
-
-            function load_signature(data) {
-                signature_editor.signature();
-                signature_editor.signature('clear');
-                var signature_value = data.signature;
-                if (signature_value && signature_value.length > 0) {
-                    dataURL = 'data:image/png;base64,' + data.signature;
-                    //                    hidden_image.attr('src',dataURL);
-                    img.src = dataURL;
-                }
-                $('#loaderContainerajax').hide();
-            }
-
-
-
-            del_btn.click(function(e) {
-                if (confirm('Delete it permanently?')) {
-                    let url = '';
-                    ajax_options = {
-                        data: {
-                            args: {
-                                app: "esign",
-                                model: "Signature",
-                                method: "del_sign"
-                            },
-                            params: {
-                                signature_id: signature_id,
-                                document_id: doc_id,
-                            }
-                        },
-                        onSuccess: function(data) {
-                            signature_dom.remove();
-                        }
-                    }
-                    window['dn_rpc_object'](ajax_options);
-
-                    $('.youtubeVideoModal').modal('hide');
-                }
-            });
         });
 
         $(document).off("click", ".new_sign .del_sign")

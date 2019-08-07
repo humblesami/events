@@ -267,7 +267,7 @@ class Signature(models.Model):
     def del_sign(cls, request, params):
         signature_id = int(params['signature_id'])        
         sign = Signature.objects.get(id=signature_id)
-        if sign.signed_at:
+        if sign.signed_at and sign.created_by.id != request.user.id:
             return 'Can not be deleted executed signature from doucment'
         if sign.created_by:
             if sign.created_by.id == request.user.id:
@@ -323,7 +323,25 @@ class Signature(models.Model):
                 if request.user.id != sign.user.id:
                     return "Unauthorized"
         sign.signed_at = datetime.datetime.now()
-        binary_signature = params['binary_signature']
+        binary_signature = ''
+
+        sign_type = params['sign_type']
+        if sign_type != 'initial' and sign_type != 'signature':
+            text = params['text']
+            img = Image.new('RGB', (60, 30), 'black')
+            drawing = ImageDraw.Draw(img)
+            drawing.text((40, 0), text, (255, 255, 255))
+            curr_dir = os.path.dirname(__file__)
+            pth = curr_dir.replace('model_files', 'static')
+            img_path = pth + "/tempsignload" + str(request.user.id) + ".png"
+            img.save(img_path)
+
+            image = open(img_path, 'rb')
+            read = image.read()
+            binary_signature = base64.encodebytes(read)
+            binary_signature = binary_signature.decode('utf-8')
+        else:
+            binary_signature = params['binary_signature']
         binary_data = io.BytesIO(base64.b64decode(binary_signature))
         jango_file = DjangoFile(binary_data)
         sign.image.save('sign_image.png', jango_file)
@@ -370,19 +388,6 @@ class Signature(models.Model):
             except:
                 pass
         binary_signature = ''
-        if res:
-            img = Image.new('RGB', (60, 30), 'black')
-            drawing = ImageDraw.Draw(img)
-            drawing.text((40, 0), res, (0, 0, 0))
-            curr_dir = os.path.dirname(__file__)
-            pth = curr_dir.replace('model_files', 'static')
-            img_path = pth + "/tempsignload" + str(request.user.id) + ".png"
-            img.save(img_path)
-
-            image = open(img_path, 'rb')
-            read = image.read()
-            binary_signature = base64.encodebytes(read)
-            binary_signature = binary_signature.decode('utf-8')
         return {"image": binary_signature, 'text': res}
 
     @classmethod
