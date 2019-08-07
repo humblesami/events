@@ -11,9 +11,11 @@
         }
         for(let i = 0; i < chartData.length; i++)
         {
-            if (total_votings > 0){
-            labels.push(chartData[i]['option_name'] + 
-                ' ('+chartData[i]['option_result']+' - '+(chartData[i]['option_result']/total_votings*100).toFixed(2)+'%)');
+            if (total_votings > 0)
+            {
+                labels.push(chartData[i]['option_name'] + 
+                    ' ('+chartData[i]['option_result']+' - '+
+                    (chartData[i]['option_result']/total_votings*100).toFixed(2)+'%)');
             }
             else{
                 labels.push(chartData[i]['option_name'] + 
@@ -47,17 +49,22 @@
                     'DodgerBlue',
                     'Yellow',
                     'Orange'
-                ],
+                ]
             }],
         
             // These labels appear in the legend and in the tooltips when hovering different arcs
-            labels: labels
+            labels: labels,
         };
         var ctx = $(canvas_selector)[0].getContext('2d');
         var myPieChart = new Chart(ctx, {
             type: chart_type,
             backgroundColor: 'rgb(255, 99, 132)',
-            data: chartData
+            data: chartData,
+            options: {
+                legend: {
+                    display: false
+                }
+            }
         });
     }
     window['drawChart'] = drawChart;

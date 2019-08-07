@@ -146,15 +146,12 @@ class Voting(Actions):
         elif voting_obj.respondents and self.meeting:
             new_added_respondets = list(set(self.meeting.get_audience()) - set(voting_obj.get_audience()))
             removed_respondents = list(set(voting_obj.get_audience()) - set(self.meeting.get_audience()))
-        else:
-            new_added_respondets = []
-            removed_respondents = voting_obj.meeting.get_audience()
-        # elif voting_obj.respondents and self.respondents:
-        #     new_added_respondets = list(set(self.get_audience()) - set(voting_obj.get_audience()))
-        #     removed_respondents = list(set(voting_obj.get_audience()) - set(self.get_audience()))
-        # elif voting_obj.meeting and self.respondents:
-        #     new_added_respondets = list(set(self.get_audience()) - set(voting_obj.meeting.get_audience()))
-        #     removed_respondents = list(set(voting_obj.meeting.get_audience()) - set(self.get_audience()))
+        elif voting_obj.respondents and self.respondents:
+            new_added_respondets = list(set(self.get_audience()) - set(voting_obj.get_audience()))
+            removed_respondents = list(set(voting_obj.get_audience()) - set(self.get_audience()))
+        elif voting_obj.meeting and self.respondents:
+            new_added_respondets = list(set(self.get_audience()) - set(voting_obj.meeting.get_audience()))
+            removed_respondents = list(set(voting_obj.meeting.get_audience()) - set(self.get_audience()))
         return new_added_respondets, removed_respondents
     
     
