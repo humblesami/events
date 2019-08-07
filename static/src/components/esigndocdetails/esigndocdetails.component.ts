@@ -804,7 +804,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
             function on_sign_got(sign_data)
             {
-                if(sign_container.hasClass('is_initial') || sign_container.hasClass('is_sign'))
+                if(sign_container.attr('signtype') == 'initial' || sign_container.attr('signtype') == 'signature')
                 {
                     let sign_config = {
                         signature_data: sign_data.image,
@@ -1166,12 +1166,10 @@ export class EsignDocDetailsComponent implements OnInit {
 
             if ($("#check_box_send_all").is(':checked')) {
                 $('.dragabl-fields').hide();
-                $('.top_btns .position_btns').removeClass("drag").attr("disabled", true)
                 $(".save_doc_data").attr("disabled", false);
                 $('.new_sign').remove();
             } else {
                 $('.dragabl-fields').show();
-                $('.top_btns .position_btns').addClass("drag").attr("disabled", false)
                 $(".save_doc_data").attr("disabled", true);
                 //$('.new_sign').show();
             }
