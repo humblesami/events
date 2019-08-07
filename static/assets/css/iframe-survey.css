@@ -103,7 +103,5 @@ input[type='radio']:after {
 }
 
 input[type='radio']:checked:after {
-    width: 20px;
-    height: 20px;
     background-color: #000;
 }

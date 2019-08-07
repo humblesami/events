@@ -24,7 +24,57 @@ form .form-row p {
 .hidden {
     display: none;
 }
+td.field-text .choice_list {
+    display: inline-block;
+    padding: 5px;
+    width: 100px;
+}
 
+input[type=checkbox]{
+    -webkit-appearance: none;
+	border: 2px solid #4b74b5;
+	padding: 8px;
+	border-radius: 3px;
+	display: inline-block;
+    position: relative;
+    margin: 5px 5px;
+    cursor: pointer;
+  }
+input[type=checkbox]:checked:after {
+	content: '\2714';
+	position: absolute;
+	top: 0px;
+	left: 3px;
+	color: #4b74b5;
+}
+.choice_list label{
+    max-width: 60px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: -2px 5px;
+}
+input[type='radio']{
+    margin-right: 10px;
+    cursor: pointer;
+}
+input[type='radio']:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    top: -3px;
+    left: -1px;
+    background-color: #fff;
+    position: relative;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid #4b74b5;
+}
+
+input[type='radio']:checked:after {
+    background-color: #000;
+}
 /* FORM LABELS */
 
 label {

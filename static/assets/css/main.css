@@ -241,6 +241,10 @@ span.rounded-circle img {
 	width: 24px;
 }
 
+.text-primary {
+    color: #4b74b5!important;
+}
+
 .DocumentWrapper:hover .DocInfoVertical {
 	background: #638fc9;
 }

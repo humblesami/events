@@ -57,15 +57,16 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 
 .aligned .form-row textarea, #questions-group  textarea{
 	display: block;
-	width: 100%;
-	border: 0;
-	border-radius: 0;
-	padding: 0 0 15px;
-	margin: 5px 0 0 0;
-	font-size: 0.898rem;
-	color: #666666;
-	border-bottom: 1px solid #A2A2A2;
-	height: 60px;
+    width: 100%;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 5px 5px 15px;
+    margin: 5px 0 0 0;
+    font-size: 0.898rem;
+    color: #666666;
+    /* border-bottom: 1px solid #A2A2A2; */
+    height: 100px;
+    box-sizing: border-box;
 }
 .aligned select{
 	border:0;
