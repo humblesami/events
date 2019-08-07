@@ -60,19 +60,13 @@ border: 1px solid;
     <pagination-controls (pageChange)="pageChanged(p=$event)" id="server"></pagination-controls>
 </div>
 <!--
-   <div class="spinner" [ngClass]="{ 'hidden': !loading }"></div>
-    <div class="row" style="padding:10px">
-        <div class="has-text-centered">
-        <pagination-controls (pageChange)="pageChanged(p=$event)"  id="server"></pagination-controls>
-        </div>
-    </div>
-    -->
-    <div class="row">
+      <div class="row">
       <div class="has-text-centered">
         <button class="btn btn-primary" (click)="pageChanged(p=1)">First Page</button>
         <button class="btn btn-primary" (click)="lastPage()">Last Page</button>
       </div>
     </div>
+-->
     <div style="text-align:center;">
         <button type="button" class="btn btn-outline-dark" (click)="submit_attendance()">Submit and Close</button>
         <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>

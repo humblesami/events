@@ -33,7 +33,7 @@ export class NgxpagerosterComponent implements OnInit {
   itemsPerPage = 2;
   limit_options = [
     2,
-    5,
+    10,
     50,
     100
   ] 
@@ -112,12 +112,12 @@ export class NgxpagerosterComponent implements OnInit {
     this.p = event;
   }
 
-  lastPage(){
-    let lastPage= Math.ceil(this.total/this.itemsPerPage);
-    this.offset = (lastPage - 1) * this.itemsPerPage;
-    this.getdata();
-    this.p=lastPage;
-  }
+  // lastPage(){
+  //   let lastPage= Math.ceil(this.total/this.itemsPerPage);
+  //   this.offset = (lastPage - 1) * this.itemsPerPage;
+  //   this.getdata();
+  //   this.p=lastPage;
+  // }
 
 
   update_attendance(attendee_id: number, val){
