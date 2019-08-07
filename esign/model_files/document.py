@@ -329,10 +329,10 @@ class Signature(models.Model):
         sign_type = params['sign_type']
         if sign_type != 'initials' and sign_type != 'signature':
             text = params['text']
-            font = ImageFont.truetype(pth + "/roboto-v19-latin-regular.ttf",17.5)
+            font = ImageFont.truetype(pth + "/roboto-v19-latin-regular.ttf",17)
             sz = font.getsize(text)
             sz = (sz[0] + 50, sz[1])
-            img = Image.new('RGB', sz, (255,255,255))
+            img = Image.new('RGB', (300,55), (255,255,255))
             drawing = ImageDraw.Draw(img)
             drawing.text((0, 0), text, (0,0,0), font)
             curr_dir = os.path.dirname(__file__)
