@@ -197,16 +197,22 @@ class Voting(Actions):
         voting_object['voting_options'] = []
         for option in voting_options:
             voting_object['voting_options'].append({'id': option.id, 'name': option.name})
-            voting_object['chart_data'].append({'option_name': option.name, 'option_result': 0})
+            voting_object['chart_data'].append({'option_name': option.name, 'option_result': 0, 'option_perc': 0})
 
         voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
             answer_count=Count('user_answer'))
+        voting_object['results'] = {
+            'answer_count': len(voting_results),
+            'respondent_count': len(voting_object_orm.get_audience())
+        }
         if voting_results:
             for result in voting_results:
                 total = len(voting_results)
                 for chart_data in voting_object['chart_data']:
                     if chart_data['option_name'] == result['user_answer__name']:
                         chart_data['option_result'] = result['answer_count']
+                        if voting_object['results']['respondent_count']:
+                            chart_data['option_perc'] = result['answer_count']/voting_object['results']['respondent_count']*100
 
         user_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id=uid)
         if len(user_answer) > 0:
