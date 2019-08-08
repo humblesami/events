@@ -17,8 +17,7 @@ export class EsignDocDetailsComponent implements OnInit {
     users_list = [];
     all_users_list = [];
     selectedUser: any;
-    socketService: SocketService;
-    selectedMeeting = 0;
+    socketService: SocketService;    
 
     constructor(private httpService: HttpService, 
         private route: ActivatedRoute, 
@@ -30,10 +29,6 @@ export class EsignDocDetailsComponent implements OnInit {
 
     get_data() {
 
-    }
-
-    meeting_changed(){
-        console.log(this.selectedMeeting,18)
     }
 
     setUserSelection(){
@@ -188,7 +183,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     else
                     {
                         $('#check_box_send_all').prop('checked', false);
-                        $('.dragabl-fields').show();
+                        $('.dragabl-fields').show();                        
                     }
                     $('#check_box_send_all').show();
 
@@ -940,7 +935,7 @@ export class EsignDocDetailsComponent implements OnInit {
         });
 
         $('#check_box_send_all').change(function() {
-
+            console.log($("#check_box_send_all").is(':checked'), 444);
             if ($("#check_box_send_all").is(':checked')) {
                 $('.dragabl-fields').hide();                
                 enable_disable_save_doc(1);
@@ -952,11 +947,15 @@ export class EsignDocDetailsComponent implements OnInit {
             }
         })
 
-        $('#dropdown_meeting').change(function() {
-            if ($('#dropdown_meeting').val() == 0) {
+        $('#dropdown_meeting').change(function() {            
+            if ($('#dropdown_meeting').val() == 0) {                
                 obj_this.users_list = obj_this.all_users_list;
                 $('.check_box_send_all').hide();
+                $('#check_box_send_all').prop('checked', false);
+                $('.dragabl-fields').show();
+
             } else {
+                $('.check_box_send_all').show();
                 ajax_options = {                    
                     data: {
                         args: {

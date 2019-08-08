@@ -197,16 +197,17 @@ class Profile(user_model):
         super(Profile, self).save(*args, **kwargs)
         if creating:
             if self.is_superuser:
+                self.user_ptr.save()
+            else:
                 random_password = uuid.uuid4().hex[:8]
                 self.set_password(random_password)
                 self.user_ptr.set_password(password)
-                self.user_ptr.save()
+                self.password_reset_on_creation_email(random_password)
             user_data = {
                 'id': self.pk,
                 'photo': self.image.url,
                 'name': self.fullname()
             }
-            self.password_reset_on_creation_email(random_password)
             events = [
                 {'name': 'new_friend', 'data': user_data, 'audience': ['all_online']}
             ]
