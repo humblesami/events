@@ -42,11 +42,11 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                         <div class="meetings_div">
                             <input *ngIf="socketService.is_admin" [(ngModel)]="isAdmin" type="checkbox" /> Admin Mode
                             <div class="doc-subtitle">Attach to Meeting</div>
-                            <select (change)="meeting_changed()" id="dropdown_meeting" [(ngModel)]="selectedMeeting">
+                            <select id="dropdown_meeting">
                                 <option value="0">Select Meeting</option>
                                 <option *ngFor="let meet of meetings" value="{{meet.id}}">{{meet.name}}</option>
                             </select>
-                            <div *ngIf="selectedMeeting != 0" class="doc-subtitle">
+                            <div class="doc-subtitle" class="check_box_send_all">
                                 <input id="check_box_send_all" type="checkbox"/>
                                 <strong >Send to all attendees:</strong>
                             </div>
