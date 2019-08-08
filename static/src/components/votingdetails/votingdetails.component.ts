@@ -62,13 +62,20 @@ export class VotingdetailsComponent implements OnInit {
                     return;
                 }
                 obj_this.discussion_params.res_id = result.id;
+                if(!result.results)
+                {
+                    result.results = {};
+                }
                 obj_this.voting_object = result;                
                 // make_bread_crumb(obj_this.voting_object.name);
+                // console.log(obj_this.voting_object, obj_this.voting_object.chart_data, 4343);
                 if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                
                 {
-                    setTimeout(function(){                        
-                        window['drawChart'](obj_this.voting_object.chart_data, '#myChart');
-                        $('.voting-chart:first').show();
+                    setTimeout(function(){
+                        if(obj_this.voting_object.results.answer_count)
+                        {
+                            window['drawChart'](obj_this.voting_object.chart_data, '#myChart');   
+                        }
                     }, 100)
                 }                
                 

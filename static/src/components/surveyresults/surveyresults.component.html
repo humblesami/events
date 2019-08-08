@@ -11,143 +11,59 @@ title="Results"></app-breadcrumb>
     </div>
 </div>
 
-  <div class="container" *ngIf="surveyDetails">
-	  <div class="MainTitleHeadWrap">
-			<div class="HeadingWrap">
-				{{surveyDetails.name}}
-			</div>
-		</div>
-      <div class="row">
-            <div class="col-sm-12">
-                <h3 class="text-primary">
-                    Question
-                </h3>
-            </div>
-            <div class="col-sm-12 mr-b20" *ngIf="surveyDetails.questions">
-                <div *ngFor="let question of surveyDetails.questions" class="row surveyDetailsquestions">
-                  
-                  <div class="col-sm-12 UserProfileDiscription">
-                      <h4 class="my-4 text-primary font-weight-bold">{{question.name}}</h4>
-                        <div *ngIf="question.choices" style="display: flex">
-                            <div *ngFor="let choice of question.choices">
-                                <label>
-                                    {{choice}}&nbsp;&nbsp;
-                                </label>
-                            </div>
-                        </div>
-                        <div *ngIf="question.user_answers">
-                            <div *ngFor="let answer of question.user_answers" style="display: flex">
-                                <div class="col-sm-4 border border-right-0 py-3">
-                                    <div class="row" *ngIf="answer.user">
-                                        <div class="col-lg-4">
-                                            <img src="{{socketService.server_url}}{{answer.user.photo}}" alt="user" class="rounded-circle" style="max-width: 100px;">
-                                        </div>
-                                        <div class="col-lg-8 mt-3">
-                                            <label>
-                                                {{answer.user.name}}
-                                            </label>
-                                            <h5>{{answer.user.email}}</h5>
-                                        </div>
+<div class="container" *ngIf="surveyDetails">
+	<div class="MainTitleHeadWrap">
+        <div class="HeadingWrap">
+            {{surveyDetails.name}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="text-primary">
+                Question
+            </h3>
+        </div>
+        <div class="col-sm-12 mr-b20" *ngIf="surveyDetails.questions">
+            <div *ngFor="let question of surveyDetails.questions" class="row surveyDetailsquestions">
+                <div class="col-sm-12 UserProfileDiscription">
+                    <h4 class="my-4 text-primary font-weight-bold">{{question.name}}?</h4>                    
+                    <div *ngIf="question.user_answers && !question.choices">
+                        <div *ngFor="let answer of question.user_answers" style="display: flex">
+                            <div class="col-sm-4 border border-right-0 py-3">
+                                <div class="row" *ngIf="answer.user">
+                                    <div class="col-lg-4">
+                                        <img src="{{socketService.server_url}}{{answer.user.photo}}" alt="user" class="rounded-circle" style="max-width: 100px;">
+                                    </div>
+                                    <div class="col-lg-8 mt-3">
+                                        <label>
+                                            {{answer.user.name}}
+                                        </label>
+                                        <h5>{{answer.user.email}}</h5>
                                     </div>
                                 </div>
-                                <div class="col-sm-8 border py-3 font-weight-light">
-                                    {{answer.answers}}
-                                </div>
+                            </div>
+                            <div class="col-sm-8 border py-3 font-weight-light">
+                                {{answer.answers}}
                             </div>
                         </div>
-                      <div *ngIf="question.chart_data && question.chart_data.length" class="w-50 ml-25">
+                    </div>                    
+                    <div *ngIf="question.chart_data && question.user_answers.length > 0" class="w-50 ml-25">
                         <canvas id="chartData-{{question.id}}"></canvas>
-                      </div>
+                    </div>
+
+                    <label>Choices</label> :
+                    <div *ngFor="let obj of question.chart_data">                        
+                        <label>
+                            {{obj.option_name}} --
+                            {{obj.option_result || 0}} --
+                            {{obj.option_perc || 0}}
+                        </label>
+                    </div>
                 </div>
             </div>
-              <!-- <div *ngIf="topic.lead" class="row">
-                  <div class="col-sm-3">
-                      <label>
-                          Lead
-                      </label>
-                  </div>
-                  <div class="col-sm-9 UserProfileDiscription">
-                      {{topic.lead}}
-                  </div>
-              </div>
-              <div *ngIf="topic.duration" class="row">
-                  <div class="col-sm-3">
-                      <label>
-                          Duration
-                      </label>
-                  </div>
-                  <div class="col-sm-9 UserProfileDiscription">
-                      {{topic.duration}}
-                  </div>
-              </div>
-              <div *ngIf="topic.content" class="row">
-                  <div class="col-sm-3">
-                      <label>
-                          Content
-                      </label>
-                  </div>
-                  <div class="col-sm-9 UserProfileDiscription">
-                      {{topic.content}}
-                  </div>
-              </div> -->
-
-              
-            </div>
-		   <!-- <div class="col-sm-4">
-				<div class="sticky-top">
-		  			<canvas id="progress-chart"></canvas>
-	  			</div>
-			</div> -->
-      </div>
-  </div>
-  <!-- <div class="container">
-      <div *ngIf="topic.votings && topic.votings.length" class="title-wrapper">
-          <div class="modal-header">
-              Approval/Voting
-          </div>
-          <div class="row">
-              <div class="kanban-card survey" *ngFor="let vote of topic.votings">
-                  <div class="SurveysInfoBox d-flex flex-wrap justify-content-between align-items-center">
-                      <div class="SurveysInfoBoxTitle">
-                          <span class="container">
-                              <h5>
-                                  {{vote.name}}
-                              </h5>
-                          </span>
-                      </div>
-                      <div class="">
-                          <button class="btn btn-primary" routerLink="/voting/{{vote.id}}">
-                              <span *ngIf = "vote.my_status != 'pending'">Results</span>
-                              <span *ngIf = "vote.my_status == 'pending'">Start</span>
-                          </button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  <section *ngIf="topic.docs && topic.docs.length" class="HomepageDocumentSection">
-      <div class="container">
-          <div class="row">
-              <div class="col-sm-12">
-                  <h4>
-                      Documents
-                  </h4>
-                  <br>
-              </div>
-              <div class="col-sm-12">
-                  <div class="row">
-                      <a class="col-sm-6 col-md-4 col-lg-3" routerLink="/topic/doc/{{doc.id}}" *ngFor="let doc of topic.docs">
-                          <div class="DocumentWrapper">
-                                  <div class="DocIcon">
-                                  <i class="fa fa-file"></i>
-                              </div>
-                              <div class="DocText">{{doc.name}}</div>
-                          </div>
-                      </a>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section> -->
+            <!-- <div class="sticky-top">
+            <canvas id="progress-chart"></canvas>
+            </div> -->
+        </div>
+    </div>    
 </div>

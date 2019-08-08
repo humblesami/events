@@ -108,7 +108,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         </div>
                     </div>
                 </div>
-                <div style="display:none" class="title-wrapper voting-chart">
+                <div *ngIf="voting_object.results.answers_count" class="title-wrapper voting-chart">
                     <div class="modal-header">
                         Graphical View
                     </div>
@@ -116,8 +116,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         <div class="canvas_container">
                             <canvas id="myChart" ></canvas>
                         </div>
-                    </div>
-					
+                    </div>					
                 </div>
 
                 <div *ngIf="voting_object.voting_docs && voting_object.voting_docs.length" class="title-wrapper">

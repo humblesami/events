@@ -1,6 +1,8 @@
 (function(){
     function drawChart(chartData, canvas_selector)
     {
+        console.log(chartData, 13);
+        // console.log($(canvas_selector).length, canvas_selector);
         let labels = [];
         let data = [];
         let total_votings = 0;
@@ -34,7 +36,7 @@
                 data: data,
                 backgroundColor: [
                     'Red',
-                    '#F5F5F5',
+                    'Green',
                     'Purple',
                     'HotPink',
                     'DodgerBlue',
@@ -43,7 +45,7 @@
                 ],
                 hoverBackgroundColor: [
                     'Red',
-                    '#F5F5F5',
+                    'Green',
                     'Purple',
                     'HotPink',
                     'DodgerBlue',
