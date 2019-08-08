@@ -15,8 +15,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
     <div class="container">
         <div class="details-card edit-mode" *ngIf="edit_mode">
             <div class="row edit-buttons edit-mode">
-                <a class="btn btn-primary cancel" (click)="onCancel()" type="button">Cancel</a>
-                <a class="btn btn-primary save" (click)="onSubmit()" type="submit">Save</a>
+                <a href="javascript:void(0);" class="btn btn-primary cancel" (click)="onCancel()">Cancel</a>
+                <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
             </div>
             <div *ngIf="section=='personal'" class="">
                 <div class="ProFileHeadWrap">
@@ -26,12 +26,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     <div class="container">
                         <div>
                             <div class="row">
-                                <div class="col-sm-2 UserProfileDiscription mb-4">
+                                <div class="col edit-author-thumb mb-4">
                                     <i class="far fa-edit" (click)="update_image()"></i>
-                                    <div *ngIf="modified_profile_data.image">
+                                    <div class="author-thumb" *ngIf="modified_profile_data.image">
                                         <img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
                                     </div>
-                                    <div *ngIf="!modified_profile_data.image">
+                                    <div class="author-thumb" *ngIf="!modified_profile_data.image">
                                         <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
                                         <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
                                     </div>
@@ -50,9 +50,9 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </div>
                                 </div>
                             </div>
-                                
+
                             </div>
-                        <div class="row">
+                        <div class="row single-input-label">
                             <label for="name">
                                 <b>First Name</b>
                             </label>
@@ -81,7 +81,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <label for="location">
                                     <b>Location</b>
                                 </label>
-            
+
                             <input value="{{profile_data.location}}" (change)="modified_profile_data.location = $event.target.value"
                                 type="text" placeholder="Enter Location" id="location">
                             <div *ngIf="my_profile && choice_fields.two_factor_auth" class="row">
@@ -137,9 +137,9 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         <i style="margin-right: 10px" class="far fa-trash-alt"></i>
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <input (change)="addFile($event, '')" 
-                                    type="file" 
-                                    name="edit_resume" 
+                                    <input (change)="addFile($event, '')"
+                                    type="file"
+                                    name="edit_resume"
                                     class='edit_resume' style="display: none"/>
                                 </div>
                             </div>
@@ -150,9 +150,9 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     <i class="far fa-edit"></i>
                                     Add Resume
                                 </a>
-                                <input (change)="addFile($event, '')" 
-                                type="file" 
-                                name="add_resume" 
+                                <input (change)="addFile($event, '')"
+                                type="file"
+                                name="add_resume"
                                 class='add_resume' style="display: none"/>
                             </div>
                         </div>
@@ -171,7 +171,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                         *ngIf="profile_data.signature_data"
                                         src="data:image/png;base64,{{profile_data.signature_data}}"
                                     />
-        
+
                                 </div>
                             </div>
                         </div>
@@ -226,16 +226,16 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <label for="fax">
                                     <b>Fax</b>
                                 </label>
-            
+
                             <input value="{{profile_data.fax}}" (change)="modified_profile_data.fax = $event.target.value"
                                 type="text" placeholder="Enter Fax" id="fax">
                             <label for="website">
                                 <b>Website</b>
                             </label>
-        
+
                             <input value="{{profile_data.website}}" (change)="modified_profile_data.website = $event.target.value"
                                 type="text" placeholder="Enter Website" id="website">
-                            <div class="UserProfileDiscription">                                
+                            <div class="UserProfileDiscription">
                                 <ng-select
                                 [items]="choice_fields.groups"
                                 [multiple]="true"
@@ -258,7 +258,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     BOARD INFO
                 </div>
                 <div class="label-control-form board-info-container">
-                    <div class="UserProfileDiscription">                                
+                    <div class="UserProfileDiscription">
                         <ng-select
                         [items]="choice_fields.committees"
                         [multiple]="true"

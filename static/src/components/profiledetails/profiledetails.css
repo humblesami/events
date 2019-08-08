@@ -15,19 +15,14 @@
     font-size: 1.7em;
 }
 
-
-.label-control-form label{
-    padding-top: 7px;
-}
-
 input[type=text], input[type=password] {
     width: 100%;
     padding:0 10px;
-    margin: 5px 0 15px 0;
+    margin: 5px 0 10px 0;
     display: block;
     border: 1px solid #dedee8;
-    height: 40px;
-    line-height: 40px;
+    height: 35px;
+    line-height: 35px;
 }
 
 input[type=text]:focus, input[type=password]:focus {
