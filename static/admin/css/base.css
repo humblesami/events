@@ -11,6 +11,7 @@ body {
     font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
     color: #333;
     background: #fff;
+    overflow-x: hidden;
 }
 
 /* LINKS */

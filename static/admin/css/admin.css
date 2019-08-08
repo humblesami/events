@@ -57,7 +57,8 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 
 .aligned .form-row textarea, #questions-group  textarea{
 	display: block;
-    width: 100%;
+	width: 100%;
+	max-width: 100%;
     border: 1px solid;
     border-radius: 5px;
     padding: 5px 5px 15px;

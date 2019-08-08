@@ -1,7 +1,7 @@
 (function(){
     window['chart_colors'] = [
-        '#ff0202',
         '#046b10',
+        '#ff0202',
         '#0e046b',
         '#6b0404',
         '#008fb9',
