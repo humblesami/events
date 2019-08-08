@@ -36,8 +36,13 @@ export class SurveyresultsComponent implements OnInit {
                     let question = obj_this.surveyDetails.questions[i];
                     
                     if (question.chart_data.length && question.user_answers.length) {
+                        var p =0;
                         for(let j in question.chart_data){
-                            question.chart_data[j].color = chart_colors[j];
+                            if(p>=chart_colors.length)
+                            {
+                                p = 0;
+                            }
+                            question.chart_data[j].color = chart_colors[p++];
                         }
                         // console.log(question.chart_data);
                         window['drawChart'](question.chart_data,

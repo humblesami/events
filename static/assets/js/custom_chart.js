@@ -1,12 +1,30 @@
 (function(){
     window['chart_colors'] = [
-        'Red',
-        'Green',
-        'Purple',
-        'HotPink',
-        'DodgerBlue',
-        'Yellow',
-        'Orange'
+        '#ff0202',
+        '#046b10',
+        '#0e046b',
+        '#6b0404',
+        '#008fb9',
+        '#fdff09',
+        '#e900fb',
+        '#FAEBD7',
+        '#A52A2A',
+        '#FF7F50',
+        '#6495ED',
+        '#FFF8DC',
+        '#DC143C',
+        '#00FFFF',
+        '#00008B',
+        '#008B8B',
+        '#B8860B',
+        '#A9A9A9',
+        '#BDB76B',
+        '#8B008B',
+        '#556B2F',
+        '#FF8C00',
+        '#9932CC',
+        '#8B0000',
+        '#483D8B',
     ];
     function drawChart(chartData, canvas_selector)
     {
