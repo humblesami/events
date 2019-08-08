@@ -441,7 +441,7 @@ class Event(models.Model):
         attendees_list = []
         records = Invitation_Response.objects.filter(event_id=meeting_id)
         total = len(records)
-        records = records[offset: offset+limit]
+        records = records[offset: offset+int(limit)]
         for obj in records:
             attendee_data = ws_methods.obj_to_dict(
                 obj.attendee,

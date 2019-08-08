@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {SocketService} from "../../app/socket.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RosterComponent } from '../roster/roster.component';
+import { DjangopaginatorComponent } from '../djangopaginator/djangopaginator.component';
 
 declare var $: any;
 
@@ -46,6 +47,10 @@ export class MeetingDetailsComponent implements OnInit {
 
     open(meeting_id) {
 		const modalRef = this.modalService.open(RosterComponent);
+		modalRef.componentInstance.meeting_id = meeting_id;
+    }
+    open_django(meeting_id) {
+		const modalRef = this.modalService.open(DjangopaginatorComponent);
 		modalRef.componentInstance.meeting_id = meeting_id;
 	}
 
