@@ -407,6 +407,22 @@ class Signature(models.Model):
 
     @classmethod
     def get_auto_sign(cls, request, params):
+        token = params.get('token')
+        user = request.user
+        if not user.id:
+            if not token:
+                return 'Not authorized to get signature'
+            else:
+                post_info = {
+                    'id': params['document_id'],
+                    'model': 'SignatureDoc',
+                    'app': 'esign'
+                }
+                res = PostUserToken.validate_token_for_post(token, post_info)
+                if type(res) is str:
+                    return res
+                else:
+                    user = res.user
         signature_id = params['signature_id']
         sign = Signature.objects.get(id=signature_id)
         curr_dir = os.path.dirname(__file__)
@@ -415,14 +431,18 @@ class Signature(models.Model):
             os.makedirs(directory)
         txt = params.get('name')
         if not txt:
-            txt = sign.user.username
+            txt = sign.user.profile.name
         if sign.type == "initials":
             txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
         # if sz[0] < 100:
-        sz = (150, 28)
+        # sz = (150, 28)
+        font_directory = curr_dir.replace('esign/model_files', 'static/assets/fonts')
+        font = ImageFont.truetype(font_directory + "/roboto-v19-latin-regular.ttf", 48)
+        sz = font.getsize(txt)
+        sz = (sz[0] + 50, sz[1])
         img = Image.new('RGB', sz, (255, 255, 255))
         d = ImageDraw.Draw(img)
-        d.text((40, 0), txt, (0, 0, 0))
+        d.text((0, -10), txt, (0, 0, 0), font)
         img_path = directory + "/pic" + str(randint(1, 99)) + ".png"
         img.save(img_path)
 
