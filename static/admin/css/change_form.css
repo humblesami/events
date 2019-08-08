@@ -25,7 +25,7 @@ form .form-row p {
     display: none;
 }
 td.field-text .choice_list {
-    display: inline-block;
+    display: flex;
     padding: 5px;
     width: 100px;
 }
@@ -39,7 +39,7 @@ input[type=checkbox]{
     position: relative;
     margin: 5px 5px;
     cursor: pointer;
-  }
+}
 input[type=checkbox]:checked:after {
 	content: '\2714';
 	position: absolute;
@@ -47,7 +47,8 @@ input[type=checkbox]:checked:after {
 	left: 3px;
 	color: #4b74b5;
 }
-.choice_list label{
+
+.choice label{
     max-width: 60px;
     text-overflow: ellipsis;
     white-space: nowrap;

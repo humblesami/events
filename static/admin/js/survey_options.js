@@ -38,17 +38,28 @@ function on_add_choice_click(el) {
     window['init_popup'](config);
 }
 selectionEvent();
-
+console.log(32);
 function append_choices(el, choices) {
     let selection_value = el.find('select')[0].value;
     let choices_list = choices_to_list(choices);
     el.next().find('textarea').val(choices);
-    el.find('.choice_list').remove();
+    var choice_list_td = el.closest('tr').find('.field-text:first');    
+    var choice_list_container = undefined;
+    if(choice_list_td.find('.choice_list').length > 0)
+    {
+        choice_list_container = choice_list_td.find('.choice_list:first');
+        choice_list_container.html('');
+    }
+    else
+    {
+        choice_list_td.append('<div class="added_choices"><b>Added Choices</b><div class="choice_list"></div><div>');
+        choice_list_container = choice_list_td.find('.choice_list:first');
+    }
     for (let i in choices_list) {
         if (selection_value == 'radio') {
-            el.append('<div class="choice_list"><input name="' + choices_list[i] + '" type="radio" disabled><label for="scales">' + choices_list[i] + '</label></div>');
+            choice_list_container.append('<div class="choice"><input name="' + choices_list[i] + '" type="radio" disabled><label for="scales">' + choices_list[i] + '</label></div>');
         } else if (selection_value == 'select-multiple') {
-            el.append('<div class="choice_list"><input name="' + choices_list[i] + '" type="checkbox" disabled><label for="scales">' + choices_list[i] + '</label></div>');
+            choice_list_container.append('<div class="choice"><input name="' + choices_list[i] + '" type="checkbox" disabled><label for="scales">' + choices_list[i] + '</label></div>');
         }
     }
 }

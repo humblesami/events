@@ -27,3 +27,14 @@ function init_popup(config) {
 
 };
 window['init_popup'] = init_popup;
+$(function(){
+    $(document).on('click', 'label.overflow-hidden', function(){
+        var c_label = this;        
+        var label_show = {
+            on_load: function(){
+                $('#signModal .modal-body').html(c_label.innerHTML);
+            }
+        }
+        init_popup(label_show);
+    })
+})

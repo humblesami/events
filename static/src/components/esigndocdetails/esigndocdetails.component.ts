@@ -18,6 +18,7 @@ export class EsignDocDetailsComponent implements OnInit {
     all_users_list = [];
     selectedUser: any;
     socketService: SocketService;
+    selectedMeeting = 0;
 
     constructor(private httpService: HttpService, 
         private route: ActivatedRoute, 
@@ -29,7 +30,10 @@ export class EsignDocDetailsComponent implements OnInit {
 
     get_data() {
 
+    }
 
+    meeting_changed(){
+        console.log(this.selectedMeeting,18)
     }
 
     setUserSelection(){
@@ -50,6 +54,7 @@ export class EsignDocDetailsComponent implements OnInit {
     toggle_admin_mode(bool){           
         this.isAdmin = bool;
     }
+    meetings = [];
 
     ngOnInit() {
         var obj_this = this;
@@ -59,8 +64,7 @@ export class EsignDocDetailsComponent implements OnInit {
             users,
             doc_data,
             send_to_all,
-            meeting_id,
-            meetings,
+            meeting_id,            
             req_url,
             
             ctx,
@@ -161,8 +165,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     doc_data = data.doc_data;
                     // console.log(doc_data, 11);
-                    obj_this.all_users_list = obj_this.users_list = users = data.users;
-                    meetings = data.meetings;
+                    obj_this.all_users_list = obj_this.users_list = users = data.users;                    
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
                     pdf_binary = data.pdf_binary;
@@ -171,12 +174,8 @@ export class EsignDocDetailsComponent implements OnInit {
                     console.log('Starting render doc data', Date());
                     renderPDF(pdf_binary);
 
-                    if (meetings) {
-                        $('#dropdown_meeting .meeting_options').remove();
-                        $.each(meetings, function() {
-                            $('#dropdown_meeting').append($("<option class='meeting_options'/>").val(this.id).text(this.name));
-                        });
-                    }
+                    obj_this.meetings = data.meetings;
+
                     if (meeting_id) {
                         $('#dropdown_meeting').val(meeting_id);
                         $('.check_box_send_all').show();
