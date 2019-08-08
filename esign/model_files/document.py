@@ -423,19 +423,14 @@ class Signature(models.Model):
                     return res
                 else:
                     user = res.user
-        signature_id = params['signature_id']
-        sign = Signature.objects.get(id=signature_id)
         curr_dir = os.path.dirname(__file__)
         directory = curr_dir.replace('model_files', 'static')
         if not os.path.exists(directory):
             os.makedirs(directory)
-        txt = params.get('name')
-        if not txt:
-            txt = sign.user.profile.name
-        if sign.type == "initials":
+        txt = user.profile.name
+        sign_type = params['sign_type']
+        if sign_type == "initials":
             txt = ''.join([x[0].upper() + "." for x in txt.split(' ')])
-        # if sz[0] < 100:
-        # sz = (150, 28)
         font_directory = curr_dir.replace('esign/model_files', 'static/assets/fonts')
         font = ImageFont.truetype(font_directory + "/roboto-v19-latin-regular.ttf", 48)
         sz = font.getsize(txt)

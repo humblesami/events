@@ -796,6 +796,8 @@ export class EsignDocDetailsComponent implements OnInit {
             
             get_signature_data();
 
+            
+
             function on_sign_got(sign_data)
             {
                 if(sign_container.attr('signtype') == 'initials' || sign_container.attr('signtype') == 'signature')
@@ -806,8 +808,11 @@ export class EsignDocDetailsComponent implements OnInit {
                             // console.log(1154, new_sign);
                             signature_data = new_sign;
                             submit_response(new_sign, sign_data.text);
+                        },
+                        on_auto_sign: function(){
+                            get_auto_sign();
                         }
-                    }
+                    };
                     window['init_sign'](sign_config);
                 }
                 else
@@ -828,6 +833,39 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     window['init_popup'](popup_config);
                 }
+
+                function get_auto_sign()
+            {
+                ajax_options = {
+                    data: {
+                        args: {
+                            app: "esign",
+                            model: "Signature",
+                            method:"get_auto_sign"
+                        },
+                        params: {
+                            sign_type: sign_container.attr('signtype'),
+                            token: token,
+                        }
+                    },
+                    onSuccess: function(data) {
+                        let sign_config = {
+                            signature_data: data.image,
+                            on_signed: function(new_sign){
+                                // console.log(1154, new_sign);
+                                signature_data = new_sign;
+                                submit_response(new_sign, sign_data.text);
+                            }
+                        };
+                        
+                        window['init_sign'](sign_config);
+                    }
+                }
+                if(token){
+                    ajax_options.url = '/rest/public';
+                }
+                window['dn_rpc_object'](ajax_options);
+            }
             }
 
             function submit_response(response_data, sign_data_text)
