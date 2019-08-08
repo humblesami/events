@@ -12,20 +12,18 @@ title="Results"></app-breadcrumb>
 </div>
 
   <div class="container" *ngIf="surveyDetails">
-      <link rel="stylesheet" href="/static/assets/css/survey.css" />
-	  <div class="MainTitleHeadWrap">
+        <link rel="stylesheet" href="/static/assets/css/survey.css" />
+        <div class="MainTitleHeadWrap">
 			<div class="HeadingWrap">
 				{{surveyDetails.name}}
 			</div>
 		</div>
-      <div class="row">
+        <div class="row">
             <div class="col-sm-12 mr-b20" *ngIf="surveyDetails.questions">
                 <div *ngFor="let question of surveyDetails.questions" class="row surveyDetailsquestions">
-                  
-                  <div class="col-sm-12 UserProfileDiscription">
-                      <h4 class="my-4 text-primary font-weight-bold">{{question.name}}?</h4>
-                        
-                        <div *ngIf="question.user_answers">
+                    <div class="col-sm-12 UserProfileDiscription">
+                        <h4 class="my-4 text-primary font-weight-bold">{{question.name}}?</h4>                        
+                        <div *ngIf="question.user_answers && !question.chart_data.length">
                             <div *ngFor="let answer of question.user_answers" style="display: flex">
                                 <div class="col-sm-4 border border-right-0 py-3">
                                     <div class="row" *ngIf="answer.user">
@@ -71,10 +69,7 @@ title="Results"></app-breadcrumb>
                         </div>
                 </div>
             </div>
-              
             </div>
-		  
-      </div>
-  </div>
- 
+        </div>
+    </div>
 </div>

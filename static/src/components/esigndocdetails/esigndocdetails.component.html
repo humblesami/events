@@ -4,6 +4,7 @@ rid="{{doc.id}}" delete="1" edit="1"
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Esignature", "link":"/actions/signdocs"}]'
 title="{{doc.doc_name}}"></app-breadcrumb>
 <div class="router-outlet p-0">
+    <link rel="stylesheet" href="/static/assets/css/esign.css" />
     <link rel="stylesheet" href="/static/assets/css/esigndocdetails.css" />    
     <div name="id" class="e_sign_doc_id" invisible="1" ></div>
     <div class="sign-position dev_only" ></div>        
@@ -40,11 +41,11 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                         </div>
                         <div class="meetings_div">
                             <input *ngIf="socketService.is_admin" [(ngModel)]="isAdmin" type="checkbox" /> Admin Mode
-                            <span class="doc-subtitle">Attach to meeting(Optional):</span>
+                            <div class="doc-subtitle">Attach to meeting(Optional):</div>
                             <select id="dropdown_meeting"><option value="0">Select Meeting</option></select>
-                            <div class="doc-subtitle">
-                                <input  id="check_box_send_all" class="check_box_send_all" type="checkbox"/>
-                                <strong class="check_box_send_all" >Send to all attendees:</strong>
+                            <div class="doc-subtitle check_box_send_all">
+                                <input id="check_box_send_all" type="checkbox"/>
+                                <strong >Send to all attendees:</strong>
                             </div>
                         </div>
         

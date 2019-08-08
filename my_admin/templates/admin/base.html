@@ -2,17 +2,16 @@
 {% block extrahead %}
     <script type="text/javascript" src="/static/assets/libs/jquery/jquery-3.2.1.min.js"></script>
     {{ block.super }}
-
     <link rel="stylesheet" type="text/css" href="/static/admin/css/bootstrap-4.1.1-c.css" />
     <script type="text/javascript" src="/static/assets/libs/bootstrap/bootstrap-4.1.1.js"></script>
     <script type="text/javascript" src="/static/assets/js/popup.js"></script>
-    <script src="/static/assets/js/public_simple_ajax.js"></script>
-{% endblock %}
-{% block footer %}
+    <script src="/static/assets/js/simple_ajax_admin.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/assets/css/roboto-condensed-fontface.css" />
     <link rel="stylesheet" type="text/css" href="/static/admin/css/change_form.css" />
     <link rel="stylesheet" type="text/css" href="/static/admin/css/admin.css" />
     <link rel="stylesheet" type="text/css" href="/static/admin/css/secondary.css" />
+{% endblock %}
+{% block footer %}
     <div class="modal fade" id="signModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
