@@ -45,9 +45,12 @@ export class MeetingDetailsComponent implements OnInit {
         this.route.params.subscribe(params => this.get_data());
     }
 
-    open(meeting_id) {
+    open_modal(meeting_id) {
 		const modalRef = this.modalService.open(RosterComponent);
-		modalRef.componentInstance.meeting_id = meeting_id;
+        modalRef.componentInstance.meeting_id = meeting_id;
+        setTimeout(function(){
+            $('ngb-modal-window.show .modal-dialog').addClass('modal-lg').addClass('modal-dialog-centered');
+        }, 51);
     }
     open_django(meeting_id) {
 		const modalRef = this.modalService.open(DjangopaginatorComponent);

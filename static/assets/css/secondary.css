@@ -63,3 +63,23 @@ body.public #viewer_container{
 {
     z-index: 27;
 }
+table.table.my-3 input[type='radio']{
+    margin-right: 10px;
+    cursor: pointer;
+}
+table.table.my-3 input[type='radio']:after {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: -3px;
+    left: -1px;
+    background-color: #fff;
+    position: relative;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid #4b74b5;
+}
+table.table.my-3 input[type='radio']:checked:after {
+    background-color: #000;
+}
