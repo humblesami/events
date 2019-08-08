@@ -31,7 +31,7 @@ export class SurveyresultsComponent implements OnInit {
             console.log(result)
             setTimeout(function() {
                 for (let question in obj_this.surveyDetails.questions) {
-                    if (obj_this.surveyDetails.questions[question].chart_data && obj_this.surveyDetails.questions[question].user_answers.length > 0) {
+                    if (obj_this.surveyDetails.questions[question].chart_data.length && obj_this.surveyDetails.questions[question].user_answers.length > 0) {
                         window['drawChart'](obj_this.surveyDetails.questions[question].chart_data,
                             '#chartData-' + obj_this.surveyDetails.questions[question].id);
                     }
@@ -39,7 +39,7 @@ export class SurveyresultsComponent implements OnInit {
                 if (obj_this.surveyDetails.progress_data) {
                     // window['drawChart'](obj_this.surveyDetails.progress_data, '#progress-chart');
                 }
-            }, 100)
+            }, 800)
         };
         const failure_cb = function(error) {
             obj_this.router.navigate(['/survey/' + obj_this.route.snapshot.params.id]);
