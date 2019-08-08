@@ -7,9 +7,10 @@ title="{{voting_object.name}}"></app-breadcrumb>
 
 	</div>
     <div class="container" *ngIf="voting_object">
+            <link rel="stylesheet" href="/static/assets/css/survey.css" />
 		<div class="MainTitleHeadWrap">
 			<div class="HeadingWrap">
-				Personal Info
+				Resolution Info
 			</div>
 			<div class="MeetingBtnWrapper">
 				<div class="btn-group" id="tdmrb{{voting_object.id}}">
@@ -111,12 +112,25 @@ title="{{voting_object.name}}"></app-breadcrumb>
                 <div *ngIf="voting_object.results.answer_count" class="title-wrapper voting-chart">
                     <div class="modal-header">
                         Graphical View
-                    </div>
-                    <div class="canvas_warpper">
-                        <div class="canvas_container">
-                            <canvas id="myChart" ></canvas>
-                        </div>
-                    </div>					
+                    </div> 
+                    <div class="w-50 ml-25">
+                        <div class="canvas_warpper my-5">
+                            <div class="canvas_container">
+                                    <canvas id="myChart"></canvas>
+                            </div>
+                        </div>	
+                        <label>Choices</label> :
+                        <table class="table">
+                            <tbody>
+                                <tr *ngFor="let obj of voting_object.chart_data">
+                                    <td [ngStyle]="{'background-color': obj.color}"></td>
+                                    <td>{{obj.option_name}}</td>
+                                    <td>{{obj.option_result || 0}}</td>
+                                    <td>{{obj.option_perc || 0}}%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>                
                 </div>
 
                 <div *ngIf="voting_object.voting_docs && voting_object.voting_docs.length" class="title-wrapper">

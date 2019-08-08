@@ -66,12 +66,25 @@ export class VotingdetailsComponent implements OnInit {
                 {
                     result.results = {};
                 }
-                obj_this.voting_object = result;                
+                obj_this.voting_object = result;
+
+                console.log(result);            
                 // make_bread_crumb(obj_this.voting_object.name);
                 // console.log(obj_this.voting_object, obj_this.voting_object.chart_data, 4343);
                 if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                
                 {
                     setTimeout(function(){
+                        var chart_colors = window['chart_colors'];
+                        var p =0;
+                        let question = obj_this.voting_object;
+                        for(let j in question.chart_data){
+                            if(p>=chart_colors.length)
+                            {
+                                p = 0;
+                            }
+                            question.chart_data[j].color = chart_colors[p++];
+                        }
+
                         if(obj_this.voting_object.results.answer_count)
                         {
                             window['drawChart'](obj_this.voting_object.chart_data, '#myChart');   
@@ -156,9 +169,20 @@ export class VotingdetailsComponent implements OnInit {
         {
             obj_this.httpService.post(voting_response_data, function(update_results){                
                 obj_this.voting_object.my_status = option_name;
+                console.log(update_results);
                 obj_this.voting_object.chart_data = update_results.chart_data;
                 if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                
                 {                 
+                    var chart_colors = window['chart_colors'];
+                        var p =0;
+                        let question = obj_this.voting_object;
+                        for(let j in question.chart_data){
+                            if(p>=chart_colors.length)
+                            {
+                                p = 0;
+                            }
+                            question.chart_data[j].color = chart_colors[p++];
+                        }
                     window['drawChart'](obj_this.voting_object.chart_data, '#myChart');
                     $('.voting-chart:first').show();                 
                 }
