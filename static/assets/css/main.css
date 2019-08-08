@@ -727,6 +727,7 @@ a.kanban-committees-info-box-name {
 	padding: 0;
 	width: 30px;
 	height: 30px;
+	color: #000000;
 }
 .del {
 	cursor: pointer;
@@ -2353,6 +2354,7 @@ span.kanban-upcoming-meeting-date {
 	border-radius: 3px;
 	flex-direction: column;
 	height: 100%;
+	border: 1px solid rgba(99, 143, 201, 0.25);
 }
 .kanban-card.survey {
 	width: 240px;
@@ -2638,7 +2640,7 @@ ul.dropdown-menu.scrollable-menu {
 	background: red;
 }
 .details-card.edit-mode {
-	margin: 45px 0;
+	margin: 0 0 45px;
 }
 .popup.messenger {
 	display: none;
@@ -2741,4 +2743,123 @@ select {
     display: block;
     width: 100%;
     padding-right:17px;
+}
+
+.ui-block {
+    background-color: #fff;
+    border-radius: 0.3rem;
+    margin-bottom: 15px;
+    box-shadow: 0px 0px 8px rgba(86, 86, 86, 0.26);
+}
+
+.top-header, .top-header-thumb {
+    position: relative;
+}
+.top-header-thumb img {
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+.top-header-thumb::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 -120px 55px -30px rgba(0,0,0,.5);
+}
+
+.top-header-author {
+    position: relative;
+    bottom: 68px;
+    max-width: 200px;
+    margin-bottom: -38px;
+    z-index: 4;
+    text-align: center;
+}
+.author-thumb-wrap{
+	position: relative;
+    max-width: 200px;
+    text-align: center;
+}
+.author-thumb {
+    border-radius: 100%;
+    border: 6px solid #fff;
+    margin: 0 auto;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    background-color: #FDFBEE;
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.17);
+}
+.author-thumb {
+    display: inline-block;
+    position: relative;
+}
+
+.edit-author-profile{
+	position: absolute;
+    bottom: -44px;
+    right: 15px;
+    font-size: 1.7em;
+    color: #3059C9;
+}
+.single-form-field{
+	color: #757575;
+	font-size: 16px;
+	font-weight: 400;
+}
+.single-form-field i{
+	margin-right: 0.5rem;
+    color: #3059C9;
+    width: 1rem;
+}
+
+.Eedit-resume-docs{}
+.Eedit-resume-docs-icon{}
+
+.edit-ui-block-header{ display:flex;  justify-content: space-between; margin-bottom:1rem; }
+.edit-ui-block-header h3, .edit-ui-block-header i{ font-size: 1.7em; color: #3059C9; text-transform:uppercase; }
+
+.single-input-label label{
+	color:#3059C9;
+	display:block;
+	margin-bottom:0.5rem;
+
+}
+.single-input-label .label-content-info{
+	border-bottom:1px solid #E1E1E1;
+	margin-bottom:0.5rem;
+	padding-bottom:0.5rem;
+}
+
+.committee-member-section{
+	display:flex;
+	flex-wrap:wrap;
+}
+.committee-member{
+	cursor:pointer;
+	border-radius: 0.2rem;
+    background-color: #4b74b5;
+    color: white;
+    padding: .1rem .4rem;
+    margin-right: 5px;
+    display: inline-block;
+    font-size: .8rem;
+}
+
+.modal-header-heading {
+    align-items: center;
+}
+.modal-header-heading h1 {
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0 0 0 0.5rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.edit-modal-body{
 }

@@ -18,7 +18,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 <i class="fa fa-angle-right"></i>
             </span>
         </div>
-
         <div class="row">
             <div class="col-lg-12">
                 <div class="MainTitleHeadWrap">
@@ -31,29 +30,95 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 </div>
             </div>
         </div>
-        
         <form class="details-card">
-            <div class="container">
-                <div class="row mb-3">
-                    <div class="col-sm-12 col-md-3 col-lg-2">
-                        <div class="ProfileUserNameJonbWrapper">
-                            <div class="ProfileChangeSaveWrapper">
-                                <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
-                                <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-                            </div>
-
-                            <div  class="row" *ngIf="profile_data.name">
-                                <div class="col-sm-12 UserProfileNameTittle">
-                                    {{profile_data.name}}
+			<div class="row mb-3">
+				<div class="col-sm-12">
+					<div class="ui-block">
+						<div class="top-header">
+							<div class="top-header-thumb">
+								<img src="static/assets/images/top-header1.jpg" alt="" />
+								<div class="edit-author-profile">
+									 <span *ngIf="my_profile || socketService.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
+								</div>
+							</div>
+							<div class="top-header-author">
+								<a href="02-ProfilePage.html" class="author-thumb">
+									<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
+									<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+								</a>
+								<div class="author-content">
+									<div class="UserProfileNameTittle">
+                                    	{{profile_data.name}}
+                                	</div>
+								</div>
+							</div>
+						</div>
+						<div class="row m-0">
+							<div class="col-lg-6">
+								<div class="pl-md-3">
+									<div *ngIf="profile_data.mobile_phone" class="single-form-field mb-2">
+										<i class="fas fa-phone"></i> {{profile_data.mobile_phone}}
+									</div>
+									<div *ngIf="profile_data.email" class="single-form-field mb-2">
+										<i class="far fa-envelope"></i> {{profile_data.email}}
+									</div>
+									<div *ngIf="profile_data.birth_date" class="single-form-field mb-2">
+										<i class="far fa-calendar-alt"></i> {{profile_data.birth_date}}
+									</div>
+									<div *ngIf="profile_data.location" class="single-form-field mb-2">
+										<i class="fas fa-map-marker-alt"></i>   {{profile_data.location}}
+									</div>
+									<div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="single-form-field mb-2">
+											<i class="far fa-envelope"></i>	{{profile_data.two_factor_auth.name}}
+									</div>
+                    			</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="row justify-content-end">
+									<div class="col-lg-6">
+								 <div *ngIf="my_profile" style="position:relative;cursor: pointer;">
+                                    <img class="strt_sign profile " style="width: 100%;"
+                                        *ngIf="profile_data.signature_data"
+                                        src="data:image/png;base64,{{profile_data.signature_data}}"
+                                    />
                                 </div>
-                            </div>
+									</div>
+									<div class="col-lg-3">
+										<div *ngIf="profile_data.resume"  class="docwrappercontainer">
+											<h3>Resume</h3>
+											<div class="mb-4">
+												<a routerLink="/resume/doc/{{profile_data.resume.id}}">
+													<div class="Eedit-resume-docs">
+														<span class="Eedit-resume-docs-icon">
+															 <img src="static/assets/images/resume.svg" alt="" />
+														</span>
+														<div class="DocInfoVertical text-truncate" style="display:none;">
+															{{profile_data.resume.name}}
+														</div>
+													</div>
+												</a>
+												<!-- <div *ngIf="my_profile || socketService.is_admin" class="resume-edit-control">
+														<a class="edit link" (click)="add_resume()">
+															<i class="far fa-edit"></i>
+														</a>
+														<input (change)="addFile($event, '')"
+														type="file"
+														name="add_resume"
+														class='add_resume' style="display: none"/>
+														</div>
+												-->
+											</div>
+										</div>
+									</div>
+								</div>
 
-                            <div *ngIf="profile_data.job_title" class="row">
-                                <div class="col-sm-12 UserProfileDiscripTittle">
-                                    {{profile_data.job_title}}
-                                </div>
-                            </div>
-                        </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+                    <div class="col-sm-12">
                         <div *ngIf="profile_data.last_login">
                             <div class="row last-login-details">
                                 <div class="col-sm-12">
@@ -70,38 +135,25 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </div>
                             </div>
                         </div>
-                        <div *ngIf="!(profile_data.last_login)">
-                            <h3>No login data</h3>
-                        </div>
 
-                        <div *ngIf="profile_data.resume"  class="row docwrappercontainer">
-                            <div class="col-sm-12">
-                                <h3>Resume</h3>
-                            </div>
-                            <div class="col-sm-12 mb-4">
-                                <a routerLink="/resume/doc/{{profile_data.resume.id}}">
-                                    <div class="DocumentWrapper">
-                                        <div class="DocIcon">
-                                            <span class="rounded-circle">
-                                                <i class="icon-doc-file"></i>
-                                            </span>
-                                        </div>
-                                        <div class="DocInfoVertical text-truncate">
-                                            {{profile_data.resume.name}}
-                                        </div>
-                                    </div>
-                                </a>
-                                <!-- <div *ngIf="my_profile || socketService.is_admin" class="resume-edit-control">
-                                        <a class="edit link" (click)="add_resume()">
-                                            <i class="far fa-edit"></i>
-                                        </a>
-                                        <input (change)="addFile($event, '')" 
-                                        type="file" 
-                                        name="add_resume" 
-                                        class='add_resume' style="display: none"/>
-                                </div>                                 -->
-                            </div>
-                        </div>
+						<div class="row assistant mb-3" *ngIf="!(profile_data.last_login)">
+							<div class="col-sm-12"  *ngIf="admin_info">
+								<div class="ui-block p-3">
+									<div class="edit-ui-block-header">
+										<h3 class="m-0 p-0">Login Info</h3>
+									</div>
+
+									<div  class="mb-0">
+										Broweser
+							country
+							Time
+							City
+									</div>
+								</div>
+							</div>
+						</div>
+
+
                         <!-- <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
                             <div *ngIf="my_profile || socketService.is_admin" class="resume-edit-control">
                                 <a class="edit link" (click)="add_resume()">
@@ -114,408 +166,325 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </div>
                         </div> -->
                     </div>
-                    <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
-                        <div class="ProFileHeadWrap">
-                            PERSONAL INFO
-                            <span *ngIf="my_profile || socketService.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
-                        </div>
-                        <div *ngIf="profile_data.mobile_phone" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="mobile-phone">
-                                    <b>Mobile Phone</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.mobile_phone}}
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.email" class="row mb-2">
-                        <div class="col-sm-3">
-                            <label for="email">
-                                <b>Email</b>
-                            </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.email}}
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.birth_date" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="birth_date">
-                                    <b>Birth Date</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                {{profile_data.birth_date}}
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.location" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="location">
-                                    <b>Location</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.location}}
-                            </div>
-                        </div>
-                        <div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="row mb-2">
-                            <div class="col-sm-3">
-                                <label for="location">
-                                    <b>Two Factor Authentication</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.two_factor_auth.name}}
-                            </div>
-                        </div>
-
-                        <div *ngIf="my_profile" class="">
-                            <!-- <div class="">
-                                <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
-                                    <i class="fa fa-pen"></i>
-                                    <span  *ngIf="profile_data.signature_data">Update </span>
-                                    <span  *ngIf="!profile_data.signature_data">Add </span>
-                                    Signature
-                                </a>
-                            </div> -->
-                            <div class="col-sm-9" style="display: flex;">
-                                <div style="position:relative;cursor: pointer;">
-                                    <img class="strt_sign profile " style="width: 100%;"
-                                        *ngIf="profile_data.signature_data"
-                                        src="data:image/png;base64,{{profile_data.signature_data}}"
-                                    />
-
-                                </div>
-                            </div>
-                        </div>
 
 
-                    </div>
+
+
                 </div>
-            </div>
-            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
-                <div class="container">
-                    <!-- Bio -->
-                    <div class="row assistant" *ngIf="admin_info">
-                        <div class="col-sm-12">
-                            <h3 class="clrBlue mb-5">
-                                    Bio
-                                    <span *ngIf="my_profile || socketService.is_admin" (click)="open('bio')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
-                            </h3>
-                        </div>
-                        <div *ngIf="profile_data.bio" class="row  mb-3">
-                            <div class="col-sm-3">
-                                <label for="website">
-                                    <b>Bio</b>
-                                </label>
-                            </div>
-                            <div class="col-sm-9 UserProfileDiscription" [innerHtml]="bio_html"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
-                <div class="container">
-                    <!-- Wrok Information -->
-                    <div class="row assistant" *ngIf="admin_info">
-                        <div class="col-sm-12">
-                            <h3 class="clrBlue mb-5">
-                                    WORK INFO
-                                    <span *ngIf="my_profile || socketService.is_admin" (click)="open('work')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
-                            </h3>
-                        </div>
-                        <div class="admin_info_after_name container">
-                            <div *ngIf="profile_data.company" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="company">
-                                        <b>Company</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.company}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.job_title" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="job-title">
+			<div class="row assistant mb-3">
+				<div class="col-sm-12"  *ngIf="admin_info">
+					<div class="ui-block p-3">
+						<div class="edit-ui-block-header">
+							<h3 class="m-0 p-0">Bio</h3>
+							<span *ngIf="my_profile || socketService.is_admin" (click)="open('bio')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+						</div>
+
+						<div *ngIf="profile_data.bio" class="mb-3">
+							<div class="single-form-field" [innerHtml]="bio_html"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Wrok Information -->
+			<div class="row assistant mb-3" *ngIf="admin_info">
+				<div class="col-sm-12"  *ngIf="admin_info">
+					<div class="ui-block p-3">
+						<div class="edit-ui-block-header">
+							<h3 class="m-0 p-0">WORK INFO</h3>
+							<span *ngIf="my_profile || socketService.is_admin" (click)="open('work')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+						</div>
+
+						 <div class="admin_info_after_name row">
+                            <div *ngIf="profile_data.company" class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label for="company">
+										<b>Company</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.company}}
+									</div>
+								</div>
+							</div>
+
+							 <div *ngIf="profile_data.job_title"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label for="job-title">
                                         <b>Job Title</b>
                                     </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.job_title}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.department" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="department">
-                                        <b>Department</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.department}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.work_phone" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="w-phone">
+									<div class="label-content-info">
+										{{profile_data.job_title}}
+									</div>
+								</div>
+							</div>
+
+							 <div *ngIf="profile_data.department"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									 <label for="department">
+										<b>Department</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.department}}
+									</div>
+								</div>
+							</div>
+
+							 <div *ngIf="profile_data.work_phone"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									 <label for="w-phone">
                                         <b>Work Phone</b>
                                     </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.work_phone}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.fax" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="fax">
+									<div class="label-content-info">
+										{{profile_data.work_phone}}
+									</div>
+								</div>
+							</div>
+
+							 <div *ngIf="profile_data.fax"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									 <label for="fax">
                                         <b>Fax</b>
                                     </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.fax}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.website" class="row mb-2">
-                                <div class="col-sm-3">
-                                    <label for="website">
+									<div class="label-content-info">
+										{{profile_data.fax}}
+									</div>
+								</div>
+							</div>
+
+							 <div *ngIf="profile_data.website"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									 <label for="website">
                                         <b>Website</b>
                                     </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.website}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.groups && profile_data.groups.length > 0" class="admin_info_after_name container">
-                                <div class="col-sm-3">
-                                    <label for="job-title">
+									<div class="label-content-info">
+										{{profile_data.website}}
+									</div>
+								</div>
+							</div>
+
+							 <div *ngIf="profile_data.groups && profile_data.groups.length > 0" class="admin_info_after_name col-lg-12 mb-2">
+								<div class="single-input-label">
+									 <label for="job-title">
                                         <b>Role</b>
                                     </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    <span class="pill" *ngFor="let group of profile_data.groups">
-                                        <span style="cursor: pointer" routerLink="/profiles/{{group.name | lowercase}}">{{group.name}}</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
-                    <div class="container">
-                        <!-- Wrok Information -->
-                        <div class="row assistant" *ngIf="admin_info">
-                            <div class="col-sm-12">
-                                <h3 class="clrBlue mb-5">
-                                    BOARD INFO
-                                    <span *ngIf="socketService.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
-                                </h3>
-                            </div>
-                            <div class="admin_info_after_name container">
-                                <div *ngIf="profile_data.committees && profile_data.committees.length > 0" class="admin_info_after_name container">
-                                    <div class="col-sm-3">
-                                        <label for="job-title">
-                                            <b>Committees</b>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-9 UserProfileDiscription">
-                                        <span class="pill" *ngFor="let com of profile_data.committees">
-                                            <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                    <div *ngIf="profile_data.board_joining_date" class="row mb-2">
-                                        <div class="col-sm-3">
-                                            <label for="website">
-                                                <b>Board Joining Date</b>
-                                            </label>
-                                        </div>
-                                        <div class="col-sm-9 UserProfileDiscription">
-                                            {{profile_data.board_joining_date}}
-                                        </div>
-                                    </div>
-                    
-                                    <div *ngIf="profile_data.term_start_date" class="row mb-2">
-                                        <div class="col-sm-3">
-                                            <label for="website">
-                                                <b>Term Start Date</b>
-                                            </label>
-                                        </div>
-                                        <div class="col-sm-9 UserProfileDiscription">
-                                            {{profile_data.term_start_date}}
-                                        </div>
-                                    </div>
-                    
-                                    <div *ngIf="profile_data.term_end_date" class="row mb-2">
-                                        <div class="col-sm-3">
-                                            <label for="website">
-                                                <b>Term End Date</b>
-                                            </label>s
-                                        </div>
-                                        <div class="col-sm-9 UserProfileDiscription">
-                                            {{profile_data.term_end_date}}
-                                        </div>
-                                    </div>
-                    
-                                    <div *ngIf="profile_data.board_joinig_date" class="row mb-2">
-                                        <div class="col-sm-3">
-                                            <label for="website">
-                                                <b>Board Joinig Date</b>
-                                            </label>
-                                        </div>
-                                        <div class="col-sm-9 UserProfileDiscription">
-                                            {{profile_data.board_joinig_date | date:'MMM dd,yyyy'}}
-                                        </div>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div *ngIf="my_profile || socketService.is_admin" class="BoderGrayTopWrap ProfileInfoTittleWrapper">
-                <div class="container">
-                    <!-- Diversity Information -->
-                    <div class="row assistant" *ngIf="admin_info">
-                        <div class="col-sm-12">
-                            <h3 class="clrBlue mb-5">
-                                DIVERSITY INFO
-                                <span *ngIf="my_profile || socketService.is_admin" (click)="open('diversity')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
-                            </h3>
-                        </div>
-                        <div class="admin_info_after_name container">
-                            <div *ngIf="profile_data.ethnicity.name" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Ethnicity</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.ethnicity.name}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.gender.name" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Gender</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.gender.name}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.veteran.name" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Veteran</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.veteran.name}}
-                                </div>
-                            </div>
+									<div class="committee-member-section">
+										<span *ngFor="let group of profile_data.groups">
+											<span class="committee-member"  routerLink="/profiles/{{group.name | lowercase}}">{{group.name}}</span>
+										</span>
+									</div>
+								</div>
+							</div>
 
-
-                            <div *ngIf="profile_data.disability.name" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Disability</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.disability.name}}
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </div>
+					</div>
+				</div>
             </div>
 
-            <div class="BoderGrayTopWrap ProfileInfoTittleWrapper">
-                <div class="container">
-                    <!--Admin Details-->
-                    <div class="row assistant" *ngIf="admin_info">
+			<!-- Wrok Information -->
+			<div class="row assistant mb-3"  *ngIf="admin_info">
+				<div class="col-sm-12"  *ngIf="admin_info">
+					<div class="ui-block p-3">
+						<div class="edit-ui-block-header">
+							<h3 class="m-0 p-0">BOARD INFO</h3>
+							<span *ngIf="socketService.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+						</div>
 
+						<div *ngIf="profile_data.bio">
+							<div class="admin_info_after_name row">
 
-                        <div class="col-sm-12">
-                            <h3 class="clrBlue mb-5">
-                                ADMINISTRATIVE ASSISTANT
-                                <span *ngIf="my_profile || socketService.is_admin" (click)="open('administrative')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
-                            </h3>
-                        </div>
+								 <div *ngIf="profile_data.board_joining_date" class="col-md-4 mb-2">
+									<div class="single-input-label">
+										<label for="website">
+												<b>Board Joining Date</b>
+											</label>
+										<div class="label-content-info">
+											{{profile_data.board_joining_date}}
+										</div>
+									</div>
+								</div>
 
-                        <div class="col-sm-2">
-                            <div class="ProfileUserNameJonbWrapper">
-                                <div class="ProfileChangeSaveWrapper">
-                                    <img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
-                                        <img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-                                </div>
+								<div *ngIf="profile_data.term_start_date" class="col-md-4 mb-2">
+									<div class="single-input-label">
+										<label for="website">
+												<b>Term Start Date</b>
+											</label>
+										<div class="label-content-info">
+											{{profile_data.term_start_date}}
+										</div>
+									</div>
+								</div>
 
-                                <div  class="row" *ngIf="profile_data.name">
-                                    <div class="col-sm-12 UserProfileNameTittle">
-                                        {{profile_data.admin_full_name}}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1">
-                        <div class="admin_info_after_name">
-                            <!-- <div *ngIf="profile_data.admin_nick_name" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Nick Name</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.admin_nick_name}}
-                                </div>
-                            </div> -->
+								<div *ngIf="profile_data.term_end_date" class="col-md-4 mb-2">
+									<div class="single-input-label">
+										<label for="website">
+											<b>Term End Date</b>
+										</label>
+										<div class="label-content-info">
+											{{profile_data.term_end_date}}
+										</div>
+									</div>
+								</div>
+								<div *ngIf="profile_data.committees && profile_data.committees.length > 0" class="admin_info_after_name col-sm-12">
+									<div class="single-input-label">
+										<label for="job-title">
+											<b>Committees</b>
+										</label>
+									</div>
+									<div class="committee-member-section">
+										<span *ngFor="let com of profile_data.committees">
+											<span class="committee-member" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-                            <div *ngIf="profile_data.admin_email" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Email</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.admin_email}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.admin_cell_phone" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Cell Phone</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.admin_cell_phone}}
-                                </div>
-                            </div>
-                            <div *ngIf="profile_data.admin_fax" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Fax</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.admin_fax}}
-                                </div>
-                            </div>
+            <div *ngIf="my_profile || socketService.is_admin">
+				<!-- Diversity Information -->
+				<div class="row assistant mb-3" *ngIf="admin_info">
+					<div class="col-sm-12"  *ngIf="admin_info">
+						<div class="ui-block p-3">
+							<div class="edit-ui-block-header">
+								<h3 class="m-0 p-0">DIVERSITY INFO</h3>
+								 <span *ngIf="my_profile || socketService.is_admin" (click)="open('diversity')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+							</div>
+							<div class="admin_info_after_name row">
+							  <div *ngIf="profile_data.ethnicity.name"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label class="question-label">
+										<b>Ethnicity</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.ethnicity.name}}
+									</div>
+								</div>
+							  </div>
 
-                            <div *ngIf="profile_data.admin_work_phone" class="row">
-                                <div class="col-sm-3">
-                                    <label class="question-label">
-                                        <b>Work Phone</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    {{profile_data.admin_work_phone}}
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+							  <div *ngIf="profile_data.gender.name" class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label class="question-label">
+										<b>Gender</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.gender.name}}
+									</div>
+								</div>
+							  </div>
+
+							  <div *ngIf="profile_data.veteran.name" class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label class="question-label">
+										<b>Veteran</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.veteran.name}}
+									</div>
+								</div>
+							  </div>
+
+							  <div *ngIf="profile_data.disability.name"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label class="question-label">
+										<b>Disability</b>
+									</label>
+									<div class="label-content-info">
+										 {{profile_data.disability.name}}
+									</div>
+								</div>
+							  </div>
+							</div>
+						</div>
+					</div>
+				</div>
             </div>
+
+			<!--Admin Details-->
+			<div class="row assistant mb-3" *ngIf="admin_info">
+
+				<div class="col-sm-12">
+					<div class="ui-block p-3">
+						<div class="edit-ui-block-header">
+							<h3 class="m-0 p-0">ADMINISTRATIVE ASSISTANT</h3>
+							<span *ngIf="my_profile || socketService.is_admin" (click)="open('administrative')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+						</div>
+						<div class="row mb-2">
+							<div class="col-sm-12">
+								<div class="ProfileUserNameJonbWrapper">
+									<div class="author-thumb-wrap">
+										<div class="author-thumb">
+											<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
+											<img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+										</div>
+										<div  class="UserProfileNameTittle" *ngIf="profile_data.name">
+											{{profile_data.admin_full_name}}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="admin_info_after_name row">
+							<!-- <div *ngIf="profile_data.admin_nick_name" class="row">
+								<div class="col-sm-3">
+									<label class="question-label">
+										<b>Nick Name</b>
+									</label>
+								</div>
+								<div class="col-sm-9 UserProfileDiscription">
+									{{profile_data.admin_nick_name}}
+								</div>
+							</div> -->
+
+							<div *ngIf="profile_data.admin_email"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label class="question-label">
+										<b>Email</b>
+									</label>
+									<div class="label-content-info">
+										 {{profile_data.admin_email}}
+									</div>
+								</div>
+							</div>
+
+							<div *ngIf="profile_data.admin_cell_phone"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label class="question-label">
+										<b>Cell Phone</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.admin_cell_phone}}
+									</div>
+								</div>
+							</div>
+
+							<div *ngIf="profile_data.admin_fax"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label class="question-label">
+										<b>Fax</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.admin_fax}}
+									</div>
+								</div>
+							</div>
+
+							<div *ngIf="profile_data.admin_work_phone"  class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label class="question-label">
+										<b>Work Phone</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.admin_work_phone}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
         </form>
     </div>            
 </div>

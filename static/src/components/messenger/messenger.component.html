@@ -23,17 +23,20 @@
                         Create
                     </button>
                 </div>
-                <div *ngIf="selected_chat_group">
+
+				<div class="group-select-section">
+				<div *ngIf="selected_chat_group">
                     <input readonly [(ngModel)]="group_name" class="group-name" />
-                    <button (click)="update_chat_group_members()" class="" aria-label="Create group.">
+                    <button (click)="update_chat_group_members()" class="fri-selt-btn" aria-label="Create group.">
                         Update
                     </button>
                 </div>
                 
                 
-                <button (click)="close_group_setup()" class="" aria-label="Create group.">
+                <button (click)="close_group_setup()" class="fri-selt-btn" aria-label="Create group.">
                     Close
                 </button>
+					</div>
                 <ng-select
                     [items]="people_list"
                     [multiple]="true"

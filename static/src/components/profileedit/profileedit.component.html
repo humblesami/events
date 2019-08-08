@@ -4,14 +4,13 @@ routes='[{"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}
 title="{{profile_data.name}}"></app-breadcrumb>
 -->
 
-<div class="modal-header">
+<div class="modal-header modal-header-heading">
+	<h1>Edit Profile</h1>
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body">
-
-
+<div class="modal-body edit-modal-body">
 <div class="router-outlet">
     <div class="container">
         <div class="details-card edit-mode" *ngIf="edit_mode">
