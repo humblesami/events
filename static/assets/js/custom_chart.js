@@ -1,7 +1,6 @@
 (function(){
     function drawChart(chartData, canvas_selector)
     {
-        console.log(chartData, 13);
         // console.log($(canvas_selector).length, canvas_selector);
         let labels = [];
         let data = [];
