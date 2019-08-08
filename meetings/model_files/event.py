@@ -261,6 +261,8 @@ class Event(models.Model):
             topic = ws_methods.obj_to_dict(t)
             topic['duration'] = str(topic['duration'])
             topic['docs'] = list(t.agendadocument_set.values())
+            for doc in topic['docs']:
+                doc['created_at'] = str(doc['created_at'])
             topics.append(topic)
         meeting_docs = list(meeting_object_orm.meetingdocument_set.values())
         votings = []

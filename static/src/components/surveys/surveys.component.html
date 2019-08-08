@@ -62,7 +62,7 @@ title="Surveys"></app-breadcrumb>
                         </div>
                         <div class="row d-flex justify-content-between" *ngIf="survey.is_published">
                             <div class="col">
-                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}">
+                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}" *ngIf="survey && survey.is_respondent && !survey.is_attempted" [ngStyle]="{'border': '1px solid rgba(99, 143, 201, 0.25)'}">
                                     <a *ngIf="survey && survey.is_respondent && !survey.is_attempted" id="{{survey.id}}" class="btn" routerLink='/survey/survey/details/{{survey.id}}'>Start Survey</a>
                                     <a *ngIf="survey && survey.is_attempted" id="{{survey.id+survey.name}}" class="btn" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
                                 </div>

@@ -2358,7 +2358,7 @@ span.kanban-upcoming-meeting-date {
 	display: flex;
 	border-radius: 3px;
 	flex-direction: column;
-	border: 1px solid rgba(99, 143, 201, 0.25);
+	height: 100%;
 }
 .kanban-card.survey {
 	width: 240px;
