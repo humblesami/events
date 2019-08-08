@@ -1,4 +1,13 @@
 (function(){
+    window['chart_colors'] = [
+        'Red',
+        'Green',
+        'Purple',
+        'HotPink',
+        'DodgerBlue',
+        'Yellow',
+        'Orange'
+    ];
     function drawChart(chartData, canvas_selector)
     {
         // console.log($(canvas_selector).length, canvas_selector);
@@ -33,24 +42,8 @@
         chartData = {
             datasets: [{
                 data: data,
-                backgroundColor: [
-                    'Red',
-                    'Green',
-                    'Purple',
-                    'HotPink',
-                    'DodgerBlue',
-                    'Yellow',
-                    'Orange'
-                ],
-                hoverBackgroundColor: [
-                    'Red',
-                    'Green',
-                    'Purple',
-                    'HotPink',
-                    'DodgerBlue',
-                    'Yellow',
-                    'Orange'
-                ]
+                backgroundColor: window['chart_colors'],
+                hoverBackgroundColor: window['chart_colors']
             }],
         
             // These labels appear in the legend and in the tooltips when hovering different arcs

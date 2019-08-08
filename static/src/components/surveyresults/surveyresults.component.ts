@@ -28,12 +28,20 @@ export class SurveyresultsComponent implements OnInit {
         };
         const success_cb = function(result) {
             obj_this.surveyDetails = result;
-            console.log(result)
+            // console.log(result)
             setTimeout(function() {
-                for (let question in obj_this.surveyDetails.questions) {
-                    if (obj_this.surveyDetails.questions[question].chart_data.length && obj_this.surveyDetails.questions[question].user_answers.length > 0) {
-                        window['drawChart'](obj_this.surveyDetails.questions[question].chart_data,
-                            '#chartData-' + obj_this.surveyDetails.questions[question].id);
+                var chart_colors = window['chart_colors'];
+                // console.log(chart_colors,7888);
+                for (let i in obj_this.surveyDetails.questions) {
+                    let question = obj_this.surveyDetails.questions[i];
+                    
+                    if (question.chart_data.length && question.user_answers.length) {
+                        for(let j in question.chart_data){
+                            question.chart_data[j].color = chart_colors[j];
+                        }
+                        // console.log(question.chart_data);
+                        window['drawChart'](question.chart_data,
+                            '#chartData-' + question.id);
                     }
                 }
                 if (obj_this.surveyDetails.progress_data) {
