@@ -163,7 +163,7 @@ class Profile(user_model):
     term_start_date = models.DateField( blank=True, null=True)
     term_end_date = models.DateField( blank=True, null=True)
     signature_data = models.BinaryField(default=b'', null=True, blank=True)
-    resume = models.OneToOneField(File, null=True, blank=True, on_delete=models.CASCADE)
+    resume = models.OneToOneField(File, null=True, blank=True, on_delete=models.SET_NULL)
     two_factor_auth = models.IntegerField(choices=TWO_FACTOR_CHOICES, blank=True, null=True)
     email_verified = models.BooleanField(null=True, default=False)
     mobile_verified = models.BooleanField(null=True, default=False)
