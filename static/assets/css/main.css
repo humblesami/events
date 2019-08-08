@@ -493,13 +493,7 @@ a.kanban-committees-info-box-name {
 .kanban-card {
     cursor: pointer;
     min-width: 245px;
-	/*    position: relative;
-    width: 100%;
-    min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-bottom: 30px;
-*/
+	box-shadow: 0px 0px 0px 2px #ddd;
 	height: 100%;
 }
 .kanban-folder {
