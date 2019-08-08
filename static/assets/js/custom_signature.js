@@ -131,8 +131,13 @@ jQuery(document).ready(function(e) {
 
 
 function init_sign(config) {
-    var sign_lib = 0;    
-    $('#signature_modal').remove();    
+    var sign_lib = 0;
+    if($('#signature_modal').length >0)
+    {
+        $('#signature_modal').hide();
+        $('.modal-backdrop').hide();
+    }
+    $('#signature_modal').remove();
     $('body').append(`<div class="modal fade" id="signature_modal" role="dialog" style="z-index:1053" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
@@ -192,7 +197,6 @@ function init_sign(config) {
 
     function setup_signature(){
         var save_btn = $('#save-signature-btn');
-        console.log(save_btn.length, 93);
         var upload_clicker = $('#upload-sig-btn');
         var upload_btn = $('#upload-sig');
 
@@ -225,8 +229,23 @@ function init_sign(config) {
             }
         });
 
+        function on_auto_sign(){
+
+        }
+
         auto_sign.click(function (e) {
-            load_signature(config.signature);
+            if (config.on_auto_sign)
+            {
+                let sign_data = config.on_auto_sign();
+                console.log(sign_data);
+                load_signature(sign_data);
+            }
+            else
+            {
+                on_auto_sign();
+            }
+
+            //load_signature(config.signature);
         });
 
         insert_sign.click(function (e) {
