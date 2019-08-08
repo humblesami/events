@@ -229,7 +229,14 @@ class Profile(user_model):
 
     @property
     def admin_full_name(self):
-        return self.admin_first_name + ' ' + self.admin_last_name
+        admin_full_name = ''
+        if self.admin_first_name:
+            admin_full_name = self.admin_first_name
+        if self.admin_last_name and self.admin_first_name:
+            admin_full_name += ' ' + self.admin_last_name
+        elif self.admin_last_name:
+            admin_full_name = self.admin_last_name
+        return admin_full_name
 
 
     @classmethod
@@ -248,6 +255,145 @@ class Profile(user_model):
         profiles = ws_methods.get_user_info(profiles)
         profiles_json = {'records': profiles, 'total': total_cnt, 'count': current_cnt}
         return profiles_json
+    
+    
+    @classmethod
+    def get_personal_info(cls, request, params):
+        profile_obj = params['profile_obj']
+        profile = ws_methods.obj_to_dict(profile_obj,
+            fields=[
+                'first_name',
+                'last_name',
+                'mobile_phone',
+                'email',
+                'birth_date',
+                'location',
+                'email_verified',
+                'mobile_verified'
+            ])
+        resume = profile_obj.resume
+        if resume:
+            profile['resume'] = {'id': resume.id}
+        profile['signature_data'] = profile_obj.signature_data.decode()
+        profile['two_factor_auth'] = {
+            'id': profile_obj.two_factor_auth,
+            'name': profile_obj.get_two_factor_auth_display()
+            }
+        return profile
+
+
+    @classmethod
+    def get_work_info(cls, request, params):
+        profile_obj = params['profile_obj']
+        profile = ws_methods.obj_to_dict(profile_obj,
+        fields=[
+            'company',
+            'job_title',
+            'department',
+            'work_phone',
+            'fax',
+            'website',
+        ])
+
+        return profile
+
+
+    @classmethod
+    def get_board_info(cls, request, params):
+        profile_obj = params['profile_obj']
+        profile = ws_methods.obj_to_dict(profile_obj,
+        fields=[
+            'board_joining_date',
+            'term_start_date',
+            'term_end_date'],
+            related={
+            'committees': {'fields': ['id', 'name']}
+            })
+        return profile
+
+
+    @classmethod
+    def get_admin_assistant_info(cls, request, params):
+        profile_obj = params['profile_obj']
+        profile = ws_methods.obj_to_dict(profile_obj,fields=[
+            'admin_first_name',
+            'admin_last_name',
+            'admin_cell_phone',
+            'admin_email',
+            'admin_work_phone',
+            'admin_fax',
+            'admin_image',
+            'mail_to_assistant'])
+        profile['admin_full_name'] = profile_obj.admin_full_name
+        return profile
+
+    @classmethod
+    def get_update_profile_details(cls, request, params):
+        field_group = params['field_group']
+        user_id = params.get('id')
+        group = params.get('type')
+        profile_obj = Profile.objects.get(pk=user_id)
+        profile = {}
+        choice_fields = {
+            'gender': [{'id':0, 'name': ''}],
+            'disability': [{'id':0, 'name': ''}],
+            'ethnicity': [{'id':0, 'name': ''}],
+            'veteran': [{'id':0, 'name': ''}],
+            'committees': [{'id':0, 'name': ''}],
+            'two_factor_auth': [{'id':0, 'name': ''}],
+            'groups': [{'id':0, 'name': ''}]
+            }
+        param = {}
+        param['profile_obj'] = profile_obj
+        if field_group == 'personal':
+            profile = cls.get_personal_info(request, param)
+            choice_fields['two_factor_auth'] = ws_methods.choices_to_list(profile_obj._meta.get_field('two_factor_auth').choices)
+        elif field_group == 'bio':
+            profile = ws_methods.obj_to_dict(profile_obj, fields=['bio'],related={'groups': {'fields': ['id', 'name']}})
+        elif field_group == 'work':
+            profile = cls.get_work_info(request, param)
+            choice_fields['groups'] = list(group_model.objects.all().values('id', 'name'))
+        elif field_group == 'board':
+            profile = cls.get_board_info(request, param)
+            choice_fields['committees'] = list(Committee.objects.values('id', 'name'))
+        elif field_group == 'diversity':
+            choice_fields['gender'] = ws_methods.choices_to_list(profile_obj._meta.get_field('gender').choices)
+            choice_fields['disability'] = ws_methods.choices_to_list(profile_obj._meta.get_field('disability').choices)
+            choice_fields['ethnicity'] = ws_methods.choices_to_list(profile_obj._meta.get_field('ethnicity').choices)
+            choice_fields['veteran'] = ws_methods.choices_to_list(profile_obj._meta.get_field('veteran').choices)
+        elif field_group == 'administrative':
+            profile = cls.get_admin_assistant_info(request, param)
+        profile['groups'] = []
+        groups = profile_obj.groups.all().values('id', 'name')
+        for group in groups:
+            profile['groups'].append(group)
+        profile['name'] = profile_obj.fullname()
+        profile['disability'] = {
+            'id': profile_obj.disability,
+            'name': profile_obj.get_disability_display()
+        }
+        profile['ethnicity'] = {
+            'id': profile_obj.ethnicity,
+            'name': profile_obj.get_ethnicity_display()
+        } 
+        profile['gender'] = {
+            'id': profile_obj.gender,
+            'name': profile_obj.get_gender_display()
+        }  
+        profile['veteran'] = {
+            'id': profile_obj.veteran,
+            'name': profile_obj.get_veteran_display()
+        }
+        profile['two_factor_auth'] = {
+            'id': profile_obj.two_factor_auth,
+            'name': profile_obj.get_two_factor_auth_display()
+        }
+        if profile['groups']:
+            profile['group'] = profile['groups'][0]['name']
+        data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
+        return data
+
+
 
     @classmethod
     def get_details(cls, request, params):

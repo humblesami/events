@@ -147,12 +147,13 @@ export class ProfileeditComponent implements OnInit {
 		input_data =
 		{ 
 			id: id,
-			type:this.type
+			type:this.type,
+			field_group: obj_this.section
 		};
 		let args = {
             app: 'meetings',
             model: 'Profile',
-            method: 'get_details'
+            method: 'get_update_profile_details'
         }			
         input_data = {
             params: input_data,
