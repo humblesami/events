@@ -36,11 +36,31 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
-
     def save(self, *args, **kwargs):
-        a=1
+        creating = False
+        old_attendee_ids = []
+        if self.pk:
+            old_event = Event.objects.get(pk=self.pk)
+            for obj in old_event.attendees.all():
+                old_attendee_ids.append(obj.id)
         super(Event, self).save(*args, **kwargs)
-        a = 2
+        attendee_ids = []
+        for obj in self.attendees.all():
+            attendee_ids.append(obj.id)
+
+        gone_attendees = set(old_attendee_ids) - set(attendee_ids)
+        gone_attendees = list(gone_attendees)
+        if len(gone_attendees) > 0:
+            to_del = Invitation_Response.objects.filter(event_id=self.id, attendee_id__in=gone_attendees)
+            to_del.delete()
+        for id in attendee_ids:
+            create_obj = Invitation_Response.objects.filter(attendee_id=id, event_id=self.id)
+            if not create_obj:
+                create_obj = Invitation_Response(attendee_id=id, event_id=self.id)
+                create_obj.save()
+
+    def save1(self, *args, **kwargs):
+        super(Event, self).save(*args, **kwargs)
 
     def notification_text(self):
         return ' meeting ' + self.name[0: 20] +'...'
@@ -433,11 +453,6 @@ class Event(models.Model):
         meeting_id = params['meeting_id']
         offset = params['offset']
         limit = params['limit']
-        meeting_obj = Event.objects.get(pk=meeting_id)
-        data = {
-            'attendees': [],
-            'total': 0
-        }
         attendees_list = []
         records = Invitation_Response.objects.filter(event_id=meeting_id)
         total = len(records)
@@ -450,8 +465,10 @@ class Event(models.Model):
             attendee_data['attendance'] = obj.attendance
             attendee_data['photo'] = attendee_data['image']
             attendees_list.append(attendee_data)
-            data['attendees'] = attendees_list
-            data['total'] = total
+        data = {
+            'attendees' : attendees_list,
+            'total' : total
+        }
         return data
             
 

@@ -249,12 +249,14 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         </div>
 
         <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">
-            <div class="modal-header">
+            
+            <!-- <button class="btn btn-primary" (click)="open_django(meeting_object.id)">Mark Attendance</button> -->
+            <button class="btn btn-primary" (click)="open_modal(meeting_object.id)"><h4>Rosters</h4></button>
+            
+            <div class="modal-header" *ngIf="meeting_object.inline_roster">
                 Roster
             </div>
-            <button class="btn btn-primary" (click)="open_modal(meeting_object.id)">Mark Attendance</button>
-            <!-- <button class="btn btn-primary" (click)="open_django(meeting_object.id)">Mark Attendance</button> -->
-            <div class="row">
+            <div class="row" *ngIf="meeting_object.inline_roster">
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of meeting_object.attendees">
                     <div class="kanban-card">
                         <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
@@ -295,9 +297,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
-
-            <!-- <app-roster meeting_id="{{meeting_object.id}}"></app-roster> -->
-
         </div>
 
         <div *ngIf="meeting_object.surveys && meeting_object.surveys.length" class="title-wrapper">
