@@ -393,18 +393,19 @@ class VotingAnswer(models.Model):
                         res = 'Created'
 
                 voting_options = list(voting_object.voting_type.votingchoice_set.values())
-                for option in voting_options:
-                    chart_data.append({'option_name': option['name'], 'option_result': 0})
-
-                voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
-                    answer_count=Count('user_answer'))
                 respondent_count = len(voting_object.get_audience())
-                if voting_results:
-                    for result in voting_results:
-                        for data in chart_data:
-                            if data['option_name'] == result['user_answer__name']:
-                                data['option_result'] = result['answer_count']
-                                data['option_perc'] = result['answer_count']/respondent_count*100
+                if respondent_count > 0:
+                    for option in voting_options:
+                        chart_data.append({'option_name': option['name'], 'option_result': 0, 'option_perc': 0})
+
+                    voting_results = VotingAnswer.objects.values('user_answer__name').filter(voting_id=voting_id).annotate(
+                        answer_count=Count('user_answer'))
+                    if voting_results:
+                        for result in voting_results:
+                            for data in chart_data:
+                                if data['option_name'] == result['user_answer__name']:
+                                    data['option_result'] = result['answer_count']
+                                    data['option_perc'] = result['answer_count']/respondent_count*100
                 res_data = {
                     'voting_option_id': user_answer_id,
                     'chart_data': chart_data
