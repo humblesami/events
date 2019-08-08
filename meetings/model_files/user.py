@@ -201,8 +201,9 @@ class Profile(user_model):
             else:
                 random_password = uuid.uuid4().hex[:8]
                 self.set_password(random_password)
-                self.user_ptr.set_password(password)
+                self.user_ptr.set_password(random_password)
                 self.password_reset_on_creation_email(random_password)
+                self.user_ptr.save()
             user_data = {
                 'id': self.pk,
                 'photo': self.image.url,
