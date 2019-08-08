@@ -270,7 +270,8 @@ class Profile(user_model):
                 'birth_date',
                 'location',
                 'email_verified',
-                'mobile_verified'
+                'mobile_verified',
+                'image'
             ])
         resume = profile_obj.resume
         if resume:
