@@ -19,7 +19,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
             </div>
             <div *ngIf="section=='personal'" class="">
-                <div class="ProFileHeadWrap">
+                <div class="ProFileHeadWrap row">
                     PERSONAL INFO
                 </div>
                 <div class="row label-control-form">
@@ -403,17 +403,29 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 </div>
                 <div class="row label-control-form">
                     <div class="container">
-                        <div class="row">
-                            <div *ngIf="modified_profile_data.admin_image" class="col-sm-2 mb-4">
-                                <img *ngIf="modified_profile_data.admin_image" class="img-thumbnail-lg" src="{{modified_profile_data.admin_image}}">
-                                <img *ngIf="!modified_profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-                                <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
+                        <div class="row p-0">
+
+                            <div *ngIf="modified_profile_data.admin_image" class="col-sm-12 mb-4">
+								<div class="author-thumb text-left">
+									<img *ngIf="modified_profile_data.admin_image" class="img-thumbnail-lg" src="{{modified_profile_data.admin_image}}">
+                                	<img *ngIf="!modified_profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+								</div>
+								<div class="w-100">
+									<input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
+								</div>
                             </div>
-                            <div *ngIf="!modified_profile_data.admin_image" class="col-sm-2 mb-4">
-                                <img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
-                                <img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-                                <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
+                            <div *ngIf="!modified_profile_data.admin_image" class="col-sm-12 mb-4">
+								<div class="author-thumb text-left">
+                                	<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
+                                	<img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+								</div>
+								<div class="w-100">
+                                	<input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
+								</div>
                             </div>
+						</div>
+							<div class="row">
+							<div class="col p-0">
                             <label for="admin-first-name">
                                 <b>First Name</b>
                             </label>
@@ -449,11 +461,13 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </label>
                             <input value="{{profile_data.admin_work_phone}}" (change)="modified_profile_data.admin_work_phone = $event.target.value"
                                 type="text" placeholder="" id="admin-work-phone" required>
-                            <label for="mail-to-assistant">
-                                <b>Email To Assistant</b>
-                            </label>
-                            <input  checked="{{profile_data.mail_to_assistant}}" (change)="mail_to_assistant_change($event.target.value)"
-                                type="checkbox" id="mail-to-assistant" required>
+
+							<label class="form-check-label pl-4"  for="mail-to-assistant">
+								 <input class="form-check-input"  checked="{{profile_data.mail_to_assistant}}" (change)="mail_to_assistant_change($event.target.value)"
+														type="checkbox" id="mail-to-assistant" required> <b>Email To Assistant</b>
+							</label>
+
+
                             <!-- <label for="mail-to-assistant">
                                 <b>Mail to Assistant</b>
                             </label>
@@ -461,6 +475,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <option ng-value="true" [selected]="true == profile_data.mail_to_assistant">Yes</option>
                                 <option ng-value="false" [selected]="null == profile_data.mail_to_assistant">No</option>
                             </select> -->
+							</div>
                         </div>
                     </div>
                 </div>
