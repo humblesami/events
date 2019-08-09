@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    console.log(2342,24234);
     $('.field-topic').hide();
     $('.field-meeting select').on('change', function(){
         let meeting_id = $(this).val();
