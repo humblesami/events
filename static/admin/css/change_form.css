@@ -118,8 +118,6 @@ form ul.inline li {
 /* ALIGNED FIELDSETS */
 
 .aligned label {
-    display:block;
-    width: 160px;
     word-wrap: break-word;
     line-height: 1;
 }
@@ -256,9 +254,9 @@ form div.help ul {
     margin-left: 0;
 }
 
-.colM fieldset.wide .vLargeTextField, .colM fieldset.wide .vXMLLargeTextField {
+/* .colM fieldset.wide .vLargeTextField, .colM fieldset.wide .vXMLLargeTextField {
     width: 450px;
-}
+} */
 
 /* COLLAPSED FIELDSETS */
 
@@ -391,9 +389,9 @@ fieldset.monospace textarea {
     width: 30em;
 }
 
-.vLargeTextField, .vXMLLargeTextField {
+/* .vLargeTextField, .vXMLLargeTextField {
     width: 48em;
-}
+} */
 
 .flatpages-flatpage #id_content {
     height: 40.2em;
@@ -435,10 +433,6 @@ tr .vTextField, tr select {
     padding: 13px;
     background: #477eba;
     color: #ffffff !important;
-}
-
-.inline-group .aligned label {
-    width: 160px;
 }
 
 .inline-related {

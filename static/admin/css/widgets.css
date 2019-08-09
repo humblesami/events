@@ -249,13 +249,6 @@ p.datetime {
     font-weight: bold;
 }
 
-.datetime span {
-    white-space: nowrap;
-    font-weight: normal;
-    font-size: 11px;
-    color: #ccc;
-}
-
 .datetime input, .form-row .datetime input.vDateField, .form-row .datetime input.vTimeField {
     min-width: 0;
     margin-left: 5px;

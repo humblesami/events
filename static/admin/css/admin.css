@@ -36,36 +36,32 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 .form-row{ border:0; padding:0 0 20px; }
 
 .aligned label{
-	display: block;
 	color: #3059C9;
 	font-size: 15px;
 	font-weight: 500;
-	width:100%;
 }
 
 .aligned .form-row input[type="text"], .aligned .form-row input[type="email"]{
 	display: block;
 	border:0;
 	border-radius: 0;
-	padding: 0 10px 8px 0px;
-	margin: 5px 0 0 0;
+	padding: 0 5px;
+	margin: 0;
 	font-size: 0.898rem;
 	color: #666666;
-	border-bottom: 1px solid #A2A2A2;
-	width: 100%;
+	border-bottom: 1px solid #ddd;
+	width: calc(100%);
 }
 
 .aligned .form-row textarea, #questions-group  textarea{
 	display: block;
-	width: 100%;
-	max-width: 100%;
-    border: 1px solid;
+	width: calc(100%);
+    border: 1px solid #ddd;
     border-radius: 5px;
     padding: 5px 5px 15px;
     margin: 5px 0 0 0;
     font-size: 0.898rem;
     color: #666666;
-    /* border-bottom: 1px solid #A2A2A2; */
     height: 100px;
     box-sizing: border-box;
 }
@@ -76,8 +72,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 	margin: 5px 0 0 0;
 	font-size: 0.898rem;
 	color: #666666;
-	border-bottom: 1px solid #A2A2A2;
-	width: 100% !important;
+	border-bottom: 1px solid #ddd;
 }
 
 
@@ -96,18 +91,15 @@ p.datetime {
     margin: 0 !important;
     align-items: flex-end;
     font-size: 0.898rem;
-    color: #666666;
     font-weight: 400;
 }
 
 p.datetime input[type="text"].vDateField{
-	width:70%;
-	margin: 0 1%;
+    margin: -6px 0 0 10px;
 }
 
 p.datetime input[type="text"].vTimeField{
-	width:30%;
-	margin: 0 1%;
+    margin: -6px 0 0 10px;
 }
 
 .datetime span .date-icon {
@@ -135,10 +127,6 @@ p.datetime input[type="text"].vTimeField{
     {
         width: 49%;
     }
-    p.datetime input[type="text"].vTimeField
-    {
-        width: inherit;
-    }
 }
 @media(max-width:460px)
 {
@@ -158,4 +146,16 @@ p.datetime input[type="text"].vTimeField{
     {
         margin-top:10px;
     }
+}
+.related-widget-wrapper>.select2 {
+    width: calc(100%) !important;
+}
+.form-row select{
+    width: calc(100%);
+    border-radius: 5px;
+    padding: 4px 0px;
+    margin-top: 6px;
+    background: transparent;
+    border-bottom: 0;
+    border: 1px solid #ddd;
 }
