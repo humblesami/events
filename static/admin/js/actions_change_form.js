@@ -1,9 +1,10 @@
 $(document).ready(function(){
+    $('.field-topic').hide();
     $('.field-meeting select').on('change', function(){
-//        console.log(11222,342343);
         let meeting_id = $(this).val();
         if (meeting_id)
         {
+            $('.field-topic').show();
             $('.field-respondents').hide();
             let input_date = {
                 meeting_id: meeting_id
@@ -35,6 +36,7 @@ $(document).ready(function(){
         else
         {
             $('.field-respondents').show();
+            $('.field-topic').hide();
         }
 
 

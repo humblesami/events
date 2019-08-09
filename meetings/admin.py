@@ -21,7 +21,7 @@ class TopicAdmin(admin.ModelAdmin):
 class TopicDocInline(nested_admin.NestedTabularInline):
     model = AgendaDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at')
-    extra = 1
+    extra = 0
 
 
 class TopicInline(nested_admin.NestedTabularInline):

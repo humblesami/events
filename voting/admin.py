@@ -40,12 +40,12 @@ class VotingAdmin(admin.ModelAdmin):
                 'description',
                 'meeting',
                 'topic',
+                'respondents',
                 'open_date',
                 'close_date',
                 'signature_required',
                 'enable_discussion',
-                'public_visibility',
-                'respondents',
+                'public_visibility'
                 ]})]
     autocomplete_fields = ['voting_type', 'respondents']
     change_form_template = 'admin/actions_change_form.html'

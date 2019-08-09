@@ -487,63 +487,78 @@ export class ProfileeditComponent implements OnInit {
 			obj_this.selectedTwoFactorAuth = [];
 			return;
 		}
+		obj_this.two_factor_auth_popup_config();
 		let args = {
 			app: 'authsignup',
 			model: 'AuthUser',
 			method: 'send_mobile_verfication_code'
 		}
+		let user_mobile_phone = '';
+		if (obj_this.profile_data.mobile_phone)
+		{
+			user_mobile_phone = obj_this.profile_data.mobile_phone;
+		}
+		else
+		{
+			user_mobile_phone = obj_this.modified_profile_data['mobile_phone'];
+		}
 		let final_input_data = {
-			params: {mobile_phone: obj_this.profile_data.mobile_phone},
+			params: {mobile_phone: user_mobile_phone},
 			args: args
         }
 		obj_this.httpService.get(final_input_data,function(data){            
-            obj_this.verification_id = data.uuid;
-
-            let config = {
-                on_load: function(){
-                    obj_this.load_verification_popup();
-                },
-                on_save:function(){						
-                    obj_this.mobile_verification_code = $('#verification_code').val();
-                    if(!obj_this.mobile_verification_code)
-                    {
-                        obj_this.selectedTwoFactorAuth = [];
-                        $('#code-error').show();
-                    }
-                    else
-                    {
-                        let input_data = {
-                            uuid: obj_this.verification_id,
-                            verification_code: obj_this.mobile_verification_code,
-                        }
-                        let args = {
-                            app: 'authsignup',
-                            model: 'AuthUser',
-                            method: 'authenticate_mobile'
-                        }
-                        let final_input_data = {
-                            params: input_data,
-                            args: args
-                        }
-                        obj_this.httpService.get(final_input_data, function(data){
-                            $('#code-error').hide();
-                            obj_this.modified_profile_data['two_factor_auth'] = obj_this.selectedTwoFactorAuth['id'];
-                            obj_this.modified_profile_data['mobile_verified'] = true;
-                            $('#signModal').modal('hide');
-                        },function(err){
-                            $('#code-error').show()
-                            $('#code-error').text(err);
-                        });
-                    }
-                },
-                on_close: function(){
-                    obj_this.selectedTwoFactorAuth = obj_this.profile_data.two_factor_auth;
-                    obj_this.selectedTwoFactorAuth = [];
-                }
-            }
-            window['init_popup'](config);
-
+			obj_this.verification_id = data.uuid;
+			obj_this.profile_data.mobile_phone = user_mobile_phone;
+			obj_this.modified_profile_data['mobile_phone'] = user_mobile_phone;
         }, null);		
+	}
+
+	two_factor_auth_popup_config()
+	{
+		let obj_this = this;
+		let config = {
+			on_load: function(){
+				obj_this.load_verification_popup();
+			},
+			on_save:function(){						
+				obj_this.mobile_verification_code = $('#verification_code').val();
+				if(!obj_this.mobile_verification_code)
+				{
+					obj_this.selectedTwoFactorAuth = [];
+					$('#code-error').show();
+				}
+				else
+				{
+					let input_data = {
+						uuid: obj_this.verification_id,
+						verification_code: obj_this.mobile_verification_code,
+					}
+					let args = {
+						app: 'authsignup',
+						model: 'AuthUser',
+						method: 'authenticate_mobile'
+					}
+					let final_input_data = {
+						params: input_data,
+						args: args
+					}
+					obj_this.httpService.get(final_input_data, function(data){
+						$('#code-error').hide();
+						obj_this.modified_profile_data['two_factor_auth'] = obj_this.selectedTwoFactorAuth['id'];
+						obj_this.modified_profile_data['mobile_verified'] = true;
+						$('#signModal').modal('hide');
+					},function(err){
+						$('#code-error').show()
+						$('#code-error').text(err);
+					});
+				}
+			},
+			on_close: function(){
+				obj_this.selectedTwoFactorAuth = obj_this.profile_data.two_factor_auth;
+				obj_this.selectedTwoFactorAuth = [];
+			}
+		}
+		window['init_popup'](config);
 	}
 
 	setTowFactorAuth()
