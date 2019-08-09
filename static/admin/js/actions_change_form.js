@@ -11,7 +11,6 @@ function get_meeting_topics(meeting_id)
         model = 'survey';
     }
     let current_url = window.location.toString();
-    console.log(current_url);
     let object_id = '';
     if (current_url.indexOf('change') != -1)
     {
@@ -27,7 +26,6 @@ function get_meeting_topics(meeting_id)
         }
     }
     
-    console.log(34234, object_id);
     let input_date = {
         meeting_id: meeting_id,
         model: model,
