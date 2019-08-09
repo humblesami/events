@@ -17,10 +17,10 @@ export class EsignDocDetailsComponent implements OnInit {
     users_list = [];
     all_users_list = [];
     selectedUser: any;
-    socketService: SocketService;    
+    socketService: SocketService;
 
-    constructor(private httpService: HttpService, 
-        private route: ActivatedRoute, 
+    constructor(private httpService: HttpService,
+        private route: ActivatedRoute,
         private ss: SocketService,
         private router: Router) {
         // this.route.params.subscribe(params => this.get_data());
@@ -41,16 +41,16 @@ export class EsignDocDetailsComponent implements OnInit {
             sign.append(`<div class='user_name'>${obj_this.selectedUser['name']}</div>`);
             sign.removeClass('active_signature');
         }
-        $('#select_user_modal').modal('hide');     
+        $('#select_user_modal').modal('hide');
     }
 
     isAdmin = false;
 
-    toggle_admin_mode(bool){           
+    toggle_admin_mode(bool){
         this.isAdmin = bool;
     }
     meetings = [];
-
+    selectedMeeting: any;
     ngOnInit() {
         var obj_this = this;
         var
@@ -59,9 +59,9 @@ export class EsignDocDetailsComponent implements OnInit {
             users,
             doc_data,
             send_to_all,
-            meeting_id,            
+            meeting_id,
             req_url,
-            
+
             ctx,
             pdfDoc,
             scale,
@@ -85,10 +85,10 @@ export class EsignDocDetailsComponent implements OnInit {
             "id": doc_id,
             "doc_name": ''
         };
-        // console.log(obj_this.socketService.user_data, 444);       
+        // console.log(obj_this.socketService.user_data, 444);
 
         $('#select_user_modal').on('shown.bs.modal', function () {
-            var sign = $('.active_signature:first');            
+            var sign = $('.active_signature:first');
             var selected = sign.attr("user");
             // console.log(selected, 333);
             if(!selected)
@@ -100,33 +100,22 @@ export class EsignDocDetailsComponent implements OnInit {
             let user_index = 0;
             let offSet = 0;
             if (selected)
-            {                
+            {
                 let user_name = sign.find('.user_name').text();
                 obj_this.selectedUser = {id: parseInt(selected), name: user_name}
-                user_index = obj_this.users_list.findIndex(x => x.id ===parseInt(selected));                
+                user_index = obj_this.users_list.findIndex(x => x.id ===parseInt(selected));
                 var selected_option = $('.ng-select-user-list .ng-option').eq(user_index);
                 var num = obj_this.users_list.length;
                 var totalHeight = $('.ng-select-user-list .scroll-host')[0].scrollHeight;
-                offSet = user_index * totalHeight/num;                
+                offSet = user_index * totalHeight/num;
                 $('.scroll-host').animate({
                     scrollTop: offSet
                 }, 100);
                 $('.ng-select-user-list .ng-input input').focus();
-                
+
             }
         });
-        
 
-        function enable_disable_save_doc(enable=undefined){
-            if(enable)
-            {
-                $(".save_doc_data").removeAttr('disabled');
-            }
-            else
-            {
-                $(".save_doc_data").attr('disabled', 'disabled');
-            }
-        }
 
         $('#select_user_modal').on('hidden.bs.modal', function () {
             obj_this.selectedUser = undefined;
@@ -160,7 +149,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     doc_data = data.doc_data;
                     // console.log(doc_data, 11);
-                    obj_this.all_users_list = obj_this.users_list = users = data.users;                    
+                    obj_this.all_users_list = obj_this.users_list = users = data.users;
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
                     pdf_binary = data.pdf_binary;
@@ -170,11 +159,37 @@ export class EsignDocDetailsComponent implements OnInit {
                     renderPDF(pdf_binary);
 
                     obj_this.meetings = data.meetings;
-
+                    // console.log(meeting_id, $('#dropdown_meeting').length, 573);
+                    for(var k=0; k< data.meetings.length; k++)
+                    {
+                        if(data.meetings[k].id == meeting_id)
+                        {
+                            console.log(send_to_all, data.meetings[k], 855);
+                            obj_this.selectedMeeting = data.meetings[k];
+                        }
+                    }
+                    var ddm = $('#dropdown_meeting');
+                    var selected = '';
+                    if(!meeting_id)
+                    {
+                        selected = ' selected';
+                    }
+                    ddm.html('<option'+selected+' value="">Select Meeting</option>');
+                    var option_html = '';
+                    data.meetings.forEach(element => {
+                        if(meeting_id == element.id)
+                        {
+                            selected = ' selected';
+                        }
+                        else
+                        {
+                            selected = '';
+                        }
+                        option_html = '<option'+selected+' value='+element.id+'>'+element.name+'</option>';
+                        ddm.append(option_html);
+                    });
                     if (meeting_id) {
-                        $('#dropdown_meeting').val(meeting_id);
                         $('.check_box_send_all').show();
-
                     }
                     if (send_to_all) {
                         $('#check_box_send_all').prop('checked', true);
@@ -183,9 +198,8 @@ export class EsignDocDetailsComponent implements OnInit {
                     else
                     {
                         $('#check_box_send_all').prop('checked', false);
-                        $('.dragabl-fields').show();                        
+                        $('.dragabl-fields').show();
                     }
-                    $('#check_box_send_all').show();
 
                     if(meeting_id)
                     {
@@ -217,7 +231,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 else{
                     console.log('Invalid signature dom');
                 }
-            }            
+            }
         }
 
         function toggleNextButton() {
@@ -291,9 +305,9 @@ export class EsignDocDetailsComponent implements OnInit {
             $('.new_sign').hide();
             var selector = '.new_sign[page=' + pageNum + ']';
             $(selector).show();
-            
+
             //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
-            setTimeout(function() {                
+            setTimeout(function() {
                 loadSignatures({
                     "doc_data": doc_data
                 });
@@ -436,7 +450,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 div.css({
                     top: this.top + "%",
                     left: this.left + "%",
-                    position: 'absolute',                    
+                    position: 'absolute',
                     height: h,
                     width: w,
                 });
@@ -487,7 +501,7 @@ export class EsignDocDetailsComponent implements OnInit {
             scroll: true,
             start: function(event, ui) {
                 //$(this).data("startingScrollTop", $(this).parent().scrollTop());
-                $(ui.helper).css({                                        
+                $(ui.helper).css({
                     background: 'rgba(255, 235, 235, 0.9)',
                     color: 'black'
                 });
@@ -569,9 +583,8 @@ export class EsignDocDetailsComponent implements OnInit {
             }).resizable();
 
             new_signature.addClass('active_signature');
-            $(this).append(new_signature);            
-            $('#select_user_modal').modal('show');            
-            enable_disable_save_doc(1);
+            $(this).append(new_signature);
+            $('#select_user_modal').modal('show');
         }
 
         $("#page_container1").droppable({
@@ -591,7 +604,7 @@ export class EsignDocDetailsComponent implements OnInit {
         //End Dragable
 
         $(document).off("click", ".save_doc_data")
-        $(document).on("click", ".save_doc_data", function(e) {            
+        $(document).on("click", ".save_doc_data", function(e) {
             var new_divs = $('.new_sign');
             var snd_to_all = $("#check_box_send_all").is(':checked');
             if (new_divs.length == 0 && !snd_to_all) {
@@ -679,7 +692,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
                 let url = '';
                 if (arr.length != 0 || snd_to_all) {
-                    ajax_options = {                        
+                    ajax_options = {
                         data: {
                             args: {
                                 app: "meetings",
@@ -697,9 +710,8 @@ export class EsignDocDetailsComponent implements OnInit {
                                 send_to_all: snd_to_all
                             }
                         },
-                        onSuccess: function(data) {                            
+                        onSuccess: function(data) {
                             loadData();
-                            enable_disable_save_doc();
                             new_divs.hide().removeClass("new_sign");
                             $('.youtubeVideoModal').modal('hide');
                             $("#nxxt_sign").click();
@@ -713,7 +725,7 @@ export class EsignDocDetailsComponent implements OnInit {
         $(document).off("click", ".sign_container")
         $(document).on("click", ".sign_container", function() {
             // console.log(4234343);
-            var sign_container = $(this);            
+            var sign_container = $(this);
             var my_record = sign_container.attr("my_record");
             if (my_record == "false" && !obj_this.isAdmin) {
                 return;
@@ -723,7 +735,7 @@ export class EsignDocDetailsComponent implements OnInit {
             // {
             //     return;
             // }
-            
+
             var login = sign_container.attr("login");
             var signature_id = sign_container.attr("id");
             var signature_dom = sign_container;
@@ -742,8 +754,8 @@ export class EsignDocDetailsComponent implements OnInit {
                             signature_id: signature_id,
                         }
                     },
-                    onSuccess: function(data) {                        
-                        sign_container.remove();                        
+                    onSuccess: function(data) {
+                        sign_container.remove();
                     }
                 }
                 $('#signModal').modal('hide');
@@ -783,7 +795,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             sign_type: sign_container.attr('signtype')
                         }
                     },
-                    onSuccess: function(data) {                        
+                    onSuccess: function(data) {
                         on_sign_got(data);
                     }
                 }
@@ -793,10 +805,10 @@ export class EsignDocDetailsComponent implements OnInit {
                 console.log(ajax_options.data.params);
                 window['dn_rpc_object'](ajax_options);
             }
-            
+
             get_signature_data();
 
-            
+
 
             function on_sign_got(sign_data)
             {
@@ -820,7 +832,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     let popup_config = {
                         on_load: function(){
                             // console.log(117);
-                            var read_only = sign_container.attr('signtype') == 'date' ? 'disabled' : '';                            
+                            var read_only = sign_container.attr('signtype') == 'date' ? 'disabled' : '';
                             $('#signModal .modal-body').html(`
                                 <input id="sign_data" value="`+sign_data.text+`" `+read_only+` />
                             `);
@@ -857,7 +869,7 @@ export class EsignDocDetailsComponent implements OnInit {
                                 submit_response(new_sign, sign_data.text);
                             }
                         };
-                        
+
                         window['init_sign'](sign_config);
                     }
                 }
@@ -911,12 +923,8 @@ export class EsignDocDetailsComponent implements OnInit {
         });
 
         $(document).off("click", ".new_sign .del_sign")
-        $(document).on("click", ".new_sign .del_sign", function(e) {            
+        $(document).on("click", ".new_sign .del_sign", function(e) {
             var sign = $($(this)[0].parentElement);
-            var new_divs = $('.new_sign:visible');
-            if (new_divs.length == 1) {
-                enable_disable_save_doc();
-            }
             sign.fadeOut();
             sign.removeClass("new_sign");
         });
@@ -925,12 +933,12 @@ export class EsignDocDetailsComponent implements OnInit {
         $(document).on("click", ".new_sign", function(e) {
             if($(e.target).hasClass('del_sign'))
             {
-                return;                
+                return;
             }
             var sign = $(this);
             $('.active_signature').removeClass('active_signature');
             sign.addClass('active_signature');
-            $('#select_user_modal').modal('show');                        
+            $('#select_user_modal').modal('show');
         });
 
 
@@ -973,47 +981,53 @@ export class EsignDocDetailsComponent implements OnInit {
         });
 
         $('#check_box_send_all').change(function() {
-            console.log($("#check_box_send_all").is(':checked'), 444);
+            // console.log($("#check_box_send_all").is(':checked'), 444);
             if ($("#check_box_send_all").is(':checked')) {
-                $('.dragabl-fields').hide();                
-                enable_disable_save_doc(1);
+                $('.dragabl-fields').hide();
                 $('.new_sign').remove();
             } else {
                 $('.dragabl-fields').show();
-                enable_disable_save_doc();
-                //$('.new_sign').show();
             }
+            save_attachemnt_to_meeting();
         })
 
-        $('#dropdown_meeting').change(function() {            
-            if ($('#dropdown_meeting').val() == 0) {                
-                obj_this.users_list = obj_this.all_users_list;
-                $('.check_box_send_all').hide();
-                $('#check_box_send_all').prop('checked', false);
-                $('.dragabl-fields').show();
-
-            } else {
-                $('.check_box_send_all').show();
-                ajax_options = {                    
-                    data: {
-                        args: {
-                            app: "meetings",
-                            model: "Event",
-                            method: "get_attendees_list",
-                        },
-                        params: {
-                            meeting_id: $('#dropdown_meeting').val(),
-                        }
+        function save_attachemnt_to_meeting(){
+            ajax_options = {
+                data: {
+                    args: {
+                        app: "meetings",
+                        model: "SignDocument",
+                        method: "set_meeting_attachment",
                     },
-                    onSuccess:function(data){
+                    params: {
+                        document_id: doc_id,
+                        meeting_id: $('#dropdown_meeting').val(),
+                        send_to_all: $("#check_box_send_all").is(':checked')
+                    }
+                },
+                onSuccess:function(data){
+                    if(data != 'done')
+                    {
                         obj_this.users_list = data;
                     }
-                };
-                if(token){
-                    ajax_options.url = '/rest/public';
                 }
-                window['dn_rpc_object'](ajax_options);
+            };
+            if(token){
+                ajax_options.url = '/rest/public';
             }
+            window['dn_rpc_object'](ajax_options);
+        }
+
+        $('#dropdown_meeting').change(function() {
+            if (!$('#dropdown_meeting').val()) {
+                obj_this.users_list = obj_this.all_users_list;
+                $('#check_box_send_all').removeAttr('checked');
+                $('.check_box_send_all').hide();
+                $('.dragabl-fields').show();
+            } else {
+                $('.check_box_send_all').show();
+            }
+            save_attachemnt_to_meeting();
         });
 
         if ($('#save-doc-data').hasClass("o_invisible_modifier")) {
@@ -1023,10 +1037,10 @@ export class EsignDocDetailsComponent implements OnInit {
         // console.log(document.getElementById('the-canvas'))
         // document.writeln('<script src="static/assets/js/viewer.js"></script>');
         this.prev_height = $('.router-outlet').css('height');
-        var new_height = parseFloat(this.prev_height) + 20;        
-        $('.router-outlet').css('height', new_height);        
+        var new_height = parseFloat(this.prev_height) + 20;
+        $('.router-outlet').css('height', new_height);
         // console.log(this.prev_height, new_height);
-        
+
         function get_url(url)
         {
             if (token)

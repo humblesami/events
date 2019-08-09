@@ -1,9 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { ChatUser } from 'src/app/models/chat';
-import { NgbModal,NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/socket.service';
-import { ProfilesummaryComponent } from '../profilesummary/profilesummary.component';
 declare var $: any;
 
 @Component({
@@ -19,9 +17,7 @@ export class RosterComponent implements OnInit {
     key_word: string;
     total_records : number;
     server_url = window['server_url'];
-    constructor(private httpService: HttpService, 
-                // private modalService: NgbModal,
-                // public activeModal: NgbActiveModal,
+    constructor(private httpService: HttpService,
                 private socketService: SocketService) { 
         this.offset = 0;
         this.limit = 2;
@@ -112,7 +108,7 @@ export class RosterComponent implements OnInit {
             meeting_id: obj_this.meeting_id,
             attendance_data: obj_this.attendance_data,
         }
-        console.log(input_data, 222);
+        // console.log(input_data, 222);
         let args = {
             app: 'meetings',
             model: 'Event',

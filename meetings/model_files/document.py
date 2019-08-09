@@ -173,7 +173,7 @@ class SignDocument(SignatureDoc):
         if not self.file_type:
             self.file_type = 'signature'
         super(SignDocument, self).save(*args, **kwargs)
-    
+
     @property
     def breadcrumb(self):
         event_obj = self.meeting
@@ -185,10 +185,29 @@ class SignDocument(SignatureDoc):
             return data
 
     @classmethod
+    def set_meeting_attachment(cls, request, params):
+        meeting_id = params.get('meeting_id')
+        document_id = params.get('document_id')
+        send_to_all = params.get('send_to_all')
+        res = 'done'
+        sign_doc = SignDocument.objects.get(id=document_id)
+        if not meeting_id:
+            meeting_id = None
+        else:
+            meeting = Event.objects.get(id=meeting_id)
+            res = Event.attendees_to_list(meeting.attendees.all())
+        sign_doc.meeting_id = meeting_id
+        sign_doc.send_to_all = send_to_all
+        sign_doc.save()
+        return res
+
+    @classmethod
     def get_detail(cls, request, params):
         file_id = int(params['document_id'])
         token = params['token']
+        user = request.user
         file_name = ''
+        file_obj = None
         if token:
             post_info = {
                 'id': params['document_id'],
@@ -200,15 +219,15 @@ class SignDocument(SignatureDoc):
                 return res
             else:
                 user = res.user
-            file_obj = cls.objects.filter(id=file_id)[0]
-            file_name = file_obj.name
-        else:
-            file_obj = cls.objects.filter(id=file_id)[0]
-            file_name = file_obj.name
+
+        if not user.id:
+            return 'Unauthorized to get sign document'
+        file_obj = cls.objects.get(id=file_id)
+        file_name = file_obj.name
         users = Profile.objects.all()
         users = queryset_to_list(users,fields=['id','name'])
-        meetings = Event.objects.all()
-        meetings = queryset_to_list(meetings,fields=['id','name'],related={'attendees':{'fields':['id','username']}})
+        meetings = Event.objects.filter(publish=True).exclude(archived=True)
+        meetings = queryset_to_list(meetings,fields=['id','name'])
         meeting_id = False
         send_to_all = False
 
@@ -217,7 +236,7 @@ class SignDocument(SignatureDoc):
         if file_obj.send_to_all:
             send_to_all = file_obj.send_to_all
 
-        doc_data = SignatureDoc.get_doc_data(request,file_obj,token)
+        doc_data = SignatureDoc.get_doc_data(request, file_obj, token)
         if type(doc_data) is str:
             return doc_data
         doc_data['doc_name'] = file_name
@@ -244,40 +263,50 @@ class SignDocument(SignatureDoc):
             doc.meeting=None
         doc.save()
         signatures = json.loads(params['data'])
+        user_ids = []
         if send_to_all:
-            m = Event.objects.filter(id=meeting_id)
+            meeting = Event.objects.get(id=meeting_id)
             sign_top = 5
             c = 0
-            for p in m[0].attendees.all():
-                if p:
-                    if c == 0:
-                        sign_left = 3
-                    if c == 1:
-                        sign_left = 51
-
-                    token = str(uuid.uuid4())
-                    obj = Signature(**{'document': doc, 'user_id': p.id, 'type': "signature", 'token': token,
-                           'left': sign_left, 'top': sign_top, 'height': 40, 'width': 140,
-                           'zoom': 300
-                           })
-                    obj.save()
-                    if c == 1:
-                        c = 0
-                        sign_top += 15
-                        continue
-                    c += 1
+            for partner in meeting.attendees.all():
+                user_ids.append(partner.id)
+                if c == 0:
+                    sign_left = 3
+                if c == 1:
+                    sign_left = 51
+                obj = Signature(
+                    document_id=doc.id,
+                    user_id=partner.id,
+                    type='signature',
+                    left=sign_left,
+                    top=sign_top,
+                    height=40,
+                    width =140,
+                    zoom=300
+                )
+                obj.save()
+                if c == 1:
+                    c = 0
+                    sign_top += 15
+                    continue
+                c += 1
             doc.add_pages_for_sign()
         else:
-            user_ids = [s["user_id"] for s in signatures]
+            user_ids = [sign["user_id"] for sign in signatures]
             user_ids = list(OrderedDict.fromkeys(user_ids))
             for u in user_ids:
-                token = str(uuid.uuid4())
-                for s in [x for x in signatures if x['user_id'] == u]:
-                    obj = Signature(**{'document_id': s['document_id'], 'user_id': s['user_id'],
-                           'email': s['email'], 'name': s['name'], 'field_name': s['field_name'],
-                           'left': s['left'], 'top': s['top'], 'page': s['page'],
-                           'height': s['height'], 'width': s['width'], 'zoom': s['zoom'], 'type': s['type']
-                        })
+                for sign in [x for x in signatures if x['user_id'] == u]:
+                    obj = Signature(
+                        document_id=sign['document_id'],
+                        user_id=sign['user_id'],
+                        email=sign['email'],
+                        name =sign['name'],
+                        field_name =sign['field_name'],
+                        left =sign['left'], top = sign['top'],
+                        page =sign['page'],
+                        height=sign['height'], width = sign['width'],
+                        zoom=sign['zoom'], type = sign['type']
+                    )
                     obj.created_by_id = request.user.id
                     obj.save()
         template_data = {            
