@@ -45,7 +45,13 @@
     </div>
     <app-paginator count="{{total_records}}" *ngIf="attendees && attendees.length > 0"            
             (changedLimit)="changedLimit($event)"            
-            (changedOffset)="changedOffset($event)"></app-paginator>
+            (changedOffset)="changedOffset($event)"
+            (lastpage)="changedOffset($event)"
+            (firstpage)="changedOffset($event)"
+            (pagedata)="changedOffset($event)"
+            >
+    </app-paginator>
+            
     <div class="float-left my-3">
         <button type="button" class="btn btn-success btn-sm rounded-0 mr-2" (click)="submit_attendance($event)">Submit and Close</button>
         <button type="button" class="btn btn-danger btn-sm rounded-0" (click)="close_roster($event)">Close</button>

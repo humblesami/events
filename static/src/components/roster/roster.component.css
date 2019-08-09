@@ -57,3 +57,7 @@ table.roster{
   .roster th{
       border-bottom: 1px solid #ddd;
   }
+  .roster td
+  {
+      vertical-align: middle;
+  }
