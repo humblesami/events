@@ -20,6 +20,9 @@ body{
     display: table-cell;
     vertical-align: middle;
 } */
+.login-form{
+    width: 500px;
+}
 .meet-logo{
     text-align: center;
     margin-bottom: 1.5rem;
@@ -160,7 +163,8 @@ input:-webkit-autofill:active {
 
 @media (max-width: 767px) { 
         
-        .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }        
+        .meet-logo, .login-form-div .form-group{ margin-bottom: 1rem; }       
+        .login-form { width: 250x;} 
   
 }
 
