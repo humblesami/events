@@ -140,6 +140,8 @@ class AuthUser(models.Model):
         user = Profile.objects.get(pk=user.id)
         mobile_phone = params['mobile_phone']
         if mobile_phone:
+            user.mobile_phone = mobile_phone
+            user.save()
             auth_type = 'phone'
             auth_type = auth_type.lower()
             address_to_send_code = mobile_phone

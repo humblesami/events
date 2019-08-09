@@ -46,8 +46,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 								</a>
 								<div class="author-content">
 									<div class="UserProfileNameTittle">
-                                    	{{profile_data.name}}
-                                	</div>
+                                        {{profile_data.name}}
+                                    </div>
 								</div>
 							</div>
 						</div>
@@ -68,8 +68,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 									</div>
 									<div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="single-form-field mb-2">
 											<i class="far fa-envelope"></i>	{{profile_data.two_factor_auth.name}}
-									</div>
-                    			</div>
+                                    </div>
+                                </div>
 							</div>
 							<div class="col-lg-6">
 								<div class="row justify-content-end">
@@ -88,7 +88,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 												<a routerLink="/resume/doc/{{profile_data.resume.id}}">
 													<div class="Eedit-resume-docs">
 														<span class="Eedit-resume-docs-icon">
-															 <img src="static/assets/images/resume.svg" alt="" />
+															<img src="static/assets/images/resume.svg" alt="" />
 														</span>
 														<div class="DocInfoVertical text-truncate" style="display:none;">
 															{{profile_data.resume.name}}
@@ -138,14 +138,15 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<div class="col-sm-12"  *ngIf="admin_info">
 								<div class="ui-block p-3">
 									<div class="edit-ui-block-header">
-										<h3 class="m-0 p-0">Login Info</h3>
+										<h3 class="m-0 p-0">Last Login</h3>
 									</div>
-
 									<div  class="mb-0">
-										Broweser
-							country
-							Time
-							City
+                                        <div>
+                                            <label>IP : </label><span>{{profile_data.login_info.ip}}</span>
+                                        </div>
+                                        <div>
+                                            <label>Time : </label><span>{{profile_data.login_info.login_time | date:'medium'}}</span>
+                                        </div>
 									</div>
 								</div>
 							</div>
@@ -193,7 +194,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<span *ngIf="my_profile || socketService.is_admin" (click)="open('work')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
 						</div>
 
-						 <div class="admin_info_after_name row">
+						<div class="admin_info_after_name row">
                             <div *ngIf="profile_data.company" class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label for="company">
@@ -218,7 +219,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 							 <div *ngIf="profile_data.department"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
-									 <label for="department">
+									<label for="department">
 										<b>Department</b>
 									</label>
 									<div class="label-content-info">
@@ -229,7 +230,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 							 <div *ngIf="profile_data.work_phone"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
-									 <label for="w-phone">
+									<label for="w-phone">
                                         <b>Work Phone</b>
                                     </label>
 									<div class="label-content-info">
@@ -240,7 +241,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 							 <div *ngIf="profile_data.fax"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
-									 <label for="fax">
+									<label for="fax">
                                         <b>Fax</b>
                                     </label>
 									<div class="label-content-info">
@@ -251,7 +252,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 							 <div *ngIf="profile_data.website"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
-									 <label for="website">
+									<label for="website">
                                         <b>Website</b>
                                     </label>
 									<div class="label-content-info">
@@ -262,7 +263,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
 							 <div *ngIf="profile_data.groups && profile_data.groups.length > 0" class="admin_info_after_name col-lg-12 mb-2">
 								<div class="single-input-label">
-									 <label for="job-title">
+									<label for="job-title">
                                         <b>Role</b>
                                     </label>
 									<div class="committee-member-section">
@@ -359,9 +360,9 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										{{profile_data.ethnicity.name}}
 									</div>
 								</div>
-							  </div>
+							</div>
 
-							  <div *ngIf="profile_data.gender.name" class="col-lg-6 mb-2">
+							<div *ngIf="profile_data.gender.name" class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label class="question-label">
 										<b>Gender</b>
@@ -370,9 +371,9 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										{{profile_data.gender.name}}
 									</div>
 								</div>
-							  </div>
+							</div>
 
-							  <div *ngIf="profile_data.veteran.name" class="col-lg-6 mb-2">
+							<div *ngIf="profile_data.veteran.name" class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label class="question-label">
 										<b>Veteran</b>
@@ -381,18 +382,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										{{profile_data.veteran.name}}
 									</div>
 								</div>
-							  </div>
+							</div>
 
-							  <div *ngIf="profile_data.disability.name"  class="col-lg-6 mb-2">
+							<div *ngIf="profile_data.disability.name"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label class="question-label">
 										<b>Disability</b>
 									</label>
 									<div class="label-content-info">
-										 {{profile_data.disability.name}}
+										{{profile_data.disability.name}}
 									</div>
 								</div>
-							  </div>
+							</div>
 							</div>
 						</div>
 					</div>
@@ -441,7 +442,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										<b>Email</b>
 									</label>
 									<div class="label-content-info">
-										 {{profile_data.admin_email}}
+										{{profile_data.admin_email}}
 									</div>
 								</div>
 							</div>
@@ -477,7 +478,21 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										{{profile_data.admin_work_phone}}
 									</div>
 								</div>
-							</div>
+                            </div>
+                            
+                            <div  class="col-lg-6 mb-2">
+                                <div class="single-input-label">
+                                    <label class="question-label">
+                                        <b>Email to assistant</b>
+                                    </label>
+                                    <div *ngIf="profile_data.mail_to_assistant"  class="label-content-info">
+                                        Yes
+                                    </div>
+                                    <div *ngIf="!profile_data.mail_to_assistant"  class="label-content-info">
+                                        No
+                                    </div>
+                                </div>
+                            </div>
 						</div>
 					</div>
 				</div>

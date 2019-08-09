@@ -42,9 +42,9 @@ class SurveyAdmin(admin.ModelAdmin):
                 'is_published',
                 'meeting',
                 'topic',
-                'open_date',
-                'close_date',
                 'respondents',
+                'open_date',
+                'close_date'
                 ]})]
     formfield_overrides = {
         models.TextField: {'widget': Textarea(
