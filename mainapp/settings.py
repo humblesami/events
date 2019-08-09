@@ -165,6 +165,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+ip2location = {}
 server_base_url = ''
 SOCKET_SERVER_URL = ''
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -174,8 +175,10 @@ with open(base_dir+'config.json') as f:
     SOCKET_SERVER_URL = configs['socket_url']
     server_base_url = configs['server_base_url']
     AUTH_SERVER_URL = configs['auth_server_url']
+    ip2location = configs["ip2location"]["active"]
 # if 'localhost' in SOCKET_SERVER_URL:
 AUTH_PASSWORD_VALIDATORS = []
+
 
 # AUTH_USER_MODEL = 'user.User'
 
