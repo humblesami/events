@@ -31,16 +31,20 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                         </div>
                         <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
                             <div class="meet-elements">
-                                <span>
+                                <span class="d-inline">
                                     Meeting Status
                                 </span>
-                                <span *ngIf="meeting_status == 'Published'" class="badge badge-success">{{meeting_status}}</span>
-                                <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning">{{meeting_status}}</span>
+                                <div class="custom-control custom-switch d-inline">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                    <label class="custom-control-label" for="customSwitch1"></label>
+                                </div>
+                                <span *ngIf="meeting_status == 'Published'" class="badge badge-success d-inline">{{meeting_status}}</span>
+                                <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning d-inline">{{meeting_status}}</span>
                             </div>
-                            <div class="publish_toggler" (click)="on_publish_changed()">
+                            <!-- <div class="publish_toggler" (click)="on_publish_changed()">
                                 <input type="checkbox" class="toggle_cb" checked
                                 data-toggle="toggle" data-size="normal">
-                            </div>
+                            </div> -->
                         </div>
                         <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
                             <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
@@ -407,24 +411,22 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </form>
             </div>
         </div>
-        <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group">
-            <div class="input-group-append">
-                <label>
-                    Attach Meeting Documents
-                </label>
-                <form style="padding: 10px;border:1px solid"
-                class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
+        <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group mt-3 mr-2">
+            
+                <form class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
                     <input (change)="file_change($event)" id="msg_file" type="file"
                         accept=".pdf,.doc,.docx,.ppt"
                         multiple
                         style="display:none"
                     />
-                    <i class="fas fa-paperclip"></i>
+                    <i class="fas fa-paperclip"></i> <span class="ml-2">Attach Meeting Documents</span>
                 </form>
-            </div>
-            <button class="btn btn-meeting" (click)="upload_doucments()">
-                <span>Upload Documents</span>
+
+            <div class="ml-2">
+                <button class="btn btn-meeting" (click)="upload_doucments()">
+                <span>Upload Attached Documents</span>
             </button>
+            </div>
         </div>
 
         <div *ngIf="meeting_object.sign_docs && meeting_object.sign_docs.length" class="DocumentsSignWrapper title-wrapper">
