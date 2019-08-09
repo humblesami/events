@@ -20,47 +20,51 @@ title="{{meeting_object.name}}"></app-breadcrumb>
     <div class="container" *ngIf="meeting_object">            
             <div class=" form-details">
                 <div class="meeting-details-form">
-                    <div class="d-flex justify-content-between">
-                        <div class="row note" *ngIf="conference_not_active">
-                            Meeting conference URL will be available 15 minutes before meeting start.
-                        </div>
-                        <div *ngIf="invalidif" class="" style="justify-content:flex-end;">
-                            <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
-                            <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
-                            <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
-                        </div>
-                        <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
-                            <div class="meet-elements">
-                                <div *ngIf="socketService.is_admin">
+                    
+
+
+                <div class="MainTitleHeadWrap" style="flex-wrap: wrap">
+                    <div class="HeadingWrap">
+                        <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
+                    </div>
+
+                    <div class="d-flex ml-auto my-2">
+                            <div class="row note" *ngIf="conference_not_active">
+                                Meeting conference URL will be available 15 minutes before meeting start.
+                            </div>
+                            <div *ngIf="invalif" class="" style="justify-content:flex-end;">
+                                <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
+                                <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
+                                <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
+                            </div>
+                            <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
+                                <div class="meet-elements">
                                     <span class="d-inline">
-                                        Click to {{applicable_publish_action}}
+                                        Meeting Status
                                     </span>
                                     <div class="custom-control custom-switch d-inline">
                                         <input (change)="on_publish_changed()" type="checkbox" class="toggle_cb custom-control-input" id="customSwitch1">
                                         <label class="custom-control-label" for="customSwitch1"></label>
                                     </div>
+                                    <span *ngIf="meeting_status == 'Published'" class="badge badge-success d-inline">{{meeting_status}}</span>
+                                    <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning d-inline">{{meeting_status}}</span>
                                 </div>
-                                <span *ngIf="meeting_status == 'Published'" class="badge badge-success d-inline">{{meeting_status}}</span>
-                                <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning d-inline">{{meeting_status}}</span>
+                            </div>
+                            <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
+                                <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
+                                    <span name="archive">Move to Archive</span>
+                                </button>
                             </div>
                         </div>
-                        <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
-                            <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
-                                <span name="archive">Move to Archive</span>
-                            </button>
+                        <div class="d-flex">
+                            <div class="MeetingBtnWrapper" id="tdmrb{{meeting_object.id}}">
+                                    <div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
+                                        <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+                                    </div>
+                                </div>
                         </div>
-                    </div>
 
-
-                <div class="MainTitleHeadWrap">
-                    <div class="HeadingWrap">
-                        <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
-                    </div>
-                    <div class="MeetingBtnWrapper" id="tdmrb{{meeting_object.id}}">
-                        <div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
-                            <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
-                        </div>
-                    </div>
+                    
 				</div>
 
                 <div class="div1">
