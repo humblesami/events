@@ -66,7 +66,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <label for="c-phone">
                                 <b>Cell Phone</b>
                             </label>
-                            <input value="{{profile_data.mobile_phone}}" (change)="mobile_phone_change($event.target.value)"
+                            <input value="{{profile_data.mobile_phone}}" (change)="modified_profile_data.mobile_phone=$event.target.value"
                                 type="text" placeholder="Enter Cell Phone" id="c-phone" required>
                             <label for="email">
                                 <b>Email</b>
