@@ -152,6 +152,7 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
 
 .aligned .form-row input {
     margin-top: 0;
+    max-width: inherit;
 }
 
 /* .colMS .aligned .vLargeTextField, .colMS .aligned .vXMLLargeTextField {

@@ -117,3 +117,45 @@ p.datetime input[type="text"].vTimeField{
 	letter-spacing:inherit;
     text-transform: capitalize;
 }
+.datetime input
+{
+    max-width: inherit;
+}
+@media(min-width:461px)
+{
+    .datetime span
+    {
+        display: flex;
+    }
+    .datetime>span:first-child
+    {
+        width: 51%;
+    }
+    .datetime>span:last-child
+    {
+        width: 49%;
+    }
+    p.datetime input[type="text"].vTimeField
+    {
+        width: inherit;
+    }
+}
+@media(max-width:460px)
+{
+    p.datetime>span
+    {
+        display: flex;
+        width: 100%;
+    }
+    p.datetime{
+        display: inherit;
+    }
+    p.datetime input[type="text"].vTimeField {
+        width: calc(100% - 125px);
+        margin: 0;
+    }
+    .datetime span:last-child
+    {
+        margin-top:10px;
+    }
+}
