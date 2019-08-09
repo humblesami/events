@@ -42,8 +42,33 @@ class Topic(models.Model):
     @classmethod
     def get_meeting_topics(cls, reques, params):
         meeting_id = params['meeting_id']
+        model = params.get('model')
+        object_id = params.get('object_id')
         topics = []
+        selected_topic_id = 0
+        if model and object_id:
+            model_obj = ''
+            if model == 'voting':
+                model_obj = ws_methods.get_model('voting', 'voting')
+                voting_obj = model_obj.objects.filter(pk=object_id, meeting_id=meeting_id).values('topic__id')
+                if voting_obj:
+                    voting_obj = voting_obj[0]
+                    selected_topic_id = voting_obj['topic__id']
+            if model == 'survey':
+                model_obj = ws_methods.get_model('survey', 'survey')
+                suvey_obj = model_obj.objects.filter(pk=object_id, meeting_id=meeting_id).values('topic__id')
+                if suvey_obj:
+                    suvey_obj = suvey_obj[0]
+                    selected_topic_id = suvey_obj['topic__id']
+
         topic_obj = Topic.objects.filter(event_id=meeting_id).values('id', 'name')
         for topic in topic_obj:
+            if selected_topic_id:
+                if selected_topic_id == topic['id']:
+                    topic = {'id': topic['id'], 'name': topic['name'], 'selected': True}
+                else:
+                    topic = {'id': topic['id'], 'name': topic['name'], 'selected': False}
+            else:
+                topic = {'id': topic['id'], 'name': topic['name'], 'selected': False}
             topics.append(topic)
-        return topics
+        return {'topics': topics, 'selected': selected_topic_id}
