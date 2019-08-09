@@ -18,11 +18,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         </span>
     </div>
     <div class="container" *ngIf="meeting_object">            
-            <div class=" form-details">
+        <div class=" form-details">
                 <div class="meeting-details-form">
-                    
-
-
                 <div class="MainTitleHeadWrap" style="flex-wrap: wrap">
                     <div class="HeadingWrap">
                         <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
@@ -257,11 +254,11 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">
             
             <!-- <button class="btn btn-primary" (click)="open_django(meeting_object.id)">Mark Attendance</button> -->
-            <button class="btn btn-primary btn-lg" (click)="open_roster()">Rosters</button>
+            <button class="btn btn-primary btn-meeting" (click)="open_roster()">Rosters</button>
             <div class="roster-full">
                 <app-roster meeting_id="{{meeting_object.id}}"></app-roster>
             </div>
-            <div class="modal-header" *ngIf="meeting_object.inline_roster">
+            <div class="modal-header btn-meeting" *ngIf="meeting_object.inline_roster">
                 Roster
             </div>
             <div class="row" *ngIf="meeting_object.inline_roster">

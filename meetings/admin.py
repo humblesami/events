@@ -134,7 +134,7 @@ class MeetingGroupAdmin(GroupAdmin):
 class CommitteeAdmin(admin.ModelAdmin):
     autocomplete_fields = ['users']
     filter_horizontal = ('users',)
-    fields = ('name', 'description', 'members', 'users')
+    fields = ('name', 'description', 'users')
     list_display = ('name', 'members')
     search_fields = ('name',)
     readonly_fields = ('members',)
@@ -147,7 +147,7 @@ class CommitteeAdmin(admin.ModelAdmin):
                 u.username, u.image)
         html += '</div>'
         return format_html(html)
-    # members.short_description = ''
+    members.short_description = ''
 
 
 class NewsVideoInline(admin.TabularInline):

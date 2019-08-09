@@ -299,3 +299,8 @@ h5, .h5 {
     height: calc(100% - 40px);
     display: none;
 }
+.btn-meeting
+{
+    font-weight: bold;
+    font-size: 0.9rem;
+}
