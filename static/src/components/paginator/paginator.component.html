@@ -1,24 +1,26 @@
-<div>
-    <div class="paging-meta">
-        <span>Items per page:</span>    
-        <select (change)="change_limit($event)" [(ngModel)]="limit" class="form-control-sm w-25">
-            <option *ngFor="let opt of limit_options">{{opt}}</option>
-        </select>
-        <span>Total Records: {{count}}</span>        
-    </div>
-    <div *ngIf="limit<count" style="text-align:right" class="">
-        <div class="">
-            <button [disabled]="offset <= 0"
-            (click)="change_page(-1)"
-            class="btn btn-sm btn-secondary">
-                <i class="fa fa-chevron-left"></i>
-            </button>
-            <span style="padding:0 5px">{{page_number}}</span>
-            <button [disabled]="offset + limit >= count"
-                (click)="change_page(1)"
-                class="btn btn-sm btn-secondary">
-                <i class="fa fa-chevron-right"></i>
-            </button>
+<div class="row">
+    <div class="paging-meta container">
+        <div class="float-left">
+                <span>Items per page:</span>    
+                <select (change)="change_limit($event)" [(ngModel)]="limit" class="form-control-sm" style="width:100px;">
+                    <option *ngFor="let opt of limit_options">{{opt}}</option>
+                </select>
+                <!-- <span>Total Records: {{count}}</span>         -->
         </div>
+        <div *ngIf="limit<count" class="float-left">
+                <div class="">
+                    <button [disabled]="offset <= 0"
+                    (click)="change_page(-1)"
+                    class="btn btn-sm btn-secondary">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <span style="padding:0 5px">{{page_number}}</span>
+                    <button [disabled]="offset + limit >= count"
+                        (click)="change_page(1)"
+                        class="btn btn-sm btn-secondary">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
     </div>
 </div>

@@ -13,16 +13,19 @@ table.roster{
     width:100%;
 }
 .roster tbody {
-    display:block;
-    padding-top:5px;
-    height: calc(100vh - 300px);
-    overflow:auto;
+    display: block;
+    padding-top: 5px;
+    height: calc(100vh - 340px);
+    overflow: auto;
 }
 .roster thead, .roster tbody tr {
     display:table;
-    width:100%;
+    width:100% !important;
     table-layout:fixed;/* even columns width , fix width of table too*/
 }
 .roster thead {
     width: calc( 100% - 1em )/* scrollbar is average 1em/16px width, remove it from thead width */
+}
+.roster .table thead th{
+    border-bottom: none;
 }

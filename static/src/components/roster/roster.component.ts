@@ -20,8 +20,8 @@ export class RosterComponent implements OnInit {
     total_records : number;
     server_url = window['server_url'];
     constructor(private httpService: HttpService, 
-                private modalService: NgbModal,
-                public activeModal: NgbActiveModal,
+                // private modalService: NgbModal,
+                // public activeModal: NgbActiveModal,
                 private socketService: SocketService) { 
         this.offset = 0;
         this.limit = 2;
@@ -46,9 +46,9 @@ export class RosterComponent implements OnInit {
     count: number;
 
     open(user_id) {
-        let obj_this = this;
-		const modalRef = this.modalService.open(ProfilesummaryComponent);
-		modalRef.componentInstance.user_id = user_id;
+        // let obj_this = this;
+		// const modalRef = this.modalService.open(ProfilesummaryComponent);
+		// modalRef.componentInstance.user_id = user_id;
     }
     
     roster_search(e){
@@ -106,7 +106,7 @@ export class RosterComponent implements OnInit {
         console.log(this.attendance_data, 103);
     }
 
-    submit_attendance(){        
+    submit_attendance(e){        
         let obj_this = this;
         let input_data = {
             meeting_id: obj_this.meeting_id,
@@ -126,7 +126,11 @@ export class RosterComponent implements OnInit {
         obj_this.httpService.post(final_input, function(data){
             console.log(data);
         }, null);
-        obj_this.activeModal.close('Close click');
+        obj_this.close_roster(e);
+    }
+    close_roster(e){
+        // console.log(e.target);
+        $(e.target).closest('.roster-full').hide();
     }
 
     ngOnInit() {

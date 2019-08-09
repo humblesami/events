@@ -1,7 +1,7 @@
-<div style="padding:10px">
+<div style="padding:10px" class="container">
     <input type="text" placeholder="Search..." (keyup)="roster_search($event)" class="form-control w-25"/>
-    <div>
-        <table class="table table my-3">
+    <div class="roster">
+        <table class="table my-3">
             <thead>
                 <tr class="text-primary">
                     <th>Attendee</th>
@@ -47,7 +47,7 @@
             (changedLimit)="changedLimit($event)"            
             (changedOffset)="changedOffset($event)"></app-paginator>
     <div class="float-left my-3">
-        <button type="button" class="btn btn-success btn-sm rounded-0 mr-2" (click)="submit_attendance()">Submit and Close</button>
-        <button type="button" class="btn btn-danger btn-sm rounded-0" (click)="activeModal.close('Close click')">Close</button>
+        <button type="button" class="btn btn-success btn-sm rounded-0 mr-2" (click)="submit_attendance($event)">Submit and Close</button>
+        <button type="button" class="btn btn-danger btn-sm rounded-0" (click)="close_roster($event)">Close</button>
     </div>
 </div>

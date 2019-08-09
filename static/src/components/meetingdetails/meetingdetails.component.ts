@@ -52,6 +52,9 @@ export class MeetingDetailsComponent implements OnInit {
             $('ngb-modal-window.show .modal-dialog').addClass('modal-lg').addClass('modal-dialog-centered');
         }, 51);
     }
+    open_roster(){
+        $('.roster-full').show();
+    }
     open_django(meeting_id) {
 		const modalRef = this.modalService.open(DjangopaginatorComponent);
 		modalRef.componentInstance.meeting_id = meeting_id;

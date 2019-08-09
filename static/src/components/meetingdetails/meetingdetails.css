@@ -289,3 +289,13 @@ h5, .h5 {
 .attendee-card button{
     font-size: 0.85rem;
 }
+.roster-full {
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    top: 40px;
+    background: #fff;
+    width: 100%;
+    height: calc(100% - 40px);
+    display: none;
+}
