@@ -2888,3 +2888,9 @@ select {
 #signModal{
 	z-index: 23;
 }
+
+h4.title-h4{
+	color:#3059C9;
+	font-size: 1.3rem;
+    text-align: center;
+}
