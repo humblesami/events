@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
+from django import forms
+from meetings.model_files.event import Event
 from .models import *
 
 
@@ -28,8 +30,16 @@ class VotingDocInline(admin.TabularInline):
     # show_change_link = True
     extra = 1
 
+class VotingForm(forms.ModelForm):
+    class Meta:
+        model = Voting
+        fields = ()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
 
 class VotingAdmin(admin.ModelAdmin):
+    form = VotingForm
     inlines = [VotingDocInline,]
     search_fields = ['name']
     fieldsets = [

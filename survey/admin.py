@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-
+from django import forms
 from survey.models import Answer, Category, Question, Response, Survey
-
+from meetings.model_files.event import Event
 from .actions import make_published
 from django.db import models
 from django.forms import Textarea
@@ -26,8 +26,16 @@ class CategoryInline(admin.TabularInline):
     exclude = ['order', ]
     extra = 1
 
+class SurveyForm(forms.ModelForm):
+        class Meta:
+            model = Survey
+            fields = ()
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
 
 class SurveyAdmin(admin.ModelAdmin):
+    form = SurveyForm
     list_display = ("name", "is_published", "need_logged_user")
     list_filter = ("is_published", "need_logged_user")
     autocomplete_fields = ['respondents']

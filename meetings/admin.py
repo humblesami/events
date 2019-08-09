@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from meetings.model_files.committee import Committee
 from meetings.model_files.user import Profile, MeetingGroup
 from django.views.decorators.debug import sensitive_post_parameters
-from meetings.model_files.document import MeetingDocument, AgendaDocument
+from meetings.model_files.document import MeetingDocument, AgendaDocument, SignDocument
 from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument, Invitation_Response, LoginEntry
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
@@ -169,15 +169,17 @@ class MeetingDocumentForm(FileForm):
     pass
 
 
-class SignDocumentForm(SignatureDocForm):
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(SignDocumentForm, self).get_form(request, obj, **kwargs)
-        return form
-
-    pass
+class SignDocumentForm(forms.ModelForm):
+    class Meta:
+            model = SignDocument
+            fields = ()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
 
 
 class AdminSignDoc(admin.ModelAdmin):
+    form = SignDocumentForm
     fields = [
         'name',
         'meeting',
@@ -194,6 +196,7 @@ class AdminSignDoc(admin.ModelAdmin):
 
 class AttendeeAdmin(admin.ModelAdmin):
     list_display = ('event', 'attendee', 'state', 'attendance')
+
 
 
 admin.site.register(News, NewsAdmin)

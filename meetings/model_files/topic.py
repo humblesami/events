@@ -38,3 +38,12 @@ class Topic(models.Model):
             return topic
         except:
             return 'someting went wrong..!'
+
+    @classmethod
+    def get_meeting_topics(cls, reques, params):
+        meeting_id = params['meeting_id']
+        topics = []
+        topic_obj = Topic.objects.filter(event_id=meeting_id).values('id', 'name')
+        for topic in topic_obj:
+            topics.append(topic)
+        return topics

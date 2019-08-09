@@ -1,5 +1,32 @@
+function get_meeting_topics(meeting_id)
+{
+    let input_date = {
+        meeting_id: meeting_id
+    }
+    let args = {
+        app: 'meetings',
+        model: 'Topic',
+        method: 'get_meeting_topics'
+    }
+    let final_input_data = {
+        params: input_date,
+        args: args
+    }
+    let options = {
+        data: final_input_data
+    }
+    options.type = 'get';
+    options.onSuccess = function(data){
+        $('.field-topic select option').remove();
+        let topic_select = $('.field-topic select');
+        topic_select.append('<option value selected>---------</option')
+        data.forEach(topic => {
+            topic_select.append('<option value='+topic.id+'>'+topic.name+'</option>');
+        });
+    }
+    window['dn_rpc_object'](options);
+}
 $(document).ready(function(){
-    console.log(2342,24234);
     $('.field-topic').hide();
     $('.field-meeting select').on('change', function(){
         let meeting_id = $(this).val();
@@ -33,9 +60,11 @@ $(document).ready(function(){
                 }
             }
             window['dn_rpc_object'](options);
+            get_meeting_topics(meeting_id);
         }
         else
         {
+            $('.field-topic select option').remove();
             $('.field-respondents').show();
             $('.field-topic').hide();
         }
