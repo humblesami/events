@@ -136,7 +136,7 @@ function dn_rpc_object(options) {
                 handleError(err);       
             }
             else{
-                console.log('Api failed to reach');
+                console.log(er, 'Api failed', args);
             }
         }
     };
