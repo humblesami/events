@@ -24,27 +24,25 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                         <div class="row note" *ngIf="conference_not_active">
                             Meeting conference URL will be available 15 minutes before meeting start.
                         </div>
-                        <div class="" style="justify-content:flex-end;">
+                        <div *ngIf="invalidif" class="" style="justify-content:flex-end;">
                             <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
                             <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
                             <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
                         </div>
                         <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
                             <div class="meet-elements">
-                                <span class="d-inline">
-                                    Meeting Status
-                                </span>
-                                <div class="custom-control custom-switch d-inline">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                                    <label class="custom-control-label" for="customSwitch1"></label>
+                                <div *ngIf="socketService.is_admin">
+                                    <span class="d-inline">
+                                        Click to {{applicable_publish_action}}
+                                    </span>
+                                    <div class="custom-control custom-switch d-inline">
+                                        <input (change)="on_publish_changed()" type="checkbox" class="toggle_cb custom-control-input" id="customSwitch1">
+                                        <label class="custom-control-label" for="customSwitch1"></label>
+                                    </div>
                                 </div>
                                 <span *ngIf="meeting_status == 'Published'" class="badge badge-success d-inline">{{meeting_status}}</span>
                                 <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning d-inline">{{meeting_status}}</span>
                             </div>
-                            <!-- <div class="publish_toggler" (click)="on_publish_changed()">
-                                <input type="checkbox" class="toggle_cb" checked
-                                data-toggle="toggle" data-size="normal">
-                            </div> -->
                         </div>
                         <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
                             <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">

@@ -26,7 +26,8 @@ export class MeetingDetailsComponent implements OnInit {
     meeting_type = '';
     meeting_status = '';
 	first_time = true;
-	me_as_respondant: any;
+    me_as_respondant: any;
+    applicable_publish_action: string;
 	discussion_params = {
 		model:'Event',
 		app:'meetings'
@@ -66,6 +67,7 @@ export class MeetingDetailsComponent implements OnInit {
         if (is_published)
         {
             obj_this.meeting_status = 'Unpublished';
+            obj_this.applicable_publish_action = 'Publish';
             obj_this.meeting_type = 'draft';
             obj_this.title = 'Draft';
             $('li.breadcrumb-item a').last().html('Draft Meetings').attr('href','/meetings/draft');
@@ -73,11 +75,14 @@ export class MeetingDetailsComponent implements OnInit {
         else
         {
             obj_this.meeting_status = 'Published';
+            obj_this.applicable_publish_action = 'Unpublish';
             obj_this.meeting_type = 'upcoming';
             obj_this.title = 'Upcoming';
             $('li.breadcrumb-item a').last().html('Upcoming Meetings').attr('href','/meetings/upcoming');
         }
         obj_this.meeting_object.publish = !is_published;
+        
+        // console.log(obj_this.meeting_status, 333)
         let args = {
             app: 'meetings',
             model: 'Event',
@@ -123,25 +128,7 @@ export class MeetingDetailsComponent implements OnInit {
                     $('.router-outlet').html('<h2 style="text-align:center">'+result.message+'</h2>');
                     return;
                 }
-                var meeting_object = obj_this.meeting_object = result.meeting;
-                
-                setTimeout(function(){
-                    $('.toggle_cb').bootstrapToggle({
-                        off: 'Unpublish',
-                        on: 'Publish'
-                    });
-                    if (obj_this.meeting_object.publish)
-                    {
-                        $('.toggle_cb').prop('checked', false).change();
-                        obj_this.meeting_status = 'Published';
-                    }
-                    else
-                    {
-                        obj_this.meeting_status = 'Unpublished';
-                    }
-                                
-                }, 100);
-
+                var meeting_object = obj_this.meeting_object = result.meeting;                                                
                 obj_this.next = result.next;
                 obj_this.prev = result.prev;
                 if (result.meeting && result.meeting.name) {
@@ -179,7 +166,28 @@ export class MeetingDetailsComponent implements OnInit {
                 }
                 attendees.splice(myindex, 1);
                 attendees.splice(0, 0, cur_user_object);
-				obj_this.me_as_respondant = attendees[0];
+                obj_this.me_as_respondant = attendees[0];
+                if (obj_this.meeting_object.publish)
+                {
+                    obj_this.meeting_status = 'Published';
+                    obj_this.applicable_publish_action = 'Unpublish';
+                }
+                else
+                {
+                    obj_this.meeting_status = 'Unpublished';
+                    obj_this.applicable_publish_action = 'Publish';
+                }
+                
+                setTimeout(function(){
+                    if (obj_this.meeting_object.publish)
+                        {
+                            $('.toggle_cb').prop('checked', true);                            
+                        }
+                        else
+                        {
+                            $('.toggle_cb').prop('checked', false);
+                        }
+                }, 100);
             } catch (er) {
                 console.log(er);
             }

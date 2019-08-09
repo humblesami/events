@@ -28,7 +28,7 @@ class FolderAdmin(admin.ModelAdmin):
     ]
     search_fields = ['name']
     readonly_fields = ['parent',]
-    inlines = [FolderInline,FileInline]
+    inlines = [FileInline, FolderInline]
     def get_queryset(self, request):
         qs = super(FolderAdmin, self).get_queryset(request)
         if request.path =='/admin/resources/folder/':
