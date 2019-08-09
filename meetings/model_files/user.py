@@ -334,6 +334,8 @@ class Profile(user_model):
     def get_update_profile_details(cls, request, params):
         field_group = params['field_group']
         user_id = params.get('id')
+        if not user_id:
+            user_id = request.user.id
         group = params.get('type')
         profile_obj = Profile.objects.get(pk=user_id)
         profile = {}
