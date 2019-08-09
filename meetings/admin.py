@@ -107,7 +107,9 @@ class UserAdmin(admin.ModelAdmin):
     autocomplete_fields = ['groups']
     form = UserForm
     list_display = (
-    'id', 'username', 'email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth', 'is_superuser')
+        'id', 'username', 'email', 'first_name', 'last_name',
+        'mobile_phone', 'two_factor_auth', 'is_superuser'
+    )
 
     class Media:
         js = ('admin/js/profile_change_form.js',)
@@ -180,6 +182,7 @@ class SignDocumentForm(forms.ModelForm):
 
 class AdminSignDoc(admin.ModelAdmin):
     form = SignDocumentForm
+    list_display = ('name', 'meeting', 'send_to_all')
     fields = [
         'name',
         'meeting',
@@ -189,15 +192,12 @@ class AdminSignDoc(admin.ModelAdmin):
         'attachment',
     ]
     change_form_template = 'admin/actions_change_form.html'
-
     class Media:
         js = ('admin/js/meeting_sign_doc.js',)
 
 
 class AttendeeAdmin(admin.ModelAdmin):
     list_display = ('event', 'attendee', 'state', 'attendance')
-
-
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event, EventAdmin)
