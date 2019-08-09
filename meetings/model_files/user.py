@@ -1,4 +1,5 @@
 import io
+import json
 import sys
 import uuid
 import base64
@@ -7,11 +8,11 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from mainapp import ws_methods
 from documents.file import File
-from mainapp.settings import server_base_url
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
 from meetings.model_files.committee import Committee
 from django.utils.translation import gettext_lazy as _
+from mainapp.settings import server_base_url, ip2location
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
 
@@ -127,6 +128,72 @@ def create_group(obj, group_name):
             if not 'lib/python' in er:
                 errorMessage += " " + er
         return errorMessage
+
+
+from django.dispatch import receiver
+from django.contrib.auth.signals import user_logged_in
+
+
+class LoginEntry(models.Model):
+    action = models.CharField(max_length=64, null=True)
+    ip = models.GenericIPAddressField(null=True)
+    user_id = models.IntegerField(null=True)
+    lc_name = models.CharField(max_length=32, null=True)
+    path_info = models.CharField(max_length=64, null=True)
+    session = models.CharField(max_length=32, null=True)
+    login_time = models.DateTimeField(auto_now_add=True, null=True)
+
+    @classmethod
+    def get_last_login_info(cls, user_id):
+        entry = LoginEntry.objects.filter(user_id=user_id).order_by('-id')
+        if entry:
+            entry = entry[0]
+            user = Profile.objects.get(pk=user_id)
+            entry = {
+                'name': user.fullname(),
+                'ip': entry.ip,
+                'login_time': str(entry.login_time)
+            }
+            return entry
+        else:
+            return 'No login info'
+
+    @classmethod
+    def ip2location(cls, request, params):
+        ip = params['ip']
+        req_url = ip2location['prefix'] + ip + ip2location['postfix']
+        res = ws_methods.http_request(req_url)
+        res = json.loads(res)
+        return res
+
+    def __unicode__(self):
+        return '{0} - {1} - {2}'.format(self.action, str(self.user_id), self.ip)
+
+    def __str__(self):
+        return '{0} - {1} - {2}'.format(self.action, str(self.user_id), self.ip)
+
+
+@receiver(user_logged_in)
+def user_logged_in_callback(sender, request, user, **kwargs):
+    meta = request.META
+    ip = meta.get('REMOTE_ADDR')
+    session = meta.get('SESSION')
+    path_info = meta.get('PATH_INFO')
+    login_entry = LoginEntry(ip=ip, user_id=user.id, session=session)
+    if path_info != '/rest/public':
+        login_entry.path_info = path_info
+    login_entry.save()
+
+
+# @receiver(user_logged_out)
+# def user_logged_out_callback(sender, request, user, **kwargs):
+#     ip = request.META.get('REMOTE_ADDR')
+#     LoginEntry.objects.create(action='user_logged_out', ip=ip, username=user.username)
+#
+#
+# @receiver(user_login_failed)
+# def user_login_failed_callback(sender, credentials, **kwargs):
+#     LoginEntry.objects.create(action='user_login_failed', username=credentials.get('username', None))
 
 
 class Profile(user_model):
@@ -259,18 +326,17 @@ class Profile(user_model):
     @classmethod
     def get_personal_info(cls, request, params):
         profile_obj = params['profile_obj']
-        profile = ws_methods.obj_to_dict(profile_obj,
-                                         fields=[
-                                             'first_name',
-                                             'last_name',
-                                             'mobile_phone',
-                                             'email',
-                                             'birth_date',
-                                             'location',
-                                             'email_verified',
-                                             'mobile_verified',
-                                             'image'
-                                         ])
+        profile = ws_methods.obj_to_dict(profile_obj, fields=[
+            'first_name',
+            'last_name',
+            'mobile_phone',
+            'email',
+            'birth_date',
+            'location',
+            'email_verified',
+            'mobile_verified',
+            'image'
+        ])
         resume = profile_obj.resume
         if resume:
             profile['resume'] = {'id': resume.id}
@@ -284,29 +350,28 @@ class Profile(user_model):
     @classmethod
     def get_work_info(cls, request, params):
         profile_obj = params['profile_obj']
-        profile = ws_methods.obj_to_dict(profile_obj,
-                                         fields=[
-                                             'company',
-                                             'job_title',
-                                             'department',
-                                             'work_phone',
-                                             'fax',
-                                             'website',
-                                         ])
+        profile = ws_methods.obj_to_dict(profile_obj, fields=[
+            'company',
+            'job_title',
+            'department',
+            'work_phone',
+            'fax',
+            'website',
+        ])
 
         return profile
 
     @classmethod
     def get_board_info(cls, request, params):
         profile_obj = params['profile_obj']
-        profile = ws_methods.obj_to_dict(profile_obj,
-                                         fields=[
-                                             'board_joining_date',
-                                             'term_start_date',
-                                             'term_end_date'],
-                                         related={
-                                             'committees': {'fields': ['id', 'name']}
-                                         })
+        profile = ws_methods.obj_to_dict(profile_obj, fields=[
+                    'board_joining_date',
+                    'term_start_date',
+                    'term_end_date'
+                ],
+                related={
+                 'committees': {'fields': ['id', 'name']}
+                })
         return profile
 
     @classmethod
@@ -474,7 +539,7 @@ class Profile(user_model):
             'two_factor_auth': two_factor_auth,
             'groups': groups
         }
-
+        profile['login_info'] = LoginEntry.get_last_login_info(profile_orm.id)
         data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
         return data
 
@@ -688,7 +753,8 @@ class Staff(Profile):
         if not created:
             create_group(self, 'Staff')
 
-        # ////////////////////GROUPS//////////////////////////////////
+
+# ////////////////////GROUPS//////////////////////////////////
 
 
 class MeetingGroup(group_model):
