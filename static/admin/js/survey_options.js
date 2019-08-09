@@ -4,65 +4,64 @@ function selectionEvent() {
             addChoicesButton(el)
         }
     ).change(function() {
-        // if(e.target.value == "select-multiple" || e.target.value == "radio")
         addChoicesButton(this);
     })
 }
 
-function on_add_choice_click(el) {
-    let element = this;
-    let choices = $(element).parent().next().find('textarea').val();
-    config = {
-        on_load: function() {
-            $('#signModal .modal-body').html('<input type="text" value="' + choices + '" class="tag_input" placeholder="Pres Enter to Add your choices"/>');
-            $('.tag_input').tagsInput({
-                placeholder: 'Type your choice and press enter to add it.'
-            });
-        },
-        on_close: function() {
-            let choices = $('.tag_input').val()
-            choices_list = choices_to_list(choices);
-            let parent = $(element).parent();
-            if (choices_list.length <= 1) {
-                parent.find('.choice_error').remove();
-                parent.append('<span class="choice_error" style="color:red">Please add more than 1 choices</span>');
-                $('.submit-row').find('input[type="submit"]').attr('disabled', 'disabled');
-            } else {
-                parent.find('.choice_error').remove();
-                $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
-                $('#signModal').modal('hide');
-            }
-            append_choices(parent, choices);
-        }
-    }
-    window['init_popup'](config);
-}
+// function on_add_choice_click(el) {
+//     let element = this;
+//     let choices = $(element).parent().next().find('textarea').val();
+//     config = {
+//         on_load: function() {
+//             $('#signModal .modal-body').html('<input type="text" value="' + choices + '" class="tag_input" placeholder="Pres Enter to Add your choices"/>');
+//             $('.tag_input').tagsInput({
+//                 placeholder: 'Type your choice and press enter to add it.'
+//             });
+//         },
+//         on_close: function() {
+//             let choices = $('.tag_input').val()
+//             choices_list = choices_to_list(choices);
+//             let parent = $(element).parent();
+//             if (choices_list.length <= 1) {
+//                 parent.find('.choice_error').remove();
+//                 parent.append('<span class="choice_error" style="color:red">Please add more than 1 choices</span>');
+//                 $('.submit-row').find('input[type="submit"]').attr('disabled', 'disabled');
+//             } else {
+//                 parent.find('.choice_error').remove();
+//                 $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
+//                 $('#signModal').modal('hide');
+//             }
+//             append_choices(parent, choices);
+//         }
+//     }
+//     window['init_popup'](config);
+// }
 selectionEvent();
-console.log(32);
-function append_choices(el, choices) {
-    let selection_value = el.find('select')[0].value;
-    let choices_list = choices_to_list(choices);
-    el.next().find('textarea').val(choices);
-    var choice_list_td = el.closest('tr').find('.field-text:first');    
-    var choice_list_container = undefined;
-    if(choice_list_td.find('.choice_list').length > 0)
-    {
-        choice_list_container = choice_list_td.find('.choice_list:first');
-        choice_list_container.html('');
-    }
-    else
-    {
-        choice_list_td.append('<div class="added_choices"><b>Added Choices</b><div class="choice_list"></div><div>');
-        choice_list_container = choice_list_td.find('.choice_list:first');
-    }
-    for (let i in choices_list) {
-        if (selection_value == 'radio') {
-            choice_list_container.append('<div class="choice"><input name="' + choices_list[i] + '" type="radio" disabled><label for="scales">' + choices_list[i] + '</label></div>');
-        } else if (selection_value == 'select-multiple') {
-            choice_list_container.append('<div class="choice"><input name="' + choices_list[i] + '" type="checkbox" disabled><label for="scales">' + choices_list[i] + '</label></div>');
-        }
-    }
-}
+
+// function append_choices(el, choices) {
+//     let selection_value = el.find('select')[0].value;
+//     let choices_list = choices_to_list(choices);
+//     el.next().find('textarea').val(choices);
+//     var choice_list_td = el.closest('tr').find('.field-text:first');    
+//     var choice_list_container = undefined;
+//     if(choice_list_td.find('.choice_list').length > 0)
+//     {
+//         choice_list_container = choice_list_td.find('.choice_list:first');
+//         choice_list_container.html('');
+//     }
+//     else
+//     {
+//         choice_list_td.append('<div class="added_choices"><b>Added Choices</b><div class="choice_list"></div><div>');
+//         choice_list_container = choice_list_td.find('.choice_list:first');
+//     }
+//     for (let i in choices_list) {
+//         if (selection_value == 'radio') {
+//             choice_list_container.append('<div class="choice"><input name="' + choices_list[i] + '" type="radio" disabled><label for="scales">' + choices_list[i] + '</label></div>');
+//         } else if (selection_value == 'select-multiple') {
+//             choice_list_container.append('<div class="choice"><input name="' + choices_list[i] + '" type="checkbox" disabled><label for="scales">' + choices_list[i] + '</label></div>');
+//         }
+//     }
+// }
 
 function choices_to_list(choices) {
     if (choices) {
@@ -78,19 +77,47 @@ function addChoicesButton(el) {
     var parent = $(el).parent();
     parent.find('button').remove();
     if (el.value == 'radio' || el.value == 'select-multiple') {
-        parent.find('.choice_list').show();
-        var add_choices_btn = $('<div><button style="background: rgb(65, 118, 144) !important" class="btn btn-primary add_choices_btn" type="button">Add Choices</button></div>');
-        parent.append(add_choices_btn);
-        add_choices_btn.click(on_add_choice_click);
-        append_choices(parent, parent.next().find('textarea').val());
-        setTimeout(() => {
-            if (!parent.next().find('textarea').val()) {
-                $('.add_choices_btn').click();
+        $(el).parent().find('.tagsinput').show();
+        var choices_tag_input = $(el).parent().next().find('textarea');
+        parent.append(choices_tag_input);
+        choices_tag_input.tagsInput({
+            placeholder: 'Type your choice and press enter to add it.',
+            onAddTag: function(){
+                $(el).parent().next().find('textarea').val($(this).val());
+                let choices = $(this).val();
+                choices = choices_to_list(choices);
+                if (choices.length <=1)
+                {
+                    parent.find('.choice_error').remove();
+                    parent.append('<span class="choice_error" style="color:red">Please add more than 1 choices</span>');
+                    $('.submit-row').find('input[type="submit"]').attr('disabled', 'disabled');
+                }
+                else
+                {
+                    parent.find('.choice_error').remove();
+                    $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
+                }
+            },
+            onRemoveTag: function(){
+                parent.next().find('textarea').val($(this).val());
+                let choices = $(this).val();
+                choices = choices_to_list(choices);
+                if (!choices.length)
+                {
+                    parent.find('.choice_error').remove();
+                    $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
+                }
+                else if( choices.length == 1)
+                {
+                    parent.find('.choice_error').remove();
+                    parent.append('<span class="choice_error" style="color:red">Please add more than 1 choices</span>');
+                    $('.submit-row').find('input[type="submit"]').attr('disabled', 'disabled');
+                }
             }
-        }, 100);
+        });
+
     } else {
-        parent.find('.choice_list').hide();
-        parent.find('button').remove();
+        $(el).parent().find('.tagsinput').hide();
         parent.find('.choice_error').remove();
         $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
     }

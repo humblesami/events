@@ -24,34 +24,31 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 </div>
                 <div class="row label-control-form">
                     <div class="container">
-                        <div>
-                            <div class="row">
-                                <div class="col edit-author-thumb mb-4">
-                                    <i class="far fa-edit" (click)="update_image()"></i>
-                                    <div class="author-thumb" *ngIf="modified_profile_data.image">
-                                        <img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
-                                    </div>
-                                    <div class="author-thumb" *ngIf="!modified_profile_data.image">
-                                        <img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
-                                        <img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-                                    </div>
-                                    <input class="pt-3 update_image" style="display: none" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
-                                </div>
-                            </div>
-                            <div class="row" *ngIf="last_login.login_time">
-                                <div class="row last-login-details">
-                                    <div class="col-sm-12">
-                                        <h3>Last Login Details</h3>
-                                        <span *ngIf="last_login.login_time">Login Time: {{last_login.login_time | date:'MMM dd,yyyy hh:mm:ss A'}}</span>
-                                        <span *ngIf="last_login.platform">OS: {{last_login.platform}}</span>
-                                        <span *ngIf="last_login.browser">Browser: {{last_login.browser}}</span>
-                                        <span *ngIf="last_login.ip">IP: {{last_login.ip}}</span>
-                                        <span *ngIf="last_login.location">Location: {{last_login.location}}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            </div>
+						<div class="row mb-3">
+							<div class="col edit-author-thumb">
+								<i class="far fa-edit" (click)="update_image()"></i>
+								<div class="author-thumb" *ngIf="modified_profile_data.image">
+									<img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
+								</div>
+								<div class="author-thumb" *ngIf="!modified_profile_data.image">
+									<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
+									<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+								</div>
+								<input class="pt-3 update_image" style="display: none" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
+							</div>
+						</div>
+						<div class="row" *ngIf="last_login.login_time">
+							<div class="row last-login-details">
+								<div class="col-sm-12">
+									<h3>Last Login Details</h3>
+									<span *ngIf="last_login.login_time">Login Time: {{last_login.login_time | date:'MMM dd,yyyy hh:mm:ss A'}}</span>
+									<span *ngIf="last_login.platform">OS: {{last_login.platform}}</span>
+									<span *ngIf="last_login.browser">Browser: {{last_login.browser}}</span>
+									<span *ngIf="last_login.ip">IP: {{last_login.ip}}</span>
+									<span *ngIf="last_login.location">Location: {{last_login.location}}</span>
+								</div>
+							</div>
+						</div>
                         <div class="row single-input-label">
                             <label for="name">
                                 <b>First Name</b>
@@ -66,7 +63,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <label for="c-phone">
                                 <b>Cell Phone</b>
                             </label>
-                            <input value="{{profile_data.mobile_phone}}" (change)="mobile_phone_change($event.target.value)"
+                            <input value="{{profile_data.mobile_phone}}" (change)="modified_profile_data.mobile_phone=$event.target.value"
                                 type="text" placeholder="Enter Cell Phone" id="c-phone" required>
                             <label for="email">
                                 <b>Email</b>

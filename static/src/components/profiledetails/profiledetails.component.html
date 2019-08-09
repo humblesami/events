@@ -33,14 +33,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
         <form class="details-card">
 			<div class="row mb-3">
 				<div class="col-sm-12">
-					<div class="ui-block">
+					<div class="ui-block p-3">
+						<div class="edit-ui-block-header">
+							<h3 class="m-0 p-0">PERSONAL INFO</h3>
+							<span *ngIf="my_profile || socketService.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
+						</div>
 						<div class="top-header">
-							<div class="top-header-thumb">
-								<img src="static/assets/images/top-header1.jpg" alt="" />
-								<div class="edit-author-profile">
-									 <span *ngIf="my_profile || socketService.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
-								</div>
-							</div>
 							<div class="top-header-author">
 								<a href="02-ProfilePage.html" class="author-thumb">
 									<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">

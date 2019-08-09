@@ -1,75 +1,65 @@
 <div style="padding:10px">
-  <input type="text" placeholder="Search..." (keyup)="roster_search($event)" [(ngModel)]="filter"/>
-<div class="paging-meta">
+    <input type="text" placeholder="Search..." (keyup)="roster_search($event)" />
     <div class="paging-meta">
-        <span>Items per page:</span>    
-        <select [(ngModel)]="itemsPerPage" (change)="recall()">
+        <div class="paging-meta">
+            <span>Items per page:</span>
+            <select [(ngModel)]="itemsPerPage" (change)="recall()">
             <option *ngFor="let opt of limit_options">{{opt}}</option>
         </select>
-        <span>Total Records: {{total}}</span>        
+            <span>Total Records: {{total}}</span>
+        </div>
     </div>
-</div>
-<div class="roster-router-outlet">
-<table class="roster">
-  <thead>
-    <tr>
-      <th>Attendee</th>
-      <th>Absent</th>
-      <th>InPerson</th>
-      <th>Online</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let obj of collection |  paginate: { id:'server',
-                                                     itemsPerPage: itemsPerPage,
-                                                     currentPage: p,
-                                                     totalItems: total }; let i=index">
-      <td (click)="open(obj.id)">
-        <img style="width:100px; height:100px;" class="roster-images" src="{{socketService.server_url}}{{obj.photo}}" />
-        {{obj.name}} 
-      </td> 
-      <td>
-        <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" /> 
-        <input (click)="update_attendance(obj.id,'absent')" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
-        <input type="hidden" value="absent" />
-        <input type="hidden" value="{{obj.id}}" />
-      </td>
-      <td>
-        <input *ngIf="obj.attendance=='inperson'" checked type="radio" name="{{obj.id}}" />
-        <input (click)="update_attendance(obj.id,'inperson')" *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
-        <input type="hidden" value="inperson" />
-        <input type="hidden" value="{{obj.id}}" />
-      </td>
-      <td>
-        <input *ngIf="obj.attendance=='online'" checked type="radio" name="{{obj.id}}" />
-        <input (click)="update_attendance(obj.id,'online')" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
-        <input type="hidden" value="online" />
-        <input type="hidden" value="{{obj.id}}" />
-      </td>
-    </tr>
-  </tbody>
-</table> 
-<style>
-table.roster td, table.roster th{
-border: 1px solid;
-}
-</style>
-</div>
+    <div class="roster-router-outlet">
+        <table class="roster">
+            <thead>
+                <tr>
+                    <th>Attendee</th>
+                    <th>Absent</th>
+                    <th>InPerson</th>
+                    <th>Online</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let obj of collection |  paginate: { id:'server',
+                    itemsPerPage: itemsPerPage,
+                    currentPage: p,
+                    totalItems: total }; let i=index">
+                    <td (click)="open(obj.id)">
+                        <img style="width:100px; height:100px;" class="roster-images" src="{{socketService.server_url}}{{obj.photo}}" /> {{obj.name}}
+                    </td>
+                    <td>
+                        <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" />
+                        <input (click)="update_attendance(obj.id,'absent')" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
+                        <input type="hidden" value="absent" />
+                        <input type="hidden" value="{{obj.id}}" />
+                    </td>
+                    <td>
+                        <input *ngIf="obj.attendance=='inperson'" checked type="radio" name="{{obj.id}}" />
+                        <input (click)="update_attendance(obj.id,'inperson')" *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
+                        <input type="hidden" value="inperson" />
+                        <input type="hidden" value="{{obj.id}}" />
+                    </td>
+                    <td>
+                        <input *ngIf="obj.attendance=='online'" checked type="radio" name="{{obj.id}}" />
+                        <input (click)="update_attendance(obj.id,'online')" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
+                        <input type="hidden" value="online" />
+                        <input type="hidden" value="{{obj.id}}" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <style>
+            table.roster td, table.roster th{
+            border: 1px solid;
+            }
+        </style>
+    </div>
 
-<div class="has-text-centered">
-    <pagination-controls (pageChange)="pageChanged(p=$event)" id="server"></pagination-controls>
-</div>
-<!--
-      <div class="row">
-      <div class="has-text-centered">
-        <button class="btn btn-primary" (click)="pageChanged(p=1)">First Page</button>
-        <button class="btn btn-primary" (click)="lastPage()">Last Page</button>
-      </div>
+    <div class="has-text-centered">
+        <pagination-controls (pageChange)="pageChanged(p=$event)" id="server"></pagination-controls>
     </div>
--->
     <div style="text-align:center;">
         <button type="button" class="btn btn-outline-dark" (click)="submit_attendance()">Submit and Close</button>
         <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
     </div>
 </div>
-

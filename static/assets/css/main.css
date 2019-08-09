@@ -2773,9 +2773,8 @@ select {
 
 .top-header-author {
     position: relative;
-    bottom: 68px;
     max-width: 200px;
-    margin-bottom: -38px;
+    margin-bottom: 15px;
     z-index: 4;
     text-align: center;
 }
@@ -2878,5 +2877,12 @@ select {
     color: #000;
 }
 
-.edit-modal-body{
+.edit-modal-body input[type="date"]{
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    display: block;
+    border: 1px solid #dedee8;
+    height: 38px;
+    line-height: 38px;
 }

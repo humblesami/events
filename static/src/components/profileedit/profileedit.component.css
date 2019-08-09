@@ -305,3 +305,7 @@ input[type="date"]::-webkit-clear-button {
     border: 1px solid #ccc;
     padding: 0;
 }
+
+.top-header-author.edit-author-thumb {
+    text-align: left;
+}
