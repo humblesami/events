@@ -20,7 +20,6 @@ TWO_FACTOR_CHOICES = (
     (2, _("Phone"))
 )
 
-
 GENDER_CHOICES = (
     (1, _("Male")),
     (2, _("Female")),
@@ -52,7 +51,7 @@ ETHINICITY_CHOICES = (
 from django.apps import apps
 
 def get_permission_set(group_name):
-    permission_set = {}    
+    permission_set = {}
     all_models = apps.get_models()
     perm_set = {}
     if group_name == 'Admin':
@@ -65,7 +64,7 @@ def get_permission_set(group_name):
         perm_set = {
             'view': 1
         }
-    
+
     group_permissions = {}
     for model_obj in all_models:
         meta = model_obj._meta
@@ -73,12 +72,12 @@ def get_permission_set(group_name):
         app_name = meta.app_label
         model_name = meta.model_name
         if not group_permissions.get(app_name):
-            group_permissions[app_name] = {}        
+            group_permissions[app_name] = {}
         group_permissions[app_name][model_name] = perm_set
-    
+
     if group_name == 'Director' or group_name == 'Staff':
-        group_permissions['meetings']['profile'] = {'view': 1, 'change': 1 }
-        group_permissions['authtoken']['token'] = {'view': 1, 'add': 1 } 
+        group_permissions['meetings']['profile'] = {'view': 1, 'change': 1}
+        group_permissions['authtoken']['token'] = {'view': 1, 'add': 1}
 
     return group_permissions
 
@@ -92,20 +91,20 @@ def create_group(obj, group_name):
             obj.groups.add(user_group)
             obj.save()
             return 'done'
-        user_group = MeetingGroup.objects.create(name=group_name)        
-        group_permissions = get_permission_set(group_name)            
+        user_group = MeetingGroup.objects.create(name=group_name)
+        group_permissions = get_permission_set(group_name)
         for app_name in group_permissions:
             for model_name in group_permissions[app_name]:
                 model_permissions = group_permissions[app_name][model_name]
-                
+
                 content_id = ContentType.objects.filter(app_label=app_name, model=model_name)
-                if not content_id:                        
-                    error_list.append('No content id for '+app_name+'.'+model_name)
+                if not content_id:
+                    error_list.append('No content id for ' + app_name + '.' + model_name)
                     continue
                 else:
                     content_id = content_id[0].id
                 for permission_type in model_permissions:
-                    code_name = permission_type+'_'+model_name
+                    code_name = permission_type + '_' + model_name
                     permission = Permission.objects.filter(content_type_id=content_id, codename=code_name)
                     if not permission:
                         error_list.append('No permission entry for content_type_id='+str(content_id)+' for '+app_name+'.'+model_name)
@@ -159,9 +158,9 @@ class Profile(user_model):
     admin_work_phone = models.CharField(max_length=30, blank=True, null=True)
     admin_fax = models.CharField(max_length=30, blank=True, null=True)
     admin_image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
-    mail_to_assistant = models.BooleanField( blank=True, null=True)
-    term_start_date = models.DateField( blank=True, null=True)
-    term_end_date = models.DateField( blank=True, null=True)
+    mail_to_assistant = models.BooleanField(blank=True, null=True)
+    term_start_date = models.DateField(blank=True, null=True)
+    term_end_date = models.DateField(blank=True, null=True)
     signature_data = models.BinaryField(default=b'', null=True, blank=True)
     resume = models.OneToOneField(File, null=True, blank=True, on_delete=models.SET_NULL)
     two_factor_auth = models.IntegerField(choices=TWO_FACTOR_CHOICES, blank=True, null=True)
@@ -240,7 +239,6 @@ class Profile(user_model):
             admin_full_name = self.admin_last_name
         return admin_full_name
 
-
     @classmethod
     def get_records(cls, request, params):
         group = params.get('type')
@@ -257,23 +255,22 @@ class Profile(user_model):
         profiles = ws_methods.get_user_info(profiles)
         profiles_json = {'records': profiles, 'total': total_cnt, 'count': current_cnt}
         return profiles_json
-    
-    
+
     @classmethod
     def get_personal_info(cls, request, params):
         profile_obj = params['profile_obj']
         profile = ws_methods.obj_to_dict(profile_obj,
-            fields=[
-                'first_name',
-                'last_name',
-                'mobile_phone',
-                'email',
-                'birth_date',
-                'location',
-                'email_verified',
-                'mobile_verified',
-                'image'
-            ])
+                                         fields=[
+                                             'first_name',
+                                             'last_name',
+                                             'mobile_phone',
+                                             'email',
+                                             'birth_date',
+                                             'location',
+                                             'email_verified',
+                                             'mobile_verified',
+                                             'image'
+                                         ])
         resume = profile_obj.resume
         if resume:
             profile['resume'] = {'id': resume.id}
@@ -281,44 +278,41 @@ class Profile(user_model):
         profile['two_factor_auth'] = {
             'id': profile_obj.two_factor_auth,
             'name': profile_obj.get_two_factor_auth_display()
-            }
+        }
         return profile
-
 
     @classmethod
     def get_work_info(cls, request, params):
         profile_obj = params['profile_obj']
         profile = ws_methods.obj_to_dict(profile_obj,
-        fields=[
-            'company',
-            'job_title',
-            'department',
-            'work_phone',
-            'fax',
-            'website',
-        ])
+                                         fields=[
+                                             'company',
+                                             'job_title',
+                                             'department',
+                                             'work_phone',
+                                             'fax',
+                                             'website',
+                                         ])
 
         return profile
-
 
     @classmethod
     def get_board_info(cls, request, params):
         profile_obj = params['profile_obj']
         profile = ws_methods.obj_to_dict(profile_obj,
-        fields=[
-            'board_joining_date',
-            'term_start_date',
-            'term_end_date'],
-            related={
-            'committees': {'fields': ['id', 'name']}
-            })
+                                         fields=[
+                                             'board_joining_date',
+                                             'term_start_date',
+                                             'term_end_date'],
+                                         related={
+                                             'committees': {'fields': ['id', 'name']}
+                                         })
         return profile
-
 
     @classmethod
     def get_admin_assistant_info(cls, request, params):
         profile_obj = params['profile_obj']
-        profile = ws_methods.obj_to_dict(profile_obj,fields=[
+        profile = ws_methods.obj_to_dict(profile_obj, fields=[
             'admin_first_name',
             'admin_last_name',
             'admin_cell_phone',
@@ -340,14 +334,14 @@ class Profile(user_model):
         profile_obj = Profile.objects.get(pk=user_id)
         profile = {}
         choice_fields = {
-            'gender': [{'id':0, 'name': ''}],
-            'disability': [{'id':0, 'name': ''}],
-            'ethnicity': [{'id':0, 'name': ''}],
-            'veteran': [{'id':0, 'name': ''}],
-            'committees': [{'id':0, 'name': ''}],
-            'two_factor_auth': [{'id':0, 'name': ''}],
-            'groups': [{'id':0, 'name': ''}]
-            }
+            'gender': [{'id': 0, 'name': ''}],
+            'disability': [{'id': 0, 'name': ''}],
+            'ethnicity': [{'id': 0, 'name': ''}],
+            'veteran': [{'id': 0, 'name': ''}],
+            'committees': [{'id': 0, 'name': ''}],
+            'two_factor_auth': [{'id': 0, 'name': ''}],
+            'groups': [{'id': 0, 'name': ''}]
+        }
         param = {}
         param['profile_obj'] = profile_obj
         if field_group == 'personal':
@@ -380,11 +374,11 @@ class Profile(user_model):
         profile['ethnicity'] = {
             'id': profile_obj.ethnicity,
             'name': profile_obj.get_ethnicity_display()
-        } 
+        }
         profile['gender'] = {
             'id': profile_obj.gender,
             'name': profile_obj.get_gender_display()
-        }  
+        }
         profile['veteran'] = {
             'id': profile_obj.veteran,
             'name': profile_obj.get_veteran_display()
@@ -397,8 +391,6 @@ class Profile(user_model):
             profile['group'] = profile['groups'][0]['name']
         data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
         return data
-
-
 
     @classmethod
     def get_details(cls, request, params):
@@ -424,7 +416,7 @@ class Profile(user_model):
         profile = ws_methods.obj_to_dict(
             profile_orm,
             fields=[
-                'id', 'name', 'username', 'first_name', 'last_name', 'email', 'image', 'bio', 'location', 'birth_date', 
+                'id', 'name', 'username', 'first_name', 'last_name', 'email', 'image', 'bio', 'location', 'birth_date',
                 'nick_name', 'company', 'job_title', 'department',
                 'work_phone', 'mobile_phone', 'website', 'fax', 'ethnicity', 'gender', 'veteran',
                 'disability', 'board_joining_date', 'admin_first_name', 'admin_last_name', 'admin_nick_name',
@@ -446,11 +438,11 @@ class Profile(user_model):
         profile['ethnicity'] = {
             'id': profile_orm.ethnicity,
             'name': profile_orm.get_ethnicity_display()
-        } 
+        }
         profile['gender'] = {
             'id': profile_orm.gender,
             'name': profile_orm.get_gender_display()
-        }  
+        }
         profile['veteran'] = {
             'id': profile_orm.veteran,
             'name': profile_orm.get_veteran_display()
@@ -474,18 +466,17 @@ class Profile(user_model):
         committees = list(Committee.objects.values('id', 'name'))
         groups = list(group_model.objects.all().values('id', 'name'))
         choice_fields = {
-            'gender': gender, 
-            'disability': disability, 
-            'ethnicity': ethnicity, 
+            'gender': gender,
+            'disability': disability,
+            'ethnicity': ethnicity,
             'veteran': veteran,
             'committees': committees,
             'two_factor_auth': two_factor_auth,
             'groups': groups
-            }
+        }
 
         data = {"profile": profile, "next": 0, "prev": 0, 'choice_fields': choice_fields}
         return data
-
 
     @classmethod
     def get_profile_summary(cls, request, params):
@@ -494,7 +485,7 @@ class Profile(user_model):
         profile = ws_methods.obj_to_dict(
             profile_obj,
             fields=['id', 'name', 'first_name', 'last_name', 'image', 'mobile_phone', 'email']
-            )
+        )
         profile['photo'] = profile['image']
         return profile
 
@@ -505,7 +496,7 @@ class Profile(user_model):
             user_id = request.user.id
         profile = Profile.objects.get(pk=user_id)
         for key in params:
-            if key != 'committees' and key != 'signature_data' and key !=' image' and key !=' admin_image' and key !='resume' and key != 'groups':
+            if key != 'committees' and key != 'signature_data' and key != ' image' and key != ' admin_image' and key != 'resume' and key != 'groups':
                 if params[key] == '' and not profile._meta._forward_fields_map[key].max_length:
                     params[key] = None
                 setattr(profile, key, params[key])
@@ -515,7 +506,7 @@ class Profile(user_model):
                 committee_ids = []
                 for committee in committees:
                     committee_ids.append(committee['id'])
-                
+
                 all_committees = Committee.objects.filter(pk__in=committee_ids)
                 current_committees = profile.committees.all()
                 new_committees = set(all_committees) - set(current_committees)
@@ -541,7 +532,7 @@ class Profile(user_model):
             jango_file = DjangoFile(binary_data)
 
             file_name = ''
-            resume_file = profile.resume # File.objects.filter(user_id=user_id)
+            resume_file = profile.resume  # File.objects.filter(user_id=user_id)
             if not resume_file:
                 file_name = 'resume_' + str(user_id) + '.pdf'
             else:
@@ -560,7 +551,7 @@ class Profile(user_model):
             ext = format.split('/')[-1]
 
             data = ContentFile(base64.b64decode(imgstr))
-            file_name = 'image_'+str(user_id) + '.' + ext
+            file_name = 'image_' + str(user_id) + '.' + ext
             profile.image.save(file_name, data, save=True)
 
         if params.get('admin_image'):
@@ -569,14 +560,14 @@ class Profile(user_model):
             ext = format.split('/')[-1]
 
             data = ContentFile(base64.b64decode(imgstr))
-            file_name = 'admin_image_'+str(user_id) + '.' + ext
+            file_name = 'admin_image_' + str(user_id) + '.' + ext
             profile.admin_image.save(file_name, data, save=True)
-        
-        if 'groups' in params:            
+
+        if 'groups' in params:
             groups = profile.groups.all()
             for group in groups:
                 group.user_set.remove(user_id)
-                group.save()  
+                group.save()
             groups = params.get('groups')
             if groups:
                 for group in groups:
@@ -623,7 +614,7 @@ class Profile(user_model):
             thread_data['subject'] = 'Password Rest'
             thread_data['audience'] = [self.id]
             thread_data['template_data'] = {
-                'url': server_base_url+'/user/reset-password/',
+                'url': server_base_url + '/user/reset-password/',
                 'password': random_password
             }
             thread_data['template_name'] = 'user/user_creation_password_reset.html'
@@ -647,16 +638,20 @@ class ManagerDirector(UserManager):
     def get_queryset(self):
         return super(ManagerDirector, self).get_queryset().filter(groups__name__in=['Director'])
 
+
 class ManagerAdmin(UserManager):
     def get_queryset(self):
         return super(ManagerAdmin, self).get_queryset().filter(groups__name__in=['Admin'])
+
 
 class ManagerStaff(UserManager):
     def get_queryset(self):
         return super(ManagerStaff, self).get_queryset().filter(groups__name__in=['Staff'])
 
+
 class Director(Profile):
     objects = ManagerDirector()
+
     class Meta:
         proxy = True
 
@@ -664,10 +659,12 @@ class Director(Profile):
         created = self.pk
         super(Director, self).save(*args, **kwargs)
         if not created:
-            create_group(self, 'Director')            
+            create_group(self, 'Director')
+
 
 class Admin(Profile):
     objects = ManagerAdmin()
+
     class Meta:
         proxy = True
 
@@ -675,10 +672,12 @@ class Admin(Profile):
         created = self.pk
         super(Admin, self).save(*args, **kwargs)
         if not created:
-            create_group(self, 'Admin')            
+            create_group(self, 'Admin')
+
 
 class Staff(Profile):
     objects = ManagerStaff()
+
     class Meta:
         proxy = True
         verbose_name_plural = "Staff"
@@ -687,10 +686,9 @@ class Staff(Profile):
         created = self.pk
         super(Staff, self).save(*args, **kwargs)
         if not created:
-            create_group(self, 'Staff')            
+            create_group(self, 'Staff')
 
-
-# ////////////////////GROUPS//////////////////////////////////
+        # ////////////////////GROUPS//////////////////////////////////
 
 
 class MeetingGroup(group_model):

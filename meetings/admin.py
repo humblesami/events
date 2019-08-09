@@ -6,10 +6,10 @@ from django.utils.html import format_html
 from django.contrib.auth.admin import GroupAdmin
 from django.utils.decorators import method_decorator
 from meetings.model_files.committee import Committee
-from meetings.model_files.user import Profile,MeetingGroup
+from meetings.model_files.user import Profile, MeetingGroup
 from django.views.decorators.debug import sensitive_post_parameters
-from meetings.model_files.document import MeetingDocument,AgendaDocument
-from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument, Invitation_Response, LoginEntry
+from meetings.model_files.document import MeetingDocument, AgendaDocument
+from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument, Invitation_Response#, LoginEntry
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
@@ -17,6 +17,7 @@ import nested_admin
 
 class TopicAdmin(admin.ModelAdmin):
     search_fields = ['name']
+
 
 class TopicDocInline(nested_admin.NestedTabularInline):
     model = AgendaDocument
@@ -29,10 +30,12 @@ class TopicInline(nested_admin.NestedTabularInline):
     inlines = [TopicDocInline]
     extra = 1
 
+
 class MeetingDocInline(nested_admin.NestedTabularInline):
     model = MeetingDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at')
     extra = 1
+
 
 class EventAdmin(nested_admin.NestedModelAdmin):
     fieldsets = [
@@ -62,13 +65,13 @@ class EventAdmin(nested_admin.NestedModelAdmin):
     # extra = 1
     readonly_fields = ('docs',)
     change_form_template = 'event_custom_change_form.html'
-    
 
     def docs(self, obj):
         html = "<div>"
         for d in obj.meetingdocument_set.all():
             if d.pdf_doc:
-                html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' %(d.name,d.pdf_doc.url)
+                html += '<a title="%s" class="fa fa-4x fa-lg fa-file related-widget-wrapper-link change-related" href="%s"></a>' % (
+                d.name, d.pdf_doc.url)
         html += '</div>'
 
         return format_html(html)
@@ -103,15 +106,18 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     autocomplete_fields = ['groups']
     form = UserForm
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth', 'is_superuser')
+    list_display = (
+    'id', 'username', 'email', 'first_name', 'last_name', 'mobile_phone', 'two_factor_auth', 'is_superuser')
+
     class Media:
-        js=('admin/js/profile_change_form.js',)
+        js = ('admin/js/profile_change_form.js',)
 
     def get_form(self, request, obj=None, **kwargs):
         if not obj:
-            kwargs.update({ 'exclude': getattr(kwargs, 'exclude', tuple()) + ('two_factor_auth',), })
+            kwargs.update({'exclude': getattr(kwargs, 'exclude', tuple()) + ('two_factor_auth',), })
         form = super(UserAdmin, self).get_form(request, obj, **kwargs)
         return form
+
 
 class MeetingGroupAdmin(GroupAdmin):
 
@@ -121,23 +127,24 @@ class MeetingGroupAdmin(GroupAdmin):
         qs = MeetingGroup.objects.filter()
         return qs
 
-    def save_model(self, request, obj, form, change):        
+    def save_model(self, request, obj, form, change):
         super(MeetingGroupAdmin, self).save_model(request, obj, form, change)
 
 
 class CommitteeAdmin(admin.ModelAdmin):
     autocomplete_fields = ['users']
     filter_horizontal = ('users',)
-    fields= ('name', 'description', 'members', 'users')
-    list_display= ('name', 'members')
-    search_fields=('name',)
+    fields = ('name', 'description', 'members', 'users')
+    list_display = ('name', 'members')
+    search_fields = ('name',)
     readonly_fields = ('members',)
 
-    def members(self,obj):
+    def members(self, obj):
         html = '<div>'
         for u in obj.users.all():
             if u.image:
-                html += '<img title="%s" style="width:50px;border-radius:92px" src="/media/%s" />' % (u.username,u.image)
+                html += '<img title="%s" style="width:50px;border-radius:92px" src="/media/%s" />' % (
+                u.username, u.image)
         html += '</div>'
         return format_html(html)
     # members.short_description = ''
@@ -161,11 +168,14 @@ class NewsAdmin(admin.ModelAdmin):
 class MeetingDocumentForm(FileForm):
     pass
 
+
 class SignDocumentForm(SignatureDocForm):
     def get_form(self, request, obj=None, **kwargs):
         form = super(SignDocumentForm, self).get_form(request, obj, **kwargs)
         return form
+
     pass
+
 
 class AdminSignDoc(admin.ModelAdmin):
     fields = [
@@ -177,21 +187,24 @@ class AdminSignDoc(admin.ModelAdmin):
         'attachment',
     ]
     change_form_template = 'admin/actions_change_form.html'
-    class Media:
-        js=('admin/js/meeting_sign_doc.js',)
 
-class AttendeeAdmin(admin.ModelAdmin):    
-    list_display= ('event', 'attendee', 'state', 'attendance')
+    class Media:
+        js = ('admin/js/meeting_sign_doc.js',)
+
+
+class AttendeeAdmin(admin.ModelAdmin):
+    list_display = ('event', 'attendee', 'state', 'attendance')
+
 
 admin.site.register(News, NewsAdmin)
-admin.site.register(Event,EventAdmin)
-admin.site.register(Topic,TopicAdmin)
+admin.site.register(Event, EventAdmin)
+admin.site.register(Topic, TopicAdmin)
 admin.site.register(MeetingDocument, MeetingDocumentForm)
 admin.site.register(AgendaDocument)
-admin.site.register(Profile,UserAdmin)
-admin.site.register(MeetingGroup,MeetingGroupAdmin)
-admin.site.register(Committee,CommitteeAdmin)
-admin.site.register(LoginEntry)
+admin.site.register(Profile, UserAdmin)
+admin.site.register(MeetingGroup, MeetingGroupAdmin)
+admin.site.register(Committee, CommitteeAdmin)
+# admin.site.register(LoginEntry)
 admin.site.register(SignDocument, AdminSignDoc)
 admin.site.register(Invitation_Response, AttendeeAdmin)
 admin.site.site_header = "BoardSheet"
