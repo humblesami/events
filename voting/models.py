@@ -194,6 +194,8 @@ class Voting(Actions):
             pass
 
         voting_object['chart_data'] = []
+        is_attendee = uid in voting_object_orm.get_audience()
+        voting_object['is_attendee'] = is_attendee
         voting_object['voting_options'] = []
         for option in voting_options:
             voting_object['voting_options'].append({'id': option.id, 'name': option.name})

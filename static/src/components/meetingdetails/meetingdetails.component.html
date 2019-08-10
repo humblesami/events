@@ -23,9 +23,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 <div class="MainTitleHeadWrap" style="flex-wrap: wrap">
                     <div class="HeadingWrap">
                         <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
-                    </div>
-
-                    <div class="d-flex ml-auto my-2">
+                        <div class="d-flex my-2">
                             <div class="row note" *ngIf="conference_not_active">
                                 Meeting conference URL will be available 15 minutes before meeting start.
                             </div>
@@ -53,15 +51,16 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 </button>
                             </div>
                         </div>
-                        <div class="d-flex">
-                            <div class="MeetingBtnWrapper" id="tdmrb{{meeting_object.id}}">
-                                    <div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
-                                        <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
-                                    </div>
-                                </div>
-                        </div>
+                    </div>
 
                     
+                    <div class="d-flex">
+                        <div class="MeetingBtnWrapper" id="tdmrb{{meeting_object.id}}">
+                            <div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
+                                <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+                            </div>
+                        </div>
+                    </div>                    
 				</div>
 
                 <div class="div1">

@@ -10,9 +10,9 @@ title="{{voting_object.name}}"></app-breadcrumb>
             <link rel="stylesheet" href="/static/assets/css/survey.css" />
 		<div class="MainTitleHeadWrap">
 			<div class="HeadingWrap">
-				Resolution Info
-			</div>
-			<div class="MeetingBtnWrapper">
+				{{voting_object.name}}
+            </div>
+			<div class="MeetingBtnWrapper" *ngIf="voting_object.is_attendee">
 				<div class="btn-group" id="tdmrb{{voting_object.id}}">
 					<a href="javascript:void(0);" (click)='respond_invitation(option.name, option.id, voting_object.id)' class="btn" *ngFor="let option of voting_object.voting_options">
 						<i *ngIf="voting_object.my_status == option.name" class="fa fa-check fa-lg"  modifiers="{}"></i>
@@ -20,32 +20,11 @@ title="{{voting_object.name}}"></app-breadcrumb>
 					</a>
 					<a href="javascript:void(0);" style="display: none" *ngIf="voting_object && voting_object.signature_required == true" id="{{voting_object.id}}" class="fa fa-pen fa-lg strt_sign voting" url='/voting/save_signature'></a>
 				</div>
-			</div>
+            </div>
 		</div>
         <div class=" form-details">
             <div class="meeting-details-form">
                 <div class="row">
-                    <!-- <div *ngIf="voting_object.signature">
-                        <img src="data:image/png;base64,{{voting_object.signature}}" height="280" width="466" />
-                    </div> -->
-					<div *ngIf="voting_object.my_status" class="col-md-6 mb-2">
-						<div class="meet-elements">
-							My Status
-						</div>
-						<label class="meet-elementsInfo">
-							{{voting_object.my_status}}
-						</label>
-					</div>
-
-                    <div *ngIf="voting_object.name && voting_object.name" class="col-md-6 mb-2">
-                        <div class="meet-elements">
-                            Subject
-                        </div>
-                        <label class="meet-elementsInfo">
-                            {{voting_object.name}}
-                        </label>
-                    </div>
-
                     <div *ngIf="voting_object.motion_first" class="col-md-6 mb-2">
                         <div class="meet-elements">
                             Motion First
@@ -102,21 +81,21 @@ title="{{voting_object.name}}"></app-breadcrumb>
 
                 </div>
 
-                <div class="row" *ngIf="voting_object.signature_data">
+                <div class="row" *ngIf="voting_object.signature_required && voting_object.signature_data">
                     <div class="col-sm-8 " style="display: flex;">
                         <div style="position:relative;cursor: pointer;">
                             <img class="strt_sign_voting " style="width: 100%;" *ngIf="voting_object.signature_data" src="data:image/png;base64,{{voting_object.signature_data}}">
                         </div>
                     </div>
                 </div>
-                <div *ngIf="voting_object.results.answer_count" class="title-wrapper voting-chart">
+                <div *ngIf="(socketService.is_admin || voting_object.public_visibility) && voting_object.results.answer_count" class="title-wrapper voting-chart">
                     <div class="modal-header">
-                        Graphical View
+                        Results
                     </div> 
                     <div class="w-50 ml-25">
                         <div class="canvas_warpper my-5">
                             <div class="canvas_container">
-                                    <canvas id="myChart"></canvas>
+                                <canvas id="myChart"></canvas>
                             </div>
                         </div>	
                         <label>Choices</label> :

@@ -5,9 +5,9 @@ import {SocketService} from "../../app/socket.service";
 declare var $: any;
 
 @Component({
-  selector: 'app-votingdetails',
-  styleUrls:['./meetingdetails.css', './votingdetails.css'],
-  templateUrl: './votingdetails.component.html'
+    selector: 'app-votingdetails',
+    styleUrls:['./meetingdetails.css', './votingdetails.css'],
+    templateUrl: './votingdetails.component.html'
 })
 export class VotingdetailsComponent implements OnInit {    
     voting_object: any;
@@ -68,7 +68,7 @@ export class VotingdetailsComponent implements OnInit {
                 }
                 obj_this.voting_object = result;
 
-                console.log(result);            
+                // console.log(result);
                 // make_bread_crumb(obj_this.voting_object.name);
                 // console.log(obj_this.voting_object, obj_this.voting_object.chart_data, 4343);
                 if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                

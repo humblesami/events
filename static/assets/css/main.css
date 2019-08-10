@@ -2412,9 +2412,9 @@ span.kanban-upcoming-meeting-date {
 .ChoseButtonHeadWrap .meeting-detail .upcomingButton button {
 	background: #638FC9;
 	color: #fff;
-	border-color: #638FC9;
-	min-width: 110px;
-	font-size: 0.85rem;
+    border-color: #638FC9;
+    min-width: 90px;
+    font-size: 0.86rem;
 }
 .res-message {
 	border: 2px solid;
@@ -2893,4 +2893,8 @@ h4.title-h4{
 	color:#3059C9;
 	font-size: 1.3rem;
     text-align: center;
+}
+.custom-control-label
+{
+    cursor: pointer;
 }
