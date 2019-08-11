@@ -20,6 +20,7 @@ from mainapp.settings import MEDIA_ROOT, server_base_url
 from mainapp.ws_methods import queryset_to_list
 from restoken.models import PostUserToken
 
+
 class SignatureDoc(File):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     original_pdf = models.FileField(upload_to='original/')
@@ -248,8 +249,6 @@ class SignatureDoc(File):
         pdf_doc = self.pdf_doc.read()
         pdf_doc = base64.b64encode(pdf_doc)
         pdf_doc = pdf_doc.decode('utf-8')
-
-        user = False
         signatures = None
         if SignatureDoc.is_admin(user):
             signatures = self.signature_set.all()
@@ -311,6 +310,8 @@ class Signature(models.Model):
         create = False
         if self.pk is None:
             create = True
+        if self.image:
+            self.signed = True
         super(Signature, self).save(*args, **kwargs)
         if create:
             pass

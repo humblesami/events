@@ -1,11 +1,4 @@
-import io
-import os
-import uuid
-import json
-import base64
-import datetime
 from fpdf import FPDF
-
 from .event import Event
 from .topic import Topic
 from .user import Profile
@@ -13,12 +6,9 @@ from random import randint
 from django.db import models
 from mainapp import ws_methods
 from documents.file import File
-from PIL import Image, ImageDraw
 from django.db import transaction
-from collections import OrderedDict
 from mainapp.settings import MEDIA_ROOT
 from restoken.models import PostUserToken
-from mainapp.settings import server_base_url
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from django.core.files import File as DjangoFile
 from esign.model_files.document import SignatureDoc, Signature
@@ -223,7 +213,6 @@ class SignDocument(SignatureDoc):
         if not user.id:
             return 'Unauthorized to get sign document'
         doc_obj = cls.objects.get(id=file_id)
-        file_name = file_obj.name
         users = Profile.objects.all()
         users = queryset_to_list(users,fields=['id','name'])
         meetings = Event.objects.filter(publish=True).exclude(archived=True)
@@ -237,7 +226,7 @@ class SignDocument(SignatureDoc):
             send_to_all = file_obj.send_to_all
 
         doc_data = doc_obj.get_doc_data(request.user)
-        doc_data['sign_count'] = len(file_obj.signature_set.filter(signed=True))
+        doc_data['sign_count'] = len(doc_obj.signature_set.filter(signed=True))
         if type(doc_data) is str:
             return doc_data
         doc_data['doc_name'] = file_name
