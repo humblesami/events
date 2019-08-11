@@ -272,7 +272,7 @@ from restoken.models import PostUserToken
 
 class VotingAnswer(models.Model):
     voting = models.ForeignKey(Voting, on_delete = models.CASCADE, null=True)
-    user = models.ForeignKey(Profile, on_delete = models.CASCADE, blank = False)
+    user = models.ForeignKey(Profile, on_delete = models.SET_NULL, blank = False, null=True)
     signature_data = models.BinaryField('Signature Data', default=b'', null=True, blank=True)
     user_answer = models.ForeignKey(VotingChoice, on_delete=models.CASCADE, null=True)
 
