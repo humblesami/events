@@ -1,67 +1,104 @@
 $(document).ready(function(){
     durationRequisits();
     $(document).on('blur', 
-        '.field-duration input:visible, .field-start_date input, .field-end_date input', 
+        '.field-duration input, .field-start_date input, .field-end_date input', 
         function()
         {
-            // var topic_name = $(this).closest('tr').find('.field-name input:visible').val();
-            // if(!topic_name)
-            // {
-            //     return;
-            // }
-            if (!$(this).val())
+            let time_difference = undefined;
+            if (check_durations_with_time())
             {
-                $('.submit-row input').attr('disabled', 'disabled');
-                return;
+                $('.field-duration .error').remove();
             }
-            $('.submit-row input').attr('disabled', 'disabled');
-            let end_date = [];
-            let start_date = [];
-            $('.field-start_date input').each(function(el){
-                let value = $(this).val();
-                start_date.push(value);
-            });
-
-            $('.field-end_date input').each(function(el){
-                let value = $(this).val();
-                end_date.push(value);
-            });
-            if (! (checkDateAndTime(start_date) && checkDateAndTime(end_date)))
+            if ($(this).closest('p').hasClass('datetime'))
             {
-                $('.submit-row input').attr('disabled', 'disabled');
-                return;
-            }
-            start_date = new Date(Date.parse(start_date.join(' ')));
-            end_date = new Date(Date.parse(end_date.join(' ')));
-            var diff = moment.duration(moment(end_date).diff(moment(start_date)));
-            let time_difference = diff.valueOf()
-            let total_durations = [0,0]
-            $(".field-duration input:visible").each(function(){
-                let duration = [];
-                duration = $(this).val().split(':')
-                for(let i=0; i<duration.length;i++){
-                    if(!isNaN(parseInt(duration[i])))
-                    {
-                        total_durations[i] += parseInt(duration[i]);
-                    }
+                if (!$(this).val())
+                {
+                    $(this).closest('span').find('.error').remove();
+                    $(this).after(`<span class="error text-danger">This field is required.</span>`);
+                    $('.submit-row input[type="submit"]').attr('disabled', 'disabled');
+                    return;
                 }
-            });
-            duration_in_mil = durationToMilliseconds(total_durations);
-            if (duration_in_mil > time_difference)
+                else
+                {
+                    $(this).closest('span').find('.error').remove();
+                    $('.submit-row input[type="submit"]').removeAttr('disabled');
+                }
+            }
+            time_difference = get_time_difference();
+            if (time_difference < 0)
             {
-                $('.submit-row input').attr('disabled', 'disabled');
-                $(this).addClass('error');
-                // $(this).focus();
+                $('.field-end_date .error').remove();
+                $('.field-end_date').append(`
+                <span class="error text-danger">
+                End Date should be greater than Start Date.
+                </sapn>`);
+                $('.submit-row input[type="submit"]').attr('disabled', 'disabled');
+                return;
             }
             else
             {
-                $('.submit-row input').removeAttr('disabled');
+                $('.field-end_date .error').remove();
+                $('.submit-row input[type="submit"]').removeAttr('disabled');
+            }
+            
+
+            
+            if ($(this).closest('td').hasClass('field-duration'))
+            {
+                if ($(this).closest('tr').find('.field-name input').val() && time_difference)
+                {
+                    duration_in_mil = get_total_durations();
+                    console.log(23,234);
+                    if (duration_in_mil > time_difference)
+                    {
+                        $('.submit-row input').attr('disabled', 'disabled');
+                        $('.field-duration div.error').remove();
+                        $(this).closest('td').append(`<div class="error text-danger">Duration must be less than meeting time.</div>`);
+                        $('.submit-row input[type="submit"]').attr('disabled', 'disabled');
+                    }
+                    else
+                    {
+                        $('.field-duration div.error').remove();
+                        $('.submit-row input[type="submit"]').removeAttr('disabled');
+                    }
+
+                }
             }
         });
-
     $('.djn-add-item a').click(function(){
         setTimeout(durationRequisits,100);
     });
+    $(document).on('click', '.datetimeshortcuts a', function(){
+        $(this).parent().parent().find('.error').remove();
+    });
+
+
+    function check_durations_with_time()
+    {
+        let time_difference = get_time_difference();
+            let total_durations = get_total_durations();
+            if (total_durations > time_difference)
+            {
+                $('.submit-row .error').remove();
+                $('.submit-row').prepend(`
+                <span class="error text-danger">Agenda duration must be less than meeting time</span>
+                `)
+                return false;
+            }
+            else
+            {
+                $('.submit-row .error').remove();
+                return true;
+            }
+    }
+    $(document).on('click', '.submit-row input[type="submit"]',
+        function(e){
+            if(!check_durations_with_time())
+            {
+                e.preventDefault();
+            }
+
+    })
 
     function checkDateAndTime(meetingDate)
     {
@@ -101,5 +138,51 @@ $(document).ready(function(){
         hours_to_mil = duration[0] * 60 * 60 * 1000;
         minuts_to_mil = duration[1] * 60 * 1000;
         return hours_to_mil + minuts_to_mil;
+    }
+    function get_time_difference()
+    {
+        let end_date = [];
+        let start_date = [];
+        $('.field-start_date input').each(function(el){
+            let value = $(this).val();
+            if (value)
+            {
+                start_date.push(value);
+            }
+        });
+
+        $('.field-end_date input').each(function(el){
+            let value = $(this).val();
+            if (value)
+            {
+                end_date.push(value);
+            }
+        });
+
+        if(start_date.length != 2 && end_date.length !=2)
+        {
+            return;   
+        }
+
+        start_date = new Date(Date.parse(start_date.join(' ')));
+        end_date = new Date(Date.parse(end_date.join(' ')));
+        var diff = moment.duration(moment(end_date).diff(moment(start_date)));
+        return diff.valueOf()
+    }
+
+    function get_total_durations()
+    {
+        let total_durations = [0,0]
+        $(".field-duration input:visible").each(function(){
+            let duration = [];
+            duration = $(this).val().split(':')
+            for(let i=0; i<duration.length;i++){
+                if(!isNaN(parseInt(duration[i])))
+                {
+                    total_durations[i] += parseInt(duration[i]);
+                }
+            }
+        });
+        return durationToMilliseconds(total_durations);
     }
 });
