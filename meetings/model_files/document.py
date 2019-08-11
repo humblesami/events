@@ -222,7 +222,7 @@ class SignDocument(SignatureDoc):
 
         if not user.id:
             return 'Unauthorized to get sign document'
-        file_obj = cls.objects.get(id=file_id)
+        doc_obj = cls.objects.get(id=file_id)
         file_name = file_obj.name
         users = Profile.objects.all()
         users = queryset_to_list(users,fields=['id','name'])
@@ -231,12 +231,13 @@ class SignDocument(SignatureDoc):
         meeting_id = False
         send_to_all = False
 
-        if file_obj.meeting:
+        if doc_obj.meeting:
             meeting_id = file_obj.meeting.id
-        if file_obj.send_to_all:
+        if doc_obj.send_to_all:
             send_to_all = file_obj.send_to_all
 
-        doc_data = SignatureDoc.get_doc_data(request, file_obj, token)
+        doc_data = doc_obj.get_doc_data(request.user)
+        doc_data['sign_count'] = len(file_obj.signature_set.filter(signed=True))
         if type(doc_data) is str:
             return doc_data
         doc_data['doc_name'] = file_name
@@ -247,25 +248,18 @@ class SignDocument(SignatureDoc):
         return doc_data
 
     @classmethod
-    def save_sign_data(cls, request, params):
+    def assign_signature(cls, request, params):
         doc_id = int(params['document_id'])
-        meeting_id = params['meeting_id']
-        send_to_all = params['send_to_all']
-        doc = cls.objects.filter(id=doc_id)[0]
-        if send_to_all:
-            doc.send_to_all=True
-        if not send_to_all:
-            doc.send_to_all=False
-        if meeting_id:
-            meeting_id = int(meeting_id)
-            doc.meeting_id=meeting_id
-        if not meeting_id:
-            doc.meeting=None
-        doc.save()
-        signatures = json.loads(params['data'])
+        doc = cls.objects.get(id=doc_id)
+        if len(doc.signature_set.filter(signed=False)) > 0:
+            return 'Can not be edited as signature_started'
+        return doc.asign_signature()
+
+    def assign_signature(self, user, params):
         user_ids = []
-        if send_to_all:
-            meeting = Event.objects.get(id=meeting_id)
+        if self.send_to_all:
+            meeting = Event.objects.get(id=self.meeting_id)
+            self.remove_all_signature()
             sign_top = 5
             c = 0
             for partner in meeting.attendees.all():
@@ -275,62 +269,26 @@ class SignDocument(SignatureDoc):
                 if c == 1:
                     sign_left = 51
                 obj = Signature(
-                    document_id=doc.id,
+                    document_id=self.id,
                     user_id=partner.id,
                     type='signature',
                     left=sign_left,
                     top=sign_top,
                     height=40,
-                    width =140,
+                    width=140,
                     zoom=300
                 )
+                obj.created_by = user.id
                 obj.save()
                 if c == 1:
                     c = 0
                     sign_top += 15
                     continue
                 c += 1
-            doc.add_pages_for_sign()
+            self.add_pages_for_sign()
+            return self.on_signature_assigned(user, user_ids, params)
         else:
-            user_ids = [sign["user_id"] for sign in signatures]
-            user_ids = list(OrderedDict.fromkeys(user_ids))
-            for u in user_ids:
-                for sign in [x for x in signatures if x['user_id'] == u]:
-                    obj = Signature(
-                        document_id=sign['document_id'],
-                        user_id=sign['user_id'],
-                        email=sign['email'],
-                        name =sign['name'],
-                        field_name =sign['field_name'],
-                        left =sign['left'], top = sign['top'],
-                        page =sign['page'],
-                        height=sign['height'], width = sign['width'],
-                        zoom=sign['zoom'], type = sign['type']
-                    )
-                    obj.created_by_id = request.user.id
-                    obj.save()
-        template_data = {            
-            'subject': params['subject'],
-            'message': params['message'],
-            'url': server_base_url + '/#/token-sign-doc/'+str(doc.id)+'/'
-        }
-        post_info = {}
-        post_info['res_app'] = 'esign'
-        post_info['res_model'] = 'SignatureDoc'
-        post_info['res_id'] = doc.id
-        template_name = 'esign/esign_request.html'
-        email_data = {
-            'subject': params['subject'],
-            'audience': user_ids,
-            'post_info': post_info,
-            'template_data': template_data,
-            'template_name': template_name,
-            'token_required': True
-        }
-        ws_methods.send_email_on_creation(email_data)
-        doc_data = SignatureDoc.get_doc_data(request,doc)
-        return doc_data
-
+            return super(SignDocument, self).assign_signature()
 
     def add_pages_for_sign( self):
         if not self.original_pdf or not self.signature_set.all().exists():

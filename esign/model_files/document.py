@@ -1,7 +1,9 @@
 import io
+import json
 import os
 import base64
 import datetime
+from collections import OrderedDict
 
 from django.apps import apps
 from fpdf import FPDF
@@ -14,7 +16,7 @@ from django.core.files import File as DjangoFile
 
 from documents.file import File
 from mainapp import ws_methods
-from mainapp.settings import MEDIA_ROOT
+from mainapp.settings import MEDIA_ROOT, server_base_url
 from mainapp.ws_methods import queryset_to_list
 from restoken.models import PostUserToken
 
@@ -33,8 +35,62 @@ class SignatureDoc(File):
             self.original_pdf = self.pdf_doc
             self.save()
             pass
-        else:
-            pass
+
+    @classmethod
+    def assign_signature(cls, request, params):
+        doc_id = int(params['document_id'])
+        doc = cls.objects.get(id=doc_id)
+        if len(doc.signature_set.filter(signed=False)) > 0:
+            return 'Can not be edited as signature_started'
+        return doc.asign_signature()
+
+    def assign_signature(self, user, params):
+        signatures = json.loads(params['data'])
+        user_ids = [sign["user_id"] for sign in signatures]
+        user_ids = list(OrderedDict.fromkeys(user_ids))
+        for u in user_ids:
+            for sign in [x for x in signatures if x['user_id'] == u]:
+                obj = Signature(
+                    document_id=sign['document_id'],
+                    user_id=sign['user_id'],
+                    email=sign['email'],
+                    name=sign['name'],
+                    field_name=sign['field_name'],
+                    left=sign['left'], top=sign['top'],
+                    page=sign['page'],
+                    height=sign['height'], width=sign['width'],
+                    zoom=sign['zoom'], type=sign['type']
+                )
+                obj.created_by_id = user.id
+                obj.save()
+        return self.on_signature_assigned(user, user_ids, params)
+
+    def on_signature_assigned(self, user, user_ids, params):
+        template_data = {
+            'subject': params['subject'],
+            'message': params['message'],
+            'url': server_base_url + '/#/token-sign-doc/' + str(self.id) + '/'
+        }
+        post_info = {}
+        post_info['res_app'] = 'esign'
+        post_info['res_model'] = 'SignatureDoc'
+        post_info['res_id'] = self.id
+        template_name = 'esign/esign_request.html'
+        email_data = {
+            'subject': params['subject'],
+            'audience': user_ids,
+            'post_info': post_info,
+            'template_data': template_data,
+            'template_name': template_name,
+            'token_required': True
+        }
+        ws_methods.send_email_on_creation(email_data)
+        doc_data = self.get_doc_data(user)
+        return doc_data
+
+    def remove_all_signature(self):
+        self.signature_set.all().remove()
+        pass
 
     @classmethod
     def save_doc(cls, request, params):
@@ -174,7 +230,7 @@ class SignatureDoc(File):
         file_obj = SignatureDoc.objects.get(id=file_id)
         file_name = file_obj.name
 
-        doc_data = SignatureDoc.get_doc_data(request, file_obj, token)
+        doc_data = SignatureDoc.get_doc_data(request.user)
         if type(doc_data) is str:
             return doc_data
         doc_data['doc_name'] = file_name
@@ -182,52 +238,40 @@ class SignatureDoc(File):
         return doc_data
 
     @classmethod
-    def get_doc_data(cls, request, doc, token=False):
-        pdf_doc = doc.pdf_doc.read()
+    def is_admin(cls, user):
+        group = Group.objects.get(name="Admin")
+        if user in group.user_set.all():
+            return True
+        return False
+
+    def get_doc_data(self, user):
+        pdf_doc = self.pdf_doc.read()
         pdf_doc = base64.b64encode(pdf_doc)
         pdf_doc = pdf_doc.decode('utf-8')
 
         user = False
         signatures = None
-        if token:
-            post_info = {
-                'id': doc.id,
-                'model': 'SignatureDoc',
-                'app': 'esign'
-            }
-            user_token = PostUserToken.validate_token_for_post(token, post_info)
-            if user_token:
-                user = user_token.user
-                signatures = doc.signature_set.filter(user_id=user.id)
+        if SignatureDoc.is_admin(user):
+            signatures = self.signature_set.all()
         else:
-            user = request.user
-            group = Group.objects.get(name="Admin")
-            if user in group.user_set.all():
-                signatures = doc.signature_set.all()
-            else:
-                signatures = doc.signature_set.filter(user_id=user.id)
-        uid = user.id
+            signatures = self.signature_set.filter(user_id=user.id)
 
         signatures = queryset_to_list(signatures,
                                       fields=['user__id', 'user__username', 'id', 'type', 'page', 'field_name', 'zoom',
                                               'width', 'height', 'top', 'left', 'image'])
-        for s in signatures:
+        for signature in signatures:
             signed = False
             my_record = False
-            s["name"] = s["user__username"]
-            if s["image"]:
+            signature["name"] = signature["user__username"]
+            if signature["image"]:
                 signed = True
-            sign_user_id = s["user__id"]
-            if token:
-                if (uid == sign_user_id and sign_user_id):
-                    my_record = True
-            else:
-                if (uid == sign_user_id):
-                    my_record = True
-            s["signed"] = signed
-            s['signtype'] = s["type"]
-            s["my_record"] = my_record
-        return {"pdf_binary": pdf_doc, "doc_data": signatures, 'id': doc.id}
+            sign_user_id = signature["user__id"]
+            if (user.id == sign_user_id and sign_user_id):
+                my_record = True
+            signature["signed"] = signed
+            signature['signtype'] = signature["type"]
+            signature["my_record"] = my_record
+        return {"pdf_binary": pdf_doc, "doc_data": signatures, 'id': self.id}
 
 
     @classmethod
@@ -259,8 +303,17 @@ class Signature(models.Model):
     zoom = models.FloatField(null=True, blank=True)
     height = models.FloatField(null=True, blank=True)
     width = models.FloatField(null=True, blank=True)
+    signed = models.BooleanField(default=False)
     signed_at = models.DateTimeField(null=True)
     created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='admin')
+
+    def save(self, *args, **kwargs):
+        create = False
+        if self.pk is None:
+            create = True
+        super(Signature, self).save(*args, **kwargs)
+        if create:
+            pass
 
 
     @classmethod
