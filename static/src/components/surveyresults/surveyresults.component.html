@@ -5,15 +5,16 @@ title="Results"></app-breadcrumb>
 <div class="router-outlet">
     <link rel="stylesheet" href="/static/assets/css/survey.css" />
     <div class="container" *ngIf="surveyDetails">
-        <div class=" form-details">
+        <div class="form-details">
             <div class="meeting-details-form">
                 <div class="row">
                     <div *ngIf="surveyDetails.name" class="col-lg-12">
                         <div class="MainTitleHeadWrap">
                             <div class="HeadingWrap">
-                                {{surveyDetails.name}}
+                                {{surveyDetails.name}} res {{surveyDetails.is_respondent}} 88 {{surveyDetails.publish}}
                             </div>
-                            <div class="MeetingBtnWrapper" *ngIf="surveyDetails.is_published">
+                            <div class="MeetingBtnWrapper" *ngIf="surveyDetails.publish">
+                                
                                 <div class="btn-group">
                                     <a *ngIf="surveyDetails.is_respondent" id="{{surveyDetails.id}}" class="btn" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Reattempt Survey</a>
                                 </div>

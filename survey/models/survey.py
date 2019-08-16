@@ -146,46 +146,33 @@ class Survey(Actions):
     @classmethod
     def get_details(cls, request, params):
         uid = request.user.id
-        survey_id = params.get('survey_id')
-        if survey_id:
-            groups = request.user.groups.values('name')
-            results_visibility = False
+        survey_id = params['survey_id']
+        groups = request.user.groups.values('name')
+        survey_obj = Survey.objects.get(pk=survey_id)
+        is_respondent = uid in survey_obj.get_audience()
+        if not is_respondent:
             for group in groups:
                 if group['name'] in ['Admin', 'Staff']:
                     results_visibility = True
-            if results_visibility:
-                survey_obj = Survey.objects.filter(pk=survey_id)
-            else:
-                survey_obj = Survey.objects.filter(
-                    (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-                    |
-                    (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-                    |
-                    Q(respondents__id=uid),pk=survey_id)
-            # survey = ws_methods.obj_to_dict(survey_obj)
-            if not survey_obj:
-                return 'Survey not Found...'
-            survey = list(survey_obj)[0]
-            questions = survey.questions.all()
-            survey_questions = []
-            for question in questions:
-                question_dict = question.__dict__
-                if question_dict['_state']:
-                    del question_dict['_state']
-                if question_dict['choices']:
-                    question_dict['choices'] = question_dict['choices'].split(',')
-                survey_questions.append(question_dict)
-            is_respondent = request.user.id in survey.get_audience()
-            survey = survey.__dict__
-            if survey['_state']:
-                del survey['_state']
-            survey['questions'] = survey_questions
-            survey['open_date'] = str(survey['open_date'])
-            survey['close_date'] = str(survey['close_date'])
-            survey['is_respondent'] = is_respondent
-            return survey
-        else:
-            return 'Invalid Survey ID'
+        if not is_respondent:
+            return 'Unauthorized to access survey details'
+        questions = survey_obj.questions.all()
+        survey_questions = []
+        for question in questions:
+            question_dict = question.__dict__
+            if question_dict['_state']:
+                del question_dict['_state']
+            if question_dict['choices']:
+                question_dict['choices'] = question_dict['choices'].split(',')
+            survey_questions.append(question_dict)
+        survey = survey_obj.__dict__
+        if survey['_state']:
+            del survey['_state']
+        survey['questions'] = survey_questions
+        survey['open_date'] = str(survey['open_date'])
+        survey['close_date'] = str(survey['close_date'])
+        survey['is_respondent'] = is_respondent
+        return survey
 
     @classmethod
     def get_pending_surveys(cls, uid):
@@ -200,7 +187,6 @@ class Survey(Actions):
             user_response = survey.questions.filter(answers__isnull=False, answers__response__user__id=uid)
             if len(user_response) > 0:
                 my_status = 'done'
-            # my_status = user_answer.user_answer.name
             else:
                 my_status = 'pending'
                 pending_survey.append({
@@ -215,118 +201,103 @@ class Survey(Actions):
         survey_id = params['survey_id']
         uid = request.user.id
         groups = request.user.groups.values('name')
-        results_visibility = False
-        for group in groups:
-            if group['name'] in ['Admin', 'Staff']:
-                results_visibility = True
-        if results_visibility:
-            survey = Survey.objects.filter(pk=survey_id)
-        # else:
-        #     survey = Survey.objects.filter(
-        #         (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-        #         |
-        #         (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-        #         |
-        #         Q(respondents__id=uid), pk=survey_id)
-        if survey:
-            survey = survey[0]
-            is_open = False
-            utc=pytz.UTC
-            now = datetime.datetime.now().replace(tzinfo=utc)
-            survey.close_date = survey.close_date.replace(tzinfo=utc)
-            if survey.close_date > now:
-                is_open = True
-            survey_results = {
-                'id': survey.id,
-                'name': survey.name,
-                'questions': [],
-                'is_open': is_open,
-                'is_respondent': request.user.id in survey.get_audience(),
-                'progess_data': []
-            }
-            questions = survey.questions.all()
-            for question in questions:
-                question_choices = []
-                user_answers = []
-                if question.type in ('radio', 'select-multiple'):
-                    question_choices = question.choices.split(',')
-                answers = list(question.answers.values('body', 'response__user__username').annotate(answer_count=Count('body')))
-                answer_objects = question.answers.all()
-                cnt = 0
-                for answer in answers:
-                    user_answer = answer['body']
-                    if question.type == 'select-multiple':
-                        user_answer = literal_eval(user_answer)
-                    profile_model = ws_methods.get_model('meetings', 'Profile')
-                    user_response = answer_objects[cnt].response
-                    if user_response and user_response.user:
-                        answer_user = profile_model.objects.filter(pk=user_response.user.id)
-                        cnt += 1
-                        user_answers.append({
-                            'answers': user_answer,
-                            'user_name': answer['response__user__username'],
-                            'user': {
-                                'id': answer_user.id,
-                                'name': answer_user.fullname(),
-                                'email': answer_user.email,
-                                'photo': answer_user.image.url,
-                            }
-                        })
-                question_data = []
-                chart_data = []
-                for choice in question_choices:
-                    question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0})
-                for index, user_answer in enumerate(answers):
-                    if question.type == 'select-multiple':
-                        user_answer = literal_eval(user_answer['body'])
-                        for user_ans in user_answer:
-                            for singledata in question_data:
-                                if user_ans == singledata['option_name'].lower():
-                                    singledata['option_result'] += 1
-                                    break
-                    else:
+        survey = Survey.objects.filter(pk=survey_id)
+        is_respondent = uid in survey.get_audience()
+        if not is_respondent:
+            for group in groups:
+                if group['name'] in ['Admin', 'Staff']:
+                    is_respondent = True
+        if not is_respondent:
+            return 'Not authorized to see results'
+        is_open = False
+        utc=pytz.UTC
+        now = datetime.datetime.now().replace(tzinfo=utc)
+        survey.close_date = survey.close_date.replace(tzinfo=utc)
+        if survey.close_date > now:
+            is_open = True
+        survey_results = {
+            'id': survey.id,
+            'name': survey.name,
+            'questions': [],
+            'is_open': is_open,
+            'is_published': survey.publish,
+            'publish': survey.publish,
+            'is_respondent': request.user.id in survey.get_audience(),
+            'progess_data': []
+        }
+        questions = survey.questions.all()
+        for question in questions:
+            question_choices = []
+            user_answers = []
+            if question.type in ('radio', 'select-multiple'):
+                question_choices = question.choices.split(',')
+            answers = list(question.answers.values('body', 'response__user__username').annotate(answer_count=Count('body')))
+            answer_objects = question.answers.all()
+            cnt = 0
+            for answer in answers:
+                user_answer = answer['body']
+                if question.type == 'select-multiple':
+                    user_answer = literal_eval(user_answer)
+                profile_model = ws_methods.get_model('meetings', 'Profile')
+                user_response = answer_objects[cnt].response
+                if user_response and user_response.user:
+                    answer_user = profile_model.objects.filter(pk=user_response.user.id)
+                    cnt += 1
+                    user_answers.append({
+                        'answers': user_answer,
+                        'user_name': answer['response__user__username'],
+                        'user': {
+                            'id': answer_user.id,
+                            'name': answer_user.fullname(),
+                            'email': answer_user.email,
+                            'photo': answer_user.image.url,
+                        }
+                    })
+            question_data = []
+            chart_data = []
+            for choice in question_choices:
+                question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0})
+            for index, user_answer in enumerate(answers):
+                if question.type == 'select-multiple':
+                    user_answer = literal_eval(user_answer['body'])
+                    for user_ans in user_answer:
                         for singledata in question_data:
-                            if user_answer['body'] == singledata['option_name']:
-                                singledata['option_result'] = user_answer['answer_count'] + singledata[
-                                    'option_result']
-                progress_data = []
-                respondents = 0
-                if survey.meeting:
-                    respondents = len(survey.meeting.attendees.all())
+                            if user_ans == singledata['option_name'].lower():
+                                singledata['option_result'] += 1
+                                break
+                else:
+                    for singledata in question_data:
+                        if user_answer['body'] == singledata['option_name']:
+                            singledata['option_result'] = user_answer['answer_count'] + singledata[
+                                'option_result']
+            progress_data = []
+            respondents = 0
+            if survey.meeting:
+                respondents = len(survey.meeting.attendees.all())
 
-                if len(survey.respondents.all()):
-                    respondents = len(survey.respondents.all())
+            if len(survey.respondents.all()):
+                respondents = len(survey.respondents.all())
 
-                if survey.topic:
-                    respondents = len(survey.topic.event.attendees.all())
+            if survey.responses:
+                responses = len(survey.responses.all())
 
-                # if survey.voting:
-                #     respondents = len(survey.voting.respondents.all())
-                #     if not respondents:
-                #         respondents = len(survey.voting.meeting.attendees.all())
-
-                if survey.responses:
-                    responses = len(survey.responses.all())
-
-                progress_data.append({
-                    'option_name': 'Response Required',
-                    'option_result': respondents - responses
-                })
-                progress_data.append({
-                    'option_name': 'Responsed',
-                    'option_result': responses
-                })
-                survey_results['questions'].append({
-                    'id': question.id,
-                    'name': question.text,
-                    'choices': question_choices,
-                    'user_answers': user_answers,
-                    'chart_data': question_data
-                })
-                survey_results['progress_data'] = progress_data
-            return survey_results
-        else:
-            return 'There is not survey against this id'
+            progress_data.append({
+                'option_name': 'Response Required',
+                'option_result': respondents - responses
+            })
+            progress_data.append({
+                'option_name': 'Responsed',
+                'option_result': responses
+            })
+            survey_results['questions'].append({
+                'id': question.id,
+                'name': question.text,
+                'choices': question_choices,
+                'user_answers': user_answers,
+                'chart_data': question_data
+            })
+            survey_results['progress_data'] = progress_data
+        return survey_results
 
 
     def send_email_on_save(self, audience, action=None):
