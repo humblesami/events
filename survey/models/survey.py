@@ -201,7 +201,7 @@ class Survey(Actions):
         survey_id = params['survey_id']
         uid = request.user.id
         groups = request.user.groups.values('name')
-        survey = Survey.objects.filter(pk=survey_id)
+        survey = Survey.objects.get(pk=survey_id)
         is_respondent = uid in survey.get_audience()
         if not is_respondent:
             for group in groups:
@@ -220,8 +220,8 @@ class Survey(Actions):
             'name': survey.name,
             'questions': [],
             'is_open': is_open,
-            'is_published': survey.publish,
-            'publish': survey.publish,
+            'is_published': survey.is_published,
+            'publish': survey.is_published,
             'is_respondent': request.user.id in survey.get_audience(),
             'progess_data': []
         }
