@@ -70,6 +70,8 @@ export class CommentsComponent implements OnInit {
                             }
                         }
                     }
+                    
+                    //item.showRep = true;
                 }
             }
             catch (er) {
@@ -108,8 +110,17 @@ export class CommentsComponent implements OnInit {
     }
 
 	showReplies(evt, com) {
-        evt.preventDefault();
+        // evt.preventDefault();
         com['showRep'] = !com['showRep'];
+        if(!com['showRep']){
+            var doc_height = $('.comments.comments-container').height();
+            // console.log(doc_height, 333);
+            setTimeout(function(){
+                $('.comments.comments-container').height(doc_height);
+                doc_height = $('.comments.comments-container').height();
+            }, 10);
+            
+        }
 	}
 
     manage_comment()
