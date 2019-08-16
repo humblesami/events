@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from mainapp import ws_methods
-from django.db.models import Q
+from django.db.models import Q, Count, Case, When, IntegerField
 from django.utils import timezone
 from mainapp.settings import server_base_url
 from meetings.model_files.user import Profile
@@ -318,9 +318,34 @@ class Event(models.Model):
         for doc in meeting_docs:
             doc['created_at'] = str(doc['created_at'])
             meeting_object['meeting_docs'].append(doc)
-        sign_docs =  meeting_object_orm.signdocument_set.all()
-        sign_docs = ws_methods.queryset_to_list(sign_docs, fields=['id','pdf_doc','name'])
-        meeting_object['sign_docs'] = sign_docs
+        sign_docs =  meeting_object_orm.signdocument_set.values(
+            'id',
+            'pdf_doc',
+            'name').annotate(
+                tot_signed=Count(
+                    Case(
+                        When((Q(signature__user_id=user_id) & Q(signature__signed=True)), then=1)
+                        ,output_field=IntegerField(),)
+                        )).annotate(
+                            tot_unsigned=Count(
+                                Case(
+                                    When((Q(signature__user_id=user_id) & Q(signature__signed=False)), then=1)
+                                    ,output_field=IntegerField(),)))
+
+        esign_docs = []
+        for sign_doc in sign_docs:
+            signature_status = ''
+            if sign_doc['tot_unsigned'] == 0:
+                signature_status = 'Completed'
+            else:
+                signature_status = str(sign_doc['tot_signed']) + ' /' + str(sign_doc['tot_unsigned'])
+            esign_docs.append({
+                'id': sign_doc['id'],
+                'pdf_doc': sign_doc['pdf_doc'],
+                'name': sign_doc['name'],
+                'signature_status': signature_status
+            })
+        meeting_object['sign_docs'] = esign_docs
         surveys = []
         try:
             surveys = meeting_object_orm.actions.all()[0].survey_set.all()

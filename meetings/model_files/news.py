@@ -5,7 +5,7 @@ from mainapp.ws_methods import queryset_to_list
 from meetings.model_files.document import SignDocument
 from meetings.model_files.event import Event
 from survey.models import Survey
-from django.db.models import Q, Count, Case, When, IntegerField, Sum
+from django.db.models import Q, Count, Case, When, IntegerField
 
 
 class News(models.Model):

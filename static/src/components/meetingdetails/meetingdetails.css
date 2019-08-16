@@ -304,3 +304,6 @@ h5, .h5 {
     font-weight: bold;
     font-size: 0.9rem;
 }
+.pending-status{
+    color:#db4437;
+}
