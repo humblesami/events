@@ -259,18 +259,20 @@ class Survey(Actions):
                         user_answer = literal_eval(user_answer)
                     profile_model = ws_methods.get_model('meetings', 'Profile')
                     user_response = answer_objects[cnt].response
-                    answer_user = profile_model.objects.get(pk=user_response.user.id)
-                    cnt += 1
-                    user_answers.append({
-                        'answers': user_answer,
-                        'user_name': answer['response__user__username'],
-                        'user': {
-                            'id': answer_user.id,
-                            'name': answer_user.fullname(),
-                            'email': answer_user.email,
-                            'photo': answer_user.image.url,
-                        }
-                    })
+                    answer_user = profile_model.objects.filter(pk=user_response.user.id)
+                    if answer_user:
+                        answer_user = answer_user[0]
+                        cnt += 1
+                        user_answers.append({
+                            'answers': user_answer,
+                            'user_name': answer['response__user__username'],
+                            'user': {
+                                'id': answer_user.id,
+                                'name': answer_user.fullname(),
+                                'email': answer_user.email,
+                                'photo': answer_user.image.url,
+                            }
+                        })
                 question_data = []
                 chart_data = []
                 for choice in question_choices:
