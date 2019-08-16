@@ -9,7 +9,7 @@ declare var $: any;
 })
 export class MeetingsComponent implements OnInit {
     no_meet = false;
-    meeting_list: any;
+    meeting_list = [];
     active_meeting: any;
     show = false;
     meeting_type: string;
