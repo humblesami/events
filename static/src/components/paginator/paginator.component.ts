@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { range } from 'rxjs';
 declare var $: any;
-
 @Component({
     selector: 'app-paginator',
     styleUrls:['./paginator.css'],
@@ -40,9 +39,15 @@ export class PaginatorComponent implements OnInit {
     offset: number;
     page_Data(event) {
         this.offset = (event - 1) * this.limit;
+        if(event == this.page_number)
+        {
+            return;
+        }
         this.page_number = event;
-        this.pagedata.emit(this.offset);
+        this.get_pager(this.page_number);
+        this.pagedata.emit(this.offset);        
     }
+
     change_page(change: number){
         var ppgn = this.page_number +=change;        
         this.page_Data(ppgn);
@@ -52,20 +57,56 @@ export class PaginatorComponent implements OnInit {
         this.page_Data(lPage);      
     }
     first_Page(change: number){
-        this.page_Data(1);
+        this.page_Data(1);   
     }
 
-    shown_pages = [1,2,3,4,5];
+    shown_pages = [];
+    startPage: number;
+    endPage: number;
+
     all_pages(pages:number){
         this.total_pages = [];
         let lPage= Math.ceil(pages/this.limit);
         for (let i = 1; i <= lPage; i++) {            
             this.total_pages.push(i)
         }
-        if(this.shown_pages.length>this.total_pages.length)
-        {
-            this.shown_pages = this.total_pages;
+        this.get_pager(this.page_number);
+    }
+
+    get_pager(current_page){
+        // console.log(current_page, 134);
+        if(current_page <= 1){
+            this.page_number = 1;
         }
+        if(this.total_pages.length <= 5)
+        {   
+            this.startPage = 1;
+            this.endPage = this.total_pages.length;
+        }
+        else
+        {
+            if(current_page > 2)
+            {
+                if(current_page - 2 > 0 && current_page + 2 < this.total_pages.length)
+                {
+                    this.startPage = current_page - 2;
+                    this.endPage = current_page + 2;    
+                }
+                else
+                {
+                    this.startPage = this.total_pages.length - 4;
+                    this.endPage = this.total_pages.length;
+                }
+            }
+            else{
+                this.startPage = 1;
+                this.endPage = 5;
+            }
+        }
+
+        this.shown_pages = this.total_pages.slice(this.startPage - 1, this.endPage);
+        // console.log(this.shown_pages);
+
     }
     change_limit(e){
         console.log(this.offset,this.limit,  1411);
