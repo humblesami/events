@@ -3,22 +3,28 @@
     <div class="container" *ngIf="surveyDetails">
         <div class=" form-details">
             <div class="meeting-details-form">
-                <div class="row d-flex justify-content-between mb-3" *ngIf="surveyDetails.is_published">
+                <!-- <div class="row d-flex justify-content-between mb-3" *ngIf="surveyDetails.is_published">
                     <div class="col">
                         <div class="survey-top-buttons" id="tdmrb{{surveyDetails.id}}">
                             <a *ngIf="surveyDetails && surveyDetails.is_respondent" id="{{surveyDetails.id}}" class="btn btn-primary" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Start Survey</a>
                             <a *ngIf="surveyDetails" id="{{surveyDetails.id+surveyDetails.name}}" class="btn btn-primary" routerLink='/survey/{{surveyDetails.id}}/results'>Survey Results</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div *ngIf="surveyDetails.name" class="col-lg-12">
-                        <div class="meet-elements">
-                            Subject
+                        <div class="MainTitleHeadWrap">
+                            <div class="HeadingWrap">
+                                    {{surveyDetails.name}}
+                            </div>
+                            <div class="MeetingBtnWrapper" *ngIf="surveyDetails.is_published">
+                                    <div class="btn-group" id="tdmrb{{surveyDetails.id}}">
+                                            <a *ngIf="surveyDetails && surveyDetails.is_respondent" id="{{surveyDetails.id}}" class="btn" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Start Survey</a>
+                                            <a *ngIf="surveyDetails" id="{{surveyDetails.id+surveyDetails.name}}" class="btn btn-primary" routerLink='/survey/{{surveyDetails.id}}/results'>Survey Results</a>
+                        
+                                    </div>
+                            </div>
                         </div>
-                        <label class="meet-elementsInfo">
-                  {{surveyDetails.name}}
-                  </label>
                     </div>
                     <div *ngIf="surveyDetails.meeting && surveyDetails.meeting.name" class="col-lg-12">
                         <div class="meet-elements">
@@ -34,15 +40,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div *ngIf="surveyDetails.hasOwnProperty('open_date') && surveyDetails.open_date" class="col-lg-12">
+                    <div *ngIf="surveyDetails.hasOwnProperty('open_date') && surveyDetails.open_date" class="col-sm-6">
                         <div class="meet-elements">
                             Open Date
                         </div>
                         <label class="overflow-hidden meet-elementsInfo" [innerHtml]="surveyDetails.open_date | date:'medium'"></label>
                     </div>
-                </div>
-                <div class="row">
-                    <div *ngIf="surveyDetails.hasOwnProperty('close_date') && surveyDetails.close_date" class="col-lg-12">
+                    <div *ngIf="surveyDetails.hasOwnProperty('close_date') && surveyDetails.close_date" class="col-sm-6">
                         <div class="meet-elements">
                             Close Date
                         </div>

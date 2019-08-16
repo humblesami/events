@@ -55,7 +55,8 @@ export class SurveyresultsComponent implements OnInit {
             }, 800)
         };
         const failure_cb = function(error) {
-            obj_this.router.navigate(['/survey/' + obj_this.route.snapshot.params.id]);
+            // console.log(error)
+            // obj_this.router.navigate(['/survey/' + obj_this.route.snapshot.params.id]);
         };
         let args = {
             app: 'survey',
