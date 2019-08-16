@@ -1,12 +1,26 @@
-.upcomingButton button{
-	margin: .2rem;
-	border: 0;
-	padding: 0.35rem;
+
+.btn-meeting {
 	background: #638FC9;
 	color: #ffffff;
 	border-radius: 25px;
 }
-.upcomingButton button i {
-    font-size: 14px;
-    padding-right: 4px;
+.btn-meeting:hover {
+	background: #3059C9;
+	color: #ffffff;
+}
+.upcomingButton button {
+	background: #638FC9;
+	color: #fff;
+	border-color: #638FC9;
+    min-width: 90px;
+    padding: 8px;
+    font-size: 0.85rem;
+    font-size: 13.5px;    
+	border: 0;
+    border-radius: 25px;
+    flex-grow: 1;
+}
+.upcomingButton{
+    display: flex;
+    min-width: 240px;
 }

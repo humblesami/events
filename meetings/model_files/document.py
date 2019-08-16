@@ -192,7 +192,7 @@ class SignDocument(SignatureDoc):
         return res
 
     @classmethod
-    def get_detail(cls, request, params):
+    def ws_get_detail(cls, request, params):
         file_id = int(params['document_id'])
         token = params['token']
         user = request.user
