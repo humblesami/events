@@ -197,7 +197,6 @@ class SignDocument(SignatureDoc):
         token = params['token']
         user = request.user
         file_name = ''
-        file_obj = None
         if token:
             post_info = {
                 'id': params['document_id'],
@@ -221,9 +220,9 @@ class SignDocument(SignatureDoc):
         send_to_all = False
 
         if doc_obj.meeting:
-            meeting_id = file_obj.meeting.id
+            meeting_id = doc_obj.meeting.id
         if doc_obj.send_to_all:
-            send_to_all = file_obj.send_to_all
+            send_to_all = doc_obj.send_to_all
 
         doc_data = doc_obj.get_doc_data(request.user)
         doc_data['sign_count'] = len(doc_obj.signature_set.filter(signed=True))
