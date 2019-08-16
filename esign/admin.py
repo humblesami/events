@@ -4,7 +4,7 @@ from esign.model_files.document import SignatureDoc, Signature
 
 
 class SignatureAdmin(admin.ModelAdmin):
-    list_display = ['user', 'document']
+    list_display = ['user', 'document', 'signed_at']
 
 
 class SignatureDocForm(FileForm):

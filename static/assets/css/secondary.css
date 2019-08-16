@@ -46,14 +46,6 @@ body.public .app-sidebar
 body.public .router-outlet{
     height: 100vh !important;
 }
-body.user #viewer_container{
-    height: calc(100vh - 158px);
-    overflow-y: auto;
-}
-body.public #viewer_container{
-    height: calc(100vh - 50px);
-    overflow-y: auto;
-}
 .sidebar-mini.sidenav-toggled .app-sidebar
 {
     overflow-y: auto;

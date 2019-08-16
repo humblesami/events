@@ -148,11 +148,15 @@
     height: calc(100vh - 112px);
     overflow-y:auto;
     width:22%;
-    display: flex;
+    display: none;
     margin:0;
     flex-direction: column;
     align-items: center;
     border-right: 1px solid rgba(75, 116, 181, 0.33);
+}
+.doc-container.admin #doc-side-scroll
+{
+    display: block;
 }
 
 .PdfButtonWrapper{    
@@ -254,9 +258,6 @@
 .check_box_send_all{
     display: none
 }
-/* .check_box_send_all, #doc-side-scroll{
-    display: none
-} */
 
 .o_cp_buttons, .o_cp_pager{
     display:none !important;
@@ -343,13 +344,6 @@
     cursor: pointer;
 }
 
-.doc-container #doc-side-scroll{
-    display: none;
-}
-.doc-container.admin #doc-side-scroll{
-    display: block;
-}
-
 .doc-container .docWrapperContainer{
     width: 100%;
 }
@@ -368,4 +362,12 @@
 }
 .sign_container img{
     max-width: inherit;
+}
+body.user #viewer_container{
+    height: calc(100vh - 164px);
+    overflow-y: auto;
+}
+body.public #viewer_container{
+    height: calc(100vh - 50px);
+    overflow-y: auto;
 }

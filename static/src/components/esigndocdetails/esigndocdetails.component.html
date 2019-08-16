@@ -3,14 +3,14 @@
 rid="{{doc.id}}" delete="1" edit="1"
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Esignature", "link":"/actions/signdocs"}]'
 title="{{doc.doc_name}}"></app-breadcrumb>
-<div class="router-outlet p-0">
+<div class="router-outlet">
     <link rel="stylesheet" href="/static/assets/css/esign.css" />
     <link rel="stylesheet" href="/static/assets/css/esigndocdetails.css" />    
     <div name="id" class="e_sign_doc_id" invisible="1" ></div>
     <div class="sign-position dev_only" ></div>        
     <div id="holder">
         <div class="container-fluid">
-            <div class="row doc-container" [ngClass]="{admin: socketService.is_admin}">
+            <div class="row doc-container" [ngClass]="{admin: !signature_started && socketService.is_admin}">
                 <div id="doc-side-scroll">
                     <div class="PdfButtonWrapper">
                         <div class="PdfVerticalButtonWrapper dragabl-fields">
@@ -40,9 +40,9 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                             </div>
                         </div>
                         <div class="meetings_div">
-                            <div *ngIf="!signature_started && socketService.is_admin">
+                            <!-- <div *ngIf="!signature_started && socketService.is_admin">
                                 <input [(ngModel)]="isAdmin" type="checkbox" /> Admin Mode
-                            </div>                            
+                            </div> -->
                             <div class="doc-subtitle">Attach to Meeting</div>
                             <select id="dropdown_meeting">
                                 <option selected value="">Select Meeting</option>

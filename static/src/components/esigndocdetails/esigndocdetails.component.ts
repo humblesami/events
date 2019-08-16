@@ -50,7 +50,7 @@ export class EsignDocDetailsComponent implements OnInit {
         this.isAdmin = bool;
     }
     meetings = [];
-    signature_started = false;
+    signature_started = true;
     selectedMeeting: any;
     ngOnInit() {
         var obj_this = this;
@@ -150,7 +150,8 @@ export class EsignDocDetailsComponent implements OnInit {
                         $('body').prepend('<h1>You have Completed You Signatures</h1>');
                     }
                     doc_data = data.doc_data;
-                    // console.log(data);
+                    obj_this.doc.doc_name = data.doc_name || 'Unnamed';
+                    console.log(obj_this.doc);
                     obj_this.signature_started = data.signature_started;
                     // console.log(doc_data, 11);
                     obj_this.all_users_list = obj_this.users_list = users = data.users;
@@ -168,7 +169,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     {
                         if(data.meetings[k].id == meeting_id)
                         {
-                            console.log(send_to_all, data.meetings[k], 855);
+                            // console.log(send_to_all, data.meetings[k], 855);
                             obj_this.selectedMeeting = data.meetings[k];
                         }
                     }
@@ -492,6 +493,7 @@ export class EsignDocDetailsComponent implements OnInit {
             {
                 obj_this.isAdmin = false;
             }
+            // console.log(obj_this.isAdmin,3545);
             // console.log('Signatures loaded',obj_this.isAdmin, Date());
         }
 
@@ -905,6 +907,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     },
                     type:"POST",
                     onSuccess: function(data) {
+                        obj_this.signature_started = true;                        
                         for(var i =0;i<doc_data.length;i++)
                         {
                             // console.log(signature_dom.attr('id'), doc_data[i].id);
@@ -1040,9 +1043,9 @@ export class EsignDocDetailsComponent implements OnInit {
         // });
         // console.log(document.getElementById('the-canvas'))
         // document.writeln('<script src="static/assets/js/viewer.js"></script>');
-        this.prev_height = $('.router-outlet').css('height');
-        var new_height = parseFloat(this.prev_height) + 20;
-        $('.router-outlet').css('height', new_height);
+        // this.prev_height = $('.router-outlet').css('height');
+        // var new_height = parseFloat(this.prev_height) + 60;
+        // $('.router-outlet').css('height', new_height);
         // console.log(this.prev_height, new_height);
 
         function get_url(url)
