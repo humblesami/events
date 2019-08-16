@@ -265,12 +265,12 @@
                                     <div class="DocName">
                                         <h5>Title: {{doc.name}}</h5>
                                     </div>
-                                    <div class="DocMeeting">
+                                    <div *ngIf="doc && doc.meeting__name" class="DocMeeting">
                                         Meeting: {{doc.meeting__name}}
                                     </div>
                                     <div class="SignatureText font-11">
                                         <span>My Signature: </span>
-                                        <span class="pending-status">{{doc.mp_signature_status}}</span>
+                                        <span class="pending-status">{{doc.signature_status}}</span>
                                     </div>
                                 </div>
                             </a>
