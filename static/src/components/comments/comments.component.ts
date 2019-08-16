@@ -20,7 +20,7 @@ export class CommentsComponent implements OnInit {
 	comments = [];
 	notes = [];
 	new_reply = '';
-	comment_subtype = 1;
+	comment_subtype = undefined;
     new_comment = '';
     active_comment : any;
     mentionConfig: any;
@@ -39,7 +39,7 @@ export class CommentsComponent implements OnInit {
         
         let on_comments_list = function(result){
             try {
-                // console.log(result);
+                obj_this.comment_subtype = 1;
                 var read_notification_ids = result.read_notification_ids;                
                 result = result.comments;
                 for(let i in result) {

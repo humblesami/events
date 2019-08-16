@@ -290,12 +290,19 @@ class Comment(models.Model):
 
     @classmethod
     def get_comments(cls, request, params):
-        res = cls.objects.filter(
-            res_app=params['res_app'],
-            res_model=params['res_model'],
-            res_id=params['res_id'],
-            subtype_id=params['subtype_id'],
-        )
+        if params.get('subtype_id'):
+            res = cls.objects.filter(
+                res_app=params['res_app'],
+                res_model=params['res_model'],
+                res_id=params['res_id'],
+                subtype_id=params['subtype_id'],
+            )
+        else:
+            res = cls.objects.filter(
+                res_app=params['res_app'],
+                res_model=params['res_model'],
+                res_id=params['res_id'],
+            )
 
         sql = "select un.id from chat_usernotification un "
         sql += " join chat_sendernotification sn on sn.id = un.sender_notification_id"
