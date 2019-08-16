@@ -103,6 +103,7 @@ input[type=checkbox]:checked:after{
 }
 .respons-margin{
     margin-top: 2px !important;
+    padding: 0 0 0 2% !important;
 }
 .CommentsWrap{
     padding-bottom: 10px !important;

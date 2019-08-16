@@ -1,128 +1,122 @@
 <div class="row d-flex justify-content-center">
-	<div class="col-sm-12 col-md-10 col-lg-8">
-		<div *ngIf="comments" class="comments main-container oe_read_only">
-			<div class="row row pt-5 pb-3">
-				<div class="btn-group col-sm-12">
-					<button [ngClass]="{active: comment_subtype === 1}" (click)="comment_subtype=1" class="btn btn-default btn-block">
-						Comments
-					</button>
-					<button [ngClass]="{active: comment_subtype === 2}" (click)="comment_subtype=2" class="btn btn-default btn-block">
-						Personal Notes
-					</button>
-				</div>
-			</div>
-			<div class="row">
-				<form class="col-lg-12">
-					<div class="form-group">
-						<div *ngIf="comment_subtype === 1">
-							<div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" (click)="manage_comment()" (keyup)="save_comment_key_up($event, null)" placeholder="Add comments here." contenteditable="true" class="mention-div-comment active-mention form-control" rows="4" id="comment"></div>
-						</div>
-						<div *ngIf="comment_subtype === 2">
-							<div 
-							(keydown)="comment_reply_keydown($event)" 
-							[mentionConfig]= "mentionConfig" 
-							name="hj" (click)="manage_comment()" 
-							(keyup)="save_comment_key_up($event, null)" 
-							placeholder="Add notes here"
-							contenteditable="true" 
-							class="mention-div-comment active-mention form-control mb-3" 
-							rows="4" 
-							id="notes"></div>
-							<!-- <textarea 
-							(keydown)="comment_reply_keydown($event)" 
-							[mentionConfig]="mentionConfig"  
-							[(ngModel)]="new_comment" 
-							(keyup)="save_comment_key_up($event, null)" 
-							class="mention-div-comment active-mention form-control"  
-							rows="4" 
-							id="notes" 
-							placeholder="Add notes here"></textarea> -->
-						</div>
-						<button [disabled]="!post_btn_disable" class="btn btn-primary" type = "submit" (click)="save_comment(null)" >Post</button>
+		<div class="col-sm-12 col-md-10 col-lg-8">
+			<div *ngIf="comments" class="comments main-container oe_read_only">
+				<div class="row row pt-5 pb-3">
+					<div class="btn-group col-sm-12">
+						<button [ngClass]="{active: comment_subtype === 1}" (click)="comment_subtype=1" class="btn btn-default btn-block">
+							Comments
+						</button>
+						<button [ngClass]="{active: comment_subtype === 2}" (click)="comment_subtype=2" class="btn btn-default btn-block">
+							Personal Notes
+						</button>
 					</div>
-				</form>
-			</div>
-			
-			<div *ngIf="comment_subtype == 1" class="comments comments-container">
-				<div class="row" *ngFor="let c of comments">
-					<div id="comment-{{c.id}}" *ngIf="c" class="col-lg-12">
-						<div class="CommentsWrapper">
-							<div class="comment">
-								<a routerLink="/profile/{{c.user.id}}" class="CommentUserNameTimeWrap">
-									<div class="comment-user-pic">
-										<img src="{{socketService.server_url}}{{c.user.photo}}" alt="user" />
+				</div>
+				<div class="row">
+					<form class="col-lg-12">
+						<div class="form-group">
+							<div *ngIf="comment_subtype === 1">
+								<div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" (click)="manage_comment()" (keyup)="save_comment_key_up($event, null)" placeholder="Add comments here." contenteditable="true" class="mention-div-comment active-mention border rounded p-2" rows="4" id="comment"></div>
+							</div>
+							<div *ngIf="comment_subtype === 2">
+								<div 
+								(keydown)="comment_reply_keydown($event)" 
+								[mentionConfig]= "mentionConfig" 
+								name="hj" (click)="manage_comment()" 
+								(keyup)="save_comment_key_up($event, null)" 
+								placeholder="Add notes here"
+								contenteditable="true" 
+								class="mention-div-comment active-mention border rounded p-2 mb-3" 
+								rows="4" 
+								id="notes"></div>
+								<!-- <textarea 
+								(keydown)="comment_reply_keydown($event)" 
+								[mentionConfig]="mentionConfig"  
+								[(ngModel)]="new_comment" 
+								(keyup)="save_comment_key_up($event, null)" 
+								class="mention-div-comment active-mention form-control"  
+								rows="4" 
+								id="notes" 
+								placeholder="Add notes here"></textarea> -->
+							</div>
+							<button  class="btn btn-primary" type = "submit" (click)="save_comment(null)" >Post</button>
+						</div>
+					</form>
+				</div>
+				
+				<div *ngIf="comment_subtype == 1" class="comments comments-container">
+					<div class="row" *ngFor="let c of comments">
+						<div id="comment-{{c.id}}" *ngIf="c" class="col-lg-12">
+							<div class="CommentsWrapper bg-light">
+								<div class="comment" [ngClass]="{'border-bottom' : c.showRep}">
+									<a routerLink="/profile/{{c.user.id}}" class="CommentUserNameTimeWrap">
+										<div class="comment-user-pic">
+											<img src="{{socketService.server_url}}{{c.user.photo}}" alt="user" />
+										</div>
+									</a>
+									<input type="hidden" class="comment_id" value="{{c.id}}" />
+									<div class="CommentsWrap">		
+										<a routerLink="/profile/{{c.user.id}}" class="mainthread">
+											<span class="comment-user" *ngIf="c.user">{{c.user.name}}</span>
+										</a>		
+										<div class="row comment_response respons-margin main">
+											<span>{{c.create_date | dateAgo }}</span>										
+											<a *ngIf="c.id" class="comment-reply" title="Add reply" (click)="commentReply($event, c)">
+												<i class="fa fa-reply"></i>
+											</a>
+											<div class="label replies-wrapper" title="Replies" *ngIf="c.children && c.children.length">
+												<div (click)="showReplies($event, c)">
+													<span *ngIf="!c['showRep']"><i class="fa fa-angle-down"></i></span>
+													<span *ngIf="c['showRep']"><i class="fa fa-angle-up"></i></span>
+												</div>
+											</div>
+										</div>					
+										<div class="comment-body" [innerHtml]="c.body.trim()">
+										</div>	
 									</div>
-								</a>
-                                <input type="hidden" class="comment_id" value="{{c.id}}" />
-								<div class="CommentsWrap">		
-									<a routerLink="/profile/{{c.user.id}}" class="mainthread">
-										<span class="comment-user" *ngIf="c.user">{{c.user.name}}</span>
-									</a>		
-									<div class="row comment_response respons-margin main">
-										<span>{{c.create_date | dateAgo }}</span>										
-										<a *ngIf="c.id" class="comment-reply" title="Add reply" (click)="commentReply($event, c)">
-											<i class="fa fa-reply"></i>
-										</a>
-										<div class="label replies-wrapper" title="Replies" *ngIf="c.children && c.children.length">
-											<div (click)="showReplies($event, c)">
-												<span *ngIf="!c['showRep']"><i class="fa fa-angle-down"></i></span>
-												<span *ngIf="c['showRep']"><i class="fa fa-angle-up"></i></span>
+								</div>
+								<div class="reply-input">								
+									<div class="reply" *ngIf="c['showRep'] && c.children && c.children.length">
+										<div class="comment" *ngFor="let rep of c.children">
+											<a routerLink="/profile/{{rep.user.id}}" class="CommentUserNameTimeWrap">
+												<div class="comment-user-pic">
+													<img src="{{socketService.server_url}}{{rep.user.photo}}" alt="user" />
+												</div>
+											</a>   
+											<a routerLink="/profile/{{rep.user.id}}" class="mainthread">
+												<span class="comment-user">{{rep.user.name}}</span>
+											</a>
+											<div class="CommentsWrap">  
+												<div class="row comment_response respons-margin main">
+													<span>{{rep.create_date | dateAgo }}</span>                                               
+												</div>                                         
+												<div class="comment-body" [innerHtml]="rep.body.trim()">
+												</div>                                           
 											</div>
 										</div>
-									</div>					
-									<div class="comment-body" [innerHtml]="c.body.trim()">
-									</div>	
+									</div>
 								</div>
 							</div>
-							<div class="reply-input">								
-								<div class="reply" *ngIf="c['showRep'] && c.children && c.children.length">
-                                    <div class="comment" *ngFor="let rep of c.children">
-                                        <a routerLink="/profile/{{rep.user.id}}" class="CommentUserNameTimeWrap">
-                                            <div class="comment-user-pic">
-                                                <img src="{{socketService.server_url}}{{rep.user.photo}}" alt="user" />
-                                            </div>
-                                        </a>   
-                                        <a routerLink="/profile/{{rep.user.id}}" class="mainthread">
-                                            <span class="comment-user">{{rep.user.name}} : </span>
-                                        </a>
-                                        <div class="CommentsWrap">  
-											<div class="row comment_response respons-margin main">
-												<span>{{rep.create_date | dateAgo }}</span>                                               
-											</div>                                         
-                                            <div class="comment-body" [innerHtml]="rep.body.trim()">
-                                            </div>                                           
-                                        </div>
-                                    </div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="comment_subtype == 2" class="notes comments-container">
+					<div *ngFor="let c of notes">
+						<div *ngIf="c" class="bg-light py-2 mb-2 border">
+							<div class="container">
+								<div class="comment_response main p-0">
+										<div>{{c.create_date | dateAgo}} </div>
+										<div [innerHtml]="c.body.trim()"></div>
+									<!--<a title="Delete Note" (click)="deleteComment(c.id,  'note')" style="cursor: pointer">-->
+									<!--<i class="fa fa-trash" aria-hidden="true"></i>-->
+									<!--</a>-->
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div *ngIf="comment_subtype == 2" class="container notes comments-container">
-				<div *ngFor="let c of notes">
-					<div *ngIf="c" class="row">
-						<div class="container">
-							<div class="row mainthread">
-								<span class="comment-user" *ngIf="c.user">{{c.user.name}} : </span>
-								<div class="comment-body">
-									<div [innerHtml]="c.body.trim()"></div>
-								</div>
-							</div>
-
-							<div class="row comment_response main">
-								<span>{{c.create_date | dateAgo}} </span>
-								<!--<a title="Delete Note" (click)="deleteComment(c.id,  'note')" style="cursor: pointer">-->
-								<!--<i class="fa fa-trash" aria-hidden="true"></i>-->
-								<!--</a>-->
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-        </div>
-        
-        <div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" (click)="manage_reply_class()" (keyup)="save_comment_key_up($event, 'reply')" placeholder="Add comments here." contenteditable="true" 
-        class="mention-div-reply hidemouseaway reply-box form-control" rows="4" id="comment"></div>
+			
+			<div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" (click)="manage_reply_class()" (keyup)="save_comment_key_up($event, 'reply')" placeholder="Add comments here." contenteditable="true" 
+			class="mention-div-reply hidemouseaway reply-box form-control" rows="4" id="comment"></div>
+		</div>
 	</div>
-</div>

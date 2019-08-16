@@ -226,14 +226,19 @@ textarea.form-control.focus {
     align-items: flex-start;
 }
 .comments .comment{
-    border-bottom: 1px solid #f0f0f0;
     margin-bottom: 10px;
+}
+.reply .comment:not(:last-child){
+    border-bottom: 1px solid #dee2e6!important
 }
 .comments:last-child{
     border-bottom: none;
     margin-bottom: 0;
 }
-
+div.comment-body span{
+    font-size: 12px !important;
+    margin-left: 10px !important;
+}
 .oform{
     display: flex;
     align-items: flex-start;

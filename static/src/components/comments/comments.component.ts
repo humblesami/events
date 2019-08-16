@@ -112,6 +112,9 @@ export class CommentsComponent implements OnInit {
 	showReplies(evt, com) {
         // evt.preventDefault();
         com['showRep'] = !com['showRep'];
+        if(com.children.length>5){
+            return
+        }
         if(!com['showRep']){
             var doc_height = $('.comments.comments-container').height();
             // console.log(doc_height, 333);
