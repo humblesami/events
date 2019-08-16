@@ -63,38 +63,44 @@ export class MeetingDetailsComponent implements OnInit {
 
     on_publish_changed(){
         let obj_this = this;
-        let is_published = obj_this.meeting_object.publish;
-        if (is_published)
-        {
-            obj_this.meeting_status = 'Unpublished';
-            obj_this.applicable_publish_action = 'Publish';
-            obj_this.meeting_type = 'draft';
-            obj_this.title = 'Draft';
-            $('li.breadcrumb-item a').last().html('Draft Meetings').attr('href','/meetings/draft');
-        }
-        else
-        {
-            obj_this.meeting_status = 'Published';
-            obj_this.applicable_publish_action = 'Unpublish';
-            obj_this.meeting_type = 'upcoming';
-            obj_this.title = 'Upcoming';
-            $('li.breadcrumb-item a').last().html('Upcoming Meetings').attr('href','/meetings/upcoming');
-        }
-        obj_this.meeting_object.publish = !is_published;
-        
-        // console.log(obj_this.meeting_status, 333)
         let args = {
             app: 'meetings',
             model: 'Event',
             method: 'update_publish_status'
         }
         let input_data = {
-            params: {meeting_id: obj_this.meeting_object.id,publish_status: obj_this.meeting_object.publish},
+            params: {meeting_id: obj_this.meeting_object.id,publish_status: !obj_this.meeting_object.publish},
             args: args,
             no_loader: 1
         };
-        obj_this.httpService.get(input_data, function(){}, function(){
-            obj_this.meeting_object.publish = !obj_this.meeting_object.publish;
+        obj_this.httpService.get(input_data, function(data){
+            let is_published = obj_this.meeting_object.publish;
+            if (is_published)
+            {
+                obj_this.meeting_status = 'Unpublished';
+                obj_this.applicable_publish_action = 'Publish';
+                obj_this.meeting_type = 'draft';
+                obj_this.title = 'Draft';
+                $('li.breadcrumb-item a').last().html('Draft Meetings').attr('href','/meetings/draft');
+            }
+            else
+            {
+                obj_this.meeting_status = 'Published';
+                obj_this.applicable_publish_action = 'Unpublish';
+                obj_this.meeting_type = 'upcoming';
+                obj_this.title = 'Upcoming';
+                $('li.breadcrumb-item a').last().html('Upcoming Meetings').attr('href','/meetings/upcoming');
+            }
+            obj_this.meeting_object.publish = !is_published;
+        }, function(){
+            if (obj_this.meeting_object.publish)
+            {
+                $('.toggle_cb').prop('checked', true);                            
+            }
+            else
+            {
+                $('.toggle_cb').prop('checked', false);
+            }
         });
     }
 
@@ -180,13 +186,13 @@ export class MeetingDetailsComponent implements OnInit {
                 
                 setTimeout(function(){
                     if (obj_this.meeting_object.publish)
-                        {
-                            $('.toggle_cb').prop('checked', true);                            
-                        }
-                        else
-                        {
-                            $('.toggle_cb').prop('checked', false);
-                        }
+                    {
+                        $('.toggle_cb').prop('checked', true);                            
+                    }
+                    else
+                    {
+                        $('.toggle_cb').prop('checked', false);
+                    }
                 }, 100);
             } catch (er) {
                 console.log(er);

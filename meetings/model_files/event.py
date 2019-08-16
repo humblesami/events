@@ -41,6 +41,17 @@ class Event(models.Model):
         old_attendee_ids = []
         if self.pk:
             old_event = Event.objects.get(pk=self.pk)
+            today = datetime.datetime.now()
+            if self.publish != old_event.publish or self.archived != old_event.archived:
+                votings = old_event.voting_set.filter(close_date__gte=today)
+                if votings:
+                    raise Exception('This meeting can not be archived because some resolutions are associated with it let them complete then move this meeting to archive')
+                surveys = old_event.survey_set.filter(close_date__gte=today)
+                if surveys:
+                    raise Exception('This meeting can not be archived because some surveys are associated with it let them complete then move this meeting to archive')
+                sign_docs = old_event.signdocument_set.filter(close_date__gte=today)
+                if sign_docs:
+                    raise Exception('This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive')
             for obj in old_event.attendees.all():
                 old_attendee_ids.append(obj.id)
         super(Event, self).save(*args, **kwargs)
@@ -429,7 +440,16 @@ class Event(models.Model):
             meeting_obj = meeting_obj[0]
             if not meeting_obj.attendance_marked:
                 return 'Please mark attendance before moving this meeting to Archive'
-            
+            today = datetime.datetime.now()
+            votings = meeting_obj.voting_set.filter(close_date__gte=today)
+            if votings:
+                return 'This meeting can not be archived because some resolutions are associated with it let them complete then move this meeting to archive'
+            surveys = meeting_obj.survey_set.filter(close_date__gte=today)
+            if surveys:
+                return 'This meeting can not be archived because some surveys are associated with it let them complete then move this meeting to archive'
+            sign_docs = meeting_obj.signdocument_set.filter(close_date__gte=today)
+            if sign_docs:
+                return 'This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive'
             meeting_obj.archived = True
             meeting_obj.save()
             return 'done'
