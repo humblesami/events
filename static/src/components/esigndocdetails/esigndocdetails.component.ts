@@ -50,6 +50,7 @@ export class EsignDocDetailsComponent implements OnInit {
         this.isAdmin = bool;
     }
     meetings = [];
+    signature_started = false;
     selectedMeeting: any;
     ngOnInit() {
         var obj_this = this;
@@ -123,6 +124,7 @@ export class EsignDocDetailsComponent implements OnInit {
             $('.active_signature').removeClass('active_signature');
         });
 
+        
         function loadData() {
             $('#loaderContainerajax').show();
             $(".o_loading").show();
@@ -133,7 +135,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     args:{
                         app: 'meetings',
                         model: 'SignDocument',
-                        method: 'get_detail'
+                        method: 'ws_get_detail'
                     },
 
                     params: {
@@ -148,6 +150,8 @@ export class EsignDocDetailsComponent implements OnInit {
                         $('body').prepend('<h1>You have Completed You Signatures</h1>');
                     }
                     doc_data = data.doc_data;
+                    // console.log(data);
+                    obj_this.signature_started = data.signature_started;
                     // console.log(doc_data, 11);
                     obj_this.all_users_list = obj_this.users_list = users = data.users;
                     meeting_id = data.meeting_id;
@@ -309,7 +313,7 @@ export class EsignDocDetailsComponent implements OnInit {
             //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
             setTimeout(function() {
                 loadSignatures({
-                    "doc_data": doc_data
+                    "doc_data": doc_data,                    
                 });
             }, 200);
             $('#loaderContainerajax').hide();
@@ -482,7 +486,7 @@ export class EsignDocDetailsComponent implements OnInit {
             // console.log(my_records.length, 1233);
             if(my_records.length == 0)
             {
-                obj_this.isAdmin = obj_this.socketService.is_admin;
+                obj_this.isAdmin = obj_this.socketService.is_admin && !obj_this.signature_started;
             }
             else
             {

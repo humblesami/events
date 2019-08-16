@@ -40,7 +40,9 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                             </div>
                         </div>
                         <div class="meetings_div">
-                            <input *ngIf="socketService.is_admin" [(ngModel)]="isAdmin" type="checkbox" /> Admin Mode
+                            <div *ngIf="!signature_started && socketService.is_admin">
+                                <input [(ngModel)]="isAdmin" type="checkbox" /> Admin Mode
+                            </div>                            
                             <div class="doc-subtitle">Attach to Meeting</div>
                             <select id="dropdown_meeting">
                                 <option selected value="">Select Meeting</option>

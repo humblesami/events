@@ -211,33 +211,15 @@ class SignatureDoc(File):
 
     @classmethod
     def ws_get_detail(cls, request, params):
-
-        doc_obj = cls.objects.get(id=file_id)
-        users = Profile.objects.all()
+        file_id = int(params['document_id'])
+        doc_obj = SignatureDoc.objects.get(id=file_id)
+        users = User.objects.all()
         users = queryset_to_list(users, fields=['id', 'name'])
-        meetings = Event.objects.filter(publish=True).exclude(archived=True)
-        meetings = queryset_to_list(meetings, fields=['id', 'name'])
-        meeting_id = False
-        send_to_all = False
-
-        if doc_obj.meeting:
-            meeting_id = doc_obj.meeting.id
-        if doc_obj.send_to_all:
-            send_to_all = doc_obj.send_to_all
-
-        doc_data = doc_obj.get_doc_data(request.user)
-        doc_data['sign_count'] = len(doc_obj.signature_set.filter(signed=True))
-        if type(doc_data) is str:
-            return doc_data
-        doc_data['doc_name'] = file_name
-        doc_data["meetings"] = meetings
+        doc_data = doc_obj.get_detail(request, params)
         doc_data["users"] = users
-        doc_data["meeting_id"] = meeting_id
-        doc_data["send_to_all"] = send_to_all
         return doc_data
 
-    def get_detail(cls, request, params):
-        file_id = int(params['document_id'])
+    def get_detail(self, request, params):
         token = params['token']
         user = request.user
         file_name = ''
@@ -255,28 +237,12 @@ class SignatureDoc(File):
 
         if not user.id:
             return 'Unauthorized to get sign document'
-        doc_obj = cls.objects.get(id=file_id)
-        users = Profile.objects.all()
-        users = queryset_to_list(users,fields=['id','name'])
-        meetings = Event.objects.filter(publish=True).exclude(archived=True)
-        meetings = queryset_to_list(meetings,fields=['id','name'])
-        meeting_id = False
-        send_to_all = False
 
-        if doc_obj.meeting:
-            meeting_id = doc_obj.meeting.id
-        if doc_obj.send_to_all:
-            send_to_all = doc_obj.send_to_all
-
-        doc_data = doc_obj.get_doc_data(request.user)
-        doc_data['sign_count'] = len(doc_obj.signature_set.filter(signed=True))
-        if type(doc_data) is str:
-            return doc_data
+        doc_data = self.get_doc_data(request.user)
+        sign_count = self.signature_set.filter(signed=True)
+        if sign_count:
+            doc_data['signature_started'] = True
         doc_data['doc_name'] = file_name
-        doc_data["meetings"] = meetings
-        doc_data["users"] = users
-        doc_data["meeting_id"] = meeting_id
-        doc_data["send_to_all"] = send_to_all
         return doc_data
 
     @classmethod
