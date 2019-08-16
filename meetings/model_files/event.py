@@ -347,13 +347,24 @@ class Event(models.Model):
         return {'data': data}
 
     @classmethod
-    def get_meetings(cls, meeting_type):
-        if meeting_type == 'archived':
-            meetings = Event.objects.filter(archived=True, publish=True)
-        elif meeting_type == 'draft':
-            meetings = Event.objects.filter(publish=False)
+    def get_meetings(cls, meeting_type, params = None):
+        results = None
+        offset = params.get('offset')
+        limit = params.get('limit')
+        kw = params.get('kw')
+        if kw:
+            results = ws_methods.search_db({'kw': kw, 'search_models':  {'meetings':['Event']}  })
         else:
-            meetings = Event.objects.filter(publish=True)
+            results = Event.objects.all()
+        if meeting_type == 'archived':
+            meetings = results.filter(archived=True, publish=True)
+        elif meeting_type == 'draft':
+            meetings = results.filter(publish=False)
+        else:
+            meetings = results.filter(publish=True)
+        if limit:
+            meetings = meetings[offset: offset + limit]
+        
         meeting_list = []
         for meeting in meetings:
             if meeting_type == 'upcoming':
@@ -424,8 +435,8 @@ class Event(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
-        meeting_type = params.get('meeting_type')
-        meeting_list = cls.get_meetings(meeting_type)
+        meeting_type = params.get('meeting_type')        
+        meeting_list = cls.get_meetings(meeting_type, params)
         meetings = cls.get_meeting_summaries(meeting_list, request.user.id)
         meetings = {'records': meetings, 'total': 0, 'count': 0}
         data = {'error': '', 'data': meetings}

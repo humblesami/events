@@ -4,6 +4,7 @@ import base64
 import traceback
 from django.apps import apps
 from datetime import datetime
+from django.db.models import  Q
 from django.contrib.auth import login
 from emailthread.models import EmailThread, DocumentThread
 from django.core.files.base import ContentFile
@@ -540,7 +541,58 @@ def has_permission(res):
                 user_permission = True
     return user_permission
 
+search_apps = {
+    'meetings':
+        {
+            'Event': ['name', 'description'],
+            'Topic': ['name', 'lead'],
+            'Committee': ['name'],
+            'Profile': ['name', 'username', 'first_name', 'last_name', 'email'],
+            
+            'MeetingDocument': ['name'],
+            'AgendaDocument': ['name'],
+            'SignDocument': ['name'],
 
+            'News': ['name', 'description'],
+            'NewsDocument': ['name'],
+            'NewsVideo': ['name'],
+        },
+    'resources':
+        {
+            'Folder': ['name'],
+            'ResourceDocument': ['name']
+        },
+    'survey':
+        {
+            'Survey': ['name', 'description'],
+            'Question':['text']
+        },
+    'voting':
+        {
+            'Voting': ['name', 'description'],
+            'VotingDocument': ['name'],
+            'VotingChoice':['name'],
+            'VotingType':['name']
+        }
+}
+
+def search_db(params):
+    results = []
+    search_text = params['kw'].lower()    
+    search_models = params.get('search_models')
+    
+    for app_name in search_models:
+        for model_name in search_models[app_name]:
+            fields =  search_apps[app_name][model_name]
+            kwargs = {}
+            q_objects = Q()
+            for field in fields:
+                q_objects |= Q(**{field+'__contains': params['kw']})
+                kwargs.update({'{0}__{1}'.format(field, 'contains'): search_text})
+            model_obj = apps.get_model(app_name, model_name)
+            search_result = model_obj.objects.filter(q_objects)
+            results = search_result
+    return results
 
 #
 #

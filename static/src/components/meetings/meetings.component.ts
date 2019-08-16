@@ -50,12 +50,31 @@ export class MeetingsComponent implements OnInit {
             obj_this.httpService.get(final_input_data, success_cb, null);
         }
     }
+
+    search_records(e){
+        let obj_this = this;
+        // console.log(e.keyCode, 67);
+        if(e.keyCode == 13)
+        {
+            obj_this.get_data(2, 0, e.target.value);
+        }
+    }
     
-    ngOnInit() {
+    ngOnInit() {        
+        this.get_data();
+        window['json_functions'].find_activate_link('.MeetingBtnWrapper');
+    }
+
+    get_data(limit = 10, off_set = 0, kw = ''){
         var url_segments = this.route.snapshot.url;
         this.meeting_type = url_segments[url_segments.length -1].path;
         let obj_this = this;
-        let input_data = { meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
+        let input_data = {
+             meeting_type: obj_this.meeting_type, 
+            //  offset: off_set,
+            //  limit: limit,
+             kw : kw
+        };
         
         var success_cb = function (result) {            
             for(var i in result.records)
@@ -80,8 +99,6 @@ export class MeetingsComponent implements OnInit {
             params: input_data,
             args: args
         };
-        
-        window['json_functions'].find_activate_link('.MeetingBtnWrapper');
         this.httpService.get(final_input_data, success_cb, failure_cb);
     }
 }
