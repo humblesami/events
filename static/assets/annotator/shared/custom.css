@@ -22,8 +22,9 @@
     position: relative;
     background: linear-gradient(to bottom, #4b74b5, #4b74b5);
     padding: 5px 0px;
-    border-radius: 10px;
+    border-radius: 0.2rem;
     flex-wrap: wrap;
+    min-height: 45px;
 }
 .toolbar .spacer {
     display: inline-block;
@@ -46,7 +47,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 22px;
+    font-size: 21px;
+    line-height:1;
     color:#ffffff;
     cursor: pointer;
 }
@@ -132,8 +134,8 @@
 .topbar .pen-color {
     cursor: pointer;
     margin-left: 7px;
-    height: 18px;
-    width: 20px;
+    height: 21px;
+    width: 21px;
     background-color: black;
 }
 .Icon {
@@ -272,23 +274,35 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 5px;
 }
+
+.toolbar button, .toolbar a, .topbar .paginator {
+    margin: 0 7px;
+}
+
 .topbar .paginator .pager {
-    padding: 0 5px;
+    padding: 0 7px;
     cursor: pointer;
     }
 .topbar .paginator .pager.prev {
-    margin-left: 5px;
+    margin-left: 7px;
 }
 .topbar .paginator .pager.next {
-    margin-right: 5px;
+    margin-right: 7px;
 }
 .topbar .paginator input {
     width: 42px;
-    margin-right: 5px;
+    height: 25px;
+    margin-right: 7px;
     padding-left: 5px;
     border: 0;
 }
+.selectBox select {
+    background-image: none !important;
+    padding: 0;
+}
+
 .search-bar-container .search-hint-text {
     display: none;
     width: fit-content;
@@ -323,11 +337,13 @@
     border-radius: 100%;
     z-index: 1;
     padding: 0;
-    margin-left: -3px;
+    position: absolute;
+    bottom: -4px;
+    right: 0;
 }
-.toolbar .paginator .pager:hover, .toolbar button:hover, .toolbar a:hover {
+/*.toolbar .paginator .pager:hover, .toolbar button:hover, .toolbar a:hover {
     background-color: rgba(0, 0, 0, 0.3);
-}
+}*/
 .toolbar button.add-point-button:hover {
     background-color: green;
 }
@@ -530,7 +546,7 @@ Color Popup
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin: 0 5px;
+    margin: 0;
     position: relative;
 }
 .ColorPalettePopup .row {
@@ -671,4 +687,11 @@ button.pen.annotation_button.active
 .comment-list-item>div>span {
     padding-left: 38px;
     display: block;
+}
+
+
+.PenSize select{
+    padding: 0 20px 0 5px;
+    background-position: right 7px center !important;
+    border: none;
 }

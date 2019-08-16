@@ -361,7 +361,7 @@ breadcrumb
 	font-weight: 600;
 }
 .breadcrumbSection .breadcrumb li {
-	color: #8c8c8cdb;
+	color: #9a9a9a;
 	text-transform: capitalize;
 	display: inline;
 }
@@ -491,8 +491,9 @@ a.kanban-committees-info-box-name {
 .kanban-card {
     cursor: pointer;
     min-width: 245px;
-	box-shadow: 0px 0px 0px 2px #ddd;
 	height: 100%;
+	border: 3px solid rgba(99, 143, 201, 0.25);
+
 }
 .kanban-folder {
 	padding: 25px 15px;
@@ -2308,7 +2309,7 @@ body.public .app-content {
 /* Start Of Upcoming Meeting  */
 
 .Info p {
-	margin-bottom: 7px;
+	margin-bottom: 3px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -2352,7 +2353,7 @@ span.kanban-upcoming-meeting-date {
 	border-radius: 3px;
 	flex-direction: column;
 	height: 100%;
-	border: 1px solid rgba(99, 143, 201, 0.25);
+	/* border: 1px solid rgba(99, 143, 201, 0.25); */
 }
 .kanban-card.survey {
 	width: 240px;
@@ -2370,6 +2371,7 @@ span.kanban-upcoming-meeting-date {
 	padding-left: 12px;
 	display: flex;
 	flex-direction: column;
+	justify-content:center;
 }
 .kanban-upcoming-meeting .Info,
 .kanban-upcoming-meeting .Info a {
@@ -2646,7 +2648,7 @@ ul.dropdown-menu.scrollable-menu {
 	right: 1.5rem;
 	bottom: 5px;
 	height: calc(100vh - 8rem) !important;
-	border-radius: 0.5rem;
+	border-radius: 0.4rem;
 	box-shadow: 0 0.1875rem 0.375rem rgba(33, 37, 41, 0.1);
 	border: 1px solid #dadada;;
 	background: #fff;
@@ -2717,9 +2719,9 @@ button.popup-closer {
 }
 
 .btn-group .btn.active {
-	background-color: #6497ca;
+	background-color: #4b74b5;
 	color: white;
-	border-color: #6497ca;
+	border-color:#4b74b5;
 }
 .toggle-off {
 	background-color: #f1f2f4
@@ -2773,7 +2775,7 @@ select {
     position: relative;
     max-width: 200px;
     margin-bottom: 15px;
-    z-index: 4;
+    z-index: 1;
     text-align: center;
 }
 .author-thumb-wrap{
