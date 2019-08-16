@@ -502,10 +502,7 @@
             function hideComments() {
                 comments_wrapper.hide();
                 shown_comment_type = false;
-                localStorage.removeItem(documentId + '/shown_comment_type');
-                let cwr_top = scroll_div.offset().top;
-                // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
-                scroll_div.height(window.innerHeight - cwr_top);
+                localStorage.removeItem(documentId + '/shown_comment_type');                
             }
 
             function showCommentsContainer(comment_sub_type) {
@@ -776,6 +773,11 @@
                                 setCookieStrict(documentId, documentId + '/scale', 1)
                             }
                             scale_select.val(RENDER_OPTIONS.scale);
+                            
+                            let scroll_div_top = scroll_div.prev()[0].getBoundingClientRect().bottom;
+                            // console.log(scroll_div_top, window.innerHeight);
+                            scroll_div.height(window.innerHeight - 40 - scroll_div_top);
+                            
                         }
                         catch(er){
                             console.log(er);

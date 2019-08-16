@@ -3,32 +3,32 @@ rid="doc_data.doc_name"
 routes="{{breadcrumb}}"
 title="{{doc_data.doc_name}}"></app-breadcrumb>
 
-    <div class="pdf-annotator" id="annotated-doc-conatiner" style="display:none;">
-        <div class="ToolPdfViwerWrapper">
-            <div id="comment-wrapper">
-                <div class="header comment-header">
-                    <span class="show-all-comments">
-                        <i class="fa fa-times-circle"></i>
-                    </span>
-                    <span class="title">Comments</span>
-                </div>
-    
-                <div class="comment-list">
-                    <div class="comment-list-container">
-                        <div class="comment-list-item">No comments</div>
-                    </div>
-                </div>
-                <form *ngIf="mention_list" class="comment-list-form">
-                    <div class="AddCommentTextWrap"><div contenteditable="true" [mentionConfig]="mentionConfig" class="active-mention" id="commentText" (keyup)="save_comment_key_up" Placeholder="Add a Comment"></div>
-                        </div>
-                    <!-- <textarea id="commentText"
-                    [mentionConfig] = "mentionConfig"
-                    placeholder="Add a Comment"></textarea> -->
-                </form>
+<div class="pdf-annotator" id="annotated-doc-conatiner" style="display:none;">
+    <div class="ToolPdfViwerWrapper">
+        <div id="comment-wrapper">
+            <div class="header comment-header">
+                <span class="show-all-comments">
+                    <i class="fa fa-times-circle"></i>
+                </span>
+                <span class="title">Comments</span>
             </div>
-    
-            <div id="viewer-wrapper">
-                <div class="toolbar topbar" style="display:none">
+
+            <div class="comment-list">
+                <div class="comment-list-container">
+                    <div class="comment-list-item">No comments</div>
+                </div>
+            </div>
+            <form *ngIf="mention_list" class="comment-list-form">
+                <div class="AddCommentTextWrap"><div contenteditable="true" [mentionConfig]="mentionConfig" class="active-mention" id="commentText" (keyup)="save_comment_key_up" Placeholder="Add a Comment"></div>
+                    </div>
+                <!-- <textarea id="commentText"
+                [mentionConfig] = "mentionConfig"
+                placeholder="Add a Comment"></textarea> -->
+            </form>
+        </div>
+
+        <div id="viewer-wrapper">
+            <div class="toolbar topbar" style="display:none">
                 <div class="ToolBarWrapper">
                     <div class="doc-manage-btn-wrap">
                         <a class="icon back" (click)="go_back()" title="Back">
@@ -38,11 +38,11 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     <div class="doc-manage-btn-wrap">
                         <div class="paginator">
                             <span (click)="changePage(page_num-1)" class="pager prev page-prev-btn" disabled="">
-								<img src="static/assets/images/docs/docs-arrow-up.svg" alt="">
-							</span>
+                                <img src="static/assets/images/docs/docs-arrow-up.svg" alt="">
+                            </span>
                             <span (click)="changePage(page_num+1)" class="pager next page-next-btn" disabled="">
-								<img src="static/assets/images/docs/docs-arrow-down.svg" alt="">
-							</span>
+                                <img src="static/assets/images/docs/docs-arrow-down.svg" alt="">
+                            </span>
     
                             <input (change)="changePage(page_num)" (blur)="changePage(page_num)" (keyup.enter)="changePage(page_num)" class="form-control" [(ngModel)]="page_num" type="number" class="page-number" value="1">
                             <span>of <span class="page-count">1</span></span>
@@ -64,7 +64,7 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     <div class="doc-manage-btn-wrap">
                         <button class="pen annotation_button" type="button" title="Pen Tool" data-tooltype="draw">
                             <div class="Icon">
-                                 <img src="static/assets/images/docs/docs-write-pen.svg" alt="">
+                                <img src="static/assets/images/docs/docs-write-pen.svg" alt="">
                             </div>
                         </button>
                     </div>
@@ -163,148 +163,147 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                             </div>
                         </a>
                     </div>
-    
-            </div>
-            </div>
-                <div id="content-wrapper">
-                    <div class="PdfViewerWrapper">
-                        <div id="viewer" class="pdfViewer"></div>
-                    </div>
                 </div>
-    
-                <!--<div id="notification-wrapper">-->
-                <!--<div class="notification-list">-->
-                <!--<div class="notification-list-container">-->
-                <!--<div class="notification-list-item">No Notifications</div>-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--</div>-->
             </div>
-    
+            <div id="content-wrapper">
+                <div class="PdfViewerWrapper">
+                    <div id="viewer" class="pdfViewer"></div>
+                </div>
+            </div>
+
+            <!--<div id="notification-wrapper">-->
+            <!--<div class="notification-list">-->
+            <!--<div class="notification-list-container">-->
+            <!--<div class="notification-list-item">No Notifications</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
         </div>
-        <div class="toolbar annotation-options ContextMenuPopup">
-            <div class="Button icon">
-                <button class="underline" type="button" title="underline" data-tooltype="underline">
-                    <div class="Icon">
-                        <svg viewBox="0 0 24 24" id="ic_annotation_underline_black_24px" width="100%" height="100%">
-                            <g fill="none" fill-rule="evenodd">
-                                <path fill="currentColor" d="M14.308 14.321H9.684L8.804 17H6l4.765-13h2.444L18 17h-2.804zm-3.912-2.17h3.2l-1.61-4.865zM5 18.5h14v2H5z"></path>
-                                <path d="M0 0h24v24H0z"></path>
-                            </g>
-                        </svg>
-                    </div>
-                </button>
-            </div>
-            <div class="Button icon">
-                <button class="strikeout" type="button" title="strikeout" data-tooltype="strikeout">
-                    <div class="Icon">
-                        <svg viewBox="0 0 24 24" id="ic_annotation_strikeout_black_24px" width="100%" height="100%">
-                            <g fill="none" fill-rule="evenodd">
-                                <path fill="currentColor" d="M9.521 16l-.717 3H6l1.021-3zm-1.139-4l2.383-7h2.444l2.395 7h-2.39l-1.227-3.714L10.772 12zm8.591 4L18 19h-2.804l-.725-3zM5 13h14v2H5z"></path>
-                                <path d="M0 0h24v24H0z"></path>
-                            </g>
-                        </svg>
-                    </div>
-                </button>
-            </div>
-            <div class="Button icon">
-                <button class="highlight" type="button" title="Highlight" data-tooltype="highlight">
-                    <div class="Icon">
-                        <svg viewBox="0 0 24 24" id="ic_annotation_highlight_black_24px" width="100%" height="100%">
-                            <g fill="none" fill-rule="evenodd">
-                                <path fill="currentColor" d="M19 3c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2zm-4.947 12.341l.789 2.344h2.492L13.076 6.31h-2.172L6.67 17.685h2.492l.781-2.344zm-3.477-1.898l1.414-4.258 1.43 4.258z"></path>
-                                <path d="M0 0h24v24H0z"></path>
-                            </g>
-                        </svg>
-                    </div>
-                </button>
-            </div>
-    
-            <div class="Button icon">
-                <button class="copy" type="button" title="Copy" data-tooltype="copy">
-                    <div class="Icon">
-                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 34.555 34.555" style="enable-background:new 0 0 34.555 34.555;" xml:space="preserve">
+
+    </div>
+    <div class="toolbar annotation-options ContextMenuPopup">
+        <div class="Button icon">
+            <button class="underline" type="button" title="underline" data-tooltype="underline">
+                <div class="Icon">
+                    <svg viewBox="0 0 24 24" id="ic_annotation_underline_black_24px" width="100%" height="100%">
+                        <g fill="none" fill-rule="evenodd">
+                            <path fill="currentColor" d="M14.308 14.321H9.684L8.804 17H6l4.765-13h2.444L18 17h-2.804zm-3.912-2.17h3.2l-1.61-4.865zM5 18.5h14v2H5z"></path>
+                            <path d="M0 0h24v24H0z"></path>
+                        </g>
+                    </svg>
+                </div>
+            </button>
+        </div>
+        <div class="Button icon">
+            <button class="strikeout" type="button" title="strikeout" data-tooltype="strikeout">
+                <div class="Icon">
+                    <svg viewBox="0 0 24 24" id="ic_annotation_strikeout_black_24px" width="100%" height="100%">
+                        <g fill="none" fill-rule="evenodd">
+                            <path fill="currentColor" d="M9.521 16l-.717 3H6l1.021-3zm-1.139-4l2.383-7h2.444l2.395 7h-2.39l-1.227-3.714L10.772 12zm8.591 4L18 19h-2.804l-.725-3zM5 13h14v2H5z"></path>
+                            <path d="M0 0h24v24H0z"></path>
+                        </g>
+                    </svg>
+                </div>
+            </button>
+        </div>
+        <div class="Button icon">
+            <button class="highlight" type="button" title="Highlight" data-tooltype="highlight">
+                <div class="Icon">
+                    <svg viewBox="0 0 24 24" id="ic_annotation_highlight_black_24px" width="100%" height="100%">
+                        <g fill="none" fill-rule="evenodd">
+                            <path fill="currentColor" d="M19 3c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2zm-4.947 12.341l.789 2.344h2.492L13.076 6.31h-2.172L6.67 17.685h2.492l.781-2.344zm-3.477-1.898l1.414-4.258 1.43 4.258z"></path>
+                            <path d="M0 0h24v24H0z"></path>
+                        </g>
+                    </svg>
+                </div>
+            </button>
+        </div>
+
+        <div class="Button icon">
+            <button class="copy" type="button" title="Copy" data-tooltype="copy">
+                <div class="Icon">
+                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 34.555 34.555" style="enable-background:new 0 0 34.555 34.555;" xml:space="preserve">
+                        <g>
                             <g>
                                 <g>
-                                    <g>
-                                        <path d="M24.065,34.555H5.489c-1.379,0-2.5-1.122-2.5-2.5V7.864c0-1.378,1.121-2.5,2.5-2.5h2.364c0.276,0,0.5,0.224,0.5,0.5
-                                            s-0.224,0.5-0.5,0.5H5.489c-0.827,0-1.5,0.673-1.5,1.5v24.19c0,0.827,0.673,1.5,1.5,1.5h18.576c0.827,0,1.5-0.673,1.5-1.5v-2.365
-                                            c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5v2.365C26.565,33.433,25.444,34.555,24.065,34.555z" />
-                                    </g>
+                                    <path d="M24.065,34.555H5.489c-1.379,0-2.5-1.122-2.5-2.5V7.864c0-1.378,1.121-2.5,2.5-2.5h2.364c0.276,0,0.5,0.224,0.5,0.5
+                                        s-0.224,0.5-0.5,0.5H5.489c-0.827,0-1.5,0.673-1.5,1.5v24.19c0,0.827,0.673,1.5,1.5,1.5h18.576c0.827,0,1.5-0.673,1.5-1.5v-2.365
+                                        c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5v2.365C26.565,33.433,25.444,34.555,24.065,34.555z" />
                                 </g>
+                            </g>
+                            <g>
                                 <g>
-                                    <g>
-                                        <path d="M29.065,29.19H10.489c-1.379,0-2.5-1.122-2.5-2.5V2.5c0-1.378,1.121-2.5,2.5-2.5h13.604c0.276,0,0.5,0.224,0.5,0.5
-                                            S24.37,1,24.094,1H10.489c-0.827,0-1.5,0.673-1.5,1.5v24.19c0,0.827,0.673,1.5,1.5,1.5h18.576c0.827,0,1.5-0.673,1.5-1.5V7.661
-                                            c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5V26.69C31.565,28.069,30.444,29.19,29.065,29.19z" />
-                                        <path d="M31.065,8.161h-6.972c-0.276,0-0.5-0.224-0.5-0.5V0.688c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5v6.473h6.472
-                                            c0.276,0,0.5,0.224,0.5,0.5S31.342,8.161,31.065,8.161z" />
-                                        <path d="M31.065,8.161c-0.13,0-0.26-0.051-0.358-0.151l-6.972-7.161c-0.192-0.198-0.188-0.514,0.01-0.707
-                                            c0.197-0.191,0.516-0.187,0.707,0.01l6.972,7.161c0.192,0.198,0.188,0.514-0.01,0.707C31.317,8.114,31.191,8.161,31.065,8.161z" />
-                                    </g>
+                                    <path d="M29.065,29.19H10.489c-1.379,0-2.5-1.122-2.5-2.5V2.5c0-1.378,1.121-2.5,2.5-2.5h13.604c0.276,0,0.5,0.224,0.5,0.5
+                                        S24.37,1,24.094,1H10.489c-0.827,0-1.5,0.673-1.5,1.5v24.19c0,0.827,0.673,1.5,1.5,1.5h18.576c0.827,0,1.5-0.673,1.5-1.5V7.661
+                                        c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5V26.69C31.565,28.069,30.444,29.19,29.065,29.19z" />
+                                    <path d="M31.065,8.161h-6.972c-0.276,0-0.5-0.224-0.5-0.5V0.688c0-0.276,0.224-0.5,0.5-0.5s0.5,0.224,0.5,0.5v6.473h6.472
+                                        c0.276,0,0.5,0.224,0.5,0.5S31.342,8.161,31.065,8.161z" />
+                                    <path d="M31.065,8.161c-0.13,0-0.26-0.051-0.358-0.151l-6.972-7.161c-0.192-0.198-0.188-0.514,0.01-0.707
+                                        c0.197-0.191,0.516-0.187,0.707,0.01l6.972,7.161c0.192,0.198,0.188,0.514-0.01,0.707C31.317,8.114,31.191,8.161,31.065,8.161z" />
                                 </g>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="update-comment ContextMenuPopup">
+        <div class="Button icon">
+            <button class="edit" type="button">
+                <div class="Icon">
+                    Edit
+                </div>
+            </button>
+        </div>
+        <div class="Button icon">
+            <button class="delete" type="button">
+                <div class="Icon">
+                    Delete
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="Popup ColorPalettePopup hidemouseaway ContextMenuPopup colors">
+        <div class="Popup StylePopup">
+            <div class="row">
+                <div class="cell colored" hex="#000000" rgb="rgb(0,0,0)" style="background-color: rgb(0,0,0);">
+                    <div id="applied_color" class="Icon check-mark dark" viewBox="0 0 24 24">
+                        <svg viewBox="0 0 24 24" id="ic_check_black_24px" width="100%" height="100%">
+                            <g fill="none" fill-rule="evenodd">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" fill-rule="nonzero"></path>
+                                <path d="M0 0h24v24H0z"></path>
                             </g>
                         </svg>
                     </div>
-                </button>
+                </div>
+                <div class="cell colored" hex="#FFFFFF" rgb="rgb(255,255,255)" style="background-color: rgb(255,255,255);"></div>
+                <div class="cell colored" hex="#FF0000" rgb="rgb(255,0,0)" style="background-color: rgb(255,0,0);"></div>
+                <div class="cell colored" hex="#00FF00" rgb="rgb(0,255,0)" style="background-color: rgb(0,255,0)"></div>
             </div>
-    
+            <div class="row">
+                <div class="cell colored" hex="#0000FF" rgb="rgb(0,0,255)" style="background-color: rgb(0,0,255);"></div>
+                <div class="cell colored" hex="#FFFF00" rgb="rgb(255,255,0)" style="background-color: rgb(255,255,0);"></div>
+                <div class="cell colored" hex="#00FFFF" rgb="rgb(0,255,255)" style="background-color: rgb(0,255,255);"></div>
+                <div class="cell colored" hex="#FF00FF" rgb="rgb(255,0,255)" style="background-color: rgb(255,0,255);"></div>
+
+            </div>
+            <div class="row">
+                <div class="cell colored" hex="#C0C0C0" rgb="rgb(192,192,192)" style="background-color: rgb(192,192,192);"></div>
+                <div class="cell colored" hex="#808080" rgb="rgb(128,128,128)" style="background-color: rgb(128,128,128);"></div>
+                <div class="cell colored" hex="#00cc63" rgb="rgb(128,0,0)" style="background-color: rgb(0, 204, 99);"></div>
+                <div class="cell colored" hex="#808000" rgb="rgb(128,128,0)" style="background-color: rgb(128,128,0);"></div>
+            </div>
+            <div class="row">
+                <div class="cell colored" hex="#008000" rgb="rgb(0,128,0)" style="background-color: rgb(0,128,0);"></div>
+                <div class="cell colored" hex="#800080" rgb="rgb(128,0,128)" style="background-color: rgb(128,0,128);"></div>
+                <div class="cell colored" hex="#008080" rgb="rgb(0,128,128)" style="background-color: rgb(0,128,121);"></div>
+                <div class="cell colored" hex="#000080" rgb="rgb(0,0,128)" style="background-color: rgb(0,0,128);"></div>
+            </div>
         </div>
-    
-        <div class="update-comment ContextMenuPopup">
-            <div class="Button icon">
-                <button class="edit" type="button">
-                    <div class="Icon">
-                        Edit
-                    </div>
-                </button>
-            </div>
-            <div class="Button icon">
-                <button class="delete" type="button">
-                    <div class="Icon">
-                        Delete
-                    </div>
-                </button>
-            </div>
-        </div>
-    
-        <div class="Popup ColorPalettePopup hidemouseaway ContextMenuPopup colors">
-            <div class="Popup StylePopup">
-                <div class="row">
-                    <div class="cell colored" hex="#000000" rgb="rgb(0,0,0)" style="background-color: rgb(0,0,0);">
-                        <div id="applied_color" class="Icon check-mark dark" viewBox="0 0 24 24">
-                            <svg viewBox="0 0 24 24" id="ic_check_black_24px" width="100%" height="100%">
-                                <g fill="none" fill-rule="evenodd">
-                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" fill-rule="nonzero"></path>
-                                    <path d="M0 0h24v24H0z"></path>
-                                </g>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="cell colored" hex="#FFFFFF" rgb="rgb(255,255,255)" style="background-color: rgb(255,255,255);"></div>
-                    <div class="cell colored" hex="#FF0000" rgb="rgb(255,0,0)" style="background-color: rgb(255,0,0);"></div>
-                    <div class="cell colored" hex="#00FF00" rgb="rgb(0,255,0)" style="background-color: rgb(0,255,0)"></div>
-                </div>
-                <div class="row">
-                    <div class="cell colored" hex="#0000FF" rgb="rgb(0,0,255)" style="background-color: rgb(0,0,255);"></div>
-                    <div class="cell colored" hex="#FFFF00" rgb="rgb(255,255,0)" style="background-color: rgb(255,255,0);"></div>
-                    <div class="cell colored" hex="#00FFFF" rgb="rgb(0,255,255)" style="background-color: rgb(0,255,255);"></div>
-                    <div class="cell colored" hex="#FF00FF" rgb="rgb(255,0,255)" style="background-color: rgb(255,0,255);"></div>
-    
-                </div>
-                <div class="row">
-                    <div class="cell colored" hex="#C0C0C0" rgb="rgb(192,192,192)" style="background-color: rgb(192,192,192);"></div>
-                    <div class="cell colored" hex="#808080" rgb="rgb(128,128,128)" style="background-color: rgb(128,128,128);"></div>
-                    <div class="cell colored" hex="#00cc63" rgb="rgb(128,0,0)" style="background-color: rgb(0, 204, 99);"></div>
-                    <div class="cell colored" hex="#808000" rgb="rgb(128,128,0)" style="background-color: rgb(128,128,0);"></div>
-                </div>
-                <div class="row">
-                    <div class="cell colored" hex="#008000" rgb="rgb(0,128,0)" style="background-color: rgb(0,128,0);"></div>
-                    <div class="cell colored" hex="#800080" rgb="rgb(128,0,128)" style="background-color: rgb(128,0,128);"></div>
-                    <div class="cell colored" hex="#008080" rgb="rgb(0,128,128)" style="background-color: rgb(0,128,121);"></div>
-                    <div class="cell colored" hex="#000080" rgb="rgb(0,0,128)" style="background-color: rgb(0,0,128);"></div>
-                </div>
-            </div>
-        </div>    
-        <div class="excel_doc"></div>
-    </div>
+    </div>    
+    <div class="excel_doc"></div>
+</div>
