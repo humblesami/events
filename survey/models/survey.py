@@ -259,9 +259,8 @@ class Survey(Actions):
                         user_answer = literal_eval(user_answer)
                     profile_model = ws_methods.get_model('meetings', 'Profile')
                     user_response = answer_objects[cnt].response
-                    answer_user = profile_model.objects.filter(pk=user_response.user.id)
-                    if answer_user:
-                        answer_user = answer_user[0]
+                    if user_response and user_response.user and user_response.user.id:
+                        answer_user = profile_model.objects.filter(pk=user_response.user.id)
                         cnt += 1
                         user_answers.append({
                             'answers': user_answer,
