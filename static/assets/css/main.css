@@ -208,7 +208,7 @@ button, a, .DocumentWrapper { cursor: pointer; }
 	text-transform: capitalize;
 	font-family: 'Roboto', sans-serif;
 	background: #606060;
-	padding:13px;
+	padding:10px;
 	transition: all 0.2s ease;
 }
 
