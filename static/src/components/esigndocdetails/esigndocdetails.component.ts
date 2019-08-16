@@ -697,7 +697,7 @@ export class EsignDocDetailsComponent implements OnInit {
                             args: {
                                 app: "meetings",
                                 model: "SignDocument",
-                                method:"assign_signature",
+                                method:"ws_assign_signature",
                             },
                             params: {
                                 document_id: doc_id,

@@ -38,7 +38,7 @@ class SignatureDoc(File):
             pass
 
     @classmethod
-    def assign_signature(cls, request, params):
+    def ws_assign_signature(cls, request, params):
         doc_id = int(params['document_id'])
         doc = cls.objects.get(id=doc_id)
         if len(doc.signature_set.filter(signed=False)) > 0:
