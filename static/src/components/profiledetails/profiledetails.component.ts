@@ -64,7 +64,7 @@ export class ProfileDetailsComponent implements OnInit {
 
 	open(section) {
         let obj_this = this;
-		const modalRef = this.modalService.open(ProfileeditComponent);
+		const modalRef = this.modalService.open(ProfileeditComponent, { size: 'lg', backdrop: 'static' });
 		modalRef.componentInstance.edit_info = {
 			section: section,
 			user_id: this.route.snapshot.params.id
