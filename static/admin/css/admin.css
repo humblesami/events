@@ -152,10 +152,10 @@ p.datetime input[type="text"].vTimeField{
 }
 .form-row select{
     width: calc(100%);
-    border-radius: 5px;
+    border-radius: 0;
     background: transparent;
-    border-bottom: 0;
-    border: 1px solid #ddd;
+    border:0;
+    border-bottom: 1px solid #ddd ;
 }
 td.field-type
 {
@@ -165,3 +165,4 @@ td.field-type
 {
 	width: 120px;
 }
+

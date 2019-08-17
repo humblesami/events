@@ -1,5 +1,8 @@
 
 /*Homepage TabBar setting*/
+.home-container{
+    padding-top: 20px;
+}
 .home{
 	background:#f1f4f2;
     padding:0 10%;
@@ -10,7 +13,7 @@
 
 .home #collapsibleNavbar .active{
     background:#ffffff;
-  }
+}
 
 .home div#collapsibleNavbar {
     justify-content: center;
@@ -70,13 +73,14 @@
 }
 
 .HomePageContentImg {
-    margin: 0px 20px 20px 0px;
+    margin-left: 20px;
     flex-basis: 300px;
     max-width: 300px;
-    float: left;
+    float: right;
 }
 .HomePageContentImg img{
-	max-width:100%;
+    max-width:100%;
+    border: 1px solid #ddd;
 	}
 .fc-more-cell{
 	background: darkgreen;
@@ -331,8 +335,14 @@ span.to-do-count {
 .kanban-card.survey
 {
     width: 240px;
+    flex-grow: 1;
+    margin: 5px;
+    flex: 0 0 33.3333%;
 }
-
+/* .kanban-card.survey::after {
+    content: '';
+    flex-grow: 1000000000;
+  } */
 .CalendarDateWrapper {
     white-space: nowrap;
     width: 90px;
@@ -423,7 +433,7 @@ span.to-do-count{
     font-size: 30px;
     display: flex;
     align-items: center;
-    margin-bottom:25px;
+    margin-bottom:5px;
     color: #2B2B2B; 
 }
 .HomeCalendarHead img{
