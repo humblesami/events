@@ -37,6 +37,31 @@ class SignatureDoc(File):
             self.save()
             pass
 
+    def get_pending_sign_count(self, uid):
+        pending_count = self.signature_set.filter(user_id=uid, signed=False).count()
+        total = self.signature_set.filter(user_id=uid).count()
+        user_status = 'Pending'
+        if total > 0:
+            if total == pending_count:
+                user_status = 'Completed'
+        else:
+            user_status = 'Not Required'
+        return {'total': total, 'pending': pending_count, 'signature_status': user_status }
+
+    @classmethod
+    def pending_sign_docs(cls, uid):
+        sign_doc_ids = Signature.objects.filter(user_id=uid, signed=False).distinct().values('document_id')
+        docs = cls.objects.filter(pk__in=sign_doc_ids)
+        pending_docs = []
+        for obj in docs:
+            tot_pending = obj.get_pending_sign_count(uid)
+            doc = tot_pending
+
+            doc['id'] = obj.id
+            doc['name'] = obj.name
+            pending_docs.append(doc)
+        return pending_docs
+
     @classmethod
     def ws_assign_signature(cls, request, params):
         doc_id = int(params['document_id'])

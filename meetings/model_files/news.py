@@ -45,41 +45,11 @@ class News(models.Model):
             news_docs.append({'name': doc.name, 'id': doc.id})
 
         voting_model = apps.get_model('voting', 'Voting')
-        esign_doc_model = apps.get_model('meetings', 'SignDocument')
-        sign_doc_ids = SignDocument.objects.filter(
-            Q(signature__user_id=request.user.id)).distinct().values('id', 'name', 'meeting__name').annotate(
-                tot_signed=Count(
-                    Case(
-                        When(signature__signed=True, then=1)
-                        ,output_field=IntegerField(),)
-                        )).annotate(
-                            tot_unsigned=Count(
-                                Case(
-                                    When(signature__signed=False, then=1)
-                                    ,output_field=IntegerField(),)))
-        
-        # sign_doc_ids = queryset_to_list(sign_doc_ids,fields=['id','name','meeting__name', 'tot_signed', 'tot_unsigned'])
-        sign_docs = []
-        for sign_doc in sign_doc_ids:
-            signature_status = ''
-            if sign_doc['tot_signed'] == 0 and sign_doc['tot_unsigned'] == 0:
-                signature_status = 'Not Required'
-            elif sign_doc['tot_unsigned'] == 0:
-                signature_status = 'Completed'
-                continue
-            else:
-                signature_status = str(sign_doc['tot_signed']) + ' /' + str(sign_doc['tot_unsigned'])
-            sign_docs.append(
-                {
-                    'id': sign_doc['id'],
-                    'name': sign_doc['name'],
-                    'meeting__name': sign_doc['meeting__name'],
-                    'signature_status': signature_status
-                    })
+        pending_sign_docs = SignDocument.pending_sign_docs(request.user.id)
         home_object['to_do_items'] = {
             'pending_meetings':  Event.get_pending_meetings(uid),
             'pending_surveys': Survey.get_pending_surveys(uid),
-            'pending_documents': sign_docs,
+            'pending_documents': pending_sign_docs,
             'pending_votings': voting_model.get_todo_votings(uid),
         }
         home_object['doc_ids'] = news_docs
