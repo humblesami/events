@@ -5,8 +5,8 @@ import { HttpService } from '../../app/http.service'
 declare var $:any;
 
 @Component({
-  selector: 'app-forgotpassword',
-  templateUrl: './forgotpassword.component.html'
+    selector: 'app-forgotpassword',
+    templateUrl: './forgotpassword.component.html'
 })
 export class ForgotpasswordComponent implements OnInit {
 	loading = false;
