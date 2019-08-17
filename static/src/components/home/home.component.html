@@ -1,13 +1,11 @@
 <app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1">        
     </app-breadcrumb>
     <div class="router-outlet home-container" *ngIf="ng_init">    
-        <div class="container">
-            <div class="todoitembtn">
+        <div class="container" id="welcome" *ngIf="home_data">
+            <section class="todoitembtn">
                 <button *ngIf="home_data && to_do_count" (click)="scroll_to_do()">Todo Items: {{to_do_count}}</button>
-            </div>
-        </div>
-        <div id="welcome" *ngIf="home_data">
-            <div class="container">
+            </section>
+            <section >
                 <div class="row">
                     <div class="col-md-8 WelcomeContent">
                     <h4 class="HomeTitle">
@@ -87,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
             <section *ngIf="home_data.doc_ids && home_data.doc_ids.length" class="HomepageDocumentSection">            
                 <div class="container">
                     <h2 class="border-bottom text-dark pb-3">Actions</h2>
@@ -114,49 +112,11 @@
                             </div>
                         </div>
                     </div>
-                    <!-- E-Signatue Doc -->
-                    <div class="border-bottom py-3">
-                        <h4 class="text-primary">E-Signatue Doc</h4>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="row docwrappercontainer">
-                                    <a class="col-sm-6 col-md-4 col-lg-2" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids">
-                                        <div class="DocumentWrapper">
-                                            <div class="DocIcon">
-                                                <span class="rounded-circle">
-                                                    <i class="icon-doc-file"></i>
-                                                </span>
-                                            </div>
-                                            <div class="DocInfoVertical text-truncate">
-                                                {{doc.name}}
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border-bottom py-3">
-                        <div *ngIf="home_data.video_ids && home_data.video_ids.length">
-                                <h4 class="text-primary">
-                                    Videos
-                                </h4>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="row">
-                                        <div class="video thumbnail col-sm-6 col-md-4 col-lg-3" *ngFor="let video of home_data.video_ids">
-                                            <iframe class="docThumbnail" frameborder="0" [src]="video.url"></iframe>
-                                            <div class="videoOverLayWrapper" (click)="view_video(video.name, video.original_url)"></div>
-                                            <h5 class="docname text-dark">{{video.name}}</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>           
+
+                             
                   
                 <div id="to-do">
-                        <div *ngIf="home_data.to_do_items.pending_meetings && home_data.to_do_items.pending_meetings.length>0" class="">
+                        <div *ngIf="home_data.to_do_items.pending_meetings1 && home_data.to_do_items.pending_meetings.length>0" class="">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="main-heading">
@@ -195,17 +155,42 @@
                                     </div>
                                 </div>
                         </div>
-                        <!--Votings-->
-                        <div *ngIf="home_data.to_do_items.pending_votings && home_data.to_do_items.pending_votings.length" class="">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="main-heading">
-                                        <h1>
-                                            Approval/Voting
-                                        </h1>
-                                    </div>
-                                </div>
+                        <!--Documents-->
+                        <div *ngIf="home_data.to_do_items.pending_documents && home_data.to_do_items.pending_documents.length" class="border-bottom py-3">
+                                <h4 class="text-primary">
+                                    Documents To Sign
+                                </h4>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="kanban-card" *ngFor="let doc of home_data.to_do_items.pending_documents">
+                                            <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
+                                                <div class="DocIcon">
+                                                    <span class="rounded-circle">
+                                                        <i class="icon-doc-file"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="DocText">
+                                                    <div class="DocName">
+                                                        <h5>Title: {{doc.name}}</h5>
+                                                    </div>
+                                                    <div *ngIf="doc && doc.meeting__name" class="DocMeeting">
+                                                        Meeting: {{doc.meeting__name}}
+                                                    </div>
+                                                    <div class="SignatureText font-11">
+                                                        <span>My Signature: </span>
+                                                        <span class="pending-status">{{doc.signature_status}}</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>  
+                                </div>                   
                             </div>
+                        <!--Votings-->
+                        <div *ngIf="home_data.to_do_items.pending_votings && home_data.to_do_items.pending_votings.length" class="py-3">
+                            <h4 class="text-primary">
+                                Approval / Voting
+                            </h4>
                             <div class="row">
                                 <div class="col-sm-6 col-md-4 mb-4" *ngFor="let vote of home_data.to_do_items.pending_votings">
                                     <div class="kanban-card voting">
@@ -227,39 +212,7 @@
                                 </div>
                             </div>                        
                         </div>
-                        <!--Documents-->
-                        <div *ngIf="home_data.to_do_items.pending_documents && home_data.to_do_items.pending_documents.length" class="DocumentsSignWrapper">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class=" modal-header">
-                                        Documents To Sign
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="kanban-card" *ngFor="let doc of home_data.to_do_items.pending_documents">
-                                    <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
-                                        <div class="DocIcon">
-                                            <span class="rounded-circle">
-                                                <i class="icon-doc-file"></i>
-                                            </span>
-                                        </div>
-                                        <div class="DocText">
-                                            <div class="DocName">
-                                                <h5>Title: {{doc.name}}</h5>
-                                            </div>
-                                            <div *ngIf="doc && doc.meeting__name" class="DocMeeting">
-                                                Meeting: {{doc.meeting__name}}
-                                            </div>
-                                            <div class="SignatureText font-11">
-                                                <span>My Signature: </span>
-                                                <span class="pending-status">{{doc.signature_status}}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>                     
-                        </div>
+                        
                         <div *ngIf="!to_do_count">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -270,7 +223,48 @@
                     </div>  
                 </div>         
             </section>
-     
+
+            <section class="HomepageDocumentSection" >
+                    <div class="container py-3">
+                            <h4 class="text-dark"><i class="fa fa-file text-primary"></i> Documents</h4>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row docwrappercontainer">
+                                        <a class="col-sm-6 col-md-4 col-lg-2" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids">
+                                            <div class="DocumentWrapper">
+                                                <div class="DocIcon">
+                                                    <span class="rounded-circle">
+                                                        <i class="icon-doc-file"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="DocInfoVertical text-truncate">
+                                                    {{doc.name}}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                    </div> 
+            </section>
+            <section class="container py-3">
+                <div *ngIf="home_data.video_ids && home_data.video_ids.length">
+                        <h4 class="text-primary">
+                            Videos
+                        </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="video thumbnail col-sm-6 col-md-4 col-lg-3" *ngFor="let video of home_data.video_ids">
+                                    <iframe class="docThumbnail" frameborder="0" [src]="video.url"></iframe>
+                                    <div class="videoOverLayWrapper" (click)="view_video(video.name, video.original_url)"></div>
+                                    <h5 class="docname text-dark">{{video.name}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
         <div class="modal fade video" id="videoModal" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
