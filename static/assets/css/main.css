@@ -2899,3 +2899,31 @@ h4.title-h4{
 {
     cursor: pointer;
 }
+
+.check-plus-label-wrap{
+	display:flex;
+	align-items:center;
+	margin:1rem 0;
+	font-weight: 600;
+}
+
+.check-plus-label-wrap input[type=checkbox]{
+    -webkit-appearance: none;
+    border: 2px solid #4b74b5;
+    padding: 0;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+    margin: 0 6px 0 0;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+.check-plus-label-wrap input[type=checkbox]:checked:after{
+	content: '\2714';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	color: #4b74b5;
+	transform:translate(-50% , -50%);
+}

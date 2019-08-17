@@ -49,8 +49,10 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                                 <option *ngFor="let meet of meetings" value="{{meet.id}}">{{meet.name}}</option>
                             </select>
                             <div class="doc-subtitle" class="check_box_send_all">
-                                <input id="check_box_send_all" type="checkbox"/>
-                                <strong >Send to all attendees:</strong>
+                                <label class="check-plus-label-wrap">
+									<input id="check_box_send_all" type="checkbox"/>
+                                	Send to all attendees:
+								</label>
                             </div>
                         </div>
         

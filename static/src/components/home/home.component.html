@@ -263,13 +263,13 @@
                                 </div>
                                 <div class="DocText">
                                     <div class="DocName">
-                                        <h5>Title: {{doc.name}}</h5>
+                                        <h5 class="text-truncate">Title: {{doc.name}}</h5>
                                     </div>
-                                    <div *ngIf="doc && doc.meeting__name" class="DocMeeting">
+                                    <div *ngIf="doc && doc.meeting__name" class="DocMeeting text-truncate">
                                         Meeting: {{doc.meeting__name}}
                                     </div>
-                                    <div class="SignatureText font-11">
-                                        <span>My Signature: </span>
+                                    <div class="SignatureText text-truncate font-11">
+                                        <span class="text-truncate">My Signature: </span>
                                         <span class="pending-status">{{doc.signature_status}}</span>
                                     </div>
                                 </div>
