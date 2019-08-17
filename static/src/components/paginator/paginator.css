@@ -1,7 +1,15 @@
+.paging-meta .page-limit
+{
+    float: left;
+}
+.paging-meta .pages
+{
+    float: right;
+}
 .paging-meta select
 {
-    width: auto;
-    display:inline;    
+    width: 65px;
+    display: inline;    
     margin: 0 5px;
 }
 li.page-item.disabled .page-link{

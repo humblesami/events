@@ -56,8 +56,7 @@ body.public .router-outlet{
     z-index: 27;
 }
 table.table.my-3 input[type='radio']{
-    margin-right: 10px;
-    cursor: pointer;
+    margin-right: 10px;    
 }
 table.table.my-3 input[type='radio']:after {
     width: 20px;
@@ -83,7 +82,6 @@ input[type=checkbox]#mail-to-assistant {
 	display: inline-block;
     position: relative;
     margin: 5px 5px;
-    cursor: pointer;
     top: -3px;
 }
 input[type=checkbox]:checked:after{
@@ -103,4 +101,7 @@ input[type=checkbox]:checked:after{
 .comment:last-of-type{
     border: none !important;
     margin-bottom:0 !important; 
+}
+select, button, label, a, input[type="radio"], input[type="checkbox"], input[type="button"]{
+    cursor: pointer;
 }

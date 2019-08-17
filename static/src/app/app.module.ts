@@ -70,7 +70,6 @@ import { SupportComponent } from '../components/support/support.component';
 import { ProfileeditComponent } from '../components/profileedit/profileedit.component';
 import { RosterComponent } from '../components/roster/roster.component';
 import { ProfilesummaryComponent } from '../components/profilesummary/profilesummary.component';
-import { DjangopaginatorComponent } from '../components/djangopaginator/djangopaginator.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 
 
@@ -136,8 +135,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
         DateAgoPipe,
         StringFirstToUpperPipe,
         RosterComponent,
-        ProfilesummaryComponent,
-        DjangopaginatorComponent,        
+        ProfilesummaryComponent
     ],
     providers:[
         AuthGuard,
@@ -146,7 +144,6 @@ import {NgxPaginationModule} from 'ngx-pagination';
         Location, 
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
-    bootstrap: [AppComponent],
-    entryComponents: [MessageiconComponent, MessengerComponent, ChatComponent, CommentsComponent,DocumentComponent, ProfilesummaryComponent, RosterComponent, DjangopaginatorComponent ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
