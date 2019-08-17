@@ -917,6 +917,10 @@ export class EsignDocDetailsComponent implements OnInit {
                             }
                         }
                         on_sign_saved(signature_dom, data);
+                        if(data.status.signature_status != 'Pending')
+                        {
+                            $("#nxxt_sign").hide(); 
+                        }
                         // $("#nxxt_sign").click();
                     }
                 }

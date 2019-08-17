@@ -115,8 +115,7 @@ class SignatureDoc(File):
         return doc_data
 
     def remove_all_signature(self):
-        self.signature_set.all().remove()
-        pass
+        self.signature_set.all().delete()
 
     @classmethod
     def save_doc(cls, request, params):
@@ -392,6 +391,7 @@ class Signature(models.Model):
         signature_id = params['signature_id']
         token = params.get('token')
         sign = Signature.objects.get(id=signature_id)
+        user = request.user
         if token:
             token = PostUserToken.objects.get(token=token)
             user = token.user
@@ -401,8 +401,8 @@ class Signature(models.Model):
             if post_info.res_id != doc_id:
                 return 'Invalid doc access'
         else:
-            if request.user.id != 1:
-                if request.user.id != sign.user.id:
+            if user.id != 1:
+                if user.id != sign.user.id:
                     return "Unauthorized"
         sign.signed_at = datetime.datetime.now()
         binary_signature = ''
@@ -433,7 +433,9 @@ class Signature(models.Model):
         binary_data = io.BytesIO(base64.b64decode(binary_signature))
         jango_file = DjangoFile(binary_data)
         sign.image.save('sign_image.png', jango_file)
-        return { 'image': binary_signature}
+
+        status = sign.document.get_pending_sign_count(user.id)
+        return { 'image': binary_signature, 'status': status}
 
     @classmethod
     def load_signature(cls, request, params):
