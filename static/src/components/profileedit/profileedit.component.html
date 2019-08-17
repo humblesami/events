@@ -12,168 +12,157 @@ title="{{profile_data.name}}"></app-breadcrumb>
 </div>
 <div class="modal-body edit-modal-body">
 <div class="router-outlet">
-    <div class="container">
-        <div class="details-card edit-mode" *ngIf="edit_mode">
+	<div class="details-card edit-mode" *ngIf="edit_mode">
             <div class="row edit-buttons edit-mode">
                 <a href="javascript:void(0);" class="btn btn-primary cancel" (click)="onCancel()">Cancel</a>
                 <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
             </div>
-            <div *ngIf="section=='personal'" class="">
+            <div *ngIf="section=='personal'" class="label-control-form">
                 <div class="ProFileHeadWrap row">
                     PERSONAL INFO
                 </div>
-                <div class="row label-control-form">
-                    <div class="container">
-						<div class="row mb-3">
-							<div class="col edit-author-thumb">
-								<i class="far fa-edit" (click)="update_image()"></i>
-								<div class="author-thumb" *ngIf="modified_profile_data.image">
-									<img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
-								</div>
-								<div class="author-thumb" *ngIf="!modified_profile_data.image">
-									<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
-									<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-								</div>
-								<input class="pt-3 update_image" style="display: none" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
-							</div>
+				<div class="row mb-3">
+					<div class="col edit-author-thumb">
+						<i class="far fa-edit" (click)="update_image()"></i>
+						<div class="author-thumb" *ngIf="modified_profile_data.image">
+							<img class="img-thumbnail-lg" src="{{modified_profile_data.image}}">
 						</div>
-						<div class="row" *ngIf="last_login.login_time">
-							<div class="row last-login-details">
-								<div class="col-sm-12">
-									<h3>Last Login Details</h3>
-									<span *ngIf="last_login.login_time">Login Time: {{last_login.login_time | date:'MMM dd,yyyy hh:mm:ss A'}}</span>
-									<span *ngIf="last_login.platform">OS: {{last_login.platform}}</span>
-									<span *ngIf="last_login.browser">Browser: {{last_login.browser}}</span>
-									<span *ngIf="last_login.ip">IP: {{last_login.ip}}</span>
-									<span *ngIf="last_login.location">Location: {{last_login.location}}</span>
+						<div class="author-thumb" *ngIf="!modified_profile_data.image">
+							<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
+							<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+						</div>
+						<input class="pt-3 update_image" style="display: none" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
+					</div>
+				</div>
+				<div class="row" *ngIf="last_login.login_time">
+					<div class="row last-login-details">
+						<div class="col-sm-12">
+							<h3>Last Login Details</h3>
+							<span *ngIf="last_login.login_time">Login Time: {{last_login.login_time | date:'MMM dd,yyyy hh:mm:ss A'}}</span>
+							<span *ngIf="last_login.platform">OS: {{last_login.platform}}</span>
+							<span *ngIf="last_login.browser">Browser: {{last_login.browser}}</span>
+							<span *ngIf="last_login.ip">IP: {{last_login.ip}}</span>
+							<span *ngIf="last_login.location">Location: {{last_login.location}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="row single-input-label">
+					<div class="col-md-6">
+						<label for="name"> <b>First Name</b> </label>
+						<input value="{{profile_data.first_name}}" (change)="modified_profile_data.first_name = $event.target.value" type="text" placeholder="Enter First Name" id="first_name">
+					</div>
+					<div class="col-md-6">
+						<label for="name"> <b>Last Name</b> </label>
+						<input value="{{profile_data.last_name}}" (change)="modified_profile_data.last_name = $event.target.value"  type="text" placeholder="Enter Last Name" id="last_name">
+					</div>
+					<div class="col-md-6">
+						<label for="c-phone"> <b>Cell Phone</b> </label>
+						<input value="{{profile_data.mobile_phone}}" (change)="modified_profile_data.mobile_phone=$event.target.value" type="text" placeholder="Enter Cell Phone" id="c-phone" required>
+					</div>
+					<div class="col-md-6">
+						<label for="email"> <b>Email</b> </label>
+						<input value="{{profile_data.email}}" [readonly]="true" (change)="modified_profile_data.email = $event.target.value"  type="text" placeholder="Enter Email" id="email">
+					</div>
+					<div class="col-md-6">
+						<label for="birth_date"> <b>Date of Birth</b> </label>
+						<input value="{{profile_data.birth_date}}" (change)="modified_profile_data.birth_date = $event.target.value" class="form-control" data-date-format="YYYY-MM-DD" type="date" placeholder="Enter Date of Birth" id="birth_date">
+					</div>
+					<div class="col-md-6">
+						<label for="location"> <b>Location</b> </label>
+						<input value="{{profile_data.location}}" (change)="modified_profile_data.location = $event.target.value" type="text" placeholder="Enter Location" id="location">
+					</div>
+
+					<div *ngIf="my_profile && choice_fields.two_factor_auth" class="row">
+						<div class="col-sm-12">
+							<label for="ethnicity">
+								<b>Two Factor Authentication</b>
+							</label>
+						</div>
+						<div class="col-sm-9 UserProfileDiscription">
+							<!-- <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
+								<option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.id === profile_data.ethnicity.id">{{row.name}}</option>
+							</select> -->
+
+							<ng-select
+							[items]="choice_fields.two_factor_auth"
+							[multiple]="false"
+							[closeOnSelect]="true"
+							[hideSelected]="true"
+							bindLabel="name"
+							(change)="setTowFactorAuth()"
+							placeholder="Select Authentication Type"
+							[(ngModel)]="selectedTwoFactorAuth"
+							>
+							</ng-select>
+
+						</div>
+					</div>
+				</div>
+				<div *ngIf="profile_data.resume"  class="row docwrappercontainer">
+					<div class="col-sm-12">
+						<h3>Resume</h3>
+					</div>
+					<div class="col-sm-12 mb-4">
+						<div *ngIf="delete_confirm">
+							<span>Do you really want to delete this resume?</span>
+							<button class="btn btn-primary" (click)="delete_confirmed()">Yes</button>
+							<button class="btn btn-primary" (click)="delete_cancelled()">No</button>
+						</div>
+						<a routerLink="/resume/doc/{{profile_data.resume.id}}">
+							<div class="DocumentWrapper">
+								<div class="DocIcon">
+									<span class="rounded-circle">
+										<i class="icon-doc-file"></i>
+									</span>
+								</div>
+								<div class="DocInfoVertical text-truncate">
+									{{profile_data.resume.name}}
 								</div>
 							</div>
+						</a>
+						<div class="resume-edit-control">
+							<a class="edit link" (click)="edit_resume($event.target)">
+								<i style="margin-right: 10px" class="far fa-trash-alt"></i>
+								<i class="far fa-edit"></i>
+							</a>
+							<input (change)="addFile($event, '')"
+							type="file"
+							name="edit_resume"
+							class='edit_resume' style="display: none"/>
 						</div>
-                        <div class="row single-input-label">
-                            <label for="name">
-                                <b>First Name</b>
-                            </label>
-                            <input value="{{profile_data.first_name}}" (change)="modified_profile_data.first_name = $event.target.value"
-                                type="text" placeholder="Enter First Name" id="first_name">
-                                <label for="name">
-                                    <b>Last Name</b>
-                                </label>
-                            <input value="{{profile_data.last_name}}" (change)="modified_profile_data.last_name = $event.target.value"
-                                type="text" placeholder="Enter Last Name" id="last_name">
-                            <label for="c-phone">
-                                <b>Cell Phone</b>
-                            </label>
-                            <input value="{{profile_data.mobile_phone}}" (change)="modified_profile_data.mobile_phone=$event.target.value"
-                                type="text" placeholder="Enter Cell Phone" id="c-phone" required>
-                            <label for="email">
-                                <b>Email</b>
-                            </label>
-                            <input value="{{profile_data.email}}" [readonly]="true" (change)="modified_profile_data.email = $event.target.value"
-                                type="text" placeholder="Enter Email" id="email">
-                            <label for="birth_date">
-                                <b>Date of Birth</b>
-                            </label>
-                            <input value="{{profile_data.birth_date}}" (change)="modified_profile_data.birth_date = $event.target.value"
-                                class="form-control" data-date-format="YYYY-MM-DD" type="date" placeholder="Enter Date of Birth" id="birth_date">
-                            <label for="location">
-                                    <b>Location</b>
-                                </label>
+					</div>
+				</div>
+				<div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
+					<div>
+						<a style="position: inherit !important" class="edit link resume-edit-control" (click)="add_resume()">
+							<i class="far fa-edit"></i>
+							Add Resume
+						</a>
+						<input (change)="addFile($event, '')"
+						type="file"
+						name="add_resume"
+						class='add_resume' style="display: none"/>
+					</div>
+				</div>
+				<div *ngIf="profile_data && my_profile" class="">
+					<div class="">
+						<a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
+							<i class="fa fa-pen"></i>
+							<span  *ngIf="profile_data && profile_data.signature_data">Update </span>
+							<span  *ngIf="profile_data && !profile_data.signature_data">Add </span>
+							Signature
+						</a>
+					</div>
+					<div class="col-sm-9" style="display: flex;">
+						<div style="position:relative;cursor: pointer;">
+							<img class="strt_sign profile " style="width: 100%;"
+								*ngIf="profile_data.signature_data"
+								src="data:image/png;base64,{{profile_data.signature_data}}"
+							/>
 
-                            <input value="{{profile_data.location}}" (change)="modified_profile_data.location = $event.target.value"
-                                type="text" placeholder="Enter Location" id="location">
-                            <div *ngIf="my_profile && choice_fields.two_factor_auth" class="row">
-                                <div class="col-sm-8">
-                                    <label for="ethnicity">
-                                        <b>Two Factor Authentication</b>
-                                    </label>
-                                </div>
-                                <div class="col-sm-9 UserProfileDiscription">
-                                    <!-- <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
-                                        <option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.id === profile_data.ethnicity.id">{{row.name}}</option>
-                                    </select> -->
-
-                                    <ng-select
-                                    [items]="choice_fields.two_factor_auth"
-                                    [multiple]="false"
-                                    [closeOnSelect]="true"
-                                    [hideSelected]="true"
-                                    bindLabel="name"
-                                    (change)="setTowFactorAuth()"
-                                    placeholder="Select Authentication Type"
-                                    [(ngModel)]="selectedTwoFactorAuth"
-                                    >
-                                    </ng-select>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data.resume"  class="row docwrappercontainer">
-                            <div class="col-sm-12">
-                                <h3>Resume</h3>
-                            </div>
-                            <div class="col-sm-12 mb-4">
-                                <div *ngIf="delete_confirm">
-                                    <span>Do you really want to delete this resume?</span>
-                                    <button class="btn btn-primary" (click)="delete_confirmed()">Yes</button>
-                                    <button class="btn btn-primary" (click)="delete_cancelled()">No</button>
-                                </div>
-                                <a routerLink="/resume/doc/{{profile_data.resume.id}}">
-                                    <div class="DocumentWrapper">
-                                        <div class="DocIcon">
-                                            <span class="rounded-circle">
-                                                <i class="icon-doc-file"></i>
-                                            </span>
-                                        </div>
-                                        <div class="DocInfoVertical text-truncate">
-                                            {{profile_data.resume.name}}
-                                        </div>
-                                    </div>
-                                </a>
-                                <div class="resume-edit-control">
-                                    <a class="edit link" (click)="edit_resume($event.target)">
-                                        <i style="margin-right: 10px" class="far fa-trash-alt"></i>
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                    <input (change)="addFile($event, '')"
-                                    type="file"
-                                    name="edit_resume"
-                                    class='edit_resume' style="display: none"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
-                            <div>
-                                <a style="position: inherit !important" class="edit link resume-edit-control" (click)="add_resume()">
-                                    <i class="far fa-edit"></i>
-                                    Add Resume
-                                </a>
-                                <input (change)="addFile($event, '')"
-                                type="file"
-                                name="add_resume"
-                                class='add_resume' style="display: none"/>
-                            </div>
-                        </div>
-                        <div *ngIf="profile_data && my_profile" class="">
-                            <div class="">
-                                <a href="javascript:void(0);" (click)='init_sign()' class="UpdateAddSignBtn">
-                                    <i class="fa fa-pen"></i>
-                                    <span  *ngIf="profile_data && profile_data.signature_data">Update </span>
-                                    <span  *ngIf="profile_data && !profile_data.signature_data">Add </span>
-                                    Signature
-                                </a>
-                            </div>
-                            <div class="col-sm-9" style="display: flex;">
-                                <div style="position:relative;cursor: pointer;">
-                                    <img class="strt_sign profile " style="width: 100%;"
-                                        *ngIf="profile_data.signature_data"
-                                        src="data:image/png;base64,{{profile_data.signature_data}}"
-                                    />
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+						</div>
+					</div>
+				</div>
             </div>
             <div *ngIf="section=='bio'" class="">
                 <div class="ProFileHeadWrap">
@@ -481,7 +470,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 </div>
             </div>
         </div>
-    </div>
 </div>
 
 <div id="slot-select-success" class="snackbar-success">Successfully Saved Your Profile.</div>
