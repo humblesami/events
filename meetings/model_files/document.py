@@ -154,189 +154,189 @@ class AgendaDocument(File):
             return 'Something went wrong while uploading agenda documents'
 
 
-class SignDocument(SignatureDoc):
-    send_to_all = models.BooleanField(blank=True, null=True)
-    meeting = models.ForeignKey(Event, on_delete=models.CASCADE,blank=True, null=True)
+# class SignDocument(SignatureDoc):
+#     send_to_all = models.BooleanField(blank=True, null=True)
+#     meeting = models.ForeignKey(Event, on_delete=models.CASCADE,blank=True, null=True)
 
-    def save(self, *args, **kwargs):
-        if not self.file_type:
-            self.file_type = 'signature'
-        super(SignDocument, self).save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         if not self.file_type:
+#             self.file_type = 'signature'
+#         super(SignDocument, self).save(*args, **kwargs)
 
-    @property
-    def breadcrumb(self):
-        event_obj = self.meeting
-        data = []
-        if self.meeting:
-            if event_obj.exectime != 'ongoing':
-                data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
-            data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
-            return data
+#     @property
+#     def breadcrumb(self):
+#         event_obj = self.meeting
+#         data = []
+#         if self.meeting:
+#             if event_obj.exectime != 'ongoing':
+#                 data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
+#             data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
+#             return data
 
-    @classmethod
-    def pending_sign_docs(cls, uid):
-        sign_doc_ids = Signature.objects.filter(user_id=uid, signed=False).distinct().values('document_id')
-        docs = SignDocument.objects.filter(pk__in=sign_doc_ids)
-        pending_docs = []
-        for obj in docs:
-            tot_pending = obj.get_pending_sign_count(uid)
-            doc = tot_pending
+#     @classmethod
+#     def pending_sign_docs(cls, uid):
+#         sign_doc_ids = Signature.objects.filter(user_id=uid, signed=False).distinct().values('document_id')
+#         docs = SignDocument.objects.filter(pk__in=sign_doc_ids)
+#         pending_docs = []
+#         for obj in docs:
+#             tot_pending = obj.get_pending_sign_count(uid)
+#             doc = tot_pending
 
-            doc['id'] = obj.id
-            doc['name'] = obj.name
-            if obj.meeting:
-                doc['meeting__name'] = obj.meeting.name
-            pending_docs.append(doc)
-        return pending_docs
+#             doc['id'] = obj.id
+#             doc['name'] = obj.name
+#             if obj.meeting:
+#                 doc['meeting__name'] = obj.meeting.name
+#             pending_docs.append(doc)
+#         return pending_docs
 
-    @classmethod
-    def set_meeting_attachment(cls, request, params):
-        meeting_id = params.get('meeting_id')
-        document_id = params.get('document_id')
-        send_to_all = params.get('send_to_all')
-        res = 'done'
-        sign_doc = SignDocument.objects.get(id=document_id)
-        if not meeting_id:
-            meeting_id = None
-        else:
-            meeting = Event.objects.get(id=meeting_id)
-            res = Event.attendees_to_list(meeting.attendees.all())
-        sign_doc.meeting_id = meeting_id
-        sign_doc.send_to_all = send_to_all
-        sign_doc.save()
-        return res
+#     @classmethod
+#     def set_meeting_attachment(cls, request, params):
+#         meeting_id = params.get('meeting_id')
+#         document_id = params.get('document_id')
+#         send_to_all = params.get('send_to_all')
+#         res = 'done'
+#         sign_doc = SignDocument.objects.get(id=document_id)
+#         if not meeting_id:
+#             meeting_id = None
+#         else:
+#             meeting = Event.objects.get(id=meeting_id)
+#             res = Event.attendees_to_list(meeting.attendees.all())
+#         sign_doc.meeting_id = meeting_id
+#         sign_doc.send_to_all = send_to_all
+#         sign_doc.save()
+#         return res
 
-    @classmethod
-    def ws_get_detail(cls, request, params):
-        file_id = int(params['document_id'])
-        doc_obj = SignatureDoc.objects.get(id=file_id)
-        res = doc_obj.get_detail(request, params)
-        if type(res) is str:
-            return str
-        doc_obj = cls.objects.filter(id=file_id)
-        if doc_obj:
-            doc_obj = doc_obj[0]
-        else:
-            return res
-        doc_data = res
-        meetings = Event.objects.filter(publish=True).exclude(archived=True)
-        meetings = queryset_to_list(meetings, fields=['id', 'name'])
-        meeting_id = False
-        send_to_all = False
-        if doc_obj.meeting:
-            meeting_id = doc_obj.meeting.id
-        if doc_obj.send_to_all:
-            send_to_all = doc_obj.send_to_all
-        users = Profile.objects.all()
-        users = queryset_to_list(users, fields=['id', 'name'])
-        doc_data["users"] = users
-        doc_data["meetings"] = meetings
-        doc_data["meeting_id"] = meeting_id
-        doc_data["send_to_all"] = send_to_all
-        return doc_data
+#     @classmethod
+#     def ws_get_detail(cls, request, params):
+#         file_id = int(params['document_id'])
+#         doc_obj = SignatureDoc.objects.get(id=file_id)
+#         res = doc_obj.get_detail(request, params)
+#         if type(res) is str:
+#             return str
+#         doc_obj = cls.objects.filter(id=file_id)
+#         if doc_obj:
+#             doc_obj = doc_obj[0]
+#         else:
+#             return res
+#         doc_data = res
+#         meetings = Event.objects.filter(publish=True).exclude(archived=True)
+#         meetings = queryset_to_list(meetings, fields=['id', 'name'])
+#         meeting_id = False
+#         send_to_all = False
+#         if doc_obj.meeting:
+#             meeting_id = doc_obj.meeting.id
+#         if doc_obj.send_to_all:
+#             send_to_all = doc_obj.send_to_all
+#         users = Profile.objects.all()
+#         users = queryset_to_list(users, fields=['id', 'name'])
+#         doc_data["users"] = users
+#         doc_data["meetings"] = meetings
+#         doc_data["meeting_id"] = meeting_id
+#         doc_data["send_to_all"] = send_to_all
+#         return doc_data
 
-    @classmethod
-    def ws_assign_signature(cls, request, params):
-        doc_id = int(params['document_id'])
-        doc = cls.objects.get(id=doc_id)
-        if len(doc.signature_set.filter(signed=True)) > 0:
-            return 'Can not be edited as signature_started'
-        return doc.assign_signature(request.user, params)
+#     @classmethod
+#     def ws_assign_signature(cls, request, params):
+#         doc_id = int(params['document_id'])
+#         doc = cls.objects.get(id=doc_id)
+#         if len(doc.signature_set.filter(signed=True)) > 0:
+#             return 'Can not be edited as signature_started'
+#         return doc.assign_signature(request.user, params)
 
-    def assign_signature(self, user, params):
-        user_ids = []
-        if self.send_to_all:
-            meeting = Event.objects.get(id=self.meeting_id)
-            self.remove_all_signature()
-            sign_top = 5
-            c = 0
-            for partner in meeting.attendees.all():
-                user_ids.append(partner.id)
-                if c == 0:
-                    sign_left = 3
-                if c == 1:
-                    sign_left = 51
-                obj = Signature(
-                    document_id=self.id,
-                    user_id=partner.id,
-                    type='signature',
-                    left=sign_left,
-                    top=sign_top,
-                    height=40,
-                    width=140,
-                    zoom=300
-                )
-                obj.created_by_id = user.id
-                obj.save()
-                if c == 1:
-                    c = 0
-                    sign_top += 15
-                    continue
-                c += 1
-            self.add_pages_for_sign()
-            return self.on_signature_assigned(user, user_ids, params)
-        else:
-            return super(SignDocument, self).assign_signature(user, params)
+#     def assign_signature(self, user, params):
+#         user_ids = []
+#         if self.send_to_all:
+#             meeting = Event.objects.get(id=self.meeting_id)
+#             self.remove_all_signature()
+#             sign_top = 5
+#             c = 0
+#             for partner in meeting.attendees.all():
+#                 user_ids.append(partner.id)
+#                 if c == 0:
+#                     sign_left = 3
+#                 if c == 1:
+#                     sign_left = 51
+#                 obj = Signature(
+#                     document_id=self.id,
+#                     user_id=partner.id,
+#                     type='signature',
+#                     left=sign_left,
+#                     top=sign_top,
+#                     height=40,
+#                     width=140,
+#                     zoom=300
+#                 )
+#                 obj.created_by_id = user.id
+#                 obj.save()
+#                 if c == 1:
+#                     c = 0
+#                     sign_top += 15
+#                     continue
+#                 c += 1
+#             self.add_pages_for_sign()
+#             return self.on_signature_assigned(user, user_ids, params)
+#         else:
+#             return super(SignDocument, self).assign_signature(user, params)
 
-    def add_pages_for_sign( self):
-        if not self.original_pdf or not self.signature_set.all().exists():
-            return
-        pth = MEDIA_ROOT + "/" + self.original_pdf.name
+#     def add_pages_for_sign( self):
+#         if not self.original_pdf or not self.signature_set.all().exists():
+#             return
+#         pth = MEDIA_ROOT + "/" + self.original_pdf.name
 
 
-        input = PdfFileReader(open(pth, "rb"))
-        # Addition of code for orientation correction Asfand
-        pageValue = input.getPage(0)
-        pageOrientation = pageValue.get('/Rotate')
-        page = input.getPage(0).mediaBox
-        zAxis = page.getUpperRight_x()
-        yAxis = page.getUpperLeft_x()
-        width = int(zAxis - yAxis)
+#         input = PdfFileReader(open(pth, "rb"))
+#         # Addition of code for orientation correction Asfand
+#         pageValue = input.getPage(0)
+#         pageOrientation = pageValue.get('/Rotate')
+#         page = input.getPage(0).mediaBox
+#         zAxis = page.getUpperRight_x()
+#         yAxis = page.getUpperLeft_x()
+#         width = int(zAxis - yAxis)
 
-        height = int(page.getUpperRight_y() - page.getLowerRight_y())
-        solution = [width, height]
-        if width > height or pageOrientation == 90:
-            if height > width:
-                orientation = 'L'
-            else:
-                orientation = 'P'
-        elif pageOrientation == 0 or pageOrientation == 180 or pageOrientation == None:
-            if width > height:
-                orientation = 'L'
-            else:
-                orientation = 'P'
+#         height = int(page.getUpperRight_y() - page.getLowerRight_y())
+#         solution = [width, height]
+#         if width > height or pageOrientation == 90:
+#             if height > width:
+#                 orientation = 'L'
+#             else:
+#                 orientation = 'P'
+#         elif pageOrientation == 0 or pageOrientation == 180 or pageOrientation == None:
+#             if width > height:
+#                 orientation = 'L'
+#             else:
+#                 orientation = 'P'
 
-        output = PdfFileWriter()
-        count = 0
-        pdf = FPDF(orientation, 'pt', solution)
-        pdf.add_page(orientation=orientation)
-        # Addition ended
-        for page_number in range(input.getNumPages()):
-            output.addPage(input.getPage(page_number))
-        current_pg = input.getNumPages() + 1
+#         output = PdfFileWriter()
+#         count = 0
+#         pdf = FPDF(orientation, 'pt', solution)
+#         pdf.add_page(orientation=orientation)
+#         # Addition ended
+#         for page_number in range(input.getNumPages()):
+#             output.addPage(input.getPage(page_number))
+#         current_pg = input.getNumPages() + 1
 
-        for sign in self.signature_set.all():
-            count = count + 1
-            sign.page = current_pg
-            sign.save()
-            if (count == 9):
-                pdf.add_page(orientation=orientation)
-                count = 0
-                current_pg += 1
+#         for sign in self.signature_set.all():
+#             count = count + 1
+#             sign.page = current_pg
+#             sign.save()
+#             if (count == 9):
+#                 pdf.add_page(orientation=orientation)
+#                 count = 0
+#                 current_pg += 1
 
-        signature_only_pdf_path = MEDIA_ROOT + "/files/signature-pdf-pages" + str(self.id) + ".pdf"
-        pdf.output(signature_only_pdf_path, "F")
+#         signature_only_pdf_path = MEDIA_ROOT + "/files/signature-pdf-pages" + str(self.id) + ".pdf"
+#         pdf.output(signature_only_pdf_path, "F")
 
-        pdf.close()
+#         pdf.close()
 
-        signaturepdf = PdfFileReader(open(signature_only_pdf_path, "rb"))
-        for page_number in range(signaturepdf.getNumPages()):
-            output.addPage(signaturepdf.getPage(page_number))
+#         signaturepdf = PdfFileReader(open(signature_only_pdf_path, "rb"))
+#         for page_number in range(signaturepdf.getNumPages()):
+#             output.addPage(signaturepdf.getPage(page_number))
 
-        output_pdf_path = MEDIA_ROOT + "/files/sign-doc-output-pages" + str(self.id) + ".pdf"
-        with open(output_pdf_path, "wb") as outputStream:
-            output.write(outputStream)
-        res = open(output_pdf_path, 'rb')
-        self.pdf_doc.save(self.original_pdf.name, DjangoFile(res))
-        self.original_pdf.save(self.original_pdf.name, DjangoFile(res))
+#         output_pdf_path = MEDIA_ROOT + "/files/sign-doc-output-pages" + str(self.id) + ".pdf"
+#         with open(output_pdf_path, "wb") as outputStream:
+#             output.write(outputStream)
+#         res = open(output_pdf_path, 'rb')
+#         self.pdf_doc.save(self.original_pdf.name, DjangoFile(res))
+#         self.original_pdf.save(self.original_pdf.name, DjangoFile(res))
 
