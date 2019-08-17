@@ -335,14 +335,12 @@ span.to-do-count {
 .kanban-card.survey
 {
     width: 240px;
-    flex-grow: 1;
     margin: 5px;
-    flex: 0 0 33.3333%;
 }
-/* .kanban-card.survey::after {
+.kanban-card.survey::after {
     content: '';
     flex-grow: 1000000000;
-  } */
+  }
 .CalendarDateWrapper {
     white-space: nowrap;
     width: 90px;
@@ -353,7 +351,12 @@ span.to-do-count {
     font-size: 16px;
     margin: 0 0 5px;
 }
-
+.SurveysInfoBoxBtn .btn:not(:disabled):not(.disabled){
+    padding: 5px 20px 5px 20px;
+}
+.docwrappercontainer{
+    margin-bottom: 10px;
+}
 @media (max-width: 575px) {
 
 
