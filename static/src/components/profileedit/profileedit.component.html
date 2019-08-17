@@ -18,7 +18,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
             </div>
             <div *ngIf="section=='personal'" class="label-control-form">
-                <div class="ProFileHeadWrap row">
+                <div class="ProFileHeadWrap">
                     PERSONAL INFO
                 </div>
 				<div class="row mb-3">
@@ -72,29 +72,26 @@ title="{{profile_data.name}}"></app-breadcrumb>
 						<input value="{{profile_data.location}}" (change)="modified_profile_data.location = $event.target.value" type="text" placeholder="Enter Location" id="location">
 					</div>
 
-					<div *ngIf="my_profile && choice_fields.two_factor_auth" class="row">
-						<div class="col-sm-12">
+					<div *ngIf="my_profile && choice_fields.two_factor_auth" class="col-md-12">
 							<label for="ethnicity">
 								<b>Two Factor Authentication</b>
 							</label>
-						</div>
-						<div class="col-sm-9 UserProfileDiscription">
-							<!-- <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
-								<option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.id === profile_data.ethnicity.id">{{row.name}}</option>
-							</select> -->
+							<div class="UserProfileDiscription">
+								<!-- <select (change)="modified_profile_data.ethnicity = $event.target.value" id='ethnicity' requeired>
+									<option *ngFor="let row of choice_fields.ethnicity" value="{{row.id}}" [selected]="row.id === profile_data.ethnicity.id">{{row.name}}</option>
+								</select> -->
 
-							<ng-select
-							[items]="choice_fields.two_factor_auth"
-							[multiple]="false"
-							[closeOnSelect]="true"
-							[hideSelected]="true"
-							bindLabel="name"
-							(change)="setTowFactorAuth()"
-							placeholder="Select Authentication Type"
-							[(ngModel)]="selectedTwoFactorAuth"
-							>
-							</ng-select>
-
+								<ng-select
+								[items]="choice_fields.two_factor_auth"
+								[multiple]="false"
+								[closeOnSelect]="true"
+								[hideSelected]="true"
+								bindLabel="name"
+								(change)="setTowFactorAuth()"
+								placeholder="Select Authentication Type"
+								[(ngModel)]="selectedTwoFactorAuth"
+								>
+								</ng-select>
 						</div>
 					</div>
 				</div>
