@@ -49,9 +49,9 @@ class Event(models.Model):
                 surveys = old_event.survey_set.filter(close_date__gte=today)
                 if surveys:
                     raise Exception('This meeting can not be archived because some surveys are associated with it let them complete then move this meeting to archive')
-                sign_docs = old_event.signdocument_set.filter(close_date__gte=today)
-                if sign_docs:
-                    raise Exception('This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive')
+                # sign_docs = old_event.signdocument_set.filter(close_date__gte=today)
+                # if sign_docs:
+                #     raise Exception('This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive')
             for obj in old_event.attendees.all():
                 old_attendee_ids.append(obj.id)
         super(Event, self).save(*args, **kwargs)
@@ -318,9 +318,15 @@ class Event(models.Model):
         for doc in meeting_docs:
             doc['created_at'] = str(doc['created_at'])
             meeting_object['meeting_docs'].append(doc)
-        sign_docs =  meeting_object_orm.signdocument_set.all()
-        sign_docs = ws_methods.queryset_to_list(sign_docs, fields=['id','pdf_doc','name'])
-        meeting_object['sign_docs'] = sign_docs
+        esign_docs = []
+        sign_docs =  meeting_object_orm.signaturedoc_set.all()
+        for sign_doc in sign_docs:
+            doc = sign_doc.get_pending_sign_count(request.user.id)
+            doc['id'] = sign_doc.id
+            doc['pdf_doc'] = sign_doc.pdf_doc.url
+            doc['name'] = sign_doc.name
+            esign_docs.append(doc)
+        meeting_object['sign_docs'] = esign_docs
         surveys = []
         try:
             surveys = meeting_object_orm.actions.all()[0].survey_set.all()

@@ -7,7 +7,7 @@ from mainapp.rest_api import produce_result, produce_exception
 from mainapp.ws_methods import check_auth_token, queryset_to_list
 from meetings.model_files.user import Profile
 from meetings.model_files.event import Event
-from meetings.model_files.document import SignDocument, Signature
+from esign.model_files.document import Signature, SignatureDoc
 from restoken.models import PostUserToken
 
 
@@ -69,7 +69,7 @@ def sign_doc_public(request, token):
             context['doc_id'] = user_token.post_info.res_id
             context['success'] = 'Please Sign Here...'
 
-            file_obj = SignDocument.objects.filter(id=user_token.post_info.res_id)[0]
+            file_obj = SignatureDoc.objects.filter(id=user_token.post_info.res_id)[0]
             file_name = file_obj.name
             users = Profile.objects.all()
             users = queryset_to_list(users,fields=['id','name'])

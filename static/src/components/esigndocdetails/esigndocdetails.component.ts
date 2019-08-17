@@ -133,8 +133,8 @@ export class EsignDocDetailsComponent implements OnInit {
             ajax_options = {
                 data: {
                     args:{
-                        app: 'meetings',
-                        model: 'SignDocument',
+                        app: 'esign',
+                        model: 'SignatureDoc',
                         method: 'ws_get_detail'
                     },
 
@@ -192,9 +192,9 @@ export class EsignDocDetailsComponent implements OnInit {
                         option_html = '<option'+selected+' value='+element.id+'>'+element.name+'</option>';
                         ddm.append(option_html);
                     });
-                    if (meeting_id) {
-                        $('.check_box_send_all').show();
-                    }
+                    // if (meeting_id) {
+                    //     $('.check_box_send_all').show();
+                    // }
                     if (send_to_all) {
                         $('#check_box_send_all').prop('checked', true);
                         $('.dragabl-fields').hide();
@@ -205,10 +205,10 @@ export class EsignDocDetailsComponent implements OnInit {
                         $('.dragabl-fields').show();
                     }
 
-                    if(meeting_id)
-                    {
-                        $('.form-row.field-send_to_all input[type="checkbox"]').show();
-                    }
+                    // if(meeting_id)
+                    // {
+                    //     $('.form-row.field-send_to_all input[type="checkbox"]').show();
+                    // }
                 }
             };
             if(token){
@@ -632,7 +632,7 @@ export class EsignDocDetailsComponent implements OnInit {
             var meeting_id = $('#dropdown_meeting').val();
             if (!meeting_id || meeting_id == 0) {
                 meeting_id = false
-                snd_to_all = false
+                // snd_to_all = false
             }
 
             body.append("<h3>Subject</h3>").append(input_subject);
@@ -701,8 +701,8 @@ export class EsignDocDetailsComponent implements OnInit {
                     ajax_options = {
                         data: {
                             args: {
-                                app: "meetings",
-                                model: "SignDocument",
+                                app: "esign",
+                                model: "SignatureDoc",
                                 method:"ws_assign_signature",
                             },
                             params: {
@@ -1006,8 +1006,8 @@ export class EsignDocDetailsComponent implements OnInit {
             ajax_options = {
                 data: {
                     args: {
-                        app: "meetings",
-                        model: "SignDocument",
+                        app: "esign",
+                        model: "SignatureDoc",
                         method: "set_meeting_attachment",
                     },
                     params: {
@@ -1033,10 +1033,8 @@ export class EsignDocDetailsComponent implements OnInit {
             if (!$('#dropdown_meeting').val()) {
                 obj_this.users_list = obj_this.all_users_list;
                 $('#check_box_send_all').removeAttr('checked');
-                $('.check_box_send_all').hide();
+                // $('.check_box_send_all').hide();
                 $('.dragabl-fields').show();
-            } else {
-                $('.check_box_send_all').show();
             }
             save_attachemnt_to_meeting();
         });

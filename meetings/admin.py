@@ -1,15 +1,15 @@
 from django import forms
 from django.contrib import admin
 from documents.admin import FileForm
-from esign.admin import SignatureDocForm
+# from esign.admin import SignatureDocForm
 from django.utils.html import format_html
 from django.contrib.auth.admin import GroupAdmin
 from django.utils.decorators import method_decorator
 from meetings.model_files.committee import Committee
 from meetings.model_files.user import Profile, MeetingGroup
 from django.views.decorators.debug import sensitive_post_parameters
-from meetings.model_files.document import MeetingDocument, AgendaDocument, SignDocument
-from .models import Event, Topic, News, NewsVideo, NewsDocument, SignDocument, Invitation_Response, LoginEntry
+from meetings.model_files.document import MeetingDocument, AgendaDocument
+from .models import Event, Topic, News, NewsVideo, NewsDocument, Invitation_Response, LoginEntry
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
@@ -171,29 +171,30 @@ class MeetingDocumentForm(FileForm):
     pass
 
 
-class SignDocumentForm(forms.ModelForm):
-    class Meta:
-            model = SignDocument
-            fields = ()
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
+# class SignDocumentForm(forms.ModelForm):
+#     class Meta:
+#             model = SignDocument
+#             fields = ()
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
 
 
-class AdminSignDoc(admin.ModelAdmin):
-    form = SignDocumentForm
-    list_display = ('name', 'meeting', 'send_to_all')
-    fields = [
-        'name',
-        'meeting',
-        'send_to_all',
-        'open_date',
-        'close_date',
-        'attachment',
-    ]
-    change_form_template = 'admin/actions_change_form.html'
-    class Media:
-        js = ('admin/js/meeting_sign_doc.js',)
+# class AdminSignDoc(admin.ModelAdmin):
+#     form = SignDocumentForm
+#     list_display = ('name', 'meeting', 'send_to_all')
+#     fields = [
+#         'name',
+#         'meeting',
+#         'attendees'
+#         'send_to_all',
+#         'open_date',
+#         'close_date',
+#         'attachment',
+#     ]
+#     change_form_template = 'admin/actions_change_form.html'
+#     class Media:
+#         js = ('admin/js/meeting_sign_doc.js',)
 
 
 class AttendeeAdmin(admin.ModelAdmin):
@@ -208,6 +209,6 @@ admin.site.register(Profile, UserAdmin)
 admin.site.register(MeetingGroup, MeetingGroupAdmin)
 admin.site.register(Committee, CommitteeAdmin)
 admin.site.register(LoginEntry)
-admin.site.register(SignDocument, AdminSignDoc)
+# admin.site.register(SignDocument, AdminSignDoc)
 admin.site.register(Invitation_Response, AttendeeAdmin)
 admin.site.site_header = "BoardSheet"

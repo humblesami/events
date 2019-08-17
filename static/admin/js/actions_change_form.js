@@ -77,9 +77,13 @@ function get_meeting_topics(meeting_id)
 }
 function meeting_selection_handler(meeting_id)
 {
+    let topic_field = $('.field-topic');
     if (meeting_id)
     {
-        $('.field-topic').show();
+        if (topic_field.length)
+        {
+            $('.field-topic').show();
+        }
         $('.field-respondents').hide();
         let input_date = {
             meeting_id: meeting_id
@@ -107,14 +111,20 @@ function meeting_selection_handler(meeting_id)
             }
         }
         window['dn_rpc_object'](options);
-        get_meeting_topics(meeting_id);
+        if (topic_field.length)
+        {
+            get_meeting_topics(meeting_id);
+        }
     }
     else
     {
-        $('.field-topic select option').remove();
-        $('.field-topic select').append('<option value selected>---------</option>');
+        if ($('.field-topic').length)
+        {
+            $('.field-topic select option').remove();
+            $('.field-topic select').append('<option value selected>---------</option>');
+            $('.field-topic').hide();
+        }
         $('.field-respondents').show();
-        $('.field-topic').hide();
     }
 }
 $(document).ready(function(){

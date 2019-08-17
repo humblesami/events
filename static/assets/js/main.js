@@ -386,7 +386,7 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'signdoc':
                     redirect_url = `/#/signdoc/${id}`;
                     break;
-                case 'signdocument':
+                case 'signaturedoc':
                     redirect_url = `/#/signdoc/${id}`;
                     break;
             }
@@ -421,7 +421,7 @@ window.addEventListener('message', function receiveMessage(evt) {
                 case 'signdoc':
                     redirect_url = `/#/signdocs`;
                     break;
-                case 'signdocument':
+                case 'signaturedoc':
                     redirect_url = `/#/signdocs`;
                     break;
             }

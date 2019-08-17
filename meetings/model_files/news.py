@@ -2,7 +2,7 @@ from django.apps import apps
 from django.db import models
 from documents.file import File
 from mainapp.ws_methods import queryset_to_list
-from meetings.model_files.document import SignDocument
+from esign.model_files.document import SignatureDoc
 from meetings.model_files.event import Event
 from survey.models import Survey
 from django.db.models import Q, Count, Case, When, IntegerField
@@ -45,7 +45,7 @@ class News(models.Model):
             news_docs.append({'name': doc.name, 'id': doc.id})
 
         voting_model = apps.get_model('voting', 'Voting')
-        pending_sign_docs = SignDocument.pending_sign_docs(request.user.id)
+        pending_sign_docs = SignatureDoc.pending_sign_docs(request.user.id)
         home_object['to_do_items'] = {
             'pending_meetings':  Event.get_pending_meetings(uid),
             'pending_surveys': Survey.get_pending_surveys(uid),
