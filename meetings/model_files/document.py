@@ -8,7 +8,6 @@ from mainapp import ws_methods
 from documents.file import File
 from django.db import transaction
 from mainapp.settings import MEDIA_ROOT
-from restoken.models import PostUserToken
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from django.core.files import File as DjangoFile
 from esign.model_files.document import SignatureDoc, Signature
@@ -175,6 +174,22 @@ class SignDocument(SignatureDoc):
             return data
 
     @classmethod
+    def pending_sign_docs(cls, uid):
+        sign_doc_ids = Signature.objects.filter(user_id=uid, signed=False).distinct().values('document_id')
+        docs = SignDocument.objects.filter(pk__in=sign_doc_ids)
+        pending_docs = []
+        for obj in docs:
+            tot_pending = obj.get_pending_sign_count(uid)
+            doc = tot_pending
+
+            doc['id'] = obj.id
+            doc['name'] = obj.name
+            if obj.meeting:
+                doc['meeting__name'] = obj.meeting.name
+            pending_docs.append(doc)
+        return pending_docs
+
+    @classmethod
     def set_meeting_attachment(cls, request, params):
         meeting_id = params.get('meeting_id')
         document_id = params.get('document_id')
@@ -251,7 +266,7 @@ class SignDocument(SignatureDoc):
                     width=140,
                     zoom=300
                 )
-                obj.created_by = user.id
+                obj.created_by_id = user.id
                 obj.save()
                 if c == 1:
                     c = 0

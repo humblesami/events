@@ -49,7 +49,7 @@ export class PaginatorComponent implements OnInit {
     }
 
     change_page(change: number){
-        var ppgn = this.page_number +=change;        
+        var ppgn = this.page_number + change;        
         this.page_Data(ppgn);
     }    
     last_Page(change: number){
@@ -109,13 +109,13 @@ export class PaginatorComponent implements OnInit {
 
     }
     change_limit(e){
-        console.log(this.offset,this.limit,  1411);
+        // console.log(this.offset,this.limit,  1411);
         this.limit = Number($(e.target).val());
         this.offset=0;
         this.page_number=1;
         this.all_pages(this.count);
         this.changedLimit.emit(this.limit);
-        console.log(this.offset,this.limit, 1411);
+        // console.log(this.offset,this.limit, 1411);
     }
     
     

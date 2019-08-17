@@ -344,37 +344,7 @@ class Event(models.Model):
         meeting_object['attendees'] = attendees
         data = {"meeting": meeting_object, "next": 0, "prev": 0}
 
-        return {'data': data}
-
-    @classmethod
-    def get_meetings(cls, meeting_type, params = None):
-        results = None
-        offset = params.get('offset')
-        limit = params.get('limit')
-        kw = params.get('kw')
-        if kw:
-            results = ws_methods.search_db({'kw': kw, 'search_models':  {'meetings':['Event']}  })
-        else:
-            results = Event.objects.all()
-        if meeting_type == 'archived':
-            meetings = results.filter(archived=True, publish=True)
-        elif meeting_type == 'draft':
-            meetings = results.filter(publish=False)
-        else:
-            meetings = results.filter(publish=True)
-        if limit:
-            meetings = meetings[offset: offset + limit]
-        
-        meeting_list = []
-        for meeting in meetings:
-            if meeting_type == 'upcoming':
-                if meeting.exectime in (meeting_type, 'ongoing'):
-                    meeting_list.append(meeting)
-            elif meeting_type == 'draft':
-                meeting_list.append(meeting)
-            elif meeting.exectime == meeting_type:
-                meeting_list.append(meeting)
-        return meeting_list
+        return {'data': data}    
 
     @classmethod
     def get_attendance_status(cls, meeting_id, uid):
@@ -435,12 +405,42 @@ class Event(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
+        offset = params['offset']
+        limit = params['limit']
         meeting_type = params.get('meeting_type')        
         meeting_list = cls.get_meetings(meeting_type, params)
         meetings = cls.get_meeting_summaries(meeting_list, request.user.id)
-        meetings = {'records': meetings, 'total': 0, 'count': 0}
+        total = len(meetings)
+        meetings = meetings[offset: offset + int(limit)]
+        meetings = {'records': meetings, 'total': total}
         data = {'error': '', 'data': meetings}
         return data
+
+    @classmethod
+    def get_meetings(cls, meeting_type, params = None):
+        results = None
+        kw = params.get('kw')
+        if kw:
+            results = ws_methods.search_db({'kw': kw, 'search_models':  {'meetings':['Event']}  })
+        else:
+            results = Event.objects.all()
+        if meeting_type == 'archived':
+            meetings = results.filter(archived=True, publish=True)
+        elif meeting_type == 'draft':
+            meetings = results.filter(publish=False)
+        else:
+            meetings = results.filter(publish=True)
+        
+        meeting_list = []
+        for meeting in meetings:
+            if meeting_type == 'upcoming':
+                if meeting.exectime in (meeting_type, 'ongoing'):
+                    meeting_list.append(meeting)
+            elif meeting_type == 'draft':
+                meeting_list.append(meeting)
+            elif meeting.exectime == meeting_type:
+                meeting_list.append(meeting)
+        return meeting_list
     
 
     @classmethod

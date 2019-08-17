@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { ChatUser } from 'src/app/models/chat';
 import { SocketService } from 'src/app/socket.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProfilesummaryComponent } from '../profilesummary/profilesummary.component';
 declare var $: any;
 
 @Component({
@@ -18,7 +20,8 @@ export class RosterComponent implements OnInit {
     total_records : number;
     server_url = window['server_url'];
     constructor(private httpService: HttpService,
-                private socketService: SocketService) { 
+                private socketService: SocketService,
+                private modalService: NgbModal) { 
         this.offset = 0;
         this.limit = 2;
         this.total_records = 0;    
@@ -41,10 +44,10 @@ export class RosterComponent implements OnInit {
     attendees : Array<ChatUser>;
     count: number;
 
-    open(user_id) {
-        // let obj_this = this;
-		// const modalRef = this.modalService.open(ProfilesummaryComponent);
-		// modalRef.componentInstance.user_id = user_id;
+    open_dialog(user_id) {
+        let obj_this = this;
+		const modalRef = this.modalService.open(ProfilesummaryComponent);
+		modalRef.componentInstance.user_id = user_id;
     }
     
     roster_search(e){

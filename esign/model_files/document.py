@@ -13,7 +13,7 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 from PIL import ImageFont, Image, ImageDraw
 from django.db import models
 from django.core.files import File as DjangoFile
-
+from django.db.models import Q, Count, Case, When, IntegerField
 from documents.file import File
 from mainapp import ws_methods
 from mainapp.settings import MEDIA_ROOT, server_base_url
@@ -36,6 +36,31 @@ class SignatureDoc(File):
             self.original_pdf = self.pdf_doc
             self.save()
             pass
+
+    def get_pending_sign_count(self, uid):
+        pending_count = self.signature_set.filter(user_id=uid, signed=False).count()
+        total = self.signature_set.filter(user_id=uid).count()
+        user_status = 'Pending'
+        if total > 0:
+            if total == pending_count:
+                user_status = 'Completed'
+        else:
+            user_status = 'Not Required'
+        return {'total': total, 'pending': pending_count, 'signature_status': user_status }
+
+    @classmethod
+    def pending_sign_docs(cls, uid):
+        sign_doc_ids = Signature.objects.filter(user_id=uid, signed=False).distinct().values('document_id')
+        docs = cls.objects.filter(pk__in=sign_doc_ids)
+        pending_docs = []
+        for obj in docs:
+            tot_pending = obj.get_pending_sign_count(uid)
+            doc = tot_pending
+
+            doc['id'] = obj.id
+            doc['name'] = obj.name
+            pending_docs.append(doc)
+        return pending_docs
 
     @classmethod
     def ws_assign_signature(cls, request, params):
@@ -90,8 +115,7 @@ class SignatureDoc(File):
         return doc_data
 
     def remove_all_signature(self):
-        self.signature_set.all().remove()
-        pass
+        self.signature_set.all().delete()
 
     @classmethod
     def save_doc(cls, request, params):
@@ -282,13 +306,34 @@ class SignatureDoc(File):
 
     @classmethod
     def get_records(cls, request, params):
-        docs = cls.objects.filter()
+        user_id = request.user.id
+        docs = cls.objects.values('id', 'name').annotate(
+                tot_signed=Count(
+                    Case(
+                        When((Q(signature__user_id=user_id) & Q(signature__signed=True)), then=1)
+                        ,output_field=IntegerField(),)
+                        )).annotate(
+                            tot_unsigned=Count(
+                                Case(
+                                    When((Q(signature__user_id=user_id) & Q(signature__signed=False)), then=1)
+                                    ,output_field=IntegerField(),)))
+        esign_docs = []
+        for sign_doc in docs:
+            signature_status = ''
+            if sign_doc['tot_signed'] == 0 and sign_doc['tot_unsigned'] == 0:
+                signature_status = 'Not Required'
+            elif sign_doc['tot_unsigned'] == 0:
+                signature_status = 'Completed'
+            else:
+                signature_status = str(sign_doc['tot_signed']) + ' /' + str(sign_doc['tot_unsigned'])
+            esign_docs.append({
+                'id': sign_doc['id'],
+                'name': sign_doc['name'],
+                'signature_status': signature_status
+            })
         total_cnt = docs.count()
         current_cnt = total_cnt
-        docs = queryset_to_list(
-            docs,fields=['name','id']
-        )
-        result = {'records': docs, 'total': total_cnt, 'count': current_cnt}
+        result = {'records': esign_docs, 'total': total_cnt, 'count': current_cnt}
         return result
 
 
@@ -346,6 +391,7 @@ class Signature(models.Model):
         signature_id = params['signature_id']
         token = params.get('token')
         sign = Signature.objects.get(id=signature_id)
+        user = request.user
         if token:
             token = PostUserToken.objects.get(token=token)
             user = token.user
@@ -355,8 +401,8 @@ class Signature(models.Model):
             if post_info.res_id != doc_id:
                 return 'Invalid doc access'
         else:
-            if request.user.id != 1:
-                if request.user.id != sign.user.id:
+            if user.id != 1:
+                if user.id != sign.user.id:
                     return "Unauthorized"
         sign.signed_at = datetime.datetime.now()
         binary_signature = ''
@@ -387,7 +433,9 @@ class Signature(models.Model):
         binary_data = io.BytesIO(base64.b64decode(binary_signature))
         jango_file = DjangoFile(binary_data)
         sign.image.save('sign_image.png', jango_file)
-        return { 'image': binary_signature}
+
+        status = sign.document.get_pending_sign_count(user.id)
+        return { 'image': binary_signature, 'status': status}
 
     @classmethod
     def load_signature(cls, request, params):

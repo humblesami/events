@@ -4,3 +4,6 @@
     display:inline;    
     margin: 0 5px;
 }
+li.page-item.disabled .page-link{
+    background-color: silver;
+}

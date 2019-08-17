@@ -30,7 +30,11 @@ title="e-Signature"></app-breadcrumb>
 						</div>
 						<div class="DocInfoVertical text-truncate">
 							{{doc.name}}
-						</div>
+                        </div>
+                        <div class="DocInfoVertical text-truncate">
+                            <span>My Signature: </span>
+                            <span class="pending-status">{{doc.signature_status}}</span>
+                        </div>
 					</div>
 				</a>
 			</div>

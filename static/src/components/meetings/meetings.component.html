@@ -31,42 +31,47 @@
 		</div>
 	</div>
 
-			<!--<div class="row">-->
-			<!--<div class="kanban-card" *ngFor="let meeting_object of meeting_list">-->
-				<!--<div class="kanban-meeting-info">-->
-
 	<div class="container">
-	<input type="text" (keyup)="search_records($event)" placeholder="Search..."  class="form-control w-25"/>
-	<br>
-		<div class="row">
-			<div class="col col-md-6 col-lg-4 mb-4" *ngFor="let meeting_object of meeting_list">
-				<div class="kanban-card kanban-meeting-info">
-					<a class="kanban-upcoming-meeting" routerLink="/meeting/{{meeting_object.id}}">
-						<div class="CalendarDateWrapper">
-							<span *ngIf="meeting_object.start" class="CalendarDateWrap">
-								<span class="kanban-upcoming-meeting-date">
-									{{meeting_object.start_dt.day}}
-								</span>
-								<span>
-									{{meeting_object.start_dt.month_year}}
-								</span>
-								<span>
-									{{meeting_object.start_dt.time}}
-								</span>
+	<input type="text"  (keyup)="search_records($event)" placeholder="Search..."  class="form-control w-25"/>
+	
+	<div class="row">
+		<div class="col col-md-6 col-lg-4 mb-4" *ngFor="let meeting_object of meeting_list">
+			<div class="kanban-card kanban-meeting-info">
+				<a class="kanban-upcoming-meeting" routerLink="/meeting/{{meeting_object.id}}">
+					<div class="CalendarDateWrapper">
+						<span *ngIf="meeting_object.start" class="CalendarDateWrap">
+							<span class="kanban-upcoming-meeting-date">
+								{{meeting_object.start_dt.day}}
 							</span>
-						</div>
-						<div class="Info">
-							<p *ngIf="meeting_object.name">
-								<b>{{meeting_object.name}}</b>
-							</p>
-							<span *ngIf="meeting_object.location" class="d-inline-block text-truncate">{{meeting_object.location}}</span>
-						</div>
-					</a>
-					
-                    <app-meetingresponse *ngIf="meeting_type == 'upcoming'" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
-					
-				</div>
+							<span>
+								{{meeting_object.start_dt.month_year}}
+							</span>
+							<span>
+								{{meeting_object.start_dt.time}}
+							</span>
+						</span>
+					</div>
+					<div class="Info">
+						<p *ngIf="meeting_object.name">
+							<b>{{meeting_object.name}}</b>
+						</p>
+						<span *ngIf="meeting_object.location" class="d-inline-block text-truncate">{{meeting_object.location}}</span>
+					</div>
+				</a>
+				
+				<app-meetingresponse *ngIf="meeting_type == 'upcoming'" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+				
 			</div>
 		</div>
+	</div>
+
+	<app-paginator count="{{total_records}}" *ngIf="meeting_list && meeting_list.length > 0" 
+		(changedLimit)="changedLimit($event)"            
+		(changedOffset)="changedOffset($event)"
+		(lastpage)="changedOffset($event)"
+		(firstpage)="changedOffset($event)"
+		(pagedata)="changedOffset($event)"
+		>
+    </app-paginator>
 	</div>
 </div>

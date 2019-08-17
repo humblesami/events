@@ -158,7 +158,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
                     pdf_binary = data.pdf_binary;
-                    obj_this.doc.doc_name = data.doc_name;
                     //setTimeout(function(){ showPDF(pdf_binary); }, 3000);
                     console.log('Starting render doc data', Date());
                     renderPDF(pdf_binary);
@@ -272,6 +271,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     pageNum = 1;
                 }
                 renderPage(pageNum);
+                $('#holder').show();
                 $('.docWrapperContainer').show();
                 toggleNextButton();
             });
@@ -918,6 +918,10 @@ export class EsignDocDetailsComponent implements OnInit {
                             }
                         }
                         on_sign_saved(signature_dom, data);
+                        if(data.status.signature_status != 'Pending')
+                        {
+                            $("#nxxt_sign").hide(); 
+                        }
                         // $("#nxxt_sign").click();
                     }
                 }
