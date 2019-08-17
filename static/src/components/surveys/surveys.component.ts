@@ -57,7 +57,8 @@ export class SurveysComponent implements OnInit {
         let flag = req_peram[req_peram.length - 1];
         this.meeting_type = flag;
         // console.log(flag)
-        this.heading = flag;        
+        this.heading = flag;
+        this.get_data();
     }
 
 }
