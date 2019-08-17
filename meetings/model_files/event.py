@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from mainapp import ws_methods
-from django.db.models import Q, Count, Case, When, IntegerField
+from django.db.models import Q
 from django.utils import timezone
 from mainapp.settings import server_base_url
 from meetings.model_files.user import Profile
@@ -318,36 +318,9 @@ class Event(models.Model):
         for doc in meeting_docs:
             doc['created_at'] = str(doc['created_at'])
             meeting_object['meeting_docs'].append(doc)
-        sign_docs =  meeting_object_orm.signdocument_set.values(
-            'id',
-            'pdf_doc',
-            'name').annotate(
-                tot_signed=Count(
-                    Case(
-                        When((Q(signature__user_id=user_id) & Q(signature__signed=True)), then=1)
-                        ,output_field=IntegerField(),)
-                        )).annotate(
-                            tot_unsigned=Count(
-                                Case(
-                                    When((Q(signature__user_id=user_id) & Q(signature__signed=False)), then=1)
-                                    ,output_field=IntegerField(),)))
-
-        esign_docs = []
-        for sign_doc in sign_docs:
-            signature_status = ''
-            if sign_doc['tot_signed'] == 0 and sign_doc['tot_unsigned'] == 0:
-                signature_status = 'Not Required'
-            elif sign_doc['tot_unsigned'] == 0:
-                signature_status = 'Completed'
-            else:
-                signature_status = str(sign_doc['tot_signed']) + ' /' + str(sign_doc['tot_unsigned'])
-            esign_docs.append({
-                'id': sign_doc['id'],
-                'pdf_doc': sign_doc['pdf_doc'],
-                'name': sign_doc['name'],
-                'signature_status': signature_status
-            })
-        meeting_object['sign_docs'] = esign_docs
+        sign_docs =  meeting_object_orm.signdocument_set.all()
+        sign_docs = ws_methods.queryset_to_list(sign_docs, fields=['id','pdf_doc','name'])
+        meeting_object['sign_docs'] = sign_docs
         surveys = []
         try:
             surveys = meeting_object_orm.actions.all()[0].survey_set.all()
@@ -371,37 +344,7 @@ class Event(models.Model):
         meeting_object['attendees'] = attendees
         data = {"meeting": meeting_object, "next": 0, "prev": 0}
 
-        return {'data': data}
-
-    @classmethod
-    def get_meetings(cls, meeting_type, params = None):
-        results = None
-        offset = params.get('offset')
-        limit = params.get('limit')
-        kw = params.get('kw')
-        if kw:
-            results = ws_methods.search_db({'kw': kw, 'search_models':  {'meetings':['Event']}  })
-        else:
-            results = Event.objects.all()
-        if meeting_type == 'archived':
-            meetings = results.filter(archived=True, publish=True)
-        elif meeting_type == 'draft':
-            meetings = results.filter(publish=False)
-        else:
-            meetings = results.filter(publish=True)
-        if limit:
-            meetings = meetings[offset: offset + limit]
-        
-        meeting_list = []
-        for meeting in meetings:
-            if meeting_type == 'upcoming':
-                if meeting.exectime in (meeting_type, 'ongoing'):
-                    meeting_list.append(meeting)
-            elif meeting_type == 'draft':
-                meeting_list.append(meeting)
-            elif meeting.exectime == meeting_type:
-                meeting_list.append(meeting)
-        return meeting_list
+        return {'data': data}    
 
     @classmethod
     def get_attendance_status(cls, meeting_id, uid):
@@ -462,12 +405,42 @@ class Event(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
+        offset = params['offset']
+        limit = params['limit']
         meeting_type = params.get('meeting_type')        
         meeting_list = cls.get_meetings(meeting_type, params)
         meetings = cls.get_meeting_summaries(meeting_list, request.user.id)
-        meetings = {'records': meetings, 'total': 0, 'count': 0}
+        total = len(meetings)
+        meetings = meetings[offset: offset + int(limit)]
+        meetings = {'records': meetings, 'total': total}
         data = {'error': '', 'data': meetings}
         return data
+
+    @classmethod
+    def get_meetings(cls, meeting_type, params = None):
+        results = None
+        kw = params.get('kw')
+        if kw:
+            results = ws_methods.search_db({'kw': kw, 'search_models':  {'meetings':['Event']}  })
+        else:
+            results = Event.objects.all()
+        if meeting_type == 'archived':
+            meetings = results.filter(archived=True, publish=True)
+        elif meeting_type == 'draft':
+            meetings = results.filter(publish=False)
+        else:
+            meetings = results.filter(publish=True)
+        
+        meeting_list = []
+        for meeting in meetings:
+            if meeting_type == 'upcoming':
+                if meeting.exectime in (meeting_type, 'ongoing'):
+                    meeting_list.append(meeting)
+            elif meeting_type == 'draft':
+                meeting_list.append(meeting)
+            elif meeting.exectime == meeting_type:
+                meeting_list.append(meeting)
+        return meeting_list
     
 
     @classmethod

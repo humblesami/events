@@ -10,7 +10,7 @@ declare var $: any;
 export class MeetingsComponent implements OnInit {
     no_meet = false;
     meeting_list = [];
-    active_meeting: any;
+    active_meeting: any;    
     show = false;
     meeting_type: string;
     heading = 'Home';
@@ -18,8 +18,13 @@ export class MeetingsComponent implements OnInit {
 		items: [],
 		title: ''
 	};
-
+    offset: number;
+    limit: number;
+    total_records : number;
     constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
+        this.offset = 0;
+        this.limit = 2;
+        this.total_records = 0;
         const obj_this = this;
         this.httpService.fetch_paged_data = function(off_set, limit){
             let req_peram = (window.location + '').split('/');
@@ -34,7 +39,7 @@ export class MeetingsComponent implements OnInit {
                     start = window['functions'].meeting_time(start);
                     result.records[i]['start_dt'] = start;
                 }
-                obj_this.meeting_list = result.records;
+                obj_this.meeting_list = result.records || [];
                 obj_this.httpService.total_records = result.total;
                 obj_this.meeting_list.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;
             };
@@ -50,32 +55,40 @@ export class MeetingsComponent implements OnInit {
             obj_this.httpService.get(final_input_data, success_cb, null);
         }
     }
-
+    changedOffset(data)
+    {
+        this.offset = Number(data);
+        // console.log(this.offset, 1008);
+        this.get_data();
+    }
+    changedLimit(data)
+    {
+        this.limit = Number(data);
+        this.offset = 0;
+        // console.log(this.limit, this.offset, 144);
+        this.get_data();
+    }
+ 
     search_records(e){
         let obj_this = this;
         // console.log(e.keyCode, 67);
         if(e.keyCode == 13)
         {
-            obj_this.get_data(2, 0, e.target.value);
+            obj_this.get_data(e.target.value);
         }
     }
-    
+
     ngOnInit() {        
         this.get_data();
         window['json_functions'].find_activate_link('.MeetingBtnWrapper');
     }
-
-    get_data(limit = 10, off_set = 0, kw = ''){
+    
+    count: number;
+    get_data(kw = ''){
         var url_segments = this.route.snapshot.url;
         this.meeting_type = url_segments[url_segments.length -1].path;
         let obj_this = this;
-        let input_data = {
-             meeting_type: obj_this.meeting_type, 
-            //  offset: off_set,
-            //  limit: limit,
-             kw : kw
-        };
-        
+              
         var success_cb = function (result) {            
             for(var i in result.records)
             {
@@ -83,11 +96,22 @@ export class MeetingsComponent implements OnInit {
                 start = window['functions'].meeting_time(start);
                 result.records[i]['start_dt'] = start;
             }
-            obj_this.meeting_list = result.records;
+            obj_this.total_records = result.total;
+            obj_this.count = result.records.length;
+            obj_this.meeting_list = result.records || [];
             obj_this.httpService.total_records = result.total;
+            // console.log(obj_this.total_records,obj_this.count,  1411);
             obj_this.meeting_list.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;
             
         };
+        
+        let input_data = {
+            meeting_type: obj_this.meeting_type, 
+            offset: obj_this.offset,
+            limit: obj_this.limit,
+            kw : kw
+       };
+
         var failure_cb = function (error) {
         };
         let args = {
@@ -100,5 +124,5 @@ export class MeetingsComponent implements OnInit {
             args: args
         };
         this.httpService.get(final_input_data, success_cb, failure_cb);
-    }
+    }    
 }
