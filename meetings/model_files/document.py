@@ -266,7 +266,7 @@ class SignDocument(SignatureDoc):
                     width=140,
                     zoom=300
                 )
-                obj.created_by = user.id
+                obj.created_by_id = user.id
                 obj.save()
                 if c == 1:
                     c = 0
