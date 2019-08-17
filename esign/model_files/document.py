@@ -13,7 +13,7 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 from PIL import ImageFont, Image, ImageDraw
 from django.db import models
 from django.core.files import File as DjangoFile
-
+from django.db.models import Q, Count, Case, When, IntegerField
 from documents.file import File
 from mainapp import ws_methods
 from mainapp.settings import MEDIA_ROOT, server_base_url
@@ -282,13 +282,34 @@ class SignatureDoc(File):
 
     @classmethod
     def get_records(cls, request, params):
-        docs = cls.objects.filter()
+        user_id = request.user.id
+        docs = cls.objects.values('id', 'name').annotate(
+                tot_signed=Count(
+                    Case(
+                        When((Q(signature__user_id=user_id) & Q(signature__signed=True)), then=1)
+                        ,output_field=IntegerField(),)
+                        )).annotate(
+                            tot_unsigned=Count(
+                                Case(
+                                    When((Q(signature__user_id=user_id) & Q(signature__signed=False)), then=1)
+                                    ,output_field=IntegerField(),)))
+        esign_docs = []
+        for sign_doc in docs:
+            signature_status = ''
+            if sign_doc['tot_signed'] == 0 and sign_doc['tot_unsigned'] == 0:
+                signature_status = 'Not Required'
+            elif sign_doc['tot_unsigned'] == 0:
+                signature_status = 'Completed'
+            else:
+                signature_status = str(sign_doc['tot_signed']) + ' /' + str(sign_doc['tot_unsigned'])
+            esign_docs.append({
+                'id': sign_doc['id'],
+                'name': sign_doc['name'],
+                'signature_status': signature_status
+            })
         total_cnt = docs.count()
         current_cnt = total_cnt
-        docs = queryset_to_list(
-            docs,fields=['name','id']
-        )
-        result = {'records': docs, 'total': total_cnt, 'count': current_cnt}
+        result = {'records': esign_docs, 'total': total_cnt, 'count': current_cnt}
         return result
 
 

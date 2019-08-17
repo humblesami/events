@@ -62,7 +62,9 @@ class News(models.Model):
         sign_docs = []
         for sign_doc in sign_doc_ids:
             signature_status = ''
-            if sign_doc['tot_unsigned'] == 0:
+            if sign_doc['tot_signed'] == 0 and sign_doc['tot_unsigned'] == 0:
+                signature_status = 'Not Required'
+            elif sign_doc['tot_unsigned'] == 0:
                 signature_status = 'Completed'
                 continue
             else:

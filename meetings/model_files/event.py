@@ -335,7 +335,9 @@ class Event(models.Model):
         esign_docs = []
         for sign_doc in sign_docs:
             signature_status = ''
-            if sign_doc['tot_unsigned'] == 0:
+            if sign_doc['tot_signed'] == 0 and sign_doc['tot_unsigned'] == 0:
+                signature_status = 'Not Required'
+            elif sign_doc['tot_unsigned'] == 0:
                 signature_status = 'Completed'
             else:
                 signature_status = str(sign_doc['tot_signed']) + ' /' + str(sign_doc['tot_unsigned'])
