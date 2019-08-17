@@ -32,7 +32,7 @@
 	</div>
 
 	<div class="container">
-	<input type="text" *ngIf="total_records > limit || total_records > 10" (keyup)="search_records($event)" placeholder="Search..."  class="form-control w-25"/>
+	<input type="text"  (keyup)="search_records($event)" placeholder="Search..."  class="form-control w-25"/>
 	
 	<div class="row">
 		<div class="col col-md-6 col-lg-4 mb-4" *ngFor="let meeting_object of meeting_list">

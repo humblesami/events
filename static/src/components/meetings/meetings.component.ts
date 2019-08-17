@@ -26,34 +26,34 @@ export class MeetingsComponent implements OnInit {
         this.limit = 2;
         this.total_records = 0;
         const obj_this = this;
-        this.httpService.fetch_paged_data = function(off_set, limit){
-            let req_peram = (window.location + '').split('/');
-            let flag = req_peram[req_peram.length - 1];
+        // this.httpService.fetch_paged_data = function(off_set, limit){
+        //     let req_peram = (window.location + '').split('/');
+        //     let flag = req_peram[req_peram.length - 1];
             
-            let req_url = '/meeting/list-json';
-            let input_data = { meeting_type: flag, paging : {offset: off_set, limit: limit}};
-            var success_cb = function (result) {
-                for(var i in result.records)
-                {
-                    var start = result.records[i]['start'];
-                    start = window['functions'].meeting_time(start);
-                    result.records[i]['start_dt'] = start;
-                }
-                obj_this.meeting_list = result.records || [];
-                obj_this.httpService.total_records = result.total;
-                obj_this.meeting_list.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;
-            };
-            let args = {
-                app: 'meetings',
-                model: 'Event',
-                method: 'get_records'
-            }			
-            let final_input_data = {
-                params: input_data,
-                args: args
-            };
-            obj_this.httpService.get(final_input_data, success_cb, null);
-        }
+        //     let req_url = '/meeting/list-json';
+        //     let input_data = { meeting_type: flag, paging : {offset: off_set, limit: limit}};
+        //     var success_cb = function (result) {
+        //         for(var i in result.records)
+        //         {
+        //             var start = result.records[i]['start'];
+        //             start = window['functions'].meeting_time(start);
+        //             result.records[i]['start_dt'] = start;
+        //         }
+        //         obj_this.meeting_list = result.records || [];
+        //         obj_this.httpService.total_records = result.total;
+        //         obj_this.meeting_list.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;
+        //     };
+        //     let args = {
+        //         app: 'meetings',
+        //         model: 'Event',
+        //         method: 'get_records'
+        //     }			
+        //     let final_input_data = {
+        //         params: input_data,
+        //         args: args
+        //     };
+        //     obj_this.httpService.get(final_input_data, success_cb, null);
+        // }
     }
     changedOffset(data)
     {
