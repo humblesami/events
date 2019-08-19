@@ -7,14 +7,15 @@ import { SocketService } from 'src/app/socket.service';
     templateUrl: 'profiles.component.html'
 })
 export class ProfilesComponent implements OnInit {
-    profiles_data: any;
+    records: any;
     no_prof = false;
     type = '';
     socketService : SocketService;    
-
-    constructor(private httpService: HttpService, private ss: SocketService) {        
-        this.profiles_data = [];
+    httpService: HttpService;
+    constructor(private httpServ: HttpService, private ss: SocketService) {        
+        this.records = [];
         this.socketService = this.ss;
+        this.httpService = httpServ;
         this.get_list();
     }
 
@@ -46,8 +47,8 @@ export class ProfilesComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data,
             (result) => {
-                    obj_this.profiles_data = result.records;
-                    obj_this.profiles_data && obj_this.profiles_data.length > 0 ? obj_this.no_prof = false : obj_this.no_prof = true;                    
+                    obj_this.records = result.records;
+                    obj_this.records && obj_this.records.length > 0 ? obj_this.no_prof = false : obj_this.no_prof = true;                    
         }, (error) => {});
     }
 

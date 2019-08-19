@@ -103,6 +103,7 @@ export class PaginatorComponent implements OnInit {
         this.httpService.limit = Number($(e.target).val());
         this.httpService.offset = 0;
         this.page_number = 1;
+        this.all_pages();
         this.reload_data.emit();
         // console.log(this.offset,this.limit, 1411);
     }

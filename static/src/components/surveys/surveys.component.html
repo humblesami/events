@@ -75,9 +75,8 @@ title="Surveys"></app-breadcrumb>
                 </div>
             </div>
         </div>
-	<app-paginator
-        *ngIf="records.length"
-            (reload_data)="get_list()">
+<app-paginator *ngIf="records.length" (reload_data)="get_list()">
     </app-paginator>
+
 	</div>
 </div>

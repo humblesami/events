@@ -12,7 +12,7 @@
                 <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
                     <button (click)="first_Page(0)" class="page-link">
                         <i class="fa fa-chevron-left"></i>
-                        <i class="fa fa-offsetchevron-left"></i>
+                        <i class="fa fa-chevron-left"></i>
                     </button>
                 </li>
                 <li class="page-item" [class.disabled]="httpService.offset<= '0'">
@@ -27,7 +27,7 @@
                         </button>
                     </li>
                 </ul>
-                <li class="page-item" [class.disabled]="httpService.ffset + httpService.limit >= httpService.count">
+                <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
                     <button (click)="change_page(1)" class="page-link">
                         <i class="fa fa-chevron-right"></i>
                     </button>

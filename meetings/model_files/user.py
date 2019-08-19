@@ -310,11 +310,21 @@ class Profile(user_model):
     def get_records(cls, request, params):
         group = params.get('type')
         profiles = []
-        if group:
-            profiles = Profile.objects.filter(groups__name__iexact=group)
+        kw = params.get('kw')
+        if kw:
+            profiles = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
         else:
-            profiles = Profile.objects.filter()
+            if group:
+                profiles = Profile.objects.filter(groups__name__iexact=group)
+            else:
+                profiles = Profile.objects.filter()
+        
         total_cnt = profiles.count()
+        offset = params.get('offset')
+        limit = params.get('limit')
+        profiles = list(profiles)
+        if limit:
+            profiles = profiles[offset: offset + int(limit)]
         current_cnt = total_cnt
         # profiles = ws_methods.queryset_to_list(
         #     profiles,fields=['username','image','email','id']

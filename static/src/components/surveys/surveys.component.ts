@@ -16,7 +16,7 @@ export class SurveysComponent implements OnInit {
     heading = 'Home';
     bread_crumb = {
         items: [],
-        title: '';
+        title: ''
     };
     httpService: HttpService;
     constructor(private httpServ: HttpService, public router: Router, private route: ActivatedRoute) {
