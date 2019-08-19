@@ -21,7 +21,7 @@ class SurveyDetail(View):
             token = address[len(address)-1]
             if token:
                 kwargs['token'] = token
-        user = get_user_by_token(request, kwargs)
+        user = get_user_by_token(request, kwargs, do_not_expire=True)
         if type(user) is str:
             return HttpResponse(user)
         survey = get_object_or_404(Survey, is_published=True, id=kwargs["id"])

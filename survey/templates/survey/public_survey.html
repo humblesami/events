@@ -3,16 +3,20 @@
 {% if token %}
 {% block btn_submit %}
 <div class="col-lg-12">
-    <input type="hidden" id="survey_token" name="token" value="15"/>
+    <input type="hidden" id="survey_token" name="token" value=""/>
+    <input type="hidden" id="id" name="id" value=""/>
     <script>
     (function(){
         var str = window.location.toString()
+        console.log(str);
         var i = str.indexOf('survey');
         var token = '';
         if(i>-1)
         {
             str = str.substr(i)
             var ar = str.split('/');
+            let survey_id = ar[ar.length -2];
+            document.getElementById('id').value = survey_id;
             if(ar.length > 2)
             {
                 token = ar[ar.length - 1];

@@ -459,8 +459,20 @@ def send_email_on_creation(email_data):
     }
     EmailThread(thread_data).start()
 
+def validate_token(token, kw=None, do_not_expire=None):
+    post_user_token = get_model('restoken', 'PostUserToken')
+    if type(post_user_token) is str:
+        return 'Model not found'
+    user_token = post_user_token.validate_token(token, do_not_expire)
+    if not user_token:
+        return 'You are not authorized'
+    if 'id' in kw.keys():
+        post_res_id = kw['id']
+        if int(post_res_id) != user_token.post_info.res_id:
+            return 'Token is not valid'
+    return user_token.user
 
-def get_user_by_token(request, kw=None):
+def get_user_by_token(request, kw=None, do_not_expire=None):
     token = ''
     user = {}
     if request.GET:
@@ -468,19 +480,15 @@ def get_user_by_token(request, kw=None):
     if not token:
         if request.POST:
             token = request.POST['token']
-    if not token and kw.get('token'):
+            if token:
+                user = validate_token(token, request.POST, do_not_expire=do_not_expire)
+                if type(user) is str:
+                    return user
+    if not token and kw and kw.get('token'):
         token = kw['token']
-        post_user_token = get_model('restoken', 'PostUserToken')
-        if type(post_user_token) is str:
-            return 'Model not found'
-        user_token = post_user_token.validate_token(token, 1)
-        if not user_token:
-            return 'You are not authorized'
-        if 'id' in kw.keys():
-            post_res_id = kw['id']
-            if int(post_res_id) != user_token.post_info.res_id:
-                return 'Token is not valid'
-        user = user_token.user
+        user = validate_token(token, kw, do_not_expire=do_not_expire)
+        if type(user) is str:
+            return user
     if not user:
         user = request.user                        
     if user and user.id:
