@@ -72,7 +72,7 @@ class SurveyDetail(View):
         return render(request, template_name, context)    
 
     def post(self, request, *args, **kwargs):
-        user = get_user_by_token(request)
+        user = get_user_by_token(request, do_not_expire=True)
         if type(user) is str:
             return user
 
