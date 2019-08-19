@@ -10,12 +10,11 @@ export class ProfilesComponent implements OnInit {
     profiles_data: any;
     no_prof = false;
     type = '';
-    socketService : SocketService;
+    socketService : SocketService;    
 
     constructor(private httpService: HttpService, private ss: SocketService) {        
         this.profiles_data = [];
         this.socketService = this.ss;
-        httpService.on_get_data = this.get_list;
         this.get_list();
     }
 

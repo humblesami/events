@@ -5,6 +5,11 @@ declare var $: any
 @Injectable()
 export class HttpService {
     server_url;
+    offset: number;
+    limit: number;
+    count: number;
+    search_kw = '';
+
     constructor() {
         this.server_url = window['server_url'];
         this.offset = 0;
@@ -17,6 +22,10 @@ export class HttpService {
     {
         var options = this.makeOptions_search('get', input_data, success_cb, failure_cb);
         window['dn_rpc_object'](options);
+    }
+
+    on_paged_data(records_count: number){
+
     }
 
     get(input_data: any, success_cb, failure_cb) {
@@ -54,39 +63,7 @@ export class HttpService {
         options.onComplete = complete_cb;
         options.onError = failure_cb;
         window['dn_rpc_object'](options);
-    }
-
-    on_get_data(){
-
-    }
-
-    offset: number;
-    limit: number;
-    count: number;
-    key_word: string;
-    changedOffset(data)
-    {
-        this.offset = Number(data);
-        // console.log(this.offset, 1008);
-        this.on_get_data();
-    }
-    changedLimit(data)
-    {
-        this.limit = Number(data);
-        this.offset = 0;
-        // console.log(this.limit, this.offset, 144);
-        this.on_get_data();
-    }
-
-    search_records(e){
-        if(e.keyCode == 13)
-        {
-            this.offset = 0;
-            this.key_word = e.target.value;
-            this.on_get_data();
-        }
-        // console.log(32312, e.keyCode);
-    }
+    }    
 
     makeOptions_secure(type, input_data, success_cb, failure_cb)
     {
@@ -96,9 +73,9 @@ export class HttpService {
             if(failure_cb)
                 failure_cb(res);
         };        
-        if(obj_this.key_word)
+        if(obj_this.search_kw)
         {
-            input_data.params.key_word = obj_this.key_word;            
+            input_data.params.kw = obj_this.search_kw;            
         }
         input_data.params.offset = obj_this.offset;
         if(obj_this.limit)
@@ -120,15 +97,16 @@ export class HttpService {
             onSuccess:function(data){                
                 success_cb(data);
                 if(data.total)
-                {
+                {                    
                     obj_this.count = Number(data.total);
+                    obj_this.on_paged_data(obj_this.count);
                 }
                 else
                 {
-                    obj_this.limit = 0;
+                    obj_this.limit = 10;
                     obj_this.offset = 0;
                     obj_this.count = 0;
-                }
+                }                
             },
             onError:onRequestFailed,
             onComplete:function(){

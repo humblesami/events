@@ -12,8 +12,7 @@ export class ResourcesComponent implements OnInit {
 		items: [],
 		title: ''
 	};
-    constructor(private httpService: HttpService) {
-        httpService.on_get_data = this.get_list;
+    constructor(private httpService: HttpService) {        
     }
 
     get_list()

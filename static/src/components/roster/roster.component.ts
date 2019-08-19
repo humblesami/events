@@ -15,13 +15,12 @@ declare var $: any;
 export class RosterComponent implements OnInit {
     @Input() meeting_id: number;
     server_url = window['server_url'];
-    constructor(private httpService: HttpService,
-                private modalService: NgbModal) {         
-                    httpService.on_get_data = this.get_list;
+    constructor(private httpService: HttpService,        
+            private socketService: SocketService, private modalService: NgbModal) {
     }    
     attendance_data = [];    
     
-    attendees : Array<ChatUser>;
+    attendees = [];
     count: number;
 
     open_dialog(user_id) {

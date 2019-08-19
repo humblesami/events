@@ -24,8 +24,7 @@ export class MeetingsComponent implements OnInit {
     constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
         this.offset = 0;
         this.limit = 2;
-        this.total_records = 0;
-        httpService.on_get_data = this.get_list;        
+        this.total_records = 0;     
     }
 
     ngOnInit() {
@@ -48,7 +47,7 @@ export class MeetingsComponent implements OnInit {
             obj_this.total_records = result.total;
             obj_this.count = result.records.length;
             obj_this.meeting_list = result.records || [];
-            // console.log(obj_this.total_records,obj_this.count,  1411);
+            console.log(obj_this.total_records,obj_this.meeting_list.length,  1411);
             obj_this.meeting_list.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;
             
         };

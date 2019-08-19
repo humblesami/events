@@ -581,8 +581,8 @@ export class EsignDocDetailsComponent implements OnInit {
                 new_signature.html('<input style="display:inline;width:90%" type="text" placeholder="Field Name"/>');
             }
 
-            new_signature.prepend('<i class="fa fa-pen  edit_sign" style="color:black;float:left" aria-hidden="true"/>');
-            new_signature.prepend('<i class="fa fa-times  fa-lg del_sign" style="color:black;float:left" aria-hidden="true"/>');
+            // new_signature.prepend('<i class="fa fa-pen  edit_sign" style="color:black;float:left" aria-hidden="true"/>');
+            new_signature.prepend('<i class="fa fa-times  fa-lg del_sign doc-time-del" aria-hidden="true"/>');
 
             new_signature.attr({
                 "page": pageNum

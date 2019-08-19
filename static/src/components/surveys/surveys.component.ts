@@ -20,7 +20,7 @@ export class SurveysComponent implements OnInit {
     };
 
     constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
-        httpService.on_get_data = this.get_list;
+        
     }
 
     get_list(){
