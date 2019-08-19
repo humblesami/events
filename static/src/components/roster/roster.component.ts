@@ -14,32 +14,12 @@ declare var $: any;
 
 export class RosterComponent implements OnInit {
     @Input() meeting_id: number;
-    offset: number;
-    limit: number;
-    key_word: string;
-    total_records : number;
     server_url = window['server_url'];
     constructor(private httpService: HttpService,
-                private socketService: SocketService,
-                private modalService: NgbModal) { 
-        this.offset = 0;
-        this.limit = 2;
-        this.total_records = 0;    
-    }
-    attendance_data = [];
-    changedOffset(data)
-    {
-        this.offset = Number(data);
-        // console.log(this.offset, 1008);
-        this.get_data();
-    }
-    changedLimit(data)
-    {
-        this.limit = Number(data);
-        this.offset = 0;
-        // console.log(this.limit, this.offset, 144);
-        this.get_data();
-    }
+                private modalService: NgbModal) {         
+                    httpService.on_get_data = this.get_list;
+    }    
+    attendance_data = [];    
     
     attendees : Array<ChatUser>;
     count: number;
@@ -48,31 +28,18 @@ export class RosterComponent implements OnInit {
         let obj_this = this;
 		const modalRef = this.modalService.open(ProfilesummaryComponent);
 		modalRef.componentInstance.user_id = user_id;
-    }
-    
-    roster_search(e){
-        if(e.keyCode == 13)
-        {
-            this.offset = 0;
-            this.key_word = e.target.value;
-            this.get_data();
-        }
-        // console.log(32312, e.keyCode);
-    }
+    }    
 
-    get_data(){
+    get_list(){
         let obj_this = this;
         function success(data){            
-            obj_this.total_records = Number(data.total);            
+            obj_this.httpService.count = Number(data.total);
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;
             // console.log(obj_this.attendees);
-            obj_this.httpService.changePaginator(data.total);
         }        
         let input_data = {
-            meeting_id: obj_this.meeting_id,
-            offset: obj_this.offset,
-            limit: obj_this.limit
+            meeting_id: obj_this.meeting_id,            
         }
         let args = {
             app: 'meetings',
@@ -84,12 +51,7 @@ export class RosterComponent implements OnInit {
             args: args,
             no_loader:1
         }
-        if(obj_this.key_word)
-        {
-            input_data['key_word'] = obj_this.key_word;            
-            args['method'] = 'search_roster';
-            // obj_this.key_word = undefined;
-        }
+        
         obj_this.httpService.get(final_input, success, null)
     }
 
@@ -133,6 +95,6 @@ export class RosterComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.get_data();        
+        this.get_list();        
     }
 }

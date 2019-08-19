@@ -20,37 +20,16 @@ export class CommitteesComponent implements OnInit {
     constructor(private httpService: HttpService, private ss: SocketService) {
         const obj_this = this;
         this.socketService = this.ss;
-        obj_this.httpService.fetch_paged_data = function(off_set, limit){
-            
-            let args = {
-                app: 'meetings',
-                model: 'Committee',
-                method: 'get_records'
-            }
-            var input_data = {
-                paging : {
-                    offset: off_set, 
-                    limit: limit
-                },
-                args: args
-            };
-            var success_cb = function (result) {
-                obj_this.committees = result.records;
-                obj_this.httpService.total_records = result.total;
-                obj_this.committees.length > 0 ? obj_this.no_committees = false : obj_this.no_committees = true;
-            };
-            var failure_cb = false;
-            obj_this.httpService.get(input_data, success_cb, failure_cb);
-        }
+        httpService.on_get_data = this.get_list;
+        this.get_list();
     }
 
-    ngOnInit() {
-        var req_url = '/ws/committees-json';
+    get_list()
+    {
         var obj_this = this;
         var success_cb = function (result) {
-            console.log(result)
+            // console.log(result)
             obj_this.committees = result.records;
-            obj_this.httpService.total_records = result.total;
             obj_this.committees.length > 0 ? obj_this.no_committees = false : obj_this.no_committees = true;
         };
         let args = {
@@ -63,12 +42,8 @@ export class CommitteesComponent implements OnInit {
             args: args
         };
         this.httpService.get(input_data, success_cb, null);
-        // make_bread_crumb(obj_this.heading);
+    }
 
-        function make_bread_crumb(page_title ) {
-            if (page_title) {
-                obj_this.bread_crumb.title = page_title;
-            }
-        }
+    ngOnInit() {
     }
 }

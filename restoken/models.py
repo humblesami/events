@@ -42,8 +42,8 @@ class PostUserToken(models.Model):
             if not user_token:
                 return False
             user_token1 = user_token[0]
-            # if not do_not_expire:
-            #     user_token.update(token='')
+            if not do_not_expire:
+                user_token.update(token='')
             return user_token1
         else:
             return False

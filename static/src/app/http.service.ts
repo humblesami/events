@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
 
-@Injectable()
-export class HttpService {        
-    total_records;
-    server_url;    
-    count;
+declare var $: any
 
+@Injectable()
+export class HttpService {
+    server_url;
     constructor() {
         this.server_url = window['server_url'];
-    }
-
-    fetch_paged_data = function(off_set, limit){};
-
-    changePaginator(total: number)
-    {
-        // console.log(Date(), new Date().getMilliseconds(), 1771);
-        // console.log('Not implemented')
+        this.offset = 0;
+        this.limit = 2;
+        this.count = 0;
+        // console.log(3422);
     }
 
     search(input_data: any, success_cb, failure_cb)
@@ -61,13 +56,59 @@ export class HttpService {
         window['dn_rpc_object'](options);
     }
 
+    on_get_data(){
+
+    }
+
+    offset: number;
+    limit: number;
+    count: number;
+    key_word: string;
+    changedOffset(data)
+    {
+        this.offset = Number(data);
+        // console.log(this.offset, 1008);
+        this.on_get_data();
+    }
+    changedLimit(data)
+    {
+        this.limit = Number(data);
+        this.offset = 0;
+        // console.log(this.limit, this.offset, 144);
+        this.on_get_data();
+    }
+
+    search_records(e){
+        if(e.keyCode == 13)
+        {
+            this.offset = 0;
+            this.key_word = e.target.value;
+            this.on_get_data();
+        }
+        // console.log(32312, e.keyCode);
+    }
+
     makeOptions_secure(type, input_data, success_cb, failure_cb)
     {
+        let obj_this = this;
         var onRequestFailed = function(res)
         {
             if(failure_cb)
                 failure_cb(res);
-        };
+        };        
+        if(obj_this.key_word)
+        {
+            input_data.params.key_word = obj_this.key_word;            
+        }
+        input_data.params.offset = obj_this.offset;
+        if(obj_this.limit)
+        {            
+            input_data.params.limit = obj_this.limit;
+        }
+        else
+        {
+            input_data.params.limit = 10;
+        }
         var options = {
             url: '/rest/secure',
             type: type,
@@ -76,7 +117,19 @@ export class HttpService {
             },
             data:input_data,            
             //type:'post',
-            onSuccess:success_cb,
+            onSuccess:function(data){                
+                success_cb(data);
+                if(data.total)
+                {
+                    obj_this.count = Number(data.total);
+                }
+                else
+                {
+                    obj_this.limit = 0;
+                    obj_this.offset = 0;
+                    obj_this.count = 0;
+                }
+            },
             onError:onRequestFailed,
             onComplete:function(){
             }

@@ -12,14 +12,14 @@ export class ProfilesComponent implements OnInit {
     type = '';
     socketService : SocketService;
 
-    constructor(private httpService: HttpService, private ss: SocketService) {
-        const obj_this = this;
+    constructor(private httpService: HttpService, private ss: SocketService) {        
         this.profiles_data = [];
         this.socketService = this.ss;
-        this.get_data();
+        httpService.on_get_data = this.get_list;
+        this.get_list();
     }
 
-    get_data(){
+    get_list(){
         var obj_this = this;
         var url = window.location.href.split("/")
         var path = url[url.length-1]
@@ -48,7 +48,6 @@ export class ProfilesComponent implements OnInit {
         obj_this.httpService.get(final_input_data,
             (result) => {
                     obj_this.profiles_data = result.records;
-                    obj_this.httpService.total_records = result.total;
                     obj_this.profiles_data && obj_this.profiles_data.length > 0 ? obj_this.no_prof = false : obj_this.no_prof = true;                    
         }, (error) => {});
     }

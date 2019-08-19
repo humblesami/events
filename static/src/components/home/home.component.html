@@ -1,6 +1,6 @@
 <app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1"></app-breadcrumb>      
     
-<div class="router-outlet home-container" *ngIf="ng_init">
+<div class="router-outlet home-container" *ngIf="ng_init && home_data">
     <div class="HomepageDocumentSection">
         <div class="container" id="welcome" *ngIf="home_data">
             <section *ngIf="home_data && to_do_count" class="todoitembtn">

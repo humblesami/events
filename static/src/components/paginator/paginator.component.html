@@ -2,21 +2,21 @@
     <div class="paging-meta">
         <div class="page-limit">
             <span>Items per page:</span>    
-            <select (change)="change_limit($event)" [(ngModel)]="limit" class="form-control-sm">
+            <select (change)="change_limit($event)" [(ngModel)]="httpService.limit" class="form-control-sm">
                 <option *ngFor="let opt of limit_options">{{opt}}</option>
             </select>
             <span>Total Records: {{count}}</span>
         </div>
 
-        <div *ngIf="limit<count" class="pages" aria-label="Page navigation example">
+        <div *ngIf="httpService.limit<count" class="pages" aria-label="Page navigation example">
             <ul class="pagination  justify-content-center" >
-                <li class="page-item" [class.disabled]="offset<= '0'" >
+                <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
                     <button (click)="first_Page(0)" class="page-link">
                         <i class="fa fa-chevron-left"></i>
                         <i class="fa fa-chevron-left"></i>
                     </button>
                 </li>
-                <li class="page-item" [class.disabled]="offset<= '0'">
+                <li class="page-item" [class.disabled]="httpService.offset<= '0'">
                     <button (click)="change_page(-1)" class="page-link">
                         <i class="fa fa-chevron-left"></i>
                     </button>
@@ -28,12 +28,12 @@
                         </button>                             
                     </li>
                 </ul>
-                <li class="page-item" [class.disabled]="offset + limit >= count">
+                <li class="page-item" [class.disabled]="httpService.ffset + httpService.limit >= count">
                     <button (click)="change_page(1)" class="page-link">
                         <i class="fa fa-chevron-right"></i>
                     </button>
                 </li>
-                <li class="page-item" [class.disabled]="offset + limit >= count">
+                <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= count">
                     <button (click)="last_Page(count)" class="page-link">
                         <i class="fa fa-chevron-right"></i>
                         <i class="fa fa-chevron-right"></i>

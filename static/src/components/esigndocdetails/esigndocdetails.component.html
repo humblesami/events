@@ -63,23 +63,31 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                 <div class="docWrapperContainer pr-0 pl-0">
                     <div class="top_btns">
                         <div class="PdfTopBtnsWrapper">
-                            <div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev" ></div>
-                            <div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next" ></div>
-                            <span class="pg_no"> <span style="font-weight: bold;" id="page_num" ></span> / <span id="page_count" ></span></span>
-                            <div class="btn btn-sm doc_btn icon-zoom-out" id="zoomOut" title="Zoom Out" ></div>
-                            <div class="btn btn-sm doc_btn icon-zoom-in" id="zoomIn" title="Zoom In" ></div>
-                            <span style="display: inline-block;" id="scaleSelectContainer">
-                                <select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
-                                    <option title="" value="0.5">50%</option>
-                                    <option title="" value="0.75">75%</option>
-                                    <option title="" value="1">100%</option>
-                                    <option title="" value="1.25">125%</option>
-                                    <option title="" value="1.5">150%</option>
-                                    <option title="" value="2">200%</option>
-                                    <option title="" value="3">300%</option>
-                                    <option title="" value="4">400%</option>
-                                </select>
-                            </span>
+							<div class="doc-manage-btn-wrap">
+								<div class="btn  btn-sm doc_btn fa fa-chevron-left" id="prev" ></div>
+                            	<div class="btn  btn-sm doc_btn fa fa-chevron-right" id="next" ></div>
+							</div>
+							<div class="doc-manage-btn-wrap">
+								<span class="pg_no"> <span style="font-weight: bold;" id="page_num" ></span> / <span id="page_count" ></span></span>
+							</div>
+							<div class="doc-manage-btn-wrap">
+								<div class="btn btn-sm doc_btn icon-zoom-in" id="zoomIn" title="Zoom In" ></div>
+								<div class="btn btn-sm doc_btn icon-zoom-out" id="zoomOut" title="Zoom Out" ></div>
+								<span style="display: inline-block;" id="scaleSelectContainer">
+									<select data-style="btn-primary" id="scaleSelect" title="Zoom" tabindex="23">
+										<option title="" value="0.5">50%</option>
+										<option title="" value="0.75">75%</option>
+										<option title="" value="1">100%</option>
+										<option title="" value="1.25">125%</option>
+										<option title="" value="1.5">150%</option>
+										<option title="" value="2">200%</option>
+										<option title="" value="3">300%</option>
+										<option title="" value="4">400%</option>
+									</select>
+								</span>
+
+							</div>
+
                         </div>
                     </div>
                     <div id="viewer_container" style="position:relative;">

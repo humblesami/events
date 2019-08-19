@@ -21,10 +21,10 @@ export class VotingsComponent implements OnInit {
 };
 
 constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
-    
+    httpService.on_get_data = this.get_list;    
 }
 
-get_data()
+get_list()
 {
     let obj_this = this;
     // let req_url = '/meeting/list-json';
@@ -38,7 +38,6 @@ get_data()
             result.records[i]['open_date'] = open_date;
         }
         obj_this.voting_data = result.records;
-        obj_this.httpService.total_records = result.total;
         obj_this.voting_data.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;            
     };
     let args = {
@@ -60,6 +59,6 @@ ngOnInit() {
         this.meeting_type = flag;
         // console.log(flag)
         this.heading = flag + ' Votings';
-        this.get_data();
+        this.get_list();
     }
 }

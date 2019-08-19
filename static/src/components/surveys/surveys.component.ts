@@ -16,14 +16,14 @@ export class SurveysComponent implements OnInit {
     heading = 'Home';
     bread_crumb = {
         items: [],
-        title: ''
+        title: ''        
     };
 
     constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
-            
+        httpService.on_get_data = this.get_list;
     }
 
-    get_data(){
+    get_list(){
         let obj_this = this;
         let input_data = { meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
         var success_cb = function (result) {
@@ -35,7 +35,6 @@ export class SurveysComponent implements OnInit {
                 result.records[i]['open_date'] = open_date;
             }
             obj_this.survey_data = result.records;
-            obj_this.httpService.total_records = result.total;
             obj_this.survey_data.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;
             // make_bread_crumb(flag);
         };
@@ -58,7 +57,6 @@ export class SurveysComponent implements OnInit {
         this.meeting_type = flag;
         // console.log(flag)
         this.heading = flag;
-        this.get_data();
+        this.get_list();
     }
-
 }
