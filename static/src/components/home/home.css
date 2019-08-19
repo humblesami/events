@@ -44,6 +44,7 @@
 
 .HomepageDocumentSection{
     margin-bottom:1rem;
+    border-bottom:5px solid #f3f3f3; 
 }
 .WelcomeContent{
     padding-bottom:30px;
