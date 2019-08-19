@@ -16,11 +16,11 @@ export class SurveysComponent implements OnInit {
     heading = 'Home';
     bread_crumb = {
         items: [],
-        title: ''        
+        title: '';
     };
-
-    constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
-        
+    httpService: HttpService;
+    constructor(private httpServ: HttpService, public router: Router, private route: ActivatedRoute) {
+        this.httpService = httpServ;
     }
 
     get_list(){

@@ -11,8 +11,10 @@ export class ResourcesComponent implements OnInit {
     bread_crumb = {
 		items: [],
 		title: ''
-	};
-    constructor(private httpService: HttpService) {        
+    };
+    httpService: HttpService;
+    constructor(private httpServ: HttpService) {        
+        this.httpService = httpServ;
     }
 
     get_list()

@@ -107,12 +107,17 @@ export class PaginatorComponent implements OnInit {
         // console.log(this.offset,this.limit, 1411);
     }
 
+    on_paged_data(){
+        // console.log(43443);
+        this.all_pages();
+    }
+
     ngOnInit() {
         window['wait_or_execute'];
         if(this.httpService.make_pages_when_loaded)
         {
             this.httpService.make_pages_when_loaded = false;
-            this.all_pages();            
+            this.all_pages();
         }
     }
 }

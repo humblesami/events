@@ -17,9 +17,11 @@ export class CommitteesComponent implements OnInit {
     socketService: SocketService
     img: string = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/220px-User_icon_2.svg.png';
 
-    constructor(private httpService: HttpService, private ss: SocketService) {
+    httpService: HttpService;
+    constructor(private httpServ: HttpService, private ss: SocketService) {
         const obj_this = this;
         this.socketService = this.ss;
+        this.httpService = httpServ;
         this.get_list();
     }
 

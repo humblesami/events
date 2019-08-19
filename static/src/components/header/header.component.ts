@@ -258,10 +258,13 @@ export class HeaderComponent implements OnInit {
     }
     
     show_messenger(){
-        console.log($('.messenger-container').length, 13);
-        // if($('.messenger-container').length == 1)
+        // console.log($('.messenger-container').length, 13);
+        if($('.messenger-container').length == 1)
         {
             $('.popup.messenger').show();
+        }
+        else{
+            window['bootbox'].alert('Please confirm that chat server is running and then refresh');
         }
     }
 

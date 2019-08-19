@@ -9,7 +9,7 @@ export class HttpService {
     limit: number;
     count: number;
     search_kw = '';
-    // @Output() on_paged_data: EventEmitter<any> = new EventEmitter();
+    @Output() on_paged_data: EventEmitter<any> = new EventEmitter();
 
     constructor() {
         this.server_url = window['server_url'];
@@ -97,6 +97,12 @@ export class HttpService {
                 if(data.total)
                 {
                     obj_this.count = Number(data.total);                    
+                    try{
+                        obj_this.on_paged_data.emit();
+                    }
+                    catch{
+
+                    }
                     obj_this.make_pages_when_loaded = true;
                 }
                 else

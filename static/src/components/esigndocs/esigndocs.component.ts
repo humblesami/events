@@ -9,8 +9,9 @@ declare var $:any;
 })
 export class EsignDocsComponent implements OnInit {
     records = [];
-
-    constructor(private httpService: HttpService,public router: Router,) {        
+    httpService: HttpService
+    constructor(private httpServ: HttpService,public router: Router,) { 
+        this.httpService = httpServ;       
         this.get_list();
     }
     uploadClick(){

@@ -15,8 +15,10 @@ declare var $: any;
 export class RosterComponent implements OnInit {
     @Input() meeting_id: number;
     server_url = window['server_url'];
-    constructor(private httpService: HttpService,        
+    httpService: HttpService;
+    constructor(private httpServ: HttpService,        
             private socketService: SocketService, private modalService: NgbModal) {
+                this.httpService = httpServ;
     }    
     attendance_data = [];    
     

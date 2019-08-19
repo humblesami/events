@@ -21,10 +21,12 @@ export class MeetingsComponent implements OnInit {
     offset: number;
     limit: number;
     total_records : number;
-    constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
+    httpService: HttpService;
+    constructor(private httpServ: HttpService, public router: Router, private route: ActivatedRoute) {
         this.offset = 0;
         this.limit = 2;
-        this.total_records = 0;     
+        this.httpService = httpServ;
+        this.total_records = 0;
     }
 
     ngOnInit() {

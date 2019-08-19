@@ -19,9 +19,9 @@ export class VotingsComponent implements OnInit {
     items: [],
     title: ''
 };
-
-constructor(private httpService: HttpService, public router: Router, private route: ActivatedRoute) {
-    
+httpService: HttpService;
+constructor(private httpServ: HttpService, public router: Router, private route: ActivatedRoute) {
+    this.httpService = httpServ;
 }
 
 get_list()
