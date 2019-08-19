@@ -1,21 +1,19 @@
 ﻿<app-breadcrumb app="meetings" model="committee" create="1" title="Committees"></app-breadcrumb>
 <div class="router-outlet">
     <div class="container">
-            <div class="row">
-                    <div class="col-lg-12">
-                        <div class="MainTitleHeadWrap">
-                            <div class="HeadingWrap">
-                                <img src="static/assets/images/committees.png" alt="" /> Committees
-                            </div>
-                        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="MainTitleHeadWrap">
+                    <div class="HeadingWrap">
+                        <img src="static/assets/images/committees.png" alt="" /> Committees
                     </div>
                 </div>
+            </div>
+        </div>
+        <input type="text" 
+            (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+            placeholder="Search..."  class="form-control mb-3"/>
         <div class="row">
-             <input type="text" 
-        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
-        placeholder="Search..."  class="form-control mb-3"/>
-
-
             <div class="kanban-committees col-xs-12 col-sm-6 col-md-4"
                     *ngFor="let committee of records">
                 <a class="kanban-committees-info-box" routerLink="/committees/{{committee.id}}">
@@ -36,11 +34,10 @@
                 </a>
             </div>   
         </div>
-                 <app-paginator
-        *ngIf="records.length"
+        <app-paginator
+            *ngIf="records.length"
             (reload_data)="get_list()">
          </app-paginator>
-
     </div>
         <div class="container" *ngIf="no_committees">
             <div class="row">
