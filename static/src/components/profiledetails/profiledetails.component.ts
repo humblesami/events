@@ -258,7 +258,7 @@ export class ProfileDetailsComponent implements OnInit {
 					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
 				}
             }
-            console.log(obj_this.profile_data, 188);
+            // console.log(obj_this.profile_data, 188);
 		};
 		const failure_cb = function (error) {
 		};

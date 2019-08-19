@@ -611,11 +611,12 @@ export class ProfileeditComponent implements OnInit {
     }
 	
 	ngOnInit(){
+        console.log(this.edit_info, 134);
 		if (this.edit_info)
 		{
 			this.section = this.edit_info.section;
 			this.user_id = this.edit_info.user_id;
 			this.get_data()
-        }            
+        }
 	}	
 }

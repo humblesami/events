@@ -1,18 +1,12 @@
-<!-- <app-breadcrumb app="meetings" model="{{type}}"
-rid="{{profile_data.id}}" *ngIf="my_profile && type_breadCrumb"
-routes='[{"title":"{{type_breadCrumb}}", "link":"/profiles/{{type_breadCrumb}}"}]'
-title="{{profile_data.name}}"></app-breadcrumb>
--->
-
 <div class="modal-header modal-header-heading">
     <h1>Edit Profile</h1>
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body edit-modal-body">
-<div class="router-outlet">
-    <div class="details-card edit-mode" *ngIf="edit_mode">
+<div class="modal-body edit-modal-body">    
+    <div class="router-outlet">
+        <div class="details-card edit-mode" *ngIf="edit_mode">
             <div class="row edit-buttons edit-mode">
                 <a href="javascript:void(0);" class="btn btn-primary cancel" (click)="onCancel()">Cancel</a>
                 <a href="javascript:void(0);" class="btn btn-primary save" (click)="onSubmit()">Save</a>
@@ -369,6 +363,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                         </ng-select>
                     </div>
                 </div>
+            </div>
             <div *ngIf="section == 'administrative'" class="">
                 <div class="ProFileHeadWrap">
                     ADMINISTRATIVE ASSISTANT
@@ -396,8 +391,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </div>
                             </div>
                         </div>
-                            <div class="row">
-                            <div class="col p-0">
+                        <div class="col p-0">
                             <label for="admin-first-name">
                                 <b>First Name</b>
                             </label>
@@ -408,11 +402,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             </label>
                             <input value="{{profile_data.admin_last_name}}" (change)="modified_profile_data.admin_last_name = $event.target.value"
                                 type="text" placeholder="Last Name" required>
-                            <!-- <label for="admin-nick-name">
-                                <b>Nick Name</b>
-                            </label>
-                            <input value="{{profile_data.admin_nick_name}}" (change)="modified_profile_data.admin_nick_name = $event.target.value"
-                                type="text" placeholder="Nick Name" required> -->
+                        
                             <label for="admin-e-mail">
                                 <b>E-mail</b>
                             </label>
@@ -434,30 +424,33 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <input value="{{profile_data.admin_work_phone}}" (change)="modified_profile_data.admin_work_phone = $event.target.value"
                                 type="text" placeholder="" id="admin-work-phone" required>
 
-                            <label class="form-check-label pl-4"  for="mail-to-assistant">
-                                    <input class="form-check-input"   checked="{{profile_data.mail_to_assistant}}" (change)="mail_to_assistant_change($event.target.value)"
-                                                        type="checkbox" id="mail-to-assistant" required> <b>Email To Assistant</b>
+                            <label class="check-plus-label-wrap" for="mail-to-assistant">
+                                <input style="" class="form-check-input"  
+                                    checked="{{profile_data.mail_to_assistant}}" 
+                                    (change)="mail_to_assistant_change($event.target.value)"
+                                    type="checkbox" id="mail-to-assistant" required
+                                />
+                                <span>Email To Assistant</span>
                             </label>
 
-
-                            <!-- <label for="mail-to-assistant">
-                                <b>Mail to Assistant</b>
-                            </label>
-                            <select (change)="modified_profile_data.mail_to_assistant = $event.target.value" id='mail_to_assistant' requeired>
-                                <option ng-value="true" [selected]="true == profile_data.mail_to_assistant">Yes</option>
-                                <option ng-value="false" [selected]="null == profile_data.mail_to_assistant">No</option>
-                            </select> -->
-                            </div>
+                            <div style="display: none">
+                                <label for="mail-to-assistant">
+                                    <b>Mail to Assistant</b>
+                                </label>
+                                <select (change)="modified_profile_data.mail_to_assistant = $event.target.value" id='mail_to_assistant' requeired>
+                                    <option ng-value="true" [selected]="true == profile_data.mail_to_assistant">Yes</option>
+                                    <option ng-value="false" [selected]="null == profile_data.mail_to_assistant">No</option>
+                                </select>
+                            </div>                            
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
-</div>
+    </div>
 
-<div id="slot-select-success" class="snackbar-success">Successfully Saved Your Profile.</div>
-<div id="slot-select-error" class="snackbar-error">Something went wrong, Try Again After Some Time.</div>
-
+    <div id="slot-select-success" class="snackbar-success">Successfully Saved Your Profile.</div>
+    <div id="slot-select-error" class="snackbar-error">Something went wrong, Try Again After Some Time.</div>    
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
