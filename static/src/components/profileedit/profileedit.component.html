@@ -166,8 +166,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     Bio
                 </div>
                 <div class="row label-control-form">
-                    <div class="container">
-                        <div class="row">
+                        <div class="col-sm-12">
                             <label for="bio">
                                 <b>Bio</b>
                             </label>
@@ -176,7 +175,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
                             </textarea>
                         </div>
-                    </div>
                 </div>
             </div>
             <div *ngIf="section=='work'" class="">
@@ -184,8 +182,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     WORK INFO
                 </div>
                 <div class="row label-control-form">
-                    <div class="container">
-                        <div class="row">
+                        <div class="col-sm-12">
                             <label for="company">
                                 <b>Company</b>
                             </label>
@@ -233,7 +230,6 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 </ng-select>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
             <div *ngIf="profile_data && socketService.is_admin && section=='board'" class="">
@@ -285,7 +281,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                 <div>
                     <div class="container">
                         <div>
-                            <div class="row" *ngIf="choice_fields.ethnicity">
+                            <div class="row mb-3" *ngIf="choice_fields.ethnicity">
                                 <div class="col-sm-3">
                                     <label for="ethnicity">
                                         <b>Ethnicity</b>
@@ -310,7 +306,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <label for="gender">
                                         <b>Gender</b>
@@ -333,7 +329,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </ng-select>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <label for="veteran">
                                         <b>Veteran</b>
@@ -356,7 +352,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                     </ng-select>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <label for="disability">
                                         <b>Disability</b>
@@ -388,7 +384,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                     ADMINISTRATIVE ASSISTANT
                 </div>
                 <div class="row label-control-form">
-                    <div class="container">
+                    <div class="col-sm-12">
                         <div class="row p-0">
 
                             <div *ngIf="modified_profile_data.admin_image" class="col-sm-12 mb-4">
@@ -410,8 +406,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 								</div>
                             </div>
 						</div>
-							<div class="row">
-							<div class="col p-0">
+
+							<div class="col-sm-12 p-0">
                             <label for="admin-first-name">
                                 <b>First Name</b>
                             </label>
@@ -448,9 +444,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
                             <input value="{{profile_data.admin_work_phone}}" (change)="modified_profile_data.admin_work_phone = $event.target.value"
                                 type="text" placeholder="" id="admin-work-phone" required>
 
-							<label class="form-check-label pl-4"  for="mail-to-assistant">
-								 <input class="form-check-input"   checked="{{profile_data.mail_to_assistant}}" (change)="mail_to_assistant_change($event.target.value)"
-														type="checkbox" id="mail-to-assistant" required> <b>Email To Assistant</b>
+							<label class="check-plus-label-wrap"  for="mail-to-assistant">
+								 <input class="form-check-input"   checked="{{profile_data.mail_to_assistant}}" (change)="mail_to_assistant_change($event.target.value)" type="checkbox" id="mail-to-assistant" required> <b>Email To Assistant</b>
 							</label>
 
 
@@ -462,7 +457,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
                                 <option ng-value="false" [selected]="null == profile_data.mail_to_assistant">No</option>
                             </select> -->
 							</div>
-                        </div>
+
                     </div>
                 </div>
             </div>
