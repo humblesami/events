@@ -139,6 +139,9 @@ def search(request):
                     'NewsDocument': ['name'],
                     'NewsVideo': ['name'],
                 },
+            'esign':{
+                'SignatureDoc':['name']
+            },
             'resources':
                 {
                     'Folder': ['name'],

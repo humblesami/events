@@ -457,15 +457,25 @@ class SignatureDoc(File, Actions):
     @classmethod
     def get_records(cls, request, params):
         user_id = request.user.id
-        docs = cls.objects.all()
+        kw = params.get('kw')
+        docs = []
+        if kw:
+            docs = ws_methods.search_db({'kw': kw, 'search_models': {'esign': ['SignatureDoc']}})
+        else:
+            docs = cls.objects.all()
+
+        total_cnt = docs.count()
+        offset = params.get('offset')
+        limit = params.get('limit')
+        if limit:
+            docs = docs[offset: offset + int(limit)]
+        current_cnt = docs.count()
         sign_docs = []
         for sign_doc in docs:
             doc = sign_doc.get_pending_sign_count(request.user.id)
             doc['id'] = sign_doc.id
             doc['name'] = sign_doc.name
             sign_docs.append(doc)
-        total_cnt = docs.count()
-        current_cnt = total_cnt
         result = {'records': sign_docs, 'total': total_cnt, 'count': current_cnt}
         return result
 

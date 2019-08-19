@@ -411,13 +411,14 @@ class Event(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
-        offset = params['offset']
-        limit = params['limit']
-        meeting_type = params.get('meeting_type')        
+        offset = params.get('offset')
+        limit = params.get('limit')
+        meeting_type = params.get('meeting_type')
         meeting_list = cls.get_meetings(meeting_type, params)
         meetings = cls.get_meeting_summaries(meeting_list, request.user.id)
         total = len(meetings)
-        meetings = meetings[offset: offset + int(limit)]
+        if limit:
+            meetings = meetings[offset: offset + int(limit)]
         meetings = {'records': meetings, 'total': total}
         data = {'error': '', 'data': meetings}
         return data
@@ -488,12 +489,13 @@ class Event(models.Model):
     @classmethod
     def get_roster_details(cls, request, params):
         meeting_id = params['meeting_id']
-        offset = params['offset']
-        limit = params['limit']
+        offset = params.get('offset')
+        limit = params.get('limit')
         attendees_list = []
         records = Invitation_Response.objects.filter(event_id=meeting_id)
         total = len(records)
-        records = records[offset: offset+int(limit)]
+        if limit:
+            records = records[offset: offset+int(limit)]
         for obj in records:
             attendee_data = ws_methods.obj_to_dict(
                 obj.attendee,

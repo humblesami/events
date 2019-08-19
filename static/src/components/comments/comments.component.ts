@@ -32,6 +32,11 @@ export class CommentsComponent implements OnInit {
 				private route: ActivatedRoute) {
                     // this.mentionedList = []
                     this.should_save = true;
+                    if(!this.mention_list)
+                    {
+                        this.mention_list = [];
+                        console.log('No mention list given');
+                    }
                 }
 
 	get_data(input_data) {

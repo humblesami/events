@@ -306,4 +306,6 @@ h5, .h5 {
 }
 .pending-status{
     color:#db4437;
+    background:#ffffff;
+     padding:0 3px;
 }
