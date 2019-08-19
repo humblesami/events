@@ -79,7 +79,7 @@
 .HomePageContentImg {
     margin-left: 20px;
     flex-basis: 300px;
-    max-width: 300px;
+    /* max-width: 300px; */
     float: right;
 }
 .HomePageContentImg img{
