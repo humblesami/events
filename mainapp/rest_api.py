@@ -24,16 +24,12 @@ public_methods = {
             'submit_public': 1
         }
     },
-    'meetings':{
-        'SignDocument':{
-            'get_detail': 1,
-        }
-    },
     'esign':{
         'SignatureDoc':{
             'get_signature': 1,
             'get_doc_data': 1,
             'get_detail': 1,
+            'ws_get_detail': 1,
         },
         'Signature':{
             'save_signature':1,
