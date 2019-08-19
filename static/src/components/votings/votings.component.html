@@ -21,8 +21,6 @@ title="Resolutions"></app-breadcrumb>
         <input type="text" 
         (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
         placeholder="Search..."  class="form-control mb-3"/>
-
-	<div class="container">
 		<div class="row">
 			<div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let voting of records">
 				<div class="kanban-card">
@@ -54,21 +52,18 @@ title="Resolutions"></app-breadcrumb>
 				</div>
 			</div>
 		</div>
-    </div>
-
-    <div class="container" *ngIf="no_meet" >
-		<div class="row">
-			<div class="col-lg-12 ">
-				<div class="jumbotron text-center">
-					<h1>No {{heading |titlecase}} for you :)</h1>
-					<hr>
-                </div>
-            </div>
-        </div>
+		<div class="container" *ngIf="no_meet" >
+			<div class="row">
+				<div class="col-lg-12 ">
+					<div class="jumbotron text-center">
+						<h1>No {{heading |titlecase}} for you :)</h1>
+						<hr>
+					</div>
+				</div>
+			</div>
+		</div>    
+		<app-paginator
+			*ngIf="records.length"
+				(reload_data)="get_list()">
+		</app-paginator>
 	</div>
-    
-    <app-paginator
-        *ngIf="records.length"
-            (reload_data)="get_list()">
-    </app-paginator>
-</div>
