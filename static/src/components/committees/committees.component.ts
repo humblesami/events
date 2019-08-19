@@ -20,7 +20,6 @@ export class CommitteesComponent implements OnInit {
     constructor(private httpService: HttpService, private ss: SocketService) {
         const obj_this = this;
         this.socketService = this.ss;
-        httpService.on_get_data = this.get_list;
         this.get_list();
     }
 

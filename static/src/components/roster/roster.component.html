@@ -1,5 +1,7 @@
 <div style="padding:10px" class="container">
-    <input type="text" placeholder="Search..." (keyup)="roster_search($event)" class="form-control w-25"/>
+    <input type="text" 
+        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+        placeholder="Search..."  class="form-control mb-3"/>
     <div class="roster">
         <table class="table my-3" style="border: 1px solid #ddd">
             <thead>
@@ -43,12 +45,8 @@
             }
         </style>
     </div>
-    <app-paginator count="{{total_records}}" *ngIf="attendees && attendees.length > 0"            
-            (changedLimit)="changedLimit($event)"            
-            (changedOffset)="changedOffset($event)"
-            (lastpage)="changedOffset($event)"
-            (firstpage)="changedOffset($event)"
-            (pagedata)="changedOffset($event)"
+    <app-paginator *ngIf="attendees.length"            
+        (reload_data)="get_list()"
             >
     </app-paginator>
             
