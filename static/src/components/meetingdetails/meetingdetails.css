@@ -298,6 +298,7 @@ h5, .h5 {
     width: 100%;
     height: calc(100% - 40px);
     display: none;
+    overflow: auto;
 }
 .btn-meeting
 {
@@ -306,6 +307,10 @@ h5, .h5 {
 }
 .pending-status{
     color:#db4437;
-    background:#ffffff;
-     padding:0 3px;
+}
+@media screen and (max-width: 390px){
+    .roster-full{
+        top: 0px;
+        height: calc(100% - 25px);
+    }   
 }

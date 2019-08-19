@@ -276,9 +276,8 @@ input[type="date"]::-webkit-clear-button {
 {
     text-align: center;    
     position: absolute;
-    top: -9px;
+    top: 10px;
     font-size: 20px;
-    right: 11px;
 }
 .modal-footer
 {

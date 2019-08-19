@@ -1,18 +1,18 @@
 <div>
     <div class="paging-meta">
-        <div class="page-limit">
-            <span>Items per page:</span>    
+        <div class="page-limit mb-1">
+            <span>Items per page:</span>
             <select (change)="change_limit($event)" [(ngModel)]="httpService.limit" class="form-control-sm">
                 <option *ngFor="let opt of limit_options">{{opt}}</option>
             </select>
             <span>Total Records: {{httpService.count}}</span>
         </div>
         <div *ngIf="httpService.limit<httpService.count" class="pages" aria-label="Page navigation example">
-            <ul class="pagination  justify-content-center" >
+            <ul class="pagination  pagination-sm justify-content-center" >
                 <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
                     <button (click)="first_Page(0)" class="page-link">
                         <i class="fa fa-chevron-left"></i>
-                        <i class="fa fa-chevron-left"></i>
+                        <i class="fa fa-offsetchevron-left"></i>
                     </button>
                 </li>
                 <li class="page-item" [class.disabled]="httpService.offset<= '0'">
@@ -21,10 +21,10 @@
                     </button>
                 </li>
                 <ul class="pagination" *ngFor="let obj of shown_pages">
-                    <li class="page-item" [class.active]="page_number == obj" >                            
+                    <li class="page-item" [class.active]="page_number == obj" >
                         <button  (click)="page_Data(obj)" class="page-link">
                             {{obj}}
-                        </button>                             
+                        </button>
                     </li>
                 </ul>
                 <li class="page-item" [class.disabled]="httpService.ffset + httpService.limit >= httpService.count">
@@ -37,8 +37,9 @@
                         <i class="fa fa-chevron-right"></i>
                         <i class="fa fa-chevron-right"></i>
                     </button>
-                </li>                    
+                </li>
             </ul>
         </div>
     </div>
 </div>
+    

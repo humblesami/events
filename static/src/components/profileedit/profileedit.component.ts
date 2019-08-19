@@ -80,7 +80,7 @@ export class ProfileeditComponent implements OnInit {
                 $(el).parent().css('position', 'relative');
                 let prev_val = el.value;
                 let overlay_style= 'position: absolute;';
-                overlay_style += 'border: 0px;padding: 5px;margin: 3px 0px 0px 5px;';
+                overlay_style += 'border: 0px;padding: 5px;margin: 8px 0px 0px 5px;';
                 let overlay = $('<input class="date-overlay" style="'+overlay_style+'" value="'+prev_val+'" />');
 
                 overlay.css({left:$(el).position().left, top:$(el).position().top});                
