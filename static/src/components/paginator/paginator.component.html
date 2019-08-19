@@ -7,7 +7,7 @@
             </select>
             <span>Total Records: {{httpService.count}}</span>
         </div>
-        <div *ngIf="httpService.limit<httpService.count" class="pages" aria-label="Page navigation example">
+        <div *ngIf="httpService.limit<=httpService.count" class="pages" aria-label="Page navigation example">
             <ul class="pagination  pagination-sm justify-content-center" >
                 <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
                     <button (click)="first_Page(0)" class="page-link">
