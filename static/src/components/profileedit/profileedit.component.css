@@ -274,10 +274,15 @@ input[type="date"]::-webkit-clear-button {
 
 .docwrappercontainer .resume-edit-control
 {
-    text-align: center;    
+     text-align: center;
     position: absolute;
-    top: 10px;
-    font-size: 20px;
+    top: -15px;
+    right: -28px;
+    font-size: 16px;
+    background: #ffffff;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.57);
+    padding: 3px 6px;
+    border-radius: 5px;
 }
 .modal-footer
 {
@@ -308,3 +313,45 @@ input[type="date"]::-webkit-clear-button {
 .top-header-author.edit-author-thumb {
     text-align: left;
 }
+
+.upload-resume-edit-section{
+	border: 1px dashed #4b74b5;
+    margin: 0 auto;
+    border-radius: 4px;
+    padding:1rem;
+    max-width:90%;
+    position: relative;
+}
+
+.upload-resume-edit-section .DocIcon{
+	height:auto;
+}
+.resume-delete-confirm{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.resume-delete-confirm  button{
+	margin: 3px;
+    padding: 0;
+    font-size: 15px;
+    min-width: 70px;
+    height: 28px;
+    line-height: 28px;
+}
+.resume-delete-confirm-wrap{
+	background:#ffffff;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+}
+
+.red-btn-bg{ background: #FF5454 !important; }
+.blue-btn-bg { background: #4B74B5 !important; }

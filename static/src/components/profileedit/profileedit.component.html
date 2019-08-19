@@ -94,33 +94,36 @@
                         <h3>Resume</h3>
                     </div>
                     <div class="col-sm-12 mb-4">
-                        <div *ngIf="delete_confirm">
-                            <span>Do you really want to delete this resume?</span>
-                            <button class="btn btn-primary" (click)="delete_confirmed()">Yes</button>
-                            <button class="btn btn-primary" (click)="delete_cancelled()">No</button>
-                        </div>
-                        <a routerLink="/resume/doc/{{profile_data.resume.id}}">
-                            <div class="DocumentWrapper">
-                                <div class="DocIcon">
-                                    <span class="rounded-circle">
-                                        <i class="icon-doc-file"></i>
-                                    </span>
-                                </div>
-                                <div class="DocInfoVertical text-truncate">
-                                    {{profile_data.resume.name}}
-                                </div>
-                            </div>
-                        </a>
-                        <div class="resume-edit-control">
-                            <a class="edit link" (click)="edit_resume($event.target)">
-                                <i style="margin-right: 10px" class="far fa-trash-alt"></i>
-                                <i class="far fa-edit"></i>
-                            </a>
-                            <input (change)="addFile($event, '')"
-                            type="file"
-                            name="edit_resume"
-                            class='edit_resume' style="display: none"/>
-                        </div>
+						<div class="upload-resume-edit-section">
+
+							<div class="resume-edit-control">
+								<a class="edit link" (click)="edit_resume($event.target)">
+									<i style="margin-right: 10px" class="far fa-trash-alt"></i>
+									<i class="far fa-edit"></i>
+								</a>
+								<input (change)="addFile($event, '')"
+								type="file"
+								name="edit_resume"
+								class='edit_resume' style="display: none"/>
+							</div>
+							<div  class="resume-delete-confirm" *ngIf="delete_confirm">
+								<div class="resume-delete-confirm-wrap">
+									<span>Do you really want to delete this resume?</span>
+									<div class="d-flex">
+										<button class="btn red-btn-bg" (click)="delete_confirmed()">Yes</button>
+										<button class="btn blue-btn-bg" (click)="delete_cancelled()">No</button>
+									</div>
+								</div>
+							</div>
+							<a routerLink="/resume/doc/{{profile_data.resume.id}}">
+								<div class="DocIcon">
+									<span class="rounded-circle">
+										<i class="icon-doc-file"></i>
+									</span>
+								</div>
+							</a>
+						</div>
+
                     </div>
                 </div>
                 <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
