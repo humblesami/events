@@ -397,7 +397,7 @@ class SignatureDoc(File, Actions):
         sign_count = self.signature_set.filter(signed=True)
         if sign_count:
             doc_data['signature_started'] = True
-        doc_data['doc_name'] = file_name
+        doc_data['doc_name'] = self.name
         return doc_data
 
 
