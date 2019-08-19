@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
     constructor(private httpService: HttpService,
         public router: Router,
         private sanitizer: DomSanitizer,
-        private socketService: SocketService) {
+        private socketService: SocketService) {            
         $('#collapsibleNavbar').children().eq(0).addClass('active');
     }
 
@@ -87,8 +87,8 @@ export class HomeComponent implements OnInit {
         $('#videoModal .modal-heaer').html('<h3>'+video_name+'</h3>')
         $('#videoModal .modal-body .embed-responsive').html(`
             <iframe class="embed-responsive-item" frameborder="0"  allowfullscreen="allowfullscreen"
-             src="`+video_url+`?autoplay=1">
-             </iframe>
+            src="`+video_url+`?autoplay=1">
+            </iframe>
         `);     
         $('#videoModal').modal('show');
     }

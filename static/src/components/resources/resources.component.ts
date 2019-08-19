@@ -12,11 +12,11 @@ export class ResourcesComponent implements OnInit {
 		items: [],
 		title: ''
 	};
-    constructor(private httpService: HttpService) {        
-        this.get_data();
+    constructor(private httpService: HttpService) {
+        httpService.on_get_data = this.get_list;
     }
 
-    get_data()
+    get_list()
     {
         const obj_this = this;        
         let args = {
@@ -31,22 +31,12 @@ export class ResourcesComponent implements OnInit {
         obj_this.httpService.get(final_input_data,
         (result: any) => {
             obj_this.folders = result.records;
-            obj_this.httpService.count = result.count;
-            obj_this.httpService.total_records = result.total;
             obj_this.folders && obj_this.folders.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
             // make_bread_crumb(obj_this.heading);
-        },
-        (error: any) => {
-            //console.log(error);
-            //alert(error);
-        });      
-        function make_bread_crumb(page_title ) {
-            if (page_title) {
-                obj_this.bread_crumb.title = page_title;
-            }
-        }  
+        },null);
     }
 
     ngOnInit() {
+        this.get_list();
     }
 }

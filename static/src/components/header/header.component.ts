@@ -258,7 +258,8 @@ export class HeaderComponent implements OnInit {
     }
     
     show_messenger(){
-        if($('.messenger-container').length == 1)
+        console.log($('.messenger-container').length, 13);
+        // if($('.messenger-container').length == 1)
         {
             $('.popup.messenger').show();
         }

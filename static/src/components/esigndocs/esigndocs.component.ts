@@ -14,7 +14,7 @@ export class EsignDocsComponent implements OnInit {
         this.get_data();
     }
     uploadClick(){
-        console.log('yyyyyyyyyyyyyyyyyyyyy ');
+        // console.log('yyyyyyyyyyyyyyyyyyyyy ');
         $('#esign_upload').click();
 	}
 
@@ -66,9 +66,6 @@ export class EsignDocsComponent implements OnInit {
         obj_this.httpService.get(final_input_data,
         (result: any) => {
             obj_this.docs = result.records;
-            obj_this.httpService.count = result.count;
-            obj_this.httpService.total_records = result.total;
-
         },
         (error: any) => {
             //console.log(error);

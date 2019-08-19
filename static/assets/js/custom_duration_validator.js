@@ -1,7 +1,7 @@
 $(document).ready(function(){
     durationRequisits();
-    $(document).on('blur', 
-        '.field-duration input, .field-start_date input, .field-end_date input', 
+    $(document).on('blur',
+        '.field-duration input, .field-start_date input, .field-end_date input',
         function()
         {
             let time_difference = undefined;
@@ -11,16 +11,19 @@ $(document).ready(function(){
             }
             if ($(this).closest('p').hasClass('datetime'))
             {
-                if (!$(this).val())
+                var dt_val = $(this).val().trim();
+                if (!dt_val)
                 {
-                    $(this).closest('span').find('.error').remove();
-                    $(this).after(`<span class="error text-danger">This field is required.</span>`);
+                    $(this).closest('.form-row').find('.error').remove();
+                    //console.log($(this).closest('.datetime')[0]);
+                    $(this).closest('.datetime').before(`<span class="error text-danger">This field is required.</span>`);
                     $('.submit-row input[type="submit"]').attr('disabled', 'disabled');
                     return;
                 }
                 else
                 {
-                    $(this).closest('span').find('.error').remove();
+                    //console.log(dt_val, 513);
+                    $(this).closest('.form-row').find('.error').remove();
                     $('.submit-row input[type="submit"]').removeAttr('disabled');
                 }
             }
@@ -40,9 +43,9 @@ $(document).ready(function(){
                 $('.field-end_date .error').remove();
                 $('.submit-row input[type="submit"]').removeAttr('disabled');
             }
-            
 
-            
+
+
             if ($(this).closest('td').hasClass('field-duration'))
             {
                 if ($(this).closest('tr').find('.field-name input').val() && time_difference)
@@ -119,7 +122,7 @@ $(document).ready(function(){
     }
 
     function durationRequisits()
-    {        
+    {
         $(".field-duration input:visible").each(function(){
             var obj = this;
             var is_pat = $(obj).hasClass('pat');
@@ -161,7 +164,7 @@ $(document).ready(function(){
 
         if(start_date.length != 2 && end_date.length !=2)
         {
-            return;   
+            return;
         }
 
         start_date = new Date(Date.parse(start_date.join(' ')));

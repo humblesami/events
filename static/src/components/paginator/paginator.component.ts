@@ -14,8 +14,7 @@ export class PaginatorComponent implements OnInit {
     @Output() lastpage: EventEmitter<number>= new EventEmitter();
     @Output() firstpage: EventEmitter<number>= new EventEmitter();
     @Output() pagedata: EventEmitter<number>= new EventEmitter();
-    total_pages = []; 
-    limit = 2;
+    total_pages = [];     
     limit_options = [
         2,
         10,
@@ -25,27 +24,24 @@ export class PaginatorComponent implements OnInit {
     httpService:any;
     page_number: number;
     constructor(private httpServ : HttpService) {
-        let obj_this = this;
-        httpServ.changePaginator = function(data){
-            obj_this.count = data;
-            // console.log(3331, obj_this.count);
-        }
+        let obj_this = this;        
         // console.log(Date(), new Date().getMilliseconds(), 113);
         this.httpService = httpServ;
-        this.offset = 0;        
-        this.page_number = 1;      
+        this.httpService.offset = 0;
+        this.httpService.limit = 0;
+        this.httpService.count = 0;
+        this.page_number = 1;
     }
 
-    offset: number;
     page_Data(event) {
-        this.offset = (event - 1) * this.limit;
+        this.httpService.offset = (event - 1) * this.httpService.limit;
         if(event == this.page_number)
         {
             return;
         }
         this.page_number = event;
         this.get_pager(this.page_number);
-        this.pagedata.emit(this.offset);        
+        this.pagedata.emit(this.httpService.offset);        
     }
 
     change_page(change: number){
@@ -53,7 +49,7 @@ export class PaginatorComponent implements OnInit {
         this.page_Data(ppgn);
     }    
     last_Page(change: number){
-        let lPage= Math.ceil(change/this.limit);
+        let lPage= Math.ceil(change/this.httpService.limit);
         this.page_Data(lPage);      
     }
     first_Page(change: number){
@@ -66,7 +62,7 @@ export class PaginatorComponent implements OnInit {
 
     all_pages(pages:number){
         this.total_pages = [];
-        let lPage= Math.ceil(pages/this.limit);
+        let lPage= Math.ceil(pages/this.httpService.limit);
         for (let i = 1; i <= lPage; i++) {            
             this.total_pages.push(i)
         }
@@ -110,31 +106,24 @@ export class PaginatorComponent implements OnInit {
     }
     change_limit(e){
         // console.log(this.offset,this.limit,  1411);
-        this.limit = Number($(e.target).val());
-        this.offset=0;
+        this.httpService.limit = Number($(e.target).val());
+        this.httpService.offset=0;
         this.page_number=1;
         this.all_pages(this.count);
-        this.changedLimit.emit(this.limit);
+        this.changedLimit.emit(this.httpService.limit);
         // console.log(this.offset,this.limit, 1411);
     }
-    
-    
-    
 
     public updateCount(total)
     {
         console.log(total, 14545);
     }
 
-    
     ngOnInit() {        
         // console.log(this.count, 199);
         let obj_this = this;
         window['wait_or_execute']
         this.all_pages(this.count);
     }
-
-
-    
 }
 
