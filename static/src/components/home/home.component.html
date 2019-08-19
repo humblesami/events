@@ -114,7 +114,7 @@
                     </div>
                 </div>                          
                 <div id="to-do">
-                        <div *ngIf="home_data.to_do_items.pending_meetings1 && home_data.to_do_items.pending_meetings.length>0" class="">
+                        <div *ngIf="home_data && home_data.to_do_items.pending_meetings1 && home_data.to_do_items.pending_meetings.length>0" class="">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="main-heading">
@@ -154,7 +154,7 @@
                                 </div>
                         </div>
                         <!--Documents-->
-                        <div *ngIf="home_data.to_do_items.pending_documents && home_data.to_do_items.pending_documents.length" class="border-bottom py-3">
+                        <div *ngIf="home_data && home_data.to_do_items.pending_documents && home_data.to_do_items.pending_documents.length" class="border-bottom py-3">
                             <h4 class="text-primary">
                                 Documents To Sign
                             </h4>
@@ -183,7 +183,7 @@
                             </div>  
                         </div>                   
                         <!--Votings-->
-                        <div *ngIf="home_data.to_do_items.pending_votings && home_data.to_do_items.pending_votings.length" class="py-3">
+                        <div *ngIf="home_data && home_data.to_do_items.pending_votings && home_data.to_do_items.pending_votings.length" class="py-3">
                             <h4 class="text-primary">
                                 Approval / Voting
                             </h4>
@@ -222,7 +222,7 @@
         </div>            
     </div>    
     
-    <section *ngIf="home_data.doc_ids && home_data.doc_ids.length"  class="HomepageDocumentSection" >
+    <section *ngIf="home_data && home_data.doc_ids && home_data.doc_ids.length"  class="HomepageDocumentSection" >
             <div class="container py-3 pl-4">
                 <h4 class="text-dark">Documents</h4>
                 <div class="row docwrappercontainer">
@@ -241,8 +241,8 @@
                 </div>
             </div> 
     </section>
-    <section *ngIf="home_data.video_ids && home_data.video_ids.length" class="container py-3 pl-4">
-        <div *ngIf="home_data.video_ids && home_data.video_ids.length">
+    <section *ngIf="home_data && home_data.video_ids && home_data.video_ids.length" class="container py-3 pl-4">
+        <div>
                 <h4 class="text-primary">
                     Videos
                 </h4>
