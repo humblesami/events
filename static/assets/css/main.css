@@ -2790,7 +2790,7 @@ select {
     overflow: hidden;
     width: 150px;
     height: 150px;
-    background-color: #FDFBEE;
+    background-color: #e6e6e6;
     box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.17);
     display: flex;
     justify-content: center;
