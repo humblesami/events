@@ -2786,7 +2786,7 @@ select {
 .author-thumb {
     border-radius: 100%;
     border: 6px solid #fff;
-    margin: 0 auto;
+    margin: 0;
     overflow: hidden;
     width: 150px;
     height: 150px;
