@@ -8,10 +8,10 @@ declare var $:any;
     templateUrl: 'esigndocs.component.html'
 })
 export class EsignDocsComponent implements OnInit {
-    docs = [];
+    records = [];
 
     constructor(private httpService: HttpService,public router: Router,) {        
-        this.get_data();
+        this.get_list();
     }
     uploadClick(){
         // console.log('yyyyyyyyyyyyyyyyyyyyy ');
@@ -38,7 +38,6 @@ export class EsignDocsComponent implements OnInit {
             };
             obj_this.httpService.post(final_input_data,
             (result: any) => {
-            // obj_this.docs = result.records;
             obj_this.router.navigate([`/signdoc/${result.id}`]);
 
             },
@@ -51,7 +50,7 @@ export class EsignDocsComponent implements OnInit {
 		};
 	}
 
-    get_data()
+    get_list()
     {
         const obj_this = this;        
         let args = {
@@ -65,7 +64,7 @@ export class EsignDocsComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data,
         (result: any) => {
-            obj_this.docs = result.records;
+            obj_this.records = result.records;
         },
         (error: any) => {
             //console.log(error);

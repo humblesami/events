@@ -5,6 +5,8 @@ from django.db.models import Q
 from documents.file import File
 from django.db.models import Count
 from django.db.models.signals import m2m_changed
+
+from mainapp import ws_methods
 from meetings.models import Profile, Event, Topic
 from mainapp.ws_methods import send_email_on_creation
 from actions.models import Actions
@@ -237,15 +239,26 @@ class Voting(Actions):
 
     @classmethod
     def get_records(cls, request, params):
-        votings = Voting.objects.values()
+        kw = params.get('kw')
+        docs = []
+        votings = []
+        if kw:
+            votings = ws_methods.search_db({'kw': kw, 'search_models': {'voting': ['Voting']}})
+        else:
+            votings = Voting.objects.all()
+
+        offset = params.get('offset')
+        limit = params.get('limit')
         total_cnt = votings.count()
-        current_cnt = total_cnt
-        votings = list(votings)
+        if limit:
+            votings = votings[offset: offset + int(limit)]
+
+        votings = list(votings.values())
         for voting in votings:
             voting['open_date'] = str(voting['open_date'])  #.day) + '-' + str(voting['open_date'].month) + '-' +str(voting['open_date'].year)
             voting['close_date'] = str(voting['close_date'].year) + '-' + str(voting['close_date'].month) + '-' + str(voting['close_date'].day)
             voting['voting_type']= list(VotingType.objects.filter(pk=voting['voting_type_id']).values('name'))[0]['name']
-        votings_json = {'records': votings, 'total': 0, 'count': 0}
+        votings_json = {'records': votings, 'total': total_cnt, 'count': 0}
         return votings_json
 
     

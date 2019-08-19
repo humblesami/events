@@ -45,6 +45,7 @@ import { RtcComponent } from '../components/rtc/rtc.component';
 import { SurveysComponent } from '../components/surveys/surveys.component'
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component'
 import { SupportComponent } from '../components/support/support.component';
+import { HttpService } from "./http.service";
 
 
 const appRoutes: Routes = [    
@@ -145,11 +146,12 @@ let routing_options = {
 
 @NgModule(routing_options)
 export class AppRoutingModule {
-	constructor(private router: Router, private socketService: SocketService) {
+	constructor(private router: Router, private socketService: SocketService, httpService: HttpService) {
         var crouter = router;
 		router.events.subscribe((event) => {
 			if (event instanceof NavigationStart) {
                 // console.log(event, router.routerState);
+                httpService.search_kw = '';
                 socketService.init_route(event.url);
 				$('.hidemouseaway').hide();
                 $('.searchbar-full-width').hide();
@@ -157,7 +159,7 @@ export class AppRoutingModule {
                 socketService.search_bar_shown = false;
                 site_functions.showLoader('route'+event.url);
                 $('body').removeClass('pdf-viewer');                
-                window['pathname'] = event.url
+                window['pathname'] = event.url;
 			}
 			else if (event instanceof NavigationEnd) {                
                 var next_url = event.url;

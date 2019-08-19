@@ -565,6 +565,9 @@ search_apps = {
             'NewsDocument': ['name'],
             'NewsVideo': ['name'],
         },
+    'esign':{
+                'SignatureDoc':['name']
+    },
     'resources':
         {
             'Folder': ['name'],

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { range } from 'rxjs';
 declare var $: any;
@@ -8,7 +8,7 @@ declare var $: any;
     templateUrl: './paginator.component.html'
 })
 export class PaginatorComponent implements OnInit {
-    @Output() reload_data: EventEmitter<number> =   new EventEmitter();
+    @Output() reload_data: EventEmitter<any> = new EventEmitter();
     limit_options = [
         2,
         10,
@@ -25,21 +25,20 @@ export class PaginatorComponent implements OnInit {
     constructor(private httpServ : HttpService) {        
         // console.log(Date(), new Date().getMilliseconds(), 113);
         this.httpService = httpServ;
-        this.httpService.offset = 0;
-        this.httpService.limit = 2;
-        this.httpService.on_paged_data = this.all_pages;
+        this.httpService.offset = 0;        
         this.page_number = 1;
+        // this.httpService.on_paged_data = this.all_pages;
     }
 
-    all_pages(records_count:number){
-        this.total_pages = [];
-        console.log(this,344);
-        let lPage= Math.ceil(records_count/this.httpService.limit);
+    all_pages(){
+        let obj_this = this;
+        obj_this.total_pages = [];
+        let lPage= Math.ceil(obj_this.httpServ.count/obj_this.httpService.limit);
         for (let i = 1; i <= lPage; i++) {            
-            this.total_pages.push(i)
+            obj_this.total_pages.push(i)
         }
-        this.get_pager(this.page_number);
-    }    
+        obj_this.get_pager(obj_this.page_number);
+    }
 
     get_pager(current_page){
         // console.log(current_page, 134);
@@ -104,13 +103,17 @@ export class PaginatorComponent implements OnInit {
         this.httpService.limit = Number($(e.target).val());
         this.httpService.offset = 0;
         this.page_number = 1;
-        this.all_pages(this.httpService.count);
         this.reload_data.emit();
         // console.log(this.offset,this.limit, 1411);
     }
 
     ngOnInit() {
         window['wait_or_execute'];
+        if(this.httpService.make_pages_when_loaded)
+        {
+            this.httpService.make_pages_when_loaded = false;
+            this.all_pages();            
+        }
     }
 }
 

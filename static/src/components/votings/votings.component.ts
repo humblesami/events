@@ -10,7 +10,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 export class VotingsComponent implements OnInit {
 
     no_meet = false;
-    voting_data: any;
+    records = [];
     active_meeting: any;
     show = false;
     meeting_type: string;
@@ -37,8 +37,8 @@ get_list()
             open_date= window['functions'].meeting_time(open_date);
             result.records[i]['open_date'] = open_date;
         }
-        obj_this.voting_data = result.records;
-        obj_this.voting_data.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;            
+        obj_this.records = result.records;
+        obj_this.records.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;            
     };
     let args = {
         app: 'voting',
