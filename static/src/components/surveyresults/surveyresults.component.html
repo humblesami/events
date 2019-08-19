@@ -16,7 +16,7 @@ title="Results"></app-breadcrumb>
                             <div class="MeetingBtnWrapper" *ngIf="surveyDetails.publish">
                                 
                                 <div class="btn-group">
-                                    <a *ngIf="surveyDetails.is_respondent" id="{{surveyDetails.id}}" class="btn" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Reattempt Survey</a>
+                                    <a *ngIf="surveyDetails && surveyDetails.is_respondent && surveyDetails.is_attempted" id="{{surveyDetails.id}}" class="btn" routerLink='/survey/survey/details/{{surveyDetails.id}}'>Reattempt Survey</a>
                                 </div>
                             </div>
                         </div>

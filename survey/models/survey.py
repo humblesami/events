@@ -214,6 +214,10 @@ class Survey(Actions):
         uid = request.user.id
         groups = request.user.groups.values('name')
         survey = Survey.objects.get(pk=survey_id)
+        attempted = False
+        question_answered = survey.questions.filter(answers__isnull=False, answers__response__user__id=uid)
+        if question_answered:
+            attempted = True
         is_respondent = uid in survey.get_audience()
         if not is_respondent:
             for group in groups:
@@ -235,6 +239,7 @@ class Survey(Actions):
             'is_published': survey.is_published,
             'publish': survey.is_published,
             'is_respondent': request.user.id in survey.get_audience(),
+            'is_attempted': attempted,
             'progess_data': []
         }
         questions = survey.questions.all()
