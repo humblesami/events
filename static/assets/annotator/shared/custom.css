@@ -620,6 +620,7 @@ mark.current {
 }
 .annotation-options .Icon{
     color:#000000;
+    width:25px;
 }
 .textLayer > div::selection {
     background: silver;

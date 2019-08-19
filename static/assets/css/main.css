@@ -2928,3 +2928,18 @@ h4.title-h4{
 	color: #4b74b5;
 	transform:translate(-50% , -50%);
 }
+
+.new_sign .del_sign {
+	color: #ffffff;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: #c30000;
+    width: 20px;
+    height: 20px;
+    font-size:12px;
+    border-radius: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
