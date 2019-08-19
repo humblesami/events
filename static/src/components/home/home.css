@@ -222,6 +222,8 @@ font-weight:500;
 }
 .pending-status{
      color:#db4437;
+     background:#ffffff;
+     padding:0 3px;
 }
 
 .DocName h5 {
