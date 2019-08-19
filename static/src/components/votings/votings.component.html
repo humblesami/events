@@ -52,16 +52,10 @@ title="Resolutions"></app-breadcrumb>
 				</div>
 			</div>
 		</div>
-		<div class="container" *ngIf="no_meet" >
-			<div class="row">
-				<div class="col-lg-12 ">
-					<div class="jumbotron text-center">
-						<h1>No {{heading |titlecase}} for you :)</h1>
-						<hr>
-					</div>
-				</div>
-			</div>
-		</div>    
+		<div class="jumbotron text-center" *ngIf="no_meet">
+			<h1>No {{heading |titlecase}} for you :)</h1>
+			<hr>
+		</div>
 		<app-paginator
 			*ngIf="records.length"
 				(reload_data)="get_list()">

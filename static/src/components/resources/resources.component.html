@@ -1,46 +1,43 @@
 ﻿<app-breadcrumb app="resources" model="folder" create="1" title="Resources"></app-breadcrumb>
 <div class="router-outlet  pt-0">
     <div class="container">
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="MainTitleHeadWrap ResourcesHeadWrapper">
-					<div class="HeadingWrap">
-						<img src="static/assets/images/face-scan.png" alt="" /> Resources
-					</div>
-					<!-- <div class="ResourcesSearchCreateWrapper">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Search here…">
-                        </div>
-                        <div class="create-btnwrap">
-                            <a href="javascript:void(0);" class="btn btn-create" data-toggle="modal" data-target="#CreateFolder">Create</a>
-						</div>
-					</div> -->
-				</div>
-			</div>
+        <div class="MainTitleHeadWrap ResourcesHeadWrapper">
+            <div class="HeadingWrap">
+                <img src="static/assets/images/face-scan.png" alt="" /> Resources
+            </div>
+            <!-- <div class="ResourcesSearchCreateWrapper">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Search here…">
+                </div>
+                <div class="create-btnwrap">
+                    <a href="javascript:void(0);" class="btn btn-create" data-toggle="modal" data-target="#CreateFolder">Create</a>
+                </div>
+            </div> -->
 		</div>
 	</div>
     <div class="cards container mt-4">
-        <div class="row docwrappercontainer">
-     <input type="text" 
-        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
-        placeholder="Search..."  class="form-control mb-3"/>
-
-            <div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let folder of records">
-                <a routerLink="/resource/{{folder.id}}" class="">
-					<div class="DocumentWrapper">
-						<div class="DocIcon">
-							<span class="rounded-circle">
-								<i class="icon-folder"></i>
-							</span>
-						</div>
-						<div class="DocInfoVertical text-truncate">
-							{{folder.name}}
-						</div>
-                    </div>
-                </a>
+        <div class="docwrappercontainer">
+            <input type="text" 
+                (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+                placeholder="Search..."  class="form-control mb-3"/>
+            <div class="row">
+                <div class="col col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let folder of records">
+                    <a routerLink="/resource/{{folder.id}}" class="">
+                        <div class="DocumentWrapper">
+                            <div class="DocIcon">
+                                <span class="rounded-circle">
+                                    <i class="icon-folder"></i>
+                                </span>
+                            </div>
+                            <div class="DocInfoVertical text-truncate">
+                                {{folder.name}}
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     <app-paginator
