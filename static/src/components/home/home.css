@@ -104,6 +104,9 @@
     .HomePageContentText {
         width: 100%;    
     }
+    .router-outlet .pl-4{
+        padding-left: 1.5rem!important;
+    }
     
 }
 
@@ -583,6 +586,7 @@ ul {list-style-type: none;}
 /* Add media queries for smaller screens */
 @media screen and (max-width:720px) {
   .weekdays li, .days li {width: 13.1%;}
+  .DocumentWrapper{margin-left: 0px;}
 }
 
 @media screen and (max-width: 420px) {
