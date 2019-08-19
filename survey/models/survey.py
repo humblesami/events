@@ -106,22 +106,34 @@ class Survey(Actions):
         # }
         # has_permission = ws_methods.has_permission(res)
         surveys = []
+        kw = params.get('kw')
         uid = request.user.id
         groups = request.user.groups.values('name')
         results_visibility = False
+        survey_list = []
         for group in groups:
             if group['name'] in ['Admin', 'Staff']:
                 results_visibility = True
-        if results_visibility:
-            survey_obj = Survey.objects.all()
+        if kw:
+            survey_list = ws_methods.search_db({'kw': kw, 'search_models': {'survey': ['Survey']}})
         else:
-            survey_obj = Survey.objects.filter(
-                (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-                    |
-                    (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
-                    |
-                    Q(respondents__id=uid))
-        for survey in survey_obj:
+            # docs = cls.objects.all()    
+            if results_visibility:
+                survey_list = Survey.objects.all()
+            else:
+                survey_list = Survey.objects.filter(
+                    (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+                        |
+                        (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
+                        |
+                        Q(respondents__id=uid))
+        total = survey_list.count()
+        offset = params.get('offset')
+        limit = params.get('limit')
+        if limit:
+            survey_list = survey_list[offset: offset + int(limit)]
+
+        for survey in survey_list:
             attempted = False
             question_answered = survey.questions.filter(answers__isnull=False, answers__response__user__id=uid)
             if question_answered:
@@ -140,7 +152,7 @@ class Survey(Actions):
                 'open_date': str(survey.open_date),
                 'close_date': str(survey.close_date),
             })
-        surveys_json = {'records': surveys, 'total': 0, 'count': 0}
+        surveys_json = {'records': surveys, 'total': total, 'count': len(survey_list)}
         return surveys_json
 
     @classmethod

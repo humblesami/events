@@ -7,7 +7,7 @@ import { SocketService } from 'src/app/socket.service';
     templateUrl: 'committees.component.html'    
 })
 export class CommitteesComponent implements OnInit {
-    committees = [];
+    records = [];
     no_committees = false;
     heading = 'Committees';
     bread_crumb = {
@@ -28,8 +28,8 @@ export class CommitteesComponent implements OnInit {
         var obj_this = this;
         var success_cb = function (result) {
             // console.log(result)
-            obj_this.committees = result.records;
-            obj_this.committees.length > 0 ? obj_this.no_committees = false : obj_this.no_committees = true;
+            obj_this.records = result.records;
+            obj_this.records.length > 0 ? obj_this.no_committees = false : obj_this.no_committees = true;
         };
         let args = {
             app: 'meetings',

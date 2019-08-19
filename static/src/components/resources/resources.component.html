@@ -24,7 +24,11 @@
 	</div>
     <div class="cards container mt-4">
         <div class="row docwrappercontainer">
-            <div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let folder of folders">
+     <input type="text" 
+        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+        placeholder="Search..."  class="form-control mb-3"/>
+
+            <div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let folder of records">
                 <a routerLink="/resource/{{folder.id}}" class="">
 					<div class="DocumentWrapper">
 						<div class="DocIcon">
@@ -39,6 +43,10 @@
                 </a>
             </div>
         </div>
+    <app-paginator
+        *ngIf="records.length"
+            (reload_data)="get_list()">
+    </app-paginator>
     </div>
 
     <div class="container" *ngIf="no_resource">
@@ -76,5 +84,6 @@
         </div>
     </div>
     </div>
+
 </div>
 </div>

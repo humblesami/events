@@ -32,8 +32,18 @@ class Committee(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
-        committees_orm = Committee.objects.filter()
+        kw = params.get('kw')
+        committees_orm = []
+        if kw:
+            committees_orm = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
+        else:
+            committees_orm = Committee.objects.filter()
         total_cnt = committees_orm.count()
+        offset = params.get('offset')
+        limit = params.get('limit')
+        committees_orm = list(committees_orm)
+        if limit:
+            committees_orm = committees_orm[offset: offset + int(limit)]
         current_cnt = total_cnt
         committees = ws_methods.queryset_to_list(
             committees_orm,

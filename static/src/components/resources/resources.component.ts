@@ -5,7 +5,7 @@ import { HttpService } from '../../app/http.service';
     templateUrl: 'resources.component.html'
 })
 export class ResourcesComponent implements OnInit {
-    folders = [];
+    records = [];
     no_resource = false;
     heading = 'Resources';
     bread_crumb = {
@@ -29,8 +29,8 @@ export class ResourcesComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data,
         (result: any) => {
-            obj_this.folders = result.records;
-            obj_this.folders && obj_this.folders.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
+            obj_this.records = result.records;
+            obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
             // make_bread_crumb(obj_this.heading);
         },null);
     }

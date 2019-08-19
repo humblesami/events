@@ -66,12 +66,18 @@ class Folder(models.Model):
 
     @classmethod
     def get_records(cls, request, params):
+        kw = params.get('kw')
+        folder = []
+        if kw:
+            folder = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
+        else:
+            folder = Folder.objects.filter(parent__isnull=True).values('name', 'id') #,resourcedocument__users__id=request.user.id).distinct()
         total_cnt = Folder.objects.filter(parent__isnull = True).count()
-        # folder = Folder.objects.filter(parent__isnull=True).values('name', 'id')
-        folder = Folder.objects.filter(parent__isnull=True).values('name', 'id') #,resourcedocument__users__id=request.user.id).distinct()
-        # if folder:
-        #     folder = folder.values('id', 'name')
+        offset = params.get('offset')
+        limit = params.get('limit')
         folder = list(folder)
+        if limit:
+            folder = folder[offset: offset + int(limit)]
         current_cnt = len(folder)
         folderObject = {'records':folder, 'total':total_cnt, 'count':current_cnt}
         return folderObject
