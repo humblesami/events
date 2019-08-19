@@ -38,7 +38,7 @@ def reset_password(request, token):
     context = {}
     if not token:
         context['error'] = 'Invalid Token'
-    user_token = PostUserToken.validate_token(token)
+    user_token = PostUserToken.validate_token(token, do_not_expire=True)
     if not user_token:
         context['error'] = 'Invalid Token'
     return render(request, 'password_reset.html', context)
