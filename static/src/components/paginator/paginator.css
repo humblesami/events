@@ -12,6 +12,12 @@
     display: inline;    
     margin: 0 5px;
 }
-li.page-item.disabled .page-link{
-    background-color: silver;
+.board-sheet-paginator li.page-item.disabled .page-link{
+    background-color: #e6e6e6;
+}
+.board-sheet-paginator .pagination li.page-item {
+    margin: 0 3px;
+}
+.board-sheet-paginator .pagination-sm .page-link{
+	padding:4px 10px;
 }
