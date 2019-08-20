@@ -30,10 +30,9 @@ export class ResourcesComponent implements OnInit {
             args: args
         };
         obj_this.httpService.get(final_input_data,
-        (result: any) => {
-            obj_this.records = result.records;
-            obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
-            // make_bread_crumb(obj_this.heading);
+        (result: any) => {            
+            obj_this.records = result.records;            
+            obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;            
         },null);
     }
 

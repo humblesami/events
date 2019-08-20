@@ -157,15 +157,15 @@ class Voting(Actions):
         return new_added_respondets, removed_respondents
     
     
-    def get_audience(self):
-        res = []
-        if self.meeting:
-            for obj in self.meeting.attendees.all():
-                res.append(obj.profile.id)
-        else:
-            for obj in self.respondents.all():
-                res.append(obj.profile.id)
-        return res
+    # def get_audience(self):
+    #     res = []
+    #     if self.meeting:
+    #         for obj in self.meeting.attendees.all():
+    #             res.append(obj.profile.id)
+    #     else:
+    #         for obj in self.respondents.all():
+    #             res.append(obj.profile.id)
+    #     return res
 
     @classmethod
     def get_details(cls, request, params):

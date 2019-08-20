@@ -78,8 +78,9 @@ class Event(models.Model):
 
     def get_audience(self):
         res = []
-        for obj in self.attendees.all():
-            res.append(obj.id)
+        audience = self.attendees.all().values('id')
+        for user in audience:
+            res.append(user['id'])
         return res
     
     @classmethod

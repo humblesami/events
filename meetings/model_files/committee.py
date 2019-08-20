@@ -35,7 +35,7 @@ class Committee(models.Model):
         kw = params.get('kw')
         committees_orm = []
         if kw:
-            committees_orm = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
+            committees_orm = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Committee']}})
         else:
             committees_orm = Committee.objects.filter()
         total_cnt = committees_orm.count()

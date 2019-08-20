@@ -68,27 +68,60 @@ function get_meeting_topics(meeting_id)
                 topic_select.append('<option value='+topic.id+'>'+topic.name+'</option>');
             });
         }
-        // topic_select.append('<option value selected>---------</option')
-        // data.topics.forEach(topic => {
-        //     topic_select.append('<option value='+topic.id+'>'+topic.name+'</option>');
-        // });
     }
     window['dn_rpc_object'](options);
 }
+
+
+function get_meeting_attendees(meeting_id)
+{
+    let input_date = {
+        meeting_id: meeting_id,
+    }
+    let args = {
+        app: 'meetings',
+        model: 'Event',
+        method: 'get_attendees_list'
+    }
+    let final_input_data = {
+        params: input_date,
+        args: args
+    }
+    let options = {
+        data: final_input_data
+    }
+    options.type = 'get';
+    options.onSuccess = (data)=>{
+        if (data.length)
+        {
+            let ul = $('.field-respondents ul');
+            let select = $('.field-respondents select');
+            select.empty();
+            $('.field-respondents ul li:not(:last-child)').remove();
+            data.forEach(el => {
+                let li = `<li class="select2-selection__choice" title="${el.name}">
+                <span class="select2-selection__choice__remove" role="presentation">×</span>
+                ${el.name}</li>`
+                ul.prepend(li);
+
+                let option = `<option value="${el.id}" selected="">${el.name}</option>`
+                select.append(option);
+            });
+        }
+    }
+    window['dn_rpc_object'](options);
+}
+
 function meeting_selection_handler(meeting_id)
 {
-    console.log(1234,2134);
     let esign = $('.app-esign.model-signaturedoc');
     let topic_field = $('.field-topic');
     if (meeting_id)
     {
+        get_meeting_attendees(meeting_id);
         if (topic_field.length)
         {
             $('.field-topic').show();
-        }
-        if (!esign.length)
-        {
-            $('.field-respondents').hide();
         }
         let input_date = {
             meeting_id: meeting_id
@@ -129,7 +162,6 @@ function meeting_selection_handler(meeting_id)
             $('.field-topic select').append('<option value selected>---------</option>');
             $('.field-topic').hide();
         }
-        $('.field-respondents').show();
     }
 }
 $(document).ready(function(){
@@ -137,14 +169,6 @@ $(document).ready(function(){
     if (! $('.field-meeting select option[selected]').attr('value'))
     {
         $('.field-topic').hide();
-        $('.field-respondents').show();
-    }
-    else
-    {
-        if (!esign.length)
-        {
-            $('.field-respondents').hide();
-        }
     }
     $('.field-meeting select').on('change', function(){
         meeting_selection_handler($(this).val());
