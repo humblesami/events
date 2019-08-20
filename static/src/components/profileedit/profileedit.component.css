@@ -23,8 +23,8 @@ input[type=text], input[type=password] {
     margin: 5px 0 10px 0;
     display: block;
     border: 1px solid #dedee8;
-    height: 35px;
-    line-height: 35px;
+    height: 38px;
+    line-height: 38px;
 }
 
 input[type=text]:focus, input[type=password]:focus {
@@ -272,7 +272,7 @@ input[type="date"]::-webkit-clear-button {
     margin: 3px 0px 0px 5px;
 }
 
-.docwrappercontainer .resume-edit-control
+.docwrappercontainer .resume-edit-control-btn
 {
      text-align: center;
     position: absolute;
@@ -355,3 +355,15 @@ input[type="date"]::-webkit-clear-button {
 
 .red-btn-bg{ background: #FF5454 !important; }
 .blue-btn-bg { background: #4B74B5 !important; }
+
+.update-signature-edit-section{
+    border: 1px dashed #4b74b5;
+    margin: 0 auto;
+    border-radius: 4px;
+    padding: 1rem;
+    max-width: 90%;
+    position: relative;
+}
+.resume-edit-control.UpdateAddSignBtn{
+	color:#ffffff;
+}
