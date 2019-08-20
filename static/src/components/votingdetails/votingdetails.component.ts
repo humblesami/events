@@ -71,7 +71,9 @@ export class VotingdetailsComponent implements OnInit {
                 // console.log(result);
                 // make_bread_crumb(obj_this.voting_object.name);
                 // console.log(obj_this.voting_object, obj_this.voting_object.chart_data, 4343);
-                if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                
+                if(obj_this.socketService.is_admin || 
+                    (obj_this.voting_object.chart_data.length && 
+                        obj_this.voting_object.public_visibility))
                 {
                     setTimeout(function(){
                         var chart_colors = window['chart_colors'];
