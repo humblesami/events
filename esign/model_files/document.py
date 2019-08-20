@@ -21,6 +21,7 @@ from mainapp.ws_methods import queryset_to_list
 from restoken.models import PostUserToken
 from actions.models import Actions
 from meetings.model_files.event import Event
+from meetings.model_files.user import Profile
 
 class SignatureDoc(File, Actions):
     workflow_enabled = models.BooleanField(blank=True, null=True)
@@ -38,6 +39,14 @@ class SignatureDoc(File, Actions):
             self.original_pdf = self.pdf_doc
             self.save()
             pass
+    
+    def get_all_respondents(self):
+        respondent_list = []
+        if self.meeting:
+            respondent_list = self.meeting.get_audience()
+        for obj in self.respondents.all():
+            respondent_list.append(obj.id)
+        return list(dict.fromkeys(respondent_list))
 
     def get_pending_sign_count(self, uid):
         pending_count = self.signature_set.filter(user_id=uid, signed=False).count()
@@ -51,6 +60,21 @@ class SignatureDoc(File, Actions):
         else:
             user_status = 'Not Required'
         return {'total': total, 'pending': pending_count, 'signature_status': user_status }
+
+
+    @classmethod
+    def add_new_respondents(cls, request, params):
+        new_respondents = params['new_respondents']
+        doc_id = params['doc_id']
+        doc_obj = cls.objects.get(pk=doc_id)
+        doc_obj.respondents.remove()
+        for respondent in new_respondents:
+            doc_obj.respondents.add(respondent['id'])
+        doc_obj.save()
+        return 'done'
+        
+        
+
 
     @classmethod
     def pending_sign_docs(cls, uid):
@@ -359,19 +383,24 @@ class SignatureDoc(File, Actions):
         meetings = queryset_to_list(meetings, fields=['id', 'name'])
         meeting_id = False
         send_to_all = False
-        users = []
-        if doc_obj.meeting:
-            meeting_id = doc_obj.meeting.id
-            users = list(doc_obj.meeting.attendees.values('id', 'name'))
-        else:
-            users = doc_obj.respondents.all()
-            users = queryset_to_list(users, fields=['id', 'name'])
+        # users = []
+        # if doc_obj.meeting:
+        #     meeting_id = doc_obj.meeting.id
+        #     users = list(doc_obj.meeting.attendees.values('id', 'name'))
+        # else:
+        #     users = doc_obj.respondents.all()
+        #     users = queryset_to_list(users, fields=['id', 'name'])
         if doc_obj.send_to_all:
             send_to_all = doc_obj.send_to_all
-        doc_data["users"] = users
         doc_data["meetings"] = meetings
         doc_data["meeting_id"] = meeting_id
         doc_data["send_to_all"] = send_to_all
+        respondent_list = doc_obj.get_all_respondents()
+        users_obj = Profile.objects.all()
+        all_users = list(users_obj.values('id', 'name'))
+        selected_users = list(users_obj.filter(id__in=respondent_list).values('id', 'name'))
+        doc_data['all_profile_users'] = all_users
+        doc_data["users"] = selected_users
         return doc_data
 
     def get_detail(self, request, params):
