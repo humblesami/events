@@ -98,11 +98,12 @@ export class CommentsComponent implements OnInit {
     add_item(item, collection, add_type, at_start){
         if(!item.user)
         {
-            console.log('Bad item in '+add_type);
+            console.log('Bad item in '+add_type);            
             return;
         }
         else
         {
+            // console.log(item.user);
             if(at_start == 1)
             {
                 collection.splice(0, 0, item);

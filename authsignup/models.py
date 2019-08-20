@@ -34,7 +34,13 @@ class AuthUser(models.Model):
             token = Token.objects.create(user=user)
 
         user_groups = list(user.groups.all().values())
-        return {'username': user.username, 'name': name, 'id': user.id, 'token': token.key, 'groups':user_groups }
+        user_data = {'username': user.username, 'name': name, 'id': user.id, 'token': token.key, 'groups':user_groups }
+        try:
+            user_data['photo'] = user.image.url
+            user_data['user_photo'] = user_data['photo']
+        except:
+            pass
+        return user_data
 
     @classmethod
     def login_user(cls, request, params):
@@ -85,7 +91,12 @@ class AuthUser(models.Model):
             try:
                 name = Profile.objects.get(pk=user.id).name
             except:
-                name = user.username
+                if user.first_name:
+                    name = user.first_name
+                if user.last_name:
+                    name += user.last_name
+                if not name:
+                    name = user.username
             return cls.do_login(request, user, name, referer_address)
         else:
             return {'error': 'Invalid credentials'}

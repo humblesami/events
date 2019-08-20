@@ -39,6 +39,8 @@ export class UserGroup{
 export class AppUser extends BaseClient{
     is_admin: Boolean;
     token: string;
+    photo: '';
+    user_photo: '';
     groups: Array<UserGroup>;
     constructor(){
         super();
