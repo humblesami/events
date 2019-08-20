@@ -751,6 +751,8 @@ a.contact-item {
     padding: 0.4rem 0.6rem;
     border-radius: 0.2rem;
     font-size: 0.8rem;
+    min-width: 70px;
+    text-align: center;
 }
 
 .Create-Group-input {
