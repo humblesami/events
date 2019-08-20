@@ -11,12 +11,14 @@ export class ResourceDetailsComponent implements OnInit {
     root = true;
     no_folders = false;
     no_files = false;
+    httpService: HttpService;
 
-    constructor(private httpService: HttpService, private route: ActivatedRoute) {
-        this.route.params.subscribe(params => this.get_data());
+    constructor(private httpServ: HttpService, private route: ActivatedRoute) {
+        this.httpService = httpServ;
+        this.route.params.subscribe(params => this.get_list());
     }
 
-    get_data(){
+    get_list(){
         var obj_this = this;
         const input_data = { id: this.route.snapshot.params.id };
         let args = {
@@ -29,16 +31,17 @@ export class ResourceDetailsComponent implements OnInit {
             args: args
         };        
         obj_this.httpService.get(final_input_data,
-            (result) => {                
+            (result: any) => {                
                 obj_this.root = !(result.hasOwnProperty('parent_id'));
                 obj_this.folder = result;
                 const parents = result.parents;
+                console.log(obj_this.folder);
                 if (parents && parents.length > 0) {
                     parents.reverse();
                     parents[parents.length - 1]['is_last'] = 1888;
                 }
-                obj_this.folder.files.length > 0 ? obj_this.no_files = false : obj_this.no_files = true;
-                obj_this.folder.sub_folders.length > 0 ? obj_this.no_folders = false : obj_this.no_folders = true;
+                // obj_this.records.files.length > 0 ? obj_this.no_files = false : obj_this.no_files = true;
+                // obj_this.records.sub_folders.length > 0 ? obj_this.no_folders = false : obj_this.no_folders = true;
         }, (error: any) => {
             console.log(error);
             //alert(error);

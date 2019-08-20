@@ -19,7 +19,7 @@ class Folder(models.Model):
         obj['id'] = folder_id
         obj['name'] = folder.name
         obj['parents'] = cls.get_ancestors(cls, folder)
-
+        
         ar = []
         sub_folders = folder.folder_set.values()
         for sub in sub_folders:
@@ -27,10 +27,25 @@ class Folder(models.Model):
             ar.append(sub_folder)
         obj['sub_folders'] = ar
         obj['files'] = []
-        resource_files = list(folder.resourcedocument_set.filter(Q(users__id=request.user.id) | Q(users__groups__name__in=['Admin', 'Staff'])).distinct().values())
-        for file in resource_files:
-            file['created_at'] = str(file['created_at'])
-            obj['files'].append(file)
+        kw = params.get('kw')
+        resource_files = []
+        if kw:
+            resource_files = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
+        else:
+            resource_files = folder.resourcedocument_set.all()
+        
+        resource_files = resource_files.filter(
+                Q(users__id=request.user.id) | 
+                Q(users__groups__name__in=['Admin', 'Staff']))
+        
+        obj['total'] = resource_files.count()
+        offset = params.get('offset')
+        limit = params.get('limit')
+        if limit:
+            resource_files = resource_files[offset: offset + int(limit)]
+        obj['count'] = len(resource_files)
+        resource_files = list(resource_files.values('id','name'))
+        obj['files'] = resource_files
         return obj
 
     def get_ancestors(self, folder_orm):
@@ -45,22 +60,22 @@ class Folder(models.Model):
     @classmethod
     def get_records(cls, request, params):
         kw = params.get('kw')
-        folder = []
+        folders = []
         if kw:
-            folder = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
+            folders = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
         else:
-            folder = Folder.objects.filter(Q(parent__isnull=True) & (
-                Q(resourcedocument__users__id=request.user.id) | 
-                Q(resourcedocument__users__groups__name__in=['Admin', 'Staff']))).distinct().values('name', 'id')
-        total_cnt = Folder.objects.filter(parent__isnull = True).count()
+            folders = Folder.objects.filter(Q(parent__isnull=True))
+        
+        
+        total_cnt = folders.count()
         offset = params.get('offset')
         limit = params.get('limit')
-        folder = list(folder)
+        folders = list(folders.values('id', 'name'))
         if limit:
-            folder = folder[offset: offset + int(limit)]
-        current_cnt = len(folder)
-        folderObject = {'records':folder, 'total':total_cnt, 'count':current_cnt}
-        return folderObject
+            folders = folders[offset: offset + int(limit)]
+        current_cnt = len(folders)
+        res = {'records':folders, 'total':total_cnt, 'count':current_cnt}
+        return res
 
 
 class ResourceDocument(File):
