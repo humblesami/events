@@ -10,7 +10,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
             <link rel="stylesheet" href="/static/assets/css/survey.css" />
 		<div class="MainTitleHeadWrap">
 			<div class="HeadingWrap">
-				{{voting_object.name}}
+				<img src="static/assets/images/meeting-icon.png" alt="" />  {{voting_object.name}}
             </div>
 			<div class="MeetingBtnWrapper" *ngIf="voting_object.is_attendee">
 				<div class="btn-group" id="tdmrb{{voting_object.id}}">
@@ -112,9 +112,9 @@ title="{{voting_object.name}}"></app-breadcrumb>
                     </div>                
                 </div>
 
-                <div *ngIf="voting_object.voting_docs && voting_object.voting_docs.length" class="title-wrapper">
+                <div *ngIf="voting_object.voting_docs && voting_object.voting_docs.length" class="title-wrapper">     
                     <div class="modal-header">
-                        Voting Documents
+                     <div><i class="icon-doc-file"></i> Voting Documents</div> 
                     </div>
 					<div class="row docwrappercontainer">
 						<div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let doc of voting_object.voting_docs">

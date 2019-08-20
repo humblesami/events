@@ -216,7 +216,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
         <div *ngIf="meeting_object.topics && meeting_object.topics.length" class="title-wrapper">
             <div class="modal-header">
-                Agenda Topics
+                <div><i class="icon-doc-file"></i> Agenda Topics </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -361,7 +361,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
         <div *ngIf="meeting_object.meeting_docs && meeting_object.meeting_docs.length" class="title-wrapper">
             <div class="modal-header">
-                Meeting Documents
+                <div><i class="icon-doc-file"></i> Meeting Documents </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let doc of meeting_object.meeting_docs">
