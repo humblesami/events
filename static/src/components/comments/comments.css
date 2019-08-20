@@ -120,8 +120,12 @@ textarea.form-control.focus {
     padding: 10px 10px 0 10px;
     margin-bottom: 20px;
 }
-
-
+.commnet-info.row.border-bottom{
+    padding-left: 45px;
+}
+.commnet-info.border-bottom:last-child{
+    border-bottom: 0px !important;
+}
 /* .comments .container.comments {
 	padding-bottom: 20px;
 }
@@ -342,4 +346,9 @@ div#comment{
 {
     font-size: 0.8rem;
     display: none;
+}
+@media screen and (max-width:768px){
+    .col-11.pl-0{
+        padding-left: 1.5rem !important;
+    }
 }

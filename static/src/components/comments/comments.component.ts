@@ -149,7 +149,7 @@ export class CommentsComponent implements OnInit {
             this.active_comment.active = false;
         comment.active = true;
         let mention_reply = $('.mention-div-reply:first');
-        $(evt.target).closest('.CommentsWrapper').find('.comment:first').after(mention_reply);
+        $(evt.target).closest('.CommentWrapper').append(mention_reply);
         mention_reply.show();
         comment['showRep'] = true;
         this.active_comment = comment;
@@ -167,6 +167,7 @@ export class CommentsComponent implements OnInit {
         // {
         //     obj_this.post_btn_disable = true;
         // }
+        
         if (obj_this.should_save)
         {
             if(e.keyCode == 13 && !e.shiftKey){
@@ -174,11 +175,11 @@ export class CommentsComponent implements OnInit {
                 if(parent == 'reply')
                 {
                     // console.log(e.target, $(e.target).prev()[0]);
-                    let cid = $(e.target).prev().find('input.comment_id').val()
-                    let items = obj_this.comments.filter(function(item){
+                    let cid = $(e.target).closest('.CommentWrapper').find('input.comment_id').val()
+                    parent = obj_this.comments.find(function(item){
                         return item.id == cid;
                     });
-                    parent = items[0];
+                    console.log(e.target,parent);
                     // console.log(cid, parent);
                 }
                 obj_this.save_comment(parent);
