@@ -218,7 +218,8 @@ class Survey(Actions):
         question_answered = survey.questions.filter(answers__isnull=False, answers__response__user__id=uid)
         if question_answered:
             attempted = True
-        is_respondent = uid in survey.get_audience()
+        audience = survey.get_audience()
+        is_respondent = uid in audience
         if not is_respondent:
             for group in groups:
                 if group['name'] in ['Admin', 'Staff']:
@@ -283,12 +284,15 @@ class Survey(Actions):
                         for singledata in question_data:
                             if user_ans == singledata['option_name'].lower():
                                 singledata['option_result'] += 1
+                                singledata['option_perc'] = "{:.{}f}".format( singledata['option_result'] / (len(audience)*len(user_answer)) * 100, 2 )
                                 break
                 else:
                     for singledata in question_data:
                         if user_answer['body'] == singledata['option_name']:
                             singledata['option_result'] = user_answer['answer_count'] + singledata[
                                 'option_result']
+                            singledata['option_perc'] = "{:.{}f}".format( singledata['option_result'] / len(audience) * 100, 2 )
+                
             progress_data = []
             respondents = 0
             if survey.meeting:
