@@ -449,13 +449,16 @@
 }
 .MessengerTitle {
     flex: 1;
+    padding-right:10px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .MessengerTitle span{
     margin-right: 5px;
 }
 .MessengerTitle span.user-name{
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 0.9rem;
 }
 .chat-user-title, .MessengerConnectWrap{
 	display: flex;
@@ -704,6 +707,8 @@ a.contact-item {
 
 .chat-group-setup{
 	background:#ebebeb;
+	height:auto;
+	padding-bottom:3px;
 }
 
 .messenger-navbar{
@@ -727,3 +732,52 @@ a.contact-item {
 
 .fri-selt-btn{
 }
+.group-adjustment-wrap{
+	display: flex;
+	align-items: center;
+}
+.group-adjustment-wrap .user_info{
+	flex:1;
+	padding-right:10px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.group-single-btn{
+	background: #638FC9;
+    color: #ffffff;
+    border: none;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.2rem;
+    font-size: 0.8rem;
+}
+
+.Create-Group-input {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+.Create-Group-input input {
+    flex: 1;
+    padding: 0.2rem 0.4rem;
+    height:35px;
+    line-height:35px;
+    margin-right: 3px;
+}
+button.check-time-btn {
+    width: 35px;
+    height: 35px;
+    background: #4b74b5;
+    border: none;
+    color: #ffffff;
+    margin: 3px;
+    border-radius: 40px;
+    font-size: 17px;
+}
+
+.messenger-group-select-member{
+	width:100%;
+	padding-top:0.2rem;
+}
+.red-bg{background:#FF5454 !important; }

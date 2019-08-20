@@ -17,35 +17,37 @@
 
         <div class="group-setup-container">
             <div *ngIf="group_mode == 'edit'" class="row p-1 m-1 chat-group-setup">
-                <div *ngIf="!selected_chat_group">
-                    <input id="group_name" [(ngModel)]="group_name" class="group-name" />
-                    <button (click)="create_chat_room()" class="" aria-label="Create group.">
-                        Create
+                <div class="Create-Group-input" *ngIf="!selected_chat_group">
+                    <input id="group_name" [(ngModel)]="group_name" class="group-name" placeholder="Enter your group name" />
+                    <button (click)="create_chat_room()" class="check-time-btn" aria-label="Create group.">
+                        <i class="fas fa-check"></i>
                     </button>
                 </div>
 
 				<div class="group-select-section">
 				<div *ngIf="selected_chat_group">
                     <input readonly [(ngModel)]="group_name" class="group-name" />
-                    <button (click)="update_chat_group_members()" class="fri-selt-btn" aria-label="Create group.">
-                        Update
+                    <button (click)="update_chat_group_members()" class="fri-selt-btn check-time-btn" aria-label="Create group.">
+                        <i class="fas fa-check"></i>
                     </button>
                 </div>
                 
                 
-                <button (click)="close_group_setup()" class="fri-selt-btn" aria-label="Create group.">
-                    Close
+                <button (click)="close_group_setup()" class="fri-selt-btn check-time-btn red-bg" aria-label="Create group.">
+                    <i class="fas fa-times"></i>
                 </button>
 					</div>
-                <ng-select
-                    [items]="people_list"
-                    [multiple]="true"
-                    [closeOnSelect]="false"                    
-                    bindLabel="name"
-                    (change)="clean_member_selection()"
-                    placeholder="Select people"
-                    [(ngModel)]="selectedPeople">
-                </ng-select>
+				<div class="messenger-group-select-member">
+					<ng-select
+						[items]="people_list"
+						[multiple]="true"
+						[closeOnSelect]="false"
+						bindLabel="name"
+						(change)="clean_member_selection()"
+						placeholder="Select people"
+						[(ngModel)]="selectedPeople">
+					</ng-select>
+				</div>
             </div>
 
             <div *ngIf="group_mode == 'view' && selected_chat_group" class="chat-group-setup">
@@ -75,7 +77,7 @@
             <ul class="chat-groups-container">
                 <li *ngFor="let cg of socketService.chat_groups" (click)="start_group_chat(cg, $event)">
                     <div *ngIf="cg.name.toLowerCase().indexOf(searchVal.toLowerCase()) > -1">
-                        <a class="contact-item d-flex align-items-center bd-highlight">
+                        <a class="contact-item group-adjustment-wrap">
                             <div class="img_cont">
                                 <img src="static/assets/images/group.jpeg" class="rounded-circle user_img">                                        
                             </div>
@@ -85,8 +87,7 @@
                             <span class="unseen" *ngIf="cg.unseen">
                                 {{cg.unseen}}
                             </span>
-                            <span style="width:50px"></span>
-                            <span class="setup" (click)="show_group_members(cg, $event)">
+                            <span class="group-single-btn" (click)="show_group_members(cg, $event)">
                                 Members
                             </span>
                         </a>
@@ -146,7 +147,7 @@
                 </div>
 
                 <div *ngIf="active_chat_user && active_chat_user.is_group" class="MessengerConnectWrap">                    
-                    <button (click)="leave_group()">Leave</button>
+                    <button class="group-single-btn" (click)="leave_group()">Leave</button>
                 </div>
                 
                 <div *ngIf="active_chat_user" class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
