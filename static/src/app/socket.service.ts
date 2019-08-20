@@ -324,7 +324,6 @@ export class SocketService {
         this.site_config = window['site_config'];
         this.server_url = this.site_config.server_base_url;
         this.media_url = this.server_url + '/media';
-        this.user_photo = this.media_url + '/profile/ETjUSr1v2n.png';
         var res = window['functions'].is_public_route();        
         if(!res)
         {
@@ -340,7 +339,8 @@ export class SocketService {
                 {
                     window['functions'].go_to_login();
                     return;
-                }
+                }            
+                // console.log(cuser, 1997);
                 if(cuser && cuser.token)
                 {
                     obj_this.connect_socket(cuser);
@@ -374,6 +374,14 @@ export class SocketService {
             console.log('Not authorized');
             return;
         }
+        if(!authorized_user.photo)
+        {            
+            this.user_photo = this.media_url + '/profile/ETjUSr1v2n.png';
+        }        
+        else{
+            this.user_photo = this.server_url + authorized_user.photo;
+        }
+        console.log(authorized_user, obj_this.user_photo, 1355);
         let me = {
             id:authorized_user.id,
             group: undefined
@@ -382,7 +390,7 @@ export class SocketService {
         {
             me.group = authorized_user.groups[0].name;
         }
-        console.log(me);
+        // console.log(me);
         $('#main-div').show();
         for(var i = 0; i < authorized_user.groups.length; i++){
             if( authorized_user.groups[i].name == 'Admin'){
@@ -390,7 +398,7 @@ export class SocketService {
                 break;
             }
         }
-        obj_this.user_data = authorized_user;       
+        obj_this.user_data = authorized_user;        
 
         let complete_server_url = obj_this.site_config.chat_server+'/sio';
         obj_this.socket = window['io'].connect(complete_server_url,{
@@ -456,9 +464,7 @@ export class SocketService {
                     return;
                 }
                 console.log("Authenticated\n\n");
-                
-                obj_this.user_data.photo = obj_this.server_url + data.user.photo;
-                obj_this.user_photo = obj_this.server_url + data.user.photo;
+                // console.log(obj_this.user_data, 1344);
                 localStorage.setItem('user', JSON.stringify(obj_this.user_data));
 
                 obj_this.verified = true;

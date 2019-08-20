@@ -338,12 +338,15 @@ export class ProfileeditComponent implements OnInit {
                     if (cuser)
                     {
                         profile.token = cuser.token;
-                        let value = JSON.stringify(profile);
-                        localStorage.setItem('user', value);
+                        profile.user_photo = profile.photo;
                         obj_this.socketService.user_data.groups = profile.groups;
                         obj_this.socketService.user_data.name = profile.name;
                         obj_this.socketService.user_data.photo = profile.photo;
                         obj_this.socketService.user_photo = obj_this.base_url + profile.photo;
+                        let value = JSON.stringify(profile);
+                        localStorage.setItem('user', value);
+
+                        console.log(obj_this.socketService.user_photo, 133);
                     }
                 }				
                 

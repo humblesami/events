@@ -102,6 +102,6 @@ input[type=checkbox]:checked:after{
     border: none !important;
     margin-bottom:0 !important; 
 }
-select, button, label, a, input[type="radio"], input[type="checkbox"], input[type="button"]{
+select, button, a, input[type="radio"], input[type="checkbox"], input[type="button"]{
     cursor: pointer;
 }
