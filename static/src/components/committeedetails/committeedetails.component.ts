@@ -44,6 +44,13 @@ export class CommitteeDetailsComponent implements OnInit {
                 obj_this.prev = result.prev;
                 obj_this.committee.description = obj_this.sanitizer.bypassSecurityTrustHtml(obj_this.committee.description);
                 obj_this.committee.users.forEach(element => {
+                    element.committees_count = element.committees.length;
+                    if(element.committees_count > 2){
+                        element.committees = element.committees.filter(function(item){
+                            return id != item.id;
+                        });
+                    }
+                    element.committees = element.committees.slice(0, 2);
                     element.group = element.group.toLowerCase();
                 });
             }, false);
