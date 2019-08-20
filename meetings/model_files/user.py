@@ -249,27 +249,17 @@ class Profile(user_model):
         password = ''
         if not profile_obj:
             creating = True
-            if self.pk and self.user_ptr and self.user_ptr.is_superuser:
-                password = self.password
-                if self.user_ptr.is_superuser:
-                    self.is_superuser = True
-                if self.user_ptr.email:
-                    self.email = self.user_ptr.email
-                self.username = self.user_ptr.username
             self.is_staff = True
             if not self.username:
                 self.username = self.email
         self.name = self.fullname()
         super(Profile, self).save(*args, **kwargs)
         if creating:
-            if self.is_superuser:
-                self.user_ptr.save()
-            else:
+            if not self.user_ptr.is_superuser:
                 random_password = uuid.uuid4().hex[:8]
-                self.set_password(random_password)
                 self.user_ptr.set_password(random_password)
                 self.password_reset_on_creation_email(random_password)
-                self.user_ptr.save()
+            self.user_ptr.save()
             user_data = {
                 'id': self.pk,
                 'photo': self.image.url,
@@ -279,7 +269,6 @@ class Profile(user_model):
                 {'name': 'new_friend', 'data': user_data, 'audience': ['all_online']}
             ]
             ws_methods.emit_event(events)
-            self.is_staff = True
 
     def fullname(self):
         user = self
