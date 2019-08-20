@@ -202,8 +202,7 @@ export class CommentsComponent implements OnInit {
         });
 
         let obj_this = this;
-        obj_this.new_comment = $('.active-mention').html().replace('<div><br></div>', '');
-        $('.active-mention').html('');
+        obj_this.new_comment = $('.active-mention').html().replace('<div><br></div>', '');        
         obj_this.new_reply = obj_this.new_comment;
         obj_this.post_btn_disable = false;
 		let item = {
@@ -219,6 +218,10 @@ export class CommentsComponent implements OnInit {
         if(item.subtype_id == 2)
         {
             item['body'] = obj_this.new_comment;
+            if(!item['body'] && ! mention_list.length)
+            {
+                return;
+            }
             obj_this.add_item(item, obj_this.notes, 'created note', 1);
 			this.new_comment = '';
         }
@@ -228,23 +231,32 @@ export class CommentsComponent implements OnInit {
             {
                 item['parent_id'] = parent_item.id;
                 item['body'] = obj_this.new_reply;
+                if(!item['body'] && ! mention_list.length)
+                {
+                    return;
+                }
                 if(!Array.isArray(parent_item.children))
                     parent_item.children = [item]
                 else
                 {
                     obj_this.add_item(item, parent_item.children, 'cr reply', 0);
-                }
-                this.new_reply = '';
+                }                
                 item['reply'] = 1;
             }
             else
             {
                 item['body'] = obj_this.new_comment;
-                obj_this.add_item(item, obj_this.comments, 'created comment', 1);
-                this.new_comment = '';
+                if(!item['body'] && ! mention_list.length)
+                {
+                    return;
+                }
+                obj_this.add_item(item, obj_this.comments, 'created comment', 1);                
                 item['reply'] = false;
-            }
-        }
+            }                                    
+        }        
+        this.new_reply = '';
+        this.new_comment = '';
+        $('.active-mention').html('');
         // console.log(obj_this.comments);
         let input_data = {
             args: {
