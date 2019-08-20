@@ -55,8 +55,7 @@ body{
     background-color: transparent;
     border: solid 1px #D8D8D8;
     padding: 0 20px 0 60px;
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.40);
+    background: #ffffff;
     font-size: 14px;
     border-radius: 35px;
 }
@@ -112,9 +111,9 @@ input:-webkit-autofill:active {
     color: #875a7b;
     display: block;
     position: absolute;
-    top: 50%;
+    top: 15%;
     left: 25px;
-    transform: translateY(-50%);
+    /* transform: translateY(-50%); */
 }
 
 .loginshape01{
