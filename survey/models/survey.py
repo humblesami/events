@@ -51,15 +51,15 @@ class Survey(Actions):
         except:
             raise
 
-    def get_audience(self):
-        res = []
-        if self.meeting:
-            for obj in self.meeting.attendees.all():
-                res.append(obj.profile.id)
-        else:
-            for obj in self.respondents.all():
-                res.append(obj.profile.id)
-        return res
+    # def get_audience(self):
+    #     res = []
+    #     if self.meeting:
+    #         for obj in self.meeting.attendees.all():
+    #             res.append(obj.profile.id)
+    #     else:
+    #         for obj in self.respondents.all():
+    #             res.append(obj.profile.id)
+    #     return res
 
 
     def get_updated_audience(self):

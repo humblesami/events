@@ -68,10 +68,6 @@ function get_meeting_topics(meeting_id)
                 topic_select.append('<option value='+topic.id+'>'+topic.name+'</option>');
             });
         }
-        // topic_select.append('<option value selected>---------</option')
-        // data.topics.forEach(topic => {
-        //     topic_select.append('<option value='+topic.id+'>'+topic.name+'</option>');
-        // });
     }
     window['dn_rpc_object'](options);
 }
@@ -122,17 +118,10 @@ function meeting_selection_handler(meeting_id)
     let topic_field = $('.field-topic');
     if (meeting_id)
     {
+        get_meeting_attendees(meeting_id);
         if (topic_field.length)
         {
             $('.field-topic').show();
-        }
-        if (!esign.length)
-        {
-            $('.field-respondents').hide();
-        }
-        else
-        {
-            get_meeting_attendees(meeting_id);
         }
         let input_date = {
             meeting_id: meeting_id
@@ -173,7 +162,6 @@ function meeting_selection_handler(meeting_id)
             $('.field-topic select').append('<option value selected>---------</option>');
             $('.field-topic').hide();
         }
-        $('.field-respondents').show();
     }
 }
 $(document).ready(function(){
@@ -181,14 +169,6 @@ $(document).ready(function(){
     if (! $('.field-meeting select option[selected]').attr('value'))
     {
         $('.field-topic').hide();
-        $('.field-respondents').show();
-    }
-    else
-    {
-        if (!esign.length)
-        {
-            $('.field-respondents').hide();
-        }
     }
     $('.field-meeting select').on('change', function(){
         meeting_selection_handler($(this).val());
