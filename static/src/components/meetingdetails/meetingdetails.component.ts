@@ -75,16 +75,21 @@ export class MeetingDetailsComponent implements OnInit {
                 obj_this.meeting_status = 'Unpublished';
                 obj_this.applicable_publish_action = 'Publish';
                 obj_this.meeting_type = 'draft';
-                obj_this.title = 'Draft';
-                $('li.breadcrumb-item a').last().html('Draft Meetings').attr('href','/meetings/draft');
+                var elm = $('li.breadcrumb-item a').last();
+                var parent_elm = elm.parent();
+                elm.remove();
+                parent_elm.append('<a href="#/meetings/draft">Draft Meetings</a>');
             }
             else
             {
                 obj_this.meeting_status = 'Published';
                 obj_this.applicable_publish_action = 'Unpublish';
-                obj_this.meeting_type = 'upcoming';
-                obj_this.title = 'Upcoming';
-                $('li.breadcrumb-item a').last().html('Upcoming Meetings').attr('href','/meetings/upcoming');
+                // obj_this.meeting_type = 'upcoming';
+                // obj_this.title = 'Upcoming';
+                // var elm = $('li.breadcrumb-item a').last();
+                // var parent_elm = elm.parent();
+                // elm.remove();
+                // parent_elm.append('<a href="#/meetings/upcoming">Upcoming Meetings</a>');
             }
             obj_this.meeting_object.publish = !is_published;
         }, function(){
