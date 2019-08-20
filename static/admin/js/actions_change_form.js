@@ -77,6 +77,8 @@ function get_meeting_topics(meeting_id)
 }
 function meeting_selection_handler(meeting_id)
 {
+    console.log(1234,2134);
+    let esign = $('.app-esign.model-signaturedoc');
     let topic_field = $('.field-topic');
     if (meeting_id)
     {
@@ -84,7 +86,10 @@ function meeting_selection_handler(meeting_id)
         {
             $('.field-topic').show();
         }
-        $('.field-respondents').hide();
+        if (!esign.length)
+        {
+            $('.field-respondents').hide();
+        }
         let input_date = {
             meeting_id: meeting_id
         }
@@ -128,6 +133,7 @@ function meeting_selection_handler(meeting_id)
     }
 }
 $(document).ready(function(){
+    let esign = $('.app-esign.model-signaturedoc');
     if (! $('.field-meeting select option[selected]').attr('value'))
     {
         $('.field-topic').hide();
@@ -135,7 +141,10 @@ $(document).ready(function(){
     }
     else
     {
-        $('.field-respondents').hide();
+        if (!esign.length)
+        {
+            $('.field-respondents').hide();
+        }
     }
     $('.field-meeting select').on('change', function(){
         meeting_selection_handler($(this).val());

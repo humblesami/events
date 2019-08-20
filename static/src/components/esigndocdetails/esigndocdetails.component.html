@@ -59,6 +59,11 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                             Send
                         </button>
                     </div>
+                    <div>
+                        <button id="edit-respondents" (click)="add_new_users()" class="btn btn-primary save_doc_data">
+                            Edit Respondents
+                        </button>
+                    </div>
                 </div>
                 <div class="docWrapperContainer pr-0 pl-0">
                     <div class="top_btns">
@@ -111,7 +116,22 @@ title="{{doc.doc_name}}"></app-breadcrumb>
     <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-body">
-            <div class="ng-select-user-list">
+            <div *ngIf="add_users" style="display: flex" class="ng-select-user-list">
+                <ng-select
+                [items]="all_profile_users"
+                [multiple]="true"
+                [closeOnSelect]="true"
+                [hideSelected]="false"
+                [isOpen]="true"
+                bindLabel="name"
+                [searchable] = "true"
+                placeholder="Select User"                
+                [(ngModel)]="selected_respondents"
+                >
+                </ng-select>
+                <button style="margin-left: 5px" (click)="close_users_modal()" class="btn btn-primary">Close</button>
+            </div>
+            <div *ngIf="!add_users" class="ng-select-user-list">
                 <ng-select
                 [items]="users_list"
                 [multiple]="false"

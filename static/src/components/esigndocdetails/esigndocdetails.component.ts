@@ -12,7 +12,11 @@ declare var $:any;
 })
 export class EsignDocDetailsComponent implements OnInit {
     doc: any;
+    doc_id:number;
     doc_name: any;
+    add_users:boolean = false;
+    selected_respondents:any = [];
+    all_profile_users:any = [];
     is_public = false;
     users_list = [];
     all_users_list = [];
@@ -46,6 +50,41 @@ export class EsignDocDetailsComponent implements OnInit {
 
     isAdmin = false;
 
+    add_new_users()
+    {
+        let obj_this = this;
+        obj_this.add_users = true;
+        $('#select_user_modal').on('hidden.bs.modal', function (e) {
+            if (obj_this.add_users)
+            {
+                let input_data = {
+                    doc_id: obj_this.doc_id,
+                    new_respondents: obj_this.selected_respondents
+                }
+                let args = {
+                    app: 'esign',
+                    model: 'SignatureDoc',
+                    method: 'add_new_respondents'
+                }
+                let final_input = {
+                    params: input_data,
+                    args: args
+                }
+                obj_this.httpService.get(final_input, (data:any) =>{
+                    obj_this.all_users_list = obj_this.users_list = obj_this.selected_respondents;
+                }, null)
+            }
+            obj_this.add_users = false;
+        });
+        $('#select_user_modal').modal('show');
+        
+    }
+
+    close_users_modal()
+    {
+        $('#select_user_modal').modal('hide');
+    }
+
     toggle_admin_mode(bool){
         this.isAdmin = bool;
     }
@@ -68,12 +107,11 @@ export class EsignDocDetailsComponent implements OnInit {
             scale,
             pageNum,
             ajax_options,
-            token = $('.sign_token').val() || "",
-            doc_id;
+            token = $('.sign_token').val() || ""
 
-        if (!doc_id) {
+        if (!obj_this.doc_id) {
             var route_token = obj_this.route.snapshot.params.token;
-            doc_id = obj_this.route.snapshot.params.id;
+            obj_this.doc_id = obj_this.route.snapshot.params.id;
             if (route_token)
             {
                 token = obj_this.route.snapshot.params.token;
@@ -83,7 +121,7 @@ export class EsignDocDetailsComponent implements OnInit {
         // console.log(doc_id, doc_data, 833, token);
 
         obj_this.doc = {
-            "id": doc_id,
+            "id": obj_this.doc_id,
             "doc_name": ''
         };
         // console.log(obj_this.socketService.user_data, 444);
@@ -139,7 +177,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     },
 
                     params: {
-                        document_id: doc_id,
+                        document_id: obj_this.doc_id,
                         token: token,
                     }
                 },
@@ -152,6 +190,8 @@ export class EsignDocDetailsComponent implements OnInit {
                     doc_data = data.doc_data;
                     obj_this.doc.doc_name = data.doc_name || 'Unnamed';
                     console.log(obj_this.doc);
+                    obj_this.selected_respondents = data.users;
+                    obj_this.all_profile_users = data.all_profile_users;
                     obj_this.signature_started = data.signature_started;
                     // console.log(doc_data, 11);
                     obj_this.all_users_list = obj_this.users_list = users = data.users;
@@ -675,7 +715,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         field_name = type.charAt(0).toUpperCase() + type.slice(1);
 
                         var obj = {
-                            document_id: doc_id,
+                            document_id: obj_this.doc_id,
                             token: token,
                             user_id: user,
                             field_name: field_name,
@@ -706,7 +746,7 @@ export class EsignDocDetailsComponent implements OnInit {
                                 method:"ws_assign_signature",
                             },
                             params: {
-                                document_id: doc_id,
+                                document_id: obj_this.doc_id,
                                 token: token,
                                 data: JSON.stringify(arr),
                                 url: url,
@@ -796,7 +836,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         params: {
                             signature_id: signature_id,
-                            document_id: doc_id,
+                            document_id: obj_this.doc_id,
                             token: token,
                             sign_type: sign_container.attr('signtype')
                         }
@@ -898,7 +938,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         params: {
                             signature_id: signature_id,
-                            document_id: doc_id,
+                            document_id: obj_this.doc_id,
                             token: token,
                             text: sign_data_text,
                             sign_type: sign_container.attr('signtype'),
@@ -1011,7 +1051,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         method: "set_meeting_attachment",
                     },
                     params: {
-                        document_id: doc_id,
+                        document_id: obj_this.doc_id,
                         meeting_id: $('#dropdown_meeting').val(),
                         send_to_all: $("#check_box_send_all").is(':checked')
                     }
