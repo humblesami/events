@@ -2584,7 +2584,22 @@ a.kanban-card.profiledataresume .DocumentWrapper {
 	border-radius: 0;
 	padding: 0 10px 8px 0px;
 	margin: 5px 0 25px 0;
+
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+.single-input-label .label-content-info{
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.text-overflow-visible{
+	overflow: visible !important;
+    text-overflow: inherit  !important;
+    white-space: inherit  !important;
+}
+
 .bootbox.modal.fade.bootbox-alert.show {
 	display: flex;
 	justify-content: center;
