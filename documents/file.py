@@ -1,6 +1,8 @@
 import os
 import base64
 import subprocess
+
+from django.contrib.auth.models import User
 from fpdf import FPDF
 from PIL import Image
 from mainapp import settings, ws_methods
@@ -37,6 +39,7 @@ class File(models.Model):
     attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     uplaod_status = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name

@@ -368,8 +368,18 @@ class SignatureDoc(File, Actions):
 
     @classmethod
     def ws_get_detail(cls, request, params):
-        file_id = int(params['document_id'])
-        doc_obj = SignatureDoc.objects.get(id=file_id)
+        file_id = params.get('document_id')
+        doc_obj = None
+        user = request.user
+        if file_id == 'new':
+            if not user.id:
+                return 'Invalid esign doc id'
+            doc_obj = SignatureDoc.objects.filter(created_by_id=user.id).last()
+            file_id = doc_obj.id
+        else:
+            doc_obj = SignatureDoc.objects.get(id=file_id)
+        if not doc_obj:
+            return 'Invalid esign doc'
         res = doc_obj.get_detail(request, params)
         if type(res) is str:
             return str
@@ -401,6 +411,8 @@ class SignatureDoc(File, Actions):
         selected_users = list(users_obj.filter(id__in=respondent_list).values('id', 'name'))
         doc_data['all_profile_users'] = all_users
         doc_data["users"] = selected_users
+        doc_data['doc_name'] = doc_obj.name
+        doc_data['doc_id'] = doc_obj.id
         return doc_data
 
     def get_detail(self, request, params):

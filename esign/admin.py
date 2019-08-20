@@ -19,6 +19,13 @@ class SignDocumentForm(forms.ModelForm):
 
 
 class AdminSignDoc(admin.ModelAdmin):
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            # Only set added_by during the first save.
+            obj.created_by_id = request.user.id
+        super().save_model(request, obj, form, change)
+
     form = SignDocumentForm
     list_display = ('name', 'meeting', 'send_to_all')
     fields = [

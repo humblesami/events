@@ -359,6 +359,7 @@ window.addEventListener('message', function receiveMessage(evt) {
             model,
             action
         } = evt.data;
+        this.console.log(evt.data);
         var redirect_url = '';
         if (action === 'change') {
             switch (model) {
@@ -390,7 +391,6 @@ window.addEventListener('message', function receiveMessage(evt) {
                     redirect_url = `/#/signdoc/${id}`;
                     break;
             }
-
         } else if(action == 'survey_submit')
         {
             switch(model)
@@ -419,10 +419,10 @@ window.addEventListener('message', function receiveMessage(evt) {
                     redirect_url = `/#/resources`;
                     break;
                 case 'signdoc':
-                    redirect_url = `/#/signdocs`;
+                    redirect_url = `/#/signdoc/new`;
                     break;
                 case 'signaturedoc':
-                    redirect_url = `/#/signdocs`;
+                    redirect_url = `/#/signdoc/new`;
                     break;
             }
         }

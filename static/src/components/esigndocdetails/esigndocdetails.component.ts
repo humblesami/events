@@ -12,7 +12,7 @@ declare var $:any;
 })
 export class EsignDocDetailsComponent implements OnInit {
     doc: any;
-    doc_id:number;
+    doc_id:string;
     doc_name: any;
     add_users:boolean = false;
     selected_respondents:any = [];
@@ -187,9 +187,17 @@ export class EsignDocDetailsComponent implements OnInit {
                         $('#holder').hide();
                         $('body').prepend('<h1>You have Completed You Signatures</h1>');
                     }
+                    if(obj_this.doc_id == 'new')
+                    {
+                        obj_this.doc_id = data.doc_id;
+                        obj_this.doc = {
+                            name: data.doc_name,
+                            id: data.doc_id
+                        }
+                    }
                     doc_data = data.doc_data;
                     obj_this.doc.doc_name = data.doc_name || 'Unnamed';
-                    console.log(obj_this.doc);
+                    // console.log(obj_this.doc);
                     obj_this.selected_respondents = data.users;
                     obj_this.all_profile_users = data.all_profile_users;
                     obj_this.signature_started = data.signature_started;
