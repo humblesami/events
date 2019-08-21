@@ -6,3 +6,61 @@
 {
     display: none !important;
 }
+.router-outlet.calendarwrapper{
+    height: auto;
+}
+.calendarwrapper{
+    background: #F3F3F3;
+    padding: 15px;
+}
+.fc-center h2{
+    font-size: 1.5rem;
+}
+.fc-view-container{
+    background: #eee;
+}
+.fc table{
+    font-size: 12px;
+}
+.fc-toolbar{
+    background: #E9E9F0;
+    padding: 25px 15px;
+}
+.fc-toolbar{
+    margin-bottom: 0;
+}
+.fc th, .fc td{
+    border: none;
+    padding: 0;
+    margin: 0;    
+}
+th.fc-day-header.fc-widget-header{
+    background: #ddd;
+    color: #666;
+    font-weight: 400;
+    font-family: inherit;
+}
+.fc-ltr .fc-basic-view .fc-day-number{
+    text-align: center;
+}
+.fc td.fc-today{
+    border-style: hidden;
+}
+.fc-basic-view tbody .fc-row {
+    min-height: 3em;
+}
+.fc-row.fc-week.fc-widget-content.fc-rigid:first-child {
+    margin-top: 10px;
+}
+.fc-row.fc-week.fc-widget-content.fc-rigid:last-child {
+    display: none;
+}
+.fc-bg table {
+    height: 65%;
+}
+.fc-unthemed .fc-today{
+    border-left: 43px solid #eee !important;
+    border-right: 43px solid #eee !important;
+    background: #1abc9c;
+    color: #fff;
+}

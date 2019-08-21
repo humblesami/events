@@ -28,6 +28,7 @@ export class SocketService {
     current_model = undefined;    
     video_call : any;
     ongoing_call : any;
+    site_url ='';
     rtc_multi_connector : any;
     active_route_snapshot : ActivatedRouteSnapshot;
     search_bar_shown = false;
@@ -40,6 +41,9 @@ export class SocketService {
 
     constructor(private router: Router) {
         var obj_this = this;
+        this.site_config = window['site_config'];
+        this.site_url = this.site_config.site_url;
+        console.log(this.site_url);
         obj_this.video_call = {
             id: undefined,
             message: undefined,
@@ -321,9 +325,9 @@ export class SocketService {
             window['socket_manager'] = obj_this;
             // console.log(obj_this, 342);
         }
-        this.site_config = window['site_config'];
-        this.server_url = this.site_config.server_base_url;
-        this.media_url = this.server_url + '/media';
+        
+        obj_this.server_url = obj_this.site_config.server_base_url;
+        obj_this.media_url = obj_this.server_url + '/media';
         var res = window['functions'].is_public_route();        
         if(!res)
         {

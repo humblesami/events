@@ -1,12 +1,7 @@
 <app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1"></app-breadcrumb>      
     
 <div class="router-outlet home-container" *ngIf="ng_init && home_data">
-
-        <!-- <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
-        <div>
-            <app-calendar></app-calendar>
-        </div> -->
-
+        <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
     <div class="HomepageDocumentSection">
         <div class="container" id="welcome" *ngIf="home_data">
             <section *ngIf="home_data && to_do_count" class="todoitembtn">
@@ -14,7 +9,7 @@
             </section>
             <section>
                 <div class="row">
-                    <div class="col-md-8 WelcomeContent">
+                    <div class="col-md-7 WelcomeContent">
                     <h4 class="HomeTitle">
                         <span>{{home_data.news.name}}</span>
                     </h4>
@@ -27,69 +22,8 @@
                         </div>
                     </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="HomeCalendarHead">
-                            Calendar                        
-                        </div>
-                        <div class="home-calendarwrapper">
-                            <div class="home-calendar">
-                                <div class="month">
-                                    <ul>
-                                        <li class="prev">&#10094;</li>
-                                        <li class="next">&#10095;</li>
-                                        <li>
-                                        August<br>
-                                        <span style="font-size:18px">2017</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <ul class="weekdays">
-                                    <li>Mo</li>
-                                    <li>Tu</li>
-                                    <li>We</li>
-                                    <li>Th</li>
-                                    <li>Fr</li>
-                                    <li>Sa</li>
-                                    <li>Su</li>
-                                </ul>
-                                <ul class="days">
-                                    <li>1</li>
-                                    <li>2</li>
-                                    <li>3</li>
-                                    <li>4</li>
-                                    <li>5</li>
-                                    <li>6</li>
-                                    <li>7</li>
-                                    <li>8</li>
-                                    <li>9</li>
-                                    <li><span class="active">10</span></li>
-                                    <li>11</li>
-                                    <li>12</li>
-                                    <li>13</li>
-                                    <li>14</li>
-                                    <li>15</li>
-                                    <li>16</li>
-                                    <li>17</li>
-                                    <li>18</li>
-                                    <li>19</li>
-                                    <li>20</li>
-                                    <li>21</li>
-                                    <li>22</li>
-                                    <li>23</li>
-                                    <li>24</li>
-                                    <li>25</li>
-                                    <li>26</li>
-                                    <li>27</li>
-                                    <li>28</li>
-                                    <li>29</li>
-                                    <li>30</li>
-                                    <li>31</li>
-                                </ul>
-                            </div>
-                            <div class="full-calendar-btn">
-                                <a routerLink="/calendar">Full Calendar</a>
-                            </div>
-                        </div>
+                    <div class="col-md-5">
+                            <app-calendar></app-calendar>
                     </div>
                 </div>
             </section>
