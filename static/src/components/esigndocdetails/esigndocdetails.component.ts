@@ -698,11 +698,11 @@ export class EsignDocDetailsComponent implements OnInit {
             var content = $('.youtubeVideoModal .modal-content:last');
             var footer = $('<div class="modal-footer" style="text-align: left;"></div>');
             var input_email = $('<h3>Send by Email:</h3><input id="email" placeholder="Email" style="width:50%"/>');
-            var input_name = $('<input id="email" placeholder="Name" style="width:50%"/>');
-            var input_subject = $('<input id="subject" placeholder="Subject" style="width:50%"/>');
-            var email_body = $('<textarea class="o_sign_message_textarea o_input" style="border-style: solid;width: 100%;"rows="4"></textarea>');
-            var save_btn = $('<br><span class="btn btn-primary btn-sm DocsBtn">Send</span>');
-            var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn">cancel</span>');
+            var input_name = $('<input id="email" placeholder="Name" class="modal-input-wrap" />');
+            var input_subject = $('<input id="subject" placeholder="Subject" class="modal-input-wrap" />');
+            var email_body = $('<textarea class="o_sign_message_textarea o_input modal-input-wrap"  "rows="4"></textarea>');
+            var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Send</span>');
+            var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn doc-cencel-btn">Cancel</span>');
             var _users = false;
             input_subject.val("Signature Request")
 

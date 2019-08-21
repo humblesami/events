@@ -64,6 +64,9 @@ kbd,
 samp {
 	font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
+.btn:foucs, button:focus{
+	box-shadow:none;
+}
 body.lightblue { background: #edf2f6; }
 body.hidden { overflow: hidden; }
 h5 { font-size: 0.859rem; }
@@ -282,7 +285,8 @@ button:focus {
 .btn-primary:not(:disabled):not(.disabled):active:focus,
 .btn-primary:not(:disabled):not(.disabled).active:focus,
 .show > .btn-primary.dropdown-toggle:focus {
-	box-shadow: 0 0 0 0.2rem #7c7bad;
+	box-shadow: none;
+	background-color: transparent;
 }
 .init_sign {
 	padding: 5px;
@@ -322,6 +326,26 @@ button:focus {
 	border-radius: 0;
 	position: relative;
 }
+.youtubeVideoModal h3{
+ 	color: #3059C9;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size:1rem;
+ }
+ .modal-input-wrap{
+ 	width: 100%;
+    padding: 0 10px;
+    margin: 5px 0 10px 0;
+    display: block;
+    border: 1px solid #dedee8;
+    height: 38px;
+    line-height: 38px;
+}
+
+ textarea.modal-input-wrap{
+ 	min-height:150px;
+ }
+
 /* =================
 breadcrumb
 ===================*/

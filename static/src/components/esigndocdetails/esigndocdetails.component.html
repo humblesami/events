@@ -69,9 +69,7 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                         <button id="save-doc-data" class="btn btn-primary save_doc_data">
                             Send
                         </button>
-                    </div>
-                    <div>
-                        <button id="edit-respondents" (click)="add_new_users()" class="btn btn-primary save_doc_data">
+						<button id="edit-respondents" (click)="add_new_users()" class="mt-3 btn btn-primary btn-block">
                             Edit Respondents
                         </button>
                     </div>
@@ -124,9 +122,10 @@ title="{{doc.doc_name}}"></app-breadcrumb>
 
 </div>
 <div class="modal fade" id="select_user_modal" tabindex="-1" role="dialog" aria-labelledby="SelectUserModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-top-fixed" role="document">
     <div class="modal-content">
         <div class="modal-body">
+			<div></div>
             <div *ngIf="add_users" style="display: flex" class="ng-select-user-list">
                 <ng-select
                 [items]="all_profile_users"
@@ -140,7 +139,7 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                 [(ngModel)]="selected_respondents"
                 >
                 </ng-select>
-                <button style="margin-left: 5px" (click)="close_users_modal()" class="btn btn-primary">Close</button>
+
             </div>
             <div *ngIf="!add_users" class="ng-select-user-list">
                 <ng-select
@@ -157,6 +156,7 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                 >
                 </ng-select>
             </div>
+			<button style="margin-left: 5px" (click)="close_users_modal()" class="btn btn-primary">Close</button>
         </div>
     </div>
     </div>

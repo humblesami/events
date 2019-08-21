@@ -4,3 +4,11 @@
     color: white;
     padding: 5px;
 }
+.youtubeVideoModal .modal-header{
+	display:none !important;
+}
+.doc-cencel-btn{
+	background: #dc3545;
+    min-width: 85px;
+    border: 1px solid #dc3545;
+}
