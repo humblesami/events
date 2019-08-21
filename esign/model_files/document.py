@@ -593,7 +593,7 @@ class Signature(models.Model):
         font_directory = curr_dir.replace('esign/model_files', 'static/assets/fonts')
         sign_type = params['sign_type']
         if sign_type != 'initials' and sign_type != 'signature':
-            text = params['text']
+            text = str(sign_type).title() + ': '+ params['text']
             font = ImageFont.truetype(font_directory + "/roboto-v19-latin-regular.ttf", 48)
             sz = font.getsize(text)
             sz = (sz[0] + 50, sz[1])
@@ -667,10 +667,8 @@ class Signature(models.Model):
                     res = profile.mobile_phone
             except:
                 pass
-        elif sign_type == 'text':
-            res = ''
         else:
-            return 'Invalid sign type '+sign_type
+            res = ''
         return {"image": binary_signature, 'text': res}
 
     @classmethod

@@ -585,6 +585,7 @@ export class EsignDocDetailsComponent implements OnInit {
             if(val)
             {
                 el.next().before('<span class="field_type">'+val+'</span>');
+                el.closest('.active_signature').attr('signtype', val);
                 el.remove();
             }
         }
@@ -748,7 +749,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         }
                         var type;
                         var field_name = "";
-                        type = sign.attr('signtype')
+                        type = sign.attr('signtype');                        
                         field_name = type.charAt(0).toUpperCase() + type.slice(1);
 
                         var obj = {
