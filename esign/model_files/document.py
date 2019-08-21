@@ -591,6 +591,8 @@ class Signature(models.Model):
         binary_signature = ''
         curr_dir = os.path.dirname(__file__)
         font_directory = curr_dir.replace('esign/model_files', 'static/assets/fonts')
+        if 'esign' in curr_dir:
+            font_directory = curr_dir.replace('esign\model_files', 'static\\assets\\fonts')
         sign_type = params['sign_type']
         if sign_type != 'initials' and sign_type != 'signature':
             text = str(sign_type).title() + ': '+ params['text']
