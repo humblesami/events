@@ -10,6 +10,16 @@
 {
     margin-right: 8px;
 }
+.home-modal-calendar .upcomingButton button i{
+	font-size:12px;
+	margin-right:5px;
+}
+.home-modal-calendar  .upcomingButton button {
+    margin-right: 8px;
+    font-size: 14px;
+    min-width: 90px;
+}
+
 .modal-backdrop
 {
     z-index: 10 !important;

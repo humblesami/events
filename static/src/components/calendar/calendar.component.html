@@ -3,69 +3,49 @@
 <div class="router-outlet calendarwrapper">
     <div id="calendar"></div>
     <div id="event-summary" style="display:none;">
-        <div class="event-card">
-            <table class="o_group o_inner_group">
-                <tbody>
-                    <tr>
-                        <td>
-                            <label >Title</label>
-                        </td>
-                        <td><span name="name">Meeting Title</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label >Starting at</label>
-                        </td>
-                        <td><span name="start">10/24/2018 08:00:00</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label >Ending at</label>
-                        </td>
-                        <td><span name="stop">10/24/2018 16:00:00</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Duration</label>
-                        </td>
-                        <td><span name="duration">08:00</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Location</label>
-                        </td>
-                        <td><span name="location">08:00</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Video Call Link</label>
-                        </td>
-                        <td>
-                            <span name="video_call_link">
-                                <a class="video_call_link" href="">Video Call</a>
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Conference Bridge No.</label>
-                        </td>
-                        <td><span name="conference_bridge_number">123-456-7890</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Meeting PIN</label>
-                        </td>
-                        <td><span name="pin">1234567989</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label>Location</label>
-                        </td>
-                        <td><span name="location">London</span></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="event-card home-modal-calendar">
+            <div class="o_group o_inner_group">
+				<div class="row home-calendar-modal-detail">
+					<div class="col-sm-12">
+						<label >Title</label>
+						<span name="name">Meeting Title</span>
+					</div>
+					<div class="col-sm-6">
+						<label >Starting at</label>
+						<span name="start">10/24/2018 08:00:00</span>
+					</div>
+					<div class="col-sm-6">
+						<label >Ending at</label>
+						<span name="stop">10/24/2018 16:00:00</span>
+					</div>
+					<div class="col-sm-6">
+						 <label>Duration</label>
+						<span name="duration">08:00</span>
+					</div>
+					<div class="col-sm-6">
+						 <label>Location</label>
+						<span name="location">08:00</span>
+					</div>
+					<div class="col-sm-6">
+						 <label>Video Call Link</label>
+						 <span name="video_call_link">
+							<a class="video_call_link" href="">Video Call</a>
+						</span>
+					</div>
+					<div class="col-sm-6">
+						<label>Conference Bridge No.</label>
+						<span name="conference_bridge_number">123-456-7890</span>
+					</div>
+					<div class="col-sm-6">
+						 <label>Meeting PIN</label>
+						<span name="pin">1234567989</span>
+					</div>
+					<div class="col-sm-6">
+						 <label>Location</label>
+						<span name="location">pak</span>
+					</div>
+				</div>
+            </div>
             <div class="upcomingButton">
                 <button class="btn btn-primary">
                     <span name="accepted">Accept</span>
@@ -90,8 +70,8 @@
     
                 </div>
                 <div class="modal-footer">
-                    <button style="display: none" (click)="navigate_meeting()" type="button" class="btn btn-default go_details" data-dismiss="modal">Details</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button style="display: none" (click)="navigate_meeting()" type="button" class="btn btn-primary btn-sm  go_details" data-dismiss="modal">Details</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

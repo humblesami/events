@@ -265,7 +265,7 @@ span.rounded-circle img {
 .btn-primary:focus,
 .btn-primary.focus {
 	color: #ffffff;
-	background-color: #000000;
+	background-color: #4b74b5;
 	border: none;
 	outline: none;
 	box-shadow: none;
@@ -277,7 +277,7 @@ button:focus {
 .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {
 	color: white;
-	background-color: #5f5e97;
+	background-color: #4b74b5;
 	border-color: transparent;
 	outline: transparent;
 	box-shadow: 0px !important;
@@ -286,7 +286,7 @@ button:focus {
 .btn-primary:not(:disabled):not(.disabled).active:focus,
 .show > .btn-primary.dropdown-toggle:focus {
 	box-shadow: none;
-	background-color: transparent;
+	background-color: #4b74b5;
 }
 .init_sign {
 	padding: 5px;
