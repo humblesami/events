@@ -64,3 +64,19 @@ th.fc-day-header.fc-widget-header{
     background: #1abc9c;
     color: #fff;
 }
+
+.fc-toolbar .fc-right {
+    display: flex;
+    float: none;
+    justify-content: center;
+}
+
+.fc-toolbar .fc-right .fc-button-group >button{        
+    background: transparent;
+    border: 0;
+    padding: 5px;
+}
+.fc-toolbar .fc-right .fc-button-group
+{
+    margin-left: 0 !important;
+}
