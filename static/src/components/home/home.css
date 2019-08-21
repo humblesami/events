@@ -79,14 +79,14 @@
 
 .HomePageContentImg {
     margin-left: 20px;
-    flex-basis: 300px;
-    width: 50%;
     float: right;
+    width: 200px;
 }
 .HomePageContentImg img{
-    max-width:100%;
-    border: 1px solid #ddd;
-	}
+    width:100%;
+    height: 100%;
+    object-fit: contain;
+}
 .fc-more-cell{
 	background: darkgreen;
 	color: white;
