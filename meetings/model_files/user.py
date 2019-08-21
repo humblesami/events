@@ -246,19 +246,22 @@ class Profile(user_model):
             return
             # raise ValidationError('Phone needs to be verified')
         profile_obj = Profile.objects.filter(pk=self.pk)
-        password = ''
+        password = self.password
+
         if not profile_obj:
             creating = True
             self.is_staff = True
-            if not self.username:
+            if self.email and not self.username:
                 self.username = self.email
         self.name = self.fullname()
         super(Profile, self).save(*args, **kwargs)
         if creating:
-            if not self.user_ptr.is_superuser:
+            if not self.is_superuser:
                 random_password = uuid.uuid4().hex[:8]
-                self.user_ptr.set_password(random_password)
                 self.password_reset_on_creation_email(random_password)
+                self.user_ptr.set_password(random_password)
+            else:
+                self.user_ptr.set_password(password)
             self.user_ptr.save()
             user_data = {
                 'id': self.pk,

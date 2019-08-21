@@ -60,8 +60,7 @@ class AuthUser(models.Model):
             if user and user.id:
                 profile = Profile.objects.filter(pk=user.id)
                 if (not profile) and user.is_superuser:
-                    profile = Profile(user_ptr=user)
-                    profile.password = password
+                    profile = Profile(user_ptr=user, email=user.email, password=password, username = user.username, is_superuser = user.is_superuser)
                     profile.save()
                 else:
                     profile = profile[0]
