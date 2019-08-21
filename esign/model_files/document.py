@@ -1,34 +1,33 @@
+import os
 import io
 import json
-import os
 import base64
 import datetime
-from collections import OrderedDict
 
-from django.apps import apps
 from fpdf import FPDF
 from random import randint
-from django.contrib.auth.models import User, Group
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from collections import OrderedDict
 from PIL import ImageFont, Image, ImageDraw
+from PyPDF2 import PdfFileReader, PdfFileWriter
+
 from django.db import models
+from django.apps import apps
 from django.core.files import File as DjangoFile
-from django.db.models import Q, Count, Case, When, IntegerField
+from django.contrib.auth.models import User, Group
+
 from documents.file import File
-from mainapp import ws_methods
-from mainapp.settings import MEDIA_ROOT, server_base_url
-from mainapp.ws_methods import queryset_to_list
-from restoken.models import PostUserToken
 from actions.models import Actions
+from restoken.models import PostUserToken
 from meetings.model_files.event import Event
 from meetings.model_files.user import Profile
+
+from mainapp.settings import MEDIA_ROOT, server_base_url
+from mainapp.ws_methods import queryset_to_list, send_email_on_creation, search_db
 
 class SignatureDoc(File, Actions):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     send_to_all = models.BooleanField(blank=True, null=True)
     original_pdf = models.FileField(upload_to='original/')
-    # open_date = models.DateTimeField(null=True)
-    # close_date = models.DateTimeField(null=True)
 
     def save(self, *args, **kwargs):
         create = False
@@ -178,7 +177,7 @@ class SignatureDoc(File, Actions):
             'template_name': template_name,
             'token_required': True
         }
-        ws_methods.send_email_on_creation(email_data)
+        send_email_on_creation(email_data)
         doc_data = self.get_doc_data(user)
         return doc_data
 
@@ -501,7 +500,7 @@ class SignatureDoc(File, Actions):
         kw = params.get('kw')
         docs = []
         if kw:
-            docs = ws_methods.search_db({'kw': kw, 'search_models': {'esign': ['SignatureDoc']}})
+            docs = search_db({'kw': kw, 'search_models': {'esign': ['SignatureDoc']}})
         else:
             docs = cls.objects.all()
 
