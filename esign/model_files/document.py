@@ -656,7 +656,7 @@ class Signature(models.Model):
                 binary_signature = base64.b64encode(binary_signature)
                 binary_signature = binary_signature.decode('utf-8')
         elif sign_type == 'date':
-            res = str(datetime.datetime.now())
+            res = datetime.datetime.now().strftime("%b %d, %Y %I:%m:%S %p")
         elif sign_type == 'email':
             res = profile.email
         elif sign_type == 'name':
