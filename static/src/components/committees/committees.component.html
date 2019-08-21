@@ -22,10 +22,10 @@
                         </a>
                     <div class="kanban-committees-info-box-img">
                         <a class="circle-imgwrap"  *ngFor="let member of committee.users; let index = index" routerLink="/profile/{{member.id}}">
-                        <span *ngIf="index < 3">
+                        <span *ngIf="index < 15">
                             <img title="{{member.username}}" class="img-thumbnail-sm" src="{{socketService.server_url}}{{member.image}}">
                         </span>
-                        <span *ngIf="index === 3">
+                        <span *ngIf="index === 15">
                             <b>. . .</b>
                         </span>
                         </a>
