@@ -59,8 +59,8 @@ th.fc-day-header.fc-widget-header{
     height: 65%;
 }
 .fc-unthemed .fc-today{
-    border-left: 43px solid #eee !important;
-    border-right: 43px solid #eee !important;
+    border-left: 0.8rem solid #eee !important;
+    border-right: 0.8rem solid #eee !important;
     background: #1abc9c;
     color: #fff;
 }

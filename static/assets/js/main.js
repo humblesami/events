@@ -399,6 +399,7 @@ window.addEventListener('message', function receiveMessage(evt) {
                     redirect_url = `/#/survey/${id}/results`;
             }
         } else {
+            // this.console.log(model, action, evt);
             switch (model) {
                 case 'event':
                         redirect_url = `/#/meetings/upcoming`;
@@ -419,10 +420,16 @@ window.addEventListener('message', function receiveMessage(evt) {
                     redirect_url = `/#/resources`;
                     break;
                 case 'signdoc':
-                    redirect_url = `/#/signdoc/new`;
+                    if(action == 'add')
+                        redirect_url = `/#/signdoc/new`;
+                    else
+                        redirect_url = `/#/signdocs`;
                     break;
                 case 'signaturedoc':
-                    redirect_url = `/#/signdoc/new`;
+                    if(action == 'add')
+                        redirect_url = `/#/signdoc/new`;
+                    else
+                        redirect_url = `/#/signdocs`;                    
                     break;
             }
         }

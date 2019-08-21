@@ -374,7 +374,10 @@ class SignatureDoc(File, Actions):
             if not user.id:
                 return 'Invalid esign doc id'
             doc_obj = SignatureDoc.objects.filter(created_by_id=user.id).last()
-            file_id = doc_obj.id
+            if doc_obj:
+                file_id = doc_obj.id
+            else:
+                return 'Invalid esign doc new'
         else:
             doc_obj = SignatureDoc.objects.get(id=file_id)
         if not doc_obj:
@@ -659,7 +662,7 @@ class Signature(models.Model):
             res = profile.email
         elif sign_type == 'name':
             res = profile.fullname()
-        else:
+        elif sign_type == 'company' or sign_type == 'phone':
             try:
                 if sign_type == 'company':
                     res = profile.compnay
@@ -667,6 +670,10 @@ class Signature(models.Model):
                     res = profile.mobile_phone
             except:
                 pass
+        elif sign_type == 'text':
+            res = ''
+        else:
+            return 'Invalid sign type '+sign_type
         return {"image": binary_signature, 'text': res}
 
     @classmethod

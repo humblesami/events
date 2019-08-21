@@ -43,7 +43,7 @@ export class SocketService {
         var obj_this = this;
         this.site_config = window['site_config'];
         this.site_url = this.site_config.site_url;
-        console.log(this.site_url);
+        // console.log(this.site_url);
         obj_this.video_call = {
             id: undefined,
             message: undefined,
@@ -385,7 +385,7 @@ export class SocketService {
         else{
             this.user_photo = this.server_url + authorized_user.photo;
         }
-        console.log(authorized_user, obj_this.user_photo, 1355);
+        // console.log(authorized_user, obj_this.user_photo, 1355);
         let me = {
             id:authorized_user.id,
             group: undefined

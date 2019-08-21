@@ -579,6 +579,16 @@ export class EsignDocDetailsComponent implements OnInit {
             tolerance: "touch",
         });
 
+        function on_field_type_given(el){            
+            var val = el.val();
+            // console.log(el[0], val);
+            if(val)
+            {
+                el.next().before('<span class="field_type">'+val+'</span>');
+                el.remove();
+            }
+        }
+
         function handleDropEvent(event, ui) {
             var new_signature = $(ui.helper).clone().removeClass('drag').addClass("new_sign").css({
                 background: 'rgba(255, 235, 235, 0.9)',
@@ -636,9 +646,28 @@ export class EsignDocDetailsComponent implements OnInit {
                 "page": pageNum
             }).resizable();
 
-            new_signature.addClass('active_signature');
+            new_signature.addClass('active_signature');            
             $(this).append(new_signature);
-            $('#select_user_modal').modal('show');
+            var field_type = new_signature.find('.field_type');
+            // console.log(new_signature[0], field_type);
+            if(field_type.html().trim() == 'Text')
+            {
+                field_type.replaceWith('<input class="field_type" />');
+                var field_type_input = new_signature.find('.field_type');
+                field_type_input.focus();                
+                field_type_input.blur(function(){
+                    on_field_type_given(field_type_input);
+                });
+                field_type_input.keyup(function(e){
+                    if(e.keyCode == 13)
+                    {
+                        on_field_type_given(field_type_input);
+                    }
+                });
+            }
+            else{                
+                $('#select_user_modal').modal('show');
+            }
         }
 
         $("#page_container1").droppable({
@@ -990,7 +1019,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
         $(document).off("click", ".new_sign")
         $(document).on("click", ".new_sign", function(e) {
-            if($(e.target).hasClass('del_sign'))
+            if($(e.target).hasClass('del_sign') || $(e.target).is('input'))
             {
                 return;
             }

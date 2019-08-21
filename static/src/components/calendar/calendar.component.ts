@@ -26,7 +26,7 @@ export class CalendarComponent implements OnInit {
     get_home_data() {
         var obj_this = this;
         var success_cb = function(home_data) {
-            console.log(home_data);
+            // console.log(home_data);
             obj_this.home_data = home_data;
             obj_this.show_calendar();
         };
