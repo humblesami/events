@@ -1,0 +1,8 @@
+.fc-toolbar .fc-left
+{
+    display: none;
+}
+.fc-state-default.fc-corner-right.fc-today-button
+{
+    display: none !important;
+}
