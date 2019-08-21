@@ -24,6 +24,7 @@ from meetings.model_files.user import Profile
 from mainapp.settings import MEDIA_ROOT, server_base_url
 from mainapp.ws_methods import queryset_to_list, send_email_on_creation, search_db
 
+
 class SignatureDoc(File, Actions):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     send_to_all = models.BooleanField(blank=True, null=True)
@@ -60,7 +61,6 @@ class SignatureDoc(File, Actions):
             user_status = 'Not Required'
         return {'total': total, 'pending': pending_count, 'signature_status': user_status }
 
-
     @classmethod
     def add_new_respondents(cls, request, params):
         new_respondents = params['new_respondents']
@@ -71,9 +71,6 @@ class SignatureDoc(File, Actions):
             doc_obj.respondents.add(respondent['id'])
         doc_obj.save()
         return 'done'
-        
-        
-
 
     @classmethod
     def pending_sign_docs(cls, uid):
@@ -93,12 +90,11 @@ class SignatureDoc(File, Actions):
     def ws_assign_signature(cls, request, params):
         doc_id = int(params['document_id'])
         doc = cls.objects.get(id=doc_id)
-        if len(doc.signature_set.filter(signed=False)) > 0:
+        if doc.signature_set.exclude(signed=False).count() > 0:
             return 'Can not be edited as signature_started'
-        return doc.asign_signature(request.user, params)
-    
+        return doc.start_assign_signature(request.user, params)
 
-    def asign_signature(self, user, params):
+    def start_assign_signature(self, user, params):
         user_ids = []
         if self.send_to_all:
             users = []
@@ -149,10 +145,13 @@ class SignatureDoc(File, Actions):
                     email=sign['email'],
                     name=sign['name'],
                     field_name=sign['field_name'],
-                    left=sign['left'], top=sign['top'],
+                    left=sign['left'],
+                    top=sign['top'],
                     page=sign['page'],
-                    height=sign['height'], width=sign['width'],
-                    zoom=sign['zoom'], type=sign['type']
+                    height=sign['height'],
+                    width=sign['width'],
+                    zoom=sign['zoom'],
+                    type=sign['type']
                 )
                 obj.created_by_id = user.id
                 obj.save()
@@ -265,6 +264,84 @@ class SignatureDoc(File, Actions):
         result = {'id': new_file.id}
         return result
 
+    @classmethod
+    def ws_get_detail(cls, request, params):
+        file_id = params.get('document_id')
+        doc_obj = None
+        user = request.user
+        if file_id == 'new':
+            if not user.id:
+                return 'Invalid esign doc id'
+            doc_obj = SignatureDoc.objects.filter(created_by_id=user.id).last()
+            if doc_obj:
+                file_id = doc_obj.id
+            else:
+                return 'Invalid esign doc new'
+        else:
+            doc_obj = SignatureDoc.objects.get(id=file_id)
+        if not doc_obj:
+            return 'Invalid esign doc'
+        res = doc_obj.get_detail(request, params)
+        if type(res) is str:
+            return str
+        doc_obj = cls.objects.filter(id=file_id)
+        if doc_obj:
+            doc_obj = doc_obj[0]
+        else:
+            return res
+        doc_data = res
+        meetings = Event.objects.filter(publish=True).exclude(archived=True)
+        meetings = queryset_to_list(meetings, fields=['id', 'name'])
+        meeting_id = False
+        send_to_all = False
+        # users = []
+        # if doc_obj.meeting:
+        #     meeting_id = doc_obj.meeting.id
+        #     users = list(doc_obj.meeting.attendees.values('id', 'name'))
+        # else:
+        #     users = doc_obj.respondents.all()
+        #     users = queryset_to_list(users, fields=['id', 'name'])
+        if doc_obj.send_to_all:
+            send_to_all = doc_obj.send_to_all
+        doc_data["meetings"] = meetings
+        doc_data["meeting_id"] = meeting_id
+        doc_data["send_to_all"] = send_to_all
+        respondent_list = doc_obj.get_all_respondents()
+        users_obj = Profile.objects.all()
+        all_users = list(users_obj.values('id', 'name'))
+        selected_users = list(users_obj.filter(id__in=respondent_list).values('id', 'name'))
+        doc_data['all_profile_users'] = all_users
+        doc_data["users"] = selected_users
+        doc_data['doc_name'] = doc_obj.name
+        doc_data['doc_id'] = doc_obj.id
+        return doc_data
+
+    def get_detail(self, request, params):
+        token = params['token']
+        user = request.user
+        file_name = ''
+        if token:
+            post_info = {
+                'id': params['document_id'],
+                'model': 'SignatureDoc',
+                'app': 'esign'
+            }
+            res = PostUserToken.validate_token_for_post(token, post_info)
+            if type(res) is str:
+                return res
+            else:
+                user = res.user
+
+        if not user.id:
+            return 'Unauthorized to get sign document'
+
+        doc_data = self.get_doc_data(request.user)
+        sign_count = self.signature_set.filter(signed=True)
+        if sign_count:
+            doc_data['signature_started'] = True
+        doc_data['doc_name'] = self.name
+        return doc_data
+
     def embed_signatures(self):
         file = self.original_pdf
         signed_doc = self.get_signed_doc(file, self.signature_set.all())
@@ -366,85 +443,6 @@ class SignatureDoc(File, Actions):
         return res
 
     @classmethod
-    def ws_get_detail(cls, request, params):
-        file_id = params.get('document_id')
-        doc_obj = None
-        user = request.user
-        if file_id == 'new':
-            if not user.id:
-                return 'Invalid esign doc id'
-            doc_obj = SignatureDoc.objects.filter(created_by_id=user.id).last()
-            if doc_obj:
-                file_id = doc_obj.id
-            else:
-                return 'Invalid esign doc new'
-        else:
-            doc_obj = SignatureDoc.objects.get(id=file_id)
-        if not doc_obj:
-            return 'Invalid esign doc'
-        res = doc_obj.get_detail(request, params)
-        if type(res) is str:
-            return str
-        doc_obj = cls.objects.filter(id=file_id)
-        if doc_obj:
-            doc_obj = doc_obj[0]
-        else:
-            return res
-        doc_data = res
-        meetings = Event.objects.filter(publish=True).exclude(archived=True)
-        meetings = queryset_to_list(meetings, fields=['id', 'name'])
-        meeting_id = False
-        send_to_all = False
-        # users = []
-        # if doc_obj.meeting:
-        #     meeting_id = doc_obj.meeting.id
-        #     users = list(doc_obj.meeting.attendees.values('id', 'name'))
-        # else:
-        #     users = doc_obj.respondents.all()
-        #     users = queryset_to_list(users, fields=['id', 'name'])
-        if doc_obj.send_to_all:
-            send_to_all = doc_obj.send_to_all
-        doc_data["meetings"] = meetings
-        doc_data["meeting_id"] = meeting_id
-        doc_data["send_to_all"] = send_to_all
-        respondent_list = doc_obj.get_all_respondents()
-        users_obj = Profile.objects.all()
-        all_users = list(users_obj.values('id', 'name'))
-        selected_users = list(users_obj.filter(id__in=respondent_list).values('id', 'name'))
-        doc_data['all_profile_users'] = all_users
-        doc_data["users"] = selected_users
-        doc_data['doc_name'] = doc_obj.name
-        doc_data['doc_id'] = doc_obj.id
-        return doc_data
-
-    def get_detail(self, request, params):
-        token = params['token']
-        user = request.user
-        file_name = ''
-        if token:
-            post_info = {
-                'id': params['document_id'],
-                'model': 'SignatureDoc',
-                'app': 'esign'
-            }
-            res = PostUserToken.validate_token_for_post(token, post_info)
-            if type(res) is str:
-                return res
-            else:
-                user = res.user
-
-        if not user.id:
-            return 'Unauthorized to get sign document'
-
-        doc_data = self.get_doc_data(request.user)
-        sign_count = self.signature_set.filter(signed=True)
-        if sign_count:
-            doc_data['signature_started'] = True
-        doc_data['doc_name'] = self.name
-        return doc_data
-
-
-    @classmethod
     def set_meeting_attachment(cls, request, params):
         meeting_id = params.get('meeting_id')
         document_id = params.get('document_id')
@@ -460,7 +458,6 @@ class SignatureDoc(File, Actions):
         sign_doc.send_to_all = send_to_all
         sign_doc.save()
         return res
-
 
     @classmethod
     def is_admin(cls, user):
