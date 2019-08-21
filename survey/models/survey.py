@@ -284,7 +284,7 @@ class Survey(Actions):
                         for singledata in question_data:
                             if user_ans == singledata['option_name'].lower():
                                 singledata['option_result'] += 1
-                                singledata['option_perc'] = "{:.{}f}".format( singledata['option_result'] / (len(audience)*len(user_answer)) * 100, 2 )
+                                singledata['option_perc'] = "{:.{}f}".format( singledata['option_result'] / len(audience) * 100, 2 )
                                 break
                 else:
                     for singledata in question_data:
