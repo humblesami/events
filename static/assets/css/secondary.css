@@ -14,16 +14,20 @@
 {
     z-index: 10 !important;
 }
-
-.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected
-{
-    background-color: grey;
-    color: white;
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label {
+    font-weight: 500;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
+    margin: .3rem;
+    font-family: "Roboto" !important;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+    background-color: #c0c0c0;
+    color: black;
 }
 
 .popup.messenger .messenger-container {
-    height: calc(100vh - 180px);
-}
+    height: calc(100vh - 180px);}
 
 hr{
     margin: 0;
