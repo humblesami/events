@@ -36,7 +36,12 @@ title="{{committee.name}}"></app-breadcrumb>
                 </div> -->
 
                 <div  class="container">
-                    <div class="row">
+             		<div class="main-full-seachbar mb-3">
+                    <input type="text" 
+                    (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+                    placeholder="Search..."  class="form-control"/>
+                    </div>
+		                <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of committee.users">
                                 <div class="kanban-card">
                                         <a routerLink="/{{profile.group}}/{{profile.id}}" class="kanban-profiles-user-info-box">
@@ -67,6 +72,10 @@ title="{{committee.name}}"></app-breadcrumb>
                                     </div>
                         </div>
                     </div>
+
+                        <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(id)">
+                    </app-paginator>
+
                 </div>
             </div>
         </div>

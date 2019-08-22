@@ -20,10 +20,21 @@ class Committee(models.Model):
                 fields=['id', 'name', 'description']
             )
             if committee:
-                committee_users = ws_methods.get_user_info(committee_orm.users.all())
+                kw = params.get('kw')
+                if kw:
+                    committee_users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
+                else:
+                    committee_users = ws_methods.get_user_info(committee_orm.users.all())
+                total_cnt = committee_users.count()
+                offset = params.get('offset')
+                limit = params.get('limit')
+                committee_users = list(committee_users)
+                if limit:
+                    committee_users = committee_users[offset: offset + int(limit)]
+                current_cnt = committee_users.count
                 committee['users'] = committee_users
 
-                data = {"committee": committee, "next": 0, "prev": 0}
+                data = {"committee": committee, "next": 0, "prev": 0, "count": current_cnt,"total": total_cnt}
                 return data
             else:
                 return {'error': 'Committee Not Found against Specific Details'}
