@@ -109,17 +109,24 @@ def http_request(req_url):
 
 
 def emit_event(data, req_url=None):
+    url = ''
     try:
         if not data:
             data = []
-            data = json.dumps(data)
-        if not req_url:
-            req_url = '/odoo_event'
-            data = quote(data)
-            url = socket_server['url'] + req_url + '?data=' + data
+        data = json.dumps(data)
+        data = quote(data)
+        req_url = '/odoo_event'
+        try:
+            url = socket_server['url'] + req_url
+        except:
+            return 'Error socket server url'
+        url += '?data=' + data
+    except:
+        return 'Error in given data '+ str(data)
+    try:
         return http_request(url)
     except:
-        return 'Error in given data or url'
+        return 'Error in url ' + url
 
 
 def obj_to_dict(obj,fields=None,to_str=None,related=None):
