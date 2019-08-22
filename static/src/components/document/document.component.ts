@@ -213,11 +213,17 @@ export class DocumentComponent implements OnInit {
     
     programatic_scroll = false;
     next_prev_page(pageToMove){                
-        pageToMove = this.page_num + pageToMove;        
+        pageToMove = this.page_num + pageToMove;
+        this.change_page(pageToMove);
     }
 
     change_page(pageToMove = null)
     {
+        if(!this.total_pages)
+        {
+            this.total_pages = $('.page-count:first').html();
+        }
+        console.log(pageToMove, 133);
         try{
             if(!pageToMove)
             {
@@ -227,14 +233,18 @@ export class DocumentComponent implements OnInit {
             if(pageToMove < 1)
             {
                 pageToMove = 1;
+                this.page_num = pageToMove;
+                return;
             }
             else
             {
                 if(pageToMove >= this.total_pages)
                 {
                     pageToMove = this.total_pages;
+                    this.page_num = pageToMove;
+                    return;
                 }
-            }            
+            }         
             let page_height = $('.pdfViewer .page:first').height();
             let pdf_scroll = (pageToMove * page_height);
             this.programatic_scroll = true;
@@ -250,6 +260,10 @@ export class DocumentComponent implements OnInit {
         var obj_this = this;
         window['init_doc_comments']();
 		$('.PdfViewerWrapper:first').scroll(function() {
+            if(!this.total_pages)
+            {
+                this.total_pages = $('.page-count:first').html();
+            }
             if(obj_this.programatic_scroll)
             {
                 obj_this.programatic_scroll = false;
