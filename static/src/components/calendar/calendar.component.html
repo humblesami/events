@@ -7,7 +7,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div *ngIf="selected_event" class="modal-content">
                 <div class="modal-header">
-                    <h4 class="title">
+                    <h4 class="title title-h4">
                         {{selected_event.name}}
                     </h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -18,15 +18,15 @@
                             <div class="o_group o_inner_group">
                                 <div class="home-calendar-modal-detail">                                    
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div *ngIf="selected_event.start_date" class="col-sm-6">
                                             <label >Starting at</label>
                                             <span name="start">{{selected_event.start_date  | date:'medium'}}</span>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div *ngIf="selected_event.end_date" class="col-sm-6">
                                             <label >Ending at</label>                        
                                             <span name="stop">{{selected_event.end_date | date:'medium'}}</span>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div *ngIf="selected_event.duration" class="col-sm-6">
                                             <label>Duration</label>
                                             <span name="duration">{{selected_event.duration}}</span>
                                         </div>
@@ -37,24 +37,24 @@
                                     </div>
 
                                     <div class="row" *ngIf="selected_event.my_event">
-                                        <div class="col-sm-6">
+                                        <div *ngIf="selected_event.video_call_link" class="col-sm-6">
                                             <label>Video Call Link</label>
                                             <span name="video_call_link">
                                                 <a class="video_call_link" target="__blank" href="{{selected_event.video_call_link}}">{{selected_event.video_call_link}}</a>
                                             </span>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div *ngIf="selected_event.conference_bridge_numbe" class="col-sm-6">
                                             <label>Conference Bridge No.</label>
                                             <span name="conference_bridge_number">{{selected_event.conference_bridge_number}}</span>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div *ngIf="selected_event.pin" class="col-sm-6">
                                             <label>Meeting PIN</label>
                                             <span name="pin">{{selected_event.pin}}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <app-meetingresponse></app-meetingresponse>
+                            <app-meetingresponse meeting_id="{{selected_event.id}}" attendee_status="{{selected_event.attendee_status}}"></app-meetingresponse>
                         </div>
                     </div>
                 </div>

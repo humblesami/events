@@ -395,7 +395,7 @@
 .new_sign, .sign_container{    
     padding: 5px 25px 5px 5px;
     min-width:160px;
-    min-height:50px;
+    min-height:40px;
 }
 
 

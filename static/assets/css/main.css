@@ -2934,6 +2934,9 @@ h4.title-h4{
 	color:#3059C9;
 	font-size: 1.3rem;
     text-align: center;
+    margin:0;
+    padding:0;
+    text-transform:capitalize;
 }
 .custom-control-label
 {
@@ -2979,4 +2982,5 @@ h4.title-h4{
     display: block;
     padding: .32rem .33rem .3rem .33rem;
 }
-.new_sign .field_type{ margin:0 .5rem; }
+.new_sign .field_type{ margin:0 .5rem; padding: 0 .3rem; flex:1; }
+.new_sign input.field_type { border-radius: .2rem; border: 1px solid #999999; }
