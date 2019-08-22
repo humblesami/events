@@ -29,24 +29,7 @@ export class DocumentComponent implements OnInit {
                     window['should_save'] = true;
 		this.socketService = ss;
         this.route.params.subscribe(params => this.loadDoc());
-    }
-
-	changePage(pageToMove){
-		this.total_pages = $('.page-count').html();
-		if(pageToMove < 1 || pageToMove > this.total_pages)
-			this.page_num = pageToMove = 1;
-
-		if(pageToMove == 1)
-			$('.page-prev-btn').attr("disabled", "disabled");
-		else
-			$('.page-prev-btn').removeAttr('disabled');
-
-		if(pageToMove == this.total_pages)
-			$('.page-next-btn').attr("disabled", "disabled");
-		else
-			$('.page-next-btn').removeAttr('disabled');
-		$('#viewer-wrapper').scrollTop($('.pdfViewer .page:first').height()* (pageToMove - 1)+50)
-	}
+    }	
 
 	hint() {
 		$('.search-bar-container .search-hint-text').css("display", "none").fadeIn(700);
@@ -205,24 +188,78 @@ export class DocumentComponent implements OnInit {
             window['functions'].hideLoader('loaddocwaiter');
         });
     }
+
+    on_page_changed(pageToMove)
+    {
+        if(pageToMove <= 1)
+        {
+            pageToMove = 1;
+            $('.page-prev-btn').addClass("disabled");
+            $('.page-next-btn').removeClass("disabled");
+        }
+        else if(pageToMove >= this.total_pages)
+        {
+            pageToMove = this.total_pages;
+            $('.page-next-btn').addClass("disabled");
+            $('.page-prev-btn').removeClass("disabled");
+        }
+        else
+        {
+            $('.page-next-btn').removeClass("disabled");
+            $('.page-prev-btn').removeClass("disabled");
+        }                
+        this.page_num = pageToMove;        
+    }
+    
+    programatic_scroll = false;
+    next_prev_page(pageToMove){                
+        pageToMove = this.page_num + pageToMove;        
+    }
+
+    change_page(pageToMove = null)
+    {
+        try{
+            if(!pageToMove)
+            {
+                pageToMove = this.page_num;
+            }
+            let test = parseInt(pageToMove);
+            if(pageToMove < 1)
+            {
+                pageToMove = 1;
+            }
+            else
+            {
+                if(pageToMove >= this.total_pages)
+                {
+                    pageToMove = this.total_pages;
+                }
+            }            
+            let page_height = $('.pdfViewer .page:first').height();
+            let pdf_scroll = (pageToMove * page_height);
+            this.programatic_scroll = true;
+            $('.PdfViewerWrapper:first').scrollTop(pdf_scroll);
+        }
+        catch
+        {
+            this.page_num = 1;
+        }
+    }
     
     ngOnInit() {
         var obj_this = this;
         window['init_doc_comments']();
-		$('#viewer-wrapper').scroll(function() {
-			var scroll = $(this).scrollTop();
-			if(scroll == 0 )
-				scroll = 1;
-			obj_this.page_num = Math.ceil(scroll / $('.pdfViewer .page:first').height());
-			if(obj_this.page_num == 1)
-				$('.page-prev-btn').attr("disabled", "disabled");
-			else
-				$('.page-prev-btn').removeAttr('disabled');
-
-			if(obj_this.page_num == $('.page-count').html())
-				$('.page-next-btn').attr("disabled", "disabled");
-			else
-				$('.page-next-btn').removeAttr('disabled');
+		$('.PdfViewerWrapper:first').scroll(function() {
+            if(obj_this.programatic_scroll)
+            {
+                obj_this.programatic_scroll = false;
+                return;
+            }
+			var pdf_scroll = $(this).scrollTop();
+			if(pdf_scroll == 0 )
+            pdf_scroll = 1;
+            let page_height = $('.pdfViewer .page:first').height();
+            obj_this.page_num = Math.ceil(pdf_scroll / page_height);            
         });
     }
 }

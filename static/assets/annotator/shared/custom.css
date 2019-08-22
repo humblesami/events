@@ -696,3 +696,7 @@ button.pen.annotation_button.active
     background-position: right 7px center !important;
     border: none;
 }
+span.pager.disabled
+{
+    background-color: silver;
+}
