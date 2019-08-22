@@ -37,13 +37,13 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                     </div>
                     <div class="doc-manage-btn-wrap">
                         <div class="paginator">
-                            <span (click)="next_prev_page(-1)" class="pager prev page-prev-btn disabled">
+                            <span (click)="next_prev_page(-1)" class="pager prev page-prev-btn">
                                 <img src="static/assets/images/docs/docs-arrow-up.svg" alt="">
                             </span>
                             <span (click)="next_prev_page(1)" class="pager next page-next-btn">
                                 <img src="static/assets/images/docs/docs-arrow-down.svg" alt="">
                             </span>
-    
+                            
                             <input (change)="change_page()" (keyup.enter)="change_page()" class="form-control" 
                             [(ngModel)]="page_num" type="number" class="page-number" value="1">
                             <span>of <span class="page-count">1</span></span>

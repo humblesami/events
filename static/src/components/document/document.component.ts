@@ -190,30 +190,13 @@ export class DocumentComponent implements OnInit {
     }
 
     on_page_changed(pageToMove)
-    {
-        if(pageToMove <= 1)
-        {
-            pageToMove = 1;
-            $('.page-prev-btn').addClass("disabled");
-            $('.page-next-btn').removeClass("disabled");
-        }
-        else if(pageToMove >= this.total_pages)
-        {
-            pageToMove = this.total_pages;
-            $('.page-next-btn').addClass("disabled");
-            $('.page-prev-btn').removeClass("disabled");
-        }
-        else
-        {
-            $('.page-next-btn').removeClass("disabled");
-            $('.page-prev-btn').removeClass("disabled");
-        }                
+    {                
         this.page_num = pageToMove;        
     }
     
     programatic_scroll = false;
-    next_prev_page(pageToMove){                
-        pageToMove = this.page_num + pageToMove;
+    next_prev_page(pageToMove){
+        pageToMove = parseInt(this.page_num+ '') + parseInt(pageToMove);
         this.change_page(pageToMove);
     }
 
@@ -223,31 +206,24 @@ export class DocumentComponent implements OnInit {
         {
             this.total_pages = $('.page-count:first').html();
         }
-        console.log(pageToMove, 133);
         try{
+            if(pageToMove == 0)
+            {
+                pageToMove = this.total_pages;
+            }
             if(!pageToMove)
             {
                 pageToMove = this.page_num;
             }
             let test = parseInt(pageToMove);
-            if(pageToMove < 1)
+            if(pageToMove > this.total_pages)
             {
                 pageToMove = 1;
-                this.page_num = pageToMove;
-                return;
             }
-            else
-            {
-                if(pageToMove >= this.total_pages)
-                {
-                    pageToMove = this.total_pages;
-                    this.page_num = pageToMove;
-                    return;
-                }
-            }         
             let page_height = $('.pdfViewer .page:first').height();
             let pdf_scroll = (pageToMove * page_height);
             this.programatic_scroll = true;
+            this.page_num = pageToMove;
             $('.PdfViewerWrapper:first').scrollTop(pdf_scroll);
         }
         catch

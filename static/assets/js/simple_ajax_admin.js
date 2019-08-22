@@ -119,7 +119,28 @@ function dn_rpc_object(options) {
         if (!options.no_loader)
             site_functions.hideLoader("ajax" + api_url);        
     };
-    options.error = function(err) {                
+    options.error = function(err) {
+        console.log('status '+err.status);
+        if(err.status == 0)
+        {
+            err = 'Could not connect to server '+ server_base_url;
+            if(window.navigator.onLine)
+            {
+                err += ' because no internet connection or server unavailble';
+            }
+            else
+            {
+                err += ' because server unavailble';
+            }
+           console.log(er);
+           return;
+        }
+        if(res.status == 404)
+        {
+            er = api_url + ' unavailable at '+ server_base_url;
+            console.log(er);
+            return;
+        }
         if(err.responseText == '{"detail":"Invalid token."}' || 
             err.responseText == '{"detail":"Authentication credentials were not provided."}')
         {
