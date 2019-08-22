@@ -1,6 +1,7 @@
 <!-- <app-breadcrumb title="Calendar"></app-breadcrumb> -->
 <h3 class="text-dark">Calendar</h3>
 <div class="router-outlet calendarwrapper">
+    <link rel="stylesheet" href="/static/assets/css/calendar.css" />
     <div id="calendar"></div>    
     <div class="modal fade" id="calenderModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -15,26 +16,27 @@
                     <div id="event-summary">
                         <div class="event-card home-modal-calendar">
                             <div class="o_group o_inner_group">
-                                <div class="row home-calendar-modal-detail">                                    
-                                    <div>
+                                <div class="home-calendar-modal-detail">                                    
+                                    <div class="row">
                                         <div class="col-sm-6">
                                             <label >Starting at</label>
-                                            <span name="start">{{selected_event.start_date}}</span>
+                                            <span name="start">{{selected_event.start_date  | date:'medium'}}</span>
                                         </div>
                                         <div class="col-sm-6">
                                             <label >Ending at</label>                        
-                                            <span name="stop">{{selected_event.end_date}}</span>
+                                            <span name="stop">{{selected_event.end_date | date:'medium'}}</span>
                                         </div>
                                         <div class="col-sm-6">
                                             <label>Duration</label>
                                             <span name="duration">{{selected_event.duration}}</span>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div *ngIf="selected_event.location" class="col-sm-6">
                                             <label>Location</label>
                                             <span name="location">{{selected_event.location}}</span>
                                         </div>
                                     </div>
-                                    <div *ngIf="selected_event.my_event">
+
+                                    <div class="row" *ngIf="selected_event.my_event">
                                         <div class="col-sm-6">
                                             <label>Video Call Link</label>
                                             <span name="video_call_link">
