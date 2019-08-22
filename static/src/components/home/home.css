@@ -469,11 +469,11 @@ span.to-do-count{
 }
 .full-calendar-btn{
     text-align: center;
-    padding: 25px 0 0;
+    padding: 0 0 1rem;
 }
 .full-calendar-btn a{
     display: inline-block;
-    padding: 10px 25px;
+    padding: 7px 25px;
     background: #4B74B5;
     color: #ffffff;
     border-radius: 25px;
@@ -483,6 +483,7 @@ span.to-do-count{
 .full-calendar-btn a:hover{
     background: #2458AB;
 }
+
 
 ul {list-style-type: none;}
 
