@@ -119,14 +119,14 @@ class Survey(Actions):
         else:
             # docs = cls.objects.all()    
             if results_visibility:
-                survey_list = Survey.objects.all()
+                survey_list = Survey.objects.all().distinct()
             else:
                 survey_list = Survey.objects.filter(
                     (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
                         |
                         (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
                         |
-                        Q(respondents__id=uid))
+                        Q(respondents__id=uid)).distinct()
         total = survey_list.count()
         offset = params.get('offset')
         limit = params.get('limit')
