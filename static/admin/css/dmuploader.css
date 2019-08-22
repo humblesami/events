@@ -1,0 +1,253 @@
+.dm-uploader{cursor:default;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.dm-uploader .btn{position:relative;overflow:hidden}.dm-uploader .btn input[type=file]{position:absolute;top:0;right:0;margin:0;border:solid transparent;width:100%;opacity:0;cursor:pointer}
+
+
+
+
+
+/* 
+	A couple styles to make the demo page look good
+ */
+
+ hr {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+#files {
+    overflow-y: scroll !important;
+	height: 205px;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+#files.file100vh {
+	overflow-y: unset !important;
+	height: auto !important;
+    list-style: none;
+    padding: 0;
+	min-height: 290px;
+}
+#debug {
+	overflow-y: scroll !important;
+	height: 180px;	
+}
+
+.dm-uploader {
+	border: 0.05rem dashed #A5A5C7;
+	text-align: center;
+	background: #FFF;
+}
+.dm-uploader.active {
+	border-color: red;
+	border-style: solid;
+}
+
+.AttachmentsWrapper {
+	display: block;
+	position: relative;
+  }
+  
+  .AttachmentsWrapper:after, .AttachmentsWrapper::before {
+	content: "";
+	display: table;
+	clear: both;
+  }
+  
+  .AttachmentsWrapper .media{
+	float: left;
+    width: 48%;
+    display: block;
+    margin: 0 1%;
+  }
+
+.ui-sortable .media .media-body.mb-1 {
+	padding: 0.5rem;
+	background: #f9f9f9;
+}
+
+.progress .bg-info{
+	background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+	background-size: 1rem 1rem;
+}
+
+.OtherDriveBox{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding:15px 0;
+}
+
+.OtherDriveBox #box-select, .OtherDriveBox .box-select, #driveapi button, #dropbox-container{
+	background: none;
+	width: 60px;
+	height: 60px;
+	background: #fff;
+	border: 1px solid #aeaeae;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 60px;
+	margin: 0 3px;
+	cursor: pointer;
+	padding: 0 !important;
+}
+#drag-and-drop-zone{
+	padding: 2rem 1rem;
+}
+.dm-uploader .btn input[type="file"]{
+	cursor: pointer;
+}
+.dropbox-dropin-btn, .dropbox-dropin-btn:link, .dropbox-dropin-btn:hover {
+	display: block;
+	text-indent: -1999999px;
+	width: 44px;
+	height: 45px !important;
+	position: absolute;
+	border: 0 !important;
+	background: transparent !important;
+	cursor: pointer;
+	padding: 0 !important;
+	z-index: 99999;
+}
+
+#dragArea .card-header{
+	font-size: 17px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #627d9d;
+}
+.UploadFilesOption{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border-top: 2px solid #68c0d4;
+	padding-top: 20px;
+}
+.UploadFilesOption a, .UploadFilesOption form{
+	margin: 0 1rem;
+	cursor: pointer;
+}
+
+.UploadInfoBox strong{
+	display: block;
+	font-weight: 500;
+	color: #272727;
+	font-size: 14px;
+}
+.UploadInfoBox .status{
+	font-weight: 400;
+	color: #272727;
+	font-size: 13px;
+}
+.UploadInfoBox .status{
+	color: #0E4A91;
+}
+
+.UploadFileBox{
+	display: block;
+	position: relative;
+}
+
+.UploadFileBox::after, .UploadFileBox::before {
+	content: "";
+	display: table;
+	clear: both;
+  }
+
+  .UploadInfoBox {
+    float: left;
+	width: calc(100% - 60px);
+	overflow: hidden;
+}
+strong#fileName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.cncl {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #272727;
+    font-size: 13px;
+    cursor: pointer;
+    float: right;
+    width: 50px;
+}
+.cncl i{
+	color: #FF0000;
+}
+
+.MediaBox{
+	height: 250px;
+	flex:1;
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+	padding: 5px;
+	overflow: hidden;
+}
+.MediaBox p{
+	background: rgba(0, 0, 0, 0.01);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #dadada;
+}
+.MediaBox p a img {
+	max-width: 100px;
+	margin-top: 20px;
+}
+.View-Del-btn {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.deletebtn{
+    border-radius: 25px;
+    height: 35px;
+	width: 70px;
+	display: flex;
+    justify-content: center;
+	align-items: center;
+	margin: 0 3px;
+	cursor: pointer;
+}
+
+.View-Del-btn .viewFile{
+	background: #bcd049; 
+}
+.View-Del-btn .cncl{
+	background: #FF0000; 
+}
+.View-Del-btn .cncl i{
+	color: #ffffff;
+	font-size: 14px;
+}
+.viewFile i{
+	color: #ffffff;
+	font-size: 17px;
+}
+.View-Del-btn .deletebtn:hover{
+	background: #000000;
+}
+
+.MediaBox #fileName {
+	font-size: 12px;
+    display: inline-block;
+    padding: 10px 20px 10px;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.height450{
+	height: 450px;
+}
+.thumnailImg img {
+    max-height: 150px;
+}

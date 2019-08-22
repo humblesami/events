@@ -67,13 +67,27 @@
           <td class="delete">{% if inline_admin_form.original %}{{ inline_admin_form.deletion_field.field }}{% endif %}</td>
         {% endif %}
         </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  <script src="/static/assets/libs/js/tagsinput.js"></script>
-  <link rel="stylesheet" href="/static/assets/libs/css/tagsinput.css" />
-  <script src="/static/admin/js/survey_options.js">
-  </script>
+     {% endfor %}
+     </tbody>
+   </table>
+   <div class="file-loading">
+    <input id="kv-explorer" type="file" multiple>
+    </div>
+    <div class="file-loading">
+        <input id="topic_attachment" name="topic_attachment" class="file" type="file" multiple data-min-file-count="1" data-theme="fas">
+    </div>
+    <script>
+        $(document).on('ready', function () {
+            $("#topic_attachment").fileinput(
+            );
+
+            $('#topic_attachment').on('fileloaded', function(event, file, previewId, index, reader) {
+                console.log(21234,234234);
+                console.log("fileloaded", file);
+            });
+        });
+
+    </script>
 </fieldset>
   </div>
 </div>

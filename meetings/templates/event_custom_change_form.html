@@ -9,3 +9,22 @@
     <script src="{% static '/assets/js/custom_duration_validator.js' %}"></script>
     <script src="/static/assets/js/validator.js"></script>
 {% endblock %}
+{% block inline_field_sets %}
+{% for inline_admin_formset in inline_admin_formsets %}
+    {% include inline_admin_formset.opts.template %}
+{% endfor %}
+<fieldset class="module">
+    <div class="file-loading">
+        <input id="kv-explorer" type="file" multiple>
+    </div>
+    <div class="file-loading">
+        <input id="attachment" name="attachment" class="file" type="file" multiple data-min-file-count="1" data-theme="fas">
+    </div>
+    <script>
+        $(document).on('ready', function () {
+            $("#attachment").fileinput(
+            );
+        });
+    </script>
+</fieldset>
+{% endblock %}

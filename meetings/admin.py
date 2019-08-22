@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.db import transaction
 from documents.admin import FileForm
 # from esign.admin import SignatureDocForm
 from django.utils.html import format_html
@@ -17,12 +18,13 @@ import nested_admin
 
 class TopicAdmin(admin.ModelAdmin):
     search_fields = ['name']
-
+    change_form_template = 'topic_custom_change_form.html'
 
 class TopicDocInline(nested_admin.NestedTabularInline):
     model = AgendaDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
     extra = 0
+    template = 'topic_custom_change_form.html'
 
 
 class TopicInline(nested_admin.NestedTabularInline):
@@ -30,11 +32,20 @@ class TopicInline(nested_admin.NestedTabularInline):
     inlines = [TopicDocInline]
     extra = 1
 
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        for afile in request.FILES.getlist('topic_attachment'):
+            try:
+                with transaction.atomic():
+                    obj.agendadocument_set.create(name=afile.name, attachment=afile)
+            except:
+                pass
+
 
 class MeetingDocInline(nested_admin.NestedTabularInline):
     model = MeetingDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
-    extra = 1
+    extra = 0
 
 
 class EventAdmin(nested_admin.NestedModelAdmin):
@@ -65,6 +76,29 @@ class EventAdmin(nested_admin.NestedModelAdmin):
     # extra = 1
     readonly_fields = ('docs',)
     change_form_template = 'event_custom_change_form.html'
+
+
+    def save_model(self, request, obj, form, change):
+        obj.save()
+
+        for afile in request.FILES.getlist('attachment'):
+            try:
+                with transaction.atomic():
+                    obj.meetingdocument_set.create(name=afile.name, attachment=afile)
+            except:
+                pass
+
+
+    def save_formset(self, request, form, formset, change):
+            formset.save()
+            for afile in request.FILES.getlist('topic_attachment'):
+                try:
+                    with transaction.atomic():
+                        afile.field_name = 'attachment'
+                        obj.agendadocument_set.create(name=afile.name, attachment=afile)
+                except:
+                    pass
+
 
     def docs(self, obj):
         html = "<div>"
