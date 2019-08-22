@@ -16,7 +16,7 @@
                     <div class="HomePageDiscription">
                         <div *ngIf="home_data.description" class="HomePageContentText">
                             <div class="HomePageContentImg">                        
-                                <img width="100%" src="{{socketService.server_url}}{{home_data.news.photo}}">
+                                <img src="{{socketService.server_url}}{{home_data.news.photo}}">
                             </div>
                             <div id="home-content" [innerHtml]="home_data.description"></div>
                         </div>
