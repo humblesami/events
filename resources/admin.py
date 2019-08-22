@@ -14,7 +14,7 @@ class FileInline(admin.TabularInline):
     model = ResourceDocument
     autocomplete_fields = ['users']
     show_change_link = True
-    exclude = ['pdf_doc','content', 'html', 'file_type', 'uplaod_status', 'created_at']
+    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
     # readonly_fields = ('View',)
     extra = 1
 

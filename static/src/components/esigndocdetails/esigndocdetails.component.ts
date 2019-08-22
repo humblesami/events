@@ -349,24 +349,26 @@ export class EsignDocDetailsComponent implements OnInit {
                 };
                 page.render(renderContext);
                 console.log('Page rendered', Date());
-            });
-            // Update page counters
-            pageNum = num;
-            document.getElementById('page_num').textContent = pageNum;
-            document.getElementById('page_count').textContent = pdfDoc.numPages;
-            $('.sign_container').hide();
-            $('.new_sign').hide();
-            var selector = '.new_sign[page=' + pageNum + ']';
-            $(selector).show();
 
-            //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
-            setTimeout(function() {
-                loadSignatures({
-                    "doc_data": doc_data,                    
-                });
-            }, 200);
-            $('#loaderContainerajax').hide();
-            $(".o_loading").hide();
+
+                pageNum = num;
+                document.getElementById('page_num').textContent = pageNum;
+                document.getElementById('page_count').textContent = pdfDoc.numPages;
+                $('.sign_container').hide();
+                $('.new_sign').hide();
+                var selector = '.new_sign[page=' + pageNum + ']';
+                $(selector).show();
+
+                //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
+                setTimeout(function() {
+                    loadSignatures({
+                        "doc_data": doc_data,                    
+                    });
+                }, 200);
+                $('#loaderContainerajax').hide();
+                $(".o_loading").hide();
+            });
+            // Update page counters            
         }
 
 
@@ -470,7 +472,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     signed: this.signed,
                     name: this.name,
                     my_record: this.my_record,
-                    //zoom:this.zoom,
+                    zoom:this.zoom,
                     page: this.page,
                     field_name: this.field_name,
                     //w:this.width,
@@ -481,7 +483,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 var show_text = this.type.charAt(0).toUpperCase() + this.type.slice(1);
                 div.html(show_text + ":" + this.name);
                 div.attr('signtype', this.type);
-
+                // console.log(this.width , perc, this.zoom);
                 var h, w, perc, diff;
                 if (this.zoom > canvas.width) {
                     perc = (canvas.width / this.zoom);
@@ -495,18 +497,21 @@ export class EsignDocDetailsComponent implements OnInit {
                     h = this.height * perc;
                 }
 
-                if (this.zoom == canvas.width) {
-                    w = this.width;
-                    h = this.height;
-                }
+                var page_zoom = $('#scaleSelect').val();
+                w = this.width * page_zoom;
+                h = this.height *  page_zoom;
+                
+                var top = this.top * page_zoom  + "%";
+                var left = this.left * page_zoom + "%";
 
                 div.css({
-                    top: this.top + "%",
-                    left: this.left + "%",
+                    top: top,
+                    left: left,
                     position: 'absolute',
                     height: h,
                     width: w,
                 });
+
                 if (!this.signed && this.my_record) {
                     div.css({
                         background: "rgba(230, 81, 81, 0.9)"
@@ -1072,8 +1077,27 @@ export class EsignDocDetailsComponent implements OnInit {
         $('#check_box_send_all').change(function() {
             // console.log($("#check_box_send_all").is(':checked'), 444);
             if ($("#check_box_send_all").is(':checked')) {
-                $('.dragabl-fields').hide();
-                $('.new_sign').remove();
+                if($('#viewer_container .sign_container').length == 0 && $('#viewer_container .new_sign').length == 0)
+                {
+                    return;
+                }
+                window['bootbox'].confirm('All assigned signatures will be removed', function(res){
+                    if(res)
+                    {
+                        if($('.sign_container[signed="true"]').length > 0)
+                        {
+                            console.log('Invalid activity');
+                            return;
+                        }
+                        $('.dragabl-fields').hide();
+                        $('.new_sign,.sign_container').remove();
+                        $('#nxxt_sign').hide();
+                        $('#save-doc-data').click();
+                    }
+                    else{
+                        $("#check_box_send_all").prop('checked', true)
+                    }
+                })                
             } else {
                 $('.dragabl-fields').show();
             }

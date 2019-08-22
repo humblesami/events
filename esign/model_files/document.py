@@ -98,6 +98,7 @@ class SignatureDoc(File, Actions):
         user_ids = []
         if self.send_to_all:
             users = []
+            self.signature_set.all().delete()
             if self.meeting:
                 users = self.meeting.get_audience()
             else:
@@ -119,7 +120,7 @@ class SignatureDoc(File, Actions):
                     top=sign_top,
                     height=40,
                     width=140,
-                    zoom=300
+                    zoom=100
                 )
                 obj.created_by_id = user.id
                 obj.save()

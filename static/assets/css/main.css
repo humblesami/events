@@ -457,24 +457,16 @@ a.kanban-committees-info-box-name {
 	align-items: center;
 }
 .bootbox {
-	bottom: unset;
-	left: unset;
-	top: 70px;
-	right: 16px;
-	padding-right: 0;
-	/* !important; */
-	min-width: 20%;
+	display: flex !important;
+    justify-content: center;
+    align-items: center;
 }
-.bootbox .modal-body {
-	max-height: 250px;
-	overflow-y: auto;
-	overflow-x: hidden;
-}
+
 .bootbox-alert {
 	bottom: inherit;
 }
 .bootbox .modal-dialog {
-	margin: 0;
+    margin: 0;    
 }
 .bootbox .modal-footer {
 	padding: 5px;
