@@ -73,7 +73,7 @@ title="{{committee.name}}"></app-breadcrumb>
                         </div>
                     </div>
 
-                        <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(id)">
+                        <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(committee.id)">
                     </app-paginator>
 
                 </div>

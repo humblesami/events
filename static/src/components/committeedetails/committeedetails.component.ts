@@ -22,10 +22,10 @@ export class CommitteeDetailsComponent implements OnInit {
     ) {        
         this.socketService = this.ss;
         let id = this.route.snapshot.params.id;
-        this.route.params.subscribe(params => this.get_data(id));
+        this.route.params.subscribe(params => this.get_list(id));
     }
 
-    get_data(id: any)
+    get_list(id: any)
     {
         var obj_this = this;            
         let args = {

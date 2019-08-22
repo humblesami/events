@@ -22,16 +22,17 @@ class Committee(models.Model):
             if committee:
                 kw = params.get('kw')
                 if kw:
-                    committee_users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
+                    committee_users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Committee']}})
                 else:
                     committee_users = ws_methods.get_user_info(committee_orm.users.all())
-                total_cnt = committee_users.count()
+                
+                total_cnt = len(committee_users)
                 offset = params.get('offset')
                 limit = params.get('limit')
                 committee_users = list(committee_users)
                 if limit:
                     committee_users = committee_users[offset: offset + int(limit)]
-                current_cnt = committee_users.count
+                current_cnt = len(committee_users)
                 committee['users'] = committee_users
 
                 data = {"committee": committee, "next": 0, "prev": 0, "count": current_cnt,"total": total_cnt}
