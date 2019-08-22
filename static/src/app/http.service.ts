@@ -76,14 +76,22 @@ export class HttpService {
         {
             input_data.params.kw = obj_this.search_kw;            
         }
-        input_data.params.offset = obj_this.offset;
-        if(obj_this.limit)
-        {            
+        if(!input_data.params)
+        {
             input_data.params.limit = obj_this.limit;
+            input_data.params.offset = obj_this.offset;
         }
         else{
-            console.log(obj_this.limit, 'limit lost');
+            if(!input_data.params.limit)
+            {
+                input_data.params.limit = obj_this.limit;
+            }
+            if(!input_data.params.offset)
+            {
+                input_data.params.offset = obj_this.offset;
+            }
         }
+        
         var options = {
             url: '/rest/secure',
             type: type,

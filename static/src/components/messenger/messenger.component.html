@@ -87,7 +87,7 @@
                             <span class="unseen" *ngIf="cg.unseen">
                                 {{cg.unseen}}
                             </span>
-                            <span class="group-single-btn" (click)="show_group_members(cg, $event)">
+                            <span class="show_members_btn group-single-btn" (click)="show_group_members(cg, $event)">
                                 Members
                             </span>
                         </a>
@@ -151,8 +151,10 @@
                 </div>
                 
                 <div *ngIf="active_chat_user" class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
-            </div>			
+            </div>
+            
             <div class="card-body msg_card_body meetVue-chat-body">
+                <h6 *ngIf="active_chat_user && active_chat_user.messages.length >= message_limit && !active_chat_user.read" style="text-align:center; padding-top:90px">Scroll to top to get older messages</h6>
                 <div class="messenger-body" *ngFor="let msg of active_chat_user.messages">
                     <div *ngIf="msg.sender.id == user.id"
                             class="d-flex align-items-end justify-content-end mb-4">

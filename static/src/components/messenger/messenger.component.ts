@@ -120,7 +120,6 @@ export class MessengerComponent implements OnInit {
                     group.members.push(data.members[i]);
                 }
             }
-
             
             obj_this.people_list = new Array<ChatUser>();            
             for(var ind in obj_this.socketService.chat_users)
@@ -229,7 +228,7 @@ export class MessengerComponent implements OnInit {
     
     start_group_chat(selected_group: ChatGroup, e){
         let obj_this = this; 
-        if(e && e.target && $(e.target).hasClass('setup'))
+        if(e && e.target && $(e.target).hasClass('show_members_btn'))
         {
             return;
         }        
@@ -389,7 +388,11 @@ export class MessengerComponent implements OnInit {
         }
     }
     
-    activate_chat_user(chat_client: ChatClient){        
+    activate_chat_user(chat_client: ChatClient){
+        if(!chat_client.messages)
+        {
+            chat_client.messages = [];
+        }
         this.active_chat_user = chat_client;
         // console.log(chat_client, 1999);
         this.set_chat_mode('active');
@@ -432,11 +435,15 @@ export class MessengerComponent implements OnInit {
         }
     }
 
+    message_limit = 20;
+    message_offset = 0;
     active_chat_user: ChatClient;
 
     onGroupSelected(messages: Array<Message>, already_fetched = 0) {
         var obj_this = this;
-		$( ".msg_card_body").unbind( "scroll" );
+        $( ".msg_card_body").unbind( "scroll" );
+        obj_this.message_offset = 0;
+        obj_this.active_chat_user.read = false;
 		$(".msg_card_body").scroll(function(){
             let scroll_top = $(".msg_card_body").scrollTop();
             if(!obj_this.active_chat_user)
@@ -454,8 +461,9 @@ export class MessengerComponent implements OnInit {
 			}
         });
 
+        
         function get_group_old_messages(){
-            if(obj_this.active_chat_user.messages.length < 5)
+            if(obj_this.active_chat_user.messages.length <= obj_this.message_limit)
             {
                 return;
             }
@@ -484,7 +492,7 @@ export class MessengerComponent implements OnInit {
                     obj_this.is_request_sent = false;
                     obj_this.update_emjoi_urls(data);
                     obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);
-                    obj_this.scroll_to_end(".msg_card_body");                    
+                    $(".msg_card_body").scrollTop(100);
                 }
                 else
                 {
@@ -535,6 +543,8 @@ export class MessengerComponent implements OnInit {
 
 	onUserSelected(messages: Array<Message>, already_fetched = 0) {        
         var obj_this = this;
+        obj_this.message_offset = 0;
+        obj_this.active_chat_user.read = false;
 		$( ".msg_card_body").unbind( "scroll" );
 		$(".msg_card_body").scroll(function(){
             let scroll_top = $(".msg_card_body").scrollTop();
@@ -554,7 +564,7 @@ export class MessengerComponent implements OnInit {
         });
 
         function get_user_old_messages(){
-            if(obj_this.active_chat_user.messages.length < 5)
+            if(obj_this.active_chat_user.messages.length < obj_this.message_limit)
             {
                 return;
             }
@@ -562,11 +572,14 @@ export class MessengerComponent implements OnInit {
             if(obj_this.active_chat_user.read || obj_this.is_request_sent){                    
                 return;
             }
+
+            obj_this.message_offset += obj_this.message_limit;
             obj_this.is_request_sent = true;
             let params = {
                 target_id: obj_this.active_chat_user.id, 
-                offset: obj_this.active_chat_user.messages.length
+                offset: obj_this.message_offset
             };
+            console.log(params);
 
             let args = {
                 app: 'chat',
@@ -583,7 +596,7 @@ export class MessengerComponent implements OnInit {
                     obj_this.is_request_sent = false;
                     obj_this.update_emjoi_urls(data);
                     obj_this.active_chat_user.messages = data.concat(obj_this.active_chat_user.messages);
-                    obj_this.scroll_to_end(".msg_card_body");                    
+                    $(".msg_card_body").scrollTop(100);
                 }
                 else
                 {
