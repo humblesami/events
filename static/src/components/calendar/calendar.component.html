@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button style="display: none" (click)="navigate_meeting()" type="button" class="btn btn-primary btn-sm  go_details" data-dismiss="modal">Details</button>
+                    <button *ngIf="selected_event.my_event" (click)="navigate_meeting()" type="button" class="btn btn-primary btn-sm  go_details" data-dismiss="modal">Details</button>
                     <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                 </div>
             </div>
