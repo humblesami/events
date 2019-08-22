@@ -1,7 +1,8 @@
 <app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1"></app-breadcrumb>      
-    
+   
 <div class="router-outlet home-container" *ngIf="ng_init && home_data">
-        <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
+    <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
+
     <div class="HomepageDocumentSection">
         <div class="container" id="welcome" *ngIf="home_data">
             <section *ngIf="home_data && to_do_count" class="todoitembtn">
@@ -32,32 +33,47 @@
                     </div>
                 </div>
             </section>
-            <section id="to-do" *ngIf="to_do_count" class="">            
+
+            
+            <section *ngIf="to_do_count" class="">            
                 <div class="container">
-                    <h2 class="border-bottom text-dark pb-3">Actions</h2>                    
-                    <div *ngIf="home_data.to_do_items.pending_surveys && home_data.to_do_items.pending_surveys.length" class="py-3">
-                        <h4 class="text-primary">
-                            Surveys
-                        </h4>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-4 mb-3" *ngFor="let sur of home_data.to_do_items.pending_surveys">
-                                <div class="SurveysInfoBox">
-                                    <div class="SurveysInfoBoxTitle">
-                                        <h5>
-                                            <b>{{sur.title}}</b>
-                                            <span *ngIf="sur.meeting_name"> Meeting: {{sur.meeting_name}}</span>
-                                        </h5>
-                                    </div>
-                                    <div class="SurveysInfoBoxBtn  btn-flex-1">
-                                        <button class="btn btn-meeting" routerLink="/home/survey/{{sur.id}}">
-                                        <span>Start</span>
-                                        </button>
-                                    </div>
-                                </div>
+                    <h2 class="border-bottom text-dark pb-3">Actions</h2>
+                    <!--Surveys-->
+                    <div id="to-do">
+                        <div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel"
+                        *ngIf="home_data.to_do_items.pending_surveys.length">   
+                            <h4 class="text-primary">
+                                Surveys
+                            </h4>
+                            <div class="controls-top float-right btn-group mb-2">
+                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_surveys, 'survey')" href="#multi-item-example" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_surveys, 'survey')" href="#multi-item-example" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                             </div>
-                        </div>
-                    </div>
-                    <div *ngIf="home_data && home_data.to_do_items.pending_meetings1 && home_data.to_do_items.pending_meetings.length>0" class="">
+                            <div class="carousel-inner" role="listbox">    
+                                <div class="carousel-item active">    
+                                    <div class="row">
+                                        
+                                        <div class="col-sm-12 col-md-6 col-lg-4 mb-3" *ngFor="let sur of home_data.to_do_items.pending_surveys.slice(start_indices['survey'], start_indices['survey'] + visible_limit['survey'])">
+                                            <div class="SurveysInfoBox">
+                                                <div class="SurveysInfoBoxTitle">
+                                                    <h5>
+                                                        <b>{{sur.title}}</b>
+                                                        <span *ngIf="sur.meeting_name"> Meeting: {{sur.meeting_name}}</span>
+                                                    </h5>
+                                                </div>
+                                                <div class="SurveysInfoBoxBtn  btn-flex-1">
+                                                    <button class="btn btn-meeting" routerLink="/home/survey/{{sur.id}}">
+                                                    <span>Start</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>   
+                        </div>                          
+                
+                        <div *ngIf="home_data && home_data.to_do_items.pending_meetings1" class="">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="main-heading">
@@ -95,102 +111,135 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
-                    <div *ngIf="home_data && home_data.to_do_items.pending_documents && home_data.to_do_items.pending_documents.length" class="border-bottom py-3">
-                        <h4 class="text-primary">
-                            Documents To Sign
-                        </h4>
-                        <div class="row">
-                            <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let doc of home_data.to_do_items.pending_documents">
-                                <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
-                                    <div class="DocIcon">
-                                        <span class="rounded-circle">
-                                            <i class="icon-doc-file"></i>
-                                        </span>
-                                    </div>
-                                    <div class="DocText">
-                                        <div class="DocName">
-                                            <h5>Title: {{doc.name}}</h5>
-                                        </div>
-                                        <div *ngIf="doc && doc.meeting__name" class="DocMeeting">
-                                            Meeting: {{doc.meeting__name}}
-                                        </div>
-                                        <div class="SignatureText font-11">
-                                            <span>My Signature: </span>
-                                            <span class="pending-status">{{doc.signature_status}}</span>
-                                        </div>
-                                    </div>
-                                </a>
+                        </div>
+                        <!--Documents-->
+                        <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" class="carousel slide carousel-multi-item border-bottom py-3" data-ride="carousel">   
+                            <h4 class="text-primary">
+                                Documents To Sign
+                            </h4>
+                            <div class="controls-top float-right btn-group mb-2">
+                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                             </div>
-                        </div>  
-                    </div>
-                    <div *ngIf="home_data && home_data.to_do_items.pending_votings && home_data.to_do_items.pending_votings.length" class="py-3">
-                        <h4 class="text-primary">
-                            Approval / Voting
-                        </h4>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-6 col-lg-4 mb-3" *ngFor="let vote of home_data.to_do_items.pending_votings">
-                                <div class="kanban-card voting">
-                                    <div class="VotingsInfoBox">
-                                        <div class="VotingsInfoBoxTitle ">
-                                            <h5>
-                                                <b>{{vote.name}}</b>
-                                                <span *ngIf="vote.meeting_name"> Meeting: {{vote.meeting_name}}</span>
-                                                <div><strong>Voting Type :</strong><span style="display:inline-block;">{{vote.voting_type_name}}</span></div>
-                                            </h5>
-                                        </div>
-                                        <div class="bs-btnwrap">
-                                            <button class="btn" routerLink="/voting/{{vote.id}}">
-                                            <span>Cast Vote</span>
-                                            </button>
+                            <div class="carousel-inner" role="listbox">    
+                                <div class="carousel-item active">    
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let doc of home_data.to_do_items.pending_documents.slice(start_indices['sign_doc'], start_indices['sign_doc'] + visible_limit['sign_doc'])">
+                                            <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
+                                                <div class="DocIcon">
+                                                    <span class="rounded-circle">
+                                                        <i class="icon-doc-file"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="DocText">
+                                                    <div class="DocName">
+                                                        <h5>Title: {{doc.name}}</h5>
+                                                    </div>
+                                                    <div *ngIf="doc && doc.meeting__name" class="DocMeeting">
+                                                        Meeting: {{doc.meeting__name}}
+                                                    </div>
+                                                    <div class="SignatureText font-11">
+                                                        <span>My Signature: </span>
+                                                        <span class="pending-status">{{doc.signature_status}}</span>
+                                                    </div>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>                        
-                    </div>
+                        </div>                 
+                        <!--Votings-->
+                        <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" class="carousel slide carousel-multi-item py-3" data-ride="carousel">   
+                                <h4 class="text-primary">
+                                    Approval / Voting
+                                </h4>
+                            <div class="controls-top float-right btn-group mb-2">
+                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                            </div>
+                            <div class="carousel-inner" role="listbox">    
+                                <div class="carousel-item active"> 
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6 col-lg-4 mb-3" *ngFor="let vote of home_data.to_do_items.pending_votings.slice(start_indices['voting'], start_indices['voting'] + visible_limit['voting'])">
+                                            <div class="kanban-card voting">
+                                                <div class="VotingsInfoBox">
+                                                    <div class="VotingsInfoBoxTitle ">
+                                                        <h5>
+                                                            <b>{{vote.name}}</b>
+                                                            <span *ngIf="vote.meeting_name"> Meeting: {{vote.meeting_name}}</span>
+                                                            <div><strong>Voting Type :</strong><span style="display:inline-block;">{{vote.voting_type_name}}</span></div>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="bs-btnwrap">
+                                                        <button class="btn" routerLink="/voting/{{vote.id}}">
+                                                        <span>Cast Vote</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
                 </div>         
             </section>
         </div>            
-    </div>    
+    </div>
     
-    <section *ngIf="home_data && home_data.doc_ids && home_data.doc_ids.length"  class="HomepageDocumentSection" >
-            <div class="container py-3 pl-4">
-                <h4 class="text-dark">Documents</h4>
-                <div class="row docwrappercontainer">
-                    <a class="col-sm-6 col-md-4 col-lg-2 mb-3" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids">
-                        <div class="DocumentWrapper">
-                            <div class="DocIcon">
-                                <span class="rounded-circle">
-                                    <i class="icon-doc-file"></i>
-                                </span>
+    <section *ngIf="home_data && home_data.doc_ids && home_data.doc_ids.length" id="multi-item-docs"
+    class="carousel slide carousel-multi-item HomepageDocumentSection" data-ride="carousel">   
+        <div class="container py-3 pl-4">
+            <h4 class="text-dark">Documents</h4>
+            <div class="controls-top float-right btn-group mb-2">
+                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+            </div>
+            <div class="carousel-inner" role="listbox">    
+                <div class="carousel-item active"> 
+                    <div class="row docwrappercontainer">
+                        <a class="col-sm-6 col-md-4 col-lg-2 mb-3" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids.slice(start_indices['news_doc'], start_indices['news_doc'] + visible_limit['news_doc'])">
+                            <div class="DocumentWrapper">
+                                <div class="DocIcon">
+                                    <span class="rounded-circle">
+                                        <i class="icon-doc-file"></i>
+                                    </span>
+                                </div>
+                                <div class="DocInfoVertical text-truncate">
+                                    {{doc.name}}
+                                </div>
                             </div>
-                            <div class="DocInfoVertical text-truncate">
-                                {{doc.name}}
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
             </div> 
+        </div>
     </section>
-    <section *ngIf="home_data && home_data.video_ids && home_data.video_ids.length" class="container py-3 pl-4">
-        <div>
-                <h4 class="text-primary">
-                    Videos
-                </h4>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="row">
-                        <div class="video thumbnail col-sm-6 col-md-4 col-lg-3" *ngFor="let video of home_data.video_ids">
-                            <iframe class="docThumbnail" frameborder="0" [src]="video.url"></iframe>
-                            <div class="videoOverLayWrapper" (click)="view_video(video.name, video.original_url)"></div>
-                            <h5 class="docname text-dark">{{video.name}}</h5>
-                        </div>
+
+    <section *ngIf="home_data && home_data.video_ids && home_data.video_ids.length" id="multi-item-videos" 
+    class="carousel slide carousel-multi-item container py-3 pl-4" data-ride="carousel">   
+            <h4 class="text-primary">
+                Videos
+            </h4>
+        <div class="controls-top float-right btn-group mb-2">
+            <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+            <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+        </div>
+        <div class="carousel-inner" role="listbox">    
+            <div class="carousel-item active"> 
+                <div class="row">
+                    <div class="video thumbnail col-sm-6 col-md-4 col-lg-3" *ngFor="let video of home_data.video_ids.slice(start_indices['news_video'], start_indices['news_video'] + visible_limit['news_video'])">
+                        <iframe class="docThumbnail" frameborder="0" [src]="video.url"></iframe>
+                        <div class="videoOverLayWrapper" (click)="view_video(video.name, video.original_url)"></div>
+                        <h5 class="docname text-dark">{{video.name}}</h5>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <div class="modal fade video" id="videoModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">

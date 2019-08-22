@@ -68,6 +68,7 @@ export class HomeComponent implements OnInit {
             obj_this.home_data = home_data;
             home_data.video_ids = valid_videos;
             var to_do_items = home_data.to_do_items;
+            console.log(home_data);
             obj_this.to_do_count = to_do_items.pending_documents.length + to_do_items.pending_meetings.length + to_do_items.pending_surveys.length + to_do_items.pending_votings.length;
         };
         let args = {
@@ -82,8 +83,7 @@ export class HomeComponent implements OnInit {
         obj_this.httpService.get(input_data, success_cb, null);
     }
 
-    view_video(video_name, video_url){  
-        console.log(video_url); 
+    view_video(video_name, video_url){
         $('#videoModal .modal-heaer').html('<h3>'+video_name+'</h3>')
         $('#videoModal .modal-body .embed-responsive').html(`
             <iframe class="embed-responsive-item" frameborder="0"  allowfullscreen="allowfullscreen"
@@ -93,7 +93,42 @@ export class HomeComponent implements OnInit {
         $('#videoModal').modal('show');
     }
 
+    visible_limit = {
+        survey : 1,
+        sign_doc : 1,
+        news_doc : 1,
+        news_video: 1,
+        voting: 1,
+    };
+
     ng_init = false;
+    start_indices = {
+        survey : 0,
+        sign_doc : 0,
+        news_doc : 0,
+        news_video: 0,
+        voting: 0,
+    };
+
+    get_slider_start_index(flag, items, item_type){
+        
+        if(!items)
+        {
+            return;
+        }
+        if(this.start_indices[item_type] + flag * this.visible_limit[item_type] >= items.length)
+        {
+            this.start_indices[item_type] = 0;
+        }
+        else if(this.start_indices[item_type] + flag * this.visible_limit[item_type] < 0)
+        {
+            this.start_indices[item_type] = items.length % this.visible_limit[item_type] > 0 ? items.length - items.length % this.visible_limit[item_type] : items.length - this.visible_limit[item_type];
+        }
+        else
+        {
+            this.start_indices[item_type] += flag * this.visible_limit[item_type];
+        }
+    }
     ngOnInit() {
         var obj_this = this;
         $('.home-container').show();
@@ -111,6 +146,33 @@ export class HomeComponent implements OnInit {
                     obj_this.get_home_data();
                 },5000)
             }                
-        }    
+        }   
+        
+        var vw = $(window).width();
+        // console.log(vw , 66);
+        if(vw > 767 && vw < 992)
+            obj_this.visible_limit = {
+                survey : 2,
+                sign_doc : 3,
+                news_doc : 2,
+                news_video: 2,
+                voting: 2,
+            }
+        else if(vw > 991)
+        obj_this.visible_limit = {
+            survey : 3,
+            sign_doc : 4,
+            news_doc : 6,
+            news_video: 3,
+            voting: 3,
+        }
+        else
+            obj_this.visible_limit = {
+                survey : 1,
+                sign_doc : 1,
+                news_doc : 1,
+                news_video: 1,
+                voting: 1,
+            };
     }
 }
