@@ -1,7 +1,9 @@
 <div style="padding:10px" class="container">
-    <input type="text" 
+    <div class="main-full-seachbar mb-3">
+	<input type="text"
         (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
-        placeholder="Search..."  class="form-control mb-3"/>
+        placeholder="Search..."  class="form-control"/>
+	</div>
     <div class="roster">
         <table class="table my-3" style="border: 1px solid #ddd">
             <thead>
