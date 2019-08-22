@@ -1,73 +1,60 @@
 <!-- <app-breadcrumb title="Calendar"></app-breadcrumb> -->
 <h3 class="text-dark">Calendar</h3>
 <div class="router-outlet calendarwrapper">
-    <div id="calendar"></div>
-    <div id="event-summary" style="display:none;">
-        <div class="event-card home-modal-calendar">
-            <div class="o_group o_inner_group">
-				<div class="row home-calendar-modal-detail">
-					<div class="col-sm-12">
-						<label >Title</label>
-						<span name="name">Meeting Title</span>
-					</div>
-					<div class="col-sm-6">
-						<label >Starting at</label>
-						<span name="start">10/24/2018 08:00:00</span>
-					</div>
-					<div class="col-sm-6">
-						<label >Ending at</label>
-						<span name="stop">10/24/2018 16:00:00</span>
-					</div>
-					<div class="col-sm-6">
-						 <label>Duration</label>
-						<span name="duration">08:00</span>
-					</div>
-					<div class="col-sm-6">
-						 <label>Location</label>
-						<span name="location">08:00</span>
-					</div>
-					<div class="col-sm-6">
-						 <label>Video Call Link</label>
-						 <span name="video_call_link">
-							<a class="video_call_link" href="">Video Call</a>
-						</span>
-					</div>
-					<div class="col-sm-6">
-						<label>Conference Bridge No.</label>
-						<span name="conference_bridge_number">123-456-7890</span>
-					</div>
-					<div class="col-sm-6">
-						 <label>Meeting PIN</label>
-						<span name="pin">1234567989</span>
-					</div>
-					<div class="col-sm-6">
-						 <label>Location</label>
-						<span name="location">pak</span>
-					</div>
-				</div>
-            </div>
-            <div class="upcomingButton">
-                <button class="btn btn-primary">
-                    <span name="accepted">Accept</span>
-                </button>
-                <button class="btn btn-primary">
-                    <span name="declined">Decline</span>
-                </button>
-                <button class="btn btn-primary">
-                    <span name="tentative">Tentative</span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <div id="calendar"></div>    
     <div class="modal fade" id="calenderModal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
+            <div *ngIf="selected_event" class="modal-content">
                 <div class="modal-header">
-                    <span class="title"></span>
+                    <h4 class="title">
+                        {{selected_event.name}}
+                    </h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div id="modal-body" class="modal-body">
-    
+                    <div id="event-summary">
+                        <div class="event-card home-modal-calendar">
+                            <div class="o_group o_inner_group">
+                                <div class="row home-calendar-modal-detail">                                    
+                                    <div>
+                                        <div class="col-sm-6">
+                                            <label >Starting at</label>
+                                            <span name="start">{{selected_event.start_date}}</span>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label >Ending at</label>                        
+                                            <span name="stop">{{selected_event.end_date}}</span>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Duration</label>
+                                            <span name="duration">{{selected_event.duration}}</span>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Location</label>
+                                            <span name="location">{{selected_event.location}}</span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="selected_event.my_event">
+                                        <div class="col-sm-6">
+                                            <label>Video Call Link</label>
+                                            <span name="video_call_link">
+                                                <a class="video_call_link" target="__blank" href="{{selected_event.video_call_link}}">{{selected_event.video_call_link}}</a>
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Conference Bridge No.</label>
+                                            <span name="conference_bridge_number">{{selected_event.conference_bridge_number}}</span>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Meeting PIN</label>
+                                            <span name="pin">{{selected_event.pin}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <app-meetingresponse></app-meetingresponse>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button style="display: none" (click)="navigate_meeting()" type="button" class="btn btn-primary btn-sm  go_details" data-dismiss="modal">Details</button>
