@@ -2977,8 +2977,19 @@ h4.title-h4{
 .new_sign .field_type{ margin:0 .5rem; padding: 0 .3rem; flex:1; }
 .new_sign input.field_type { border-radius: .2rem; border: 1px solid #999999; }
 .main-full-seachbar{
-	background: #E1E1E1;
-    padding: 15px;
-    border-radius: .3rem;
+	background: #e9ecef;
+	padding: 8px;
+	border-radius: .15rem;
+	position:relative;
 }
-.main-full-seachbar .form-control{ }
+.main-full-seachbar .form-control{ border-radius: 0; }
+.main-full-seachbar:before{
+	font-family: 'boardsheet' !important;
+    content: "\e903";
+    position: absolute;
+    top: 50%;
+    color: #000000;
+    transform: translateY(-50%);
+    right: 20px;
+    font-size: 18px;
+	}
