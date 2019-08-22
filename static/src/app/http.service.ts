@@ -14,7 +14,7 @@ export class HttpService {
     constructor() {
         this.server_url = window['server_url'];
         this.offset = 0;
-        this.limit = 2;
+        this.limit = 5;
         this.count = 0;
     }
 
