@@ -472,34 +472,38 @@ export class EsignDocDetailsComponent implements OnInit {
                     signed: this.signed,
                     name: this.name,
                     my_record: this.my_record,
-                    zoom:this.zoom,
                     page: this.page,
-                    field_name: this.field_name,
-                    //w:this.width,
-                    //h:this.height,
+                    field_name: this.field_name,                    
                     class: "sign_container",
                     //text: this.name
                 });
+                // console.log(this);
                 var show_text = this.type.charAt(0).toUpperCase() + this.type.slice(1);
                 div.html(show_text + ":" + this.name);
                 div.attr('signtype', this.type);
-                // console.log(this.width , perc, this.zoom);
-                var h, w, perc, diff;
-                if (this.zoom > canvas.width) {
-                    perc = (canvas.width / this.zoom);
-                    w = this.width * perc;
-                    h = this.height * perc;
-                }
-
-                if (this.zoom < canvas.width) {
-                    perc = (canvas.width / this.zoom);
-                    w = this.width * perc;
-                    h = this.height * perc;
-                }
+                var h, w;
 
                 var page_zoom = $('#scaleSelect').val();
+                if(!page_zoom)
+                {
+                    page_zoom = 1;
+                    // console.log(page_zoom, 133);
+                }
                 w = this.width * page_zoom;
                 h = this.height *  page_zoom;
+                if(!h)
+                {                    
+                    h = 20 * page_zoom;
+                    if(this.type == 'initials' || this.type == 'signature')
+                    {
+                        h = 40 * page_zoom;
+                    }
+                }
+                if(!w)
+                {
+                    w = 160 * page_zoom;
+                }
+                // console.log(h, w, 1233);
                 
                 var top = this.top * page_zoom  + "%";
                 var left = this.left * page_zoom + "%";
