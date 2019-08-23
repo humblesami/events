@@ -282,7 +282,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<span *ngIf="socketService.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
 						</div>
 
-						<div *ngIf="profile_data.bio">
+						<div *ngIf="profile_data.groups">
 							<div class="admin_info_after_name row">
 
 								 <div *ngIf="profile_data.board_joining_date" class="col-md-4 mb-2">
@@ -330,17 +330,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
 									</div>
 								</div>
 								<div *ngIf="profile_data.groups && profile_data.groups.length > 0" class="admin_info_after_name col-lg-12 mb-2">
-								<div class="single-input-label">
-									<label for="job-title">
-                                        <b>Role</b>
-                                    </label>
-									<div class="committee-member-section">
-										<span *ngFor="let group of profile_data.groups">
-											<span class="committee-member"  routerLink="/profiles/{{group.name | lowercase}}">{{group.name}}</span>
-										</span>
+									<div class="single-input-label">
+										<label for="job-title">
+											<b>Role</b>
+										</label>
+										<div class="committee-member-section">
+											<span *ngFor="let group of profile_data.groups">
+												<span class="committee-member"  routerLink="/profiles/{{group.name | lowercase}}">{{group.name}}</span>
+											</span>
+										</div>
 									</div>
 								</div>
-							</div>
+							
 							</div>
 						</div>
 					</div>
