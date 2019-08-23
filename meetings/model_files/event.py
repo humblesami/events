@@ -172,6 +172,27 @@ class Event(models.Model):
         return val
     location = property(_compute_address)
 
+    @classmethod
+    def get_calendar(cls, request, params):
+        user_id = request.user.id
+        public_events = Event.objects.filter(archived=False, publish=True).values('id','name','start_date','end_date')
+        calendar_events = []
+        for ev1 in public_events:
+            ev2 = Event.objects.get(pk=ev1['id'])
+            my_event = ev2.attendees.filter(pk=user_id)
+            if my_event:
+                my_event = 1
+            else:
+                my_event = None
+            event = {
+                'id': ev1['id'],
+                'name': ev1['id'],
+                'start_date': str(ev1['start_date']),
+                'end_date': str(ev1['end_date']),
+                'my_event': my_event,
+            }
+            calendar_events.append(event)
+        return calendar_events
 
     @classmethod
     def get_upcoming_public_events(cls, user_id):

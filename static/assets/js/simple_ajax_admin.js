@@ -135,7 +135,7 @@ function dn_rpc_object(options) {
             console.log(err);
             return;
         }
-        if(res.status == 404)
+        if(err.status == 404)
         {
             er = api_url + ' unavailable at '+ server_base_url;
             console.log(err);
