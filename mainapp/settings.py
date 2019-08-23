@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     'esign',
     'nested_admin',
     'restoken',
-    'actions'
+    'actions',
+    'test'
 ]
 
 REST_FRAMEWORK = {
@@ -113,6 +114,7 @@ TEMPLATES = [
             os.path.join(PROJECT_ROOT, '..', 'ngapp/templates'),
             os.path.join(PROJECT_ROOT, '..', 'emailthread/templates'),
             os.path.join(PROJECT_ROOT, '..', 'authsignup/templates'),
+            os.path.join(PROJECT_ROOT, '..', 'temp/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
