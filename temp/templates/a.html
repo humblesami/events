@@ -5,68 +5,82 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Google Picker Example</title>
 
-    <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
-    <script>
-        (function() {
-            console.log(444);
-
-            function onAuthApiLoad() {
-                window.gapi.auth.authorize({
-                    'client_id': '883270356067-4ib2bm6t9jnp8j5ef73nqkgth35oq19r.apps.googleusercontent.com',
-                    'scope': ['https://www.googleapis.com/auth/drive']
-                }, handleAuthResult);
-            }
-            window['onAuthApiLoad'] = onAuthApiLoad;
-            var oauthToken;
-
-            function handleAuthResult(authResult) {
-                console.log(authResult, 188);
-                if (authResult && !authResult.error) {
-                    oauthToken = authResult.access_token;
-                    window['gdrive_accessed'] = true;
-                    createPicker();
-                }
-            }
-
-            function createPicker() {
-                var picker = new google.picker.PickerBuilder()
-                    .addView(new google.picker.DocsUploadView())
-                    .addView(new google.picker.DocsView())
-                    .setOAuthToken(oauthToken)
-                    //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
-                    .setCallback(pickerCallback)
-                    .build();
-                picker.setVisible(true);
-            }
-
-            function pickerCallback(data) {
-                var url = 'nothing';
-                if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-                    var doc = data[google.picker.Response.DOCUMENTS][0];
-                    url = doc[google.picker.Document.URL];
-                }
-                var message = 'You picked: ' + url;
-                document.getElementById('accessed_file').innerHTML = message;
-            }
-            document.getElementById('google_drive_picker').click(createPicker);
-        })()
-
-        function onApiLoad() {
-            if (window['gdrive_accessed']) {
-                console.log('Already accessed gdrive');
-                return;
-            }
-            gapi.load('auth', { 'callback': window['onAuthApiLoad'] });
-            gapi.load('picker');
-        }
-    </script>
+    
 </head>
 
 <body>
     <button disabled id="google_drive_picker">Show Drive Picker</button>
     <div id="accessed_file"></div>
     <div id="result">Result</div>
-    <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+    <div>
+      
+      <script>
+          (function() {
+              function onAuthApiLoad() {
+                  window.gapi.auth.authorize({
+                      'client_id': '883270356067-4ib2bm6t9jnp8j5ef73nqkgth35oq19r.apps.googleusercontent.com',
+                      'scope': ['https://www.googleapis.com/auth/drive']
+                  }, handleAuthResult);
+              }
+              window['onGPAuthApiLoad'] = onAuthApiLoad;
+              var oauthToken;
+  
+              function handleAuthResult(authResult) {
+                  console.log(authResult, 188);
+                  if (authResult && !authResult.error) {
+                      oauthToken = authResult.access_token;
+                      window['gdrive_accessed'] = true;
+                      createPicker();
+                  }
+              }
+
+              var gdrive_picker = undefined;
+  
+              function createPicker() {
+                  var gdrive_picker = new google.picker.PickerBuilder()
+                      // .addView(new google.picker.DocsUploadView())
+                      .addView(new google.picker.DocsView())
+                      .setOAuthToken(oauthToken)
+                      //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
+                      .setCallback(pickerCallback)
+                      .build();
+                    gdrive_picker.setVisible(true);
+                    document.getElementById('google_drive_picker').removeAttribute('disabled');
+              }
+  
+              function pickerCallback(data) {
+                  var url = 'nothing';
+                  if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+                      var doc = data[google.picker.Response.DOCUMENTS][0];
+                      url = doc[google.picker.Document.URL];
+                  }
+                  var message = 'You picked: ' + url;
+                  document.getElementById('accessed_file').innerHTML = message;
+              }
+              document.getElementById('google_drive_picker').click(function(){
+                if(gdrive_picker)
+                {
+                  gdrive_picker.setVisible(true);
+                }
+                else{
+                  console.log('Picker not loaded yet');
+                }
+              });
+          })()
+  
+          function onGooglePickerApiLoad() {
+            console.log('APi Loaded');
+              if (window['gdrive_accessed']) {
+                  console.log('Already accessed gdrive');
+                  return;
+              }
+              gapi.load('auth', { 'callback': window['onGPAuthApiLoad'] });
+              gapi.load('picker');
+          }
+      </script>
+      <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onGooglePickerApiLoad"></script>
+    </div>
+    
 </body>
 
 </html>
