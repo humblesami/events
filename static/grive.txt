@@ -1,0 +1,8 @@
+API kEY
+AIzaSyD0bgdd-yE9KDGFzofQ_ZHNoLH3jff9VMY
+
+client id
+883270356067-rf7r3q9t3ah48v6o6ldr48ipet2tc601.apps.googleusercontent.com
+
+Client Secert
+I0xg7HtrYpDuZwmELOuL1LUW
