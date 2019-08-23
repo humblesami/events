@@ -17,10 +17,7 @@
                     </div>
                     <div class="form-group input-label-icon">
                         <img async class="img-fluid user-icon" src="static/assets/images/login-user.png" />  
-                        <input id="username" placeholder="Username" type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
-                        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                            <div *ngIf="f.username.errors.required">Username is required</div>
-                        </div>
+                        <input id="username" placeholder="Username" type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />                        
                     </div>
                     <div class="form-group input-label-icon">                        
                         <img async class="img-fluid" src="static/assets/images/lock-icon.png" />  
