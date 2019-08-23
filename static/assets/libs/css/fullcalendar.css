@@ -580,6 +580,8 @@ a.fc-more:hover {
 
 .fc-toolbar .fc-right {
 	float: right;
+	display: flex;
+    align-items: center;
 }
 
 .fc-toolbar .fc-center {
@@ -1218,14 +1220,14 @@ tr.fc-year-week-days
 }
 .fc-toolbar button {
     float: none;
-    border-radius: 3px;
     background: #ffffff;
     box-shadow: none;
     margin: 3px;
-    border: 1px solid #c7c7c7;
+    border: 1px solid #4B74B5;
     padding: 0px 13px;
     text-transform: capitalize;
     color: #616161;
+    text-shadow:none;
 }
 .fc-toolbar button:hover{
     background-color: #f1f3f4;
@@ -1245,7 +1247,10 @@ th.fc-day-header.fc-widget-header {
     display: block;
 }
 .fc-toolbar button.fc-state-active, .fc-state-active {
-	background-color: #458aae;
+	background-color: #4B74B5;
     background-image: none;
     color: white;
+}
+.fc-toolbar button:nth-child(4) {
+	border-radius:0 !important;
 }

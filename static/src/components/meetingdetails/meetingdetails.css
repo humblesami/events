@@ -306,7 +306,15 @@ h5, .h5 {
     font-size: 0.9rem;
 }
 .pending-status{
-    color:#db4437;
+     border-radius: 0.2rem;
+    background-color: #3a5d95;
+    color: white;
+    padding: .2rem .3rem;
+    margin-right: 5px;
+    display: inline-block;
+    font-size: .7rem;
+    line-height: 1;
+    margin-left: .2rem;
 }
 @media screen and (max-width: 390px){
     .roster-full{

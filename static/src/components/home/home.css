@@ -231,9 +231,15 @@ font-weight:500;
 
 }
 .pending-status{
-     color:#db4437;
-     background:#ffffff;
-     padding:0 3px;
+      border-radius: 0.2rem;
+    background-color: #3a5d95;
+    color: white;
+    padding: .2rem .3rem;
+    margin-right: 5px;
+    display: inline-block;
+    font-size: .7rem;
+    line-height: 1;
+    margin-left: .2rem;
 }
 
 .DocName h5 {
