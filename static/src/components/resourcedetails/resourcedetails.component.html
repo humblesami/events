@@ -34,8 +34,8 @@
 			<input type="text" 
 				(keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
 				placeholder="Search..."  class="form-control"/>
-			</div>
-  			<div class="row docwrappercontainer">				
+            </div>
+            <div class="row docwrappercontainer">				
 				<div class="col-sm-6 col-md-4 col-lg-2 mb-4"  *ngFor="let doc of folder.files">
 					<a routerLink="/resource/doc/{{doc.id}}" class="">
 						<div class="DocumentWrapper">
@@ -49,12 +49,12 @@
 							</div>
 						</div>
 					</a>
-				</div>    
-        	</div>
+                </div>    
+            </div>
 			
 
-			<app-paginator *ngIf="folder.files.length" (reload_data)="get_list()">
-    		</app-paginator>
+			<app-paginator *ngIf="folder.files.length" (reload_data)="get_list()">                
+            </app-paginator>
 
 			<div *ngIf="folder.sub_folders.length">
 				<div [ngClass]="{'pt-5': folder.total > httpService.limit}" *ngIf="!(no_folders)">

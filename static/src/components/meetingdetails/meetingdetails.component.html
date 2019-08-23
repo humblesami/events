@@ -372,7 +372,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 							</span>
 						</div>
                         <div class="DocInfoVertical text-truncate">
-                                {{doc.name}}
+                            {{doc.name}}
                         </div>
                     </a>
                     <a class="DocumentWrapper gray-bge" *ngIf="doc && !doc.uplaod_status">
@@ -383,7 +383,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </span>
                         </div>
                         <div class="DocInfoVertical text-truncate">
-                                {{doc.name}}
+                            {{doc.name}}
                         </div>
                     </a>
                 </div>
@@ -441,11 +441,11 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 								</span>
 							</div>
 							<div class="DocText">
-								<div class="DocName">
-									<h5 class="text-truncate">Title: {{doc.name}}</h5>
+								<div class="DocName text-truncate">
+									<h5 class="text-truncate">{{doc.name}}</h5>
 								</div>
 								<div class="SignatureText text-truncate font-11">
-									<span>My Signature: </span>
+									<span>Status: </span>
 									<span class="pending-status">{{doc.signature_status}}</span>
 								</div>
 							</div>

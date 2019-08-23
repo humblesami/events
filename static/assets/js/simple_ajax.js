@@ -134,13 +134,13 @@ function dn_rpc_object(options) {
             {
                 err += ' because server unavailble';
             }
-           console.log(er);
-           return;
+            console.log(err);
+            return;
         }
         if(res.status == 404)
         {
             er = api_url + ' unavailable at '+ site_config.server_base_url;
-            console.log(er);
+            console.log(err);
             return;
         }
 

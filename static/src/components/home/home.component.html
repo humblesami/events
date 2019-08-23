@@ -1,5 +1,4 @@
-<app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1"></app-breadcrumb>      
-   
+<app-breadcrumb title="Home" edit="1" app="meetings" model="news" rid="1"></app-breadcrumb>
 <div class="router-outlet home-container" *ngIf="ng_init && home_data">
     <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
 
@@ -132,14 +131,14 @@
                                                     </span>
                                                 </div>
                                                 <div class="DocText">
-                                                    <div class="DocName">
-                                                        <h5>Title: {{doc.name}}</h5>
+                                                    <div class="DocName text-truncate">
+                                                        <h5 class="text-truncate">{{doc.name}}</h5>
                                                     </div>
                                                     <div *ngIf="doc && doc.meeting__name" class="DocMeeting">
                                                         Meeting: {{doc.meeting__name}}
                                                     </div>
                                                     <div class="SignatureText font-11">
-                                                        <span>My Signature: </span>
+                                                        <span>Status: </span>
                                                         <span class="pending-status">{{doc.signature_status}}</span>
                                                     </div>
                                                 </div>

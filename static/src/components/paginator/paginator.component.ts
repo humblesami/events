@@ -10,6 +10,7 @@ declare var $: any;
 export class PaginatorComponent implements OnInit {
     @Output() reload_data: EventEmitter<any> = new EventEmitter();
     limit_options = [
+        2,
         5,
         10,
         50,
