@@ -1,16 +1,13 @@
 from django.contrib import admin
-from django.db.models import Count
 from django import forms
-from meetings.model_files.event import Event
 from .models import *
-
-
+import nested_admin
 
 class VotingChoiceAdmin(admin.ModelAdmin):
     autocomplete_fields = ['voting_type']
 
 
-class ChoiceInline(admin.TabularInline):
+class ChoiceInline(nested_admin.NestedStackedInline):
     model = VotingChoice
     extra = 1
 
@@ -22,7 +19,7 @@ class VotingTypeAdmin(admin.ModelAdmin):
     search_fields = ['name']
     
 
-class VotingDocInline(admin.TabularInline):
+class VotingDocInline(nested_admin.NestedStackedInline):
     model = VotingDocument
     autocomplete_fields = ['voting']
     exclude=('html','content','original_pdf','pdf_doc', 'file_type', 'uplaod_status', 'created_at')

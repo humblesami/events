@@ -1,16 +1,16 @@
 from django.contrib import admin
 from .models import Folder, ResourceDocument
 from documents.admin import FileForm
-# Register your models here.
+import nested_admin
 
-class FolderInline(admin.TabularInline):
+class FolderInline(nested_admin.NestedStackedInline):
     model = Folder
     show_change_link = True
     verbose_name = "Sub Folder"
     verbose_name_plural = "Sub Folders"
     extra = 1
 
-class FileInline(admin.TabularInline):
+class FileInline(nested_admin.NestedStackedInline):
     model = ResourceDocument
     autocomplete_fields = ['users']
     show_change_link = True

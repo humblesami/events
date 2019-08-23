@@ -31,7 +31,7 @@ class TopicInline(nested_admin.NestedStackedInline):
     extra = 1
 
 
-class MeetingDocInline(nested_admin.NestedTabularInline):
+class MeetingDocInline(nested_admin.NestedStackedInline):
     model = MeetingDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
     extra = 1
@@ -152,12 +152,12 @@ class CommitteeAdmin(admin.ModelAdmin):
     members.short_description = ''
 
 
-class NewsVideoInline(admin.TabularInline):
+class NewsVideoInline(nested_admin.NestedStackedInline):
     model = NewsVideo
     extra = 1
 
 
-class NewsDocumentInline(admin.TabularInline):
+class NewsDocumentInline(nested_admin.NestedStackedInline):
     model = NewsDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
     extra = 1

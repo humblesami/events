@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from django.contrib import admin
 from django import forms
 from survey.models import Answer, Category, Question, Response, Survey
@@ -7,9 +6,10 @@ from meetings.model_files.event import Event
 from .actions import make_published
 from django.db import models
 from django.forms import Textarea
+import nested_admin
 
 
-class QuestionInline(admin.TabularInline):
+class QuestionInline(nested_admin.NestedStackedInline):
     model = Question
     exclude = ['order', 'category', 'required', ]
     ordering = ["category", ]
@@ -21,7 +21,7 @@ class QuestionInline(admin.TabularInline):
     }
 
 
-class CategoryInline(admin.TabularInline):
+class CategoryInline(nested_admin.NestedStackedInline):
     model = Category
     exclude = ['order', ]
     extra = 1
