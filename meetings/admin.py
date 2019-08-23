@@ -19,13 +19,13 @@ class TopicAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-class TopicDocInline(nested_admin.NestedTabularInline):
+class TopicDocInline(nested_admin.NestedStackedInline):
     model = AgendaDocument
     exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
     extra = 0
 
 
-class TopicInline(nested_admin.NestedTabularInline):
+class TopicInline(nested_admin.NestedStackedInline):
     model = Topic
     inlines = [TopicDocInline]
     extra = 1
