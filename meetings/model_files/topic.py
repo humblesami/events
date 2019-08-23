@@ -1,14 +1,15 @@
 from django.db import models
-from meetings.model_files.event import Event
 from mainapp import ws_methods
+from mainapp.positional import PositionalSortMixIn
+from meetings.model_files.event import Event
 
 
-class Topic(models.Model):
+class Topic(PositionalSortMixIn, models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     lead = models.CharField(max_length=200, blank=True)
     duration = models.DurationField(null=True)
-
+    position = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
