@@ -1256,3 +1256,6 @@ th.fc-day-header.fc-widget-header {
 .fc-toolbar button:nth-child(4) {
 	border-radius:0 !important;
 }
+.fc th {
+    border-color: #f5f6fa;
+}

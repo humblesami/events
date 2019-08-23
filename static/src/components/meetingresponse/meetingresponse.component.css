@@ -30,6 +30,12 @@
     max-width:130px;
 }
 
+.upcomingButton button {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .upcomingButton button i{
     font-size: 0.75rem;
     margin-right:.3rem;
