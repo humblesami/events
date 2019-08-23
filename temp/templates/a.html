@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Google Picker Example</title>
 
-   <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
-        <script>
-            function onApiLoad() {
-                gapi.load('auth', { 'callback': onAuthApiLoad });
-                gapi.load('picker');
-            }
+    <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+    <script>
+        (function() {
+            console.log(444);
+
             function onAuthApiLoad() {
                 window.gapi.auth.authorize({
                     'client_id': '883270356067-4ib2bm6t9jnp8j5ef73nqkgth35oq19r.apps.googleusercontent.com',
                     'scope': ['https://www.googleapis.com/auth/drive']
                 }, handleAuthResult);
             }
+            window['onAuthApiLoad'] = onAuthApiLoad;
             var oauthToken;
+
             function handleAuthResult(authResult) {
-              console.log(authResult, 188);
+                console.log(authResult, 188);
                 if (authResult && !authResult.error) {
                     oauthToken = authResult.access_token;
+                    window['gdrive_accessed'] = true;
                     createPicker();
                 }
             }
+
             function createPicker() {
                 var picker = new google.picker.PickerBuilder()
-                    //.addView(new google.picker.DocsUploadView())
+                    .addView(new google.picker.DocsUploadView())
                     .addView(new google.picker.DocsView())
                     .setOAuthToken(oauthToken)
                     //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
@@ -42,12 +46,27 @@
                     url = doc[google.picker.Document.URL];
                 }
                 var message = 'You picked: ' + url;
-                document.getElementById('result').innerHTML = message;
+                document.getElementById('accessed_file').innerHTML = message;
             }
-        </script>
-  </head>
-  <body>
+            document.getElementById('google_drive_picker').click(createPicker);
+        })()
+
+        function onApiLoad() {
+            if (window['gdrive_accessed']) {
+                console.log('Already accessed gdrive');
+                return;
+            }
+            gapi.load('auth', { 'callback': window['onAuthApiLoad'] });
+            gapi.load('picker');
+        }
+    </script>
+</head>
+
+<body>
+    <button disabled id="google_drive_picker">Show Drive Picker</button>
+    <div id="accessed_file"></div>
     <div id="result">Result</div>
     <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
-  </body>
+</body>
+
 </html>
