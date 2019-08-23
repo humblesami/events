@@ -47,8 +47,10 @@
                       //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
                       .setCallback(pickerCallback)
                       .build();
+                      console.log('Setting picker visible');
+                      document.getElementById('google_drive_picker').removeAttribute('disabled');
                     gdrive_picker.setVisible(true);
-                    document.getElementById('google_drive_picker').removeAttribute('disabled');
+                    
               }
   
               function pickerCallback(data) {
@@ -70,8 +72,10 @@
                   console.log('Picker not loaded yet');
                 }
               });
+
+              
           })()
-  
+
           function onGooglePickerApiLoad() {
             console.log('APi Loaded');
               if (window['gdrive_accessed']) {
