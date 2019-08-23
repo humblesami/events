@@ -8,4 +8,55 @@
     border-bottom: 1px solid #ddd;
     border-radius:0; 
 }
+.aligned .form-row input[type="text"]{
+    padding: 0;
+}
+.inline-related{
+    border: 2px solid #eee;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+.inline-related h3 span.delete{
+    float: left;
+}
+.inline-related fieldset{
+    padding-left: 10px;
+    padding-bottom: 10px;
+    width: 98%;
+}
+.has-inlines.inline-related fieldset{
+    padding-left: 0;
+}
+.form-row {
+    padding: 5px 0px 5px;
+}
+.inline-related h3,
+.inline-related fieldset.module h3{
+    padding: 10px 5px 15px;
+}
+h3.djn-drag-handler b,.inline-related fieldset.module h3 b{
+    padding-left: 0.7rem;
+}
+input[type=checkbox]{
+    margin: 0px 5px;
+}
+.field-attachment label{
+    float: left;
+}
 
+@media screen and (max-width:767px){
+    .aligned p.file-upload{
+        margin-left: 0;
+    }
+    .inline-related h3 span.delete{
+        flex:none !important;
+    }
+    h3.djn-drag-handler b, .inline-related fieldset.module h3 b{
+        padding-left: 0;
+    }
+    .inline-related .module,
+    .djn-group .djn-group-nested{
+        overflow: hidden;
+        padding-bottom: 10px !important;
+    }
+}
