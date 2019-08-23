@@ -286,6 +286,14 @@ class Profile(user_model):
             else:
                 name = self.name
         return name
+    
+
+    def is_admin(self):
+        admin = False
+        if self.groups.filter(name__in=['Admin']):
+            admin = True
+        return admin
+
 
     @property
     def admin_full_name(self):
@@ -420,10 +428,10 @@ class Profile(user_model):
             profile = ws_methods.obj_to_dict(profile_obj, fields=['bio'],related={'groups': {'fields': ['id', 'name']}})
         elif field_group == 'work':
             profile = cls.get_work_info(request, param)
-            choice_fields['groups'] = list(group_model.objects.all().values('id', 'name'))
         elif field_group == 'board':
             profile = cls.get_board_info(request, param)
             choice_fields['committees'] = list(Committee.objects.values('id', 'name'))
+            choice_fields['groups'] = list(group_model.objects.all().values('id', 'name'))
         elif field_group == 'diversity':
             choice_fields['gender'] = ws_methods.choices_to_list(profile_obj._meta.get_field('gender').choices)
             choice_fields['disability'] = ws_methods.choices_to_list(profile_obj._meta.get_field('disability').choices)
@@ -560,6 +568,10 @@ class Profile(user_model):
 
     @classmethod
     def update_profile(cls, request, params):
+        request_user = request.user
+        if not request_user.profile.is_admin():
+            params.pop('committees', None)
+            params.pop('groups', None)
         user_id = params.get('user_id')
         if not user_id:
             user_id = request.user.id
