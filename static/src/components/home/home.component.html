@@ -2,12 +2,12 @@
 <div class="router-outlet home-container" *ngIf="ng_init && home_data">
     <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
 
-    <div class="HomepageDocumentSection">
-        <div class="container" id="welcome" *ngIf="home_data">
+    <div class="container">
+        <div class="HomepageDocumentSection" id="welcome" *ngIf="home_data">
             <section *ngIf="home_data && to_do_count" class="todoitembtn">
                 <button  (click)="scroll_to_do()">Todo Items: {{to_do_count}}</button>
             </section>
-            <section class="container">
+            <section class="HomepageDocumentSection">
                 <div class="row">
                     <div class="col-md-7 WelcomeContent">
                     <h4 class="HomeTitle">
@@ -35,7 +35,6 @@
 
             
             <section *ngIf="to_do_count" class="">            
-                <div class="container">
                     <h2 class="border-bottom text-dark pb-3">Actions</h2>
                     <!--Surveys-->
                     <div id="to-do">
@@ -183,42 +182,43 @@
                             </div>
                         </div>
                     </div>  
-                </div>         
             </section>
         </div>            
     </div>
     
     <section *ngIf="home_data && home_data.doc_ids && home_data.doc_ids.length" id="multi-item-docs"
-    class="carousel slide carousel-multi-item HomepageDocumentSection" data-ride="carousel">   
-        <div class="container py-3 pl-4">
-            <h4 class="text-dark">Documents</h4>
-            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
-                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
-            </div>
-            <div class="carousel-inner" role="listbox">    
-                <div class="carousel-item active"> 
-                    <div class="row docwrappercontainer">
-                        <a class="col-sm-6 col-md-4 col-lg-2 mb-3" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids.slice(start_indices['news_doc'], start_indices['news_doc'] + visible_limit['news_doc'])">
-                            <div class="DocumentWrapper">
-                                <div class="DocIcon">
-                                    <span class="rounded-circle">
-                                        <i class="icon-doc-file"></i>
-                                    </span>
-                                </div>
-                                <div class="DocInfoVertical text-truncate">
-                                    {{doc.name}}
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+    class="carousel slide carousel-multi-item " data-ride="carousel">   
+        <div class="py-3 container">
+            <div class="HomepageDocumentSection">
+                <h4 class="text-dark">Documents</h4>
+                <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
+                    <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                    <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                 </div>
-            </div> 
+                <div class="carousel-inner" role="listbox">    
+                    <div class="carousel-item active"> 
+                        <div class="row docwrappercontainer">
+                            <a class="col-sm-6 col-md-4 col-lg-2 mb-3" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids.slice(start_indices['news_doc'], start_indices['news_doc'] + visible_limit['news_doc'])">
+                                <div class="DocumentWrapper">
+                                    <div class="DocIcon">
+                                        <span class="rounded-circle">
+                                            <i class="icon-doc-file"></i>
+                                        </span>
+                                    </div>
+                                    <div class="DocInfoVertical text-truncate">
+                                        {{doc.name}}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div> 
+            </div>
         </div>
     </section>
 
     <section *ngIf="home_data && home_data.video_ids && home_data.video_ids.length" id="multi-item-videos" 
-    class="carousel slide carousel-multi-item container py-3 pl-4" data-ride="carousel">   
+    class="carousel slide carousel-multi-item container py-3" data-ride="carousel">   
             <h4 class="text-primary">
                 Videos
             </h4>
