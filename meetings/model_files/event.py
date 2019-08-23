@@ -328,7 +328,7 @@ class Event(models.Model):
             voting['close_date'] = str(voting['close_date'])
         """attendee needs fix"""
         attendees = []
-        meeting_attendees = ws_methods.get_user_info(meeting_object_orm.attendees.filter(groups__name__in=['Admin','Staff','Director']))
+        meeting_attendees = ws_methods.get_user_info(meeting_object_orm.attendees.filter(groups__name__in=['Admin','Staff','Director']).distinct())
         for attendee_obj in meeting_attendees:
             attendance_status = cls.get_attendance_status(meeting_id, attendee_obj['id'])
             attendee_obj['attendance_status'] = attendance_status['state']

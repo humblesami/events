@@ -314,7 +314,7 @@ class Profile(user_model):
         if kw:
             profiles = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
         else:
-            profiles = Profile.objects.all()
+            profiles = Profile.objects.filter(groups__name__in=['Admin','Staff','Director']).distinct()
             
         if group:
             profiles = profiles.filter(groups__name__iexact=group)

@@ -24,7 +24,7 @@ class Committee(models.Model):
                 if kw:
                     committee_users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Committee']}})
                 else:
-                    committee_users = ws_methods.get_user_info(committee_orm.users.filter(groups__name__in=['Admin','Staff','Director']))
+                    committee_users = ws_methods.get_user_info(committee_orm.users.filter(groups__name__in=['Admin','Staff','Director']).distinct())
                 
                 total_cnt = len(committee_users)
                 offset = params.get('offset')
