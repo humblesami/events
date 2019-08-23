@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Boardsheet</title>
-<!--    <link rel="shortcut icon" href="">-->
-<!--    <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />-->
+	<link rel="shortcut icon" href="">
     <style>
     button[type="submit"]:disabled{
         background-color: grey;
@@ -41,9 +41,7 @@
                                 <img class="img-fluid" src_url="/static/assets/images/lock-icon.png" />
                                 <input id="password" placeholder="Password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                             </div>
-                            <div class="login-feedback"
-                            style="text-align:center; color:red; padding-bottom:10px"
-                            ></div>
+                            <div class="login-feedback" style="text-align:center; color:red; padding-bottom:10px"></div>
                             <div class="form-group text-center pl-5 pr-5 mb-2">
                                 <button type="submit" disabled class="login-btn">Login</button>
                             </div>

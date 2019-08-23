@@ -22,20 +22,17 @@
                             <div *ngIf="f.username.errors.required">Username is required</div>
                         </div>
                     </div>
-                    <div class="form-group input-label-icon">
+                    <div class="form-group input-label-icon">                        
                         <img async class="img-fluid" src="static/assets/images/lock-icon.png" />  
-                        <input id="password" placeholder="Password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                            <div *ngIf="f.password.errors.required">Password is required</div>
-                        </div>
+                        <input id="password" placeholder="Password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />                        
                     </div>
+                    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
                     <div class="form-group text-center pl-5 pr-5 mb-2">
                         <button class="login-btn">Login</button>
                     </div>
                     <div class="form-group text-center">
                         <a class="forgot" routerLink="/forgot-password">Forgot Password?</a>
-                    </div>
-                    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+                    </div>                    
                 </form>
         
                 

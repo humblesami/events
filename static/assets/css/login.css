@@ -111,9 +111,9 @@ input:-webkit-autofill:active {
     color: #875a7b;
     display: block;
     position: absolute;
-    top: 15%;
+    top: 50%;
     left: 25px;
-    /* transform: translateY(-50%); */
+    transform: translateY(-50%);
 }
 
 .loginshape01{
