@@ -58,9 +58,8 @@
                             </div>
                             <div *ngIf="!type && profile.group" class="kanban-profiles-user-InfoLIST">
                                 <!-- <i class="fas fa-envelope"></i> -->
-                                <span>
-                                    Role: {{profile.group}}
-                                </span>
+                                <span > Role:  </span>
+                                <span class="committee-member">{{profile.group | firstToUpper }}</span>
                             </div>
                         </div>
                     </a>

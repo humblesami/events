@@ -34,9 +34,10 @@ class Folder(models.Model):
         else:
             resource_files = folder.resourcedocument_set.all()
         
-        resource_files = resource_files.filter(
-                Q(users__id=request.user.id) | 
-                Q(users__groups__name__in=['Admin', 'Staff']))
+        is_staff = request.user.groups.all().filter(name__in=['Admin','Staff'])        
+        if not is_staff:
+            resource_files = resource_files.filter(
+                    Q(users__id=request.user.id))
         
         obj['total'] = resource_files.count()
         offset = params.get('offset')
