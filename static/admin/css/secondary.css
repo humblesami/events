@@ -28,7 +28,7 @@
     padding-left: 0;
 }
 .form-row {
-    padding: 5px 0px 5px;
+    padding: 15px 0px 5px;
 }
 .inline-related h3,
 .inline-related fieldset.module h3{
@@ -48,6 +48,22 @@ input[type=checkbox]{
 .inline-group h2{
     margin: 0px;
     padding: 0.5rem 0 1rem;
+}
+#content h1{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#questions-group textarea{
+    height: 70px;
+}
+.form-row.errors{
+    border:none;
+}
+#id_is_published {
+    margin-top:-4px;
+}
+.inline-group .tabular td.original p{
+    padding: 2px 20px;
 }
 @media screen and (max-width:767px){
     .aligned p.file-upload{
