@@ -18,6 +18,7 @@
             }
             var oauthToken;
             function handleAuthResult(authResult) {
+              console.log(authResult, 188);
                 if (authResult && !authResult.error) {
                     oauthToken = authResult.access_token;
                     createPicker();
@@ -46,7 +47,7 @@
         </script>
   </head>
   <body>
-    <div id="result"></div>
+    <div id="result">Result</div>
     <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
   </body>
 </html>
