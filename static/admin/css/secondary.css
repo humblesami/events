@@ -46,7 +46,7 @@ h3.djn-drag-handler b,.inline-related fieldset.module h3 b{
     font-size: 0.8rem;
 }
 input[type=checkbox]{
-    margin:-2px 0 0 5px;
+    margin:-2px 3px 0 5px;
 }
 .field-attachment label{
     float: left;
