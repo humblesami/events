@@ -448,3 +448,32 @@ div#ongoing_controls {
 #rtc-container.min .media-container.self{
     display: none;
 }
+
+.setup-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.setup-buttons button {
+    background: #4B74B5;
+    border: 0;
+    color: #fff;
+    width: 60px;
+    height: 60px;
+    margin: 0 .3rem !important;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.danger-bg{
+	background: #FF5454 !important;
+}
+.green-bg{
+	background: #18af3b !important;
+}
+
+.CallOptionsButton .accept{
+	background: #28a745 !important;
+}

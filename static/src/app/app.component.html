@@ -93,7 +93,7 @@
                     
                     <div class="CallOptionsButton">                            
                         <a class="accept" (click)="socketService.video_call.accept()">
-                            <img src="static/assets/images/end-call.png" alt="Avatar" />
+                            <img src="static/assets/images/attend-call.svg"  />
                         </a>
                         <a class="reject" (click)="socketService.video_call.reject()">
                             <img src="static/assets/images/end-call.png" alt="Avatar" />
@@ -142,8 +142,8 @@
                     >
                     <!-- <button id="toggle-camera" (click)="socketService.video_call.toggle_camera()">Toggle Camera</button> -->
                     <button id="open-room" style="display:none">Open Room</button>
-                    <button id="share-screen" disabled="">Share Your Screen</button>
-                    <button id="leave-room" (click)="socketService.video_call.terminate()">Hangup (Leave)</button>
+                    <button id="share-screen" disabled=""><img src="static/assets/images/share-screen.svg"></button>
+                    <button id="leave-room" class="danger-bg" (click)="socketService.video_call.terminate()"><img src="static/assets/images/end-call.png" alt="End call" /></button>
                 </div>
             </div>
             
