@@ -50,8 +50,7 @@ export class CommitteeDetailsComponent implements OnInit {
                             return id != item.id;
                         });
                     }
-                    element.committees = element.committees.slice(0, 2);
-                    element.group = element.group.toLowerCase();
+                    element.committees = element.committees.slice(0, 2);                    
                 });
             }, false);
     }

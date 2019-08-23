@@ -171,7 +171,7 @@ class Event(models.Model):
         val = val.strip()
         return val
     location = property(_compute_address)
-
+    
     @classmethod
     def get_calendar(cls, request, params):
         user_id = request.user.id
@@ -328,7 +328,7 @@ class Event(models.Model):
             voting['close_date'] = str(voting['close_date'])
         """attendee needs fix"""
         attendees = []
-        meeting_attendees = ws_methods.get_user_info( meeting_object_orm.attendees.all())
+        meeting_attendees = ws_methods.get_user_info(meeting_object_orm.attendees.filter(groups__name__in=['Admin','Staff','Director']))
         for attendee_obj in meeting_attendees:
             attendance_status = cls.get_attendance_status(meeting_id, attendee_obj['id'])
             attendee_obj['attendance_status'] = attendance_status['state']

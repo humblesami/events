@@ -306,10 +306,12 @@ class Profile(user_model):
         if kw:
             profiles = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
         else:
-            if group:
-                profiles = Profile.objects.filter(groups__name__iexact=group)
-            else:
-                profiles = Profile.objects.filter()
+            profiles = Profile.objects.all()
+            
+        if group:
+            profiles = profiles.filter(groups__name__iexact=group)
+        else:
+            profiles = profiles.filter(groups__name__in=['Admin','Staff','Director'])
         
         total_cnt = profiles.count()
         offset = params.get('offset')

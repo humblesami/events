@@ -152,6 +152,7 @@ export class AppRoutingModule {
 			if (event instanceof NavigationStart) {
                 // console.log(event, router.routerState);
                 httpService.search_kw = '';
+                httpService.offset = 0;
                 socketService.init_route(event.url);
 				$('.hidemouseaway').hide();
                 $('.searchbar-full-width').hide();

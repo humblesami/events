@@ -515,9 +515,10 @@ def get_user_info(users):
         user_info['company'] = user.company
         user_info['mobile_phone'] = user.mobile_phone
         groups = list(user.groups.all())
-        group_name = ''
+        group_name = []
         if len(groups) > 0:
-            group_name = groups[0].name.lower()
+            for grp in groups:
+                group_name.append(grp.name.lower())
         user_info['group'] = group_name
         user_committees =  obj_to_dict(user,
             fields = [],
@@ -528,7 +529,7 @@ def get_user_info(users):
         committees = []
         for com in user_committees['committees']:
             committees.append(com)
-        user_info['committees'] = committees
+        user_info['committees'] = committees        
         users_info.append(user_info)
     return users_info
 
