@@ -33,9 +33,11 @@
 .inline-related h3,
 .inline-related fieldset.module h3{
     padding: 10px 5px 15px;
+    cursor: pointer;
 }
 h3.djn-drag-handler b,.inline-related fieldset.module h3 b{
     padding-left: 0.7rem;
+    font-size: 0.8rem;
 }
 input[type=checkbox]{
     margin: 0px 5px;
@@ -43,7 +45,10 @@ input[type=checkbox]{
 .field-attachment label{
     float: left;
 }
-
+.inline-group h2{
+    margin: 0px;
+    padding: 0.5rem 0 1rem;
+}
 @media screen and (max-width:767px){
     .aligned p.file-upload{
         margin-left: 0;
