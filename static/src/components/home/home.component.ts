@@ -163,7 +163,7 @@ export class HomeComponent implements OnInit {
             survey : 3,
             sign_doc : 4,
             news_doc : 6,
-            news_video: 3,
+            news_video: 4,
             voting: 3,
         }
         else
@@ -174,5 +174,6 @@ export class HomeComponent implements OnInit {
                 news_video: 1,
                 voting: 1,
             };
+        console.log(obj_this.visible_limit['news_video'],1122);
     }
 }

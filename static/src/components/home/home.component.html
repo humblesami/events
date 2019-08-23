@@ -44,7 +44,7 @@
                             <h4 class="text-primary">
                                 Surveys
                             </h4>
-                            <div class="controls-top float-right btn-group mb-2">
+                            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_surveys.length > visible_limit['survey']">
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_surveys, 'survey')" href="#multi-item-example" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_surveys, 'survey')" href="#multi-item-example" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                             </div>
@@ -116,7 +116,7 @@
                             <h4 class="text-primary">
                                 Documents To Sign
                             </h4>
-                            <div class="controls-top float-right btn-group mb-2">
+                            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                             </div>
@@ -153,7 +153,7 @@
                                 <h4 class="text-primary">
                                     Approval / Voting
                                 </h4>
-                            <div class="controls-top float-right btn-group mb-2">
+                            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                             </div>
@@ -192,7 +192,7 @@
     class="carousel slide carousel-multi-item HomepageDocumentSection" data-ride="carousel">   
         <div class="container py-3 pl-4">
             <h4 class="text-dark">Documents</h4>
-            <div class="controls-top float-right btn-group mb-2">
+            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
             </div>
@@ -222,7 +222,7 @@
             <h4 class="text-primary">
                 Videos
             </h4>
-        <div class="controls-top float-right btn-group mb-2">
+        <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.video_ids.length > visible_limit['news_video']">
             <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
             <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="next"><i class="fa fa-chevron-right"></i></a>
         </div>
