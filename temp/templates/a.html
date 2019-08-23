@@ -26,18 +26,21 @@
               var oauthToken;
   
               function handleAuthResult(authResult) {
-                  console.log(authResult, 188);
                   if (authResult && !authResult.error) {
                       oauthToken = authResult.access_token;
                       window['gdrive_accessed'] = true;
                       createPicker();
+                  }
+                  else
+                  {
+                    console.log(authResult);
                   }
               }
 
               var gdrive_picker = undefined;
   
               function createPicker() {
-                  var gdrive_picker = new google.picker.PickerBuilder()
+                  gdrive_picker = new google.picker.PickerBuilder()
                       // .addView(new google.picker.DocsUploadView())
                       .addView(new google.picker.DocsView())
                       .setOAuthToken(oauthToken)
@@ -61,6 +64,7 @@
                 if(gdrive_picker)
                 {
                   gdrive_picker.setVisible(true);
+                  console.log('Tried setting picker visibile');
                 }
                 else{
                   console.log('Picker not loaded yet');
