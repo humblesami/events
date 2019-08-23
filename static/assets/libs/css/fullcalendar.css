@@ -46,7 +46,8 @@ body .fc { /* extra precedence to overcome jqui */
 }
 
 .fc-unthemed .fc-today {
-	background: #fcf8e3;
+	background: #4b74b5;
+    color: #ffffff;
 }
 
 .fc-highlight { /* when user is selecting cells */
@@ -112,7 +113,7 @@ body .fc { /* extra precedence to overcome jqui */
 
 	/* dimensions */
 	margin: 0;
-	height: 2.1em;
+	height: 2.5em;
 	padding: 0 .6em;
 
 	/* text & cursor */
@@ -603,6 +604,7 @@ a.fc-more:hover {
 
 .fc-toolbar h2 {
 	margin: 0;
+    color: #4D4F5C;
 }
 
 /* button layering (for border precedence) */
