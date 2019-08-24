@@ -39,7 +39,7 @@
             .setOAuthToken(oauthToken)
             .addView(view)
             .addView(new google.picker.DocsUploadView())
-            .setDeveloperKey('2UIJVPNMmgQIO-1sve6Oh0Fi')
+            // .setDeveloperKey('2UIJVPNMmgQIO-1sve6Oh0Fi')
             .setCallback(pickerCallback)
             .build();
          picker.setVisible(true);
