@@ -28,8 +28,9 @@
         var allowed_types = prefix+'doc,'+prefix+'docx,';
         allowed_types += prefix+'ppt,'+prefix+'pptx,';
         allowed_types += prefix+'odt,'+prefix+'pdf,'+prefix+'txt';
+        allowed_types = 'application/vnd.google.drive.ext-type.txt';
         console.log(allowed_types);
-        var view = new google.picker.View(google.picker.ViewId.DOCS);
+        var view = new google.picker.View(google.picker.ViewId.DOCUMENTS);
         view.setMimeTypes(allowed_types);
         gdrive_picker = new google.picker.PickerBuilder()
             // .addView(google.picker.ViewId.DOCUMENTS)
