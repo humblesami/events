@@ -31,13 +31,13 @@
         allowed_types = 'application/vnd.google.drive.ext-type.txt';
         console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
-        view.setMimeTypes(allowed_types);
+        view.setMimeTypes("image/png,image/jpeg,image/jpg");
         var picker = new google.picker.PickerBuilder()
             .enableFeature(google.picker.Feature.NAV_HIDDEN)
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
             .setAppId('boreal-quarter-250721')
             .setOAuthToken(oauthToken)
-            .addView(view)
+            // .addView(view)
             .addView(new google.picker.DocsUploadView())
             // .setDeveloperKey('2UIJVPNMmgQIO-1sve6Oh0Fi')
             .setCallback(pickerCallback)
