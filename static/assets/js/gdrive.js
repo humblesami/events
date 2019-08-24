@@ -30,6 +30,7 @@
             .setOAuthToken(oauthToken)
             //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
             .setCallback(pickerCallback)
+            .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
             .build();
             console.log('Setting picker visible');
             document.getElementById('google_drive_picker').removeAttribute('disabled');
@@ -40,11 +41,12 @@
     function pickerCallback(data) {
         var url = 'nothing';
         if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-            var doc = data[google.picker.Response.DOCUMENTS][0];
-            url = doc[google.picker.Document.URL];
+            var docs = data[google.picker.Response.DOCUMENTS];
+            // url = doc[google.picker.Document.URL];
+            console.log(docs);
         }
-        var message = 'You picked: ' + url;
-        document.getElementById('accessed_file').innerHTML = message;
+        // var message = 'You picked: ' + url;
+        // document.getElementById('accessed_file').innerHTML = message;
     }
     document.getElementById('google_drive_picker').click(function(){
     if(gdrive_picker)
