@@ -27,34 +27,29 @@
 
         var allowed_types = [
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "application/x-vnd.oasis.opendocument.spreadsheet",
-        
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        "application/vnd.oasis.opendocument.presentation",
+            "application/x-vnd.oasis.opendocument.spreadsheet",
+            
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "application/vnd.oasis.opendocument.presentation",
 
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "application/vnd.oasis.opendocument.text",
-        "application/rtf",
-        "application/pdf",
-        "text/csv",
-        "text/plain"];
-        allowed_types = allowed_types.slice(0, allowed_types.length - 2);
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.oasis.opendocument.text",
+            "application/rtf",
+            "application/pdf",
+            "text/csv"
+        ];
         console.log(allowed_types);
         allowed_types = allowed_types.join(',');
 
         var appId = 'boreal-quarter-250721';
-
+        
         var view = new google.picker.View(google.picker.ViewId.DOCS);
-        // view.setMimeTypes("image/png,image/jpeg,image/jpg");
         view.setMimeTypes(allowed_types);
         var gdrive_picker = new google.picker.PickerBuilder()
-            // .enableFeature(google.picker.Feature.NAV_HIDDEN)
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
             .setAppId(appId)
             .setOAuthToken(oauthToken)
             .addView(view)
-            // .addView(new google.picker.DocsUploadView())
-            // .setDeveloperKey(developerKey)
             .setCallback(pickerCallback)
             .build();
         gdrive_picker.setVisible(true);
