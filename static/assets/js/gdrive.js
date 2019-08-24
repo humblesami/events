@@ -29,8 +29,8 @@
         allowed_types += prefix+'ppt,'+prefix+'pptx';
         allowed_types += prefix+'odt,'+prefix+'pdf'+prefix+'txt';
         console.log(allowed_types);
-        var view = new google.picker.View(google.picker.DocsView());
-        view.setMimeTypes(allowed_types);
+        var view = new google.picker.View(google.picker.ViewId.DOCS);
+        view.setQuery("*.docx");
         gdrive_picker = new google.picker.PickerBuilder()
             // .addView(google.picker.ViewId.DOCUMENTS)
             // .addView(google.picker.ViewId.PRESENTATIONS)
@@ -45,6 +45,7 @@
             console.log('Setting picker visible');
             document.getElementById('google_drive_picker').removeAttribute('disabled');
         gdrive_picker.setVisible(true);
+        
     }
 
     function pickerCallback(data) {
