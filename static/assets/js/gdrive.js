@@ -31,8 +31,8 @@
         allowed_types = 'application/vnd.google.drive.ext-type.txt';
         console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
-        view.setQuery('*.txt,*.doc');
-        view.setMimeTypes("application/vnd.google-apps.document,application/vnd.google-apps.kix,application/vnd.google-apps.spreadsheet,application/vnd.google-apps.presentation");
+        view.setQuery('*.doc');
+        // view.setMimeTypes("application/vnd.google-apps.document,application/vnd.google-apps.kix,application/vnd.google-apps.spreadsheet,application/vnd.google-apps.presentation");
         var picker = new google.picker.PickerBuilder()
             .enableFeature(google.picker.Feature.NAV_HIDDEN)
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
