@@ -24,16 +24,8 @@
     var gdrive_picker = undefined;
 
     function createPicker() {
-        var allowed_types = 'application/vnd.google.drive.ext-type.pdf';
-        allowed_types += 'application/vnd.google.drive.ext-type.doc';
-        allowed_types += 'application/vnd.google.drive.ext-type.ppt';
-        allowed_types += 'application/vnd.google.drive.ext-type.pptx';
-        allowed_types += 'application/vnd.google.drive.ext-type.odt';
-        allowed_types += 'application/vnd.google.drive.ext-type.txt';
 
-        //2nd method I tried
-
-        allowed_types += "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        allowed_types = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         allowed_types += ",application/x-vnd.oasis.opendocument.spreadsheet";
         
         allowed_types += ",application/vnd.openxmlformats-officedocument.presentationml.presentation";
@@ -49,8 +41,8 @@
 
         console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
-        // view.setQuery('*.doc,*.docx,*.ppt,*.pptx');
         view.setMimeTypes(allowed_types);
+
         var picker = new google.picker.PickerBuilder()
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
             .setAppId('boreal-quarter-250721')
