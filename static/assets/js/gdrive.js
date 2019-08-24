@@ -31,7 +31,7 @@
         allowed_types = 'application/vnd.google.drive.ext-type.txt';
         console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
-        view.setMimeTypes("image/png,image/jpeg,image/jpg");
+        view.setMimeTypes(allowed_types);
         var picker = new google.picker.PickerBuilder()
             .enableFeature(google.picker.Feature.NAV_HIDDEN)
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
