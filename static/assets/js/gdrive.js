@@ -38,7 +38,7 @@
         "application/pdf",
         "text/plain",
         "text/csv"];
-        allowed_types = allowed_types.slice(allowed_types.length - 4, allowed_types.length);
+        allowed_types = allowed_types.slice(allowed_types.length - 5, allowed_types.length - 4);
         console.log(allowed_types);
         allowed_types = allowed_types.join(',');
 
