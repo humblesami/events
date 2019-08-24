@@ -32,20 +32,20 @@
         allowed_types += 'application/vnd.google.drive.ext-type.txt';
 
         //2nd method I tried
-        allowed_types += ",application/vnd.google-apps.kix";
-        allowed_types = "application/vnd.google-apps.document";
-        allowed_types += ",application/vnd.google-apps.spreadsheet";
-        allowed_types += ",application/vnd.google-apps.presentation";
+
+        allowed_types += "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         allowed_types += ",application/x-vnd.oasis.opendocument.spreadsheet";
-        allowed_types += ",text/plainapplication/vnd.oasis.opendocument.text";
-        allowed_types += ",application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        allowed_types += ",application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        
         
         allowed_types += ",application/vnd.openxmlformats-officedocument.presentationml.presentation";
         allowed_types += ",application/vnd.oasis.opendocument.presentation";
+
+        allowed_types += ",application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        allowed_types += ",application/vnd.oasis.opendocument.text";
+        allowed_types += ",application/rtf";
+        allowed_types += ",application/pdf";
         allowed_types += ",text/plain";
         allowed_types += ",text/csv";
+        
 
         console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
