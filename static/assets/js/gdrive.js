@@ -24,14 +24,19 @@
     var gdrive_picker = undefined;
 
     function createPicker() {
-        // var view = new google.picker.View(google.picker.ViewId.DOCS);
-        // view.setMimeTypes("application/vnd.google-apps.document/*,application/vnd.google-apps.presentation/*");
+        var prefix = 'application/vnd.google.drive.ext-type.';
+        var allowed_types = prefix+'doc,'+prefix+'docx';
+        allowed_types += prefix+'ppt,'+prefix+'pptx';
+        allowed_types += prefix+'odt,'+prefix+'pdf'+prefix+'txt';
+        console.log(allowed_types);
+        var view = new google.picker.View(google.picker.DocsView());
+        view.setMimeTypes(allowed_types);
         gdrive_picker = new google.picker.PickerBuilder()
-            .addView(google.picker.ViewId.DOCUMENTS)
-            .addView(google.picker.ViewId.PRESENTATIONS)
+            // .addView(google.picker.ViewId.DOCUMENTS)
+            // .addView(google.picker.ViewId.PRESENTATIONS)
             // .addView(new google.picker.DocsUploadView())
             // .addView(new google.picker.DocsView())
-            // .addView(view)
+            .addView(view)
             .setOAuthToken(oauthToken)
             //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
             .setCallback(pickerCallback)
@@ -40,7 +45,6 @@
             console.log('Setting picker visible');
             document.getElementById('google_drive_picker').removeAttribute('disabled');
         gdrive_picker.setVisible(true);
-        
     }
 
     function pickerCallback(data) {
