@@ -25,7 +25,7 @@
 
     function createPicker() {
 
-        allowed_types = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        var allowed_types = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         allowed_types += ",application/x-vnd.oasis.opendocument.spreadsheet";
         
         allowed_types += ",application/vnd.openxmlformats-officedocument.presentationml.presentation";
