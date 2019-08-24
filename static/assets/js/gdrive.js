@@ -30,14 +30,13 @@
         allowed_types += prefix+'odt,'+prefix+'pdf'+prefix+'txt';
         console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
-        view.setQuery("*.docx");
+        view.setMimeTypes(allowed_types);
         gdrive_picker = new google.picker.PickerBuilder()
             // .addView(google.picker.ViewId.DOCUMENTS)
             // .addView(google.picker.ViewId.PRESENTATIONS)
             // .addView(new google.picker.DocsUploadView())
-            .addView(new google.picker.DocsView().setQuery('*.txt'))
-            // .setQuery('*.txt')
-            // .addView(view)
+            // .addView(new google.picker.DocsView())
+            .addView(view)
             .setOAuthToken(oauthToken)
             //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
             .setCallback(pickerCallback)
