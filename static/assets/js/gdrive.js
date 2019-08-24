@@ -24,65 +24,59 @@
     var gdrive_picker = undefined;
 
     function createPicker() {
-        var prefix = 'application/vnd.google.drive.ext-type.';
-        var allowed_types = prefix+'doc,'+prefix+'docx,';
-        allowed_types += prefix+'ppt,'+prefix+'pptx,';
-        allowed_types += prefix+'odt,'+prefix+'pdf,'+prefix+'txt';
-        allowed_types = 'application/vnd.google.drive.ext-type.txt';
+        var allowed_types = 'application/vnd.google.drive.ext-type.pdf';
+        allowed_types += 'application/vnd.google.drive.ext-type.doc';
+        allowed_types += 'application/vnd.google.drive.ext-type.ppt';
+        allowed_types += 'application/vnd.google.drive.ext-type.pptx';
+        allowed_types += 'application/vnd.google.drive.ext-type.odt';
+        allowed_types += 'application/vnd.google.drive.ext-type.txt';
+
+        //2nd method I tried
+        allowed_types += ",application/vnd.google-apps.kix";
+        allowed_types = "application/vnd.google-apps.document";
+        allowed_types += ",application/vnd.google-apps.spreadsheet";
+        allowed_types += ",application/vnd.google-apps.presentation";
+        allowed_types += ",application/x-vnd.oasis.opendocument.spreadsheet";
+        allowed_types += ",text/plainapplication/vnd.oasis.opendocument.text";
+        allowed_types += ",application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        allowed_types += ",application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        
+        
+        allowed_types += ",application/vnd.openxmlformats-officedocument.presentationml.presentation";
+        allowed_types += ",application/vnd.oasis.opendocument.presentation";
+        allowed_types += ",text/plain";
+        allowed_types += ",text/csv";
+
         console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
-        view.setQuery('*.doc');
-        // view.setMimeTypes("application/vnd.google-apps.document,application/vnd.google-apps.kix,application/vnd.google-apps.spreadsheet,application/vnd.google-apps.presentation");
+        // view.setQuery('*.doc,*.docx,*.ppt,*.pptx');
+        view.setMimeTypes(allowed_types);
         var picker = new google.picker.PickerBuilder()
-            .enableFeature(google.picker.Feature.NAV_HIDDEN)
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
             .setAppId('boreal-quarter-250721')
             .setOAuthToken(oauthToken)
             .addView(view)
             .addView(new google.picker.DocsUploadView())
-            // .setDeveloperKey('2UIJVPNMmgQIO-1sve6Oh0Fi')
+            // .setDeveloperKey('my sercret key')
             .setCallback(pickerCallback)
             .build();
          picker.setVisible(true);
-        // var view = new google.picker.View(google.picker.ViewId.DOCS);
-        // view.setMimeTypes(allowed_types);
-        // gdrive_picker = new google.picker.PickerBuilder()
-            // .addView(google.picker.ViewId.DOCUMENTS)
-            // .addView(google.picker.ViewId.PRESENTATIONS)
-            // .addView(new google.picker.DocsUploadView())
-            // .addView(new google.picker.DocsView())
-        //     .addView(view)
-        //     .setOAuthToken(oauthToken)
-        //     //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
-        //     .setCallback(pickerCallback)
-        //     .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-        //     .build();
-        //     console.log('Setting picker visible');
-        //     document.getElementById('google_drive_picker').removeAttribute('disabled');
-        // gdrive_picker.setVisible(true);
-        
     }
 
     function pickerCallback(data) {
-        var url = 'nothing';
         if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
             var docs = data[google.picker.Response.DOCUMENTS];
-            // url = doc[google.picker.Document.URL];
             console.log(docs);
         }
-        // var message = 'You picked: ' + url;
-        // document.getElementById('accessed_file').innerHTML = message;
     }
     document.getElementById('google_drive_picker').click(function(){
-    if(gdrive_picker)
-    {
-        gdrive_picker.setVisible(true);
-        console.log('Tried setting picker visibile');
-    }
-    else{
-        console.log('Picker not loaded yet');
-    }
+        if(gdrive_picker)
+        {
+            gdrive_picker.setVisible(true);
+            console.log('Tried setting picker visibile');
+        }
+        else{
+            console.log('Picker not loaded yet');
+        }
     });
-
-    
-})()
+})();
