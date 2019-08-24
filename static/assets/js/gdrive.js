@@ -25,9 +25,9 @@
 
     function createPicker() {
         var prefix = 'application/vnd.google.drive.ext-type.';
-        var allowed_types = prefix+'doc,'+prefix+'docx';
-        allowed_types += prefix+'ppt,'+prefix+'pptx';
-        allowed_types += prefix+'odt,'+prefix+'pdf'+prefix+'txt';
+        var allowed_types = prefix+'doc,'+prefix+'docx,';
+        allowed_types += prefix+'ppt,'+prefix+'pptx,';
+        allowed_types += prefix+'odt,'+prefix+'pdf,'+prefix+'txt';
         console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
         view.setMimeTypes(allowed_types);
