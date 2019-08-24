@@ -30,22 +30,35 @@
         allowed_types += prefix+'odt,'+prefix+'pdf,'+prefix+'txt';
         allowed_types = 'application/vnd.google.drive.ext-type.txt';
         console.log(allowed_types);
-        var view = new google.picker.View();
-        view.setMimeTypes(allowed_types);
-        gdrive_picker = new google.picker.PickerBuilder()
+        var view = new google.picker.View(google.picker.ViewId.DOCS);
+        view.setMimeTypes("image/png,image/jpeg,image/jpg");
+        var picker = new google.picker.PickerBuilder()
+            .enableFeature(google.picker.Feature.NAV_HIDDEN)
+            .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+            .setAppId('boreal-quarter-250721')
+            .setOAuthToken(oauthToken)
+            .addView(view)
+            .addView(new google.picker.DocsUploadView())
+            .setDeveloperKey(developerKey)
+            .setCallback(pickerCallback)
+            .build();
+         picker.setVisible(true);
+        // var view = new google.picker.View(google.picker.ViewId.DOCS);
+        // view.setMimeTypes(allowed_types);
+        // gdrive_picker = new google.picker.PickerBuilder()
             // .addView(google.picker.ViewId.DOCUMENTS)
             // .addView(google.picker.ViewId.PRESENTATIONS)
             // .addView(new google.picker.DocsUploadView())
             // .addView(new google.picker.DocsView())
-            .addView(view)
-            .setOAuthToken(oauthToken)
-            //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
-            .setCallback(pickerCallback)
-            .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-            .build();
-            console.log('Setting picker visible');
-            document.getElementById('google_drive_picker').removeAttribute('disabled');
-        gdrive_picker.setVisible(true);
+        //     .addView(view)
+        //     .setOAuthToken(oauthToken)
+        //     //.setDeveloperKey('AIzaSyDPs9U-dgOC9h1jRFNwOwhRtARCph8_3HM')
+        //     .setCallback(pickerCallback)
+        //     .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+        //     .build();
+        //     console.log('Setting picker visible');
+        //     document.getElementById('google_drive_picker').removeAttribute('disabled');
+        // gdrive_picker.setVisible(true);
         
     }
 
