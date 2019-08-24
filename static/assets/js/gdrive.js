@@ -25,18 +25,22 @@
 
     function createPicker() {
 
-        var allowed_types = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        allowed_types += ",application/x-vnd.oasis.opendocument.spreadsheet";
+        var allowed_types = [
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/x-vnd.oasis.opendocument.spreadsheet",
         
-        allowed_types += ",application/vnd.openxmlformats-officedocument.presentationml.presentation";
-        allowed_types += ",application/vnd.oasis.opendocument.presentation";
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/vnd.oasis.opendocument.presentation",
 
-        allowed_types += ",application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        allowed_types += ",application/vnd.oasis.opendocument.text";
-        allowed_types += ",application/rtf";
-        allowed_types += ",application/pdf";
-        allowed_types += ",text/plain";
-        allowed_types += ",text/csv";
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.oasis.opendocument.text",
+        "application/rtf",
+        "application/pdf",
+        "text/plain",
+        "text/csv"];
+        allowed_types = allowed_types.slice(allowed_types.length - 4, allowed_types.length);
+        console.log(allowed_types);
+        allowed_types = allowed_types.join(',');
 
         var appId = 'boreal-quarter-250721';
 
