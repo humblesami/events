@@ -30,7 +30,7 @@
         allowed_types += prefix+'odt,'+prefix+'pdf,'+prefix+'txt';
         allowed_types = 'application/vnd.google.drive.ext-type.txt';
         console.log(allowed_types);
-        var view = new google.picker.View(google.picker.ViewId.DOCUMENTS);
+        var view = new google.picker.View();
         view.setMimeTypes(allowed_types);
         gdrive_picker = new google.picker.PickerBuilder()
             // .addView(google.picker.ViewId.DOCUMENTS)
