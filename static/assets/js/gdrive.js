@@ -37,7 +37,7 @@
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
             .setAppId('boreal-quarter-250721')
             .setOAuthToken(oauthToken)
-            // .addView(view)
+            .addView(view)
             .addView(new google.picker.DocsUploadView())
             // .setDeveloperKey('2UIJVPNMmgQIO-1sve6Oh0Fi')
             .setCallback(pickerCallback)
