@@ -42,11 +42,19 @@
         view.setMimeTypes(allowed_types);
         console.log(allowed_types);
 
+        var appId = 'boreal-quarter-250721';
+
+        var view = new google.picker.View(google.picker.ViewId.DOCS);
+        // view.setMimeTypes("image/png,image/jpeg,image/jpg");
+        view.setMimeTypes("image/png,image/jpeg,image/jpg");
         var picker = new google.picker.PickerBuilder()
+            // .enableFeature(google.picker.Feature.NAV_HIDDEN)
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-            .setAppId('boreal-quarter-250721')
+            .setAppId(appId)
             .setOAuthToken(oauthToken)
             .addView(view)
+            // .addView(new google.picker.DocsUploadView())
+            // .setDeveloperKey(developerKey)
             .setCallback(pickerCallback)
             .build();
          picker.setVisible(true);
