@@ -3,7 +3,9 @@ var http = require("http");
 const { exec } = require('child_process');
 var express = require("express");
 var app = express();
-app.use(express.static(__dirname + '/'));
+var public_path = __dirname + '/html';
+public_path = express.static(public_path);
+app.use(public_path);
 
 function execute_child_process(res, cmd, callback, failure_cb) {
     try {

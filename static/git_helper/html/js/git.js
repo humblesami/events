@@ -1,7 +1,6 @@
 $('form:first').submit(function(e){
     e.preventDefault();
     var input_data = {};
-    var do_request = true;
     $('.form-controls input').each(function (i, el) {
         input_data[el.name] = el.value;
     });
