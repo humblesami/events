@@ -37,19 +37,16 @@
         allowed_types += ",application/pdf";
         allowed_types += ",text/plain";
         allowed_types += ",text/csv";
-        
 
-        console.log(allowed_types);
         var view = new google.picker.View(google.picker.ViewId.DOCS);
         view.setMimeTypes(allowed_types);
+        console.log(allowed_types);
 
         var picker = new google.picker.PickerBuilder()
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
             .setAppId('boreal-quarter-250721')
             .setOAuthToken(oauthToken)
             .addView(view)
-            .addView(new google.picker.DocsUploadView())
-            // .setDeveloperKey('my sercret key')
             .setCallback(pickerCallback)
             .build();
          picker.setVisible(true);
