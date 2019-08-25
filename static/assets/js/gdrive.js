@@ -1,4 +1,26 @@
 (function() {
+
+    var oauthToken = "ya29.GlxvB2TL6InowGSCeZH1dlP20-tKIRZAbf6rOoIXouu8neYmT0PLAwy4oHaxrt9cvVG9JavWBPRuCTkBTqYPqHS7-O3Cp5bLBRVExN6ScqIfRjnPvRqjURNovTqPhA";
+    function download()
+    {
+        var req_url = "https://www.googleapis.com/drive/v3/files/0Byhetnb2DhmFWVlZcEV0cTNLSWM/export?mimeType=application%2Frtf&key=AIzaSyDtYxh2q_KL6Gm0mX7TNCrkuEFEcWGolqw"
+            req_url = "https://drive.google.com/uc?id=0Byhetnb2DhmFcFpZVDBUWkc0aVk&export=download"
+            ajax_options = {
+                headers:{
+                    'Authorization': "Bearer "+oauthToken,
+                    'Accept': 'application/json',
+                },
+                data: {},
+                trace:1,
+                url: req_url,
+                onSuccess:function(data){
+                    console.log(data);
+                }
+            }
+            ajax_request(ajax_options);
+    }
+    // download();
+
     function onAuthApiLoad() {
         console.log('APi Loaded');
         window.gapi.auth.authorize({
@@ -7,7 +29,6 @@
         }, handleAuthResult);
     }
     window['onGPAuthApiLoad'] = onAuthApiLoad;
-    var oauthToken;
 
     function handleAuthResult(authResult) {
         if (authResult && !authResult.error) {
@@ -61,21 +82,11 @@
             }
             
             var file_id = docs[0].id;
+            var download_url = "https://drive.google.com/uc?id="+file_id+"&export=download";
+            download_url = "https://www.googleapis.com/drive/v3/files/"+file_id+"?alt=media"
+            console.log()
             console.log(file_id, docs[0]);
-            var req_url = "https://www.googleapis.com/drive/v3/files/0Byhetnb2DhmFWVlZcEV0cTNLSWM/export?mimeType=application%2Frtf&key=AIzaSyDtYxh2q_KL6Gm0mX7TNCrkuEFEcWGolqw"
-            ajax_options = {
-                headers:{
-                    'Authorization': "Bearer "+oauthToken,
-                    'Accept': 'application/json',
-                },
-                data: {},
-                trace:1,
-                url: req_url,
-                onSuccess:function(data){
-                    console.log(data);
-                }
-            }
-            ajax_request(ajax_options);
+            console.log(oauthToken);
         }
     }
     document.getElementById('google_drive_picker').click(function(){
