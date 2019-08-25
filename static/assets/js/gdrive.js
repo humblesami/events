@@ -68,6 +68,7 @@
                     'Content-Type': 'text/html; charset=UTF-8'
                 },
                 data: {},
+                trace:1,
                 url: req_url,
             }
             ajax_request(ajax_options);

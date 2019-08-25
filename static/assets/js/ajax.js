@@ -1,8 +1,6 @@
 function ajax_request(options) {
     var server_base_url = window.location.origin.toString();
     var req_url = options.url;
-    if (input_data.no_loader)
-        options.no_loader = 1;
     options.dataType = 'json';
     // options.contentType = "application/json; charset=utf-8";
     options.timeout = 30000;
@@ -14,10 +12,10 @@ function ajax_request(options) {
         {
             if(url_with_params.length < 1500)
             {
-                console.log(url_with_params, input_data);    
+                console.log(url_with_params, options.data);    
             }
             else{
-                console.log(input_data);
+                console.log(options.data);
             }
         }
         if (options.type == 'post')
@@ -78,7 +76,7 @@ function ajax_request(options) {
         if(err.responseText == '{"detail":"Invalid token."}' || 
             err.responseText == '{"detail":"Authentication credentials were not provided."}')
         {
-            console.log(input_data.args.method + ' needs login to be accessed');            
+            console.log(req_url + ' needs login to be accessed');            
             return;
         }
         else
@@ -127,7 +125,6 @@ function ajax_request(options) {
         }
         if(!options.trace)
         {
-            console.log(input_data.args);
             if(options.type == 'GET' && url_with_params.length < 1500)
             {
                 console.log(url_with_params);
