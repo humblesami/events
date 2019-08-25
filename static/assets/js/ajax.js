@@ -85,11 +85,11 @@ function ajax_request(options) {
             {                            
                 err = {
                     error: err.responseText
-                }     
+                }
                 handleError(err);       
             }
             else{
-                console.log(er, 'Api failed', args);
+                console.log(err, 'Api failed', args);
             }
         }
     };
