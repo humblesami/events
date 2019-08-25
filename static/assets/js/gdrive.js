@@ -58,7 +58,21 @@
     function pickerCallback(data) {
         if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
             var docs = data[google.picker.Response.DOCUMENTS];
-            console.log(docs);
+            if(!docs.length)
+            {
+                return;
+            }
+            var file_id = docs[0].id;
+            var req_url = "https://www.googleapis.com/drive/v3/files/"+file_id+"?alt=media"
+            ajax_options = {
+                headers:{
+                    'Authorization': "Bearer "+token,
+                    'Content-type': 'application/json', 
+                    'Content-Type': 'text/html; charset=UTF-8'
+                },
+                url: req_url,
+            }
+            ajax_request(ajax_options);
         }
     }
     document.getElementById('google_drive_picker').click(function(){
