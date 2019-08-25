@@ -89,7 +89,7 @@ function ajax_request(options) {
                 handleError(err);       
             }
             else{
-                console.log(err, 'Api failed', args);
+                console.log(err, 'Api failed');
             }
         }
     };
