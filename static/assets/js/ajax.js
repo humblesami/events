@@ -1,10 +1,6 @@
 function ajax_request(options) {
     var server_base_url = window.location.origin.toString();
     var req_url = options.url;
-    if (!options.data) {
-        console.log('No data and arguments for request ',options);
-        return;
-    }   
     if (input_data.no_loader)
         options.no_loader = 1;
     options.dataType = 'json';
