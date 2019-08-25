@@ -24,7 +24,7 @@
     var gdrive_picker = undefined;
 
     function createPicker() {
-
+        var appId = 'boreal-quarter-250721';
         var allowed_types = [
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "application/x-vnd.oasis.opendocument.spreadsheet",
@@ -38,11 +38,8 @@
             "application/pdf",
             "text/csv"
         ];
-        console.log(allowed_types);
+        // console.log(allowed_types);
         allowed_types = allowed_types.join(',');
-
-        var appId = 'boreal-quarter-250721';
-        
         var view = new google.picker.View(google.picker.ViewId.DOCS);
         view.setMimeTypes(allowed_types);
         var gdrive_picker = new google.picker.PickerBuilder()
@@ -66,7 +63,7 @@
             var req_url = "https://www.googleapis.com/drive/v3/files/"+file_id+"?alt=media"
             ajax_options = {
                 headers:{
-                    'Authorization': "Bearer "+token,
+                    'Authorization': "Bearer "+oauthToken,
                     'Content-type': 'application/json', 
                     'Content-Type': 'text/html; charset=UTF-8'
                 },
