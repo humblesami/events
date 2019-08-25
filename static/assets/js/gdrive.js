@@ -62,16 +62,18 @@
             
             var file_id = docs[0].id;
             console.log(file_id, docs[0]);
-            var req_url = "https://www.googleapis.com/drive/v3/files/"+file_id+"?alt=media"
+            var req_url = "https://www.googleapis.com/drive/v3/files/0Byhetnb2DhmFWVlZcEV0cTNLSWM/export?mimeType=application%2Frtf&key=AIzaSyDtYxh2q_KL6Gm0mX7TNCrkuEFEcWGolqw"
             ajax_options = {
                 headers:{
                     'Authorization': "Bearer "+oauthToken,
-                    'Content-type': 'application/json', 
-                    'Content-Type': 'text/html; charset=UTF-8'
+                    'Accept': 'application/json',
                 },
                 data: {},
                 trace:1,
                 url: req_url,
+                onSuccess:function(data){
+                    console.log(data);
+                }
             }
             ajax_request(ajax_options);
         }
