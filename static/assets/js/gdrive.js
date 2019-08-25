@@ -59,7 +59,9 @@
             {
                 return;
             }
+            
             var file_id = docs[0].id;
+            console.log(file_id, docs[0]);
             var req_url = "https://www.googleapis.com/drive/v3/files/"+file_id+"?alt=media"
             ajax_options = {
                 headers:{
