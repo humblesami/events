@@ -20,12 +20,17 @@ def download(request):
         }
         response = requests.get(req_url, headers=headers)
 
-        with open('afile', "wb") as f:
+        with open('gdrivefile', "wb") as f:
             f.write(response.content)
         context = 'done'
     except:
         err = sys.exc_info()
         context = {'error': 'Error '+ err}
-    return json.dupms(context)
+    if context !=' done':
+        try:
+            context = json.dumps(context)
+        except:
+            context = 'Unknown Error'
+    return context
 
 
