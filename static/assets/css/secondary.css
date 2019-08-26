@@ -119,3 +119,7 @@ input[type=checkbox]:checked:after{
 select, button, a, input[type="radio"], input[type="checkbox"], input[type="button"]{
     cursor: pointer;
 }
+.badge-warning.position-absolute{
+    top: 0;
+    right: 0;
+}

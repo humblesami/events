@@ -26,7 +26,7 @@ title="Surveys"></app-breadcrumb>
 		</div>
         <div class="row">
             <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let survey of records">
-                <div class="kanban-card">
+                <div class="kanban-card position-relative">
                     <div class="kanban-meeting-info">
                         <div class="kanban-upcoming-meeting" routerLink="/survey/{{survey.id}}">
                             <div *ngIf="survey.open_date" class="CalendarDateWrapper">
@@ -56,13 +56,18 @@ title="Surveys"></app-breadcrumb>
                         </div>
                         <div class="row d-flex justify-content-between" *ngIf="survey.is_published">
                             <div class="col">
-                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}" *ngIf="survey && survey.is_respondent" [ngStyle]="{'border': '1px solid rgba(99, 143, 201, 0.25)'}">
-                                    <a *ngIf="survey && survey.is_respondent && !survey.is_attempted" id="{{survey.id}}" class="btn" routerLink='/survey/survey/details/{{survey.id}}'>Start Survey</a>
-                                    <a *ngIf="survey && survey.is_attempted && survey.is_attempted" id="{{survey.id+survey.name}}" class="btn" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
+                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}" *ngIf="survey.is_respondent" [ngStyle]="{'border': '1px solid rgba(99, 143, 201, 0.25)'}">
+                                    <a *ngIf="!survey.is_attempted" id="{{survey.id}}" class="btn" routerLink='/survey/survey/details/{{survey.id}}'>Start Survey</a>
+                                    <a *ngIf="survey.is_attempted" id="{{survey.id+survey.name}}" class="btn" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
+                                </div>
+                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}" *ngIf="!survey.is_respondent" [ngStyle]="{'border': '1px solid rgba(99, 143, 201, 0.25)'}">
+                                    <a *ngIf="!survey.is_attempted" id="{{survey.id}}" class="btn" routerLink='/surveys'>No Results Yet</a>
+                                    <a *ngIf="survey.is_attempted" id="{{survey.id+survey.name}}" class="btn" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <span class="badge badge-warning mt-2 rounded-0 position-absolute" *ngIf="!survey.is_respondent">Not Respondent</span>                
                 </div>
             </div>
         </div>
