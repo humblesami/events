@@ -53,6 +53,9 @@
 	padding: 0;
     margin: 0;    
 }
+.fc th {
+    border-color: #ddd;
+}
 th.fc-day-header.fc-widget-header{
     background: #ddd;
     color: #666;
@@ -62,9 +65,7 @@ th.fc-day-header.fc-widget-header{
 .fc-ltr .fc-basic-view .fc-day-number{
     text-align: center;
 }
-.fc td.fc-today{
-    border-style: hidden;
-}
+
 .fc-basic-view tbody .fc-row {
     min-height: 3em;
     background:#ffffff;

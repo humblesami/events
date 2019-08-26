@@ -36,7 +36,7 @@
 				placeholder="Search..."  class="form-control"/>
             </div>
             <div class="row docwrappercontainer">				
-				<div class="col-sm-6 col-md-4 col-lg-2 mb-4"  *ngFor="let doc of folder.files">
+				<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4"  *ngFor="let doc of folder.files">
 					<a routerLink="/resource/doc/{{doc.id}}" class="">
 						<div class="DocumentWrapper">
 							<div class="DocIcon">
@@ -65,7 +65,7 @@
 				</div>
 				
 				<div class="row docwrappercontainer docs-colr-them">
-					<div class="col-sm-6 col-md-4 col-lg-2 mb-4" *ngFor="let folder of folder.sub_folders">
+					<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of folder.sub_folders">
 						<a routerLink="/resource/{{folder.id}}" class="">
 							<div class="DocumentWrapper">
 								<div class="DocIcon">
