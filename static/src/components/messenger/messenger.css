@@ -728,6 +728,9 @@ a.contact-item {
 }
 
 .group-select-section{
+    display: flex;
+    align-items: center;
+    flex: 1;
 }
 
 .fri-selt-btn{
