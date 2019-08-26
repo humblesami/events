@@ -58,7 +58,7 @@ class Actions(models.Model):
             action.close_date = action.close_date.replace(tzinfo=utc)
             if action.open_date > now:
                 is_open = False
-            if action.close_date <= now:
+            elif action.close_date <= now:
                 is_open = False
             if not is_open:
                 exclude_ids.append(action.id)

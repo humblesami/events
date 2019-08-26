@@ -41,6 +41,12 @@ title="{{committee.name}}"></app-breadcrumb>
                     (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
                     placeholder="Search..."  class="form-control"/>
                     </div>
+                    <div  *ngIf="committee.description" class="col-md-12">
+                        <div class="meet-elements">
+                            Description
+                        </div>
+                        <label class="meet-elementsInfo text-overflow-visible" [innerHtml]="committee.description"></label>
+                    </div>
 		                <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of committee.users">
                             <div class="kanban-card">

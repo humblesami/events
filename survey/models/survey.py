@@ -166,8 +166,8 @@ class Survey(Actions):
             for group in groups:
                 if group['name'] in ['Admin', 'Staff']:
                     results_visibility = True
-        if not is_respondent:
-            return 'Unauthorized to access survey details'
+        # if not is_respondent:
+        #     return 'Unauthorized to access survey details'
         questions = survey_obj.questions.all()
         survey_questions = []
         for question in questions:
@@ -187,16 +187,17 @@ class Survey(Actions):
         return survey
 
     @classmethod
-    def get_pending_surveys(cls, uid):
-        surveys = Survey.objects.filter(
-            (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
-            |
-            Q(respondents__id=uid),
-            Q(close_date__gte=datetime.datetime.now())
-        )
+    def get_pending_surveys(cls, user):
+        # surveys = Survey.objects.filter(
+        #     (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
+        #     |
+        #     Q(respondents__id=uid),
+        #     Q(close_date__gte=datetime.datetime.now())
+        # )
+        surveys = Actions.gt_my_open_actions(Survey.objects.all(), user, 'home')
         pending_survey = []
         for survey in surveys:
-            user_response = survey.questions.filter(answers__isnull=False, answers__response__user__id=uid)
+            user_response = survey.questions.filter(answers__isnull=False, answers__response__user__id=user.id)
             if len(user_response) > 0:
                 my_status = 'done'
             else:
