@@ -69,7 +69,7 @@ function ajax_request(options) {
         }
         if(err.status == 404)
         {
-            er = api_url + ' unavailable at '+ server_base_url;
+            err = req_url + ' unavailable';
             console.log(err);
             return;
         }

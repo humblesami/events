@@ -1,30 +1,30 @@
 (function() {
 
     var oauthToken = "ya29.GlxvB2TL6InowGSCeZH1dlP20-tKIRZAbf6rOoIXouu8neYmT0PLAwy4oHaxrt9cvVG9JavWBPRuCTkBTqYPqHS7-O3Cp5bLBRVExN6ScqIfRjnPvRqjURNovTqPhA";
-    function download()
+    
+    function download(file_id)
     {
-        var req_url = "https://www.googleapis.com/drive/v3/files/0Byhetnb2DhmFWVlZcEV0cTNLSWM/export?mimeType=application%2Frtf&key=AIzaSyDtYxh2q_KL6Gm0mX7TNCrkuEFEcWGolqw"
-            req_url = "https://drive.google.com/uc?id=0Byhetnb2DhmFcFpZVDBUWkc0aVk&export=download"
-            ajax_options = {
-                headers:{
-                    'Authorization': "Bearer "+oauthToken,
-                    'Accept': 'application/json',
-                },
-                data: {},
-                trace:1,
-                url: req_url,
-                onSuccess:function(data){
-                    console.log(data);
-                }
-            }
-            ajax_request(ajax_options);
+        var req_url = window.location.origin +'/temp/download';
+        ajax_options = {            
+            data: {
+                file_id: file_id,
+                auth_token : oauthToken
+            },
+            trace:1,
+            url: req_url,
+            onSuccess:function(data){
+                console.log(data);
+            },
+
+        }
+        ajax_request(ajax_options);
     }
     // download();
 
     function onAuthApiLoad() {
         console.log('APi Loaded');
         window.gapi.auth.authorize({
-            'client_id': '883270356067-4ib2bm6t9jnp8j5ef73nqkgth35oq19r.apps.googleusercontent.com',
+            'client_id': '921039722572-u3aq7gvjgk42gj590ve3qf5fc1schjf0.apps.googleusercontent.com',
             'scope': ['https://www.googleapis.com/auth/drive']
         }, handleAuthResult);
     }
@@ -83,10 +83,10 @@
             
             var file_id = docs[0].id;
             var download_url = "https://drive.google.com/uc?id="+file_id+"&export=download";
-            download_url = "https://www.googleapis.com/drive/v3/files/"+file_id+"?alt=media"
-            console.log()
-            console.log(file_id, docs[0]);
+            download_url = "https://www.googleapis.com/drive/v3/files/"+file_id+"?alt=media"            
+            console.log(file_id, docs[0]);            
             console.log(oauthToken);
+            download(file_id);
         }
     }
     document.getElementById('google_drive_picker').click(function(){

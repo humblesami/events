@@ -11,13 +11,13 @@ import nested_admin
 
 class QuestionInline(nested_admin.NestedStackedInline):
     model = Question
-    exclude = ['order', 'category', 'required', ]
+    exclude = ('order', 'category', 'required')
     ordering = ["category", ]
     extra = 1
     formfield_overrides = {
         models.TextField: {'widget': Textarea(
-                        attrs={'rows': 3,
-                                'cols': 40,})},
+                        attrs={'rows': 2,
+                                'cols': 10,})},
     }
 
 

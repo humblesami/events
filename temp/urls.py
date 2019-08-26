@@ -2,5 +2,6 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
-    path('drive', views.gdrive, name='gdrive')
+    path('drive', views.gdrive, name='gdrive'),
+    path('download', views.download, name='gdrive')
 ]
