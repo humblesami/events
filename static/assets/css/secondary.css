@@ -135,3 +135,18 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
     color: #fff;
     font-size: 1rem;
 }
+
+.bs-btnwrap .btn.btn-secondary,
+.btn-secondary:not(:disabled):not(.disabled):active{
+    background-color: rgba(99, 143, 201, 0.25);
+    border-color:rgba(99, 143, 201, 0.25);
+}
+.btn-secondary:not(:disabled):not(.disabled):active:focus{
+    box-shadow: none;
+}
+@media screen and (max-width:480px){
+    .roster .table th:first-child,
+    .roster .table td:first-child{
+        width: 35%;
+    }
+}
