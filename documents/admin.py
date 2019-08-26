@@ -1,14 +1,19 @@
+from django import forms
 from django.contrib import admin
-from .file import File
 from .annotation import *
 
 
 class FileForm(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ('html', 'file_type', 'content', 'original_pdf', 'pdf_doc', 'upload_status', 'created_at', 'created_by')
+        self.exclude = ('html', 'uplaod_status', 'file_type', 'content', 'original_pdf', 'pdf_doc', 'upload_status', 'created_at', 'created_by')
         form = super(FileForm, self).get_form(request, obj, **kwargs)
         return form
+
+class FileModelForm(forms.ModelForm):
+    class Meta:
+        model = File
+        fields = ['name','attachment']
 
 admin.site.register(File,FileForm)
 admin.site.register(Annotation)

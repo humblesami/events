@@ -34,9 +34,8 @@ function dn_rpc_object(options) {
         options.headers ['Authorization'] = 'Token '+ajax_user.cookie.token;
     }
     else if(api_url.endsWith('/secure'))
-    {
-        console.log(ajax_user.cookie, ' Invalid token for', input_data.args);
-        window['functions'].go_to_login();
+    {        
+        handle_authorization('Invalid acces to secure api');        
         return;
     }
 
@@ -119,7 +118,7 @@ function dn_rpc_object(options) {
         if (options.onComplete)
             options.onComplete();
         if (!options.no_loader)
-            site_functions.hideLoader("ajax" + api_url);        
+            site_functions.hideLoader("ajax" + api_url);
     };
     options.error = function(err) {   
         console.log('status '+err.status);
@@ -148,7 +147,7 @@ function dn_rpc_object(options) {
             err.responseText == '{"detail":"Authentication credentials were not provided."}')
         {
             console.log(input_data.args.method + ' needs login to be accessed');
-            window['functions'].go_to_login();
+            handle_authorization(err.responseText);
             return;
         }
         else
@@ -166,6 +165,23 @@ function dn_rpc_object(options) {
         }
     };
 
+    function handle_authorization(err){
+        try{
+            console.log(err);
+            var is_admin = ajax_user.cookie.groups.find(function(item){
+                return item.name == 'Admin';
+            });
+            if(!is_admin)
+            {
+                window['functions'].go_to_login();
+            }
+        }
+        catch(err){
+            window['functions'].go_to_login();
+        }
+        site_functions.hideLoader("ajax" + api_url);
+    }
+
 
     function handleError(response)
     {
@@ -175,15 +191,15 @@ function dn_rpc_object(options) {
             response.error = response.error.message;
         }
         if (response.error.indexOf('oken not valid') > -1 || response.error.indexOf('please login') > -1) {                        
-            bootbox.alert('Token expired, please login again '+ options.url);
-            window['functions'].go_to_login();
+            bootbox.alert('Token expired, please login again '+ options.url);            
+            handle_authorization();
             return;
         } else if (response.error.indexOf('not allowed to access') > -1) {
             bootbox.alert("Contact admin for permissions" + response.error);
         } else {                                
             if(response.error.indexOf('Unauthorized') > -1)
             {
-                window['functions'].go_to_login();
+                handle_authorization(response.error);
                 return;
             }
             else if(options.onError) {

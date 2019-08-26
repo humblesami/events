@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib import admin
-from documents.admin import FileForm
-# from esign.admin import SignatureDocForm
+from documents.admin import FileModelForm
 from django.utils.html import format_html
 from django.contrib.auth.admin import GroupAdmin
 from django.utils.decorators import method_decorator
@@ -18,24 +17,30 @@ import nested_admin
 class TopicAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
+class AgendaDocumentAdmin(admin.ModelAdmin):
+    fields = ['name','attachment','meeting']
 
-class TopicDocInline(nested_admin.NestedStackedInline):
-    model = AgendaDocument
-    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
+class MeetingDocumentAdmin(admin.ModelAdmin):
+    fields = ['name','attachment','meeting']
+
+
+class MeetingDocumentModelForm(FileModelForm):
+    fields = ['name','attachment']
+class MeetingDocInline(nested_admin.NestedStackedInline):
+    model = MeetingDocument
+    form = MeetingDocumentModelForm
     extra = 0
 
+class TopicDocumentModelForm(FileModelForm):
+    fields = ['name','attachment']
+class TopicDocInline(nested_admin.NestedStackedInline):
+    model = AgendaDocument
+    form = TopicDocumentModelForm
+    extra = 0
 
 class TopicInline(nested_admin.NestedStackedInline):
     model = Topic
-    inlines = [TopicDocInline]
-    extra = 1
-
-
-class MeetingDocInline(nested_admin.NestedStackedInline):
-    model = MeetingDocument
-    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
-    extra = 1
-
+    extra = 0
 
 class EventAdmin(nested_admin.NestedModelAdmin):
     fieldsets = [
@@ -167,10 +172,6 @@ class NewsAdmin(admin.ModelAdmin):
     inlines = [NewsVideoInline, NewsDocumentInline, ]
 
 
-class MeetingDocumentForm(FileForm):
-    pass
-
-
 # class SignDocumentForm(forms.ModelForm):
 #     class Meta:
 #             model = SignDocument
@@ -203,8 +204,8 @@ class AttendeeAdmin(admin.ModelAdmin):
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Topic, TopicAdmin)
-admin.site.register(MeetingDocument, MeetingDocumentForm)
-admin.site.register(AgendaDocument)
+admin.site.register(MeetingDocument, MeetingDocumentAdmin)
+admin.site.register(AgendaDocument, AgendaDocumentAdmin)
 admin.site.register(Profile, UserAdmin)
 admin.site.register(MeetingGroup, MeetingGroupAdmin)
 admin.site.register(Committee, CommitteeAdmin)
