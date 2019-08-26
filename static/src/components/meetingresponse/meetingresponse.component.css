@@ -40,3 +40,6 @@
     font-size: 0.75rem;
     margin-right:.3rem;
 }
+.upcomingButton.greyout button{
+    background: silver;    
+}

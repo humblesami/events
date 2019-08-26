@@ -51,7 +51,7 @@
                         </div>
                     </a>
                     
-                    <app-meetingresponse *ngIf="meeting_type == 'upcoming'" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+                    <app-meetingresponse my_event="{{meeting_object.my_event}}" *ngIf="meeting_type == 'upcoming'" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
                     
                 </div>
             </div>

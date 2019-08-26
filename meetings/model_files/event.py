@@ -175,21 +175,21 @@ class Event(models.Model):
     @classmethod
     def get_calendar(cls, request, params):
         user_id = request.user.id
-        public_events = Event.objects.filter(archived=False, publish=True).values('id','name','start_date','end_date')
+        public_events = Event.objects.filter(archived=False, publish=True).values('id', 'name', 'start_date', 'end_date')
         calendar_events = []
         for ev1 in public_events:
             ev2 = Event.objects.get(pk=ev1['id'])
-            my_event = ev2.attendees.filter(pk=user_id)
-            if my_event:
-                my_event = 1
+            am_participant = ev2.attendees.filter(pk=user_id)
+            if am_participant:
+                am_participant = 1
             else:
-                my_event = None
+                am_participant = None
             event = {
                 'id': ev1['id'],
                 'name': ev1['id'],
                 'start_date': str(ev1['start_date']),
                 'end_date': str(ev1['end_date']),
-                'my_event': my_event,
+                'my_event': am_participant,
             }
             calendar_events.append(event)
         return calendar_events
@@ -199,18 +199,14 @@ class Event(models.Model):
         public_events = Event.objects.filter(archived=False, publish=True, end_date__gt=datetime.datetime.now())
         calendar_events = []
         for event in public_events:
-            event.start_date = str(event.start_date)
-            event.end_date = str(event.end_date)
-            event.country = str(event.country.name)
-            event.start = event.start_date
-            event.stop = event.end_date
-            my_event = event.attendees.filter(pk = user_id)
-            if my_event:
-                event.my_event = 1
-            event = event.__dict__
-            if event['_state']:
-                del event['_state']
-            calendar_events.append(event)
+            event_dict = {}
+            event_dict['start_date'] = str(event.start_date)
+            event_dict['end_date'] = str(event.end_date)
+            event_dict['country'] = str(event.country.name)
+            am_participant = event.attendees.filter(pk=user_id)
+            if am_participant:
+                event_dict['my_event'] = 1
+            calendar_events.append(event_dict)
         return calendar_events
 
     @classmethod
@@ -245,6 +241,10 @@ class Event(models.Model):
             user_id = request.user.id
         else:
             user_id = params['user_id']
+        meeting = Event.objects.get(id=meeting_id)
+        is_respondant = meeting.attendees.filter(id=user_id)
+        if not is_respondant:
+            return 'Unauthorized'
         if user_response:
             invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
             if invitation_response:
@@ -304,8 +304,9 @@ class Event(models.Model):
         meeting_object['exectime'] = meeting_object_orm.exectime
         meeting_object['attendance_marked'] = meeting_object_orm.attendance_marked
 
-        attendance_status = cls.get_attendance_status(meeting_id, user_id)
+        attendance_status = cls.get_attendance_status(meeting_object_orm, user_id)
         meeting_object['attendee_status'] = attendance_status['state']
+        meeting_object['my_event'] = attendance_status['my_event']
 
         topic_orm = list(meeting_object_orm.topic_set.all())
         topics = []
@@ -330,10 +331,11 @@ class Event(models.Model):
         attendees = []
         meeting_attendees = ws_methods.get_user_info(meeting_object_orm.attendees.filter(groups__name__in=['Admin','Staff','Director']).distinct())
         for attendee_obj in meeting_attendees:
-            attendance_status = cls.get_attendance_status(meeting_id, attendee_obj['id'])
+            attendance_status = cls.get_attendance_status(meeting_object_orm, attendee_obj['id'])
             attendee_obj['attendance_status'] = attendance_status['state']
             attendee_obj['response_by'] = attendance_status['response_by']
             attendee_obj['attendance'] = attendance_status['attendance']
+            attendee_obj['my_event'] = attendance_status['my_event']
             attendees.append(attendee_obj)
         meeting_object['topics'] = topics
         meeting_object['meeting_docs'] = []
@@ -375,8 +377,8 @@ class Event(models.Model):
         return {'data': data}    
 
     @classmethod
-    def get_attendance_status(cls, meeting_id, uid):
-        invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=uid)
+    def get_attendance_status(cls, meeting, uid):
+        invitation_response = Invitation_Response.objects.filter(event_id=meeting.id, attendee_id=uid)
         attendance_status = {
             'state': 'needsAction',
             'response_by': '',
@@ -387,6 +389,11 @@ class Event(models.Model):
             attendance_status['state'] = invitation_response.state
             attendance_status['response_by'] = invitation_response.state_by
             attendance_status['attendance'] = invitation_response.attendance
+        my_event = meeting.attendees.filter(pk=uid)
+        if my_event:
+            attendance_status['my_event'] = 1
+        else:
+            attendance_status['my_event'] = None
         return attendance_status
 
     @classmethod
@@ -403,12 +410,9 @@ class Event(models.Model):
         meeting['start'] = str(meeting_obj.start_date)
         meeting['stop'] = str(meeting_obj.end_date)
         meeting['location'] = meeting_obj.location
-        attendance_status = cls.get_attendance_status(meeting_id, uid)
+        attendance_status = cls.get_attendance_status(meeting_obj, uid)
         meeting['attendee_status'] = attendance_status['state']
-        my_event = meeting_obj.attendees.filter(pk=request.user.id)
-        if my_event:
-            meeting['my_event'] = 1
-
+        meeting['my_event'] = attendance_status['my_event']
         return meeting
     
     @classmethod
@@ -425,9 +429,9 @@ class Event(models.Model):
             meeting['stop'] = str(meeting_obj.end_date)
             meeting['location'] = meeting_obj.location
 
-            attendance_status = cls.get_attendance_status(meeting_id, uid)
+            attendance_status = cls.get_attendance_status(meeting_obj, uid)
             meeting['attendee_status'] = attendance_status['state']
-
+            meeting['my_event'] = attendance_status['my_event']
             res_meetings.append(meeting)
         return res_meetings
 

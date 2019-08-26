@@ -57,7 +57,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     <div class="d-flex">
                         <div class="MeetingBtnWrapper" id="tdmrb{{meeting_object.id}}">
                             <div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
-                                <app-meetingresponse class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+                                <app-meetingresponse my_event="{{meeting_object.my_event}}" class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
                             </div>
                         </div>
                     </div>                    

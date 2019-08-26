@@ -10,10 +10,11 @@ export class MeetingresponseComponent implements OnInit {
 
     @Input() attendee_status: string;
     @Input() meeting_id: string;
+    @Input() my_event: string;
 
     httpService: HttpService;
     constructor(private http_ervice: HttpService) {
-        this.httpService = http_ervice;
+        this.httpService = http_ervice;        
     }
 
     respond_invitation(response: string, meet_id: string) {
@@ -41,7 +42,7 @@ export class MeetingresponseComponent implements OnInit {
         }
     }
 
-    ngOnInit() {
+    ngOnInit() {        
     }
 
 }
