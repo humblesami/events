@@ -123,3 +123,15 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
     top: 0;
     right: 0;
 }
+.fc-unthemed .fc-today {
+    background: transparent !important;
+    color: #666 !important;
+}
+.fc-row .fc-content-skeleton tbody td{
+    top: -3px !important;
+}
+.fc-time-grid-event .fc-time,
+.fc-time-grid-event > .fc-content{
+    color: #fff;
+    font-size: 1rem;
+}
