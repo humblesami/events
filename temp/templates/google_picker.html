@@ -4,6 +4,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Google Picker Example</title>
+    <script type="text/javascript" src="/static/assets/libs/js/jquery-2.2.4.js"></script>
 </head>
 
 <body>
@@ -11,17 +12,12 @@
     <div id="accessed_file"></div>
     <div id="result">Result</div>
     <div>
-        <script type="text/javascript" src="/static/assets/libs/js/jquery-2.2.4.js"></script>
         <script src="/static/assets/js/ajax.js"></script>
         <script src="/static/assets/js/gdrive.js"></script>
         <script>
         function onGooglePickerApiLoad() {
-            if (window['gdrive_accessed']) {
-              console.log('Already accessed gdrive');
-              return;
-            }
-            gapi.load('auth', { 'callback': window['onGPAuthApiLoad'] });
-            gapi.load('picker');
+            window['google_picker'] = 1;
+            $('#google_drive_picker').removeAttr('disabled');
         }
         </script>
         <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onGooglePickerApiLoad"></script>

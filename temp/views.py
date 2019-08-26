@@ -1,8 +1,11 @@
-import json
+import os
 import sys
-
+import json
 import requests
 from django.shortcuts import render
+from django.http import HttpResponse
+
+from mainapp.settings import MEDIA_ROOT
 
 
 def gdrive(request):
@@ -13,24 +16,29 @@ def download(request):
     context = {}
     try:
         file_id = request.GET['file_id']
+        file_name = request.GET['file_name']
         oauthToken = request.GET['auth_token']
         req_url = "https://www.googleapis.com/drive/v3/files/" + file_id + "?alt=media"
         headers = {
             'Authorization': "Bearer " + oauthToken
         }
         response = requests.get(req_url, headers=headers)
-
-        with open('gdrivefile', "wb") as f:
-            f.write(response.content)
-        context = 'done'
+        file_path = MEDIA_ROOT + "/gdrive"
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)
+        file_path = file_path + "/"+file_name
+        with open(file_path, "wb") as f:
+            res = f.write(response.content)
+            print('done')
+        context = "done"
     except:
-        err = sys.exc_info()
+        err = str(sys.exc_info())
         context = {'error': 'Error '+ err}
-    if context !=' done':
+    if context != 'done':
         try:
             context = json.dumps(context)
         except:
             context = 'Unknown Error'
-    return context
+    return HttpResponse(context)
 
 
