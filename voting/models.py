@@ -1,5 +1,7 @@
 import base64
 import datetime
+
+import pytz
 from django.db import models
 from django.db.models import Q
 from documents.file import File
@@ -92,13 +94,9 @@ class Voting(Actions):
 
 
     @classmethod
-    def get_todo_votings(cls, uid):
-        votings = Voting.objects.filter(
-            (Q(meeting__id__isnull = False) & Q(meeting__attendees__id=uid))
-            |
-            Q(respondents__id = uid),
-            Q(close_date__gte=datetime.datetime.now())
-        )
+    def get_pending_votings(cls, user):
+        uid = user.id
+        votings = Actions.gt_my_open_actions(Voting.objects.all(), user, 'home')
         pending_votings = []
         for voting in votings:
             if voting:
@@ -246,6 +244,8 @@ class Voting(Actions):
             votings = ws_methods.search_db({'kw': kw, 'search_models': {'voting': ['Voting']}})
         else:
             votings = Voting.objects.all()
+
+        votings = Actions.gt_my_open_actions(votings, request.user)
 
         offset = params.get('offset')
         limit = params.get('limit')

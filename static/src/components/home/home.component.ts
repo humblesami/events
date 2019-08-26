@@ -109,6 +109,17 @@ export class HomeComponent implements OnInit {
         news_video: 0,
         voting: 0,
     };
+    ending_indices = {
+        survey : 0,
+        sign_doc : 0,
+        news_doc : 0,
+        news_video: 0,
+        voting: 0,
+    }
+
+    update_indices(){
+
+    }
 
     get_slider_start_index(flag, items, item_type){
         
@@ -128,6 +139,8 @@ export class HomeComponent implements OnInit {
         {
             this.start_indices[item_type] += flag * this.visible_limit[item_type];
         }
+        this.ending_indices[item_type] =  this.start_indices[item_type] + this.visible_limit[item_type];
+        console.log(this.visible_limit[item_type],this.start_indices[item_type],items,item_type);
     }
     ngOnInit() {
         var obj_this = this;
@@ -150,21 +163,29 @@ export class HomeComponent implements OnInit {
         
         var vw = $(window).width();
         // console.log(vw , 66);
-        if(vw > 767 && vw < 992)
-            obj_this.visible_limit = {
-                survey : 2,
-                sign_doc : 3,
-                news_doc : 2,
-                news_video: 2,
-                voting: 2,
-            }
-        else if(vw > 991)
+        if(vw > 991)
         obj_this.visible_limit = {
             survey : 3,
             sign_doc : 4,
             news_doc : 6,
             news_video: 4,
             voting: 3,
+        }
+        else if(vw > 767 && vw < 992)
+        obj_this.visible_limit = {
+            survey : 2,
+            sign_doc : 3,
+            news_doc : 3,
+            news_video: 3,
+            voting: 2,
+        }
+        else if(vw > 576 && vw < 768)
+        obj_this.visible_limit = {
+            survey : 1,
+            sign_doc : 2,
+            news_doc : 2,
+            news_video: 2,
+            voting: 1,
         }
         else
             obj_this.visible_limit = {
@@ -174,6 +195,11 @@ export class HomeComponent implements OnInit {
                 news_video: 1,
                 voting: 1,
             };
-        console.log(obj_this.visible_limit['news_video'],1122);
+
+        for (var item_type in obj_this.ending_indices)
+        {
+            obj_this.ending_indices[item_type] = obj_this.visible_limit[item_type];
+        }
+        console.log(obj_this.visible_limit, obj_this.ending_indices,1122);
     }
 }

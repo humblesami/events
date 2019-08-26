@@ -50,7 +50,7 @@ class News(models.Model):
             'pending_meetings':  Event.get_pending_meetings(uid),
             'pending_surveys': Survey.get_pending_surveys(uid),
             'pending_documents': pending_sign_docs,
-            'pending_votings': voting_model.get_todo_votings(uid),
+            'pending_votings': voting_model.get_pending_votings(request.user),
         }
         home_object['doc_ids'] = news_docs
         home_object['video_ids'] = news_videos
