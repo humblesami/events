@@ -163,7 +163,15 @@ export class HomeComponent implements OnInit {
         
         var vw = $(window).width();
         // console.log(vw , 66);
-        if(vw > 991)
+        if(vw > 1200)
+        obj_this.visible_limit = {
+            survey : 3,
+            sign_doc : 6,
+            news_doc : 6,
+            news_video: 4,
+            voting: 3,
+        }
+        else if(vw > 991 && vw < 1200)
         obj_this.visible_limit = {
             survey : 3,
             sign_doc : 4,
