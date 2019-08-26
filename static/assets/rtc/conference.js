@@ -159,7 +159,7 @@
                     console.log(er);
                 }
 
-                var mute_button = $('<button class="mute">Mute/Unmute</button>');
+                var mute_button = $('<button class="mute"><img src="static/assets/images/mp-unmute.svg" alt="" /></button>');
                 mute_button.click(function(){
                     video_caller.mute_some_one(this);
                 });

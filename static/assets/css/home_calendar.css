@@ -51,7 +51,7 @@
 
 .fc th, .fc td{
 	padding: 0;
-    margin: 0;    
+    margin: 0;
 }
 .fc th {
     border-color: #ddd;
@@ -97,4 +97,10 @@ th.fc-day-header.fc-widget-header{
 
 .fc-day-grid td{
 	border:1px solid #dddddd;
+}
+
+.fc-row .fc-content-skeleton tbody td, .fc-row .fc-helper-skeleton tbody td {
+    border-top: 0;
+    top: -8px;
+    position: relative;
 }

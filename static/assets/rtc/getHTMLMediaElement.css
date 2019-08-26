@@ -454,13 +454,13 @@ div#ongoing_controls {
     justify-content: center;
     align-items: center;
 }
-.setup-buttons button {
+.setup-buttons button, .mute {
     background: #4B74B5;
     border: 0;
     color: #fff;
     width: 60px;
     height: 60px;
-    margin: 0 .3rem !important;
+    margin: .3rem !important;
     border-radius: 50%;
     display: flex;
     justify-content: center;
