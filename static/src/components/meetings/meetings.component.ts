@@ -10,7 +10,7 @@ declare var $: any;
 export class MeetingsComponent implements OnInit {
     no_meet = false;
     meeting_list = [];
-    active_meeting: any;    
+    active_meeting: any;
     show = false;
     meeting_type: string;
     heading = 'Home';
@@ -33,13 +33,13 @@ export class MeetingsComponent implements OnInit {
         window['json_functions'].find_activate_link('.MeetingBtnWrapper');
         this.get_list();
     }
-    
+
     count: number;
     get_list(){
         var url_segments = this.route.snapshot.url;
         this.meeting_type = url_segments[url_segments.length -1].path;
         let obj_this = this;
-        var success_cb = function (result) {            
+        var success_cb = function (result) {
             for(var i in result.records)
             {
                 var start = result.records[i]['start'];
@@ -50,11 +50,11 @@ export class MeetingsComponent implements OnInit {
             obj_this.count = result.records.length;
             obj_this.meeting_list = result.records || [];
             // console.log(obj_this.total_records,obj_this.meeting_list.length,  1411);
-            obj_this.meeting_list.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;            
+            obj_this.meeting_list.length > 0 ? obj_this.no_meet = false : obj_this.no_meet = true;
         };
-        
+
         let input_data = {
-            meeting_type: obj_this.meeting_type            
+            meeting_type: obj_this.meeting_type
         };
 
         var failure_cb = function (error) {
@@ -63,11 +63,11 @@ export class MeetingsComponent implements OnInit {
             app: 'meetings',
             model: 'Event',
             method: 'get_records'
-        }			
+        }
         let final_input_data = {
             params: input_data,
             args: args
         };
         this.httpService.get(final_input_data, success_cb, failure_cb);
-    }    
+    }
 }
