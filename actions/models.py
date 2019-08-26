@@ -56,7 +56,7 @@ class Actions(models.Model):
             utc = pytz.UTC
             now = datetime.datetime.now().replace(tzinfo=utc)
             action.close_date = action.close_date.replace(tzinfo=utc)
-            if action.start_date < now:
+            if action.open_date > now:
                 is_open = False
             if action.close_date <= now:
                 is_open = False
