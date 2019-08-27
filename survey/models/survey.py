@@ -174,12 +174,14 @@ class Survey(Actions):
             question_dict = question.__dict__
             if question_dict['_state']:
                 del question_dict['_state']
+            ws_methods.stringfy_sytem_fields(question_dict)
             if question_dict['choices']:
                 question_dict['choices'] = question_dict['choices'].split(',')
             survey_questions.append(question_dict)
         survey = survey_obj.__dict__
         if survey['_state']:
             del survey['_state']
+        ws_methods.stringfy_sytem_fields(survey)
         survey['questions'] = survey_questions
         survey['open_date'] = str(survey['open_date'])
         survey['close_date'] = str(survey['close_date'])
