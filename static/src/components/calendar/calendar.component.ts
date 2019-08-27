@@ -58,7 +58,7 @@ export class CalendarComponent implements OnInit {
         if (obj_this.events.length != 0) {
             events = obj_this.events;
         } else {
-            if (home_data.calendar) {
+            if (home_data.calendar) {                
                 home_data.calendar.forEach(function(event: any) {
                     let date = window['functions'].meeting_time_str(event.start);
                     events.push({
@@ -73,6 +73,7 @@ export class CalendarComponent implements OnInit {
                 obj_this.events = events;
             }
         }
+        // console.log(home_data.calendar,events, obj_this.events);
         if (home_data.calendar)
             obj_this.renderCalendar(events);
     }
@@ -162,7 +163,7 @@ export class CalendarComponent implements OnInit {
             args: args
         };
         obj_this.httpService.get(input_data,function(data){
-            console.log(data, 13888);
+            // console.log(data, 13888);
             obj_this.selected_event = data;
             $('#calenderModal').modal('show');
         }, null)

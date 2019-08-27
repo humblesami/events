@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django import forms
+
+from documents.admin import FileModelForm
 from .models import *
 import nested_admin
+
 
 class VotingChoiceAdmin(admin.ModelAdmin):
     autocomplete_fields = ['voting_type']
@@ -9,7 +12,7 @@ class VotingChoiceAdmin(admin.ModelAdmin):
 
 class ChoiceInline(nested_admin.NestedStackedInline):
     model = VotingChoice
-    extra = 1
+    extra = 0
 
 
 class VotingTypeAdmin(admin.ModelAdmin):
@@ -19,13 +22,15 @@ class VotingTypeAdmin(admin.ModelAdmin):
     search_fields = ['name']
     
 
+class VotingDocModelForm(FileModelForm):
+    fields = ['name','attachment']
+
+
 class VotingDocInline(nested_admin.NestedStackedInline):
     model = VotingDocument
     autocomplete_fields = ['voting']
-    exclude=('html','content','original_pdf','pdf_doc', 'file_type', 'uplaod_status', 'created_at')
-    # readonly_fields = ('View',)
-    # show_change_link = True
-    extra = 1
+    form = VotingDocModelForm
+    extra = 0
 
 class VotingForm(forms.ModelForm):
     class Meta:

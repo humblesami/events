@@ -122,7 +122,7 @@ class SignatureDoc(File, Actions):
                     width=140,
                     zoom=100
                 )
-                obj.created_by_id = user.id
+                obj.updated_by_id = user.id
                 obj.save()
                 if c == 1:
                     c = 0
@@ -154,7 +154,7 @@ class SignatureDoc(File, Actions):
                     zoom=sign['zoom'],
                     type=sign['type']
                 )
-                obj.created_by_id = user.id
+                obj.updated_by_id = user.id
                 obj.save()
         return self.on_signature_assigned(user, user_ids, params)
     
@@ -273,7 +273,7 @@ class SignatureDoc(File, Actions):
         if file_id == 'new':
             if not user.id:
                 return 'Invalid esign doc id'
-            doc_obj = SignatureDoc.objects.filter(created_by_id=user.id).last()
+            doc_obj = SignatureDoc.objects.filter(updated_by_id=user.id).last()
             if doc_obj:
                 file_id = doc_obj.id
             else:
@@ -540,7 +540,7 @@ class Signature(models.Model):
     width = models.FloatField(null=True, blank=True)
     signed = models.BooleanField(default=False)
     signed_at = models.DateTimeField(null=True)
-    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='admin')
+    update_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='admin')
 
     def save(self, *args, **kwargs):
         create = False
@@ -557,10 +557,10 @@ class Signature(models.Model):
     def del_sign(cls, request, params):
         signature_id = int(params['signature_id'])        
         sign = Signature.objects.get(id=signature_id)
-        if sign.signed_at and sign.created_by.id != request.user.id:
+        if sign.signed_at and sign.updated_by.id != request.user.id:
             return 'Can not be deleted executed signature from doucment'
-        if sign.created_by:
-            if sign.created_by.id == request.user.id:
+        if sign.updated_by:
+            if sign.updated_by.id == request.user.id:
                 sign.delete()
                 return 'done'
             else:

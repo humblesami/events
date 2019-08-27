@@ -3,19 +3,17 @@ from django.contrib import admin
 from .annotation import *
 
 
-class FileForm(admin.ModelAdmin):
+class FileAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'upload_status', 'file_type', 'content', 'pdf_doc', 'upload_status', 'updated_by', 'html']
 
-    def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ('html', 'uplaod_status', 'file_type', 'content', 'original_pdf', 'pdf_doc', 'upload_status', 'created_at', 'created_by')
-        form = super(FileForm, self).get_form(request, obj, **kwargs)
-        return form
 
 class FileModelForm(forms.ModelForm):
     class Meta:
         model = File
         fields = ['name','attachment']
 
-admin.site.register(File,FileForm)
+
+admin.site.register(File, FileAdmin)
 admin.site.register(Annotation)
 admin.site.register(AnnotationDocument)
 admin.site.register(RectangleAnnotation)

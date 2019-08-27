@@ -14,11 +14,9 @@ sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
 
 
-class TopicAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-
 class AgendaDocumentAdmin(admin.ModelAdmin):
     fields = ['name','attachment','meeting']
+
 
 class MeetingDocumentAdmin(admin.ModelAdmin):
     fields = ['name','attachment','meeting']
@@ -26,21 +24,42 @@ class MeetingDocumentAdmin(admin.ModelAdmin):
 
 class MeetingDocumentModelForm(FileModelForm):
     fields = ['name','attachment']
+
+
 class MeetingDocInline(nested_admin.NestedStackedInline):
     model = MeetingDocument
     form = MeetingDocumentModelForm
     extra = 0
 
+
+class NewsDocModelForm(FileModelForm):
+    fields = ['name', 'attachment']
+
+
+class NewsDocumentInline(nested_admin.NestedStackedInline):
+    model = NewsDocument
+    form = NewsDocModelForm
+    extra = 0
+
+
 class TopicDocumentModelForm(FileModelForm):
     fields = ['name','attachment']
+
+
 class TopicDocInline(nested_admin.NestedStackedInline):
     model = AgendaDocument
     form = TopicDocumentModelForm
     extra = 0
 
+
+class TopicAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+
 class TopicInline(nested_admin.NestedStackedInline):
     model = Topic
     extra = 0
+
 
 class EventAdmin(nested_admin.NestedModelAdmin):
     fieldsets = [
@@ -159,43 +178,11 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 class NewsVideoInline(nested_admin.NestedStackedInline):
     model = NewsVideo
-    extra = 1
-
-
-class NewsDocumentInline(nested_admin.NestedStackedInline):
-    model = NewsDocument
-    exclude = ('html', 'content', 'original_pdf', 'pdf_doc', 'file_type', 'uplaod_status', 'created_at', 'created_by')
-    extra = 1
+    extra = 0
 
 
 class NewsAdmin(admin.ModelAdmin):
-    inlines = [NewsVideoInline, NewsDocumentInline, ]
-
-
-# class SignDocumentForm(forms.ModelForm):
-#     class Meta:
-#             model = SignDocument
-#             fields = ()
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
-
-
-# class AdminSignDoc(admin.ModelAdmin):
-#     form = SignDocumentForm
-#     list_display = ('name', 'meeting', 'send_to_all')
-#     fields = [
-#         'name',
-#         'meeting',
-#         'attendees'
-#         'send_to_all',
-#         'open_date',
-#         'close_date',
-#         'attachment',
-#     ]
-#     change_form_template = 'admin/actions_change_form.html'
-#     class Media:
-#         js = ('admin/js/meeting_sign_doc.js',)
+    inlines = [NewsVideoInline, NewsDocumentInline]
 
 
 class AttendeeAdmin(admin.ModelAdmin):

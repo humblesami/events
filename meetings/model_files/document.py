@@ -9,18 +9,6 @@ from django.db import transaction
 class MeetingDocument(File):
     meeting = models.ForeignKey(Event, on_delete=models.CASCADE)
 
-    @property
-    def breadcrumb(self):
-        event_obj = self.meeting
-        data = []
-        data = []
-        if event_obj:
-            if event_obj.exectime != 'ongoing':
-                data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
-
-            data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
-            return data
-
     def save(self, *args, **kwargs):
         if not self.file_type:
             self.file_type = 'meeting'
@@ -34,7 +22,6 @@ class MeetingDocument(File):
         for obj in self.meeting.attendees.all():
             res.append(obj.id)
         return res
-
 
     @classmethod
     def upload_meeting_documents(cls, request, params):

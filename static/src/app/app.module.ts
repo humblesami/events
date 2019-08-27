@@ -135,7 +135,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
         DateAgoPipe,
         StringFirstToUpperPipe,
         RosterComponent,
-        ProfilesummaryComponent
+        ProfilesummaryComponent,
     ],
     providers:[
         AuthGuard,
@@ -144,6 +144,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
         Location, 
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [ProfilesummaryComponent]
 })
 export class AppModule { }
