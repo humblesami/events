@@ -32,16 +32,13 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
                                 <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
                             </div>
-                            <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'">
+                            <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'" class="mb-2">
                                 <div class="meet-elements">
-                                    <span class="d-inline">
-                                        Meeting Status
-                                    </span>
-                                    <div class="custom-control custom-switch">
-                                        <input (change)="on_publish_changed()" type="checkbox" class="toggle_cb custom-control-input" id="customSwitch1">
+                                    <div  class="custom-control custom-switch">
+                                        <input (click)="on_publish_changed()" type="checkbox" class="toggle_cb custom-control-input" id="customSwitch1">
                                         <label class="custom-control-label" for="customSwitch1">
-                                            <span *ngIf="meeting_status == 'Published'" >{{meeting_status}}</span>
-                                            <span *ngIf="meeting_status == 'Unpublished'" >{{meeting_status}}</span>
+                                            <span *ngIf="meeting_status == 'Published'" class="published">{{meeting_status}}</span>
+                                            <span *ngIf="meeting_status == 'Unpublished'" class="unpublished">{{meeting_status}}</span>
                                         </label>
                                     </div>
                                     

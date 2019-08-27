@@ -98,13 +98,13 @@ input[type=checkbox]#mail-to-assistant {
     margin: 5px 5px;
     top: -3px;
 }
-input[type=checkbox]:checked:after{
+/* input[type=checkbox]:checked:after{
 	content: '\2714';
 	position: absolute;
 	top: -3px;
 	left: 3px;
 	color: #4b74b5;
-}
+} */
 .respons-margin{
     margin-top: 2px !important;
     padding: 0 0 0 2% !important;
@@ -146,6 +146,34 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
 }
 th.d-none.d-md-block{
     margin-block-end: -1px;
+}
+
+.custom-switch .custom-control-label::before{
+    width: 6.5rem;
+    height: 2rem;
+    border-radius: 1.5rem;
+}
+.custom-switch .custom-control-label::after{
+    top: 0.6rem;
+    width: calc(1.5rem - 4px);
+    height: calc(1.5rem - 4px);
+    border-radius: 50%;
+    left: calc(2.75rem + 2px);
+}
+.custom-switch .custom-control-input:checked~.custom-control-label::after{
+    left: calc(-2.9rem + 2px);
+}
+.published,.unpublished{
+    position: absolute;
+    z-index: 1;
+    margin-top: 0.5rem;
+}
+.published{
+    color: #fff;
+    left: -10px;
+}
+.unpublished{
+    left: -30px;
 }
 @media screen and (max-width:480px){
     .roster .table th:first-child,

@@ -62,7 +62,7 @@ def stringfy_sytem_fields(dict_object):
         dict_object['updated_at'] = str(dict_object['updated_at'])
     if dict_object.get('created_at'):
         dict_object['created_at'] = str(dict_object['created_at'])
-    if dict_object.get('updated_at'):
+    if dict_object.get('updated_by'):
         dict_object['updated_by'] = str(dict_object['updated_by'])
     if dict_object.get('created_by'):
         dict_object['created_by'] = str(dict_object['created_by'])
