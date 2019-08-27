@@ -32,7 +32,6 @@ class Event(models.Model):
     conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, null=True, blank=True)
     video_call_link = models.CharField(max_length=200, null=True, blank=True)
 
-
     def __str__(self):
         return self.name
 
@@ -74,7 +73,7 @@ class Event(models.Model):
         super(Event, self).save(*args, **kwargs)
 
     def notification_text(self):
-        return ' meeting ' + self.name[0: 20] +'...'
+        return ' meeting ' + self.name[0: 20] + '...'
 
     def get_audience(self):
         res = []
@@ -82,13 +81,12 @@ class Event(models.Model):
         for user in audience:
             res.append(user['id'])
         return res
-    
+
     @classmethod
     def get_attendees_list(cls, request, params):
         meeting_id = params.get('meeting_id')
         meeting = Event.objects.get(id=meeting_id)
         return Event.attendees_to_list(meeting.attendees.all())
-
 
     @classmethod
     def attendees_to_list(cls, attendees):
@@ -103,7 +101,6 @@ class Event(models.Model):
     def get_attendees(self):
         return Event.attendees_to_list(self.attendees.all())
 
-
     @property
     def attendance_marked(self):
         attendance = Invitation_Response.objects.filter(
@@ -113,7 +110,6 @@ class Event(models.Model):
         else:
             return True
 
-    
     @property
     def exectime(self):
         current_date = timezone.now()
@@ -121,9 +117,9 @@ class Event(models.Model):
             return 'draft'
         if self.start_date >= current_date:
             return 'upcoming'
-        elif self.end_date <= current_date  and self.archived == False:
+        elif self.end_date <= current_date and self.archived == False:
             return 'completed'
-        elif self.end_date <= current_date  and self.archived == True:
+        elif self.end_date <= current_date and self.archived == True:
             return 'archived'
         elif self.start_date <= current_date and self.end_date >= current_date:
             return 'ongoing'
@@ -143,7 +139,7 @@ class Event(models.Model):
         else:
             hours = str(hours)
         if minutes < 10:
-            minutes = '0'+str(minutes)
+            minutes = '0' + str(minutes)
         else:
             minutes = str(minutes)
         val = hours + ':' + minutes
@@ -171,7 +167,7 @@ class Event(models.Model):
         val = val.strip()
         return val
     location = property(_compute_address)
-    
+
     @classmethod
     def get_calendar(cls, request, params):
         user_id = request.user.id
@@ -199,36 +195,37 @@ class Event(models.Model):
         public_events = Event.objects.filter(archived=False, publish=True, end_date__gt=datetime.datetime.now())
         calendar_events = []
         for event in public_events:
-            event_dict = {}
-            event_dict['start_date'] = str(event.start_date)
-            event_dict['end_date'] = str(event.end_date)
-            event_dict['country'] = str(event.country.name)
-            am_participant = event.attendees.filter(pk=user_id)
-            if am_participant:
-                event_dict['my_event'] = 1
-            calendar_events.append(event_dict)
+            event.start_date = str(event.start_date)
+            event.end_date = str(event.end_date)
+            event.country = str(event.country.name)
+            event.start = event.start_date
+            event.stop = event.end_date
+            my_event = event.attendees.filter(pk=user_id)
+            if my_event:
+                event.my_event = 1
+            event = event.__dict__
+            if event['_state']:
+                del event['_state']
+            calendar_events.append(event)
         return calendar_events
 
     @classmethod
     def get_pending_meetings(cls, uid):
-        meetings = Event.objects.filter(attendees__id=uid, publish=True,
-                                                end_date__gte=datetime.datetime.now())
+        meetings = Event.objects.filter(attendees__id=uid, publish=True, end_date__gte=datetime.datetime.now())
 
         pending_meetings = cls.get_meeting_summaries(meetings, uid)
         return pending_meetings
- 
 
     # working on meeting attendees attendance
     @classmethod
-    def mark_attendance(cls, request, params):                 
+    def mark_attendance(cls, request, params):
         meeting_id = params['meeting_id']
         attendances = params['attendance_data']
         for atten in attendances:
-            check_meeting = Invitation_Response.objects.get(event_id = meeting_id , attendee_id= atten['id'])
+            check_meeting = Invitation_Response.objects.get(event_id=meeting_id, attendee_id=atten['id'])
             check_meeting.attendance = atten['attendance']
             check_meeting.save()
         return 'done'
-
 
     @classmethod
     def respond_invitation(cls, request, params):
@@ -246,13 +243,13 @@ class Event(models.Model):
         if not is_respondant:
             return 'Unauthorized'
         if user_response:
-            invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
+            invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=user_id)
             if invitation_response:
                 invitation_response = invitation_response[0]
                 invitation_response.state = user_response
                 invitation_response.save()
             else:
-                invitation_response = Invitation_Response(state= user_response, event_id = meeting_id, attendee_id = user_id)
+                invitation_response = Invitation_Response(state=user_response, event_id=meeting_id, attendee_id=user_id)
                 invitation_response.save()
             return 'done'
         elif user_attendance:
@@ -260,7 +257,7 @@ class Event(models.Model):
                 'attendance_marked': False
             }
             user_id = params['user_id']
-            invitation_response = Invitation_Response.objects.filter(event_id = meeting_id, attendee_id = user_id)
+            invitation_response = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id=user_id)
             if invitation_response:
                 invitation_response = invitation_response[0]
                 invitation_response.attendance = user_attendance
@@ -342,7 +339,7 @@ class Event(models.Model):
             doc['created_at'] = str(doc['created_at'])
             meeting_object['meeting_docs'].append(doc)
         esign_docs = []
-        sign_docs =  meeting_object_orm.signaturedoc_set.all()
+        sign_docs = meeting_object_orm.signaturedoc_set.all()
         for sign_doc in sign_docs:
             doc = sign_doc.get_pending_sign_count(request.user.id)
             doc['id'] = sign_doc.id
@@ -356,7 +353,7 @@ class Event(models.Model):
             surveys = ws_methods.queryset_to_list(surveys, fields=['id', 'name'],
             related = {
                 'responses': {'fields': ['id', 'user']}
-                })
+            })
         except:
             pass
         meeting_object['surveys'] = surveys
@@ -373,7 +370,7 @@ class Event(models.Model):
         meeting_object['attendees'] = attendees
         data = {"meeting": meeting_object, "next": 0, "prev": 0}
 
-        return {'data': data}    
+        return {'data': data}
 
     @classmethod
     def get_attendance_status(cls, meeting, uid):
@@ -397,7 +394,7 @@ class Event(models.Model):
 
     @classmethod
     def meeting_summary(cls, request, params):
-        
+
         meeting = {}
         uid = request.user.id
         meeting_id = int(params['id'])
@@ -413,7 +410,7 @@ class Event(models.Model):
         meeting['attendee_status'] = attendance_status['state']
         meeting['my_event'] = attendance_status['my_event']
         return meeting
-    
+
     @classmethod
     def get_meeting_summaries(cls, meetings, uid):
         res_meetings = []
@@ -449,11 +446,11 @@ class Event(models.Model):
         return data
 
     @classmethod
-    def get_meetings(cls, meeting_type, params = None):
+    def get_meetings(cls, meeting_type, params=None):
         results = None
         kw = params.get('kw')
         if kw:
-            results = ws_methods.search_db({'kw': kw, 'search_models':  {'meetings':['Event']}  })
+            results = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Event']}})
         else:
             results = Event.objects.all()
         if meeting_type == 'archived':
@@ -462,7 +459,7 @@ class Event(models.Model):
             meetings = results.filter(publish=False)
         else:
             meetings = results.filter(publish=True)
-        
+
         meeting_list = []
         for meeting in meetings:
             if meeting_type == 'upcoming':
@@ -473,7 +470,6 @@ class Event(models.Model):
             elif meeting.exectime == meeting_type:
                 meeting_list.append(meeting)
         return meeting_list
-    
 
     @classmethod
     def move_to_archive(cls, request, params):
@@ -498,7 +494,6 @@ class Event(models.Model):
             return 'done'
         return 'Something went wrong while moving meeting to archived'
 
-
     @classmethod
     def update_publish_status(cls, request, params):
         meeting_id = params['meeting_id']
@@ -510,7 +505,6 @@ class Event(models.Model):
             return {'publish': publish_status}
         return 'Something went wrong while updating meeting publish status'
 
-
     @classmethod
     def get_roster_details(cls, request, params):
         meeting_id = params['meeting_id']
@@ -520,21 +514,20 @@ class Event(models.Model):
         records = Invitation_Response.objects.filter(event_id=meeting_id)
         total = len(records)
         if limit:
-            records = records[offset: offset+int(limit)]
+            records = records[offset: offset + int(limit)]
         for obj in records:
             attendee_data = ws_methods.obj_to_dict(
                 obj.attendee,
                 fields=['id', 'name', 'email', 'mobile_phone', 'company', 'image']
-                )
+            )
             attendee_data['attendance'] = obj.attendance
             attendee_data['photo'] = attendee_data['image']
             attendees_list.append(attendee_data)
         data = {
-            'attendees' : attendees_list,
-            'total' : total
+            'attendees': attendees_list,
+            'total': total
         }
         return data
-            
 
     @classmethod
     def search_roster(cls, request, params):
@@ -561,11 +554,12 @@ class Event(models.Model):
             attendees_list = []
             for attendee in attendees:
                 attendee_data = ws_methods.obj_to_dict(
-                attendee,
-                fields=['id', 'name', 'mobile_phone', 'email', 'company', 'image'],
-                related={
-                    'invitation_response_set': {'fields': 'attendance'}
-                        })
+                    attendee,
+                    fields=['id', 'name', 'mobile_phone', 'email', 'company', 'image'],
+                    related={
+                        'invitation_response_set': {'fields': 'attendance'}
+                    }
+                )
                 attendee_data['attendance'] = attendee_data['invitation_response_set'][0]['attendance']
                 del attendee_data['invitation_response_set']
                 attendee_data['photo'] = attendee_data['image']
@@ -574,7 +568,6 @@ class Event(models.Model):
             data['total'] = total
             return data
         return data
-
 
     @classmethod
     def get_action_dates(cls, request, params):
@@ -586,15 +579,14 @@ class Event(models.Model):
             end_date = meeting.end_date.date()
             end_time = meeting.end_date.time()
             data = {
-                'open_date': '%04d'%start_date.year + '-' + '%02d'%start_date.month + '-' + '%02d'%start_date.day,
-                'open_time':  '%02d'%start_time.hour + ':' + '%02d'%start_time.minute + ':' + '%02d'%start_time.second,
-                'close_date': '%04d'%end_date.year + '-' + '%02d'%end_date.month + '-' + '%02d'%end_date.day,
-                'close_time': '%02d'%end_time.hour + ':' + '%02d'%end_time.minute + ':' + '%02d'%end_time.second
+                'open_date': '%04d' % start_date.year + '-' + '%02d' % start_date.month + '-' + '%02d' % start_date.day,
+                'open_time': '%02d' % start_time.hour + ':' + '%02d' % start_time.minute + ':' + '%02d' % start_time.second,
+                'close_date': '%04d' % end_date.year + '-' + '%02d' % end_date.month + '-' + '%02d' % end_date.day,
+                'close_time': '%02d' % end_time.hour + ':' + '%02d' % end_time.minute + ':' + '%02d' % end_time.second
             }
             return data
         else:
             return 'done'
-
 
     def response_invitation_email(self, audience, action=None):
         state_selection = []
@@ -604,11 +596,11 @@ class Event(models.Model):
                     state_selection.append({'name': state[1], 'value': state[0]})
                 else:
                     state_selection.append({'name': 'Tentative', 'value': state[0]})
-        template_data = {            
-            'id': self.id, 
+        template_data = {
+            'id': self.id,
             'name': self.name,
             'response_invitations': state_selection,
-            'server_base_url': server_base_url                
+            'server_base_url': server_base_url
         }
         post_info = {}
         post_info['res_app'] = self._meta.app_label
@@ -641,14 +633,14 @@ def attendees_saved(sender, instance, action, pk_set, **kwargs):
         if new_added_respondets:
             instance.response_invitation_email(new_added_respondets)
             respond_objs = []
-            for user_id in  new_added_respondets:
+            for user_id in new_added_respondets:
                 respond_obj = Invitation_Response(event_id=instance.id, attendee_id=user_id)
                 respond_objs.append(respond_obj)
             if respond_objs:
                 Invitation_Response.objects.bulk_create(respond_objs)
+
+
 m2m_changed.connect(attendees_saved, sender=Event.attendees.through)
-
-
 
 STATE_SELECTION = (
     ('needsAction', _("Needs Action")),
@@ -664,8 +656,8 @@ ATTENDANCE_SELECTION = (
 
 
 class Invitation_Response(models.Model):
-    state = models.CharField(max_length=20,choices=STATE_SELECTION, blank=True, null=True)
+    state = models.CharField(max_length=20, choices=STATE_SELECTION, blank=True, null=True)
     state_by = models.CharField(max_length=20, blank=True, null=True)
     attendee = models.ForeignKey(Profile, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    attendance = models.CharField(max_length=20,choices=ATTENDANCE_SELECTION, blank=True, null=True)
+    attendance = models.CharField(max_length=20, choices=ATTENDANCE_SELECTION, blank=True, null=True)

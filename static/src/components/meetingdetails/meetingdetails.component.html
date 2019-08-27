@@ -37,6 +37,16 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <span class="d-inline">
                                         Meeting Status
                                     </span>
+
+									    <div class="onoffswitch">
+        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+        <label class="onoffswitch-label" for="myonoffswitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+        </label>
+    </div>
+
+
                                     <div class="custom-control custom-switch d-inline">
                                         <input (change)="on_publish_changed()" type="checkbox" class="toggle_cb custom-control-input" id="customSwitch1">
                                         <label class="custom-control-label" for="customSwitch1"></label>
