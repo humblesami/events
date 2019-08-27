@@ -266,7 +266,6 @@ class Event(models.Model):
                 invitation_response.attendance = user_attendance
                 invitation_response.save()
                 data['attendance_marked'] = invitation_response.event.attendance_marked
-                
             else:
                 invitation_response = Invitation_Response(attendance= user_attendance, event_id = meeting_id, attendee_id = user_id)
                 invitation_response.save()

@@ -171,7 +171,7 @@ export class VotingdetailsComponent implements OnInit {
         {
             obj_this.httpService.post(voting_response_data, function(update_results){                
                 obj_this.voting_object.my_status = option_name;
-                console.log(update_results);
+                // console.log(update_results);
                 obj_this.voting_object.chart_data = update_results.chart_data;
                 if(obj_this.voting_object.chart_data.length && obj_this.voting_object.public_visibility)                
                 {                 

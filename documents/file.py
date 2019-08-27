@@ -11,6 +11,7 @@ from PyPDF2 import PdfFileReader
 from django.db import models
 from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
+from django_currentuser.middleware import get_current_user
 
 def validate_file_extension(value):
     
@@ -38,8 +39,8 @@ class File(models.Model):
     file_type = models.CharField(max_length=128, default='')
     attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    uplaod_status = models.BooleanField(default=False)
-    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    upload_status = models.BooleanField(default=False)
+    updated_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
@@ -49,6 +50,8 @@ class File(models.Model):
             create = False
             if self.pk is None:
                 create = True
+            req_user = get_current_user()
+            self.updated_by_id = req_user.id
             super(File, self).save(*args, **kwargs)
             if create and self.file_type != 'message':
                 ws_methods.document_thread(self)
