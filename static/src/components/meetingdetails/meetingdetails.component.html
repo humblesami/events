@@ -37,22 +37,14 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <span class="d-inline">
                                         Meeting Status
                                     </span>
-
-									    <div class="onoffswitch">
-        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
-        <label class="onoffswitch-label" for="myonoffswitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-        </label>
-    </div>
-
-
-                                    <div class="custom-control custom-switch d-inline">
+                                    <div class="custom-control custom-switch">
                                         <input (change)="on_publish_changed()" type="checkbox" class="toggle_cb custom-control-input" id="customSwitch1">
-                                        <label class="custom-control-label" for="customSwitch1"></label>
+                                        <label class="custom-control-label" for="customSwitch1">
+                                            <span *ngIf="meeting_status == 'Published'" >{{meeting_status}}</span>
+                                            <span *ngIf="meeting_status == 'Unpublished'" >{{meeting_status}}</span>
+                                        </label>
                                     </div>
-                                    <span *ngIf="meeting_status == 'Published'" class="badge badge-success d-inline">{{meeting_status}}</span>
-                                    <span *ngIf="meeting_status == 'Unpublished'" class="badge badge-warning d-inline">{{meeting_status}}</span>
+                                    
                                 </div>
                             </div>
                             <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
