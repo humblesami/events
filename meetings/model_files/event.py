@@ -107,7 +107,7 @@ class Event(models.Model):
     @property
     def attendance_marked(self):
         attendance = Invitation_Response.objects.filter(
-            Q(event_id=self.id) & (Q(attendance__isnull=True) | Q(attendance='')))
+            Q(event_id=self.id) & (Q(attendance__isnull=True) | Q(attendance=''))).distinct()
         if attendance:
             return False
         else:
