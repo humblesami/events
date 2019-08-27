@@ -8,10 +8,11 @@ from meetings.model_files.user import Profile
 from django_countries.fields import CountryField
 from django.db.models.signals import m2m_changed
 from django.utils.translation import gettext_lazy as _
+from mainapp.models import CustomModel
 
 # Create your models here.
 
-class Event(models.Model):
+class Event(CustomModel):
     class Meta:
         verbose_name = "Meeting"
         verbose_name_plural = "Meetings"
@@ -297,6 +298,8 @@ class Event(models.Model):
         meeting_object['end_date'] = str(meeting_object['end_date'])
         meeting_object['start'] = meeting_object['start_date']
         meeting_object['stop'] = meeting_object['end_date']
+        meeting_object['created_by'] = meeting_object['created_by']
+        meeting_object['updated_by'] = meeting_object['updated_by']
         meeting_object['exectime'] = meeting_object_orm.exectime
         meeting_object['attendance_marked'] = meeting_object_orm.attendance_marked
 
@@ -655,7 +658,7 @@ ATTENDANCE_SELECTION = (
 )
 
 
-class Invitation_Response(models.Model):
+class Invitation_Response(CustomModel):
     state = models.CharField(max_length=20, choices=STATE_SELECTION, blank=True, null=True)
     state_by = models.CharField(max_length=20, blank=True, null=True)
     attendee = models.ForeignKey(Profile, on_delete=models.CASCADE)

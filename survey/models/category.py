@@ -5,9 +5,9 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from .survey import Survey
+from mainapp.models import CustomModel
 
-
-class Category(models.Model):
+class Category(CustomModel):
 
     name = models.CharField(_("Name"), max_length=400)
     survey = models.ForeignKey(

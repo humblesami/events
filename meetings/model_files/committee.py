@@ -1,7 +1,9 @@
 from django.db import models
 from mainapp import ws_methods
+from mainapp.models import CustomModel
 
-class Committee(models.Model):
+
+class Committee(CustomModel):
     name = models.CharField(max_length=150)
     users = models.ManyToManyField('meetings.Profile', blank=True, related_name="committees")
     description = models.TextField(max_length=500, default='', blank=True)

@@ -20,7 +20,7 @@ class SignDocumentForm(forms.ModelForm):
 
 class AdminSignDoc(admin.ModelAdmin):
     form = SignDocumentForm
-    list_display = ('name', 'meeting', 'send_to_all')
+    list_display = ('name', 'meeting', 'send_to_all','created_by')
     fields = [
         'name',
         'meeting',

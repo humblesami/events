@@ -6,9 +6,10 @@ from esign.model_files.document import SignatureDoc
 from meetings.model_files.event import Event
 from survey.models import Survey
 from django.db.models import Q, Count, Case, When, IntegerField
+from mainapp.models import CustomModel
 
 
-class News(models.Model):
+class News(CustomModel):
     name = models.CharField(max_length=200)
     description = models.TextField(default='', blank=True)
     photo = models.ImageField(upload_to='home/', default='profile/ETjUSr1v2n.png')
@@ -75,7 +76,7 @@ class NewsDocument(File):
 
 
 
-class NewsVideo(models.Model):
+class NewsVideo(CustomModel):
     name = models.CharField('Video Title', max_length=200)
     url = models.CharField('Video Link', max_length=500)
     news = models.ForeignKey(News, null=True, on_delete=models.SET_NULL)

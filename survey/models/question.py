@@ -11,6 +11,9 @@ from django.utils.translation import ugettext_lazy as _
 from .category import Category
 from .survey import Survey
 
+from mainapp.models import CustomModel
+
+
 try:  # pragma: no cover
     from _collections import OrderedDict
 except ImportError:  # pragma: no cover
@@ -47,7 +50,7 @@ class SortAnswer(object):
     ALPHANUMERIC = "alphanumeric"
 
 
-class Question(models.Model):
+class Question(CustomModel):
 
     TEXT = "text"
     SHORT_TEXT = "short-text"

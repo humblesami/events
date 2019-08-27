@@ -4,8 +4,9 @@ import pytz
 from django.db import models
 from meetings.model_files.event import Event
 from django.utils.translation import ugettext_lazy as _
+from mainapp.models import CustomModel
 
-class Actions(models.Model):
+class Actions(CustomModel):
     class Meta:
         abstract = True
     open_date = models.DateTimeField(default=None)
@@ -14,6 +15,9 @@ class Actions(models.Model):
     name = models.CharField(_("Name"), max_length=400)
     description = models.TextField(_("Description"), default='')
     respondents = models.ManyToManyField('meetings.Profile', blank=True)
+
+    def save(self, *args, **kwargs):
+        super(Actions, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.meeting.name + '-Action'

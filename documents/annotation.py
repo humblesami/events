@@ -10,9 +10,10 @@ from documents.file import File
 from chat.models import Notification
 from mainapp.ws_methods import set_obj_attrs
 from meetings.model_files.user import Profile
+from mainapp.models import CustomModel
 
 
-class AnnotationDocument(models.Model):
+class AnnotationDocument(CustomModel):
     version = models.IntegerField()
     document = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
     doc_name = models.CharField(max_length=100, null=True)
@@ -196,7 +197,7 @@ class AnnotationDocument(models.Model):
             CommentAnnotation.objects.bulk_create(children)
 
 
-class Annotation(models.Model):
+class Annotation(CustomModel):
     name = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
@@ -239,7 +240,7 @@ class RectangleAnnotation(Annotation):
         return  user_rectangle
 
 
-class Dimension(models.Model):
+class Dimension(CustomModel):
     rectangle = models.ForeignKey(RectangleAnnotation, on_delete=models.CASCADE)
     x = models.FloatField()
     y = models.FloatField()
@@ -279,7 +280,7 @@ class DrawingAnnotation(Annotation):
         return  line_drawings    
 
     
-class Line(models.Model):
+class Line(CustomModel):
     drawing = models.ForeignKey(DrawingAnnotation, on_delete=models.CASCADE)
     x = models.IntegerField()
     y = models.IntegerField()
@@ -295,7 +296,6 @@ class PointAnnotation(Annotation):
     '''
     comment_doc_id = models.CharField(max_length=128, null=True)
     pdf = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def get_meta(self):
         data = {
@@ -397,7 +397,7 @@ class PointAnnotation(Annotation):
         return  comments_points
 
 
-class CommentAnnotation(models.Model):
+class CommentAnnotation(CustomModel):
     body = models.CharField(max_length=500)
     point = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

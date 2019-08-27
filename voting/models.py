@@ -12,14 +12,15 @@ from mainapp import ws_methods
 from meetings.models import Profile, Event, Topic
 from mainapp.ws_methods import send_email_on_creation
 from actions.models import Actions
+from mainapp.models import CustomModel
 
 
-class VotingType(models.Model):
+class VotingType(CustomModel):
     name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
 
-class VotingChoice(models.Model):
+class VotingChoice(CustomModel):
     name = models.CharField('Voting Choice', max_length = 100)
     voting_type = models.ForeignKey(VotingType, on_delete = models.CASCADE)
     def __str__(self):

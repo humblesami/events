@@ -23,6 +23,7 @@ from meetings.model_files.user import Profile
 
 from mainapp.settings import MEDIA_ROOT, server_base_url
 from mainapp.ws_methods import queryset_to_list, send_email_on_creation, search_db
+from mainapp.models import CustomModel
 
 
 class SignatureDoc(File, Actions):
@@ -34,6 +35,7 @@ class SignatureDoc(File, Actions):
         create = False
         if self.pk is None:
             create = True
+            self.file_type = 'esign'
         super(SignatureDoc, self).save(*args, **kwargs)
         if create:
             self.original_pdf = self.pdf_doc
@@ -521,7 +523,7 @@ class SignatureDoc(File, Actions):
         return result
 
 
-class Signature(models.Model):
+class Signature(CustomModel):
     name = models.CharField(max_length=200, blank=True)
     email = models.CharField(max_length=200, blank=True)
     type = models.CharField(max_length=200)
@@ -540,14 +542,13 @@ class Signature(models.Model):
     width = models.FloatField(null=True, blank=True)
     signed = models.BooleanField(default=False)
     signed_at = models.DateTimeField(null=True)
-    update_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='admin')
 
     def save(self, *args, **kwargs):
         create = False
         if self.pk is None:
-            create = True
+            create = True            
         if self.image:
-            self.signed = True
+            self.signed = True            
         super(Signature, self).save(*args, **kwargs)
         if create:
             pass

@@ -14,11 +14,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from .question import Question
 from .response import Response
+from mainapp.models import CustomModel
+
 
 LOGGER = logging.getLogger(__name__)
 
 
-class Answer(models.Model):
+class Answer(CustomModel):
 
     question = models.ForeignKey(
         Question,

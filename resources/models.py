@@ -1,10 +1,11 @@
 from meetings.model_files.user import *
 from mainapp import  ws_methods
 from django.db.models import Q
+from mainapp.models import CustomModel
 
 # Create your models here.
 
-class Folder(models.Model):
+class Folder(CustomModel):
     name = models.CharField(max_length = 200)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 

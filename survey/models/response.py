@@ -5,6 +5,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from .survey import Survey
+from mainapp.models import CustomModel
+
 
 try:
     from django.conf import settings
@@ -17,7 +19,7 @@ except (ImportError, AttributeError):
     user_model = User
 
 
-class Response(models.Model):
+class Response(CustomModel):
 
     """
         A Response object is a collection of questions and answers with a

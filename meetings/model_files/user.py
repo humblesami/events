@@ -15,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from mainapp.settings import server_base_url, ip2location
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as user_model, Group as group_model, UserManager, Permission
+from mainapp.models import CustomModel
 
 TWO_FACTOR_CHOICES = (
     (1, _("Email")),
@@ -134,7 +135,7 @@ from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in
 
 
-class LoginEntry(models.Model):
+class LoginEntry(CustomModel):
     action = models.CharField(max_length=64, null=True)
     ip = models.GenericIPAddressField(null=True)
     user_id = models.IntegerField(null=True)
@@ -196,7 +197,7 @@ def user_logged_in_callback(sender, request, user, **kwargs):
 #     LoginEntry.objects.create(action='user_login_failed', username=credentials.get('username', None))
 
 
-class Profile(user_model):
+class Profile(user_model, CustomModel):
     class Meta:
         verbose_name_plural = "Boardsheet  Users"
     name = models.CharField(max_length=200, default='', blank=True)

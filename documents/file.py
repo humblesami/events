@@ -11,7 +11,8 @@ from PyPDF2 import PdfFileReader
 from django.db import models
 from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
-from django_currentuser.middleware import get_current_user
+from mainapp.models import CustomModel
+
 
 def validate_file_extension(value):
     
@@ -31,16 +32,14 @@ def text_extractor(f):
         n += 1
     return text
 
-class File(models.Model):
+class File(CustomModel):
     name = models.CharField(max_length=100)
     html = models.CharField(max_length=30, blank=True)
     content = models.CharField(max_length=30, blank=True)
     pdf_doc = models.FileField(upload_to='converted/', null=True)
     file_type = models.CharField(max_length=128, default='')
-    attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])    
     upload_status = models.BooleanField(default=False)
-    updated_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
@@ -50,26 +49,29 @@ class File(models.Model):
             create = False
             if self.pk is None:
                 create = True
-            req_user = get_current_user()
-            self.updated_by_id = req_user.id
             super(File, self).save(*args, **kwargs)
-            if create and self.file_type != 'message':
-                ws_methods.document_thread(self)
-                # self.get_pdf()
-                # if self.html:
-                #     self.content = self.html
-                # else:
-                #     if not self.pdf_doc:
-                #         raise Exception('File conversion failed')
-                #     if not self.pdf_doc.file:
-                #         raise Exception('File conversion failed.')
-                #     self.content = text_extractor(self.pdf_doc)
-                # self.save()
+            if create and self.file_type != 'message':                
+                if self.file_type != 'esign':
+                    ws_methods.document_thread(self)
+                else:
+                    self.process_doc()                
         except:
             res = ws_methods.get_error_message()
             a = 1
 
 
+    def process_doc(self):
+        self.get_pdf()
+        if self.html:
+            self.content = self.html
+        else:
+            if not self.pdf_doc:
+                raise Exception('File conversion failed')
+            if not self.pdf_doc.file:
+                raise Exception('File conversion failed.')
+            self.content = text_extractor(self.pdf_doc)
+        self.save()
+    
     def get_pdf(self):
         tmp = self.attachment.url.split('.')
         ext = tmp[len(tmp) - 1]

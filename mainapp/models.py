@@ -1,7 +1,34 @@
-# from django.db import models
-# class Abstract(models.Model):
-#     name = models.CharField(max_length=200)
-#
-#     @classmethod
-#     def search(cls, request, params):
-#         return {'error': 'Not implemented'}
+import datetime
+from django.db import models
+from django.contrib.auth.models import User as user_model
+from django_currentuser.middleware import get_current_user
+
+class CustomModel(models.Model):
+    created_at = models.DateTimeField(null=True)
+    created_by = models.ForeignKey(
+        user_model,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='%(app_label)s_%(class)s_created_by',
+        related_query_name='%(app_label)s_%(class)s'
+        )
+    updated_at = models.DateTimeField(null=True)
+    updated_by = models.ForeignKey(
+        user_model,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='%(app_label)s_%(class)s_updated_by',
+        related_query_name='%(app_label)s_%(class)s'
+        )
+    class Meta:
+        abstract = True
+    
+    def save(self, *args, **kwargs):
+        req_user = get_current_user()
+        if self.pk is None:
+            self.created_at = datetime.datetime.now()
+            self.created_by = req_user
+        else:
+            self.updated_at = datetime.datetime.now()
+            self.updated_by = req_user
+        super(CustomModel, self).save(*args, **kwargs)
