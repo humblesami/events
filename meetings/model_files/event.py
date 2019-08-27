@@ -298,8 +298,8 @@ class Event(CustomModel):
         meeting_object['end_date'] = str(meeting_object['end_date'])
         meeting_object['start'] = meeting_object['start_date']
         meeting_object['stop'] = meeting_object['end_date']
-        meeting_object['created_by'] = meeting_object['created_by']
-        meeting_object['updated_by'] = meeting_object['updated_by']
+        meeting_object['created_by'] = meeting_object.get('created_by')
+        meeting_object['updated_by'] = meeting_object.get('updated_by')
         meeting_object['exectime'] = meeting_object_orm.exectime
         meeting_object['attendance_marked'] = meeting_object_orm.attendance_marked
 
