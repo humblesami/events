@@ -45,11 +45,10 @@ body .fc { /* extra precedence to overcome jqui */
 	color: #666;
 }
 
-.fc-unthemed .fc-today {
-	background: #4b74b5;
-    color: #ffffff;
+.fc-month-view  .fc-today, .fc-year-view .fc-today{
+    background: #4b74b5;
+    color: #fff;
 }
-
 .fc-highlight { /* when user is selecting cells */
 	background: #bce8f1;
 	opacity: .3;
