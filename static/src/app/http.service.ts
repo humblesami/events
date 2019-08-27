@@ -113,7 +113,7 @@ export class HttpService {
                     }
                     obj_this.make_pages_when_loaded = true;
                 }
-                else
+                else if(data.total == 0)
                 {
                     obj_this.offset = 0;
                     obj_this.count = 0;

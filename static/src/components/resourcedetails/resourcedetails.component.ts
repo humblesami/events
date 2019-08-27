@@ -35,7 +35,7 @@ export class ResourceDetailsComponent implements OnInit {
                 obj_this.root = !(result.hasOwnProperty('parent_id'));
                 obj_this.folder = result;
                 const parents = result.parents;
-                console.log(obj_this.folder);
+                // console.log(obj_this.folder);
                 if (parents && parents.length > 0) {
                     parents.reverse();
                     parents[parents.length - 1]['is_last'] = 1888;
