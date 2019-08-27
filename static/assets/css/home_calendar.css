@@ -79,7 +79,7 @@ th.fc-day-header.fc-widget-header{
 .fc-bg table {
     height: 100%;
 }
-.fc-unthemed .fc-today{
+.fc-month-view  .fc-today{
     background: #4b74b5;
     color: #fff;
 }
