@@ -2119,6 +2119,11 @@ i.icon-folder.app-menu__icon {
 	transition: transform 0.3s ease;
 	transition: transform 0.3s ease, -webkit-transform 0.3s ease;
 }
+
+	.sidebar-mini.sidenav-toggled .app-menu__item .app-menu__label, .sidebar-mini.sidenav-toggled .app-menu__item:hover .app-menu__label {
+		display:none;
+	}
+
 @media (min-width: 768px) {
 	.sidebar-mini.sidenav-toggled .app-sidebar__user-name,
 	.sidebar-mini.sidenav-toggled .app-sidebar__user-designation,
@@ -3003,4 +3008,57 @@ h4.title-h4{
     font-size: .7rem;
     line-height: 1;
     margin-left: .2rem;
+}
+
+.onoffswitch {
+	position: relative; width: 120px;
+	-webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+	display: none;
+}
+.onoffswitch-label {
+	display: block; overflow: hidden; cursor: pointer;
+	border: 2px solid #F7F7F7; border-radius: 48px;
+}
+.onoffswitch-inner {
+	display: block; width: 200%; margin-left: -100%;
+	transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+	display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
+	font-size: 13px; color: white;
+	box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+	content: "Published";
+	padding-left: 15px;
+	background-color: #638FC9; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+	content: "Unpublished";
+	padding-right: 15px;
+	background-color: #dc3545;
+	color: #ffffff;
+	text-align: right;
+}
+.onoffswitch-switch {
+	display: block;
+	width: 15px;
+	margin: 9px;
+	background: #FFFFFF;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 86px;
+	border: 2px solid #F7F7F7;
+	border-radius: 48px;
+	transition: all 0.3s ease-in 0s;
+	height: 15px;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+	margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+	right: 0px;
 }
