@@ -278,12 +278,8 @@ class Event(CustomModel):
         user_id = request.user.id
         meeting_id = int(meeting_id)
         meeting_object_orm = Event.objects.get(pk=meeting_id)
-        meeting_object = Event.objects.filter(pk=meeting_id).values()
-        meeting_object = list(meeting_object)
-        meeting_object = meeting_object[0]
-        if not meeting_object:
-            return ('', {'message': 'Meeting with id' + str(meeting_id) + ' exists no more'})
 
+        meeting_object = {}
         location = meeting_object_orm.location
         duration = meeting_object_orm.duration
         meeting_object['location'] = location
@@ -295,12 +291,12 @@ class Event(CustomModel):
         meeting_object['zip'] = meeting_object_orm.zip
         meeting_object['country'] = meeting_object_orm.country.name
 
-        meeting_object['start_date'] = str(meeting_object['start_date'])
-        meeting_object['end_date'] = str(meeting_object['end_date'])
-        meeting_object['start'] = meeting_object['start_date']
-        meeting_object['stop'] = meeting_object['end_date']
-        meeting_object['created_by'] = meeting_object.get('created_by')
-        meeting_object['updated_by'] = meeting_object.get('updated_by')
+        meeting_object['start_date'] = str(meeting_object_orm.start_date)
+        meeting_object['end_date'] = str(meeting_object_orm.end_date)
+        meeting_object['start'] = str(meeting_object_orm.start_date)
+        meeting_object['stop'] = str(meeting_object_orm.end_date)
+        meeting_object['created_by'] = str(meeting_object_orm.created_by)
+        meeting_object['updated_by'] = str(meeting_object_orm.updated_by)
         meeting_object['exectime'] = meeting_object_orm.exectime
         meeting_object['attendance_marked'] = meeting_object_orm.attendance_marked
 
