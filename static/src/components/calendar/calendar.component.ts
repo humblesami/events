@@ -30,6 +30,9 @@ export class CalendarComponent implements OnInit {
             })
         });
         this.get_home_data();
+        $('body').on('click', '.scheduleDetailOpener',function() {
+            obj_this.scheduleDetails(this);
+        });
     }
 
     get_home_data() {
@@ -115,6 +118,8 @@ export class CalendarComponent implements OnInit {
             // }
         });
 
+        let schedule:any;
+
         if ($('.fc-schedule-button').length == 0) {
             var schedule_html = '<div class="container-fluid schedule-container schedule-wrap">';
             for (var i = 0; i < events.length; i++) {
@@ -128,10 +133,7 @@ export class CalendarComponent implements OnInit {
                 }
             }
             schedule_html += '</div>';
-            let schedule = $(schedule_html);
-            schedule.find('.scheduleDetailOpener').click(function() {
-                obj_this.scheduleDetails(this);
-            });
+            schedule = $(schedule_html);
             var btn = $('<button type="button" class="fc-schedule-button fc-button fc-state-default fc-corner-right">Schedule</button>')
             $('.fc-button-group:first').append(btn);
 
@@ -146,6 +148,9 @@ export class CalendarComponent implements OnInit {
                 btn.addClass('fc-state-active');
             });
         }
+        schedule.find('.scheduleDetailOpener').click(function() {
+                obj_this.scheduleDetails(this);
+            });
     }
 
     scheduleDetails(el) {
