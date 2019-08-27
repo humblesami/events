@@ -332,6 +332,7 @@ class Comment(models.Model):
             user = obj.user
             comment = obj.__dict__
             del comment['_state']
+            ws_methods.stringfy_sytem_fields(comment)
             comment['user'] = {
                 'id': user.id,
                 'photo': user.image.url,
@@ -375,6 +376,7 @@ class Comment(models.Model):
             'name': user.name
         }
         del comment['_state']
+        ws_methods.stringfy_sytem_fields(comment)
         comment['create_date'] = str(datetime.now())
         comment['children'] = []
         param = params
@@ -629,6 +631,7 @@ class Message(models.Model):
         message_dict['create_date'] = str(datetime.now())
 
         del message_dict['_state']
+        ws_methods.stringfy_sytem_fields(message_dict)
         message_dict['uuid'] = params['uuid']
         events = [
             {'name': 'chat_message_received', 'data': message_dict, 'audience': [target_id]}

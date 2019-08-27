@@ -207,6 +207,7 @@ class Event(CustomModel):
             event = event.__dict__
             if event['_state']:
                 del event['_state']
+            ws_methods.stringfy_sytem_fields(event)
             calendar_events.append(event)
         return calendar_events
 

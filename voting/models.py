@@ -233,6 +233,7 @@ class Voting(Actions):
             voting_object['topic'].append({'id': topic.validate_unique()})
         if voting_object.get('_state'):
             del voting_object['_state']
+        ws_methods.stringfy_sytem_fields(voting_object)
         return voting_object
 
 
