@@ -144,6 +144,9 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
 .btn-secondary:not(:disabled):not(.disabled):active:focus{
     box-shadow: none;
 }
+th.d-none.d-md-block{
+    margin-block-end: -1px;
+}
 @media screen and (max-width:480px){
     .roster .table th:first-child,
     .roster .table td:first-child{

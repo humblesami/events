@@ -9,7 +9,7 @@
             <thead>
                 <tr class="text-primary">
                     <th>Attendee</th>
-                    <th class="d-none d-lg-block">Status / Response By</th>
+                    <th class="d-none d-md-block">Status</th>
                     <th>Absent</th>
                     <th>InPerson</th>
                     <th>Online</th>
@@ -18,12 +18,12 @@
             <tbody>
                 <tr *ngFor="let obj of attendees">
                     <td (click)="open_dialog(obj.id)">
-                        <img class="roster-images rounded-circle d-none d-lg-block" src="{{socketService.server_url}}{{obj.photo}}" style="height: 60px;width: 60px;" />
+                        <img class="roster-images rounded-circle d-none d-md-block" src="{{socketService.server_url}}{{obj.photo}}" style="height: 60px;width: 60px;" />
                         <span class="text-primary font-weight-bold">{{obj.name}}</span>
-                        <p class="d-md-block d-lg-none">Accept by: Self</p>                                        
+                        <p class="d-sm-block d-md-none">Accept by: Self</p>                                        
                     </td>  
-                    <td class="d-none d-lg-block font-weight-bold text-primary mt-3">
-                        Accept / Self
+                    <td class="d-none d-md-block pt-5">
+                        <span class="font-weight-bold text-primary">Accept / Self</span>
                     </td>
                     <td>
                         <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" />                    
