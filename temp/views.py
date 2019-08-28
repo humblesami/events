@@ -20,6 +20,10 @@ def dropbox_authorize(request):
     context = {}
     return render(request, 'dropbox-authorize.html', context)
 
+def dropbox_callback(request):
+    context = {}
+    return render(request, 'dropbox-callback.html', context)    
+
 def dropbox(request):
     context = {}
     return render(request, 'dropbox.html', context)

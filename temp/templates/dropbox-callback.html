@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var ar = window.location.toString().split('=');
+    var token = ar[ar.length - 1];
+    console.log('Sending');
+    window.opener.postMessage({token: token, secret: 'sadasecret'}, 'http://localhost:8000');
+    window.close();
+</script>
+</body>
+</html>
