@@ -282,6 +282,9 @@ class Event(CustomModel):
         meeting_object = {}
         location = meeting_object_orm.location
         duration = meeting_object_orm.duration
+        meeting_object['id'] = meeting_object_orm.id
+        meeting_object['name'] = meeting_object_orm.name
+        meeting_object['description'] = meeting_object_orm.description
         meeting_object['location'] = location
         meeting_object['duration'] = duration
 
