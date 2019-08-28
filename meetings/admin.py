@@ -54,10 +54,19 @@ class TopicDocInline(nested_admin.NestedStackedInline):
 
 class TopicAdmin(admin.ModelAdmin):
     search_fields = ['name']
+    fields = ['name', 'lead', 'duration']
+    inlines = [TopicDocInline]
+
+
+class TopicModelForm(forms.ModelForm):
+    class Meta:
+        model = Topic
+        fields = ['name', 'lead', 'duration']
 
 
 class TopicInline(nested_admin.NestedStackedInline):
     model = Topic
+    form = TopicModelForm
     extra = 0
 
 
