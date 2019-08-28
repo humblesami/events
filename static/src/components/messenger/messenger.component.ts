@@ -220,6 +220,7 @@ export class MessengerComponent implements OnInit {
         obj_this.httpService.post(input_data,function(created_chat_group){
             obj_this.socketService.chat_groups.push(created_chat_group);
             created_chat_group.created_by = obj_this.user;
+            obj_this.close_group_setup();
         }, function(){
             
         });
@@ -829,7 +830,7 @@ export class MessengerComponent implements OnInit {
                 args: args
             };
             input_data['no_loader'] = 1;
-			obj_this.httpService.post(input_data, null, null);
+			obj_this.httpService.post(input_data, ()=>{}, null);
 
             obj_this.socketService.update_unseen_message_count("read-new-message", sender);            
             setTimeout(function(){
@@ -906,7 +907,7 @@ export class MessengerComponent implements OnInit {
                     args: args
                 };
                 input_data['no_loader'] = 1;
-                obj_this.httpService.post(input_data, null, null);
+                obj_this.httpService.post(input_data, ()=>{}, null);
     
                 obj_this.socketService.update_unseen_message_count("read-new-message", group);            
                 setTimeout(function(){
