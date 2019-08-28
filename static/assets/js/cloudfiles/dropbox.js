@@ -22,7 +22,7 @@ document.getElementById("OpenDropboxFilePicker").addEventListener("click", e => 
 
 $(function(){
     $.ajax({
-        url:'https://www.dropbox.com/oauth2/authorize?client_id=pvbda3hm0tpwnod&response_type=code',
+        url:'',
         success:function(data){
             console.log(data)
         },

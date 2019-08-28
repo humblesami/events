@@ -16,9 +16,13 @@ def onedrive(request):
     context = {}
     return render(request, 'onedrive.html', context)
 
+def dropbox_authorize(request):
+    context = {}
+    return render(request, 'dropbox-authorize.html', context)
+
 def dropbox(request):
     context = {}
-    return render(request, 'dropbox.html', context)    
+    return render(request, 'dropbox.html', context)
 
 def download(request):
     context = {}
