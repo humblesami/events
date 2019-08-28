@@ -20,20 +20,19 @@ class Folder(CustomModel):
         obj['id'] = folder_id
         obj['name'] = folder.name
         obj['parents'] = cls.get_ancestors(cls, folder)
-        
-        ar = []
-        sub_folders = folder.folder_set.values()
-        for sub in sub_folders:
-            sub_folder = {'id': sub['id'], 'name': sub['name'], 'parent_id': folder.id}
-            ar.append(sub_folder)
-        obj['sub_folders'] = ar
         obj['files'] = []
         kw = params.get('kw')
         resource_files = []
         if kw:
-            resource_files = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
+            resource_files = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['ResourceDocument']}})
         else:
             resource_files = folder.resourcedocument_set.all()
+            ar = []
+            sub_folders = folder.folder_set.values()
+            for sub in sub_folders:
+                sub_folder = {'id': sub['id'], 'name': sub['name'], 'parent_id': folder.id}
+                ar.append(sub_folder)
+            obj['sub_folders'] = ar
         
         is_staff = request.user.groups.all().filter(name__in=['Admin','Staff'])        
         if not is_staff:
