@@ -24,7 +24,8 @@ class Committee(CustomModel):
             if committee:
                 kw = params.get('kw')
                 if kw:
-                    committee_users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Committee']}})
+                    committee_users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
+                    committee_users = ws_methods.get_user_info(committee_users)
                 else:
                     committee_users = ws_methods.get_user_info(committee_orm.users.filter(groups__name__in=['Admin','Staff','Director']).distinct())
                 
