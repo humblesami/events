@@ -254,13 +254,12 @@ class Voting(Actions):
         total_cnt = votings.count()
         if limit:
             votings = votings[offset: offset + int(limit)]
-
-        votings = list(votings.values())
+        all_votings = []
         for voting in votings:
-            voting['open_date'] = str(voting['open_date'])  #.day) + '-' + str(voting['open_date'].month) + '-' +str(voting['open_date'].year)
-            voting['close_date'] = str(voting['close_date'].year) + '-' + str(voting['close_date'].month) + '-' + str(voting['close_date'].day)
-            voting['voting_type']= list(VotingType.objects.filter(pk=voting['voting_type_id']).values('name'))[0]['name']
-        votings_json = {'records': votings, 'total': total_cnt, 'count': 0}
+            current_voting = ws_methods.obj_to_dict(voting, fields=['id', 'name', 'open_date', 'close_date'])
+            current_voting['voting_type'] = voting.voting_type.name
+            all_votings.append(current_voting)
+        votings_json = {'records': all_votings, 'total': total_cnt, 'count': 0}
         return votings_json
 
     
