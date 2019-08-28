@@ -122,16 +122,17 @@ b { font-weight: 500; }
 }
 .un-read-msg {
 	background: #dc3545;
-	color: white;
-	border-radius: 20px;
-	padding: 0 5px;
-	padding-top: 2px;
-	font-weight: bold;
-	font-size: 12px;
-	position: absolute;
-	top: 0px;
-	right: -2px;
-	z-index: 4;
+    color: white;
+    border-radius: 50%;
+    padding: .1rem .3rem;
+    padding-top: 2px;
+    font-weight: bold;
+    font-size: 12px;
+    position: absolute;
+    top: 0px;
+    right: 2px;
+    z-index: 4;
+    line-height: 1;
 }
 button, a, .DocumentWrapper { cursor: pointer; }
 .fade.in { opacity: 1; }

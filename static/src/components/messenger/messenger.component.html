@@ -180,11 +180,13 @@
                     
                     <div *ngIf="msg.sender.id != user.id"
                             class="d-flex align-items-end justify-content-start mb-4">
-                        <div class="img_cont_msg">
-                            <img *ngIf="!msg.chat_group" src="{{socketService.server_url}}{{msg.sender.photo}}" class="rounded-circle user_img_msg" />
-                            <span *ngIf="msg.chat_group" class="rounded-circle user_img_msg">{{msg.sender.name}}</span>
-                        </div>
-                        <div class="msg_cotainer">
+                        <div class="img-mintain-box">
+							<div class="img_cont_msg">
+								<img *ngIf="!msg.chat_group" src="{{socketService.server_url}}{{msg.sender.photo}}" />
+								<span *ngIf="msg.chat_group" class="rounded-circle user_img_msg">{{msg.sender.name}}</span>
+							</div>
+						</div>
+						<div class="msg_cotainer">
                             <div class="msg-box-wrapper">
                                 <div *ngIf="msg.body" class="msg-box-text" [innerHTML]="msg.body"></div>
                                 <div class="attachment_container">                                    

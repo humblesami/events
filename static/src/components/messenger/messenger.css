@@ -110,31 +110,29 @@
 	position: relative;	
 }
 .messenger-container .user_img_msg{
-	height: 40px;
-	width: 40px;
-	border:1.5px solid #f5f6fa;
-	position: relative;
-
+	max-width:100%;
 }
 .messenger-container .img_cont{
 	position: relative;
-	height: 40px;
 	width: 40px;
 	overflow:hidden;
 }
 .messenger-container .img_cont_msg{
-	height: 40px;
 	width: 40px;
+	border:1.5px solid #f5f6fa;
+	position: relative;
+	overflow:hidden;
+	border-radius:50%;
 }
 
 .messenger-container span.unseen {
 	color: white;
-	padding: 2px 4px;
-	background: #dc3545;
-	border-radius: 3px;
-	height: 22px;
-	position: absolute;
-	right: 10px;
+    padding: .1rem .3rem;
+    background: #dc3545;
+    border-radius: 50rem;
+    position: absolute;
+    right: 10px;
+    line-height: 1;
 }
 
 .messenger-container .online_icon{
@@ -261,49 +259,31 @@
 	max-width: 440px;
 }
 
-.messenger-container .msg-send-box-text{
-	background-color: #09f;
-	color: #ffffff;
-	float: right;
+.messenger-container .msg-send-box-text, .messenger-container .msg-box-text{
 	margin-top: auto;
     margin-bottom: auto;
-    border-radius:1.3em;
-    padding: 6px 12px 7px;
+    border-radius:.5rem;
+    padding:.75rem 1rem;
     font-size: 12px;
 	line-height: 16px;
 	word-break: break-word!important;
     overflow-wrap: break-word!important;
+
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.10),0 2px 4px 0 rgba(0,0,0,.05)!important;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.10),0 2px 4px 0 rgba(0,0,0,.05)!important;
+}
+
+.messenger-container .msg-send-box-text{
+	background-color: #2699FB;
+	color: #ffffff;
+	float: right;
 }
 
 .messenger-container .msg-box-text{
 	background-color: #f1f0f0;
 	color: rgba(0, 0, 0, 1);
 	float: left;
-	margin-top: auto;
-    margin-bottom: auto;
-    border-radius: 1.3em;
-    padding: 6px 12px 7px;
-    font-size: 12px;
-	line-height: 16px;
-	word-break: break-word!important;
-    overflow-wrap: break-word!important;
 }
-
-
-.messenger-container .msg-send-box-text, .messenger-container .msg-box-text{
-	background-color: #09f;
-	color: #ffffff;
-	float: right;
-	margin-top: auto;
-    margin-bottom: auto;
-    border-radius:1.3em;
-    padding: 6px 12px 7px;
-    font-size: 12px;
-	line-height: 16px;
-	word-break: break-word!important;
-    overflow-wrap: break-word!important;
-}
-
 
 .messenger-container .msg-send-box-wrapper::before, 
 .messenger-container .msg-send-box-wrapper::after, 
@@ -786,3 +766,28 @@ button.check-time-btn {
 	padding-top:0.2rem;
 }
 .red-bg{background:#FF5454 !important; }
+
+.img-mintain-box {
+    width: 30px;
+    height: 30px;
+    background: rgb(195, 195, 195);
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    -ms-flex-negative: 0!important;
+    flex-shrink: 0!important;
+}
+
+.img-mintain-box .img_cont_msg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.img-mintain-box .img_cont_msg img {
+    width: 100%;
+    height: 100%;
+}
