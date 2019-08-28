@@ -98,13 +98,6 @@ input[type=checkbox]#mail-to-assistant {
     margin: 5px 5px;
     top: -3px;
 }
-/* input[type=checkbox]:checked:after{
-	content: '\2714';
-	position: absolute;
-	top: -3px;
-	left: 3px;
-	color: #4b74b5;
-} */
 .respons-margin{
     margin-top: 2px !important;
     padding: 0 0 0 2% !important;
@@ -123,10 +116,6 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
     top: 0;
     right: 0;
 }
-/* .fc-unthemed .fc-today {
-    background: transparent !important;
-    color: #666 !important;
-} */
 .fc-row .fc-content-skeleton tbody td{
     top: -3px !important;
 }
@@ -147,32 +136,51 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
 th.d-none.d-md-block{
     margin-block-end: -1px;
 }
-/* 
-.custom-switch .custom-control-label::before{
-    width: 6.5rem;
-    height: 2rem;
-    border-radius: 1.5rem;
+/* Committee */
+a:hover{
+    color: #959595; 
 }
-.custom-switch .custom-control-label::after{
-    top: 0.6rem;
-    width: calc(1.5rem - 4px);
-    height: calc(1.5rem - 4px);
+.kanban-committees-info-box{
+    color: #959595;
+}
+.pending-status,
+.kanban-committees-info-box p,
+.kanban-committees-info-box-name{   
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kanban-committees-info-box-name{
+    font-size: 1.3rem;
+}
+.kanban-committees-info-box-img{
+    padding: 0 !important;
+    float: right;
+}
+.kanban-committees-info-box-img a{
+    margin-left: -10px;
+    position: relative;
+}
+.pending-status{
+    width: 70px;
+    text-align: center;
+    background: #4b74b5;
+    padding: .4rem .3rem;
+    margin-left: 0;
+}
+.kanban-profiles-user-img{
     border-radius: 50%;
-    left: calc(2.75rem + 2px);
 }
-.custom-switch .custom-control-input:checked~.custom-control-label::after{
-    left: calc(-2.9rem + 2px);
+.kanban-profiles-user-info-box{
+    background: #f3f3f3;
 }
-.published,.unpublished{
-    position: absolute;
-    z-index: 1;
-    margin-top: 0.5rem;
+.members-details{
+    margin-bottom: 1rem;
+    border-bottom: 5px solid #f3f3f3;
+    padding-bottom: 1rem;
 }
-.published{
-    color: #fff;
-    left: -10px;
-}
-*/
+/* End Committee */
 .check-status{
     width: 7rem;
     border:1px solid #000;
@@ -225,6 +233,7 @@ th.d-none.d-md-block{
         width: 35%;
     }
 }
+
 body.public .popup.messenger{
     display: none !important;
 }
