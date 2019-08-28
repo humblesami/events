@@ -20,6 +20,7 @@ var dn_current_site_user = {
         refreshSession();
         localStorage.setItem('last_activity', Date());
         $('body').removeClass('public').addClass('user');
+        $('.popup.messenger').hide();
     },
     logout: function(navigate) {
         if(!dn_current_site_user.cookie)

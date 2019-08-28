@@ -27,7 +27,7 @@ export class SocketService {
     current_id = undefined;	      
     site_config = undefined;
     current_model = undefined;    
-    video_call : any;    
+    video_call : VideoCall;    
     site_url = '';
     rtc_multi_connector : any;
     active_route_snapshot : ActivatedRouteSnapshot;

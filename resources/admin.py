@@ -1,5 +1,5 @@
 from django.contrib import admin
-from documents.admin import FileModelForm, FileAdmin
+from documents.admin import FileAdmin
 from .models import Folder, ResourceDocument
 import nested_admin
 
@@ -12,16 +12,12 @@ class FolderInline(nested_admin.NestedStackedInline):
     extra = 1
 
 
-class FileModelForm(FileModelForm):
-    fields = ['name', 'attachment']
-
-
 class FileInline(nested_admin.NestedStackedInline):
     model = ResourceDocument
     autocomplete_fields = ['users']
     show_change_link = True
-    form = FileModelForm
     extra = 0
+
 
 class FolderAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -41,8 +37,8 @@ class FolderAdmin(admin.ModelAdmin):
         return qs
 
 
-class ResourceDocumentForm(FileAdmin):
+class ResourceDocAdmin(FileAdmin):
     autocomplete_fields = ['users', 'folder']
 
 admin.site.register(Folder, FolderAdmin)
-admin.site.register(ResourceDocument, ResourceDocumentForm)
+admin.site.register(ResourceDocument, ResourceDocAdmin)

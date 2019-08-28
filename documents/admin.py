@@ -1,16 +1,15 @@
-from django import forms
 from django.contrib import admin
+from mainapp.admin import BaseAdmin, BaseInlineAdmin
 from .annotation import *
 
 
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(BaseAdmin):
     list_display = ['id', 'name', 'upload_status', 'file_type', 'content', 'pdf_doc', 'upload_status', 'updated_by', 'html']
+    exclude = ('created_at', 'created_by', 'updated_at', 'updated_by', 'file_type', 'content', 'pdf_doc', 'upload_status', 'html')
 
 
-class FileModelForm(forms.ModelForm):
-    class Meta:
-        model = File
-        fields = ['name','attachment']
+class FileInlineAdmin(BaseInlineAdmin):
+    exclude = ('created_at', 'created_by', 'updated_at', 'updated_by', 'file_type', 'content', 'pdf_doc', 'upload_status', 'html')
 
 
 admin.site.register(File, FileAdmin)

@@ -1,7 +1,6 @@
-from django.contrib import admin
 from django import forms
-
-from documents.admin import FileModelForm
+from django.contrib import admin
+from documents.admin import FileAdmin
 from .models import *
 import nested_admin
 
@@ -22,14 +21,13 @@ class VotingTypeAdmin(admin.ModelAdmin):
     search_fields = ['name']
     
 
-class VotingDocModelForm(FileModelForm):
-    fields = ['name','attachment']
+class VotingDocAdmin(FileAdmin):
+    pass
 
 
 class VotingDocInline(nested_admin.NestedStackedInline):
     model = VotingDocument
     autocomplete_fields = ['voting']
-    form = VotingDocModelForm
     extra = 0
 
 class VotingForm(forms.ModelForm):

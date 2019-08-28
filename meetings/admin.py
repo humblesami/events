@@ -1,9 +1,11 @@
 from django import forms
 from django.contrib import admin
-from documents.admin import FileModelForm
 from django.utils.html import format_html
 from django.contrib.auth.admin import GroupAdmin
 from django.utils.decorators import method_decorator
+
+from documents.admin import FileAdmin, FileInlineAdmin
+from mainapp.admin import BaseAdmin, BaseInlineAdmin
 from meetings.model_files.committee import Committee
 from meetings.model_files.user import Profile, MeetingGroup
 from django.views.decorators.debug import sensitive_post_parameters
@@ -14,60 +16,38 @@ sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
 
 
-class AgendaDocumentAdmin(admin.ModelAdmin):
+class MeetingDocumentAdmin(FileAdmin):
     fields = ['name','attachment','meeting']
 
 
-class MeetingDocumentAdmin(admin.ModelAdmin):
-    fields = ['name','attachment','meeting']
-
-
-class MeetingDocumentModelForm(FileModelForm):
-    fields = ['name','attachment']
-
-
-class MeetingDocInline(nested_admin.NestedStackedInline):
+class MeetingDocInline(FileInlineAdmin):
     model = MeetingDocument
-    form = MeetingDocumentModelForm
     extra = 0
 
 
-class NewsDocModelForm(FileModelForm):
-    fields = ['name', 'attachment']
+class NewsDocAdmin(FileAdmin):
+    pass
 
 
-class NewsDocumentInline(nested_admin.NestedStackedInline):
+class NewsDocumentInline(FileInlineAdmin):
     model = NewsDocument
-    form = NewsDocModelForm
     extra = 0
 
 
-class TopicDocumentModelForm(FileModelForm):
-    fields = ['name','attachment']
-
-
-class TopicDocInline(nested_admin.NestedStackedInline):
+class TopicDocInline(FileInlineAdmin):
     model = AgendaDocument
-    form = TopicDocumentModelForm
     extra = 0
 
 
-class TopicAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-    fields = ['name', 'lead', 'duration']
-    inlines = [TopicDocInline]
-
-
-class TopicModelForm(forms.ModelForm):
-    class Meta:
-        model = Topic
-        fields = ['name', 'lead', 'duration']
-
-
-class TopicInline(nested_admin.NestedStackedInline):
+class TopicInline(BaseInlineAdmin):
     model = Topic
-    form = TopicModelForm
+    inlines = [TopicDocInline]
     extra = 0
+
+
+class TopicAdmin(BaseAdmin):
+    search_fields = ['name']
+    inlines = [TopicDocInline]
 
 
 class EventAdmin(nested_admin.NestedModelAdmin):
@@ -185,17 +165,20 @@ class CommitteeAdmin(admin.ModelAdmin):
     members.short_description = ''
 
 
-class NewsVideoInline(nested_admin.NestedStackedInline):
+class NewsVideoInline(BaseInlineAdmin):
     model = NewsVideo
     extra = 0
 
 
-class NewsAdmin(admin.ModelAdmin):
+class NewsAdmin(BaseAdmin):
     inlines = [NewsVideoInline, NewsDocumentInline]
 
 
 class AttendeeAdmin(admin.ModelAdmin):
     list_display = ('event', 'attendee', 'state', 'attendance')
+
+class AgendaDocumentAdmin(admin.ModelAdmin):
+    fields = ['name','attachment']
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(Event, EventAdmin)

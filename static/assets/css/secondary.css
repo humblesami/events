@@ -225,3 +225,6 @@ th.d-none.d-md-block{
         width: 35%;
     }
 }
+body.public .popup.messenger{
+    display: none !important;
+}

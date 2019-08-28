@@ -2,10 +2,11 @@ from django import forms
 from django.contrib import admin
 from documents.admin import FileAdmin
 from esign.model_files.document import SignatureDoc, Signature
+from mainapp.admin import BaseAdmin
 from meetings.model_files.event import Event
 
 
-class SignatureAdmin(admin.ModelAdmin):
+class SignatureAdmin(BaseAdmin):
     list_display = ['user', 'document', 'signed_at']
 
 
@@ -18,7 +19,7 @@ class SignDocumentForm(forms.ModelForm):
         self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
 
 
-class AdminSignDoc(admin.ModelAdmin):
+class SignDocAdmin(admin.ModelAdmin):
     form = SignDocumentForm
     list_display = ('name', 'meeting', 'send_to_all','created_by')
     fields = [
@@ -44,5 +45,5 @@ class AdminSignDoc(admin.ModelAdmin):
 #     #     form = super(SignatureDocForm, self).get_form(request, obj, **kwargs)
 #     #     return form
 
-admin.site.register(SignatureDoc, AdminSignDoc)
+admin.site.register(SignatureDoc, SignDocAdmin)
 admin.site.register(Signature, SignatureAdmin)
