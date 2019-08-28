@@ -8,29 +8,8 @@
 
 <button id="OpenOneDrive" type="button">Open from OneDrive</button>
 
-<script type="text/javascript">
-
-function launchOneDrivePicker() {
-        var odOptions = {
-            clientId: "df45ae45-68bd-4568-a473-4159a1b16fc1",
-            action: "download",
-            multiSelect: true,
-            openInNewWindow: true,
-            advanced: {
-                queryParameters: "select=id,name,size,file,folder,photo,@microsoft.graph.downloadUrl",                
-            },
-            success: function (response) {console.log(response); },
-            cancel: function (response) { console.log(response); },
-            error: function (e) { console.log(e); }
-        };
-        OneDrive.open(odOptions);    
-}
-
-document.getElementById("OpenOneDrive").addEventListener("click", e => {
-    e.preventDefault();
-    launchOneDrivePicker()
-    });
-</script>
+<script type="text/javascript" src="/static/assets/libs/jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="/static/assets/js/cloudfiles/onedrive.js"></script>
 
 </body>
 </html>
