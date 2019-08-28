@@ -7,11 +7,12 @@ from .actions import make_published
 from django.db import models
 from django.forms import Textarea
 import nested_admin
+from mainapp.admin import BaseInlineAdmin, BaseAdmin
 
 
-class QuestionInline(nested_admin.NestedStackedInline):
+class QuestionInline(BaseInlineAdmin):
     model = Question
-    exclude = ('order', 'category', 'required')
+    exclude = ('order', 'category', 'required', 'created_at', 'created_by', 'updated_at', 'updated_by')
     ordering = ["category", ]
     extra = 1
     formfield_overrides = {
@@ -21,7 +22,7 @@ class QuestionInline(nested_admin.NestedStackedInline):
     }
 
 
-class CategoryInline(nested_admin.NestedStackedInline):
+class CategoryInline(BaseInlineAdmin):
     model = Category
     exclude = ['order', ]
     extra = 1
@@ -34,7 +35,7 @@ class SurveyForm(forms.ModelForm):
             super().__init__(*args, **kwargs)
             self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
 
-class SurveyAdmin(admin.ModelAdmin):
+class SurveyAdmin(BaseAdmin):
     form = SurveyForm
     list_display = ("name", "is_published", "need_logged_user")
     list_filter = ("is_published", "need_logged_user")

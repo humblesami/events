@@ -1,10 +1,11 @@
 from django.contrib import admin
-from documents.admin import FileAdmin
+from documents.admin import FileAdmin, FileInlineAdmin
 from .models import Folder, ResourceDocument
 import nested_admin
+from mainapp.admin import BaseInlineAdmin, BaseAdmin
 
 
-class FolderInline(nested_admin.NestedStackedInline):
+class FolderInline(BaseInlineAdmin):
     model = Folder
     show_change_link = True
     verbose_name = "Sub Folder"
@@ -12,14 +13,14 @@ class FolderInline(nested_admin.NestedStackedInline):
     extra = 1
 
 
-class FileInline(nested_admin.NestedStackedInline):
+class FileInline(FileInlineAdmin):
     model = ResourceDocument
     autocomplete_fields = ['users']
     show_change_link = True
     extra = 0
 
 
-class FolderAdmin(admin.ModelAdmin):
+class FolderAdmin(BaseAdmin):
     fieldsets = [
         (None, {
             'fields': [

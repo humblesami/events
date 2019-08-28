@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
-from documents.admin import FileAdmin
+from documents.admin import FileInlineAdmin, FileAdmin
+from mainapp.admin import BaseAdmin
 from .models import *
 import nested_admin
 
@@ -25,7 +26,7 @@ class VotingDocAdmin(FileAdmin):
     pass
 
 
-class VotingDocInline(nested_admin.NestedStackedInline):
+class VotingDocInline(FileInlineAdmin):
     model = VotingDocument
     autocomplete_fields = ['voting']
     extra = 0
@@ -38,7 +39,7 @@ class VotingForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
 
-class VotingAdmin(admin.ModelAdmin):
+class VotingAdmin(BaseAdmin):
     form = VotingForm
     inlines = [VotingDocInline,]
     search_fields = ['name']
