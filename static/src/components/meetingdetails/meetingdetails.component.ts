@@ -56,12 +56,21 @@ export class MeetingDetailsComponent implements OnInit {
         $('.roster-full').show();
     }
 
-    on_publish_changed(){
+    on_publish_changed(e){
+
         let obj_this = this;
         let args = {
             app: 'meetings',
             model: 'Event',
             method: 'update_publish_status'
+        }
+        $(e.target).closest('button').attr('disabled', 'disabled');
+        if(obj_this.meeting_status == 'Unpublished')
+        {
+            obj_this.meeting_status = 'Published';
+        }
+        else{
+            obj_this.meeting_status = 'Unpublished';
         }
         let input_data = {
             params: {meeting_id: obj_this.meeting_object.id,publish_status: !obj_this.meeting_object.publish},
@@ -70,6 +79,7 @@ export class MeetingDetailsComponent implements OnInit {
         };
         obj_this.httpService.get(input_data, function(data){
             let is_published = obj_this.meeting_object.publish;
+            $(e.target).closest('button').removeAttr('disabled');
             if (is_published)
             {
                 obj_this.meeting_status = 'Unpublished';
@@ -104,6 +114,8 @@ export class MeetingDetailsComponent implements OnInit {
         });
     }
 
+    is_attendee = false;
+
 	get_data() {
         let obj_this = this;
 		const page_url = window.location + '';
@@ -123,8 +135,6 @@ export class MeetingDetailsComponent implements OnInit {
             params: {id: obj_this.route.snapshot.params.id, meeting_type: obj_this.flag},
             args: args
         };
-        
-        
 
         let on_data = function(result) {
 
@@ -167,8 +177,10 @@ export class MeetingDetailsComponent implements OnInit {
                 });
                 if(!cur_user_object)
                 {
-                    console.log('Me not in attendees');
-                    return;
+                    obj_this.is_attendee = false;
+                }
+                else{
+                    obj_this.is_attendee = true;
                 }
                 attendees.splice(myindex, 1);
                 attendees.splice(0, 0, cur_user_object);

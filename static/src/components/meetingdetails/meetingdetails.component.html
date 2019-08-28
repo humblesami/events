@@ -33,16 +33,12 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
                             </div>
                             <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'" class="mb-2">
-                                <div class="meet-elements">
-                                    <div  class="custom-control custom-switch">
-                                        <input (click)="on_publish_changed()" type="checkbox" class="toggle_cb custom-control-input" id="customSwitch1">
-                                        <label class="custom-control-label" for="customSwitch1">
-                                            <span *ngIf="meeting_status == 'Published'" class="published">{{meeting_status}}</span>
-                                            <span *ngIf="meeting_status == 'Unpublished'" class="unpublished">{{meeting_status}}</span>
-                                        </label>
-                                    </div>
-                                    
-                                </div>
+                                <button class="check-status meet-elements position-relative"
+                                    (click)="on_publish_changed($event)"
+                                    [ngClass]="meeting_status">
+                                    <span class="circle"><i class="fa fa-circle"></i></span>
+                                    <span class="status">{{meeting_status}}</span>
+                                </button>
                             </div>
                             <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
                                 <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
@@ -73,143 +69,119 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 {{me.state}}
                             </label>
                         </div>
-
-                        <!-- <div *ngIf="meeting_object.name" class="col-md-6">
-                                <div class="meet-elements">
-                                    Meeting Subject
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    {{meeting_object.name}}
-                                </label>
-                            </div> -->
                     </div>
-
-<div class="row">
-                            <div *ngIf="meeting_object.start" class="col-md-6">
-                                    <div class="meet-elements">
-                                        Start Date & Time
-                                    </div>
-                                    <label class="meet-elementsInfo">
-                                        {{meeting_object.start | date:'medium' }}
-                                    </label>
-                                </div>
-
-                                <div *ngIf="meeting_object.stop" class="col-md-6">
-                                        <div class="meet-elements">
-                                            End Date & Time
-                                        </div>
-                                        <label class="meet-elementsInfo">
-                                            {{meeting_object.stop | date:'medium'}}
-                                        </label>
-                                    </div>
-                                    <div *ngIf="meeting_object.duration" class="col-md-6">
-                                            <div class="meet-elements">
-                                                Duration
-                                            </div>
-                                            <label class="meet-elementsInfo">
-                                                {{meeting_object.duration}}
-                                            </label>
-                                        </div>
-
-
-                    <!-- <div *ngIf="meeting_object.conference_status == 'active'"> -->
-
-                            <div class="col-md-6" *ngIf="meeting_object.video_call_link">
-                                <div class="meet-elements">
-                                    Video Call Link
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    <a target="__blank" href="{{meeting_object.video_call_link}}">{{meeting_object.video_call_link}}</a>
-                                </label>
+                    
+                    <div class="row">
+                        <div *ngIf="meeting_object.start" class="col-md-6">
+                            <div class="meet-elements">
+                                Start Date & Time
                             </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.start | date:'medium' }}
+                            </label>
+                        </div>
 
-                            <div class="col-md-6" *ngIf="meeting_object.conference_bridge_number">
-                                <div class="meet-elements">
-                                    Conference Bridge No.
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    {{meeting_object.conference_bridge_number}}
-                                </label>
+                        <div *ngIf="meeting_object.stop" class="col-md-6">
+                            <div class="meet-elements">
+                                End Date & Time
                             </div>
-
-                            <div class="col-md-6" *ngIf="meeting_object.pin">
-                                <div class="meet-elements">
-                                    Meeting PIN
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    {{meeting_object.pin}}
-                                </label>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.stop | date:'medium'}}
+                            </label>
+                        </div>
+                        <div *ngIf="meeting_object.duration" class="col-md-6">
+                            <div class="meet-elements">
+                                Duration
                             </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.duration}}
+                            </label>
+                        </div>
 
-
-
-                            <div *ngIf="meeting_object.location" class="col-md-6">
-                                <div class="meet-elements">
-                                    Location
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    {{meeting_object.location}}
-                                </label>
+                        <div class="col-md-6" *ngIf="meeting_object.video_call_link">
+                            <div class="meet-elements">
+                                Video Call Link
                             </div>
+                            <label class="meet-elementsInfo">
+                                <a target="__blank" href="{{meeting_object.video_call_link}}">{{meeting_object.video_call_link}}</a>
+                            </label>
+                        </div>
 
-                            <div *ngIf="meeting_object.city" class="col-md-6">
-                                <div class="meet-elements">
-                                    City
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    {{meeting_object.city}}
-                                </label>
+                        <div class="col-md-6" *ngIf="meeting_object.conference_bridge_number">
+                            <div class="meet-elements">
+                                Conference Bridge No.
                             </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.conference_bridge_number}}
+                            </label>
+                        </div>
 
-
-
-                            <div *ngIf="meeting_object.state" class="col-md-6">
-                                <div class="meet-elements">
-                                    State
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    {{meeting_object.state}}
-                                </label>
+                        <div class="col-md-6" *ngIf="meeting_object.pin">
+                            <div class="meet-elements">
+                                Meeting PIN
                             </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.pin}}
+                            </label>
+                        </div>
 
-                            <div *ngIf="meeting_object.zip" class="col-md-6">
-                                <div class="meet-elements">
-                                    Zip Code
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    {{meeting_object.zip}}
-                                </label>
+
+
+                        <div *ngIf="meeting_object.location" class="col-md-6">
+                            <div class="meet-elements">
+                                Location
                             </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.location}}
+                            </label>
+                        </div>
 
-                            <div *ngIf="meeting_object.country" class="col-md-6">
-                                <div class="meet-elements">
-                                    Country
-                                </div>
-                                <label class="meet-elementsInfo">
-                                    {{meeting_object.country}}
-                                </label>
+                        <div *ngIf="meeting_object.city" class="col-md-6">
+                            <div class="meet-elements">
+                                City
                             </div>
-
-							<div  *ngIf="meeting_object.description" class="col-md-12">
-								<div class="meet-elements">
-									Description
-								</div>
-								<label class="meet-elementsInfo text-overflow-visible" [innerHtml]="meeting_object.description"></label>
-							</div>
-
-</div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.city}}
+                            </label>
+                        </div>
 
 
 
+                        <div *ngIf="meeting_object.state" class="col-md-6">
+                            <div class="meet-elements">
+                                State
+                            </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.state}}
+                            </label>
+                        </div>
 
+                        <div *ngIf="meeting_object.zip" class="col-md-6">
+                            <div class="meet-elements">
+                                Zip Code
+                            </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.zip}}
+                            </label>
+                        </div>
 
+                        <div *ngIf="meeting_object.country" class="col-md-6">
+                            <div class="meet-elements">
+                                Country
+                            </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.country}}
+                            </label>
+                        </div>
 
-
-                    <!-- </div> -->
+                        <div  *ngIf="meeting_object.description" class="col-md-12">
+                            <div class="meet-elements">
+                                Description
+                            </div>
+                            <label class="meet-elementsInfo text-overflow-visible" [innerHtml]="meeting_object.description"></label>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- <h2>Status {{meeting_object.conference_status}}</h2> -->
-
             </div>
         </div>
 
@@ -389,7 +361,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-
         <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
             <div class="call_container ">
                 <form>
@@ -408,6 +379,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </form>
             </div>
         </div>
+
         <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group mt-3 mr-2">
             
                 <form class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
@@ -453,6 +425,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 </div>
             </div>
         </div>
-        <app-comments *ngIf="meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}" [mention_list]="meeting_object.attendees"></app-comments>
+        <app-comments *ngIf="is_attendee && meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}" [mention_list]="meeting_object.attendees"></app-comments>
     </div>
 </div>
