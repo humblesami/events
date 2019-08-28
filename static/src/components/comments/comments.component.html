@@ -49,7 +49,9 @@
 					<div id="comment-{{c.id}}" *ngIf="c" class="CommentWrapper">	
 						<div class="commnet-info row pt-3">
 							<a routerLink="/profile/{{c.user.id}}" class="col-1">
-								<img src="{{socketService.server_url}}{{c.user.photo}}" alt="user" style="max-width: 30px;" class="rounded-circle">									
+								<div class="comments-user-img-wrap">
+									<img src="{{socketService.server_url}}{{c.user.photo}}" alt="user">
+								</div>
 							</a>
 							<div class="col-11 pl-0">
 								<b class="text-primary font-weight-bold mt-1" *ngIf="c.user">{{c.user.name}}</b>
@@ -71,7 +73,9 @@
 						<div class="reply-container" *ngIf="c['showRep'] && c.children && c.children.length">
 							<div class="commnet-info row mb-3" *ngFor="let rep of c.children" [ngClass]="{'border-bottom' : c.showRep}">
 								<a routerLink="/profile/{{rep.user.id}}" class="col-1">
-									<img src="{{socketService.server_url}}{{rep.user.photo}}" alt="user" style="max-width: 30px;" class="rounded-circle">
+									<div class="comments-user-img-wrap">
+										<img src="{{socketService.server_url}}{{rep.user.photo}}" alt="user">
+									</div>
 								</a>
 								<div class="col-11 pl-0">
 									<b class="text-primary font-weight-bold mt-1">{{rep.user.name}}</b>

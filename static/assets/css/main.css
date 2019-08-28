@@ -3062,3 +3062,16 @@ h4.title-h4{
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
 	right: 0px;
 }
+
+.comments-user-img-wrap{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.comments-user-img-wrap img{
+	max-width:100%;
+}
