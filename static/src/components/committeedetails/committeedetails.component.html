@@ -15,39 +15,31 @@ title="{{committee.name}}"></app-breadcrumb>
 
         <div class="container">
             <div *ngIf="committee" class="deatils-form">
-				<div class="row">
-                    <div class="col-lg-12">
-                        <div class="MainTitleHeadWrap">
-                            <div class="HeadingWrap">
-                                <img src="static/assets/images/committees.png" alt="" /> {{committee.name}}
-                            </div>
+                <div class="col-lg-12">
+                    <div class="MainTitleHeadWrap">
+                        <div class="HeadingWrap text-capitalize">
+                            <img src="static/assets/images/committees.png" alt="" /> {{committee.name}}
                         </div>
                     </div>
                 </div>
-                <!-- <div class="row">
-                        <div class="col-sm-4" style="border-right: 1px solid #cccccc;">
-                            <label cl>
-                                <b>Charter</b>
-                            </label>
-                        </div>
-                        <div class="col-sm-9 UserProfileDiscription">
-                                <span [innerHtml]="committee.description"></span>
-                        </div>
-                </div> -->
-
                 <div  class="container">
              		<div class="main-full-seachbar mb-3">
-                    <input type="text" 
-                    (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(committee.id): null" 
-                    placeholder="Search..."  class="form-control"/>
+                        <input type="text" 
+                        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(committee.id): null" 
+                        placeholder="Search..."  class="form-control"/>
                     </div>
-                    <div  *ngIf="committee.description" class="col-md-12">
+                    <div  *ngIf="committee.description" class="pb-5 members-details">
                         <div class="meet-elements">
                             Description
                         </div>
                         <label class="meet-elementsInfo text-overflow-visible" [innerHtml]="committee.description"></label>
                     </div>
-		                <div class="row">
+                    <div class="MainTitleHeadWrap">
+                        <div class="HeadingWrap">
+                            <i class="fa fa-users"></i> Members
+                        </div>
+                    </div>
+		            <div class="row">
                         <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of committee.users">
                             <div class="kanban-card">
                                 <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
@@ -58,16 +50,17 @@ title="{{committee.name}}"></app-breadcrumb>
                                         <div class="kanban-profiles-user-InfoLIST">
                                             {{profile.name}}
                                         </div>
-                                        
+                                        <div class="kanban-profiles-user-InfoLIST">
+                                            <i class="fas fa-envelope"></i>{{profile.email}}
+                                        </div>
                                         <div *ngIf="profile.committees && profile.committees.length > 0">
-                                            <label for="job-title">
+                                            <p for="job-title" class="mb-0">
                                                 <b>Committees</b>
-                                            </label>                                                    
+                                            </p>                                                    
                                             <span class="pending-status mb-1" *ngFor="let com of profile.committees">
                                                 <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
                                             </span>
-                                            <span *ngIf="profile.committees_count > 2">....</span>
-                                                                                            
+                                            <span *ngIf="profile.committees_count > 2">....</span>                                                                                            
                                         </div>
                                         <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
                                         <div *ngIf="profile.state" class="">
@@ -78,10 +71,8 @@ title="{{committee.name}}"></app-breadcrumb>
                             </div>
                         </div>
                     </div>
-
-                        <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(committee.id)">
+                    <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(committee.id)">
                     </app-paginator>
-
                 </div>
             </div>
         </div>

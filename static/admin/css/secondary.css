@@ -6,7 +6,7 @@
     background-color: #fff;
     border: none;
     border-bottom: 1px solid #ddd;
-    border-radius:0; 
+    border-radius:0;
 }
 .aligned .form-row input[type="text"]{
     padding: 0;
@@ -18,7 +18,7 @@
 }
 .inline-related h3 span.delete{
     float: left;
-    
+
 }
 .inline-related h3 span.delete label{
     margin-left: 0;
@@ -102,4 +102,7 @@ input[type=checkbox]{
     .datetimeshortcuts{
         margin-top: 0px !important;
     }
+}
+.popup #container{
+    overflow-y:hidden;
 }

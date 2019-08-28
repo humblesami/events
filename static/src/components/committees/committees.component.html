@@ -19,20 +19,27 @@
             <div class="kanban-committees col-xs-12 col-sm-6 col-md-4"
                     *ngFor="let committee of records">
                 <a class="kanban-committees-info-box" routerLink="/committees/{{committee.id}}">
-                        <a class="kanban-committees-info-box-name">
-                            {{committee.name}}
-                        </a>
-                    <div class="kanban-committees-info-box-img">
-                        <a class="circle-imgwrap"  *ngFor="let member of committee.users; let index = index" routerLink="/profile/{{member.id}}">
-                        <span *ngIf="index < 15">
-                            <img title="{{member.username}}" class="img-thumbnail-sm" src="{{socketService.server_url}}{{member.image}}">
-                        </span>
-                        <span *ngIf="index === 15">
-                            <b>. . .</b>
-                        </span>
-                        </a>
+                    <a class="kanban-committees-info-box-name">
+                        {{committee.name}}
+                    </a>
+                    <div class="container">
+                        <p class="mb-4">{{committee.description}}</p>
+                        <div class="row">
+                            <div class="col-2">
+                                Members
+                            </div>
+                            <div class="col-10">
+                                <div class="kanban-committees-info-box-img">
+                                    <a class="circle-imgwrap"  *ngFor="let member of committee.users.slice(0,6)" routerLink="/profile/{{member.id}}">
+                                        <img title="{{member.username}}" class="img-thumbnail-sm" src="{{socketService.server_url}}{{member.image}}">
+                                    </a>
+                                    <span *ngIf="committee.users.length > 6">
+                                        ...
+                                    </span>
+                                </div>
+                            </div>
+                        </div> 
                     </div>
-                    
                 </a>
             </div>   
         </div>
