@@ -301,6 +301,7 @@ class Event(CustomModel):
         meeting_object['created_by'] = str(meeting_object_orm.created_by)
         meeting_object['updated_by'] = str(meeting_object_orm.updated_by)
         meeting_object['exectime'] = meeting_object_orm.exectime
+        meeting_object['publish'] = meeting_object_orm.publish
         meeting_object['attendance_marked'] = meeting_object_orm.attendance_marked
 
         attendance_status = cls.get_attendance_status(meeting_object_orm, user_id)
