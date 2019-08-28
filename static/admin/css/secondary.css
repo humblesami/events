@@ -106,3 +106,6 @@ input[type=checkbox]{
 .popup #container{
     overflow-y:hidden;
 }
+fieldset.module{
+    overflow-y: hidden;
+}
