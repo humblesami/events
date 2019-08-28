@@ -163,11 +163,12 @@ a:hover{
     position: relative;
 }
 .pending-status{
-    width: 70px;
+    width: 60px;
     text-align: center;
     background: #4b74b5;
     padding: .4rem .3rem;
     margin-left: 0;
+    text-transform: capitalize;
 }
 .kanban-profiles-user-img{
     border-radius: 50%;
@@ -179,6 +180,9 @@ a:hover{
     margin-bottom: 1rem;
     border-bottom: 5px solid #f3f3f3;
     padding-bottom: 1rem;
+}
+.meet-elementsInfo{
+    border-bottom:0px;
 }
 /* End Committee */
 .check-status{

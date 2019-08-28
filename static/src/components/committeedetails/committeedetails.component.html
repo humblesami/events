@@ -28,11 +28,11 @@ title="{{committee.name}}"></app-breadcrumb>
                         (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(committee.id): null" 
                         placeholder="Search..."  class="form-control"/>
                     </div>
-                    <div  *ngIf="committee.description" class="pb-5 members-details">
+                    <div  *ngIf="committee.description" class="pb-0 members-details">
                         <div class="meet-elements">
                             Description
                         </div>
-                        <label class="meet-elementsInfo text-overflow-visible" [innerHtml]="committee.description"></label>
+                        <label class="meet-elementsInfo text-overflow-visible text-justify" [innerHtml]="committee.description"></label>
                     </div>
                     <div class="MainTitleHeadWrap">
                         <div class="HeadingWrap">
@@ -54,10 +54,10 @@ title="{{committee.name}}"></app-breadcrumb>
                                             <i class="fas fa-envelope"></i>{{profile.email}}
                                         </div>
                                         <div *ngIf="profile.committees && profile.committees.length > 0">
-                                            <p for="job-title" class="mb-0">
+                                            <p for="job-title" class="mb-1">
                                                 <b>Committees</b>
                                             </p>                                                    
-                                            <span class="pending-status mb-1" *ngFor="let com of profile.committees">
+                                            <span class="pending-status mb-0" *ngFor="let com of profile.committees">
                                                 <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
                                             </span>
                                             <span *ngIf="profile.committees_count > 2">....</span>                                                                                            
