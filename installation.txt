@@ -22,7 +22,6 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py createsuperuser --username=sa --email=sami.akram@digitalnet.com
 
-
 find . -path "*/migrations/*.pyc"  -delete
 
 To add default records of meeting
