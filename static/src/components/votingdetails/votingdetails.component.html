@@ -55,15 +55,32 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         <a class="col-sm-6 col-md-4 col-lg-4 anchor-mb" routerLink="/topic/{{voting_object.topic.id}}">{{voting_object.topic.name}}</a>
                     </div>
 
-                    <div *ngIf="voting_object.open_date && voting_object.open_date" class="col-md-6 mb-2">
+                    <div *ngIf="voting_object.my_status" class="col-md-6 mb-2">
                         <div class="meet-elements">
-                            Open Date
+                            My Status
                         </div>
                         <label class="meet-elementsInfo">
-                            {{voting_object.open_date | date:'medium' }}
+                            {{voting_object.my_status}}
                         </label>
                     </div>
 
+                    <div *ngIf="voting_object.voting_type.name" class="col-md-6 mb-2">
+                        <div class="meet-elements">
+                            Voting Type
+                        </div>
+                        <label class="meet-elementsInfo">
+                            {{voting_object.voting_type.name}}
+                        </label>
+                    </div>
+                    
+                    <div *ngIf="voting_object.close_date && voting_object.close_date" class="col-md-6 mb-2">
+                        <div class="meet-elements">
+                            Close Date
+                        </div>
+                        <label class="meet-elementsInfo">
+                            {{voting_object.close_date | date:'medium'}}
+                        </label>
+                    </div>
                     <div *ngIf="voting_object.close_date && voting_object.close_date" class="col-md-6 mb-2">
                         <div class="meet-elements">
                             Close Date
@@ -78,16 +95,14 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         </div>
                         <label class="meet-elementsInfo text-overflow-visible" [innerHtml]="voting_object.description"></label>
                     </div>
-
-                </div>
-
-                <div class="row" *ngIf="voting_object.signature_required && voting_object.signature_data">
-                    <div class="col-sm-8 " style="display: flex;">
-                        <div style="position:relative;cursor: pointer;">
+                    <div *ngIf="voting_object.signature_required" class="col-md-6 mb-2">
+                        <div class="border">
                             <img class="strt_sign_voting " style="width: 100%;" *ngIf="voting_object.signature_data" src="data:image/png;base64,{{voting_object.signature_data}}">
                         </div>
                     </div>
                 </div>
+                <!-- <img src="static/assets/images/test/a.png"> -->
+
                 <div *ngIf="(socketService.is_admin || voting_object.public_visibility) && voting_object.results.answer_count" class="title-wrapper voting-chart">
                     <div class="modal-header">
                         Results

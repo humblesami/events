@@ -71,6 +71,9 @@ input[type=checkbox]{
 .inline-group .tabular td.original p{
     padding: 2px 20px;
 }
+.related-widget-wrapper-link.add-related {
+    display: none;
+}
 @media screen and (max-width:768px){
     .aligned p.file-upload{
         margin-left: 0;
