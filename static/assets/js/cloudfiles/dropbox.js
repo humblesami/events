@@ -36,8 +36,9 @@ $(function(){
             init_token();
             return;
         }
-        var token = localStorage.getItem('/dropbox/token');    
-        // console.log(token, 24);
+     //   var token = localStorage.getItem('/dropbox/token');    
+        var token = access_token;
+     // console.log(token, 24);
         var options = {
             success: function (files) {
                 for (const file of files) {
@@ -51,8 +52,8 @@ $(function(){
             linkType: "direct", // or "preview"
             multiselect: true,
             folderselect: false, // or true
-            extensions: ['.pdf', '.doc', '.docx', '.html'],
-            sizeLimit: 4096, // or any positive number
+            extensions: ['.pdf', '.doc', '.docx', '.html', '.odt','.xls','.pptx','.ppt'],
+        //    sizeLimit: 4096, // or any positive number
         };
         Dropbox.choose(options);
     }
