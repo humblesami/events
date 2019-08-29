@@ -1,10 +1,9 @@
 (function(){
     window['chart_colors'] = [
-        '#046b10',
-        '#ff0202',
-        '#0e046b',
-        '#6b0404',
-        '#008fb9',
+        '#7CD122',
+        '#EF6262',
+        '#F9BB10',
+        '#05B0D8',
         '#fdff09',
         '#e900fb',
         '#FAEBD7',

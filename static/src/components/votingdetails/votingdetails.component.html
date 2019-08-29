@@ -101,8 +101,6 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         </div>
                     </div>
                 </div>
-                <!-- <img src="static/assets/images/test/a.png"> -->
-
                 <div *ngIf="(socketService.is_admin || voting_object.public_visibility) && voting_object.results.answer_count" class="title-wrapper voting-chart">
                     <div class="modal-header">
                         Results
