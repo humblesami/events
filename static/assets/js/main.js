@@ -430,7 +430,7 @@ window.addEventListener('message', function receiveMessage(evt) {
                     if(action == 'add')
                         redirect_url = `/#/signdoc/new`;
                     else
-                        redirect_url = `/#/signdocs`;                    
+                        redirect_url = `/#/signdocs`;
                     break;
             }
         }

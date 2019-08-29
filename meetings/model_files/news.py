@@ -20,7 +20,6 @@ class News(CustomModel):
     @classmethod
     def get_data(cls, request, params):
         uid = request.user.id
-        home_object = {}
         news = News.objects.all()
         if not news:
             news = News(name='News & Announcements')
@@ -28,6 +27,7 @@ class News(CustomModel):
         else:
             news = news[0]
 
+        home_object = {'id': news.id}
         home_object['news'] = {
             'id': news.id,
             'description': news.description,
