@@ -1,0 +1,16 @@
+#record_details_iframe{
+	width:100%;
+	border: 0;
+	margin-top: -5px;
+    height: calc(100vh - 115px);
+}
+
+/* #container-main{
+	min-height:auto;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border:0;
+    border-radius: 40;
+    box-shadow:none;
+} */

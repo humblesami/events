@@ -1,0 +1,65 @@
+<app-breadcrumb app="voting" model="voting" 
+create="1"
+title="Resolutions"></app-breadcrumb>
+<div class="router-outlet">
+	<div class="container">
+		<div class="MainTitleHeadWrap">
+			<div class="HeadingWrap">
+				<img src="static/assets/images/meeting-icon.png" alt="" /> Resolutions
+			</div>
+			<div class="MeetingBtnWrapper">
+				<div class="btn-group">
+					<a routerLink="/votings" class="btn">Resolutions</a>
+					<a routerLink="/signdocs" class="btn">Esignature</a>
+					<a routerLink="/surveys" class="btn">Surveys</a>
+				</div>
+			</div>
+		</div>
+    </div>    
+    
+	<div class="container">
+		<div class="main-full-seachbar mb-3">
+        <input type="text" 
+        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+        placeholder="Search..."  class="form-control"/>
+		</div>
+		<div class="row">
+			<div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let voting of records">
+				<div class="kanban-card">
+					<div class="kanban-meeting-info">
+						<a class="kanban-upcoming-meeting" routerLink="/voting/{{voting.id}}">
+							<div class="CalendarDateWrapper">
+								<span *ngIf="voting.open_date" class="CalendarDateWrap">
+									<span class="kanban-upcoming-meeting-date">
+									{{voting.open_date.day}}
+								</span>
+									<span>
+									{{voting.open_date.month_year}}
+								</span>
+									<span>
+									{{voting.open_date.time}}
+								</span>
+								</span>
+							</div>
+							<div class="Info">
+								<p *ngIf="voting.name">
+									<b>{{voting.name}}</b>
+								</p>
+								<span *ngIf="voting.voting_type">
+									<strong>Voting Type: </strong>{{voting.voting_type}}
+								</span>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="jumbotron text-center" *ngIf="no_meet">
+			<h1>No Resolutions for you :)</h1>
+			<hr>
+		</div>
+		<app-paginator
+			*ngIf="records.length"
+				(reload_data)="get_list()">
+		</app-paginator>
+	</div>

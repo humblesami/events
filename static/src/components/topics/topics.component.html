@@ -1,0 +1,147 @@
+<app-breadcrumb app="meetings" model="topic" 
+*ngIf="topic && meeting_type"
+rid={{topic.id}}
+edit="1"
+delete="1"
+routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"},
+{"title":"{{meeting_name}}", "link":"/meeting/{{meeting_id}}"}]'
+title="{{topic.name}}"></app-breadcrumb>
+<div class="router-outlet"><div class="container">
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="MainTitleHeadWrap">
+					<div class="HeadingWrap">
+						<i _ngcontent-c4="" class="icon-profile"></i> {{topic.name}}
+					</div>
+				</div>
+			</div>
+		</div>
+        <div class="row">
+
+            <div class="col-sm-12 mr-b20">
+                <div  class="row">
+					<div *ngIf="topic.name" class="col-md-6">
+						<div class="meet-elements">Name</div>
+						<label class="meet-elementsInfo">{{topic.name}}</label>
+					</div>
+					<div *ngIf="topic.lead" class="col-md-6">
+						<div class="meet-elements">Lead</div>
+						<label class="meet-elementsInfo">{{topic.name}}</label>
+					</div>
+					<div *ngIf="topic.duration" class="col-md-6">
+						<div class="meet-elements">Duration</div>
+						<label class="meet-elementsInfo">{{topic.duration}}</label>
+					</div>
+					<div *ngIf="topic.content" class="col-md-6">
+						<div class="meet-elements">Content</div>
+						<label class="meet-elementsInfo">{{topic.content}}</label>
+					</div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div *ngIf="topic.votings && topic.votings.length" class="title-wrapper">
+            <!--Votings-->
+			<div class="row">
+                <div class="col-sm-12">
+                    <div class="main-heading">
+						<h1>
+                        	Approval/Voting
+                    	</h1>
+					</div>
+                </div>
+			</div>
+
+            <div class="row">
+				<div class="col-sm-6 col-md-4 mb-4" *ngFor="let vote of topic.votings">
+					<div class="kanban-card voting">
+						<div class="VotingsInfoBox">
+							<div class="VotingsInfoBoxTitle ">
+								<h5>
+									<b>{{vote.name}}</b>
+								</h5>
+							</div>
+							<div class="bs-btnwrap">
+							<button class="btn btn-primary" routerLink="/voting/{{vote.id}}">
+								<span *ngIf = "vote.my_status != 'pending'">Results</span>
+								<span *ngIf = "vote.my_status == 'pending'">Start</span>
+							</button>
+						</div>
+						</div>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div>
+    <section *ngIf="topic.docs && topic.docs.length" class="HomepageDocumentSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="main-heading">
+						<h1>
+                        	Documents
+                    	</h1>
+					</div>
+                </div>
+                <div class="col-sm-12">
+					<div class="row docwrappercontainer">
+                        <a class="col-sm-6 col-md-4 col-lg-2" routerLink="/topic/doc/{{doc.id}}" *ngFor="let doc of topic.docs">
+                            <div class="DocumentWrapper">
+								<div class="DocIcon">
+									<span class="rounded-circle">
+										<i class="icon-doc-file"></i>
+									</span>
+								</div>
+								<div class="DocInfoVertical text-truncate">
+									{{doc.name}}
+								</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</section>
+	<div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
+            <div class="call_container ">
+                <form>
+                <div *ngFor="let doc of attachments; let i = index" contenteditable="false"
+                    class="doc-thumb" style="display: flex;">
+                    <span class="doc-thumb-icon"><i class="fa fa-2x fa-file"></i></span>
+                    <!-- <span class="file_name">{{doc.name}}</span> -->
+                    <div>
+                        <input type="text" name="attachment_name"
+                        (click)="$event.target.select()" (change)="doc_name_change(doc, $event)" value="{{doc.name}}"/>
+                    </div>
+                    <span class="doc-thumb-close" (click)="remove_attachment($event)">
+                        <i class="del fas fa-times-circle"></i>
+                    </span>
+                </div>
+            </form>
+            </div>
+        </div>
+        <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group">
+            <div class="input-group-append">
+                <label>
+                    Attach Agenda Documents
+                </label>
+                <form style="padding: 10px;border:1px solid" 
+                class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
+                    <input (change)="file_change($event)" id="msg_file" type="file" 
+                        accept=".pdf,.doc,.docx,.ppt" 
+                        multiple
+                        style="display:none"
+                    />
+                    <i class="fas fa-paperclip"></i>
+                </form>
+            </div>
+            <button class="btn btn-meeting" (click)="upload_doucments()">
+                <span>Upload Documents</span>
+            </button>
+        </div>
+</div>

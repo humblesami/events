@@ -1,0 +1,63 @@
+.roster-images{
+    height: 100px;
+    width: 100px;
+}
+.close-btn
+{
+    width: 100%;
+    background-color: #21375a !important;
+    color: white;
+}
+
+table.roster{
+    width:100%;
+}
+.roster tbody {
+    display: block;
+    padding-top: 5px;
+    height: calc(100vh - 340px);
+    overflow: auto;
+}
+.roster tbody::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #D62929;
+}
+.roster thead, .roster tbody tr {
+    display:table;
+    width:100% !important;
+    table-layout:fixed;
+}
+.roster thead {
+    width: calc( 100% - 1em );
+}
+
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #f1f1f1 !important; 
+    border-radius: 0px !important;
+  }
+  .roster tr:nth-child(1) td{
+      border-top: none
+  }
+  .roster th{
+      border-bottom: 1px solid #ddd;
+  }
+  .roster td
+  {
+      vertical-align: middle;
+  }

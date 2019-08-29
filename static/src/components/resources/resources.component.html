@@ -1,0 +1,78 @@
+﻿<app-breadcrumb app="resources" model="folder" create="1" title="Resources"></app-breadcrumb>
+<div class="router-outlet  pt-0">
+    <div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="MainTitleHeadWrap ResourcesHeadWrapper">
+					<div class="HeadingWrap">
+						<img src="static/assets/images/face-scan.png" alt="" /> Resources
+					</div>					
+				</div>
+			</div>
+		</div>
+		<div class="main-full-seachbar mb-3">
+			<input type="text"
+                (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null"
+                placeholder="Search..."  class="form-control"/>
+		</div>
+	</div>
+
+    <div class="cards container mt-4">
+
+        <div class="row docwrappercontainer">
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of records">
+                <a routerLink="/resource/{{folder.id}}" class="">
+                    <div class="DocumentWrapper">
+                        <div class="DocIcon">
+                            <span class="rounded-circle">
+                                <i class="icon-folder"></i>
+                            </span>
+                        </div>
+                        <div class="DocInfoVertical text-truncate">
+                            {{folder.name}}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <app-paginator *ngIf="records.length" (reload_data)="get_list()">
+        </app-paginator>
+    </div>
+
+    <div class="container" *ngIf="no_resource">
+        <div class="row">
+            <div class="col-lg-12 ">
+                <div class="jumbotron text-center">
+                    <h1>There are no resources for now!</h1>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Folder Modal -->
+<div class="modal fade" id="CreateFolder" tabindex="-1" role="dialog" aria-labelledby="CreateFolder" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">          
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        <div class="modal-body">
+            <div class="pt-5 pb-3">
+                <div class="modal-folder-icon">
+                    <img src="static/assets/images/modal-folder.png" alt="modal-folder" />
+                </div>
+            </div>
+            <div class="Modal-Folder-Box">
+                <span>Create New Folder</span>
+                <input type="text" class="form-control" placeholder="Enter folder name">
+                <div class="Modal-Folder-Option">
+                    <a href="javascript:void(0);" class="btn btn-chose" >Create</a>
+                    <a href="javascript:void(0);" class="btn btn-chose" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>

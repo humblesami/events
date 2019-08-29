@@ -1,0 +1,243 @@
+.droppable_holder{
+    width:200px;
+    height:200px;
+    border: 10px dashed #ccc;
+}
+.droppable_holder.hover {
+    border: 10px dashed #0c0;
+}
+.upcomingButton button
+{
+    margin-right: 8px;
+}
+.home-modal-calendar .upcomingButton button i{
+	font-size:12px;
+	margin-right:5px;
+}
+.home-modal-calendar  .upcomingButton button {
+    margin-right: 8px;
+    font-size: 14px;
+    min-width: 90px;
+}
+
+.modal-backdrop
+{
+    z-index: 10 !important;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label {
+    font-weight: 500;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
+    margin: .3rem;
+    font-family: "Roboto" !important;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+    background-color: #c0c0c0;
+    color: black;
+}
+
+.popup.messenger .messenger-container {
+    height: calc(100vh - 180px);}
+
+hr{
+    margin: 0;
+}
+body.public .app-sidebar
+{
+	display:none;
+}
+.saved_sign{
+    cursor:pointer;
+    width:190px;
+    height:40px;
+    border:2px dotted gray;
+    font-weight: bold;
+    color:black;
+    z-index:1;
+    overflow:hidden;
+    background-color: antiquewhite;
+}
+body.public .router-outlet{
+    height: 100vh !important;
+}
+.sidebar-mini.sidenav-toggled .app-sidebar
+{
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#server-wait
+{
+    z-index: 27;
+}
+table.table.my-3 input[type='radio']{
+    margin-right: 10px;
+}
+table.table.my-3 input[type='radio']:after {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: -3px;
+    left: -1px;
+    background-color: #fff;
+    position: relative;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid #4b74b5;
+}
+table.table.my-3 input[type='radio']:checked:after {
+    background-color: #000;
+}
+input[type=checkbox]#mail-to-assistant {
+    -webkit-appearance: none;
+	border: 2px solid #4b74b5;
+	padding: 8px;
+	border-radius: 3px;
+	display: inline-block;
+    position: relative;
+    margin: 5px 5px;
+    top: -3px;
+}
+.respons-margin{
+    margin-top: 2px !important;
+    padding: 0 0 0 2% !important;
+}
+.CommentsWrap{
+    padding-bottom: 10px !important;
+}
+.comment:last-of-type{
+    border: none !important;
+    margin-bottom:0 !important;
+}
+select, button, a, input[type="radio"], input[type="checkbox"], input[type="button"]{
+    cursor: pointer;
+}
+.badge-warning.position-absolute{
+    top: 0;
+    right: 0;
+}
+.fc-row .fc-content-skeleton tbody td{
+    top: -3px !important;
+}
+.fc-time-grid-event .fc-time,
+.fc-time-grid-event > .fc-content{
+    color: #fff;
+    font-size: 1rem;
+}
+
+.bs-btnwrap .btn.btn-secondary,
+.btn-secondary:not(:disabled):not(.disabled):active{
+    background-color: rgba(99, 143, 201, 0.25);
+    border-color:rgba(99, 143, 201, 0.25);
+}
+.btn-secondary:not(:disabled):not(.disabled):active:focus{
+    box-shadow: none;
+}
+th.d-none.d-md-block{
+    margin-block-end: -1px;
+}
+/* Committee */
+a:hover{
+    color: #959595; 
+}
+.kanban-committees-info-box{
+    color: #959595;
+}
+.pending-status,
+.kanban-committees-info-box p,
+.kanban-committees-info-box-name{   
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kanban-committees-info-box-name{
+    font-size: 1.3rem;
+}
+.kanban-committees-info-box-img{
+    padding: 0 !important;
+    float: right;
+}
+.kanban-committees-info-box-img a{
+    margin-left: -10px;
+    position: relative;
+}
+.pending-status{
+    width: 60px;
+    text-align: center;
+    background: #4b74b5;
+    padding: .4rem .3rem;
+    margin-left: 0;
+    text-transform: capitalize;
+}
+.kanban-profiles-user-img{
+    border-radius: 50%;
+}
+.kanban-profiles-user-info-box{
+    background: #f3f3f3;
+}
+.members-details{
+    margin-bottom: 1rem;
+    border-bottom: 5px solid #f3f3f3;
+    padding-bottom: 1rem;
+}
+.meet-elementsInfo{
+    border-bottom:0px;
+}
+/* End Committee */
+.check-status{
+    width: 7rem;
+    border:1px solid #000;
+    border-radius: 25px;
+    height: 30px;
+    cursor: pointer;
+}
+.check-status.Published,.check-status.Unpublished 
+{
+    transition: all 1s ease;
+}
+.check-status.Published .circle,.check-status.Unpublished .circle 
+{
+    transition: all 1s ease;
+}
+.check-status.Unpublished{
+    background: #fff;
+}
+.check-status.Published {
+    background:#4B74B5;
+}
+.check-status.Published, .check-status.Published .circle i{
+    color: #fff;
+}
+
+.check-status.Published span, .check-status.Unpublished span{
+    position: absolute;
+    top: 0.15rem;
+}
+
+.check-status.Published .circle{
+    left: 0.2rem;
+}
+
+.check-status.Unpublished .circle{
+    right: -0.4rem;
+}
+
+.check-status.Published .status{
+    right: 1rem;
+}
+.check-status.Unpublished .status{
+    left: 0.5rem;
+}
+
+
+@media screen and (max-width:480px){
+    .roster .table th:first-child,
+    .roster .table td:first-child{
+        width: 35%;
+    }
+}
+
+body.public .popup.messenger{
+    display: none !important;
+}

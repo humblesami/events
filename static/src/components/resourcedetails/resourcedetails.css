@@ -1,0 +1,8 @@
+.modal-header, .modal-footer{
+    background-color: #eeeeee !important;
+}
+
+.bordered{
+    border: 1px solid #808080;
+}
+

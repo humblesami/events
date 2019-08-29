@@ -1,0 +1,85 @@
+﻿<app-breadcrumb app="meetings" model="profile" create="1" title="Profiles"></app-breadcrumb>
+<div class="router-outlet">
+    <div  class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="MainTitleHeadWrap">
+					<div class="HeadingWrap">
+						<i class="icon-profile"></i> Profiles
+					</div>
+					<div class="MeetingBtnWrapper">
+						<div class="btn-group">
+							<a routerLink="/profiles/directors" class="btn">Directors</a>
+							<a routerLink="/profiles/admins" class="btn">Admins</a>
+							<a routerLink="/profiles/staff" class="btn">Staff</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="main-full-seachbar mb-3">
+		 <input type="text" 
+        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+        placeholder="Search..."  class="form-control"/>
+		</div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of records">
+                <div class="kanban-card">
+                    <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
+                        <div class="kanban-profiles-user-img">
+                            <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
+                        </div>
+                        <div class="kanban-profiles-user-info">
+                            <div class="kanban-profiles-user-InfoLIST">
+                                {{profile.name}}
+                            </div>
+                            <!--
+                            <div *ngIf="profile.company" class="kanban-profiles-user-InfoLIST">
+                                <i class="fas fa-users"></i>
+                                <span >
+                                    {{profile.company}}
+                                </span>
+                            </div>
+                            <div *ngIf="profile.mobile_phone" class="kanban-profiles-user-InfoLIST">
+                                <i class="fas fa-phone"></i>
+                                <span >
+                                    {{profile.mobile_phone}}
+                                </span>
+                            </div>  
+                            <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
+                            <div *ngIf="profile.state" class="">
+                                <b>Status : </b> {{profile.state}}
+                            </div>-->
+                            <div *ngIf="profile.email" class="kanban-profiles-user-InfoLIST">
+                                <i class="fas fa-envelope"></i>
+                                <span>
+                                    {{profile.email}}
+                                </span>
+                            </div>
+                            <div *ngIf="profile.group" class="kanban-profiles-user-InfoLIST">
+                                <!-- <i class="fas fa-envelope"></i> -->
+                                <span > Role: </span>
+                                <span class="committee-member" *ngFor="let group of profile.group">{{ group | firstToUpper }}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>		
+        </div>
+
+    <app-paginator *ngIf="records.length" (reload_data)="get_list()">
+    </app-paginator>
+
+    </div>
+
+    <div class="container" *ngIf="no_prof">
+		<div class="row">
+			<div class="col-lg-12 ">
+				<div class="jumbotron text-center">
+                    <h1>There are no {{type + 's'}} to show for now!</h1>
+                    <hr>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>

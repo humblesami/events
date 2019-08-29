@@ -1,0 +1,174 @@
+<div class="header-div">
+    <app-header></app-header>
+</div>
+<div class="pager-div">
+    <aside class="app-sidebar">
+        <ul class="app-menu">            
+            <li><a class="app-menu__item" routerLink="/"><i class="icon-dashboard app-menu__icon"></i> <span class="app-menu__label">Dashboard</span></a></li>
+            <li><a class="app-menu__item" routerLink="/meetings/upcoming"><i class="icon-meeting app-menu__icon"></i> <span class="app-menu__label">Meetings</span></a></li>
+            <li><a class="app-menu__item" routerLink="/votings"><i class="icon-action app-menu__icon"></i> <span class="app-menu__label">Actions</span></a> </li>
+            <li><a class="app-menu__item" routerLink="/resources"><i class="icon-folder app-menu__icon"></i> <span class="app-menu__label">Resources</span></a> </li>
+            <li><a class="app-menu__item" routerLink="/committees"><i class="icon-committees	 app-menu__icon"></i> <span class="app-menu__label">Committees</span></a> </li>
+            <li><a class="app-menu__item" routerLink="/profiles"><i class="icon-profile app-menu__icon"></i> <span class="app-menu__label">Profiles</span></a> </li>
+        </ul>
+    </aside>
+    <div class="app-content">
+        <div id="server-wait" class="loadingoverlay">            
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div id="main-div" class="main-div">
+            <router-outlet></router-outlet>
+        </div>
+        <div class="popup messenger">
+            <div class="messenger-head">
+				<a class="full-messger-link" routerLink="/messenger">
+					<i class="fas fa-expand-arrows-alt"></i> Full messenger
+				</a>
+				<button class="popup-closer" (click)="close_messenger_popup()">
+				<i class="fas fa-times"></i>
+            </button>
+            </div>
+            
+            <app-messenger class="desktop-chat">
+            </app-messenger>
+        </div>
+
+        <div class="modal fade video" id="appModal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="title"></span>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+        <div id="rtc-container" style="display:none" class="make-center full">
+            <!-- <link type="text/css" rel="stylesheet" href="/static/assets/rtc/style.css"/> -->
+            <link type="text/css" rel="stylesheet" href="/static/assets/rtc/getHTMLMediaElement.css"/>    
+            <div class="closer max">
+                <div class="minimizer">
+                    <span (click)="socketService.video_call.minimize()">
+                    <i class="fa fa-window-minimize"></i>
+                    </span>
+                    <span (click)="socketService.video_call.quit()">
+                    <i class="fa fa-window-close"></i>
+                    </span>                       
+                </div>
+                <div class="maximizer">
+                    <span (click)="socketService.video_call.maximize()" >
+                    <i class="fa fa-window-maximize"></i>
+                    </span>
+                    <span (click)="socketService.video_call.quit()">
+                    <i class="fa fa-window-close"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="CallingOutterwrapper" *ngIf="socketService.video_call">
+
+                <div class="CallingContainer" *ngIf="socketService.video_call.state == 'incoming'">
+                    <div class="user-call-infobox-wrapper">
+                        <div class="user-call-img-wrapper">
+                            <img src="{{socketService.server_url}}{{socketService.video_call.caller.photo}}" alt="Avatar" />
+                        </div>
+                        <h5 class="text-center">Incoming Call From</h5>                        
+                        <span class="d-block text-center">{{socketService.video_call.caller.name}}</span>                        
+                    </div>
+                    <div class="spinner">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>                        
+                    
+                    <div class="CallOptionsButton">                            
+                        <a class="accept" (click)="socketService.video_call.accept()">
+                            <img src="static/assets/images/attend-call.svg"  />
+                        </a>
+                        <a class="reject" (click)="socketService.video_call.reject()">
+                            <img src="static/assets/images/end-call.png" alt="Avatar" />
+                        </a>
+                    </div>                    
+                    
+                    <audio class="call_sound" style="display:none" controls autoplay>
+                        <source src="/static/assets/audio/call.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+
+                <div class="CallingContainer" *ngIf="socketService.video_call.state == 'outgoing'">
+                    <div class="user-call-infobox-wrapper">
+                        <div class="user-call-img-wrapper">
+                            <img src="{{socketService.server_url}}{{socketService.video_call.callee.photo}}" alt="Avatar" />
+                        </div>
+                        <h5 class="text-center">Calling</h5>
+                        <span class="d-block text-center">{{socketService.video_call.callee.name}}</span>                        
+                    </div>
+                    <div class="spinner">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    
+                    <div class="CallOptionsButton">
+                        <a class="reject" (click)="socketService.video_call.cancel()">
+                            <img src="static/assets/images/end-call.png" alt="call end" />
+                        </a>
+                    </div>                    
+                    
+                    <audio class="call_sound" style="display:none" controls autoplay>
+                        <source src="/static/assets/audio/call.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+                
+                
+            </div>
+
+            <div class="call_room" id="ongoing_controls">
+                <div class="setup-buttons">
+                    <input type="text" id="room-id" value="abcdef" 
+                    autocorrect="off" autocapitalize="off" size="20"
+                    style="display:none"
+                    >
+                    <!-- <button id="toggle-camera" (click)="socketService.video_call.toggle_camera()">Toggle Camera</button> -->
+                    <button id="open-room" style="display:none">Open Room</button>
+                    <button id="share-screen" disabled=""><img src="static/assets/images/share-screen.svg"></button>
+                    <button id="leave-room" class="danger-bg" (click)="socketService.video_call.terminate()"><img src="static/assets/images/end-call.png" alt="End call" /></button>
+                </div>
+            </div>
+            
+            <div id="videos-container" style="margin: 20px 0;"></div>                
+        </div>
+        
+        <div class="modal fade" id="signModal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <div id="signature-body" class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <span class="btn btn-primary btn-sm DocsBtn" id="save-sig">Save</span>
+                        <button type="button" class="btn btn-sm btn-default" id="close-btn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button (click)="topFunction()" id="backTop" title="Go to top">
+    <i class="fa fa-arrow-up"></i>
+</button>

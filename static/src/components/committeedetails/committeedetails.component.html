@@ -1,0 +1,80 @@
+﻿<app-breadcrumb app="meetings" model="committee" 
+*ngIf="committee" rid="{{committee.id}}" edit="1" delete="1" 
+routes='[{"title":"Committees", "link":"/committees"}]'
+title="{{committee.name}}"></app-breadcrumb>
+<div class="router-outlet">
+    <div  class="cards container">
+        <div class="page-links">
+            <span class="prev next-prev-link" title="Privious">
+                <i class="fa fa-angle-left"></i>
+            </span>
+            <span class="next next-prev-link" title="Next">
+                <i class="fa fa-angle-right"></i>
+            </span>
+        </div>
+
+        <div class="container">
+            <div *ngIf="committee" class="deatils-form">
+                <div class="col-lg-12">
+                    <div class="MainTitleHeadWrap">
+                        <div class="HeadingWrap text-capitalize">
+                            <img src="static/assets/images/committees.png" alt="" /> {{committee.name}}
+                        </div>
+                    </div>
+                </div>
+                <div  class="container">
+             		<div class="main-full-seachbar mb-3">
+                        <input type="text" 
+                        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(committee.id): null" 
+                        placeholder="Search..."  class="form-control"/>
+                    </div>
+                    <div  *ngIf="committee.description" class="pb-0 members-details">
+                        <div class="meet-elements">
+                            Description
+                        </div>
+                        <label class="meet-elementsInfo text-overflow-visible text-justify" [innerHtml]="committee.description"></label>
+                    </div>
+                    <div class="MainTitleHeadWrap">
+                        <div class="HeadingWrap">
+                            <i class="fa fa-users"></i> Members
+                        </div>
+                    </div>
+		            <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of committee.users">
+                            <div class="kanban-card">
+                                <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
+                                    <div class="kanban-profiles-user-img">
+                                        <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
+                                    </div>
+                                    <div class="">
+                                        <div class="kanban-profiles-user-InfoLIST">
+                                            {{profile.name}}
+                                        </div>
+                                        <div class="kanban-profiles-user-InfoLIST">
+                                            <i class="fas fa-envelope"></i>{{profile.email}}
+                                        </div>
+                                        <div *ngIf="profile.committees && profile.committees.length > 0">
+                                            <p for="job-title" class="mb-1">
+                                                <b>Committees</b>
+                                            </p>                                                    
+                                            <span class="pending-status mb-0" *ngFor="let com of profile.committees">
+                                                <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
+                                            </span>
+                                            <span *ngIf="profile.committees_count > 2">....</span>                                                                                            
+                                        </div>
+                                        <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
+                                        <div *ngIf="profile.state" class="">
+                                            <b>Status : </b> {{profile.state}}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(committee.id)">
+                    </app-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
