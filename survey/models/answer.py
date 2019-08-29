@@ -38,6 +38,9 @@ class Answer(CustomModel):
     updated = models.DateTimeField(_("Update date"), auto_now=True)
     body = models.TextField(_("Content"), blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        super(Answer, self).save(*args, **kwargs)
+
     def __init__(self, *args, **kwargs):
         try:
             question = Question.objects.get(pk=kwargs["question_id"])

@@ -53,7 +53,7 @@ title="Results"></app-breadcrumb>
                                                 <canvas id="chartData-{{question.id}}"></canvas>
                                         </div>
                                     </div>
-                                    <label>Choices</label> :
+                                    <label>Choices: Answer By {{ question.user_answers.length }} Person</label> 
                                     <table class="table">
                                         <tbody>
                                             <tr *ngFor="let obj of question.chart_data">

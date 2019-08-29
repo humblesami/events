@@ -285,13 +285,13 @@ class Survey(Actions):
                     user_answer = literal_eval(user_answer['body'])
                     for user_ans in user_answer:
                         for singledata in question_data:
-                            if user_ans == singledata['option_name'].lower():
+                            if user_ans == singledata['option_name'].replace(' ','-').lower():
                                 singledata['option_result'] += 1
                                 singledata['option_perc'] = "{:.{}f}".format( singledata['option_result'] / len(audience) * 100, 2 )
                                 break
                 else:
                     for singledata in question_data:
-                        if user_answer['body'] == singledata['option_name']:
+                        if user_answer['body'] == singledata['option_name'].replace(' ', '-').lower():
                             singledata['option_result'] = user_answer['answer_count'] + singledata[
                                 'option_result']
                             singledata['option_perc'] = "{:.{}f}".format( singledata['option_result'] / len(audience) * 100, 2 )
