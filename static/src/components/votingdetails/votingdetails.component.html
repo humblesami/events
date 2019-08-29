@@ -73,12 +73,12 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         </label>
                     </div>
                     
-                    <div *ngIf="voting_object.close_date && voting_object.close_date" class="col-md-6 mb-2">
+                    <div *ngIf="voting_object.open_date && voting_object.open_date" class="col-md-6 mb-2">
                         <div class="meet-elements">
-                            Close Date
+                            Open Date
                         </div>
                         <label class="meet-elementsInfo">
-                            {{voting_object.close_date | date:'medium'}}
+                            {{voting_object.open_date | date:'medium'}}
                         </label>
                     </div>
                     <div *ngIf="voting_object.close_date && voting_object.close_date" class="col-md-6 mb-2">
