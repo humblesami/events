@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    {% if id and token %}
+        <h2>{{name}}</h2>
+        {% for choice in choices %}
+        <a style="padding:5px; margin:5px" href="{{server_base_url}}/voting/{{id}}/{{choice.id}}/{{token}}">{{choice.name}}</a>
+        {% endfor %}
+    {% endif %}
+<div id="div1"><h2>
+    {% if error %}
+        {{ error }}
+    {% elif success %}
+        {{ success }}
+    {% endif %}
+
+</h2></div>
+
+<!-- <button>Get External Content</button> -->
+
+</body>
+</html>

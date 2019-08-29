@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Boardsheet</title>
+	<link rel="shortcut icon" href="">
+    <style>
+    button[type="submit"]:disabled{
+        background-color: grey;
+    }
+    </style>
+</head>
+
+<body class="app sidebar-mini rtl sidenav-toggled public">
+    <script>
+        console.log(Date());
+    </script>
+    <link rel="stylesheet" href="/static/assets/css/login-only.css" />
+    <div class="router-outlet Login-form-wrapper">
+        <span class="loginshape01"><img class="img-fluid" src_url="/static/assets/images/loginshape-01.png" /> </span>
+        <span class="loginshape02"><img class="img-fluid" src_url="/static/assets/images/loginshape-02.png" /> </span>
+        <span class="loginshape03"><img class="img-fluid" src_url="/static/assets/images/loginshape-03.png" /> </span>
+        <div class="container">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-sm-10 col-md-5 col-xl-5">
+                    <div class="login-form-div">
+                        <form class="login-form">
+                            <a href="/#/" class="login-logo">
+                                <img class="img-fluid" src_url="/static/assets/images/login-logo.png" />
+                            </a>
+                            <div class="member-login-box">
+                                <img src_url="/static/assets/images/member-icon.png" />
+                                <span>Member Login</span>
+                            </div>
+                            <div class="form-group input-label-icon">
+                                <img class="img-fluid user-icon" src_url="/static/assets/images/login-user.png" />
+                                <input id="username" placeholder="Username" type="text" formControlName="username" class="form-control" />
+                            </div>
+                            <div class="form-group input-label-icon">
+                                <img class="img-fluid" src_url="/static/assets/images/lock-icon.png" />
+                                <input id="password" placeholder="Password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+                            </div>
+                            <div class="login-feedback" style="text-align:center; color:red; padding-bottom:10px"></div>
+                            <div class="form-group text-center pl-5 pr-5 mb-2">
+                                <button type="submit" disabled class="login-btn">Login</button>
+                            </div>
+                            <div style="display:none" class="form-group forgot text-center">
+                            <a class="forgot" href="/#/forgot-password">Forgot Password?</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-7 text-center d-none d-md-block d-lg-block">
+                    <img class="img-key" src_url="/static/assets/images/login-vector.png" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        console.log(Date());
+    </script>
+    <script type="text/javascript" src="/static/assets/libs/js/jquery-2.2.4.js"></script>
+    <script type="text/javascript" src="/static/assets/config.js" id="config_script"></script>
+    <script type="text/javascript" src="/static/assets/js/simple_ajax.js"></script>
+    <script type="text/javascript" src="/static/assets/js/main.js"></script>
+    <script type="text/javascript" src="/static/assets/js/login.js"></script>
+    <script>
+        (function(){
+            var elm = document.getElementById('username');
+            setTimeout(function(){
+                elm.select();
+            }, 800);
+        })()
+        console.log(Date());
+    </script>
+    <link rel="stylesheet" type="text/css" href="/static/assets/libs/bootstrap/bootstrap-4.2.1.css" />
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/main.css" />
+    <link rel="stylesheet" href="/static/assets/css/login.css" />
+
+	<link rel="stylesheet" type="text/css" href="/static/assets/css/boardsheet.css" />
+	<link rel="stylesheet" type="text/css" href="/static/assets/css/roboto-condensed-fontface.css" />
+
+	<link rel="stylesheet" type="text/css" href="/static/assets/libs/css/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="/static/assets/css/font-awsome-5.5.0.css" />
+	<link rel="stylesheet" type="text/css" href="/static/assets/css/font-roboto-3.4.5.7.9.css" />
+	<link rel="stylesheet" type="text/css" href="/static/assets/libs/css/fullcalendar.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/assets/annotator/shared/pdf.viewer.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/assets/annotator/shared/custom.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/assets/css/emoji.css" />
+
+	<script type="text/javascript" src="/static/assets/js/json.js"></script>
+    <script type="text/javascript" src="/static/assets/js/datetime.js"></script>
+
+	<script type="text/javascript" src="/static/assets/libs/js/moment.js"></script>
+    <script type="text/javascript" src="/static/assets/libs/js/fullcalendar.min.js"></script>
+
+	<script type="text/javascript" src="/static/assets/libs/js/socket.io.js"></script>
+
+	<script type="text/javascript" src="/static/assets/libs/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+	<script src="/static/assets/libs/toggler/toggler.js"></script>
+	<script type="text/javascript" src="/static/assets/libs/js/bootbox.js"></script>
+	<script type="text/javascript" src="/static/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
+
+	<script type="text/javascript" src="/static/assets/libs/js/jquery.mark.min.js"></script>
+    <script type="text/javascript" src="/static/assets/libs/js/mark.min.js"></script>
+
+    <link href="/static/assets/libs/toggler/toggler.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/assets/libs/select2/select2.css" />
+    <link rel="stylesheet" href="/static/assets/libs/select2/default.theme.css" />
+
+    <script type="text/javascript" src="/static/assets/libs/select2/select2.js"></script>
+
+    <script type="text/javascript" src="/static/assets/emoji/js/emoji-picker.js"></script>
+    <script type="text/javascript" src="/static/assets/js/chart.js"></script>
+
+	<script type="text/javascript" src="/static/assets/annotator/shared/pdf.js"></script>
+	<script type="text/javascript" src="/static/assets/annotator/shared/pdf.viewer.js"></script>
+	<script type="text/javascript" src="/static/assets/annotator/annotator.js"></script>
+
+	<script type="text/javascript" src="/static/assets/js/custom_chart.js"></script>
+    <script type="text/javascript" src="/static/assets/js/custom_signature.js"></script>
+	<script type="text/javascript" src="/static/assets/js/popup.js"></script>
+
+    <script type="text/javascript" src="/static/assets/rtc/adapter.js"></script>
+    <script type="text/javascript" src="/static/assets/rtc/RTCMultiConnection.min.js"></script>
+    <script type="text/javascript" src="/static/assets/rtc/getScreenId.js"></script>
+    <script type="text/javascript" src="/static/assets/rtc/getHTMLMediaElement.js"></script>
+    <script type="text/javascript" src="/static/assets/rtc/conference.js"></script>
+    <script src="/static/assets/js/doc_preview.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/secondary.css" />
+    <script>
+        console.log(Date());
+        $('.form-group.forgot').show();
+    </script>
+</body>
+</html>

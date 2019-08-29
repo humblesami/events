@@ -1,1 +1,0 @@
-document.writeln('<script src="/w_masking/static/debug.js"></script>');

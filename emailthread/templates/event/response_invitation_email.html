@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    {% if id and token %}
+        <p>abcdef</p>
+        <h2>{{name}}</h2>
+        {% for response in response_invitations %}
+            <a style="padding:5px; margin:5px" href="{{server_base_url}}/meeting/{{id}}/{{response.value}}/{{token}}">{{response.name}}</a>
+        {% endfor %}
+    {% endif %}
+<div id="div1"><h2>
+    {% if error %}
+        {{ error }}
+    {% elif success %}
+        {{ success }}
+    {% endif %}
+
+</h2></div>
+</body>
+</html>
