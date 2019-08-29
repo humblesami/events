@@ -28,7 +28,7 @@ export class SurveyresultsComponent implements OnInit {
         };
         const success_cb = function(result) {
             obj_this.surveyDetails = result;
-            // console.log(result)
+            console.log(result);
             setTimeout(function() {
                 var chart_colors = window['chart_colors'];
                 // console.log(chart_colors,7888);

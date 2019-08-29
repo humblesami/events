@@ -226,7 +226,9 @@ a:hover{
 .check-status.Unpublished .status{
     left: 0.5rem;
 }
-
+.accordion .card:first-of-type{
+    border: 1px solid rgba(0,0,0,.125);
+}
 @media screen and (max-width:480px){
     .roster .table th:first-child,
     .roster .table td:first-child{
