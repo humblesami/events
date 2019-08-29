@@ -1,5 +1,5 @@
 $(function(){
-
+    
     var access_token = undefined;
     function init_token(){
         if(access_token)
@@ -30,6 +30,7 @@ $(function(){
     }
 
     function open_files() {
+        access_token = localStorage.getItem("dropbox/token");
         if(!access_token)
         {
             init_token();
