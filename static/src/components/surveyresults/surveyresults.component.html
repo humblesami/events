@@ -30,17 +30,19 @@ title="Results"></app-breadcrumb>
                                 <!-- Accordions-->
                                 <div class="accordion" id="accordionExample">
                                     <div class="card">
-                                        <a class="card-header" data-toggle="collapse" [attr.data-target]="'#' + question.id"  id="headingOne" aria-expanded="true">
-                                            {{question.name}}
+                                        <a class="card-header" data-toggle="collapse" 
+                                        [attr.data-target]="'#question-' + question.id" 
+                                        id="headingOne" aria-expanded="true">
+                                           Q: {{question.name}} ?
                                         </a>
-                                        <div [attr.id]="question.id" class="collapse" [ngClass]="{show: question.choices.length }" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                            <div class="card-body">
+                                        <div id="question-{{question.id}}" class="collapse" [ngClass]="{show: question.choices.length }" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                            <div class="card-body" [ngClass]="{hideoverflow: !question.choices.length }">
                                                 <div *ngIf="question.user_answers && !question.chart_data.length">
                                                     <div *ngFor="let answer of question.user_answers" style="display: flex">
                                                         <div class="col-sm-4 border border-right-0 py-3">
                                                             <div class="row" *ngIf="answer.user">
                                                                 <div class="col-lg-4">
-                                                                    <img src="{{socketService.server_url}}{{answer.user.photo}}" alt="user" class="rounded-circle" style="max-width: 100px;">
+                                                                    <img src="{{socketService.server_url}}{{answer.user.photo}}" alt="user" class="rounded-circle" style="max-width: 70px;">
                                                                 </div>
                                                                 <div class="col-lg-8 mt-3">
                                                                     <label>
