@@ -25,10 +25,10 @@
                     <div class="container">
                         <p class="mb-4">{{committee.description}}</p>
                         <div class="row">
-                            <div class="col-2">
-                                Members
+                            <div class="col-2 col-lg-5">
+                               {{committee.users.length}} Member<span *ngIf="committee.users.length > 1">s</span>
                             </div>
-                            <div class="col-10">
+                            <div class="col-10 col-lg-7">
                                 <div class="kanban-committees-info-box-img">
                                     <a class="circle-imgwrap"  *ngFor="let member of committee.users.slice(0,6)" routerLink="/profile/{{member.id}}">
                                         <img title="{{member.username}}" class="img-thumbnail-sm" src="{{socketService.server_url}}{{member.image}}">

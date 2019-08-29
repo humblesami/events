@@ -20,6 +20,7 @@ h2.heading-title span:before {
 .bordered{
     border: 1px solid #808080;
 }
+
 .kanban-committees-info-box{
     display: flex;
     background: #f3f3f3;
@@ -30,6 +31,7 @@ h2.heading-title span:before {
     flex-wrap: wrap;
     margin-bottom:15px;
 }
+
 span.btn.btn-sm{
     width: 60px;
     margin-left: 10px;
@@ -38,4 +40,11 @@ span.btn.btn-sm{
     text-overflow: ellipsis;
     background-color: #4b74b5;
     color: #ffffff;
+}
+
+.meet-elementsInfo {
+    border-bottom: 0px;
+}
+a,a:hover{
+    color: #3059C9;
 }

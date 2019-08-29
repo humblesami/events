@@ -44,18 +44,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
 								<div class="row align-items-center">
 									<div class="col-auto">
 										<div class="top-header">
-										<div class="top-header-author">
-											<a href="javascript:void(0);" class="author-thumb">
-												<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
-												<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
-											</a>
-											<div class="author-content">
-												<div class="UserProfileNameTittle">
-													{{profile_data.name}}
+											<div class="top-header-author">
+												<a href="javascript:void(0);" class="author-thumb">
+													<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
+													<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+												</a>
+												<div class="author-content">
+													<div class="UserProfileNameTittle">
+														{{profile_data.name}}
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
 									</div>
 									<div class="col-auto">
 										<div class="pl-md-3">
@@ -72,7 +72,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 												<i class="fas fa-map-marker-alt"></i>   {{profile_data.location}}
 											</div>
 											<div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="single-form-field mb-2">
-													<i class="far fa-envelope"></i>	{{profile_data.two_factor_auth.name}}
+												<i class="far fa-envelope"></i>	{{profile_data.two_factor_auth.name}}
 											</div>
 										</div>
 									</div>
@@ -82,12 +82,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
 								<div class="row justify-content-end">
 									<div class="col-5">
 										<h4 class="title-h4">E-Signature</h4>
-								 <div *ngIf="my_profile" style="position:relative;cursor: pointer;">
-                                    <img class="strt_sign profile " style="width: 100%;"
-                                        *ngIf="profile_data.signature_data"
-                                        src="data:image/png;base64,{{profile_data.signature_data}}"
-                                    />
-                                </div>
+										<div *ngIf="my_profile" style="position:relative;cursor: pointer;">
+											<img class="strt_sign profile " style="width: 100%;"
+												*ngIf="profile_data.signature_data"
+												src="data:image/png;base64,{{profile_data.signature_data}}"
+											/>
+										</div>
 									</div>
 									<div class="col-5">
 										<div *ngIf="profile_data.resume"  class="docwrappercontainer text-center">
@@ -103,81 +103,15 @@ title="{{profile_data.name}}"></app-breadcrumb>
 														</div>
 													</div>
 												</a>
-												<!-- <div *ngIf="my_profile || socketService.is_admin" class="resume-edit-control">
-														<a class="edit link" (click)="add_resume()">
-															<i class="far fa-edit"></i>
-														</a>
-														<input (change)="addFile($event, '')"
-														type="file"
-														name="add_resume"
-														class='add_resume' style="display: none"/>
-														</div>
-												-->
 											</div>
 										</div>
 									</div>
 								</div>
-
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-                    <div class="col-sm-12">
-                        <div *ngIf="profile_data.last_login">
-                            <div class="row last-login-details">
-                                <div class="col-sm-12">
-                                    <h3>Last Login Details</h3>
-                                    <span *ngIf="profile_data.login.last.login_time">Login Time:
-                                        {{profile_data.last_login| date:'MMM dd,yyyy hh:mm:ss A'}}</span>
-                                    <!-- <span *ngIf="profile_data.login.last.platform">OS:
-                                        {{profile_data.login['last'].platform}}</span>
-                                    <span *ngIf="profile_data.login.last.browser">Browser:
-                                        {{profile_data.login['last'].browser}}</span>
-                                    <span *ngIf="profile_data.login.last.ip">IP: {{profile_data.login['last'].ip}}</span>
-                                    <span *ngIf="profile_data.login.last.location">Location:
-                                        {{profile_data.login['last'].location}}</span> -->
-                                </div>
-                            </div>
-                        </div>
-
-						<div class="row assistant mb-3" *ngIf="!(profile_data.last_login)">
-							<div class="col-sm-12"  *ngIf="admin_info">
-								<div class="ui-block p-3">
-									<div class="edit-ui-block-header">
-										<h3 class="m-0 p-0">Last Login</h3>
-									</div>
-									<div  class="mb-0">
-                                        <div>
-                                            <label>IP : </label><span>{{profile_data.login_info.ip}}</span>
-                                        </div>
-                                        <div>
-                                            <label>Time : </label><span>{{profile_data.login_info.login_time | date:'medium'}}</span>
-                                        </div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-
-                        <!-- <div *ngIf="!profile_data.resume"  class="row docwrappercontainer">
-                            <div *ngIf="my_profile || socketService.is_admin" class="resume-edit-control">
-                                <a class="edit link" (click)="add_resume()">
-                                    <i class="far fa-edit"></i>
-                                </a>
-                                <input (change)="addFile($event, '')" 
-                                type="file" 
-                                name="add_resume" 
-                                class='add_resume' style="display: none"/>
-                            </div>
-                        </div> -->
-                    </div>
-
-
-
-
-                </div>
 			<div class="row assistant mb-3">
 				<div class="col-sm-12"  *ngIf="admin_info">
 					<div class="ui-block p-3">
@@ -203,18 +137,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 						</div>
 
 						<div class="admin_info_after_name row">
-                            <div *ngIf="profile_data.company" class="col-lg-6 mb-2">
-								<div class="single-input-label">
-									<label for="company">
-										<b>Company</b>
-									</label>
-									<div class="label-content-info">
-										{{profile_data.company}}
-									</div>
-								</div>
-							</div>
-
-							 <div *ngIf="profile_data.job_title"  class="col-lg-6 mb-2">
+                            
+							<div *ngIf="profile_data.job_title"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label for="job-title">
                                         <b>Job Title</b>
@@ -224,8 +148,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 									</div>
 								</div>
 							</div>
-
-							 <div *ngIf="profile_data.department"  class="col-lg-6 mb-2">
+						
+							<div *ngIf="profile_data.department"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label for="department">
 										<b>Department</b>
@@ -236,7 +160,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
 								</div>
 							</div>
 
-							 <div *ngIf="profile_data.work_phone"  class="col-lg-6 mb-2">
+							<div *ngIf="profile_data.company" class="col-lg-6 mb-2">
+								<div class="single-input-label">
+									<label for="company">
+										<b>Company</b>
+									</label>
+									<div class="label-content-info">
+										{{profile_data.company}}
+									</div>
+								</div>
+							</div>	
+												
+							<div *ngIf="profile_data.work_phone"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label for="w-phone">
                                         <b>Work Phone</b>
@@ -247,7 +182,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 								</div>
 							</div>
 
-							 <div *ngIf="profile_data.fax"  class="col-lg-6 mb-2">
+							<div *ngIf="profile_data.fax"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label for="fax">
                                         <b>Fax</b>
@@ -258,7 +193,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 								</div>
 							</div>
 
-							 <div *ngIf="profile_data.website"  class="col-lg-6 mb-2">
+							<div *ngIf="profile_data.website"  class="col-lg-6 mb-2">
 								<div class="single-input-label">
 									<label for="website">
                                         <b>Website</b>
@@ -317,6 +252,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										</div>
 									</div>
 								</div>
+
 								<div *ngIf="profile_data.committees && profile_data.committees.length > 0" class="admin_info_after_name col-sm-12">
 									<div class="single-input-label">
 										<label for="job-title">
@@ -329,6 +265,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										</span>
 									</div>
 								</div>
+
 								<div *ngIf="profile_data.groups && profile_data.groups.length > 0" class="admin_info_after_name col-lg-12 mb-2">
 									<div class="single-input-label">
 										<label for="job-title">
@@ -405,8 +342,86 @@ title="{{profile_data.name}}"></app-breadcrumb>
 						</div>
 					</div>
 				</div>
-            </div>
+			</div>
+			<!-- Last Login -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div *ngIf="profile_data.last_login">
+						<div class="row last-login-details">
+							<div class="col-sm-12">
+								<h3>Last Login Details</h3>
+								<span *ngIf="profile_data.login.last.login_time">Login Time:
+									{{profile_data.last_login| date:'MMM dd,yyyy hh:mm:ss A'}}
+								</span>
+							</div>
+						</div>
+					</div>
 
+					<div class="row assistant mb-3" *ngIf="!(profile_data.last_login)">
+						<div class="col-sm-12"  *ngIf="admin_info">
+							<div class="ui-block p-3">
+								<div class="edit-ui-block-header">
+									<h3 class="m-0 p-0">Last Login</h3>
+								</div>
+								<div  class="mb-0">
+									<div class="row">
+										<div class="col-lg-6 mb-2">
+											<div class="single-input-label">
+												<label for="company">
+													<b>Login Time</b>
+												</label>
+												<div class="label-content-info">
+													{{profile_data.login_info.login_time | date:'medium'}}
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 mb-2">
+											<div class="single-input-label">
+												<label for="company">
+													<b>OS</b>
+												</label>
+												<div class="label-content-info">
+													Windows
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 mb-2">
+											<div class="single-input-label">
+												<label for="company">
+													<b>Browser</b>
+												</label>
+												<div class="label-content-info">
+													Chrome
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 mb-2">
+											<div class="single-input-label">
+												<label for="company">
+													<b>IP Address</b>
+												</label>
+												<div class="label-content-info">
+													{{profile_data.login_info.ip}}
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6 mb-2">
+											<div class="single-input-label">
+												<label for="company">
+													<b>Location</b>
+												</label>
+												<div class="label-content-info">
+													Punjab Lahore
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			<!--Admin Details-->
 			<div class="row assistant mb-3" *ngIf="admin_info">
 
