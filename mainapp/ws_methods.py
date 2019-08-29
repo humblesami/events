@@ -567,6 +567,15 @@ def has_permission(res):
                 user_permission = True
     return user_permission
 
+# class SearchModel:
+#     name = ''
+#     fields = []
+#
+# class SearchApp:
+#     name = ''
+#     models = []
+
+
 search_apps = {
     'meetings':
         {
@@ -605,14 +614,14 @@ search_apps = {
         }
 }
 
-def search_db(params):
+def search_db(params, search_fields=None):
     results = []
-    search_text = params['kw'].lower()    
+    search_text = params['kw'].lower()
     search_models = params.get('search_models')
     
     for app_name in search_models:
         for model_name in search_models[app_name]:
-            fields =  search_apps[app_name][model_name]
+            fields = search_apps[app_name][model_name]
             kwargs = {}
             q_objects = Q()
             for field in fields:

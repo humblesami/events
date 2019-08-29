@@ -28,13 +28,12 @@ export class SurveyresultsComponent implements OnInit {
         };
         const success_cb = function(result) {
             obj_this.surveyDetails = result;
-            console.log(result);
+            // console.log(result);
             setTimeout(function() {
                 var chart_colors = window['chart_colors'];
                 // console.log(chart_colors,7888);
                 for (let i in obj_this.surveyDetails.questions) {
-                    let question = obj_this.surveyDetails.questions[i];
-                    
+                    let question = obj_this.surveyDetails.questions[i];                    
                     if (question.chart_data.length && question.user_answers.length) {
                         var p =0;
                         for(let j in question.chart_data){

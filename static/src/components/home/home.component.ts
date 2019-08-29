@@ -66,8 +66,8 @@ export class HomeComponent implements OnInit {
             obj_this.home_data = home_data;
             home_data.video_ids = valid_videos;
             var to_do_items = home_data.to_do_items;
-            // console.log(home_data);
-            obj_this.to_do_count = to_do_items.pending_documents.length + to_do_items.pending_meetings.length + to_do_items.pending_surveys.length + to_do_items.pending_votings.length;
+            console.log(home_data);
+            obj_this.to_do_count = to_do_items.pending_documents.length + to_do_items.pending_surveys.length + to_do_items.pending_votings.length;
         };
         let args = {
             app: 'meetings',

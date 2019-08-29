@@ -4,6 +4,7 @@ from mainapp import ws_methods
 from django.db.models import Q
 from django.utils import timezone
 from mainapp.settings import server_base_url
+# from mainapp.ws_methods import SearchApp
 from meetings.model_files.user import Profile
 from django_countries.fields import CountryField
 from django.db.models.signals import m2m_changed
@@ -454,6 +455,15 @@ class Event(CustomModel):
         results = None
         kw = params.get('kw')
         if kw:
+            # ar = []
+            # models = []
+            # fields = []
+            # models.append(name='Event', fields=fields)
+            #
+            # fields = ['name', 'email']
+            # models.append(name='Profile', fields=fields)
+            # ar.append(SearchApp(name='meetings', models=models))
+
             results = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Event']}})
         else:
             results = Event.objects.all()
