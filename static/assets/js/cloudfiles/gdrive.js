@@ -11,7 +11,7 @@ $(function(){
             })
         }
         var req_url = window.location.origin +'/temp/download';
-        ajax_options = {            
+        ajax_options = {
             data: {
                 selected_files: files_data,
                 auth_token : oauthToken
@@ -42,7 +42,7 @@ $(function(){
         }
         else
         {
-        console.log(authResult);
+            console.log(authResult);
         }
     }
 
@@ -99,6 +99,7 @@ $(function(){
                 }
                 if(!found)
                 {
+                    docs[i].download_url = 'https://www.googleapis.com/drive/v3/files/' + docs[i].id + '?alt=media';
                     selected_files.push(docs[i]);
                 }
             }            
@@ -108,6 +109,7 @@ $(function(){
             $('#google_drive_picker').removeAttr('disabled');
         }
     }
+
     if($('#google_drive_picker').length)
     {
         $('#google_drive_picker').click(function(){

@@ -22,24 +22,27 @@ def dropbox_authorize(request):
 
 def dropbox_callback(request):
     context = {}
-    return render(request, 'dropbox-callback.html', context)    
+    return render(request, 'dropbox-callback.html', context)
 
 def dropbox(request):
     context = {}
     return render(request, 'dropbox.html', context)
 
+def cloud(request):
+    context = {}
+    return render(request, 'cloud.html', context)
+
 def download(request):
     context = {}
     try:
-        file_id = request.GET['file_id']
         file_name = request.GET['file_name']
-        oauthToken = request.GET['auth_token']
-        req_url = "https://www.googleapis.com/drive/v3/files/" + file_id + "?alt=media"
+        auth_token = request.GET['auth_token']
+        file_url = requests.GET['file_url']
         headers = {
-            'Authorization': "Bearer " + oauthToken
+            'Authorization': "Bearer " + auth_token
         }
-        response = requests.get(req_url, headers=headers)
-        file_path = MEDIA_ROOT + "/gdrive"
+        response = requests.get(file_url, headers=headers)
+        file_path = MEDIA_ROOT + "/attachments"
         if not os.path.exists(file_path):
             os.makedirs(file_path)
         file_path = file_path + "/"+file_name
@@ -56,5 +59,3 @@ def download(request):
         except:
             context = 'Unknown Error'
     return HttpResponse(context)
-
-
