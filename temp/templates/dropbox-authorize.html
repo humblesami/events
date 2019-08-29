@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var client_id = 'pvbda3hm0tpwnod';
+    var redirect_uri = 'http://localhost:8000/temp/dropbox-callback';
+    redirect_uri = '&redirect_uri=' + redirect_uri;
+    //redirect_uri = '';
+    window.location = 'https://www.dropbox.com/oauth2/authorize?client_id='+client_id+'&response_type=code'+redirect_uri;
+</script>
+</body>
+</html>

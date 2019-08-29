@@ -1,3 +1,4 @@
+from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.contrib.auth.decorators import login_required
@@ -263,5 +264,5 @@ def produce_result(res, args=None):
         else:
             args = ''
         res = {'error': ' Invalid result type'+args}
-    res = json.dumps(res)
+    res = json.dumps(res, cls=DjangoJSONEncoder)
     return HttpResponse(res)
