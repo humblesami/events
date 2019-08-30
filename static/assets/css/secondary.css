@@ -161,6 +161,7 @@ a:hover{
 .kanban-committees-info-box-img a{
     margin-left: -10px;
     position: relative;
+    border: 2px solid #ffffff;
 }
 .pending-status{
     width: 60px;
