@@ -55,7 +55,10 @@ export class MessengerComponent implements OnInit {
 
             socketService.server_events['friend_joined'] = updateUserStatus;
 
-            socketService.server_events['user_left'] = updateUserStatus;
+            socketService.server_events['user_left'] = function(data){
+                // console.log(data, 155);
+                updateUserStatus(data);
+            } 
 
             socketService.server_events['new_friend'] = function(friend: ChatClient){
                 socketService.chat_users.push(friend);
@@ -72,7 +75,7 @@ export class MessengerComponent implements OnInit {
             }
             
             function updateUserStatus(user: ChatClient)
-            {
+            {                
                 if(obj_this.user.id == user.id)
                 {
                     console.log(user , "Should never happen now");
@@ -468,7 +471,6 @@ export class MessengerComponent implements OnInit {
                 target_id: obj_this.active_chat_user.id, 
                 offset: obj_this.active_chat_user.messages.length
             };
-
             let args = {
                 app: 'chat',
                 model: 'message',
@@ -478,7 +480,7 @@ export class MessengerComponent implements OnInit {
                 params: params,
                 args: args
             };
-            let on_success = function(data){
+            let on_grouop_olde_messages = function(data){
                 // console.log(params.offset, data);
                 if(data.length > 0) {
                     obj_this.is_request_sent = false;
@@ -492,7 +494,7 @@ export class MessengerComponent implements OnInit {
                 }
             };
             input_data['no_loader'] = 1;
-            obj_this.httpService.get(input_data, on_success, null);
+            obj_this.httpService.get(input_data, on_grouop_olde_messages, null);
         }
         //waiting because [data-emojiable=true] needs to render
         setTimeout(function(){
@@ -577,7 +579,7 @@ export class MessengerComponent implements OnInit {
                 params: params,
                 args: args
             };
-            let on_success = function(data){
+            let on_user_old_message = function(data){
                 // console.log(params.offset, data);
                 if(data.length > 0) {
                     obj_this.is_request_sent = false;
@@ -591,7 +593,7 @@ export class MessengerComponent implements OnInit {
                 }
             };
             input_data['no_loader'] = 1;
-            obj_this.httpService.get(input_data, on_success, null);
+            obj_this.httpService.get(input_data, on_user_old_message, null);
         }
         //waiting because [data-emojiable=true] needs to render
         setTimeout(function(){
@@ -632,7 +634,7 @@ export class MessengerComponent implements OnInit {
         },20);
 	}
 
-	send_message(input_data, force_post= false){   
+	send_message(input_data){   
         let obj_this = this;     
 		try{
             let args = {
@@ -640,7 +642,7 @@ export class MessengerComponent implements OnInit {
                 model: 'message',
                 method: 'send'
             }
-            if (force_post)
+            if(input_data.attachments.length > 0)
             {
                 args['post'] = 1;
             }
@@ -649,16 +651,23 @@ export class MessengerComponent implements OnInit {
                 input_data.group_id = obj_this.active_chat_user.id;
                 delete input_data['to'];
             }
-            var on_success = input_data.on_success;
             input_data = {
                 params: input_data,
                 args: args
             };
             input_data['no_loader'] = 1;
-			obj_this.httpService.post(input_data, function(data){
-                if(on_success)
+			obj_this.httpService.post(input_data, function (data){
+                // console.log(data);
+                if(data.attachments.length)
                 {
-                    on_success(data);
+                    let that_message = obj_this.active_chat_user.messages.find(function(obj){
+                        return obj.uuid == data.uuid;
+                    });
+                    // console.log(that_message, data.uuid, data.attachments);
+                    if(that_message)
+                    {
+                        that_message.attachments = data.attachments;
+                    }
                 }
             }, null);
 		}
@@ -739,26 +748,7 @@ export class MessengerComponent implements OnInit {
             no_loader: 1,
         };
         
-        var force_post = false;
-        if(obj_this.attachments.length > 0)
-        {
-            force_post = true;
-            input_data['on_success'] = function(data){                
-                let that_message = obj_this.active_chat_user.messages.filter(function(obj){
-                    return obj.uuid == data.uuid;
-                });
-                if(that_message.length > 0)
-                {
-                    let recent_message = that_message[0];
-                    recent_message.attachments = that_message[0].attachments;
-                }
-                else{
-                    console.log('No.. cant lost the message');
-                }
-            }
-        }        
-
-        obj_this.send_message(input_data, force_post);
+        obj_this.send_message(input_data);
         if(message_content)
         {
             message_content = obj_this.sanitizer.bypassSecurityTrustHtml(message_content);
@@ -778,6 +768,7 @@ export class MessengerComponent implements OnInit {
         obj_this.add_message(obj_this.active_chat_user, obj_message);
         $('.emoji-wysiwyg-editor').html("");
         obj_this.attachments = [];
+        $('form.attach_btn')[0].reset();
 		obj_this.scroll_to_end(".msg_card_body");
     }    
     

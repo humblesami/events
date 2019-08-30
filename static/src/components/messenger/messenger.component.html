@@ -2,7 +2,7 @@
 
     <div class="chat-setup-container chat friends-chat-box" *ngIf="chat_mode == 'none'">
         <div class="card-header MessengerSearchWrap">
-            <div class="input-group">
+            <div class="input-group">                
                 <div class="input-group-prepend">
                     <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
                 </div>
@@ -127,12 +127,15 @@
 
     <div class="chat chat-container-wrppaer" *ngIf="active_chat_user">
         <div class="chat-full-height">
+
             <div class="chat-user-title">
+
                 <div class="MessengerTitle">
                     <span class="backchatlist" (click)="set_chat_mode('none')"><i class="fas fa-arrow-left"></i></span>
                     <span class="user-name">{{active_chat_user.name}}</span>
                     <span class="status" *ngIf="active_chat_user.online" class="userstat">Online</span>
                 </div>
+
                 <div *ngIf="active_chat_user && !active_chat_user.is_group" class="MessengerConnectWrap">                    
                     <div class="CallCircleIcon" (click)="socketService.video_call.init(active_chat_user.id, 'audio_only')">
                         <span >
@@ -151,7 +154,9 @@
                 </div>
                 
                 <div *ngIf="active_chat_user" class="active_chat_user_id" style="display:none">{{active_chat_user.id}}</div>
-            </div>			
+            
+            </div>
+
             <div class="card-body msg_card_body meetVue-chat-body">
                 <div class="messenger-body" *ngFor="let msg of active_chat_user.messages">
                     <div *ngIf="msg.sender.id == user.id"
@@ -199,11 +204,12 @@
                             <span class="msg_time">{{msg.create_date | date:'medium'}}</span>
                         </div>
                     </div>
-                </div>
-                
+                </div>                
             </div>
+
             <div class="card-footer meetVue-chat-footer">
-                <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
+                
+                <div *ngIf="attachments.length" class="chat-selectBox" id="attach_modal">
                     <div class="call_container ">
                         <div *ngFor="let doc of attachments" contenteditable="false"
                             class="doc-thumb" style="display: flex;">
@@ -215,10 +221,12 @@
                         </div>                                    
                     </div>
                 </div>
+
                 <div class="input-group">
                     <input type="text" id="message_input_box" data-emojiable="true"
                             data-type="image" class="form-control" placeholder="Type your message here" />                                
                     <div class="input-group-append">
+                        hello
                         <form style="padding: 10px;border:1px solid" class="input-group-text attach_btn" (click)="attach_btn_click($event)">
                             <input (change)="file_change($event)" id="msg_file" type="file" 
                                 accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.ppt" 

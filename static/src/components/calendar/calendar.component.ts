@@ -98,7 +98,7 @@ export class CalendarComponent implements OnInit {
                     args: args
                 };
                 obj_this.httpService.get(input_data,function(data){
-                    console.log(data, 134);                    
+                    // console.log(data, 134);
                     obj_this.selected_event = data;
                     $('#calenderModal').modal('show');
                 }, null);

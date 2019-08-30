@@ -1,3 +1,6 @@
+import inspect
+import os
+
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.contrib.auth.decorators import login_required
@@ -263,5 +266,18 @@ def produce_result(res, args=None):
         else:
             args = ''
         res = {'error': ' Invalid result type'+args}
-    res = json.dumps(res)
+    try:
+        res = json.dumps(res)
+    except:
+        print(args)
+        print('\n\n\n')
+        print(res['data'])
+        print('\n\n\n')
+        return produce_exception()
+        # dir = os.path.dirname(os.path.realpath(__file__))
+        # ar = dir.split('/')
+        # ar = ar[:-1]
+        # dir = ('/').join(ar)
+        # with open(dir + '/error_log.txt', "a+") as f:
+        #     f.write(args + '\n\n' + res['data'])
     return HttpResponse(res)
