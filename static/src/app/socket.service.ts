@@ -484,14 +484,20 @@ export class SocketService {
                 {
                     obj_this.chat_clients.push(data.chat_groups[kk]);
                 }
+
+                var online_count = 0;
                 for(var km in data.friends)
                 {
                     obj_this.chat_clients.push(data.friends[km]);
+                    if(data.friends[i].online)
+                    {
+                        online_count++;
+                    }
                 }
                 obj_this.chat_groups = data.chat_groups;
                 obj_this.chat_users = data.friends;
 
-                // console.log(obj_this.chat_users, 4509);
+                // console.log(obj_this.chat_users, 'friend-count='+ data.friends.length, 'online_count='+online_count);
 
                 obj_this.notificationList = [];
                 data.notifications = data.notifications.list;

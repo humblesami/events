@@ -36,7 +36,7 @@ export class HttpService {
         var options = this.makeOptions_public(input_data,success_cb, failure_cb);        
         window['dn_rpc_object'](options);
     }
-
+    
     authenticate(url: string, input_data: any, success_cb, failure_cb, complete_cb) {
         const httpservie = this;
         input_data = {
@@ -93,7 +93,10 @@ export class HttpService {
             data:input_data,            
             //type:'post',
             onSuccess:function(data){                
-                success_cb(data);
+                if(success_cb)
+                {
+                    success_cb(data);
+                }                                
                 if(data.total)
                 {
                     obj_this.count = Number(data.total);                    
@@ -133,7 +136,12 @@ export class HttpService {
             },
             data:input_data,            
             //type:'post',
-            onSuccess:success_cb,
+            onSuccess:function(data){
+                if(success_cb)
+                {
+                    success_cb(data);
+                }
+            },
             onError:onRequestFailed,
             onComplete:function(){
             }
@@ -156,7 +164,12 @@ export class HttpService {
             },
             data:input_data,            
             //type:'post',
-            onSuccess:success_cb,
+            onSuccess: function(data){
+                if(success_cb)
+                {
+                    success_cb(data);
+                }
+            },
             onError:onRequestFailed,
             onComplete:function(){
             }

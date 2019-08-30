@@ -588,6 +588,7 @@ class Message(models.Model):
         group_id = params.get('group_id')
         target_id = params.get('to')
         body = params['body']
+        uuid = params['uuid']
         message = Message(sender_id=uid, body=body, create_date=datetime.now())
         if group_id:
             message.chat_group_id = group_id
@@ -602,7 +603,7 @@ class Message(models.Model):
                 doc = MessageDocument(
                     message_id=message.id,
                     file_type='message',
-                    name=file_name
+                    name=file_name,
                 )
 
                 image_data = attachment['binary']
@@ -751,27 +752,19 @@ class AuthUserChat(models.Model):
         try:
             uid = params['id']
             uid = int(uid)
-            mp_users = Profile.objects.filter()
+            chat_users = Profile.objects.exclude(pk = uid).values('id', 'name', 'image', 'groups')
+            chat_users = list(chat_users)
             unseen_messages = 0
-            chat_users = []
             friend_ids = []
             committees = []
             meetings = []
-            for friendObj in mp_users:
-                if friendObj.pk != uid:
-                    id = friendObj.id
-                    name = friendObj.fullname()
-                    photo = friendObj.image.url
-                    unseen = len(Message.objects.filter(sender_id=friendObj.id, read_status=False, to=uid))
-                    unseen_messages += unseen
-                    friend = {
-                        'id': id,
-                        'unseen': unseen,
-                        'name': name,
-                        'photo': photo
-                    }
-                    chat_users.append(friend)
-                    friend_ids.append(id)
+            for friend in chat_users:
+                unseen = len(Message.objects.filter(sender_id=friend['id'], read_status=False, to=uid))
+                friend['unseen'] = unseen
+                unseen_messages += unseen
+                friend_ids.append(friend['id'])
+                friend['unseen'] = unseen
+                friend['photo'] = '/media/'+ friend['image']
 
             user_object = User.objects.get(pk=uid)
             profile_object = Profile.objects.filter(pk=uid)
@@ -799,7 +792,8 @@ class AuthUserChat(models.Model):
             req_user = {
                 'id': uid,
                 'name': profile_object.name,
-                'photo': profile_object.image.url
+                'photo': profile_object.image.url,
+                'groups': list(profile_object.groups.all().values('id', 'name'))
             }
             committee_objects = profile_object.committees.all()
             for obj in committee_objects:
@@ -836,6 +830,9 @@ class AuthUserChat(models.Model):
                 'meetings': meetings,
                 'chat_groups': chat_groups_list
             }
+            # if len(chat_users) > 0:
+            #     first_friend = chat_users[0]
+            #     print(first_friend)
         except:
             eg = traceback.format_exception(*sys.exc_info())
             errorMessage = ''
