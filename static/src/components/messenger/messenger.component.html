@@ -132,7 +132,8 @@
             <div class="chat-user-title">
                 <div class="MessengerTitle">
                     <span class="backchatlist" (click)="set_chat_mode('none')"><i class="fas fa-arrow-left"></i></span>
-                    <span class="user-name">{{active_chat_user.name}}</span>
+                    <img *ngIf="!active_chat_user.is_group" src="{{socketService.server_url}}{{active_chat_user.photo}}" />
+                    <span class="user-name">{{active_chat_user.name}}</span>                    
                     <span class="status" *ngIf="active_chat_user.online" class="userstat">Online</span>
                 </div>
                 <div *ngIf="active_chat_user && !active_chat_user.is_group" class="MessengerConnectWrap">                    
@@ -168,7 +169,7 @@
                                         <a *ngIf="doc.url" contenteditable="false"
                                         href="{{socketService.server_url}}{{doc.url}}"
                                         target="__blank"
-                                        class="download" style="display: flex;">
+                                        class="download">
                                             <span class="file_name">
                                                 <i class="fa fa-download"></i>{{doc.name}}
                                             </span>
@@ -185,13 +186,7 @@
                         <!-- <div class="img_cont_msg">
                             <img *ngIf="!msg.chat_group" src="{{socketService.server_url}}{{msg.sender.photo}}" class="rounded-circle user_img_msg" />
                             <span *ngIf="msg.chat_group" class="rounded-circle user_img_msg">{{msg.sender.name}}</span>
-                        </div> -->
-                        <div class="img-mintain-box">
-                            <div class="img_cont_msg">
-                                <img *ngIf="!msg.chat_group" src="{{socketService.server_url}}{{msg.sender.photo}}" />
-                                <span *ngIf="msg.chat_group" class="rounded-circle user_img_msg">{{msg.sender.name}}</span>
-                            </div>
-                        </div>                        
+                        </div> -->                                              
                         <div class="msg_cotainer">
                             <div class="msg-box-wrapper">
                                 <div *ngIf="msg.body" class="msg-box-text" [innerHTML]="msg.body"></div>

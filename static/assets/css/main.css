@@ -834,14 +834,6 @@ a.kanban-committees-info-box-name {
 	top: 8px;
 	opacity: 0.5;
 	}
-.file_name {
-	color: #1d2129;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	margin: 0 10px 0 0;
-	flex: 1;
-	}
 /*** Header ***/
 
 .brand-logo {
