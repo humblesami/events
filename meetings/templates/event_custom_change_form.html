@@ -8,6 +8,15 @@
     <script src="/static/assets/js/mask.js"></script>
     <script src="{% static '/assets/js/custom_duration_validator.js' %}"></script>
     <script src="/static/assets/js/validator.js"></script>
+    <script src="/static/assets/fileinput/js/fileinput.js" type="text/javascript"></script>
+    <link href="/static/assets/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
+    <link href="/static/assets/fileinput/themes/fa-theme.css" media="all" rel="stylesheet" type="text/css"/>
+    <script src="/static/assets/fileinput/js/plugins/piexif.js" type="text/javascript"></script>
+    <script src="/static/assets/fileinput/js/plugins/sortable.js" type="text/javascript"></script>
+    <script src="/static/assets/fileinput/js/locales/fr.js" type="text/javascript"></script>
+    <script src="/static/assets/fileinput/js/locales/es.js" type="text/javascript"></script>
+    <script src="/static/assets/fileinput/themes/theme.js" type="text/javascript"></script>
+    <script src="/static/assets/fileinput/themes/explorer-theme.js" type="text/javascript"></script>
 {% endblock %}
 {% block inline_field_sets %}
 {% for inline_admin_formset in inline_admin_formsets %}
@@ -20,11 +29,7 @@
     <div class="file-loading">
         <input id="attachment" name="attachment" class="file" type="file" multiple data-min-file-count="1" data-theme="fas">
     </div>
-    <script>
-        $(document).on('ready', function () {
-            $("#attachment").fileinput(
-            );
-        });
+    <script src="/static/assets/fileinput/js/custom_fileinput.js">
     </script>
 </fieldset>
 {% endblock %}

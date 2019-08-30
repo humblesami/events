@@ -27,10 +27,10 @@ class TopicDocInline(nested_admin.NestedTabularInline):
     template = 'topic_custom_change_form.html'
 
 
-class TopicInline(nested_admin.NestedTabularInline):
+class TopicInline(nested_admin.NestedStackedInline):
     model = Topic
     inlines = [TopicDocInline]
-    extra = 1
+    extra = 0
 
     def save_model(self, request, obj, form, change):
         obj.save()
@@ -91,13 +91,16 @@ class EventAdmin(nested_admin.NestedModelAdmin):
 
     def save_formset(self, request, form, formset, change):
             formset.save()
-            for afile in request.FILES.getlist('topic_attachment'):
-                try:
-                    with transaction.atomic():
-                        afile.field_name = 'attachment'
-                        obj.agendadocument_set.create(name=afile.name, attachment=afile)
-                except:
-                    pass
+            counter = 0
+            for topic in formset.queryset:
+                for afile in request.FILES.getlist('topic_attachment-'+str(counter)):
+                    try:
+                        with transaction.atomic():
+                            afile.field_name = 'attachment'
+                            topic.agendadocument_set.create(name=afile.name, agenda = topic, attachment=afile)
+                    except:
+                        pass
+                counter += 1
 
 
     def docs(self, obj):
