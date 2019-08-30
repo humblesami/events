@@ -6,7 +6,6 @@ from datetime import datetime
 from mainapp import ws_methods
 from documents.file import File
 from django.contrib import admin
-from django.db import connection
 from django.contrib.auth.models import User
 from meetings.model_files.user import Profile, create_group
 
@@ -31,7 +30,7 @@ class Notification(models.Model):
             self.post_address.res_id) + '--' + self.notification_type.name
 
     def get_meta(self, res_obj):
-        #sender list would be same for all users/audience
+        # sender list would be same for all users/audience
         user_notifications = self.usernotification_set.filter(read=False, notification_id=self.id)
         senders_list = []
         for user_notification in user_notifications:
@@ -56,9 +55,8 @@ class Notification(models.Model):
             'template': notification_template,
             'name_place': ' => ' + name_place,
             'info': post_meta
-        }        
+        }
         return meta
-
 
     @classmethod
     def mark_read(cls, request, params):
@@ -108,7 +106,6 @@ class Notification(models.Model):
                 user_notification = UserNotification(notification_id=mention_notification.id, sender_id=sender.id, user_id=uid)
                 user_notification.save()
                 senders_for_mention[uid] = UserNotification.get_senders(cls, uid, mention_notification.id)
-            
             audience = list(set(audience) - set(mentioned_list))
         senders_for_all = {}
         for uid in audience:
@@ -143,7 +140,12 @@ class Notification(models.Model):
                 clone['notification_type'] = mention_notification_type.name
                 clone['body'] = ' ' + mention_meta['template'] + ' ' + mention_meta['name_place']
                 events.append({'name': 'notification_received', 'data': clone, 'audience': mentioned_list})
-                events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience + mentioned_list})
+                emit_data = {
+                    'name': event_data['name'],
+                    'data': event_data['data'],
+                    'audience': audience + mentioned_list
+                }
+                events.append(emit_data)
             else:
                 events.append({'name': event_data['name'], 'data': event_data['data'], 'audience': audience})
             res = ws_methods.emit_event(events)
@@ -172,7 +174,7 @@ class Notification(models.Model):
     def get_post_address(cls, res_app, res_model, res_id):
         post_address = PostAddress.objects.filter(res_app=res_app, res_model=res_model, res_id=res_id)
         if not post_address:
-            post_address = PostAddress(res_app=res_app, res_model=res_model, res_id=res_id)            
+            post_address = PostAddress(res_app=res_app, res_model=res_model, res_id=res_id)
             post_address.save()
         else:
             post_address = post_address[0]
@@ -199,17 +201,17 @@ class UserNotification(models.Model):
     def get_senders(self, user_id, notification_id):
         notification_senders = UserNotification.objects.filter(
             read=False, user_id=user_id, notification_id=notification_id
-            ).values('sender__id', 'sender__name')
+        ).values('sender__id', 'sender__name')
         count = notification_senders.count()
         notification_senders = notification_senders.distinct()
         senders = []
         for notification_sender in notification_senders:
             senders.append({
-                'id': notification_sender['sender__id'], 
+                'id': notification_sender['sender__id'],
                 'name': notification_sender['sender__name']
-                })
+            })
         return senders, count
-    
+
     @classmethod
     def mark_read_notification(cls, request, params):
         res_id = params['res_id']
@@ -222,7 +224,7 @@ class UserNotification(models.Model):
             address = address[0]
             notifications = address.notification_set.all()
             for obj1 in notifications:
-                user_notifications = obj1.usernotification_set.filter(user_id=request.user.id,read=False,notification_id=obj1.id)
+                user_notifications = obj1.usernotification_set.filter(user_id=request.user.id, read=False, notification_id=obj1.id)
                 for obj3 in user_notifications:
                     obj3.read = True
                     obj3.save()
@@ -248,7 +250,7 @@ class UserNotification(models.Model):
 
             address = notification.post_address
             model = apps.get_model(address.res_app, address.res_model)
-            obj_res = model.objects.filter(pk=address.res_id)            
+            obj_res = model.objects.filter(pk=address.res_id)
             if obj_res:
                 obj_res = obj_res[0]
                 meta = notification.get_meta(obj_res)
@@ -326,7 +328,7 @@ class Comment(models.Model):
 
         }
 
-        read_ids = [] #UserNotification.mark_read_notification(request, params)
+        read_ids = []  # UserNotification.mark_read_notification(request, params)
         comments = []
         for obj in res:
             user = obj.user
@@ -407,7 +409,7 @@ class ChatGroup(models.Model):
                 me_added = True
         chat_group = ChatGroup(
             name=params['name'],
-            created_by_id = uid
+            created_by_id=uid
         )
         chat_group.save()
         if not me_added:
@@ -425,7 +427,7 @@ class ChatGroup(models.Model):
         ]
         res = ws_methods.emit_event(events)
         if res == 'done':
-            return { 'error': '', 'data': created_chat_group }
+            return {'error': '', 'data': created_chat_group}
         else:
             return res
 
@@ -472,7 +474,6 @@ class ChatGroup(models.Model):
             return {'error': '', 'data': group}
         else:
             return res
-
 
     @classmethod
     def add_members(cls, request, params):
@@ -522,19 +523,18 @@ class ChatGroup(models.Model):
             'data': group,
             'audience': existing_members_ids
         }
-        events = [ event1, event2]
+        events = [event1, event2]
         res = ws_methods.emit_event(events)
         if res == 'done':
             return {'error': '', 'data': group}
         else:
             return res
 
-
     @classmethod
     def remove_member(cls, request, params):
         member_id = params['member_id']
         group_id = params['group_id']
-        chat_group = ChatGroup.objects.get(pk = group_id)
+        chat_group = ChatGroup.objects.get(pk=group_id)
         all_member_set = set(chat_group.members.all())
         removed_member_set = set(Profile.objects.filter(id=member_id))
         remaining_members = all_member_set - removed_member_set
@@ -544,7 +544,7 @@ class ChatGroup(models.Model):
     @classmethod
     def get_details(cls, request, params):
         group_id = params['group_id']
-        group_obj = ChatGroup.objects.get(pk = group_id)
+        group_obj = ChatGroup.objects.get(pk=group_id)
         group_members = []
         for mem in group_obj.members.all():
             group_members.append({
@@ -590,6 +590,7 @@ class Message(models.Model):
         group_id = params.get('group_id')
         target_id = params.get('to')
         body = params['body']
+        uuid = params['uuid']
         message = Message(sender_id=uid, body=body, create_date=datetime.now())
         if group_id:
             message.chat_group_id = group_id
@@ -604,7 +605,7 @@ class Message(models.Model):
                 doc = MessageDocument(
                     message_id=message.id,
                     file_type='message',
-                    name=file_name
+                    name=file_name,
                 )
 
                 image_data = attachment['binary']
@@ -638,7 +639,11 @@ class Message(models.Model):
         ]
         if group_id:
             events = [
-                {'name': 'group_chat_message_received', 'data': message_dict, 'room': {'type': 'chat_room', 'id': group_id} }
+                {
+                    'name': 'group_chat_message_received',
+                    'data': message_dict,
+                    'room': {'type': 'chat_room', 'id': group_id}
+                }
             ]
         res = ws_methods.emit_event(events)
         if res == 'done':
@@ -732,8 +737,10 @@ class MessageStatus(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
 
+
 class MessageDocument(File):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
+
 
 class AuthUserChat(models.Model):
     @classmethod
@@ -754,27 +761,19 @@ class AuthUserChat(models.Model):
         try:
             uid = params['id']
             uid = int(uid)
-            mp_users = Profile.objects.filter()
+            chat_users = Profile.objects.exclude(pk=uid).values('id', 'name', 'image', 'groups')
+            chat_users = list(chat_users)
             unseen_messages = 0
-            chat_users = []
             friend_ids = []
             committees = []
             meetings = []
-            for friendObj in mp_users:
-                if friendObj.pk != uid:
-                    id = friendObj.id
-                    name = friendObj.fullname()
-                    photo = friendObj.image.url
-                    unseen = len(Message.objects.filter(sender_id=friendObj.id, read_status=False, to=uid))
-                    unseen_messages += unseen
-                    friend = {
-                        'id': id,
-                        'unseen': unseen,
-                        'name': name,
-                        'photo': photo
-                    }
-                    chat_users.append(friend)
-                    friend_ids.append(id)
+            for friend in chat_users:
+                unseen = len(Message.objects.filter(sender_id=friend['id'], read_status=False, to=uid))
+                friend['unseen'] = unseen
+                unseen_messages += unseen
+                friend_ids.append(friend['id'])
+                friend['unseen'] = unseen
+                friend['photo'] = '/media/' + friend['image']
 
             user_object = User.objects.get(pk=uid)
             profile_object = Profile.objects.filter(pk=uid)
@@ -802,7 +801,8 @@ class AuthUserChat(models.Model):
             req_user = {
                 'id': uid,
                 'name': profile_object.name,
-                'photo': profile_object.image.url
+                'photo': profile_object.image.url,
+                'groups': list(profile_object.groups.all().values('id', 'name'))
             }
             committee_objects = profile_object.committees.all()
             for obj in committee_objects:
@@ -818,7 +818,7 @@ class AuthUserChat(models.Model):
             for obj in chat_groups:
                 unseen = len(MessageStatus.objects.filter(message__chat_group_id=obj.id, read=False))
                 chat_group = {
-                    'id':obj.id, 'name': obj.name, 'unseen': unseen,
+                    'id': obj.id, 'name': obj.name, 'unseen': unseen,
                     'photo': '/static/assets/images/group.jpeg',
                     'members': [],
                     'created_by': {
@@ -839,6 +839,9 @@ class AuthUserChat(models.Model):
                 'meetings': meetings,
                 'chat_groups': chat_groups_list
             }
+            # if len(chat_users) > 0:
+            #     first_friend = chat_users[0]
+            #     print(first_friend)
         except:
             eg = traceback.format_exception(*sys.exc_info())
             errorMessage = ''

@@ -2,7 +2,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.contrib.auth.decorators import login_required
-from django.db.models import  Q
+from django.db.models import Q
 
 import json
 import sys
@@ -13,32 +13,33 @@ from django.http import HttpResponse
 from mainapp import ws_methods
 
 public_methods = {
-    'authsignup':{
-        'AuthUser':{
+    'authsignup': {
+        'AuthUser': {
             'login_user': 1,
             'reset_password': 1,
             'set_password': 1
         }
     },
-    'voting':{
-        'VotingAnswer':{
+    'voting': {
+        'VotingAnswer': {
             'submit_public': 1
         }
     },
-    'esign':{
-        'SignatureDoc':{
+    'esign': {
+        'SignatureDoc': {
             'get_signature': 1,
             'get_doc_data': 1,
             'get_detail': 1,
             'ws_get_detail': 1,
         },
-        'Signature':{
-            'save_signature':1,
+        'Signature': {
+            'save_signature': 1,
             'get_signature': 1,
-            'load_signature':1,
+            'load_signature': 1,
         }
     }
 }
+
 
 @csrf_exempt
 def public(request):
@@ -82,6 +83,7 @@ def secure(request):
     except:
         return produce_exception()
 
+
 @login_required()
 def search_session(request):
     try:
@@ -92,6 +94,7 @@ def search_session(request):
     except:
         return produce_exception()
 
+
 @csrf_exempt
 @api_view(["GET", "POST"])
 def search_ws(request):
@@ -100,6 +103,7 @@ def search_ws(request):
         return produce_result(results)
     except:
         return produce_exception()
+
 
 def search(request):
     kw = request.POST
@@ -127,7 +131,7 @@ def search(request):
                     'Topic': ['name', 'lead'],
                     'Committee': ['name'],
                     'Profile': ['name', 'username', 'first_name', 'last_name', 'email'],
-                    
+
                     'MeetingDocument': ['name'],
                     'AgendaDocument': ['name'],
                     'SignDocument': ['name'],
@@ -136,8 +140,8 @@ def search(request):
                     'NewsDocument': ['name'],
                     'NewsVideo': ['name'],
                 },
-            'esign':{
-                'SignatureDoc':['name']
+            'esign': {
+                'SignatureDoc': ['name']
             },
             'resources':
                 {
@@ -147,25 +151,25 @@ def search(request):
             'survey':
                 {
                     'Survey': ['name', 'description'],
-                    'Question':['text']
+                    'Question': ['text']
                 },
             'voting':
                 {
                     'Voting': ['name', 'description'],
                     'VotingDocument': ['name'],
-                    'VotingChoice':['name'],
-                    'VotingType':['name']
+                    'VotingChoice': ['name'],
+                    'VotingType': ['name']
                 }
         }
 
     if search_models:
         for app_name in search_models:
             for model_name in search_models[app_name]:
-                fields =  search_apps[app_name][model_name]
+                fields = search_apps[app_name][model_name]
                 kwargs = {}
                 q_objects = Q()
                 for field in fields:
-                    q_objects |= Q(**{field+'__contains': params['kw']})
+                    q_objects |= Q(**{field + '__contains': params['kw']})
                     kwargs.update({'{0}__{1}'.format(field, 'contains'): search_text})
                 model_obj = apps.get_model(app_name, model_name)
                 search_result = model_obj.objects.filter(q_objects)
@@ -181,7 +185,7 @@ def search(request):
                 kwargs = {}
                 q_objects = Q()
                 for field in fields:
-                    q_objects |= Q(**{field+'__contains': params['kw']})
+                    q_objects |= Q(**{field + '__contains': params['kw']})
                     kwargs.update({'{0}__{1}'.format(field, 'contains'): search_text})
                 model_obj = apps.get_model(app, model)
                 search_result = model_obj.objects.filter(q_objects)
@@ -218,7 +222,6 @@ def session(request):
         return produce_exception()
 
 
-
 def produce_exception():
     eg = traceback.format_exception(*sys.exc_info())
     errorMessage = ''
@@ -228,6 +231,7 @@ def produce_exception():
         if not 'lib/python' in er and not 'lib\\' in er:
             errorMessage += " " + er
     return HttpResponse(errorMessage)
+
 
 def produce_exception_public():
     eg = traceback.format_exception(*sys.exc_info())
@@ -240,6 +244,7 @@ def produce_exception_public():
     res = {'error': errorMessage}
     res = json.dumps(res)
     return HttpResponse(res)
+
 
 def produce_result(res, args=None):
     if isinstance(res, dict):
@@ -263,6 +268,19 @@ def produce_result(res, args=None):
             args = ' in ' + args['app'] + '.' + args['model'] + '.' + args['method']
         else:
             args = ''
-        res = {'error': ' Invalid result type'+args}
-    res = json.dumps(res, cls=DjangoJSONEncoder)
+        res = {'error': ' Invalid result type' + args}
+    try:
+        res = json.dumps(res, cls=DjangoJSONEncoder)
+    except:
+        print(args)
+        print('\n\n\n')
+        print(res['data'])
+        print('\n\n\n')
+        return produce_exception()
+        # dir = os.path.dirname(os.path.realpath(__file__))
+        # ar = dir.split('/')
+        # ar = ar[:-1]
+        # dir = ('/').join(ar)
+        # with open(dir + '/error_log.txt', "a+") as f:
+        #     f.write(args + '\n\n' + res['data'])
     return HttpResponse(res)

@@ -25,15 +25,15 @@ export class HttpService {
     }
 
     get(input_data: any, success_cb, failure_cb) {
-        var options = this.makeOptions_secure('get', input_data,success_cb, failure_cb);        
+        var options = this.makeOptions_secure('get', input_data,success_cb, failure_cb);
         window['dn_rpc_object'](options);
     }
     post(input_data: any, success_cb, failure_cb) {
-        var options = this.makeOptions_secure('post', input_data,success_cb, failure_cb);        
+        var options = this.makeOptions_secure('post', input_data,success_cb, failure_cb);
         window['dn_rpc_object'](options);
     }
     post_public(input_data: any, success_cb, failure_cb) {
-        var options = this.makeOptions_public(input_data,success_cb, failure_cb);        
+        var options = this.makeOptions_public(input_data,success_cb, failure_cb);
         window['dn_rpc_object'](options);
     }
 
@@ -48,7 +48,7 @@ export class HttpService {
             params: input_data
         }
         var options = httpservie.makeOptions_public(input_data, success_cb, failure_cb);
-        options.onSuccess = function(data){            
+        options.onSuccess = function(data){
             window['current_user'].onLogin(data);
             if(success_cb)
             {
@@ -59,7 +59,7 @@ export class HttpService {
         options.onComplete = complete_cb;
         options.onError = failure_cb;
         window['dn_rpc_object'](options);
-    }    
+    }
 
     make_pages_when_loaded = false;
     makeOptions_secure(type, input_data, success_cb, failure_cb)
@@ -69,12 +69,12 @@ export class HttpService {
         {
             if(failure_cb)
                 failure_cb(res);
-        };        
+        };
         // delete input_data.params.offset;
         // delete input_data.params.limit;
         if(obj_this.search_kw)
         {
-            input_data.params.kw = obj_this.search_kw;            
+            input_data.params.kw = obj_this.search_kw;
         }
         if(!input_data.params)
         {
@@ -91,20 +91,22 @@ export class HttpService {
                 input_data.params.offset = obj_this.offset;
             }
         }
-        
         var options = {
             url: '/rest/secure',
             type: type,
             before:function(a, b){
                 //console.log(b.url);
             },
-            data:input_data,            
+            data:input_data,
             //type:'post',
-            onSuccess:function(data){                
-                success_cb(data);
+            onSuccess:function(data){
+                if(success_cb)
+                {
+                    success_cb(data);
+                }
                 if(data.total)
                 {
-                    obj_this.count = Number(data.total);                    
+                    obj_this.count = Number(data.total);
                     try{
                         obj_this.on_paged_data.emit();
                     }
@@ -139,9 +141,14 @@ export class HttpService {
             before:function(a, b){
                 //console.log(b.url);
             },
-            data:input_data,            
+            data:input_data,
             //type:'post',
-            onSuccess:success_cb,
+            onSuccess:function(data){
+                if(success_cb)
+                {
+                    success_cb(data);
+                }
+            },
             onError:onRequestFailed,
             onComplete:function(){
             }
@@ -154,7 +161,7 @@ export class HttpService {
         var onRequestFailed = function(res)
         {
             if(failure_cb)
-                failure_cb(res);            
+                failure_cb(res);
         };
         var options = {
             url: '/rest/public',
@@ -162,9 +169,14 @@ export class HttpService {
             before:function(a, b){
                 //console.log(b.url);
             },
-            data:input_data,            
+            data:input_data,
             //type:'post',
-            onSuccess:success_cb,
+            onSuccess: function(data){
+                if(success_cb)
+                {
+                    success_cb(data);
+                }
+            },
             onError:onRequestFailed,
             onComplete:function(){
             }
@@ -173,7 +185,7 @@ export class HttpService {
     }
 
     make_bread_crumb() {
-        let comeplete_url = window.location + '';        
+        let comeplete_url = window.location + '';
         let base_url = window.location.origin + '';
         let page_url = comeplete_url.replace(base_url + '/', '');
 
@@ -182,7 +194,7 @@ export class HttpService {
         let links = []
         for ( var i in ar) {
             if (parseInt(i) !== ar.length - 1) {
-                last_link = last_link + '/' + ar[i];                
+                last_link = last_link + '/' + ar[i];
                 links.push({url: last_link, title: ar[i]});
             }
         }

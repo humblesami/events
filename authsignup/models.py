@@ -89,7 +89,7 @@ class AuthUser(models.Model):
         if user and user.id:
             name = ''
             try:
-                name = Profile.objects.get(pk=user.id).name
+                name = Profile.objects.get(pk=user.id).fullname()
             except:
                 if user.first_name:
                     name = user.first_name
