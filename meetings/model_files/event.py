@@ -50,9 +50,9 @@ class Event(CustomModel):
                 surveys = old_event.survey_set.filter(close_date__gte=today)
                 if surveys:
                     raise Exception('This meeting can not be archived because some surveys are associated with it let them complete then move this meeting to archive')
-                # sign_docs = old_event.signdocument_set.filter(close_date__gte=today)
-                # if sign_docs:
-                #     raise Exception('This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive')
+                sign_docs = old_event.signaturedoc_set.filter(close_date__gte=today)
+                if sign_docs:
+                    raise Exception('This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive')
             for obj in old_event.attendees.all():
                 old_attendee_ids.append(obj.id)
         super(Event, self).save(*args, **kwargs)
