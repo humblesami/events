@@ -316,6 +316,9 @@ h5, .h5 {
     line-height: 1;
     margin-left: .2rem;
 }
+.table > tbody > tr{
+    border: 1px solid #dee2e6
+}
 @media screen and (max-width: 390px){
     .roster-full{
         top: 0px;

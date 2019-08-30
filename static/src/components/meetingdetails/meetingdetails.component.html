@@ -109,7 +109,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
                         <div *ngIf="meeting_object.conference_bridge_number" class="col-md-6">
                             <div class="meet-elements">
-                                Conference Bridge No
+                                Conference Bridge Number
                             </div>
                             <label class="meet-elementsInfo">
                                 {{meeting_object.conference_bridge_number}}
@@ -186,32 +186,30 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="table-responsive">
-                        <table class="table table-bordered boardsheet-table">
-                            <thead class="thead-light">
-                            <tr>
-                                <th>Title</th>
-                                <th>Lead</th>
-                                <th>Duration</th>
-                                <th>Attachment</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="cursor:pointer" routerLink="/topic/{{topic.id}}" *ngFor="let topic of meeting_object.topics">
-                                    <td>{{topic.name}}</td>
-                                    <td>{{topic.lead}}</td>
-                                    <td >{{topic.duration}}</td>
-                                    <td>
-                                        <div class="talbe-docs-wrapper">
-                                            <div *ngIf="topic.docs && topic.docs.length && topic.docs.length > 0">
-                                                <i class="fa fa-file"></i>
-                                            </div>
+                    <table class="table boardsheet-table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Title</th>
+                            <th>Lead</th>
+                            <th>Duration</th>
+                            <th>Attachment</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="cursor:pointer" routerLink="/topic/{{topic.id}}" *ngFor="let topic of meeting_object.topics">
+                                <td>{{topic.name}}</td>
+                                <td>{{topic.lead}}</td>
+                                <td >{{topic.duration}}</td>
+                                <td>
+                                    <div class="talbe-docs-wrapper">
+                                        <div *ngIf="topic.docs && topic.docs.length && topic.docs.length > 0">
+                                            <i class="fa fa-file"></i>
                                         </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
