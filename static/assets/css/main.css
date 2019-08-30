@@ -2699,7 +2699,7 @@ ul.dropdown-menu.scrollable-menu {
 }
 .popup.messenger .messenger-container {
 	height: calc(100vh - 130px);
-	border-radius: 0.5rem;
+	/* border-radius: 0.5rem; */
 	overflow: hidden;
 }
 .popup.messenger .messenger-container .chat-full-height {
