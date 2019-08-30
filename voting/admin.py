@@ -29,7 +29,6 @@ class VotingDocAdmin(FileAdmin):
 class VotingDocInline(FileInlineAdmin):
     model = VotingDocument
     autocomplete_fields = ['voting']
-    extra = 0
 
 class VotingForm(forms.ModelForm):
     class Meta:

@@ -9,7 +9,9 @@ class FileAdmin(BaseAdmin):
 
 
 class FileInlineAdmin(BaseInlineAdmin):
+    extra = 0
     exclude = ('created_at', 'created_by', 'updated_at', 'updated_by', 'file_type', 'content', 'pdf_doc', 'upload_status', 'html')
+    template = 'admin/stacked.html'
 
 
 admin.site.register(File, FileAdmin)

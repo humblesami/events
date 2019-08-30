@@ -116,6 +116,7 @@ TEMPLATES = [
             os.path.join(PROJECT_ROOT, '..', 'emailthread/templates'),
             os.path.join(PROJECT_ROOT, '..', 'authsignup/templates'),
             os.path.join(PROJECT_ROOT, '..', 'temp/templates'),
+            os.path.join(PROJECT_ROOT, '..', 'documents/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

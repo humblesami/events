@@ -22,7 +22,6 @@ class MeetingDocumentAdmin(FileAdmin):
 
 class MeetingDocInline(FileInlineAdmin):
     model = MeetingDocument
-    extra = 0
 
 
 class NewsDocAdmin(FileAdmin):
@@ -31,12 +30,10 @@ class NewsDocAdmin(FileAdmin):
 
 class NewsDocumentInline(FileInlineAdmin):
     model = NewsDocument
-    extra = 0
 
 
 class TopicDocInline(FileInlineAdmin):
     model = AgendaDocument
-    extra = 0
 
 
 class TopicInline(BaseInlineAdmin):
