@@ -231,6 +231,8 @@
 	/* margin: auto 10px auto 0;
 	position: relative;
 	max-width: 440px; */
+	display: flex;
+    flex-direction: column;
 }
 .messenger-container .msg-box-wrapper {
 	margin: auto 10px auto 0;
@@ -722,13 +724,22 @@ button.check-time-btn {
 .attachment_container {
     display: flex;
     flex-wrap:wrap;
-}
-
+	}
 .attachment_container .download {
     border: 1px solid #dadada;
-    border-radius: .5rem;
+    border-radius: .3rem;
     overflow: hidden;
     display: flex;
-    margin: 0 3px;
-}
-.send-files-wrap{}
+    margin: 3px;
+    height: 30px;
+    align-items: center;
+    padding-right: 15px;
+	}
+.attachment_container .download i{
+	background: #638fc9;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 .5rem;
+    margin-right: .3rem;
+    color: #ffffff;
+	}
