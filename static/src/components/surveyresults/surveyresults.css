@@ -8,7 +8,45 @@
 	font-size:16px;
 	line-height:19px;
 }
+
 .hideoverflow{
 	height:250px;
     overflow: auto;
+}
+
+.card .card-header{
+	background-color: #4B74B5;
+	color: #ffffff;
+	border-radius:0px;
+}
+
+.card-header.collapsed .fa:before {  
+content: "\f067";
+}
+
+.card-header .fa:before {
+content: "\f068";
+}
+
+.readmore{
+	color: #4B74B5 !important;
+	font-weight: bold
+}
+.surveyDetailsquestions label{
+	word-break: break-all;
+}
+
+@media screen and (min-width:992px){
+	.rounded-circle{
+		max-width: 70px;
+	}
+}
+@media screen and (max-width:380px){
+	.rounded-circle{
+		max-width: 135%;
+	}
+	.surveyDetailsquestions label{
+		font-size: 0.9rem;
+		font-weight: bold;
+	}
 }

@@ -21,6 +21,11 @@ export class SurveyresultsComponent implements OnInit {
         this.socketService = this.ss;
     }
 
+    show_answer_details(detail){
+        window['bootbox'].alert(detail);
+        $('.modal-dialog').addClass('modal-lg');
+    }
+
     ngOnInit() {
         const obj_this = this;
         const input_data = {
