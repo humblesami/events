@@ -1,8 +1,4 @@
 ﻿<div class=" breadcrumbSection">
-    <div class="edit-buttons" *ngIf="folder">
-        <a class="btn btn-primary" routerLink="/edit/resources/folder/{{folder.id}}/change">Edit</a>
-        <a class="btn btn-danger" routerLink="/edit/resources/folder/{{folder.id}}/delete">Delete</a>
-    </div> 
     <ul class="breadcrumb" *ngIf="folder && folder.parents">
         <li class="breadcrumb-item">                                                
             <a routerLink="/resources">
@@ -15,7 +11,11 @@
             </a>
         </li>
         <li class="breadcrumb-item active">{{folder.name}}</li>
-    </ul>
+	</ul>
+	<div class="edit-buttons" *ngIf="folder">
+		<a class="btn btn-primary" routerLink="/edit/resources/folder/{{folder.id}}/change">Edit</a>
+		<a class="btn btn-danger" routerLink="/edit/resources/folder/{{folder.id}}/delete">Delete</a>
+	</div>
 </div>
 
 <div class="router-outlet">        
