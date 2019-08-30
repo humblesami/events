@@ -726,7 +726,7 @@ button.check-time-btn {
 .attachment_container .download {
     border: 1px solid #dadada;
     border-radius: .5rem;
-    width: 10rem;
     overflow: hidden;
     display: flex;
+    margin: 0 3px;
 }
