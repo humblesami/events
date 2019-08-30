@@ -50,11 +50,12 @@ class File(CustomModel):
             if self.pk is None:
                 create = True
             super(File, self).save(*args, **kwargs)
-            if create and self.file_type != 'message':                
-                if self.file_type != 'esign':
-                    ws_methods.document_thread(self)
-                else:
-                    self.process_doc()                
+            if create and self.file_type != 'message':
+                self.process_doc()
+                # if self.file_type != 'esign':
+                #     ws_methods.document_thread(self)
+                # else:
+                #     self.process_doc()
         except:
             res = ws_methods.get_error_message()
             a = 1
@@ -191,8 +192,6 @@ class File(CustomModel):
             'mention_list': mention_list
         }
         return {'data': doc}
-
-
 
     @classmethod
     def get_binary(cls, request, params):

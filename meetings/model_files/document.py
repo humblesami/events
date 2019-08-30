@@ -14,6 +14,16 @@ class MeetingDocument(File):
             self.file_type = 'meeting'
         super(MeetingDocument, self).save(*args, **kwargs)
 
+    @property
+    def breadcrumb(self):
+        event_obj = self.meeting
+        data = []
+        if event_obj:
+            if event_obj.exectime != 'ongoing':
+                data.append({'title': event_obj.exectime, 'link': '/meetings/' + event_obj.exectime})
+            data.append({'title': event_obj.name, 'link': '/meeting/' + str(event_obj.id)})
+            return data
+
     def notification_text(self):
         return ' document ' + self.name + ' in ' + self.meeting.notification_text()
 

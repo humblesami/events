@@ -32,7 +32,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
                                 <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
                             </div>
-                            <div *ngIf="meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft'" class="mb-2">
+                            <div *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')" class="mb-2">
                                 <button class="check-status meet-elements position-relative"
                                     (click)="on_publish_changed($event)"
                                     [ngClass]="meeting_status">
@@ -329,7 +329,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of meeting_object.meeting_docs">
-                    <a routerLink="/meeting/doc/{{doc.id}}" class="DocumentWrapper gray-bge" *ngIf="doc && doc.uplaod_status">
+                    <a routerLink="/meeting/doc/{{doc.id}}" class="DocumentWrapper gray-bge">
 						<div class="DocIcon">
 							<span class="rounded-circle">
 								<i class="icon-doc-file"></i>
@@ -339,7 +339,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             {{doc.name}}
                         </div>
                     </a>
-                    <a class="DocumentWrapper gray-bge" *ngIf="doc && !doc.uplaod_status">
+                    <!-- <a class="DocumentWrapper gray-bge" *ngIf="doc && !doc.upload_status">
 						<span class="doc-uplaod-status"><i class="fas fa-exclamation-circle"></i></span>
                         <div class="DocIcon">
                             <span class="rounded-circle">
@@ -349,7 +349,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                         <div class="DocInfoVertical text-truncate">
                             {{doc.name}}
                         </div>
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>

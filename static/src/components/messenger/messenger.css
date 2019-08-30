@@ -186,8 +186,8 @@
 	margin-top: 7px;
 	}
 .messenger-container .msg_time_send {
-	text-align: right;
-	padding-right: 11px;
+	/* text-align: right;
+	padding-right: 11px; */
 	}
 .messenger-container .msg_head {
 	position: relative;
@@ -231,8 +231,6 @@
 	/* margin: auto 10px auto 0;
 	position: relative;
 	max-width: 440px; */
-	display: flex;
-    flex-direction: column;
 }
 .messenger-container .msg-box-wrapper {
 	margin: auto 10px auto 0;
@@ -242,18 +240,11 @@
 .messenger-container .msg-send-box-text, .messenger-container .msg-box-text {	
     border-radius: 0.5rem;
     padding: 0.5rem;
-    float:right;
-	font-size: 12px;
-	line-height: 16px;
-	word-break: break-word!important;
-	overflow-wrap: break-word!important;
-	-webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.10), 0 2px 4px 0 rgba(0,0,0,.05)!important;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.10), 0 2px 4px 0 rgba(0,0,0,.05)!important;
+    font-size: 12px;
     background-color: #2699FB;
-	color: #ffffff;
-    text-align: right;
-    width: fit-content;
+    color: #ffffff;
 }
+
 .file_name {
 	overflow: hidden;
     text-overflow: ellipsis;
@@ -549,10 +540,16 @@
 .fa-download {
 	color: blue;
 	padding-right: 5px;
-	}
+    }
+.attachment_container
+{
+    display: flex;
+    margin-top:5px;    
+}
+
 .attachment_container a.download {
 	/* padding-top: 8px;
-	padding-left: 8px; */
+    padding-left: 8px; */    
 }
 .popup-closer {
 	position: absolute;
@@ -720,26 +717,14 @@ button.check-time-btn {
 	width: 100%;
 	height: 100%;
 	}
-
-.attachment_container {
-    display: flex;
-    flex-wrap:wrap;
-	}
-.attachment_container .download {
-    border: 1px solid #dadada;
-    border-radius: .3rem;
-    overflow: hidden;
-    display: flex;
-    margin: 3px;
-    height: 30px;
-    align-items: center;
-    padding-right: 15px;
-	}
-.attachment_container .download i{
-	background: #638fc9;
-    height: 30px;
-    line-height: 30px;
-    padding: 0 .5rem;
-    margin-right: .3rem;
-    color: #ffffff;
-	}
+.messenger-body .me{
+    text-align: right;
+}
+.messenger-container .me .msg-send-box-text{
+    background: #ddd;
+    color: black;
+}
+.me .attachment_container
+{
+    justify-content: flex-end;
+}

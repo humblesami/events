@@ -34,6 +34,18 @@ class Event(CustomModel):
     conference_bridge_number = models.CharField('Conference Bridge No.', max_length=200, null=True, blank=True)
     video_call_link = models.CharField(max_length=200, null=True, blank=True)
 
+    def has_active_action(self):
+        today = datetime.datetime.now()
+        votings = self.voting_set.filter(open_date__lte=today, close_date__gte=today)
+        if votings:
+            return True
+        surveys = self.survey_set.filter(open_date__lte=today, close_date__gte=today)
+        if surveys:
+            return True
+        sign_docs = self.signaturedoc_set.filter(open_date__lte=today, close_date__gte=today)
+        if sign_docs:
+            return True
+
     def __str__(self):
         return self.name
 
@@ -42,17 +54,10 @@ class Event(CustomModel):
         old_attendee_ids = []
         if self.pk:
             old_event = Event.objects.get(pk=self.pk)
-            today = datetime.datetime.now()
-            if self.publish != old_event.publish or self.archived != old_event.archived:
-                votings = old_event.voting_set.filter(close_date__gte=today)
-                if votings:
-                    raise Exception('This meeting can not be archived because some resolutions are associated with it let them complete then move this meeting to archive')
-                surveys = old_event.survey_set.filter(close_date__gte=today)
-                if surveys:
-                    raise Exception('This meeting can not be archived because some surveys are associated with it let them complete then move this meeting to archive')
-                sign_docs = old_event.signaturedoc_set.filter(close_date__gte=today)
-                if sign_docs:
-                    raise Exception('This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive')
+            if self.archived != old_event.archived:
+                if self.has_active_action():
+                    message = 'This meeting can not be archived because some actions are associated with it. let them complete.'
+                    raise Exception(message)
             for obj in old_event.attendees.all():
                 old_attendee_ids.append(obj.id)
         super(Event, self).save(*args, **kwargs)
@@ -364,8 +369,8 @@ class Event(CustomModel):
         meeting_object['surveys'] = surveys
         meeting_object['votings'] = votings
         meeting_object['attendees'] = attendees
+        meeting_object['has_active_action'] = meeting_object_orm.has_active_action()
         data = {"meeting": meeting_object, "next": 0, "prev": 0}
-
         return {'data': data}
 
     @classmethod
@@ -484,16 +489,9 @@ class Event(CustomModel):
             meeting_obj = meeting_obj[0]
             if not meeting_obj.attendance_marked:
                 return 'Please mark attendance before moving this meeting to Archive'
-            today = datetime.datetime.now()
-            votings = meeting_obj.voting_set.filter(close_date__gte=today)
-            if votings:
-                return 'This meeting can not be archived because some resolutions are associated with it let them complete then move this meeting to archive'
-            surveys = meeting_obj.survey_set.filter(close_date__gte=today)
-            if surveys:
-                return 'This meeting can not be archived because some surveys are associated with it let them complete then move this meeting to archive'
-            sign_docs = meeting_obj.signdocument_set.filter(close_date__gte=today)
-            if sign_docs:
-                return 'This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive'
+            if meeting_obj.has_active_action():
+                message = 'This meeting can not be archived because some actions are associated with it. let them complete then move this meeting to archive'
+                return message
             meeting_obj.archived = True
             meeting_obj.save()
             return 'done'

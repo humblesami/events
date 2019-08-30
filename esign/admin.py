@@ -16,7 +16,7 @@ class SignDocumentForm(forms.ModelForm):
             fields = ()
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['meeting'].queryset = Event.objects.filter(publish=True, archived=False)
+        self.fields['meeting'].queryset = Event.objects.filter(archived=False)
 
 
 class SignDocAdmin(admin.ModelAdmin):
