@@ -70,7 +70,7 @@ title="Results"></app-breadcrumb>
                                                     <table class="table">
                                                         <tbody>
                                                             <tr *ngFor="let obj of question.chart_data">
-                                                                <td [ngStyle]="{'background-color': obj.color}"></td>
+                                                                <td [ngStyle]="{'background-color': obj.color}" style="width: 20px;height:20px;padding:0"></td>
                                                                 <td>{{obj.option_name}}</td>
                                                                 <td>{{obj.option_result || 0}}</td>
                                                                 <td>{{obj.option_perc || 0}}%</td>
