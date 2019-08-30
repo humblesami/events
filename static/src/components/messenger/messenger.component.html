@@ -160,7 +160,7 @@
                 <h6 *ngIf="active_chat_user && active_chat_user.messages.length >= message_limit && !active_chat_user.read" style="text-align:center; padding-top:90px">Scroll to top to get older messages</h6>
                 <div class="messenger-body" *ngFor="let msg of active_chat_user.messages">
                     <div *ngIf="msg.sender.id == user.id"
-                            class="d-flex align-items-end justify-content-end mb-4">
+                            class="d-flex justify-content-end">
                         <div class="msg_cotainer_send">
                             <div class="msg-send-box-wrapper">
                                 <div  *ngIf="msg.body" class="msg-send-box-text" [innerHTML]="msg.body"></div>
@@ -182,7 +182,7 @@
                     </div>
                     
                     <div *ngIf="msg.sender.id != user.id"
-                            class="d-flex align-items-end justify-content-start mb-4">
+                            class="">
                         <!-- <div class="img_cont_msg">
                             <img *ngIf="!msg.chat_group" src="{{socketService.server_url}}{{msg.sender.photo}}" class="rounded-circle user_img_msg" />
                             <span *ngIf="msg.chat_group" class="rounded-circle user_img_msg">{{msg.sender.name}}</span>
@@ -194,7 +194,7 @@
                                     <a *ngFor="let doc of msg.attachments" contenteditable="false"
                                     href="{{socketService.server_url}}{{doc.url}}"
                                     target="__blank"
-                                    class="download" style="display: flex;">
+                                    class="download">
                                         <span class="file_name">
                                             <i class="fa fa-download"></i>{{doc.name}}
                                         </span>
