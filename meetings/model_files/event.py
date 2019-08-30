@@ -50,9 +50,9 @@ class Event(CustomModel):
                 surveys = old_event.survey_set.filter(close_date__gte=today)
                 if surveys:
                     raise Exception('This meeting can not be archived because some surveys are associated with it let them complete then move this meeting to archive')
-                # sign_docs = old_event.signdocument_set.filter(close_date__gte=today)
-                # if sign_docs:
-                #     raise Exception('This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive')
+                sign_docs = old_event.signaturedoc_set.filter(close_date__gte=today)
+                if sign_docs:
+                    raise Exception('This meeting can not be archived because some eSignature documents are associated with it let them complete then move this meeting to archive')
             for obj in old_event.attendees.all():
                 old_attendee_ids.append(obj.id)
         super(Event, self).save(*args, **kwargs)
@@ -304,6 +304,11 @@ class Event(CustomModel):
         meeting_object['exectime'] = meeting_object_orm.exectime
         meeting_object['publish'] = meeting_object_orm.publish
         meeting_object['attendance_marked'] = meeting_object_orm.attendance_marked
+        meeting_object['pin'] = meeting_object_orm.pin
+        meeting_object['conference_bridge_number'] = meeting_object_orm.conference_bridge_number
+        meeting_object['video_call_link'] = meeting_object_orm.video_call_link
+        # meeting_object['pin'] = meeting_object_orm.pin
+        # meeting_object['pin'] = meeting_object_orm.pin
 
         attendance_status = cls.get_attendance_status(meeting_object_orm, user_id)
         meeting_object['attendee_status'] = attendance_status['state']

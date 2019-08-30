@@ -163,6 +163,10 @@ export class EsignDocDetailsComponent implements OnInit {
         });
 
         
+        var page_zoom = 1;
+        $(function(){
+            page_zoom = $('#scaleSelect').val();
+        });
         function loadData() {
             $('#loaderContainerajax').show();
             $(".o_loading").show();
@@ -182,6 +186,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                 },
                 onSuccess: function(data) {
+                    page_zoom = $('#scaleSelect').val();
                     if(obj_this.is_public && data == 'done')
                     {
                         $('#holder').hide();
@@ -291,7 +296,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 return !v.signed && v.my_record;
             });
             if (d.length > 0) {
-                $("#nxxt_sign").show();
+                // $("#nxxt_sign").show();
             }
         }
 
@@ -481,9 +486,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 var show_text = this.type.charAt(0).toUpperCase() + this.type.slice(1);
                 div.html(show_text + ":" + this.name);
                 div.attr('signtype', this.type);
-                var h, w;
-
-                var page_zoom = $('#scaleSelect').val();
+                var h, w;                
                 if(!page_zoom)
                 {
                     page_zoom = 1;
@@ -505,8 +508,8 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
                 // console.log(h, w, 1233);
                 
-                var top = this.top * page_zoom  + "%";
-                var left = this.left * page_zoom + "%";
+                var top = this.top * page_zoom;
+                var left = this.left * page_zoom;
 
                 div.css({
                     top: top,
@@ -622,8 +625,8 @@ export class EsignDocDetailsComponent implements OnInit {
                             scrollTop: $(this).parent().parent().scrollTop() + 133
                         }, 7)
                     }
-                    var percent_left = (positionX / canvas.width) * 100;
-                    var percent_top = (positionY / canvas.height) * 100;
+                    // var percent_left = (positionX / canvas.width) * 100;
+                    // var percent_top = (positionY / canvas.height) * 100;
                     // $('.sign-position').html('Sign Here - Positions:' + positionX + "X" + ($(this).position().top-$(this).parent().parent().scrollTop())+"-----"+thresh);
                 },
                 cursor: 'move'
@@ -633,17 +636,15 @@ export class EsignDocDetailsComponent implements OnInit {
             if (parseFloat(new_signature[0].style.top) - $(this).parent().position().top < 0) {
                 return;
             }
-            var left = parseFloat(new_signature[0].style.left) - $(this).offset().left + 65;
-            var top = parseFloat(new_signature[0].style.top) - $(this).parent().parent().position().top + $(this).parent().scrollTop();
-            var percent_left = (left / canvas.width) * 100;
-            var percent_top = (top / canvas.height) * 100;
+            var left = parseFloat(new_signature[0].style.left);
+            var top = parseFloat(new_signature[0].style.top) - $(this).parent().parent().position().top + $(this).parent().scrollTop();            
             new_signature.css({
                 position: 'absolute',
-                left: percent_left + "%",
-                top: percent_top + "%",
-                overflow: 'hidden'
+                left: left - 210,
+                top: top, // percent_top + "%",
+                // overflow: 'hidden'
             });
-            // console.log(percent_left, percent_top);
+            // console.log(new_signature[0] ,234);
             //new_signature.append('<i class="fa fa-pen  fa-lg  edit_sign" style="color:black;float:right;margin-right:10px;" aria-hidden="true"/>');
             if (new_signature.hasClass("text_psition")) {
                 new_signature.html('<input style="display:inline;width:90%" type="text" placeholder="Field Name"/>');
@@ -684,12 +685,11 @@ export class EsignDocDetailsComponent implements OnInit {
             drop: function(event, ui) {
                 var left = ui.position.left;
                 var top = ui.position.top;
-                var percent_left = (left / canvas.width) * 100;
-                var percent_top = (top / canvas.height) * 100;
                 $(ui.helper[0]).css({
-                    left: percent_left + "%",
-                    top: percent_top + "%"
+                    left: left,// percent_left + "%",
+                    top: top // percent_top + "%"
                 });
+                // console.log(ui.helper[0], 1233);
             },
             accept: ".new_sign",
             tolerance: "touch",
@@ -742,10 +742,15 @@ export class EsignDocDetailsComponent implements OnInit {
                 if (!snd_to_all) {
                     $.each(new_divs, function() {
                         var sign = $(this);
-                        var left = sign.position().left;
-                        var top = sign.position().top + sign.parent().scrollTop();
-                        var percent_left = parseFloat(sign[0].style.left) //(left/canvas.width)*100;
-                        var percent_top = parseFloat(sign[0].style.top) //(top/canvas.height)*100;
+                        var a = parseFloat(sign.position().left);
+                        // console.log(a, 133);
+                        var b =  parseFloat(page_zoom+"");
+                        var left = a / b;
+                        // console.log(left, 133);
+                        a = parseFloat(sign.position().top);
+                        // console.log(a, 133);
+                        var top = a / b + sign.parent().scrollTop();
+                        // console.log(a / b, 133);
                         var h = sign[0].style.height;
                         h = parseFloat(h);
                         var w = sign[0].style.width;
@@ -768,8 +773,8 @@ export class EsignDocDetailsComponent implements OnInit {
                             field_name: field_name,
                             email: email,
                             name: name,
-                            left: percent_left,
-                            top: percent_top,
+                            left: left,
+                            top: top,
                             page: pg,
                             height: h,
                             width: w,
@@ -1005,7 +1010,8 @@ export class EsignDocDetailsComponent implements OnInit {
                             }
                         }
                         on_sign_saved(signature_dom, data);
-                        if(data.status.signature_status != 'Pending')
+                        // console.log(data.status.signature_status)
+                        if($('.sign_container[signed="false"]').length == 0)                        
                         {
                             $("#nxxt_sign").hide(); 
                         }

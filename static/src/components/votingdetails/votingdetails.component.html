@@ -95,7 +95,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         </div>
                         <label class="meet-elementsInfo text-overflow-visible" [innerHtml]="voting_object.description"></label>
                     </div>
-                    <div *ngIf="voting_object.signature_required" class="col-md-6 mb-2">
+                    <div *ngIf="voting_object.signature_required" class="col-md-2 mb-2">
                         <div class="border">
                             <img class="strt_sign_voting " style="width: 100%;" *ngIf="voting_object.signature_data" src="data:image/png;base64,{{voting_object.signature_data}}">
                         </div>
@@ -115,7 +115,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         <table class="table">
                             <tbody>
                                 <tr *ngFor="let obj of voting_object.chart_data">
-                                    <td [ngStyle]="{'background-color': obj.color}"></td>
+                                    <td [ngStyle]="{'background-color': obj.color}" style="width: 20px;height:20px;padding:0"></td>
                                     <td>{{obj.option_name}}</td>
                                     <td>{{obj.option_result || 0}}</td>
                                     <td>{{obj.option_perc || 0}}%</td>

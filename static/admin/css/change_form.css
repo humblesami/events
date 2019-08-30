@@ -48,6 +48,24 @@ input[type=checkbox]:checked:after {
 	color: #4b74b5;
 }
 
+.field-attachment label{
+    float: none !important;
+}
+
+input[type="file"]{
+    border: 2px solid #4b74b5;
+    margin-left:10px;
+}
+
+::-webkit-file-upload-button {
+    color: #fff;
+    /* border-radius: 10px; */
+    background: #4B74B5;
+    padding: 10px;
+    border: none;
+    
+}
+
 .choice label{
     max-width: 60px;
     text-overflow: ellipsis;
