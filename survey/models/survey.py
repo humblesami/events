@@ -211,6 +211,14 @@ class Survey(Actions):
                 })
         return pending_survey
 
+    def my_status(self,user_id):
+        user_response = self.questions.filter(answers__isnull=False, answers__response__user__id=user_id)
+        if len(user_response) > 0:
+            status = 'done'
+        else:
+            status = 'pending'
+        return status
+
     @classmethod
     def get_results(cls, request, params):
         survey_id = params['survey_id']

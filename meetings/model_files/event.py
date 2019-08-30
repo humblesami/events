@@ -325,14 +325,7 @@ class Event(CustomModel):
                 doc['created_at'] = str(doc['created_at'])
             topics.append(topic)
         meeting_docs = list(meeting_object_orm.meetingdocument_set.values())
-        votings = []
-        try:
-            votings = list(meeting_object_orm.actions.all()[0].voting.values())
-        except:
-            pass
-        for voting in votings:
-            voting['open_date'] = str(voting['open_date'])
-            voting['close_date'] = str(voting['close_date'])
+
         """attendee needs fix"""
         attendees = []
         meeting_attendees = ws_methods.get_user_info(meeting_object_orm.attendees.filter(groups__name__in=['Admin','Staff','Director']).distinct())
@@ -357,25 +350,18 @@ class Event(CustomModel):
             doc['name'] = sign_doc.name
             esign_docs.append(doc)
         meeting_object['sign_docs'] = esign_docs
-        surveys = []
-        try:
-            surveys = meeting_object_orm.actions.all()[0].survey_set.all()
-            surveys = ws_methods.queryset_to_list(surveys, fields=['id', 'name'],
-            related = {
-                'responses': {'fields': ['id', 'user']}
-            })
-        except:
-            pass
+        votings = list(meeting_object_orm.voting_set.all().values('id', 'name', 'open_date', 'close_date', 'description'))
+        for voting in votings:
+            voting['open_date'] = str(voting['open_date'])
+            voting['close_date'] = str(voting['close_date'])
+
+        surveys_qs = meeting_object_orm.survey_set.all()
+        surveys = list(surveys_qs.values('id', 'name', 'open_date', 'close_date'))
+        i = 0
+        for obj in surveys_qs:
+            surveys[i]['my_status'] = obj.my_status(user_id)
+            i = i + 1
         meeting_object['surveys'] = surveys
-        for survey in surveys:
-            if not survey['responses']:
-                survey['my_status'] = 'pending'
-            for response in survey['responses']:
-                if response['user'] == user_id:
-                    survey['my_status'] = 'done'
-                else:
-                    survey['my_status'] = 'pending'
-            del survey['responses']
         meeting_object['votings'] = votings
         meeting_object['attendees'] = attendees
         data = {"meeting": meeting_object, "next": 0, "prev": 0}
