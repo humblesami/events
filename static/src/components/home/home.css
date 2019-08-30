@@ -227,8 +227,8 @@ btn.active{
 }
 
 .SignatureText{
-font-weight:500;
-
+	display:flex;
+	font-weight:500;
 }
 .pending-status{
       border-radius: 0.2rem;
