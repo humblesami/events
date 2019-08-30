@@ -547,3 +547,6 @@
 .file-preview-initial.sortable-chosen {
     background-color: #d9edf7;
 }
+.file-drop-zone-title{
+    padding: 10px;
+}
