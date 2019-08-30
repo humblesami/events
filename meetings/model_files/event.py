@@ -304,6 +304,11 @@ class Event(CustomModel):
         meeting_object['exectime'] = meeting_object_orm.exectime
         meeting_object['publish'] = meeting_object_orm.publish
         meeting_object['attendance_marked'] = meeting_object_orm.attendance_marked
+        meeting_object['pin'] = meeting_object_orm.pin
+        meeting_object['conference_bridge_number'] = meeting_object_orm.conference_bridge_number
+        meeting_object['video_call_link'] = meeting_object_orm.video_call_link
+        # meeting_object['pin'] = meeting_object_orm.pin
+        # meeting_object['pin'] = meeting_object_orm.pin
 
         attendance_status = cls.get_attendance_status(meeting_object_orm, user_id)
         meeting_object['attendee_status'] = attendance_status['state']

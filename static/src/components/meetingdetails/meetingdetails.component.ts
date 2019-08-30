@@ -137,7 +137,7 @@ export class MeetingDetailsComponent implements OnInit {
         };
 
         let on_data = function(result) {
-
+            console.log(result,1122);
             try {
                 if(result.message)
                 {

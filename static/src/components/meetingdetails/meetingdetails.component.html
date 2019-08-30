@@ -98,7 +98,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </label>
                         </div>
 
-                        <div class="col-md-6" *ngIf="meeting_object.video_call_link">
+                        <div  *ngIf="meeting_object.video_call_link" class="col-md-6">
                             <div class="meet-elements">
                                 Video Call Link
                             </div>
@@ -107,32 +107,21 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </label>
                         </div>
 
-                        <div class="col-md-6" *ngIf="meeting_object.conference_bridge_number">
+                        <div *ngIf="meeting_object.conference_bridge_number" class="col-md-6">
                             <div class="meet-elements">
-                                Conference Bridge No.
+                                Conference Bridge No
                             </div>
                             <label class="meet-elementsInfo">
                                 {{meeting_object.conference_bridge_number}}
                             </label>
                         </div>
 
-                        <div class="col-md-6" *ngIf="meeting_object.pin">
+                        <div *ngIf="meeting_object.pin" class="col-md-6">
                             <div class="meet-elements">
-                                Meeting PIN
+                                Meeting Pin
                             </div>
                             <label class="meet-elementsInfo">
                                 {{meeting_object.pin}}
-                            </label>
-                        </div>
-
-
-
-                        <div *ngIf="meeting_object.location" class="col-md-6">
-                            <div class="meet-elements">
-                                Location
-                            </div>
-                            <label class="meet-elementsInfo">
-                                {{meeting_object.location}}
                             </label>
                         </div>
 
@@ -144,8 +133,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 {{meeting_object.city}}
                             </label>
                         </div>
-
-
 
                         <div *ngIf="meeting_object.state" class="col-md-6">
                             <div class="meet-elements">
@@ -171,6 +158,14 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </div>
                             <label class="meet-elementsInfo">
                                 {{meeting_object.country}}
+                            </label>
+                        </div>
+                        <div *ngIf="meeting_object.location" class="col-md-6">
+                            <div class="meet-elements">
+                                Location
+                            </div>
+                            <label class="meet-elementsInfo">
+                                {{meeting_object.location}}
                             </label>
                         </div>
 
