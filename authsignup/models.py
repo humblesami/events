@@ -186,7 +186,7 @@ class AuthUser(models.Model):
     def set_password(cls, request, params):
         password = params['password']
         token = params['token']
-        user_token = PostUserToken.validate_token(token)
+        user_token = PostUserToken.validate_token(token,1)
         if user_token:
             user = user_token.user
             user.set_password(password)
