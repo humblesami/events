@@ -95,7 +95,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         </div>
                         <label class="meet-elementsInfo text-overflow-visible" [innerHtml]="voting_object.description"></label>
                     </div>
-                    <div *ngIf="voting_object.signature_required" class="col-md-6 mb-2">
+                    <div *ngIf="voting_object.signature_required" class="col-md-2 mb-2">
                         <div class="border">
                             <img class="strt_sign_voting " style="width: 100%;" *ngIf="voting_object.signature_data" src="data:image/png;base64,{{voting_object.signature_data}}">
                         </div>
