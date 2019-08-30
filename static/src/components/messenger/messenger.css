@@ -240,6 +240,7 @@
 .messenger-container .msg-send-box-text, .messenger-container .msg-box-text {	
     border-radius: 0.5rem;
     padding: 0.5rem;
+    float:right;
 	font-size: 12px;
 	line-height: 16px;
 	word-break: break-word!important;
@@ -730,3 +731,4 @@ button.check-time-btn {
     display: flex;
     margin: 0 3px;
 }
+.send-files-wrap{}

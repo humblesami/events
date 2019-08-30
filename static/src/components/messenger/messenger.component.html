@@ -165,7 +165,7 @@
                             <div class="msg-send-box-wrapper">
                                 <div  *ngIf="msg.body" class="msg-send-box-text" [innerHTML]="msg.body"></div>
                                 <div class="attachment_container">                                    
-                                    <div *ngFor="let doc of msg.attachments">
+                                    <div class="send-files-wrap" *ngFor="let doc of msg.attachments">
                                         <a *ngIf="doc.url" contenteditable="false"
                                         href="{{socketService.server_url}}{{doc.url}}"
                                         target="__blank"
