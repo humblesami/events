@@ -1,7 +1,11 @@
 $(function(){
     var multiSelect = false;
+    var active_picker = undefined;
+    var active_cloud_picker = undefined;
     function is_multi_select_enabled(e){
-        multiSelect = $(e.target).closest('.cloud_pickers_container').attr('multiple');
+        active_picker = $(e.target).closest('.picker');
+        active_cloud_picker = active_picker.closest('.cloud_pickers_container');
+        multiSelect = active_cloud_picker.attr('multiple');
         if(multiSelect)
         {
             multiSelect = true;
@@ -161,7 +165,7 @@ $(function(){
                 {
                     return;
                 }
-                on_files_selected(docs,'gdrive');
+                on_files_selected(docs, 'google');
             }
         }
         $('body').on('click', '.google_drive_picker', open_cloud_picker);
@@ -189,26 +193,28 @@ $(function(){
         $('body').on('click', '.one_drive_picker', open_cloud_picker);
     }
 
-    var selected_files = [];
     function on_files_selected(current_files, source){
-        console.log(current_files, 1990, source);
+        var selected_files = active_picker.find('input.url');
+        console.log(selected_files, 18);
+        var more_files = [];
         var found = false;
         for(var i in current_files)
         {
             for(var j in selected_files)
             {
-                if(selected_files[j].id == current_files[i].id && selected_files[j].source == source)
+                if(selected_files[j].val() == current_files[i].id)
                 {
                     found = true;
                 }                    
             }
             if(!found)
             {
-                current_files[i].source = source;
-                selected_files.push(current_files[i]);
+                more_files.push(current_files[i]);
+                active_picker.find('.selected_files').append('<input class="url" value="'+current_files[i].url+'">');
+                active_cloud_picker.find('.upload_files').append('<input name="url" value="'+current_files[i].url+'">');
             }
         }
-        console.log(selected_files, 88333);
+        console.log(more_files, 88333);
     }
     
     init_google_picker();

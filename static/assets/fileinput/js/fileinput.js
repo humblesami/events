@@ -1405,16 +1405,22 @@
                 }
             var could_drives = `
             <div`+multiple+` class="cloud_pickers_container d-flex justify-content-center pb-1">
-                <div class="google_drive_picker">
-                    <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" alt="Google Drive" title="Google Drive">
+                <div class="google_drive_picker picker border">
+                    <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" 
+                    alt="Google Drive" title="Google Drive">
+                    <div class="selected_files"></div>
                 </div>
-                <div class="one_drive_picker">
-                    <img class="img-fluid" src="/static/assets/images/cloud/onedrive.png" alt="OneDrive" title="OneDrive">
+                <div class="one_drive_picker picker border">
+                    <img class="img-fluid" src="/static/assets/images/cloud/onedrive.png" 
+                    alt="OneDrive" title="OneDrive">
+                    <div class="selected_files"></div>
                 </div>
-                <div class="drop_box_picker">
-                    <img class="img-fluid" src="/static/assets/images/cloud/dropbox.png" alt="Dropbox" title="Dropbox">
+                <div class="drop_box_picker picker border">
+                    <img class="img-fluid" src="/static/assets/images/cloud/dropbox.png" 
+                    alt="Dropbox" title="Dropbox">
+                    <div class="selected_files"></div>
                 </div>
-                <div class="selected_files">
+                <div class="upload_files">
                 
                 </div>
             </div>
