@@ -1394,8 +1394,17 @@
                 '    <div class="kv-fileinput-error"></div>\n' +
                 '    </div>\n' +
                 '</div>';
+                var multiple = self.filePlural;
+                if(multiple)
+                {
+                    multiple = ' multiple="1"'
+                }
+                else
+                {
+                    multiple = '';
+                }
             var could_drives = `
-            <div class="cloud_pickers_container d-flex justify-content-center pb-1">
+            <div`+multiple+` class="cloud_pickers_container d-flex justify-content-center pb-1">
                 <div class="google_drive_picker">
                     <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" alt="Google Drive" title="Google Drive">
                 </div>

@@ -92,15 +92,14 @@ $(function(){
         var access_token = undefined;
         function open_cloud_picker(ev){
             is_multi_select_enabled(ev);
-            if(!window['google_picker'])
-            {
-                console.log('Google Picker API not loaded yet');
-                return;
-            }
-            else
+            if(gapi)
             {
                 gapi.load('auth', { 'callback': onAuthApiLoad });
                 gapi.load('picker');
+            }
+            else
+            {
+                console.log('Google api not loaded yet');
             }
         }
     
@@ -115,7 +114,6 @@ $(function(){
         function handleAuthResult(authResult) {
             if (access_token || (authResult && !authResult.error)) {
                 access_token = authResult.access_token;
-                window['gdrive_accessed'] = true;
                 createPicker();
             }
             else
@@ -143,16 +141,16 @@ $(function(){
             allowed_types = allowed_types.join(',');
             var view = new google.picker.View(google.picker.ViewId.DOCS);
             view.setMimeTypes(allowed_types);
-            var gdrive_picker = new google.picker.PickerBuilder()
+            var picker_builder = new google.picker.PickerBuilder()
                 .setAppId(appId)
                 .setOAuthToken(access_token)
                 .addView(view)
                 .setCallback(pickerCallback);
             if(multiSelect)
             {
-                gdrive_picker.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+                picker_builder.enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
             }
-            gdrive_picker.build();
+            var gdrive_picker = picker_builder.build();
             gdrive_picker.setVisible(true);        
         }
     
@@ -194,6 +192,7 @@ $(function(){
     var selected_files = [];
     function on_files_selected(current_files, source){
         console.log(current_files, 1990, source);
+        var found = false;
         for(var i in current_files)
         {
             for(var j in selected_files)
