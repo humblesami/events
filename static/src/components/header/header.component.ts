@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
         'voting.VotingDocument' : 'voting/doc/',
         'meetings.MeetingDocument': '/meeting/doc/',
         'resources.ResourceDocument': '/resource/doc/',
-        'meetings.SignDocument': '/signdoc/',
+        'esign.SignatureDoc': '/signdoc/',
         'meetings.AgendaDocument': '/topic/doc/',        
     };
     

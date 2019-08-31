@@ -95,7 +95,7 @@ export class EsignDocDetailsComponent implements OnInit {
         var obj_this = this;
         var
             canvas,
-            pdf_binary,
+            pdf_url,
             users,
             doc_data,
             send_to_all,
@@ -168,9 +168,8 @@ export class EsignDocDetailsComponent implements OnInit {
             page_zoom = $('#scaleSelect').val();
         });
         function loadData() {
-            $('#loaderContainerajax').show();
-            $(".o_loading").show();
             console.log('Loading doc data', Date());
+            window['functions'].showLoader('esign-doc');
             let url = '';
             ajax_options = {
                 data: {
@@ -210,10 +209,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     obj_this.all_users_list = obj_this.users_list = users = data.users;
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
-                    pdf_binary = data.pdf_binary;
-                    //setTimeout(function(){ showPDF(pdf_binary); }, 3000);
+                    pdf_url = window['site_config'].server_base_url + data.file_url;
                     console.log('Starting render doc data', Date());
-                    renderPDF(pdf_binary);
+                    renderPDF(pdf_url);
 
                     obj_this.meetings = data.meetings;
                     // console.log(meeting_id, $('#dropdown_meeting').length, 573);
@@ -304,20 +302,12 @@ export class EsignDocDetailsComponent implements OnInit {
         $('#scaleSelect')[0].selectedIndex = 4;
         //$('.modal-footer:last').hide();
 
-        function renderPDF(s) {
-            $('#loaderContainerajax').show();
-            $(".o_loading").show();
-
-
-            var pdfData = atob(s);
-            //     PDFJS.workerSrc = '/e_sign/static/js/pdf.worker.js';
+        function renderPDF(pdf_url) {
             pdfDoc = null;
             scale = 1.5;
             canvas = document.getElementById('the-canvas')
             ctx = canvas.getContext('2d');
-            window["PDFJS"].getDocument({
-                data: pdfData
-            }).then(function getPdf(_pdfDoc) {
+            window["PDFJS"].getDocument(pdf_url).then(function getPdf(_pdfDoc) {
                 console.log('Got doc to render', Date());
                 pdfDoc = _pdfDoc;
                 if (!pageNum) {
@@ -370,8 +360,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         "doc_data": doc_data,                    
                     });
                 }, 200);
-                $('#loaderContainerajax').hide();
-                $(".o_loading").hide();
+                window['functions'].hideLoader('esign-doc');
             });
             // Update page counters            
         }
@@ -679,6 +668,30 @@ export class EsignDocDetailsComponent implements OnInit {
             else{                
                 $('#select_user_modal').modal('show');
             }
+        }
+
+        function on_dropped(rect){
+            
+        }
+
+        function get_db_position(el){
+            var db_rect = {
+                top:el.offSet().top / page_zoom, 
+                left:el.offSet().left / page_zoom, 
+                width:el.width() * page_zoom, 
+                height:el.height() * page_zoom, 
+            }
+            return db_rect;
+        }
+
+        function set_position_on_doc(rect, el){
+            var zoomed_rect = {
+                top:rect.top * page_zoom, 
+                left:rect.left * page_zoom, 
+                width:rect.width * page_zoom, 
+                height:rect.height * page_zoom, 
+            }
+            el.css(zoomed_rect);
         }
 
         $("#page_container1").droppable({

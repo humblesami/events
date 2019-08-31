@@ -586,7 +586,6 @@ search_apps = {
             
             'MeetingDocument': ['name'],
             'AgendaDocument': ['name'],
-            'SignDocument': ['name'],
 
             'News': ['name', 'description'],
             'NewsDocument': ['name'],

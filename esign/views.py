@@ -1,14 +1,15 @@
 import json
 from django.apps import apps
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
+from restoken.models import PostUserToken
+from meetings.model_files.event import Event
+from meetings.model_files.user import Profile
 from rest_framework.decorators import api_view
+from esign.models import Signature, SignatureDoc
+
+from django.views.decorators.csrf import csrf_exempt
 from mainapp.rest_api import produce_result, produce_exception
 from mainapp.ws_methods import check_auth_token, queryset_to_list
-from meetings.model_files.user import Profile
-from meetings.model_files.event import Event
-from esign.model_files.document import Signature, SignatureDoc
-from restoken.models import PostUserToken
 
 
 def get_sign_doc_data(request):    

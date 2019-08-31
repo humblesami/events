@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib import admin
-from documents.admin import FileAdmin
-from esign.model_files.document import SignatureDoc, Signature
+from .models import Signature, SignatureDoc
 from mainapp.admin import BaseAdmin
 from meetings.model_files.event import Event
 
@@ -10,7 +9,7 @@ class SignatureAdmin(BaseAdmin):
     list_display = ['user', 'document', 'signed_at']
 
 
-class SignDocumentForm(forms.ModelForm):
+class SignDocForm(forms.ModelForm):
     class Meta:
             model = SignatureDoc
             fields = ()
@@ -20,7 +19,7 @@ class SignDocumentForm(forms.ModelForm):
 
 
 class SignDocAdmin(admin.ModelAdmin):
-    form = SignDocumentForm
+    form = SignDocForm
     list_display = ('name', 'meeting', 'send_to_all','created_by')
     fields = [
         'name',

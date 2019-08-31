@@ -2,16 +2,16 @@ import os
 import base64
 import subprocess
 
-from django.contrib.auth.models import User
-from fpdf import FPDF
 from PIL import Image
-from mainapp import settings, ws_methods
+from fpdf import FPDF
 from PyPDF2 import PdfFileReader
+from mainapp import settings, ws_methods
 
 from django.db import models
+from mainapp.models import CustomModel
 from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
-from mainapp.models import CustomModel
+
 
 
 def validate_file_extension(value):
@@ -47,11 +47,20 @@ class File(CustomModel):
     def save(self, *args, **kwargs):
         try:
             create = False
+            old_doc = None
+            file_changed = False
             if self.pk is None:
                 create = True
+                if self.attachment:
+                    file_changed = True
+            else:
+                old_doc = File.objects.get(pk=self.pk).attachment
+                if old_doc != self.attachment:
+                    file_changed = True
             super(File, self).save(*args, **kwargs)
-            if create and self.file_type != 'message':
+            if file_changed and self.file_type != 'message':
                 self.process_doc()
+                pass
                 # if self.file_type != 'esign':
                 #     ws_methods.document_thread(self)
                 # else:

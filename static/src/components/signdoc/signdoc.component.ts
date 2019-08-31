@@ -23,7 +23,7 @@ export class SigndocComponent implements OnInit {
         });
         let args = {
             app: 'esign',
-            model: 'SignDocument',
+            model: 'SignatureDoc',
             method: 'get_token'
         }			
         let final_input_data = {

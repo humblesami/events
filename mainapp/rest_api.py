@@ -134,7 +134,6 @@ def search(request):
 
                     'MeetingDocument': ['name'],
                     'AgendaDocument': ['name'],
-                    'SignDocument': ['name'],
 
                     'News': ['name', 'description'],
                     'NewsDocument': ['name'],

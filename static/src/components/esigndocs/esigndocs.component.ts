@@ -31,8 +31,8 @@ export class EsignDocsComponent implements OnInit {
             let final_input_data = {
             params: {name:file.name,file:fileReader.result},
             args: {
-                app: 'meetings',
-                model: 'SignDocument',
+                app: 'esign',
+                model: 'SignatureDoc',
                 method: 'save_doc',
                 post: 1
             }

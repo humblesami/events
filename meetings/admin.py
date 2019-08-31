@@ -186,6 +186,5 @@ admin.site.register(Profile, UserAdmin)
 admin.site.register(MeetingGroup, MeetingGroupAdmin)
 admin.site.register(Committee, CommitteeAdmin)
 admin.site.register(LoginEntry)
-# admin.site.register(SignDocument, AdminSignDoc)
 admin.site.register(Invitation_Response, AttendeeAdmin)
 admin.site.site_header = "BoardSheet"
