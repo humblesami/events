@@ -1394,12 +1394,29 @@
                 '    <div class="kv-fileinput-error"></div>\n' +
                 '    </div>\n' +
                 '</div>';
+            var could_drives = `
+            <div class="cloud_pickers_container d-flex justify-content-center pb-1">
+                <div class="google_drive_picker">
+                    <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" alt="Google Drive" title="Google Drive">
+                </div>
+                <div class="one_drive_picker">
+                    <img class="img-fluid" src="/static/assets/images/cloud/onedrive.png" alt="OneDrive" title="OneDrive">
+                </div>
+                <div class="drop_box_picker">
+                    <img class="img-fluid" src="/static/assets/images/cloud/dropbox.png" alt="Dropbox" title="Dropbox">
+                </div>
+                <div class="selected_files">
+                
+                </div>
+            </div>
+            `;
+            tPreview += could_drives;
             tClose = $h.closeButton('fileinput-remove');
             tFileIcon = '<i class="glyphicon glyphicon-file"></i>';
             // noinspection HtmlUnknownAttribute
             tCaption = '<div class="file-caption form-control {class}" tabindex="500">\n' +
-                '  <span class="file-caption-icon"></span>\n' +
-                '  <input class="file-caption-name" onkeydown="return false;" onpaste="return false;">\n' +
+                '  <span class="file-caption-icon"></span>' +
+                '  <input class="file-caption-name">\n' +
                 '</div>';
             //noinspection HtmlUnknownAttribute
             tBtnDefault = '<button type="{type}" tabindex="500" title="{title}" class="{css}" ' +
@@ -2860,7 +2877,13 @@
             if ($h.isEmpty(self.customPreviewTags)) {
                 return template;
             }
-            return $h.replaceTags(template, self.customPreviewTags);
+            var res = $h.replaceTags(template, self.customPreviewTags);
+            var caption_input = $('input.file-caption-name:visible');
+            if(caption_input.length)
+            {
+                caption_input.focus();
+            }
+            return res;
         },
         _getOutData: function (formdata, jqXHR, responseData, filesData) {
             var self = this;
@@ -4357,6 +4380,21 @@
                 icon = self._getLayoutTemplate('fileIcon');
             }
             self.$captionContainer.addClass('icon-visible');
+            var prev_val = self.$caption.val();
+            if(prev_val)
+            {
+                var arrr = prev_val.split('.');
+                var ext = arrr[arrr.length - 1];
+                // console.log(prev_val, ext);
+                if(ext && ext.length < 5)
+                {
+                    prev_val = '';
+                }
+            }
+            if(prev_val)
+            {
+                out = prev_val;
+            }
             self.$caption.attr('title', title).val(out);
             self.$captionIcon.html(icon);
         },

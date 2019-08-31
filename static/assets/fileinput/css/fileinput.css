@@ -59,6 +59,7 @@
     margin-top: 10px;
     width: 16px;
     height: 16px;
+    display: none;
 }
 
 .krajee-default .file-thumb-progress .progress, .krajee-default .file-thumb-progress .progress-bar {
@@ -175,8 +176,7 @@
 .file-preview {
     border-radius: 5px;
     border: 1px solid #ddd;
-    padding: 8px;
-    width: 100%;
+    width: 99%;
     margin-bottom: 5px;
 }
 
@@ -231,10 +231,6 @@
     height: 55px;
 }
 
-.krajee-default.file-preview-frame .file-thumbnail-footer {
-    height: 70px;
-}
-
 .krajee-default.file-preview-frame:not(.file-preview-error):hover {
     border: 1px solid rgba(0,0,0,0.3);
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.4);
@@ -271,7 +267,6 @@
     padding-top: 4px;
     font-size: 11px;
     color: #777;
-    margin-bottom: 30px;
 }
 
 .file-upload-stats {
@@ -404,7 +399,6 @@
     border-radius: 4px;
     text-align: center;
     vertical-align: middle;
-    margin: 12px 15px 12px 12px;
     padding: 5px;
 }
 
@@ -423,8 +417,9 @@
 .file-drop-zone-title {
     color: #aaa;
     font-size: 1.6em;
-    padding: 85px 10px;
+    padding: 40px;
     cursor: default;
+    cursor: pointer;
 }
 
 .file-highlighted {
@@ -540,13 +535,7 @@
     opacity: 0.7;
 }
 
-.clickable .file-drop-zone-title {
-    cursor: pointer;
-}
 
 .file-preview-initial.sortable-chosen {
     background-color: #d9edf7;
-}
-.file-drop-zone-title{
-    padding: 10px;
 }

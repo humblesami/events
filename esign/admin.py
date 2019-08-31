@@ -23,17 +23,23 @@ class SignDocAdmin(admin.ModelAdmin):
     list_display = ('name', 'meeting', 'send_to_all','created_by')
     fields = [
         'name',
+        'attachment',
         'meeting',
         'respondents',
         'send_to_all',
         'open_date',
         'close_date',
-        'attachment',
     ]
     autocomplete_fields = ['respondents']
     change_form_template = 'admin/actions_change_form.html'
     class Media:
-        js = ('admin/js/meeting_sign_doc.js',)
+        js = ('admin/js/esign_doc.js',)
+        css = {
+            'all': ('admin/css/esign-doc.css',)
+        }
+
+    # def save_model(self, request, obj, form, change):
+    #     super(SignDocAdmin, self).save_model(request, obj, form, change)
 
 
 # class SignatureDocForm(FileForm):
