@@ -221,26 +221,8 @@ $(function(){
     }
 
     function on_files_selected(current_files, source){
-        var selected_files = active_picker.find('input.url');
-        // console.log(selected_files, 18);
-        var more_files = [];
-        var found = false;
-        for(const file of current_files)
-        {
-            selected_files.each(function(i, el){
-                if(el.value == file.url)
-                {
-                    found = true;
-                }   
-            })
-            if(!found)
-            {
-                more_files.push(file);
-                active_picker.find('.selected_files').append('<input class="url" value="'+file.url+'">');
-                active_cloud_picker.find('.upload_files').append('<input name="url" value="'+file.url+'">');
-            }
-        }
-        // console.log(more_files, 88333);
+        // console.log(current_files, 13);
+        window['merge_cloud_files'](current_files);
     }
     
     init_google_picker();

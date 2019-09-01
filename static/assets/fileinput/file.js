@@ -11,7 +11,7 @@ function file_input(input){
         multiple = '';
     }
     var uploader = `
-    <div class="file-input file-input-ajax-new">
+    <div class="file-input-picker-container">
         <div class="file-drop-zone">
             <div class="file-drop-zone-title">Drag & drop files here …</div>
             <div class="preview-conatiner">
@@ -41,7 +41,12 @@ function file_input(input){
     </div>
     `;
     input.hide();
-    parent.append(uploader);
+    input.after(uploader);
+    parent.find('.cloud_pickers_container .picker').click(function(){
+        // console.log(this);
+        window['merge_cloud_files'] = merge_cloud_files;
+    });
+
     parent.find('.local_picker').click(function(){
         input.click();
     });
@@ -64,9 +69,9 @@ function file_input(input){
 
     input.cloud_urls = [];
     input.cloud_files = []
+    var added_files = [];
     input.local_files = [];
     input.selected_files = [];
-    parent.find('.cloud_pickers_container').related_input = input;
 
     merge_local_files = function(new_files){
         added_files = [];
@@ -97,9 +102,9 @@ function file_input(input){
             preview_files(added_files);
         }
     }
-
-    var added_files = [];
-    input.merge_cloud_files = function(new_files){
+    
+    merge_cloud_files = function(new_files){
+        // console.log(new_files, 4444);
         added_files = [];
         if(multiple)
         {
@@ -112,11 +117,11 @@ function file_input(input){
                     {
                         already_exists = true;
                     }
-                    else
-                    {
-                        input.cloud_files.push(file1);
-                        added_files.push(file1);
-                    }
+                }
+                if(!already_exists)
+                {
+                    input.cloud_files.push(file1);
+                    added_files.push(file1);
                 }
             }
             input.selected_files = input.local_files.concat(input.cloud_files);
