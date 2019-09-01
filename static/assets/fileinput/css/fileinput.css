@@ -539,3 +539,39 @@
 .file-preview-initial.sortable-chosen {
     background-color: #d9edf7;
 }
+
+.cloud_pickers_container .picker{
+    cursor: pointer;
+}
+
+.file-drop-zone.dragenter{
+    background: silver;
+}
+.preview-conatiner
+{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+.file-box
+{
+    position:relative;
+    width:180px;
+}
+.file-box .del
+{
+    cursor: pointer;
+    position:absolute;
+    padding:2px;
+    right:5px;
+    border: 1px solid #ddd;
+}
+.file-box input[name="name"]
+{
+    margin-top: 5px;
+    width: 170px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 6px 2px;
+}

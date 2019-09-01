@@ -45,11 +45,16 @@ $(function(){
             }
             var options = {
                 success: function (files) {
+                    var selection_info = [];
                     for (const file of files) {
-                        const name = file.name;
-                        const url = file.link;
+                        // console.log(file, 188);
+                        selection_info.push({
+                            id: file.id,
+                            name: file.name,
+                            url: file.link,
+                        })
                     }
-                    on_files_selected(files, 'dropbox');
+                    on_files_selected(selection_info, 'dropbox');
                 },
                 cancel: function () {
                 },
@@ -160,12 +165,24 @@ $(function(){
     
         function pickerCallback(data) {
             if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-                var docs = data[google.picker.Response.DOCUMENTS];
-                if(!docs.length)
+                var files = data[google.picker.Response.DOCUMENTS];
+                if(!files.length)
                 {
                     return;
                 }
-                on_files_selected(docs, 'google');
+                var selection_info = [];
+                var download_obj = download_urls['google'];
+                for(const file of files)
+                {
+                    // console.log(file, 188);
+                    selection_info.push({
+                        id: file.id,
+                        name: file.name,
+                        download_url: download_obj.prefix+'/'+file.id+download_obj.postfix,
+                        url: file.embed_url
+                    })
+                }
+                on_files_selected(selection_info, 'google');
             }
         }
         $('body').on('click', '.google_drive_picker', open_cloud_picker);
@@ -182,8 +199,18 @@ $(function(){
                 advanced: {
                    filter: "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt"
                 },
-                success: function (response) {
-                    on_files_selected(response, 'onedrive');
+                success: function (files) {
+                    var selection_info = [];
+                    for(var file of files)
+                    {
+                        // console.log(file, 188);
+                        selection_info.push({
+                            id: file.id,
+                            name: file.name,
+                            url: file["@microsoft.graph.downloadUrl"],
+                        })
+                    }
+                    on_files_selected(files, 'onedrive');
                 },
                 cancel: function (response) { console.log(response); },
                 error: function (e) { console.log(e); }
@@ -195,26 +222,25 @@ $(function(){
 
     function on_files_selected(current_files, source){
         var selected_files = active_picker.find('input.url');
-        console.log(selected_files, 18);
+        // console.log(selected_files, 18);
         var more_files = [];
         var found = false;
-        for(var i in current_files)
+        for(const file of current_files)
         {
-            for(var j in selected_files)
-            {
-                if(selected_files[j].val() == current_files[i].id)
+            selected_files.each(function(i, el){
+                if(el.value == file.url)
                 {
                     found = true;
-                }                    
-            }
+                }   
+            })
             if(!found)
             {
-                more_files.push(current_files[i]);
-                active_picker.find('.selected_files').append('<input class="url" value="'+current_files[i].url+'">');
-                active_cloud_picker.find('.upload_files').append('<input name="url" value="'+current_files[i].url+'">');
+                more_files.push(file);
+                active_picker.find('.selected_files').append('<input class="url" value="'+file.url+'">');
+                active_cloud_picker.find('.upload_files').append('<input name="url" value="'+file.url+'">');
             }
         }
-        console.log(more_files, 88333);
+        // console.log(more_files, 88333);
     }
     
     init_google_picker();

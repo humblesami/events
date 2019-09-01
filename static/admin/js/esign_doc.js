@@ -22,16 +22,8 @@ $(function(){
     
     if($('#id_attachment').length)
     {
-        $('#id_attachment').fileinput();
-        var name_row = $('.form-row.field-name');
-        var file_name = name_row.find('input[name="name"]').val();
-        var caption_input = $('input.file-caption-name').attr('name', 'name');
-        if(!caption_input.val())
-        {
-            var arr = file_name.split('.');
-            file_name = arr[arr.length - 1];
-            caption_input.val(file_name);
-        }
+        // $('#id_attachment').attr('multiple','multiple');
+        file_input($('#id_attachment'));
         $('.form-row.field-attachment').show();
     }
 });

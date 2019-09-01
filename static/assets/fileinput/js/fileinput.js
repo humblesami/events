@@ -1394,7 +1394,7 @@
                 '    <div class="kv-fileinput-error"></div>\n' +
                 '    </div>\n' +
                 '</div>';
-                var multiple = self.filePlural;
+                var multiple = self.$element.attr('multiple');
                 if(multiple)
                 {
                     multiple = ' multiple="1"'
@@ -1954,7 +1954,7 @@
                 msg = msg.setTokens(tokens);
             }
             if (window.console && typeof window.console.log !== 'undefined') {
-                window.console.log(msg);
+                // window.console.log(msg);
             } else {
                 window.alert(msg);
             }
