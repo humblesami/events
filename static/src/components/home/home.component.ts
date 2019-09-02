@@ -50,7 +50,14 @@ export class HomeComponent implements OnInit {
                 start = window['functions'].meeting_time(start);
                 result[i]['start_dt'] = start;
             }
-            
+            for(var survey of home_data.to_do_items.pending_surveys)
+            {
+                survey.open_date = window['functions'].meeting_time(survey.open_date);
+            }
+            for(var voting of home_data.to_do_items.pending_votings)
+            {
+                voting.open_date = window['functions'].meeting_time(voting.open_date);
+            }
             home_data.description = obj_this.sanitizer.bypassSecurityTrustHtml(home_data.news.description);            
 
             var valid_videos = [];            
@@ -66,7 +73,7 @@ export class HomeComponent implements OnInit {
             obj_this.home_data = home_data;
             home_data.video_ids = valid_videos;
             var to_do_items = home_data.to_do_items;
-            // console.log(home_data);
+            //console.log(home_data);
             obj_this.to_do_count = to_do_items.pending_documents.length + to_do_items.pending_surveys.length + to_do_items.pending_votings.length;
         };
         let args = {

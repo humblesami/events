@@ -111,7 +111,8 @@ class Voting(Actions):
                         'id': voting.id,
                         'name': voting.name,
                         'voting_type_name': voting.voting_type.name,
-                        'my_status': my_status
+                        'my_status': my_status,
+                        'open_date':str(voting.open_date)
                     })
         return pending_votings
 

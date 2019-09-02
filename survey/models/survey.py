@@ -210,7 +210,9 @@ class Survey(Actions):
                 pending_survey.append({
                     'id': survey.id,
                     'title': survey.name,
-                    'my_status': my_status
+                    'my_status': my_status,
+                    'open_date': str(survey.open_date),
+                    'description': survey.description,
                 })
         return pending_survey
 

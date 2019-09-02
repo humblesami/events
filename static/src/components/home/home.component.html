@@ -39,7 +39,7 @@
                     <!--Surveys-->
                     <div id="to-do">
                         <div class="carousel slide carousel-multi-item" data-ride="carousel"
-                        *ngIf="home_data.to_do_items.pending_surveys.length">   
+                        *ngIf="home_data.to_do_items.pending_surveys.length" [ngClass]="['border-bottom','py-3']">   
                             <div class="clearfix">
                                 <h4 class="text-primary my-3 float-left">
                                     Surveys
@@ -54,18 +54,39 @@
                                     <div class="row">
                                         
                                         <div class="col-sm-12 col-md-6 col-lg-4 mb-3" *ngFor="let sur of home_data.to_do_items.pending_surveys.slice(start_indices['survey'], ending_indices['survey'])">
-                                            <div class="SurveysInfoBox">
-                                                <div class="SurveysInfoBoxTitle">
-                                                    <h5>
-                                                        <b>{{sur.title}}</b>
-                                                        <span *ngIf="sur.meeting_name"> Meeting: {{sur.meeting_name}}</span>
-                                                    </h5>
-                                                </div>
-                                                <div class="SurveysInfoBoxBtn  btn-flex-1">
-                                                    <button class="btn btn-meeting" routerLink="/home/survey/{{sur.id}}">
-                                                    <span>Start</span>
-                                                    </button>
-                                                </div>
+                                            <div class="kanban-card position-relative">
+                                                <div class="kanban-meeting-info">
+                                                    <div class="kanban-upcoming-meeting" routerLink="/survey/{{sur.id}}">
+                                                        <div *ngIf="sur.open_date" class="CalendarDateWrapper">
+                                                            <span class="CalendarDateWrap">
+                                                                <span class="kanban-upcoming-meeting-date">
+                                                                    {{sur.open_date.day}}
+                                                                </span>
+                                                                    <span>
+                                                                    {{sur.open_date.month_year}}
+                                                                </span>
+                                                                <span>
+                                                                    {{sur.open_date.time}}
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="Info">
+                                                            <p class="text-truncate" *ngIf="sur.title">
+                                                                <b>{{sur.title}}</b>
+                                                            </p>
+                                                            <span class=" text-truncate" *ngIf="sur.description">
+                                                                Description: {{sur.description}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row d-flex justify-content-between">
+                                                        <div class="col">
+                                                            <div class="bs-btnwrap survey-top-buttons" routerLink="/home/survey/{{sur.id}}" [ngStyle]="{'background': '#f3f3f3'}">
+                                                                <a class="btn text-white">Start Survey</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>             
                                             </div>
                                         </div>
                                     </div> 
@@ -166,21 +187,39 @@
                                 <div class="carousel-item active"> 
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 col-lg-4 mb-3" *ngFor="let vote of home_data.to_do_items.pending_votings.slice(start_indices['voting'], ending_indices['voting'])">
-                                            <div class="kanban-card voting">
-                                                <div class="VotingsInfoBox">
-                                                    <div class="VotingsInfoBoxTitle ">
-                                                        <h5>
-                                                            <b>{{vote.name}}</b>
-                                                            <span *ngIf="vote.meeting_name"> Meeting: {{vote.meeting_name}}</span>
-                                                            <div><strong>Voting Type :</strong><span style="display:inline-block;">{{vote.voting_type_name}}</span></div>
-                                                        </h5>
+                                            <div class="kanban-card position-relative">
+                                                <div class="kanban-meeting-info">
+                                                    <div class="kanban-upcoming-meeting" routerLink="/voting/{{vote.id}}">
+                                                        <div *ngIf="vote.open_date" class="CalendarDateWrapper">
+                                                            <span class="CalendarDateWrap">
+                                                                <span class="kanban-upcoming-meeting-date">
+                                                                    {{vote.open_date.day}}
+                                                                </span>
+                                                                    <span>
+                                                                    {{vote.open_date.month_year}}
+                                                                </span>
+                                                                <span>
+                                                                    {{vote.open_date.time}}
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                        <div class="Info">
+                                                            <p class="text-truncate" *ngIf="vote.name">
+                                                                <b>{{vote.name}}</b>                                        
+                                                            </p>
+                                                            <span *ngIf="vote.voting_type_name">
+                                                                <strong>Voting Type: </strong>{{vote.voting_type_name}}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div class="bs-btnwrap">
-                                                        <button class="btn" routerLink="/voting/{{vote.id}}">
-                                                        <span>Cast Vote</span>
-                                                        </button>
+                                                    <div class="row d-flex justify-content-between">
+                                                        <div class="col">
+                                                            <div class="bs-btnwrap survey-top-buttons" routerLink="/voting/{{vote.id}}" [ngStyle]="{'background': '#f3f3f3'}">
+                                                                <span class="btn text-white">Cast Vote</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </div>             
                                             </div>
                                         </div>
                                     </div>                                    

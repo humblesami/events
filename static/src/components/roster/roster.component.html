@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let obj of attendees">
+                <tr *ngFor="let obj of attendees" class="bg-light">
                     <td (click)="open_dialog(obj.id)">
                         <img class="roster-images rounded-circle d-none d-md-block" src="{{socketService.server_url}}{{obj.photo}}" style="height: 60px;width: 60px;" />
                         <span class="text-primary font-weight-bold">{{obj.name}}</span>
