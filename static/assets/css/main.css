@@ -1081,13 +1081,13 @@ input#search-box {
 
 .show_search_results {
 	height: calc(100vh - 121px);
-	position: fixed;
-	top: 121px;
-	background: rgba(224, 224, 224, 0.98);
-	display: flex;
-	width: 91%;
-	z-index: 11;
-	left: 8.5%;
+    position: fixed;
+    top: 121px;
+    background: rgb(241, 241, 241);
+    display: flex;
+    left: 0;
+    z-index: 11;
+    right: 0;
 	}
 .show_search_results {
 	justify-content: center;
@@ -2009,6 +2009,7 @@ a.showmouseawaybutton.fa.meetodoo-noti {
 	.notification-container .notification-list {
 		width: 100%;
 		top: 46px;
+		min-width:260px;
 		}
 	}
 body.iframe {
