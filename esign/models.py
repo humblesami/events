@@ -30,18 +30,13 @@ class SignatureDoc(File, Actions):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     send_to_all = models.BooleanField(blank=True, null=True)
     original_pdf = models.FileField(upload_to='original/')
-    upload = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        create = False
         if self.pk is None:
-            create = True
             self.file_type = 'esign'
         super(SignatureDoc, self).save(*args, **kwargs)
-        if create:
-            self.original_pdf = self.pdf_doc
-            self.save()
-            pass
+
+
 
     def get_all_respondents(self):
         respondent_list = []

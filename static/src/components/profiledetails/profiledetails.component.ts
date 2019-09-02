@@ -240,7 +240,7 @@ export class ProfileDetailsComponent implements OnInit {
 			{
 				obj_this.bio_html = obj_this.sanitizer.bypassSecurityTrustHtml(result.profile.bio);				
 			}
-			if (!obj_this.type_breadCrumb)
+			if (!obj_this.type_breadCrumb && result.profile.group)
 			{
 				obj_this.type = result.profile.group.toLowerCase()
 				obj_this.type_breadCrumb = obj_this.type;

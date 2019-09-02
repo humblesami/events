@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User as user_model
 from django_currentuser.middleware import get_current_user
 
+
 class CustomModel(models.Model):
     created_at = models.DateTimeField(null=True)
     created_by = models.ForeignKey(
@@ -34,8 +35,8 @@ class CustomModel(models.Model):
         super(CustomModel, self).save(*args, **kwargs)
 
 
-
 class FilesUpload(models.Model):
     binary_data = models.TextField(null=True, blank=True)
+
     class Meta:
         abstract = True

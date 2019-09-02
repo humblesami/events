@@ -222,7 +222,7 @@ export class ProfileeditComponent implements OnInit {
 			{
 				$('#mail-to-assistant').prop('checked', false)
 			}
-			if (!obj_this.type_breadCrumb)
+			if (!obj_this.type_breadCrumb && result.profile.group)
 			{
 				obj_this.type = result.profile.group.toLowerCase()
 				obj_this.type_breadCrumb = obj_this.type;
@@ -614,7 +614,7 @@ export class ProfileeditComponent implements OnInit {
     }
 	
 	ngOnInit(){
-        console.log(this.edit_info, 134);
+        // console.log(this.edit_info, 134);
 		if (this.edit_info)
 		{
 			this.section = this.edit_info.section;

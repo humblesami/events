@@ -38,35 +38,59 @@ function file_input(input){
             
             </div>
         </div>
-        <input name="upload" />
     </div>
     `;
-    // input.hide();
+    input.hide();
     input.after(uploader);    
     parent.find('.cloud_pickers_container .picker').click(function(){
-        // console.log(this);
+        // console.log(6565);
         window['merge_cloud_files'] = merge_cloud_files;
     });
 
     parent.find('.local_picker').click(function(){
         input.click();
     });
-    var drop_zone = parent.find('.file-drop-zone');
-    drop_zone.on('dragenter', function(e){
-        $(this).addClass('dragenter');
-    });
-    drop_zone.on('dragleave', function(e){
-        $(this).removeClass('dragenter');
-    });
-    drop_zone.on('drop', function(e){
-        $(this).removeClass('dragenter');
-        var new_files = e.dataTransfer.items;
+    var drop_zone = parent.find('.file-drop-zone:first');
+    dropZone = drop_zone[0];    
+
+    function on_dragenter(evn){
+        evn.preventDefault();
+        $(drop_zone).addClass('dragenter');
+    }
+    function on_dragover(evn){
+        evn.preventDefault();
+    }
+    function on_dragleave(evn){
+        var related = evn.relatedTarget;
+        if(related != this) {
+            if (related) {
+                inside = jQuery.contains(this, related);
+            }
+            else
+            {
+                $(drop_zone).removeClass('dragenter');
+            }
+        }
+    }
+    function on_drop(evn){        
+        $(drop_zone).removeClass('dragenter');
+        if(!evn.dataTransfer)
+        {
+            console.log('No files data found');
+            return;
+        }
+        var new_files = evn.dataTransfer.files;
         if(!multiple)
         {
             new_files = [new_files[0]];
         }
         merge_local_files(new_files);
-    });
+    }
+
+    dropZone.addEventListener('dragenter', on_dragenter, false);
+    dropZone.addEventListener('dragover', on_dragover, false);
+    dropZone.addEventListener('dragleave', on_dragleave, false);
+    dropZone.addEventListener('drop', on_drop, false);
 
     var added_files = [];
     input.cloud_urls = [];
@@ -103,6 +127,26 @@ function file_input(input){
             preview_files(added_files);
         }
     }
+
+    function download(file_url, access_token=undefined, calll_back)
+    {
+        //file_url = 'https://dl.dropboxusercontent.com/1/view/nt37jrpb6akix39/article%205.pdf';
+        var ajax_options = {
+            url: file_url,
+            success: function (data, textStatus, jqXHR) {
+                calll_back(data);
+            },
+            error:function(a,b,c,d){
+                console.log('Error',a,b,c,d);
+            }
+        }
+        if(access_token){
+            ajax_options.header = {
+                Authorization: 'Bearer '+access_token
+            }
+        }
+        $.ajax(ajax_options);
+    }
     
     merge_cloud_files = function(new_files){
         // console.log(new_files, 4444);
@@ -130,10 +174,10 @@ function file_input(input){
         }
         else
         {
-            input.selected_files = input.cloud_files = added_files = new_files;
+            input.selected_files = input.cloud_files = added_files = new_files;            
             preview_files(added_files);
         }
-    }
+    }    
 
     function remove_file(e)
     {
@@ -197,12 +241,17 @@ function file_input(input){
             if(single_file.url)
             {
                 name_box.append('<input name="url" value="'+single_file.url+'"/>');
+                name_box.val(single_file.name);                    
+                download(single_file.url, single_file.access_token, function(data){
+                    data = btoa(unescape(encodeURIComponent(data)));
+                    $('[name="binary_data"]').val(data);
+                });
             }
             else
             {
                 window['js_utils'].read_file(single_file, function(data){                    
-                    parent.find('input[name="name"]').val(single_file.name);
-                    parent.find('input[name="upload"]').val(data);
+                    name_box.val(single_file.name);
+                    $('[name="binary_data"]').val(data);
                 });
             }
             nail2.find('.del').click(remove_file);
@@ -222,7 +271,7 @@ function file_input(input){
         merge_local_files(element.files);
     });
 }
-$(document).on('dragenter dragover drop', function(e){
-    e.stopPropagation();
-    e.preventDefault();
+$(document).on('dragenter dragover drop', function(evn){
+    evn.stopPropagation();
+    evn.preventDefault();
 });

@@ -24,6 +24,7 @@ class SignDocAdmin(admin.ModelAdmin):
     fields = [
         'name',
         'attachment',
+        'binary_data',
         'meeting',
         'respondents',
         'send_to_all',

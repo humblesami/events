@@ -178,8 +178,8 @@ $(function(){
                     selection_info.push({
                         id: file.id,
                         name: file.name,
-                        download_url: download_obj.prefix+'/'+file.id+download_obj.postfix,
-                        url: file.embed_url
+                        access_token: access_token,
+                        url: download_obj.prefix+'/'+file.id+download_obj.postfix,                        
                     })
                 }
                 on_files_selected(selection_info, 'google');
@@ -197,7 +197,7 @@ $(function(){
                 multiSelect: multiSelect,
                 openInNewWindow: true,
                 advanced: {
-                   filter: "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt"
+                    filter: "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt"
                 },
                 success: function (files) {
                     var selection_info = [];
