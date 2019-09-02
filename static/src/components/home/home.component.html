@@ -38,14 +38,16 @@
                     <h2 class="border-bottom text-dark pb-3">Actions</h2>
                     <!--Surveys-->
                     <div id="to-do">
-                        <div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel"
+                        <div class="carousel slide carousel-multi-item" data-ride="carousel"
                         *ngIf="home_data.to_do_items.pending_surveys.length">   
-                            <h4 class="text-primary my-3">
-                                Surveys
-                            </h4>
-                            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_surveys.length > visible_limit['survey']">
-                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_surveys, 'survey')" href="#multi-item-example" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_surveys, 'survey')" href="#multi-item-example" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                            <div class="clearfix">
+                                <h4 class="text-primary my-3 float-left">
+                                    Surveys
+                                </h4>
+                                <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.to_do_items.pending_surveys.length > visible_limit['survey']">
+                                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_surveys, 'survey')"  data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, home_data.to_do_items.pending_surveys, 'survey')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                                </div>
                             </div>
                             <div class="carousel-inner" role="listbox">    
                                 <div class="carousel-item active">    
@@ -112,12 +114,14 @@
                         </div>
                         <!--Documents-->
                         <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" class="carousel slide carousel-multi-item border-bottom py-3" data-ride="carousel">   
-                            <h4 class="text-primary my-3">
-                                Documents To Sign
-                            </h4>
-                            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
-                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                            <div class="clearfix">
+                                <h4 class="text-primary my-3 float-left">
+                                    Documents To Sign
+                                </h4>
+                                <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
+                                    <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                                    <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                                </div>
                             </div>
                             <div class="carousel-inner" role="listbox">    
                                 <div class="carousel-item active">    
@@ -149,12 +153,14 @@
                         </div>                 
                         <!--Votings-->
                         <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" class="carousel slide carousel-multi-item py-3" data-ride="carousel">   
-                                <h4 class="text-primary my-3">
-                                    Approval / Voting
-                                </h4>
-                            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
-                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                            <div class="clearfix">
+                                <h4 class="text-primary my-3 float-left">
+                                        Approval / Voting
+                                    </h4>
+                                <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
+                                    <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                                    <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                                </div>
                             </div>
                             <div class="carousel-inner" role="listbox">    
                                 <div class="carousel-item active"> 
@@ -190,10 +196,12 @@
     class="carousel slide carousel-multi-item " data-ride="carousel">   
         <div class="py-3 container">
             <div class="HomepageDocumentSection">
-                <h4 class="text-primary my-3">Documents</h4>
-                <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
-                    <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                    <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                <div class="clearfix">
+                    <h4 class="text-primary my-3 float-left">Documents</h4>
+                    <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
+                        <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                        <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                    </div>
                 </div>
                 <div class="carousel-inner" role="listbox">    
                     <div class="carousel-item active"> 
@@ -219,12 +227,14 @@
 
     <section *ngIf="home_data && home_data.video_ids && home_data.video_ids.length" id="multi-item-videos" 
     class="carousel slide carousel-multi-item container py-3" data-ride="carousel">   
-            <h4 class="text-primary my-3">
-                Videos
-            </h4>
-        <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.video_ids.length > visible_limit['news_video']">
-            <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-            <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+        <div class="clearfix">
+            <h4 class="text-primary my-3 float-left">
+                    Videos
+                </h4>
+            <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.video_ids.length > visible_limit['news_video']">
+                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+            </div>
         </div>
         <div class="carousel-inner" role="listbox">    
             <div class="carousel-item active"> 
