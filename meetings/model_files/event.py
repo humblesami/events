@@ -355,13 +355,13 @@ class Event(CustomModel):
             doc['name'] = sign_doc.name
             esign_docs.append(doc)
         meeting_object['sign_docs'] = esign_docs
-        votings = list(meeting_object_orm.voting_set.all().values('id', 'name', 'open_date', 'close_date', 'description'))
+        votings = list(meeting_object_orm.voting_set.all().values('id', 'name', 'open_date', 'close_date', 'description','voting_type__name'))
         for voting in votings:
             voting['open_date'] = str(voting['open_date'])
             voting['close_date'] = str(voting['close_date'])
 
         surveys_qs = meeting_object_orm.survey_set.all()
-        surveys = list(surveys_qs.values('id', 'name', 'open_date', 'close_date'))
+        surveys = list(surveys_qs.values('id', 'name', 'description', 'open_date', 'close_date'))
         i = 0
         for obj in surveys_qs:
             surveys[i]['my_status'] = obj.my_status(user_id)

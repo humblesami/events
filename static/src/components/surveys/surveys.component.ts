@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { HttpService } from "../../app/http.service";
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
     styleUrls: ['./surveys.css']
 })
 export class SurveysComponent implements OnInit {
+    @Input() meeting_id: number;
     no_meet = false;
     records = [];
     active_meeting: any;
@@ -25,7 +26,10 @@ export class SurveysComponent implements OnInit {
 
     get_list(){
         let obj_this = this;
-        let input_data = { meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
+        let input_data = {meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
+        if(obj_this.meeting_id){
+            input_data['meeting_id']=obj_this.meeting_id;
+        }
         var success_cb = function (result) {
             // console.log(result)
             for(var i in result.records)

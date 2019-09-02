@@ -137,7 +137,7 @@ export class MeetingDetailsComponent implements OnInit {
         };
 
         let on_data = function(result) {
-            // console.log(result,1122);
+            console.log(result,1122);
             try {
                 if(result.message)
                 {
@@ -195,7 +195,14 @@ export class MeetingDetailsComponent implements OnInit {
                     obj_this.meeting_status = 'Unpublished';
                     obj_this.applicable_publish_action = 'Publish';
                 }
-                
+                for(var survey of meeting_object.surveys)
+                {
+                    survey.open_date = window['functions'].meeting_time(survey.open_date);
+                }
+                for(var voting of meeting_object.votings)
+                {
+                    voting.open_date = window['functions'].meeting_time(voting.open_date);
+                }
                 setTimeout(function(){
                     if (obj_this.meeting_object.publish)
                     {

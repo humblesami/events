@@ -127,6 +127,9 @@ class Survey(Actions):
                         (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
                         |
                         Q(respondents__id=uid)).distinct()
+        if params.get('meeting_id'):
+            meeting_id = params.get('meeting_id')
+            survey_list = survey_list.filter(meeting_id=meeting_id)
         total = survey_list.count()
         offset = params.get('offset')
         limit = params.get('limit')
