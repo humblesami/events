@@ -24,6 +24,8 @@ class SignDocAdmin(admin.ModelAdmin):
     fields = [
         'name',
         'attachment',
+        'cloud_url',
+        'access_token',
         'binary_data',
         'file_name',
         'meeting',

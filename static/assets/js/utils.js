@@ -14,7 +14,7 @@ window['js_utils'] = {
     {
         var ext = file_name.split('.');
         ext = ext[ext.length - 1];
-        var prefix = 'Invalid file name';
+        var prefix = '';
         switch(ext){
             case 'pdf':
                 prefix = 'data:application/pdf;base64,';

@@ -116,13 +116,18 @@ $(function(){
             console.log('APi Loaded');
             window.gapi.auth.authorize({
                 'client_id': '921039722572-u3aq7gvjgk42gj590ve3qf5fc1schjf0.apps.googleusercontent.com',
-                'scope': ['https://www.googleapis.com/auth/drive']
+                'scope': [
+                    'https://www.googleapis.com/auth/drive',
+                    'https://www.googleapis.com/auth/drive.file',
+                    'https://www.googleapis.com/auth/drive.metadata'
+                ]
             }, handleAuthResult);
         }
     
         function handleAuthResult(authResult) {
             if (access_token || (authResult && !authResult.error)) {
                 access_token = authResult.access_token;
+//                console.log(access_token);
                 createPicker();
             }
             else
@@ -180,7 +185,8 @@ $(function(){
                         name: file.name,
                         access_token: access_token,
                         url: download_obj.prefix+'/'+file.id+download_obj.postfix,                        
-                    })
+                    });
+                    console.log(selection_info[0]);
                 }
                 on_files_selected(selection_info, 'google');
             }

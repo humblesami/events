@@ -34,9 +34,8 @@ function apply_drag_drop(input){
                 <i class="glyphicon glyphicon-folder-open"></i>&nbsp;  
                 <span class="hidden-xs">Browse …</span>
             </div>
-            <div class="upload_files">
-            
-            </div>
+        </div>
+        <div class="feedback">
         </div>
     </div>
     `;
@@ -206,6 +205,7 @@ function apply_drag_drop(input){
     }    
 
     function preview_files(incoming_files){
+        parent.find('.feedback').html('');
         var thumbnail = `
         <div class="file-preview-other file-box border p-1">
             <div class="text-right pb-1 del">
@@ -241,23 +241,25 @@ function apply_drag_drop(input){
             name_box.val(single_file.name);
             parent.closest('fieldset').find('[name="file_name"]').val(single_file.name);
             var single_file_prefix = window['js_utils'].get_dataurl_prefix(single_file.name);
-            if(single_file_prefix == 'Invalid file anme')
+            if(!single_file_prefix)
             {
-                console.log('Invalid file type')
+                parent.find('.feedback').html('Invalid file type');
+                return;
             }
             if(single_file.url)
             {
                 name_box.append('<input name="url" value="'+single_file.url+'"/>');                
-                download(single_file.url, single_file.access_token, function(data){
-                    data = btoa(unescape(encodeURIComponent(data)));                    
-                    data = single_file_prefix + data;
-                    parent.closest('fieldset').find('[name="binary_data"]').val(data);
-                });
+                // download(single_file.url, single_file.access_token, function(data){
+                //     data = btoa(unescape(encodeURIComponent(data)));                    
+                //     data = single_file_prefix + data;
+                //     parent.closest('fieldset').find('[name="binary_data"]').val(data);
+                // });
+                parent.closest('fieldset').find('input[name="cloud_url"]').val(single_file.url);
+                parent.closest('fieldset').find('input[name="access_token"]').val(single_file.access_token);
             }
             else
             {
                 window['js_utils'].read_file(single_file, function(data){
-                    data = single_file_prefix + data;
                     parent.closest('fieldset').find('[name="binary_data"]').val(data);
                 });
             }            

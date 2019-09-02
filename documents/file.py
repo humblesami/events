@@ -1,6 +1,7 @@
 import io
 import os
 import base64
+import re
 import subprocess
 
 from PIL import Image
@@ -15,10 +16,11 @@ from django.core.exceptions import ValidationError
 
 
 def validate_file_extension(value):
-    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
-    valid_extensions = ['.pdf', '.odt', '.doc', '.docx', '.xlsx', '.xls', '.ppt', '.pptx']
-    if not ext.lower() in valid_extensions:
-        raise ValidationError(u'Unsupported file extension. Only pdf and microsoft office documents(odt, doc,docx,ppt.pptx,xls,xlsx) are allowed')
+    pass
+    # ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+    # valid_extensions = ['.pdf', '.odt', '.doc', '.docx', '.xlsx', '.xls', '.ppt', '.pptx']
+    # if not ext.lower() in valid_extensions:
+    #     raise ValidationError(u'Unsupported file extension. Only pdf and microsoft office documents(odt, doc,docx,ppt.pptx,xls,xlsx) are allowed')
 
 def text_extractor(f):
     pdf = PdfFileReader(f)
@@ -40,42 +42,44 @@ class File(CustomModel, FilesUpload):
     file_type = models.CharField(max_length=128, default='')
     attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])
     upload_status = models.BooleanField(default=False)
-    file_name =  models.CharField(max_length=512, default='')
+    file_name = models.CharField(max_length=128, default='')
+    cloud_url = models.CharField(max_length=512, null=True, blank=True)
+    access_token = models.CharField(max_length=256, null=True, blank=True)
 
     def __str__(self):
         return self.name
 
-
-
     pending_tasks = 3
+
     def save(self, *args, **kwargs):
         try:
-            file_str = None
-            if self.binary_data:
-                file_str = self.binary_data.split(';base64,')[1]
-                binary_data = io.BytesIO(base64.b64decode(file_str))
-                file_data = DjangoFile(binary_data)
-            if self.pk is None:
-                self.pending_tasks = 2
-                self.attachment.save(self.file_name, file_data)
-                return
-            else:
-                old_file = File.objects.get(pk=self.pk).attachment
-                if file_str:
-                    if old_file:
-                        file_path = settings.BASE_DIR + old_file.url
-                        old_file_str = base64.b64encode(open(file_path, "rb").read()).decode('utf-8')
-                        if old_file_str != file_str:
-                            self.pending_tasks = 3
-                        else:
-                            self.pending_tasks = 0
-                    else:
-                        self.pending_tasks = 3
-                    if self.pending_tasks > 2:
-                        self.binary_data = None
-                        self.pending_tasks = 2
-                        self.attachment.save(self.file_name, file_data)
-                        return
+            if self.pending_tasks == 3:
+                file_data = None
+                if self.cloud_url:
+                    headers = None
+                    if self.access_token:
+                        headers = {'Authorization':'Bearer '+self.access_token}
+                    self.file_name = re.sub('[^0-9a-zA-Z\.]+', '_', self.file_name)
+                    file_data = ws_methods.http(self.cloud_url, headers)
+                    if file_data == b'Not Found':
+                        raise Exception('Not found')
+                    pth = settings.BASE_DIR + '/media/files/'+self.file_name
+                    f = open(pth, 'wb')
+                    f.write(file_data)
+                    f.close()
+                    res = open(pth, 'rb')
+                    file_data = res
+                elif self.binary_data:
+                    file_str = self.binary_data.split(';base64,')[1]
+                    binary_data = io.BytesIO(base64.b64decode(file_str))
+                    file_data = DjangoFile(binary_data)
+                if file_data is not None:
+                    self.binary_data = ''
+                    self.cloud_url = ''
+                    self.access_token = ''
+                    self.pending_tasks = 2
+                    self.attachment.save(self.file_name, file_data)
+                    return
                 else:
                     self.pending_tasks = 0
             super(File, self).save(*args, **kwargs)
@@ -92,7 +96,10 @@ class File(CustomModel, FilesUpload):
                         raise Exception('File conversion failed')
                     if not self.pdf_doc.file:
                         raise Exception('File conversion failed.')
-                    self.content = text_extractor(self.pdf_doc)
+                    try:
+                        self.content = text_extractor(self.pdf_doc)
+                    except:
+                        pass
                 self.pending_tasks = 0
                 self.save()
             pass
@@ -104,7 +111,7 @@ class File(CustomModel, FilesUpload):
     def get_pdf(self):
         tmp = self.attachment.url.split('.')
         ext = tmp[len(tmp) - 1]
-        filename = self.attachment.name.replace("files/", "").split(".")[0]
+        filename = self.file_name
         pth = settings.BASE_DIR + self.attachment.url
         if ext in ('odt', 'doc', 'docx', 'ppt', 'pptx', 'pdf'):
             self.doc2pdf(pth, ext, filename)

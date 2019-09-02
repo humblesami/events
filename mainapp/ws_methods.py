@@ -93,10 +93,24 @@ def choices_to_list(choice_list):
     lst = []
     for choice in choice_list:
         lst.append({'id': choice[0], 'name': str(choice[1])})
-    return  lst
+    return lst
 
 
 from urllib.parse import urlsplit
+
+
+def http(req_url, headers=None):
+    try:
+        res = ''
+        if headers:
+            res = requests.get(req_url, headers=headers)
+        else:
+            res = requests.get(req_url)
+        res = res.content
+    except:
+        res = 'Request failed because ' + str(sys.exc_info())
+        print(res)
+    return res
 
 def http_request(req_url):
     try:
