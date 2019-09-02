@@ -1,4 +1,4 @@
-function file_input(input){
+function apply_drag_drop(input){
     var element = input[0];
     var parent = input.parent();
     var multiple = input.attr('multiple');
@@ -202,7 +202,8 @@ function file_input(input){
         {
             parent.find('.file-drop-zone-title').show();
         }
-    }
+        parent.closest('fieldset').find('[name="binary_data"]').val('');v
+    }    
 
     function preview_files(incoming_files){
         var thumbnail = `
@@ -238,22 +239,28 @@ function file_input(input){
             var name_box = nail2.find('input[name="name"]');
             var single_file = incoming_files[0];
             name_box.val(single_file.name);
+            parent.closest('fieldset').find('[name="file_name"]').val(single_file.name);
+            var single_file_prefix = window['js_utils'].get_dataurl_prefix(single_file.name);
+            if(single_file_prefix == 'Invalid file anme')
+            {
+                console.log('Invalid file type')
+            }
             if(single_file.url)
             {
-                name_box.append('<input name="url" value="'+single_file.url+'"/>');
-                name_box.val(single_file.name);                    
+                name_box.append('<input name="url" value="'+single_file.url+'"/>');                
                 download(single_file.url, single_file.access_token, function(data){
-                    data = btoa(unescape(encodeURIComponent(data)));
-                    $('[name="binary_data"]').val(data);
+                    data = btoa(unescape(encodeURIComponent(data)));                    
+                    data = single_file_prefix + data;
+                    parent.closest('fieldset').find('[name="binary_data"]').val(data);
                 });
             }
             else
             {
-                window['js_utils'].read_file(single_file, function(data){                    
-                    name_box.val(single_file.name);
-                    $('[name="binary_data"]').val(data);
+                window['js_utils'].read_file(single_file, function(data){
+                    data = single_file_prefix + data;
+                    parent.closest('fieldset').find('[name="binary_data"]').val(data);
                 });
-            }
+            }            
             nail2.find('.del').click(remove_file);
             parent.find('.preview-conatiner').html(nail2);            
         }
@@ -270,6 +277,9 @@ function file_input(input){
     input.change(function(e){
         merge_local_files(element.files);
     });
+
+
+    
 }
 $(document).on('dragenter dragover drop', function(evn){
     evn.stopPropagation();

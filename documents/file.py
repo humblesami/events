@@ -40,48 +40,66 @@ class File(CustomModel, FilesUpload):
     file_type = models.CharField(max_length=128, default='')
     attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])
     upload_status = models.BooleanField(default=False)
+    file_name =  models.CharField(max_length=512, default='')
 
     def __str__(self):
         return self.name
 
+
+
+    pending_tasks = 3
     def save(self, *args, **kwargs):
         try:
-            create = False
-            old_doc = None
-            file_changed = False
+            file_str = None
+            if self.binary_data:
+                file_str = self.binary_data.split(';base64,')[1]
+                binary_data = io.BytesIO(base64.b64decode(file_str))
+                file_data = DjangoFile(binary_data)
             if self.pk is None:
-                create = True
-                if self.attachment:
-                    file_changed = True
-            elif self.attachment:
-                old_doc = File.objects.get(pk=self.pk).attachment
-                self.binary_data = None
-                if old_doc != self.attachment:
-                    file_changed = True
+                self.pending_tasks = 2
+                self.attachment.save(self.file_name, file_data)
+                return
+            else:
+                old_file = File.objects.get(pk=self.pk).attachment
+                if file_str:
+                    if old_file:
+                        file_path = settings.BASE_DIR + old_file.url
+                        old_file_str = base64.b64encode(open(file_path, "rb").read()).decode('utf-8')
+                        if old_file_str != file_str:
+                            self.pending_tasks = 3
+                        else:
+                            self.pending_tasks = 0
+                    else:
+                        self.pending_tasks = 3
+                    if self.pending_tasks > 2:
+                        self.binary_data = None
+                        self.pending_tasks = 2
+                        self.attachment.save(self.file_name, file_data)
+                        return
+                else:
+                    self.pending_tasks = 0
             super(File, self).save(*args, **kwargs)
-            if file_changed:
+            if self.pending_tasks > 1:
                 if self.file_type != 'message':
-                    self.process_doc()
-            elif self.binary_data:
-                format, imgstr = self.binary_data.split(';base64,')
-                binary_data = io.BytesIO(base64.b64decode(imgstr))
-                self.binary_data = None
-                self.attachment.save(self.name, DjangoFile(binary_data))
+                    self.pending_tasks = 1
+                    self.get_pdf()
+                    return
+            if self.pending_tasks > 0:
+                if self.html:
+                    self.content = self.html
+                else:
+                    if not self.pdf_doc:
+                        raise Exception('File conversion failed')
+                    if not self.pdf_doc.file:
+                        raise Exception('File conversion failed.')
+                    self.content = text_extractor(self.pdf_doc)
+                self.pending_tasks = 0
+                self.save()
+            pass
         except:
             res = ws_methods.get_error_message()
             a = 1
 
-    def process_doc(self):
-        self.get_pdf()
-        if self.html:
-            self.content = self.html
-        else:
-            if not self.pdf_doc:
-                raise Exception('File conversion failed')
-            if not self.pdf_doc.file:
-                raise Exception('File conversion failed.')
-            self.content = text_extractor(self.pdf_doc)
-        self.save()
 
     def get_pdf(self):
         tmp = self.attachment.url.split('.')

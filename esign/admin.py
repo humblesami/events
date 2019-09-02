@@ -25,6 +25,7 @@ class SignDocAdmin(admin.ModelAdmin):
         'name',
         'attachment',
         'binary_data',
+        'file_name',
         'meeting',
         'respondents',
         'send_to_all',
