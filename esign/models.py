@@ -30,6 +30,7 @@ class SignatureDoc(File, Actions):
     workflow_enabled = models.BooleanField(blank=True, null=True)
     send_to_all = models.BooleanField(blank=True, null=True)
     original_pdf = models.FileField(upload_to='original/')
+    upload = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         create = False

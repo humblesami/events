@@ -38,10 +38,11 @@ function file_input(input){
             
             </div>
         </div>
+        <input name="upload" />
     </div>
     `;
-    input.hide();
-    input.after(uploader);
+    // input.hide();
+    input.after(uploader);    
     parent.find('.cloud_pickers_container .picker').click(function(){
         // console.log(this);
         window['merge_cloud_files'] = merge_cloud_files;
@@ -59,7 +60,7 @@ function file_input(input){
     });
     drop_zone.on('drop', function(e){
         $(this).removeClass('dragenter');
-        var new_files = ev.dataTransfer.items;
+        var new_files = e.dataTransfer.items;
         if(!multiple)
         {
             new_files = [new_files[0]];
@@ -67,9 +68,9 @@ function file_input(input){
         merge_local_files(new_files);
     });
 
-    input.cloud_urls = [];
-    input.cloud_files = []
     var added_files = [];
+    input.cloud_urls = [];
+    input.cloud_files = []    
     input.local_files = [];
     input.selected_files = [];
 
@@ -190,15 +191,22 @@ function file_input(input){
         else
         {
             var nail2 = $(thumbnail);
-            var name_box = nail1.find('input[name="name"]');
+            var name_box = nail2.find('input[name="name"]');
             var single_file = incoming_files[0];
             name_box.val(single_file.name);
             if(single_file.url)
             {
                 name_box.append('<input name="url" value="'+single_file.url+'"/>');
             }
+            else
+            {
+                window['js_utils'].read_file(single_file, function(data){                    
+                    parent.find('input[name="name"]').val(single_file.name);
+                    parent.find('input[name="upload"]').val(data);
+                });
+            }
             nail2.find('.del').click(remove_file);
-            parent.find('.preview-conatiner').html(nail2);
+            parent.find('.preview-conatiner').html(nail2);            
         }
         if(parent.find('.file-box').length)
         {

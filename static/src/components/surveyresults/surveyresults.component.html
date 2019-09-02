@@ -73,7 +73,9 @@ title="Results"></app-breadcrumb>
                                                                 <td [ngStyle]="{'background-color': obj.color}" style="width: 20px;height:20px;padding:0"></td>
                                                                 <td>{{obj.option_name}}</td>
                                                                 <td>{{obj.option_result || 0}}</td>
-                                                                <td>{{obj.option_perc || 0}}%</td>
+                                                                <td *ngIf="obj.type != 'select-multiple'">{{obj.option_perc || 0}}%</td>
+                                                                <td *ngIf="obj.type == 'select-multiple'">{{obj.total_perc || 0}}%</td>
+                                                                <!--<td *ngIf="obj.type == 'select-multiple'">{{obj.option_result}}/{{obj.total_answers}}</td>-->
                                                             </tr>
                                                         </tbody>
                                                     </table>                                                        

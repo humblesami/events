@@ -8,7 +8,7 @@ from PyPDF2 import PdfFileReader
 from mainapp import settings, ws_methods
 
 from django.db import models
-from mainapp.models import CustomModel
+from mainapp.models import CustomModel, FilesUpload
 from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
 
@@ -32,7 +32,7 @@ def text_extractor(f):
         n += 1
     return text
 
-class File(CustomModel):
+class File(CustomModel, FilesUpload):
     name = models.CharField(max_length=100)
     html = models.CharField(max_length=30, blank=True)
     content = models.CharField(max_length=30, blank=True)
