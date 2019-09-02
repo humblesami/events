@@ -218,6 +218,9 @@ class Survey(Actions):
         else:
             status = 'pending'
         return status
+    @classmethod
+    def total_users(survey,audience,question):
+        pass
 
     @classmethod
     def get_results(cls, request, params):
@@ -247,6 +250,8 @@ class Survey(Actions):
             'id': survey.id,
             'name': survey.name,
             'questions': [],
+            'questions_single':[],
+            'questions_multi':[],
             'is_open': is_open,
             'is_published': survey.is_published,
             'publish': survey.is_published,
@@ -263,10 +268,12 @@ class Survey(Actions):
             answers = list(question.answers.values('body', 'response__user__username').annotate(answer_count=Count('body')))
             answer_objects = question.answers.all()
             cnt = 0
+            user_answers_count = 0
             for answer in answers:
                 user_answer = answer['body']
                 if question.type == 'select-multiple':
                     user_answer = literal_eval(user_answer)
+                    user_answers_count += len(user_answer)
                 profile_model = ws_methods.get_model('meetings', 'Profile')
                 user_response = answer_objects[cnt].response
                 if user_response and user_response.user:
@@ -287,15 +294,18 @@ class Survey(Actions):
             question_data = []
             chart_data = []
             for choice in question_choices:
-                question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0})
+                question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0, 'total_perc': 0, 'type':''})
             for index, user_answer in enumerate(answers):
                 if question.type == 'select-multiple':
                     user_answer = literal_eval(user_answer['body'])
+
                     for user_ans in user_answer:
                         for singledata in question_data:
                             if user_ans == singledata['option_name'].replace(' ','-').lower():
                                 singledata['option_result'] += 1
                                 singledata['option_perc'] = "{:.{}f}".format( singledata['option_result'] / len(audience) * 100, 2 )
+                                singledata['total_perc'] = "{:.{}f}".format((singledata['option_result']/ user_answers_count ) * 100,2)
+                                singledata['type'] = 'select-multiple'
                                 break
                 else:
                     for singledata in question_data:
@@ -323,13 +333,23 @@ class Survey(Actions):
                 'option_name': 'Responsed',
                 'option_result': responses
             })
-            survey_results['questions'].append({
-                'id': question.id,
-                'name': question.text,
-                'choices': question_choices,
-                'user_answers': user_answers,
-                'chart_data': question_data
-            })
+            if question.type in ('radio', 'select-multiple'):
+                survey_results['questions_multi'].append({
+                    'id': question.id,
+                    'name': question.text,
+                    'choices': question_choices,
+                    'user_answers': user_answers,
+                    'chart_data': question_data
+                })
+            else:
+                survey_results['questions_single'].append({
+                    'id': question.id,
+                    'name': question.text,
+                    'choices': question_choices,
+                    'user_answers': user_answers,
+                    'chart_data': question_data
+                })
+            survey_results['questions'] = survey_results['questions_single'] + survey_results['questions_multi']
             survey_results['progress_data'] = progress_data
         return survey_results
 

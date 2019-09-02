@@ -74,6 +74,7 @@ title="Results"></app-breadcrumb>
                                                                 <td>{{obj.option_name}}</td>
                                                                 <td>{{obj.option_result || 0}}</td>
                                                                 <td>{{obj.option_perc || 0}}%</td>
+                                                                <td *ngIf="obj.type == 'select-multiple'">{{obj.total_perc || 0}}%</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>                                                        
