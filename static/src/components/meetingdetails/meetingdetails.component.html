@@ -271,9 +271,15 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         </div>
         <div *ngIf="meeting_object.surveys && meeting_object.surveys.length" class="title-wrapper border-bottom">
             <!--Surveys-->
-            <h4 class="text-primary my-3">Surveys</h4>
+            <div class="clearfix">
+                <h4 class="text-primary float-left">Surveys</h4>
+                <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.surveys.length > visible_limit['survey']">
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.surveys, 'survey')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.surveys, 'survey')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
             <div class="row">
-                <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let sur of meeting_object.surveys">
+                <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let sur of meeting_object.surveys.slice(start_indices['survey'], ending_indices['survey'])">
                     <div class="kanban-card position-relative">
                         <div class="kanban-meeting-info">
                             <div class="kanban-upcoming-meeting" routerLink="/survey/{{sur.id}}">
@@ -315,13 +321,17 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 
         <div *ngIf="meeting_object.votings && meeting_object.votings.length" class="title-wrapper border-bottom">
             <!--Votings-->
-            <div class="row">
-                <div class="col-sm-12">
-                    <h4 class="my-3 text-primary">Approval/Voting</h4>
+            
+                <div class="clearfix mt-2">
+                    <h4 class="text-primary float-left">Approval/Voting</h4>
+                    <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.votings.length > visible_limit['voting']">
+                        <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.votings, 'voting')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                        <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.votings, 'voting')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                    </div>
                 </div>
-			</div>
+	
             <div class="row">
-                <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let vote of meeting_object.votings">
+                <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let vote of meeting_object.votings.slice(start_indices['voting'], ending_indices['voting'])">
                     <div class="kanban-card position-relative">
                         <div class="kanban-meeting-info">
                             <div class="kanban-upcoming-meeting" routerLink="/voting/{{vote.id}}">
@@ -361,10 +371,16 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <div *ngIf="meeting_object.meeting_docs && meeting_object.meeting_docs.length" class="title-wrapper border-bottom">
-            <h4 class="my-3 text-primary"><i class="icon-doc-file"></i> Meeting Documents </h4>
+        <div *ngIf="meeting_object.meeting_docs && meeting_object.meeting_docs.length" class="title-wrapper">
+            <div class="clearfix mt-2">
+                <h4 class="my-3 text-primary float-left"><i class="icon-doc-file"></i> Meeting Documents </h4>
+                <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.meeting_docs.length > visible_limit['news_doc']">
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.meeting_docs, 'news_doc')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.meeting_docs, 'news_doc')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
             <div class="row">
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of meeting_object.meeting_docs">
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of meeting_object.meeting_docs.slice(start_indices['news_doc'], ending_indices['news_doc'])">
                     <a routerLink="/meeting/doc/{{doc.id}}" class="DocumentWrapper gray-bge">
 						<div class="DocIcon">
 							<span class="rounded-circle">
@@ -375,17 +391,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             {{doc.name}}
                         </div>
                     </a>
-                    <!-- <a class="DocumentWrapper gray-bge" *ngIf="doc && !doc.upload_status">
-						<span class="doc-uplaod-status"><i class="fas fa-exclamation-circle"></i></span>
-                        <div class="DocIcon">
-                            <span class="rounded-circle">
-                                <i class="icon-doc-file"></i>
-                            </span>
-                        </div>
-                        <div class="DocInfoVertical text-truncate">
-                            {{doc.name}}
-                        </div>
-                    </a> -->
                 </div>
             </div>
         </div>
@@ -396,7 +401,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 <div *ngFor="let doc of attachments; let i = index" contenteditable="false"
                     class="doc-thumb" style="display: flex;">
                     <span class="doc-thumb-icon"><i class="fa fa-2x fa-file"></i></span>
-                    <!-- <span class="file_name">{{doc.name}}</span> -->
                     <div>
                         <input type="text" name="attachment_name"
                         (click)="$event.target.select()" value="{{doc.name}}" (change)="doc_name_change(doc, $event)"/>
@@ -409,7 +413,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group mt-3 mr-2">
+        <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group mr-2 border-bottom pb-3">
             
                 <form class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
                     <input (change)="file_change($event)" id="msg_file" type="file"
@@ -428,11 +432,17 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         </div>
 
         <div *ngIf="meeting_object.sign_docs && meeting_object.sign_docs.length" class="DocumentsSignWrapper title-wrapper border-bottom">
-            <h4 class="my-3 text-primary">
-                Documents To Sign
-            </h4>
+            <div class="clearfix mt-2">
+                <h4 class="my-3 text-primary float-left">
+                    Documents To Sign
+                </h4>
+                <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.sign_docs.length > visible_limit['sign_doc']">
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.sign_docs, 'sign_doc')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.sign_docs, 'sign_doc')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
 			<div class="row docwrappercontainer">
-				<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4"   *ngFor="let doc of meeting_object.sign_docs">
+				<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of meeting_object.sign_docs.slice(start_indices['sign_doc'], ending_indices['sign_doc'])">
 					<a routerLink="/signdoc/{{doc.id}}" class="">
 						<div class="DocumentWrapper">
 							<div class="DocIcon">

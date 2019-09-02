@@ -330,8 +330,103 @@ export class MeetingDetailsComponent implements OnInit {
             }, null);
         }
     }
+    visible_limit = {
+        survey : 1,
+        sign_doc : 1,
+        news_doc : 1,
+        news_video: 1,
+        voting: 1,
+    };
+    ng_init = false;
+    start_indices = {
+        survey : 0,
+        sign_doc : 0,
+        news_doc : 0,
+        news_video: 0,
+        voting: 0,
+    };
+    ending_indices = {
+        survey : 0,
+        sign_doc : 0,
+        news_doc : 0,
+        news_video: 0,
+        voting: 0,
+    }
 
+    update_indices(){
+
+    }
+    get_slider_start_index(flag, items, item_type){
+        
+        if(!items)
+        {
+            return;
+        }
+        if(this.start_indices[item_type] + flag * this.visible_limit[item_type] >= items.length)
+        {
+            this.start_indices[item_type] = 0;
+        }
+        else if(this.start_indices[item_type] + flag * this.visible_limit[item_type] < 0)
+        {
+            this.start_indices[item_type] = items.length % this.visible_limit[item_type] > 0 ? items.length - items.length % this.visible_limit[item_type] : items.length - this.visible_limit[item_type];
+        }
+        else
+        {
+            this.start_indices[item_type] += flag * this.visible_limit[item_type];
+        }
+        this.ending_indices[item_type] =  this.start_indices[item_type] + this.visible_limit[item_type];
+        console.log(this.visible_limit[item_type],this.start_indices[item_type],items,item_type);
+    }
 	ngOnInit() {
+        let obj_this = this;
+        var vw = $(window).width();
+        // console.log(vw , 66);
+        if(vw > 1200)
+        obj_this.visible_limit = {
+            survey : 3,
+            sign_doc : 6,
+            news_doc : 6,
+            news_video: 4,
+            voting: 3,
+        }
+        else if(vw > 991 && vw < 1200)
+        obj_this.visible_limit = {
+            survey : 3,
+            sign_doc : 4,
+            news_doc : 6,
+            news_video: 4,
+            voting: 3,
+        }
+        else if(vw > 767 && vw < 992)
+        obj_this.visible_limit = {
+            survey : 2,
+            sign_doc : 3,
+            news_doc : 3,
+            news_video: 3,
+            voting: 2,
+        }
+        else if(vw > 576 && vw < 768)
+        obj_this.visible_limit = {
+            survey : 1,
+            sign_doc : 2,
+            news_doc : 2,
+            news_video: 2,
+            voting: 1,
+        }
+        else
+        obj_this.visible_limit = {
+                survey : 1,
+                sign_doc : 1,
+                news_doc : 1,
+                news_video: 1,
+                voting: 1,
+            };
+
+        for (var item_type in obj_this.ending_indices)
+        {
+            obj_this.ending_indices[item_type] = obj_this.visible_limit[item_type];
+        }
+        console.log(obj_this.visible_limit, obj_this.ending_indices,1122);
 	}
 
 	ngOnDestroy() {
