@@ -294,7 +294,7 @@ class Survey(Actions):
             question_data = []
             chart_data = []
             for choice in question_choices:
-                question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0, 'total_perc': 0, 'type':''})
+                question_data.append({'option_name': choice.strip(), 'option_result': 0, 'option_perc': 0, 'total_perc': 0, 'type':'','total_answers':''})
             for index, user_answer in enumerate(answers):
                 if question.type == 'select-multiple':
                     user_answer = literal_eval(user_answer['body'])
@@ -305,6 +305,7 @@ class Survey(Actions):
                                 singledata['option_result'] += 1
                                 singledata['option_perc'] = "{:.{}f}".format( singledata['option_result'] / len(audience) * 100, 2 )
                                 singledata['total_perc'] = "{:.{}f}".format((singledata['option_result']/ user_answers_count ) * 100,2)
+                                singledata['total_answers'] = user_answers_count
                                 singledata['type'] = 'select-multiple'
                                 break
                 else:
