@@ -230,6 +230,10 @@ a:hover{
 .accordion .card:first-of-type{
     border: 1px solid rgba(0,0,0,.125);
 }
+.kanban-card{
+    border: none;
+}
+
 @media screen and (max-width:480px){
     .roster .table th:first-child,
     .roster .table td:first-child{

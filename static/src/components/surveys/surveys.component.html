@@ -49,20 +49,20 @@ title="Surveys"></app-breadcrumb>
                                 <span class=" text-truncate" *ngIf="survey.description">
                                     Description: {{survey.description}}
                                 </span>
-                                <span *ngIf="survey.meeting && survey.meeting.name">
+                                <span class="text-truncate" *ngIf="survey.meeting && survey.meeting.name">
                                     Meeting: {{survey.meeting.name}}
                                 </span>
                             </div>
                         </div>
                         <div class="row d-flex justify-content-between" *ngIf="survey.is_published">
                             <div class="col">
-                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}" *ngIf="survey.is_respondent" [ngStyle]="{'border': '1px solid rgba(99, 143, 201, 0.25)'}">
-                                    <a *ngIf="!survey.is_attempted" id="{{survey.id}}" class="btn" routerLink='/survey/survey/details/{{survey.id}}'>Start Survey</a>
-                                    <a *ngIf="survey.is_attempted" id="{{survey.id+survey.name}}" class="btn" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
+                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}" *ngIf="survey.is_respondent">
+                                    <a *ngIf="!survey.is_attempted" class="btn" routerLink='/survey/survey/details/{{survey.id}}'>Start Survey</a>
+                                    <a *ngIf="survey.is_attempted" class="btn" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
                                 </div>
-                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}" *ngIf="!survey.is_respondent" [ngStyle]="{'border': '1px solid rgba(99, 143, 201, 0.25)'}">
+                                <div class="bs-btnwrap survey-top-buttons" id="tdmrb{{survey.id}}" *ngIf="!survey.is_respondent" [ngStyle]="{'border-top': '1px solid rgba(99, 143, 201, 0.25)'}">
                                     <!-- <a *ngIf="!survey.is_attempted" id="{{survey.id}}" class="btn btn-secondary" routerLink='/surveys'>No Results Yet</a> -->
-                                    <a *ngIf="survey.is_attempted || !survey.is_attempted" id="{{survey.id+survey.name}}" class="btn btn-secondary" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
+                                    <a *ngIf="survey.is_attempted || !survey.is_attempted"  class="btn btn-secondary" routerLink='/survey/{{survey.id}}/results'>Survey Results</a>
                                 </div>
                             </div>
                         </div>

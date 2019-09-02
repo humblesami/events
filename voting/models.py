@@ -253,12 +253,14 @@ class Voting(Actions):
         offset = params.get('offset')
         limit = params.get('limit')
         total_cnt = votings.count()
+        uid = request.user.id
         if limit:
             votings = votings[offset: offset + int(limit)]
         all_votings = []
         for voting in votings:
             current_voting = ws_methods.obj_to_dict(voting, fields=['id', 'name', 'open_date', 'close_date'])
             current_voting['voting_type'] = voting.voting_type.name
+            # current_voting['is_respondent'] = uid in voting.get_audience()
             all_votings.append(current_voting)
         votings_json = {'records': all_votings, 'total': total_cnt, 'count': 0}
         return votings_json

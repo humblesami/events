@@ -30,7 +30,7 @@ get_list()
     // let req_url = '/meeting/list-json';
     let input_data = { meeting_type: obj_this.meeting_type, paging : {offset: 0, limit: 10}};
     var success_cb = function (result) {
-        // console.log(result);
+        console.log(result);
         for(var i in result.records)
         {
             var open_date = result.records[i]['open_date'];

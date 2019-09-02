@@ -35,7 +35,11 @@ content: "\f068";
 .surveyDetailsquestions label{
 	word-break: break-all;
 }
-
+.card-header .float-right{
+    border-radius: 50%;
+    border: 2px solid #fff;
+    padding: 0 3px;
+}
 @media screen and (min-width:992px){
 	.rounded-circle{
 		max-width: 70px;

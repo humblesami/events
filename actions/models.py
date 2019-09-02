@@ -34,9 +34,6 @@ class Actions(CustomModel):
     
     def get_audience(self):
         audience = []
-        if self.meeting:
-            audience = self.meeting.get_audience()
-        
         for obj in self.respondents.all().values('id'):
             audience.append(obj['id'])
         return list(dict.fromkeys(audience))

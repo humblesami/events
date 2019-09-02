@@ -99,7 +99,8 @@ class Notification(models.Model):
             return 'get audience not defined for ' + res_app + '.' + res_model
         if not audience:
             return 'No Audience'
-        audience.remove(sender.id)
+        if sender.id in audience:
+            audience.remove(sender.id)
         senders_for_mention = {}
         if mentioned_list:
             for uid in mentioned_list:

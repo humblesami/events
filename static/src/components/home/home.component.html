@@ -34,7 +34,7 @@
             </section>
 
             
-            <section *ngIf="to_do_count" class="">            
+            <section *ngIf="to_do_count" class="HomepageDocumentSection">            
                     <h2 class="border-bottom text-dark pb-3">Actions</h2>
                     <!--Surveys-->
                     <div id="to-do">
@@ -137,7 +137,7 @@
                         <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" class="carousel slide carousel-multi-item border-bottom py-3" data-ride="carousel">   
                             <div class="clearfix">
                                 <h4 class="text-primary my-3 float-left">
-                                    Documents To Sign
+                                    E-Signature Doc
                                 </h4>
                                 <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
                                     <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
@@ -176,7 +176,7 @@
                         <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" class="carousel slide carousel-multi-item py-3" data-ride="carousel">   
                             <div class="clearfix">
                                 <h4 class="text-primary my-3 float-left">
-                                        Approval / Voting
+                                        Voting / Approvals
                                     </h4>
                                 <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
                                     <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
@@ -212,10 +212,10 @@
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <div class="row d-flex justify-content-between">
+                                                    <div class="row d-flex justify-content-between" routerLink="/voting/{{vote.id}}">
                                                         <div class="col">
-                                                            <div class="bs-btnwrap survey-top-buttons" routerLink="/voting/{{vote.id}}" [ngStyle]="{'background': '#f3f3f3'}">
-                                                                <span class="btn text-white">Cast Vote</span>
+                                                            <div class="bs-btnwrap survey-top-buttons">
+                                                                <a class="btn text-white">Details</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -233,7 +233,7 @@
     
     <section *ngIf="home_data && home_data.doc_ids && home_data.doc_ids.length" id="multi-item-docs"
     class="carousel slide carousel-multi-item " data-ride="carousel">   
-        <div class="py-3 container">
+        <div class="py-0 container">
             <div class="HomepageDocumentSection">
                 <div class="clearfix">
                     <h4 class="text-primary my-3 float-left">Documents</h4>
@@ -265,7 +265,7 @@
     </section>
 
     <section *ngIf="home_data && home_data.video_ids && home_data.video_ids.length" id="multi-item-videos" 
-    class="carousel slide carousel-multi-item container py-3" data-ride="carousel">   
+    class="carousel slide carousel-multi-item container py-0" data-ride="carousel">   
         <div class="clearfix">
             <h4 class="text-primary my-3 float-left">
                     Videos
