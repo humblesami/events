@@ -25,6 +25,7 @@ $(function(){
         // $('#id_attachment').attr('multiple','multiple');
         file_input($('#id_attachment'));
         $('.form-row.field-attachment').show();
+        $('.form-row.field-respondents').show();
     }
 });
 
