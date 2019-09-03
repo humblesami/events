@@ -32,6 +32,19 @@ export class HttpService {
         var options = this.makeOptions_secure('post', input_data,success_cb, failure_cb);
         window['dn_rpc_object'](options);
     }
+    post_files(form: any) {
+        var url = form.attr("action");
+        url = window['site_config'].server_base_ur + url;
+        var formData = {};
+        $(form).find("input[name]").each(function (index, node) {
+            formData[node.name] = node.value;
+        });
+        $.post(url, formData).done(function (data) {
+            alert(data);
+        }).failure(function(a,b,c,d){
+            console.log(a,b,c,d);
+        });
+    }
     post_public(input_data: any, success_cb, failure_cb) {
         var options = this.makeOptions_public(input_data,success_cb, failure_cb);
         window['dn_rpc_object'](options);
