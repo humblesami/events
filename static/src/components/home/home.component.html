@@ -37,16 +37,16 @@
 
             
             <section *ngIf="to_do_count" class="HomepageDocumentSection">            
-                    <h2 class="border-bottom text-dark pb-3"><i class="icon-action"></i> Actions</h2>
+                    <h2 class="border-bottom text-dark pb-3 mb-0"><i class="icon-action"></i> Actions</h2>
                     <!--Surveys-->
                     <div id="to-do">
                         <div class="carousel slide carousel-multi-item" data-ride="carousel"
-                        *ngIf="home_data.to_do_items.pending_surveys.length" [ngClass]="['border-bottom','py-3']">   
+                        *ngIf="home_data.to_do_items.pending_surveys.length" [ngClass]="['border-bottom',' pt-3 pb-4']">
                             <div class="clearfix">
-                                <h4 class="text-primary my-3 float-left">
+                                <h4 class="text-primary pb-3 float-left">
                                     Surveys
                                 </h4>
-                                <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.to_do_items.pending_surveys.length > visible_limit['survey']">
+                                <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_surveys.length > visible_limit['survey']">
                                     <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_surveys, 'survey')"  data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                     <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, home_data.to_do_items.pending_surveys, 'survey')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                                 </div>
@@ -136,12 +136,12 @@
                             </div>
                         </div>
                         <!--Documents-->
-                        <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" class="carousel slide carousel-multi-item border-bottom py-3" data-ride="carousel">   
+                        <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" class="carousel slide carousel-multi-item border-bottom  pt-3 pb-4" data-ride="carousel">
                             <div class="clearfix">
-                                <h4 class="text-primary my-3 float-left">
+                                <h4 class="text-primary pb-3 float-left">
                                     E-Signature Doc
                                 </h4>
-                                <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
+                                <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
                                     <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                     <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                                 </div>
@@ -175,12 +175,12 @@
                             </div>
                         </div>                 
                         <!--Votings-->
-                        <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" class="carousel slide carousel-multi-item py-3" data-ride="carousel">   
+                        <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" class="carousel slide carousel-multi-item  pt-3 pb-4" data-ride="carousel">
                             <div class="clearfix">
-                                <h4 class="text-primary my-3 float-left">
+                                <h4 class="text-primary pb-3 float-left">
                                         Voting / Approvals
                                     </h4>
-                                <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
+                                <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
                                     <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                     <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                                 </div>
