@@ -1474,17 +1474,37 @@
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
                     aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
+                    var username = aComment.user_name;
+                    var user_image = '';
+                    if(aComment.user)
+                    {
+                        username = aComment.user.name;
+                        if(aComment.user.image)
+                        {
+                            user_image = window['site_config'].server_base_url + aComment.user.image;
+                            user_image = '<img class="img-fluid" id="navbar-profile-img" src="'+user_image+'">' ;
+
+                        }
+                        else
+                        {
+                            var initials = username.match(/\b\w/g) || [];
+                            initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+                            user_image = '<span>'+initials+'</span>';
+                        }
+                    }
+                    
+
                     var child_info = `
 						<div class="user-pic-time-infoWrapper">
 							<div class="userSmpic icon-user-single">
-								<img class="img-fluid" id="navbar-profile-img" src="">
+								`+user_image+`
 							</div>
 							<div class="user-time-info">
 								<span class="user">` + aComment.user_name + `</span>
-								<span class"time">` + aComment.date_time + `</span>
+                                <span class="time">` + aComment.date_time + `</span>
+                                <div><p>` + aComment.content + `</p></div>
 							</div>
 						</div>
-						<div>` + aComment.content + `</div>
                     `;
                     $(child).attr('comment-id', aComment.uuid);
                     $(child).attr('annotation', aComment.annotation);

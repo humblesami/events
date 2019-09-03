@@ -368,12 +368,12 @@ body.pdf-viewer {
     flex-direction: row-reverse;*/
     }
 #content-wrapper {
-    position: relative;	
+    position: relative;
 }
 #comment-wrapper {
     position: relative;
     flex: 0 0 330px;
-    max-width: 330px;  
+    max-width: 330px;
     display: none;
     background: #F8F8F8;
     border-right: 1px solid #e6e6e6;
@@ -443,7 +443,7 @@ body.pdf-viewer {
     }
 #comment-wrapper .comment-list-item {
     font-size: 13px;
-    padding: 15px 8px 6px;
+    padding: 5px 8px 0px;
     line-height: 1.5;
     cursor: pointer;
     color: #000000;
@@ -451,8 +451,15 @@ body.pdf-viewer {
 .comment-list-item .user-time-info {
     font-size: 11px;
     margin:0;
-    padding: 0 0 15px;
+    padding: 5px 0 0;
     line-height: 1;
+}
+.user-time-info p{
+    line-height:1.5;
+}
+.user-time-info p span{
+    font-family:inherit !important;
+    font-size:11px !important;
 }
 .comment-list-item .user-time-info .user {
     font-size: .840rem;
@@ -479,7 +486,7 @@ body.pdf-viewer {
     padding-bottom: 65px;
     height: calc(100vh - 160px);
     overflow-y: scroll;
-    background: #ffffff;
+    background: #f1f2f4;
     z-index:3;
 }
 .comment-list-form {
@@ -571,10 +578,12 @@ hr {
 }
 .groupcomment {
     margin: 0;
-    padding: 10px;
+    padding: 5px 10px 0px;
     border-bottom: 1px solid #e8e6e6;
 }
-
+.groupcomment:last-child{
+    border-bottom:none
+}
 .btn-primary.strt_sign.pdfjs {
     cursor: pointer;
     height: 34px;
@@ -648,7 +657,7 @@ button.pen.annotation_button.active
 {
     background-color: darkgreen;
 }
-        
+
 .user-pic-time-infoWrapper{
     display:flex;
     position:relative;
@@ -665,17 +674,37 @@ button.pen.annotation_button.active
     align-items: center;
     color: #ffffff;
     overflow:hidden;
+    min-width:30px;
 }
 .userSmpic.icon-user-single::before {
     position: absolute;
     z-index: 1;
 }
-        
+
 .userSmpic img{
     position:relative;
     z-index:2;
 }
-        
+
+/* Documents Comments */
+.comment-list-item .user-time-info .user,
+.comment-list-item .user-time-info .time{
+    padding-bottom: 10px;
+}
+
+.comment-list-container .comment-list-item:not(:first-child) {
+    padding-left: 2rem !important;
+    margin-bottom: -1rem !important;
+}
+.comment-list-item:first-child .user-time-info .user::after {
+    content: "Reply";
+    margin-left: 1rem;
+    background: #6a6969;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size:10px;
+    color:#fff;
+}
 /*
 .comment-list-item:nth-of-type(n+1) {
     margin:0 0 0 20px !important;
