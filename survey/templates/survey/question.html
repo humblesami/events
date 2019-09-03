@@ -2,7 +2,7 @@
 {% for form in response_form %}
 	{% if form.field.widget.attrs.category == category.name or not form.field.widget.attrs.category %}
 		<div class="col-lg-12" {% if form.errors%} danger {% endif %}">
-			<div class="iframe-textarea-wrap">
+			<div class="iframe-textarea-wrap" style="border-bottom:1px solid #ced4da;padding-bottom:3rem;padding-top:1rem;margin-bottom:1rem;">
 					<h4>
 						Q: {{ form.label|safe }}
 					</h4>
