@@ -153,7 +153,7 @@
                                             <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
                                                 <div class="DocIcon">
                                                     <span class="rounded-circle">
-                                                        <i class="icon-doc-file"></i>
+                                                        <img src="static/assets/images/e-sign.svg" alt="">
                                                     </span>
                                                 </div>
                                                 <div class="DocText">
@@ -238,11 +238,13 @@
         <div class="py-0 container">
             <div class="HomepageDocumentSection">
                 <div class="clearfix">
-                    <h4 class="text-primary my-3 float-left">Documents</h4>
-                    <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
-                        <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                        <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
-                    </div>
+					<div class="d-flex justify-content-between border-bottom align-items-center text-dark mb-3">
+						<h2 class="mb-3 float-left"><span class="head-icon-end"><i class="icon-action"></i> Documents</span></h2>
+						<div class="controls-top float-right btn-group mb-2" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
+							<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+							<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+						</div>
+					</div>
                 </div>
                 <div class="carousel-inner" role="listbox">    
                     <div class="carousel-item active"> 
@@ -267,16 +269,16 @@
     </section>
 
     <section *ngIf="home_data && home_data.video_ids && home_data.video_ids.length" id="multi-item-videos" 
-    class="carousel slide carousel-multi-item container py-0" data-ride="carousel">   
-        <div class="clearfix">
-            <h4 class="text-primary my-3 float-left">
-                    Videos
-                </h4>
-            <div class="controls-top float-right btn-group mb-2 mt-3" *ngIf="home_data.video_ids.length > visible_limit['news_video']">
-                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="next"><i class="fa fa-chevron-right"></i></a>
-            </div>
-        </div>
+    class="carousel slide carousel-multi-item container py-0" data-ride="carousel">
+		<div class="clearfix">
+			<div class="d-flex justify-content-between border-bottom align-items-center text-dark mb-3">
+				<h2 class="mb-3 float-left"><span class="head-icon-end"><i class="icon-action"></i> Videos</span></h2>
+				<div class="controls-top float-right btn-group mb-2" *ngIf="home_data.video_ids.length > visible_limit['news_video']">
+					<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+					<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+				</div>
+			</div>
+		</div>
         <div class="carousel-inner" role="listbox">    
             <div class="carousel-item active"> 
                 <div class="row">

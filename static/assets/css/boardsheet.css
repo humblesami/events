@@ -19,63 +19,82 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+.icon-newspaper:before {
+  content: "\e914";
+}
+.icon-business:before {
+  content: "\e915";
+}
+.icon-docs-line:before {
+  content: "\e916";
+}
+.icon-e-sign:before {
+  content: "\e917";
+}
+.icon-play-button:before {
+  content: "\e918";
+}
 .icon-calendar-empty:before {
-	content: "\e90c";
+  content: "\e90c";
 }
 .icon-call-answer:before {
-	content: "\e90d";
+  content: "\e90d";
 }
 .icon-close-envelope:before {
-	content: "\e90e";
+  content: "\e90e";
 }
 .icon-draw-pencil:before {
-	content: "\e90f";
+  content: "\e90f";
 }
 .icon-hotel:before {
-	content: "\e910";
+  content: "\e910";
 }
 .icon-user-single:before {
-	content: "\e911";
+  content: "\e911";
 }
 .icon-zoom-in:before {
-	content: "\e912";
+  content: "\e912";
 }
 .icon-zoom-out:before {
-	content: "\e913";
+  content: "\e913";
 }
 .icon-calendar:before {
-	content: "\e90b";
+  content: "\e90b";
 }
 .icon-doc-file:before {
-	content: "\e90a";
+  content: "\e90a";
 }
 .icon-action:before {
-	content: "\e904";
+  content: "\e904";
 }
 .icon-committees:before {
-	content: "\e905";
+  content: "\e905";
 }
 .icon-dashboard:before {
-	content: "\e906";
+  content: "\e906";
 }
 .icon-folder:before {
-	content: "\e907";
+  content: "\e907";
 }
 .icon-meeting:before {
-	content: "\e908";
+  content: "\e908";
 }
 .icon-profile:before {
-	content: "\e909";
+  content: "\e909";
 }
 .icon-chat:before {
-	content: "\e900";
+  content: "\e900";
+  color: #737373;
 }
 .icon-cursor:before {
-	content: "\e901";
+  content: "\e901";
+  color: #737373;
 }
 .icon-noti:before {
-	content: "\e902";
+  content: "\e902";
+  color: #737373;
 }
 .icon-search:before {
-	content: "\e903";
+  content: "\e903";
+  color: #737373;
 }
