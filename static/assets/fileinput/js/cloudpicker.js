@@ -216,5 +216,5 @@ $(function(){
     
     init_google_picker();
     init_drop_box_picker();
-    init_one_drive_picker();
+    // init_one_drive_picker();
 })

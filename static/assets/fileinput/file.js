@@ -318,5 +318,20 @@ $(document).on('dragenter dragover drop', function(evn){
     evn.stopPropagation();
     evn.preventDefault();
 });
-
+(function(){    
+    // console.log(99999999999,  window['merge_cloud_files']);
+    window.addEventListener("message", function(response){        
+        if(response.data)
+        {
+            var files = response.data;
+            if(Array.isArray(files) && files.length)
+            {
+                if(files[0].url)
+                {
+                    window['merge_cloud_files'](files);
+                }
+            }    
+        }
+    })
+})()
 window['apply_drag_drop'] = apply_drag_drop;

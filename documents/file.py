@@ -41,7 +41,7 @@ class File(CustomModel, FilesUpload):
     content = models.CharField(max_length=30, blank=True)
     pdf_doc = models.FileField(upload_to='converted/', null=True)
     file_type = models.CharField(max_length=128, default='')
-    attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])
+    attachment = models.FileField(upload_to='files/', null=True, blank=True, validators=[validate_file_extension])
     upload_status = models.BooleanField(default=False)
     file_name = models.CharField(max_length=128, default='')
     cloud_url = models.CharField(max_length=512, null=True, blank=True)
