@@ -3151,9 +3151,6 @@ label.check-plus-label-wrap {
 	}
 .head-icon-end{
 	display:flex;
-	align-items:end;
+	align-items: center;
 }
-.head-icon-end img, .head-icon-end i{ margin-right:.5rem; color:#3059C9;    width: 23px;
-    font-size: 23px;
-    position: relative;
-    top: 4px; }
+.head-icon-end i{ margin-right:.5rem; color:#3059C9; }

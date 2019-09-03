@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-md-7 WelcomeContent">
                     <h3 class="text-dark pb-1 mb-3">
-                        <span class="head-icon-end"> <img src="static/assets/images/newspaper.svg" alt=""> {{home_data.news.name}}</span>
+                        <span class="head-icon-end"> <i class="icon-newspaper"></i> {{home_data.news.name}}</span>
                     </h3>
                     <div class="HomePageDiscription">
                         <div *ngIf="home_data.description" class="HomePageContentText">
@@ -153,7 +153,7 @@
                                             <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
                                                 <div class="DocIcon">
                                                     <span class="rounded-circle">
-                                                        <img src="static/assets/images/e-sign.svg" alt="">
+                                                        <i class="icon-e-sign"></i>
                                                     </span>
                                                 </div>
                                                 <div class="DocText">
@@ -238,8 +238,8 @@
         <div class="py-0 container">
             <div class="HomepageDocumentSection">
                 <div class="clearfix">
-					<div class="d-flex justify-content-between border-bottom align-items-center text-dark mb-3">
-						<h2 class="mb-3 float-left"><span class="head-icon-end"><i class="icon-action"></i> Documents</span></h2>
+					<div class="d-flex justify-content-between border-bottom align-items-center text-dark mb-4">
+						<h2 class="mb-3 float-left"><span class="head-icon-end"><i class="icon-docs-line"></i> Documents</span></h2>
 						<div class="controls-top float-right btn-group mb-2" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
 							<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
 							<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
@@ -253,7 +253,7 @@
                                 <div class="DocumentWrapper">
                                     <div class="DocIcon">
                                         <span class="rounded-circle">
-                                            <i class="icon-doc-file"></i>
+                                            <i class="icon-docs-line"></i>
                                         </span>
                                     </div>
                                     <div class="DocInfoVertical text-truncate">
@@ -269,10 +269,10 @@
     </section>
 
     <section *ngIf="home_data && home_data.video_ids && home_data.video_ids.length" id="multi-item-videos" 
-    class="carousel slide carousel-multi-item container py-0" data-ride="carousel">
+    class="carousel slide carousel-multi-item container py-0 pb-4" data-ride="carousel">
 		<div class="clearfix">
-			<div class="d-flex justify-content-between border-bottom align-items-center text-dark mb-3">
-				<h2 class="mb-3 float-left"><span class="head-icon-end"><i class="icon-action"></i> Videos</span></h2>
+			<div class="d-flex justify-content-between border-bottom align-items-center text-dark mb-4">
+				<h2 class="mb-3 float-left"><span class="head-icon-end"><i class="icon-play-button"></i> Videos</span></h2>
 				<div class="controls-top float-right btn-group mb-2" *ngIf="home_data.video_ids.length > visible_limit['news_video']">
 					<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
 					<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="next"><i class="fa fa-chevron-right"></i></a>
