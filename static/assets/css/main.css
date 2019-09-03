@@ -52,7 +52,9 @@ body {
 .text-dark {
     color: #2B2B2B !important;
 }
-
+.border-bottom {
+    border-bottom: 1px solid #E1E1E1!important;
+}
 /*
 @media (min-width: 576px){
 	.container {
