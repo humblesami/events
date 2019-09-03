@@ -428,6 +428,13 @@ span.to-do-count{
     cursor: pointer;
 }
 
+.HomepageDocumentSection .icon-action{
+	margin-right: .2rem;
+	color: #3059C9;
+	width: 23px;
+	font-size: 1.8rem;
+}
+
 /*
 #videoModal .modal-content{
     height: 88vh;
@@ -489,8 +496,6 @@ span.to-do-count{
 .full-calendar-btn a:hover{
     background: #2458AB;
 }
-
-
 ul {list-style-type: none;}
 
 .month {

@@ -48,6 +48,11 @@ body {
 .fs-19 {
 	font-size: 19px
 	}
+
+.text-dark {
+    color: #2B2B2B !important;
+}
+
 /*
 @media (min-width: 576px){
 	.container {
@@ -3144,3 +3149,11 @@ label.check-plus-label-wrap {
 .comments-user-img-wrap img {
 	max-width: 100%;
 	}
+.head-icon-end{
+	display:flex;
+	align-items:end;
+}
+.head-icon-end img, .head-icon-end i{ margin-right:.5rem; color:#3059C9;    width: 23px;
+    font-size: 23px;
+    position: relative;
+    top: 4px; }

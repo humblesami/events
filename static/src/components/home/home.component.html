@@ -10,8 +10,8 @@
             <section class="HomepageDocumentSection">
                 <div class="row">
                     <div class="col-md-7 WelcomeContent">
-                    <h3 class="border-bottom text-dark pb-1 mb-3">
-                        <span>{{home_data.news.name}}</span>
+                    <h3 class="text-dark pb-1 mb-3">
+                        <span class="head-icon-end"> <img src="static/assets/images/newspaper.svg" alt=""> {{home_data.news.name}}</span>
                     </h3>
                     <div class="HomePageDiscription">
                         <div *ngIf="home_data.description" class="HomePageContentText">
@@ -23,7 +23,9 @@
                     </div>
                     </div>
                     <div class="col-md-5">
-                        <app-calendar></app-calendar>
+                        <div class="row">
+							<app-calendar></app-calendar>
+						</div>
                         <div class="calendarwrapper">
 							<div class="full-calendar-btn">
 								<a routerLink="/calendar">Full Calendar</a>
@@ -35,7 +37,7 @@
 
             
             <section *ngIf="to_do_count" class="HomepageDocumentSection">            
-                    <h2 class="border-bottom text-dark pb-3">Actions</h2>
+                    <h2 class="border-bottom text-dark pb-3"><i class="icon-action"></i> Actions</h2>
                     <!--Surveys-->
                     <div id="to-do">
                         <div class="carousel slide carousel-multi-item" data-ride="carousel"
