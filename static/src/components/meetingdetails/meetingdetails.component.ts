@@ -426,7 +426,7 @@ export class MeetingDetailsComponent implements OnInit {
         {
             obj_this.ending_indices[item_type] = obj_this.visible_limit[item_type];
         }
-        console.log(obj_this.visible_limit, obj_this.ending_indices,1122);
+        // console.log(obj_this.visible_limit, obj_this.ending_indices,1122);
 	}
 
 	ngOnDestroy() {

@@ -83,6 +83,14 @@ class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
     users = models.ManyToManyField (Profile, 'Access', blank=True)
 
+    @classmethod
+    def get_attachments(cls, request, params):
+        parent_id = params.get('parent_id')
+        docs = File.objects.filter(folder_id=parent_id)
+        docs = docs.values('id', 'name')
+        docs = list(docs)
+        return docs
+
     def save(self, *args, **kwargs):
         if not self.file_type:
             self.file_type = 'resource'

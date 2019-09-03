@@ -5,6 +5,7 @@ import re
 import subprocess
 
 from PIL import Image
+from django.apps import apps
 from fpdf import FPDF
 from PyPDF2 import PdfFileReader
 from mainapp import settings, ws_methods
@@ -13,7 +14,7 @@ from django.db import models
 from mainapp.models import CustomModel, FilesUpload
 from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
-
+from django.db.models import Q
 
 def validate_file_extension(value):
     pass
@@ -73,6 +74,8 @@ class File(CustomModel, FilesUpload):
                     file_str = self.binary_data.split(';base64,')[1]
                     binary_data = io.BytesIO(base64.b64decode(file_str))
                     file_data = DjangoFile(binary_data)
+                    self.attachment.save(self.file_name, file_data)
+
                 if file_data is not None:
                     self.binary_data = ''
                     self.cloud_url = ''
@@ -80,15 +83,26 @@ class File(CustomModel, FilesUpload):
                     self.pending_tasks = 2
                     self.attachment.save(self.file_name, file_data)
                     return
-                else:
-                    self.pending_tasks = 0
+
+                if file_data is None:
+                    if not self.attachment:
+                        self.pending_tasks = 0
+                    else:
+                        if self.pk:
+                            if self.attachment != File.objects.get(pk=self.id).attachment:
+                                self.pending_tasks = 2
+                            else:
+                                self.pending_tasks = 0
+                        else:
+                            self.pending_tasks = 2
+
             super(File, self).save(*args, **kwargs)
-            if self.pending_tasks > 1:
+            if self.pending_tasks == 2:
                 if self.file_type != 'message':
                     self.pending_tasks = 1
                     self.get_pdf()
                     return
-            if self.pending_tasks > 0:
+            if self.pending_tasks == 1:
                 if self.html:
                     self.content = self.html
                 else:
@@ -184,6 +198,18 @@ class File(CustomModel, FilesUpload):
             # self.original_pdf.save(filename+".pdf", DjangoFile(res))
         except:
             raise
+
+    @classmethod
+    def get_attachments(cls, request, params):
+        parent_id = params.get('parent_id')
+        parent_field = params.get('parent_field')
+        model = apps.get_model(params['app'], params['model'])
+        q_objects = Q()
+        q_objects |= Q(**{parent_field: parent_id})
+        docs = model.objects.filter(q_objects)
+        docs = docs.values('id', 'name')
+        docs = list(docs)
+        return docs
 
     @classmethod
     def get_file_data(cls, request, params):

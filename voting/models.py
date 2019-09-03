@@ -512,6 +512,7 @@ class VotingAnswer(models.Model):
             }
         return data
 
+
 class VotingDocument(File):
     voting = models.ForeignKey('Voting', on_delete=models.CASCADE)
 
@@ -519,7 +520,14 @@ class VotingDocument(File):
         if not self.file_type:
             self.file_type = 'voting'
         super(VotingDocument, self).save(*args, **kwargs)
-    
+
+    @classmethod
+    def get_attachments(cls, request, params):
+        parent_id = params.get('parent_id')
+        docs = File.objects.filter(voting_id=parent_id)
+        docs = docs.values('id', 'name')
+        docs = list(docs)
+        return docs
 
     @property
     def breadcrumb(self):

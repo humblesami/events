@@ -10,7 +10,9 @@ class FileAdmin(BaseAdmin):
 
 class FileInlineAdmin(BaseInlineAdmin):
     extra = 0
-    exclude = ('created_at', 'created_by', 'updated_at', 'updated_by', 'file_type', 'content', 'pdf_doc', 'upload_status', 'html')
+    exclude = (
+        'created_at', 'created_by', 'updated_at', 'updated_by', 'file_type', 'file_input', 'content',
+        'pdf_doc', 'upload_status', 'html','cloud_url', 'access_token', 'file_name', 'binary_data')
     template = 'admin/stacked.html'
 
 

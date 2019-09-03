@@ -126,26 +126,6 @@ function apply_drag_drop(input){
             preview_files(added_files);
         }
     }
-
-    function download(file_url, access_token=undefined, calll_back)
-    {
-        //file_url = 'https://dl.dropboxusercontent.com/1/view/nt37jrpb6akix39/article%205.pdf';
-        var ajax_options = {
-            url: file_url,
-            success: function (data, textStatus, jqXHR) {
-                calll_back(data);
-            },
-            error:function(a,b,c,d){
-                console.log('Error',a,b,c,d);
-            }
-        }
-        if(access_token){
-            ajax_options.header = {
-                Authorization: 'Bearer '+access_token
-            }
-        }
-        $.ajax(ajax_options);
-    }
     
     merge_cloud_files = function(new_files){
         // console.log(new_files, 4444);

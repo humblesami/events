@@ -14,6 +14,14 @@ class MeetingDocument(File):
             self.file_type = 'meeting'
         super(MeetingDocument, self).save(*args, **kwargs)
 
+    @classmethod
+    def get_attachments(cls, request, params):
+        parent_id = params.get('parent_id')
+        docs = File.objects.filter(meeting_id=parent_id)
+        docs = docs.values('id', 'name')
+        docs = list(docs)
+        return docs
+
     @property
     def breadcrumb(self):
         event_obj = self.meeting
@@ -74,6 +82,14 @@ class MeetingDocument(File):
 
 class AgendaDocument(File):
     agenda = models.ForeignKey(Topic, on_delete=models.CASCADE)
+
+    @classmethod
+    def get_attachments(cls, request, params):
+        parent_id = params.get('parent_id')
+        docs = File.objects.filter(agenda_id=parent_id)
+        docs = docs.values('id', 'name')
+        docs = list(docs)
+        return docs
 
     def save(self, *args, **kwargs):
         if not self.file_type:

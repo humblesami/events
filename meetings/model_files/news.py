@@ -57,6 +57,7 @@ class News(CustomModel):
 
         return {'error': '', 'data': home_object}
 
+
 class NewsDocument(File):
     news = models.ForeignKey(News, on_delete=models.CASCADE)
 
@@ -65,6 +66,13 @@ class NewsDocument(File):
             self.file_type = 'home'
         super(NewsDocument, self).save(*args, **kwargs)
 
+    @classmethod
+    def get_attachments(cls, request, params):
+        parent_id = params.get('parent_id')
+        docs = File.objects.filter(news_id=parent_id)
+        docs = docs.values('id', 'name')
+        docs = list(docs)
+        return docs
 
     @property
     def breadcrumb(self):

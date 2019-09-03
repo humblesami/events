@@ -71,6 +71,7 @@ import { ProfileeditComponent } from '../components/profileedit/profileedit.comp
 import { RosterComponent } from '../components/roster/roster.component';
 import { ProfilesummaryComponent } from '../components/profilesummary/profilesummary.component';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { DocumentsComponent } from '../components/documents/documents.component';
 
 
 @NgModule({
@@ -136,6 +137,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
         StringFirstToUpperPipe,
         RosterComponent,
         ProfilesummaryComponent,
+        DocumentsComponent,
     ],
     providers:[
         AuthGuard,

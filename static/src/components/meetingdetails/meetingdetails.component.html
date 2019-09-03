@@ -371,6 +371,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
+        <!-- <app-documents parent_field="meeting_id" parent_id="{{meeting_object.id}}" res_app="meetings" res_model="MeetingDocument"></app-documents> -->
+
         <div *ngIf="meeting_object.meeting_docs && meeting_object.meeting_docs.length" class="title-wrapper border-bottom">
             <div class="clearfix mt-3">
                 <h4 class="my-3 text-primary float-left"><i class="icon-doc-file"></i> Meeting Documents </h4>

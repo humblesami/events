@@ -15,23 +15,6 @@ $(function(){
             multiSelect = false;
         }
     }
-    var download_urls = {
-        google:{
-            prefix: 'https://www.googleapis.com/drive/v3/files/',
-            postfix:'?alt=media',
-            access_token: '',
-        },
-        onedrive:{
-            prefix: 'https://www.googleapis.com/drive/v3/files/',
-            postfix:'?alt=media',
-            access_token: '',
-        },
-        dropbox:{
-            prefix: 'https://www.googleapis.com/drive/v3/files/',
-            postfix:'?alt=media',
-            access_token: '',
-        }
-    }
 
     function init_drop_box_picker(){
         var access_token = undefined;
@@ -176,7 +159,6 @@ $(function(){
                     return;
                 }
                 var selection_info = [];
-                var download_obj = download_urls['google'];
                 for(const file of files)
                 {
                     console.log(file, 188);
@@ -184,7 +166,8 @@ $(function(){
                         id: file.id,
                         name: file.name,
                         access_token: access_token,
-                        url: download_obj.prefix+'/'+file.id+download_obj.postfix,                        
+                        view_url: file.url,
+                        url: 'https://www.googleapis.com/drive/v3/files/'+file.id+'?alt=media'
                     });
                     console.log(selection_info[0]);
                 }
