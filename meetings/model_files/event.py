@@ -329,7 +329,7 @@ class Event(CustomModel):
             for doc in topic['docs']:
                 doc['created_at'] = str(doc['created_at'])
             topics.append(topic)
-        meeting_docs = list(meeting_object_orm.meetingdocument_set.values())
+        meeting_docs = list(meeting_object_orm.documents.values())
 
         """attendee needs fix"""
         attendees = []

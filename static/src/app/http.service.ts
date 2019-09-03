@@ -34,7 +34,7 @@ export class HttpService {
     }
     post_files(form: any) {
         var url = form.attr("action");
-        url = window['site_config'].server_base_ur + url;
+        url = window['site_config'].server_base_url + url;
         var formData = {};
         $(form).find("input[name]").each(function (index, node) {
             formData[node.name] = node.value;

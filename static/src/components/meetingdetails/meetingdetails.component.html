@@ -396,6 +396,12 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 </div>
             </div>
         </div>
+        <app-fileupload 
+            *ngIf="meeting_object && meeting_object.id" 
+            res_app="meetings" 
+            res_model="Event" 
+            res_id="{{meeting_object.id}}">
+        </app-fileupload>
 
         <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
             <div class="call_container ">

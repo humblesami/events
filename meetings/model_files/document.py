@@ -7,7 +7,7 @@ from django.db import transaction
 
 
 class MeetingDocument(File):
-    meeting = models.ForeignKey(Event, on_delete=models.CASCADE)
+    meeting = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='documents')
 
     def save(self, *args, **kwargs):
         if not self.file_type:

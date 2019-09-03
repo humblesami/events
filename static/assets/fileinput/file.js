@@ -1,4 +1,4 @@
-function apply_drag_drop(input){
+function apply_drag_drop(input, resInfo){
     var element = input[0];
     var parent = input.parent();
     var multiple = input.attr('multiple');
@@ -125,6 +125,57 @@ function apply_drag_drop(input){
             input.selected_files = input.local_files = added_files = new_files;
             preview_files(added_files);
         }
+        //////////////////////////////////////////////////
+        upload_files(added_files);
+    }
+
+    function upload_files(files)
+    {
+        var url = 'http://localhost:8000/docs/upload-files';
+        var formData = new FormData();
+        files.forEach(function(file, i) {
+            formData.append('file['+i+']', file);
+        });
+        formData.append('res_app', resInfo.res_app);
+        formData.append('res_model', resInfo.res_model);
+        formData.append('res_id', resInfo.res_id);
+        var user = localStorage.getItem('user');
+        user = JSON.parse(user);
+        headers = {'Authorization': 'Token '+user.token};
+        $.ajax({
+            url: url,
+            data: formData,
+            type: 'POST',
+            headers: headers,
+            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+            processData: false, // NEEDED, DON'T OMIT THIS
+            success:function(data){
+                console.log(data);
+            },
+            error: function(a,b,c,d){
+                console.log(a,b,c,d)
+            }
+        });
+    }
+
+    function download(file_url, access_token=undefined, calll_back)
+    {
+        //file_url = 'https://dl.dropboxusercontent.com/1/view/nt37jrpb6akix39/article%205.pdf';
+        var ajax_options = {
+            url: file_url,
+            success: function (data, textStatus, jqXHR) {
+                calll_back(data);
+            },
+            error:function(a,b,c,d){
+                console.log('Error',a,b,c,d);
+            }
+        }
+        if(access_token){
+            ajax_options.header = {
+                Authorization: 'Bearer '+access_token
+            }
+        }
+        $.ajax(ajax_options);
     }
     
     merge_cloud_files = function(new_files){
@@ -181,7 +232,7 @@ function apply_drag_drop(input){
         {
             parent.find('.file-drop-zone-title').show();
         }
-        parent.closest('fieldset').find('[name="binary_data"]').val('');v
+        parent.closest('fieldset').find('[name="binary_data"]').val('');
     }    
 
     function preview_files(incoming_files){
@@ -267,3 +318,5 @@ $(document).on('dragenter dragover drop', function(evn){
     evn.stopPropagation();
     evn.preventDefault();
 });
+
+window['apply_drag_drop'] = apply_drag_drop;
