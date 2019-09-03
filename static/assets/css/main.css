@@ -2697,12 +2697,16 @@ a.kanban-card.profiledataresume .DocumentWrapper {
 	/* For Firefox */
 	}
 .circle-imgwrap {
-	width: 28px;
-	height: 28px;
+	width: 34px;
+	height: 34px;
 	border-radius: 28px;
 	overflow: hidden;
 	position: relative;
 	margin: 2px;
+	}
+.circle-imgwrap  .img-thumbnail-sm{
+	width: 34px;
+	height: 34px;
 	}
 ul.dropdown-menu.scrollable-menu {
 	margin-top: 30px;
@@ -3042,13 +3046,14 @@ label.check-plus-label-wrap {
 	border: 1px solid #999999;
 	}
 .main-full-seachbar {
-	background: #e9ecef;
-	padding: 8px;
-	border-radius: .15rem;
-	position: relative;
+	background: #E1E1E1;
+    padding: 10px;
+    border-radius: 6px;
+    position: relative;
 	}
 .main-full-seachbar .form-control {
 	border-radius: 0;
+	border: 1px solid #ffffff;
 	}
 .main-full-seachbar:before {
 	font-family: 'boardsheet' !important;

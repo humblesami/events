@@ -19,6 +19,9 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+.icon-pin:before {
+  content: "\e919";
+}
 .icon-newspaper:before {
   content: "\e914";
 }
