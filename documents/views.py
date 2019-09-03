@@ -6,6 +6,7 @@ from mainapp import ws_methods
 from django.db import transaction
 from meetings.model_files.user import Profile
 from documents.file import File
+import json
 
 
 @csrf_exempt
@@ -18,8 +19,17 @@ def upload_files(request):
         res_model = req['res_model']
         res_id = req['res_id']
         model = ws_methods.get_model(res_app, res_model)
-        # doc_set = []
         obj = model.objects.get(pk=res_id)
+
+        cloud_data = req.get('cloud_data')
+        if cloud_data:
+            cloud_data = json.loads(cloud_data)            
+            for file in cloud_data:
+                # file_obj = File(name=file.name, attachment=file)
+                # doc_set.append(file_obj)            
+                with transaction.atomic():
+                    created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
+                    ids.append(created_file.id)
         for key in request.FILES:
             files = request.FILES.getlist(key)            
             for file in files:

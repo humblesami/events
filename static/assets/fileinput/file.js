@@ -129,16 +129,26 @@ function apply_drag_drop(input, resInfo){
         upload_files(added_files);
     }
 
-    function upload_files(files)
+    function upload_files(files, cloud=false)
     {
-        var url = 'http://localhost:8000/docs/upload-files';
+        // console.log(files);
+        var url = window['site_config'].server_base_url+'/docs/upload-files';
         var formData = new FormData();
-        files.forEach(function(file, i) {
-            formData.append('file['+i+']', file);
-        });
+        if(!cloud)
+        {
+            files.forEach(function(file, i) {
+                formData.append('file['+i+']', file);
+            });
+        }
+        else
+        {
+            formData.append('cloud_data', JSON.stringify(files));
+        }
+        
         formData.append('res_app', resInfo.res_app);
         formData.append('res_model', resInfo.res_model);
         formData.append('res_id', resInfo.res_id);
+
         var user = localStorage.getItem('user');
         user = JSON.parse(user);
         headers = {'Authorization': 'Token '+user.token};
@@ -156,26 +166,6 @@ function apply_drag_drop(input, resInfo){
                 console.log(a,b,c,d)
             }
         });
-    }
-
-    function download(file_url, access_token=undefined, calll_back)
-    {
-        //file_url = 'https://dl.dropboxusercontent.com/1/view/nt37jrpb6akix39/article%205.pdf';
-        var ajax_options = {
-            url: file_url,
-            success: function (data, textStatus, jqXHR) {
-                calll_back(data);
-            },
-            error:function(a,b,c,d){
-                console.log('Error',a,b,c,d);
-            }
-        }
-        if(access_token){
-            ajax_options.header = {
-                Authorization: 'Bearer '+access_token
-            }
-        }
-        $.ajax(ajax_options);
     }
     
     merge_cloud_files = function(new_files){
@@ -207,6 +197,11 @@ function apply_drag_drop(input, resInfo){
             input.selected_files = input.cloud_files = added_files = new_files;            
             preview_files(added_files);
         }
+        for(var new_file of added_files)
+        {
+            new_file.file_name = new_file.name;
+        }
+        upload_files(added_files,1);
     }    
 
     function remove_file(e)
@@ -318,6 +313,7 @@ $(document).on('dragenter dragover drop', function(evn){
     evn.stopPropagation();
     evn.preventDefault();
 });
+
 (function(){    
     // console.log(99999999999,  window['merge_cloud_files']);
     window.addEventListener("message", function(response){        
