@@ -47,7 +47,10 @@
                             <p *ngIf="meeting_object.name">
                                 <b>{{meeting_object.name}}</b>
                             </p>
-                            <span *ngIf="meeting_object.location" class="d-inline-block text-truncate">{{meeting_object.location}}</span>
+                            <span *ngIf="meeting_object.location" class="d-inline-block text-truncate">
+                                <i class="fa fa-street-view text-primary"></i> 
+                                {{meeting_object.location}}
+                            </span>
                         </div>
                     </a>
                     

@@ -140,6 +140,10 @@ th.d-none.d-md-block{
 a:hover{
     color: #959595; 
 }
+.kanban-upcoming-meeting .Info{
+    color: #8d8d8d;
+    font-size: 14px;
+}
 .kanban-committees-info-box{
     color: #959595;
 }
