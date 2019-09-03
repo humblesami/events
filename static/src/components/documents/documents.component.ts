@@ -34,11 +34,12 @@ export class DocumentsComponent implements OnInit {
                 parent_id: obj_this.parent_id,
             }
         }
-        this.httpService.get(input_data, function(data){
+        this.httpService.get(input_data, function(data){            
             for(var doc of data){
                 doc.routerLink = '/'+doc.type+'/doc/'+doc.id;
             }
-            
+            obj_this.docs = data;
+            console.log(data);
         }, null)
     }
 
