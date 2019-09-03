@@ -121,7 +121,6 @@ class File(CustomModel, FilesUpload):
             res = ws_methods.get_error_message()
             a = 1
 
-
     def get_pdf(self):
         tmp = self.attachment.url.split('.')
         ext = tmp[len(tmp) - 1]

@@ -1,4 +1,4 @@
-function apply_drag_drop(input, resInfo){
+function apply_drag_drop(input, resInfo, on_files_uploaded){
     var element = input[0];
     var parent = input.parent();
     var multiple = input.attr('multiple');
@@ -128,45 +128,6 @@ function apply_drag_drop(input, resInfo){
         //////////////////////////////////////////////////
         upload_files(added_files);
     }
-
-    function upload_files(files, cloud=false)
-    {
-        // console.log(files);
-        var url = window['site_config'].server_base_url+'/docs/upload-files';
-        var formData = new FormData();
-        if(!cloud)
-        {
-            files.forEach(function(file, i) {
-                formData.append('file['+i+']', file);
-            });
-        }
-        else
-        {
-            formData.append('cloud_data', JSON.stringify(files));
-        }
-        
-        formData.append('res_app', resInfo.res_app);
-        formData.append('res_model', resInfo.res_model);
-        formData.append('res_id', resInfo.res_id);
-
-        var user = localStorage.getItem('user');
-        user = JSON.parse(user);
-        headers = {'Authorization': 'Token '+user.token};
-        $.ajax({
-            url: url,
-            data: formData,
-            type: 'POST',
-            headers: headers,
-            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
-            processData: false, // NEEDED, DON'T OMIT THIS
-            success:function(data){
-                console.log(data);
-            },
-            error: function(a,b,c,d){
-                console.log(a,b,c,d)
-            }
-        });
-    }
     
     merge_cloud_files = function(new_files){
         // console.log(new_files, 4444);
@@ -202,7 +163,59 @@ function apply_drag_drop(input, resInfo){
             new_file.file_name = new_file.name;
         }
         upload_files(added_files,1);
-    }    
+    }
+
+    function upload_files(files, cloud=false)
+    {
+        // console.log(files);
+        parent.find('.picker').hide()//.attr('disabled', 'disabled');
+        $('.file-drop-zone-title').addClass('loading').html('Files being uploaded...');
+        var url = window['site_config'].server_base_url+'/docs/upload-files';
+        var formData = new FormData();
+        if(!cloud)
+        {
+            files.forEach(function(file, i) {
+                formData.append('file['+i+']', file);
+            });
+        }
+        else
+        {
+            formData.append('cloud_data', JSON.stringify(files));
+        }
+        
+        formData.append('res_app', resInfo.res_app);
+        formData.append('res_model', resInfo.res_model);
+        formData.append('res_id', resInfo.res_id);
+
+        var user = localStorage.getItem('user');
+        user = JSON.parse(user);
+        headers = {'Authorization': 'Token '+user.token};
+        $.ajax({
+            url: url,
+            data: formData,
+            type: 'POST',
+            headers: headers,
+            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+            processData: false, // NEEDED, DON'T OMIT THIS
+            success: function(data){
+                console.log(data, 1444007);
+                data = JSON.parse(data);
+                if(on_files_uploaded)
+                {
+                    parent.find('.file-box').remove();
+                    parent.find('.preview-conatiner').html('');
+                    on_files_uploaded(data);
+                }
+            },
+            error: function(a,b,c,d){
+                console.log(a,b,c,d)
+            },
+            complete:function(){
+                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
+                parent.find('.picker').show()//.removeAttr('disabled');
+            }
+        });
+    }
 
     function remove_file(e)
     {
@@ -256,7 +269,7 @@ function apply_drag_drop(input, resInfo){
                     name_box.append('<input name="url" value="'+file.url+'"/>');
                 }
                 nail1.find('.del').click(remove_file);
-                parent.find('.preview-conatiner').append(nail1);
+                // parent.find('.preview-conatiner').append(nail1);
             }
         }
         else
