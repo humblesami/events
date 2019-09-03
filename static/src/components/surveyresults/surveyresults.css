@@ -10,7 +10,8 @@
 }
 
 .hideoverflow{
-	height:250px;
+	min-height:150px;
+	max-height: 250px;
     overflow: auto;
 }
 

@@ -43,13 +43,13 @@ title="Results"></app-breadcrumb>
                                                         <div class="col-3 col-sm-5 col-md-4 border border-right-0 py-3">
                                                             <div class="row" *ngIf="answer.user">
                                                                 <div class="col-sm-5 col-lg-5">
-                                                                    <img src="{{socketService.server_url}}{{answer.user.photo}}" alt="user" class="rounded-circle">
+                                                                    <img src="{{socketService.server_url}}{{answer.user.photo}}" alt="user" class="rounded-circle" id="dialog">
                                                                 </div>
                                                                 <div class="col-sm-7 col-lg-7 mt-3">
                                                                     <label>
-                                                                        {{answer.user.name}}
+                                                                        <a (click)="show_user_details(answer.user.name,answer.user.email)">{{answer.user.name}}</a>
                                                                     </label>
-                                                                    <h5 class="d-none d-lg-block">{{answer.user.email}}</h5>
+                                                                    <!-- <h5 class="d-none d-lg-block">{{answer.user.email}}</h5> -->
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -23,9 +23,13 @@ export class SurveyresultsComponent implements OnInit {
 
     show_answer_details(detail){
         window['bootbox'].alert(detail);
-        $('.modal-dialog').addClass('modal-lg');
+        $('.modal-dialog').addClass('modal-lg');        
     }
-
+    show_user_details(name,email){
+        window['bootbox'].alert("<div class='col-md-12'>"+name+"</div>" +"<div class='col-md-12'>"+ email+"</div>");
+        $('.modal-dialog').addClass('modal-lg');
+        //$( "#dialog" ).dialog();
+    }
     ngOnInit() {
         const obj_this = this;
         const input_data = {
