@@ -29,7 +29,7 @@ class Topic(PositionalSortMixIn, CustomModel):
             topic_orm = Topic.objects.get(pk=topic_id)
             topic = ws_methods.obj_to_dict(topic_orm, fields=['id', 'name', 'lead', 'duration', 'event__exectime', 'event__name', 'event__id'])
             topic['duration'] = str(topic['duration'])
-            topic_docs = list(topic_orm.agendadocument_set.values())
+            topic_docs = list(topic_orm.documents.values())
             meeting_type = ''
             try:
                 meeting_type = topic_orm.event.exectime
