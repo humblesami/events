@@ -143,7 +143,9 @@ export class SocketService {
         }
         else
         {
-            obj_this.admin_mode = true;
+            let admin_mode_obj = JSON.parse(admin_mode_cookie);
+            obj_this.admin_mode = admin_mode_obj['admin_mode'];
+            obj_this.is_admin = obj_this.admin_mode;
             obj_this.actually_admin = true;
         }
         obj_this.user_data = authorized_user;

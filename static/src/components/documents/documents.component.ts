@@ -39,6 +39,7 @@ export class DocumentsComponent implements OnInit {
 
     change_file_name(evn, doc_id)
     {
+        let obj_this = this;
         let input_data = {
             doc_id: doc_id,
             name: evn.target.value
@@ -52,7 +53,15 @@ export class DocumentsComponent implements OnInit {
             params: input_data,
             args: args
         }
-        this.httpServ.get(final_input, (data)=>{}, ()=>{})
+        obj_this.httpServ.get(final_input, (data)=>{
+            obj_this.docs =  obj_this.docs.filter((el)=>{
+                if (doc_id == el.id)
+                {
+                    el.name = evn.target.value;
+                }
+                return el;
+            });
+        }, ()=>{})
     }
 
     delete_file(evn, doc_id)
