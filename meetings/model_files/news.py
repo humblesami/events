@@ -59,7 +59,7 @@ class News(CustomModel):
 
 
 class NewsDocument(File):
-    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='documents')
 
     def save(self, *args, **kwargs):
         if not self.file_type:

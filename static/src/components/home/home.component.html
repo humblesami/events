@@ -233,7 +233,7 @@
         </div>            
     </div>
     
-    <section *ngIf="home_data && home_data.doc_ids && home_data.doc_ids.length" id="multi-item-docs"
+    <section *ngIf="socketService.admin_mode || (home_data && home_data.doc_ids && home_data.doc_ids.length)" id="multi-item-docs"
     class="carousel slide carousel-multi-item " data-ride="carousel">   
         <div class="py-0 container">
             <div class="HomepageDocumentSection">
@@ -248,7 +248,7 @@
                 </div>
                 <div class="carousel-inner" role="listbox">    
                     <div class="carousel-item active"> 
-                        <div class="row docwrappercontainer">
+                        <div *ngIf="!socketService.admin_mode" class="row docwrappercontainer">
                             <a class="col-sm-6 col-md-4 col-lg-2 mb-3" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids.slice(start_indices['news_doc'], ending_indices['news_doc'])">
                                 <div class="DocumentWrapper">
                                     <div class="DocIcon">
@@ -263,6 +263,9 @@
                             </a>
                         </div>
                     </div>
+                    <app-documents *ngIf="socketService.admin_mode" parent_model="News" parent_field="news_id" parent_id="{{home_data.id}}"
+                    res_app="meetings" res_model="NewsDocument"></app-documents>
+
                 </div> 
             </div>
         </div>

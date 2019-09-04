@@ -10,6 +10,12 @@ window['js_utils'] = {
             console.log(evt, 333);
         }
     },
+    unique_id: function(){
+        let rand = (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        var now = new Date();
+        rand = 'id_'+now.getFullYear()+now.getMonth()+now.getDate()+now.getHours()+now.setSeconds()+rand;
+        return rand;
+    },
     get_dataurl_prefix: function (file_name)
     {
         var ext = file_name.split('.');
