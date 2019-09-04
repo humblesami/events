@@ -105,11 +105,9 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     dropZone.addEventListener('dragleave', on_dragleave, false);
     dropZone.addEventListener('drop', on_drop, false);
 
-    var added_files = [];
-    input.cloud_urls = [];
 
+    input.cloud_urls = [];
     merge_local_files = function(new_files){
-        added_files = [];
         if(multiple)
         {
             preview_files(new_files);
@@ -117,24 +115,23 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         }
         else
         {
-            preview_files(added_files);
+            preview_files(new_files);
         }
         //////////////////////////////////////////////////        
     }
     
     function merge_cloud_files(new_files){
         // console.log(new_files, 4444);        
-        added_files = [];
         if(multiple)
         {            
-            preview_files(added_files);
-            upload_files(added_files,1);
+            preview_files(new_file);
+            upload_files(new_file,1);
         }
         else
         {          
             preview_files(new_files);
         }
-        for(var new_file of added_files)
+        for(var new_file of new_file)
         {
             new_file.file_name = new_file.name;
         }
@@ -148,7 +145,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         for(var obj of files){
             if(!obj.file_name)
             {
-                obj.file_name = obj.name;                
+                obj.file_name = obj.name;
             }
         }
         $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
@@ -156,9 +153,11 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         var formData = new FormData();
         if(!cloud)
         {
-            files.forEach(function(file, i) {
+            var i= 0;
+            for(var file of files){
                 formData.append('file['+i+']', file);
-            });
+                i++;
+            }
         }
         else
         {
@@ -214,6 +213,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     }
 
     function preview_files(incoming_files){
+        console.log(incoming_files, 22);
         parent.find('.feedback').html('');
         var thumbnail = `
         <div class="file-preview-other file-box border p-1">
