@@ -1,9 +1,9 @@
-import nested_admin
+from django.contrib import admin
 
 
-class BaseAdmin(nested_admin.NestedModelAdmin):
+class BaseAdmin(admin.ModelAdmin):
     exclude = ('created_at', 'created_by', 'updated_at', 'updated_by')
 
 
-class BaseInlineAdmin(nested_admin.NestedStackedInline):
+class BaseInlineAdmin(admin.StackedInline):
     exclude = ('created_at', 'created_by', 'updated_at', 'updated_by')
