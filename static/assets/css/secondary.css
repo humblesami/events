@@ -170,10 +170,16 @@ a:hover{
 .pending-status{
     width: 60px;
     text-align: center;
-    background: #4b74b5;
-    padding: .4rem .3rem;
-    margin-left: 0;
+    background: #3a5d95;
+    padding: .2rem .3rem;
+    margin-left: .2rem;
+    margin-right: 5px;
+    margin-bottom: -0.3rem;
     text-transform: capitalize;
+    border-radius: 0.2rem;
+    color: white;
+    font-size: .7rem;
+    line-height: 1;
 }
 .kanban-profiles-user-img{
     border-radius: 50%;
@@ -239,6 +245,9 @@ a:hover{
 }
 .HeadingWrap-status{
     width: 100%;
+}
+.DocText, .DocInfoVertical{
+    background: #638fc9 !important;
 }
 @media screen and (max-width:480px){
     .roster .table th:first-child,
