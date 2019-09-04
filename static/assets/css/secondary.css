@@ -189,7 +189,7 @@ a:hover{
 /* End Committee */
 .check-status{
     width: 7rem;
-    border:1px solid #000;
+    border:1px solid #ddd;
     border-radius: 25px;
     height: 30px;
     cursor: pointer;
@@ -237,7 +237,9 @@ a:hover{
 .kanban-card{
     border: none;
 }
-
+.HeadingWrap-status{
+    width: 100%;
+}
 @media screen and (max-width:480px){
     .roster .table th:first-child,
     .roster .table td:first-child{

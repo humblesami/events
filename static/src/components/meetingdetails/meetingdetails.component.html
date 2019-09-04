@@ -21,9 +21,21 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         <div class=" form-details">
                 <div class="meeting-details-form">
                 <div class="MainTitleHeadWrap" style="flex-wrap: wrap">
-                    <div class="HeadingWrap">
-                        <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
-                        <div class="d-flex my-2">
+                    <div class="HeadingWrap HeadingWrap-status">
+                        <div class="d-sm-flex">
+                            <div class="mr-auto">
+                                <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
+                            </div>
+                            <div *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')">
+                                <button class="check-status meet-elements position-relative"
+                                    (click)="on_publish_changed($event)"
+                                    [ngClass]="meeting_status">
+                                    <span class="circle"><i class="fa fa-circle"></i></span>
+                                    <span class="status">{{meeting_status}}</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex">
                             <div class="row note" *ngIf="conference_not_active">
                                 Meeting conference URL will be available 15 minutes before meeting start.
                             </div>
@@ -31,14 +43,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
                                 <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
                                 <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
-                            </div>
-                            <div *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')" class="mb-2">
-                                <button class="check-status meet-elements position-relative"
-                                    (click)="on_publish_changed($event)"
-                                    [ngClass]="meeting_status">
-                                    <span class="circle"><i class="fa fa-circle"></i></span>
-                                    <span class="status">{{meeting_status}}</span>
-                                </button>
                             </div>
                             <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
                                 <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
@@ -49,7 +53,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </div>
 
                     
-                    <div class="d-flex">
+                    <div class="col-12 p-0">
                         <div class="MeetingBtnWrapper" id="tdmrb{{meeting_object.id}}">
                             <div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
                                 <app-meetingresponse my_event="{{meeting_object.my_event}}" class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
@@ -384,32 +388,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             <app-documents parent_model="Event" parent_field="meeting_id" parent_id="{{meeting_object.id}}"
             res_app="meetings" res_model="MeetingDocument"></app-documents>
         </div>
-
-        
-        <!-- <div *ngIf="meeting_object.meeting_docs && meeting_object.meeting_docs.length" class="title-wrapper border-bottom">
-            <div class="clearfix mt-3">
-                <h4 class="my-3 text-primary float-left"><i class="icon-doc-file"></i> Meeting Documents </h4>
-                <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.meeting_docs.length > visible_limit['news_doc']">
-                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.meeting_docs, 'news_doc')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.meeting_docs, 'news_doc')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of meeting_object.meeting_docs.slice(start_indices['news_doc'], ending_indices['news_doc'])">
-                    <a routerLink="/meeting/doc/{{doc.id}}" class="DocumentWrapper gray-bge">
-						<div class="DocIcon">
-							<span class="rounded-circle">
-								<i class="icon-doc-file"></i>
-							</span>
-						</div>
-                        <div class="DocInfoVertical text-truncate">
-                            {{doc.name}}
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div> -->
-
         <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
             <div class="call_container ">
                 <form>

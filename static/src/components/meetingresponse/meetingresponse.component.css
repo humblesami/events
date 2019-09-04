@@ -13,7 +13,7 @@
     display: flex;
     min-width: 240px;
     border-top:1px solid #e9e9e9;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .upcomingButton button {

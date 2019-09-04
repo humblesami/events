@@ -330,3 +330,10 @@ h5, .h5 {
         height: calc(100% - 25px);
     }   
 }
+@media (min-width: 280px){
+    .MainTitleHeadWrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
