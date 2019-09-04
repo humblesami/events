@@ -19,7 +19,11 @@ title="{{doc_data.doc_name}}"></app-breadcrumb>
                 </div>
             </div>
             <form *ngIf="mention_list" class="comment-list-form">
-                <div class="AddCommentTextWrap"><div contenteditable="true" [mentionConfig]="mentionConfig" class="active-mention" id="commentText" (keyup)="save_comment_key_up" Placeholder="Add a Comment"></div>
+                <div class="AddCommentTextWrap"><div contenteditable="true" [mentionConfig]="mentionConfig" 
+                    class="active-mention commentText" id="commentText" Placeholder="Add a Comment"></div>
+                </div>
+                <div class="commentText1">
+                    <i class="fas fa-location-arrow"></i>
                 </div>
             </form>
         </div>
