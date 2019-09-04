@@ -124,16 +124,16 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         // console.log(new_files, 4444);        
         if(multiple)
         {            
-            preview_files(new_file);
-            upload_files(new_file,1);
+            preview_files(new_files);
+            upload_files(new_files, 1);
         }
         else
         {          
             preview_files(new_files);
         }
-        for(var new_file of new_file)
+        for(var file of new_files)
         {
-            new_file.file_name = new_file.name;
+            file.file_name = file.name;
         }
     }
 
@@ -141,7 +141,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     
     function upload_files(files, cloud=false)
     {
-        // console.log(files);
+        console.log(files, 13);
         for(var obj of files){
             if(!obj.file_name)
             {
