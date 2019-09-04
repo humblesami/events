@@ -26,7 +26,7 @@ class Folder(CustomModel):
         if kw:
             resource_files = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['ResourceDocument']}})
         else:
-            resource_files = folder.resourcedocument_set.all()
+            resource_files = folder.documents.all()
             ar = []
             sub_folders = folder.folder_set.values()
             for sub in sub_folders:
@@ -80,7 +80,7 @@ class Folder(CustomModel):
 
 
 class ResourceDocument(File):
-    folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
+    folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='documents')
     users = models.ManyToManyField (Profile, 'Access', blank=True)
 
     @classmethod
