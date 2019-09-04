@@ -230,9 +230,6 @@ btn.active{
 	display:flex;
 	font-weight:500;
 }
-.pending-status{
-    padding: .3rem .3rem;
-}
 
 .DocName h5 {
     font-size: 14px;
