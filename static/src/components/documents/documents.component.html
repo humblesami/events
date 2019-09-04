@@ -10,6 +10,7 @@
                 <div class="DocText">
                     <div class="DocName text-truncate">
                         <h5 class="text-truncate">{{doc.name}}</h5>
+                        <input value="{{doc.name}}" (focus)="start_rename($event)" (click)="start_rename($event)" >
                     </div>              
                 </div>
             </a>

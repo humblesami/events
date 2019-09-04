@@ -168,8 +168,8 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     function upload_files(files, cloud=false)
     {
         // console.log(files);
-        parent.find('.picker').hide()//.attr('disabled', 'disabled');
-        $('.file-drop-zone-title').addClass('loading').html('Files being uploaded...');
+        // parent.find('.picker').hide()//.attr('disabled', 'disabled');
+        $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
         var url = window['site_config'].server_base_url+'/docs/upload-files';
         var formData = new FormData();
         if(!cloud)
@@ -212,7 +212,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             },
             complete:function(){
                 $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
-                parent.find('.picker').show()//.removeAttr('disabled');
+                // parent.find('.picker').show()//.removeAttr('disabled');
             }
         });
     }
@@ -322,10 +322,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
 
     
 }
-$(document).on('dragenter dragover drop', function(evn){
-    evn.stopPropagation();
-    evn.preventDefault();
-});
+
 
 (function(){    
     // console.log(99999999999,  window['merge_cloud_files']);
@@ -343,4 +340,9 @@ $(document).on('dragenter dragover drop', function(evn){
         }
     })
 })()
+
 window['apply_drag_drop'] = apply_drag_drop;
+$(document).on('dragenter dragover drop', function(evn){
+    evn.stopPropagation();
+    evn.preventDefault();
+});

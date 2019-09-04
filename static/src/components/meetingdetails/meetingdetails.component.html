@@ -381,7 +381,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.meeting_docs, 'news_doc')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                 </div>
             </div>
-            <app-documents parent_model="Event" parent_field="meeting_id" parent_id="{{meeting_object.id}}" res_app="meetings" res_model="MeetingDocument"></app-documents>
+            <app-documents parent_model="Event" parent_field="meeting_id" parent_id="{{meeting_object.id}}"
+            res_app="meetings" res_model="MeetingDocument"></app-documents>
         </div>
 
         

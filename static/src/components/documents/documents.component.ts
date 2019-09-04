@@ -34,6 +34,13 @@ export class DocumentsComponent implements OnInit {
         console.log(data, 134);
     }
 
+    start_rename(evn)
+    {
+        evn.stopPropagation();
+        evn.preventDefault();
+        console.log(4343);
+    }
+
     ngOnInit() {
         let obj_this = this;
         obj_this.roterLinkPrefix = obj_this.doc_types[obj_this.res_model];
