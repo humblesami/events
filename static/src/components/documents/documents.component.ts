@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from 'src/app/http.service';
+import {SocketService} from "../../app/socket.service";
+
 
 @Component({
     selector: 'app-documents',
@@ -24,21 +26,70 @@ export class DocumentsComponent implements OnInit {
         ResourceDocument:'/resource/doc/',
         NewsDocument:'/news/doc/',
     }
+    socketService: SocketService;
 
-    constructor(private httpServ: HttpService) {
-        this.httpService = httpServ;  
+    constructor(private httpServ: HttpService, private ss: SocketService) {
+        this.httpService = httpServ;
+        this.socketService = ss;
     }
 
     update_data(data){
         this.docs = this.docs.concat(data);
-        console.log(data, 134);
     }
+
+    change_file_name(evn, doc_id)
+    {
+        let input_data = {
+            doc_id: doc_id,
+            name: evn.target.value
+        }
+        let args = {
+            app: 'documents',
+            model: 'File',
+            method: 'change_file_name'
+        }
+        let final_input = {
+            params: input_data,
+            args: args
+        }
+        this.httpServ.get(final_input, (data)=>{}, ()=>{})
+    }
+
+    delete_file(evn, doc_id)
+    {
+        evn.stopPropagation();
+        evn.preventDefault();
+        let obj_this = this;        
+        let input_data = {
+            doc_id: doc_id,
+        }
+        let args = {
+            app: 'documents',
+            model: 'File',
+            method: 'delete_file'
+        }
+        let final_input = {
+            params: input_data,
+            args: args
+        }
+
+        obj_this.docs.find((item)=>{
+            return item.id== doc_id;
+        }).deleting=true;
+
+        obj_this.httpServ.get(final_input, (data)=>{                        
+            obj_this.docs =  obj_this.docs.filter((el)=>{
+                return doc_id != el.id;
+            });
+        }, ()=>{
+
+        })
+    }    
 
     start_rename(evn)
     {
         evn.stopPropagation();
         evn.preventDefault();
-        console.log(4343);
     }
 
     ngOnInit() {

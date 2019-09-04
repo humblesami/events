@@ -210,6 +210,22 @@ class File(CustomModel, FilesUpload):
         docs = list(docs)
         return docs
 
+    
+    @classmethod
+    def change_file_name(cls, request, params):
+        doc_id = params['doc_id']
+        name = params['name']
+        file = File.objects.get(pk=doc_id)
+        file.name = name
+        file.save()
+        return 'done'
+    
+    @classmethod
+    def delete_file(csl, request, params):
+        doc_id = params['doc_id']
+        File.objects.get(pk=doc_id).delete()
+        return 'done'
+
     @classmethod
     def get_file_data(cls, request, params):
         file_id = int(params['id'])
