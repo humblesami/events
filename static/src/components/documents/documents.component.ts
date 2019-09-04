@@ -53,7 +53,7 @@ export class DocumentsComponent implements OnInit {
             params: input_data,
             args: args
         }
-        obj_this.httpServ.get(final_input, (data)=>{
+        obj_this.httpServ.get(final_input, (data)=>{            
             obj_this.docs =  obj_this.docs.filter((el)=>{
                 if (doc_id == el.id)
                 {
@@ -117,7 +117,9 @@ export class DocumentsComponent implements OnInit {
                 parent_id: obj_this.parent_id,
             }
         }
+        console.log(6565,133);
         this.httpService.get(input_data, function(data){
+            console.log(data, 133);
             obj_this.docs = data;
         }, null)
     }
