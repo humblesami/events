@@ -325,7 +325,7 @@ class Event(CustomModel):
         for t in topic_orm:
             topic = ws_methods.obj_to_dict(t)
             topic['duration'] = str(topic['duration'])
-            topic['docs'] = list(t.agendadocument_set.values())
+            topic['docs'] = list(t.documents.values())
             for doc in topic['docs']:
                 doc['created_at'] = str(doc['created_at'])
             topics.append(topic)

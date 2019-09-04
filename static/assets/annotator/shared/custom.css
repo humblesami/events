@@ -368,12 +368,12 @@ body.pdf-viewer {
     flex-direction: row-reverse;*/
     }
 #content-wrapper {
-    position: relative;	
+    position: relative;
 }
 #comment-wrapper {
     position: relative;
     flex: 0 0 330px;
-    max-width: 330px;  
+    max-width: 330px;
     display: none;
     background: #F8F8F8;
     border-right: 1px solid #e6e6e6;
@@ -440,19 +440,43 @@ body.pdf-viewer {
     text-align: center;
     background: #f5f5f5;
     color: #757575;
-    }
-#comment-wrapper .comment-list-item {
+}
+.comment-list {
+    padding-bottom: 65px;
+}
+.comment-list-container {
+    width: 100%;
+    padding-bottom: 65px;
+    height: calc(100vh - 160px);
+    overflow-y: scroll;
+    background: #f1f2f4;
+    z-index:3;
+}    
+.comment-list-item {
     font-size: 13px;
-    padding: 15px 8px 6px;
-    line-height: 1.5;
+    padding: 10px 15px 0px;
     cursor: pointer;
     color: #000000;
+    margin: 0 10px;
+}
+.comment-list-item:first-child{
+    border-bottom: 1px solid #ddd;
 }
 .comment-list-item .user-time-info {
-    font-size: 11px;
     margin:0;
-    padding: 0 0 15px;
+    padding: 5px 0 0;
     line-height: 1;
+}
+.comment-details p{
+    line-height:1.5;
+    word-break: break-all;
+}
+.comment-details p ~ div{
+    display: none;
+}
+.comment-details p span{
+    font-family:inherit !important;
+    font-size:13px !important;
 }
 .comment-list-item .user-time-info .user {
     font-size: .840rem;
@@ -471,47 +495,67 @@ body.pdf-viewer {
     width: 15px;
     margin-top: -5px;
     }
-.comment-list {
-    padding-bottom: 65px;
-    }
-#comment-wrapper .comment-list-container {
-    width: 100%;
-    padding-bottom: 65px;
-    height: calc(100vh - 160px);
-    overflow-y: scroll;
-    background: #ffffff;
-    z-index:3;
-}
+
 .comment-list-form {
     padding-left: 0px;
     position: absolute;
-    bottom:65px;
+    bottom: 68px;
     width: calc(100% - 17px);
-    border-top: 1px solid hsla(0,0%,0%,.2);
-    background:#ffffff;
+    border: 5px solid #fff;
+    background: #ffffff;
+    box-shadow: 0 0 0 1px gainsboro;
 }
-
+.AddCommentTextWrap {
+    width: 85%;
+    float: left;
+}
 #commentText {
     width: 100%;
     resize: none;
-    max-height: 65px;
-    min-height: 44px;
+    max-height: 45px;
+    min-height: 35px;
     border: indianred;
     background-color: white;
     padding:10px 17px 10px 10px;
     overflow:auto;
-    }
-
-
-/*
-.comment-list-container br{
-    display:none;
+}   
+.commentText1 i {
+    padding: 10px 10px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: 0.2rem;
 }
-#commentText:focus {
-    outline: none;
-    border-top: 1px solid #cccccc;
-    box-shadow: transparent;
-} */
+/****** Full Discussein *******/
+.full-discussion .comment-list-item {
+    padding-left: 2rem !important;
+    margin-bottom: -1rem !important;
+    border-left: 1px solid #ddd;
+}
+.full-discussion .comment-list-item:first-child{
+    padding-left: 0 !important;
+    margin-bottom: -1rem !important;
+    border: 0px;
+} 
+.full-discussion .comment-list-item:first-child::after,
+.full-discussion .comment-list-item:not(:first-child)::after{
+    content: "";
+    display: block;
+    margin: 30px -32px -25px;
+    width: 10%;
+    padding-top: 0px;
+    border-top: 1px solid #ddd;
+}
+.full-discussion .comment-list-item:first-child::after{
+    margin: 30px 0px -25px;
+}
+.full-discussion .comment-list-item:last-child{
+    border-left: 0;
+}
+.full-discussion .comment-list-item:last-child::after {
+    border: none;
+    padding-bottom: 20px;
+}
 /****** Context Menu *******/
 .ContextMenuPopup {
     display: none;
@@ -571,10 +615,12 @@ hr {
 }
 .groupcomment {
     margin: 0;
-    padding: 10px;
+    padding: 5px 10px 0px;
     border-bottom: 1px solid #e8e6e6;
 }
-
+.groupcomment:last-child{
+    border-bottom:none
+}
 .btn-primary.strt_sign.pdfjs {
     cursor: pointer;
     height: 34px;
@@ -648,7 +694,7 @@ button.pen.annotation_button.active
 {
     background-color: darkgreen;
 }
-        
+
 .user-pic-time-infoWrapper{
     display:flex;
     position:relative;
@@ -665,17 +711,33 @@ button.pen.annotation_button.active
     align-items: center;
     color: #ffffff;
     overflow:hidden;
+    min-width:30px;
 }
 .userSmpic.icon-user-single::before {
     position: absolute;
-    z-index: 1;
+    /* z-index: 1; */
 }
-        
+
 .userSmpic img{
     position:relative;
-    z-index:2;
+    /* z-index:2; */
 }
-        
+
+/* Documents Comments */
+.comment-list-item .user-time-info .user,
+.comment-list-item .user-time-info .time{
+    padding-bottom: 10px;
+}
+
+.comment-list-item:first-child .user-time-info .user::after {
+    content: "Reply";
+    margin-left: 1rem;
+    background: #6a6969;
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size:10px;
+    color:#fff;
+}
 /*
 .comment-list-item:nth-of-type(n+1) {
     margin:0 0 0 20px !important;

@@ -81,7 +81,7 @@ class MeetingDocument(File):
 
 
 class AgendaDocument(File):
-    agenda = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    agenda = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='documents')
 
     @classmethod
     def get_attachments(cls, request, params):

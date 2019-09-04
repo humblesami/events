@@ -18,7 +18,7 @@ $(function(){
 
     function init_drop_box_picker(){
         var access_token = undefined;
-        function open_cloud_picker(ev) {
+        function open_cloud_picker(ev) {            
             is_multi_select_enabled(ev);
             access_token = localStorage.getItem("dropbox/token");
             if(!access_token)
@@ -209,12 +209,13 @@ $(function(){
         $('body').on('click', '.one_drive_picker', open_cloud_picker);
     }
 
-    function on_files_selected(current_files, source){
-        // console.log(current_files, 13);
-        window['merge_cloud_files'](current_files);
+    function on_files_selected(current_files, source){        
+        var current_cloud_number = $(".cloud_pickers_container").index(active_cloud_picker);
+        // console.log(current_files, current_cloud_number, 3233);
+        window['merge_cloud_files'][current_cloud_number](current_files);
     }
     
     init_google_picker();
     init_drop_box_picker();
-    init_one_drive_picker();
+    // init_one_drive_picker();
 })

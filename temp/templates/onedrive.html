@@ -6,10 +6,29 @@
 
 <script src="https://js.live.net/v7.2/OneDrive.js" type="text/javascript"></script>
 
-<button id="OpenOneDrive" type="button">Open from OneDrive</button>
+<div id="OpenOne">
+</div>
 
+
+<script>
+var cloud_number = undefined;
+</script>
 <script type="text/javascript" src="/static/assets/libs/jquery/jquery-3.3.1.js"></script>
 <script type="text/javascript" src="/static/assets/js/cloudfiles/onedrive.js"></script>
-
+<script>
+$(function(){
+    //alert(window.location.toString());
+    var url = new URL(window.location.toString());
+    var temp = url.searchParams.get("picker_index");
+    if(temp || temp == 0)
+    {
+        cloud_number = temp;
+        $('#OpenOne').click();
+    }
+    else{
+        //alert('No picker found');
+    }
+});
+</script>
 </body>
 </html>

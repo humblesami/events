@@ -384,13 +384,15 @@ class PointAnnotation(Annotation):
                 })
                 comments = point.commentannotation_set.all()
                 for comment in comments:
+                    user = comment.user
                     comments_points[counter]['comments'].append({
                         'class': "Comment",
                         'uuid': comment.uuid,
                         'point_id': point.uuid,
-                        'uid': comment.user_id,
+                        'uid': user.id,
                         'content': comment.body,
-                        'user_name': comment.user.username,
+                        'user_name': user.username,
+                        'user': {'name': user.fullname(), 'id':user.id, 'image': user.image.url},
                         'date_time': str(comment.date_time)
                     })
                 counter += 1
@@ -400,7 +402,7 @@ class PointAnnotation(Annotation):
 class CommentAnnotation(CustomModel):
     body = models.CharField(max_length=500)
     point = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     date_time = models.DateTimeField(auto_now_add=True)
     uuid = models.CharField(max_length=200)
 

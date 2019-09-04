@@ -1282,7 +1282,18 @@
                         return;
                     }
                     if (!e.shiftKey && e.keyCode == 13) {
-                        if (!window['should_save'])
+                        e.preventDefault();
+                        postComment();
+                    }
+                });
+
+                $('body').on('click', '.commentText1', function(e) {
+                    postComment();
+                });
+
+                function postComment()
+                {
+                    if (!window['should_save'])
                         {
                             window['should_save'] = true;
                             return;
@@ -1295,7 +1306,7 @@
                                 mention_list.push(parseInt(mentioned_id));
                             }
                         });
-                        e.preventDefault();
+                        
                         var commentValue = commentText.html(); // commentText.val().trim();
                         commentValue = commentValue.substr(0, commentValue.length - 1);
                         if (commentValue == '') {
@@ -1315,12 +1326,12 @@
                         pdfStoreAdapter.addComment(documentId, activePointId, comment).then(function(comment) {
                             insertComment(comment, 1);
                         });
-                    }
-                });
+                }
 
                 loadALlCommentsOnDocument = function(point_uuid) {
                     comment_list.html('');
                     comment_list.removeAttr('annotation-id');
+                    $('.comment-list-container').addClass('full-discussion');
                     var point_type = false;
                     if (slected_comment_type == 'notes')
                         point_type = 'personal';
@@ -1474,17 +1485,37 @@
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
                     aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
+                    var username = aComment.user_name;
+                    var user_image = '';
+                    if(aComment.user)
+                    {
+                        username = aComment.user.name;
+                        if(aComment.user.image)
+                        {
+                            user_image = window['site_config'].server_base_url + aComment.user.image;
+                            user_image = '<img class="img-fluid" id="navbar-profile-img" src="'+user_image+'">' ;
+
+                        }
+                        else
+                        {
+                            var initials = username.match(/\b\w/g) || [];
+                            initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+                            user_image = '<span>'+initials+'</span>';
+                        }
+                    }
+                    
+
                     var child_info = `
 						<div class="user-pic-time-infoWrapper">
 							<div class="userSmpic icon-user-single">
-								<img class="img-fluid" id="navbar-profile-img" src="">
+								`+user_image+`
 							</div>
 							<div class="user-time-info">
 								<span class="user">` + aComment.user_name + `</span>
-								<span class"time">` + aComment.date_time + `</span>
-							</div>
-						</div>
-						<div>` + aComment.content + `</div>
+                                <span class="time">` + aComment.date_time + `</span>
+                            </div>
+                        </div>
+                        <div class="comment-details"><p>` + aComment.content + `</p></div>
                     `;
                     $(child).attr('comment-id', aComment.uuid);
                     $(child).attr('annotation', aComment.annotation);
@@ -1547,9 +1578,11 @@
                         }
                     });
                     if (activeAnnotationItem.sub_type) {
+                        $('.comment-list-container').addClass('full-discussion');
                         comment_list.removeAttr('annotation-id');
                         showCommentsContainer('notes');
                     } else {
+                        $('.comment-list-container').removeClass('full-discussion');
                         comment_list.attr('annotation-id', activeAnnotationId);
                         $('#pdf-annotate-edit-overlay a').remove();
                         showCommentsContainer('comments');

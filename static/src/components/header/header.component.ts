@@ -48,6 +48,33 @@ export class HeaderComponent implements OnInit {
         this.socketService = sserv;        
     }
 
+    set_admin_mode_text()
+    {
+        let obj_this = this;
+        if (obj_this.socketService.admin_mode)
+        {
+            $('.admin_mode').html('Disable Admin Mode');
+        }
+        else
+        {
+            $('.admin_mode').html('Enable Admin Mode');
+        }
+    }
+
+    admin_mode_handler()
+    {
+        let obj_this = this;
+        if (obj_this.socketService.admin_mode)
+        {
+            obj_this.socketService.set_admin_mode(false);
+        }
+        else
+        {
+            obj_this.socketService.set_admin_mode(true);
+        }
+        obj_this.set_admin_mode_text();
+    }
+
     on_search_focus(){
         let obj_this = this;
         if(obj_this.socketService.active_route_snapshot.data.model)
@@ -281,6 +308,9 @@ export class HeaderComponent implements OnInit {
         //         }
         //     });
         // }, 200);
-        
+        let obj_this = this;
+        $(()=>{
+            obj_this.set_admin_mode_text();
+        });
     }
 }

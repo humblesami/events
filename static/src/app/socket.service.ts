@@ -59,7 +59,7 @@ export class SocketService {
         {
             try
             {
-                var user_cookie = localStorage.getItem('user');                
+                var user_cookie = localStorage.getItem('user');
                 let cuser = undefined;
                 if(user_cookie)
                 {
@@ -95,8 +95,10 @@ export class SocketService {
     route_changed(route: ActivatedRouteSnapshot){
         this.active_route_snapshot = route;
     }   
-    
+
     is_admin = false;
+    admin_mode = false;
+    actually_admin = false;
     connect_socket(authorized_user){
         var obj_this = this;
         if(!authorized_user)
@@ -128,7 +130,26 @@ export class SocketService {
                 break;
             }
         }
-        obj_this.user_data = authorized_user;        
+        var admin_mode_cookie = localStorage.getItem('admin_mode');
+        if (!admin_mode_cookie)
+        {
+            localStorage.setItem('admin_mode', JSON.stringify({admin_mode: false}));
+            obj_this.admin_mode = false;
+        }
+        else if (!obj_this.is_admin)
+        {
+            localStorage.setItem('admin_mode', JSON.stringify({admin_mode: true}));
+            obj_this.admin_mode = false;
+        }
+        else
+        {
+            let admin_mode_obj = JSON.parse(admin_mode_cookie);
+            obj_this.admin_mode = admin_mode_obj['admin_mode'];
+            obj_this.is_admin = obj_this.admin_mode;
+            obj_this.actually_admin = true;
+        }
+        obj_this.user_data = authorized_user;
+
 
         let complete_server_url = obj_this.site_config.chat_server+'/sio';
         obj_this.socket = window['io'].connect(complete_server_url,{
@@ -196,7 +217,6 @@ export class SocketService {
                 console.log("Authenticated\n\n");
                 // console.log(obj_this.user_data, 1344);
                 localStorage.setItem('user', JSON.stringify(obj_this.user_data));
-
                 obj_this.verified = true;
                 if(!data.unseen && data.unseen != 0)
                 {
@@ -261,6 +281,14 @@ export class SocketService {
             });
         });        
     }
+
+    set_admin_mode(mode)
+    {
+        let obj_this = this;
+        obj_this.admin_mode = mode;
+        obj_this.is_admin = mode;
+        localStorage.setItem('admin_mode', JSON.stringify({admin_mode:mode}));
+    }    
 
     add_chat_user(chat_cleint: ChatClient)
     {

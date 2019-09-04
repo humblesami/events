@@ -1,4 +1,22 @@
-function apply_drag_drop(input, resInfo){
+window['merge_cloud_files'] = [];
+function apply_drag_drop(input, resInfo, on_files_uploaded){    
+    if(!input.length)
+    {
+        console.log('invalid file input element');
+        return;
+    }
+
+    if(input.length>1)
+    {
+        console.log('invalid file input element1');
+        return;
+    }
+    if(!input.is(':file'))
+    {
+        console.log('invalid file input element2');
+        return;
+    }
+    // console.log('a theek a');
     var element = input[0];
     var parent = input.parent();
     var multiple = input.attr('multiple');
@@ -19,16 +37,13 @@ function apply_drag_drop(input, resInfo){
         </div>
         <div`+multiple+` class="cloud_pickers_container d-flex justify-content-center pb-1">
             <div class="google_drive_picker picker border">
-                <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" title="Google Drive">
-                <div class="selected_files"></div>
+                <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" title="Google Drive">                
             </div>
             <div class="one_drive_picker picker border">
-                <img class="img-fluid" src="/static/assets/images/cloud/onedrive.png" title="OneDrive">
-                <div class="selected_files"></div>
+                <img class="img-fluid" src="/static/assets/images/cloud/onedrive.png" title="OneDrive">                
             </div>
             <div class="drop_box_picker picker border">
-                <img class="img-fluid" src="/static/assets/images/cloud/dropbox.png" title="Dropbox">
-                <div class="selected_files"></div>
+                <img class="img-fluid" src="/static/assets/images/cloud/dropbox.png" title="Dropbox">                
             </div>
             <div class="local_picker picker border btn btn-primary btn-file">
                 <i class="glyphicon glyphicon-folder-open"></i>&nbsp;  
@@ -38,13 +53,12 @@ function apply_drag_drop(input, resInfo){
         <div class="feedback">
         </div>
     </div>
-    `;
+    `;    
     input.hide();
-    input.after(uploader);    
-    parent.find('.cloud_pickers_container .picker').click(function(){
-        // console.log(6565);
-        window['merge_cloud_files'] = merge_cloud_files;
-    });
+    input.after(uploader);
+    var elm = input.next().find('.cloud_pickers_container');
+    var current_cloud_number = $(".cloud_pickers_container").index(elm);    
+
 
     parent.find('.local_picker').click(function(){
         input.click();
@@ -91,54 +105,69 @@ function apply_drag_drop(input, resInfo){
     dropZone.addEventListener('dragleave', on_dragleave, false);
     dropZone.addEventListener('drop', on_drop, false);
 
-    var added_files = [];
-    input.cloud_urls = [];
-    input.cloud_files = []    
-    input.local_files = [];
-    input.selected_files = [];
 
+    input.cloud_urls = [];
     merge_local_files = function(new_files){
-        added_files = [];
         if(multiple)
         {
-            for(const file1 of new_files)
-            {
-                var already_exists = false;
-                for(const file2 of input.local_files)
-                {
-                    if(file1.name == file2.name && file1.size == file2.size)
-                    {
-                        already_exists = true;
-                    }
-                }
-                if(!already_exists)
-                {
-                    input.local_files.push(file1);
-                    added_files.push(file1);
-                }
-            }
-            input.selected_files = input.local_files.concat(input.cloud_files);
-            preview_files(added_files);
+            preview_files(new_files);
+            upload_files(new_files);
         }
         else
         {
-            input.selected_files = input.local_files = added_files = new_files;
-            preview_files(added_files);
+            preview_files(new_files);
         }
-        //////////////////////////////////////////////////
-        upload_files(added_files);
+        //////////////////////////////////////////////////        
+    }
+    
+    function merge_cloud_files(new_files){
+        // console.log(new_files, 4444);        
+        if(multiple)
+        {            
+            preview_files(new_file);
+            upload_files(new_file,1);
+        }
+        else
+        {          
+            preview_files(new_files);
+        }
+        for(var new_file of new_file)
+        {
+            new_file.file_name = new_file.name;
+        }
     }
 
-    function upload_files(files)
+    window['merge_cloud_files'][current_cloud_number] = merge_cloud_files;
+    
+    function upload_files(files, cloud=false)
     {
-        var url = 'http://localhost:8000/docs/upload-files';
+        // console.log(files);
+        for(var obj of files){
+            if(!obj.file_name)
+            {
+                obj.file_name = obj.name;
+            }
+        }
+        $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
+        var url = window['site_config'].server_base_url+'/docs/upload-files';
         var formData = new FormData();
-        files.forEach(function(file, i) {
-            formData.append('file['+i+']', file);
-        });
+        if(!cloud)
+        {
+            var i= 0;
+            for(var file of files){
+                formData.append('file['+i+']', file);
+                i++;
+            }
+        }
+        else
+        {
+            formData.append('cloud_data', JSON.stringify(files));
+        }
+        
         formData.append('res_app', resInfo.res_app);
         formData.append('res_model', resInfo.res_model);
-        formData.append('res_id', resInfo.res_id);
+        formData.append('res_id', resInfo.res_id);        
+
         var user = localStorage.getItem('user');
         user = JSON.parse(user);
         headers = {'Authorization': 'Token '+user.token};
@@ -149,93 +178,42 @@ function apply_drag_drop(input, resInfo){
             headers: headers,
             contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
             processData: false, // NEEDED, DON'T OMIT THIS
-            success:function(data){
-                console.log(data);
+            success: function(data){
+                if(!data)
+                {
+                    console.log('Invalid response');
+                }
+                try{
+                    data = JSON.parse(data);
+                    if(data.length)
+                    {
+                        if(on_files_uploaded)
+                        {
+                            parent.find('.file-box').remove();
+                            parent.find('.preview-conatiner').html('');
+                            on_files_uploaded(data);
+                        }
+                    }
+                    else{
+                        console.log('Invalid files in response', data);
+                    }
+                }
+                catch(er){
+                    console.log(data, er);
+                }
             },
             error: function(a,b,c,d){
                 console.log(a,b,c,d)
+            },
+            complete:function(){
+                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
+                // parent.find('.picker').show()//.removeAttr('disabled');
             }
         });
     }
 
-    function download(file_url, access_token=undefined, calll_back)
-    {
-        //file_url = 'https://dl.dropboxusercontent.com/1/view/nt37jrpb6akix39/article%205.pdf';
-        var ajax_options = {
-            url: file_url,
-            success: function (data, textStatus, jqXHR) {
-                calll_back(data);
-            },
-            error:function(a,b,c,d){
-                console.log('Error',a,b,c,d);
-            }
-        }
-        if(access_token){
-            ajax_options.header = {
-                Authorization: 'Bearer '+access_token
-            }
-        }
-        $.ajax(ajax_options);
-    }
-    
-    merge_cloud_files = function(new_files){
-        // console.log(new_files, 4444);
-        added_files = [];
-        if(multiple)
-        {
-            for(const file1 of new_files)
-            {
-                var already_exists = false;
-                for(const file2 of input.cloud_files)
-                {
-                    if(file1.url == file2.url)
-                    {
-                        already_exists = true;
-                    }
-                }
-                if(!already_exists)
-                {
-                    input.cloud_files.push(file1);
-                    added_files.push(file1);
-                }
-            }
-            input.selected_files = input.local_files.concat(input.cloud_files);
-            preview_files(added_files);
-        }
-        else
-        {
-            input.selected_files = input.cloud_files = added_files = new_files;            
-            preview_files(added_files);
-        }
-    }    
-
-    function remove_file(e)
-    {
-        var thumbnail = $(e.target).closest('.file-box');
-        if(multiple)
-        {
-            var index = thumbnail.index();
-            console.log(input.selected_files.length, 187);
-            input.selected_files.splice(index, 1);
-            console.log(input.selected_files.length, 186);
-        }
-        else
-        {
-            input.selected_files = [];
-        }
-        thumbnail.remove();
-        if(parent.find('.file-box').length)
-        {
-            parent.find('.file-drop-zone-title').hide();
-        }
-        else
-        {
-            parent.find('.file-drop-zone-title').show();
-        }
-        parent.closest('fieldset').find('[name="binary_data"]').val('');
-    }    
-
     function preview_files(incoming_files){
+        console.log(incoming_files, 22);
         parent.find('.feedback').html('');
         var thumbnail = `
         <div class="file-preview-other file-box border p-1">
@@ -260,31 +238,18 @@ function apply_drag_drop(input, resInfo){
                 {
                     name_box.append('<input name="url" value="'+file.url+'"/>');
                 }
-                nail1.find('.del').click(remove_file);
-                parent.find('.preview-conatiner').append(nail1);
             }
         }
         else
         {
-            var nail2 = $(thumbnail);
-            var name_box = nail2.find('input[name="name"]');
+            var nail2 = $(thumbnail);            
+            var name_box = parent.closest('form').find('input[name="name"]');            
             var single_file = incoming_files[0];
             name_box.val(single_file.name);
-            parent.closest('fieldset').find('[name="file_name"]').val(single_file.name);
-            var single_file_prefix = window['js_utils'].get_dataurl_prefix(single_file.name);
-            if(!single_file_prefix)
-            {
-                parent.find('.feedback').html('Invalid file type');
-                return;
-            }
+            // console.log(name_box.length, name_box);
+            parent.closest('fieldset').find('[name="file_name"]').val(single_file.name);            
             if(single_file.url)
             {
-                name_box.append('<input name="url" value="'+single_file.url+'"/>');                
-                // download(single_file.url, single_file.access_token, function(data){
-                //     data = btoa(unescape(encodeURIComponent(data)));                    
-                //     data = single_file_prefix + data;
-                //     parent.closest('fieldset').find('[name="binary_data"]').val(data);
-                // });
                 parent.closest('fieldset').find('input[name="cloud_url"]').val(single_file.url);
                 parent.closest('fieldset').find('input[name="access_token"]').val(single_file.access_token);
             }
@@ -293,8 +258,7 @@ function apply_drag_drop(input, resInfo){
                 window['js_utils'].read_file(single_file, function(data){
                     parent.closest('fieldset').find('[name="binary_data"]').val(data);
                 });
-            }            
-            nail2.find('.del').click(remove_file);
+            }
             parent.find('.preview-conatiner').html(nail2);            
         }
         if(parent.find('.file-box').length)
@@ -310,13 +274,31 @@ function apply_drag_drop(input, resInfo){
     input.change(function(e){
         merge_local_files(element.files);
     });
-
-
-    
 }
+
+
+(function(){    
+    // console.log(99999999999,  window['merge_cloud_files']);
+    window.addEventListener("message", function(response){        
+        this.console.log(response, 1444504);
+        if(response.data)
+        {
+            var received_data = response.data;
+            var files = received_data.files;
+            var cloud_number = received_data.cloud_number;
+            if(Array.isArray(files) && files.length)
+            {
+                if(files[0].url)
+                {
+                    window['merge_cloud_files'][cloud_number](files);
+                }
+            }    
+        }
+    })
+})()
+
+window['apply_drag_drop'] = apply_drag_drop;
 $(document).on('dragenter dragover drop', function(evn){
     evn.stopPropagation();
     evn.preventDefault();
 });
-
-window['apply_drag_drop'] = apply_drag_drop;

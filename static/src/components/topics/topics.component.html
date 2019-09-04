@@ -106,7 +106,13 @@ title="{{topic.name}}"></app-breadcrumb>
                 </div>
             </div>
         </div>
-	</section>
+    </section>
+    <app-fileupload 
+            *ngIf="topic && topic.id" 
+            res_app="meetings" 
+            res_model="Topic" 
+            res_id="{{topic.id}}">
+        </app-fileupload>
 	<div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
             <div class="call_container ">
                 <form>

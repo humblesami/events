@@ -1,21 +1,21 @@
 from django import forms
 from django.contrib import admin
 from documents.admin import FileInlineAdmin, FileAdmin
-from mainapp.admin import BaseAdmin
+from mainapp.admin import BaseAdmin, BaseInlineAdmin
 from .models import *
 import nested_admin
 
 
-class VotingChoiceAdmin(admin.ModelAdmin):
+class VotingChoiceAdmin(BaseAdmin):
     autocomplete_fields = ['voting_type']
 
 
-class ChoiceInline(nested_admin.NestedStackedInline):
+class ChoiceInline(BaseInlineAdmin):
     model = VotingChoice
     extra = 0
 
 
-class VotingTypeAdmin(admin.ModelAdmin):
+class VotingTypeAdmin(BaseAdmin):
     list_display = ['name']
     inlines = [ChoiceInline]
     list_filter = ['name']

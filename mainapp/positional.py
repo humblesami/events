@@ -168,7 +168,10 @@ class PositionalSortMixIn(object):
                 # get the last object
                 last = model_class._default_manager.all().order_by('-position')[0]
                 # the position of the last element
-                self.position = last.position + 1
+                if last.position:
+                    self.position = last.position + 1
+                else:
+                    self.position = 1
             except IndexError:
                 # IndexError happened: the query did not return any objects
                 # so this has to be the first

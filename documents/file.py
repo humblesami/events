@@ -41,14 +41,14 @@ class File(CustomModel, FilesUpload):
     content = models.CharField(max_length=30, blank=True)
     pdf_doc = models.FileField(upload_to='converted/', null=True)
     file_type = models.CharField(max_length=128, default='')
-    attachment = models.FileField(upload_to='files/', null=True, validators=[validate_file_extension])
+    attachment = models.FileField(upload_to='files/', null=True, blank=True, validators=[validate_file_extension])
     upload_status = models.BooleanField(default=False)
     file_name = models.CharField(max_length=128, default='')
     cloud_url = models.CharField(max_length=512, null=True, blank=True)
     access_token = models.CharField(max_length=256, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name        
 
     pending_tasks = 3
 
@@ -70,13 +70,6 @@ class File(CustomModel, FilesUpload):
                     f.close()
                     res = open(pth, 'rb')
                     file_data = res
-                elif self.binary_data:
-                    file_str = self.binary_data.split(';base64,')[1]
-                    binary_data = io.BytesIO(base64.b64decode(file_str))
-                    file_data = DjangoFile(binary_data)
-                    self.attachment.save(self.file_name, file_data)
-
-                if file_data is not None:
                     self.binary_data = ''
                     self.cloud_url = ''
                     self.access_token = ''
@@ -120,7 +113,6 @@ class File(CustomModel, FilesUpload):
         except:
             res = ws_methods.get_error_message()
             a = 1
-
 
     def get_pdf(self):
         tmp = self.attachment.url.split('.')
@@ -210,6 +202,22 @@ class File(CustomModel, FilesUpload):
         docs = docs.values('id', 'name')
         docs = list(docs)
         return docs
+
+    
+    @classmethod
+    def change_file_name(cls, request, params):
+        doc_id = params['doc_id']
+        name = params['name']
+        file = File.objects.get(pk=doc_id)
+        file.name = name
+        file.save()
+        return 'done'
+    
+    @classmethod
+    def delete_file(csl, request, params):
+        doc_id = params['doc_id']
+        File.objects.get(pk=doc_id).delete()
+        return 'done'
 
     @classmethod
     def get_file_data(cls, request, params):
