@@ -178,7 +178,7 @@ class Voting(Actions):
 
         voting_object['voting_docs'] = []
         try:
-            voting_docs = list(voting_object_orm.votingdocument_set.all().values())
+            voting_docs = list(voting_object_orm.documents.all().values())
             for doc in voting_docs:
                 doc['created_at'] = str(doc['created_at'])
                 voting_object['voting_docs'].append(doc)
@@ -514,7 +514,7 @@ class VotingAnswer(models.Model):
 
 
 class VotingDocument(File):
-    voting = models.ForeignKey('Voting', on_delete=models.CASCADE)
+    voting = models.ForeignKey('Voting', on_delete=models.CASCADE, related_name='documents')
 
     def save(self, *args, **kwargs):
         if not self.file_type:
