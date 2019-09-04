@@ -9,23 +9,26 @@
 <div id="OpenOne">
 </div>
 
-<h2>
-    One Drive
-</h2>
 
+<script>
+var cloud_number = undefined;
+</script>
 <script type="text/javascript" src="/static/assets/libs/jquery/jquery-3.3.1.js"></script>
 <script type="text/javascript" src="/static/assets/js/cloudfiles/onedrive.js"></script>
 <script>
 $(function(){
-
-            console.log(34343);
-            var url = new URL(window.location.toString());
-            var c = url.searchParams.get("a");
-            if(c)
-            {
-                $('#OpenOne').click();
-            }
-        });
+    //alert(window.location.toString());
+    var url = new URL(window.location.toString());
+    var temp = url.searchParams.get("picker_index");
+    if(temp || temp == 0)
+    {
+        cloud_number = temp;
+        $('#OpenOne').click();
+    }
+    else{
+        //alert('No picker found');
+    }
+});
 </script>
 </body>
 </html>

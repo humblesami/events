@@ -48,7 +48,7 @@ class File(CustomModel, FilesUpload):
     access_token = models.CharField(max_length=256, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name        
 
     pending_tasks = 3
 

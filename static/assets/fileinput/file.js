@@ -1,4 +1,22 @@
-function apply_drag_drop(input, resInfo, on_files_uploaded){
+window['merge_cloud_files'] = [];
+function apply_drag_drop(input, resInfo, on_files_uploaded){    
+    if(!input.length)
+    {
+        console.log('invalid file input element');
+        return;
+    }
+
+    if(input.length>1)
+    {
+        console.log('invalid file input element1');
+        return;
+    }
+    if(!input.is(':file'))
+    {
+        console.log('invalid file input element2');
+        return;
+    }
+    // console.log('a theek a');
     var element = input[0];
     var parent = input.parent();
     var multiple = input.attr('multiple');
@@ -38,13 +56,12 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         <div class="feedback">
         </div>
     </div>
-    `;
+    `;    
     input.hide();
-    input.after(uploader);    
-    parent.find('.cloud_pickers_container .picker').click(function(){
-        // console.log(6565);
-        window['merge_cloud_files'] = merge_cloud_files;
-    });
+    input.after(uploader);
+    var elm = input.next().find('.cloud_pickers_container');
+    var current_cloud_number = $(".cloud_pickers_container").index(elm);    
+
 
     parent.find('.local_picker').click(function(){
         input.click();
@@ -119,18 +136,18 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             }
             input.selected_files = input.local_files.concat(input.cloud_files);
             preview_files(added_files);
+            upload_files(added_files);
         }
         else
         {
             input.selected_files = input.local_files = added_files = new_files;
             preview_files(added_files);
         }
-        //////////////////////////////////////////////////
-        upload_files(added_files);
+        //////////////////////////////////////////////////        
     }
     
-    merge_cloud_files = function(new_files){
-        // console.log(new_files, 4444);
+    function merge_cloud_files(new_files){
+        // console.log(new_files, 4444);        
         added_files = [];
         if(multiple)
         {
@@ -152,6 +169,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             }
             input.selected_files = input.local_files.concat(input.cloud_files);
             preview_files(added_files);
+            upload_files(added_files,1);
         }
         else
         {
@@ -161,14 +179,20 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         for(var new_file of added_files)
         {
             new_file.file_name = new_file.name;
-        }
-        upload_files(added_files,1);
+        }        
     }
 
+    window['merge_cloud_files'][current_cloud_number] = merge_cloud_files;
+    
     function upload_files(files, cloud=false)
     {
         // console.log(files);
-        // parent.find('.picker').hide()//.attr('disabled', 'disabled');
+        for(var obj of files){
+            if(!obj.file_name)
+            {
+                obj.file_name = obj.name;                
+            }
+        }
         $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
         var url = window['site_config'].server_base_url+'/docs/upload-files';
         var formData = new FormData();
@@ -185,7 +209,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         
         formData.append('res_app', resInfo.res_app);
         formData.append('res_model', resInfo.res_model);
-        formData.append('res_id', resInfo.res_id);
+        formData.append('res_id', resInfo.res_id);        
 
         var user = localStorage.getItem('user');
         user = JSON.parse(user);
@@ -198,13 +222,27 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
             processData: false, // NEEDED, DON'T OMIT THIS
             success: function(data){
-                console.log(data, 1444007);
-                data = JSON.parse(data);
-                if(on_files_uploaded)
+                if(!data)
                 {
-                    parent.find('.file-box').remove();
-                    parent.find('.preview-conatiner').html('');
-                    on_files_uploaded(data);
+                    console.log('Invalid response');
+                }
+                try{
+                    data = JSON.parse(data);
+                    if(data.length)
+                    {
+                        if(on_files_uploaded)
+                        {
+                            parent.find('.file-box').remove();
+                            parent.find('.preview-conatiner').html('');
+                            on_files_uploaded(data);
+                        }
+                    }
+                    else{
+                        console.log('Invalid files in response', data);
+                    }
+                }
+                catch(er){
+                    console.log(data, er);
                 }
             },
             error: function(a,b,c,d){
@@ -223,9 +261,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         if(multiple)
         {
             var index = thumbnail.index();
-            console.log(input.selected_files.length, 187);
             input.selected_files.splice(index, 1);
-            console.log(input.selected_files.length, 186);
         }
         else
         {
@@ -318,23 +354,23 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     input.change(function(e){
         merge_local_files(element.files);
     });
-
-
-    
 }
 
 
 (function(){    
     // console.log(99999999999,  window['merge_cloud_files']);
     window.addEventListener("message", function(response){        
+        this.console.log(response, 1444504);
         if(response.data)
         {
-            var files = response.data;
+            var received_data = response.data;
+            var files = received_data.files;
+            var cloud_number = received_data.cloud_number;
             if(Array.isArray(files) && files.length)
             {
                 if(files[0].url)
                 {
-                    window['merge_cloud_files'](files);
+                    window['merge_cloud_files'][cloud_number](files);
                 }
             }    
         }
