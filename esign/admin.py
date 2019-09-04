@@ -22,8 +22,8 @@ class SignDocAdmin(admin.ModelAdmin):
     form = SignDocForm
     list_display = ('name', 'meeting', 'send_to_all','created_by')
     fields = [
-        'name',
         'attachment',
+        'name',
         'cloud_url',
         'access_token',
         'binary_data',

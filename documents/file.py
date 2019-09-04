@@ -70,13 +70,6 @@ class File(CustomModel, FilesUpload):
                     f.close()
                     res = open(pth, 'rb')
                     file_data = res
-                elif self.binary_data:
-                    file_str = self.binary_data.split(';base64,')[1]
-                    binary_data = io.BytesIO(base64.b64decode(file_str))
-                    file_data = DjangoFile(binary_data)
-                    self.attachment.save(self.file_name, file_data)
-
-                if file_data is not None:
                     self.binary_data = ''
                     self.cloud_url = ''
                     self.access_token = ''

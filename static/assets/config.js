@@ -71,7 +71,7 @@ site_config.site_url = current_site_base_url;
 
 site_config.public_urls = ['login']
 //console.log(site_config);
-site_config['app_name'] = 'MeetingPoint';
+site_config['app_name'] = 'meetings';
 if(current_site_base_url.indexOf('localhost') > -1)
 {
     site_config.is_localhost = 1;

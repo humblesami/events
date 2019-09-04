@@ -1,7 +1,4 @@
-.form-row.field-name
-{
-    display: none;
-}
+
 .form-row.field-attachment
 {
     display: none;
@@ -14,13 +11,22 @@
 {
     display: none;
 }
-/* .form-row.field-binary_data{
+.form-row.field-binary_data{
     display: none;
-} */
+}
+.form-row.field-cloud_url{
+    display: none;
+}
+.form-row.field-access_token{
+    display: none;
+}
+
 .form-row.field-file_name{
     display: none;
 }
 .aligned p.file-upload{
     margin-left: 0;
 }
-
+.preview-conatiner input{
+    display: none;
+}

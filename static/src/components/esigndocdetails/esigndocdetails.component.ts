@@ -380,12 +380,12 @@ export class EsignDocDetailsComponent implements OnInit {
                 return;
             pageNum++;
             renderPage(pageNum);
-        });
+        });        
 
 
         function zoom(newScale) {
             // Using promise to fetch the page
-
+            page_zoom = newScale;
             pdfDoc.getPage(pageNum).then(function(page) {
                 var viewport = page.getViewport(newScale);
                 var pre_width = canvas.width;
@@ -400,32 +400,11 @@ export class EsignDocDetailsComponent implements OnInit {
                 page.render(renderContext);
                 //  $('.sign_container').hide();
                 //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
-                var saved_new_signs = $('.sign_container:visible,.new_sign');
+                var saved_new_signs = $('.sign_container:visible,.new_sign');                
                 $.each(saved_new_signs, function() {
-                    var h, w, perc;
-                    if (pre_width > canvas.width) {
-                        perc = (canvas.width / pre_width);
-                        w = parseFloat($(this)[0].style.width) * perc;
-                        h = parseFloat($(this)[0].style.height) * perc;
-                    }
-
-                    if (pre_width < canvas.width) {
-                        perc = (canvas.width / pre_width);
-                        w = parseFloat($(this)[0].style.width) * perc;
-                        h = parseFloat($(this)[0].style.height) * perc;
-                    }
-
-                    if (pre_width == canvas.width) {
-                        w = parseFloat($(this)[0].style.width);
-                        h = parseFloat($(this)[0].style.height);
-                    }
-
-                    $(this).css({
-                        width: w,
-                        height: h
-                    });
+                    set_position_on_doc($(this))                    
                 });
-            });
+            });            
         }
 
         $("#zoomIn").on('click', function zoomIn() {
@@ -684,12 +663,17 @@ export class EsignDocDetailsComponent implements OnInit {
             return db_rect;
         }
 
-        function set_position_on_doc(rect, el){
+        function set_position_on_doc(el){
+            return;
+            var width = $(this).attr('width');
+            var height = $(this).attr('height');
+            var left = $(this).attr('left');
+            var top = $(this).attr('top');
             var zoomed_rect = {
-                top:rect.top * page_zoom, 
-                left:rect.left * page_zoom, 
-                width:rect.width * page_zoom, 
-                height:rect.height * page_zoom, 
+                top:top * page_zoom, 
+                left:left * page_zoom, 
+                width:width * page_zoom, 
+                height:height * page_zoom, 
             }
             el.css(zoomed_rect);
         }
