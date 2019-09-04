@@ -78,7 +78,7 @@ title="{{topic.name}}"></app-breadcrumb>
             </div>
         </div>
     </div>
-    <section *ngIf="topic.docs && topic.docs.length" class="HomepageDocumentSection">
+    <section *ngIf="socketService.admin_mode || (topic.docs && topic.docs.length)" class="HomepageDocumentSection">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
@@ -88,31 +88,13 @@ title="{{topic.name}}"></app-breadcrumb>
                     	</h1>
 					</div>
                 </div>
-                <div class="col-sm-12">
-					<div class="row docwrappercontainer">
-                        <a class="col-sm-6 col-md-4 col-lg-2" routerLink="/topic/doc/{{doc.id}}" *ngFor="let doc of topic.docs">
-                            <div class="DocumentWrapper">
-								<div class="DocIcon">
-									<span class="rounded-circle">
-										<i class="icon-doc-file"></i>
-									</span>
-								</div>
-								<div class="DocInfoVertical text-truncate">
-									{{doc.name}}
-								</div>
-                            </div>
-                        </a>
-                    </div>
+                <div *ngIf="topic && topic.id" class="col-sm-12">
+                    <app-documents parent_model="Topic" parent_field="agenda_id" parent_id="{{topic.id}}"
+                    res_app="meetings" res_model="AgendaDocument"></app-documents>
                 </div>
             </div>
         </div>
     </section>
-    <app-fileupload 
-            *ngIf="topic && topic.id" 
-            res_app="meetings" 
-            res_model="Topic" 
-            res_id="{{topic.id}}">
-        </app-fileupload>
 	<div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
             <div class="call_container ">
                 <form>

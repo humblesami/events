@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpService} from '../../app/http.service';
 import {ActivatedRoute} from '@angular/router';
+import {SocketService} from "../../app/socket.service";
+
 declare var $: any;
+
 
 @Component({
     selector: 'app-topics',
@@ -26,7 +29,12 @@ export class TopicsComponent implements OnInit {
     meeting_name = '';
     meeting_id = '';
     attachments = [];
-    constructor(private httpService: HttpService, private route: ActivatedRoute) { }
+    socketService: SocketService;
+    constructor(private httpService: HttpService, 
+        private route: ActivatedRoute,
+        private ss: SocketService) {
+            this.socketService = this.ss;
+        }
     file_change(event)
     {
         let obj_this = this;
