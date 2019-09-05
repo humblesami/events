@@ -30,9 +30,8 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     }
     var uploader = `
     <div class="file-input-picker-container">
-        
         <div class="file-drop-zone">
-            <div class="feedback-message">
+        <div class="feedback-message">
             </div>
             <div class="file-drop-zone-title">Drag & drop files here …</div>
             <div class="preview-conatiner">
@@ -53,7 +52,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 <span class="hidden-xs">Browse …</span>
             </div>
         </div>
-        
+
     </div>
     `;    
     input.hide();
@@ -113,7 +112,6 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         if(multiple)
         {
             preview_files(new_files);
-            upload_files(new_files);
         }
         else
         {
@@ -126,12 +124,11 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         // console.log(new_files, 4444);        
         if(multiple)
         {            
-            preview_files(new_files);
-            upload_files(new_files, 1);
+            preview_files(new_files, 1);
         }
         else
         {          
-            preview_files(new_files);
+            preview_files(new_files,1);
         }
         for(var file of new_files)
         {
@@ -203,13 +200,12 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 }
             },
             error: function(a,b,c,d){
-                console.log(a,b,c,d)
                 $('.feedback-message').addClass('alert-danger').html('Fail to Upload Files');
                 $(".feedback-message").fadeIn();
                 function hideMsg(){
                     $(".feedback-message").fadeOut();
                     }
-                    setTimeout(hideMsg,3000);
+                    setTimeout(hideMsg,2000);
             },
             complete:function(){
                 $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
@@ -217,15 +213,33 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 $(".feedback-message").fadeIn();
                 function hideMsg(){
                     $(".feedback-message").fadeOut();
-                    }
-                    setTimeout(hideMsg,3000);
             }
+            setTimeout(hideMsg,2000);
+        }
+
         });
     }
 
-    function preview_files(incoming_files){
-        // console.log(incoming_files, 22);
-        parent.find('.feedback-message').html('');
+    function preview_files(incoming_files, cloud){
+        let files = [];
+        for (const file of incoming_files) {
+            file_name = file.name.split('.');
+            if(['pdf', 'odt', 'doc', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'].indexOf(file_name[file_name.length-1]) > -1)
+            {
+                files.push(file);
+            }
+        }
+        if (!files.length)
+        {
+            $('.feedback-message').addClass('alert-danger').html('Invalid File(s).');
+            $(".feedback-message").fadeIn('slow');
+            function hideMsg(){
+                $(".feedback-message").fadeOut();
+            }
+            setTimeout(hideMsg,2000);
+            return;
+        }
+        parent.find('.feedback').html('');
         var thumbnail = `
         <div class="file-preview-other file-box border p-1">
             <div class="text-right pb-1 del">
@@ -240,7 +254,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
 
         if(multiple)
         {
-            for(const file of incoming_files)
+            for(const file of files)
             {
                 var nail1 = $(thumbnail);
                 var name_box = nail1.find('input[name="name"]');
@@ -250,12 +264,13 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                     name_box.append('<input name="url" value="'+file.url+'"/>');
                 }
             }
+            upload_files(files, cloud);
         }
         else
         {
             var nail2 = $(thumbnail);            
             var name_box = parent.closest('form').find('input[name="name"]');            
-            var single_file = incoming_files[0];
+            var single_file = files[0];
             name_box.val(single_file.name);
             // console.log(name_box.length, name_box);
             parent.closest('fieldset').find('[name="file_name"]').val(single_file.name);            
