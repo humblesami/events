@@ -234,6 +234,7 @@ class Profile(user_model, CustomModel):
     two_factor_auth = models.IntegerField(choices=TWO_FACTOR_CHOICES, blank=True, null=True)
     email_verified = models.BooleanField(null=True, default=False)
     mobile_verified = models.BooleanField(null=True, default=False)
+    image_updated = models.BooleanField(default=False)
     # user_type = models.CharField(max_length=50)
 
     UniqueConstraint(fields=['email'], name='unique_email')
@@ -256,6 +257,14 @@ class Profile(user_model, CustomModel):
                 self.username = self.email
             self.image = ws_methods.generate_default_image(self.fullname())
         self.name = self.fullname()
+        if profile_obj:
+            profile_obj = profile_obj[0]
+            if self.image != profile_obj.image:
+                self.image_updated = True
+            if not self.image_updated:
+                if self.name != profile_obj.name:
+                    self.image = ws_methods.generate_default_image(self.name)
+
         super(Profile, self).save(*args, **kwargs)
         if creating:
             if not self.is_superuser:
