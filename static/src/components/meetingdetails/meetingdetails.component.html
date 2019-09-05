@@ -323,18 +323,18 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>        
 
         <div *ngIf="meeting_object.votings && meeting_object.votings.length" class="title-wrapper border-bottom">
             <!--Votings-->
             
-                <div class="clearfix mt-3">
-                    <h4 class="text-primary float-left">Approval/Voting</h4>
-                    <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.votings.length > visible_limit['voting']">
-                        <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.votings, 'voting')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                        <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.votings, 'voting')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
-                    </div>
+            <div class="clearfix mt-3">
+                <h4 class="text-primary float-left">Approval/Voting</h4>
+                <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.votings.length > visible_limit['voting']">
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.votings, 'voting')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.votings, 'voting')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                 </div>
+            </div>
 	
             <div class="row">
                 <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let vote of meeting_object.votings.slice(start_indices['voting'], ending_indices['voting'])">
