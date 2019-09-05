@@ -44,7 +44,7 @@
 				</div>
 				
 				<!--Comments Section-->
-			<span class="font-weight-bold" *ngIf="comments.length">Total Comments	{{comments.length}}</span>
+			<span class="font-weight-bold" *ngIf="comments && comments.length">Total Comments	{{comments.length}}</span>
 			<div *ngIf="comment_subtype == 1">				
 				<div class="container bg-light mb-3" *ngFor="let c of comments">	
 					<div id="comment-{{c.id}}" *ngIf="c" class="CommentWrapper">	
@@ -64,7 +64,7 @@
 									<span *ngIf="!c['showRep']"><i class="fa fa-angle-down text-white"></i></span>
 									<span *ngIf="c['showRep']"><i class="fa fa-angle-up text-white"></i></span>
 								</span>
-								<span *ngIf="c.children.length" class="float-right d-none d-sm-block">{{c.children.length}} Replies</span>
+								<span *ngIf="c.children && c.children.length" class="float-right d-none d-sm-block">{{c.children.length}} Replies</span>
 								<input type="hidden" class="comment_id" value="{{c.id}}" />
 								<p class="commnet-content text-justify" [innerHtml]="c.body.trim()"></p>
 							</div>							

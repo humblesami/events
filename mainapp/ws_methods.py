@@ -670,7 +670,7 @@ def generate_default_image(name):
     pic_name = "/pic" + str(randint(1, 9999999)) + ".png"
     img_path = directory.replace('mainapp', 'media/profile') + pic_name
     img.save(img_path)
-    return 'profile/' + pic_name
+    return 'profile' + pic_name
 
 #
 #
