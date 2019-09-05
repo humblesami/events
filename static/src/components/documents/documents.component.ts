@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { HttpService } from 'src/app/http.service';
 import {SocketService} from "../../app/socket.service";
 declare var $:any;
@@ -30,9 +30,38 @@ export class DocumentsComponent implements OnInit {
     // unique_id = window['js_utils'].unique_id();
     socketService: SocketService;
 
-    constructor(private httpServ: HttpService, private ss: SocketService) {
+    constructor(private httpServ: HttpService, private ss: SocketService,
+        public zone: NgZone) {
         this.httpService = httpServ;
         this.socketService = ss;
+        ss.doc_object = this;
+    }
+
+    on_mode_changed(){
+        let obj_this = this;        
+        setTimeout(function(){
+            obj_this.on_admin_mode_changed()
+        },10);
+    }
+
+    on_admin_mode_changed(){
+        let obj_this = this; 
+        if(!this.socketService.admin_mode)
+        {
+            return;
+        }
+        let file_input = $('#dlc-file-picker');        
+        let resInfo = {
+            res_app: obj_this.res_app,
+            res_model: obj_this.parent_model,
+            res_id: obj_this.parent_id
+        }
+        window['apply_drag_drop'](file_input, resInfo, function(data){
+            var result = obj_this.docs.concat(data);
+            // obj_this.docs = result;
+            obj_this.zone.run(() => obj_this.docs = result);            
+            console.log(obj_this.docs, data, 'After upload '+Date());
+        });
     }
 
     change_file_name(evn, doc_id)
@@ -113,21 +142,13 @@ export class DocumentsComponent implements OnInit {
     }
     
     ngOnInit() {
-        this.get_list();
         let obj_this = this;
-        
-        let file_input = $('#dlc-file-picker');
-        if(this.socketService.admin_mode && file_input.length == 1)
-        {
-            let resInfo = {
-                res_app: obj_this.res_app,
-                res_model: obj_this.parent_model,
-                res_id: obj_this.parent_id
-            }
-            window['apply_drag_drop'](file_input, resInfo, function(data){
-                obj_this.docs = obj_this.docs.concat(data);
-                console.log(obj_this.docs, data, 'After upload '+Date());
-            });
-        }
+        obj_this.get_list();        
+        setTimeout(function(){
+            obj_this.on_admin_mode_changed()
+        },10);      
+        $(document).on('focus','.DocText input',function(){
+            this.select();
+        });
     }
 }

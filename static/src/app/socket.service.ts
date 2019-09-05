@@ -92,6 +92,12 @@ export class SocketService {
         }
     }
 
+    doc_object = undefined;
+
+    on_admin_mode_changed(){
+        this.doc_object.on_mode_changed();
+    }
+
     route_changed(route: ActivatedRouteSnapshot){
         this.active_route_snapshot = route;
     }   
@@ -288,6 +294,7 @@ export class SocketService {
         obj_this.admin_mode = mode;
         obj_this.is_admin = mode;
         localStorage.setItem('admin_mode', JSON.stringify({admin_mode:mode}));
+        obj_this.on_admin_mode_changed();
     }    
 
     add_chat_user(chat_cleint: ChatClient)

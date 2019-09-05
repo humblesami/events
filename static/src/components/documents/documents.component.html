@@ -26,5 +26,7 @@
             </a>
         </div>
     </div>
-    <input id="dlc-file-picker" type="file" name='files[]' multiple/>
+    <div *ngIf="socketService.admin_mode">
+        <input id="dlc-file-picker" type="file" name='files[]' multiple/>
+    </div>
 </div>
