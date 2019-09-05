@@ -30,7 +30,10 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     }
     var uploader = `
     <div class="file-input-picker-container">
+        
         <div class="file-drop-zone">
+            <div class="feedback-message">
+            </div>
             <div class="file-drop-zone-title">Drag & drop files here …</div>
             <div class="preview-conatiner">
             </div>
@@ -50,8 +53,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 <span class="hidden-xs">Browse …</span>
             </div>
         </div>
-        <div class="feedback">
-        </div>
+        
     </div>
     `;    
     input.hide();
@@ -148,6 +150,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 obj.file_name = obj.name;
             }
         }
+
         $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
         var url = window['site_config'].server_base_url+'/docs/upload-files';
         var formData = new FormData();
@@ -201,17 +204,28 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             },
             error: function(a,b,c,d){
                 console.log(a,b,c,d)
+                $('.feedback-message').addClass('alert-danger').html('Fail to Upload Files');
+                $(".feedback-message").fadeIn();
+                function hideMsg(){
+                    $(".feedback-message").fadeOut();
+                    }
+                    setTimeout(hideMsg,3000);
             },
             complete:function(){
                 $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
-                // parent.find('.picker').show()//.removeAttr('disabled');
+                $('.feedback-message').addClass('alert-success').html('Files Uploaded Successfully');
+                $(".feedback-message").fadeIn();
+                function hideMsg(){
+                    $(".feedback-message").fadeOut();
+                    }
+                    setTimeout(hideMsg,3000);
             }
         });
     }
 
     function preview_files(incoming_files){
         // console.log(incoming_files, 22);
-        parent.find('.feedback').html('');
+        parent.find('.feedback-message').html('');
         var thumbnail = `
         <div class="file-preview-other file-box border p-1">
             <div class="text-right pb-1 del">

@@ -580,3 +580,7 @@
     color: red;
     text-align: center;
 }
+.file-drop-zone .loading{
+    background-color: silver;
+    color: black;
+}
