@@ -1,6 +1,11 @@
+import io
+import os
 import sys
 import json
 import base64
+from random import randint
+from django.core.files import File as DjangoFile
+from django.core.files.base import ContentFile
 import traceback
 from django.apps import apps
 from datetime import datetime
@@ -9,6 +14,7 @@ from django.contrib.auth import login
 from emailthread.models import EmailThread, DocumentThread
 from django.core.files.base import ContentFile
 from rest_framework.authtoken.models import Token
+from PIL import ImageFont, Image, ImageDraw
 
 
 import requests
@@ -644,6 +650,30 @@ def search_db(params, search_fields=None):
             search_result = model_obj.objects.filter(q_objects)
             results = search_result
     return results
+
+
+def generate_default_image(name):
+    curr_dir = os.path.dirname(__file__)
+    directory = curr_dir.replace('model_files', 'static')
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    txt = name
+    txt = ''.join([x[0].upper() for x in txt.split(' ')])
+    font_directory = curr_dir.replace('mainapp', 'static/assets/fonts')
+    font = ImageFont.truetype(font_directory + "/roboto-v19-latin-regular.ttf", 48)
+    sz = font.getsize(txt)
+    sz = (100, 100)
+    img = Image.new('RGB', sz, (randint(0, 255), randint(0, 255), randint(0, 255)))
+    d = ImageDraw.Draw(img)
+    d.text((15, 23), txt, (255, 255, 255), font)
+    pic_name = "/pic" + str(randint(1, 9999999)) + ".png"
+    img_path = directory.replace('mainapp', 'media/profile') + pic_name
+    img.save(img_path)
+    return 'profile/' + pic_name
+    # binary_data = io.BytesIO(base64.b64decode(binary_signature))
+    # jango_file = DjangoFile(binary_data)
+    # return jango_file
+    # sign.image.save('sign_image.png', jango_file)
 
 #
 #

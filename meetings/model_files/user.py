@@ -254,6 +254,7 @@ class Profile(user_model, CustomModel):
             self.is_staff = True
             if self.email and not self.username:
                 self.username = self.email
+            self.image = ws_methods.generate_default_image(self.fullname())
         self.name = self.fullname()
         super(Profile, self).save(*args, **kwargs)
         if creating:
