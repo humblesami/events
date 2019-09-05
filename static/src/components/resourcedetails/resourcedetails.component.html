@@ -53,7 +53,7 @@
                 </div>
             </div>
             
-            <app-documents *ngIf="socketService.admin_mode"
+            <app-documents *ngIf="socketService.admin_mode && folder && folder.files && folder.files.length"
                 parent_model="Folder" parent_field="folder_id" 
                 parent_id="{{folder.id}}"
                 res_app="resources" res_model="ResourceDocument">
