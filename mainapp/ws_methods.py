@@ -659,13 +659,25 @@ def generate_default_image(name):
         os.makedirs(directory)
     txt = name
     txt = ''.join([x[0].upper() for x in txt.split(' ')])
+
+
+
+
+
+
     font_directory = curr_dir.replace('mainapp', 'static/assets/fonts')
     font = ImageFont.truetype(font_directory + "/roboto-v19-latin-regular.ttf", 48)
-    sz = font.getsize(txt)
-    sz = (100, 100)
-    img = Image.new('RGB', sz, (randint(0, 255), randint(0, 255), randint(0, 255)))
-    d = ImageDraw.Draw(img)
-    d.text((15, 23), txt, (255, 255, 255), font)
+    img = Image.new('RGB', (100, 100), (randint(0, 255), randint(0, 255), randint(0, 255)))   # "L": (8-bit pixels, black and white)
+    font = ImageFont.truetype(font_directory + "/roboto-v19-latin-regular.ttf", 48)
+    draw = ImageDraw.Draw(img)
+    w, h = draw.textsize(txt, font=font)
+    h += int(h*0.21)
+    draw.text(((100-w)/2, (100-h)/2), text=txt, fill='white', font=font)
+    # sz = font.getsize(txt)
+    # sz = (100, 100)
+    # img = Image.new('RGB', sz, (randint(0, 255), randint(0, 255), randint(0, 255)))
+    # d = ImageDraw.Draw(img)
+    # d.text((15, 23), txt, (255, 255, 255), font)
     pic_name = "/pic" + str(randint(1, 9999999)) + ".png"
     img_path = directory.replace('mainapp', 'media/profile') + pic_name
     img.save(img_path)
