@@ -47,7 +47,7 @@ class TopicAdmin(BaseAdmin):
     inlines = [TopicDocInline]
 
 
-class EventAdmin(nested_admin.NestedModelAdmin):
+class EventAdmin(BaseAdmin):
     fieldsets = [
         (None, {
             'fields': [
