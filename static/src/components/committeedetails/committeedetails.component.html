@@ -57,8 +57,8 @@ title="{{committee.name}}"></app-breadcrumb>
                                             <p for="job-title" class="mb-1">
                                                 <b>Committees</b>
                                             </p>                                                    
-                                            <span class="pending-status mb-0" *ngFor="let com of profile.committees">
-                                                <span style="cursor: pointer" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
+                                            <span class="pending-status mb-1 mb-sm-0" *ngFor="let com of profile.committees">
+                                                <span  routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
                                             </span>
                                             <span *ngIf="profile.committees_count > 2">....</span>                                                                                            
                                         </div>
