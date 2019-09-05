@@ -1318,6 +1318,7 @@
                             date_time: new Date(),
                             user_name: annotation_user_m2.name,
                             uid: annotation_user_m2.id,
+                            user_image: annotation_user_m2.photo,
                             content: commentValue
                         };
                         //console.log(commentText.content)
@@ -2888,6 +2889,7 @@
                                                 content: values.content,
                                                 uid: values.uid,
                                                 user_name: values.user_name,
+                                                user: {image: values.user_image},
                                                 date_time: values.date_time,
                                             };
                                             var doc_info = documentId.split('-');
@@ -2896,7 +2898,7 @@
                                                 document_id: doc_info[1],
                                                 comment_doc_name : comment_doc_id,
                                             };
-                                            console.log(input_data);
+                                            // console.log(input_data);
 
                                             var annotations = _getAnnotations(documentId);
                                             var point = {};
@@ -2920,6 +2922,7 @@
                                                 } else {
                                                     annotations[index].comments.push(comment);
                                                 }
+                                                console.log(comment);
                                                 point.comment = comment;
                                                 point.doc_id = documentId;
                                                 point.document_id = doc_info[1];
@@ -4926,7 +4929,8 @@
                                         content: content,
                                         date_time: new Date(),
                                         uid: annotation_user_m2.id,
-                                        user_name: annotation_user_m2.name
+                                        user_name: annotation_user_m2.name,
+                                        user_image: annotation_user_m2.photo
                                     }
                                     pdfStoreAdapter.addComment(documentId, annotation.uuid, values);
                                     (0, _appendChild2.default)(svg, annotation);

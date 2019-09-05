@@ -391,7 +391,7 @@ class PointAnnotation(Annotation):
                         'point_id': point.uuid,
                         'uid': user.id,
                         'content': comment.body,
-                        'user_name': user.username,
+                        'user_name': user.name,
                         'user': {'name': user.fullname(), 'id':user.id, 'image': user.image.url},
                         'date_time': str(comment.date_time)
                     })
