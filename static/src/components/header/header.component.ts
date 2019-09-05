@@ -296,18 +296,7 @@ export class HeaderComponent implements OnInit {
     }
 
     admin_url = '';
-    ngOnInit() {        
-        // setTimeout(function(){
-        //     $('.messageicon-container').popover({
-        //         html:true,
-        //         content: function() {
-        //             // var content = $(this).attr("content");
-        //             // console.log($(content)[0]);                    
-        //             // return content; // $(content)[0].outerHTML;
-        //             return $('#messenger-icon-target').html();
-        //         }
-        //     });
-        // }, 200);
+    ngOnInit() {
         let obj_this = this;
         $(()=>{
             obj_this.set_admin_mode_text();

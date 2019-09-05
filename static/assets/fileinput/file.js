@@ -175,11 +175,17 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             url: url,
             data: formData,
             type: 'POST',
-            dataType: 'JSON',
+            // dataType: 'JSON',
             headers: headers,
             contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
             processData: false, // NEEDED, DON'T OMIT THIS
             success: function(data){
+                try{
+                    data = JSON.parse(data);
+                }
+                catch(er){
+                    console.log('Invalid data from post files', data);
+                }
                 if(Array.isArray(data))
                 {
                     if(on_files_uploaded)

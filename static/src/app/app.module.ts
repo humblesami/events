@@ -72,7 +72,6 @@ import { RosterComponent } from '../components/roster/roster.component';
 import { ProfilesummaryComponent } from '../components/profilesummary/profilesummary.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { DocumentsComponent } from '../components/documents/documents.component';
-import { FileuploadComponent } from '../components/fileupload/fileupload.component'
 
 
 @NgModule({
@@ -139,7 +138,6 @@ import { FileuploadComponent } from '../components/fileupload/fileupload.compone
         RosterComponent,
         ProfilesummaryComponent,
         DocumentsComponent,
-        FileuploadComponent
     ],
     providers:[
         AuthGuard,

@@ -35,12 +35,6 @@ export class DocumentsComponent implements OnInit {
         this.socketService = ss;
     }
 
-    update_data(data){
-        let obj_this = this;
-        this.docs = this.docs.concat(data);
-        console.log(this.docs, data, 'After upload '+Date());
-    }
-
     change_file_name(evn, doc_id)
     {
         let obj_this = this;
@@ -115,6 +109,21 @@ export class DocumentsComponent implements OnInit {
         this.httpService.get(input_data, function(data){
             // console.log(data, 133);
             obj_this.docs = data;
-        }, null)
+        }, null);
+
+        
+        let file_input = $('#dlc-file-picker');
+        if(this.socketService.admin_mode && file_input.length == 1)
+        {
+            let resInfo = {
+                res_app: obj_this.res_app,
+                res_model: obj_this.parent_model,
+                res_id: obj_this.parent_id
+            }
+            window['apply_drag_drop'](file_input, resInfo, function(data){
+                obj_this.docs = obj_this.docs.concat(data);
+                console.log(obj_this.docs, data, 'After upload '+Date());
+            });
+        }
     }
 }

@@ -21,13 +21,5 @@
             </a>
         </div>
     </div>
-    <div *ngIf="socketService.admin_mode && res_model">
-        <app-fileupload
-            (update_data)="update_data($event)"
-            res_app="{{res_app}}"
-            res_model="{{parent_model}}" 
-            res_id="{{parent_id}}">
-        </app-fileupload>
-        <button class="hhh">hhh</button>
-    </div>
+    <input id="dlc-file-picker" type="file" name='files[]' multiple/>
 </div>

@@ -263,7 +263,8 @@
                             </a>
                         </div>
                     </div>
-                    <app-documents *ngIf="socketService.admin_mode" parent_model="News" parent_field="news_id" parent_id="{{home_data.id}}"
+                    <app-documents *ngIf="socketService.admin_mode" 
+                    parent_model="News" parent_field="news_id" parent_id="{{home_data.id}}"
                     res_app="meetings" res_model="NewsDocument"></app-documents>
 
                 </div> 
