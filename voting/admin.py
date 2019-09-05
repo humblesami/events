@@ -40,7 +40,7 @@ class VotingForm(forms.ModelForm):
 
 class VotingAdmin(BaseAdmin):
     form = VotingForm
-    inlines = [VotingDocInline,]
+    # inlines = [VotingDocInline,]
     search_fields = ['name']
     fieldsets = [
         (None, {
