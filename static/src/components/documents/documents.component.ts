@@ -51,11 +51,16 @@ export class DocumentsComponent implements OnInit {
             return;
         }
         let file_input = $('#dlc-file-picker');        
+        if(file_input.attr('dragdrop'))
+        {
+            return;
+        }
         let resInfo = {
             res_app: obj_this.res_app,
             res_model: obj_this.parent_model,
             res_id: obj_this.parent_id
         }
+        file_input.attr('dragdrop', 1);
         window['apply_drag_drop'](file_input, resInfo, function(data){
             var result = obj_this.docs.concat(data);
             // obj_this.docs = result;

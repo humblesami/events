@@ -247,8 +247,8 @@
 					</div>
                 </div>
                 <div class="carousel-inner" role="listbox">    
-                    <div class="carousel-item active"> 
-                        <div *ngIf="!socketService.admin_mode" class="row docwrappercontainer">
+                    <div  *ngIf="!socketService.admin_mode" class="carousel-item active"> 
+                        <div class="row docwrappercontainer">
                             <a class="col-sm-6 col-md-4 col-lg-2 mb-3" routerLink="/home/doc/{{doc.id}}" *ngFor="let doc of home_data.doc_ids.slice(start_indices['news_doc'], ending_indices['news_doc'])">
                                 <div class="DocumentWrapper">
                                     <div class="DocIcon">
