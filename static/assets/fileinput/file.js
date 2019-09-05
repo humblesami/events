@@ -35,7 +35,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             <div class="preview-conatiner">
             </div>
         </div>
-        <div`+multiple+` class="cloud_pickers_container d-flex justify-content-center pb-1">
+        <div`+multiple+` class="cloud_pickers_container d-flex justify-content-center align-items-center pb-1">
             <div class="google_drive_picker picker border">
                 <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" title="Google Drive">                
             </div>

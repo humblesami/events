@@ -3156,3 +3156,29 @@ label.check-plus-label-wrap {
 	align-items: center;
 }
 .head-icon-end i{ margin-right:.5rem; color:#3059C9; }
+.DocumentWrapper input.renamer {
+    background: rgb(255, 255, 255);
+    border: none;
+    padding: 0 .5rem;
+    height: 30px;
+    line-height:30px;
+    }
+.doc-del-btn {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    color: red;
+}
+.google_drive_picker, .one_drive_picker, .drop_box_picker {
+    cursor: pointer;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.picker{
+	margin: .5rem;
+}
