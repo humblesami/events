@@ -310,17 +310,7 @@ h5, .h5 {
     font-weight: bold;
     font-size: 0.9rem;
 }
-.pending-status{
-     border-radius: 0.2rem;
-    background-color: #3a5d95;
-    color: white;
-    padding: .2rem .3rem;
-    margin-right: 5px;
-    display: inline-block;
-    font-size: .7rem;
-    line-height: 1;
-    margin-left: .2rem;
-}
+
 .table > tbody > tr{
     border: 1px solid #dee2e6
 }
@@ -329,4 +319,11 @@ h5, .h5 {
         top: 0px;
         height: calc(100% - 25px);
     }   
+}
+@media (min-width: 280px){
+    .MainTitleHeadWrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 }

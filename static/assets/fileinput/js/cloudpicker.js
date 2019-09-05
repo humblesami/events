@@ -30,7 +30,7 @@ $(function(){
                 success: function (files) {
                     var selection_info = [];
                     for (const file of files) {
-                        console.log(file, 188);
+                        // console.log(file, 188);
                         selection_info.push({
                             id: file.id,
                             name: file.name,
@@ -161,7 +161,7 @@ $(function(){
                 var selection_info = [];
                 for(const file of files)
                 {
-                    console.log(file, 188);
+                    // console.log(file, 188);
                     selection_info.push({
                         id: file.id,
                         name: file.name,

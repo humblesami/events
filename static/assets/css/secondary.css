@@ -147,7 +147,6 @@ a:hover{
 .kanban-committees-info-box{
     color: #959595;
 }
-.pending-status,
 .kanban-committees-info-box p,
 .kanban-committees-info-box-name{   
     overflow: hidden;
@@ -167,14 +166,7 @@ a:hover{
     position: relative;
     border: 2px solid #ffffff;
 }
-.pending-status{
-    width: 60px;
-    text-align: center;
-    background: #4b74b5;
-    padding: .4rem .3rem;
-    margin-left: 0;
-    text-transform: capitalize;
-}
+
 .kanban-profiles-user-img{
     border-radius: 50%;
 }
@@ -189,7 +181,7 @@ a:hover{
 /* End Committee */
 .check-status{
     width: 7rem;
-    border:1px solid #000;
+    border:1px solid #ddd;
     border-radius: 25px;
     height: 30px;
     cursor: pointer;
@@ -237,7 +229,18 @@ a:hover{
 .kanban-card{
     border: none;
 }
-
+.HeadingWrap-status{
+    width: 100%;
+}
+.DocText, .DocInfoVertical{
+    background: #638fc9 !important;
+}
+.admin_mode{
+    width: 50% !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 @media screen and (max-width:480px){
     .roster .table th:first-child,
     .roster .table td:first-child{

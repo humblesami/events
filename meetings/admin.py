@@ -112,7 +112,7 @@ class UserForm(forms.ModelForm):
         return self.cleaned_data['email']
 
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseAdmin):
     search_fields = ('name',)
     autocomplete_fields = ['groups']
     form = UserForm
@@ -143,7 +143,7 @@ class MeetingGroupAdmin(GroupAdmin):
         super(MeetingGroupAdmin, self).save_model(request, obj, form, change)
 
 
-class CommitteeAdmin(admin.ModelAdmin):
+class CommitteeAdmin(BaseAdmin):
     autocomplete_fields = ['users']
     filter_horizontal = ('users',)
     fields = ('name', 'description', 'users')
@@ -171,10 +171,10 @@ class NewsAdmin(BaseAdmin):
     inlines = [NewsVideoInline, NewsDocumentInline]
 
 
-class AttendeeAdmin(admin.ModelAdmin):
+class AttendeeAdmin(BaseAdmin):
     list_display = ('event', 'attendee', 'state', 'attendance')
 
-class AgendaDocumentAdmin(admin.ModelAdmin):
+class AgendaDocumentAdmin(BaseAdmin):
     fields = ['name','attachment']
 
 admin.site.register(News, NewsAdmin)

@@ -141,7 +141,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     
     function upload_files(files, cloud=false)
     {
-        console.log(files, 13);
+        // console.log(files, 13);
         for(var obj of files){
             if(!obj.file_name)
             {
@@ -175,31 +175,22 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             url: url,
             data: formData,
             type: 'POST',
+            dataType: 'JSON',
             headers: headers,
             contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
             processData: false, // NEEDED, DON'T OMIT THIS
             success: function(data){
-                if(!data)
+                if(Array.isArray(data))
                 {
-                    console.log('Invalid response');
-                }
-                try{
-                    data = JSON.parse(data);
-                    if(data.length)
+                    if(on_files_uploaded)
                     {
-                        if(on_files_uploaded)
-                        {
-                            parent.find('.file-box').remove();
-                            parent.find('.preview-conatiner').html('');
-                            on_files_uploaded(data);
-                        }
-                    }
-                    else{
-                        console.log('Invalid files in response', data);
+                        parent.find('.file-box').remove();
+                        parent.find('.preview-conatiner').html('');
+                        on_files_uploaded(data);
                     }
                 }
-                catch(er){
-                    console.log(data, er);
+                else{
+                    console.log(data, ' invalid data from file save');
                 }
             },
             error: function(a,b,c,d){
@@ -213,7 +204,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     }
 
     function preview_files(incoming_files){
-        console.log(incoming_files, 22);
+        // console.log(incoming_files, 22);
         parent.find('.feedback').html('');
         var thumbnail = `
         <div class="file-preview-other file-box border p-1">
@@ -280,7 +271,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
 (function(){    
     // console.log(99999999999,  window['merge_cloud_files']);
     window.addEventListener("message", function(response){        
-        this.console.log(response, 1444504);
+        // this.console.log(response, 1444504);
         if(response.data)
         {
             var received_data = response.data;

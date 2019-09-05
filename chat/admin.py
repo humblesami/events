@@ -1,7 +1,9 @@
 from django.contrib import admin
+
+from mainapp.admin import BaseAdmin
 from .models import ChatGroup
 
-class ChatGroupForm(admin.ModelAdmin):
+class ChatGroupForm(BaseAdmin):
     list_display =('name','created_by')
 
 

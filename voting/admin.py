@@ -108,7 +108,7 @@ class VotingAdmin(BaseAdmin):
                 request, object_id, form_url, extra_context=extra_context,)
 
 
-class VotingAnswerAdmin(admin.ModelAdmin):
+class VotingAnswerAdmin(BaseAdmin):
     list_display = ['user_answer', 'voting', 'user', 'signature_data']
     # list_filter = ['answer', 'user']
     list_filter = ['user']

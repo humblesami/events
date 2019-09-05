@@ -75,7 +75,7 @@ class AnswerBaseInline(admin.StackedInline):
     model = Answer
 
 
-class ResponseAdmin(admin.ModelAdmin):
+class ResponseAdmin(BaseAdmin):
     list_display = ("interview_uuid", "survey", "created", "user")
     list_filter = ("survey", "created")
     date_hierarchy = "created"

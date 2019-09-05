@@ -342,7 +342,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     canvasContext: ctx,
                     viewport: viewport
                 };
-                page.render(renderContext);
+                page.render(renderContext).promise.catch(function (reason) {
+                    console.log('stopped ' + reason);
+                });
                 console.log('Page rendered', Date());
 
 

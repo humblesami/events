@@ -24,7 +24,7 @@ export class FileuploadComponent implements OnInit {
                 res_id: obj_this.res_id
             }
             window['apply_drag_drop'](file_input, resInfo, function(data){
-                console.log(data, 9966);
+                // console.log(data, 9966);
                 obj_this.update_data.emit(data);
             });
         });

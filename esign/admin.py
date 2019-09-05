@@ -18,7 +18,7 @@ class SignDocForm(forms.ModelForm):
         self.fields['meeting'].queryset = Event.objects.filter(archived=False)
 
 
-class SignDocAdmin(admin.ModelAdmin):
+class SignDocAdmin(BaseAdmin):
     form = SignDocForm
     list_display = ('name', 'meeting', 'send_to_all','created_by')
     fields = [

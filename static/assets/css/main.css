@@ -3066,15 +3066,10 @@ label.check-plus-label-wrap {
 	font-size: 18px;
 	}
 .pending-status {
-	border-radius: 0.2rem;
-	background-color: #3a5d95;
-	color: white;
-	padding: .2rem .3rem;
+    padding: .2rem .3rem;
 	margin-right: 5px;
-	display: inline-block;
-	font-size: .7rem;
 	line-height: 1;
-	margin-left: .2rem;
+	font-size: .7rem;
 	}
 .onoffswitch {
 	position: relative;
