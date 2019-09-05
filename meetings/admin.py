@@ -38,13 +38,13 @@ class TopicDocInline(FileInlineAdmin):
 
 class TopicInline(BaseInlineAdmin):
     model = Topic
-    inlines = [TopicDocInline]
+    # inlines = [TopicDocInline]
     extra = 0
 
 
 class TopicAdmin(BaseAdmin):
     search_fields = ['name']
-    inlines = [TopicDocInline]
+    # inlines = [TopicDocInline]
 
 
 class EventAdmin(BaseAdmin):
@@ -71,7 +71,7 @@ class EventAdmin(BaseAdmin):
     autocomplete_fields = ['attendees']
     # autocomplete_fields = ('attendees',)
 
-    inlines = [TopicInline, MeetingDocInline]
+    inlines = [TopicInline]
     # extra = 1
     readonly_fields = ('docs',)
     change_form_template = 'event_custom_change_form.html'
@@ -168,7 +168,7 @@ class NewsVideoInline(BaseInlineAdmin):
 
 
 class NewsAdmin(BaseAdmin):
-    inlines = [NewsVideoInline, NewsDocumentInline]
+    inlines = [NewsVideoInline]
 
 
 class AttendeeAdmin(BaseAdmin):
