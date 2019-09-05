@@ -3162,6 +3162,8 @@ label.check-plus-label-wrap {
     padding: 0 .5rem;
     height: 30px;
     line-height:30px;
+    border-radius:0 !important;
+    font-size: 13px;
     }
 .doc-del-btn {
     position: absolute;
