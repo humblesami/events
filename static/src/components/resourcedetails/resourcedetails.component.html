@@ -30,7 +30,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="main-full-seachbar mb-3">
+			<div class="main-full-seachbar mb-3" *ngIf="!socketService.admin_mode">
 			<input type="text" 
 				(keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
 				placeholder="Search..."  class="form-control"/>
@@ -60,7 +60,7 @@
             </app-documents>
 			
 
-			<app-paginator *ngIf="folder.files.length" (reload_data)="get_list()">                
+			<app-paginator *ngIf="folder.files.length && !socketService.admin_mode" (reload_data)="get_list()">                
             </app-paginator>
 
 			<div *ngIf="folder && folder.sub_folders && folder.sub_folders.length">

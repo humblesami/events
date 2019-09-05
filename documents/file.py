@@ -194,11 +194,16 @@ class File(CustomModel, FilesUpload):
     @classmethod
     def get_attachments(cls, request, params):
         parent_id = params.get('parent_id')
-        parent_field = params.get('parent_field')
+        parent_field = params.get('parent_field')    
         model = apps.get_model(params['app'], params['model'])
         q_objects = Q()
         q_objects |= Q(**{parent_field: parent_id})
-        docs = model.objects.filter(q_objects)
+
+        kw = params.get('kw')
+        if kw:
+            docs = ws_methods.search_db({'kw': kw, 'search_models': { params['app']: [params['model']]}})
+        else:
+            docs = model.objects.filter(q_objects)
         docs = docs.values('id', 'name')
         docs = list(docs)
         return docs

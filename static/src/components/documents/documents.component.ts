@@ -89,7 +89,7 @@ export class DocumentsComponent implements OnInit {
         evn.preventDefault();
     }
 
-    ngOnInit() {
+    get_list(){
         let obj_this = this;
         obj_this.roterLinkPrefix = obj_this.doc_types[obj_this.res_model];
         let input_data = {
@@ -110,7 +110,11 @@ export class DocumentsComponent implements OnInit {
             // console.log(data, 133);
             obj_this.docs = data;
         }, null);
-
+    }
+    
+    ngOnInit() {
+        this.get_list();
+        let obj_this = this;
         
         let file_input = $('#dlc-file-picker');
         if(this.socketService.admin_mode && file_input.length == 1)
