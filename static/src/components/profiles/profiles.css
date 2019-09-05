@@ -1,1 +1,47 @@
-
+.kanban-profile-card{
+    background: #f3f3f3;
+    border: 1px solid #f1eeee;
+    padding: 10px 10px 7px;
+    border-radius: 3px;
+}
+.kanban-profile-card a{
+    color: #43425D;
+}
+.kanban-profile-card img{
+    width: 50px;
+    height: 50px;
+    margin-right:10px; 
+    border-radius: 50%;
+	object-fit: contain;
+	overflow: hidden;
+	background: white;
+	border: 1px solid #ddd;
+}
+.profile-items{
+    display: flex;
+    align-items: center;
+}
+.mobile-kanbann{
+    display: none;
+}
+@media screen and (max-width:992px){
+    .row.no-gutters .col-2{
+        display: none;
+    }
+}
+@media screen and (max-width:576px){
+    .kanban-profile-card img{
+        display:none;
+    }
+    .d-none{
+        display: block !important;
+    }
+}
+@media screen and (max-width:480px){
+    .d-none{
+        display: none !important;
+    }
+    .mobile-kanbann{
+        display: block;
+    }
+}

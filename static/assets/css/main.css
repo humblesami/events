@@ -259,7 +259,7 @@ a,
 	margin-bottom: 30px;
 	}
 .DocumentWrapper {
-	background-color: #E9F6FF;
+	background-color: #F3F3F3;
 	position: relative;
 	display: block;
 	}
@@ -629,16 +629,14 @@ a.kanban-committees-info-box-name {
 	font-weight: 500;
 	line-height: 17px;
 	}
-.kanban-profiles-user-img {
-	margin-right: 15px;
+.kanban-profiles-user-img img {
 	width: 55px;
 	height: 55px;
+    border-radius: 50%;
+	object-fit: contain;
 	overflow: hidden;
-	/* border-radius: 50%; */
-	flex: 0 0 55px;
-	}
-.kanban-profiles-user-img img {
-	max-width: 100%;
+	background: white;
+	border: 1px solid #ddd;
 	}
 .kanban-profiles-user-InfoLIST {
 	font-size: 13px;
@@ -3138,13 +3136,13 @@ label.check-plus-label-wrap {
 	right: 0px;
 	}
 .comments-user-img-wrap {
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;
+	object-fit: contain;
 	overflow: hidden;
+	background: white;
+	border: 1px solid #ddd;
 	}
 .comments-user-img-wrap img {
 	max-width: 100%;
@@ -3155,17 +3153,19 @@ label.check-plus-label-wrap {
 }
 .head-icon-end i{ margin-right:.5rem; color:#3059C9; }
 .DocumentWrapper input.renamer {
-    background: rgb(255, 255, 255);
-    border: none;
-    padding: 0 .5rem;
-    height: 30px;
-    line-height:30px;
+	height: auto;
+	font-size: 0.85rem;
+	padding: 3px 6px;
     }
 .doc-del-btn {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    color: red;
+	position: absolute;
+	right: 0;
+	padding: 3px 6px;
+	border-radius: 50%;
+	border: 1px solid #ede;
+}
+.doc-del-btn:hover {
+	color: red;
 }
 .google_drive_picker, .one_drive_picker, .drop_box_picker {
     cursor: pointer;

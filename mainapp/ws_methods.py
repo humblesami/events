@@ -544,6 +544,7 @@ def get_user_info(users):
         user_info['email'] = user.email
         user_info['company'] = user.company
         user_info['mobile_phone'] = user.mobile_phone
+        user_info['department'] = user.department
         groups = list(user.groups.all())
         group_name = []
         if len(groups) > 0:

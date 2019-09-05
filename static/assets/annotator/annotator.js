@@ -1513,7 +1513,7 @@
 							</div>
 							<div class="user-time-info">
 								<span class="user">` + aComment.user_name + `</span>
-                                <span class="time">` + aComment.date_time + `</span>
+                                <span class="time">` + window['dt_functions'].timeAgo(aComment.date_time)  + `</span>
                             </div>
                         </div>
                         <div class="comment-details"><p>` + aComment.content + `</p></div>

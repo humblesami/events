@@ -241,6 +241,9 @@ a:hover{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.container{
+    max-width: inherit;
+}
 @media screen and (max-width:480px){
     .roster .table th:first-child,
     .roster .table td:first-child{
