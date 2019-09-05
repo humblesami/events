@@ -372,8 +372,7 @@ body.pdf-viewer {
 }
 #comment-wrapper {
     position: relative;
-    flex: 0 0 330px;
-    max-width: 330px;
+    width: 330px;
     display: none;
     background: #F8F8F8;
     border-right: 1px solid #e6e6e6;
@@ -484,9 +483,9 @@ body.pdf-viewer {
     font-weight: 600;
 }
 
-.comment-list-item .user-time-info span{
+/* .comment-list-item .user-time-info span{
     display:block;
-}
+} */
 
 .comment-list-item .user-time-info .buttons {
     float: right;
@@ -729,7 +728,7 @@ button.pen.annotation_button.active
     padding-bottom: 10px;
 }
 
-.comment-list-item:first-child .user-time-info .user::after {
+.comment-list-item:first-child .user-time-info .time::after {
     content: "Reply";
     margin-left: 1rem;
     background: #6a6969;

@@ -269,17 +269,18 @@ a,
 	left: 5px;
 	line-height: 1;
 	}
-.DocText,
-.DocInfoVertical {
-	color: #ffffff;
-	font-size: 13px;
-	font-weight: 400;
-	text-transform: capitalize;
-	font-family: 'Roboto', sans-serif;
-	background: #638fc9;
-	padding: 10px;
-	transition: all 0.2s ease;
-	}
+.DocText, .DocInfoVertical {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: capitalize;
+    font-family: 'Roboto', sans-serif;
+    background: #638fc9;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
 .DocumentWrapper:hover .DocText {
 	background: #2699FB
 	}

@@ -145,6 +145,7 @@
 
             window['init_doc_comments'] = function(){
                 comments_wrapper = $('#comment-wrapper');
+                comments_wrapper.resizable();
                 commentText = comments_wrapper.find('#commentText');
                 comment_list_div = comments_wrapper.find('.comment-list:first');
                 comment_list = comments_wrapper.find('.comment-list-container:first');
@@ -1511,12 +1512,12 @@
 							<div class="userSmpic icon-user-single">
 								`+user_image+`
 							</div>
-							<div class="user-time-info">
-								<span class="user">` + aComment.user_name + `</span>
-                                <span class="time">` + window['dt_functions'].timeAgo(aComment.date_time)  + `</span>
+							<div class="user-time-info pt-2">
+								<span class="user text-primary">` + aComment.user_name + `</span>
+                                <span class="time small">` + window['dt_functions'].timeAgo(aComment.date_time)  + `</span>
                             </div>
                         </div>
-                        <div class="comment-details"><p>` + aComment.content + `</p></div>
+                        <div class="comment-details pt-1 pl-1"><p>` + aComment.content + `</p></div>
                     `;
                     $(child).attr('comment-id', aComment.uuid);
                     $(child).attr('annotation', aComment.annotation);
