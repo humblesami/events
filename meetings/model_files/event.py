@@ -282,8 +282,15 @@ class Event(CustomModel):
     def get_details(cls, request, params):
         meeting_id = params['id']
         user_id = request.user.id
-        meeting_id = int(meeting_id)
-        meeting_object_orm = Event.objects.get(pk=meeting_id)
+        meeting_object_orm = None
+        if meeting_id == 'new':
+            if not user_id:
+                return 'Invalid meeting id'
+            meeting_object_orm = Event.objects.filter(created_by_id=user_id).last()
+            if meeting_object_orm:
+                meeting_id = meeting_object_orm.id
+        else:
+            meeting_object_orm = Event.objects.get(pk=meeting_id)
 
         meeting_object = {}
         location = meeting_object_orm.location

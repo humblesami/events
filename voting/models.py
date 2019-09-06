@@ -171,7 +171,15 @@ class Voting(Actions):
     def get_details(cls, request, params):
         uid = request.user.id
         voting_id = params['id']
-        voting_object_orm = Voting.objects.get(pk=voting_id)
+        voting_object_orm = None
+        if voting_id == 'new':
+            if not uid:
+                return 'Invalid resolution id'
+            voting_object_orm = Voting.objects.filter(created_by_id=uid).last()
+            if voting_object_orm:
+                voting_id = voting_object_orm.id
+        else:
+            voting_object_orm = Voting.objects.get(pk=voting_id)
         voting_object = voting_object_orm.__dict__
         voting_object['open_date'] = str(voting_object['open_date'])
         voting_object['close_date'] = str(voting_object['close_date'])

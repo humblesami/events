@@ -16,7 +16,16 @@ class Folder(CustomModel):
     def get_details(cls, request, params):
         obj = {}
         folder_id = params['id']
-        folder = Folder.objects.get(pk=folder_id)
+        folder = None
+        user_id = request.user.id
+        if folder_id == 'new':
+            if not user_id:
+                return 'Invalid resource id'
+            folder = Folder.objects.filter(created_by_id=user_id).last()
+            if folder:
+                folder_id = folder.id
+        else:
+            folder = Folder.objects.get(pk=folder_id)
         obj['id'] = folder_id
         obj['name'] = folder.name
         obj['parents'] = cls.get_ancestors(cls, folder)

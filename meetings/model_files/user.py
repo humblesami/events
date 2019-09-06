@@ -484,7 +484,14 @@ class Profile(user_model, CustomModel):
         group = params.get('type')
         if not user_id:
             user_id = request.user.id
-        profile_orm = Profile.objects.filter(pk=user_id)
+        profile_orm = None
+        if user_id == 'new':
+            profile_orm = Profile.objects.filter(created_by_id=request.user.id).last()
+            if profile_orm:
+                user_id = profile_orm.id
+        else:
+            profile_orm = Profile.objects.get(pk=user_id)
+
         if not profile_orm:
             user_object = user_model.objects.get(pk=user_id)
             if user_object.is_superuser:
@@ -493,7 +500,6 @@ class Profile(user_model, CustomModel):
                 create_group(user_object, 'Admin')
                 profile_orm = profile_object
         else:
-            profile_orm = profile_orm[0]
             admin_full_name = ''
             try:
                 admin_full_name = profile_orm.admin_full_name

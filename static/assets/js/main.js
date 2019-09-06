@@ -378,7 +378,11 @@ window.addEventListener('message', function receiveMessage(evt) {
         } = evt.data;
         this.console.log(evt.data);
         var redirect_url = '';
-        if (action === 'change') {
+        if (action === 'change' || action === 'add') {
+            if (action === 'add')
+            {
+                id = 'new';
+            }
             switch (model) {
                 case 'event':
                     redirect_url = `/#/meeting/${id}`;

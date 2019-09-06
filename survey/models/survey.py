@@ -163,7 +163,15 @@ class Survey(Actions):
         uid = request.user.id
         survey_id = params['survey_id']
         groups = request.user.groups.values('name')
-        survey_obj = Survey.objects.get(pk=survey_id)
+        survey_obj = None
+        if survey_id == 'new':
+            if not uid:
+                return 'Invalid survey id'
+            survey_obj = Survey.objects.filter(created_by_id=uid).last()
+            if survey_obj:
+                survey_id = survey_obj.id
+        else:
+            survey_obj = Survey.objects.get(pk=survey_id)
         is_respondent = uid in survey_obj.get_audience()
         if not is_respondent:
             for group in groups:

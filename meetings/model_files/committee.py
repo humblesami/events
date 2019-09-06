@@ -14,34 +14,40 @@ class Committee(CustomModel):
 
     @classmethod
     def get_detail(cls, request, params):
-        comm_id = params.get('id')
-        if comm_id:
+        comm_id = params['id']
+        user_id = request.user.id
+        committee_orm = None
+        if comm_id == 'new':
+            if not user_id:
+                return 'Invalid committee id'
+            committee_orm = Committee.objects.filter(created_by_id=user_id).last()
+            if committee_orm:
+                comm_id = committee_orm.id
+        else:
             committee_orm = Committee.objects.filter(pk=comm_id)[0]
-            committee = ws_methods.obj_to_dict(
-                committee_orm,
-                fields=['id', 'name', 'description']
-            )
-            if committee:
-                kw = params.get('kw')
-                if kw:
-                    committee_users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
-                    committee_users = ws_methods.get_user_info(committee_users)
-                else:
-                    committee_users = ws_methods.get_user_info(committee_orm.users.filter(groups__name__in=['Admin','Staff','Director']).distinct())
-                
-                total_cnt = len(committee_users)
-                offset = params.get('offset')
-                limit = params.get('limit')
-                committee_users = list(committee_users)
-                if limit:
-                    committee_users = committee_users[offset: offset + int(limit)]
-                current_cnt = len(committee_users)
-                committee['users'] = committee_users
-
-                data = {"committee": committee, "next": 0, "prev": 0, "count": current_cnt,"total": total_cnt}
-                return data
+        committee = ws_methods.obj_to_dict(
+            committee_orm,
+            fields=['id', 'name', 'description']
+        )
+        if committee:
+            kw = params.get('kw')
+            if kw:
+                committee_users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
+                committee_users = ws_methods.get_user_info(committee_users)
             else:
-                return {'error': 'Committee Not Found against Specific Details'}
+                committee_users = ws_methods.get_user_info(committee_orm.users.filter(groups__name__in=['Admin','Staff','Director']).distinct())
+            
+            total_cnt = len(committee_users)
+            offset = params.get('offset')
+            limit = params.get('limit')
+            committee_users = list(committee_users)
+            if limit:
+                committee_users = committee_users[offset: offset + int(limit)]
+            current_cnt = len(committee_users)
+            committee['users'] = committee_users
+
+            data = {"committee": committee, "next": 0, "prev": 0, "count": current_cnt,"total": total_cnt}
+            return data
         else:
             return {'error': 'Committee Not Found against Specific Details'}
 

@@ -267,7 +267,7 @@ class SignatureDoc(File, Actions):
         if file_id == 'new':
             if not user.id:
                 return 'Invalid esign doc id'
-            doc_obj = SignatureDoc.objects.filter(updated_by_id=user.id).last()
+            doc_obj = SignatureDoc.objects.filter(created_by_id=user.id).last()
             if doc_obj:
                 file_id = doc_obj.id
             else:
