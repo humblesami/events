@@ -10,6 +10,7 @@ declare var $:any;
 export class AppComponent {        
     constructor(private ss: SocketService)
     {
+        console.log('App constructor '+window['dt_functions'].now());
         this.socketService = ss;        
     }
     socketService: SocketService;
@@ -34,7 +35,6 @@ export class AppComponent {
     odoo_build = window['odoo'] ? 1 : undefined;
     ngOnInit() {
         var obj_this = this;
-        window['loader'] = $('#server-wait');
         window.onscroll = function() {obj_this.scrollFunction()};
         var treeviewMenu = $('.app-menu');
         $('body').on('click', '.main-nav-header [data-toggle="sidebar"]', function(event){
@@ -58,7 +58,10 @@ export class AppComponent {
             $(".btn-search").toggleClass("animate");
             $(".serach-input").val("");
         });
-        
-        
+        // console.log(5534);
+        $(function(){
+            window['functions'].hideLoader('Site Resources');
+            // console.log(11777);
+        })
     }
 }

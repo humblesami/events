@@ -69,7 +69,7 @@ export class DocumentComponent implements OnInit {
         console.log(Date(), new Date().getMilliseconds());
         var obj_this = this;
 		window['show_annotation'] = false;
-        window['functions'].showLoader('loaddocwaiter');        
+        window['functions'].showLoader('Document Data');        
         obj_this.onLibsLoaded();
     }
 

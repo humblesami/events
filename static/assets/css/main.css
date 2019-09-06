@@ -673,6 +673,16 @@ a.kanban-committees-info-box-name {
 	top: calc(50vh - 70px);
 	left: calc(50% - 10px);
 	}
+#server-wait .text {
+	position: relative;
+	top: calc(50vh - 55px);
+	width: 100%;
+	justify-content: center;
+	
+}
+#server-wait .text strong{
+	max-width: 50vw;
+}
 .bootbox-close-button.close {
 	display: none;
 	}

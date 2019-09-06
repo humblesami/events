@@ -220,7 +220,7 @@ export class SocketService {
                     console.log('invalid user data ', data);
                     return;
                 }
-                console.log("Authenticated\n\n");
+                // console.log("Authenticated\n\n");
                 // console.log(obj_this.user_data, 1344);
                 localStorage.setItem('user', JSON.stringify(obj_this.user_data));
                 obj_this.verified = true;

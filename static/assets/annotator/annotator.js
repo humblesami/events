@@ -537,8 +537,8 @@
             }            
 
             function onDocLoaded() {                
-                site_functions.hideLoader("loaddocwaiter");
-                site_functions.hideLoader("renderdoc");
+                site_functions.hideLoader("Document Data");
+                site_functions.hideLoader("Rendering Document");
             }
 
             function showHideAnnotations(rotate_degree) {
@@ -651,7 +651,7 @@
 
             function render(doc_data) {
                 annotation_user_m2 = window['current_user'].cookie;
-                site_functions.showLoader("renderdoc");                
+                site_functions.showLoader("Rendering Document");                
                 if (doc_data && doc_data.first_time) {                    
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');

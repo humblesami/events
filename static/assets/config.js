@@ -43,24 +43,24 @@ var network_config_https = {
 var site_config = site_config_live;
 
 var current_site_base_url = window.location.origin.toString();
-if(current_site_base_url != 'http://172.16.21.171:4200')
+var is_localhost = false;
+if(current_site_base_url.indexOf('localhost') > -1)
+{   
+    site_config = site_config_local;
+    is_localhost = true;
+}
+else
 {
-    if(current_site_base_url.indexOf('localhost') > -1)
-    {   
-        site_config = site_config_local;
-    }
-    else
+    if(current_site_base_url.startsWith('https://172'))
     {
-        if(current_site_base_url.startsWith('https://172'))
-        {
-            site_config = network_config_https;
-        }
-        else if(current_site_base_url.indexOf('172.16') > -1)
-        {
-            site_config = network_config;
-        }
+        site_config = network_config_https;
+    }
+    else if(current_site_base_url.indexOf('172.16') > -1)
+    {
+        site_config = network_config;
     }
 }
+
 
 if(current_site_base_url.indexOf('www.') > -1)
 {
@@ -75,7 +75,7 @@ site_config['app_name'] = 'meetings';
 if(current_site_base_url.indexOf('localhost') > -1)
 {
     site_config.is_localhost = 1;
-    site_config.trace_request = 1;
+    site_config.trace_request = 0;
 }
 window['site_config'] = site_config;
 // if(site_config.site_url.startsWith('https://')){

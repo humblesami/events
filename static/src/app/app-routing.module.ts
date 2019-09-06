@@ -1,3 +1,4 @@
+console.log('Init Routing '+window['dt_functions'].now());
 import {CommentsComponent} from "../components/comments/comments.component";
 
 declare var $: any;
@@ -158,7 +159,7 @@ export class AppRoutingModule {
                 $('.searchbar-full-width').hide();
                 $('.modal:visible button.close:first').click();
                 socketService.search_bar_shown = false;
-                site_functions.showLoader('route'+event.url);
+                site_functions.showLoader('Route');
                 $('body').removeClass('pdf-viewer');                
                 window['pathname'] = event.url;
 			}
@@ -171,7 +172,7 @@ export class AppRoutingModule {
                 }
                 localStorage.setItem('previous_url', current_url);
                 localStorage.setItem('current_url', next_url);
-                site_functions.hideLoader('route'+next_url);                
+                site_functions.hideLoader('Route');                
                 
             }
             else if (event instanceof RoutesRecognized) {                

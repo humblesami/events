@@ -3,6 +3,7 @@ var session_time_limit = 1800000;
 var is_mobile_device = undefined;
 var is_local_host = false;
 var server_wait_loader = undefined;
+var loader_last_shown = undefined;
 
 var dn_current_site_user = {
     cookie: {
@@ -180,39 +181,41 @@ var site_functions = {
         }
         return hour + ':' + minut;
     },
+    loadingTimeOut: undefined,
     showLoader: function(nam) {
-        if(!server_wait_loader)
-        {
-            server_wait_loader = window['loader'];
-            if(!server_wait_loader)
-            {
-                return;
-            }
-        }
         var obj_this = this;
-        var time_out = undefined;
         if (obj_this.processes.length == 0) {
             server_wait_loader.show();
             server_wait_loader.shown = 1;
-            time_out = setTimeout(function() {
-                obj_this.hideLoader(nam);
-            }, 29000);
         }
-        obj_this.processes.push({
-            name: nam,
-            time_out: time_out
-        });
+        if(obj_this.loadingTimeOut)
+        {
+            clearTimeout(obj_this.loadingTimeOut);
+        }
+        loader_last_shown = new Date();
+        obj_this.loadingTimeOut = setTimeout(function() {
+            if(obj_this.processes.length)
+            {
+                obj_this.hideLoader('force', 'Timeout');
+            }
+            else
+            {
+                clearTimeout(obj_this.loadingTimeOut);
+            }
+        }, 29000);
+        obj_this.processes.push(nam);
+        var loading_text = 'Loading '+this.processes.join(','); 
+        console.log('Added '+nam+ ' '+window['dt_functions'].now());
+        server_wait_loader.find('.text strong').html(loading_text);
         //console.log(nam, new Date().getMilliseconds());
     },
     hideLoader: function(nam, hiddenFrom) {
-        if(!server_wait_loader){
-            server_wait_loader = window['loader'];
-            if(!server_wait_loader)
-            {
-                return;
-            }
-        }
         if (!nam || nam == 'force') {
+            console.log('Processes in progress => '+ this.processes.join(','));
+            if(hiddenFrom)
+            {
+                console.log('hidden from => '+ hiddenFrom);
+            }
             this.processes = [];
             if (!nam)
                 console.trace();
@@ -224,25 +227,32 @@ var site_functions = {
             server_wait_loader.shown = 0;
         }
         if (this.processes.length == 0) {
+            loader_last_shown = undefined;
+            clearTimeout(this.loadingTimeOut);
             //console.log("Already removed "+nam);
             return;
         }
         var found = false;
         for (var i = this.processes.length - 1; i >= 0; i--) {
-            if (this.processes[i].name == nam) {
+            if (this.processes[i] == nam) {
                 found = true;
-                clearTimeout(this.processes[i].time_out);
                 this.processes.splice(i, 1);
                 break;
             }
         }
         if (found) {
-            //console.log(this.processes, " removed "+ nam);
+            console.log('Loaded '+ nam + ' '+window['dt_functions'].now());
         } else {
             console.log(nam + " not found");
         }
         if (this.processes.length == 0) {
             server_wait_loader.hide();
+            loader_last_shown = undefined;
+        }
+        else{
+            var loading_text = 'Loading '+this.processes.join(','); 
+            // console.log(loading_text, this.processes);
+            server_wait_loader.find('.text strong').html(loading_text);
         }
         //console.log(nam, new Date().getMilliseconds());
     },
@@ -321,8 +331,14 @@ function addMainEventListeners() {
         {
             localStorage.setItem('last_activity', Date());
         }
-
-        site_functions.hideLoader('force','');
+        if(loader_last_shown)
+        {
+            if(new Date() - loader_last_shown > 2000)
+            {
+                site_functions.hideLoader('force','');
+            }
+        }
+        
         var target = e.target;
         var showbtn = $(target).closest('.showmouseawaybutton');
         if (showbtn && showbtn.length > 0) {
@@ -488,6 +504,8 @@ $(function(){
 })
 window['current_user'] = dn_current_site_user;
 window["functions"] = site_functions;
+window['loader'] = server_wait_loader = $('#server-wait');
+site_functions.showLoader('Site Resources');
 check_if_touch_device();
 addMainEventListeners();
 dn_current_site_user.initUserDataFromCookie();

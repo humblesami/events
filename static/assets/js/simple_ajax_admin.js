@@ -64,6 +64,7 @@ function dn_rpc_object(options) {
 
     options.url = req_url;
     options.timeout = 30000;
+    var loading_text = 'Data From Server'
 
     var url_with_params = 'Nothing';
     options.beforeSend = function(a, b) {
@@ -83,7 +84,16 @@ function dn_rpc_object(options) {
             }
         }
         if (!options.no_loader)
-            site_functions.showLoader("ajax" + api_url);
+        {
+            if(input_data.args){
+                loading_text = input_data.args.model;
+                if(is_localhost)
+                {
+                    loading_text += "."+input_data.args.method;
+                }
+            }
+            site_functions.showLoader(loading_text);
+        }
         if (options.type == 'post')
             url_with_params = options;
     };
@@ -117,7 +127,7 @@ function dn_rpc_object(options) {
         if (options.onComplete)
             options.onComplete();
         if (!options.no_loader)
-            site_functions.hideLoader("ajax" + api_url);        
+            site_functions.hideLoader(loading_text);        
     };
     options.error = function(err) {
         console.log('status '+err.status);
