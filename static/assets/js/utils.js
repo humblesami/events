@@ -16,6 +16,56 @@ window['js_utils'] = {
         rand = 'id_'+now.getFullYear()+now.getMonth()+now.getDate()+now.getHours()+now.setSeconds()+rand;
         return rand;
     },
+    addLoader: function(selector, position){
+        // console.log('tried loader ', selector);
+        var element = $(selector);
+        if(element.length != 1)
+        {
+            if(element.length > 1)
+            {
+                element = element.last();                
+                console.log(selector + ' found more than one');
+            }
+            else{
+                console.log(selector + ' not found');
+                return;
+            }
+        }
+        var pos_type = element.css('position');        
+        if(!pos_type == pos_type == 'static')
+        {
+            element.css('position','relative');
+        }
+        var partial_loader = $('.partial-loader').clone().show();
+        if(position){
+            partial_loader.find('.row').css('justify-content', position);
+        }
+        element.append(partial_loader);
+    },
+    removeLoader: function(element){
+        if(element.length != 1)
+        {
+            if(element.length > 1)
+            {
+                element = element.fisrt();
+                console.log(selector + ' found more than one');
+            }
+            else{
+                console.log(selector + ' not found');
+                return;
+            }
+        }
+        var loader = element.find('.partial-loader');
+        if(loader.length)
+        {
+            // console.log('removed loader ', element[0]);
+            element.find('.partial-loader').remove();
+        }
+        else
+        {
+            console.log('loader not found', element[0]);
+        }
+    },
     get_dataurl_prefix: function (file_name)
     {
         var ext = file_name.split('.');

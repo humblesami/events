@@ -158,7 +158,7 @@
     
                 <div class="card-body msg_card_body meetVue-chat-body">
                     <h6 *ngIf="active_chat_user && active_chat_user.messages.length >= message_limit && !active_chat_user.read" style="text-align:center; padding-top:90px">Scroll to top to get older messages</h6>
-                    <div class="messenger-body" *ngFor="let msg of active_chat_user.messages">                    
+                    <div class="chat-message" *ngFor="let msg of active_chat_user.messages">
                         <div [ngClass]="{me: msg.sender.id == user.id}">
                             <div class="msg-send-box-wrapper">
                                 <span  *ngIf="msg.body" class="msg-send-box-text" [innerHTML]="msg.body"></span>
@@ -175,7 +175,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <span class="msg_time_send">{{msg.create_date | date:'medium'}}</span>
+                            <span class="msg_time_send">{{msg.create_date | dateAgo}}</span>
                         </div>
                     </div>                       
                 </div>

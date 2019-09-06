@@ -272,3 +272,14 @@ a:hover{
 body.public .popup.messenger{
     display: none !important;
 }
+.partial-loader{
+    position: absolute;
+    z-index: 91;
+    opacity: 0.3;
+    background: white;    
+    width: 80%;
+    padding-bottom: 5px;
+}
+.partial-loader .row{
+    justify-content: center;
+}

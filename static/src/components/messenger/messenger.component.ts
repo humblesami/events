@@ -148,7 +148,7 @@ export class MessengerComponent implements OnInit {
 
     group_name = '';
     add_message(chat_client: ChatClient, message: Message){        
-        chat_client.messages.push(message);
+        chat_client.messages.push(message);      
         // console.log(345, chat_client.messages);
     }
 
@@ -664,22 +664,40 @@ export class MessengerComponent implements OnInit {
                 input_data.group_id = obj_this.active_chat_user.id;
                 delete input_data['to'];
             }
+
+            if(input_data.attachments.length)
+            {
+                setTimeout(function(){
+                    window['js_utils'].addLoader('.chat-message:last', 'flex-end');
+                }, 100);
+            }
+            
             input_data = {
                 params: input_data,
                 args: args
             };
-            input_data['no_loader'] = 1;
+            input_data['no_loader'] = 1;            
 			obj_this.httpService.post(input_data, function (data){
                 // console.log(data);
                 if(data.attachments.length)
                 {
-                    let that_message = obj_this.active_chat_user.messages.find(function(obj){
-                        return obj.uuid == data.uuid;
-                    });
-                    // console.log(that_message, data.uuid, data.attachments);
-                    if(that_message)
+                    let messages = obj_this.active_chat_user.messages;
+                    let len = obj_this.active_chat_user.messages.length;
+                    var cnt = 0;
+                    for(var i= len -1; i>=0; i--)
                     {
-                        that_message.attachments = data.attachments;
+                        if(messages[i].uuid == data.uuid)
+                        {
+                            messages[i].attachments = data.attachments;
+                            window['js_utils'].removeLoader($('.chat-message').eq(i));
+                            // console.log(i, 1007);
+                            break;
+                        }
+                        if(cnt++ > 4)
+                        {
+                            break;
+                        }
+                        // console.log(i, 5566);
                     }
                 }
             }, null);
@@ -759,8 +777,7 @@ export class MessengerComponent implements OnInit {
 			to: obj_this.active_chat_user.id,
             create_date: new Date(),
             no_loader: 1,
-        };
-        
+        };        
         obj_this.send_message(input_data);
         if(message_content)
         {

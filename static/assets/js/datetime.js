@@ -56,6 +56,8 @@ function hours_to_hoursNminutes(hours) {
 function standeredTime(time) {
     return moment(time).format('MMM DD YYYY, h:mm:ss A');
 }
+
+
 var js_datetime_utils = {
     standeredTime: standeredTime,
     standardDate: getDateString,

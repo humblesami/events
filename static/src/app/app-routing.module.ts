@@ -1,4 +1,7 @@
-console.log('Init Routing '+window['dt_functions'].now());
+if(window['site_config'].log_loading)
+{
+    console.log('Init Routing '+window['dt_functions'].now());
+}
 import {CommentsComponent} from "../components/comments/comments.component";
 
 declare var $: any;

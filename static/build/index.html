@@ -10,22 +10,27 @@
     <script type="text/javascript" src="static/assets/libs/js/jquery-2.2.4.js"></script>
     <script type="text/javascript" src="static/assets/js/utils.js"></script>
     <script type="text/javascript" src="static/assets/config.js" id="config_script"></script>
-
-
 </head>
-
 <body class="app sidebar-mini rtl sidenav-toggled public">
-
     <div id="server-wait" style="display:none" class="loadingoverlay">
         <div class="row">
-            <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading Resources</span>
+            <div class="spinner-border text-primary" role="status">                
             </div>
         </div>
         <div class="row text">
             <strong></strong>
         </div>
     </div>
+    <div class="partial-loader" style="display:none">
+        <div class="row">
+            <div class="spinner-border text-primary" role="status">                
+            </div>
+        </div>
+        <div class="row text">
+            <strong>Loading data...</strong>
+        </div>
+    </div>
+
     <script type="text/javascript" src="static/assets/js/auth.js"></script>
 	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />
@@ -49,7 +54,6 @@
 	<script>
 		window["io"] = io;
     </script>
-
 
 
     <script type="text/javascript" src="static/assets/libs/js/jquery-ui.min.js"></script>
@@ -107,7 +111,6 @@
             $('.onedrive_iframe iframe').attr('src', 'http://localhost:8000/temp/onedrive?picker_index='+current_cloud_number);
         });
     </script>
-
     <link rel="stylesheet" type="text/css" href="static/assets/css/secondary.css" />
 
 	<app-root></app-root>

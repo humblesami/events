@@ -204,8 +204,11 @@ var site_functions = {
             }
         }, 29000);
         obj_this.processes.push(nam);
-        var loading_text = 'Loading '+this.processes.join(','); 
-        console.log('Added '+nam+ ' '+window['dt_functions'].now());
+        var loading_text = 'Loading '+this.processes.join(',');
+        if(site_config.log_loading)
+        {
+            console.log('Added '+nam+ ' '+window['dt_functions'].now());
+        }
         server_wait_loader.find('.text strong').html(loading_text);
         //console.log(nam, new Date().getMilliseconds());
     },
@@ -241,7 +244,10 @@ var site_functions = {
             }
         }
         if (found) {
-            console.log('Loaded '+ nam + ' '+window['dt_functions'].now());
+            if(site_config.log_loading)
+            {
+                console.log('Loaded '+ nam + ' '+window['dt_functions'].now());
+            }
         } else {
             console.log(nam + " not found");
         }
@@ -250,8 +256,7 @@ var site_functions = {
             loader_last_shown = undefined;
         }
         else{
-            var loading_text = 'Loading '+this.processes.join(','); 
-            // console.log(loading_text, this.processes);
+            var loading_text = 'Loading '+this.processes.join(',');             
             server_wait_loader.find('.text strong').html(loading_text);
         }
         //console.log(nam, new Date().getMilliseconds());

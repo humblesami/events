@@ -10,7 +10,10 @@ declare var $:any;
 export class AppComponent {        
     constructor(private ss: SocketService)
     {
-        console.log('App constructor '+window['dt_functions'].now());
+        if(window['site_config'].log_loading)
+        {
+            console.log('App constructor '+window['dt_functions'].now());
+        }
         this.socketService = ss;        
     }
     socketService: SocketService;
