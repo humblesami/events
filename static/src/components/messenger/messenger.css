@@ -189,12 +189,8 @@
 */    
 .messenger-container .msg_time, .messenger-container .msg_time_send {    
     font-size: 9px;    
-    padding-right: 10px;
-}    
-.messenger-container .msg_time_send {
-	/* text-align: right;
-	padding-right: 11px; */
-	}
+    padding: 0 10px;
+}
 .messenger-container .msg_head {
 	position: relative;
 	}
@@ -234,10 +230,12 @@
 	background-color: rgba(0,0,0,0.2);
 	}
 .messenger-container .msg-send-box-wrapper {
-	padding-top: 20px;
+    padding-top: 20px;
+    padding-left: 10px;
 }
 .me .msg-send-box-wrapper{
     padding-right: 10px;
+    padding-left: 0;
 }
 .messenger-container .msg-box-wrapper {
 	margin: auto 10px auto 0;
@@ -294,13 +292,8 @@
 	box-shadow: 0 transparent;
 	}
 .messenger-container .meetVue-chat-body {
-	-webkit-flex: 1 1 0;
-	flex: 1 1 0;
-	-webkit-order: 1;
-	order: 1;
-	position: relative;
-	padding: 0;
-	}
+	padding: 10px;
+}
 .messenger-container .meetVue-chat-footer {
 	-webkit-order: 3;
 	order: 2;
@@ -548,7 +541,6 @@
     }
 .attachment_container
 {
-    display: flex;
     margin-top:5px;    
 }
 
@@ -731,8 +723,4 @@ button.check-time-btn {
 .messenger-container .me .msg-send-box-text{
     background: #ddd;
     color: black;
-}
-.me .attachment_container
-{
-    justify-content: flex-end;
 }
