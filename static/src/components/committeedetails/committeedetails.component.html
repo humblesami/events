@@ -43,7 +43,7 @@ title="{{committee.name}}"></app-breadcrumb>
                         <div class="col-sm-12 col-md-6 col-lg-4 mb-4" *ngFor="let profile of committee.users">
                             <div class="kanban-card">
                                 <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
-                                    <div class="kanban-profiles-user-img">
+                                    <div class="kanban-profiles-user-img img-flex">
                                         <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
                                     </div>
                                     <div class="">

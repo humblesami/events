@@ -30,8 +30,8 @@
                             </div>
                             <div class="col-8 col-lg-8">
                                 <div class="kanban-committees-info-box-img">
-                                    <a class="circle-imgwrap"  *ngFor="let member of committee.users.slice(0,5)" routerLink="/profile/{{member.id}}">
-                                        <img title="{{member.username}}" class="img-thumbnail-sm" src="{{socketService.server_url}}{{member.image}}">
+                                    <a class="circle-imgwrap img-flex img"  *ngFor="let member of committee.users.slice(0,5)" routerLink="/profile/{{member.id}}">
+                                        <img title="{{member.username}}" src="{{socketService.server_url}}{{member.image}}">
                                     </a>
                                     <span *ngIf="committee.users.length > 5">
                                         ...

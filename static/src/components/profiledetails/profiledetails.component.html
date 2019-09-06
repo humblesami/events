@@ -45,9 +45,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 									<div class="col-auto">
 										<div class="top-header">
 											<div class="top-header-author">
-												<a href="javascript:void(0);" class="author-thumb">
-													<img *ngIf="profile_data.image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.image}}">
-													<img *ngIf="!profile_data.image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+												<a href="javascript:void(0);">
+													<div class="author-thumb img-flex">
+														<img *ngIf="profile_data.image" src="{{socketService.server_url}}{{profile_data.image}}">
+														<img *ngIf="!profile_data.image"  src="static/assets/images/no-profile.png">
+													</div>
 												</a>
 												<div class="author-content">
 													<div class="UserProfileNameTittle">
@@ -435,7 +437,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<div class="col-sm-12">
 								<div class="ProfileUserNameJonbWrapper">
 									<div class="author-thumb-wrap">
-										<div class="author-thumb">
+										<div class="author-thumb img-flex">
 											<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
 											<img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
 										</div>

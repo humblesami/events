@@ -1,3 +1,16 @@
+.img-flex img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.survey-results{
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    background: #f3f3f3;
+    border-radius: 50%;
+}
+
 .droppable_holder{
     width:200px;
     height:200px;
@@ -169,6 +182,11 @@ a:hover{
 
 .kanban-profiles-user-img{
     border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #ddd;
 }
 .kanban-profiles-user-info-box{
     background: #f3f3f3;
@@ -241,9 +259,9 @@ a:hover{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.container{
+/* .container{
     max-width: inherit;
-}
+} */
 @media screen and (max-width:480px){
     .roster .table th:first-child,
     .roster .table td:first-child{

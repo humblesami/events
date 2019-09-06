@@ -7,25 +7,24 @@
 .kanban-profile-card a{
     color: #43425D;
 }
-.kanban-profile-card img{
+.profile-images{
     width: 50px;
     height: 50px;
-    margin-right:10px; 
+    overflow: hidden;
+    background: #fff;
     border-radius: 50%;
-	object-fit: contain;
-	overflow: hidden;
-	background: white;
-	border: 1px solid #ddd;
+    margin-right: 10px;
 }
 .profile-items{
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 .mobile-kanbann{
     display: none;
 }
 @media screen and (max-width:992px){
-    .row.no-gutters .col-2{
+    .row.no-gutters .col-3{
         display: none;
     }
 }

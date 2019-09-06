@@ -41,7 +41,7 @@
 
                 <app-chat></app-chat>
                 <div class="navbar-profile-menu dropdown">
-                    <button class="profile-icon showmouseawaybutton" (click)="show_profile_menu($event)">
+                    <button class="profile-icon showmouseawaybutton img-flex" (click)="show_profile_menu($event)">
                         <span class="header-user-name">{{socketService.user_data.name}}</span>
                         <img id="navbar-profile-img" class="img-thumbnail-sm" src="{{socketService.user_photo}}">
                     </button>

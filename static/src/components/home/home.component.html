@@ -15,7 +15,7 @@
                     </h3>
                     <div class="HomePageDiscription">
                         <div *ngIf="home_data.description" class="HomePageContentText">
-                            <div class="HomePageContentImg">                        
+                            <div class="HomePageContentImg img-flex">                        
                                 <img src="{{socketService.server_url}}{{home_data.news.photo}}">
                             </div>
                             <div id="home-content" [innerHtml]="home_data.description"></div>
@@ -23,10 +23,12 @@
                     </div>
                     </div>
                     <div class="col-md-5">
-						<app-calendar></app-calendar>
-						<div class="col-sm-12 calendarwrapper">
-							<div class="full-calendar-btn">
-								<a routerLink="/calendar">Full Calendar</a>
+                        <div class="row">
+							<app-calendar></app-calendar>
+							<div class="col-sm-12 calendarwrapper">
+								<div class="full-calendar-btn">
+									<a routerLink="/calendar">Full Calendar</a>
+								</div>
 							</div>
 						</div>
                     </div>

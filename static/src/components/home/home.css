@@ -84,15 +84,8 @@
     border: 1px solid #ddd;
     height: 300px;
     width: 300px;
-    display:flex;
-    justify-content:center;
-    align-items: center;
     background: linear-gradient(to bottom, #f9f9f9, #f9f9f9);
 }
-.HomePageContentImg img{
-    max-width:100%;
-    max-height:100%;
-    }
 .fc-more-cell{
 	background: darkgreen;
 	color: white;

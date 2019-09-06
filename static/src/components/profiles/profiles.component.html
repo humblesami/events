@@ -24,20 +24,20 @@
         </div>
         <div class="d-none d-sm-block">
             <div class="row text-primary">
-                <div class="col-4">
+                <div class="col-3">
                     <h6>Basic Info</h6>
                 </div>
-                <div class="col-2">
+                <!-- <div class="col-2">
                     <h6>Department</h6>
-                </div>
-                <div class="col-2">
+                </div> -->
+                <div class="col-3 text-center">
                     <h6>Company</h6>
                 </div>
-                <div class="col-2">
+                <div class="col-3 text-center">
                     <h6>Phone</h6>
                 </div>
-                <div class="col-2">
-                    <h6>Role</h6>
+                <div class="col-3 text-center">
+                    <h6>Membership</h6>
                 </div>
             </div>
         </div>
@@ -47,12 +47,14 @@
                     <div class="kanban-profile-card">
                         <a routerLink="/profile/{{profile.id}}">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-3">
                                     <div class="row no-gutters">
-                                        <div class="col-2">
-                                            <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}" class="rounded-circle" style="width: 50px;height:50px;">
+                                        <div class="col-3">
+                                            <div class="profile-images img-flex">
+                                                <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
+                                            </div>                                            
                                         </div>
-                                        <div class="col-10 pl-2">
+                                        <div class="col-9 pl-2">
                                             <div class="text-truncate">
                                                 {{profile.name}}
                                             </div>
@@ -62,16 +64,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-2 profile-items">
+                                <!-- <div class="col-2 profile-items">
                                     <span class="text-truncate">{{profile.department}}</span>
-                                </div>
-                                <div class="col-2 profile-items">
+                                </div> -->
+                                <div class="col-3 profile-items text-center">
                                     <span class="text-truncate">{{profile.company}}</span>
                                 </div>
-                                <div class="col-2 profile-items">
-                                    <span class="text-truncate">{{profile.mobile_phone}}</span>
+                                <div class="col-3 profile-items text-center">
+                                    <span class="text-truncate text-center">{{profile.mobile_phone}}</span>
                                 </div>
-                                <div class="col-2 profile-items">
+                                <div class="col-3 profile-items text-center">
                                     <div *ngIf="profile.group">    
                                         <span class="text-truncate" *ngFor="let group of profile.group">{{ group | firstToUpper }}</span>
                                     </div>
@@ -87,8 +89,8 @@
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of records">
                 <div class="kanban-card">
                     <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
-                        <div class="kanban-profiles-user-img">
-                            <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
+                        <div class="profile-images img-flex">
+                            <img alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
                         </div>
                         <div class="kanban-profiles-user-info">
                             <div class="kanban-profiles-user-InfoLIST">
