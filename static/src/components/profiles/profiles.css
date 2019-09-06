@@ -18,7 +18,16 @@
 .profile-items{
     display: flex;
     align-items: center;
-    justify-content: center;
+}
+.profile-items:last-of-type{
+    justify-content:flex-end;
+}
+.profile-item-content{
+    width: 100px;
+}
+.profile-item-content span{
+    padding-left:0.9rem; 
+    display: block;
 }
 .mobile-kanbann{
     display: none;

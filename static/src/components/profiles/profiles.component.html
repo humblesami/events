@@ -30,14 +30,16 @@
                 <!-- <div class="col-2">
                     <h6>Department</h6>
                 </div> -->
-                <div class="col-3 text-center">
+                <div class="col-3 profile-items">
                     <h6>Company</h6>
                 </div>
-                <div class="col-3 text-center">
+                <div class="col-3 profile-items">
                     <h6>Phone</h6>
                 </div>
-                <div class="col-3 text-center">
-                    <h6>Membership</h6>
+                <div class="col-3 profile-items">
+                    <div class="profile-item-content">
+                        <h6>Membership</h6>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,15 +69,17 @@
                                 <!-- <div class="col-2 profile-items">
                                     <span class="text-truncate">{{profile.department}}</span>
                                 </div> -->
-                                <div class="col-3 profile-items text-center">
+                                <div class="col-3 profile-items">
                                     <span class="text-truncate">{{profile.company}}</span>
                                 </div>
-                                <div class="col-3 profile-items text-center">
-                                    <span class="text-truncate text-center">{{profile.mobile_phone}}</span>
+                                <div class="col-3 profile-items">
+                                    <span class="text-truncate">{{profile.mobile_phone}}</span>
                                 </div>
-                                <div class="col-3 profile-items text-center">
-                                    <div *ngIf="profile.group">    
-                                        <span class="text-truncate" *ngFor="let group of profile.group">{{ group | firstToUpper }}</span>
+                                <div class="col-3 profile-items">
+                                    <div class="profile-item-content">
+                                        <div *ngIf="profile.group">    
+                                            <span class="text-truncate" *ngFor="let group of profile.group">{{ group | firstToUpper }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
