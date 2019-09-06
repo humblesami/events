@@ -138,7 +138,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
 
     window['merge_cloud_files'][current_cloud_number] = merge_cloud_files;
     
-    function upload_files(files, cloud=false)
+    function upload_files(files, invalid_files , cloud=false)
     {
         // console.log(files, 13);
         for(var obj of files){
@@ -200,46 +200,66 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 }
             },
             error: function(a,b,c,d){
-                $('.feedback-message').addClass('alert-danger').html('Fail to Upload Files');
-                $(".feedback-message").fadeIn();
+                $('.feedback-message').append('<p id="success-message" class="alert-danger">Fail to Upload Files </p>').fadeIn("slow");
                 function hideMsg(){
-                    $(".feedback-message").fadeOut();
+                    $("#success-message").fadeOut();
+                    $(".feedback-message").remove($("#success-message"));
+                    $(".feedback-message").fadeOut()
                     }
-                    setTimeout(hideMsg,2000);
+                    setTimeout(hideMsg,12000);
             },
-            complete:function(){
+            complete:function(){        
                 $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
-                $('.feedback-message').addClass('alert-success').html('Files Uploaded Successfully');
-                $(".feedback-message").fadeIn();
+                $(".feedback-message").append('<p id="success-message" class="alert-success">'+ files.length +' File(s) Uploaded Successfully </p>').fadeIn("slow");
                 function hideMsg(){
-                    $(".feedback-message").fadeOut();
+                    $("#success-message").fadeOut();
+                    $(".feedback-message").remove($("#success-message"));
+                    $(".feedback-message").fadeOut()
+                }
+                setTimeout(hideMsg,12000);
+                if(invalid_files){
+                    for(const invalid of invalid_files){
+                        $(".feedback-message").append('<p class="alert-danger inv_f" id="'+invalid.name +'"> Invalid File ('+ invalid.name + ')</p>').fadeIn("slow");
+                        function hideMsg(){
+                            $(".feedback-message").fadeOut("slow");    
+                            $(".feedback-message").remove($("#"+invalid.name));
+                        }
+                        setTimeout(hideMsg,12000);
+                    }
+                }
+
+        
             }
-            setTimeout(hideMsg,2000);
-        }
 
         });
     }
 
     function preview_files(incoming_files, cloud){
         let files = [];
+        let invalid_files= [];
         for (const file of incoming_files) {
             file_name = file.name.split('.');
             if(['pdf', 'odt', 'doc', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'].indexOf(file_name[file_name.length-1]) > -1)
             {
                 files.push(file);
+            }else{
+                invalid_files.push(file);
             }
         }
         if (!files.length)
         {
-            $('.feedback-message').addClass('alert-danger').html('Invalid File(s).');
-            $(".feedback-message").fadeIn('slow');
+            $(".feedback-message").append('<p class="alert-danger" id="invalid_message"> Invalid File(s).</p>').fadeIn("slow")
+            // $('.feedback-message').addClass('alert-danger').html('Invalid File(s).').fadeIn();
             function hideMsg(){
-                $(".feedback-message").fadeOut();
-            }
-            setTimeout(hideMsg,2000);
+                $("#invalid_message").fadeOut();
+                $(".feedback-message").remove($("#invalid_message"));
+                // $(".feedback-message").fadeOut();
+                }
+                setTimeout(hideMsg,6000);
             return;
         }
-        parent.find('.feedback').html('');
+
+        parent.find('.feedback-message').html('');
         var thumbnail = `
         <div class="file-preview-other file-box border p-1">
             <div class="text-right pb-1 del">
@@ -264,7 +284,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                     name_box.append('<input name="url" value="'+file.url+'"/>');
                 }
             }
-            upload_files(files, cloud);
+            upload_files(files, invalid_files ,cloud);
         }
         else
         {

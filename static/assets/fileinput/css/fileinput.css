@@ -584,3 +584,23 @@
     background-color: silver;
     color: black;
 }
+.file-drop-zone{
+    position: relative;
+} 
+ .feedback-message{
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.feedback-message p{
+    text-align: center;
+    background: #ddd;
+    font-size: .9rem;
+    margin:0 0 .5rem;
+}
+
+/* .feedback-message #alert-danger{
+    position: relative;
+} */
