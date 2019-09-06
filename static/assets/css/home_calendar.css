@@ -92,4 +92,8 @@ th.fc-day-header.fc-widget-header {
 	top: -8px;
 	position: relative;
 }
-.home-calendar-tp{ padding-top:0 !important;}
+.home-calendar-tp{
+	padding-top: 0 !important;
+    padding-left: 0;
+    padding-right: 0;
+}
