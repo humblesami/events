@@ -19,6 +19,9 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+.icon-admin-mode:before {
+  content: "\e91a";
+}
 .icon-pin:before {
   content: "\e919";
 }

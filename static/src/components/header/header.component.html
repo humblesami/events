@@ -11,7 +11,9 @@
             </div>
             
 			<div class="main-user-navbar">
-                    <button *ngIf="socketService.actually_admin" class="btn btn-primary admin_mode" (click)="admin_mode_handler()">Enable Admin Mode</button>
+				<div class="automanage nav-icon">
+					<a href="javascript:void(0);" *ngIf="socketService.actually_admin" (click)="admin_mode_handler()"><i class="icon-admin-mode"></i></a>
+				</div>
 				<div class="automanage nav-icon">
                     <a  routerLink="/calendar"><i class="icon-calendar"></i></a>
                 </div>
