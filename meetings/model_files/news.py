@@ -1,10 +1,10 @@
 from django.apps import apps
 from django.db import models
 from documents.file import File
-from esign.models import SignatureDoc
-from meetings.model_files.event import Event
 from survey.models import Survey
+from esign.models import SignatureDoc
 from mainapp.models import CustomModel
+from meetings.model_files.event import Event
 
 
 class News(CustomModel):
@@ -79,7 +79,6 @@ class NewsDocument(File):
         data = []
         data.append({'title': 'Home', 'link': '/'})
         return data
-
 
 
 class NewsVideo(CustomModel):

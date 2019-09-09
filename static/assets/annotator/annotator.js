@@ -16,6 +16,7 @@
     var activate_annotation = undefined;
     var mention_list = undefined;
     var handlePointAnnotationClick = undefined;
+    var doc_loading_step = undefined;
     var loadALlCommentsOnDocument = function() {
         console.log("Load comment not defined");
     }
@@ -349,11 +350,11 @@
                             input_data['annotations'] = annotationString;
                             input_data['version'] = document_version;
                         }
-                        let args = {
+                        var args = {
                             app: 'documents',
                             model: 'AnnotationDocument',
                             method: 'add_annotation'
-                        }
+                        };
                         var final_input_data = {
                             args: args,
                             params: input_data
@@ -530,15 +531,10 @@
 
                 }
                 ctop = ctop - 11;
-                let cwr_top = scroll_div.offset().top;
+                var cwr_top = scroll_div.offset().top;
                 // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
                 scroll_div.height(window.innerHeight - cwr_top);
                 localStorage.setItem(documentId + '/shown_comment_type', shown_comment_type);
-            }            
-
-            function onDocLoaded() {                
-                site_functions.hideLoader("Document Data");
-                site_functions.hideLoader("Rendering Document");
             }
 
             function showHideAnnotations(rotate_degree) {
@@ -651,7 +647,9 @@
 
             function render(doc_data) {
                 annotation_user_m2 = window['current_user'].cookie;
-                site_functions.showLoader("Rendering Document");                
+                site_functions.hideLoader("Document Data");
+                doc_loading_step = "Document Render Data";
+                site_functions.showLoader(doc_loading_step);
                 if (doc_data && doc_data.first_time) {                    
                     comments_wrapper = $('#comment-wrapper');
                     commentText = comments_wrapper.find('#commentText');
@@ -734,7 +732,7 @@
                 try {
                     // console.log(Date(), new Date().getMilliseconds(), 'reached render details');
                     var pdfData = false;
-                    let cwr_top = scroll_div.offset().top;
+                    var cwr_top = scroll_div.offset().top;
                     // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
                     scroll_div.height(window.innerHeight - cwr_top);
                     var pages_rendered = 0;
@@ -775,7 +773,7 @@
                             }
                             scale_select.val(RENDER_OPTIONS.scale);
                             
-                            let scroll_div_top = scroll_div.prev()[0].getBoundingClientRect().bottom;
+                            var scroll_div_top = scroll_div.prev()[0].getBoundingClientRect().bottom;
                             // console.log(scroll_div_top, window.innerHeight);
                             scroll_div.height(window.innerHeight - 40 - scroll_div_top);
                             
@@ -813,13 +811,21 @@
                                     }
                                 }
                                 RENDER_OPTIONS.document_data = doc_data;
-                                console.log(Date(), new Date().getMilliseconds(), 'going to get doc data');
+                                //console.log(Date(), new Date().getMilliseconds(), 'going to get doc data');
+                                site_functions.hideLoader(doc_loading_step);
+                                doc_loading_step = 'document content';
+                                site_functions.showLoader(doc_loading_step);
                                 PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
                                     console.log(Date(), new Date().getMilliseconds(), 'got doc data at client to show');
                                     pdf_doc_data = pdf_data;
                                     $('.page-count').html(pdf_doc_data.numPages);
                                     if (pdf_doc_data.numPages > 1)
+                                    {
                                         $('.page-next-btn').removeAttr('disabled');
+                                    }
+                                    site_functions.hideLoader(doc_loading_step);
+                                    doc_loading_step = 'document pages';
+                                    site_functions.showLoader(doc_loading_step);
                                     renderPdfData(pdf_doc_data);
                                 });
                             }
@@ -828,7 +834,7 @@
                             }
                         } else {
                             bootbox.alert("Invalid document data ", doc_data);
-                            onDocLoaded();
+                            site_functions.hideLoader(doc_loading_step);
                             return;
                         }
                     } else {
@@ -837,18 +843,17 @@
                             documentId = RENDER_OPTIONS.documentId;
                         } else {
                             bootbox.alert("Invalid render options data ", RENDER_OPTIONS);
-                            onDocLoaded();
+                            site_functions.hideLoader(doc_loading_step);
                             return;
                         }
                         renderPdfData(pdf_doc_data)
                     }
-
                     function renderPdfData(pdfContent) {
                         try{
 
                             if (!pdfContent) {
                                 alert("PDF not loaded");
-                                onDocLoaded();
+                                site_functions.hideLoader(doc_loading_step);
                                 return;
                             }
                             RENDER_OPTIONS.pdfDocument = pdfContent;
@@ -888,7 +893,7 @@
                             try{
                                 pages_rendered++;
                                 if (pange_number == 1) {
-                                    
+                                    site_functions.hideLoader(doc_loading_step);
                                     first_page_rendered = 1;
                                     if (doc_data && doc_data.first_time) {
                                         $('body').addClass('pdf-viewer');
@@ -915,7 +920,7 @@
 
                         function on_document_rendered(){
                             try{
-                                onDocLoaded();
+                                $('.ToolBarWrapper>div').css({display: 'flex'});
                                 document_version = getDocumentVersion(documentId);
                                 if(!(doc_data && doc_data.first_time))
                                 {
@@ -927,7 +932,7 @@
                                     doc_id: documentId,
                                     version: document_version
                                 };
-                                let args = {
+                                var args = {
                                     app: 'documents',
                                     model: 'AnnotationDocument',
                                     method: 'get_annotations'
@@ -1301,7 +1306,7 @@
                         }
                         mention_list = []
                         $('.active-mention a.mention').each(function(i, el){
-                            let mentioned_id = $(el).attr('mentioned_id');
+                            var mentioned_id = $(el).attr('mentioned_id');
                             if(mention_list.indexOf(mentioned_id) == -1)
                             {
                                 mention_list.push(parseInt(mentioned_id));
@@ -1507,18 +1512,22 @@
                     }
                     
 
-                    var child_info = `
-						<div class="user-pic-time-infoWrapper">
-							<div class="userSmpic icon-user-single">
-								`+user_image+`
-							</div>
-							<div class="user-time-info pt-2">
-								<span class="user text-primary">` + aComment.user_name + `</span>
-                                <span class="time small">` + window['dt_functions'].timeAgo(aComment.date_time)  + `</span>
-                            </div>
-                        </div>
-                        <div class="comment-details pt-1 pl-1"><p>` + aComment.content + `</p></div>
-                    `;
+                    var child_info = '';
+					child_info += '<div class="user-pic-time-infoWrapper">';
+					child_info += '<div class="userSmpic icon-user-single">';
+					child_info += +user_image;
+					child_info += '</div>';
+					child_info += '<div class="user-time-info pt-2">';
+                    child_info += '<span class="user text-primary">';
+                    child_info += aComment.user_name + '</span>';
+                    child_info += '<span class="time small">';
+                    child_info += window['dt_functions'].timeAgo(aComment.date_time);  + '</span>';
+                    child_info += '</div>';
+                    child_info += '</div>';
+                    child_info += '<div class="comment-details pt-1 pl-1">';
+                    child_info += '<p>' + aComment.content + '</p>';
+                    child_info += '</div>';
+                    
                     $(child).attr('comment-id', aComment.uuid);
                     $(child).attr('annotation', aComment.annotation);
                     child.innerHTML = child_info;
@@ -5909,4 +5918,4 @@
         module4
     ]);
     window['pdf_js_module'] = pdf_js_module;
-})()
+})();

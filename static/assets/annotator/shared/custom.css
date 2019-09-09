@@ -761,3 +761,6 @@ span.pager.disabled
 {
     background-color: silver;
 }
+.ToolBarWrapper>div{
+    display: none;
+}
