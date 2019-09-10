@@ -78,10 +78,6 @@ body.public .router-outlet{
     overflow-y: auto;
     overflow-x: hidden;
 }
-#server-wait
-{
-    z-index: 27;
-}
 table.table.my-3 input[type='radio']{
     margin-right: 10px;
 }

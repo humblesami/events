@@ -650,24 +650,17 @@ a.kanban-committees-info-box-name {
 	}
 #server-wait {
 	position: absolute;
-	z-index: 19;
+	z-index: 27;
 	top: 0;
 	left: 0;
 	opacity: 0.3;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background: white;
-	}
-#server-wait .spinner-border {
-	position: relative;
-	top: calc(50vh - 70px);
-	left: calc(50% - 10px);
-    }
-    #server-wait .row.text {
-        position: absolute;
-        left: calc(50vw - 40px);
-        top: calc(50vh - 40px);
-    }    
+	}    
 .bootbox-close-button.close {
 	display: none;
 	}

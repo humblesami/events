@@ -209,7 +209,7 @@ var site_functions = {
         {
             console.log('Added '+nam+ ' '+window['dt_functions'].now());
         }
-        server_wait_loader.find('.text strong').html(loading_text);
+        server_wait_loader.find('.text').html(loading_text);
         //console.log(nam, new Date().getMilliseconds());
     },
     hideLoader: function(nam, hiddenFrom) {
