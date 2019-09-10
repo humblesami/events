@@ -9,6 +9,20 @@
   ],
   "exclude": [
     "src/test.ts",
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "src/assets",
+    "src/assets/*.*",
+    "assets",
+    "assets/*.*",
+
+
+    "src/assets/*.js",
+    "assets/*.js",
+    "src/assets/*.css",
+    "assets/*.css",
+
+    "src/assets/**/*.*",
+    "src/assets/**/*.css",
+    "src/assets/**/*.js",
   ]
 }

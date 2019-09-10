@@ -1,6 +1,6 @@
-<!-- <app-breadcrumb *ngIf="home_data" title="Home" edit="1" app="meetings" model="news" rid="{{home_data.id}}"></app-breadcrumb>
+<!-- <app-breadcrumb *ngIf="home_data" title="Home" edit="1" app="meetings" model="news" rid="{{home_data.id}}"></app-breadcrumb> -->
 <div class="router-outlet home-container" *ngIf="ng_init && home_data">
-    <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
+    <link rel="stylesheet" href="/assets/css/home_calendar.css" />
 
     <div class="container">
         <div id="welcome" *ngIf="home_data">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-md-5">
                         <div class="row">
-							<app-calendar></app-calendar>
+							<!-- <app-calendar></app-calendar> -->
 							<div class="col-sm-12 calendarwrapper">
 								<div class="full-calendar-btn">
 									<a routerLink="/calendar">Full Calendar</a>
@@ -130,7 +130,7 @@
                                             <span *ngIf="meeting_object.location" class="d-inline-block text-truncate">{{meeting_object.location}}</span>
                                         </div>
                                     </a>
-                                    <app-meetingresponse my_event="1" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
+                                    <!-- <app-meetingresponse my_event="1" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse> -->
                                 </div>
                             </div>
                         </div>
@@ -263,9 +263,9 @@
                             </a>
                         </div>
                     </div>
-                    <app-documents *ngIf="socketService.admin_mode" 
+                    <!-- <app-documents *ngIf="socketService.admin_mode" 
                     parent_model="News" parent_field="news_id" parent_id="{{home_data.id}}"
-                    res_app="meetings" res_model="NewsDocument"></app-documents>
+                    res_app="meetings" res_model="NewsDocument"></app-documents> -->
 
                 </div> 
             </div>
@@ -307,4 +307,4 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>

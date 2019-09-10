@@ -16,6 +16,14 @@ window['js_utils'] = {
         rand = 'id_'+now.getFullYear()+now.getMonth()+now.getDate()+now.getHours()+now.setSeconds()+rand;
         return rand;
     },
+    handle_exception: function(er){
+        var index = er.indexOf('at u (');
+        if(index > -1)
+        {
+            er = er.substr(0, index - 1);
+        }
+        return er;
+    },
     get_dataurl_prefix: function (file_name)
     {
         var ext = file_name.split('.');

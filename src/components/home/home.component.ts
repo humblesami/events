@@ -1,8 +1,9 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser'
 import { HttpService } from '../../services/http.service';
-// import { SocketService } from '../../services/socket.service';
+import { SocketService } from '../../services/socket.service';
 import { Router } from '@angular/router';
+
 declare var $: any;
 @Component({
     styleUrls:['./home.css'],
@@ -13,9 +14,9 @@ export class HomeComponent implements OnInit {
     to_do_count = 0;
     date: Number = Date.now();
     home_data: any;
-
+    
     constructor(private httpService: HttpService,
-        // private socketService: SocketService
+        public socketService: SocketService,
         public router: Router,
         private sanitizer: DomSanitizer) {            
         $('#collapsibleNavbar').children().eq(0).addClass('active');
@@ -44,19 +45,20 @@ export class HomeComponent implements OnInit {
                 console.log("invalid data", home_data);
                 return;
             }
+            var dt_js = window['dt_js'];
             var result = home_data.to_do_items.pending_meetings;
             for (var i in result) {
                 var start = result[i]['start'];
-                start = window['functions'].meeting_time(start);
+                start = dt_js.meeting_time(start);
                 result[i]['start_dt'] = start;
             }
             for(var survey of home_data.to_do_items.pending_surveys)
             {
-                survey.open_date = window['functions'].meeting_time(survey.open_date);
+                survey.open_date = dt_js.meeting_time(survey.open_date);
             }
             for(var voting of home_data.to_do_items.pending_votings)
             {
-                voting.open_date = window['functions'].meeting_time(voting.open_date);
+                voting.open_date = dt_js.meeting_time(voting.open_date);
             }
             home_data.description = obj_this.sanitizer.bypassSecurityTrustHtml(home_data.news.description);            
 

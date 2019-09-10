@@ -9,7 +9,7 @@ function dn_rpc_object(options) {
         console.log('No data and arguments for request ',options);
         return;
     }
-    var input_data = options.data;    
+    var input_data = options.data;
     if (input_data.no_loader)
         options.no_loader = 1;
 
@@ -90,7 +90,10 @@ function dn_rpc_object(options) {
                     loading_text += "."+input_data.args.method;
                 }
             }
-            site_functions.showLoader(loading_text);
+            if(window_loader)
+            {
+                window_loader.show(loading_text);
+            }
         }
         if (options.type == 'post')
             url_with_params = options;
@@ -108,6 +111,10 @@ function dn_rpc_object(options) {
                 }
                 catch(er)
                 {
+                    if(window.js_utils && window.js_utils.hanlde_exception)
+                    {
+                        er = window.js_utils.hanlde_exception(er);
+                    }
                     console.log(response, er);
                 }
             } else if(site_config.show_logs.indexOf('ajax_success')){
@@ -127,7 +134,12 @@ function dn_rpc_object(options) {
         if (options.onComplete)
             options.onComplete();
         if (!options.no_loader)
-            site_functions.hideLoader(loading_text);
+        {
+            if(window_loader)
+            {
+                window_loader.hide(loading_text);
+            }
+        }
     };
     options.error = function(err) {   
         console.log('status '+err.status);
@@ -182,15 +194,23 @@ function dn_rpc_object(options) {
             });
             if(!is_admin)
             {
-                window['functions'].go_to_login();
+                if(window.auth_js && window.auth_js.go_to_login)
+                {
+                    window.auth_js.go_to_login();
+                }
             }
         }
         catch(err){
-            window['functions'].go_to_login();
+            if(window.auth_js && window.auth_js.go_to_login)
+            {
+                window.auth_js.go_to_login();
+            }
         }
-        site_functions.hideLoader("ajax" + api_url);
+        if(window_loader)
+        {
+            window_loader.hide(loading_text);
+        }
     }
-
 
     function handleError(response)
     {
@@ -217,6 +237,10 @@ function dn_rpc_object(options) {
                 }
                 catch(er)
                 {
+                    if(window.js_utils && window.js_utils.hanlde_exception)
+                    {
+                        er = window.js_utils.hanlde_exception(er);
+                    }
                     console.log(response.error, er);
                 }                        
             }                

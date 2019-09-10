@@ -11,10 +11,10 @@ declare var $:any;
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     selectedFile: FileReader = null;
+    error: string;
     loading = false;
     submitted = false;
     returnUrl: string;
-    error: string;
     page_loaded = false;
 
     constructor(

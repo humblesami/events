@@ -9,6 +9,7 @@ import { HomeComponent } from '../components/home/home.component';
 import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from './auth.guard';
 import { HttpService } from 'src/services/http.service';
+import { SocketService } from 'src/services/socket.service';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { HttpService } from 'src/services/http.service';
   providers: [
     AuthGuard,
     HttpService,
+    SocketService
   ],
   bootstrap: [AppComponent]
 })

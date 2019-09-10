@@ -1,7 +1,13 @@
-window_loader = {
+var window_loader = {
     processes : [],
+    loader: $('#server-wait'),
     show: function(nam) {
         var obj_this = this;
+        var server_wait_loader = obj_this.loader;
+        if(!server_wait_loader.length)
+        {
+            return;
+        }
         if (obj_this.processes.length == 0) {
             server_wait_loader.show();
             server_wait_loader.shown = 1;
@@ -31,6 +37,12 @@ window_loader = {
         //console.log(nam, new Date().getMilliseconds());
     },
     hide: function(nam, hiddenFrom) {
+        var obj_this = this;
+        var server_wait_loader = obj_this.loader;
+        if(!server_wait_loader.length)
+        {
+            return;
+        }
         if (!nam || nam == 'force') {
             console.log('Processes in progress => '+ this.processes.join(','));
             if(hiddenFrom)

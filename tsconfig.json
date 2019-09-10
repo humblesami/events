@@ -19,10 +19,6 @@
       "dom"
     ]
   },
-  "exclude": [
-    "assets",
-    "src/assets",
-  ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
