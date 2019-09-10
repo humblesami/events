@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Base</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>console.log(Date()+'-'+new Date().getMilliseconds());</script>
+  <script type="text/javascript" src="assets/libs/jquery/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="assets/js/datetime.js"></script>
+  <script type="text/javascript" src="assets/js/utils.js"></script>
+  <script type="text/javascript" src="assets/config.js" id="config_script"></script>
+  <script type="text/javascript" src="assets/js/auth.js"></script>
+</head>
+<body>
+    
+    <div id="server-wait" style="display:none" class="loadingoverlay">
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">    
+            </div>
+            <div class="text">
+                Loading data...
+            </div>
+        </div>
+    </div>
+
+    <div class="partial-loader" style="display:none">
+        <div class="row">
+            <div class="spinner-border text-primary" role="status">
+            </div>
+        </div>
+        <div class="row text">
+            Loading data...
+        </div>
+    </div>
+    <script type="text/javascript" src="assets/js/loader.js"></script>
+  <app-root></app-root>
+</body>
+</html>

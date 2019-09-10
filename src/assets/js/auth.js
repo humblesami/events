@@ -1,0 +1,129 @@
+(function(){
+    var wl = window.location;
+    var wl_str = wl.toString();
+    window['current_user'] = {};
+    window['add_user_class'] = function(){
+        $('body').removeClass('public').addClass('user');
+    }
+    function verifyUserToken() {
+        var public_route = is_public_route();
+        // console.log(public_route, 877);
+        if(public_route)
+        {
+            $('body').removeClass('user').addClass('public');
+            return;
+        }
+        var user_cookie = localStorage.getItem('user');
+        if (user_cookie) {
+            // if(window.location.hostname != 'localhost')
+            {
+                var last_activity = localStorage.getItem('last_activity');
+                if(!last_activity)
+                {
+                    go_to_login();
+                    return;
+                }
+                else{
+                    var time_now = new Date();
+                    last_activity = new Date(last_activity);
+                    var diff = (time_now - last_activity) /1000;
+                    // console.log('Last activity', diff, window.location.hostname, Date());
+                    if(diff > 3)
+                    {
+                        go_to_login();
+                        return;
+                    }
+                }
+            }
+            user_cookie = JSON.parse(user_cookie);
+            if (user_cookie.token) {
+                var error = undefined;
+                var ajax_options = {
+                    url: site_config.server_base_url + '/user/verify-token',
+                    async: false,
+                    headers: {
+                        Authorization:
+                        'Token '+user_cookie.token
+                    },
+                    error: function(er){
+                        if(er.responseJSON)
+                        {
+                            er = er.responseJSON.detail;
+                        }
+                        error = er;
+                        console.log(er);
+                    },
+                    complete:function(){
+                        // console.log(error, public_route);
+                        if(!error)
+                        {
+                            localStorage.setItem('last_activity', Date());
+                            window['add_user_class']();
+                        }
+                        else{
+                            go_to_login();
+                            return;
+                        }
+                    }
+                }
+                $.ajax(ajax_options);
+            }
+            else{
+                go_to_login();
+            }
+        }
+        else
+        {
+            go_to_login();
+        }
+    }
+
+    function is_public_route(url){
+        if(!url)
+        {
+            url = get_path_name();
+        }
+        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
+        for (var i in public_routes)
+        {
+            if (url.startsWith(public_routes[i]))
+            {
+                localStorage.removeItem('user');
+                $('body').removeClass('user').addClass('public');
+                return true;
+            }
+        }
+        return false;
+    }
+    function get_path_name() {
+        if(wl.toString().indexOf('localhost') > -1)
+        {
+            is_local_host = true;
+        }
+        if (wl.hash) {
+            window['pathname'] = wl.hash.substr(1, wl.hash.length);
+        } else {
+            window['pathname'] = wl.toString().replace(wl.origin, '');
+        }
+        return window['pathname'];
+    }
+    function go_to_login() {
+        // console.log(788);
+        localStorage.removeItem('user');
+        $('body').removeClass('user').addClass('public');
+        if(!wl_str.endsWith('login'))
+        {
+            if(wl_str.indexOf('4200') == -1)
+            {
+                window.location = window['site_config'].server_base_url+'/user/login';
+            }
+            else{
+                window.location = '/#/login';
+            }
+        }
+    }
+    window['auth_js'] = {
+        go_to_login: go_to_login
+    }
+    verifyUserToken();
+})()

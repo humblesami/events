@@ -1,0 +1,40 @@
+<div class="router-outlet Login-form-wrapper" *ngIf="page_loaded">
+    <link rel="stylesheet" href="/assets/css/login.css" />
+    <span class="loginshape01"><img async class="img-fluid" src="/assets/images/loginshape-01.png" /> </span>
+    <span class="loginshape02"><img async class="img-fluid" src="/assets/images/loginshape-02.png" /> </span>
+    <span class="loginshape03"><img async class="img-fluid" src="/assets/images/loginshape-03.png" /> </span>
+    <div class="container">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-sm-10 col-md-5 col-xl-5">
+            <div class="login-form-div">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <a href="/#/" class="login-logo">
+                        <img async class="img-fluid" src="/assets/images/login-logo.png" />
+                    </a>
+                    <div class="member-login-box">
+                        <img async src="/assets/images/member-icon.png" />
+                        <span>Member Login</span>
+                    </div>
+                    <div class="form-group input-label-icon">
+                        <img async class="img-fluid user-icon" src="/assets/images/login-user.png" />  
+                        <input id="username" placeholder="Username" type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />                        
+                    </div>
+                    <div class="form-group input-label-icon">                        
+                        <img async class="img-fluid" src="/assets/images/lock-icon.png" />  
+                        <input id="password" placeholder="Password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />                        
+                    </div>
+                    <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+                    <div class="form-group text-center pl-5 pr-5 mb-2">
+                        <button class="login-btn">Login</button>
+                    </div>
+                    <div class="form-group text-center">
+                        <a class="forgot" routerLink="/forgot-password">Forgot Password?</a>
+                    </div>                    
+                </form>
+            </div>
+        </div>
+        <div class="col-md-7 text-center d-none d-md-block d-lg-block">
+            <img async class="img-key" src="/assets/images/login-vector.png" />  
+        </div>
+    </div>
+</div>

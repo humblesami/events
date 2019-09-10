@@ -1,0 +1,24 @@
+.sign_container
+{
+    background: lightslategrey;
+    color: white;
+    padding: 5px;
+}
+.youtubeVideoModal .modal-header{
+	display:none !important;
+}
+.doc-cencel-btn{
+	background: #dc3545;
+    min-width: 85px;
+    border: 1px solid #dc3545;
+}
+#viewer_container
+{
+    height: calc(100vh - 153px);
+    overflow: auto;
+}
+.sign_container[signed="true"]
+{
+    background: white;
+    border: 1px dotted black;
+}
