@@ -388,22 +388,34 @@
                         <div class="row p-0">
 
                             <div *ngIf="modified_profile_data.admin_image" class="col-sm-12 mb-4">
+                                <div class="edit-author-thumb">
+                                    <label for="file-input">
+                                        <i class="fa fa-edit"></i>
+                                    </label>                                    
+                                    <input id="file-input" class="pt-3 d-none" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
+                                </div>
                                 <div class="author-thumb img-flex">
                                     <img *ngIf="modified_profile_data.admin_image" src="{{modified_profile_data.admin_image}}">
                                     <img *ngIf="!modified_profile_data.admin_image" src="static/assets/images/no-profile.png">
                                 </div>
-                                <div class="w-100">
+                                <!-- <div class="w-100">
                                     <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
-                                </div>
+                                </div> -->
                             </div>
                             <div *ngIf="!modified_profile_data.admin_image" class="col-sm-12 mb-4">
+                                    <div class="edit-author-thumb">
+                                        <label for="file-input">
+                                            <i class="fa fa-edit"></i>
+                                        </label>                                    
+                                        <input id="file-input" class="pt-3 d-none" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
+                                    </div>
                                 <div class="author-thumb img-flex">
                                     <img *ngIf="profile_data.admin_image"  src="{{socketService.server_url}}{{profile_data.admin_image}}">
                                     <img *ngIf="!profile_data.admin_image" src="static/assets/images/no-profile.png">
                                 </div>
-                                <div class="w-100">
+                                <!-- <div class="w-100">
                                     <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="col p-0">
