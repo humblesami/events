@@ -11,6 +11,15 @@
     console.log(Date()+'-' + new Date().getMilliseconds());
     </script>
     <script type="text/javascript" src="static/assets/libs/js/jquery-2.2.4.js"></script>
+    <script>
+    (function(){
+        $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+            if ( options.dataType == 'script' || originalOptions.dataType == 'script' ) {
+                options.cache = true;
+            }
+        });
+    })()
+    </script>    
     <script type="text/javascript" src="static/assets/js/utils.js"></script>
     <script type="text/javascript" src="static/assets/config.js" id="config_script"></script>
 </head>
