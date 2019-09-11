@@ -2857,6 +2857,10 @@ select {
 	background-color: #e6e6e6;
 	box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.17);
 	}
+.director-thumb{
+	margin-left: auto;
+	margin-right: auto;
+}
 .edit-modal-body .author-thumb {
 	width: 100px;
 	height: 100px;
