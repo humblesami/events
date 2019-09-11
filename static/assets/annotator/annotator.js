@@ -732,7 +732,7 @@
                     var pages_rendered = 0;
                     // console.log(5544455);
                     if (doc_data && doc_data.first_time) {
-                        try{                        
+                        try{                            
                             if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
                                 window['show_annotation'] = true;
                             } else {
@@ -777,8 +777,6 @@
 
                         if (doc_data.type) {
                             try{
-
-                                
                                 if(!doc_data.url)
                                 {
                                     if (doc_data.doc.startsWith('data:application/pdf;base64,')) {
@@ -939,17 +937,17 @@
                                         version: document_version
                                     }
                                 };
-                                // dn_rpc_object({
-                                //     data:input_data,
-                                //     no_loader:1,
-                                //     onSuccess: function (annotaions_data) {
-                                //         doc_data.first_time = undefined;
-                                //         onAnnotationsDownloaded(annotaions_data, doc_data);
-                                //     },
-                                //     onError:function(er){
-                                //         console.log(er);
-                                //     }
-                                // });
+                                dn_rpc_object({
+                                    data:input_data,
+                                    no_loader:1,
+                                    onSuccess: function (annotaions_data) {
+                                        doc_data.first_time = undefined;
+                                        onAnnotationsDownloaded(annotaions_data, doc_data);
+                                    },
+                                    onError:function(er){
+                                        console.log(er);
+                                    }
+                                });
 
                                 socket_manager.execute_on_verified(function(){
                                     var n_list = socket_manager.notificationList;
