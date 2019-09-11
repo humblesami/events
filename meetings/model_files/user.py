@@ -576,8 +576,13 @@ class Profile(user_model, CustomModel):
         profile_obj = Profile.objects.get(pk=user_id)
         profile = ws_methods.obj_to_dict(
             profile_obj,
-            fields=['id', 'name', 'first_name', 'last_name', 'image', 'mobile_phone', 'email']
+            fields=['id', 'name', 'first_name', 'last_name', 'image', 'mobile_phone','company', 'email']
         )
+        profile['groups'] = []
+        groups = profile_obj.groups.all().values('id', 'name')
+        for group in groups:
+            profile['groups'].append(group)
+
         profile['photo'] = profile['image']
         return profile
 

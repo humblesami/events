@@ -81,21 +81,22 @@ body.public .router-outlet{
 table.table.my-3 input[type='radio']{
     margin-right: 10px;
 }
-table.table.my-3 input[type='radio']:after {
-    width: 20px;
-    height: 20px;
+input[type='radio']:after {
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     top: -3px;
     left: -1px;
-    background-color: #fff;
+    background: #fff;
     position: relative;
     content: '';
     display: inline-block;
     visibility: visible;
-    border: 2px solid #4b74b5;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #5869f3;
 }
-table.table.my-3 input[type='radio']:checked:after {
-    background-color: #000;
+input[type='radio']:checked:after {
+    background-color: #5869f3;
 }
 input[type=checkbox]#mail-to-assistant {
     -webkit-appearance: none;

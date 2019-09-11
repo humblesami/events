@@ -33,7 +33,9 @@ export class ProfilesummaryComponent implements OnInit {
       args: args
     }
     obj_this.httpService.get(final_input_data, (data)=>{
+      console.log(data,1234);
       obj_this.profile_data = data;
+      
     }, null)
   }
 

@@ -1,3 +1,6 @@
+.bg-roster{
+    background: #F1F1F1;
+}
 .roster-images{
     height: 100px;
     width: 100px;
@@ -33,8 +36,6 @@ table.roster{
     width: calc( 100% - 1em );
 }
 
-
-
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -51,8 +52,15 @@ table.roster{
     background: #f1f1f1 !important; 
     border-radius: 0px !important;
   }
-  .roster tr:nth-child(1) td{
+  .roster tr:nth-child(even) td,
+  .roster tr:nth-child(odd) td{
       border-top: none
+  }
+  .roster tr{
+      margin-bottom: 10px;
+  }
+  .roster tbody tr:last-child{
+    margin-bottom: 0;
   }
   .roster th{
       border-bottom: 1px solid #ddd;
@@ -60,4 +68,8 @@ table.roster{
   .roster td
   {
       vertical-align: middle;
+  }
+  input[type='radio']:after{
+      background: #F1F1F1;
+      border: 3px solid #F1F1F1;
   }

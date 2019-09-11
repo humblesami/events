@@ -28,7 +28,7 @@ export class RosterComponent implements OnInit {
     open_dialog(user_id) {
         let obj_this = this;
 		const modalRef = this.modalService.open(ProfilesummaryComponent);
-		modalRef.componentInstance.user_id = user_id;
+        modalRef.componentInstance.user_id = user_id;
     }    
 
     get_list(){

@@ -5,7 +5,7 @@
         placeholder="Search..."  class="form-control"/>
 	</div>
     <div class="roster">
-        <table class="table my-3" style="border: 1px solid #ddd">
+        <table class="table my-3">
             <thead>
                 <tr class="text-primary">
                     <th>Attendee</th>
@@ -16,9 +16,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let obj of attendees" class="bg-light">
-                    <td (click)="open_dialog(obj.id)">
-                        <img class="roster-images rounded-circle d-none d-md-block" src="{{socketService.server_url}}{{obj.photo}}" style="height: 60px;width: 60px;" />
+                <tr *ngFor="let obj of attendees" class="bg-roster">
+                    <td (click)="open_dialog(obj.id)" style="cursor: pointer">
+                        <span>
+                            <img class="roster-images rounded-circle d-none d-md-block" src="{{socketService.server_url}}{{obj.photo}}" style="height: 60px;width: 60px;" />
+                        </span>
                         <span class="text-primary font-weight-bold">{{obj.name}}</span>
                         <p class="d-sm-block d-md-none">Accept by: Self</p>                                        
                     </td>  
