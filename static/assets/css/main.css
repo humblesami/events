@@ -2989,8 +2989,8 @@ label.check-plus-label-wrap {
 .new_sign .del_sign {
 	color: #ffffff;
 	position: absolute;
-	top: 5px;
-	right: 3px;
+	top: -13px;
+	right: -13px;
 	background: #c30000;
 	font-size: 12px;
 	border-radius: 3rem;

@@ -42,7 +42,7 @@ export class EsignDocDetailsComponent implements OnInit {
             let sign = $('.active_signature');
             sign.attr("user", obj_this.selectedUser['id']);
             sign.find('.user_name').remove();
-            sign.append(`<div class='user_name'>${obj_this.selectedUser['name']}</div>`);
+            sign.append(`: <span class='user_name'>${obj_this.selectedUser['name']}</span>`);
             sign.removeClass('active_signature');
         }
         $('#select_user_modal').modal('hide');
@@ -566,7 +566,8 @@ export class EsignDocDetailsComponent implements OnInit {
             // console.log(el[0], val);
             if(val)
             {
-                el.next().before('<span class="field_type">'+val+'</span>');
+                // console.log(val,123);
+                el.next().before('<span class="field_type"> : '+val+'</span>');
                 el.closest('.active_signature').attr('signtype', val);
                 el.remove();
             }

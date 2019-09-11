@@ -69,11 +69,13 @@
     background-color: white;
     color: red!important
 }
-
 .new_sign i {
     margin-left: 2px;
 }
-
+.new_sign .field_type{
+    margin: 0;
+    padding-right: 0;
+}
 #scaleSelectContainer select#scaleSelect {
     background: white;
     margin-left: 3px;
@@ -255,8 +257,9 @@
 }
 
 .new_sign {
-	background: #e2e2e2 !important;
-    box-shadow: 0px 0px 3px 1px #b7b7b7;
+	background: #ffffff !important;
+    box-shadow: 0px 0px 0px 8px #e2e2e2;
+    border: 2px solid #b7b7b7;
 }
 
 .details_div {
@@ -393,7 +396,7 @@
     cursor: pointer;    
 }
 .new_sign, .sign_container{    
-    padding: 5px 25px 5px 5px;
+    padding: 7px 25px 5px 5px;
     min-width:160px;
     min-height:40px;
 }
