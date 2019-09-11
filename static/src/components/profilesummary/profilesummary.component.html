@@ -1,107 +1,76 @@
+
 <form *ngIf="profile_data" class="details-card">
-  <div class="container">
-      <div class="row mb-3">
-          <div class="col-sm-12 col-md-3 col-lg-2">
+  <div class="container profile_summary_popup">
+      <div class="row my-5">
+          <div class="col-sm-12 col-md-4 mb-2">
               <div class="ProfileUserNameJonbWrapper">
-                  <div class="ProfileChangeSaveWrapper">
-                      <img *ngIf="profile_data.photo" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.photo}}">
-                      <img *ngIf="!profile_data.photo" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
+                  <div class="ProfileChangeSaveWrapper img-flex mb-1">
+                      <img *ngIf="profile_data.photo" src="{{socketService.server_url}}{{profile_data.photo}}">
+                      <img *ngIf="!profile_data.photo"  src="static/assets/images/no-profile.png">
                   </div>
 
-                  <div  class="row" *ngIf="profile_data.name">
-                      <div class="col-sm-12 UserProfileNameTittle">
+                  <div  *ngIf="profile_data.name">
+                      <div class="UserProfileNameTittle text-truncate text-primary">
                           {{profile_data.name}}
                       </div>
                   </div>
-
-                  <div *ngIf="profile_data.job_title" class="row">
-                      <div class="col-sm-12 UserProfileDiscripTittle">
-                          {{profile_data.job_title}}
-                      </div>
-                  </div>
               </div>
-          </div>
-          <div class="col-sm-12 col-md-8 col-lg-9 offset-md-1 offset-lg-1 ProfileInfoTittleWrapper">
-              <div *ngIf="profile_data.mobile_phone" class="row mb-2">
-                  <div class="col-sm-3">
-                      <label for="mobile-phone">
-                          <b>Mobile Phone</b>
-                      </label>
-                  </div>
-                  <div class="col-sm-9 UserProfileDiscription">
-                      {{profile_data.mobile_phone}}
-                  </div>
-              </div>
-              <div *ngIf="profile_data.email" class="row mb-2">
-              <div class="col-sm-3">
-                  <label for="email">
-                      <b>Email</b>
-                  </label>
-                  </div>
-                  <div class="col-sm-9 UserProfileDiscription">
-                      {{profile_data.email}}
-                  </div>
-              </div>
-              <div *ngIf="profile_data.birth_date" class="row mb-2">
-                  <div class="col-sm-3">
-                      <label for="birth_date">
-                          <b>Birth Date</b>
-                      </label>
-                  </div>
-                  <div class="col-sm-9 UserProfileDiscription">
-                      {{profile_data.birth_date}}
-                  </div>
-              </div>
-              <div *ngIf="profile_data.location" class="row mb-2">
-                  <div class="col-sm-3">
-                      <label for="location">
-                          <b>Location</b>
-                      </label>
-                  </div>
-                  <div class="col-sm-9 UserProfileDiscription">
-                          {{profile_data.location}}
-                  </div>
-              </div>
-              <div *ngIf="profile_data.committees && profile_data.committees.length > 0" class="admin_info_after_name col-sm-12">
-                <div class="single-input-label">
-                    <label for="job-title">
-                        <b>Committees</b>
-                    </label>
-                </div>
-                <div class="committee-member-section">
-                    <span *ngFor="let com of profile_data.committees">
-                        <span class="committee-member" routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
-                    </span>
-                </div>
             </div>
-
-
-            <div *ngIf="profile_data.groups && profile_data.groups.length > 0" class="admin_info_after_name col-lg-12 mb-2">
-                <div class="single-input-label">
-                    <label for="job-title">
-                        <b>Role</b>
-                    </label>
-                    <div class="committee-member-section">
-                        <span *ngFor="let group of profile_data.groups">
-                            <span class="committee-member" >{{group.name}}</span>
-                        </span>
+            <div class="col-sm-12 col-md-8 ProfileInfoTittleWrapper">
+                <div class="container">
+                    <div class="row" *ngIf="profile_data.email">
+                        <div class="col-12 p-0">
+                            <label for="email" class="font-weight-bold text-primary">
+                                Email
+                            </label>
+                        </div>
+                        <div class="col-12 profile-border-bottom p-0 pb-2 mb-2">
+                            <div class="text-truncate">
+                                {{profile_data.email}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="profile_data.mobile_phone">
+                        <div class="col-12 p-0">
+                            <label for="mobile_phone" class="font-weight-bold text-primary">
+                                Phone
+                            </label>
+                        </div>
+                        <div class="col-12 p-0 profile-border-bottom pb-2 mb-2">
+                            <div class="text-truncate">
+                                {{profile_data.mobile_phone}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="profile_data.company">
+                        <div class="col-12 p-0">
+                            <label for="company" class="font-weight-bold text-primary">
+                                Company
+                            </label>
+                        </div>
+                        <div class="col-12 p-0 profile-border-bottom pb-2 mb-2">
+                            <div class="text-truncate">
+                                {{profile_data.company}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="profile_data.groups && profile_data.groups.length > 0">
+                        <div class="col-12 p-0">
+                            <label for="company" class="font-weight-bold text-primary">
+                                Role
+                            </label>
+                        </div>
+                        <div class="col-12 p-0 profile-border-bottom pb-2 mb-2">
+                            <div class="committee-member-section">
+                                <span *ngFor="let group of profile_data.groups">
+                                    <span class="committee-member" >{{group.name}}</span>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div *ngIf="profile_data.company" class="col-lg-6 mb-2">
-                <div class="single-input-label">
-                    <label for="company">
-                        <b>Company</b>
-                    </label>
-                    <div class="label-content-info">
-                        {{profile_data.company}}
-                    </div>
-                </div>
-            </div>
-
-          </div>
       </div>
   </div>
+  <a class="cancel_button" (click)="activeModal.close('Close click')"><i class="fa fa-times"></i></a>
 </form>
-<button type="button" class="btn btn-outline-dark close-btn" (click)="activeModal.close('Close click')">Close</button>
