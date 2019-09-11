@@ -29,12 +29,14 @@ export class DocumentsComponent implements OnInit {
     }
     // unique_id = window['js_utils'].unique_id();
     socketService: SocketService;
+    object_id = undefined;
 
     constructor(private httpServ: HttpService, private ss: SocketService,
         public zone: NgZone) {
         this.httpService = httpServ;
         this.socketService = ss;
-        ss.doc_object = this;
+        this.object_id = window['js_utils'].unique_id();
+        ss.doc_objects[this.object_id] = this;
     }
 
     on_mode_changed(){
@@ -45,7 +47,7 @@ export class DocumentsComponent implements OnInit {
     }
 
     on_admin_mode_changed(){
-        let obj_this = this; 
+        let obj_this = this;
         if(!this.socketService.admin_mode)
         {
             return;
@@ -155,5 +157,9 @@ export class DocumentsComponent implements OnInit {
         $(document).on('focus','.DocText input',function(){
             this.select();
         });
+    }
+
+    ngOnDestroy(){
+        delete this.socketService.doc_objects[this.object_id];
     }
 }

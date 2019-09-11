@@ -92,10 +92,14 @@ export class SocketService {
         }
     }
 
-    doc_object = undefined;
+    doc_objects = {};
 
     on_admin_mode_changed(){
-        this.doc_object.on_mode_changed();
+        let obj_this = this;
+        for (var key in obj_this.doc_objects)
+        {
+            obj_this.doc_objects[key].on_mode_changed();
+        }
     }
 
     route_changed(route: ActivatedRouteSnapshot){
