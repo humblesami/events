@@ -647,20 +647,7 @@ a.kanban-committees-info-box-name {
 	}
 .hidemouseaway {
 	display: none;
-	}
-#server-wait {
-	position: absolute;
-	z-index: 27;
-	top: 0;
-	left: 0;
-	opacity: 0.3;
-	width: 100vw;
-	height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: white;
-	}    
+	}  
 .bootbox-close-button.close {
 	display: none;
 	}

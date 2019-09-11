@@ -515,6 +515,7 @@ window['current_user'] = dn_current_site_user;
 window["functions"] = site_functions;
 window['loader'] = server_wait_loader = $('#server-wait');
 site_functions.showLoader('Site Resources');
+// console.log(54343);
 check_if_touch_device();
 addMainEventListeners();
 dn_current_site_user.initUserDataFromCookie();

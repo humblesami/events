@@ -7,13 +7,28 @@
 	<title>Boardsheet</title>
 	<link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />
+    <script>
+    console.log(Date()+'-' + new Date().getMilliseconds());
+    </script>
     <script type="text/javascript" src="static/assets/libs/js/jquery-2.2.4.js"></script>
     <script type="text/javascript" src="static/assets/js/utils.js"></script>
     <script type="text/javascript" src="static/assets/config.js" id="config_script"></script>
 </head>
 <body class="app sidebar-mini rtl sidenav-toggled public">
     
-    <div id="server-wait" style="display:none" class="loadingoverlay">
+    <div id="server-wait" 
+        style="position: absolute;
+            z-index: 27;
+            top: 0;
+            left: 0;
+            opacity: 0.3;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;" 
+    class="loadingoverlay">
         <div class="text-center">
             <div class="spinner-border text-primary" role="status">    
             </div>
@@ -34,6 +49,7 @@
     </div>
 
     <script type="text/javascript" src="static/assets/js/auth.js"></script>
+
 	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />
     <link rel="stylesheet" type="text/css" href="static/assets/libs/bootstrap/bootstrap-4.2.1.css" />
