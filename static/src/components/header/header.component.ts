@@ -53,13 +53,15 @@ export class HeaderComponent implements OnInit {
         let obj_this = this;
         if (obj_this.socketService.admin_mode)
         {
-            $('.admin_mode').html('Disable Admin Mode');
+            obj_this.admin_enabled = 'text-success';
         }
         else
         {
-            $('.admin_mode').html('Enable Admin Mode');
+            obj_this.admin_enabled = 'text-danger';
         }
     }
+
+    admin_enabled = 'text-danger';
 
     admin_mode_handler()
     {

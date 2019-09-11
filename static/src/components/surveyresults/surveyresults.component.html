@@ -32,7 +32,7 @@ title="Results"></app-breadcrumb>
                                         <a class="card-header" data-toggle="collapse" 
                                         [attr.data-target]="'#question-' + question.id" 
                                         id="headingOne" [ngClass]="{collapsed: !question.choices.length }">
-                                           <span>Q: {{question.name}} ?</span>
+                                           <span>Q: {{question.name}}</span>
                                            <span class="float-right"><i class="fa"></i></span>
                                         </a>
                                         <div id="question-{{question.id}}" class="collapse" [ngClass]="{show: question.choices.length }"

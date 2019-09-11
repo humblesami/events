@@ -3,7 +3,6 @@
     border-bottom: 1px solid gainsboro;
 }
 
-
 @media (max-width: 575px) {
     button.showmouseawaybutton.notification-icon{
         font-size: 10px;

@@ -279,3 +279,6 @@ body.public .popup.messenger{
 .partial-loader .row{
     justify-content: center;
 }
+mention-list.dropup{
+    top: 10px !important;
+}

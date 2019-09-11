@@ -96,6 +96,13 @@ export class SocketService {
 
     on_admin_mode_changed(){
         let obj_this = this;
+        if(obj_this.admin_mode)
+        {
+$('#admin_mode_toggler').add
+        }
+        else{
+
+        }
         for (var key in obj_this.doc_objects)
         {
             obj_this.doc_objects[key].on_mode_changed();

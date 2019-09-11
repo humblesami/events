@@ -73,7 +73,7 @@
                     </div>
                 </ul>
             </div>        
-        <div class="page-limit">
+        <div class="page-limit mb-2">
             <span>Page Size</span>
             <select (change)="change_limit($event)" [(ngModel)]="httpService.limit" class="form-control-sm">
                 <option *ngFor="let opt of limit_options">{{opt}}</option>

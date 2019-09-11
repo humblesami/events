@@ -708,10 +708,10 @@ export class EsignDocDetailsComponent implements OnInit {
             var footer = $('<div class="modal-footer" style="text-align: left;"></div>');
             var input_email = $('<h3>Send by Email:</h3><input id="email" placeholder="Email" style="width:50%"/>');
             var input_name = $('<input id="email" placeholder="Name" class="modal-input-wrap" />');
-            var input_subject = $('<input id="subject" placeholder="Subject" class="modal-input-wrap" />');
-            var email_body = $('<textarea class="o_sign_message_textarea o_input modal-input-wrap"  "rows="4"></textarea>');
-            var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Send</span>');
-            var cancel_btn = $('<span class="btn btn-primary btn-sm cancelBtn doc-cencel-btn">Cancel</span>');
+            var input_subject = $('<input id="subject" placeholder="Subject" class="modal-input-wrap rounded" />');
+            var email_body = $('<textarea class="o_sign_message_textarea o_input modal-input-wrap rounded"  "rows="4"></textarea>');
+            var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Send and Close</span>');
+            var cancel_btn = $('<span class="btn btn-sm text-primary">No Thanks</span>');
             var _users = false;
             input_subject.val("Signature Request")
 
@@ -720,7 +720,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 meeting_id = false
                 // snd_to_all = false
             }
-
+            body.append("<h3 class='border-bottom text-dark pb-2 font-weight-bold'>Sign and Return</h3>");
             body.append("<h3>Subject</h3>").append(input_subject);
             body.append("<h3>Message</h3>").append(email_body);
             body.append(save_btn);
