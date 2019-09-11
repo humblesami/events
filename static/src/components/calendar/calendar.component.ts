@@ -17,7 +17,19 @@ export class CalendarComponent implements OnInit {
     constructor(private httpService: HttpService,
         public router: Router,
         private sanitizer: DomSanitizer,
-        private socketService: SocketService) {}
+        private socketService: SocketService) {
+            if (! (window['dynamic_files'].indexOf('full_calender') > -1))
+            {
+                let script = `<script type="text/javascript" src="static/assets/libs/js/fullcalendar.min.js">
+                    </script>`
+                $("body").append(script);
+                window['dynamic_files'].push('full_calender')
+                console.log(window['dynamic_files']);
+            }
+            // $(()=>{
+            //     window['init_sign'](sign_config);
+            // });
+        }
 
     ngOnInit() {
         let obj_this = this;

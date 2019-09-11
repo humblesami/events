@@ -40,6 +40,7 @@ export class SocketService {
     }
 
     constructor(private router: Router) {
+        window['dynamic_files'] = []
         var obj_this = this;
         this.site_config = window['site_config'];
         this.site_url = this.site_config.site_url;
