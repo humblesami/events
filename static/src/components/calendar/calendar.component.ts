@@ -18,17 +18,18 @@ export class CalendarComponent implements OnInit {
         public router: Router,
         private sanitizer: DomSanitizer,
         private socketService: SocketService) {
-            if (! (window['dynamic_files'].indexOf('full_calender') > -1))
+            if (!(window['dynamic_files'].indexOf('full_calender') > -1))
             {
-                let script = `<script type="text/javascript" src="static/assets/libs/js/fullcalendar.min.js">
-                    </script>`
-                $("body").append(script);
+                var calendar_script = document.createElement('script');
+                console.log(Date(), 1888);
+                calendar_script.onload = function () {
+                    console.log(Date(), 1999);
+                };
+                calendar_script.src = 'static/assets/libs/js/fullcalendar.min.js';                
+                document.body.appendChild(calendar_script);
                 window['dynamic_files'].push('full_calender')
                 console.log(window['dynamic_files']);
             }
-            // $(()=>{
-            //     window['init_sign'](sign_config);
-            // });
         }
 
     ngOnInit() {
