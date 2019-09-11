@@ -23,7 +23,7 @@
                 var time_now = new Date();
                 last_activity = new Date(last_activity);
                 var diff = (time_now - last_activity) /1000;
-                console.log('Last activity', diff, window.location.hostname, Date());
+                // console.log('Last activity', diff, window.location.hostname, Date());
                 if(window.location.hostname != 'localhost' && diff > 30)
                 {
                     go_to_login();

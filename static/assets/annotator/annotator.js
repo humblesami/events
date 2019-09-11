@@ -641,11 +641,13 @@
                     hand_drawings = [];
                     combined_drawing = {};
                     if (!onsave)
+                    {
                         render_details();
+                    }
                 }
             }
 
-            function render(doc_data) {
+            function pdf_render(doc_data) {                
                 annotation_user_m2 = window['current_user'].cookie;
                 site_functions.hideLoader("Document Data");
                 doc_loading_step = "Document Render Data";
@@ -664,15 +666,8 @@
                     if (!cookieVal) {
                         initDocCookies(documentId);
                     }
-                    if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
-                        var document_version = getDocumentVersion(documentId);                                                
-                        render_details(doc_data);                        
-                    } else {
-                        render_details(doc_data);
-                    }
-                } else {
-                    setTimeout(render_details, 100);
                 }
+                render_details(doc_data);
             }
 
             // Scale/rotate
@@ -690,12 +685,12 @@
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale', RENDER_OPTIONS.scale);
                         var newScale = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/scale');
                         setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/rotate', RENDER_OPTIONS.rotate % 360);
-                        render();
+                        pdf_render();
                     }
                 }
 
-                var scale_select = document.querySelector('.toolbar select.scale');
-                scale_select.addEventListener('change', handleScaleChange);
+                var scale_select = document.querySelector('.toolbar select.scale');                
+                scale_select.onchange = handleScaleChange;
 
                 function handleScaleChange() {
                     setScaleRotate(scale_select.value, RENDER_OPTIONS.rotate);
@@ -712,34 +707,32 @@
                 document.querySelector('.toolbar .rotate-ccw').addEventListener('click', handleRotateCCWClick);
                 document.querySelector('.toolbar .rotate-cw').addEventListener('click', handleRotateCWClick);
 
-                $('body').on('click', '.toolbar:first .zoomin', function() {
+                $('.toolbar:first .zoomin')[0].onclick = function() {
                     if (RENDER_OPTIONS.scale >= 5)
                         return;
                     var selected_option = scale_select.children[scale_select.selectedIndex];
                     scale_select.value = $(selected_option).next().val();
                     handleScaleChange();
-                });
-                $('body').on('click', '.toolbar:first .zoomout', function() {
+                };
+                $('.toolbar:first .zoomout')[0].onclick = function() {
                     if (RENDER_OPTIONS.scale <= 0.25)
                         return;
                     var selected_option = scale_select.children[scale_select.selectedIndex];
                     scale_select.value = $(selected_option).prev().val();
                     handleScaleChange();
-                });
+                };
             }
 
             function render_details(doc_data) {
                 try {
-                    // console.log(Date(), new Date().getMilliseconds(), 'reached render details');
                     var pdfData = false;
                     var cwr_top = scroll_div.offset().top;
                     // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
                     scroll_div.height(window.innerHeight - cwr_top);
                     var pages_rendered = 0;
+                    // console.log(5544455);
                     if (doc_data && doc_data.first_time) {
-                        try{
-
-                        
+                        try{                        
                             if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
                                 window['show_annotation'] = true;
                             } else {
@@ -811,12 +804,12 @@
                                     }
                                 }
                                 RENDER_OPTIONS.document_data = doc_data;
-                                //console.log(Date(), new Date().getMilliseconds(), 'going to get doc data');
                                 site_functions.hideLoader(doc_loading_step);
                                 doc_loading_step = 'document content';
-                                site_functions.showLoader(doc_loading_step);
+                                site_functions.showLoader(doc_loading_step);                                
+                                console.log(js_datetime_utils.now_full(), 'downloading doc data at client');
                                 PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
-                                    console.log(Date(), new Date().getMilliseconds(), 'got doc data at client to show');
+                                    console.log(js_datetime_utils.now_full(), 'download completed');
                                     pdf_doc_data = pdf_data;
                                     $('.page-count').html(pdf_doc_data.numPages);
                                     if (pdf_doc_data.numPages > 1)
@@ -848,9 +841,10 @@
                         }
                         renderPdfData(pdf_doc_data)
                     }
+                    
                     function renderPdfData(pdfContent) {
                         try{
-
+                            // console.log('Render pdf data');
                             if (!pdfContent) {
                                 alert("PDF not loaded");
                                 site_functions.hideLoader(doc_loading_step);
@@ -899,7 +893,7 @@
                                         $('body').addClass('pdf-viewer');
                                     }
                                     scroll_div.show();
-                                    console.log(Date(), new Date().getMilliseconds(), 'first page done');
+                                    console.log(js_datetime_utils.now_full(), 'first page done');
                                 }
     
                                 if (annotation_mode == 1) {
@@ -909,7 +903,7 @@
                                 if(pange_number == NUM_PAGES)
                                 {
                                     on_document_rendered();
-                                    console.log(Date(), new Date().getMilliseconds(), 'document done');
+                                    console.log(js_datetime_utils.now_full(), 'document done');
                                 }
                             }
                             
@@ -945,17 +939,17 @@
                                         version: document_version
                                     }
                                 };
-                                dn_rpc_object({
-                                    data:input_data,
-                                    no_loader:1,
-                                    onSuccess: function (annotaions_data) {
-                                        doc_data.first_time = undefined;
-                                        onAnnotationsDownloaded(annotaions_data, doc_data);
-                                    },
-                                    onError:function(er){
-                                        console.log(er);
-                                    }
-                                });
+                                // dn_rpc_object({
+                                //     data:input_data,
+                                //     no_loader:1,
+                                //     onSuccess: function (annotaions_data) {
+                                //         doc_data.first_time = undefined;
+                                //         onAnnotationsDownloaded(annotaions_data, doc_data);
+                                //     },
+                                //     onError:function(er){
+                                //         console.log(er);
+                                //     }
+                                // });
 
                                 socket_manager.execute_on_verified(function(){
                                     var n_list = socket_manager.notificationList;
@@ -981,7 +975,8 @@
                                 console.log(er);
                             }
                         }
-                        try{                        
+                        try{
+                            // console.log('Render pages');
                             UI.renderPage(1, RENDER_OPTIONS, function(cb_data, page_num) {
                                 onPageDone(cb_data, page_num, 1);
                                 for (var i = 2; i <= NUM_PAGES; i++) {
@@ -1622,7 +1617,7 @@
                 UI.addEventListener('annotation:click', handleAnnotationClick);
                 UI.addEventListener('annotation:blur', handleAnnotationBlur);
             })(window, document);
-            exports.render = render;
+            exports.pdf_render = pdf_render;
         } catch (err) {
             console.log(err)
         }
@@ -5462,6 +5457,7 @@
 
                     function renderPage(pageNumber, renderOptions, onPageRendered) {
                         var documentId = renderOptions.documentId;
+                        // console.log('rendering page =>' pageNumber);
                         var pdfDocument = renderOptions.pdfDocument;
                         var scale = renderOptions.scale;
                         var rotate = renderOptions.rotate;
@@ -5475,11 +5471,16 @@
                             var page = document.getElementById('pageContainer' + pageNumber);
                             var svg = page.querySelector('.annotationLayer');
                             var canvas = page.querySelector('.canvasWrapper canvas');
+                            // console.log(pageNumber, 223);
                             var canvasContext = canvas.getContext('2d', {
                                 alpha: false
                             });
                             var viewport = pdfPage.getViewport(scale, rotate);
-                            //var viewport = pdfPage.getViewport($('#viewer').width() / pdfPage.getViewport(1.0).width);
+                            if(!viewport)
+                            {
+                                console.log(scale, rotate, pdfPage, 'Invalid view port');
+                                return;
+                            }
                             var transform = scalePage(pageNumber, viewport, canvasContext); // Render the page
                             var fun1 = pdfPage.render({
                                 canvasContext: canvasContext,
@@ -5537,7 +5538,11 @@
                                 alpha: false
                             });
                             var viewport = pdfPage.getViewport(scale, rotate);
-                            //var viewport = pdfPage.getViewport($('#viewer').width() / pdfPage.getViewport(1.0).width);
+                            if(!viewport)
+                            {
+                                console.log(scale, rotate, pdfPage, 'Invalid view port');
+                                return;
+                            }
                             var transform = scalePage(pageNumber, viewport, canvasContext); // Render the page
                             var fun1 = pdfPage.render({
                                 canvasContext: canvasContext,

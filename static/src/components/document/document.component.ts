@@ -66,7 +66,7 @@ export class DocumentComponent implements OnInit {
     }
 
     loadDoc(){
-        console.log(Date(), new Date().getMilliseconds());
+        console.log(window['dt_functions'].now_full(), 'doc started');
         var obj_this = this;
 		window['show_annotation'] = false;
         window['functions'].showLoader('Document Data');        
@@ -94,7 +94,6 @@ export class DocumentComponent implements OnInit {
     
     onLibsLoaded()
     {
-        console.log(Date(), new Date().getMilliseconds(), ' doc reached');
         var obj_this = this;        
         var doc_type = obj_this.route.snapshot.params.doc_type;        
         let doc_id = obj_this.route.snapshot.params.res_id;
@@ -175,8 +174,8 @@ export class DocumentComponent implements OnInit {
                 $('.loadingoverlay').hide();
             }
             else{
-                console.log(Date(), new Date().getMilliseconds(), 'started rendering');
-                window['pdf_js_module'].render(doc_data);
+                console.log(window['dt_functions'].now_full(), 'doc info fetched');
+                window['pdf_js_module'].pdf_render(doc_data);
             }                
         };
         if(!doc_type){
@@ -195,16 +194,28 @@ export class DocumentComponent implements OnInit {
     }
     
     programatic_scroll = false;
-    next_prev_page(pageToMove){
+    next_prev_page(pageToMove){        
         pageToMove = parseInt(this.page_num+ '') + parseInt(pageToMove);
         this.change_page(pageToMove);
     }
 
     change_page(pageToMove = null)
     {
+        if(pageToMove == 0)
+        {
+            return;
+        }
+        if(pageToMove && pageToMove < 1)
+        {            
+            return;
+        }
         if(!this.total_pages)
         {
             this.total_pages = $('.page-count:first').html();
+        }
+        if(pageToMove && pageToMove > this.total_pages)
+        {            
+            return;
         }
         try{
             if(pageToMove == 0)

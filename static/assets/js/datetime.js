@@ -62,6 +62,10 @@ var js_datetime_utils = {
     standeredTime: standeredTime,
     standardDate: getDateString,
     now: getDateTimeString,
+    now_full: function(){
+        var res = getTimeString()+ '.'+ new Date().getMilliseconds();
+        return res;        
+    },
     addInterval: function(interval_type, n, dt=Date()){  
         // console.log(typeof(dt), dt, 455);      
         if(typeof(dt) == 'string')
