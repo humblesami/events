@@ -95,5 +95,31 @@ window['js_utils'] = {
                 break;
         }
         return prefix;
+    },
+    load_css: function(){
+
+    },
+    load_script: function(file_path, on_load){
+        if (!window['dynamic_files'])
+        {
+            window['dynamic_files'] = [];
+        }
+
+        if (!(window['dynamic_files'].indexOf(file_path) > -1))
+        {
+            window['dynamic_files'].push(file_path);
+            var script = document.createElement('script');
+            if (on_load)
+            {
+                script.onload = on_load;
+            }
+            script.src = file_path;
+            document.body.appendChild(script);            
+            console.log(window['dynamic_files']);
+        }
+        else if (on_load)
+        {
+            on_load();            
+        }
     }
 }

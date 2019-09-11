@@ -89,7 +89,8 @@ export class VotingdetailsComponent implements OnInit {
 
                         if(obj_this.voting_object.results.answer_count)
                         {
-                            window['drawChart'](obj_this.voting_object.chart_data, '#myChart');   
+                            window['js_utils'].load_script('static/assets/js/chart.js',
+                            ()=>{window['drawChart'](obj_this.voting_object.chart_data, '#myChart');});
                         }
                     }, 100)
                 }                
@@ -185,8 +186,9 @@ export class VotingdetailsComponent implements OnInit {
                             }
                             question.chart_data[j].color = chart_colors[p++];
                         }
-                    window['drawChart'](obj_this.voting_object.chart_data, '#myChart');
-                    $('.voting-chart:first').show();                 
+                    window['js_utils'].load_script('static/assets/js/chart.js',
+                    ()=>{window['drawChart'](obj_this.voting_object.chart_data, '#myChart');});
+                    $('.voting-chart:first').show();
                 }
             }, null);
         }
@@ -205,7 +207,8 @@ export class VotingdetailsComponent implements OnInit {
                     }
                 }
                 
-                window['init_sign'](sign_config);
+                window['js_utils'].load_script('static/assets/js/custom_signature.js',
+                ()=>{window['init_sign'](sign_config)});
             }
             else
             {
