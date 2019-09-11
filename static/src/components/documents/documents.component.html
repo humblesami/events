@@ -18,8 +18,8 @@
                     </span>
                 </div>
                 <div class="DocText">
-                    <div class="DocName text-truncate">
-                        <h5 *ngIf="!socketService.admin_mode" class="text-truncate">{{doc.name}}</h5>
+                    <div class="DocName">
+                        <span *ngIf="!socketService.admin_mode" class="text-truncate">{{doc.name}}</span>
                         <input class="form-control renamer" *ngIf="socketService.admin_mode" value="{{doc.name}}" (change)="change_file_name($event,doc.id)" (click)="start_rename($event)" >
                     </div>              
                 </div>

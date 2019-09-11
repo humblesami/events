@@ -67,7 +67,7 @@ export class DocumentsComponent implements OnInit {
             var result = obj_this.docs.concat(data);
             // obj_this.docs = result;
             obj_this.zone.run(() => obj_this.docs = result);            
-            console.log(obj_this.docs, data, 'After upload '+Date());
+            // console.log(obj_this.docs, data, 'After upload '+Date());
         });
     }
 

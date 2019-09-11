@@ -43,7 +43,7 @@ export class ResourceDetailsComponent implements OnInit {
                     parents.reverse();
                     parents[parents.length - 1]['is_last'] = 1888;
                 }
-                console.log(result);
+                // console.log(result);
                 // obj_this.records.files.length > 0 ? obj_this.no_files = false : obj_this.no_files = true;
                 // obj_this.records.sub_folders.length > 0 ? obj_this.no_folders = false : obj_this.no_folders = true;
         }, (error: any) => {
