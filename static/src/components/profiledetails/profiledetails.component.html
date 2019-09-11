@@ -50,9 +50,9 @@ title="{{profile_data.name}}"></app-breadcrumb>
 														<img *ngIf="profile_data.image" src="{{socketService.server_url}}{{profile_data.image}}">
 														<img *ngIf="!profile_data.image"  src="static/assets/images/no-profile.png">
 													</div>
-												</a>
+												</a>												
 												<div class="author-content">
-													<div class="UserProfileNameTittle">
+													<div class="UserProfileNameTittle text-truncate">
 														{{profile_data.name}}
 													</div>
 												</div>
@@ -437,11 +437,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<div class="col-sm-12">
 								<div class="ProfileUserNameJonbWrapper">
 									<div class="author-thumb-wrap">
-										<div class="author-thumb img-flex">
+										<div class="author-thumb director-thumb img-flex">
 											<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
 											<img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
 										</div>
-										<div  class="UserProfileNameTittle" *ngIf="profile_data.name">
+										<div  class="UserProfileNameTittle text-truncate" *ngIf="profile_data.name">
 											{{profile_data.admin_full_name}}
 										</div>
 									</div>
