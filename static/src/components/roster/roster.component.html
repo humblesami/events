@@ -17,12 +17,12 @@
             </thead>
             <tbody>
                 <tr *ngFor="let obj of attendees" class="bg-roster">
-                    <td (click)="open_dialog(obj.id)" style="cursor: pointer">
-                        <span>
-                            <img class="roster-images rounded-circle d-none d-md-block" src="{{socketService.server_url}}{{obj.photo}}" style="height: 60px;width: 60px;" />
-                        </span>
-                        <span class="text-primary font-weight-bold">{{obj.name}}</span>
-                        <p class="d-sm-block d-md-none">Accept by: Self</p>                                        
+                    <td (click)="open_dialog(obj.id)">
+                        <span class="profile-view img-flex">
+                            <img class="d-none d-md-block" src="{{socketService.server_url}}{{obj.photo}}"/>
+                            <span class="text-primary font-weight-bold ml-md-2 ml-0 text-truncate">{{obj.name}}</span>
+                            <p class="d-sm-block d-md-none">Accept by: Self</p>
+                        </span>                                                                
                     </td>  
                     <td class="d-none d-md-block pt-5">
                         <span class="font-weight-bold text-primary">Accept / Self</span>
