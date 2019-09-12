@@ -1,3 +1,100 @@
+window['dynamic_files'] = {};
+var app_libs = window['app_libs'] = {
+    full_calendar:{
+        script_paths : ['static/assets/libs/fullcalendar/fullcalendar.min.js'],
+        style_paths : ['static/assets/libs/fullcalendar/fullcalendar.css'],
+        status: undefined,
+        call_backs: [],
+        load: function(on_load){            
+            var obj_this = this;    
+            if(!obj_this.status)
+            {
+                obj_this.status = 'loading';
+                var link  = document.createElement('link');
+                link.rel  = 'stylesheet';
+                link.type = 'text/css';
+                link.href = obj_this.style_paths[0];
+                link.media = 'all';
+                document.body.appendChild(link);
+
+
+                obj_this.call_backs.push(on_load);
+                var script = document.createElement('script');
+                script.onload = function(){                
+                    for(var cb of obj_this.call_backs)
+                    {
+                        cb();
+                    }
+                    obj_this.status = 'loaded';
+                };
+                script.src = obj_this.script_paths[0];
+                document.body.appendChild(script);                
+            }
+            else{
+                if(obj_this.status == 'loaded')
+                {
+                    on_load();
+                }
+                else{
+                    obj_this.call_backs.push(on_load);
+                }
+            }
+        }
+    },
+    signature: {
+        script_paths: ['static/assets/js/custom_signature.js'],
+        style_paths: [],
+        dependenceis: ['bootstrap']
+    },
+    bootstrap:{
+        script_paths : ['static/assets/libs/bootstrap/bootstrap-4.1.1.js'],
+        style_paths : ['static/assets/libs/bootstrap/bootstrap-4.2.1.css'],        
+    },
+    bootbox:{
+        script_paths : ['static/assets/libs/bootstrap/bootbox.js'],
+        style_paths: [],
+        dependenceis: ['bootstrap']
+    },
+    emoji_picker:{
+        script_paths : ['static/assets/emoji/js/emoji-picker.js'],
+        style_paths:['static/assets/css/emoji.css'],
+        status: undefined,
+        call_backs: [],
+        load: function(on_load){
+            var obj_this = this;    
+            if(!obj_this.status)
+            {
+                obj_this.status = 'loading';
+                var link  = document.createElement('link');
+                link.rel  = 'stylesheet';
+                link.type = 'text/css';
+                link.href = obj_this.style_paths[0];
+                link.media = 'all';
+                document.body.appendChild(link);
+
+                var script = document.createElement('script');
+                script.onload = function(){                
+                    for(var cb of obj_this.call_backs)
+                    {
+                        cb();
+                    }
+                    obj_this.status = 'loaded';
+                };
+                script.src = obj_this.script_paths[0];
+                document.body.appendChild(script);                
+            }
+            else{
+                if(obj_this.status == 'loaded')
+                {
+                    on_load();
+                }
+                else{
+                    obj_this.call_backs.push(on_load);
+                }
+            }
+        }
+    }
+}
 window['js_utils'] = {
     read_file: function(file, call_back) {
         var reader = new FileReader();        
@@ -99,27 +196,5 @@ window['js_utils'] = {
     load_css: function(){
 
     },
-    load_script: function(file_path, on_load){
-        if (!window['dynamic_files'])
-        {
-            window['dynamic_files'] = [];
-        }
-
-        if (!(window['dynamic_files'].indexOf(file_path) > -1))
-        {
-            window['dynamic_files'].push(file_path);
-            var script = document.createElement('script');
-            if (on_load)
-            {
-                script.onload = on_load;
-            }
-            script.src = file_path;
-            document.body.appendChild(script);            
-            console.log(window['dynamic_files']);
-        }
-        else if (on_load)
-        {
-            on_load();            
-        }
-    }
+    
 }

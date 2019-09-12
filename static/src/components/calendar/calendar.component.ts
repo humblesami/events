@@ -18,7 +18,7 @@ export class CalendarComponent implements OnInit {
         public router: Router,
         private sanitizer: DomSanitizer,
         private socketService: SocketService) {
-            window['js_utils'].load_script('static/assets/libs/js/fullcalendar.min.js');
+            
         }
 
     ngOnInit() {
@@ -81,10 +81,9 @@ export class CalendarComponent implements OnInit {
         // console.log(home_data.calendar,events, obj_this.events);
         if (home_data.calendar)
         {
-            window['js_utils'].load_script('static/assets/libs/js/fullcalendar.min.js',
-            ()=>{
+            window['app_libs']['full_calendar'].load(()=>{
                 obj_this.renderCalendar(events);
-            });
+            });            
         }
     }
 

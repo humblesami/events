@@ -25,7 +25,7 @@ export class MessengerComponent implements OnInit {
 		private sanitizer: DomSanitizer,
 		private httpService: HttpService,
 		private ss: SocketService) {
-            window['js_utils'].load_script('static/assets/emoji/js/emoji-picker.js');
+            window['app_libs']['emoji_picker'].load();
 		var obj_this = this;
 		obj_this.socketService = ss;
         var socketService = ss;
