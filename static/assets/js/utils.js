@@ -210,4 +210,4 @@ var js_utils = window['js_utils'] = {
             console.log('loader not found', element[0]);
         }
     },
-}    
+}
