@@ -11,7 +11,7 @@ from meetings.model_files.user import Profile, MeetingGroup
 from django.views.decorators.debug import sensitive_post_parameters
 from meetings.model_files.document import MeetingDocument, AgendaDocument
 from .models import Event, Topic, News, NewsVideo, NewsDocument, Invitation_Response, LoginEntry
-
+from django_currentuser.middleware import get_current_user
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 import nested_admin
 
@@ -90,7 +90,7 @@ class EventAdmin(BaseAdmin):
 class UserForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('email', 'first_name', 'last_name', 'mobile_phone', 'groups', 'two_factor_auth')
+        fields = ('email', 'password', 'first_name', 'last_name', 'mobile_phone', 'groups', 'two_factor_auth')
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
@@ -102,6 +102,9 @@ class UserForm(forms.ModelForm):
     def save(self, commit=True):
         user = super(UserForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
+        req_user = get_current_user()
+        if req_user.is_superuser:
+            user.set_password(self.data['password'])
         if commit:
             user.save()
         return user
@@ -110,6 +113,7 @@ class UserForm(forms.ModelForm):
         if not self.instance.pk and Profile.objects.filter(email=self.cleaned_data['email']).exists():
             raise forms.ValidationError(u'This email already exists.')
         return self.cleaned_data['email']
+
 
 
 class UserAdmin(BaseAdmin):
@@ -127,6 +131,8 @@ class UserAdmin(BaseAdmin):
     def get_form(self, request, obj=None, **kwargs):
         if not obj:
             kwargs.update({'exclude': getattr(kwargs, 'exclude', tuple()) + ('two_factor_auth',), })
+        if not request.user.is_superuser:
+            kwargs.update({'exclude': getattr(kwargs, 'exclude', tuple()) + ('password',), })
         form = super(UserAdmin, self).get_form(request, obj, **kwargs)
         return form
 
