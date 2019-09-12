@@ -55,7 +55,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         <a class="col-sm-6 col-md-4 col-lg-4 anchor-mb" routerLink="/topic/{{voting_object.topic.id}}">{{voting_object.topic.name}}</a>
                     </div>
 
-                    <div *ngIf="voting_object.my_status" class="col-md-6 mb-2">
+                    <div *ngIf="voting_object.my_status && voting_object.is_attendee" class="col-md-6 mb-2">
                         <div class="meet-elements">
                             My Status
                         </div>
@@ -64,7 +64,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         </label>
                     </div>
 
-                    <div *ngIf="voting_object.voting_type.name" class="col-md-6 mb-2">
+                    <div *ngIf="voting_object.voting_type.name && voting_object.is_attendee" class="col-md-6 mb-2">
                         <div class="meet-elements">
                             Voting Type
                         </div>
