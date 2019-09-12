@@ -121,7 +121,6 @@ var site_functions = {
         {
             return;
         }
-        alert(location_now);
         if(!force && location_now.indexOf('localhost:4200') > -1)
         {
             return;
