@@ -68,7 +68,7 @@ export class VotingdetailsComponent implements OnInit {
                 }
                 obj_this.voting_object = result;
 
-                console.log(result);
+                //console.log(result);
                 // make_bread_crumb(obj_this.voting_object.name);
                 // console.log(obj_this.voting_object, obj_this.voting_object.chart_data, 4343);
                 if(obj_this.socketService.is_admin || 

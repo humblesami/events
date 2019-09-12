@@ -9,3 +9,10 @@
     display: flex;
     justify-content: center;    
 }
+.title-wrapper .modal-header{
+    background: #4B74B5 !important;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 0;
+    margin: 15px 0;
+}
