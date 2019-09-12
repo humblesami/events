@@ -11,8 +11,8 @@
             </div>
             
 			<div class="main-user-navbar">
-				<div class="automanage nav-icon" (click)="admin_mode_handler()">
-					<a href="javascript:void(0);" id="admin_mode_toggler" class="{{admin_enabled}}" *ngIf="socketService.actually_admin">
+				<div class="automanage nav-icon" (click)="admin_mode_handler()" *ngIf="socketService.actually_admin">
+					<a href="javascript:void(0);" id="admin_mode_toggler" class="{{admin_enabled}}">
                         <i class="font-weight-bold icon-admin-mode"></i>
                     </a>
 				</div>

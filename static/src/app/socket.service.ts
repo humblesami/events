@@ -153,11 +153,13 @@ $('#admin_mode_toggler').add
         {
             localStorage.setItem('admin_mode', JSON.stringify({admin_mode: false}));
             obj_this.admin_mode = false;
+            obj_this.actually_admin = false;
         }
         else if (!obj_this.is_admin)
         {
             localStorage.setItem('admin_mode', JSON.stringify({admin_mode: true}));
             obj_this.admin_mode = false;
+            obj_this.actually_admin = false;
         }
         else
         {
