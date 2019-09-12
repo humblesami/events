@@ -1,8 +1,8 @@
 window['dynamic_files'] = {};
 var app_libs = window['app_libs'] = {
     full_calendar:{
-        script_paths : ['static/assets/libs/js/fullcalendar.min.js'],
-        style_paths : ['static/assets/libs/css/fullcalendar.css'],
+        script_paths : ['static/assets/libs/fullcalendar/fullcalendar.min.js'],
+        style_paths : ['static/assets/libs/fullcalendar/fullcalendar.css'],
         status: undefined,
         call_backs: [],
         load: function(on_load){            
