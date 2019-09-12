@@ -7,7 +7,8 @@ var app_libs = window['app_libs'] = {
             'assets/fileinput/js/cloudpicker.js',            
         ],
         style_paths : [],        
-        load: function(on_load){            
+        load: function(on_load){
+            console.log(123);            
             var obj_this = this;    
             if(!obj_this.status)
             {

@@ -56,10 +56,13 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     `;
     input.hide();
     input.after(uploader);
-    input.next().find('.picker').css('visibility','hidden');
-    window['app_libs']['file_input'].load(function(){
-        $('.cloud_pickers_container .picker').css('visibility','visible');
-    });
+    if(!input.closest('#content-main').length){
+        input.next().find('.picker').css('visibility','hidden');
+        window['app_libs']['file_input'].load(function(){
+            $('.cloud_pickers_container .picker').css('visibility','visible');
+        });
+    }
+    
     var elm = input.next().find('.cloud_pickers_container');
     var current_cloud_number = $(".cloud_pickers_container").index(elm);    
 
