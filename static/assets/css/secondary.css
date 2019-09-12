@@ -256,6 +256,14 @@ a:hover{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.bootbox-body-scroll{
+    max-height: calc(100vh - 200px) !important;
+    overflow-y: auto !important;
+}
+.readmore{
+    color: #4B74B5 !important;
+    font-weight: bold;
+}
 /* .container{
     max-width: inherit;
 } */
