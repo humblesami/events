@@ -83,7 +83,7 @@ export class CalendarComponent implements OnInit {
         {
             window['app_libs']['full_calendar'].load(()=>{
                 obj_this.renderCalendar(events);
-            });            
+            });
         }
     }
 

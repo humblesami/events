@@ -4,6 +4,7 @@ var app_libs = window['app_libs'] = {
         script_paths : ['static/assets/libs/fullcalendar/fullcalendar.min.js'],
         style_paths : ['static/assets/libs/fullcalendar/fullcalendar.css'],
         status: undefined,
+        dependenceis: [],
         call_backs: [],
         load: function(on_load){            
             var obj_this = this;    
@@ -15,7 +16,7 @@ var app_libs = window['app_libs'] = {
                 link.type = 'text/css';
                 link.href = obj_this.style_paths[0];
                 link.media = 'all';
-                document.head.appendChild(link);
+                document.body.appendChild(link);
 
 
                 obj_this.call_backs.push(on_load);
@@ -44,21 +45,154 @@ var app_libs = window['app_libs'] = {
     signature: {
         script_paths: ['static/assets/js/custom_signature.js'],
         style_paths: [],
-        dependenceis: ['bootstrap']
+        dependenceis: ['bootstrap'],
+        status: undefined,
+        call_backs: [],
+        load: function(on_load){            
+            var obj_this = this;    
+            if(!obj_this.status)
+            {
+                if (obj_this.dependenceis)
+                {
+                    app_libs[obj_this.dependenceis[0]].load(function(){
+                        obj_this.call_backs.push(on_load);
+                        var script = document.createElement('script');
+                        script.onload = function(){                
+                            for(var cb of obj_this.call_backs)
+                            {
+                                cb();
+                            }
+                            obj_this.status = 'loaded';
+                        };
+                        script.src = obj_this.script_paths[0];
+                        document.body.appendChild(script);
+                    });
+                }
+                else
+                {
+                    obj_this.call_backs.push(on_load);
+                    var script = document.createElement('script');
+                    script.onload = function(){                
+                        for(var cb of obj_this.call_backs)
+                        {
+                            cb();
+                        }
+                        obj_this.status = 'loaded';
+                    };
+                    script.src = obj_this.script_paths[0];
+                    document.body.appendChild(script);
+                }
+            }
+            else{
+                if(obj_this.status == 'loaded')
+                {
+                    on_load();
+                }
+                else{
+                    obj_this.call_backs.push(on_load);
+                }
+            }
+        }
     },
     bootstrap:{
         script_paths : ['static/assets/libs/bootstrap/bootstrap-4.1.1.js'],
-        style_paths : ['static/assets/libs/bootstrap/bootstrap-4.2.1.css'],        
+        style_paths : ['static/assets/libs/bootstrap/bootstrap-4.2.1.css'],
+        dependenceis: [],
+        status: undefined,
+        call_backs: [],
+        load: function(on_load){            
+            var obj_this = this;    
+            if(!obj_this.status)
+            {
+                obj_this.status = 'loading';
+                var link  = document.createElement('link');
+                link.rel  = 'stylesheet';
+                link.type = 'text/css';
+                link.href = obj_this.style_paths[0];
+                link.media = 'all';
+                document.head.appendChild(link);
+
+
+                obj_this.call_backs.push(on_load);
+                var script = document.createElement('script');
+                script.onload = function(){                
+                    for(var cb of obj_this.call_backs)
+                    {
+                        cb();
+                    }
+                    obj_this.status = 'loaded';
+                };
+                script.src = obj_this.script_paths[0];
+                document.head.appendChild(script);                
+            }
+            else{
+                if(obj_this.status == 'loaded')
+                {
+                    on_load();
+                }
+                else{
+                    obj_this.call_backs.push(on_load);
+                }
+            }
+        }
     },
     bootbox:{
         script_paths : ['static/assets/libs/bootstrap/bootbox.js'],
         style_paths: [],
-        dependenceis: ['bootstrap']
+        dependenceis: ['bootstrap'],
+        status: undefined,
+        call_backs: [],
+        load: function(on_load){            
+            var obj_this = this;    
+            if(!obj_this.status)
+            {
+                if (obj_this.dependenceis)
+                {
+                    app_libs[obj_this.dependenceis[0]].load(function(){
+                        obj_this.call_backs.push(on_load);
+                        var script = document.createElement('script');
+                        script.onload = function(){                
+                            for(var cb of obj_this.call_backs)
+                            {
+                                cb();
+                            }
+                            obj_this.status = 'loaded';
+                        };
+                        script.src = obj_this.script_paths[0];
+                        document.body.appendChild(script);
+                    });
+                }
+                else
+                {
+                    obj_this.call_backs.push(on_load);
+                    var script = document.createElement('script');
+                    script.onload = function(){                
+                        for(var cb of obj_this.call_backs)
+                        {
+                            cb();
+                        }
+                        obj_this.status = 'loaded';
+                    };
+                    script.src = obj_this.script_paths[0];
+                    document.body.appendChild(script);
+                }
+            }
+            else{
+                if(obj_this.status == 'loaded')
+                {
+                    on_load();
+                }
+                else{
+                    obj_this.call_backs.push(on_load);
+                }
+            }
+        }
     },
     emoji_picker:{
         script_paths : ['static/assets/emoji/js/emoji-picker.js'],
         style_paths:['static/assets/css/emoji.css'],
         status: undefined,
+        dependenceis: [],
         call_backs: [],
         load: function(on_load){
             var obj_this = this;    
@@ -93,8 +227,44 @@ var app_libs = window['app_libs'] = {
                 }
             }
         }
+    },
+    chart: {
+        script_paths : ['static/assets/js/chart.js'],
+        style_paths : [],
+        status: undefined,
+        dependenceis: [],
+        call_backs: [],
+        load: function(on_load){            
+            var obj_this = this;    
+            if(!obj_this.status)
+            {
+                obj_this.call_backs.push(on_load);
+                var script = document.createElement('script');
+                script.onload = function(){                
+                    for(var cb of obj_this.call_backs)
+                    {
+                        cb();
+                    }
+                    obj_this.status = 'loaded';
+                };
+                script.src = obj_this.script_paths[0];
+                document.body.appendChild(script);                
+            }
+            else{
+                if(obj_this.status == 'loaded')
+                {
+                    on_load();
+                }
+                else{
+                    obj_this.call_backs.push(on_load);
+                }
+            }
+        }
     }
-}
+};
+(()=> {
+    app_libs['bootstrap'].load();
+ })();
 window['js_utils'] = {
     read_file: function(file, call_back) {
         var reader = new FileReader();        

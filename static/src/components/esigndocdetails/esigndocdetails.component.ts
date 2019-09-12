@@ -923,8 +923,9 @@ export class EsignDocDetailsComponent implements OnInit {
                             get_auto_sign();
                         }
                     };
-                    window['js_utils'].load_script('static/assets/js/custom_signature.js',
-                    ()=>{window['init_sign'](sign_config)});
+                    window['app_libs']['signature'].load(()=>{
+                        window['init_sign'](sign_config);
+                    });
                 }
                 else
                 {
@@ -969,8 +970,9 @@ export class EsignDocDetailsComponent implements OnInit {
                             }
                         };
 
-                        window['js_utils'].load_script('static/assets/js/custom_signature.js',
-                        ()=>{window['init_sign'](sign_config)});
+                        window['app_libs']['signature'].load(()=>{
+                            window['init_sign'](sign_config);
+                        });
                     }
                 }
                 if(token){

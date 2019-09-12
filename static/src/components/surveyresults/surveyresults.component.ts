@@ -19,7 +19,7 @@ export class SurveyresultsComponent implements OnInit {
         private route: ActivatedRoute, private ss: SocketService,
         public router: Router) {
         this.socketService = this.ss;
-        window['js_utils'].load_script('static/assets/js/chart.js');
+        window['app_libs']['signature'].load();
     }
 
     show_answer_details(detail){
@@ -53,12 +53,10 @@ export class SurveyresultsComponent implements OnInit {
                             }
                             question.chart_data[j].color = chart_colors[p++];
                         }
-                        // console.log(question.chart_data);
-                        window['js_utils'].load_script('static/assets/js/chart.js',
-                            ()=>{
-                                window['drawChart'](question.chart_data,
-                                    '#chartData-' + question.id);
-                            });
+                        window['app_libs']['chart'].load(()=>{
+                            window['drawChart'](question.chart_data,
+                                '#chartData-' + question.id);
+                        });
                     }
                 }
                 if (obj_this.surveyDetails.progress_data) {
