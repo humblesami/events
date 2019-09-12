@@ -1,8 +1,8 @@
 window['dynamic_files'] = {};
 var app_libs = window['app_libs'] = {
     full_calendar:{
-        script_paths : ['static/assets/libs/fullcalendar/fullcalendar.min.js'],
-        style_paths : ['static/assets/libs/fullcalendar/fullcalendar.css'],
+        script_paths : ['static/assets/libs/js/fullcalendar.min.js'],
+        style_paths : ['static/assets/libs/css/fullcalendar.css'],
         status: undefined,
         call_backs: [],
         load: function(on_load){            
@@ -15,7 +15,7 @@ var app_libs = window['app_libs'] = {
                 link.type = 'text/css';
                 link.href = obj_this.style_paths[0];
                 link.media = 'all';
-                document.body.appendChild(link);
+                document.head.appendChild(link);
 
 
                 obj_this.call_backs.push(on_load);
