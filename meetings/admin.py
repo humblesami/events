@@ -104,7 +104,8 @@ class UserForm(forms.ModelForm):
         user.email = self.cleaned_data["email"]
         req_user = get_current_user()
         if req_user.is_superuser:
-            user.set_password(self.data['password'])
+            if 'password' in self.changed_data:
+                user.set_password(self.data['password'])
         if commit:
             user.save()
         return user
