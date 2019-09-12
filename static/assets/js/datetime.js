@@ -100,6 +100,10 @@ var dt_js = {
         return dt;
         // console.log(dt), 133;
     },
+    now_full: function(){
+        var res = dt_js.getTimeString()+ '.'+ new Date().getMilliseconds();
+        return res;
+    },
     timeAgo: function(value){
         if (value) {
             var seconds = Math.floor((+new Date() - +new Date(value)) / 1000);

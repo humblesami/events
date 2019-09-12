@@ -805,9 +805,9 @@
                                 site_functions.hideLoader(doc_loading_step);
                                 doc_loading_step = 'document content';
                                 site_functions.showLoader(doc_loading_step);                                
-                                console.log(js_datetime_utils.now_full(), 'downloading doc data at client');
+                                console.log(window['dt_functions'].now_full(), 'downloading doc data at client');
                                 PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
-                                    console.log(js_datetime_utils.now_full(), 'download completed');
+                                    console.log(window['dt_functions'].now_full(), 'download completed');
                                     pdf_doc_data = pdf_data;
                                     $('.page-count').html(pdf_doc_data.numPages);
                                     if (pdf_doc_data.numPages > 1)
@@ -891,7 +891,7 @@
                                         $('body').addClass('pdf-viewer');
                                     }
                                     scroll_div.show();
-                                    console.log(js_datetime_utils.now_full(), 'first page done');
+                                    console.log(window['dt_functions'].now_full(), 'first page done');
                                 }
     
                                 if (annotation_mode == 1) {
@@ -901,7 +901,7 @@
                                 if(pange_number == NUM_PAGES)
                                 {
                                     on_document_rendered();
-                                    console.log(js_datetime_utils.now_full(), 'document done');
+                                    console.log(window['dt_functions'].now_full(), 'document done');
                                 }
                             }
                             
