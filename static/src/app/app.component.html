@@ -18,7 +18,7 @@
         </div>
         <div *ngIf="socketService.messenger_active" class="popup messenger">
             <div class="messenger-head">
-				<a class="full-messger-link" routerLink="/messenger">
+				<a class="full-messger-link" routerLink="/messenger" (click)="change_messenger_view()">
 					<i class="fas fa-expand-arrows-alt"></i> Full messenger
 				</a>
 				<button class="popup-closer" (click)="close_messenger_popup()">

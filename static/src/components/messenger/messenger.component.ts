@@ -3,6 +3,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
 import {SocketService} from "../../app/socket.service";
 import { AppUser, ChatGroup, BaseClient, ChatClient, Message, ChatUser, ChatGroupMessage, UserMessage } from '../../app/models/chat';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -22,7 +23,8 @@ export class MessengerComponent implements OnInit {
     selectedPeople : Array<ChatUser>;
 
 	constructor(
-		private sanitizer: DomSanitizer,
+        private sanitizer: DomSanitizer,
+        public router: Router,
 		private httpService: HttpService,
 		private ss: SocketService) {
             window['app_libs']['emoji_picker'].load();
@@ -158,6 +160,12 @@ export class MessengerComponent implements OnInit {
         this.switch_group_mode('none');
     }
 
+    change_messenger_view()
+    {
+        this.socketService.is_messenger_max = false;
+        this.router.navigate(['/']);
+        $('.messageicon-container.mobile-chatroom').click();
+    }
     
     leave_group(){
         let obj_this = this;

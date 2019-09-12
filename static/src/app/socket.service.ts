@@ -27,7 +27,8 @@ export class SocketService {
     current_id = undefined;	      
     site_config = undefined;
     current_model = undefined;    
-    video_call : VideoCall;    
+    video_call : VideoCall;
+    is_messenger_max = false;
     site_url = '';
     rtc_multi_connector : any;
     messenger_active = 0 ;

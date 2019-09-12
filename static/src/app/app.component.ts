@@ -32,6 +32,11 @@ export class AppComponent {
 		}
     }
 
+    change_messenger_view()
+    {
+        this.socketService.is_messenger_max = true;
+    }
+
     close_messenger_popup(){
         $('.popup.messenger').hide();
     }

@@ -1,5 +1,7 @@
 <div class="messenger-container" *ngIf="user">
-
+        <div (click)="change_messenger_view()">
+            <button *ngIf="socketService.is_messenger_max" >Minimize</button>
+        </div>
         <div class="chat-setup-container chat friends-chat-box" *ngIf="chat_mode == 'none'">
             <div class="card-header MessengerSearchWrap">
                 <div class="input-group">                
