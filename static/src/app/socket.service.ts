@@ -30,6 +30,7 @@ export class SocketService {
     video_call : VideoCall;    
     site_url = '';
     rtc_multi_connector : any;
+    messenger_active = 0 ;
     active_route_snapshot : ActivatedRouteSnapshot;
     search_bar_shown = false;
 

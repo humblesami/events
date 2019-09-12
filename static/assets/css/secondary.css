@@ -49,9 +49,6 @@
     color: black;
 }
 
-.popup.messenger .messenger-container {
-    height: calc(100vh - 180px);}
-
 hr{
     margin: 0;
 }

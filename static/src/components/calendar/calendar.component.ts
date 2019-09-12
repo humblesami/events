@@ -65,7 +65,7 @@ export class CalendarComponent implements OnInit {
         } else {
             if (home_data.calendar) {                
                 home_data.calendar.forEach(function(event: any) {
-                    let date = window['functions'].meeting_time_str(event.start);
+                    let date = window['dt_functions'].meeting_time_str(event.start);
                     events.push({
                         title: event.name,
                         start: event.start,
@@ -78,12 +78,29 @@ export class CalendarComponent implements OnInit {
                 obj_this.events = events;
             }
         }
-        // console.log(home_data.calendar,events, obj_this.events);
+        // console.log(home_data.calendar,events, obj_this.events);        
         if (home_data.calendar)
         {
-            window['app_libs']['full_calendar'].load(()=>{
-                obj_this.renderCalendar(events);
-            });
+            if(window['app_libs']['moment'].status != 'loaded')
+            {
+                window['app_libs']['moment'].load(()=>{                    
+                    window['app_libs']['full_calendar'].load(()=>{                        
+                        obj_this.renderCalendar(events);
+                    });
+                });                
+            }
+            else
+            {
+                if(window['app_libs']['full_calendar'].status != 'loaded')
+                {
+                    window['app_libs']['full_calendar'].load(()=>{
+                        obj_this.renderCalendar(events);
+                    });
+                }
+                else{
+                    obj_this.renderCalendar(events);
+                }
+            }
         }
     }
 

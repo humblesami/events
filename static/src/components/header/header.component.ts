@@ -286,15 +286,12 @@ export class HeaderComponent implements OnInit {
         obj_this.socketService.search_bar_shown = false;
     }
     
-    show_messenger(){
-        // console.log($('.messenger-container').length, 13);
-        if($('.messenger-container').length == 1)
+    show_messenger(){        
+        if(!this.socketService.messenger_active)
         {
-            $('.popup.messenger').show();
+            this.socketService.messenger_active = 1;
         }
-        else{
-            window['bootbox'].alert('Please confirm that chat server is running and then refresh');
-        }
+        $('.popup.messenger').show();
     }
 
     admin_url = '';

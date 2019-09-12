@@ -91,6 +91,18 @@ var dt_js = {
         // console.log(dt, res);
         return res;
     },
+    meeting_time_str: function(dt){
+        var obj_this = this;
+        if(typeof(dt) == 'string')
+        {
+            dt = new Date(dt);
+        }
+        var res = obj_this.monthShortNames[dt.getMonth()];
+        res += ','+dt.getFullYear();
+        res += ' '+dt.getDate();
+        res += ' '+obj_this.getMeetingTime();        
+        return res;
+    },
     date: function(dt){
         this.getDateString(dt);
     },

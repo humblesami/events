@@ -2711,28 +2711,23 @@ ul.dropdown-menu.scrollable-menu {
 	margin: 0 0 45px;
 	}
 .popup.messenger {
-	display: none;
 	position: fixed;
 	right: 1.5rem;
 	bottom: 5px;
 	height: calc(100vh - 8rem) !important;
 	border-radius: 0.4rem;
 	box-shadow: 0 0.1875rem 0.375rem rgba(33, 37, 41, 0.1);
-	border: 1px solid #dadada;
-	;
+	border: 1px solid #dadada;;
 	background: #fff;
 	z-index: 8;
 	width: calc(100vw - 3rem);
+    overflow: hidden;
+    width: 320px;
+	}
+.popup.messenger .messenger-container {	
+	height: calc(100vh - 180px);
 	overflow: hidden;
-	}
-.popup.messenger {
-	width: 320px;
-	}
-.popup.messenger .messenger-container {
-	height: calc(100vh - 130px);
-	/* border-radius: 0.5rem; */
-	overflow: hidden;
-	}
+}
 .popup.messenger .messenger-container .chat-full-height {
 	border: 0;
 	height: 100%;

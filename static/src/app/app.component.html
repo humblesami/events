@@ -3,7 +3,7 @@
 </div>
 <div class="pager-div">
     <aside class="app-sidebar">
-        <ul class="app-menu">            
+        <ul class="app-menu">
             <li><a class="app-menu__item" routerLink="/" data-toggle="tooltip" data-placement="right" title="Dashboard"><i class="icon-dashboard app-menu__icon"></i> <span class="app-menu__label">Dashboard</span></a></li>
             <li><a class="app-menu__item" routerLink="/meetings/upcoming" data-toggle="tooltip" data-placement="right" title="Meetings"><i class="icon-meeting app-menu__icon"></i> <span class="app-menu__label">Meetings</span></a></li>
             <li><a class="app-menu__item" routerLink="/votings" data-toggle="tooltip" data-placement="right" title="Actions"><i class="icon-action app-menu__icon"></i> <span class="app-menu__label">Actions</span></a> </li>
@@ -16,7 +16,7 @@
         <div id="main-div" class="main-div">
             <router-outlet></router-outlet>
         </div>
-        <div class="popup messenger">
+        <div *ngIf="socketService.messenger_active" class="popup messenger">
             <div class="messenger-head">
 				<a class="full-messger-link" routerLink="/messenger">
 					<i class="fas fa-expand-arrows-alt"></i> Full messenger
@@ -24,10 +24,9 @@
 				<button class="popup-closer" (click)="close_messenger_popup()">
 				<i class="fas fa-times"></i>
             </button>
-            </div>
-            
+            </div>   
             <app-messenger class="desktop-chat">
-            </app-messenger>
+            </app-messenger>                     
         </div>
 
         <div class="modal fade video" id="appModal" role="dialog" aria-hidden="true">
@@ -47,8 +46,7 @@
             </div>
         </div>        
 
-        <div id="rtc-container" style="display:none" class="make-center full">
-            <!-- <link type="text/css" rel="stylesheet" href="/static/assets/rtc/style.css"/> -->
+        <div id="rtc-container" style="display:none" class="make-center full">            
             <link type="text/css" rel="stylesheet" href="/static/assets/rtc/getHTMLMediaElement.css"/>    
             <div class="closer max">
                 <div class="minimizer">
@@ -135,7 +133,6 @@
                     autocorrect="off" autocapitalize="off" size="20"
                     style="display:none"
                     >
-                    <!-- <button id="toggle-camera" (click)="socketService.video_call.toggle_camera()">Toggle Camera</button> -->
                     <button id="open-room" style="display:none">Open Room</button>
                     <button id="share-screen" disabled=""><img src="static/assets/images/share-screen.svg"></button>
                     <button id="leave-room" class="danger-bg" (click)="socketService.video_call.terminate()"><img src="static/assets/images/end-call.png" alt="End call" /></button>

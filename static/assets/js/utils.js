@@ -1,5 +1,15 @@
 window['dynamic_files'] = {};
 var app_libs = window['app_libs'] = {
+    moment:{
+        script_paths:[
+            "static/assets/libs/js/moment.js"
+        ],
+        style_paths:[],
+        load: function(on_load){            
+            var obj_this = this;    
+            js_utils.load_lib(obj_this, on_load);
+        }
+    },
     rtc:{
         script_paths:[
             "static/assets/rtc/adapter.js",
@@ -249,4 +259,5 @@ $(function(){
             window['bootbox'] = bootbox;
         }
     });
+    app_libs['moment'].load(function(){});
 })
