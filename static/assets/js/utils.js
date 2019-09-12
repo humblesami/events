@@ -1,5 +1,34 @@
 window['dynamic_files'] = {};
 var app_libs = window['app_libs'] = {
+    rtc:{
+        script_paths:[
+            "static/assets/rtc/adapter.js",
+            "static/assets/rtc/RTCMultiConnection.min.js",
+            "static/assets/rtc/getScreenId.js",
+            "static/assets/rtc/getHTMLMediaElement.js",
+            "static/assets/rtc/conference.js"
+        ],
+        style_paths:[],
+        load: function(on_load){            
+            var obj_this = this;    
+            js_utils.load_lib(obj_this, on_load);
+        }
+    },
+    pdf:{
+        script_paths:[
+            "static/assets/annotator/shared/pdf.js",
+            "static/assets/annotator/shared/pdf.viewer.js",
+            "static/assets/annotator/annotator.js"
+        ],
+        style_paths:[
+            "static/assets/annotator/shared/pdf.viewer.css",
+            "static/assets/annotator/shared/custom.css"
+        ],
+        load: function(on_load){            
+            var obj_this = this;    
+            js_utils.load_lib(obj_this, on_load);
+        }
+    },
     file_input:{
         script_paths : [
             'https://apis.google.com/js/api.js',
@@ -7,8 +36,7 @@ var app_libs = window['app_libs'] = {
             'assets/fileinput/js/cloudpicker.js',            
         ],
         style_paths : [],        
-        load: function(on_load){
-            console.log(123);            
+        load: function(on_load){            
             var obj_this = this;    
             if(!obj_this.status)
             {
@@ -83,15 +111,6 @@ var app_libs = window['app_libs'] = {
         }
     }
 };
-
-(function(){
-    for(var key in app_libs)
-    {
-        app_libs[key].status = undefined;
-        app_libs[key].loaded = 0;
-        app_libs[key].call_backs = [];
-    }
-})()
 
 var js_utils = window['js_utils'] = {
     load_lib: function(obj_this, on_load){
@@ -212,3 +231,22 @@ var js_utils = window['js_utils'] = {
         }
     },
 }
+
+
+for(var key in app_libs)
+{
+    app_libs[key].status = undefined;
+    app_libs[key].loaded = 0;
+    app_libs[key].call_backs = [];
+}
+$(function(){
+    app_libs['bootbox'].load(function(){
+        if(!bootbox)
+        {
+            console.log('not loaded', app_libs['bootbox']);
+        }        
+        else{
+            window['bootbox'] = bootbox;
+        }
+    });
+})

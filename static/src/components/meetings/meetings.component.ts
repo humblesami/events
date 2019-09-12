@@ -43,7 +43,7 @@ export class MeetingsComponent implements OnInit {
             for(var i in result.records)
             {
                 var start = result.records[i]['start'];
-                start = window['functions'].meeting_time(start);
+                start = window['dt_functions'].meeting_time(start);
                 result.records[i]['start_dt'] = start;
             }
             obj_this.total_records = result.total;

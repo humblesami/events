@@ -4,6 +4,10 @@ var dt_js = {
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ],
+    monthShortNames : [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ],
     hours_to_hoursNminutes: function (hours) {
         var res = parseInt(hours);
         var minutes = hours % res;
@@ -40,6 +44,30 @@ var dt_js = {
             s = "0" + s;
         return h + ":" + mm + ":" + s;
     },
+    getMeetingTime: function (dt)
+    {
+        if (!dt)
+            dt = new Date();
+        else if (typeof dt == 'string')
+            dt = new Date(dt);
+    
+        var mm = dt.getMinutes();
+        var h = dt.getHours();
+        var s = dt.getSeconds();
+        var postfix = 'AM';
+        if(h>12)
+        {
+            h = h%12;
+            postfix = 'PM'
+        }
+        if (h < 10)
+            h = "0" + h;
+        if (mm < 10)
+            mm = "0" + mm;
+        if (s < 10)
+            s = "0" + s;        
+        return h + ":" + mm+ ' '+postfix;
+    },
     getDateTimeString: function(dt) {
         if (!dt)
             dt = new Date();
@@ -56,10 +84,11 @@ var dt_js = {
             dt = new Date(dt);
         }
         var res = {
-            month: obj_this.monthNames[dt.getMonth()],
-            date: dt.getDate(),
-            year: dt.getFullYear(),
-        } 
+            month_year: obj_this.monthShortNames[dt.getMonth()] +' '+dt.getFullYear(),
+            day: dt.getDate(),
+            time: obj_this.getMeetingTime(),
+        }
+        // console.log(dt, res);
         return res;
     },
     date: function(dt){

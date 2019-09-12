@@ -47,16 +47,16 @@ export class HomeComponent implements OnInit {
             var result = home_data.to_do_items.pending_meetings;
             for (var i in result) {
                 var start = result[i]['start'];
-                start = window['functions'].meeting_time(start);
+                start = window['dt_functions'].meeting_time(start);
                 result[i]['start_dt'] = start;
             }
             for(var survey of home_data.to_do_items.pending_surveys)
             {
-                survey.open_date = window['functions'].meeting_time(survey.open_date);
+                survey.open_date = window['dt_functions'].meeting_time(survey.open_date);
             }
             for(var voting of home_data.to_do_items.pending_votings)
             {
-                voting.open_date = window['functions'].meeting_time(voting.open_date);
+                voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
             }
             home_data.description = obj_this.sanitizer.bypassSecurityTrustHtml(home_data.news.description);            
 

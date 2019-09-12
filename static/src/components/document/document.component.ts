@@ -175,8 +175,10 @@ export class DocumentComponent implements OnInit {
             }
             else{
                 console.log(window['dt_functions'].now_full(), 'doc info fetched');
-                window['pdf_js_module'].pdf_render(doc_data);
-            }                
+                window['app_libs']['pdf'].load(function(){
+                    window['pdf_js_module'].pdf_render(doc_data);
+                });
+            }
         };
         if(!doc_type){
             //console.log("No doc_type");
@@ -245,22 +247,25 @@ export class DocumentComponent implements OnInit {
     
     ngOnInit() {
         var obj_this = this;
-        window['init_doc_comments']();
-		$('.PdfViewerWrapper:first').scroll(function() {
-            if(!this.total_pages)
-            {
-                this.total_pages = $('.page-count:first').html();
-            }
-            if(obj_this.programatic_scroll)
-            {
-                obj_this.programatic_scroll = false;
-                return;
-            }
-			var pdf_scroll = $(this).scrollTop();
-			if(pdf_scroll == 0 )
-            pdf_scroll = 1;
-            let page_height = $('.pdfViewer .page:first').height();
-            obj_this.page_num = Math.ceil(pdf_scroll / page_height);            
+        window['app_libs']['pdf'].load(function(){
+            window['init_doc_comments']();
+            $('.PdfViewerWrapper:first').scroll(function() {
+                if(!this.total_pages)
+                {
+                    this.total_pages = $('.page-count:first').html();
+                }
+                if(obj_this.programatic_scroll)
+                {
+                    obj_this.programatic_scroll = false;
+                    return;
+                }
+                var pdf_scroll = $(this).scrollTop();
+                if(pdf_scroll == 0 )
+                pdf_scroll = 1;
+                let page_height = $('.pdfViewer .page:first').height();
+                obj_this.page_num = Math.ceil(pdf_scroll / page_height);            
+            });
         });
+        
     }
 }

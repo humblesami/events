@@ -381,7 +381,7 @@ window.addEventListener('message', function receiveMessage(evt) {
             model,
             action
         } = evt.data;
-        this.console.log(evt.data);
+        // this.console.log(evt.data);
         var redirect_url = '';
         if (action === 'change' || action === 'add') {
             if (action === 'add')

@@ -197,11 +197,11 @@ export class MeetingDetailsComponent implements OnInit {
                 }
                 for(var survey of meeting_object.surveys)
                 {
-                    survey.open_date = window['functions'].meeting_time(survey.open_date);
+                    survey.open_date = window['dt_functions'].meeting_time(survey.open_date);
                 }
                 for(var voting of meeting_object.votings)
                 {
-                    voting.open_date = window['functions'].meeting_time(voting.open_date);
+                    voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
                 }
                 setTimeout(function(){
                     if (obj_this.meeting_object.publish)

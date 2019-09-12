@@ -18,8 +18,7 @@ export class VideoCall{
     is_audio_call = false;            
     incoming_call = undefined;
 
-
-    init(uid, audio_only){
+    start(uid, audio_only){
         let video_call = this;
         // console.log(uid, audio_only, 88);
         video_call.drag_enabled = false;
@@ -69,7 +68,14 @@ export class VideoCall{
             {
                 video_call.cancel('Not available');
             }
-        }, video_call.timeout);
+        }, video_call.timeout);        
+    }
+
+    init(uid, audio_only){        
+        let obj_this = this;
+        window['app_libs']['rtc'].load(function(){
+            obj_this.start(uid, audio_only);
+        })
     }
 
     show_incoming_call(data){

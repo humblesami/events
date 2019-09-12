@@ -34,7 +34,7 @@ get_list()
         for(var i in result.records)
         {
             var open_date = result.records[i]['open_date'];
-            open_date= window['functions'].meeting_time(open_date);
+            open_date= window['dt_functions'].meeting_time(open_date);
             result.records[i]['open_date'] = open_date;
         }
         obj_this.records = result.records;

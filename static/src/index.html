@@ -66,41 +66,32 @@
 	<link rel="stylesheet" type="text/css" href="static/assets/libs/css/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-awsome-5.5.0.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-roboto-3.4.5.7.9.css" />	
-	<link rel="stylesheet" type="text/css" href="static/assets/annotator/shared/pdf.viewer.css"/>
-	<link rel="stylesheet" type="text/css" href="static/assets/annotator/shared/custom.css"/>
+	
+	
     <link rel="stylesheet" type="text/css" href="static/assets/css/main.css" />
     <script type="text/javascript" src="static/assets/js/json.js"></script>
     <script type="text/javascript" src="static/assets/js/datetime.js"></script>
     <script type="text/javascript" src="static/assets/js/simple_ajax.js"></script>    
     <script type="text/javascript" src="static/assets/js/main.js"></script>
-
-	<script type="text/javascript" src="static/assets/libs/js/moment.js"></script>
+    <script async type="text/javascript" src="static/assets/libs/js/moment.js"></script>	
 	<script type="text/javascript" src="static/assets/libs/js/socket.io.js"></script>
 	<script>
 		window["io"] = io;
     </script>
-
-    <script type="text/javascript" src="static/assets/libs/js/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="/static/assets/libs/bootstrap/popper-1.14.3.js"></script>
+    <app-root></app-root>
     
-	<script type="text/javascript" src="static/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
 
-	<script type="text/javascript" src="static/assets/libs/js/jquery.mark.min.js"></script>
-    <script type="text/javascript" src="static/assets/libs/js/mark.min.js"></script>
-    <link rel="stylesheet" href="static/assets/libs/select2/default.theme.css" />
-
-	<script type="text/javascript" src="static/assets/annotator/shared/pdf.js"></script>
-	<script type="text/javascript" src="static/assets/annotator/shared/pdf.viewer.js"></script>
-	<script type="text/javascript" src="static/assets/annotator/annotator.js"></script>
+    <script async type="text/javascript" src="static/assets/libs/js/jquery-ui.min.js"></script>
+    <script async type="text/javascript" src="/static/assets/libs/bootstrap/popper-1.14.3.js"></script>    
+	<script async type="text/javascript" src="static/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
+	<script async type="text/javascript" src="static/assets/libs/js/jquery.mark.min.js"></script>
+    <script async type="text/javascript" src="static/assets/libs/js/mark.min.js"></script>
+    <link async rel="stylesheet" href="static/assets/libs/select2/default.theme.css" />	
 
 	<script type="text/javascript" src="static/assets/js/custom_chart.js"></script>
 	<script type="text/javascript" src="static/assets/js/popup.js"></script>
 
-    <script type="text/javascript" src="static/assets/rtc/adapter.js"></script>
-    <script type="text/javascript" src="static/assets/rtc/RTCMultiConnection.min.js"></script>
-    <script type="text/javascript" src="static/assets/rtc/getScreenId.js"></script>
-    <script type="text/javascript" src="static/assets/rtc/getHTMLMediaElement.js"></script>
-    <script type="text/javascript" src="static/assets/rtc/conference.js"></script>
+    
     <script type="text/javascript" src="static/assets/js/doc_preview.js"></script>
 
     
@@ -126,17 +117,10 @@
                 var btn = this;
                 on_onedrive_sdk_loaded(btn);
             }
-            $('body').on('click', '.one_drive_picker', one_drive_click);
-
-            app_libs['bootbox'].load(function(){
-                window['bootbox'] = bootbox;
-            });
+            $('body').on('click', '.one_drive_picker', one_drive_click);            
 
         })();
     </script>
     <link rel="stylesheet" type="text/css" href="static/assets/css/secondary.css" />
-
-	<app-root></app-root>
-
 </body>
 </html>
