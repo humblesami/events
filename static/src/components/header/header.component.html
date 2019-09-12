@@ -12,7 +12,18 @@
             
 			<div class="main-user-navbar">
 				<div class="automanage nav-icon" (click)="admin_mode_handler()" *ngIf="socketService.actually_admin">
-					<a href="javascript:void(0);" id="admin_mode_toggler" class="{{admin_enabled}}">
+                    <a  *ngIf="socketService.admin_mode"
+                        href="javascript:void(0);"
+                        id="admin_mode_toggler"
+                        class="{{admin_enabled}}"
+                        data-toggle="tooltip" data-placement="right" title="Disable Admim Mode">
+                        <i class="font-weight-bold icon-admin-mode"></i>
+                    </a>
+                    <a  *ngIf="!socketService.admin_mode"
+                        href="javascript:void(0);"
+                        id="admin_mode_toggler"
+                        class="{{admin_enabled}}"
+                        data-toggle="tooltip" data-placement="right" title="Enable Admim Mode">
                         <i class="font-weight-bold icon-admin-mode"></i>
                     </a>
 				</div>
