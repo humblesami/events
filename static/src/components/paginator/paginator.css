@@ -1,3 +1,6 @@
+.board-sheet-paginator{
+    float: right;
+}
 .paging-meta .page-limit
 {
     float: left;

@@ -372,8 +372,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 												<label for="company">
 													<b>Login Time</b>
 												</label>
-												<div class="label-content-info">
+												<div class="label-content-info" *ngIf="profile_data.login_info.login_time">
 													{{profile_data.login_info.login_time | date:'medium'}}
+												</div>
+												<div class="label-content-info" *ngIf="!profile_data.login_info.login_time">
+													Not Login Yet!
 												</div>
 											</div>
 										</div>
@@ -402,8 +405,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 												<label for="company">
 													<b>IP Address</b>
 												</label>
-												<div class="label-content-info">
+												<div class="label-content-info" *ngIf="profile_data.login_info.ip">
 													{{profile_data.login_info.ip}}
+												</div>
+												<div class="label-content-info" *ngIf="!profile_data.login_info.ip">
+													Not Login Yet!
 												</div>
 											</div>
 										</div>
