@@ -1,5 +1,5 @@
 <div>
-    <div class="main-full-seachbar mb-3" *ngIf="socketService.admin_mod">
+    <div class="main-full-seachbar mb-3" *ngIf="socketService.admin_mode">
         <input type="text" 
 				(keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
 				placeholder="Search..."  class="form-control"/>  
@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of docs">
             <a class="DocumentWrapper gray-bg" routerLink="{{roterLinkPrefix+doc.id}}">
-                <div *ngIf="!deleting && socketService.is_admin && not_home_page" class="doc-del-btn"
+                <div *ngIf="!deleting && socketService.is_admin" class="doc-del-btn"
                 (click)="delete_file($event, doc.id)">
                     <i class="far fa-trash-alt pointer" ></i>
                 </div>                
@@ -19,14 +19,14 @@
                 </div>
                 <div class="DocText">
                     <div class="DocName">
-                        <span *ngIf="!socketService.admin_mode || !not_home_page" class="text-truncate">{{doc.name}}</span>
-                        <input class="form-control renamer" *ngIf="socketService.admin_mode && not_home_page" value="{{doc.name}}" (change)="change_file_name($event,doc.id)" (click)="start_rename($event)" >
+                        <span *ngIf="!socketService.admin_mode" class="text-truncate">{{doc.name}}</span>
+                        <input class="form-control renamer" *ngIf="socketService.admin_mode" value="{{doc.name}}" (change)="change_file_name($event,doc.id)" (click)="start_rename($event)" >
                     </div>              
                 </div>
             </a>
         </div>
     </div>
-    <div *ngIf="socketService.admin_mode && not_home_page">        
+    <div *ngIf="socketService.admin_mode">        
         <input id="dlc-file-picker" type="file" name='files[]' multiple/>
     </div>
 </div>

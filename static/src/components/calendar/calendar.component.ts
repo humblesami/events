@@ -87,7 +87,7 @@ export class CalendarComponent implements OnInit {
                     window['app_libs']['full_calendar'].load(()=>{                        
                         obj_this.renderCalendar(events);
                     });
-                });                
+                });
             }
             else
             {
@@ -105,8 +105,7 @@ export class CalendarComponent implements OnInit {
     }
 
     renderCalendar(events) {
-        let obj_this = this;
-
+        let obj_this = this;        
         $('#calendar').fullCalendar({
             events: events,
             timezone: 'local',
@@ -142,6 +141,7 @@ export class CalendarComponent implements OnInit {
             // }
         });
 
+        $('.home-calendar').css('visibility', 'visible');
         let schedule:any;
 
         if ($('.fc-schedule-button').length == 0) {
@@ -173,8 +173,8 @@ export class CalendarComponent implements OnInit {
             });
         }
         schedule.find('.scheduleDetailOpener').click(function() {
-                obj_this.scheduleDetails(this);
-            });
+            obj_this.scheduleDetails(this);
+        });
     }
 
     scheduleDetails(el) {

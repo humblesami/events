@@ -43,7 +43,7 @@ var app_libs = window['app_libs'] = {
         script_paths : [
             'https://apis.google.com/js/api.js',
             'https://www.dropbox.com/static/api/2/dropins.js',
-            'assets/fileinput/js/cloudpicker.js',            
+            'static/assets/fileinput/js/cloudpicker.js',            
         ],
         style_paths : [],        
         load: function(on_load){            

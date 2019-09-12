@@ -27,7 +27,6 @@ export class DocumentsComponent implements OnInit {
         ResourceDocument:'/resource/doc/',
         NewsDocument:'/news/doc/',
     }
-    not_home_page = true;
     // unique_id = window['js_utils'].unique_id();
     socketService: SocketService;
     object_id = undefined;
@@ -38,14 +37,6 @@ export class DocumentsComponent implements OnInit {
         this.socketService = ss;
         this.object_id = window['js_utils'].unique_id();
         ss.doc_objects[this.object_id] = this;
-        if (window.location.hash == '#/')
-        {
-            this.not_home_page = false;
-        }
-        else
-        {
-            this.not_home_page = true;
-        }
     }
 
     on_mode_changed(){
