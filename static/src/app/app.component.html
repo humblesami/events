@@ -134,8 +134,12 @@
                     style="display:none"
                     >
                     <button id="open-room" style="display:none">Open Room</button>
-                    <button id="share-screen" disabled=""><img src="static/assets/images/share-screen.svg"></button>
-                    <button id="leave-room" class="danger-bg" (click)="socketService.video_call.terminate()"><img src="static/assets/images/end-call.png" alt="End call" /></button>
+                    <button id="share-screen" disabled="">
+                        <img async src="static/assets/images/share-screen.svg">
+                    </button>
+                    <button id="leave-room" class="danger-bg" (click)="socketService.video_call.terminate()">
+                        <img async src="static/assets/images/end-call.png" alt="End call" />
+                    </button>
                 </div>
             </div>
             

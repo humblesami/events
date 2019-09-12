@@ -5,6 +5,10 @@ var is_local_host = false;
 var server_wait_loader = undefined;
 var loader_last_shown = undefined;
 
+var location_obj = window.location;
+var location_now = location_obj.toString();
+var origin_now = location_obj.origin.toString();
+
 var dn_current_site_user = {
     cookie: {
         token: "",
@@ -24,11 +28,15 @@ var dn_current_site_user = {
         $('.popup.messenger').hide();
     },
     logout: function(navigate) {
+        if(location_now.endsWith('user/login'))
+        {
+            return;
+        }
         if(!dn_current_site_user.cookie)
         {
             return;
         }
-        if(window.location.toString().indexOf('login') == -1)
+        if(location_now.indexOf('login') == -1)
         {
             $('body').hide();
             $('body').removeClass('user').addClass('public');
@@ -76,15 +84,14 @@ var site_functions = {
         return false;
     },
     get_path_name: function() {
-        var wl = window.location;
-        if(wl.toString().indexOf('localhost') > -1)
+        if(location_now.indexOf('localhost') > -1)
         {
             is_local_host = true;
         }
-        if (wl.hash) {
-            window['pathname'] = wl.hash.substr(1, wl.hash.length);
+        if (location_obj.hash) {
+            window['pathname'] = location_obj.hash.substr(1, location_obj.hash.length);
         } else {
-            window['pathname'] = wl.toString().replace(window.location.origin, '');
+            window['pathname'] = location_obj.toString().replace(origin_now, '');
         }
         return window['pathname'];
     },
@@ -109,8 +116,13 @@ var site_functions = {
             reader.readAsDataURL(files[i]);
         }
     },
-    go_to_login: function(force) {
-        if(!force && window.location.toString().indexOf('localhost:4200') > -1)
+    go_to_login: function(force) {        
+        if(location_now.indexOf('/login') > -1)
+        {
+            return;
+        }
+        alert(location_now);
+        if(!force && location_now.indexOf('localhost:4200') > -1)
         {
             return;
         }
@@ -120,9 +132,9 @@ var site_functions = {
         {
             dn_current_site_user.logout();
         }
-        if(!window.location.toString().endsWith('login'))
+        if(!location_now.endsWith('login'))
         {
-            if(window.location.toString().indexOf('4200') == -1)
+            if(location_now.indexOf('4200') == -1)
             {
                 window.location = window['site_config'].server_base_url+'/user/logout';
             }
@@ -483,16 +495,15 @@ function refreshSession() {
     }, session_time_limit);
 }
 
-function check_if_touch_device() {
-    var wl = window.location;
-    if(wl.toString().indexOf('localhost') > -1)
+function check_if_touch_device() {    
+    if(location_obj.toString().indexOf('localhost') > -1)
     {
         is_local_host = true;
     }
-    if (wl.hash) {
-        window['pathname'] = wl.hash.substr(1, wl.hash.length);
+    if (location_obj.hash) {
+        window['pathname'] = location_obj.hash.substr(1, location_obj.hash.length);
     } else {
-        window['pathname'] = wl.toString().replace(window.location.origin, '');
+        window['pathname'] = location_obj.toString().replace(origin_now, '');
     }
     try
     {
@@ -514,7 +525,10 @@ $(function(){
 window['current_user'] = dn_current_site_user;
 window["functions"] = site_functions;
 window['loader'] = server_wait_loader = $('#server-wait');
-site_functions.showLoader('Site Resources');
+if(location_now.indexOf('/login') == -1)
+{
+    site_functions.showLoader('Site Resources');
+}
 // console.log(54343);
 check_if_touch_device();
 addMainEventListeners();
