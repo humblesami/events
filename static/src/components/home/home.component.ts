@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
                 voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
             }
             home_data.text = home_data.news.description;
-            home_data.news.description = home_data.news.description.substr(0,1250)+'...';
+            home_data.news.description = home_data.news.description.substr(0,1250)+' <a class="readmore">Read More</a>...';
             home_data.description = obj_this.sanitizer.bypassSecurityTrustHtml(home_data.news.description);            
 
             var valid_videos = [];            
@@ -93,7 +93,8 @@ export class HomeComponent implements OnInit {
     show_answer_details(){
         // console.log(this.home_data.description.changingThisBreaksApplicationSecurity);
         window['bootbox'].alert(this.home_data.text);
-        $('.modal-dialog').addClass('modal-lg');        
+        $('.modal-dialog').addClass("modal-lg");   
+        $('.bootbox-body').addClass('bootbox-body-scroll');     
     }
 
     view_video(video_name, video_url){

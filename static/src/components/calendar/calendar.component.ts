@@ -109,6 +109,7 @@ export class CalendarComponent implements OnInit {
 
         $('#calendar').fullCalendar({
             events: events,
+            timezone: 'local',
             eventClick: function(calEvent, jsEvent, view) {
                 var id = calEvent.id;
                 var req_url = '/meeting/summary'
