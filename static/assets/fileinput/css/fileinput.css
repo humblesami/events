@@ -112,6 +112,7 @@
 
 .btn-file {
     overflow: hidden;
+    border-radius: 20px;
 }
 
 .btn-file input[type=file] {

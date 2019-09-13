@@ -49,7 +49,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             </div>
             <div class="local_picker picker border btn btn-primary btn-file">
                 <i class="glyphicon glyphicon-folder-open"></i>&nbsp;  
-                <span class="hidden-xs">Browse …</span>
+                <span class="hidden-xs" style="padding-right:8px;">Browse</span>
             </div>
         </div>
     </div>
