@@ -190,33 +190,31 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                     data = JSON.parse(data);
                 }
                 catch(er){
-                    console.log('Invalid data from post files', data);
+                    console.log(data);
+                    $(".feedback-message").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
+                    return;
                 }
+                
                 if(Array.isArray(data))
                 {
                     if(on_files_uploaded)
                     {
                         parent.find('.file-box').remove();
-                        parent.find('.preview-conatiner').html('');
-                        on_files_uploaded(data);
+                        parent.find('.preview-conatiner').html('');                        
+                        on_files_uploaded(data);                        
                     }
+                    $(".feedback-message").append('<p id="success-message" class="alert-success">'+ files.length +' File(s) Uploaded Successfully </p>').fadeIn("slow");
                 }
                 else{
-                    console.log(data, ' invalid data from file save');
+                    console.log(data);
+                    $(".feedback-message").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
                 }
             },
             error: function(a,b,c,d){
                 $('.feedback-message').append('<p id="success-message" class="alert-danger">Fail to Upload Files </p>').fadeIn("slow");
-                function hideMsg(){
-                    $("#success-message").fadeOut();
-                    $(".feedback-message").remove($("#success-message"));
-                    $(".feedback-message").fadeOut()
-                    }
-                    setTimeout(hideMsg,12000);
             },
             complete:function(){        
-                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
-                $(".feedback-message").append('<p id="success-message" class="alert-success">'+ files.length +' File(s) Uploaded Successfully </p>').fadeIn("slow");
+                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');                
                 function hideMsg(){
                     $("#success-message").fadeOut();
                     $(".feedback-message").remove($("#success-message"));
