@@ -40,7 +40,10 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 	font-size: 15px;
 	font-weight: 500;
 }
-
+input:-webkit-autofill {
+    box-shadow: 0 0 0 0 #ffffff;
+    transition: background-color 5000s ease-in-out 0s;
+}
 .aligned .form-row input[type="text"], .aligned .form-row input[type="email"]{
 	display: block;
 	border:0;
