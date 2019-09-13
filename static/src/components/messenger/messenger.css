@@ -1,5 +1,5 @@
 .messenger-container {
-	height: calc(100vh - 71px);
+	height: calc(100vh - 73px);
 	}
 .messenger-container .container-fluid, .row {
 	height: 100%;
@@ -555,9 +555,8 @@
 	z-index: 1;
 	}
 .chatgroup {
- padding:.8rem 0 .3rem;
-	display: block;
-	}
+	padding:.8rem 0 .3rem;
+}
 .yt1Zfc {
 	background-color: #0f9d58;
 	-webkit-border-radius: 50%;
@@ -571,7 +570,7 @@
 	border: 0;
 	}
 .chatgroup .create {
-	display: flex;
+	display: inline-flex;
 	background: transparent;
 	border: 0;
 	color: #000;

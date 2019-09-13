@@ -1,10 +1,7 @@
 <div class="messenger-container" *ngIf="user">
-        <div (click)="change_messenger_view()" class="text-right mr-2 mt-1">
-            <i class="far fa-window-restore text-primary" *ngIf="socketService.is_messenger_max"></i>
-        </div>
         <div class="chat-setup-container chat friends-chat-box clearfix" *ngIf="chat_mode == 'none'">
             <div class="card-header MessengerSearchWrap">
-                <div class="input-group">                
+                <div class="input-group mb-2">                
                     <div class="input-group-prepend">
                         <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
                     </div>
@@ -12,6 +9,11 @@
                 </div>
                 <span class="chatgroup">
                     <button (click)="group_create_mode()" class="create"> <img src="static/assets/images/add-group.svg" alt="" /> Create New Group</button>
+                </span>
+                <span class="float-right mt-1">
+                    <a (click)="change_messenger_view()" class="text-right">
+                        <i class="far fa-window-restore text-dark" *ngIf="socketService.is_messenger_max"></i>
+                    </a>
                 </span>
             </div>
     
