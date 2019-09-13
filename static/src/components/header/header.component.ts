@@ -286,12 +286,19 @@ export class HeaderComponent implements OnInit {
         obj_this.socketService.search_bar_shown = false;
     }
     
-    show_messenger(){        
+    show_messenger(){
+        if(window.location.toString().endsWith('/messenger'))
+        {
+            return;
+        }
         if(!this.socketService.messenger_active)
         {
             this.socketService.messenger_active = 1;
+            setTimeout(()=>{$('.popup.messenger').show()}, 20);
         }
-        $('.popup.messenger').show();
+        else{
+            $('.popup.messenger').show();
+        }
     }
 
     admin_url = '';

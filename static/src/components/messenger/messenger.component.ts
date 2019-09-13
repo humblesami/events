@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
+import {Location} from '@angular/common';
 import {SocketService} from "../../app/socket.service";
 import { AppUser, ChatGroup, BaseClient, ChatClient, Message, ChatUser, ChatGroupMessage, UserMessage } from '../../app/models/chat';
 import { Router } from '@angular/router';
@@ -25,124 +26,126 @@ export class MessengerComponent implements OnInit {
 	constructor(
         private sanitizer: DomSanitizer,
         public router: Router,
+        private _location: Location,
 		private httpService: HttpService,
-		private ss: SocketService) {
+        private ss: SocketService
+        ) {
             window['app_libs']['emoji_picker'].load();
-		var obj_this = this;
-		obj_this.socketService = ss;
-        var socketService = ss;
-		function registerChatEventListeners()
-		{
-            obj_this.user = socketService.user_data;
-			socketService.server_events['chat_message_received'] = function (msg) {
-                try{
-                    // console.log(msg, 'chat_message_received');
-                    obj_this.receiveMessage(msg, msg.sender.id);
-                }
-                catch(er)
-                {
-                    console.log(er);
-                }
-            }
-
-            socketService.server_events['group_chat_message_received'] = function(msg){
-                try{
-                    //console.log('redifen chat_message_received');
-                    obj_this.receiveGroupMessage(msg, msg.sender.id);
-                }
-                catch(er)
-                {
-                    console.log(er);
-                }
-            };
-
-            socketService.server_events['friend_joined'] = updateUserStatus;
-
-            socketService.server_events['user_left'] = updateUserStatus;
-
-            socketService.server_events['new_friend'] = function(friend: ChatClient){
-                socketService.chat_users.push(friend);
-            }
-            socketService.server_events['friend_removed'] = function(friend_id){
-                for(var i = 0; i < socketService.chat_users.length; i++)
-                {
-                    if(socketService.chat_users[i].id == friend_id)
-                    {
-                        socketService.chat_users.splice(i, 1);
-                        break;
-                    }
-                }
-            }
-            
-            function updateUserStatus(user: ChatClient)
-            {                
-                if(obj_this.user.id == user.id)
-                {
-                    console.log(user , "Should never happen now");
-                    return;
-                }
-                var temp = socketService.chat_users.filter(function(item){
-                    return item.id == user.id;
-                });
-                if(temp.length == 0){
-                    console.log(user , " not found");
-                    return;
-                }
-                let client = temp[0] as ChatClient;
-                client.online = user.online;
-            }
-
-            socketService.server_events['chat_group_members_updated'] = function(data){
-                var index = -1;
-                var all_groups = obj_this.socketService.chat_groups;
-                for(var i =0; i < all_groups.length; i++)
-                {
-                    if(all_groups[i].id == data.id)
-                    {
-                        index = i;
-                        break;
-                    }
-                }
-                if(index == -1)
-                {
-                    console.log('members added in valid group', data, obj_this.socketService.chat_groups);
-                    obj_this.on_messge_from_new_group(data.id);
-                    return;
-                }
-                var group = undefined;
-                if(obj_this.active_chat_user.is_group && obj_this.active_chat_user.id == data.id)
-                {
-                    group = obj_this.active_chat_user as ChatGroup;                    
-                }
-                else
-                {
-                    group = obj_this.socketService.chat_groups[index];
-                }
-                for(var j=0;j<data.members.length;j++)
-                {
-                    group.members.push(data.members[i]);
-                }
-            }
-            
-            obj_this.people_list = new Array<ChatUser>();            
-            for(var ind in obj_this.socketService.chat_users)
+            var obj_this = this;
+            obj_this.socketService = ss;
+            var socketService = ss;
+            function registerChatEventListeners()
             {
-                let obj_user = obj_this.socketService.chat_users[ind] as ChatUser;                
-                obj_this.people_list.push(obj_user);
+                obj_this.user = socketService.user_data;
+                socketService.server_events['chat_message_received'] = function (msg) {
+                    try{
+                        // console.log(msg, 'chat_message_received');
+                        obj_this.receiveMessage(msg, msg.sender.id);
+                    }
+                    catch(er)
+                    {
+                        console.log(er);
+                    }
+                }
+
+                socketService.server_events['group_chat_message_received'] = function(msg){
+                    try{
+                        //console.log('redifen chat_message_received');
+                        obj_this.receiveGroupMessage(msg, msg.sender.id);
+                    }
+                    catch(er)
+                    {
+                        console.log(er);
+                    }
+                };
+
+                socketService.server_events['friend_joined'] = updateUserStatus;
+
+                socketService.server_events['user_left'] = updateUserStatus;
+
+                socketService.server_events['new_friend'] = function(friend: ChatClient){
+                    socketService.chat_users.push(friend);
+                }
+                socketService.server_events['friend_removed'] = function(friend_id){
+                    for(var i = 0; i < socketService.chat_users.length; i++)
+                    {
+                        if(socketService.chat_users[i].id == friend_id)
+                        {
+                            socketService.chat_users.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                
+                function updateUserStatus(user: ChatClient)
+                {                
+                    if(obj_this.user.id == user.id)
+                    {
+                        console.log(user , "Should never happen now");
+                        return;
+                    }
+                    var temp = socketService.chat_users.filter(function(item){
+                        return item.id == user.id;
+                    });
+                    if(temp.length == 0){
+                        console.log(user , " not found");
+                        return;
+                    }
+                    let client = temp[0] as ChatClient;
+                    client.online = user.online;
+                }
+
+                socketService.server_events['chat_group_members_updated'] = function(data){
+                    var index = -1;
+                    var all_groups = obj_this.socketService.chat_groups;
+                    for(var i =0; i < all_groups.length; i++)
+                    {
+                        if(all_groups[i].id == data.id)
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if(index == -1)
+                    {
+                        console.log('members added in valid group', data, obj_this.socketService.chat_groups);
+                        obj_this.on_messge_from_new_group(data.id);
+                        return;
+                    }
+                    var group = undefined;
+                    if(obj_this.active_chat_user.is_group && obj_this.active_chat_user.id == data.id)
+                    {
+                        group = obj_this.active_chat_user as ChatGroup;                    
+                    }
+                    else
+                    {
+                        group = obj_this.socketService.chat_groups[index];
+                    }
+                    for(var j=0;j<data.members.length;j++)
+                    {
+                        group.members.push(data.members[i]);
+                    }
+                }
+                
+                obj_this.people_list = new Array<ChatUser>();            
+                for(var ind in obj_this.socketService.chat_users)
+                {
+                    let obj_user = obj_this.socketService.chat_users[ind] as ChatUser;                
+                    obj_this.people_list.push(obj_user);
+                }
+                if(!obj_this.user)
+                {
+                    console.log("No user data is socket service yet");
+                    return;
+                }
             }
-			if(!obj_this.user)
-			{
-				console.log("No user data is socket service yet");
-				return;
-			}
-        }
-        try{
-            ss.execute_on_verified(registerChatEventListeners);
-        }
-        catch(er)
-        {
-            console.log(113, er);
-        }        
+            try{                
+                ss.execute_on_verified(registerChatEventListeners);
+            }
+            catch(er)
+            {
+                console.log(113, er);
+            }        
     }
 
     scrollToEnd(){
@@ -162,9 +165,9 @@ export class MessengerComponent implements OnInit {
 
     change_messenger_view()
     {
-        this.socketService.is_messenger_max = false;
-        this.router.navigate(['/']);
-        $('.messageicon-container.mobile-chatroom').click();
+        this.socketService.is_messenger_max = false;        
+        this._location.back();
+        $('.popup.messenger').show();
     }
     
     leave_group(){
