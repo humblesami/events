@@ -5,9 +5,15 @@ var is_local_host = false;
 var server_wait_loader = undefined;
 var loader_last_shown = undefined;
 
-var location_obj = window.location;
-var location_now = location_obj.toString();
-var origin_now = location_obj.origin.toString();
+function location_obj(){    
+    return window.location;
+}
+function location_now(){ 
+    return location_obj().toString();
+}
+function origin_now(){
+    return location_obj().origin.toString();
+}
 
 var dn_current_site_user = {
     cookie: {
@@ -28,7 +34,7 @@ var dn_current_site_user = {
         $('.popup.messenger').hide();
     },
     logout: function(navigate) {
-        if(location_now.endsWith('user/login'))
+        if(location_now().endsWith('user/login'))
         {
             return;
         }
@@ -36,7 +42,7 @@ var dn_current_site_user = {
         {
             return;
         }
-        if(location_now.indexOf('login') == -1)
+        if(location_now().indexOf('login') == -1)
         {
             $('body').hide();
             $('body').removeClass('user').addClass('public');
@@ -84,14 +90,14 @@ var site_functions = {
         return false;
     },
     get_path_name: function() {
-        if(location_now.indexOf('localhost') > -1)
+        if(location_now().indexOf('localhost') > -1)
         {
             is_local_host = true;
         }
-        if (location_obj.hash) {
-            window['pathname'] = location_obj.hash.substr(1, location_obj.hash.length);
+        if (location_obj().hash) {
+            window['pathname'] = location_obj().hash.substr(1, location_obj().hash.length);
         } else {
-            window['pathname'] = location_obj.toString().replace(origin_now, '');
+            window['pathname'] = location_obj().toString().replace(origin_now(), '');
         }
         return window['pathname'];
     },
@@ -117,11 +123,11 @@ var site_functions = {
         }
     },
     go_to_login: function(force) {        
-        if(location_now.indexOf('/login') > -1)
+        if(location_now().indexOf('/login') > -1)
         {
             return;
         }
-        if(!force && location_now.indexOf('localhost:4200') > -1)
+        if(!force && location_now().indexOf('localhost:4200') > -1)
         {
             return;
         }
@@ -131,9 +137,9 @@ var site_functions = {
         {
             dn_current_site_user.logout();
         }
-        if(!location_now.endsWith('login'))
+        if(!location_now().endsWith('login'))
         {
-            if(location_now.indexOf('4200') == -1)
+            if(location_now().indexOf('4200') == -1)
             {
                 window.location = window['site_config'].server_base_url+'/user/logout';
             }
@@ -495,14 +501,14 @@ function refreshSession() {
 }
 
 function check_if_touch_device() {    
-    if(location_obj.toString().indexOf('localhost') > -1)
+    if(location_obj().toString().indexOf('localhost') > -1)
     {
         is_local_host = true;
     }
-    if (location_obj.hash) {
-        window['pathname'] = location_obj.hash.substr(1, location_obj.hash.length);
+    if (location_obj().hash) {
+        window['pathname'] = location_obj().hash.substr(1, location_obj().hash.length);
     } else {
-        window['pathname'] = location_obj.toString().replace(origin_now, '');
+        window['pathname'] = location_obj().toString().replace(origin_now(), '');
     }
     try
     {
@@ -524,7 +530,7 @@ $(function(){
 window['current_user'] = dn_current_site_user;
 window["functions"] = site_functions;
 window['loader'] = server_wait_loader = $('#server-wait');
-if(location_now.indexOf('/login') == -1)
+if(location_now().indexOf('/login') == -1)
 {
     site_functions.showLoader('Site Resources');
 }
