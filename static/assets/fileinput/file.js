@@ -99,8 +99,9 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             console.log('No files data found');
             return;
         }
-        var new_files = evn.dataTransfer.files;
-        element.files = new_files;        
+        var new_files = evn.dataTransfer.files;        
+        element.files = new_files;
+        preview_files(new_files);
     }
 
     dropZone.addEventListener('dragenter', on_dragenter, false);
@@ -163,6 +164,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         headers = {'Authorization': 'Token '+user.token};
         var file_input_picker = $('.file-input-picker-container')
         js_utils.addLoader(file_input_picker);
+        console.log(formData);
         $.ajax({
             url: url,
             data: formData,
