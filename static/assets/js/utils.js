@@ -21,7 +21,7 @@ var app_libs = window['app_libs'] = {
         style_paths:[],
         load: function(on_load){            
             var obj_this = this;    
-            js_utils.load_lib(obj_this, on_load);
+            js_utils.load_lib(obj_this, on_load);            
         }
     },
     pdf:{
@@ -63,8 +63,10 @@ var app_libs = window['app_libs'] = {
                     script.onload = function(){
                         obj_this.loaded += 1;
                         if(obj_this.loaded == scr_length)
-                        obj_this.status = 'loaded';
-                        on_load();
+                        {
+                            obj_this.status = 'loaded';
+                            on_load();
+                        }
                     };
                     script.src = scr_path;
                     document.body.appendChild(script);

@@ -79,7 +79,7 @@ export class VideoCall{
     }
 
     show_incoming_call(data){
-        var video_call = this;
+        var video_call = this;        
         if(video_call.ongoing_call || video_call.state != 'available')
         {
             video_call.show_notification('Another incoming call');
@@ -91,7 +91,12 @@ export class VideoCall{
         video_call.is_audio_call = data.is_audio_call;
         video_call.caller = video_call.socketService.get_user_by_id(data.caller_id);
         video_call.callee = video_call.socketService.user_data;
-        video_call.initialize();
+        if(!window['app_libs']['rtc'].status)
+        {
+            window['app_libs']['rtc'].load(function(){
+                video_call.initialize();
+            });
+        }        
     }
 
     
