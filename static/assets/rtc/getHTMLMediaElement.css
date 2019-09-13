@@ -3,7 +3,20 @@ Muaz Khan     - www.MuazKhan.com
 MIT License   - www.WebRTC-Experiment.com/licence
 Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaElement
 */
-
+.on_video_icons{
+    display: flex;
+}
+.muted_icons{
+    margin-bottom: 5px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #638FC9;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    margin-right: 5px !important;
+}
 .media-container, .media-container * {
     margin: 0;
     padding: 0;

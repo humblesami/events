@@ -159,19 +159,35 @@
                     console.log(er);
                 }
 
-                var mute_button = $('<button class="mute"><img src="static/assets/images/mp-unmute.svg" alt="" /></button>');
+                var mute_button = $('<span class="muted_icons"><i class="fas fa-microphone"></i></span>');
                 mute_button.click(function(){
+                    if(mute_button.find('i').hasClass('fa-microphone')){
+                        mute_button.find('i').removeClass('fa-microphone').addClass('fa-microphone-slash');
+                        mute_button.css("background-color", "#FF5454");
+                    }
+                    else{
+                        mute_button.find('i').removeClass('fa-microphone-slash').addClass('fa-microphone');
+                        mute_button.css("background-color", "#638FC9");
+                    }
                     video_caller.mute_some_one(this);
                 });
 
-                var my_controls = $('<div class="my_controls"></div>');
+                var my_controls = $('<div class="my_controls on_video_icons"></div>');
                 my_controls.append(mute_button);
 
                 // console.log(is_audio_call, 67);
                 if(!is_audio_call)
                 {
-                    var hide_button = $('<button class="hide">Hide/Show</button>');
+                    var hide_button = $('<span class="muted_icons"><i class="fas fa-video hide"></i></span>');
                     hide_button.click(function(){
+                        if(hide_button.find('i').hasClass('fa-video')){
+                            hide_button.find('i').removeClass('fa-video').addClass('fa-video-slash');
+                            hide_button.css("background-color", "#FF5454");
+                        }
+                        else{
+                            hide_button.find('i').removeClass('fa-video-slash').addClass('fa-video');
+                            hide_button.css("background-color", "#638FC9");
+                        }
                         video_caller.hide_some_one(this);
                     });
                     my_controls.append(hide_button);
