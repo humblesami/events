@@ -21,6 +21,8 @@ export class HomeComponent implements OnInit {
         $('#collapsibleNavbar').children().eq(0).addClass('active');
     }
 
+    text_limit = 1250;
+
     navigate_meeting() {
         var obj_this = this;
         let id = document.getElementsByClassName('go_details')[0].id;
@@ -35,7 +37,7 @@ export class HomeComponent implements OnInit {
         $('.router-outlet').animate({            
             scrollTop: $('#to-do').position().top - 20
         }, 500);
-    }
+    }    
 
     get_home_data() {
         var obj_this = this;
@@ -58,13 +60,21 @@ export class HomeComponent implements OnInit {
             {
                 voting.open_date = window['dt_functions'].meeting_time(voting.open_date);
             }
+            
             home_data.text = home_data.news.description;
-            home_data.news.description = home_data.news.description.substr(0,1250);
-            if(home_data.text.length > 1250){
-                home_data.news.description = home_data.news.description +' <a id="readmore" class="readmore">Read More</a>...'
+            home_data.news.description = home_data.news.description.substr(0,obj_this.text_limit);
+            if(home_data.text.length > obj_this.text_limit){
+                home_data.news.description = home_data.news.description +' <a id="readmore" class="readmore">Read More</a>...';                
             }
-            home_data.description = obj_this.sanitizer.bypassSecurityTrustHtml(home_data.news.description);            
-
+            home_data.description = obj_this.sanitizer.bypassSecurityTrustHtml(home_data.news.description);
+            if(home_data.text.length > obj_this.text_limit){
+                setTimeout(function(){
+                    $('#readmore').click(function(){
+                        obj_this.show_answer_details();
+                    })
+                },10);
+            }            
+            
             var valid_videos = [];            
             home_data.video_ids.forEach((element: any) => {
                 element.original_url = element.url;
@@ -165,7 +175,9 @@ export class HomeComponent implements OnInit {
         $('#videoModal').on('hidden.bs.modal', function () {
             $('#videoModal .modal-body .embed-responsive').html('');
         });
-        
+
+        obj_this.text_limit = parseInt(""+ ($(window).width()));
+        // console.log(obj_this.text_limit, 122);
         obj_this.get_home_data(); 
         $(function(){
             obj_this.ng_init = true;
