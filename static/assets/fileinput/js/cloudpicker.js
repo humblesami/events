@@ -35,6 +35,7 @@ $(function(){
                             id: file.id,
                             name: file.name,
                             url: file.link,
+                            size: file.bytes,
                         })
                     }
                     on_files_selected(selection_info, 'dropbox');
@@ -167,7 +168,9 @@ $(function(){
                         name: file.name,
                         access_token: access_token,
                         view_url: file.url,
-                        url: 'https://www.googleapis.com/drive/v3/files/'+file.id+'?alt=media'
+                        url: 'https://www.googleapis.com/drive/v3/files/'+file.id+'?alt=media',
+                        size: file.sizeBytes,
+                        
                     });
                     console.log(selection_info[0]);
                 }

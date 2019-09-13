@@ -215,11 +215,16 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     function preview_files(incoming_files, cloud){
         let files = [];
         let invalid_files= [];
+        let invalid_files_size= [];
         for (const file of incoming_files) {
             file_name = file.name.split('.');
             if(['pdf', 'odt', 'doc', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'].indexOf(file_name[file_name.length-1]) > -1)
             {
-                files.push(file);
+                if(file.size > 10000000){
+                    invalid_files_size.push(file);
+                }else{
+                    files.push(file);
+                }
             }else{
                 invalid_files.push(file);
             }
@@ -235,6 +240,17 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             setTimeout(hideMsg,6000);
             return;
         }
+        if (invalid_files_size.length)
+        {
+            $(".feedback-message").append('<p class="alert-danger" id="invalid_message"> Invalid File(s). Only 10 MB document size is allow</p>').fadeIn("slow")
+            function hideMsg(){
+                $("#invalid_message").fadeOut();
+                $(".feedback-message").html('');
+            }
+            setTimeout(hideMsg,6000);
+            return;
+        }
+
 
         parent.find('.feedback-message').html('');
         var thumbnail = `

@@ -44,6 +44,7 @@ $(function(){
                 for (const file of files) {
                         const name = file.name;
                         const url = file.link;
+                        const file_size = file.bytes;
                         console.log(file);
                     }
             },

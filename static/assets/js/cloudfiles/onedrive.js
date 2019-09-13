@@ -19,6 +19,7 @@ $(function(){
                         id: file.id,
                         name: file.name,
                         url: file["@microsoft.graph.downloadUrl"],
+                        size: file.size,
                     })
                 }
                 
