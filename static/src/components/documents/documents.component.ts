@@ -17,7 +17,7 @@ export class DocumentsComponent implements OnInit {
 
     @Input() res_app: string;
     @Input() res_model: string;
-
+    @Input() readonly: any;
     docs = [];
     roterLinkPrefix = '';
     doc_types = {
@@ -48,7 +48,7 @@ export class DocumentsComponent implements OnInit {
 
     on_admin_mode_changed(){
         let obj_this = this;
-        if(!this.socketService.admin_mode)
+        if(!this.socketService.admin_mode || this.readonly)
         {
             return;
         }

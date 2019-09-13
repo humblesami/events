@@ -385,8 +385,14 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.meeting_docs, 'news_doc')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                 </div>
             </div>
-            <app-documents parent_model="Event" parent_field="meeting_id" parent_id="{{meeting_object.id}}"
-            res_app="meetings" res_model="MeetingDocument"></app-documents>
+            <div *ngIf="meeting_type != 'archived'">
+                <app-documents parent_model="Event" parent_field="meeting_id" parent_id="{{meeting_object.id}}"
+                    res_app="meetings" res_model="MeetingDocument"></app-documents>
+            </div>
+            <div *ngIf="meeting_type == 'archived'">
+                <app-documents parent_model="Event" parent_field="meeting_id" parent_id="{{meeting_object.id}}"
+                    res_app="meetings" res_model="MeetingDocument" readonly=1></app-documents>
+            </div>
         </div>
         <div *ngIf="attachments.length > 0" class="chat-selectBox" id="attach_modal">
             <div class="call_container ">
@@ -406,7 +412,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group mr-2 border-bottom pb-3">
+        <!-- <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group mr-2 border-bottom pb-3">
             
                 <form class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
                     <input (change)="file_change($event)" id="msg_file" type="file"
@@ -422,7 +428,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                 <span>Upload Attached Documents</span>
             </button>
             </div>
-        </div>
+        </div> -->
 
         <div *ngIf="meeting_object.sign_docs && meeting_object.sign_docs.length" class="DocumentsSignWrapper title-wrapper border-bottom">
             <div class="clearfix mt-3">
