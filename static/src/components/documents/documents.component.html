@@ -20,7 +20,17 @@
                 <div class="DocText">
                     <div class="DocName">
                         <span *ngIf="!socketService.admin_mode || readonly" class="text-truncate">{{doc.name}}</span>
-                        <input class="form-control renamer" *ngIf="socketService.admin_mode && !readonly" value="{{doc.name}}" (change)="change_file_name($event,doc.id)" (click)="start_rename($event)" >
+                        <input class="form-control renamer"                        
+                            (focus)="renamer_focused($event.target)" 
+                            *ngIf="socketService.admin_mode && !readonly" 
+                            value="{{doc.name}}" (click)="start_rename($event)"
+                            (change)="renamer_changed($event.target)">
+                        <button *ngIf="socketService.admin_mode && !readonly" 
+                        (click)="change_file_name_1($event,doc)" 
+                        class="fri-selt-btn check-time-btn" 
+                        aria-label="rename file.">
+                            <i (click)="change_file_name_2($event,doc)" class="fas fa-check"></i>
+                        </button>
                     </div>              
                 </div>
             </a>

@@ -20,6 +20,7 @@ export class DocumentsComponent implements OnInit {
     @Input() readonly: any;
     docs = [];
     roterLinkPrefix = '';
+    show_renamer_button = false;
     doc_types = {
         MeetingDocument: '/meeting/doc/',
         AgendaDocument:'/topic/doc/',
@@ -69,25 +70,6 @@ export class DocumentsComponent implements OnInit {
             obj_this.zone.run(() => obj_this.docs = result);            
             // console.log(obj_this.docs, data, 'After upload '+Date());
         });
-    }
-
-    change_file_name(evn, doc_id)
-    {
-        let obj_this = this;
-        let input_data = {
-            doc_id: doc_id,
-            name: evn.target.value
-        }
-        let args = {
-            app: 'documents',
-            model: 'File',
-            method: 'change_file_name'
-        }
-        let final_input = {
-            params: input_data,
-            args: args
-        }
-        obj_this.httpServ.get(final_input, null, null);
     }
 
     delete_file(evn, doc_id)
@@ -147,7 +129,62 @@ export class DocumentsComponent implements OnInit {
             obj_this.docs = data;
         }, null);
     }
+
+    renamer_focused(el)
+    {
+        this.show_renamer_button = false;
+        $(el).next('button').show();
+    }
+
+    renamer_changed(el)
+    {
+        this.show_renamer_button = true;
+    }
     
+    change_file_name_1(evn, doc)
+    {
+        this.change_file_name(evn, doc);
+    }
+
+    change_file_name_2(evn, doc)
+    {
+        this.change_file_name(evn, doc);
+    }
+
+    change_file_name(evn, doc)
+    {
+        evn.stopPropagation();
+        evn.preventDefault();
+        let obj_this = this;
+        $(evn.target).closest('button').hide();
+        if(!this.show_renamer_button)
+        {
+            return;
+        }        
+        let file_name = $(evn.target).closest('.DocName').find('input.renamer').val();
+        if (!file_name)
+        {            
+            return;
+        }
+        var doc_id = doc.id;
+        let input_data = {
+            doc_id: doc_id,
+            name: file_name
+        }
+        let args = {
+            app: 'documents',
+            model: 'File',
+            method: 'change_file_name'
+        }
+        let final_input = {
+            params: input_data,
+            args: args
+        }
+        obj_this.httpServ.get(final_input, (data)=>{
+            doc.name = file_name;
+        }, null);
+    }
+
     ngOnInit() {
         let obj_this = this;
         obj_this.get_list();        
