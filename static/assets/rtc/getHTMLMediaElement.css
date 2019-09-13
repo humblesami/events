@@ -3,27 +3,38 @@ Muaz Khan     - www.MuazKhan.com
 MIT License   - www.WebRTC-Experiment.com/licence
 Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaElement
 */
-.on_video_icons{
-    display: flex;
-}
-.muted_icons{
+.setup-buttons button,.media-container .muted_icons{
     margin-bottom: 5px !important;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #638FC9;
     border-radius: 50%;
+    font-size: 1.5vw;
+    height: 4vw;
+    width: 4vw;
+    margin-right: 5px !important;
+}
+.media-container  .on_video_icons{
+    display: flex;
+    right: 40.5vw !important;
+    bottom: 20px !important;
+}
+.media-container.self .on_video_icons{
+    right: 0 !important;
+    bottom: 0 !important;
+}
+.media-container.self .muted_icons{
+    margin-bottom: 5px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #638FC9;
+    border-radius: 50%;
+    font-size: 1vw;
     height: 30px;
     width: 30px;
     margin-right: 5px !important;
-}
-.media-container, .media-container * {
-    margin: 0;
-    padding: 0;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
 }
 
 .media-container, .media-container * {
@@ -310,10 +321,9 @@ input[type="range"]::-webkit-slider-thumb {
 div#ongoing_controls {
     position: absolute;
     z-index: 2222;
-    left: 50%;
-    bottom: 100px;
+    left: 40vw;
+    bottom: 20px;
     display: none;
-    transform: translateX(-50%);
 }
 
 #rtc-container.full .closer{
@@ -412,8 +422,8 @@ div#ongoing_controls {
     position: absolute;
     width: 267px !important;
     height: 200px !important;
-    bottom: 30px;
-    left: 40px;
+    top: 30px;
+    left: 10px;
     background: #000000;
     padding: 0;
     border-radius: 0;
@@ -471,8 +481,6 @@ div#ongoing_controls {
     background: #4B74B5;
     border: 0;
     color: #fff;
-    width: 60px;
-    height: 60px;
     margin: .3rem !important;
     border-radius: 50%;
     display: flex;

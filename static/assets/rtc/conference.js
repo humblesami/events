@@ -192,8 +192,13 @@
                     });
                     my_controls.append(hide_button);
                 }
-                
-                $(mediaElement).append(my_controls);
+                // if($(mediaElement).hasClass('self')){
+                //     $('#ongoing_controls').append(my_controls);
+                // }
+                // else
+                {
+                    $(mediaElement).append(my_controls);
+                }
             
                 setTimeout(function() {
                     mediaElement.media.play();
