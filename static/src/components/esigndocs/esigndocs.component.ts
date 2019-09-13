@@ -11,6 +11,7 @@ export class EsignDocsComponent implements OnInit {
     records = [];
     httpService: HttpService
     constructor(private httpServ: HttpService,public router: Router,) { 
+        window['app_libs']['pdf'].load();
         this.httpService = httpServ;       
         this.get_list();
     }

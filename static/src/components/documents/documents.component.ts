@@ -36,6 +36,7 @@ export class DocumentsComponent implements OnInit {
         public zone: NgZone) {
         this.httpService = httpServ;
         this.socketService = ss;
+        window['app_libs']['pdf'].load();
         this.object_id = window['js_utils'].unique_id();
         ss.doc_objects[this.object_id] = this;
     }
