@@ -174,16 +174,16 @@ export class EsignDocDetailsComponent implements OnInit {
                 zoom(scale);
             });
 
-            console.log($('#check_box_send_all').length, 2332);
+            // console.log($('#check_box_send_all').length, 2332);
             $('#check_box_send_all').change(function() {
                 // console.log(434333)
-                console.log($("#check_box_send_all").is(':checked'), 444);
+                // console.log($("#check_box_send_all").is(':checked'), 444);
 
                 if ($("#check_box_send_all").is(':checked')) {
                     var signs_exist = false;
-                    if($('#viewer_container .sign_container').length == 0 || $('#viewer_container .new_sign').length == 0)
+                    if($('#viewer_container .sign_container').length || $('#viewer_container .new_sign').length)
                     {
-                        signs_exist = true;                        
+                        signs_exist = true;
                     }
                     if(signs_exist)
                     {
@@ -207,7 +207,10 @@ export class EsignDocDetailsComponent implements OnInit {
                                 $("#check_box_send_all").prop('checked', false);
                             }
                         })
-                    }                    
+                    }
+                    else{
+                        save_attachemnt_to_meeting();
+                    }
                 } else {
                     save_attachemnt_to_meeting();
                     $('.dragabl-fields').show();
@@ -793,8 +796,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
                     pdf_url = window['site_config'].server_base_url + data.file_url;
-                    console.log('Starting render doc data', Date());
-
                     if(window['app_libs']['pdf'].status != 'loaded')
                     {
                         window['app_libs']['pdf'].load(function(){
@@ -900,6 +901,7 @@ export class EsignDocDetailsComponent implements OnInit {
             scale = 1.5;
             canvas = document.getElementById('the-canvas')
             ctx = canvas.getContext('2d');
+            console.log('Dcownloading doc', Date());
             window["PDFJS"].getDocument(pdf_url).then(function getPdf(_pdfDoc) {
                 console.log('Got doc to render', Date());
                 pdfDoc = _pdfDoc;
@@ -926,7 +928,6 @@ export class EsignDocDetailsComponent implements OnInit {
         function renderPage(num) {
             // Using promise to fetch the page
             pdfDoc.getPage(num).then(function(page) {
-                console.log('Got page to render', Date());
                 var viewport = page.getViewport(scale);
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;

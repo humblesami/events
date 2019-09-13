@@ -50,6 +50,5 @@
             form.find('button[type="submit"]:first').removeAttr('disabled');
         };
         window['dn_rpc_object'](options);
-    });
-    form.find('button[type="submit"]:first').removeAttr('disabled');
+    });    
 })()
