@@ -71,8 +71,8 @@ input:-webkit-autofill {
 .aligned select{
 	border:0;
 	border-radius: 0;
-	padding: 0 10px 8px 0px;
-	margin: 5px 0 0 0;
+	padding: 0 0 8px 0;
+	margin-left: -4px;
 	font-size: 0.898rem;
 	color: #666666;
 	border-bottom: 1px solid #ddd;
