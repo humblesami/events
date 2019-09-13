@@ -444,6 +444,8 @@ class SignatureDoc(File, Actions):
             res = Event.attendees_to_list(meeting.attendees.all())
         sign_doc.meeting_id = meeting_id
         sign_doc.send_to_all = send_to_all
+        if send_to_all:
+            sign_doc.signature_set.all().delete()
         sign_doc.save()
         return res
 
