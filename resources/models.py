@@ -32,8 +32,12 @@ class Folder(CustomModel):
         obj['files'] = []
         kw = params.get('kw')
         resource_files = []
-        if kw:
-            resource_files = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['ResourceDocument']}})
+        if kw:            
+            if folder:
+                resource_files = folder.documents.all().filter(Q(name__icontains= kw))
+            else:
+                resource_files = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['ResourceDocument']}})
+                resource_files = resource_files.filter(folder_id= folder.id)
         else:
             resource_files = folder.documents.all()
             ar = []
@@ -72,7 +76,9 @@ class Folder(CustomModel):
         kw = params.get('kw')
         folders = []
         if kw:
+            
             folders = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
+            folders = folders.filter(Q(parent__isnull=True))
         else:
             folders = Folder.objects.filter(Q(parent__isnull=True))
         
