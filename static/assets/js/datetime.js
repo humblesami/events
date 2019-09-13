@@ -86,7 +86,7 @@ var dt_js = {
         var res = {
             month_year: obj_this.monthShortNames[dt.getMonth()] +' '+dt.getFullYear(),
             day: dt.getDate(),
-            time: obj_this.getMeetingTime(),
+            time: obj_this.getMeetingTime(dt),
         }
         // console.log(dt, res);
         return res;
@@ -100,7 +100,7 @@ var dt_js = {
         var res = obj_this.monthShortNames[dt.getMonth()];
         res += ','+dt.getFullYear();
         res += ' '+dt.getDate();
-        res += ' '+obj_this.getMeetingTime();        
+        res += ' '+obj_this.getMeetingTime(dt);        
         return res;
     },
     date: function(dt){
