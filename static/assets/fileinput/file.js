@@ -144,7 +144,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
 
     window['merge_cloud_files'][current_cloud_number] = merge_cloud_files;
     
-    function upload_files(files, invalid_files , cloud=false)
+    function upload_files(files, cloud=false)
     {
         // console.log(files, 13);
         for(var obj of files){
@@ -177,10 +177,12 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         var user = localStorage.getItem('user');
         user = JSON.parse(user);
         headers = {'Authorization': 'Token '+user.token};
+        var file_input_picker = $('.file-input-picker-container')
+        js_utils.addLoader(file_input_picker);
         $.ajax({
             url: url,
             data: formData,
-            type: 'POST',
+            type: 'POST',            
             // dataType: 'JSON',
             headers: headers,
             contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
@@ -213,28 +215,14 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             error: function(a,b,c,d){
                 $('.feedback-message').append('<p id="success-message" class="alert-danger">Fail to Upload Files </p>').fadeIn("slow");
             },
-            complete:function(){        
+            complete:function(){
+                js_utils.removeLoader(file_input_picker);
                 $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');                
-                function hideMsg(){
-                    $("#success-message").fadeOut();
-                    $(".feedback-message").remove($("#success-message"));
-                    $(".feedback-message").fadeOut()
-                }
-                setTimeout(hideMsg,12000);
-                if(invalid_files){
-                    for(const invalid of invalid_files){
-                        $(".feedback-message").append('<p class="alert-danger inv_f" id="'+invalid.name +'"> Invalid File ('+ invalid.name + ')</p>').fadeIn("slow");
-                        function hideMsg(){
-                            $(".feedback-message").fadeOut("slow");    
-                            $(".feedback-message").remove($("#"+invalid.name));
-                        }
-                        setTimeout(hideMsg,12000);
-                    }
-                }
-
-        
+                setTimeout(function(){
+                    $(".feedback-message").fadeOut("slow");
+                    $(".feedback-message").html('');
+                }, 4000);
             }
-
         });
     }
 
@@ -250,16 +238,15 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 invalid_files.push(file);
             }
         }
-        if (!files.length)
+        if (invalid_files.length)
         {
-            $(".feedback-message").append('<p class="alert-danger" id="invalid_message"> Invalid File(s).</p>').fadeIn("slow")
+            $(".feedback-message").append('<p class="alert-danger" id="invalid_message"> Invalid File(s). Only (doc,docx,ppt,excel and open office) documents are allowed</p>').fadeIn("slow")
             // $('.feedback-message').addClass('alert-danger').html('Invalid File(s).').fadeIn();
             function hideMsg(){
                 $("#invalid_message").fadeOut();
-                $(".feedback-message").remove($("#invalid_message"));
-                // $(".feedback-message").fadeOut();
-                }
-                setTimeout(hideMsg,6000);
+                $(".feedback-message").html('');
+            }
+            setTimeout(hideMsg,6000);
             return;
         }
 
@@ -288,7 +275,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                     name_box.append('<input name="url" value="'+file.url+'"/>');
                 }
             }
-            upload_files(files, invalid_files ,cloud);
+            upload_files(files, cloud);
         }
         else
         {

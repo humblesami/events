@@ -680,7 +680,7 @@ export class MessengerComponent implements OnInit {
             if(input_data.attachments.length)
             {
                 setTimeout(function(){
-                    window['js_utils'].addLoader('.chat-message:last', 'flex-end');
+                    window['js_utils'].addLoader($('.chat-message:last'), 'flex-end');
                 }, 100);
             }
             

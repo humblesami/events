@@ -190,27 +190,25 @@ var js_utils = window['js_utils'] = {
         rand = 'id_'+now.getFullYear()+now.getMonth()+now.getDate()+now.getHours()+now.setSeconds()+rand;
         return rand;
     },
-    addLoader: function(selector, position){
-        // console.log('tried loader ', selector);
-        var element = $(selector);
+    addLoader: function(element, position){       
         if(element.length != 1)
         {
             if(element.length > 1)
             {
                 element = element.last();                
-                console.log(selector + ' found more than one');
+                console.log(element.attr('class') + ' found more than one');
             }
             else{
-                console.log(selector + ' not found');
+                console.log(element.attr('class') + ' not found');
                 return;
             }
         }
         var pos_type = element.css('position');        
-        if(!pos_type == pos_type == 'static')
+        if(!pos_type || pos_type == 'static')
         {
             element.css('position','relative');
         }
-        var partial_loader = $('.partial-loader').clone().show();
+        var partial_loader = $('.partial-loader:first').clone().css('display','flex');
         if(position){
             partial_loader.find('.row').css('justify-content', position);
         }

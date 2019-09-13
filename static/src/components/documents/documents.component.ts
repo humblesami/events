@@ -65,10 +65,13 @@ export class DocumentsComponent implements OnInit {
         }
         file_input.attr('dragdrop', 1);
         window['apply_drag_drop'](file_input, resInfo, function(data){
-            var result = obj_this.docs.concat(data);
-            // obj_this.docs = result;
-            obj_this.zone.run(() => obj_this.docs = result);            
-            // console.log(obj_this.docs, data, 'After upload '+Date());
+            try{
+                var result = obj_this.docs.concat(data);
+                obj_this.zone.run(() => obj_this.docs = result);
+            }
+            catch(er){
+                console.log(er, 5455);
+            }
         });
     }
 
@@ -129,7 +132,7 @@ export class DocumentsComponent implements OnInit {
             obj_this.docs = data;
         }, null);
     }
-
+    
     renamer_focused(el)
     {
         this.show_renamer_button = false;
@@ -184,7 +187,7 @@ export class DocumentsComponent implements OnInit {
             doc.name = file_name;
         }, null);
     }
-
+    
     ngOnInit() {
         let obj_this = this;
         obj_this.get_list();        
