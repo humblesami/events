@@ -1,4 +1,5 @@
 import io
+import os
 import json
 import sys
 import uuid
@@ -263,6 +264,11 @@ class Profile(user_model, CustomModel):
                 self.image_updated = True
             if not self.image_updated:
                 if self.name != profile_obj.name:
+                    curr_dir = os.path.dirname(__file__).replace('/meetings/model_files', '')
+                    try:
+                        os.remove(curr_dir + profile_obj.image.url)
+                    except:
+                        pass
                     self.image = ws_methods.generate_default_image(self.name)
 
         super(Profile, self).save(*args, **kwargs)
