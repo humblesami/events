@@ -26,13 +26,13 @@ def upload_files(request):
             for file in cloud_data:
                 with transaction.atomic():
                     created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
-                    docs.append({'id':created_file.id, 'name': file['name']})
+                    docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
         for key in request.FILES:
             files = request.FILES.getlist(key)            
             for file in files:
                 with transaction.atomic():
                     created_file = obj.documents.create(name=file.name, attachment=file)
-                    docs.append({'id':created_file.id, 'name': file.name})
+                    docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})
 
         docs = json.dumps(docs)
     except:

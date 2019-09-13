@@ -181,7 +181,7 @@ export class HomeComponent implements OnInit {
         obj_this.get_home_data(); 
         $(function(){
             obj_this.ng_init = true;
-        })       
+        })
         this.socketService.server_events['to_do_item_updated'] = function() {
             if (obj_this){
                 setTimeout(function(){

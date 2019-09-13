@@ -3,8 +3,37 @@ Muaz Khan     - www.MuazKhan.com
 MIT License   - www.WebRTC-Experiment.com/licence
 Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaElement
 */
+#jitsi-meet-container {
+	text-align: center;
+	position: relative;
+	height: 92vh;
+	width: 100%;
+	}
+#meeting-room {
+	height: 92.5vh;
+	overflow-y: hidden;
+	background: silver;
+	}
+#jitsi-meet-container video {
+	transform: scaleX(-1);
+	}
+#meeting-room video {
+	width: 100%;
+	}
+#audience {
+	bottom: 0;
+	position: absolute;
+	padding-left: 3px;
+	width: 100%;
+	text-align: left;
+	overflow-x: auto;
+	}
+#audience video {
+	height: 20vh;
+	}
+
 .setup-buttons button,.media-container .muted_icons{
-    margin-bottom: 5px !important;
+    margin-bottom: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,28 +42,16 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
     font-size: 1.5vw;
     height: 4vw;
     width: 4vw;
-    margin-right: 5px !important;
+    margin-right: 5px;
 }
-.media-container  .on_video_icons{
-    display: flex;
-    right: 40.5vw !important;
-    bottom: 20px !important;
-}
+
 .media-container.self .on_video_icons{
-    right: 0 !important;
-    bottom: 0 !important;
+    right: 0;
+    bottom: 0;
 }
-.media-container.self .muted_icons{
-    margin-bottom: 5px !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #638FC9;
-    border-radius: 50%;
+.media-container.self .muted_icons{    
     height: 30px;
     width: 30px;
-    margin-right: 5px !important;
-    font-size: 12px;
 }
 
 .media-container {
@@ -310,10 +327,16 @@ input[type="range"]::-webkit-slider-thumb {
     color: #ffffff;
     font-size:18px;
 }
+.media-container .on_video_icons{
+    display: flex;
+    left: 54vw;
+    bottom: 20px;
+    cursor: pointer;
+}
 div#ongoing_controls {
     position: absolute;
     z-index: 2222;
-    left: 40vw;
+    right: 46vw;
     bottom: 20px;
     display: none;
 }
@@ -455,9 +478,7 @@ div#ongoing_controls {
     border: 2px solid white;
 }
 .media-container .my_controls{
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    position: absolute;    
 }
 
 #rtc-container.min .media-container.self{
@@ -472,7 +493,6 @@ div#ongoing_controls {
 .setup-buttons button, .mute {
     background: #4B74B5;
     border: 0;
-    margin: .3rem !important;
 }
 
 .danger-bg{

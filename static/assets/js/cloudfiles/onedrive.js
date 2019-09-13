@@ -7,7 +7,7 @@ $(function(){
             multiSelect: true,
             openInNewWindow: true,
             advanced: {
-               filter: "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt"
+                filter: "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt"
             },
             success: function (response) {
                 // console.log(555, response);
@@ -20,11 +20,11 @@ $(function(){
                         name: file.name,
                         url: file["@microsoft.graph.downloadUrl"],
                         size: file.size,
+                        source: 'Ondrive'
                     })
                 }
                 
-                var post_data = {files:selection_info, cloud_number: cloud_number};
-                console.log(post_data, 566);
+                var post_data = {files:selection_info, cloud_number: cloud_number};                
                 window.parent.postMessage(post_data, '*');
             },
             cancel: function (response) { console.log(response); },

@@ -36,6 +36,7 @@ $(function(){
                             name: file.name,
                             url: file.link,
                             size: file.bytes,
+                            source:'Dropbox',
                         })
                     }
                     on_files_selected(selection_info, 'dropbox');
@@ -170,9 +171,9 @@ $(function(){
                         view_url: file.url,
                         url: 'https://www.googleapis.com/drive/v3/files/'+file.id+'?alt=media',
                         size: file.sizeBytes,
-                        
+                        source:'Google',
                     });
-                    console.log(selection_info[0]);
+                    // console.log(selection_info[0]);
                 }
                 on_files_selected(selection_info, 'google');
             }

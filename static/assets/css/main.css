@@ -697,14 +697,14 @@ a.kanban-committees-info-box-name {
         -ms-flex: 0 0 50%;
         flex: 0 0 50%;
         max-width: 50%;
-    			}
+}
 			}
 @media (min-width: 1200px){
 	.kanban-card {
         -ms-flex: 0 0 33.333333%;
 		flex: 0 0 33.333333%;
 		max-width: 33.333333%;
-    			}
+}
 			}
 @media (min-width: 1540px){
 	.kanban-card {
@@ -715,37 +715,8 @@ a.kanban-committees-info-box-name {
 			}
  */
 
-#jitsi-meet-container {
-	text-align: center;
-	position: relative;
-	height: 92vh;
-	width: 100%;
-	}
-#meeting-room {
-	height: 92.5vh;
-	overflow-y: hidden;
-	background: silver;
-	}
-#jitsi-meet-container video {
-	transform: scaleX(-1);
-	}
-#meeting-room video {
-	width: 100%;
-	}
-#audience {
-	bottom: 0;
-	position: absolute;
-	padding-left: 3px;
-	width: 100%;
-	text-align: left;
-	overflow-x: auto;
-	}
-#audience video {
-	height: 20vh;
-	}
-#leave-room {
-	margin-top: 20px;
-	}
+
+
 #backTop {
 	display: none;
 	position: fixed;

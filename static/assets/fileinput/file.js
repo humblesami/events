@@ -164,7 +164,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         headers = {'Authorization': 'Token '+user.token};
         var file_input_picker = $('.file-input-picker-container')
         js_utils.addLoader(file_input_picker);
-        console.log(formData);
+        // console.log(formData);
         $.ajax({
             url: url,
             data: formData,
@@ -184,7 +184,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 }
                 
                 if(Array.isArray(data))
-                {
+                {                    
                     if(on_files_uploaded)
                     {
                         parent.find('.file-box').remove();

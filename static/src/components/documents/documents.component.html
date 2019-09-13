@@ -10,8 +10,10 @@
                 <div *ngIf="!deleting && socketService.is_admin && !readonly" class="doc-del-btn"
                 (click)="delete_file($event, doc.id)">
                     <i class="far fa-trash-alt pointer" ></i>
-                </div>                
-                
+                </div>
+                <div class="doc-del-btn" style="left:5px">
+                    {{doc.access_token}}
+                </div>
                 <div class="DocIcon">
                     <span class="rounded-circle">
                         <i class="icon-doc-file"></i>

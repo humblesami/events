@@ -70,11 +70,20 @@ class File(CustomModel, FilesUpload):
                     res = open(pth, 'rb')
                     file_data = res
                     self.binary_data = ''
-                    self.cloud_url = ''
-                    self.access_token = ''
+                    cloud_url = self.cloud_url      
+                    if 'https://www.googleapis.com' in cloud_url:
+                        self.access_token = 'Google'
+                    elif 'https://public.dm.files.1drv.com' in cloud_url:
+                        self.access_token = 'Onedrive'
+                    elif 'https://dl.dropboxusercontent.com' in cloud_url:
+                        self.access_token = 'Dropbox'
+                    else:
+                        self.access_token = 'Unknown Cloud'
                     self.pending_tasks = 2
                     self.attachment.save(self.file_name, file_data)
                     return
+                else:
+                    self.access_token = 'Local'
 
                 if file_data is None:
                     if not self.attachment:
@@ -203,7 +212,7 @@ class File(CustomModel, FilesUpload):
             docs = ws_methods.search_db({'kw': kw, 'search_models': { params['app']: [params['model']]}})
         else:
             docs = model.objects.filter(q_objects)
-        docs = docs.values('id', 'name')
+        docs = docs.values('id', 'name', 'access_token')
         docs = list(docs)
         return docs
 

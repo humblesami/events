@@ -186,7 +186,7 @@ export class DocumentComponent implements OnInit {
         }
         
         obj_this.httpService.get(input_data,renderDoc, function(){
-            window['functions'].hideLoader('loaddocwaiter');
+            window['functions'].hideLoader('Documents');
         });
     }
 
