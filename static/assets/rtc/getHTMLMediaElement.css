@@ -31,18 +31,10 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
     align-items: center;
     background-color: #638FC9;
     border-radius: 50%;
-    font-size: 1vw;
     height: 30px;
     width: 30px;
     margin-right: 5px !important;
-}
-
-.media-container, .media-container * {
-    -moz-transition: all .5s ease-in-out;
-    -ms-transition: all .5s ease-in-out;
-    -o-transition: all .5s ease-in-out;
-    -webkit-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out;
+    font-size: 12px;
 }
 
 .media-container {
@@ -480,12 +472,7 @@ div#ongoing_controls {
 .setup-buttons button, .mute {
     background: #4B74B5;
     border: 0;
-    color: #fff;
     margin: .3rem !important;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .danger-bg{
