@@ -3131,16 +3131,6 @@ label.check-plus-label-wrap {
 .doc-del-btn:hover {
 	color: red;
 }
-.google_drive_picker, .one_drive_picker, .drop_box_picker {
-    cursor: pointer;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .picker{
 	margin: .5rem;
 }
