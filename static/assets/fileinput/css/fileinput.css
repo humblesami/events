@@ -553,9 +553,6 @@
     align-items: center;
     margin: 5px 5px;
 }
-.btn-primary,.btn-primary:hover{
-    background-color: #0062cc;
-}
 .file-drop-zone.dragenter{
     background: silver;
 }
