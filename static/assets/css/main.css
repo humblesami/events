@@ -2696,7 +2696,21 @@ ul.dropdown-menu.scrollable-menu {
 	width: calc(100vw - 3rem);
     overflow: hidden;
     width: 320px;
-	}
+    }
+    .popup .messenger-group-select-member .ng-dropdown-panel.ng-select-bottom
+    {
+        min-height: 271px;
+    }
+    .popup.messenger .ng-dropdown-panel .ng-dropdown-panel-items{
+        max-height: inherit;
+    }    
+    .popup.messenger .ng-select{
+        padding: 2px 3px;
+    }
+    .popup.messenger .ng-dropdown-panel.ng-select-bottom
+    {
+        width: 98.2%;
+    }
 .popup.messenger .messenger-container {	
 	height: calc(100vh - 180px);
 	overflow: hidden;

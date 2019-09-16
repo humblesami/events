@@ -20,28 +20,27 @@
             <hr/>
     
             <div class="group-setup-container">
-                <div *ngIf="group_mode == 'edit'" class="row p-1 m-1 chat-group-setup">
+                <div *ngIf="group_mode == 'edit'" class="chat-group-setup">
                     <div class="Create-Group-input" *ngIf="!selected_chat_group">
-                        <input id="group_name" [(ngModel)]="group_name" class="group-name" placeholder="Enter your group name" />
-                        <button (click)="create_chat_room()" class="check-time-btn" aria-label="Create group.">
+                        <input [(ngModel)]="group_name" class="group-name" placeholder="Group Name" />
+                        <label (click)="create_chat_room()" class="check-time-btn">
                             <i class="fas fa-check"></i>
-                        </button>
+                        </label>                        
+                        <label (click)="close_group_setup()" class="check-time-btn red-bg">
+                            <i class="fas fa-times"></i>
+                        </label>                        
                     </div>
-    
-                    <div class="group-select-section">
-                            <!-- <div class="Create-Group-input" *ngIf="selected_chat_group"> -->
-                    <div *ngIf="selected_chat_group">
-                        <input readonly [(ngModel)]="group_name" class="group-name" />
-                        <button (click)="update_chat_group_members()" class="fri-selt-btn check-time-btn" aria-label="Create group.">
+
+                    <div class="Create-Group-input" *ngIf="selected_chat_group">
+                        <input readonly id="group_name" [(ngModel)]="group_name" class="group-name" placeholder="Enter your group name" />
+                        <label (click)="update_chat_group_members()" class="check-time-btn">
                             <i class="fas fa-check"></i>
-                        </button>
+                        </label>
+                        <label (click)="close_group_setup()" class="check-time-btn red-bg">
+                            <i class="fas fa-times"></i>
+                        </label>
                     </div>
-                    
-                    
-                    <button (click)="close_group_setup()" class="fri-selt-btn check-time-btn red-bg" aria-label="Create group.">
-                        <i class="fas fa-times"></i>
-                    </button>
-                        </div>
+
                     <div class="messenger-group-select-member">
                         <ng-select
                             [items]="people_list"
