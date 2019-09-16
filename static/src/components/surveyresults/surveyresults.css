@@ -63,3 +63,14 @@ content: "\f068";
     /* right: 0px; */
     top: 0px;
 }
+ canvas#progress-chart{
+	height: 50px !important;
+	width: 50px !important;
+	margin-bottom: 5px;
+}
+
+@media screen and (max-width:767px){
+	.m-top{
+		margin-top: 0.5rem;
+	}
+}
