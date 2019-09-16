@@ -72,19 +72,7 @@
             go_to_login();
         }
     }
-    
-    function get_path_name() {
-        if(wl.toString().indexOf('localhost') > -1)
-        {
-            is_local_host = true;
-        }
-        if (wl.hash) {
-            window['pathname'] = wl.hash.substr(1, wl.hash.length);
-        } else {
-            window['pathname'] = wl.toString().replace(wl.origin, '');
-        }
-        return window['pathname'];
-    }
+        
     function go_to_login() {
         localStorage.removeItem('user');
         $('body').removeClass('user').addClass('public');

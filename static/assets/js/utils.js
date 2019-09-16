@@ -124,6 +124,19 @@ var app_libs = window['app_libs'] = {
     }
 };
 
+function get_cpath_name() {
+    if(wl.toString().indexOf('localhost') > -1)
+    {
+        is_local_host = true;
+    }
+    if (wl.hash) {
+        window['pathname'] = wl.hash.substr(1, wl.hash.length);
+    } else {
+        window['pathname'] = wl.toString().replace(wl.origin, '');
+    }
+    return window['pathname'];
+}
+
 var js_utils = window['js_utils'] = {
     load_lib: function(obj_this, on_load){
         if(!obj_this.status)
@@ -243,7 +256,7 @@ var js_utils = window['js_utils'] = {
     is_public_route: function (url){
         if(!url)
         {
-            url = get_path_name();
+            url = get_cpath_name();
         }
         let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
         for (var i in public_routes)
