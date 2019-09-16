@@ -81,26 +81,31 @@ export class CalendarComponent implements OnInit {
         // console.log(home_data.calendar,events, obj_this.events);        
         if (home_data.calendar)
         {
-            if(window['app_libs']['moment'].status != 'loaded')
-            {
-                window['app_libs']['moment'].load(()=>{                    
-                    window['app_libs']['full_calendar'].load(()=>{                        
-                        obj_this.renderCalendar(events);
-                    });
-                });
-            }
-            else
-            {
-                if(window['app_libs']['full_calendar'].status != 'loaded')
-                {
-                    window['app_libs']['full_calendar'].load(()=>{
-                        obj_this.renderCalendar(events);
-                    });
-                }
-                else{
+            window['app_libs']['moment'].load(()=>{                    
+                window['app_libs']['full_calendar'].load(()=>{                        
                     obj_this.renderCalendar(events);
-                }
-            }
+                });
+            });
+            // if(window['app_libs']['moment'].status != 'loaded')
+            // {
+            //     window['app_libs']['moment'].load(()=>{                    
+            //         window['app_libs']['full_calendar'].load(()=>{                        
+            //             obj_this.renderCalendar(events);
+            //         });
+            //     });
+            // }
+            // else
+            // {
+            //     if(window['app_libs']['full_calendar'].status != 'loaded')
+            //     {
+            //         window['app_libs']['full_calendar'].load(()=>{
+            //             obj_this.renderCalendar(events);
+            //         });
+            //     }
+            //     else{
+            //         obj_this.renderCalendar(events);
+            //     }
+            // }
         }
     }
 

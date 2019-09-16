@@ -790,16 +790,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
                     pdf_url = window['site_config'].server_base_url + data.file_url;
-                    if(window['app_libs']['pdf'].status != 'loaded')
-                    {
-                        window['app_libs']['pdf'].load(function(){
-                            renderPDF(pdf_url);
-                        });
-                    }
-                    else{
+                    window['app_libs']['pdf'].load(function(){
                         renderPDF(pdf_url);
-                    }
-
+                    });
 
                     obj_this.meetings = data.meetings;
                     // console.log(meeting_id, $('#dropdown_meeting').length, 573);
