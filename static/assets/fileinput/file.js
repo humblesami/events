@@ -283,7 +283,10 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         {            
             var name_box = parent.closest('form').find('input[name="name"]');            
             var single_file = files[0];
-            name_box.val(single_file.name);
+            let file_name = single_file.name.split('.');
+            file_name.pop();
+            file_name = file_name.join();
+            name_box.val(file_name);
             parent.closest('fieldset').find('[name="file_name"]').val(single_file.name);
             $('.file-drop-zone-title').html('File '+single_file.name+' ready to be uploaded...');
         }

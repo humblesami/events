@@ -32,9 +32,15 @@ class SignatureDoc(File, Actions):
     original_pdf = models.FileField(upload_to='original/')
 
     def save(self, *args, **kwargs):
+        create = False
         if self.pk is None:
+            create = True
             self.file_type = 'esign'
         super(SignatureDoc, self).save(*args, **kwargs)
+        if create:
+            self.original_pdf = self.pdf_doc
+            self.save()
+
 
 
 
@@ -107,9 +113,9 @@ class SignatureDoc(File, Actions):
             for user_id in users:
                 user_ids.append(user_id)
                 if c == 0:
-                    sign_left = 3
+                    sign_left = 10
                 if c == 1:
-                    sign_left = 51
+                    sign_left = 150
                 obj = Signature(
                     document_id=self.id,
                     user_id=user_id,
@@ -124,7 +130,7 @@ class SignatureDoc(File, Actions):
                 obj.save()
                 if c == 1:
                     c = 0
-                    sign_top += 15
+                    sign_top += 50
                     continue
                 c += 1
             self.add_pages_for_sign()
@@ -185,6 +191,8 @@ class SignatureDoc(File, Actions):
         pth = MEDIA_ROOT + "/" + self.original_pdf.name
 
         input = PdfFileReader(open(pth, "rb"))
+        if input.isEncrypted:
+            input.decrypt('')
         # Addition of code for orientation correction Asfand
         pageValue = input.getPage(0)
         pageOrientation = pageValue.get('/Rotate')
@@ -218,6 +226,8 @@ class SignatureDoc(File, Actions):
         for sign in self.signature_set.all():
             count = count + 1
             sign.page = current_pg
+            if sign.left > 10:
+                sign.left = width - sign.width - 10
             sign.save()
             if (count == 9):
                 pdf.add_page(orientation=orientation)
@@ -237,8 +247,8 @@ class SignatureDoc(File, Actions):
         with open(output_pdf_path, "wb") as outputStream:
             output.write(outputStream)
         res = open(output_pdf_path, 'rb')
-        self.pdf_doc.save(self.original_pdf.name, DjangoFile(res))
-        self.original_pdf.save(self.original_pdf.name, DjangoFile(res))
+        self.pdf_doc.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
+        self.original_pdf.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
 
     def remove_all_signature(self):
         self.signature_set.all().delete()
