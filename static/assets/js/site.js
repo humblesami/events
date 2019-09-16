@@ -72,23 +72,7 @@ var dn_current_site_user = {
 
 
 var site_functions = {
-    processes: [],
-    is_public_route: function(url){
-        // console.log(3232);
-        if(!url)
-        {
-            url = site_functions.get_path_name();
-        }
-        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
-        for (var i in public_routes)
-        {
-            if (url.startsWith(public_routes[i]))
-            {
-                return true;
-            }
-        }
-        return false;
-    },
+    processes: [],    
     get_path_name: function() {
         if(location_now().indexOf('localhost') > -1)
         {
@@ -349,7 +333,7 @@ function addMainEventListeners() {
 
     $(document).on("mouseup touchend keyup", function(e) {
         refreshSession();
-        if(!site_functions.is_public_route())
+        if(!window['js_utils'].is_public_route())
         {
             localStorage.setItem('last_activity', Date());
         }

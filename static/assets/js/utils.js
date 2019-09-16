@@ -240,6 +240,23 @@ var js_utils = window['js_utils'] = {
             console.log('loader not found', element[0]);
         }
     },
+    is_public_route: function (url){
+        if(!url)
+        {
+            url = get_path_name();
+        }
+        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
+        for (var i in public_routes)
+        {
+            if (url.startsWith(public_routes[i]))
+            {
+                localStorage.removeItem('user');
+                $('body').removeClass('user').addClass('public');
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 

@@ -5,7 +5,7 @@
         $('body').removeClass('public').addClass('user');
     }
     function verifyUserToken() {
-        var public_route = is_public_route();
+        var public_route = window['js_utils'].is_public_route();
         if(public_route)
         {
             $('body').removeClass('user').addClass('public');
@@ -72,24 +72,7 @@
             go_to_login();
         }
     }
-
-    function is_public_route(url){
-        if(!url)
-        {
-            url = get_path_name();
-        }
-        let public_routes = ['/user/login','/user/forgot-password','/user/reset-password', '/login','/forgot-password', '/logout','/reset-password', '/token-sign-doc'];
-        for (var i in public_routes)
-        {
-            if (url.startsWith(public_routes[i]))
-            {
-                localStorage.removeItem('user');
-                $('body').removeClass('user').addClass('public');
-                return true;
-            }
-        }
-        return false;
-    }
+    
     function get_path_name() {
         if(wl.toString().indexOf('localhost') > -1)
         {
