@@ -753,7 +753,10 @@ a.kanban-committees-info-box-name {
 	padding: 0;
 	width: 30px;
 	height: 30px;
-	color: #000000;
+	color: #ffffff;
+	border-radius: 50%;
+	background: #FF1A1A;
+
 	}
 .del {
 	cursor: pointer;
