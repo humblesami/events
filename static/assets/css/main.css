@@ -279,11 +279,10 @@ a,
 	font-family: 'Roboto', sans-serif;
 	background: #638fc9;
 	padding: 10px;
-    transition: all 0.2s ease;    
-    
-    text-align: center;
+    transition: all 0.2s ease;  
     font-size: 0.85rem;
-    font-weight: bold;
+	font-weight: bold;
+	text-align: center;
     
 }
 .DocumentWrapper:hover .DocText {
