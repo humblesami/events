@@ -43,8 +43,7 @@ export class EsignDocDetailsComponent implements OnInit {
             let sign = $('.active_signature');
             sign.attr("user", obj_this.selectedUser['id']);
             sign.find('.user_name').remove();
-            sign.append(`: <span class='user_name'>${obj_this.selectedUser['name']}</span>`);
-            sign.removeClass('active_signature');
+            sign.append(`: <span class='user_name'>${obj_this.selectedUser['name']}</span>`);            
         }
         $('#select_user_modal').modal('hide');
     }
@@ -262,12 +261,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 //revert: "invalid",
                 helper: "clone",
                 scroll: true,
-                start: function(event, ui) {
-                    //$(this).data("startingScrollTop", $(this).parent().scrollTop());
-                    $(ui.helper).css({
-                        background: 'rgba(255, 235, 235, 0.9)',
-                        color: 'black'
-                    });
+                start: function(event, ui) {                    
                 },
                 drag: function(event, ui) {
                     //                var st = parseInt($(this).data("startingScrollTop"));
@@ -646,15 +640,20 @@ export class EsignDocDetailsComponent implements OnInit {
                 sign.removeClass("new_sign");
             });
 
+
+            $(document).off("mousedown", ".new_sign")
+            $(document).on("mousedown", ".new_sign", function(e) {
+                var sign = $(this);
+                $('.active_signature').removeClass('active_signature');
+                sign.addClass('active_signature');
+            });
+
             $(document).off("click", ".new_sign")
             $(document).on("click", ".new_sign", function(e) {
                 if($(e.target).hasClass('del_sign') || $(e.target).is('input'))
                 {
                     return;
                 }
-                var sign = $(this);
-                $('.active_signature').removeClass('active_signature');
-                sign.addClass('active_signature');
                 $('#select_user_modal').modal('show');
             });
 
@@ -701,7 +700,6 @@ export class EsignDocDetailsComponent implements OnInit {
             $('#select_user_modal').on('hidden.bs.modal', function () {
                 obj_this.selectedUser = undefined;
                 $('.ng-select-user-list .ng-input input').focus();
-                $('.active_signature').removeClass('active_signature');
             });
             
             page_zoom = $('#scaleSelect').val();
@@ -961,10 +959,7 @@ export class EsignDocDetailsComponent implements OnInit {
         }
 
         function handleDropEvent(event, ui) {
-            var new_signature = $(ui.helper).clone().removeClass('drag').addClass("new_sign").css({
-                background: 'rgba(255, 235, 235, 0.9)',
-                color: 'black'
-            });
+            var new_signature = $(ui.helper).clone().removeClass('drag').addClass("new_sign");
             new_signature.draggable({
                 containment: "#page_container",
                 scroll: true,
@@ -1015,6 +1010,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 "page": pageNum
             }).resizable();
 
+            $('.active_signature').removeClass('active_signature');
             new_signature.addClass('active_signature');            
             $(this).append(new_signature);
             var field_type = new_signature.find('.field_type');

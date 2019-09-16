@@ -2975,26 +2975,7 @@ label.check-plus-label-wrap {
 	color: #4b74b5;
 	transform: translate(-50%, -50%);
 	}
-.new_sign .del_sign {
-	color: #ffffff;
-	position: absolute;
-	top: -13px;
-	right: -13px;
-	background: #c30000;
-	font-size: 12px;
-	border-radius: 3rem;
-	display: block;
-	padding: .32rem .33rem .3rem .33rem;
-	}
-.new_sign .field_type {
-	margin: 0 .5rem;
-	padding: 0 .3rem;
-	flex: 1;
-	}
-.new_sign input.field_type {
-	border-radius: .2rem;
-	border: 1px solid #999999;
-	}
+
 .main-full-seachbar {
 	background: #E1E1E1;
     padding: 10px;

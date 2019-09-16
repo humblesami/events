@@ -22,3 +22,28 @@
     background: white;
     border: 1px dotted black;
 }
+
+.new_sign .del_sign {
+	color: #ffffff;
+	position: absolute;
+	top: -13px;
+	right: -13px;
+	background: #c30000;
+	font-size: 12px;
+	border-radius: 3rem;
+	padding: .32rem .33rem .3rem .33rem;
+	}
+.new_sign .field_type {
+	margin: 0 .5rem;
+	padding: 0 .3rem;
+	flex: 1;
+	}
+.new_sign input.field_type {
+	border-radius: .2rem;
+	border: 1px solid #999999;
+	}
+
+.new_sign.active_signature{
+    display: block;
+    box-shadow: 0px 0px 0px 8px yellow;
+}
