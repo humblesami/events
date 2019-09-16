@@ -26,8 +26,7 @@
     <script type="text/javascript" src="static/assets/config.js" id="config_script"></script>
 </head>
 <body class="app sidebar-mini rtl sidenav-toggled public">
-    
-    <div id="server-wait" 
+    <div id="server-wait"
         style="position: absolute;
             z-index: 27;
             top: 0;
@@ -38,10 +37,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: white;" 
+            background: white;"
     class="loadingoverlay">
         <div class="text-center">
-            <div class="spinner-border text-primary" role="status">    
+            <div class="spinner-border text-primary" role="status">
             </div>
             <div class="text">
                 Loading resources...
@@ -53,46 +52,41 @@
         <div class="spinner-border text-primary" role="status">
         </div>
         <div class="row text">
-            
+
         </div>
     </div>
 
     <script type="text/javascript" src="static/assets/js/auth.js"></script>
-
 	<link rel="stylesheet" type="text/css" href="static/assets/css/boardsheet.css" />
-	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />    
+	<link rel="stylesheet" type="text/css" href="static/assets/css/roboto-condensed-fontface.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/libs/css/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="static/assets/css/font-awsome-5.5.0.css" />
-	<link rel="stylesheet" type="text/css" href="static/assets/css/font-roboto-3.4.5.7.9.css" />	
-	
-	
+	<link rel="stylesheet" type="text/css" href="static/assets/css/font-roboto-3.4.5.7.9.css" />
+
     <link rel="stylesheet" type="text/css" href="static/assets/css/main.css" />
     <script type="text/javascript" src="static/assets/js/json.js"></script>
     <script type="text/javascript" src="static/assets/js/datetime.js"></script>
-    <script type="text/javascript" src="static/assets/js/simple_ajax.js"></script>    
-    <script type="text/javascript" src="static/assets/js/main.js"></script>
-    <script async type="text/javascript" src="static/assets/libs/js/moment.js"></script>	
+    <script type="text/javascript" src="static/assets/js/simple_ajax.js"></script>
+    <script type="text/javascript" src="static/assets/js/site.js"></script>
+    <script async type="text/javascript" src="static/assets/libs/js/moment.js"></script>
 	<script type="text/javascript" src="static/assets/libs/js/socket.io.js"></script>
 	<script>
 		window["io"] = io;
     </script>
     <app-root></app-root>
-    
+
 
     <script type="text/javascript" src="static/assets/libs/js/jquery-ui.min.js"></script>
-    <script async type="text/javascript" src="/static/assets/libs/bootstrap/popper-1.14.3.js"></script>    
+    <script async type="text/javascript" src="/static/assets/libs/bootstrap/popper-1.14.3.js"></script>
 	<script async type="text/javascript" src="static/assets/libs/js/jquery.ui.touch-punch.min.js"></script>
 	<script async type="text/javascript" src="static/assets/libs/js/jquery.mark.min.js"></script>
     <script async type="text/javascript" src="static/assets/libs/js/mark.min.js"></script>
-    <link async rel="stylesheet" href="static/assets/libs/select2/default.theme.css" />	
+    <link async rel="stylesheet" href="static/assets/libs/select2/default.theme.css" />
 
 	<script type="text/javascript" src="static/assets/js/custom_chart.js"></script>
 	<script type="text/javascript" src="static/assets/js/popup.js"></script>
 
-    
     <script type="text/javascript" src="static/assets/js/doc_preview.js"></script>
-
-    
     <script type="text/javascript" src="/static/assets/fileinput/file.js"></script>
     <link href="/static/assets/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
 
@@ -115,7 +109,7 @@
                 var btn = this;
                 on_onedrive_sdk_loaded(btn);
             }
-            $('body').on('click', '.one_drive_picker', one_drive_click);            
+            $('body').on('click', '.one_drive_picker', one_drive_click);
 
         })();
     </script>
