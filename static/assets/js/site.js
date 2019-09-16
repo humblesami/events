@@ -215,10 +215,13 @@ var site_functions = {
     },
     hideLoader: function(nam, hiddenFrom) {
         if (!nam || nam == 'force') {
-            console.log('Processes in progress => '+ this.processes.join(','));
-            if(hiddenFrom)
+            if(this.processes.length)
             {
-                console.log('hidden from => '+ hiddenFrom);
+                console.log('Processes in progress => '+ this.processes.join(','));
+                if(hiddenFrom)
+                {
+                    console.log('hidden from => '+ hiddenFrom);
+                }
             }
             this.processes = [];
             if (!nam)

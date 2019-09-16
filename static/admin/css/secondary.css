@@ -117,3 +117,8 @@ fieldset.module{
 .popup #container .related-widget-wrapper-link.change-related{
     display: none;
 }
+.popup.delete-confirmation #content>h2:last-of-type,
+.popup.delete-confirmation #content>ul:last-of-type
+{
+    display: none;
+}
