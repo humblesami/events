@@ -125,6 +125,7 @@ var app_libs = window['app_libs'] = {
 };
 
 function get_cpath_name() {
+    var wl = window.location;
     if(wl.toString().indexOf('localhost') > -1)
     {
         is_local_host = true;
