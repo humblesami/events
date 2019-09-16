@@ -14,6 +14,7 @@ class Folder(CustomModel):
 
     @classmethod
     def get_details(cls, request, params):
+
         obj = {}
         folder_id = params['id']
         folder = None
@@ -43,7 +44,11 @@ class Folder(CustomModel):
             ar = []
             sub_folders = folder.folder_set.values()
             for sub in sub_folders:
-                sub_folder = {'id': sub['id'], 'name': sub['name'], 'parent_id': folder.id}
+                folder = Folder.objects.get(pk= sub['id'])
+                folder.total_files = 0
+                folder.files_in_folder(folder)
+                total_files = folder.total_files                
+                sub_folder = {'id': sub['id'], 'name': sub['name'], 'parent_id': folder.id, 'total_files': total_files}
                 ar.append(sub_folder)
             obj['sub_folders'] = ar
         
@@ -69,7 +74,15 @@ class Folder(CustomModel):
             parents_list.append({'name':upper_folder.name,'id':upper_folder.id})
             upper_folder = upper_folder.parent
         return parents_list
-
+    
+    total_files = 0
+    def files_in_folder(self, folder):
+        folder.total_files += self.documents.count()
+            # if sub_folder.folder_set.values():
+        # new_total = 0
+        for sub_folder in self.folder_set.all():
+            new_folder = Folder.objects.get(pk=sub_folder.id)
+            new_folder.files_in_folder(folder)
 
     @classmethod
     def get_records(cls, request, params):
@@ -86,11 +99,20 @@ class Folder(CustomModel):
         total_cnt = folders.count()
         offset = params.get('offset')
         limit = params.get('limit')
-        folders = list(folders.values('id', 'name'))
+        ab = []
         if limit:
             folders = folders[offset: offset + int(limit)]
-        current_cnt = len(folders)
-        res = {'records':folders, 'total':total_cnt, 'count':current_cnt}
+        for folder in folders:
+            folder.total_files = 0
+            folder.files_in_folder(folder)
+            total_files = folder.total_files
+            cd = ws_methods.obj_to_dict(folder, fields=['name', 'id'])
+            cd['total_files'] = total_files
+            ab.append(cd)
+            # folder.append({'total_files' : total_files})
+        folders = ab
+        current_cnt = len(ab)
+        res = {'records':ab, 'total':total_cnt, 'count':current_cnt}
         return res
 
 
