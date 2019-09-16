@@ -1,7 +1,3 @@
-$(document).ready(function(){
-});
-
-
 $(document).on('keyup', '.new-password', function() {
     new_password = $('.new-password').val(),
     confirm_new_password = $('.confirm-password').val(),
@@ -85,3 +81,45 @@ $(document).on('click', '.pass_show .ptxt', function() {
         return attr == 'password' ? 'text' : 'password';
     });
 });
+
+$(function(){
+    var token_str = window.location.toString().split('/');
+    token_str = token_str[token_str.length - 1];
+    $('#token').val(token_str)
+    $('button.submit-btn').click(function(){
+        $('.feedback').html('');
+        var input_data = {
+            args:{
+                app: 'authsignup',
+                model: 'AuthUser',
+                method: 'set_password',
+            },
+            params: {
+                password: $('#password').val(),
+                token: $('#token').val(),
+            }
+        }
+        var options = {
+            url: '/rest/public',
+            data: input_data
+        }
+        options.onSuccess = function(data){
+            if(data == 'done'){
+                window.location = site_config.server_base_url + '/user/login';
+            }
+            else
+            {
+                $('.feedback').html(data);
+            }
+        };
+        options.type = 'get';
+        options.onError = function(a,b,c,d){
+            console.log(a,b,c,d);
+            $('.feedback').html(a);
+        };
+        options.onComplete = function(data){
+            
+        };
+        window['dn_rpc_object'](options);
+    })
+})

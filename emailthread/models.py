@@ -92,7 +92,7 @@ class EmailThread(threading.Thread):
                 else:
                     produce_exception('User Not Found..!')
         except:
-            produce_exception('')
+            produce_exception()
 
 
 class ThreadEmail(threading.Thread):

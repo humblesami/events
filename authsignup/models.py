@@ -189,6 +189,7 @@ class AuthUser(models.Model):
         user_token = PostUserToken.validate_token(token,1)
         if user_token:
             user = user_token.user
+            request.user = user
             user.set_password(password)
             user.email_verfied = True
             user.save()
