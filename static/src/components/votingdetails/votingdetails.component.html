@@ -11,6 +11,7 @@ title="{{voting_object.name}}"></app-breadcrumb>
 		<div class="MainTitleHeadWrap">
 			<div class="HeadingWrap">
 				<img src="static/assets/images/meeting-icon.png" alt="" />  {{voting_object.name}}
+                <canvas id="progress-chart" style="height:100px; weight:100px;"></canvas>
             </div>
 			<div class="MeetingBtnWrapper" *ngIf="voting_object.is_attendee">
 				<div class="btn-group" id="tdmrb{{voting_object.id}}">
@@ -105,6 +106,8 @@ title="{{voting_object.name}}"></app-breadcrumb>
                     <div class="modal-header">
                         Results
                     </div> 
+
+                   
                     <div class="w-50 ml-25">
                         <div class="canvas_warpper my-5">
                             <div class="canvas_container">

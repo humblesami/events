@@ -93,6 +93,12 @@ export class VotingdetailsComponent implements OnInit {
                                 window['drawChart'](obj_this.voting_object.chart_data, '#myChart');
                             });
                         }
+                        if(obj_this.voting_object.progress_data)
+                        {
+                            window['app_libs']['chart'].load(()=>{
+                                window['drawChart'](obj_this.voting_object.progress_data, '#progress-chart');
+                            });
+                        }
                     }, 100)
                 }                
                 

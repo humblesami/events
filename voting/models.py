@@ -196,7 +196,7 @@ class Voting(Actions):
             'id': voting_object_orm.voting_type.id,
             'name': voting_object_orm.voting_type.name
         }
-
+        progress_data = []
         voting_options = []
         try:
             voting_options = list(voting_object_orm.voting_type.votingchoice_set.all())
@@ -204,6 +204,7 @@ class Voting(Actions):
             pass
 
         voting_object['chart_data'] = []
+        voting_object['progress_data'] = []
         is_attendee = uid in voting_object_orm.get_audience()
         voting_object['is_attendee'] = is_attendee
         voting_object['voting_options'] = []
@@ -225,6 +226,7 @@ class Voting(Actions):
                         chart_data['option_result'] = result['answer_count']
                         if voting_object['results']['respondent_count']:
                             chart_data['option_perc'] = result['answer_count']/voting_object['results']['respondent_count']*100
+                        
 
         user_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id=uid)
         if len(user_answer) > 0:
@@ -238,6 +240,17 @@ class Voting(Actions):
         if meeting:
             voting_object['meeting'].append({'id': meeting.id, 'name': meeting.name})
         topic = voting_object_orm.topic
+        if voting_object['results']['respondent_count']:
+            progress_data.append({
+                'option_name': 'Response Required',
+                'option_result': voting_object['results']['respondent_count'] - voting_object['results']['answer_count']
+            })            
+            progress_data.append({
+                'option_name': 'Responsed',
+                'option_result': voting_object['results']['respondent_count']
+            })
+        voting_object['progress_data'] = progress_data
+
         if topic:
             voting_object['topic'].append({'id': topic.validate_unique()})
         if voting_object.get('_state'):
