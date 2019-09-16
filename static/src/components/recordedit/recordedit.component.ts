@@ -15,15 +15,29 @@ export class RecordEditComponent implements OnInit {
 	constructor(private route: ActivatedRoute, private sanitizer: DomSanitizer, private _location: Location) { 
 		
     }
+
+    loader_hidden = false;
     
 	ngOnInit() {
-        this.id= this.route.snapshot.params.id;        
+        let obj_this = this;
+        obj_this.id= this.route.snapshot.params.id;        
         let temp = window.location.hash.split("edit")[1];
-        this.url = window['site_config'].server_base_url+"/admin"+temp+"?_popup";
-        this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+        obj_this.url = window['site_config'].server_base_url+"/admin"+temp+"?_popup";
+        obj_this.url = obj_this.sanitizer.bypassSecurityTrustResourceUrl(obj_this.url);
         window['functions'].showLoader(temp);
+        $('#record_edit_iframe').load(function(){
+            if(!obj_this.loader_hidden)
+            {
+                obj_this.loader_hidden = true;
+                window['functions'].hideLoader(temp);
+            }
+        })
         function content_start_loading(){
-            window['functions'].hideLoader(temp);
+            if(!obj_this.loader_hidden)
+            {
+                obj_this.loader_hidden = true;
+                window['functions'].hideLoader(temp);
+            }            
         }
         function receiveMessage(e){
             var url = window.location.href,
