@@ -533,12 +533,9 @@ export class EsignDocDetailsComponent implements OnInit {
                                 get_auto_sign();
                             }
                         };
-                        if(!window['app_libs']['signature'].status)
-                        {
-                            window['app_libs']['signature'].load(()=>{
-                                window['init_sign'](sign_config);
-                            });
-                        }
+                        window['app_libs']['signature'].load(()=>{
+                            window['init_sign'](sign_config);
+                        });
                     }
                     else
                     {
