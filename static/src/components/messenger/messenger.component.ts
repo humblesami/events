@@ -363,10 +363,7 @@ export class MessengerComponent implements OnInit {
         obj_this.attachments = [];                
         obj_this.activate_chat_user(target);
         this.is_minimize = false;
-        if(!window['app_libs']['rtc'].status)
-        {
-            window['app_libs']['rtc'].load();
-        }
+        window['app_libs']['rtc'].load();
         if(!obj_this.active_chat_user)
         {
             console.log("No user selected with "+target.id+' from ',obj_this.socketService.chat_users);

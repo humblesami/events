@@ -579,12 +579,9 @@ export class EsignDocDetailsComponent implements OnInit {
                                         submit_response(new_sign, sign_data.text);
                                     }
                                 };
-                                if(!window['app_libs']['signature'].status)
-                                {
-                                    window['app_libs']['signature'].load(()=>{
-                                        window['init_sign'](sign_config);
-                                    });
-                                }
+                                window['app_libs']['signature'].load(()=>{
+                                    window['init_sign'](sign_config);
+                                });
                             }
                         }
                         if(token){
