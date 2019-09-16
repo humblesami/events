@@ -103,10 +103,7 @@ class SignatureDoc(File, Actions):
         if self.send_to_all:
             users = []
             self.signature_set.all().delete()
-            if self.meeting:
-                users = self.meeting.get_audience()
-            else:
-                users = self.get_respondents()
+            users = self.get_respondents()
             self.remove_all_signature()
             sign_top = 5
             c = 0
@@ -248,7 +245,7 @@ class SignatureDoc(File, Actions):
             output.write(outputStream)
         res = open(output_pdf_path, 'rb')
         self.pdf_doc.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
-        self.original_pdf.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
+        # self.original_pdf.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
 
     def remove_all_signature(self):
         self.signature_set.all().delete()
