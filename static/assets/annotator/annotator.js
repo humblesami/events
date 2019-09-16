@@ -5467,7 +5467,12 @@
                             var pdfPage = _ref2[0];
                             var annotations = _ref2[1];
                             var page = document.getElementById('pageContainer' + pageNumber);
-                            var svg = page.querySelector('.annotationLayer');
+                            if(!page)
+                            {
+                                console.log('1. Invalid page container '+'pageContainer' + pageNumber);
+                                return;
+                            }
+                            var svg = page.querySelector('.annotationLayer');                            
                             var canvas = page.querySelector('.canvasWrapper canvas');
                             // console.log(pageNumber, 223);
                             var canvasContext = canvas.getContext('2d', {
@@ -5530,7 +5535,12 @@
                             var pdfPage = _ref2[0];
                             var annotations = [];
                             var page = document.getElementById('pageContainer' + pageNumber);
-                            var svg = page.querySelector('.annotationLayer');
+                            if(!page)
+                            {
+                                console.log('2. Invalid page container '+'pageContainer' + pageNumber);
+                                return;
+                            }
+                            var svg = page.querySelector('.annotationLayer');                            
                             var canvas = page.querySelector('.canvasWrapper canvas');
                             var canvasContext = canvas.getContext('2d', {
                                 alpha: false
@@ -5588,8 +5598,13 @@
                      */
                     function scalePage(pageNumber, viewport, context) {
                         var page = document.getElementById('pageContainer' + pageNumber);
-                        var canvas = page.querySelector('.canvasWrapper canvas');
+                        if(!page)
+                        {
+                            console.log('3. Invalid page container '+'pageContainer' + pageNumber);
+                            return;
+                        }
                         var svg = page.querySelector('.annotationLayer');
+                        var canvas = page.querySelector('.canvasWrapper canvas');
                         var wrapper = page.querySelector('.canvasWrapper');
                         var textLayer = page.querySelector('.textLayer');
                         var outputScale = getOutputScale(context);
