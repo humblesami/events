@@ -55,3 +55,11 @@ content: "\f068";
 		font-weight: bold;
 	}
 }
+.progress-chart{
+	/* position: absolute; */
+    /* z-index: 999; */
+    width: 75px;
+    /* height: 57px; */
+    /* right: 0px; */
+    top: 0px;
+}

@@ -60,7 +60,10 @@ export class SurveyresultsComponent implements OnInit {
                     }
                 }
                 if (obj_this.surveyDetails.progress_data) {
-                    // window['drawChart'](obj_this.surveyDetails.progress_data, '#progress-chart');
+                    window['app_libs']['chart'].load(()=>{
+                    window['drawChart'](obj_this.surveyDetails.progress_data, '#progress-chart');
+                    });
+
                 }
             }, 800)
         };
