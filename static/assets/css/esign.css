@@ -20,7 +20,6 @@
 .sign_container[signed="true"]
 {
     background: white;
-    border: 1px dotted black;
 }
 
 .new_sign .del_sign {
