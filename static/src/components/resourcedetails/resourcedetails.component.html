@@ -49,12 +49,12 @@
                                 <h5 class="text-truncate">{{doc.name}}</h5>
                             </div>              
                         </div>
-                    </a>
-            	</div>
+					</a>
+				</div>
             </div>
             
 			<!--  || (folder && folder.files && folder.files.length) -->
-	        <app-documents *ngIf="socketService.admin_mode"
+	        <app-documents *ngIf="reset_child && socketService.admin_mode"
                 parent_model="Folder" parent_field="folder_id" 
                 parent_id="{{folder.id}}"
                 res_app="resources" res_model="ResourceDocument">

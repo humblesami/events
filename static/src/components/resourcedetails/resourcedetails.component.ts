@@ -13,6 +13,7 @@ export class ResourceDetailsComponent implements OnInit {
     no_folders = false;
     no_files = false;
     httpService: HttpService;
+    reset_child = false;
     socketService: SocketService;
 
     constructor(private httpServ: HttpService, private ss: SocketService, private route: ActivatedRoute) {
@@ -23,6 +24,7 @@ export class ResourceDetailsComponent implements OnInit {
 
     get_list(){
         var obj_this = this;
+        this.reset_child = false;
         const input_data = { id: this.route.snapshot.params.id };
         let args = {
             app: 'resources',
@@ -34,7 +36,7 @@ export class ResourceDetailsComponent implements OnInit {
             args: args
         };        
         obj_this.httpService.get(final_input_data,
-            (result: any) => {                
+            (result: any) => {
                 obj_this.root = !(result.hasOwnProperty('parent_id'));
                 obj_this.folder = result;
                 const parents = result.parents;
@@ -43,9 +45,7 @@ export class ResourceDetailsComponent implements OnInit {
                     parents.reverse();
                     parents[parents.length - 1]['is_last'] = 1888;
                 }
-                // console.log(result);
-                // obj_this.records.files.length > 0 ? obj_this.no_files = false : obj_this.no_files = true;
-                // obj_this.records.sub_folders.length > 0 ? obj_this.no_folders = false : obj_this.no_folders = true;
+                this.reset_child = true;
         }, (error: any) => {
             console.log(error);
             //alert(error);
