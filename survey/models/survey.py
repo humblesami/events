@@ -340,11 +340,11 @@ class Survey(Actions):
                 responses = len(survey.responses.all())
 
             progress_data.append({
-                'option_name': 'Response Required',
+                'option_name': '',
                 'option_result': respondents - responses
             })
             progress_data.append({
-                'option_name': 'Responsed',
+                'option_name': '',
                 'option_result': responses
             })
             if question.type in ('radio', 'select-multiple'):

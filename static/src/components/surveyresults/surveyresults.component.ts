@@ -24,7 +24,7 @@ export class SurveyresultsComponent implements OnInit {
 
     show_answer_details(detail){
         window['bootbox'].alert(detail);
-        $('.modal-dialog').addClass('modal-lg');        
+        $('.modal-dialog').addClass('modal-lg');
     }
     show_user_details(name,email){
         window['bootbox'].alert("<div class='col-md-12'>"+name+"</div>" +"<div class='col-md-12'>"+ email+"</div>");
@@ -43,7 +43,7 @@ export class SurveyresultsComponent implements OnInit {
                 var chart_colors = window['chart_colors'];
                 // console.log(chart_colors,7888);
                 for (let i in obj_this.surveyDetails.questions) {
-                    let question = obj_this.surveyDetails.questions[i];                    
+                    let question = obj_this.surveyDetails.questions[i];
                     if (question.chart_data.length && question.user_answers.length) {
                         var p =0;
                         for(let j in question.chart_data){
@@ -54,8 +54,7 @@ export class SurveyresultsComponent implements OnInit {
                             question.chart_data[j].color = chart_colors[p++];
                         }
                         window['app_libs']['chart'].load(()=>{
-                            window['drawChart'](question.chart_data,
-                                '#chartData-' + question.id);
+                            window['drawChart'](question.chart_data, '#chartData-' + question.id);
                         });
                     }
                 }
@@ -63,7 +62,6 @@ export class SurveyresultsComponent implements OnInit {
                     window['app_libs']['chart'].load(()=>{
                     window['drawChart'](obj_this.surveyDetails.progress_data, '#progress-chart');
                     });
-
                 }
             }, 800)
         };

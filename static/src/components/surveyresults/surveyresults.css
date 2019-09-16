@@ -64,8 +64,6 @@ content: "\f068";
     top: 0px;
 }
  canvas#progress-chart{
-	height: 50px !important;
-	width: 50px !important;
 	margin-bottom: 5px;
 }
 
