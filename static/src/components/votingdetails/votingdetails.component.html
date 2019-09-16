@@ -8,12 +8,14 @@ title="{{voting_object.name}}"></app-breadcrumb>
 	</div>
     <div class="container" *ngIf="voting_object">
             <link rel="stylesheet" href="/static/assets/css/survey.css" />
-		<div class="MainTitleHeadWrap">
+		<div class="MainTitleHeadWrap row justify-content-between">
 			<div class="HeadingWrap">
 				<img src="static/assets/images/meeting-icon.png" alt="" />  {{voting_object.name}}
-                <canvas id="progress-chart" style="height:100px; weight:100px;"></canvas>
             </div>
-			<div class="MeetingBtnWrapper" *ngIf="voting_object.is_attendee">
+            <div style="height: 50px;width:50px;">
+                <canvas id="progress-chart"></canvas>
+            </div>
+            <div class="MeetingBtnWrapper m-top" *ngIf="voting_object.is_attendee">
 				<div class="btn-group" id="tdmrb{{voting_object.id}}">
 					<a href="javascript:void(0);" (click)='respond_invitation(option.name, option.id, voting_object.id)' class="btn" *ngFor="let option of voting_object.voting_options">
 						<i *ngIf="voting_object.my_status == option.name" class="fa fa-check fa-lg"  modifiers="{}"></i>
