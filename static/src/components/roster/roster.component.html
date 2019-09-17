@@ -5,54 +5,76 @@
         placeholder="Search..."  class="form-control"/>
 	</div>
     <div class="roster">
-        <table class="table my-3">
-            <thead>
-                <tr class="text-primary">
-                    <th>Attendee</th>
-                    <th class="d-none d-md-block">Status</th>
-                    <th>Absent</th>
-                    <th>InPerson</th>
-                    <th>Online</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let obj of attendees" class="bg-roster">
-                    <td (click)="open_dialog(obj.id)">
-                        <span class="profile-view img-flex">
-                            <img class="d-none d-md-block" src="{{socketService.server_url}}{{obj.photo}}"/>
-                            <span class="text-primary font-weight-bold ml-md-2 ml-0 text-truncate">{{obj.name}}</span>
-                            <p class="d-sm-block d-md-none">Accept by: Self</p>
-                        </span>                                                                
-                    </td>  
-                    <td class="d-none d-md-block pt-5">
-                        <span class="font-weight-bold text-primary">Accept / Self</span>
-                    </td>
-                    <td>
-                        <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" />                    
-                        <input (click)="update_attendance(obj.id,'absent')" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
-                        <input type="hidden" value="absent" />
-                        <input type="hidden" value="{{obj.id}}" />
-                    </td>
-                    <td>
-                        <input *ngIf="obj.attendance=='inperson'" checked type="radio" name="{{obj.id}}" />
-                        <input (click)="update_attendance(obj.id,'inperson')" *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
-                        <input type="hidden" value="inperson" />
-                        <input type="hidden" value="{{obj.id}}" />
-                    </td>
-                    <td>
-                        <input *ngIf="obj.attendance=='online'" checked type="radio" name="{{obj.id}}" />
-                        <input (click)="update_attendance(obj.id,'online')" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
-                        <input type="hidden" value="online" />
-                        <input type="hidden" value="{{obj.id}}" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>        
-        <style>
-            table.roster td, table.roster th{
-                border: 1px solid;
-            }
-        </style>
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-12 mb-1">
+                    <div class="row roster-elements">
+                        <div class="col-3 col-sm-4 p-0">
+                            Attendee
+                        </div>
+                        <div class="col-2">
+                            Status
+                        </div>
+                        <div class="col-2">
+                            Absent
+                        </div>
+                        <div class="col-2">
+                            InPerson
+                        </div>
+                        <div class="col-2">
+                            Online
+                        </div>
+                    </div>
+                </div>
+                <!-- Attendance -->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 mb-1 bg-roster" *ngFor="let obj of attendees">
+                            <div class="row roester-data">
+                                <div class="col-3 col-sm-4" (click)="open_dialog(obj.id)">
+                                    <div class="row no-gutters" style="cursor: pointer">
+                                        <div class="col-3 d-none d-lg-block">
+                                            <div class="img-flex img-circle">
+                                                <img src="{{socketService.server_url}}{{obj.photo}}"/>
+                                            </div>                            
+                                        </div>
+                                        <div class="col-9">
+                                            <div class="d-block text-truncate">
+                                                {{obj.name}}
+                                            </div>
+                                            <div class="d-block text-truncate">
+                                                {{obj.email}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    Accept by: Self
+                                </div>
+                                <div class="col-2">
+                                    <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" />                    
+                                    <input (click)="update_attendance(obj.id,'absent')" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
+                                    <input type="hidden" value="absent" />
+                                    <input type="hidden" value="{{obj.id}}" />
+                                </div>
+                                <div class="col-2">
+                                    <input *ngIf="obj.attendance=='inperson'" checked type="radio" name="{{obj.id}}" />
+                                    <input (click)="update_attendance(obj.id,'inperson')" *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
+                                    <input type="hidden" value="inperson" />
+                                    <input type="hidden" value="{{obj.id}}" />
+                                </div>
+                                <div class="col-2">
+                                    <input *ngIf="obj.attendance=='online'" checked type="radio" name="{{obj.id}}" />
+                                    <input (click)="update_attendance(obj.id,'online')" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
+                                    <input type="hidden" value="online" />
+                                    <input type="hidden" value="{{obj.id}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            </div>   
+        </div>           
     </div>
     <app-paginator *ngIf="attendees.length"            
         (reload_data)="get_list()"
