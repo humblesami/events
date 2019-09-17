@@ -164,7 +164,7 @@
                     <div class="chat-message" *ngFor="let msg of active_chat_user.messages">
                         <div [ngClass]="{me: msg.sender.id == user.id}">
                             <div class="msg-send-box-wrapper">
-                                <span  *ngIf="msg.body" class="msg-send-box-text" [innerHTML]="msg.body"></span>
+                                <div  *ngIf="msg.body" class="msg-send-box-text" [innerHTML]="msg.body"></div>
                                 <div class="attachment_container">                                    
                                     <div *ngFor="let doc of msg.attachments">
                                         <a *ngIf="doc.url" contenteditable="false"

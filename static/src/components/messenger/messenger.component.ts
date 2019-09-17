@@ -761,9 +761,9 @@ export class MessengerComponent implements OnInit {
                 {
                     message_content = message_content.slice(0, -15);
                 }
-			}
+            }
             if(message_content){
-                message_content = message_content.replace(/^(\s+<br( \/)?>)*|(<br( \/)?>\s)*$/gm, '');
+                message_content = message_content.replace(/^(\s*<br( \/)?>)*|(<br( \/)?>\s*)*$/gm, '');
             }
         }
 
@@ -782,7 +782,7 @@ export class MessengerComponent implements OnInit {
             date.getSeconds(),
             date.getMilliseconds()
         ];
-        var timestamp = components.join("");
+        var timestamp = components.join("");        
         var input_data = {
             body: message_content,
             uuid : timestamp,
@@ -791,7 +791,7 @@ export class MessengerComponent implements OnInit {
             create_date: new Date(),
             no_loader: 1,
         };        
-        obj_this.send_message(input_data);
+        obj_this.send_message(input_data);        
         if(message_content)
         {
             message_content = obj_this.sanitizer.bypassSecurityTrustHtml(message_content);
