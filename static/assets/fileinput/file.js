@@ -289,6 +289,15 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             name_box.val(file_name);
             parent.closest('fieldset').find('[name="file_name"]').val(single_file.name);
             $('.file-drop-zone-title').html('File '+single_file.name+' ready to be uploaded...');
+            if(on_files_uploaded)
+            {
+                data = {
+                    file: single_file,
+                    file_name: file_name,
+                    cloud: cloud,
+                }
+                on_files_uploaded(data);
+            }
         }
         if(parent.find('.file-box').length)
         {

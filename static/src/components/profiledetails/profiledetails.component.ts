@@ -70,9 +70,7 @@ export class ProfileDetailsComponent implements OnInit {
 			user_id: this.route.snapshot.params.id
         }
         function on_modal_opened(a){
-			if (a=='saved'){
-				obj_this.get_data();
-			}
+			obj_this.get_data();
         }
 		modalRef.result.then(on_modal_opened, () => { })
 	}
@@ -217,7 +215,12 @@ export class ProfileDetailsComponent implements OnInit {
 	bio_html = undefined;
 	get_data() {
 		const obj_this = this;
-        let id = this.route.snapshot.params.id;
+		let id = undefined;
+		let params = obj_this.route.snapshot.params;
+		if(params.id)
+		{
+			id = params.id;
+		}
         let input_data = undefined;
         if (id == obj_this.socketService.user_data.id || id == undefined) {
 			obj_this.my_profile = true;	

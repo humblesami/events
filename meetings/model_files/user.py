@@ -354,6 +354,7 @@ class Profile(user_model, CustomModel):
     def get_personal_info(cls, request, params):
         profile_obj = params['profile_obj']
         profile = ws_methods.obj_to_dict(profile_obj, fields=[
+            'id',
             'first_name',
             'last_name',
             'mobile_phone',

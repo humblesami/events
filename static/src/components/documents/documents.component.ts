@@ -18,6 +18,7 @@ export class DocumentsComponent implements OnInit {
     @Input() res_app: string;
     @Input() res_model: string;
     @Input() readonly: any;
+    @Input() dont_show_files: any;
     docs = [];
     roterLinkPrefix = '';
     show_renamer_button = false;
@@ -113,6 +114,10 @@ export class DocumentsComponent implements OnInit {
 
     get_list(){
         let obj_this = this;
+        if (obj_this.dont_show_files)
+        {
+            return;
+        }
         obj_this.roterLinkPrefix = obj_this.doc_types[obj_this.res_model];
         let input_data = {
             args:{

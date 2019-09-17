@@ -135,7 +135,7 @@ export class ProfileeditComponent implements OnInit {
 			console.log('Error: ', error);
 		};
 	}
-
+	resume_drag_drop = false;
 	bio_html = undefined;
 	get_data() {
 		const obj_this = this;		
@@ -158,8 +158,7 @@ export class ProfileeditComponent implements OnInit {
         input_data = {
             params: input_data,
             args: args
-        }; 
-			
+		}; 	
 		const success_cb = function (result) {
 			obj_this.base_url = window['site_config'].server_base_url;		
 			if(result.profile.admin_email || result.profile.admin_cell_phone
@@ -232,11 +231,105 @@ export class ProfileeditComponent implements OnInit {
 				}
 			}
 			obj_this.input_date_format();
+			if(obj_this.resume_drag_drop)
+			{
+				return ;
+			}
+			obj_this.resume_drag_drop = true;
+			var file_input = $('input[name="add_resume"]');
+			file_input.attr('dragdrop', 1);
+			window['apply_drag_drop'](file_input, null, function(data){
+				try{
+					console.log(data);
+					let file = []
+					file.push(data.file)
+					obj_this.upload_files(file, data.cloud, (data)=>{
+						obj_this.profile_data.resume = data[0];
+						$(".feedback-message").append('<p id="success-message" class="alert-success">File Uploaded Successfully </p>').fadeIn("slow");
+					});
+				}
+				catch(er){
+					console.log(er, 5455);
+				}
+			});
 		};
 		const failure_cb = function (error) {
 		};
 		this.httpService.get(input_data, success_cb, failure_cb);
 	}
+
+	resInfo = {};
+
+	upload_files(files, cloud=false, success)
+    {
+		let obj_this = this;
+        // console.log(files, 13);
+        for(var obj of files){
+            if(!obj.file_name)
+            {
+                obj.file_name = obj.name;
+            }
+        }
+
+        $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
+        var url = window['site_config'].server_base_url+'/docs/upload-single-file';
+        var formData = new FormData();
+        if(!cloud)
+        {
+            var i= 0;
+            for(var file of files){
+                formData.append('file['+i+']', file);
+                i++;
+            }
+        }
+        else
+        {
+            formData.append('cloud_data', JSON.stringify(files));
+        }
+        
+        formData.append('res_app', 'meetings');
+        formData.append('res_model', 'Profile');
+		formData.append('res_id', obj_this.profile_data.id);
+		formData.append('file_field', 'resume');
+		let user: any;
+        user = localStorage.getItem('user');
+        user = JSON.parse(user);
+        let headers = {'Authorization': 'Token '+user.token};
+        var file_input_picker = $('.file-input-picker-container')
+        // js_utils.addLoader(file_input_picker);
+        // console.log(formData);
+        $.ajax({
+            url: url,
+            data: formData,
+            type: 'POST',            
+            // dataType: 'JSON',
+            headers: headers,
+            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+            processData: false, // NEEDED, DON'T OMIT THIS
+            success: function(data){
+                try{
+                    success(data = JSON.parse(data));
+                }
+                catch(er){
+                    console.log(data);
+                    $(".feedback-message").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
+                    return;
+                }
+                
+            },
+            error: function(a,b,c,d){
+                $('.feedback-message').append('<p id="success-message" class="alert-danger">Fail to Upload Files </p>').fadeIn("slow");
+            },
+            complete:function(){
+                // js_utils.removeLoader(file_input_picker);
+                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');                
+                setTimeout(function(){
+                    $(".feedback-message").fadeOut("slow");
+                    $(".feedback-message").html('');
+                }, 4000);
+            }
+        });
+    }
 
 	mail_to_assistant_change(value)
 	{
