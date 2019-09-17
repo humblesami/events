@@ -225,7 +225,7 @@ class Voting(Actions):
                     if chart_data['option_name'] == result['user_answer__name']:
                         chart_data['option_result'] = result['answer_count']
                         if voting_object['results']['respondent_count']:
-                            chart_data['option_perc'] = result['answer_count']/voting_object['results']['respondent_count']*100
+                            chart_data['option_perc'] ="{:.{}f}".format((result['answer_count']/voting_object['results']['respondent_count']) *100,2)
                         
 
         user_answer = VotingAnswer.objects.filter(voting_id = voting_id, user_id=uid)
