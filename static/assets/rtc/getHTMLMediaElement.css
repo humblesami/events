@@ -46,12 +46,14 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
 }
 
 .media-container.self .on_video_icons{
-    right: 0;
+    left: 0;
     bottom: 0;
+    display: flex;
 }
 .media-container.self .muted_icons{    
     height: 30px;
     width: 30px;
+    font-size:12px;
 }
 
 .media-container {
@@ -327,7 +329,7 @@ input[type="range"]::-webkit-slider-thumb {
     color: #ffffff;
     font-size:18px;
 }
-.media-container .on_video_icons{
+.media-container:not(.slef) .on_video_icons{
     display: flex;
     left: 54vw;
     bottom: 20px;
