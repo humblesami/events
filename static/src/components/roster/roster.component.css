@@ -1,9 +1,11 @@
+.roster-height{
+    overflow: auto;
+    max-height: 300px;
+}
 .bg-roster{
     background: #f1f2f4;
     align-items: center;
     padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
 }
 .close-btn
 {
@@ -37,12 +39,12 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #dddddd; 
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #f1f1f1 !important; 
+    background: #4B74B5 !important; 
     border-radius: 0px !important;
 }
 input[type='radio']:after{
