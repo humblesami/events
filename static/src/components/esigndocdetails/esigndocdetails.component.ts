@@ -153,7 +153,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 if (scaleSelect.selectedIndex < last) {
                     scale = scaleSelect.options[scaleSelect.selectedIndex + 1].value;
                     scaleSelect.selectedIndex += 1;
-                    zoom(scale);
+                    zoom_changed(scale);
                 }
             });
 
@@ -163,21 +163,17 @@ export class EsignDocDetailsComponent implements OnInit {
                 if (scaleSelect.selectedIndex > 0) {
                     scale = scaleSelect.options[scaleSelect.selectedIndex - 1].value;
                     scaleSelect.selectedIndex -= 1;
-                    zoom(scale);
+                    zoom_changed(scale);
                 }
             });
 
             $("#scaleSelect").on('click', function zoomSelect() {
                 var scaleSelect = document.getElementById("scaleSelect") as HTMLSelectElement;
                 scale = scaleSelect.options[scaleSelect.selectedIndex].value;
-                zoom(scale);
+                zoom_changed(scale);
             });
 
-            // console.log($('#check_box_send_all').length, 2332);
             $('#check_box_send_all').change(function() {
-                // console.log(434333)
-                // console.log($("#check_box_send_all").is(':checked'), 444);
-
                 if ($("#check_box_send_all").is(':checked')) {
                     var signs_exist = false;
                     if($('#viewer_container .sign_container').length || $('#viewer_container .new_sign').length)
@@ -209,6 +205,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     else{
                         save_attachemnt_to_meeting();
+                        $('.dragabl-fields').hide();
                     }
                 } else {
                     save_attachemnt_to_meeting();
@@ -241,7 +238,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     let user_name = sign.find('.user_name').text();
                     obj_this.selectedUser = {id: parseInt(selected), name: user_name}
                     user_index = obj_this.users_list.findIndex(x => x.id ===parseInt(selected));
-                    var selected_option = $('.ng-select-user-list .ng-option').eq(user_index);
                     var num = obj_this.users_list.length;
                     var totalHeight = $('.ng-select-user-list .scroll-host')[0].scrollHeight;
                     offSet = user_index * totalHeight/num;
@@ -249,50 +245,97 @@ export class EsignDocDetailsComponent implements OnInit {
                         scrollTop: offSet
                     }, 100);
                     $('.ng-select-user-list .ng-input input').focus();
-
                 }
             });
+            //Pick and drag a new field to page
 
-            ///////////////////////DRAG AND DROOP//////////////////////////
 
-            //Dragable Start
+            function handleDropEvent(event, ui) {
+                var new_signature = $(ui.helper).clone().removeClass('drag').addClass("new_sign");
+                new_signature.draggable({
+                    containment: "#page_container",
+                    scroll: true,                    
+                    cursor: 'move'
+                });
+    
+    
+                if (parseFloat(new_signature[0].style.top) - $(this).parent().position().top < 0) {
+                    return;
+                }
+                var field_left = parseFloat(new_signature[0].style.left);
+                var field_top = parseFloat(new_signature[0].style.top) - $(this).parent().parent().position().top + $(this).parent().scrollTop();            
+                
+                field_left -= 210;
+
+                new_signature.css({
+                    position: 'absolute',
+                    left: field_left,
+                    top: field_top,
+                });                
+
+
+                if (new_signature.hasClass("text_psition")) {
+                    new_signature.html('<input style="display:inline;width:90%" type="text" placeholder="Field Name"/>');
+                }
+    
+                new_signature.prepend('<i class="fa fa-times  fa-lg del_sign doc-time-del" aria-hidden="true"/>');
+    
+                new_signature.attr({
+                    "page": pageNum
+                }).resizable();
+
+                new_signature[0].onresize = function(){                    
+                    on_dropped(this);
+                }
+    
+                $('.active_signature').removeClass('active_signature');
+                new_signature.addClass('active_signature');            
+                $(this).append(new_signature);
+                var field_type = new_signature.find('.field_type');
+                if(field_type.html().trim() == 'Text')
+                {
+                    field_type.replaceWith('<input class="field_type" />');
+                    var field_type_input = new_signature.find('.field_type');
+                    field_type_input.focus();                
+                    field_type_input.blur(function(){
+                        on_field_type_given(field_type_input);
+                    });
+                    field_type_input.keyup(function(e){
+                        if(e.keyCode == 13)
+                        {
+                            on_field_type_given(field_type_input);
+                        }
+                    });
+                }
+                else{                
+                    $('#select_user_modal').modal('show');
+                }
+
+                on_dropped(new_signature[0]);
+            }
+
             $('.drag').draggable({
-                //containment: "#page_container",
-                //revert: "invalid",
                 helper: "clone",
                 scroll: true,
-                start: function(event, ui) {                    
-                },
-                drag: function(event, ui) {
-                    //                var st = parseInt($(this).data("startingScrollTop"));
-                    //                ui.position.top -= $(this).parent().scrollTop() - st;
-
-                    var positionX = $("#signature-position").position().left;
-                    var positionY = $("#signature-position").position().top + $(this).parent().scrollTop();
-
-                    var percent_left = (positionX / canvas.width) * 100;
-                    var percent_top = (positionY / canvas.height) * 100;
-                    $('.pstion').html('Sign Here - Positions:' + percent_left + "X" + percent_top);
-                },
                 cursor: 'move'
             });
             $("#page_container").droppable({
                 drop: handleDropEvent,
                 accept: ".drag",
-                tolerance: "touch",
+                tolerance: "touch",                
             });
-
             
 
+            //Drag already existing field within page
             $("#page_container1").droppable({
                 drop: function(event, ui) {
-                    var left = ui.position.left;
-                    var top = ui.position.top;
+                    var sign_left = ui.position.left;
+                    var sign_top = ui.position.top;
                     $(ui.helper[0]).css({
-                        left: left,// percent_left + "%",
-                        top: top // percent_top + "%"
+                        left: sign_left,
+                        top: sign_top
                     });
-                    // console.log(ui.helper[0], 1233);
+                    on_dropped(ui.helper[0]);
                 },
                 accept: ".new_sign",
                 tolerance: "touch",
@@ -335,7 +378,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 });
                 
                 save_btn.click(function(e) {
-                    var arr = [];
+                    var sign_fields = [];
                     // console.log(3232);
                     var isEmpty = false;
                     var subject = input_subject[0].value;
@@ -346,46 +389,40 @@ export class EsignDocDetailsComponent implements OnInit {
                     if (!snd_to_all) {
                         $.each(new_divs, function() {
                             var sign = $(this);
-                            var a = parseFloat(sign.position().left);
-                            // console.log(a, 133);
-                            var b =  parseFloat(page_zoom+"");
-                            var left = a / b;
-                            // console.log(left, 133);
-                            a = parseFloat(sign.position().top);
-                            // console.log(a, 133);
-                            var top = a / b + sign.parent().scrollTop();
-                            // console.log(a / b, 133);
-                            var h = sign[0].style.height;
-                            h = parseFloat(h);
-                            var w = sign[0].style.width;
-                            w = parseFloat(w);
+                            
                             var pg = sign.attr("page");
                             var user = sign.attr("user");
                             if (user == 0 || !user) {
                                 isEmpty = true;
                                 return;
                             }
-                            var type;
                             var field_name = "";
-                            type = sign.attr('signtype');                        
-                            field_name = type.charAt(0).toUpperCase() + type.slice(1);
-
-                            var obj = {
-                                document_id: obj_this.doc_id,
-                                token: token,
-                                user_id: user,
-                                field_name: field_name,
-                                email: email,
-                                name: name,
-                                left: left,
-                                top: top,
-                                page: pg,
-                                height: h,
-                                width: w,
-                                zoom: canvas.width,
-                                type: type
-                            };
-                            arr.push(obj);
+                            var field_type = sign.attr('signtype');                        
+                            field_name = field_type.charAt(0).toUpperCase() + field_type.slice(1);
+                            var db_position = sign.attr('position');                            
+                            if(db_position)
+                            {
+                                db_position = JSON.parse(db_position);                                
+                                var obj = {
+                                    document_id: obj_this.doc_id,
+                                    token: token,
+                                    user_id: user,
+                                    field_name: field_name,
+                                    email: email,
+                                    name: name,
+                                    page: pg,
+                                    left: db_position.left,
+                                    top: db_position.top,
+                                    height: db_position.height,
+                                    width: db_position.width,
+                                    zoom: canvas.width,
+                                    type: field_type
+                                };
+                                sign_fields.push(obj);
+                            }
+                            else{
+                                console.log('No position ', db_position);
+                            }
                         });
                         if (isEmpty) {
                             alert("Select user for all fields!!!");
@@ -393,18 +430,18 @@ export class EsignDocDetailsComponent implements OnInit {
                         }
                     }
                     let url = '';
-                    if (arr.length != 0 || snd_to_all) {
+                    if (sign_fields.length != 0 || snd_to_all) {
                         ajax_options = {
                             data: {
                                 args: {
                                     app: "esign",
                                     model: "SignatureDoc",
-                                    method:"ws_assign_signature",
+                                    method: "ws_assign_signature",
                                 },
                                 params: {
                                     document_id: obj_this.doc_id,
                                     token: token,
-                                    data: JSON.stringify(arr),
+                                    data: JSON.stringify(sign_fields),
                                     url: url,
                                     meeting_id: meeting_id,
                                     subject: subject,
@@ -664,20 +701,16 @@ export class EsignDocDetailsComponent implements OnInit {
                 });
                 if (d.length == 0) {
                     $(this).hide();
-                    // if (obj_this.is_public)
-                    // {
-                    //     window.location.href = window['site_config'].server_base_url+'/response-sumbitted'
-                    // }
                     return;
                 }
                 var sign = d[0];
-                var top = canvas.height * (sign.top / 100);
+                var next_top = canvas.height * (sign.top / 100);
 
-                var left = canvas.width * (sign.left / 100);
+                var next_left = canvas.width * (sign.left / 100);
                 renderPage(sign.page);
                 $('html, #page_container1').animate({
-                    scrollTop: top - 150,
-                    scrollLeft: left - 150,
+                    scrollTop: next_top - 150,
+                    scrollLeft: next_left - 150,
                 }, 500);
 
                 $(this).html("NEXT>").animate({
@@ -687,7 +720,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 setTimeout(function() {
                     $('#nxxt_sign').html("NEXT>").animate({
 
-                        top: top - $('#page_container1').scrollTop() + "px"
+                        top: next_top - $('#page_container1').scrollTop() + "px"
                     }, 1000);
 
                     $(`.sign_container[id=${sign.id}]:visible`).css({
@@ -779,11 +812,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     doc_data = data.doc_data;
                     obj_this.doc.doc_name = data.doc_name || 'Unnamed';
-                    // console.log(obj_this.doc);
                     obj_this.selected_respondents = data.users;
                     obj_this.all_profile_users = data.all_profile_users;
                     obj_this.signature_started = data.signature_started;
-                    // console.log(doc_data, 11);
                     obj_this.all_users_list = obj_this.users_list = users = data.users;
                     meeting_id = data.meeting_id;
                     send_to_all = data.send_to_all;
@@ -793,12 +824,10 @@ export class EsignDocDetailsComponent implements OnInit {
                     });
 
                     obj_this.meetings = data.meetings;
-                    // console.log(meeting_id, $('#dropdown_meeting').length, 573);
                     for(var k=0; k< data.meetings.length; k++)
                     {
                         if(data.meetings[k].id == meeting_id)
                         {
-                            // console.log(send_to_all, data.meetings[k], 855);
                             obj_this.selectedMeeting = data.meetings[k];
                         }
                     }
@@ -822,9 +851,6 @@ export class EsignDocDetailsComponent implements OnInit {
                         option_html = '<option'+selected+' value='+element.id+'>'+element.name+'</option>';
                         ddm.append(option_html);
                     });
-                    // if (meeting_id) {
-                    //     $('.check_box_send_all').show();
-                    // }
                     if (send_to_all) {
                         $('#check_box_send_all').prop('checked', true);
                         $('.dragabl-fields').hide();
@@ -834,11 +860,6 @@ export class EsignDocDetailsComponent implements OnInit {
                         $('#check_box_send_all').prop('checked', false);
                         $('.dragabl-fields').show();
                     }
-
-                    // if(meeting_id)
-                    // {
-                    //     $('.form-row.field-send_to_all input[type="checkbox"]').show();
-                    // }
                 }
             };
             if(token){
@@ -849,7 +870,6 @@ export class EsignDocDetailsComponent implements OnInit {
         loadData();
 
         function on_sign_saved(signature_dom, data){
-            // console.log(signature_dom[0], data)
             var sign_img = signature_dom.find('img:first');
             var sign_img_src = 'data:image/png;base64,' + data.image;
             signature_dom.attr('signed','true').css('background','white');
@@ -876,10 +896,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 // $("#nxxt_sign").show();
             }
         }
-
-
-        
-        //$('.modal-footer:last').hide();
 
         function renderPDF(pdf_url) {
             pdfDoc = null;
@@ -911,12 +927,10 @@ export class EsignDocDetailsComponent implements OnInit {
         }
 
         function renderPage(num) {
-            // Using promise to fetch the page
             pdfDoc.getPage(num).then(function(page) {
                 var viewport = page.getViewport(scale);
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
-                // Render PDF page into canvas context
                 var renderContext = {
                     canvasContext: ctx,
                     viewport: viewport
@@ -958,210 +972,120 @@ export class EsignDocDetailsComponent implements OnInit {
             }
         }
 
-        function handleDropEvent(event, ui) {
-            var new_signature = $(ui.helper).clone().removeClass('drag').addClass("new_sign");
-            new_signature.draggable({
-                containment: "#page_container",
-                scroll: true,
-                start: function() {
-                    //$(this).data("startingScrollTop", $(this).parent().parent().scrollTop());
-                    // $("#signature-position").css({ background: 'green', color: 'white', cursor: 'move' });
-                },
-                drag: function(event, ui) {
-                    //var st = parseInt($(this).data("startingScrollTop"));
-                    //ui.position.top -= $(this).parent().parent().scrollTop() - st;
-                    var positionX = $(this).position().left;
-                    var positionY = $(this).position().top //+$(this).parent().scrollTop();
-                    var thresh = $(this).parent().parent().height() - 40;
-                    if (positionY - $(this).parent().parent().scrollTop() > thresh) {
-                        $('#page_container1').animate({
-                            scrollTop: $(this).parent().parent().scrollTop() + 133
-                        }, 7)
-                    }
-                    // var percent_left = (positionX / canvas.width) * 100;
-                    // var percent_top = (positionY / canvas.height) * 100;
-                    // $('.sign-position').html('Sign Here - Positions:' + positionX + "X" + ($(this).position().top-$(this).parent().parent().scrollTop())+"-----"+thresh);
-                },
-                cursor: 'move'
-            });
-
-
-            if (parseFloat(new_signature[0].style.top) - $(this).parent().position().top < 0) {
-                return;
+        function on_dropped(el){
+            var position = $(el).position();
+            position = {
+                top: parseFloat(position.top),
+                left: parseFloat(position.left),
+                width: $(el).width(),
+                height: $(el).height(),
             }
-            var left = parseFloat(new_signature[0].style.left);
-            var top = parseFloat(new_signature[0].style.top) - $(this).parent().parent().position().top + $(this).parent().scrollTop();            
-            new_signature.css({
-                position: 'absolute',
-                left: left - 210,
-                top: top, // percent_top + "%",
-                // overflow: 'hidden'
-            });
-            // console.log(new_signature[0] ,234);
-            //new_signature.append('<i class="fa fa-pen  fa-lg  edit_sign" style="color:black;float:right;margin-right:10px;" aria-hidden="true"/>');
-            if (new_signature.hasClass("text_psition")) {
-                new_signature.html('<input style="display:inline;width:90%" type="text" placeholder="Field Name"/>');
+            var db_pos = {
+                top: position.top / page_zoom,
+                left: position.left / page_zoom,
+                width: position.width / page_zoom,
+                height: position.height / page_zoom,
             }
+            console.log(position, page_zoom, db_pos);
+            var db_pos_str = JSON.stringify(db_pos);
+            $(el).attr('position',db_pos_str);
+        }
 
-            // new_signature.prepend('<i class="fa fa-pen  edit_sign" style="color:black;float:left" aria-hidden="true"/>');
-            new_signature.prepend('<i class="fa fa-times  fa-lg del_sign doc-time-del" aria-hidden="true"/>');
-
-            new_signature.attr({
-                "page": pageNum
-            }).resizable();
-
-            $('.active_signature').removeClass('active_signature');
-            new_signature.addClass('active_signature');            
-            $(this).append(new_signature);
-            var field_type = new_signature.find('.field_type');
-            // console.log(new_signature[0], field_type);
-            if(field_type.html().trim() == 'Text')
-            {
-                field_type.replaceWith('<input class="field_type" />');
-                var field_type_input = new_signature.find('.field_type');
-                field_type_input.focus();                
-                field_type_input.blur(function(){
-                    on_field_type_given(field_type_input);
-                });
-                field_type_input.keyup(function(e){
-                    if(e.keyCode == 13)
-                    {
-                        on_field_type_given(field_type_input);
-                    }
-                });
+        function set_position_on_page(el, position=null){            
+            try{
+                if(!position)
+                {
+                    position = $(el).attr('position');
+                    position = JSON.parse(position);
+                }
+                if(!position.left)
+                {
+                    console.log('Invalid position', position);
+                    return;
+                }
+                position = { 
+                    top: position.top,
+                    left: position.left,
+                    width: position.width,
+                    height: position.height,
+                };
+                var rect = {
+                    top: position.top * page_zoom, 
+                    left: position.left * page_zoom, 
+                    width: position.width * page_zoom, 
+                    height: position.height * page_zoom,
+                    position: 'absolute',
+                }
+                // console.log(position, page_zoom, rect);
+                $(el).attr('position', JSON.stringify(position));
+                $(el).css(rect);
             }
-            else{                
-                $('#select_user_modal').modal('show');
+            catch(er){
+                console.log('Position attribute not correct', el);
             }
         }
 
-        function on_dropped(rect){
-            
-        }
-
-        function get_db_position(el){
-            var db_rect = {
-                top:el.offSet().top / page_zoom, 
-                left:el.offSet().left / page_zoom, 
-                width:el.width() * page_zoom, 
-                height:el.height() * page_zoom, 
-            }
-            return db_rect;
-        }
-
-        function set_position_on_doc(el){
-            return;
-            var width = $(this).attr('width');
-            var height = $(this).attr('height');
-            var left = $(this).attr('left');
-            var top = $(this).attr('top');
-            var zoomed_rect = {
-                top:top * page_zoom, 
-                left:left * page_zoom, 
-                width:width * page_zoom, 
-                height:height * page_zoom, 
-            }
-            el.css(zoomed_rect);
-        }
-
-        function zoom(newScale) {
+        function zoom_changed(newScale) {
             // Using promise to fetch the page
             page_zoom = newScale;
             pdfDoc.getPage(pageNum).then(function(page) {
                 var viewport = page.getViewport(newScale);
-                var pre_width = canvas.width;
                 canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                var new_width = canvas.width;
+                canvas.width = viewport.width;                
                 // Render PDF page into canvas context
                 var renderContext = {
                     canvasContext: ctx,
                     viewport: viewport
                 };
                 page.render(renderContext);
-                //  $('.sign_container').hide();
-                //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
                 var saved_new_signs = $('.sign_container:visible,.new_sign');                
                 $.each(saved_new_signs, function() {
-                    set_position_on_doc($(this))                    
+                    set_position_on_page(this);
                 });
             });            
         }
 
-        function loadSignatures(data) {
-            doc_data = data.doc_data;
-            var height = canvas.height;
-            // console.log(doc_data);
-            $.each(doc_data, function() {
-                // console.log(this);
+        function loadSignatures(data) {            
+            var signature_fields = data.doc_data;
+            $.each(signature_fields, function() {
+                var field = this;
                 var div = $('<div></div>', {
-                    id: this.id,
-                    signed: this.signed,
-                    name: this.name,
-                    my_record: this.my_record,
-                    page: this.page,
-                    field_name: this.field_name,                    
+                    id: field.id,
+                    signed: field.signed,
+                    name: field.name,
+                    my_record: field.my_record,
+                    page: field.page,
+                    field_name: field.field_name,                    
                     class: "sign_container",
-                    //text: this.name
                 });
-                // console.log(this);
-                var show_text = this.type.charAt(0).toUpperCase() + this.type.slice(1);
-                div.html(show_text + ":" + this.name);
-                div.attr('signtype', this.type);
-                var h, w;                
-                if(!page_zoom)
-                {
-                    page_zoom = 1;
-                    // console.log(page_zoom, 133);
-                }
-                w = this.width * page_zoom;
-                h = this.height *  page_zoom;
-                if(!h)
-                {                    
-                    h = 20 * page_zoom;
-                    if(this.type == 'initials' || this.type == 'signature')
-                    {
-                        h = 40 * page_zoom;
-                    }
-                }
-                if(!w)
-                {
-                    w = 160 * page_zoom;
-                }
-                // console.log(h, w, 1233);
-                
-                var top = this.top * page_zoom;
-                var left = this.left * page_zoom;
+                // console.log(field);
+                var show_text = field.type.charAt(0).toUpperCase() + field.type.slice(1);
+                div.html(show_text + ":" + field.name);
+                div.attr('signtype', field.type);
 
-                div.css({
-                    top: top,
-                    left: left,
-                    position: 'absolute',
-                    height: h,
-                    width: w,
-                });
+                set_position_on_page(div, field);
 
-                if (!this.signed && this.my_record) {
+                if (!field.signed && field.my_record) {
                     div.css({
                         background: "rgba(230, 81, 81, 0.9)"
                     });
                 }
                 if (obj_this.isAdmin)
                 {
-                    if(this.signed)
+                    if(field.signed)
                     {
-                        div.html('<img src="'+window['site_config'].server_base_url+this.image+'" style="height:calc(100% - 10px)"/>');
+                        div.html('<img src="'+window['site_config'].server_base_url+field.image+'" style="height:calc(100% - 10px)"/>');
                     }
                 }
                 else
                 {
-                    if(this.signed && this.my_record)
+                    if(field.signed && field.my_record)
                     {
-                        div.html('<img src="'+window['site_config'].server_base_url+this.image+'" style="height:calc(100% - 10px)"/>');
+                        div.html('<img src="'+window['site_config'].server_base_url+field.image+'" style="height:calc(100% - 10px)"/>');
                     }
                 }
 
-                if (this.page == pageNum) {
+                if (field.page == pageNum) {
                     $('#page_container').append(div);
                 }
             });
@@ -1175,8 +1099,6 @@ export class EsignDocDetailsComponent implements OnInit {
             {
                 obj_this.isAdmin = false;
             }
-            // console.log(obj_this.isAdmin,3545);
-            // console.log('Signatures loaded',obj_this.isAdmin, Date());
         }
 
 

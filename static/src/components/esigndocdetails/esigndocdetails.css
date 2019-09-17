@@ -312,8 +312,7 @@
 .meetings_div{
     color: #404040;
     font-size: 12px;
-    padding-top:10px;
-    border-top: 1px solid #E1E1E1;
+    padding-top:10px;    
 }
 
 .meetings_div strong{
@@ -345,6 +344,7 @@
 
 .PdfVerticalButtonWrapper{
     display: block;
+    border-bottom: 1px solid #E1E1E1;
 }
 
 .fields-title{
