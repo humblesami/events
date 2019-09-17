@@ -138,34 +138,34 @@ export class DocumentsComponent implements OnInit {
     {
         this.show_renamer_button = false;
         $(el).next('button').show();
+        $(el).closest('.DocName').css("display","flex");
+        $(el).closest('.DocName').find('input.renamer').css("width","78%")
     }
-
+    renamer_focused_out(el,doc){
+        $(el).next('button').hide();
+        $(el).closest('.DocName').css("display","block");
+        $(el).closest('.DocName').find('input.renamer').css("width","100%");
+        this.change_file_name(el, doc);
+    }
     renamer_changed(el)
     {
         this.show_renamer_button = true;
     }
-    
-    change_file_name_1(evn, doc)
-    {
-        this.change_file_name(evn, doc);
-    }
 
-    change_file_name_2(evn, doc)
-    {
-        this.change_file_name(evn, doc);
-    }
-
-    change_file_name(evn, doc)
-    {
+    prevent_default(evn,doc){
         evn.stopPropagation();
         evn.preventDefault();
+        this.change_file_name(evn.target, doc);
+    }
+
+    change_file_name(el, doc)
+    {
         let obj_this = this;
-        $(evn.target).closest('button').hide();
         if(!this.show_renamer_button)
         {
             return;
-        }        
-        let file_name = $(evn.target).closest('.DocName').find('input.renamer').val();
+        }
+        let file_name = $(el).closest('.DocText').find('input.renamer').val();
         if (!file_name)
         {            
             return;

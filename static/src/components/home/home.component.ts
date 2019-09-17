@@ -109,7 +109,6 @@ export class HomeComponent implements OnInit {
         $('.modal-dialog').addClass("modal-lg");   
         $('.bootbox-body').addClass('bootbox-body-scroll');     
     }
-
     view_video(video_name, video_url){
         $('#videoModal .modal-heaer').html('<h3>'+video_name+'</h3>')
         $('#videoModal .modal-body .embed-responsive').html(`

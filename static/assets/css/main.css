@@ -329,8 +329,8 @@ span.rounded-circle img {
 	}
 .btn-primary:hover {
 	color: white;
-	background-color: #000000;
-	border-color: #000000;
+	background-color: #638FC9;
+	border-color: #638FC9;
 	}
 .btn-primary:focus,
 .btn-primary.focus {
@@ -2066,6 +2066,7 @@ button {
 	height: 20px;
 	margin-right: 13px;
 	font-size: 22px;
+	text-align: center;
 	}
 i.icon-folder.app-menu__icon {
 	font-size: 17px;
@@ -3089,7 +3090,7 @@ label.check-plus-label-wrap {
 .DocumentWrapper input.renamer {
 	height: auto;
 	font-size: 0.85rem;
-	padding: 3px 6px;
+	padding: 7px 6px;
     }
 .doc-del-btn {
 	position: absolute;
