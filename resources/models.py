@@ -11,6 +11,23 @@ class Folder(CustomModel):
 
     def __str__(self):
         return self.name
+    @classmethod
+    def create_new(cls,request,params):        
+        name = params['name']        
+        folder = Folder(
+            name =name,
+        )
+        parent = params.get('parent_folder')
+        if parent:        
+            folder.parent_id = parent
+        
+        folder.save()
+        data = {
+            'name': folder.name,
+            'id': folder.id,
+            'parent': parent,
+        }
+        return data
 
     @classmethod
     def get_details(cls, request, params):

@@ -96,15 +96,13 @@ export class SocketService {
     }
 
     doc_objects = {};
+    call_backs_on_mode_changed = {};
 
     on_admin_mode_changed(){
         let obj_this = this;
-        if(obj_this.admin_mode)
+        for(let fun_name in obj_this.call_backs_on_mode_changed)
         {
-$('#admin_mode_toggler').add
-        }
-        else{
-
+            obj_this.call_backs_on_mode_changed[fun_name]();
         }
         for (var key in obj_this.doc_objects)
         {
