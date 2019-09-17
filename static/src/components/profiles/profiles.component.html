@@ -9,6 +9,7 @@
 					</div>
 					<div class="MeetingBtnWrapper">
 						<div class="btn-group">
+                            <a routerLink="/profiles" class="btn">All</a>
 							<a routerLink="/profiles/directors" class="btn">Directors</a>
 							<a routerLink="/profiles/admins" class="btn">Admins</a>
 							<a routerLink="/profiles/staff" class="btn">Staff</a>
@@ -22,7 +23,7 @@
         (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
         placeholder="Search..."  class="form-control"/>
         </div>
-        <div class="d-none d-sm-block">
+        <div *ngIf="records && records.length" class="d-none d-sm-block">
             <div class="row text-primary">
                 <div class="col-3">
                     <h6>Basic Info</h6>
@@ -126,7 +127,7 @@
 		<div class="row">
 			<div class="col-lg-12 ">
 				<div class="jumbotron text-center">
-                    <h1>There are no {{type + 's'}} to show for now!</h1>
+                    <h1>There is no {{type}} to show for now!</h1>
                     <hr>
                 </div>
 			</div>
