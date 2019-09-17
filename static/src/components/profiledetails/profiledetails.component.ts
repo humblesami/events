@@ -147,7 +147,31 @@ export class ProfileDetailsComponent implements OnInit {
 			console.log('Error: ', error);
 		};
 	}
+	update_sign(){
+		let obj_this = this;
+        let sign_config = {
+            signature_data: obj_this.profile_data.signature_data,            
+            on_signed: function(signature_data) {
+                obj_this.profile_data.signature_data = signature_data;
+                obj_this.httpService.post({
+                    args: {
+                        app: 'meetings',
+                        model: 'Profile',
+                        method: 'save_signature',
+                        post: 1,
+                    },
+                    params: {
+                        signature_data: signature_data
+                    }
+                }, null, function(){
 
+                });
+            }            
+		}
+		window['app_libs']['signature'].load(()=>{
+			window['init_sign'](sign_config);
+		});
+	}
 	resumeUpload() {
 		this.submitted = true;
 		const obj_this = this;

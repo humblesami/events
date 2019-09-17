@@ -429,7 +429,8 @@ breadcrumb
 .breadcrumbSection .btn {
 	margin: 0 3px;
 	font-size: 12px;
-	color: white;
+	border-radius: 20px;
+	padding: 5px 15px 6px 15px;
 	}
 .edit-buttons a:not([href]):not([tabindex]) {
 	color: white;
@@ -2608,7 +2609,7 @@ a.kanban-card.profiledataresume .DocumentWrapper {
 	}
 .meet-elementsInfo {
 	display: block;
-	border-bottom: 1px solid #A2A2A2;
+	border-bottom: 1px solid #e1e1e1;
 	border-radius: 0;
 	padding: 0 10px 8px 0px;
 	margin: 5px 0 25px 0;
@@ -2909,14 +2910,15 @@ select {
 	flex-wrap: wrap;
 	}
 .committee-member {
-	cursor: pointer;
-	border-radius: 0.2rem;
-	background-color: #4b74b5;
-	color: white;
-	padding: .1rem .4rem;
-	margin-right: 5px;
-	display: inline-block;
-	font-size: .8rem;
+    cursor: pointer;
+    border-radius: 0.2rem;
+    background-color: #4b74b5;
+    color: white;
+    padding: .4rem .4rem;
+    margin-right: 5px;
+    display: inline-block;
+    font-size: .8rem;
+    margin-bottom: 5px;
 	}
 .modal-header-heading {
 	align-items: center;
@@ -2944,7 +2946,6 @@ h4.title-h4 {
 	color: #3059C9;
 	font-size: 1.3rem;
 	text-align: center;
-	margin: 0;
 	padding: 0;
 	text-transform: capitalize;
 	}
@@ -3000,10 +3001,10 @@ label.check-plus-label-wrap {
 	font-size: 18px;
 	}
 .pending-status {
-    padding: .2rem .3rem;
+    font-size: .8rem;
+    padding: .5rem .3rem;
 	margin-right: 5px;
 	line-height: 1;
-	font-size: .7rem;
 	}
 .onoffswitch {
 	position: relative;

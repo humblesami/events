@@ -314,21 +314,6 @@ fieldset.monospace textarea {
 }
 
 /* SUBMIT ROW */
-
-
-.submit-row
-{
-    position: fixed;
-    bottom: 1px;
-    border-radius: 4px;
-    z-index: 12;
-    padding: 6px 7px;
-    background: #f8f8f8;
-    border: 1px solid rgb(236, 232, 232);
-    text-align: right;
-    left: 2px;
-    width: calc(100vw - 36px);
-}
 .submit-row input {
     /* height: 35px;
     line-height: 15px; */

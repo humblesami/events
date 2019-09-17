@@ -546,12 +546,12 @@
 }
 .google_drive_picker, .one_drive_picker, .drop_box_picker {
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5px 5px;
+    margin: 15px 5px 15px;
 }
 .file-drop-zone.dragenter{
     background: silver;

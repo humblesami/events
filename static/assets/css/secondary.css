@@ -196,7 +196,7 @@ a.DocumentWrapper:hover{
 /* End Committee */
 .check-status{
     width: 7rem;
-    border:1px solid #ddd;
+    border:1px solid #4B74B5;
     border-radius: 25px;
     height: 30px;
     cursor: pointer;

@@ -464,13 +464,15 @@ a.button {
     float: right;
     border: none;
     font-weight: 400;
-    background: #417690;
+    background: #4b74b5;
+    border-radius: 20px;
+    padding: 7px 15px;
 }
 
 .button.default:active, input[type=submit].default:active,
 .button.default:focus, input[type=submit].default:focus,
 .button.default:hover, input[type=submit].default:hover {
-    background: #205067;
+    background: #638FC9;
 }
 
 .button[disabled].default,

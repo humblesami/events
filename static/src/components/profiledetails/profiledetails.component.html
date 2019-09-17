@@ -82,10 +82,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							</div>
 							<div class="col-sm">
 								<div class="row justify-content-end">
-									<div class="col-5">
-										<h4 class="title-h4">E-Signature</h4>
-										<div *ngIf="my_profile" style="position:relative;cursor: pointer;">
-											<img class="strt_sign profile " style="width: 100%;"
+									<div class="col-5" *ngIf="my_profile">
+										<h4 class="title-h4" style="cursor: pointer" (click)='update_sign()'> 
+											<i class="icon-draw-pencil"></i>
+											E-Signature</h4>
+										<div *ngIf="my_profile" style="position:relative;cursor: pointer;" class="img-flex" style="height: 100px;">
+											<img class="strt_sign profile " 
 												*ngIf="profile_data.signature_data"
 												src="data:image/png;base64,{{profile_data.signature_data}}"
 											/>

@@ -52,6 +52,8 @@ a,a:hover{
     background: #4b74b5;
     border-radius: 0.2rem;
     color: #fff;
+    display: inline-block;
+    
 }
 .pending-status span{
     display: inline-block;
@@ -64,9 +66,6 @@ a,a:hover{
 @media screen and (max-width:480px){
     .kanban-card{
         min-width: 175px;
-    }
-    .pending-status span{
-        margin-top: 8px;
     }
     .kanban-profiles-user-InfoLIST{
         word-break: break-all;

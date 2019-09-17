@@ -358,11 +358,17 @@ input[type="date"]::-webkit-clear-button {
 
 .update-signature-edit-section{
     border: 1px dashed #4b74b5;
-    margin: 0 auto;
     border-radius: 4px;
-    padding: 1rem;
     max-width: 90%;
-    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    height: 85px;
+}
+img.strt_sign {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
 }
 .resume-edit-control.UpdateAddSignBtn{
 	color:#ffffff;
