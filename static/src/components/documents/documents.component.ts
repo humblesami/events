@@ -42,6 +42,22 @@ export class DocumentsComponent implements OnInit {
         ss.doc_objects[this.object_id] = this;
     }
 
+    get_icon_url(source = null){
+        var icon_url = "/static/assets/images/cloud/local.png";
+        switch(source){
+            case "Google":
+                    icon_url = "/static/assets/images/cloud/gdrive.png";
+                break;
+            case "Onedrive":
+                    icon_url = "/static/assets/images/cloud/onedrive.png";
+                break;
+            case "Dropbox":
+                    icon_url = "/static/assets/images/cloud/dropbox.png";
+                break;
+        }
+        return icon_url;
+    }
+
     on_mode_changed(){
         let obj_this = this;        
         setTimeout(function(){
