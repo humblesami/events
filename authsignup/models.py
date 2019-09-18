@@ -1,5 +1,5 @@
 import json
-
+from django.apps import apps
 from django.db import models
 from mainapp import ws_methods
 from django.contrib.auth.models import User
@@ -19,6 +19,20 @@ class DualAuth(models.Model):
 # Create your models here.
 class AuthUser(models.Model):
 
+    @classmethod
+    def rename_item(cls, request, params):
+        item_id = params['item_id']
+        name = params['name']
+
+        app_name = params['app']
+        model_name = params['model']
+        model = apps.get_model(app_name, model_name)
+
+        item = model.objects.get(pk=item_id)
+        item.name = name
+        item.save()
+        return 'done'
+    
     @classmethod
     def do_login(cls, request, user, name, referer_address):
         login(request, user)
