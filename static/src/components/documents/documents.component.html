@@ -1,6 +1,6 @@
 <div>    
     <div class="row">
-        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of docs">
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 mb-4" *ngFor="let doc of docs">
             <a class="DocumentWrapper gray-bg" routerLink="{{roterLinkPrefix+doc.id}}">
                 <div *ngIf="!deleting && socketService.is_admin && !readonly" class="doc-del-btn"
                 (click)="delete_file($event, doc.id)">
@@ -17,10 +17,10 @@
                 <div class="DocText" (click)="renameService.prevent_default($event, doc)">
                     <div class="DocName">
                         <div *ngIf="!doc.edit_mode">
-                            <span class="text-truncate">{{doc.name}}</span>
-                            <button *ngIf="socketService.admin_mode" class="edit-btn"><i class="fas fa-edit "></i></button>
+                            <span class="text-truncate doc-info">{{doc.name}}</span>
+                            <button *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary ml-2"><i class="fas fa-edit "></i></button>
                         </div>
-                        <div *ngIf="doc.edit_mode">
+                        <div *ngIf="doc.edit_mode" class="d-flex">
                             <input class="form-control renamer"                        
                                 (focus)="renameService.renamer_focused($event.target)" 
                                 (blur)="renameService.renamer_focused_out($event,doc,'file')"

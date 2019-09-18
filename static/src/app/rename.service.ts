@@ -22,8 +22,7 @@ export class RenameService {
     renamer_focused(el)
     {        
         $(el).next('button').show();
-        $(el).closest('.DocName').css("display","flex");
-        $(el).closest('.DocName').find('input.renamer').css("width","78%")
+        // $(el).closest('.DocName').css("display","flex");
     }
     renamer_focused_out(evn,folder,type=null){
         if(evn.type=='keyup' && evn.keyCode != 13)

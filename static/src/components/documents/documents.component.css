@@ -14,3 +14,8 @@ button.check-time-btn {
 	border-radius: 40px;
 	font-size: 17px;
 	}
+.doc-info{
+	width: 70%;
+    display: inline-block;
+    margin-bottom: -6px;
+}	
