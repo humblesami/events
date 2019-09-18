@@ -14,12 +14,12 @@
                         <i class="icon-doc-file"></i>
                     </span>
                 </div>
-                <div class="DocText" *ngIf="socketService.admin_mode" (click)="renameService.prevent_default($event, doc)">
+                <div class="DocText" (click)="renameService.prevent_default($event, doc)">
                     <div class="DocName">
                         <div *ngIf="!doc.edit_mode">
                             <span class="text-truncate">{{doc.name}}</span>
-                            <button class="edit-btn"><i class="fas fa-edit "></i></button>
-                        </div>										
+                            <button *ngIf="socketService.admin_mode" class="edit-btn"><i class="fas fa-edit "></i></button>
+                        </div>
                         <div *ngIf="doc.edit_mode">
                             <input class="form-control renamer"                        
                                 (focus)="renameService.renamer_focused($event.target)" 

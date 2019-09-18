@@ -72,8 +72,6 @@ export class DocumentsComponent implements OnInit {
         let obj_this = this;
         if(!this.socketService.admin_mode || this.readonly)
         {
-            obj_this.zone.run(() => obj_this.docs);
-            console.log(obj_this.docs);
             return;
         }
         let file_input = $('#dlc-file-picker');        

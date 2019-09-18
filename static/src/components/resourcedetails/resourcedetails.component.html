@@ -35,26 +35,9 @@
 				(keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
 				placeholder="Search..."  class="form-control"/>
             </div>
-
-            <div *ngIf="!socketService.admin_mode" class="row">
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of folder.files">
-                    <a class="DocumentWrapper gray-bg" routerLink="/resource/doc/{{doc.id}}">
-                        <div class="DocIcon">
-                            <span class="rounded-circle">
-                                <i class="icon-doc-file"></i>
-                            </span>
-                        </div>
-                        <div class="DocText">
-                            <div class="DocName text-truncate">
-                                <h5 class="text-truncate">{{doc.name}}</h5>
-                            </div>              
-                        </div>
-					</a>
-				</div>
-            </div>
             
 			<!--  || (folder && folder.files && folder.files.length) -->
-	        <app-documents *ngIf="reset_child && socketService.admin_mode"
+	        <app-documents
                 parent_model="Folder" parent_field="folder_id" 
                 parent_id="{{folder.id}}"
                 res_app="resources" res_model="ResourceDocument">
@@ -80,15 +63,12 @@
 									<span class="rounded-circle">
 										<i class="icon-folder"></i>
 									</span>
-								</div>
-								<div *ngIf="!socketService.admin_mode" class="DocInfoVertical text-truncate">
-									{{folder.name}}({{folder.total_files}})
-								</div>
-								<div class="DocText" *ngIf="socketService.admin_mode" (click)="renameService.prevent_default($event, folder, 133)">
+								</div>								
+								<div class="DocText" (click)="renameService.prevent_default($event, folder, 133)">
 									<div class="DocName">
 										<div *ngIf="!folder.edit_mode">
-											<span class="text-truncate">{{folder.name}}</span>
-											<button class="edit-btn"><i class="fas fa-edit "></i></button>
+											<span class="text-truncate">{{folder.name}}({{folder.total_files}})</span>
+											<button *ngIf="socketService.admin_mode" class="edit-btn"><i class="fas fa-edit "></i></button>
 										</div>										
 										<div *ngIf="folder.edit_mode">
 											<input class="form-control renamer"                        

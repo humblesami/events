@@ -27,32 +27,28 @@
                             <span class="rounded-circle">
                                 <i class="icon-folder"></i>
                             </span>
+                        </div>                        
+                        <div class="DocText" (click)="renameService.prevent_default($event, folder, 133)">
+                            <div class="DocName">
+                                <div *ngIf="!folder.edit_mode">
+                                    <span class="text-truncate">{{folder.name}} ({{folder.total_files}})</span>
+                                    <button *ngIf="socketService.admin_mode" class="edit-btn"><i class="fas fa-edit "></i></button>
+                                </div>										
+                                <div *ngIf="folder.edit_mode">
+                                    <input class="form-control renamer"                        
+                                        (focus)="renameService.renamer_focused($event.target)" 
+                                        (blur)="renameService.renamer_focused_out($event,folder,'folder')"
+                                        (keyup)="renameService.renamer_focused_out($event,folder,'folder')"												
+                                        value="{{folder.name}}"
+                                        (change)="renameService.renamer_changed($event.target)">
+                                    <button 
+                                    class="fri-selt-btn check-time-btn" 
+                                    aria-label="rename file.">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                            </div>              
                         </div>
-                        <div *ngIf="!socketService.admin_mode" class="DocInfoVertical text-truncate">
-                            {{folder.name}} ({{folder.total_files}})
-                        </div>
-                        <div class="DocText" *ngIf="socketService.admin_mode" (click)="renameService.prevent_default($event, folder, 133)">
-									<div class="DocName">
-										<div *ngIf="!folder.edit_mode">
-											<span class="text-truncate">{{folder.name}}</span>
-											<button class="edit-btn"><i class="fas fa-edit "></i></button>
-										</div>										
-										<div *ngIf="folder.edit_mode">
-											<input class="form-control renamer"                        
-												(focus)="renameService.renamer_focused($event.target)" 
-												(blur)="renameService.renamer_focused_out($event,folder,'folder')"
-												(keyup)="renameService.renamer_focused_out($event,folder,'folder')"												
-												value="{{folder.name}}"
-												(change)="renameService.renamer_changed($event.target)">
-											<button 
-											class="fri-selt-btn check-time-btn" 
-											aria-label="rename file.">
-												<i class="fas fa-check"></i>
-											</button>
-										</div>
-									</div>              
-								</div>
-
                     </div>
                 </a>
             </div>
