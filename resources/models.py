@@ -41,7 +41,6 @@ class Folder(CustomModel):
 
     @classmethod
     def get_details(cls, request, params):
-
         obj = {}
         folder_id = params['id']
         folder = None

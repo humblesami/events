@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+﻿import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
@@ -22,7 +22,8 @@ export class ResourceDetailsComponent implements OnInit {
     socketService: SocketService;
     renameService: RenameService;
 
-    constructor(private httpServ: HttpService,private renameSer: RenameService, private ss: SocketService, private route: ActivatedRoute) {
+    constructor(private httpServ: HttpService,private renameSer: RenameService, 
+        private ss: SocketService, private route: ActivatedRoute, public zone: NgZone) {
         this.httpService = httpServ;
         this.socketService = ss;
         this.route.params.subscribe(params => this.get_list(1));
@@ -36,21 +37,26 @@ export class ResourceDetailsComponent implements OnInit {
             app: 'resources',
             model: 'Folder',
             method: 'get_details'
-        }			
+        }
+
         let final_input_data = {
             params: input_data,
             args: args
-        };        
+        };
         obj_this.httpService.get(final_input_data,
             (result: any) => {
                 obj_this.root = !(result.hasOwnProperty('parent_id'));
-                obj_this.folder = result;
+                obj_this.folder = undefined;
+                setTimeout(function(){
+                    obj_this.folder = result;
+                }, 50);
                 if(on_init)
                 {
-                    setTimeout(function(){obj_this.add_folder_create_button() },100);
+                    setTimeout(function(){
+                        obj_this.add_folder_create_button();
+                    },100);
                 }
                 const parents = result.parents;
-                // console.log(obj_this.folder);
                 if (parents && parents.length > 0) {
                     parents.reverse();
                     parents[parents.length - 1]['is_last'] = 1888;
