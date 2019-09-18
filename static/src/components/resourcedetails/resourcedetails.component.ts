@@ -19,7 +19,6 @@ export class ResourceDetailsComponent implements OnInit {
     modified_folder_data =undefined;
     no_files = false;
     httpService: HttpService;
-    reset_child = false;
     socketService: SocketService;
     renameService: RenameService;
 
@@ -32,7 +31,6 @@ export class ResourceDetailsComponent implements OnInit {
 
     get_list(on_init=null){
         var obj_this = this;
-        this.reset_child = false;
         const input_data = { id: this.route.snapshot.params.id };
         let args = {
             app: 'resources',
@@ -57,7 +55,6 @@ export class ResourceDetailsComponent implements OnInit {
                     parents.reverse();
                     parents[parents.length - 1]['is_last'] = 1888;
                 }
-                this.reset_child = true;
         }, (error: any) => {
             console.log(error);
             //alert(error);

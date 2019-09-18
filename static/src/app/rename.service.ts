@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
+import { SocketService } from './socket.service';
 
 declare var $: any
 
@@ -8,7 +9,7 @@ declare var $: any
 export class RenameService {
     server_url;
     
-    constructor(private httpService:HttpService) {
+    constructor(private httpService:HttpService, private socketService: SocketService) {
         
     }
 
@@ -37,6 +38,10 @@ export class RenameService {
     }
 
     prevent_default(evn, folder, test=null){
+        if(!this.socketService.admin_mode)
+        {
+            return;
+        }
         evn.stopPropagation();
         evn.preventDefault();
         if(!folder.edit_mode)
