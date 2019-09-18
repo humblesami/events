@@ -359,7 +359,7 @@ export class MessengerComponent implements OnInit {
     }
     
 	select_chat_user(target: ChatClient) {        
-        var obj_this = this;        
+        var obj_this = this;
         obj_this.attachments = [];                
         obj_this.activate_chat_user(target);
         $('.msg_card_body').css('visibility', 'visible');

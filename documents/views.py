@@ -31,7 +31,7 @@ def upload_files(request):
             files = request.FILES.getlist(key)            
             for file in files:
                 with transaction.atomic():
-                    created_file = obj.documents.create(name=file.name, attachment=file)
+                    created_file = obj.documents.create(name=file.name, file_name=file.name, attachment=file)
                     docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})
 
         docs = json.dumps(docs)
@@ -59,21 +59,17 @@ def upload_single_file(request):
                 with transaction.atomic():
                     created_file = File(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
                     created_file.save()
-                    file_obj = getattr(obj, file_field)
-                    file_obj = created_file
-                    setattr(obj,file_field, file_obj)
+                    setattr(obj,file_field, created_file)
                     obj.save()
                     docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
         for key in request.FILES:
             files = request.FILES.getlist(key)            
             for file in files:
                 with transaction.atomic():
-                    created_file = File(name=file.name, file_type='resume')
+                    created_file = File(name=file.name, file_name=file.name)
                     created_file.attachment.save(file.name, file)
                     created_file.save()
-                    file_obj = getattr(obj, file_field)
-                    file_obj = created_file
-                    setattr(obj,file_field, file_obj)
+                    setattr(obj, file_field, created_file)
                     obj.save()
                     # created_file = obj.resume.attachment.save(name=file.name, attachment=file)
                     docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})

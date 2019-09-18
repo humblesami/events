@@ -788,24 +788,18 @@
                                         uint8Array[i] = raw.charCodeAt(i);
                                     }
                                     doc_data.doc = uint8Array;
+                                    console.log(window['dt_functions'].now_full(), 'skipped download ');
                                 }
                                 else
                                 {
-                                    if(window.location.toString().indexOf('4200') > -1)
-                                    {
-                                        doc_data.doc = site_config.site_url+'/static/assets/a.pdf';    
-                                    }
-                                    else{
-                                        var doc_url =window['site_config'].server_base_url+doc_data.url;
-                                        console.log(window['site_config'].server_base_url, doc_data.url, doc_url);
-                                        doc_data.doc = doc_url;
-                                    }
+                                    var doc_url = window['site_config'].server_base_url + doc_data.url;                                    
+                                    doc_data.doc = doc_url;
+                                    console.log(window['dt_functions'].now_full(), 'downloading doc data at client from '+doc_url);
                                 }
                                 RENDER_OPTIONS.document_data = doc_data;
                                 site_functions.hideLoader(doc_loading_step);
                                 doc_loading_step = 'document content';
-                                site_functions.showLoader(doc_loading_step);                                
-                                console.log(window['dt_functions'].now_full(), 'downloading doc data at client');
+                                site_functions.showLoader(doc_loading_step);                                                                
                                 PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
                                     console.log(window['dt_functions'].now_full(), 'download completed');
                                     pdf_doc_data = pdf_data;

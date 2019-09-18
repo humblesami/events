@@ -168,6 +168,8 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         formData.append('res_model', resInfo.res_model);
         formData.append('res_id', resInfo.res_id);
 
+        formData.file_name('file_name', resInfo.res_id);
+
         var user = localStorage.getItem('user');
         user = JSON.parse(user);
         headers = {'Authorization': 'Token '+user.token};

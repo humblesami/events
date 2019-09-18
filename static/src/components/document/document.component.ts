@@ -261,7 +261,9 @@ export class DocumentComponent implements OnInit {
                 }
                 var pdf_scroll = $(this).scrollTop();
                 if(pdf_scroll == 0 )
-                pdf_scroll = 1;
+                {
+                    pdf_scroll = 1;
+                }
                 let page_height = $('.pdfViewer .page:first').height();
                 obj_this.page_num = Math.ceil(pdf_scroll / page_height);            
             });

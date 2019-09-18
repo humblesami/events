@@ -35,9 +35,8 @@
 				(keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
 				placeholder="Search..."  class="form-control"/>
             </div>
-            
-			<!--  || (folder && folder.files && folder.files.length) -->
-	        <app-documents
+                        
+            <app-documents
                 parent_model="Folder" parent_field="folder_id" 
                 parent_id="{{folder.id}}"
                 res_app="resources" res_model="ResourceDocument">
@@ -64,7 +63,7 @@
 										<i class="icon-folder"></i>
 									</span>
 								</div>								
-								<div class="DocText" (click)="renameService.prevent_default($event, folder, 133)">
+								<div class="DocText" (click)="renameService.prevent_default($event, folder)">
 									<div class="DocName">
 										<div *ngIf="!folder.edit_mode">
 											<span class="text-truncate resource-info">{{folder.name}}({{folder.total_files}})</span>
