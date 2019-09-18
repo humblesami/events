@@ -5,7 +5,7 @@ var app_libs = window['app_libs'] = {
             "static/assets/libs/js/moment.js"
         ],
         style_paths:[],
-        load: function(on_load){            
+        load: function(on_load){
             var obj_this = this;    
             js_utils.load_lib(obj_this, on_load);
         }

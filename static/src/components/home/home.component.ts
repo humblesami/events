@@ -172,6 +172,7 @@ export class HomeComponent implements OnInit {
         var obj_this = this;
         $('.home-container').show();
         $('#videoModal').on('hidden.bs.modal', function () {
+            console.log(43434);
             $('#videoModal .modal-body .embed-responsive').html('');
         });
 
