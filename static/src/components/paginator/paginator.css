@@ -11,7 +11,7 @@
 }
 .paging-meta select
 {
-    width: 65px;
+    width: 75px;
     display: inline;    
     margin: 0 5px;
 }
@@ -24,36 +24,9 @@
 .board-sheet-paginator .pagination-sm .page-link{
 	padding:4px 10px;
 }
-.mob_paginator{
-    display: none;
-}
+
 @media screen and (max-width:420px){
-    .mob_paginator{
-        display: block;
-    }
-    .pagination-sm{
-        padding: 0;
-    }
-    .paginator{
-        display: flex;
-        margin-bottom: 10px;
-    }
-    ul.pagination.pagination-sm{
-        display: none   ;
-    }
-    .arrows{
-        padding: 0;
-    }
-    .arrows li{
-        display: inline-block;
-        list-style: none;
-    }
-    .pages
-    {
-        float: none !important;
-    }
-    .form-control-sm{
-        height: calc(1.3rem + 2px);
-        padding: 0 .5rem;
+    .board-sheet-paginator .pagination-sm .page-link{
+        padding: 0px 5px;
     }
 }

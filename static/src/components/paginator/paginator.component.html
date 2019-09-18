@@ -1,78 +1,38 @@
 <div class="board-sheet-paginator" *ngIf="httpService.count > limit_options[0]">
     <div class="paging-meta">
-            <div *ngIf="httpService.limit < httpService.count" class="pages" aria-label="Page navigation example">
-                <ul class="pagination  pagination-sm justify-content-center" >
-                    <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
-                        <button (click)="first_Page(0)" class="page-link">
-                            <i class="fa fa-chevron-left"></i>
-                            <i class="fa fa-chevron-left"></i>
-                        </button>
-                    </li>
-                    <li class="page-item" [class.disabled]="httpService.offset<= '0'">
-                        <button (click)="change_page(-1)" class="page-link">
-                            <i class="fa fa-chevron-left"></i>
-                        </button>
-                    </li>
-                    <ul class="pagination" *ngFor="let obj of shown_pages">
-                        <li class="page-item" [class.active]="page_number == obj" >
-                            <button  (click)="page_Data(obj)" class="page-link">
-                                {{obj}}
-                            </button>
-                        </li>
-                    </ul>
-                    <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
-                        <button (click)="change_page(1)" class="page-link">
-                            <i class="fa fa-chevron-right"></i>
-                        </button>
-                    </li>
-                    <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
-                        <button (click)="last_Page(httpService.count)" class="page-link">
-                            <i class="fa fa-chevron-right"></i>
-                            <i class="fa fa-chevron-right"></i>
+        <div *ngIf="httpService.limit < httpService.count" class="pages" aria-label="Page navigation example">
+            <ul class="pagination  pagination-sm justify-content-center" >
+                <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
+                    <button (click)="first_Page(0)" class="page-link">
+                        <i class="fa fa-chevron-left"></i>
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                </li>
+                <li class="page-item" [class.disabled]="httpService.offset<= '0'">
+                    <button (click)="change_page(-1)" class="page-link">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                </li>
+                <ul class="pagination" *ngFor="let obj of shown_pages">
+                    <li class="page-item" [class.active]="page_number == obj" >
+                        <button  (click)="page_Data(obj)" class="page-link">
+                            {{obj}}
                         </button>
                     </li>
                 </ul>
-            </div>
-            
-            <div class="pages mob_paginator" aria-label="Page navigation example">
-                <ul class="pagination-sm">
-                    <div class="paginator">
-                        <ul class="pagination" *ngFor="let obj of shown_pages">
-                            <li class="page-item" [class.active]="page_number == obj" >
-                                <button  (click)="page_Data(obj)" class="page-link">
-                                    {{obj}}
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <ul class="arrows">
-                            <li class="page-item" [class.disabled]="httpService.offset<= '0'" >
-                                    <button (click)="first_Page(0)" class="page-link">
-                                        <i class="fa fa-chevron-left"></i>
-                                        <i class="fa fa-chevron-left"></i>
-                                    </button>
-                                </li>
-                                <li class="page-item" [class.disabled]="httpService.offset<= '0'">
-                                    <button (click)="change_page(-1)" class="page-link">
-                                        <i class="fa fa-chevron-left"></i>
-                                    </button>
-                            </li>
-                            <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
-                                <button (click)="change_page(1)" class="page-link">
-                                    <i class="fa fa-chevron-right"></i>
-                                </button>
-                            </li>
-                            <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
-                                <button (click)="last_Page(httpService.count)" class="page-link">
-                                    <i class="fa fa-chevron-right"></i>
-                                    <i class="fa fa-chevron-right"></i>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </ul>
-            </div>        
+                <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
+                    <button (click)="change_page(1)" class="page-link">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                </li>
+                <li class="page-item" [class.disabled]="httpService.offset + httpService.limit >= httpService.count">
+                    <button (click)="last_Page(httpService.count)" class="page-link">
+                        <i class="fa fa-chevron-right"></i>
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
         <div class="page-limit mb-2">
             <span>Page Size</span>
             <select (change)="change_limit($event)" [(ngModel)]="httpService.limit" class="form-control-sm">

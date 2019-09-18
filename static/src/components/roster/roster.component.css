@@ -52,9 +52,17 @@ input[type='radio']:after{
     background: #F1F1F1;
     border: 3px solid #F1F1F1;
 }
+@media screen and (max-width:767px){
+    .display-block{
+        display: block !important;
+    }
+    .form-buttons{
+        margin-bottom:10px; 
+    }
+}
 @media screen and (max-width:480px){
     .roster-elements{
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
     .roester-data{
         font-size: 0.6rem;
