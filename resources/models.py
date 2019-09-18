@@ -29,6 +29,16 @@ class Folder(CustomModel):
         }
         return data
 
+  
+    @classmethod
+    def change_folder_name(cls, request, params):
+        folder_id = params['folder_id']
+        name = params['name']
+        folder = Folder.objects.get(pk=folder_id)
+        folder.name = name
+        folder.save()
+        return 'done'
+
     @classmethod
     def get_details(cls, request, params):
 

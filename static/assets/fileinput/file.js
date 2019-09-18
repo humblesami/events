@@ -241,7 +241,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
 
             if(extentions.indexOf(file_name[file_name.length-1]) > -1)
             {
-                if(file.size > 10000000){
+                if(file.size > 5000000){
                     invalid_files_size.push(file);
                 }else{
                     files.push(file);
@@ -263,7 +263,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         }
         if (invalid_files_size.length)
         {
-            $(".feedback-message").append('<p class="alert-danger" id="invalid_message"> Invalid File(s). Only 10 MB document size is allow</p>').fadeIn("slow")
+            $(".feedback-message").append('<p class="alert-danger" id="invalid_message"> Invalid File(s). Only 5 MB document size is allow</p>').fadeIn("slow")
             function hideMsg(){
                 $("#invalid_message").fadeOut();
                 $(".feedback-message").html('');

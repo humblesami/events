@@ -2,6 +2,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
+import { RenameService } from 'src/app/rename.service';
 declare var $:any;
 
 @Component({
@@ -14,19 +15,20 @@ export class ResourceDetailsComponent implements OnInit {
     root = true;
     no_folders = false;
     new_folder = undefined;
-    parent_folder = undefined;
+    parent_folder = undefined;    
     modified_folder_data =undefined;
     no_files = false;
     httpService: HttpService;
     reset_child = false;
     socketService: SocketService;
+    renameService: RenameService;
 
-    constructor(private httpServ: HttpService, private ss: SocketService, private route: ActivatedRoute) {
+    constructor(private httpServ: HttpService,private renameSer: RenameService, private ss: SocketService, private route: ActivatedRoute) {
         this.httpService = httpServ;
         this.socketService = ss;
         this.route.params.subscribe(params => this.get_list(1));
+        this.renameService =renameSer;
     }
-
 
     get_list(on_init=null){
         var obj_this = this;
@@ -155,8 +157,11 @@ export class ResourceDetailsComponent implements OnInit {
                 }
             });
         }, 100)        
-        
     }
+
+
+
+
 
     ngOnInit() {   
         let obj_this = this;

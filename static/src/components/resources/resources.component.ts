@@ -1,9 +1,11 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
+import { RenameService } from 'src/app/rename.service';
 declare var $:any;
 
 @Component({
+    styleUrls:['./resources.css'],
     templateUrl: 'resources.component.html'
 })
 export class ResourcesComponent implements OnInit {
@@ -11,6 +13,7 @@ export class ResourcesComponent implements OnInit {
     no_resource = false;
     new_folder = undefined;
     parent_folder = undefined;
+    show_renamer_button = false;
     modified_folder_data =undefined;
     heading = 'Resources';
     bread_crumb = {
@@ -18,8 +21,11 @@ export class ResourcesComponent implements OnInit {
 		title: ''
     };
     httpService: HttpService;
-    constructor(private httpServ: HttpService, private socketService: SocketService) {        
+    renameService: RenameService;
+
+    constructor(private httpServ: HttpService,private renameSer: RenameService, private socketService: SocketService) {        
         this.httpService = httpServ;
+        this.renameService =renameSer;
     }
 
     get_list()
@@ -130,6 +136,73 @@ export class ResourcesComponent implements OnInit {
             $('.breadcrumbSection .edit-buttons').append(create_button);
         },10);        
     }
+
+    // start_rename(evn)
+    // {
+    //     evn.stopPropagation();
+    //     evn.preventDefault();
+    // }
+    // renamer_focused(el)
+    // {
+    //     this.show_renamer_button = false;
+    //     $(el).next('button').show();
+    //     $(el).closest('.DocName').css("display","flex");
+    //     $(el).closest('.DocName').find('input.renamer').css("width","78%")
+    // }
+    // renamer_focused_out(evn,folder){
+    //     if(evn.type=='keyup' && evn.keyCode != 13)
+    //     {
+    //         return;
+    //     }
+    //     var el = evn.target;
+    //     $(el).next('button').hide();
+    //     $(el).closest('.DocName').css("display","block");
+    //     $(el).closest('.DocName').find('input.renamer').css("width","100%");
+    //     this.change_folder_name(el, folder);
+    // }
+    // prevent_default(evn,folder){
+    //     evn.stopPropagation();
+    //     evn.preventDefault();
+    //     this.change_folder_name(evn.target, folder);
+        
+    // }
+
+    // renamer_changed(el)
+    // {
+    //     this.show_renamer_button = true;
+    // }
+    // change_folder_name(el, folder)
+    // {
+    //     let obj_this = this;
+    //     if(!this.show_renamer_button)
+    //     {
+    //         return;
+    //     }
+    //     let folder_name = $(el).closest('.DocText').find('input.renamer').val();
+    //     if (!folder_name)
+    //     {            
+    //         return;
+    //     }
+    //     var folder_id = folder.id;
+    //     let input_data = {
+    //         folder_id: folder_id,
+    //         name: folder_name
+    //     }
+    //     let args = {
+    //         app: 'resources',
+    //         model: 'Folder',
+    //         method: 'change_folder_name'
+    //     }
+    //     let final_input = {
+    //         params: input_data,
+    //         args: args
+    //     }
+    //     obj_this.httpServ.get(final_input, (data)=>{
+    //         folder.name = folder_name;
+    //     }, null);
+    // }
+
+
 
     ngOnInit() {
         let obj_this = this;

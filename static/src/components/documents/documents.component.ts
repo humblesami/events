@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { HttpService } from 'src/app/http.service';
 import {SocketService} from "../../app/socket.service";
+import { RenameService } from 'src/app/rename.service';
 declare var $:any;
 
 
@@ -32,10 +33,12 @@ export class DocumentsComponent implements OnInit {
     // unique_id = window['js_utils'].unique_id();
     socketService: SocketService;
     object_id = undefined;
+    renameService: RenameService;
 
-    constructor(private httpServ: HttpService, private ss: SocketService,
+    constructor(private httpServ: HttpService,private renameSer: RenameService, private ss: SocketService,
         public zone: NgZone) {
         this.httpService = httpServ;
+        this.renameService =renameSer;
         this.socketService = ss;
         window['app_libs']['pdf'].load();
         this.object_id = window['js_utils'].unique_id();
@@ -69,6 +72,8 @@ export class DocumentsComponent implements OnInit {
         let obj_this = this;
         if(!this.socketService.admin_mode || this.readonly)
         {
+            obj_this.zone.run(() => obj_this.docs);
+            console.log(obj_this.docs);
             return;
         }
         let file_input = $('#dlc-file-picker');        
@@ -152,61 +157,6 @@ export class DocumentsComponent implements OnInit {
         this.httpService.get(input_data, function(data){
             // console.log(data, 133);
             obj_this.docs = data;
-        }, null);
-    }
-    
-    renamer_focused(el)
-    {
-        this.show_renamer_button = false;
-        $(el).next('button').show();
-        $(el).closest('.DocName').css("display","flex");
-        $(el).closest('.DocName').find('input.renamer').css("width","78%")
-    }
-    renamer_focused_out(el,doc){
-        $(el).next('button').hide();
-        $(el).closest('.DocName').css("display","block");
-        $(el).closest('.DocName').find('input.renamer').css("width","100%");
-        this.change_file_name(el, doc);
-    }
-    renamer_changed(el)
-    {
-        this.show_renamer_button = true;
-    }
-
-    prevent_default(evn,doc){
-        evn.stopPropagation();
-        evn.preventDefault();
-        this.change_file_name(evn.target, doc);
-    }
-
-    change_file_name(el, doc)
-    {
-        let obj_this = this;
-        if(!this.show_renamer_button)
-        {
-            return;
-        }
-        let file_name = $(el).closest('.DocText').find('input.renamer').val();
-        if (!file_name)
-        {            
-            return;
-        }
-        var doc_id = doc.id;
-        let input_data = {
-            doc_id: doc_id,
-            name: file_name
-        }
-        let args = {
-            app: 'documents',
-            model: 'File',
-            method: 'change_file_name'
-        }
-        let final_input = {
-            params: input_data,
-            args: args
-        }
-        obj_this.httpServ.get(final_input, (data)=>{
-            doc.name = file_name;
         }, null);
     }
     
