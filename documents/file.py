@@ -73,7 +73,7 @@ class File(CustomModel, FilesUpload):
                     cloud_url = self.cloud_url      
                     if 'https://www.googleapis.com' in cloud_url:
                         self.access_token = 'Google'
-                    elif 'https://public.dm.files.1drv.com' in cloud_url:
+                    elif 'files.1drv.com' in cloud_url:
                         self.access_token = 'Onedrive'
                     elif 'https://dl.dropboxusercontent.com' in cloud_url:
                         self.access_token = 'Dropbox'
