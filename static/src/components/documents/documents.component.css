@@ -19,3 +19,7 @@ button.check-time-btn {
     display: inline-block;
     margin-bottom: -6px;
 }	
+.doc_icons{
+	position: absolute;
+	object-fit: contain;
+}
