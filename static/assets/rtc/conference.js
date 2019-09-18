@@ -172,8 +172,8 @@
                     video_caller.mute_some_one(this);
                 });
 
-                var my_controls = $('<div class="my_controls on_video_icons"></div>');
-                my_controls.append(mute_button);
+                var video_controls = $('<div class="video_controls"></div>');
+                video_controls.append(mute_button);
 
                 // console.log(is_audio_call, 67);
                 if(!is_audio_call)
@@ -190,15 +190,13 @@
                         }
                         video_caller.hide_some_one(this);
                     });
-                    my_controls.append(hide_button);
+                    video_controls.append(hide_button);
                 }
-                // if($(mediaElement).hasClass('self')){
-                //     $('#ongoing_controls').append(my_controls);
-                // }
-                // else
-                {
-                    $(mediaElement).append(my_controls);
+                if(event.type === 'local'){
+                    video_controls.addClass('self');
                 }
+                $(mediaElement).append(video_controls);
+                
             
                 setTimeout(function() {
                     mediaElement.media.play();

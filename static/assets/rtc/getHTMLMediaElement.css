@@ -44,11 +44,18 @@ Documentation - github.com/muaz-khan/WebRTC-Experiment/tree/master/getMediaEleme
     width: 4vw;
     margin-right: 5px;
 }
-
-.media-container.self .on_video_icons{
-    left: 0;
-    bottom: 0;
+.media-container .video_controls{
     display: flex;
+    cursor: pointer;
+    position: absolute;
+}
+.media-container .video_controls:not(.self){
+    left: 54vw;
+    bottom: 20px;
+}
+.media-container .video_controls.self{
+    right: 0;
+    bottom: 0;
 }
 .media-container.self .muted_icons{    
     height: 30px;
@@ -329,12 +336,6 @@ input[type="range"]::-webkit-slider-thumb {
     color: #ffffff;
     font-size:18px;
 }
-.media-container:not(.slef) .on_video_icons{
-    display: flex;
-    left: 54vw;
-    bottom: 20px;
-    cursor: pointer;
-}
 div#ongoing_controls {
     position: absolute;
     z-index: 2222;
@@ -479,9 +480,6 @@ div#ongoing_controls {
 .media-container{
     border: 2px solid white;
 }
-.media-container .my_controls{
-    position: absolute;    
-}
 
 #rtc-container.min .media-container.self{
     display: none;
@@ -506,4 +504,11 @@ div#ongoing_controls {
 
 .CallOptionsButton .accept{
 	background: #28a745 !important;
+}
+@media screen and (max-width:991px){
+    .setup-buttons button, .media-container .muted_icons{
+        font-size: 15px;
+        height: 35px;
+        width: 35px;
+    }
 }
