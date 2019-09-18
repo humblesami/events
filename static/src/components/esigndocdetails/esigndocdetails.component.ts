@@ -253,7 +253,7 @@ export class EsignDocDetailsComponent implements OnInit {
             function handleDropEvent(event, ui) {
                 var new_signature = $(ui.helper).clone().removeClass('drag').addClass("new_sign");
                 new_signature.draggable({
-                    containment: "#page_container",
+                    containment: "#the-canvas",
                     scroll: true,                    
                     cursor: 'move'
                 });
@@ -349,18 +349,12 @@ export class EsignDocDetailsComponent implements OnInit {
                 if (new_divs.length == 0 && !snd_to_all) {
                     return;
                 }
-                window["doc_preview"].image("uuuu");
-                var body = $('.youtubeVideoModal .modal-body:last');
-                var content = $('.youtubeVideoModal .modal-content:last');
-                var footer = $('<div class="modal-footer" style="text-align: left;"></div>');
+                var body = $('<div/>');
                 var input_email = $('<h3>Send by Email:</h3><input id="email" placeholder="Email" style="width:50%"/>');
                 var input_name = $('<input id="email" placeholder="Name" class="modal-input-wrap" />');
                 var input_subject = $('<input id="subject" placeholder="Subject" class="modal-input-wrap rounded" />');
                 var email_body = $('<textarea class="o_sign_message_textarea o_input modal-input-wrap rounded"  "rows="4"></textarea>');
-                var save_btn = $('<span class="btn btn-primary btn-sm DocsBtn">Send and Close</span>');
-                var cancel_btn = $('<span class="btn btn-sm text-primary">No Thanks</span>');
-                var _users = false;
-                input_subject.val("Signature Request")
+                input_subject.val("Signature Request");
 
                 var meeting_id = $('#dropdown_meeting').val();
                 if (!meeting_id || meeting_id == 0) {
@@ -370,14 +364,19 @@ export class EsignDocDetailsComponent implements OnInit {
                 body.append("<h3 class='border-bottom text-dark pb-2 font-weight-bold'>Sign and Return</h3>");
                 body.append("<h3>Subject</h3>").append(input_subject);
                 body.append("<h3>Message</h3>").append(email_body);
-                body.append(save_btn);
-                body.append(cancel_btn);
-                cancel_btn.click(function(evt) {
-                    evt.preventDefault()
-                    $('.youtubeVideoModal').modal('hide');
-                });
+
+                var label_show = {
+                    on_load: function(){
+                        $('#signModal .modal-body').html(body);
+                    },
+                    on_save: function(){
+                        assign_signatures();
+                    },
+                    hide_on_save:1
+                };
+                window['init_popup'](label_show);
                 
-                save_btn.click(function(e) {
+                function assign_signatures() {
                     var sign_fields = [];
                     // console.log(3232);
                     var isEmpty = false;
@@ -458,7 +457,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         }
                         window['dn_rpc_object'](ajax_options);
                     }
-                });
+                }
             });
 
             $(document).off("click", ".sign_container")
@@ -735,11 +734,9 @@ export class EsignDocDetailsComponent implements OnInit {
                 $('.ng-select-user-list .ng-input input').focus();
             });
             
-            page_zoom = $('#scaleSelect').val();
             if ($('#save-doc-data').hasClass("o_invisible_modifier")) {
                 $('#page_container1')[0].style.height = "calc(100vh - 165px)";
             }
-            $('#scaleSelect')[0].selectedIndex = 4;  
         });
 
 
@@ -899,7 +896,16 @@ export class EsignDocDetailsComponent implements OnInit {
 
         function renderPDF(pdf_url) {
             pdfDoc = null;
-            scale = 1.5;
+            var doc_page_url = window.location.toString().replace(window.location.hostname, '');
+            scale = localStorage.getItem(doc_page_url);
+            if(scale)
+            {
+                page_zoom = scale = parseFloat(scale);
+            }
+            else{
+                scale = page_zoom = 1.5;
+            }
+            $('#scaleSelect').val(page_zoom);
             canvas = document.getElementById('the-canvas')
             ctx = canvas.getContext('2d');
             console.log('Dcownloading doc', Date());
@@ -979,14 +985,51 @@ export class EsignDocDetailsComponent implements OnInit {
                 left: parseFloat(position.left),
                 width: $(el).width(),
                 height: $(el).height(),
+            };
+            if(position.left < 5)
+            {
+                position.left = 5;
+                $(el).css('left', '5px');
+            }
+            var the_canvas = $('#the-canvas');
+            if( position.width > the_canvas.width())
+            {
+                position.width = the_canvas.width()
+                $(el).width(position.width)
+            }
+            if( position.height > the_canvas.height())
+            {
+                position.height = the_canvas.height()
+                $(el).height(position.height);
+            }
+            if(page_zoom < 1)
+            {
+                if(position.left < the_canvas.position().left)
+                {
+                    position.left = the_canvas.position().left + 5;
+                    $(el).css('left', position.left+'px');
+                    position.left = 5;
+                }
+                else if(position.left + position.width > the_canvas.position().left + the_canvas.width())
+                {
+                    position.left = the_canvas.position().left + the_canvas.width() - position.width - 30;
+                    $(el).css('left', position.left+'px');
+                    position.left = position.left - the_canvas.position().left;
+                }
+
+                if(position.top + position.height > the_canvas.position().top + the_canvas.height())
+                {
+                    position.top = the_canvas.height() - position.height - 30;
+                    $(el).css('top', position.top+'px');
+                }
             }
             var db_pos = {
                 top: position.top / page_zoom,
                 left: position.left / page_zoom,
                 width: position.width / page_zoom,
                 height: position.height / page_zoom,
-            }
-            console.log(position, page_zoom, db_pos);
+            };
+            // console.log(position, page_zoom, db_pos);
             var db_pos_str = JSON.stringify(db_pos);
             $(el).attr('position',db_pos_str);
         }
@@ -998,7 +1041,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     position = $(el).attr('position');
                     position = JSON.parse(position);
                 }
-                if(!position.left)
+                if(position.left != 0 && !position.left)
                 {
                     console.log('Invalid position', position);
                     return;
@@ -1016,6 +1059,10 @@ export class EsignDocDetailsComponent implements OnInit {
                     height: position.height * page_zoom,
                     position: 'absolute',
                 }
+                if(page_zoom < 1)
+                {
+                    rect.left += $('#the-canvas').position().left;
+                }
                 // console.log(position, page_zoom, rect);
                 $(el).attr('position', JSON.stringify(position));
                 $(el).css(rect);
@@ -1028,6 +1075,9 @@ export class EsignDocDetailsComponent implements OnInit {
         function zoom_changed(newScale) {
             // Using promise to fetch the page
             page_zoom = newScale;
+            var doc_page_url = window.location.toString().replace(window.location.hostname, '');
+            localStorage.setItem(doc_page_url, newScale);
+            
             pdfDoc.getPage(pageNum).then(function(page) {
                 var viewport = page.getViewport(newScale);
                 canvas.height = viewport.height;
