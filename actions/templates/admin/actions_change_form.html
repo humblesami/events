@@ -18,7 +18,8 @@
     $('body').on('click', '.one_drive_picker', function(){
         var active_cloud_picker = $(this).closest('.cloud_pickers_container');
         var current_cloud_number = $(".cloud_pickers_container").index(active_cloud_picker);
-        $('.onedrive_iframe iframe').attr('src', site_config.server_base_url+'/temp/onedrive?picker_index='+current_cloud_number);
+        var input_type = active_cloud_picker.attr('input_type');
+        $('.onedrive_iframe iframe').attr('src', site_config.server_base_url+'/temp/onedrive?picker_index='+current_cloud_number+'&file_type='+input_type);
     });
     </script>
     <script src="/static/admin/js/actions_change_form.js"></script>

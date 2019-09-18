@@ -2,10 +2,12 @@ $(function(){
     var multiSelect = false;
     var active_picker = undefined;
     var active_cloud_picker = undefined;
+    var file_type = '';
     function is_multi_select_enabled(e){
         active_picker = $(e.target).closest('.picker');
         active_cloud_picker = active_picker.closest('.cloud_pickers_container');
         multiSelect = active_cloud_picker.attr('multiple');
+        file_type = active_cloud_picker.attr('input_type');
         if(multiSelect)
         {
             multiSelect = true;
@@ -25,6 +27,15 @@ $(function(){
             {
                 // init_token();
                 // return;
+            }
+            let extensions = [];
+            if (file_type == 'document')
+            {
+                extensions = ['.pdf', '.doc', '.docx', '.html', '.odt','.xls','.pptx','.ppt'];
+            }
+            else
+            {
+                extensions = ['.png', '.jpg', '.jpeg'];
             }
             var options = {
                 success: function (files) {
@@ -46,7 +57,7 @@ $(function(){
                 linkType: "direct", // or "preview"
                 multiselect: multiSelect,
                 folderselect: false, // or true
-                extensions: ['.pdf', '.doc', '.docx', '.html', '.odt','.xls','.pptx','.ppt'],
+                extensions: extensions,
             //    sizeLimit: 4096, // or any positive number
             };
             Dropbox.choose(options);
@@ -123,19 +134,30 @@ $(function(){
 
         function createPicker() {
             var appId = 'boreal-quarter-250721';
-            var allowed_types = [
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "application/x-vnd.oasis.opendocument.spreadsheet",
-                
-                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                "application/vnd.oasis.opendocument.presentation",
-    
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "application/vnd.oasis.opendocument.text",
-                "application/rtf",
-                "application/pdf",
-                "text/csv"
-            ];
+            var allowed_types = [];
+            if (file_type == 'document')
+            {
+                allowed_types = [
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "application/x-vnd.oasis.opendocument.spreadsheet",
+                    
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    "application/vnd.oasis.opendocument.presentation",
+        
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.oasis.opendocument.text",
+                    "application/rtf",
+                    "application/pdf"
+                ];
+            }
+            else
+            {
+                allowed_types = [
+                    "image/png",
+                    "image/jpg",
+                    "image/jpeg",
+                ];
+            }
             // console.log(allowed_types);
             allowed_types = allowed_types.join(',');
             var view = new google.picker.View(google.picker.ViewId.DOCS);
@@ -164,6 +186,7 @@ $(function(){
                 for(const file of files)
                 {
                     // console.log(file, 188);
+                    console.log(access_token);
                     selection_info.push({
                         id: file.id,
                         name: file.name,
@@ -190,7 +213,7 @@ $(function(){
                 multiSelect: multiSelect,
                 openInNewWindow: true,
                 advanced: {
-                    filter: "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt"
+                    // filter: "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt"
                 },
                 success: function (files) {
                     var selection_info = [];

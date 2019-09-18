@@ -105,7 +105,8 @@
             function on_onedrive_sdk_loaded(btn){
                 var active_cloud_picker = $(btn).closest('.cloud_pickers_container');
                 var current_cloud_number = $(".cloud_pickers_container").index(active_cloud_picker);
-                var redirect_uri = site_config.server_base_url + '/temp/onedrive?picker_index='+current_cloud_number;
+                var input_type = active_cloud_picker.attr('input_type');
+                var redirect_uri = site_config.server_base_url + '/temp/onedrive?picker_index='+current_cloud_number+'&file_type='+input_type;
                 // console.log(redirect_uri, 1233);
                 $('.onedrive_iframe iframe').attr('src', redirect_uri);
             }

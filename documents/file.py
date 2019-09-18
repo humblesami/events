@@ -44,7 +44,7 @@ class File(CustomModel, FilesUpload):
     upload_status = models.BooleanField(default=False)
     file_name = models.CharField(max_length=128, default='')
     cloud_url = models.CharField(max_length=512, null=True, blank=True)
-    access_token = models.CharField(max_length=256, null=True, blank=True)
+    access_token = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
         return self.name        

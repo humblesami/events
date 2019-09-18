@@ -46,7 +46,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             <div class="preview-conatiner">
             </div>
         </div>
-        <div`+multiple+` class="cloud_pickers_container d-flex justify-content-center align-items-center pb-1">
+        <div`+multiple+` input_type=${input_type} class="cloud_pickers_container d-flex justify-content-center align-items-center pb-1">
             <div class="google_drive_picker picker border">
                 <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" title="Google Drive">                
             </div>
@@ -167,8 +167,14 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         formData.append('res_app', resInfo.res_app);
         formData.append('res_model', resInfo.res_model);
         formData.append('res_id', resInfo.res_id);
-
-        formData.file_name('file_name', resInfo.res_id);
+        if (input_type == 'document')
+        {
+            formData.append('file_type', 'document');
+        }
+        else
+        {
+            formData.append('file_type', 'image');
+        }
 
         var user = localStorage.getItem('user');
         user = JSON.parse(user);
@@ -318,6 +324,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                     file: single_file,
                     file_name: file_name,
                     cloud: cloud,
+                    file_type: input_type
                 }
                 on_files_uploaded(data);
             }

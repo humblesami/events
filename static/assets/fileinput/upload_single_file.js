@@ -10,7 +10,15 @@ function upload_single_file(files, resInfo, cloud=false, success)
     }
 
     $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
-    var url = window['site_config'].server_base_url+'/docs/upload-single-file';
+    var url = '';
+    if (resInfo.file_type == 'document')
+    {
+        url = window['site_config'].server_base_url+'/docs/upload-single-file';
+    }
+    else
+    {
+        url = window['site_config'].server_base_url+'/docs/upload-single-image-file';
+    }
     var formData = new FormData();
     if(!cloud)
     {
@@ -29,6 +37,7 @@ function upload_single_file(files, resInfo, cloud=false, success)
     formData.append('res_model', resInfo.res_model);
     formData.append('res_id', resInfo.res_id);
     formData.append('res_field', resInfo.res_field);
+    formData.append('file_type', resInfo.file_type);
     let user = localStorage.getItem('user');
     user = JSON.parse(user);
     let headers = {'Authorization': 'Token '+user.token};

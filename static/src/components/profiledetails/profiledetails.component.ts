@@ -303,13 +303,39 @@ export class ProfileDetailsComponent implements OnInit {
 						file_input.attr('input_type', 'image');
 						window['apply_drag_drop'](file_input, null, function(data){
 							try{
-								console.log(data);
-								let file = []
-								file.push(data.file)
-								// obj_this.upload_files(file, data.cloud, (data)=>{
-								// 	obj_this.profile_data.resume = data[0];
-								// 	$(".feedback-message").append('<p id="success-message" class="alert-success">File Uploaded Successfully </p>').fadeIn("slow");
-								// });
+								let file = [];
+								file.push(data.file);
+								let resInfo = {
+									res_app: 'meetings',
+									res_model: 'Profile',
+									res_id: obj_this.profile_data.id,
+									res_field: 'image',
+									file_type: data.file_type
+								}
+								window['upload_single_file'](file, resInfo, data.cloud, (data)=>{
+									
+									obj_this.profile_data.image = data[0].image_url;
+									if(obj_this.my_profile)
+									{
+										var user_cookie = localStorage.getItem('user');                
+										let cuser = undefined;
+										if(user_cookie)
+										{
+											cuser = JSON.parse(user_cookie);
+										}
+										if (cuser)
+										{
+											cuser.photo = obj_this.profile_data.image;
+											cuser.user_photo = obj_this.profile_data.image;
+											obj_this.socketService.user_data.photo = obj_this.profile_data.image;
+                        					obj_this.socketService.user_photo = obj_this.base_url + obj_this.profile_data.image;
+											let value = JSON.stringify(cuser);
+											localStorage.setItem('user', value);
+										}
+									}
+									$(".feedback-message").append('<p id="success-message" class="alert-success">File Uploaded Successfully </p>').fadeIn("slow");
+								});
+								
 							}
 							catch(er){
 								console.log(er, 5455);

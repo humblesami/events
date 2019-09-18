@@ -6,7 +6,12 @@ from mainapp import ws_methods
 from django.db import transaction
 from meetings.model_files.user import Profile
 from documents.file import File
+from django.core.files import File as DjangoFile
+from django.core.files.temp import NamedTemporaryFile
+from urllib.request import urlopen
+import urllib
 import json
+import os
 
 
 @csrf_exempt
@@ -50,16 +55,34 @@ def upload_single_file(request):
         res_model = req['res_model']
         res_id = req['res_id']
         file_field = req['res_field']
+        file_type = req['file_type']
         model = ws_methods.get_model(res_app, res_model)
         obj = model.objects.get(pk=res_id)
         cloud_data = req.get('cloud_data')
+
         if cloud_data:
             cloud_data = json.loads(cloud_data)            
             for file in cloud_data:
                 with transaction.atomic():
+                    if file_type == 'image':
+                        img_temp = NamedTemporaryFile(delete=True)
+                        if file['source'] == 'Google':
+                            headers = {'Authorization':'Bearer '+file['access_token']}
+                            request = urllib.request.Request(file['url'], headers=headers)
+                            img_temp.write(urlopen(request).read())
+                        else:
+                            img_temp.write(urlopen(file['url']).read())
+                        img_temp.flush()
+                        file_obj = getattr(obj, file_field)
+                        file_obj.save(file['file_name'], DjangoFile(img_temp))
+                        setattr(obj,file_field, file_obj)
+                        obj.save()
+                        return
                     created_file = File(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
                     created_file.save()
-                    setattr(obj,file_field, created_file)
+                    file_obj = getattr(obj, file_field)
+                    file_obj = created_file
+                    setattr(obj,file_field, file_obj)
                     obj.save()
                     docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
         for key in request.FILES:
@@ -69,7 +92,9 @@ def upload_single_file(request):
                     created_file = File(name=file.name, file_name=file.name)
                     created_file.attachment.save(file.name, file)
                     created_file.save()
-                    setattr(obj, file_field, created_file)
+                    file_obj = getattr(obj, file_field)
+                    file_obj = created_file
+                    setattr(obj,file_field, file_obj)
                     obj.save()
                     # created_file = obj.resume.attachment.save(name=file.name, attachment=file)
                     docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})
@@ -78,4 +103,63 @@ def upload_single_file(request):
         return HttpResponse(docs)
     except:
         docs = ws_methods.get_error_message()
-    return HttpResponse(docs)    
+    return HttpResponse(docs)
+
+
+@csrf_exempt
+@api_view(["GET", "POST"])
+def upload_single_image_file(request):   
+    docs = []
+    try:
+        req = request.POST
+        res_app = req['res_app']
+        res_model = req['res_model']
+        res_id = req['res_id']
+        file_field = req['res_field']
+        file_type = req['file_type']
+        model = ws_methods.get_model(res_app, res_model)
+        obj = model.objects.get(pk=res_id)
+        cloud_data = req.get('cloud_data')
+
+        if cloud_data:
+            cloud_data = json.loads(cloud_data)            
+            for file in cloud_data:
+                with transaction.atomic():
+                    if file_type == 'image':
+                        img_temp = NamedTemporaryFile(delete=True)
+                        if file['source'] == 'Google':
+                            headers = {'Authorization':'Bearer '+file['access_token']}
+                            request = urllib.request.Request(file['url'], headers=headers)
+                            img_temp.write(urlopen(request).read())
+                        else:
+                            img_temp.write(urlopen(file['url']).read())
+                        img_temp.flush()
+                        file_obj = getattr(obj, file_field)
+                        file_obj.save(file['file_name'], DjangoFile(img_temp))
+                        setattr(obj,file_field, file_obj)
+                        obj.save()
+                        docs.append({'image_url':file_obj.url})
+        for key in request.FILES:
+            files = request.FILES.getlist(key)            
+            for file in files:
+                with transaction.atomic():
+                    if file_type == 'image':
+                        curr_dir = os.path.dirname(__file__)
+                        directory = curr_dir.replace('documents', 'media')
+                        if not os.path.exists(directory):
+                            os.makedirs(directory)
+                        full_filename = os.path.join(directory, 'profile', file.name)
+                        img_temp = open(full_filename, 'wb+')
+                        for chunk in file.chunks():
+                            img_temp.write(chunk)
+                        file_obj = getattr(obj, file_field)
+                        file_obj.save(file.name, DjangoFile(img_temp))
+                        setattr(obj,file_field, file_obj)
+                        obj.save()
+                        file_obj = getattr(obj, file_field)
+                        docs.append({'image_url':file_obj.url})
+        docs = json.dumps(docs)
+        return HttpResponse(docs)
+    except:
+        docs = ws_methods.get_error_message()
+    return HttpResponse(docs)

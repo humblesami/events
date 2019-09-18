@@ -1,13 +1,23 @@
 $(function(){
-    function launchOneDrivePicker() {
-        // alert(cloud_number+'---'+3232);
+    function launchOneDrivePicker(e) {
+        var file_type = $('input[name="file_type"]').val();
+        let extentions = '';
+        if (file_type == 'document')
+        {
+            extentions = "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt";
+        }
+        else
+        {
+            extentions = ".png,.jpg,.jpeg";
+        }
+        console.log(file_type);
         var odOptions = {
             clientId: "df45ae45-68bd-4568-a473-4159a1b16fc1",
             action: "download",
             multiSelect: true,
             openInNewWindow: true,
             advanced: {
-                filter: "folder,.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt"
+                filter: extentions
             },
             success: function (response) {
                 // console.log(555, response);
