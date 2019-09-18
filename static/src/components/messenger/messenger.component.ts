@@ -359,10 +359,11 @@ export class MessengerComponent implements OnInit {
     }
     
 	select_chat_user(target: ChatClient) {        
-        var obj_this = this;
+        var obj_this = this;        
         obj_this.attachments = [];                
         obj_this.activate_chat_user(target);
-        this.is_minimize = false;
+        $('.msg_card_body').css('visibility', 'visible');
+        this.is_minimize = false;        
         window['app_libs']['rtc'].load();
         if(!obj_this.active_chat_user)
         {
@@ -395,7 +396,7 @@ export class MessengerComponent implements OnInit {
                 }
                 obj_this.is_request_sent = false;
                 obj_this.active_chat_user.messages = [];
-                obj_this.onUserSelected(data);
+                obj_this.onUserSelected(data);                
             }
             input_data['no_loader'] = 1;
             obj_this.httpService.get(input_data, call_on_user_selected_event, call_on_user_selected_event);
@@ -431,8 +432,7 @@ export class MessengerComponent implements OnInit {
     scroll_to_end(selector)
     {
         if($(selector).length > 0)
-        {              
-            $(selector).css('visibility', 'hidden');
+        {
             setTimeout(function(){
                 $(selector).stop().animate({
                     scrollTop: $(selector)[0].scrollHeight
@@ -559,8 +559,8 @@ export class MessengerComponent implements OnInit {
 	onUserSelected(messages: Array<Message>, already_fetched = 0) {        
         var obj_this = this;
         obj_this.message_offset = 0;
-        obj_this.active_chat_user.read = false;
-		$( ".msg_card_body").unbind( "scroll" );
+        obj_this.active_chat_user.read = false;        
+        $( ".msg_card_body").unbind( "scroll" );
 		$(".msg_card_body").scroll(function(){
             let scroll_top = $(".msg_card_body").scrollTop();
             if(!obj_this.active_chat_user)
@@ -656,7 +656,7 @@ export class MessengerComponent implements OnInit {
 			$('#send_btn').click(function(){
 				obj_this.prepare_message();
 			});
-            obj_this.scroll_to_end(".msg_card_body");	
+            obj_this.scroll_to_end(".msg_card_body");            
         },20);
 	}
 

@@ -20,7 +20,8 @@
 	text-align: center;
 	}
 .messenger-container .msg_card_body {
-	overflow-y: auto;
+    overflow-y: auto;
+    visibility: hidden;
 	}
 .messenger-container .container {
 	align-content: center;
