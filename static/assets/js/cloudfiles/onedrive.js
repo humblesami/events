@@ -20,7 +20,7 @@ $(function(){
                         name: file.name,
                         url: file["@microsoft.graph.downloadUrl"],
                         size: file.size,
-                        source: 'Ondrive'
+                        source: 'Onedrive'
                     })
                 }
                 

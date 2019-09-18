@@ -247,7 +247,10 @@
     padding: 0.5rem;
     font-size: 12px;
     background-color: #2699FB;
-    color: #ffffff;
+	color: #ffffff;
+	display: inline-block;
+	max-width: 70%;
+	text-align: left;
 }
 
 .file_name {
@@ -354,7 +357,7 @@
 	border-bottom: 1px solid rgba(0, 0, 0, .10);
 	box-sizing: border-box;
 	height: 50px;
-	padding: 8px 15px;
+	padding: 20px 15px;
 	position: relative;
 	text-align: left;
 	line-height: 1;
