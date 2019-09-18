@@ -46,7 +46,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										<div class="top-header">
 											<div class="top-header-author">
 												<a href="javascript:void(0);">
-													<div class="author-thumb img-flex">
+													<div class="author-thumb img-flex" (click)="change_image()">
 														<img *ngIf="profile_data.image" src="{{socketService.server_url}}{{profile_data.image}}">
 														<img *ngIf="!profile_data.image"  src="static/assets/images/no-profile.png">
 													</div>

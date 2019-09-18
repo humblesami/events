@@ -281,7 +281,49 @@ export class ProfileDetailsComponent implements OnInit {
 		const failure_cb = function (error) {
 		};
 		this.httpService.get(input_data, success_cb, failure_cb);
-    }
+	}
+	
+	change_image()
+	{
+		let obj_this = this;
+		let config = {
+			hide_on_save: true,
+			on_load: function(){
+				$(document).ready(function(){
+					$('#signModal .modal-body').html(
+						`
+						<input type="file" 
+							accept=".jpg,.jpeg,.png" 
+							name="profile_image_upload", id="profile_image_upload"/>
+						`
+						);
+					setTimeout(() => {
+						var file_input = $('#profile_image_upload');
+						file_input.attr('dragdrop', 1);
+						file_input.attr('input_type', 'image');
+						window['apply_drag_drop'](file_input, null, function(data){
+							try{
+								console.log(data);
+								let file = []
+								file.push(data.file)
+								// obj_this.upload_files(file, data.cloud, (data)=>{
+								// 	obj_this.profile_data.resume = data[0];
+								// 	$(".feedback-message").append('<p id="success-message" class="alert-success">File Uploaded Successfully </p>').fadeIn("slow");
+								// });
+							}
+							catch(er){
+								console.log(er, 5455);
+							}
+						});
+					}, 100);
+				});
+			},
+			on_save:function(){
+
+			}
+		}
+		window['init_popup'](config);
+	}
     
     init_sign()
     {

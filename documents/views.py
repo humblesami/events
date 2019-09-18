@@ -49,7 +49,7 @@ def upload_single_file(request):
         res_app = req['res_app']
         res_model = req['res_model']
         res_id = req['res_id']
-        file_field = req['file_field']
+        file_field = req['res_field']
         model = ws_methods.get_model(res_app, res_model)
         obj = model.objects.get(pk=res_id)
         cloud_data = req.get('cloud_data')

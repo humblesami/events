@@ -238,15 +238,26 @@ export class ProfileeditComponent implements OnInit {
 			obj_this.resume_drag_drop = true;
 			var file_input = $('input[name="add_resume"]');
 			file_input.attr('dragdrop', 1);
+			// file_input.attr('input_type', 'image');
 			window['apply_drag_drop'](file_input, null, function(data){
 				try{
 					console.log(data);
 					let file = []
 					file.push(data.file)
-					obj_this.upload_files(file, data.cloud, (data)=>{
+					let resInfo = {
+						res_app: 'meetings',
+						res_model: 'Profile',
+						res_id: obj_this.profile_data.id,
+						res_field: 'resume'
+					}
+					window['upload_single_file'](file, resInfo, data.cloud, (data)=>{
 						obj_this.profile_data.resume = data[0];
 						$(".feedback-message").append('<p id="success-message" class="alert-success">File Uploaded Successfully </p>').fadeIn("slow");
 					});
+					// obj_this.upload_files(file, data.cloud, (data)=>{
+					// 	obj_this.profile_data.resume = data[0];
+					// 	$(".feedback-message").append('<p id="success-message" class="alert-success">File Uploaded Successfully </p>').fadeIn("slow");
+					// });
 				}
 				catch(er){
 					console.log(er, 5455);
@@ -260,76 +271,76 @@ export class ProfileeditComponent implements OnInit {
 
 	resInfo = {};
 
-	upload_files(files, cloud=false, success)
-    {
-		let obj_this = this;
-        // console.log(files, 13);
-        for(var obj of files){
-            if(!obj.file_name)
-            {
-                obj.file_name = obj.name;
-            }
-        }
+	// upload_single_file(files, cloud=false, success)
+    // {
+	// 	let obj_this = this;
+    //     // console.log(files, 13);
+    //     for(var obj of files){
+    //         if(!obj.file_name)
+    //         {
+    //             obj.file_name = obj.name;
+    //         }
+    //     }
 
-        $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
-        var url = window['site_config'].server_base_url+'/docs/upload-single-file';
-        var formData = new FormData();
-        if(!cloud)
-        {
-            var i= 0;
-            for(var file of files){
-                formData.append('file['+i+']', file);
-                i++;
-            }
-        }
-        else
-        {
-            formData.append('cloud_data', JSON.stringify(files));
-        }
+    //     $('.file-drop-zone-title').addClass('loading').html('Uploading '+files.length+' files...');
+    //     var url = window['site_config'].server_base_url+'/docs/upload-single-file';
+    //     var formData = new FormData();
+    //     if(!cloud)
+    //     {
+    //         var i= 0;
+    //         for(var file of files){
+    //             formData.append('file['+i+']', file);
+    //             i++;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         formData.append('cloud_data', JSON.stringify(files));
+    //     }
         
-        formData.append('res_app', 'meetings');
-        formData.append('res_model', 'Profile');
-		formData.append('res_id', obj_this.profile_data.id);
-		formData.append('file_field', 'resume');
-		let user: any;
-        user = localStorage.getItem('user');
-        user = JSON.parse(user);
-        let headers = {'Authorization': 'Token '+user.token};
-        var file_input_picker = $('.file-input-picker-container')
-        // js_utils.addLoader(file_input_picker);
-        // console.log(formData);
-        $.ajax({
-            url: url,
-            data: formData,
-            type: 'POST',            
-            // dataType: 'JSON',
-            headers: headers,
-            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
-            processData: false, // NEEDED, DON'T OMIT THIS
-            success: function(data){
-                try{
-                    success(data = JSON.parse(data));
-                }
-                catch(er){
-                    console.log(data);
-                    $(".feedback-message").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
-                    return;
-                }
+    //     formData.append('res_app', 'meetings');
+    //     formData.append('res_model', 'Profile');
+	// 	formData.append('res_id', obj_this.profile_data.id);
+	// 	formData.append('file_field', 'resume');
+	// 	let user: any;
+    //     user = localStorage.getItem('user');
+    //     user = JSON.parse(user);
+    //     let headers = {'Authorization': 'Token '+user.token};
+    //     var file_input_picker = $('.file-input-picker-container')
+    //     // js_utils.addLoader(file_input_picker);
+    //     // console.log(formData);
+    //     $.ajax({
+    //         url: url,
+    //         data: formData,
+    //         type: 'POST',            
+    //         // dataType: 'JSON',
+    //         headers: headers,
+    //         contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+    //         processData: false, // NEEDED, DON'T OMIT THIS
+    //         success: function(data){
+    //             try{
+    //                 success(data = JSON.parse(data));
+    //             }
+    //             catch(er){
+    //                 console.log(data);
+    //                 $(".feedback-message").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
+    //                 return;
+    //             }
                 
-            },
-            error: function(a,b,c,d){
-                $('.feedback-message').append('<p id="success-message" class="alert-danger">Fail to Upload Files </p>').fadeIn("slow");
-            },
-            complete:function(){
-                // js_utils.removeLoader(file_input_picker);
-                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');                
-                setTimeout(function(){
-                    $(".feedback-message").fadeOut("slow");
-                    $(".feedback-message").html('');
-                }, 4000);
-            }
-        });
-    }
+    //         },
+    //         error: function(a,b,c,d){
+    //             $('.feedback-message').append('<p id="success-message" class="alert-danger">Fail to Upload Files </p>').fadeIn("slow");
+    //         },
+    //         complete:function(){
+    //             // js_utils.removeLoader(file_input_picker);
+    //             $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');                
+    //             setTimeout(function(){
+    //                 $(".feedback-message").fadeOut("slow");
+    //                 $(".feedback-message").html('');
+    //             }, 4000);
+    //         }
+    //     });
+    // }
 
 	mail_to_assistant_change(value)
 	{

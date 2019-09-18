@@ -20,6 +20,15 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     var element = input[0];
     var parent = input.parent();
     var multiple = input.attr('multiple');
+    var input_type = input.attr('input_type');
+    if (!input_type)
+    {
+        input_type = 'document';
+    }
+    else
+    {
+        input_type = 'image';
+    }
     if(multiple)
     {
         multiple = ' multiple="1"'
@@ -157,7 +166,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         
         formData.append('res_app', resInfo.res_app);
         formData.append('res_model', resInfo.res_model);
-        formData.append('res_id', resInfo.res_id);        
+        formData.append('res_id', resInfo.res_id);
 
         var user = localStorage.getItem('user');
         user = JSON.parse(user);
@@ -216,9 +225,21 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         let files = [];
         let invalid_files= [];
         let invalid_files_size= [];
+        let doc_file_extentions = ['pdf', 'odt', 'doc', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'];
+        let image_file_extentions = ['jpg', 'jpeg', 'png'];
+        let extentions = [];
+        if (input_type == 'document')
+        {
+            extentions = doc_file_extentions;
+        }
+        else
+        {
+            extentions = image_file_extentions;
+        }
         for (const file of incoming_files) {
             file_name = file.name.split('.');
-            if(['pdf', 'odt', 'doc', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'].indexOf(file_name[file_name.length-1]) > -1)
+
+            if(extentions.indexOf(file_name[file_name.length-1]) > -1)
             {
                 if(file.size > 10000000){
                     invalid_files_size.push(file);
@@ -308,7 +329,6 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             parent.find('.file-drop-zone-title').show();
         }
     }
-
     input.change(function(e){
         preview_files(element.files);
     });
