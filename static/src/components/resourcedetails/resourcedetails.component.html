@@ -67,10 +67,10 @@
 								<div class="DocText" (click)="renameService.prevent_default($event, folder, 133)">
 									<div class="DocName">
 										<div *ngIf="!folder.edit_mode">
-											<span class="text-truncate">{{folder.name}}({{folder.total_files}})</span>
-											<button *ngIf="socketService.admin_mode" class="edit-btn"><i class="fas fa-edit "></i></button>
+											<span class="text-truncate resource-info">{{folder.name}}({{folder.total_files}})</span>
+											<button *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary"><i class="fas fa-edit "></i></button>
 										</div>										
-										<div *ngIf="folder.edit_mode">
+										<div *ngIf="folder.edit_mode" class="d-flex">
 											<input class="form-control renamer"                        
 												(focus)="renameService.renamer_focused($event.target)" 
 												(blur)="renameService.renamer_focused_out($event,folder, 'folder')"

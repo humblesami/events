@@ -21,6 +21,11 @@ button.check-time-btn {
 	border-radius: 40px;
 	font-size: 17px;
 	}
-	.DocText .edit-btn{
-		float: right;
-	}
+.DocText .edit-btn{
+	float: right;
+}
+.resource-info{
+	width: 70%;
+	display: inline-block;
+	margin-bottom: -6px;
+}	
