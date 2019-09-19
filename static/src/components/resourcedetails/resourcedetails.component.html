@@ -50,81 +50,12 @@
 				<div [ngClass]="{'pt-5': folder.total > httpService.limit}" *ngIf="!(no_folders)">
 					<hr *ngIf="folder.files.length">
 					<div class="mt-3 HeadingWrap ResourcesHeadWrapper">
-						<i class="icon-folder"></i> Sub Folders
+						<i class="icon-folder"></i>Sub Folders
 					</div>				
-				</div>
-				
-				<div class="row docwrappercontainer docs-colr-them">
-					<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of folder.sub_folders">
-						<a routerLink="/resource/{{folder.id}}" class="">
-							<div class="DocumentWrapper">
-							<div *ngIf="folder && folder.id &&socketService.is_admin" class="doc-del-btn"
-								(click)="delete_folder($event, folder.id)">
-									<i class="far fa-trash-alt pointer" ></i>
-								</div>
-								<div class="DocIcon">
-									<span class="rounded-circle">
-										<i class="icon-folder"></i>
-									</span>
-								</div>								
-								<div class="DocText" (click)="renameService.prevent_default($event, folder)">
-									<div class="DocName">
-										<div *ngIf="!folder.edit_mode" class="d-flex align-items-center justify-content-between">
-											<span class="text-truncate resource-info">{{folder.name}}({{folder.total_files}})</span>
-											<button *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary mr-1"><i class="fas fa-edit"></i></button>
-											<button *ngIf="socketService.admin_mode" (click)="openmodel([folder])" class="btn btn-sm btn-primary"><i class="fa fa-user-plus"></i></button>
-										</div>										
-										<div *ngIf="folder.edit_mode" class="d-flex">
-											<input class="form-control renamer"                        
-												(focus)="renameService.renamer_focused($event.target)" 
-												(blur)="renameService.renamer_focused_out($event,folder, 'folder')"
-												(keyup)="renameService.renamer_focused_out($event,folder,'folder')"												
-												value="{{folder.name}}"
-												(change)="renameService.renamer_changed($event.target)">
-											<button 
-											class="fri-selt-btn check-time-btn" 
-											aria-label="rename file.">
-												<i class="fas fa-check"></i>
-											</button>
-										</div>
-									</div>              
-								</div>
-							</div>
-						</a>						
-					</div>
-				</div>
+                </div>
+                
+				<app-folders parent_id="{{folder.id}}"></app-folders>
 			</div>
         </div>
-    </div>
-</div>
-
-<div class="modal fade" id="select_user_forlder" tabindex="-1" role="dialog" aria-labelledby="SelectUserModal" aria-hidden="true">
-    <div class="modal-dialog modal-top-fixed" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-			<div></div>
-                <div  style="display: flex" class="ng-select-user-list">
-                    <ng-select
-                    [items]="users"
-                    [multiple]="true"
-                    [hideSelected]="true"
-                    bindLabel="name"
-                    placeholder="Select User"
-                    [(ngModel)]="selectedUsers"
-                    >
-                    <ng-template ng-footer-tmp>
-                        Selected count: {{selectedUsers.length}}
-                    </ng-template>
-                    </ng-select>                    
-                </div>
-                <br>
-                <div>
-                    <button class="btn btn-sm btn-primary" (click)="saveusers()">Save</button>  
-                    <button class="btn btn-sm btn-success ml-1" (click)="selectedUsers=users" >Select All</button>
-                    <button class="btn btn-sm btn-danger ml-1" (click)="selectedUsers=[]" >Clear All</button>
-                    <button class="btn btn-sm btn-danger ml-1" (click)="closemodel()" >Close</button>
-                </div>
-        </div>
-    </div>
     </div>
 </div>

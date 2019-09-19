@@ -73,6 +73,7 @@ import { RosterComponent } from '../components/roster/roster.component';
 import { ProfilesummaryComponent } from '../components/profilesummary/profilesummary.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { DocumentsComponent } from '../components/documents/documents.component';
+import { FoldersComponent } from '../components/folders/folders.component';
 
 
 @NgModule({
@@ -139,6 +140,7 @@ import { DocumentsComponent } from '../components/documents/documents.component'
         RosterComponent,
         ProfilesummaryComponent,
         DocumentsComponent,
+        FoldersComponent,
     ],
     providers:[
         AuthGuard,

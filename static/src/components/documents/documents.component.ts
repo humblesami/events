@@ -104,29 +104,36 @@ export class DocumentsComponent implements OnInit {
     {
         evn.stopPropagation();
         evn.preventDefault();
-        let obj_this = this;        
-        let input_data = {
-            doc_id: doc_id,
-        }
-        let args = {
-            app: 'documents',
-            model: 'File',
-            method: 'delete_file'
-        }
-        let final_input = {
-            params: input_data,
-            args: args
-        }
 
-        obj_this.docs.find((item)=>{
-            return item.id== doc_id;
-        }).deleting=true;
-
-        obj_this.httpServ.get(final_input, (data)=>{                        
-            obj_this.docs =  obj_this.docs.filter((el)=>{
-                return doc_id != el.id;
-            });
-        }, null);
+        window['bootbox'].confirm('Are you sure to delete?', function(dr){
+            if(!dr)
+            {
+                return;
+            }
+            let obj_this = this;        
+            let input_data = {
+                doc_id: doc_id,
+            }
+            let args = {
+                app: 'documents',
+                model: 'File',
+                method: 'delete_file'
+            }
+            let final_input = {
+                params: input_data,
+                args: args
+            }
+    
+            obj_this.docs.find((item)=>{
+                return item.id== doc_id;
+            }).deleting=true;
+    
+            obj_this.httpServ.get(final_input, (data)=>{                        
+                obj_this.docs =  obj_this.docs.filter((el)=>{
+                    return doc_id != el.id;
+                });
+            }, null);
+        });        
     }    
 
     start_rename(evn)

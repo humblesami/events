@@ -141,11 +141,13 @@ class Folder(CustomModel):
         user_id = request.user.id
         folders = []
         if kw:
-            
             folders = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
             folders = folders.filter(Q(parent__isnull=True) & Q(users__id=user_id))
         else:
             folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id))
+        parent_id = params.get('parent_id')
+        if parent_id:
+            folders = folders.filter(parent_id=parent_id)
         total_cnt = folders.count()
         offset = params.get('offset')
         limit = params.get('limit')
