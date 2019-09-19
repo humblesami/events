@@ -5,7 +5,7 @@
                 <div *ngIf="!deleting && socketService.is_admin && !readonly" class="doc-del-btn"
                 (click)="delete_file($event, doc.id)">
                     <i class="far fa-trash-alt pointer" ></i>
-                </div>                
+                </div>
                 <div class="p-1 pos-abs" style="left:5px">
                     <img height="20px" width="20px" src="{{get_icon_url(doc.access_token)}}" alt="" class="doc_icons">
                 </div>

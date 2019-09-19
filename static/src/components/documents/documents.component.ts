@@ -127,7 +127,7 @@ export class DocumentsComponent implements OnInit {
                 return doc_id != el.id;
             });
         }, null);
-    }    
+    }
 
     start_rename(evn)
     {

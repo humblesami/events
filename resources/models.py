@@ -231,6 +231,13 @@ class Folder(CustomModel):
         return audience
 
 
+    @classmethod
+    def delete_folder(cls, request, params):
+        folder_id = params['folder_id']
+        Folder.objects.get(pk=folder_id).delete()
+        return 'done'
+
+
 
 class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='documents')
