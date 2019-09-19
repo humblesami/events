@@ -392,23 +392,7 @@
 .doc-container.admin .docWrapperContainer{
     width: 78%;
 }
-.sign_container{
-    cursor: pointer;    
-}
-.new_sign, .sign_container{    
-    padding: 7px 25px 5px 5px;
-    min-width:160px;
-    min-height:40px;
-}
 
-
-.sign_container[signed="true"]{    
-    border: 1px dotted;
-    background: white;
-}
-.sign_container img{
-    max-width: inherit;
-}
 body.user #viewer_container{
     height: calc(100vh - 164px);
     overflow-y: auto;

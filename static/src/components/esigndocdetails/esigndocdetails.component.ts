@@ -128,7 +128,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
         var page_zoom = 1;
         $(function(){
-
+            $('#dropdown_meeting').val(meeting_id);
             // Go to previous page
             $("#prev").on('click', function goPrevious() {
                 if (pageNum <= 1)
@@ -284,8 +284,14 @@ export class EsignDocDetailsComponent implements OnInit {
                     "page": pageNum
                 }).resizable();
 
-                new_signature[0].onresize = function(){                    
-                    on_dropped(this);
+                
+                var after_resized;                
+                new_signature[0].onresize = function(){
+                    var el_this = this;
+                    clearTimeout(after_resized);
+                    after_resized = setTimeout(function(){
+                        on_dropped(el_this);
+                    }, 100);                    
                 }
     
                 $('.active_signature').removeClass('active_signature');
@@ -310,7 +316,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 else{                
                     $('#select_user_modal').modal('show');
                 }
-
                 on_dropped(new_signature[0]);
             }
 
@@ -357,10 +362,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 input_subject.val("Signature Request");
 
                 var meeting_id = $('#dropdown_meeting').val();
-                if (!meeting_id || meeting_id == 0) {
-                    meeting_id = false
-                    // snd_to_all = false
-                }
                 body.append("<h3 class='border-bottom text-dark pb-2 font-weight-bold'>Sign and Return</h3>");
                 body.append("<h3>Subject</h3>").append(input_subject);
                 body.append("<h3>Message</h3>").append(email_body);
@@ -814,6 +815,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     obj_this.signature_started = data.signature_started;
                     obj_this.all_users_list = obj_this.users_list = users = data.users;
                     meeting_id = data.meeting_id;
+                    // console.log(data);
                     send_to_all = data.send_to_all;
                     pdf_url = window['site_config'].server_base_url + data.file_url;
                     window['app_libs']['pdf'].load(function(){
@@ -980,10 +982,27 @@ export class EsignDocDetailsComponent implements OnInit {
 
         function on_dropped(el){
             var position = $(el).position();
+            if(!$(el).css('width'))
+            {                
+                $(el).css('width', $(el).width());
+                $(el).css('height', $(el).height());
+                console.log($(el).width(), 59990);
+            }
+
+            // var vertical_padding = 0;
+            // var vertical_padding1 = $(el).css('padding-top');
+            // var vertical_padding2 = $(el).css('padding-bottom');
+            // if(vertical_padding1)
+            // {
+            //     vertical_padding1 = parseFloat(vertical_padding1);
+            //     vertical_padding2 = parseFloat(vertical_padding2);
+            //     vertical_padding = vertical_padding1 + vertical_padding2;
+            // }
+
             position = {
                 top: parseFloat(position.top),
                 left: parseFloat(position.left),
-                width: $(el).width(),
+                width: $(el).width() + 25,
                 height: $(el).height(),
             };
             if(position.left < 5)

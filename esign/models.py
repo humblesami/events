@@ -294,7 +294,7 @@ class SignatureDoc(File, Actions):
         doc_data = res
         meetings = Event.objects.filter(publish=True).exclude(archived=True)
         meetings = queryset_to_list(meetings, fields=['id', 'name'])
-        meeting_id = False
+        meeting_id = doc_obj.meeting_id
         send_to_all = False
         if doc_obj.send_to_all:
             send_to_all = doc_obj.send_to_all
@@ -580,9 +580,7 @@ class Signature(CustomModel):
         sign.signed_at = datetime.datetime.now()
         binary_signature = ''
         curr_dir = os.path.dirname(__file__)
-        font_directory = curr_dir.replace('esign/model_files', 'static/assets/fonts')
-        if 'esign' in font_directory:
-            font_directory = font_directory.replace('esign\model_files', 'static\\assets\\fonts')
+        font_directory = curr_dir.replace('esign', 'static/assets/fonts')
         sign_type = params['sign_type']
         if sign_type != 'initials' and sign_type != 'signature':
             text = str(sign_type).title() + ': ' + params['text']
@@ -593,10 +591,10 @@ class Signature(CustomModel):
             drawing = ImageDraw.Draw(img)
             drawing.text((0, -10), text, (0, 0, 0), font)
             curr_dir = os.path.dirname(__file__)
-            signature_directory = curr_dir.replace('model_files', 'static')
+            signature_directory = curr_dir + '/static'
             if not os.path.exists(signature_directory):
                 os.makedirs(signature_directory)
-            img_path = signature_directory + "/tempsignload" + str(request.user.id) + ".png"
+            img_path = signature_directory + "/sign" + str(request.user.id) + ".png"
             img.save(img_path)
 
             image = open(img_path, 'rb')
