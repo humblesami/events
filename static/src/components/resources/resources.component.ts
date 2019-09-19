@@ -28,6 +28,32 @@ export class ResourcesComponent implements OnInit {
         this.renameService =renameSer;
     }
 
+
+    delete_folder(evn, folder_id)
+    {
+        evn.stopPropagation();
+        evn.preventDefault();
+        let obj_this = this;        
+        let input_data = {
+            folder_id: folder_id,
+        }
+        let args = {
+            app: 'resources',
+            model: 'Folder',
+            method: 'delete_folder'
+        }
+        let final_input = {
+            params: input_data,
+            args: args
+        }
+
+        obj_this.httpServ.get(final_input, (data)=>{                        
+            obj_this.records =  obj_this.records.filter((el)=>{
+                return folder_id != el.id;
+            });
+        }, null);
+    }
+
     get_list()
     {
         let obj_this = this;
