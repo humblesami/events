@@ -331,8 +331,8 @@ span.rounded-circle img {
 	}
 .btn-primary:hover {
 	color: white;
-	background-color: #638FC9;
-	border-color: #638FC9;
+	border-color: #4b74b5;
+    background: #4b74b5;
 	}
 .btn-primary:focus,
 .btn-primary.focus {
