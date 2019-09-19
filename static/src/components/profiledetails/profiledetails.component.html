@@ -40,7 +40,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 						</div>
 
 						<div class="row m-0 align-items-center">
-							<div class="col-sm-5">
+							<div class="col-sm-5 p-0">
 								<div class="row align-items-center">
 									<div class="col-auto">
 										<div class="top-header">
@@ -51,8 +51,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 														<img *ngIf="!profile_data.image"  src="static/assets/images/no-profile.png">
 													</div>
 												</a>												
-												<div class="author-content">
-													<div class="UserProfileNameTittle text-truncate">
+												<div class="author-content d-none d-md-block">
+													<div class="UserProfileNameTittle wordBreak">
 														{{profile_data.name}}
 													</div>
 												</div>
@@ -60,29 +60,32 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										</div>
 									</div>
 									<div class="col-auto">
-										<div class="pl-md-3">
-											<div *ngIf="profile_data.mobile_phone" class="single-form-field mb-2 wordBreak">
-												<i class="fas fa-phone"></i> {{profile_data.mobile_phone}}
+										<div class="author-content d-block d-md-none">
+											<div class="UserProfileNameTittle wordBreak">
+												{{profile_data.name}}
 											</div>
-											<div *ngIf="profile_data.email" class="single-form-field mb-2 wordBreak">
-												<i class="far fa-envelope"></i> {{profile_data.email}}
-											</div>
-											<div *ngIf="profile_data.birth_date" class="single-form-field mb-2 wordBreak">
-												<i class="far fa-calendar-alt"></i> {{profile_data.birth_date}}
-											</div>
-											<div *ngIf="profile_data.location" class="single-form-field mb-2 wordBreak">
-												<i class="fas fa-map-marker-alt"></i>   {{profile_data.location}}
-											</div>
-											<div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="single-form-field mb-2 wordBreak">
-												<i class="far fa-envelope"></i>	{{profile_data.two_factor_auth.name}}
-											</div>
+										</div>
+										<div *ngIf="profile_data.mobile_phone" class="single-form-field mb-2 wordBreak">
+											<i class="fas fa-phone"></i> {{profile_data.mobile_phone}}
+										</div>
+										<div *ngIf="profile_data.email" class="single-form-field mb-2 wordBreak">
+											<i class="far fa-envelope"></i> {{profile_data.email}}
+										</div>
+										<div *ngIf="profile_data.birth_date" class="single-form-field mb-2 wordBreak">
+											<i class="far fa-calendar-alt"></i> {{profile_data.birth_date}}
+										</div>
+										<div *ngIf="profile_data.location" class="single-form-field mb-2 wordBreak">
+											<i class="fas fa-map-marker-alt"></i>   {{profile_data.location}}
+										</div>
+										<div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="single-form-field mb-2 wordBreak">
+											<i class="far fa-envelope"></i>	{{profile_data.two_factor_auth.name}}
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-7">
 								<div class="row justify-content-end">
-									<div class="col-7 col-sm-12 col-md-6" *ngIf="my_profile">
+									<div class="col-7 col-sm-12 col-md-6 p-0" *ngIf="my_profile">
 										<h4 class="title-h4" style="cursor: pointer" (click)='update_sign()'> 
 											<i class="icon-draw-pencil"></i>
 											E-Signature</h4>
@@ -94,7 +97,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 										</div>
 									</div>
 									<div class="col-5 col-sm-12 col-md-6">
-										<div *ngIf="profile_data.resume"  class="docwrappercontainer text-center">
+										<div *ngIf="profile_data.resume"  class="docwrappercontainer text-center left-text">
 											<h4 class="title-h4">Resume</h4>
 											<div class="mb-0">
 												<a routerLink="/resume/doc/{{profile_data.resume.id}}">
@@ -445,11 +448,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<div class="col-sm-12">
 								<div class="ProfileUserNameJonbWrapper">
 									<div class="author-thumb-wrap">
-										<div class="author-thumb director-thumb img-flex">
+										<div class="author-thumb img-flex">
 											<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
 											<img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
 										</div>
-										<div  class="UserProfileNameTittle text-truncate" *ngIf="profile_data.name">
+										<div  class="UserProfileNameTittle wordBreak" *ngIf="profile_data.name">
 											{{profile_data.admin_full_name}}
 										</div>
 									</div>

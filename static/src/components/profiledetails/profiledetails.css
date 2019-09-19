@@ -76,6 +76,17 @@ button:hover {
     word-break: break-all
 }
 /* Change styles for cancel button and signup button on extra small screens */
+@media screen and (max-width: 576px) {
+    .img-flex img{
+        border:1px solid #ddd;
+    }
+    h4.title-h4{
+        text-align: left;
+    }
+    .left-text{
+        text-align: left !important;
+    }
+}
 @media screen and (max-width: 340px) {
     .cancelbtn, .signupbtn {
         width: 100%;

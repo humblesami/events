@@ -2827,12 +2827,9 @@ select {
 	max-width: 200px;
 	margin-bottom: 15px;
 	z-index: 1;
-	text-align: center;
 	}
 .author-thumb-wrap {
 	position: relative;
-	max-width: 200px;
-	text-align: center;
 	}
 .author-thumb {
 	border-radius: 100%;
