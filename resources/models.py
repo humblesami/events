@@ -31,15 +31,14 @@ class Folder(CustomModel):
         folder = Folder(
             name =name,
         )
-        parent = params.get('parent_folder')
-        if parent:        
-            folder.parent_id = parent
-        
+        parent_id = params.get('parent_id')
+        if parent_id:        
+            folder.parent_id = parent_id
         folder.save()
         data = {
             'name': folder.name,
             'id': folder.id,
-            'parent': parent,
+            'parent': parent_id,
         }
         return data
 
@@ -110,6 +109,10 @@ class Folder(CustomModel):
         obj['count'] = len(resource_files)
         resource_files = list(resource_files.values('id','name'))
         obj['files'] = resource_files
+        users_obj = ws_methods.get_model('meetings','Profile')
+        users_obj = users_obj.objects.all()
+        all_users = list(users_obj.values('id', 'name'))
+        obj['users'] = all_users
         return obj
 
 
@@ -147,6 +150,9 @@ class Folder(CustomModel):
         offset = params.get('offset')
         limit = params.get('limit')
         ab = []
+        users_obj = ws_methods.get_model('meetings','Profile')        
+        users_obj = users_obj.objects.all()
+        all_users = list(users_obj.values('id', 'name'))
         if limit:
             folders = folders[offset: offset + int(limit)]
         for folder in folders:
@@ -159,7 +165,7 @@ class Folder(CustomModel):
             # folder.append({'total_files' : total_files})
         folders = ab
         current_cnt = len(ab)
-        res = {'records':ab, 'total':total_cnt, 'count':current_cnt}
+        res = {'records':ab, 'total':total_cnt, 'count':current_cnt, 'users': all_users}
         return res
 
 
@@ -186,11 +192,12 @@ class Folder(CustomModel):
 
     @classmethod
     def define_access(cls, request, params):
-        folder_id = params.get('folder_id')
+        folder_id = params.get('folder_ids')
         file_ids = params.get('file_ids')
         user_id = request.user.id
         user_ids = params['user_ids']
         if folder_id:
+            folder_id = folder_id[0]
             folder = Folder.objects.get(pk=folder_id)
             for user in folder.users.all():
                 if user.id != user_id:
@@ -217,6 +224,7 @@ class Folder(CustomModel):
     def get_resource_audience(cls, request, params):
         folder_id = params.get('folder_id')
         file_id = params.get('file_id')
+        parent_id = params.get('parent_id')
         audience = []
         has_admin_group = request.user.groups.filter(name='Admin')
         if not has_admin_group:
@@ -228,14 +236,13 @@ class Folder(CustomModel):
         if file_id:
             file_users = ResourceDocument.objects.get(pk=file_id).users.all()
             audience = list(file_users.values('id', 'name'))
-        return audience
-
-
-    @classmethod
-    def delete_folder(cls, request, params):
-        folder_id = params['folder_id']
-        Folder.objects.get(pk=folder_id).delete()
-        return 'done'
+        
+        valid_audience = []
+        if parent_id:
+            folder_users = Folder.objects.get(pk=parent_id).users.all()
+            valid_audience = list(folder_users.values('id', 'name'))
+        res = {'selected': audience, 'valid': valid_audience}
+        return res
 
 
 

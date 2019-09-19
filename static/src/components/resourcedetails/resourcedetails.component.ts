@@ -21,6 +21,9 @@ export class ResourceDetailsComponent implements OnInit {
     httpService: HttpService;
     socketService: SocketService;
     renameService: RenameService;
+    selectedUsers = [];
+    users = [];
+    selected_docs = [];
 
     constructor(private httpServ: HttpService,private renameSer: RenameService, 
         private ss: SocketService, private route: ActivatedRoute, public zone: NgZone) {
@@ -71,9 +74,9 @@ export class ResourceDetailsComponent implements OnInit {
         obj_this.httpService.get(final_input_data,
             (result: any) => {
                 obj_this.root = !(result.hasOwnProperty('parent_id'));
-                obj_this.folder = undefined;
+                obj_this.folder = undefined;                
                 setTimeout(function(){
-                    obj_this.folder = result;
+                    obj_this.folder = result;                    
                 }, 50);
                 if(on_init)
                 {
@@ -90,9 +93,7 @@ export class ResourceDetailsComponent implements OnInit {
             console.log(error);
             //alert(error);
         });
-    }
-
-    
+    }    
 
     create_folder_popup_config()
 	{
@@ -103,10 +104,6 @@ export class ResourceDetailsComponent implements OnInit {
 			},
 			on_save:function(){						
                 obj_this.new_folder = $('#new_folder').val();
-                if(obj_this.route.snapshot.params.id){
-                    obj_this.parent_folder = obj_this.route.snapshot.params.id;
-                }
-                    
 				if(!obj_this.new_folder)
 				{
 					obj_this.new_folder = [];
@@ -116,7 +113,7 @@ export class ResourceDetailsComponent implements OnInit {
 				{
 					let input_data = {
                         name: obj_this.new_folder,
-                        parent_folder : obj_this.parent_folder
+                        parent_id : obj_this.folder.id
 					}
 					let args = {
 						app: 'resources',
@@ -187,8 +184,75 @@ export class ResourceDetailsComponent implements OnInit {
         }, 100)        
     }
 
+    saveusers(){
+        let obj_this = this;        
+        var user_ids = [];
+        var new_file_ids = [];
+        for(var file of obj_this.selected_docs)
+        {
+            new_file_ids.push(file.id);
+        }
+        for(var user of obj_this.selectedUsers)
+        {
+            user_ids.push(user.id);
+        }
+        // console.log(user_ids,new_file_ids);
+        let args = {
+            app: 'resources',
+            model: 'Folder',
+            method: 'define_access'
+        }
+        let final_input_data = {
+            params: {
+                folder_ids : new_file_ids,
+                user_ids : user_ids
+            },
+            args: args
+        };
+        obj_this.httpService.get(final_input_data,
+        (result: any) => {
+            console.log(result);           
+        },null);
+        $('#select_user_forlder').modal('hide');
+    }
 
+    closemodel(){
+        $('#select_user_forlder').modal('hide');
+        this.selectedUsers = [];
+        this.selected_docs  = [];
+    }
 
+    openmodel(docs){
+        let obj_this = this;
+        obj_this.selectedUsers = [];
+        obj_this.selected_docs  = [];
+
+        for(var doc of docs)
+        {
+            obj_this.selected_docs.push(doc);
+        }
+        if(docs.length == 1)
+        {
+            let args = {
+                app: 'resources',
+                model: 'Folder',
+                method: 'get_resource_audience'
+            }
+            let final_input_data = {
+                params: {
+                    folder_id: docs[0].id,
+                    parent_id: obj_this.folder.id
+                },
+                args: args
+            };
+            obj_this.httpService.get(final_input_data,
+            (result: any) => {                
+                obj_this.users = result.valid;
+                obj_this.selectedUsers = result.selected;
+            },null);                
+        }
+        $('#select_user_forlder').modal('show');
+    }
 
 
     ngOnInit() {   

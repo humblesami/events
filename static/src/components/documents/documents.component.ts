@@ -127,7 +127,7 @@ export class DocumentsComponent implements OnInit {
                 return doc_id != el.id;
             });
         }, null);
-    }
+    }    
 
     start_rename(evn)
     {
@@ -162,7 +162,7 @@ export class DocumentsComponent implements OnInit {
             obj_this.users = data.users;
         }, null);
     }
-    
+        
 
     saveusers(){
         let obj_this = this;        
@@ -176,8 +176,7 @@ export class DocumentsComponent implements OnInit {
         {
             user_ids.push(user.id);
         }
-        console.log(user_ids,new_file_ids);
-                
+        // console.log(user_ids,new_file_ids);       
         let args = {
             app: 'resources',
             model: 'Folder',
@@ -223,13 +222,15 @@ export class DocumentsComponent implements OnInit {
             let final_input_data = {
                 params: {
                     file_id: docs[0].id,
+                    parent_id: obj_this.parent_id
                 },
                 args: args
             };
             obj_this.httpService.get(final_input_data,
             (result: any) => {
                 // console.log(result);
-                obj_this.selectedUsers = result;
+                obj_this.users = result.valid;
+                obj_this.selectedUsers = result.selected;
             },null);                
         }
         $('#select_user_modal').modal('show');

@@ -55,6 +55,7 @@
                         </div>
                     </div>
                 </a>
+                <button *ngIf="socketService.admin_mode" (click)="openmodel([folder])" class="btn btn-info btn-lg">Add Users</button>
             </div>
         </div>
         <app-paginator *ngIf="records.length" (reload_data)="get_list()">
@@ -96,5 +97,36 @@
             </div>
         </div>
         </div>
+    </div>
+</div>
+
+<div class="modal fade" id="select_user_modal" tabindex="-1" role="dialog" aria-labelledby="SelectUserModal" aria-hidden="true">
+    <div class="modal-dialog modal-top-fixed" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+			<div></div>
+                <div  style="display: flex" class="ng-select-user-list">
+                    <ng-select
+                    [items]="users"
+                    [multiple]="true"
+                    [hideSelected]="true"
+                    bindLabel="name"
+                    placeholder="Select User"
+                    [(ngModel)]="selectedUsers"
+                    >
+                    <ng-template ng-footer-tmp>
+                            Selected count: {{selectedUsers.length}}
+                    </ng-template>
+                    </ng-select>                    
+                </div>
+                <br>
+                <div>
+                    <button class="btn btn-primary" (click)="saveusers()">Save</button>  
+                    <button class="btn btn-success" (click)="selectedUsers=users" >Select All</button>
+                    <button class="btn btn-danger" (click)="selectedUsers=[]" >Clear All</button>
+                    <button class="btn btn-danger" (click)="closemodel()" >Close</button>
+                </div>
+        </div>
+    </div>
     </div>
 </div>

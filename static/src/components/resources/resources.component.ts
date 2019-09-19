@@ -15,6 +15,10 @@ export class ResourcesComponent implements OnInit {
     parent_folder = undefined;
     show_renamer_button = false;
     modified_folder_data =undefined;
+    selectedUsers = [];
+    selected_docs = [];
+    docs = [];
+    users = [];
     heading = 'Resources';
     bread_crumb = {
 		items: [],
@@ -27,7 +31,6 @@ export class ResourcesComponent implements OnInit {
         this.httpService = httpServ;
         this.renameService =renameSer;
     }
-
 
     delete_folder(evn, folder_id)
     {
@@ -53,7 +56,7 @@ export class ResourcesComponent implements OnInit {
             });
         }, null);
     }
-
+    
     get_list()
     {
         let obj_this = this;
@@ -68,7 +71,8 @@ export class ResourcesComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data,
         (result: any) => {
-            obj_this.records = result.records;            
+            obj_this.records = result.records;      
+            obj_this.users = result.users;
             obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;            
         },null);
     }
@@ -163,71 +167,74 @@ export class ResourcesComponent implements OnInit {
         },10);        
     }
 
-    // start_rename(evn)
-    // {
-    //     evn.stopPropagation();
-    //     evn.preventDefault();
-    // }
-    // renamer_focused(el)
-    // {
-    //     this.show_renamer_button = false;
-    //     $(el).next('button').show();
-    //     $(el).closest('.DocName').css("display","flex");
-    //     $(el).closest('.DocName').find('input.renamer').css("width","78%")
-    // }
-    // renamer_focused_out(evn,folder){
-    //     if(evn.type=='keyup' && evn.keyCode != 13)
-    //     {
-    //         return;
-    //     }
-    //     var el = evn.target;
-    //     $(el).next('button').hide();
-    //     $(el).closest('.DocName').css("display","block");
-    //     $(el).closest('.DocName').find('input.renamer').css("width","100%");
-    //     this.change_folder_name(el, folder);
-    // }
-    // prevent_default(evn,folder){
-    //     evn.stopPropagation();
-    //     evn.preventDefault();
-    //     this.change_folder_name(evn.target, folder);
-        
-    // }
+    saveusers(){
+        let obj_this = this;        
+        var user_ids = [];
+        var new_file_ids = [];
+        for(var file of obj_this.selected_docs)
+        {
+            new_file_ids.push(file.id);
+        }
+        for(var user of obj_this.selectedUsers)
+        {
+            user_ids.push(user.id);
+        }
+        console.log(user_ids,new_file_ids);
+        let args = {
+            app: 'resources',
+            model: 'Folder',
+            method: 'define_access'
+        }
+        let final_input_data = {
+            params: {
+                folder_ids : new_file_ids,
+                user_ids : user_ids
+            },
+            args: args
+        };
+        obj_this.httpService.get(final_input_data,
+        (result: any) => {
+            console.log(result);           
+        },null);
+        $('#select_user_modal').modal('hide');
+    }
 
-    // renamer_changed(el)
-    // {
-    //     this.show_renamer_button = true;
-    // }
-    // change_folder_name(el, folder)
-    // {
-    //     let obj_this = this;
-    //     if(!this.show_renamer_button)
-    //     {
-    //         return;
-    //     }
-    //     let folder_name = $(el).closest('.DocText').find('input.renamer').val();
-    //     if (!folder_name)
-    //     {            
-    //         return;
-    //     }
-    //     var folder_id = folder.id;
-    //     let input_data = {
-    //         folder_id: folder_id,
-    //         name: folder_name
-    //     }
-    //     let args = {
-    //         app: 'resources',
-    //         model: 'Folder',
-    //         method: 'change_folder_name'
-    //     }
-    //     let final_input = {
-    //         params: input_data,
-    //         args: args
-    //     }
-    //     obj_this.httpServ.get(final_input, (data)=>{
-    //         folder.name = folder_name;
-    //     }, null);
-    // }
+    closemodel(){
+        $('#select_user_modal').modal('hide');
+        this.selectedUsers = [];
+        this.selected_docs  = [];
+    }
 
+    openmodel(docs){
+        let obj_this = this;
+        obj_this.selectedUsers = [];
+        obj_this.selected_docs  = [];
+
+        for(var doc of docs)
+        {
+            obj_this.selected_docs.push(doc);
+        }
+        console.log(docs);
+        if(docs.length == 1)
+        {
+            let args = {
+                app: 'resources',
+                model: 'Folder',
+                method: 'get_resource_audience'
+            }
+            let final_input_data = {
+                params: {
+                    folder_id: docs[0].id,
+                },
+                args: args
+            };
+            obj_this.httpService.get(final_input_data,
+            (result: any) => {
+                obj_this.selectedUsers = result.selected;
+            },null);                
+        }
+        $('#select_user_modal').modal('show');
+    }
 
 
     ngOnInit() {
