@@ -87,7 +87,7 @@ class Folder(CustomModel):
         else:
             resource_files = folder.documents.filter(users__id=user_id)
             ar = []
-            sub_folders = folder.folder_set.values()
+            sub_folders = folder.folder_set.filter(users__id=user_id).values()
             for sub in sub_folders:
                 folder = Folder.objects.get(pk= sub['id'])
                 folder.total_files = 0
