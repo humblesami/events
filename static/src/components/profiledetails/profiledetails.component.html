@@ -448,7 +448,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<div class="col-sm-12">
 								<div class="ProfileUserNameJonbWrapper">
 									<div class="author-thumb-wrap">
-										<div class="author-thumb img-flex">
+										<div (click)="change_admin_image()" style="cursor: pointer" class="author-thumb img-flex">
 											<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">
 											<img *ngIf="!profile_data.admin_image" class="img-thumbnail-lg" src="static/assets/images/no-profile.png">
 										</div>

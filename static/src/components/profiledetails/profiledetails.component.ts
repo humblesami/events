@@ -328,7 +328,7 @@ export class ProfileDetailsComponent implements OnInit {
 											cuser.photo = obj_this.profile_data.image;
 											cuser.user_photo = obj_this.profile_data.image;
 											obj_this.socketService.user_data.photo = obj_this.profile_data.image;
-                        					obj_this.socketService.user_photo = obj_this.base_url + obj_this.profile_data.image;
+											obj_this.socketService.user_photo = obj_this.base_url + obj_this.profile_data.image;
 											let value = JSON.stringify(cuser);
 											localStorage.setItem('user', value);
 										}
@@ -350,7 +350,60 @@ export class ProfileDetailsComponent implements OnInit {
 		}
 		window['init_popup'](config);
 	}
-    
+	
+	
+	change_admin_image()
+	{
+		let obj_this = this;
+		let config = {
+			hide_on_save: true,
+			on_load: function(){
+				$(document).ready(function(){
+					$('#signModal .modal-body').html(
+						`
+						<input type="file" 
+							accept=".jpg,.jpeg,.png" 
+							name="profile_image_upload", id="profile_image_upload"/>
+						`
+						);
+					setTimeout(() => {
+						var file_input = $('#profile_image_upload');
+						file_input.attr('dragdrop', 1);
+						file_input.attr('input_type', 'image');
+						window['apply_drag_drop'](file_input, null, function(data){
+							try{
+								let file = [];
+								file.push(data.file);
+								let resInfo = {
+									res_app: 'meetings',
+									res_model: 'Profile',
+									res_id: obj_this.profile_data.id,
+									res_field: 'admin_image',
+									file_type: data.file_type
+								}
+								window['upload_single_file'](file, resInfo, data.cloud, (data)=>{
+									if(obj_this.my_profile || obj_this.socketService.is_admin)
+									{
+										obj_this.profile_data.admin_image = data[0].image_url;
+									}
+									$(".feedback-message").append('<p id="success-message" class="alert-success">File Uploaded Successfully </p>').fadeIn("slow");
+								});
+								
+							}
+							catch(er){
+								console.log(er, 5455);
+							}
+						});
+					}, 100);
+				});
+			},
+			on_save:function(){
+
+			}
+		}
+		window['init_popup'](config);
+	}
+
     init_sign()
     {
         let obj_this = this;
