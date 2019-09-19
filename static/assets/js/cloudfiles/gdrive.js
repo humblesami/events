@@ -29,7 +29,7 @@ $(function(){
     function onAuthApiLoad() {
         console.log('APi Loaded');
         window.gapi.auth.authorize({
-            'client_id': '921039722572-u3aq7gvjgk42gj590ve3qf5fc1schjf0.apps.googleusercontent.com',
+            'client_id': '817538782176-g2lt1g2abguu59qt44lnbv14h5j51eqb.apps.googleusercontent.com',
             'scope': ['https://www.googleapis.com/auth/drive']
         }, handleAuthResult);
     }
