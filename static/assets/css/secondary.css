@@ -221,7 +221,7 @@ a.DocumentWrapper:hover{
 
 .check-status.Published span, .check-status.Unpublished span{
     position: absolute;
-    top: 0.15rem;
+    top: 0.19rem;
 }
 
 .check-status.Published .circle{

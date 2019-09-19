@@ -78,8 +78,8 @@
     </div>
     <div class="d-flex display-block">            
         <div class="form-buttons">
-            <button type="button" class="btn btn-success btn-sm mr-2" (click)="submit_attendance($event)">Submit and Close</button>
-            <button type="button" class="btn btn-danger btn-sm " (click)="close_roster($event)">Close</button>
+            <button type="button" class="btn btn-primary btn-sm mr-2" (click)="submit_attendance($event)">Submit</button>
+            <button type="button" class="btn btn-danger btn-sm " (click)="close_roster($event)">Cancel</button>
         </div>
         <div class="ml-auto d-flex">
             <app-paginator *ngIf="attendees.length"            

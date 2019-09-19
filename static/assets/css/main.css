@@ -11,6 +11,7 @@ body {
 .router-outlet {
 	height: calc(100vh - 110px);
 	overflow-x: hidden;
+	overflow-y: overlay;
 	}
 body {
 	font-family: "Roboto-Condensed";
@@ -2329,7 +2330,7 @@ body.public .app-content {
 	}
 .HeadingWrap i {
 	color: #4B74B5;
-	font-size: 23px;
+	font-size: 22px;
 	margin-right: 10px;
 	}
 .sidebar-mini.sidenav-toggled .app-sidebar {
@@ -2433,9 +2434,19 @@ span.kanban-upcoming-meeting-date {
 	border-radius: 25px;
 	}
 .btn-meeting:hover {
-	background: #3059C9;
+	background: #638FC9;
 	color: #ffffff;
-	}
+}
+.page-link{
+	color: #638FC9;
+}
+.page-item.active .page-link{
+	background: #638FC9;
+	border-color: #638FC9;
+}
+.page-link:focus{
+	box-shadow: 0 0 0 0;
+}	
 .ChoseButtonHeadWrap .meeting-detail .upcomingButton {
 	border: 0;
 	margin: 0;
@@ -3103,4 +3114,7 @@ label.check-plus-label-wrap {
 }
 .picker{
 	margin: .5rem;
+}
+.btn-danger:not(:disabled):not(.disabled):active:focus{
+	box-shadow: 0 0 0;
 }
