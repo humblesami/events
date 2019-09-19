@@ -40,7 +40,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 						</div>
 
 						<div class="row m-0 align-items-center">
-							<div class="col-sm">
+							<div class="col-sm-5">
 								<div class="row align-items-center">
 									<div class="col-auto">
 										<div class="top-header">
@@ -61,28 +61,28 @@ title="{{profile_data.name}}"></app-breadcrumb>
 									</div>
 									<div class="col-auto">
 										<div class="pl-md-3">
-											<div *ngIf="profile_data.mobile_phone" class="single-form-field mb-2">
+											<div *ngIf="profile_data.mobile_phone" class="single-form-field mb-2 wordBreak">
 												<i class="fas fa-phone"></i> {{profile_data.mobile_phone}}
 											</div>
-											<div *ngIf="profile_data.email" class="single-form-field mb-2">
+											<div *ngIf="profile_data.email" class="single-form-field mb-2 wordBreak">
 												<i class="far fa-envelope"></i> {{profile_data.email}}
 											</div>
-											<div *ngIf="profile_data.birth_date" class="single-form-field mb-2">
+											<div *ngIf="profile_data.birth_date" class="single-form-field mb-2 wordBreak">
 												<i class="far fa-calendar-alt"></i> {{profile_data.birth_date}}
 											</div>
-											<div *ngIf="profile_data.location" class="single-form-field mb-2">
+											<div *ngIf="profile_data.location" class="single-form-field mb-2 wordBreak">
 												<i class="fas fa-map-marker-alt"></i>   {{profile_data.location}}
 											</div>
-											<div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="single-form-field mb-2">
+											<div *ngIf="my_profile && profile_data.two_factor_auth && profile_data.two_factor_auth.name" class="single-form-field mb-2 wordBreak">
 												<i class="far fa-envelope"></i>	{{profile_data.two_factor_auth.name}}
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="col-sm">
+							<div class="col-sm-7">
 								<div class="row justify-content-end">
-									<div class="col-5" *ngIf="my_profile">
+									<div class="col-7 col-sm-12 col-md-6" *ngIf="my_profile">
 										<h4 class="title-h4" style="cursor: pointer" (click)='update_sign()'> 
 											<i class="icon-draw-pencil"></i>
 											E-Signature</h4>
@@ -93,7 +93,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 											/>
 										</div>
 									</div>
-									<div class="col-5">
+									<div class="col-5 col-sm-12 col-md-6">
 										<div *ngIf="profile_data.resume"  class="docwrappercontainer text-center">
 											<h4 class="title-h4">Resume</h4>
 											<div class="mb-0">
