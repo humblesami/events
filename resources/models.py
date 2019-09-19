@@ -30,7 +30,7 @@ class Folder(CustomModel):
         }
         return data
 
-  
+
     @classmethod
     def change_folder_name(cls, request, params):
         folder_id = params['folder_id']
@@ -39,6 +39,7 @@ class Folder(CustomModel):
         folder.name = name
         folder.save()
         return 'done'
+
 
     @classmethod
     def get_details(cls, request, params):
@@ -94,6 +95,7 @@ class Folder(CustomModel):
         obj['files'] = resource_files
         return obj
 
+
     def get_ancestors(self, folder_orm):
         parents_list = []
         upper_folder = folder_orm.parent
@@ -102,6 +104,7 @@ class Folder(CustomModel):
             upper_folder = upper_folder.parent
         return parents_list
     
+
     total_files = 0
     def files_in_folder(self, folder):
         folder.total_files += self.documents.count()
@@ -110,6 +113,7 @@ class Folder(CustomModel):
         for sub_folder in self.folder_set.all():
             new_folder = Folder.objects.get(pk=sub_folder.id)
             new_folder.files_in_folder(folder)
+
 
     @classmethod
     def get_records(cls, request, params):
@@ -121,8 +125,6 @@ class Folder(CustomModel):
             folders = folders.filter(Q(parent__isnull=True))
         else:
             folders = Folder.objects.filter(Q(parent__isnull=True))
-        
-        
         total_cnt = folders.count()
         offset = params.get('offset')
         limit = params.get('limit')
@@ -143,9 +145,36 @@ class Folder(CustomModel):
         return res
 
 
+    @classmethod
+    def resource_search_details(cls, request, params):
+        kw = params.get('kw')
+        user_id = request.user.id
+        folders = None
+        files = None
+        if kw:
+            folders = Folder.objects.filter(users__id=user_id, name__icontains=kw)
+            files = ResourceDocument.objects.filter(users__id=user_id, name__icontains=kw)
+        else:
+            folders = Folder.objects.filter(users__id=user_id)
+            files = ResourceDocument.objects.filter(users__id=user_id)
+        folder_set = list(files.values('id', 'name'))
+        files_set = list(files.values('id', 'name'))
+        data = {
+            'folders': folder_set,
+            'files': files_set
+        }
+        return data
+
+
+
 class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='documents')
     users = models.ManyToManyField (Profile, related_name='file_audience', blank=True)
+
+
+    def __str__(self):
+            return self.name
+
 
     @classmethod
     def get_attachments(cls, request, params):
@@ -155,12 +184,11 @@ class ResourceDocument(File):
         docs = list(docs)
         return docs
 
+
     def save(self, *args, **kwargs):
         if not self.file_type:
             self.file_type = 'resource'
         super(ResourceDocument, self).save(*args, **kwargs)
-    def __str__(self):
-        return self.name
     
 
     @property

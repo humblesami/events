@@ -7,6 +7,7 @@ from mainapp.admin import BaseInlineAdmin, BaseAdmin
 
 class FolderInline(BaseInlineAdmin):
     model = Folder
+    autocomplete_fields = ['users']
     show_change_link = True
     verbose_name = "Sub Folder"
     verbose_name_plural = "Sub Folders"
@@ -25,9 +26,11 @@ class FolderAdmin(BaseAdmin):
         (None, {
             'fields': [
                 'name',
+                'users'
             ]
         })
     ]
+    autocomplete_fields = ['users']
     search_fields = ['name']
     readonly_fields = ['parent',]
     inlines = [FolderInline]
