@@ -8,6 +8,7 @@ from mainapp.models import CustomModel
 class Folder(CustomModel):
     name = models.CharField(max_length = 200)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    users = models.ManyToManyField(Profile, related_name='folder_audience', blank=True)
 
     def __str__(self):
         return self.name
@@ -144,7 +145,7 @@ class Folder(CustomModel):
 
 class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='documents')
-    users = models.ManyToManyField (Profile, 'Access', blank=True)
+    users = models.ManyToManyField (Profile, related_name='file_audience', blank=True)
 
     @classmethod
     def get_attachments(cls, request, params):
