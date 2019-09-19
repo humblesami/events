@@ -163,10 +163,6 @@ export class DocumentsComponent implements OnInit {
         }, null);
     }
     
-    selectAll() 
-    {        
-        this.selectedUsers = this.users;        
-    }
 
     saveusers(){
         let obj_this = this;        

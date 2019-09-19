@@ -313,7 +313,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         }
                     });
                 }
-                else{                
+                else{
                     $('#select_user_modal').modal('show');
                 }
                 on_dropped(new_signature[0]);
