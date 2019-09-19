@@ -2,6 +2,7 @@ from meetings.model_files.user import *
 from mainapp import  ws_methods
 from django.db.models import Q
 from mainapp.models import CustomModel
+from django_currentuser.middleware import get_current_user
 
 # Create your models here.
 
@@ -12,6 +13,18 @@ class Folder(CustomModel):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        current_user = get_current_user()
+        creating = False
+        if not self.pk:
+            creating = True
+        super(Folder, self).save(*args, **kwargs)
+        if creating and current_user not in self.users.all():
+            self.users.add(current_user.id)
+            self.save()
+        
+    
     @classmethod
     def create_new(cls,request,params):        
         name = params['name']        
@@ -54,7 +67,11 @@ class Folder(CustomModel):
             if folder:
                 folder_id = folder.id
         else:
-            folder = Folder.objects.get(pk=folder_id, users__id=user_id)
+            folder = Folder.objects.filter(pk=folder_id, users__id=user_id)
+            if not folder:
+                return 'Invalid folder access'
+            else:
+                folder = folder[0]
         obj['id'] = folder_id
         obj['name'] = folder.name
         obj['parents'] = cls.get_ancestors(cls, folder)
@@ -168,7 +185,7 @@ class Folder(CustomModel):
 
 
     @classmethod
-    def resources_access(cls, request, params):
+    def define_access(cls, request, params):
         folder_id = params.get('folder_id')
         file_ids = params.get('file_ids')
         user_id = request.user.id
@@ -176,21 +193,42 @@ class Folder(CustomModel):
         if folder_id:
             folder = Folder.objects.get(pk=folder_id)
             for user in folder.users.all():
-                folder.users.remove(user.id)
+                if user.id != user_id:
+                    folder.users.remove(user.id)
             folder.save()
-            for user in user_ids:
-                folder.users.add(user)
+            for uid in user_ids:
+                if uid != user_id:
+                    folder.users.add(uid)
             folder.save()
         
         for file_id in file_ids:
             file = ResourceDocument.objects.get(pk=file_id)
             for user in file.users.all():
-                file.users.remove(user.id)
+                if user.id != user_id:
+                    file.users.remove(user.id)
             file.save()
-            for user in user_ids:
-                file.users.add(user)
+            for uid in user_ids:
+                if uid != user_id:
+                    file.users.add(uid)
             file.save()
         return 'done'
+
+    @classmethod
+    def get_resource_audience(cls, request, params):
+        folder_id = params.get('folder_id')
+        file_id = params.get('file_id')
+        audience = []
+        has_admin_group = request.user.groups.filter(name='Admin')
+        if not has_admin_group:
+            return audience
+        if folder_id:
+            folder_users = Folder.objects.get(pk=folder_id).users.all()
+            audience = list(folder_users.values('id', 'name'))
+        
+        if file_id:
+            file_users = ResourceDocument.objects.get(pk=file_id).users.all()
+            audience = list(file_users.values('id', 'name'))
+        return audience
 
 
 
@@ -215,7 +253,14 @@ class ResourceDocument(File):
     def save(self, *args, **kwargs):
         if not self.file_type:
             self.file_type = 'resource'
+        current_user = get_current_user()
+        creating = False
+        if not self.pk:
+            creating = True
         super(ResourceDocument, self).save(*args, **kwargs)
+        if creating and current_user not in self.users.all():
+            self.users.add(current_user.id)
+            self.save()
     
 
     @property

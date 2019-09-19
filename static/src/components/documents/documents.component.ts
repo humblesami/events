@@ -21,8 +21,11 @@ export class DocumentsComponent implements OnInit {
     @Input() readonly: any;
     @Input() dont_show_files: any;
     docs = [];
+    users = [];
     roterLinkPrefix = '';
     show_renamer_button = false;
+    selectedUsers = [];
+    selected_docs = [];
     doc_types = {
         MeetingDocument: '/meeting/doc/',
         AgendaDocument:'/topic/doc/',
@@ -89,6 +92,7 @@ export class DocumentsComponent implements OnInit {
             try{
                 var result = obj_this.docs.concat(data);
                 obj_this.zone.run(() => obj_this.docs = result);
+                obj_this.openmodel(result);
             }
             catch(er){
                 console.log(er, 5455);
@@ -154,16 +158,93 @@ export class DocumentsComponent implements OnInit {
         // console.log(6565,133);
         this.httpService.get(input_data, function(data){
             // console.log(data, 133);
-            obj_this.docs = data;
+            obj_this.docs = data.docs;
+            obj_this.users = data.users;
         }, null);
     }
     
+    selectAll() 
+    {        
+        this.selectedUsers = this.users;        
+    }
+
+    saveusers(){
+        let obj_this = this;        
+        var user_ids = [];
+        var new_file_ids = [];
+        for(var file of obj_this.selected_docs)
+        {
+            new_file_ids.push(file.id);
+        }
+        for(var user of obj_this.selectedUsers)
+        {
+            user_ids.push(user.id);
+        }
+        console.log(user_ids,new_file_ids);
+                
+        let args = {
+            app: 'resources',
+            model: 'Folder',
+            method: 'define_access'
+        }
+        let final_input_data = {
+            params: {
+                file_ids: new_file_ids,
+                user_ids : user_ids
+            },
+            args: args
+        };
+        obj_this.httpService.get(final_input_data,
+        (result: any) => {
+            console.log(result);           
+        },null);
+        $('#select_user_modal').modal('hide');
+    }
+
+    closemodel(){
+        $('#select_user_modal').modal('hide');
+        this.selectedUsers = [];
+        this.selected_docs  = [];
+    }
+
+    openmodel(docs){
+        let obj_this = this;
+        obj_this.selectedUsers = [];
+        obj_this.selected_docs  = [];
+
+        for(var doc of docs)
+        {
+            obj_this.selected_docs.push(doc);
+        }
+        console.log(docs);
+        if(docs.length == 1)
+        {
+            let args = {
+                app: 'resources',
+                model: 'Folder',
+                method: 'get_resource_audience'
+            }
+            let final_input_data = {
+                params: {
+                    file_id: docs[0].id,
+                },
+                args: args
+            };
+            obj_this.httpService.get(final_input_data,
+            (result: any) => {
+                // console.log(result);
+                obj_this.selectedUsers = result;
+            },null);                
+        }
+        $('#select_user_modal').modal('show');
+    }
+
     ngOnInit() {
         let obj_this = this;
         obj_this.get_list();        
         setTimeout(function(){
             obj_this.on_admin_mode_changed()
-        },10);      
+        },10);
         $(document).on('focus','.DocText input',function(){
             this.select();
         });
