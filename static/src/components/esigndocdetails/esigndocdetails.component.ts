@@ -1078,11 +1078,11 @@ export class EsignDocDetailsComponent implements OnInit {
                     height: position.height * page_zoom,
                     position: 'absolute',
                 }
-                if(page_zoom < 1)
+                if($('#this-canvas').width() < $('#page_container').width())
                 {
                     rect.left += $('#the-canvas').position().left;
                 }
-                // console.log(position, page_zoom, rect);
+                console.log(position, page_zoom, rect);
                 $(el).attr('position', JSON.stringify(position));
                 $(el).css(rect);
             }
