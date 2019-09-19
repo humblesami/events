@@ -54,7 +54,7 @@ class Folder(CustomModel):
             if folder:
                 folder_id = folder.id
         else:
-            folder = Folder.objects.get(pk=folder_id)
+            folder = Folder.objects.get(pk=folder_id, users__id=user_id)
         obj['id'] = folder_id
         obj['name'] = folder.name
         obj['parents'] = cls.get_ancestors(cls, folder)
@@ -63,12 +63,12 @@ class Folder(CustomModel):
         resource_files = []
         if kw:            
             if folder:
-                resource_files = folder.documents.all().filter(Q(name__icontains= kw))
+                resource_files = folder.documents.filter(Q(name__icontains= kw) & Q(users__id=user_id))
             else:
                 resource_files = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['ResourceDocument']}})
-                resource_files = resource_files.filter(folder_id= folder.id)
+                resource_files = resource_files.filter(folder_id= folder.id, users__id=user_id)
         else:
-            resource_files = folder.documents.all()
+            resource_files = folder.documents.filter(users__id=user_id)
             ar = []
             sub_folders = folder.folder_set.values()
             for sub in sub_folders:
@@ -118,13 +118,14 @@ class Folder(CustomModel):
     @classmethod
     def get_records(cls, request, params):
         kw = params.get('kw')
+        user_id = request.user.id
         folders = []
         if kw:
             
             folders = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
-            folders = folders.filter(Q(parent__isnull=True))
+            folders = folders.filter(Q(parent__isnull=True) & Q(users__id=user_id))
         else:
-            folders = Folder.objects.filter(Q(parent__isnull=True))
+            folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id))
         total_cnt = folders.count()
         offset = params.get('offset')
         limit = params.get('limit')
@@ -164,6 +165,32 @@ class Folder(CustomModel):
             'files': files_set
         }
         return data
+
+
+    @classmethod
+    def resources_access(cls, request, params):
+        folder_id = params.get('folder_id')
+        file_ids = params.get('file_ids')
+        user_id = request.user.id
+        user_ids = params['user_ids']
+        if folder_id:
+            folder = Folder.objects.get(pk=folder_id)
+            for user in folder.users.all():
+                folder.users.remove(user.id)
+            folder.save()
+            for user in user_ids:
+                folder.users.add(user)
+            folder.save()
+        
+        for file_id in file_ids:
+            file = ResourceDocument.objects.get(pk=file_id)
+            for user in file.users.all():
+                file.users.remove(user.id)
+            file.save()
+            for user in user_ids:
+                file.users.add(user)
+            file.save()
+        return 'done'
 
 
 
