@@ -1,9 +1,15 @@
 <div class="router-outlet  pt-0">
     <div class="container">        
-        <div class="main-full-seachbar mb-3">
-            <input type="text"
+        <div class="input-group d-flex main-full-seachbar mb-3">
+            <input type="text" [(ngModel)]="search_kw1"
                 (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null"
-                placeholder="Search..."  class="form-control"/>
+                placeholder="Search..." class="form-control py-2 border-right-0 border">
+            <span class="input-group-append">
+                <button class="btn bg-white border-left-0 border" 
+                (click)="httpService.search_kw = search_kw1;get_list();">
+                    <i class="fa fa-search text-muted"></i>
+                </button>
+            </span>
         </div>
     </div>
 

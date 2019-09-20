@@ -2999,7 +2999,7 @@ label.check-plus-label-wrap {
 	border-radius: 0;
 	border: 1px solid #ffffff;
 	}
-.main-full-seachbar:before {
+/* .main-full-seachbar:before {
 	font-family: 'boardsheet' !important;
 	content: "\e903";
 	position: absolute;
@@ -3008,7 +3008,7 @@ label.check-plus-label-wrap {
 	transform: translateY(-50%);
 	right: 20px;
 	font-size: 18px;
-	}
+	} */
 .pending-status {
     font-size: .8rem;
     padding: .5rem .3rem;
