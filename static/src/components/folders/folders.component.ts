@@ -37,13 +37,13 @@ export class FoldersComponent implements OnInit {
         this.renameService =renameSer;        
     }
 
-    delete_folder(evn, folder_id)
+    delete_folder(evn, folder_id, folder_total_files)
     {
         evn.stopPropagation();
         evn.preventDefault();
         let obj_this = this;
-        window['bootbox'].confirm('Are you sure to delete?', function(dr){
-            if(!dr)
+        window['bootbox'].confirm('Are you sure to delete? This folder contains '+ folder_total_files + ' file(s).', function(dr){
+        if(!dr)
             {
                 return;
             }            

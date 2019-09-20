@@ -19,8 +19,8 @@
                 <a routerLink="/resource/{{folder.id}}" class="">
                     <div class="DocumentWrapper">
                         <div *ngIf="folder && folder.id &&socketService.is_admin" class="doc-del-btn"
-                        (click)="delete_folder($event, folder.id)">
-                            <i class="far fa-trash-alt pointer" ></i>
+     	                (click)="delete_folder($event, folder.id , folder.total_files)">
+                        <i class="far fa-trash-alt pointer" ></i>
                         </div>
                         <div class="DocIcon">
                             <span class="rounded-circle">
