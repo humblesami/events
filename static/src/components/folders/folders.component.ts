@@ -24,6 +24,7 @@ export class FoldersComponent implements OnInit {
         items: [],
         title: ''
     };
+    search_kw1 = '';
     httpService: HttpService;
     userService: UserService;
     renameService: RenameService;
