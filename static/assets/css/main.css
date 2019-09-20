@@ -2862,8 +2862,8 @@ select {
 	}
 .edit-author-thumb i {
 	position: absolute;
-    top: 5px;
-    right: 25px;
+	bottom: 10px;
+	left: 90px;
 	background: #4b74b5;
 	color: #ffffff;
 	display: flex;
@@ -2875,25 +2875,6 @@ select {
 	z-index: 9;
 	cursor: pointer;
 	}
-.edit_image i{
-	position: absolute;
-    top: 5px;
-    right: 25px;
-    background: #4b74b5;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 1rem;
-    width: 30px;
-    height: 30px;
-    z-index: 9;
-    cursor: pointer;
-}	
-.edit-author-thumb i.update{
-	top: 30px;
-    left: 130px;
-}
 .edit-author-profile {
 	position: absolute;
 	bottom: -44px;

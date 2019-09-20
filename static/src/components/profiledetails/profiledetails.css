@@ -216,3 +216,11 @@ last-login-details
     font-size: 20px;
     right: 11px;
 }
+.edit-file{
+    position: absolute;
+    left: 125px;
+    padding: 4px 5px;
+    border: 1px solid #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
