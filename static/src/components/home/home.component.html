@@ -22,15 +22,13 @@
                         </div>
                     </div>
                     </div>
-                    <div class="col-md-5 home-calendar" style="visibility: hidden">
-                        <div class="row">
-							<app-calendar></app-calendar>
-							<div class="col-sm-12 calendarwrapper">
-								<div class="full-calendar-btn">
-									<a routerLink="/calendar">Full Calendar</a>
-								</div>
-							</div>
-						</div>
+                    <div class="col-md-5 home-calendar" style="visibility: hidden">       
+                        <app-calendar></app-calendar>
+                        <div class="col-sm-12 calendarwrapper">
+                            <div class="full-calendar-btn">
+                                <a routerLink="/calendar">Full Calendar</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -135,11 +133,16 @@
                         </div>
                     </div>
                     <!--Documents-->
+                    
                     <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" class="carousel slide carousel-multi-item border-bottom  pt-3 pb-4" data-ride="carousel">
-                        <div class="clearfix">
-                            <h4 class="text-primary pb-3 float-left">
-                                E-Signature Doc
+                        <div class="clearfix">                                
+                            <h4 class="mb-3 float-left">
+                                <span class="head-icon-end">
+                                    <i class="icon-docs-line"></i>
+                                    E-Signature Doc
+                                </span>
                             </h4>
+                   
                             <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
@@ -152,7 +155,7 @@
                                         <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
                                             <div class="DocIcon">
                                                 <span class="rounded-circle">
-                                                    <i class="icon-e-sign"></i>
+                                                    <i class="icon-doc-file"></i>
                                                 </span>
                                             </div>
                                             <div class="DocText">
@@ -176,9 +179,14 @@
                     <!--Votings-->
                     <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" class="carousel slide carousel-multi-item  pt-3 pb-4" data-ride="carousel">
                         <div class="clearfix">
-                            <h4 class="text-primary pb-3 float-left">
-                                    Voting / Approvals
-                                </h4>
+                            <h4 class="mb-3 float-left">
+                                <span class="head-icon-end">
+                                <i class="icon-voting"></i>
+                                Voting / Approvals
+                                </span>
+                            </h4>
+                                                       
+                            
                             <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="next"><i class="fa fa-chevron-right"></i></a>
