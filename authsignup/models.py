@@ -63,9 +63,9 @@ class AuthUser(models.Model):
         obj = model.objects.get(pk=object_id)
 
         old_user_ids = []
-        ids = obj.users.all().values('id')
-        for id in ids:
-            old_user_ids.append(id)
+        id_list = obj.users.all().values('id')
+        for id_obj in id_list:
+            old_user_ids.append(id_obj['id'])
 
         for user in obj.users.all():
             if user.id != user_id and obj.created_by.id != user.id:
@@ -77,7 +77,7 @@ class AuthUser(models.Model):
                 obj.users.add(uid)
         obj.save()
 
-        if model == 'Folder':
+        if model_name == 'Folder':
             removed_ids = set(old_user_ids).difference(user_ids)
             if len(removed_ids) > 0:
                 obj.update_child_access(removed_ids, user_id)

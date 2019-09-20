@@ -191,7 +191,7 @@
                 <br>
                 <div>
                     <button class="btn btn-sm btn-primary" (click)="userService.saveusers()">Save</button>  
-                    <button class="btn btn-sm btn-success ml-1" (click)="userService.selectedUsers=renameService.valid_users" >Select All</button>
+                    <button class="btn btn-sm btn-success ml-1" (click)="userService.selectedUsers=userService.valid_users" >Select All</button>
                     <button class="btn btn-sm btn-danger ml-1" (click)="userService.selectedUsers=[]" >Clear All</button>
                     <button class="btn btn-sm btn-danger ml-1" (click)="userService.closemodel()" >Close</button>
                 </div>
