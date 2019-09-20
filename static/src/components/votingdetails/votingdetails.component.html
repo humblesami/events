@@ -8,9 +8,9 @@ title="{{voting_object.name}}"></app-breadcrumb>
 	</div>
     <div class="container" *ngIf="voting_object">
             <link rel="stylesheet" href="/static/assets/css/survey.css" />
-		<div class="MainTitleHeadWrap row justify-content-between">
+		<div class="MainTitleHeadWrap justify-content-between">
 			<div class="HeadingWrap">
-				<img src="static/assets/images/meeting-icon.png" alt="" />  {{voting_object.name}}
+				<i class="icon-voting-detail"></i>{{voting_object.name}}
             </div>
             <div style="height: 50px;width:50px;">
                 <canvas id="progress-chart"></canvas>

@@ -19,6 +19,13 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+
+.icon-voting:before {
+  content: "\e91b";
+}
+.icon-voting-detail:before {
+  content: "\e91c";
+}
 .icon-admin-mode:before {
   content: "\e91a";
 }
