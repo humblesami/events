@@ -14,6 +14,7 @@ export class FoldersComponent implements OnInit {
     @Input() parent_id: number;
     parent;
     records = [];
+    message ='';
     no_resource = false;
     new_folder = undefined;
     show_renamer_button = false;
@@ -43,7 +44,13 @@ export class FoldersComponent implements OnInit {
         evn.stopPropagation();
         evn.preventDefault();
         let obj_this = this;
-        window['bootbox'].confirm('Are you sure to delete? This folder contains '+ folder_total_files + ' file(s).', function(dr){
+        if(folder_total_files){
+           obj_this.message = 'Are you sure to delete? This folder contains '+ folder_total_files + ' file(s).';
+        }else{
+            obj_this.message = 'Are you sure to delete?';
+        }
+
+        window['bootbox'].confirm(obj_this.message , function(dr){
         if(!dr)
             {
                 return;
