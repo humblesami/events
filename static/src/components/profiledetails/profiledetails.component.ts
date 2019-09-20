@@ -312,8 +312,7 @@ export class ProfileDetailsComponent implements OnInit {
 									res_field: 'image',
 									file_type: data.file_type
 								}
-								window['upload_single_file'](file, resInfo, data.cloud, (data)=>{
-									
+								window['upload_single_file'](file, resInfo, data.cloud, (data)=>{									
 									obj_this.profile_data.image = data[0].image_url;
 									if(obj_this.my_profile)
 									{

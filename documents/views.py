@@ -85,19 +85,20 @@ def upload_single_file(request):
                     setattr(obj,file_field, file_obj)
                     obj.save()
                     docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
-        for key in request.FILES:
-            files = request.FILES.getlist(key)            
-            for file in files:
-                with transaction.atomic():
-                    created_file = File(name=file.name, file_name=file.name)
-                    created_file.attachment.save(file.name, file)
-                    created_file.save()
-                    file_obj = getattr(obj, file_field)
-                    file_obj = created_file
-                    setattr(obj,file_field, file_obj)
-                    obj.save()
-                    # created_file = obj.resume.attachment.save(name=file.name, attachment=file)
-                    docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})
+        else:
+            for key in request.FILES:
+                files = request.FILES.getlist(key)
+                for file in files:
+                    with transaction.atomic():
+                        created_file = File(name=file.name, file_name=file.name)
+                        created_file.attachment.save(file.name, file)
+                        created_file.save()
+                        file_obj = getattr(obj, file_field)
+                        file_obj = created_file
+                        setattr(obj,file_field, file_obj)
+                        obj.save()
+                        # created_file = obj.resume.attachment.save(name=file.name, attachment=file)
+                        docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})
 
         docs = json.dumps(docs)
         return HttpResponse(docs)
@@ -139,25 +140,26 @@ def upload_single_image_file(request):
                         setattr(obj,file_field, file_obj)
                         obj.save()
                         docs.append({'image_url':file_obj.url})
-        for key in request.FILES:
-            files = request.FILES.getlist(key)            
-            for file in files:
-                with transaction.atomic():
-                    if file_type == 'image':
-                        curr_dir = os.path.dirname(__file__)
-                        directory = curr_dir.replace('documents', 'media')
-                        if not os.path.exists(directory):
-                            os.makedirs(directory)
-                        full_filename = os.path.join(directory, 'profile', file.name)
-                        img_temp = open(full_filename, 'wb+')
-                        for chunk in file.chunks():
-                            img_temp.write(chunk)
-                        file_obj = getattr(obj, file_field)
-                        file_obj.save(file.name, DjangoFile(img_temp))
-                        setattr(obj,file_field, file_obj)
-                        obj.save()
-                        file_obj = getattr(obj, file_field)
-                        docs.append({'image_url':file_obj.url})
+        else:
+            for key in request.FILES:
+                files = request.FILES.getlist(key)            
+                for file in files:
+                    with transaction.atomic():
+                        if file_type == 'image':
+                            curr_dir = os.path.dirname(__file__)
+                            directory = curr_dir.replace('documents', 'media')
+                            if not os.path.exists(directory):
+                                os.makedirs(directory)
+                            full_filename = os.path.join(directory, 'profile', file.name)
+                            img_temp = open(full_filename, 'wb+')
+                            for chunk in file.chunks():
+                                img_temp.write(chunk)
+                            file_obj = getattr(obj, file_field)
+                            file_obj.save(file.name, DjangoFile(img_temp))
+                            setattr(obj,file_field, file_obj)
+                            obj.save()
+                            file_obj = getattr(obj, file_field)
+                            docs.append({'image_url':file_obj.url})
         docs = json.dumps(docs)
         return HttpResponse(docs)
     except:

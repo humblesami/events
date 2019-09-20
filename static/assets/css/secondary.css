@@ -298,3 +298,9 @@ body.public .popup.messenger{
 mention-list.dropup{
     top: 10px !important;
 }
+.sub_folders .sub.container{
+    padding: 0;
+}
+.sub_folders .search.container{
+    display: none;
+}

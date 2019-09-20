@@ -44,13 +44,13 @@
 			<app-paginator *ngIf="folder.files.length && !socketService.admin_mode" (reload_data)="get_list()">                
             </app-paginator>
 
-			<div *ngIf="folder && (socketService.admin_mode || folder.sub_folders.length)">
-				<div [ngClass]="{'pt-5': folder.total > httpService.limit}" *ngIf="!(no_folders)">
+			<div class="sub_folders" *ngIf="folder && (socketService.admin_mode || folder.sub_folders.length)">
+				<div class="pb-3" [ngClass]="{'pt-5': folder.total > httpService.limit}" *ngIf="!(no_folders)">
 					<hr *ngIf="folder.files.length">
 					<div class="mt-3 HeadingWrap ResourcesHeadWrapper">
 						<i class="icon-folder"></i>Sub Folders
 					</div>				
-                </div>                
+                </div>
 				<app-folders parent_id="{{folder.id}}"></app-folders>
 			</div>
         </div>

@@ -1,5 +1,5 @@
 <div class="router-outlet  pt-0">
-    <div class="container">        
+    <div class="sub search container">        
         <div class="input-group d-flex main-full-seachbar mb-3">
             <input type="text" [(ngModel)]="search_kw1"
                 (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null"
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="cards container">
+    <div class="sub cards container">
         <div class="row docwrappercontainer mb-0">
             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of records">
                 <a routerLink="/resource/{{folder.id}}" class="">
@@ -64,7 +64,7 @@
         </app-paginator>
     </div>
 
-    <div class="container" *ngIf="!records.length">
+    <div class="sub container" *ngIf="!records.length">
         <div class="row">
             <div class="col-lg-12 ">
                 <div class="jumbotron text-center">

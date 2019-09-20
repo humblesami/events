@@ -113,14 +113,16 @@
 	border-radius: 50%;
 	}
 .messenger-container span.unseen {
-	color: white;
- padding: .1rem .3rem;
-	background: #dc3545;
-	border-radius: 50rem;
-	position: absolute;
-	right: 10px;
-	line-height: 1;
-	}
+    color: white;
+    padding: .1rem .3rem;
+    background: #dc3545;
+    border-radius: 50rem;
+    position: absolute;
+    left: 40px;
+    top: 3px;
+    font-weight: bold;
+    line-height: 1;
+}
 .messenger-container .online_icon {
 	position: absolute;
 	height: 15px;

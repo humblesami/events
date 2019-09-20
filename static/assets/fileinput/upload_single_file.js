@@ -55,6 +55,8 @@ function upload_single_file(files, resInfo, cloud=false, success)
         success: function(data){
             try{
                 success(data = JSON.parse(data));
+                // console.log($('.file-input-picker-container:visible').closest('.modal:visible').length, 232);
+                $('.file-input-picker-container:visible').closest('.modal:visible').find('#close-btn').click();
             }
             catch(er){
                 console.log(data);
