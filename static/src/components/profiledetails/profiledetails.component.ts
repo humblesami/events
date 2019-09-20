@@ -145,6 +145,10 @@ export class ProfileDetailsComponent implements OnInit {
 			console.log('Error: ', error);
 		};
 	}
+	update_image()
+	{
+		$('.update_image:first').click();
+	}
 	update_sign(){
 		let obj_this = this;
         let sign_config = {
