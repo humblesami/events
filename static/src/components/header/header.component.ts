@@ -304,6 +304,7 @@ export class HeaderComponent implements OnInit {
     admin_url = '';
     ngOnInit() {
         let obj_this = this;
+        this.socketService.messenger_active = 1;        
         $(()=>{
             obj_this.set_admin_mode_text();
         });
