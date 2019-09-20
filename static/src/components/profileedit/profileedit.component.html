@@ -15,19 +15,6 @@
                     <div class="ProFileHeadWrap">
                         PERSONAL INFO
                     </div>
-                    <div class="row mb-3">
-                        <div class="col edit-author-thumb">
-                            <i class="far fa-edit" (click)="update_image()"></i>
-                            <div class="author-thumb img-flex" *ngIf="modified_profile_data.image">
-                                <img  src="{{modified_profile_data.image}}">
-                            </div>
-                            <div class="author-thumb img-flex" *ngIf="!modified_profile_data.image">
-                                <img *ngIf="profile_data.image" src="{{socketService.server_url}}{{profile_data.image}}">
-                                <img *ngIf="!profile_data.image"  src="static/assets/images/no-profile.png">
-                            </div>
-                            <input class="pt-3 update_image" style="display: none" (change)="addFile($event, 'profile')" type="file" name="pic" accept="image/*">
-                        </div>
-                    </div>
                     <div class="row" *ngIf="last_login.login_time">
                         <div class="row last-login-details">
                             <div class="col-sm-12">
@@ -342,40 +329,7 @@
                         ADMINISTRATIVE ASSISTANT
                     </div>
                     <div class="row label-control-form">
-                        <div class="container">
-                            <div class="row p-0">
-    
-                                <div *ngIf="modified_profile_data.admin_image" class="col-sm-12 mb-4">
-                                    <div class="edit-author-thumb">
-                                        <label for="file-input">
-                                            <i class="fa fa-edit"></i>
-                                        </label>                                    
-                                        <input id="file-input" class="pt-3 d-none" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
-                                    </div>
-                                    <div class="author-thumb img-flex">
-                                        <img *ngIf="modified_profile_data.admin_image" src="{{modified_profile_data.admin_image}}">
-                                        <img *ngIf="!modified_profile_data.admin_image" src="static/assets/images/no-profile.png">
-                                    </div>
-                                    <!-- <div class="w-100">
-                                        <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
-                                    </div> -->
-                                </div>
-                                <div *ngIf="!modified_profile_data.admin_image" class="col-sm-12 mb-4">
-                                        <div class="edit-author-thumb">
-                                            <label for="file-input">
-                                                <i class="fa fa-edit"></i>
-                                            </label>                                    
-                                            <input id="file-input" class="pt-3 d-none" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
-                                        </div>
-                                    <div class="author-thumb img-flex">
-                                        <img *ngIf="profile_data.admin_image"  src="{{socketService.server_url}}{{profile_data.admin_image}}">
-                                        <img *ngIf="!profile_data.admin_image" src="static/assets/images/no-profile.png">
-                                    </div>
-                                    <!-- <div class="w-100">
-                                        <input class="pt-3" (change)="addFile($event, 'admin')" type="file" name="pic" accept="image/*">
-                                    </div> -->
-                                </div>
-                            </div>
+                        <div class="container">                            
                             <div class="col p-0">
                                 <label for="admin-first-name">
                                     <b>First Name</b>
@@ -415,7 +369,7 @@
                                         (change)="mail_to_assistant_change($event.target.value)"
                                         type="checkbox" id="mail-to-assistant" required
                                     />
-                                    <span>Email To Assistant</span>
+                                    <span style="margin-top:-4px;">Email To Assistant</span>
                                 </label>
     
                                 <div style="display: none">

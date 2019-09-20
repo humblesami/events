@@ -93,7 +93,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 											<i class="icon-draw-pencil"></i>
 											E-Signature</h4>
 										<div *ngIf="my_profile" style="position:relative;cursor: pointer;" class="img-flex" style="height: 100px;">
-											<img class="strt_sign profile " 
+                                            <img class="strt_sign profile " 
+                                            style=" object-fit: contain"
 												*ngIf="profile_data.signature_data"
 												src="data:image/png;base64,{{profile_data.signature_data}}"
 											/>
