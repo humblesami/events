@@ -6,7 +6,7 @@ function init_popup(config) {
         {
             config.on_save();
         }
-        if(config.hide_on_save)
+        if(config.hide_on_save || config.hide)
         {
             $('#signModal').modal('hide');
         }

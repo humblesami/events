@@ -1,4 +1,7 @@
-﻿<app-breadcrumb app="resources" model="folder" title="Resources"></app-breadcrumb>
+﻿<app-breadcrumb app="resources" model="folder" title="Resources">
+    <div class="edit-buttons" *ngIf="socketService.is_admin">		
+	</div>
+</app-breadcrumb>
 
 <div class="container">
     <div class="MainTitleHeadWrap ResourcesHeadWrapper">

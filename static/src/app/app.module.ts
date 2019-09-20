@@ -12,6 +12,7 @@ import { CamelCasePipe } from './pipes/camel.pipe'
 import { SocketService } from './socket.service';
 import { HttpService } from './http.service';
 import { RenameService } from './rename.service';
+import { UserService } from './user.service';
 
 import { AppComponent }         from './app.component';
 import { AppRoutingModule }     from './app-routing.module';
@@ -147,6 +148,7 @@ import { FoldersComponent } from '../components/folders/folders.component';
         SocketService,
         HttpService,
         RenameService,
+        UserService,
         Location, 
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],

@@ -12,25 +12,14 @@ declare var $:any;
 
 export class ResourceDetailsComponent implements OnInit {
     folder: any;
-    root = true;
-    no_folders = false;
-    new_folder = undefined;
-    parent_folder = undefined;    
-    modified_folder_data =undefined;
-    no_files = false;
     httpService: HttpService;
-    socketService: SocketService;
-    renameService: RenameService;
-    selectedUsers = [];
-    users = [];
-    selected_docs = [];
+    socketService: SocketService;    
 
-    constructor(private httpServ: HttpService,private renameSer: RenameService, 
-        private ss: SocketService, private route: ActivatedRoute, public zone: NgZone) {
+    constructor(private httpServ: HttpService,
+        private ss: SocketService, private route: ActivatedRoute) {
         this.httpService = httpServ;
         this.socketService = ss;
-        this.route.params.subscribe(params => this.get_list(1));
-        this.renameService =renameSer;
+        this.route.params.subscribe(params => this.get_list(1));        
     }
 
     get_list(on_init=null){
@@ -48,19 +37,20 @@ export class ResourceDetailsComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data,
             (result: any) => {
-                obj_this.root = !(result.hasOwnProperty('parent_id'));
                 obj_this.folder = undefined;                
                 setTimeout(function(){
-                    obj_this.folder = result;                    
-                }, 50);                
+                    obj_this.folder = result;
+                    setTimeout(function(){
+                        var create_button = $('#create_new_folder');
+                        $('.breadcrumbSection .edit-buttons').append(create_button);
+                    },51);
+                }, 10);
                 const parents = result.parents;
                 if (parents && parents.length > 0) {
                     parents.reverse();
-                    parents[parents.length - 1]['is_last'] = 1888;
                 }
         }, (error: any) => {
             console.log(error);
-            //alert(error);
         });
     }    
 

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {SocketService} from './socket.service';
+import { UserService } from './user.service';
 declare var $:any;
 
 @Component({
@@ -8,8 +9,10 @@ declare var $:any;
 })
 
 export class AppComponent {        
-    constructor(private ss: SocketService)
+    userService: UserService;
+    constructor(private ss: SocketService, userServ: UserService)
     {
+        this.userService = userServ;
         console.log(Date()+'-' + new Date().getMilliseconds());
         if(window['site_config'].log_loading)
         {

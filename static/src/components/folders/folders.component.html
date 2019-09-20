@@ -21,16 +21,19 @@
                                 <i class="icon-folder"></i>
                             </span>
                         </div>                        
-                        <div class="DocText">
+                        <div class="DocText" (click)="renameService.prevent_default($event)">
                             <div class="DocName">
                                 <div *ngIf="!folder.edit_mode" class="d-flex justify-content-between align-items-center">
                                     <span class="text-truncate resource-info">{{folder.name}} ({{folder.total_files}})</span>
                                     <button *ngIf="socketService.admin_mode" 
-                                    (click)="renameService.prevent_default($event, folder, 133)"
+                                    (click)="renameService.enable_rename($event, folder)"
                                     class="btn btn-sm btn-primary mr-1">
                                         <i class="fas fa-edit "></i>
                                     </button>
-                                    <button *ngIf="socketService.admin_mode" (click)="openmodel([folder])" class="btn btn-sm btn-primary"><i class="fa fa-user-plus"></i></button>
+                                    <button *ngIf="socketService.admin_mode" 
+                                    (click)="userService.get_access_details(folder,'resources','Folder',parent)" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-user-plus"></i>
+                                    </button>
                                 </div>										
                                 <div *ngIf="folder.edit_mode" class="d-flex">
                                     <input class="form-control renamer"                        
@@ -55,73 +58,14 @@
         </app-paginator>
     </div>
 
-    <div class="container" *ngIf="no_resource">
+    <div class="container" *ngIf="!records.length">
         <div class="row">
             <div class="col-lg-12 ">
                 <div class="jumbotron text-center">
-                    <h1>There are no resources for now!</h1>
+                    <h1>There are no folders for now!</h1>
                     <hr>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="modal fade" id="select_user_modal" tabindex="-1" role="dialog" aria-labelledby="SelectUserModal" aria-hidden="true">
-    <div class="modal-dialog modal-top-fixed" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-            <div></div>
-                <div  style="display: flex" class="ng-select-user-list">
-                    <ng-select
-                    [items]="users"
-                    [multiple]="true"
-                    [hideSelected]="true"
-                    bindLabel="name"
-                    placeholder="Select User"
-                    [(ngModel)]="selectedUsers"
-                    >
-                    <ng-template ng-footer-tmp>
-                            Selected count: {{selectedUsers.length}}
-                    </ng-template>
-                    </ng-select>                    
-                </div>
-                <br>
-                <div>
-                    <button class="btn btn-sm btn-primary" (click)="saveusers()">Save</button>  
-                    <button class="btn btn-sm btn-success ml-1" (click)="selectedUsers=users" >Select All</button>
-                    <button class="btn btn-sm btn-danger ml-1" (click)="selectedUsers=[]" >Clear All</button>
-                    <button class="btn btn-sm btn-danger ml-1" (click)="closemodel()" >Close</button>
-                </div>
-        </div>
-    </div>
-    </div>
-</div>
-
-<!-- Folder Modal -->
-<div class="modal fade" id="CreateFolder" tabindex="-1" role="dialog" aria-labelledby="CreateFolder" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">          
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <i class="fas fa-times" aria-hidden="true"></i>
-            </button>
-        <div class="modal-body">
-            <div class="pt-5 pb-3">
-                <div class="modal-folder-icon">
-                    <img src="static/assets/images/modal-folder.png" alt="modal-folder" />
-                </div>
-            </div>
-            <div class="Modal-Folder-Box">
-                <span>Create New Folder</span>
-                <input type="text" class="form-control" placeholder="Enter folder name">
-                <div class="Modal-Folder-Option">
-                    <a href="javascript:void(0);" class="btn btn-chose" >Create</a>
-                    <a href="javascript:void(0);" class="btn btn-chose" data-dismiss="modal">Cancel</a>
-                </div>
-            </div>
-        </div>
         </div>
     </div>
 </div>

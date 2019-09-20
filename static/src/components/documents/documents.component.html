@@ -18,8 +18,13 @@
                     <div class="DocName">
                         <div *ngIf="!doc.edit_mode" class="d-flex justify-content-between align-items-center">
                             <span class="text-truncate doc-info">{{doc.name}}</span>
-                            <button *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary ml-2 mr-1"><i class="fas fa-edit "></i></button>
-                            <button *ngIf="res_model=='ResourceDocument' && socketService.admin_mode" (click)="openmodel([doc])" class="btn btn-sm btn-primary"><i class="fa fa-user-plus"></i></button>
+                            <button (click)="renameService.enable_rename($event, doc)" *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary ml-2 mr-1">
+                                <i class="fas fa-edit "></i>
+                            </button>
+                            <button *ngIf="res_model=='ResourceDocument' && socketService.admin_mode" 
+                            (click)="userService.get_access_details(doc,'resources','ResourceDocument', parent)" class="btn btn-sm btn-primary">
+                                <i class="fa fa-user-plus"></i>
+                            </button>
                         </div>
                         <div *ngIf="doc.edit_mode" class="d-flex">
                             <input class="form-control renamer"                        
@@ -41,36 +46,5 @@
     </div>
     <div *ngIf="socketService.admin_mode && !readonly">        
         <input id="dlc-file-picker" type="file" name='files[]' multiple/>
-    </div>
-</div>
-
-<div class="modal fade" id="select_user_modal" tabindex="-1" role="dialog" aria-labelledby="SelectUserModal" aria-hidden="true">
-    <div class="modal-dialog modal-top-fixed" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-			<div></div>
-                <div  style="display: flex" class="ng-select-user-list">
-                    <ng-select
-                    [items]="users"
-                    [multiple]="true"
-                    [hideSelected]="true"
-                    bindLabel="name"
-                    placeholder="Select User"
-                    [(ngModel)]="selectedUsers"
-                    >
-                    <ng-template ng-footer-tmp>
-                            Selected count: {{selectedUsers.length}}
-                    </ng-template>
-                    </ng-select>                    
-                </div>
-                <br>
-                <div>
-                    <button class="btn btn-sm btn-primary" (click)="saveusers()">Save</button>  
-                    <button class="btn btn-sm btn-success ml-1" (click)="selectedUsers=users" >Select All</button>
-                    <button class="btn btn-sm btn-danger ml-1" (click)="selectedUsers=[]" >Clear All</button>
-                    <button class="btn btn-sm btn-danger ml-1" (click)="closemodel()" >Close</button>
-                </div>
-        </div>
-    </div>
     </div>
 </div>

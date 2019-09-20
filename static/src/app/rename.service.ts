@@ -14,6 +14,18 @@ export class RenameService {
     }
 
     name_is_changed = false;
+    enable_rename(evn, obj){
+        if(!obj.edit_mode)
+        {
+            var target = $(evn.target).closest('.DocText');            
+            this.name_is_changed = false;
+            obj.edit_mode = true;
+            setTimeout(function(){
+                target.find('.renamer').focus();
+            }, 100);
+        }
+    }
+
     renamer_changed(el)
     {
         this.name_is_changed = true;
@@ -21,9 +33,9 @@ export class RenameService {
 
     renamer_focused(el)
     {        
-        $(el).next('button').show();
-        // $(el).closest('.DocName').css("display","flex");
+        $(el).next('button').show();    
     }
+
     renamer_focused_out(evn,folder,type=null){
         if(evn.type=='keyup' && evn.keyCode != 13)
         {
@@ -36,22 +48,13 @@ export class RenameService {
         this.rename_object(el, folder, type);
     }
 
-    prevent_default(evn, folder, test=null){
+    prevent_default(evn){
         if(!this.socketService.admin_mode)
         {
             return;
         }
         evn.stopPropagation();
         evn.preventDefault();
-        if(!folder.edit_mode)
-        {
-            var target = $(evn.target).closest('.DocText');            
-            this.name_is_changed = false;
-            folder.edit_mode = true;
-            setTimeout(function(){
-                target.find('.renamer').focus();
-            }, 100);
-        }
     }
 
     rename_object(el, item, type)

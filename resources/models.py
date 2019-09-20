@@ -23,8 +23,24 @@ class Folder(CustomModel):
         if creating and current_user not in self.users.all():
             self.users.add(current_user.id)
             self.save()
-        
-    
+
+
+    def update_child_access(self, ids_to_remove, user_id):
+        if self.id:
+            documents = self.documents.all()
+            for document in documents:
+                for user in ids_to_remove:
+                    if user != user_id:
+                        document.users.remove(user)
+            sub_folders = Folder.objects.filter(parent_id=self.id)
+            if sub_folders:
+                for sub_folder in sub_folders:
+                    for user in ids_to_remove:
+                        if user != user_id:
+                            sub_folder.users.remove(user)
+                    sub_folder.update_child_access(ids_to_remove, user_id)
+        return 'done'
+
     @classmethod
     def create_new(cls,request,params):        
         name = params['name']        
@@ -41,6 +57,13 @@ class Folder(CustomModel):
             'parent': parent_id,
         }
         return data
+
+    @classmethod
+    def delete_folder(cls, request, params):
+        folder_id = params['folder_id']
+        folder = Folder.objects.get(pk=folder_id)
+        folder.delete()
+        return 'done'
 
 
     @classmethod
@@ -140,18 +163,23 @@ class Folder(CustomModel):
         kw = params.get('kw')
         user_id = request.user.id
         folders = []
+        parent_id = params.get('parent_id')
         if kw:
             folders = ws_methods.search_db({'kw': kw, 'search_models': {'resources': ['Folder']}})
-            folders = folders.filter(Q(parent__isnull=True) & Q(users__id=user_id))
+            if parent_id:
+                folders = folders.filter(Q(parent_id=parent_id) & Q(users__id=user_id))
+            else:
+                folders = folders.filter(Q(parent__isnull=True) & Q(users__id=user_id))
         else:
-            folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id))
-        parent_id = params.get('parent_id')
-        if parent_id:
-            folders = folders.filter(parent_id=parent_id)
+            if parent_id:
+                folders = Folder.objects.filter(Q(parent_id=parent_id) & Q(users__id=user_id))
+            else:
+                folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id))
+
         total_cnt = folders.count()
         offset = params.get('offset')
         limit = params.get('limit')
-        ab = []
+        records = []
         users_obj = ws_methods.get_model('meetings','Profile')        
         users_obj = users_obj.objects.all()
         all_users = list(users_obj.values('id', 'name'))
@@ -163,11 +191,9 @@ class Folder(CustomModel):
             total_files = folder.total_files
             cd = ws_methods.obj_to_dict(folder, fields=['name', 'id'])
             cd['total_files'] = total_files
-            ab.append(cd)
-            # folder.append({'total_files' : total_files})
-        folders = ab
-        current_cnt = len(ab)
-        res = {'records':ab, 'total':total_cnt, 'count':current_cnt, 'users': all_users}
+            records.append(cd)
+        current_cnt = len(records)
+        res = {'records':records, 'total':total_cnt, 'count':current_cnt, 'users': all_users}
         return res
 
 
@@ -190,62 +216,6 @@ class Folder(CustomModel):
             'files': files_set
         }
         return data
-
-
-    @classmethod
-    def define_access(cls, request, params):
-        folder_id = params.get('folder_ids')
-        file_ids = params.get('file_ids')
-        user_id = request.user.id
-        user_ids = params['user_ids']
-        if folder_id:
-            folder_id = folder_id[0]
-            folder = Folder.objects.get(pk=folder_id)
-            for user in folder.users.all():
-                if user.id != user_id:
-                    folder.users.remove(user.id)
-            folder.save()
-            for uid in user_ids:
-                if uid != user_id:
-                    folder.users.add(uid)
-            folder.save()
-        
-        for file_id in file_ids:
-            file = ResourceDocument.objects.get(pk=file_id)
-            for user in file.users.all():
-                if user.id != user_id:
-                    file.users.remove(user.id)
-            file.save()
-            for uid in user_ids:
-                if uid != user_id:
-                    file.users.add(uid)
-            file.save()
-        return 'done'
-
-    @classmethod
-    def get_resource_audience(cls, request, params):
-        folder_id = params.get('folder_id')
-        file_id = params.get('file_id')
-        parent_id = params.get('parent_id')
-        audience = []
-        has_admin_group = request.user.groups.filter(name='Admin')
-        if not has_admin_group:
-            return audience
-        if folder_id:
-            folder_users = Folder.objects.get(pk=folder_id).users.all()
-            audience = list(folder_users.values('id', 'name'))
-        
-        if file_id:
-            file_users = ResourceDocument.objects.get(pk=file_id).users.all()
-            audience = list(file_users.values('id', 'name'))
-        
-        valid_audience = []
-        if parent_id:
-            folder_users = Folder.objects.get(pk=parent_id).users.all()
-            valid_audience = list(folder_users.values('id', 'name'))
-        res = {'selected': audience, 'valid': valid_audience}
-        return res
-
 
 
 class ResourceDocument(File):

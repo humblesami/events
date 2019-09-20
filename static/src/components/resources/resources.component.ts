@@ -15,14 +15,16 @@ export class ResourcesComponent implements OnInit {
 		items: [],
 		title: ''
     };
-    httpService: HttpService;
-    renameService: RenameService;
 
-    constructor(private httpServ: HttpService,private renameSer: RenameService, private socketService: SocketService) {        
+    constructor(public socketService: SocketService) {        
         
     }
 
     ngOnInit() {
-        let obj_this = this;        
+        let obj_this = this;
+        setTimeout(function(){
+            var create_button = $('#create_new_folder');                        
+            $('app-breadcrumb .edit-buttons').append(create_button);            
+        }, 50);        
     }
 }

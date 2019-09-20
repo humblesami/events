@@ -2,6 +2,7 @@ import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { HttpService } from 'src/app/http.service';
 import {SocketService} from "../../app/socket.service";
 import { RenameService } from 'src/app/rename.service';
+import { UserService } from 'src/app/user.service';
 declare var $:any;
 
 
@@ -36,16 +37,21 @@ export class DocumentsComponent implements OnInit {
     // unique_id = window['js_utils'].unique_id();
     socketService: SocketService;
     object_id = undefined;
+    userService: UserService;
     renameService: RenameService;
-
-    constructor(private httpServ: HttpService,private renameSer: RenameService, private ss: SocketService,
+    parent;
+    constructor(private httpServ: HttpService,
+        private renameSer: RenameService, 
+        private userServ: UserService,
+        private ss: SocketService,
         public zone: NgZone) {
         this.httpService = httpServ;
-        this.renameService =renameSer;
+        this.userService = userServ;
+        this.renameService = renameSer;
         this.socketService = ss;
         window['app_libs']['pdf'].load();
         this.object_id = window['js_utils'].unique_id();
-        ss.doc_objects[this.object_id] = this;
+        ss.doc_objects[this.object_id] = this;        
     }
 
     get_icon_url(source = null){
@@ -91,8 +97,7 @@ export class DocumentsComponent implements OnInit {
         window['apply_drag_drop'](file_input, resInfo, function(data){
             try{
                 var result = obj_this.docs.concat(data);
-                obj_this.zone.run(() => obj_this.docs = result);
-                obj_this.openmodel(result);
+                obj_this.zone.run(() => obj_this.docs = result);                
             }
             catch(er){
                 console.log(er, 5455);
@@ -104,13 +109,12 @@ export class DocumentsComponent implements OnInit {
     {
         evn.stopPropagation();
         evn.preventDefault();
-
+        let obj_this = this;
         window['bootbox'].confirm('Are you sure to delete?', function(dr){
             if(!dr)
             {
                 return;
-            }
-            let obj_this = this;        
+            }            
             let input_data = {
                 doc_id: doc_id,
             }
@@ -134,12 +138,6 @@ export class DocumentsComponent implements OnInit {
                 });
             }, null);
         });        
-    }    
-
-    start_rename(evn)
-    {
-        evn.stopPropagation();
-        evn.preventDefault();
     }
 
     get_list(){
@@ -169,83 +167,15 @@ export class DocumentsComponent implements OnInit {
             obj_this.users = data.users;
         }, null);
     }
-        
-
-    saveusers(){
-        let obj_this = this;        
-        var user_ids = [];
-        var new_file_ids = [];
-        for(var file of obj_this.selected_docs)
-        {
-            new_file_ids.push(file.id);
-        }
-        for(var user of obj_this.selectedUsers)
-        {
-            user_ids.push(user.id);
-        }
-        // console.log(user_ids,new_file_ids);       
-        let args = {
-            app: 'resources',
-            model: 'Folder',
-            method: 'define_access'
-        }
-        let final_input_data = {
-            params: {
-                file_ids: new_file_ids,
-                user_ids : user_ids
-            },
-            args: args
-        };
-        obj_this.httpService.get(final_input_data,
-        (result: any) => {
-            console.log(result);           
-        },null);
-        $('#select_user_modal').modal('hide');
-    }
-
-    closemodel(){
-        $('#select_user_modal').modal('hide');
-        this.selectedUsers = [];
-        this.selected_docs  = [];
-    }
-
-    openmodel(docs){
-        let obj_this = this;
-        obj_this.selectedUsers = [];
-        obj_this.selected_docs  = [];
-
-        for(var doc of docs)
-        {
-            obj_this.selected_docs.push(doc);
-        }
-        console.log(docs);
-        if(docs.length == 1)
-        {
-            let args = {
-                app: 'resources',
-                model: 'Folder',
-                method: 'get_resource_audience'
-            }
-            let final_input_data = {
-                params: {
-                    file_id: docs[0].id,
-                    parent_id: obj_this.parent_id
-                },
-                args: args
-            };
-            obj_this.httpService.get(final_input_data,
-            (result: any) => {
-                // console.log(result);
-                obj_this.users = result.valid;
-                obj_this.selectedUsers = result.selected;
-            },null);                
-        }
-        $('#select_user_modal').modal('show');
-    }
 
     ngOnInit() {
         let obj_this = this;
-        obj_this.get_list();        
+        obj_this.get_list();
+        this.parent = {
+            app: 'resources',
+            model: 'Folder',
+            id: this.parent_id
+        }
         setTimeout(function(){
             obj_this.on_admin_mode_changed()
         },10);

@@ -168,3 +168,34 @@
 <button (click)="topFunction()" id="backTop" title="Go to top">
     <i class="fa fa-arrow-up"></i>
 </button>
+
+<div class="modal fade" id="select_user_modal" tabindex="-1" role="dialog" aria-labelledby="SelectUserModal" aria-hidden="true">
+    <div class="modal-dialog modal-top-fixed" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div></div>
+                <div  style="display: flex" class="ng-select-user-list">
+                    <ng-select
+                    [items]="userService.valid_users"
+                    [multiple]="true"
+                    [hideSelected]="true"
+                    bindLabel="name"
+                    placeholder="Select User"
+                    [(ngModel)]="userService.selectedUsers"
+                    >
+                    <ng-template ng-footer-tmp>
+                            Selected count: {{userService.selectedUsers.length}}
+                    </ng-template>
+                    </ng-select>                    
+                </div>
+                <br>
+                <div>
+                    <button class="btn btn-sm btn-primary" (click)="userService.saveusers()">Save</button>  
+                    <button class="btn btn-sm btn-success ml-1" (click)="userService.selectedUsers=renameService.valid_users" >Select All</button>
+                    <button class="btn btn-sm btn-danger ml-1" (click)="userService.selectedUsers=[]" >Clear All</button>
+                    <button class="btn btn-sm btn-danger ml-1" (click)="userService.closemodel()" >Close</button>
+                </div>
+        </div>
+    </div>
+    </div>
+</div>        
