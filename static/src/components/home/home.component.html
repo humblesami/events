@@ -37,8 +37,8 @@
                 <h2 class="border-bottom text-dark pb-3 mb-0"><i class="icon-action"></i> Actions</h2>
                 <!--Surveys-->
                 <div id="to-do">
-                    <div class="carousel slide carousel-multi-item" data-ride="carousel"
-                    *ngIf="home_data.to_do_items.pending_surveys.length" [ngClass]="['border-bottom',' pt-3 pb-4']">
+                    <div class="carousel slide carousel-multi-item pt-3 pb-4" data-ride="carousel"
+                    *ngIf="home_data.to_do_items.pending_surveys.length">
                         <div class="clearfix">
                             <h4 class="text-primary pb-3 float-left">
                                 Surveys
@@ -134,7 +134,8 @@
                     </div>
                     <!--Documents-->
                     
-                    <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" class="carousel slide carousel-multi-item border-bottom  pt-3 pb-4" data-ride="carousel">
+                    <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" 
+                    class="carousel slide carousel-multi-item pt-3 pb-4" data-ride="carousel">
                         <div class="clearfix">                                
                             <h4 class="mb-3 float-left">
                                 <span class="head-icon-end">
@@ -177,7 +178,8 @@
                         </div>
                     </div>                 
                     <!--Votings-->
-                    <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" class="carousel slide carousel-multi-item  pt-3 pb-4" data-ride="carousel">
+                    <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" 
+                    class="carousel slide carousel-multi-item  pt-3 pb-4" data-ride="carousel">
                         <div class="clearfix">
                             <h4 class="mb-3 float-left">
                                 <span class="head-icon-end">

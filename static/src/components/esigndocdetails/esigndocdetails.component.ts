@@ -541,12 +541,10 @@ export class EsignDocDetailsComponent implements OnInit {
                     if(token){
                         ajax_options.url = '/rest/public';
                     }
-                    console.log(ajax_options.data.params);
+                    // console.log(ajax_options.data.params);
                     window['dn_rpc_object'](ajax_options);
                 }
-
                 get_signature_data();
-
 
 
                 function on_sign_got(sign_data)
