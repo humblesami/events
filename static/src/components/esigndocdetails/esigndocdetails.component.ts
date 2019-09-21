@@ -928,7 +928,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 $('#holder').html('<h3>Sorry document has been removed now</h3>');
                 console.log(er);
             }
-
         }
 
 

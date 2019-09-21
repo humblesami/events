@@ -136,48 +136,51 @@ class File(CustomModel, FilesUpload):
         else:
             raise Exception('Invalid File Type')
 
+    def exclude_extension(self, name):
+        name = os.path.splitext(name)[0]
+        return name
+
     def doc2pdf(self, pth, ext, filename):
         try:
-            converted_pth = pth.replace("files", "converted")
-            converted_pth = converted_pth.split(".")[0] + ".pdf"
+            res_pdf_path = pth.replace("files", "converted")
+            res_pdf_path = self.exclude_extension(res_pdf_path) + '.pdf'
             if ext == "pdf":
                 res = open(pth, 'rb')
             else:
                 subprocess.check_call(
                     ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'pdf',
-                     '-o', converted_pth, '-d', 'document',
+                     '-o', res_pdf_path, '-d', 'document',
                      pth])
-                res = open(converted_pth, 'rb')
+                res = open(res_pdf_path, 'rb')
             if ext != "pdf":
-                res = open(converted_pth, 'rb')
+                res = open(res_pdf_path, 'rb')
             else:
                 res = open(pth, 'rb')
-            self.pdf_doc.save(filename + ".pdf", DjangoFile(res))
-            # self.original_pdf.save(filename+".pdf", DjangoFile(res))
-
+            if filename.endswith('.pdf'):
+                filename = filename + '.pdf'
+            self.pdf_doc.save(filename, DjangoFile(res))
         except:
             raise
 
     def excel2xhtml(self, pth, filename):
         try:
-            converted_pth = pth.replace("files", "converted")
-            converted_pth = converted_pth.split(".")[0] + ".xhtml"
+            res_pdf_path = pth.replace("files", "converted")
+            res_pdf_path = self.exclude_extension(res_pdf_path) + ".xhtml"
             subprocess.check_call(
                 ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'xhtml',
-                 '-o', converted_pth,
+                 '-o', res_pdf_path,
                  pth])
-            res = open(converted_pth, 'rb')
+            res = open(res_pdf_path, 'rb')
             self.pdf_doc.save(filename + ".xhtml", DjangoFile(res))
             read = res.read()
             r = read.decode("utf-8")
             self.html = r
-
         except:
             raise
 
     def img2pdf(self, pth, filename):
         try:
-            converted_pth = pth.replace("files", "converted")
+            res_pdf_path = pth.replace("files", "converted")
             im = Image.open(pth)
             width, height = im.size
             if height >= width:
@@ -192,10 +195,11 @@ class File(CustomModel, FilesUpload):
             pdf = FPDF()
             pdf.add_page(orientation=orientation)
             pdf.image(pth, x=0, y=0, w=w, h=h)
-            pdf.output(converted_pth, "F")
-            res = open(converted_pth, 'rb')
-            self.pdf_doc.save(filename + ".pdf", DjangoFile(res))
-            # self.original_pdf.save(filename+".pdf", DjangoFile(res))
+            pdf.output(res_pdf_path, "F")
+            res = open(res_pdf_path, 'rb')
+            if not filename.endswith('.pdf'):
+                filename = filename + '.pdf'
+            self.pdf_doc.save(filename, DjangoFile(res))
         except:
             raise
 

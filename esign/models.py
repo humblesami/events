@@ -41,9 +41,6 @@ class SignatureDoc(File, Actions):
             self.original_pdf = self.pdf_doc
             self.save()
 
-
-
-
     def get_all_respondents(self):
         respondent_list = []
         if self.meeting:
@@ -245,7 +242,6 @@ class SignatureDoc(File, Actions):
             output.write(outputStream)
         res = open(output_pdf_path, 'rb')
         self.pdf_doc.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
-        # self.original_pdf.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
 
     def remove_all_signature(self):
         self.signature_set.all().delete()
