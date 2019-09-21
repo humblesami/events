@@ -1,6 +1,6 @@
 <app-breadcrumb 
 *ngIf="surveyDetails"
-routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/actions/surveys"}, {"title":"{{surveyDetails.name}}", "link":"/survey/{{surveyDetails.id}}"}]'
+routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/surveys"}, {"title":"{{surveyDetails.name}}", "link":"/survey/{{surveyDetails.id}}"}]'
 title="Results"></app-breadcrumb>
 <div class="router-outlet">
     <link rel="stylesheet" href="/static/assets/css/survey.css" />

@@ -19,7 +19,7 @@ body.user #viewer_container
 }
 body.public #viewer_container
 {
-    height: calc(100vh - 109px);
+    height: calc(100vh - 43px);
     overflow: auto;
 }
 .sign_container[signed="true"]

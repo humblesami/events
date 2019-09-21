@@ -658,6 +658,9 @@ export class EsignDocDetailsComponent implements OnInit {
                                 $("#nxxt_sign").hide(); 
                             }
                             // $("#nxxt_sign").click();
+                        },
+                        onError:function(er){
+                            window['bootbox'].alert(er);
                         }
                     }
                     if(token){
@@ -993,7 +996,7 @@ export class EsignDocDetailsComponent implements OnInit {
             {                
                 $(el).css('width', $(el).width());
                 $(el).css('height', $(el).height());
-                console.log($(el).width(), 59990);
+                // console.log($(el).width(), 59990);
             }
 
             // var vertical_padding = 0;
@@ -1089,7 +1092,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 {
                     rect.left += $('#the-canvas').position().left;
                 }
-                console.log(position, page_zoom, rect);
+                // console.log(position, page_zoom, rect);
                 $(el).attr('position', JSON.stringify(position));
                 $(el).css(rect);
             }
@@ -1133,6 +1136,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     page: field.page,
                     field_name: field.field_name,                    
                     class: "sign_container",
+                    title: field.created_at
                 });
                 // console.log(field);
                 var show_text = field.type.charAt(0).toUpperCase() + field.type.slice(1);

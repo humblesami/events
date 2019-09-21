@@ -1,4 +1,4 @@
-<app-breadcrumb app="survey" model="survey" *ngIf="surveyDetails" rid="{{surveyDetails.id}}" edit="1" delete="1" routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/actions/surveys"}]' title="{{surveyDetails.name}}"></app-breadcrumb>
+<app-breadcrumb app="survey" model="survey" *ngIf="surveyDetails" rid="{{surveyDetails.id}}" edit="1" delete="1" routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/surveys"}]' title="{{surveyDetails.name}}"></app-breadcrumb>
 <div class="router-outlet">
     <div class="container" *ngIf="surveyDetails">
         <div class=" form-details">

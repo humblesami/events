@@ -124,9 +124,6 @@ const appRoutes: Routes = [
     { path: 'signdocs', data:{app:'esign', model:'SignatureDoc'}, component: EsignDocsComponent, canActivate: [AuthGuard]},
     { path: 'votings', data:{app:'voting', model:'Voting', search_models:{ voting:['Voting','VotingChoice','VotingType']} }, component: VotingsComponent, canActivate: [AuthGuard]},
     
-    { path: 'actions/surveys', data:{app:'survey', model:'Survey', search_models: {survey:['Survey','Question']} }, component: SurveysComponent, canActivate: [AuthGuard]},
-    { path: 'actions/signdocs', data:{app:'esign', model:'SignatureDoc'}, component: EsignDocsComponent, canActivate: [AuthGuard]},
-    { path: 'actions/votings', data:{app:'voting', model:'Voting', search_models: {voting: ['Voting','VotingChoice','VotingType']} }, component: VotingsComponent, canActivate: [AuthGuard]},
     { path: 'actions', data:{app:'voting', model:'Voting', search_models:{survey:['Survey', 'Question'], esign: ['SignatureDoc'],voting: ['Voting','VotingChoice','VotingType']}}, component: VotingsComponent, canActivate: [AuthGuard]},
 
     { path: 'voting/:id', component: VotingdetailsComponent},

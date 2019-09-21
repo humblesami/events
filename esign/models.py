@@ -469,7 +469,7 @@ class SignatureDoc(File, Actions):
 
         signatures = queryset_to_list(signatures,
                                       fields=['user__id', 'user__username', 'id', 'type', 'page', 'field_name', 'zoom',
-                                              'width', 'height', 'top', 'left', 'image'])
+                                              'width', 'height', 'top', 'left', 'image', 'created_at'])
         for signature in signatures:
             signed = False
             my_record = False
@@ -563,12 +563,16 @@ class Signature(CustomModel):
         user = request.user
         if token:
             token = PostUserToken.objects.get(token=token)
+            if not token:
+                return 'Invalid token to sign this document'
             user = token.user
+            if not user:
+                return 'Token not associated to any user'
             if user.id != sign.user_id:
-                return 'Invalid user'
+                return 'Invalid user against provided token'
             post_info = token.post_info
             if post_info.res_id != doc_id:
-                return 'Invalid doc access'
+                return 'Token not valid for this post'
         else:
             if user.id != 1:
                 if user.id != sign.user.id:
