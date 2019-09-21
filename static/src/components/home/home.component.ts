@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
             home_data.text = home_data.news.description;
             home_data.news.description = home_data.news.description.substr(0,obj_this.text_limit);
             if(home_data.text.length > obj_this.text_limit){
-                home_data.news.description = home_data.news.description +'... <a id="readmore" class="readmore d-block mt-2">Read More</a>';                
+                home_data.news.description = home_data.news.description +'... <a id="readmore" class="readmore">Read More</a>';                
             }
             home_data.description = obj_this.sanitizer.bypassSecurityTrustHtml(home_data.news.description);
             if(home_data.text.length > obj_this.text_limit){
