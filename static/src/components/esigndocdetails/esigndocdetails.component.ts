@@ -910,18 +910,25 @@ export class EsignDocDetailsComponent implements OnInit {
             $('#scaleSelect').val(page_zoom);
             canvas = document.getElementById('the-canvas')
             ctx = canvas.getContext('2d');
-            console.log('Dcownloading doc', Date());
-            window["PDFJS"].getDocument(pdf_url).then(function getPdf(_pdfDoc) {
-                console.log('Got doc to render', Date());
-                pdfDoc = _pdfDoc;
-                if (!pageNum) {
-                    pageNum = 1;
-                }
-                renderPage(pageNum);
-                $('#holder').show();
-                $('.docWrapperContainer').show();
-                toggleNextButton();
-            });
+            try{
+                console.log('Dcownloading doc from '+pdf_url, Date());
+                window["PDFJS"].getDocument(pdf_url).then(function getPdf(_pdfDoc) {
+                    console.log('Got doc to render', Date());
+                    pdfDoc = _pdfDoc;
+                    if (!pageNum) {
+                        pageNum = 1;
+                    }
+                    renderPage(pageNum);
+                    $('#holder').show();
+                    $('.docWrapperContainer').show();
+                    toggleNextButton();
+                });
+            }
+            catch(er){
+                $('#holder').html('<h3>Sorry document has been removed now</h3>');
+                console.log(er);
+            }
+
         }
 
 
