@@ -1,30 +1,39 @@
 
-function init_popup(config) {    
-    $('#signModal #save-sig').off('click');
-    $('#signModal #save-sig').click(function(){        
-        if (config.on_save)
-        {
-            config.on_save();
-        }
-        if(config.hide_on_save || config.hide)
-        {
-            $('#signModal').modal('hide');
-        }
-    });
-    $('#signModal #close-btn').off('click');
-    $('#signModal #close-btn').click(function(){
+function init_popup(config) {
+    var modal_obj = $('#signModal');
+    modal_obj.find('.modal-header span').html('');
+    modal_obj.find('.modal-footer button:not(#save-sig):not(#close-btn)').remove();
+    var save_btn = modal_obj.find('#save-sig');
+    if(!config.no_save)
+    {
+        save_btn.off('click').show();
+        save_btn.click(function(){        
+            if (config.on_save)
+            {
+                config.on_save();
+            }
+            if(config.hide_on_save || config.hide)
+            {
+                modal_obj.modal('hide');
+            }
+        });
+    }
+    else{
+        save_btn.hide();
+    }
+    modal_obj.find('#close-btn').off('click');
+    modal_obj.find('#close-btn').click(function(){
         if (config.on_close)
         {
             config.on_close();
         }
-        $('#signModal').modal('hide');
+        modal_obj.modal('hide');
     });
     if(config.on_load)
     {
         config.on_load();
     }
-    $('#signModal').modal('show');
-
+    modal_obj.modal('show');
 };
 window['init_popup'] = init_popup;
 $(function(){
@@ -36,5 +45,8 @@ $(function(){
             }
         }
         init_popup(label_show);
+    });
+    $('#signModal').on('shown.bs.modal', function(){
+        $(this).find('input:visible:first').focus();
     })
 })

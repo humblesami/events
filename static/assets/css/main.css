@@ -2988,7 +2988,9 @@ label.check-plus-label-wrap {
 	color: #4b74b5;
 	transform: translate(-50%, -50%);
 	}
-
+.PdfButtonWrapper .check-plus-label-wrap{
+	margin: 0.7rem 0;
+}
 .main-full-seachbar {
 	background: #E1E1E1;
     padding: 10px;
@@ -3121,4 +3123,15 @@ label.check-plus-label-wrap {
 .modal.fade .modal-dialog
 {
     min-width: 50%;
+}
+.btn-default{
+	border: 1px solid #ddd;
+}
+.modal-footer .btn{
+	border: 0;
+}
+.modal-header .title{
+	font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 6px;
 }

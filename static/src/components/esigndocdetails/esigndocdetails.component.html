@@ -50,9 +50,6 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                             </div>
                         </div>
                         <div class="meetings_div">
-                            <!-- <div *ngIf="!signature_started && socketService.is_admin">
-                                <input [(ngModel)]="isAdmin" type="checkbox" /> Admin Mode
-                            </div> -->
                             <div class="doc-subtitle">Attach to Meeting</div>
                             <select id="dropdown_meeting">
                                 <option selected value="">Select Meeting</option>
@@ -69,7 +66,7 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                         <button id="save-doc-data" class="btn btn-primary save_doc_data">
                             Send
                         </button>
-						<button id="edit-respondents" (click)="add_new_users()" class="mt-3 btn btn-primary btn-block">
+						<button id="edit-respondents" (click)="add_new_users()" class="mt-2 btn btn-primary btn-block">
                             Edit Respondents
                         </button>
                     </div>

@@ -85,14 +85,14 @@ export class EsignDocDetailsComponent implements OnInit {
         $('#select_user_modal').modal('hide');
     }
 
-    toggle_admin_mode(bool){
-        this.isAdmin = bool;
-    }
     meetings = [];
     signature_started = true;
     selectedMeeting: any;
+
+
     ngOnInit() {
         var obj_this = this;
+        
         var
             canvas,
             pdf_url,
@@ -366,7 +366,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 body.append("<h3>Subject</h3>").append(input_subject);
                 body.append("<h3>Message</h3>").append(email_body);
 
-                var label_show = {
+                var assign_popup = {
                     on_load: function(){
                         $('#signModal .modal-body').html(body);
                     },
@@ -375,7 +375,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     },
                     hide_on_save:1
                 };
-                window['init_popup'](label_show);
+                window['init_popup'](assign_popup);
                 
                 function assign_signatures() {
                     var sign_fields = [];
@@ -466,20 +466,12 @@ export class EsignDocDetailsComponent implements OnInit {
                 // console.log(4234343);
                 var sign_container = $(this);
                 var my_record = sign_container.attr("my_record");
-                if (my_record == "false" && !obj_this.isAdmin) {
+                if (my_record == "false" && (!obj_this.isAdmin || obj_this.signature_started)) {
                     return;
                 }
-                var is_signed = sign_container.attr('signed').toString();
-                // if(is_signed == "true")
-                // {
-                //     return;
-                // }
-
-                var login = sign_container.attr("login");
+                
                 var signature_id = sign_container.attr("id");
                 var signature_dom = sign_container;
-
-                var signature_data;
 
                 function remove_sign(){
                     ajax_options = {
@@ -500,15 +492,24 @@ export class EsignDocDetailsComponent implements OnInit {
                     $('#signModal').modal('hide');
                     window['dn_rpc_object'](ajax_options);
                 }
-                if(obj_this.isAdmin && (is_signed == "false" || my_record == "true"))
+                if(obj_this.isAdmin && !obj_this.signature_started)
                 {
                     let popup_config = {
                         on_load: function(){
-                            $('#signModal .modal-body').html(`
-                                <button class="remove">Remove</button>
+                            var modal_body = $('#signModal .modal-body');
+                            var disable_instruction = $('<span>Please disable admin mode to sign document.</span>');
+                            var disable_admin_btn = $('<button class="btn btn-primary">Disable Admin</button>');
+                            disable_admin_btn.click(function(){
+                                $('#signModal').modal('hide');
+                                obj_this.socketService.set_admin_mode(false);
+                            });
+                            modal_body.html(disable_instruction).append(disable_admin_btn);
+                            $('#signModal .modal-footer').find('button:last').before(`
+                                <button class="remove btn-sm btn-danger">Remove</button>
                             `);
                             $('#signModal button.remove').click(remove_sign);
                         },
+                        no_save:1,
                         hide_on_save: true,
                         on_shown: function(){
                             $('#signModal button.remove').click(remove_sign);
@@ -554,8 +555,6 @@ export class EsignDocDetailsComponent implements OnInit {
                         let sign_config = {
                             signature_data: sign_data.image,
                             on_signed: function(new_sign){
-                                // console.log(1154, new_sign);
-                                signature_data = new_sign;
                                 submit_response(new_sign, sign_data.text);
                             },
                             on_auto_sign: function(){
@@ -570,10 +569,12 @@ export class EsignDocDetailsComponent implements OnInit {
                     {
                         let popup_config = {
                             on_load: function(){
-                                // console.log(117);
-                                var read_only = sign_container.attr('signtype') == 'date' ? 'disabled' : '';
+                                var selected_sign_type = sign_container.attr('signtype');
+                                var read_only = selected_sign_type == 'date' ? 'disabled' : '';
+                                selected_sign_type = window['js_utils'].camel_case(selected_sign_type);
+                                $('#signModal .modal-header .title:first').html(selected_sign_type);
                                 $('#signModal .modal-body').html(`
-                                    <input id="sign_data" value="`+sign_data.text+`" `+read_only+` />
+                                    <input id="sign_data" class="form-control" placeholder="Please Enter `+selected_sign_type+`" value="`+sign_data.text+`" `+read_only+` />
                                 `);
                             },
                             on_save:function(){
@@ -603,8 +604,6 @@ export class EsignDocDetailsComponent implements OnInit {
                                 let sign_config = {
                                     signature_data: data.image,
                                     on_signed: function(new_sign){
-                                        // console.log(1154, new_sign);
-                                        signature_data = new_sign;
                                         submit_response(new_sign, sign_data.text);
                                     }
                                 };
@@ -781,6 +780,11 @@ export class EsignDocDetailsComponent implements OnInit {
         function loadData() {
             console.log('Loading doc data', Date());
             window['functions'].showLoader('esign-doc');
+            var doc_data_ws = 'ws_get_details';
+            if(!$('body').hasClass('user'))
+            {
+                doc_data_ws = 'wsp_get_details'
+            }
             let url = '';
             ajax_options = {
                 data: {
@@ -789,7 +793,6 @@ export class EsignDocDetailsComponent implements OnInit {
                         model: 'SignatureDoc',
                         method: 'ws_get_detail'
                     },
-
                     params: {
                         document_id: obj_this.doc_id,
                         token: token,
@@ -812,54 +815,65 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     doc_data = data.doc_data;
                     obj_this.doc.doc_name = data.doc_name || 'Unnamed';
-                    obj_this.selected_respondents = data.users;
-                    obj_this.all_profile_users = data.all_profile_users;
                     obj_this.signature_started = data.signature_started;
-                    obj_this.all_users_list = obj_this.users_list = users = data.users;
-                    meeting_id = data.meeting_id;
-                    // console.log(data);
-                    send_to_all = data.send_to_all;
-                    pdf_url = window['site_config'].server_base_url + data.file_url;
-                    window['app_libs']['pdf'].load(function(){
-                        renderPDF(pdf_url);
-                    });
 
-                    obj_this.meetings = data.meetings;
-                    for(var k=0; k< data.meetings.length; k++)
+                    if(data.binary)
                     {
-                        if(data.meetings[k].id == meeting_id)
+                        pdf_url = 'data:application/pdf;base64,' + data.binary;
+                        window['app_libs']['pdf'].load(function(){
+                            renderPDF(pdf_url);
+                        });
+                    }
+                    else{
+                        obj_this.selected_respondents = data.users;
+                        obj_this.all_profile_users = data.all_profile_users;
+                        obj_this.all_users_list = obj_this.users_list = users = data.users;
+                        meeting_id = data.meeting_id;
+                        send_to_all = data.send_to_all;
+                        pdf_url = window['site_config'].server_base_url + data.file_url;
+                        console.log('Dcownloading doc from '+pdf_url, Date());
+
+                        window['app_libs']['pdf'].load(function(){
+                            renderPDF(pdf_url);
+                        });
+
+                        obj_this.meetings = data.meetings;
+                        for(var k=0; k< data.meetings.length; k++)
                         {
-                            obj_this.selectedMeeting = data.meetings[k];
+                            if(data.meetings[k].id == meeting_id)
+                            {
+                                obj_this.selectedMeeting = data.meetings[k];
+                            }
                         }
-                    }
-                    var ddm = $('#dropdown_meeting');
-                    var selected = '';
-                    if(!meeting_id)
-                    {
-                        selected = ' selected';
-                    }
-                    ddm.html('<option'+selected+' value="">Select Meeting</option>');
-                    var option_html = '';
-                    data.meetings.forEach(element => {
-                        if(meeting_id == element.id)
+                        var ddm = $('#dropdown_meeting');
+                        var selected = '';
+                        if(!meeting_id)
                         {
                             selected = ' selected';
                         }
+                        ddm.html('<option'+selected+' value="">Select Meeting</option>');
+                        var option_html = '';
+                        data.meetings.forEach(element => {
+                            if(meeting_id == element.id)
+                            {
+                                selected = ' selected';
+                            }
+                            else
+                            {
+                                selected = '';
+                            }
+                            option_html = '<option'+selected+' value='+element.id+'>'+element.name+'</option>';
+                            ddm.append(option_html);
+                        });
+                        if (send_to_all) {
+                            $('#check_box_send_all').prop('checked', true);
+                            $('.dragabl-fields').hide();
+                        }
                         else
                         {
-                            selected = '';
+                            $('#check_box_send_all').prop('checked', false);
+                            $('.dragabl-fields').show();
                         }
-                        option_html = '<option'+selected+' value='+element.id+'>'+element.name+'</option>';
-                        ddm.append(option_html);
-                    });
-                    if (send_to_all) {
-                        $('#check_box_send_all').prop('checked', true);
-                        $('.dragabl-fields').hide();
-                    }
-                    else
-                    {
-                        $('#check_box_send_all').prop('checked', false);
-                        $('.dragabl-fields').show();
                     }
                 }
             };
@@ -913,7 +927,6 @@ export class EsignDocDetailsComponent implements OnInit {
             canvas = document.getElementById('the-canvas')
             ctx = canvas.getContext('2d');
             try{
-                console.log('Dcownloading doc from '+pdf_url, Date());
                 window["PDFJS"].getDocument(pdf_url).then(function getPdf(_pdfDoc) {
                     console.log('Got doc to render', Date());
                     pdfDoc = _pdfDoc;
@@ -1162,29 +1175,41 @@ export class EsignDocDetailsComponent implements OnInit {
                 {
                     if(field.signed && field.my_record)
                     {
-                        div.html('<img src="'+window['site_config'].server_base_url+field.image+'" style="height:calc(100% - 10px)"/>');
+                        if(!token)
+                        {
+                            div.html('<img src="'+window['site_config'].server_base_url+field.image+'" style="height:calc(100% - 10px)"/>');
+                        }
+                        else{
+                            div.html('<img src="'+field.image+'" style="height:calc(100% - 10px)"/>');
+                        }
                     }
                 }
-
+                
                 if (field.page == pageNum) {
                     $('#page_container').append(div);
                 }
             });
-            var my_records = $('.sign_container[my_record="true"]');
-            // console.log(my_records.length, 1233);
-            if(my_records.length == 0)
+        }
+
+        if(obj_this.socketService.admin_mode)
+        {
+            obj_this.isAdmin = true;
+            $('.doc-container').removeClass('admin').addClass('admin');
+        }
+        else{
+            $('.doc-container').removeClass('admin');
+        }
+        obj_this.socketService.call_backs_on_mode_changed['esign'] = function(){
+            if(obj_this.socketService.admin_mode)
             {
-                obj_this.isAdmin = obj_this.socketService.is_admin && !obj_this.signature_started;
+                $('.doc-container').removeClass('admin').addClass('admin');
+                obj_this.isAdmin = true;
             }
-            else
-            {
+            else{
+                $('.doc-container').removeClass('admin');
                 obj_this.isAdmin = false;
             }
         }
-
-
-        
-
     }
     prev_height = '';
     ngOnDestroy(){

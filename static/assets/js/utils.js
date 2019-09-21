@@ -254,6 +254,14 @@ var js_utils = window['js_utils'] = {
             console.log('loader not found', element[0]);
         }
     },
+    camel_case: function(value){
+        var result = value.toLowerCase().split(' ');
+        for(var i=0 ; i<result.length; i++){
+            result[i] = result[i].charAt(0).toUpperCase() + result[i].substring(1);
+        }
+        result =  result.join(' ');
+        return result;
+    },
     is_public_route: function (url){
         if(!url)
         {

@@ -60,10 +60,16 @@ body.public #viewer_container
     height:40px;
 }
 
-.sign_container[signed="true"]{    
-    border: 1px dotted;
+.sign_container[signed="true"]{
     background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.sign_container img{
-    max-width: inherit;
+.sign_container[signed="true"] img{
+    object-fit: contain;
+}
+
+.check_box_send_all span{
+    font-size: 13px;
 }

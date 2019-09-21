@@ -309,7 +309,7 @@ export class SocketService {
         obj_this.is_admin = mode;
         localStorage.setItem('admin_mode', JSON.stringify({admin_mode:mode}));
         obj_this.on_admin_mode_changed();
-    }    
+    }
 
     add_chat_user(chat_cleint: ChatClient)
     {

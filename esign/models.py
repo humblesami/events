@@ -176,7 +176,7 @@ class SignatureDoc(File, Actions):
             'token_required': True
         }
         send_email_on_creation(email_data)
-        doc_data = self.get_doc_data(user)
+        doc_data = self.get_doc_data(user, False)
         return doc_data
 
     def add_pages_for_sign(self):
@@ -266,6 +266,7 @@ class SignatureDoc(File, Actions):
     def ws_get_detail(cls, request, params):
         file_id = params.get('document_id')
         doc_obj = None
+        token = params.get('token')
         user = request.user
         if file_id == 'new':
             if not user.id:
@@ -288,6 +289,17 @@ class SignatureDoc(File, Actions):
         else:
             return res
         doc_data = res
+        doc_data['doc_name'] = doc_obj.name
+        doc_data['doc_id'] = doc_obj.id
+
+        if token:
+            pdf_doc = doc_obj.pdf_doc
+            pdf_doc = pdf_doc.read()
+            pdf_doc = base64.b64encode(pdf_doc)
+            result = pdf_doc.decode('utf-8')
+            doc_data['binary'] = result
+            return doc_data
+
         meetings = Event.objects.filter(publish=True).exclude(archived=True)
         meetings = queryset_to_list(meetings, fields=['id', 'name'])
         meeting_id = doc_obj.meeting_id
@@ -303,12 +315,11 @@ class SignatureDoc(File, Actions):
         selected_users = list(users_obj.filter(id__in=respondent_list).values('id', 'name'))
         doc_data['all_profile_users'] = all_users
         doc_data["users"] = selected_users
-        doc_data['doc_name'] = doc_obj.name
-        doc_data['doc_id'] = doc_obj.id
+
         return doc_data
 
     def get_detail(self, request, params):
-        token = params['token']
+        token = params.get('token')
         user = request.user
         file_name = ''
         if token:
@@ -322,11 +333,12 @@ class SignatureDoc(File, Actions):
                 return res
             else:
                 user = res.user
-
+        else:
+            user = request.user
         if not user.id:
             return 'Unauthorized to get sign document'
 
-        doc_data = self.get_doc_data(request.user)
+        doc_data = self.get_doc_data(user, token)
         sign_count = self.signature_set.filter(signed=True)
         if sign_count:
             doc_data['signature_started'] = True
@@ -459,29 +471,40 @@ class SignatureDoc(File, Actions):
             return True
         return False
 
-    def get_doc_data(self, user):
+    def get_doc_data(self, user, token):
         pdf_doc = self.pdf_doc
-        signatures = None
+        signature_objs = None
         if SignatureDoc.is_admin(user):
-            signatures = self.signature_set.all()
+            signature_objs = self.signature_set.all()
         else:
-            signatures = self.signature_set.filter(user_id=user.id)
+            signature_objs = self.signature_set.filter(user_id=user.id)
 
-        signatures = queryset_to_list(signatures,
+        signatures = queryset_to_list(signature_objs,
                                       fields=['user__id', 'user__username', 'id', 'type', 'page', 'field_name', 'zoom',
-                                              'width', 'height', 'top', 'left', 'image', 'created_at'])
+                                              'width', 'height', 'top', 'left', 'created_at'])
+        i = 0
         for signature in signatures:
             signed = False
             my_record = False
             signature["name"] = signature["user__username"]
-            if signature["image"]:
+            image = signature_objs[i].image
+            if image:
+                if token:
+                    img = image
+                    img = img.read()
+                    img = base64.b64encode(img)
+                    img = img.decode('utf-8')
+                    signature["image"] = 'data:image/png;base64,'+img
+                else:
+                    signature['image'] = image.url
                 signed = True
             sign_user_id = signature["user__id"]
-            if (user.id == sign_user_id and sign_user_id):
+            if user.id == sign_user_id and sign_user_id:
                 my_record = True
             signature["signed"] = signed
             signature['signtype'] = signature["type"]
             signature["my_record"] = my_record
+            i = i + 1
         return {"file_url": pdf_doc.url, "doc_data": signatures, 'id': self.id}
 
     @classmethod
@@ -581,11 +604,8 @@ class Signature(CustomModel):
                 message +' token id=' + str(token.id)
             return {'error': res, 'message': message}
 
-        post_info = token.post_info
-        if post_info.res_id != doc_id:
-            return 'Token not valid for this post'
+        request.user = user
         sign.signed_at = datetime.datetime.now()
-        binary_signature = ''
         curr_dir = os.path.dirname(__file__)
         font_directory = curr_dir.replace('esign', 'static/assets/fonts')
         sign_type = params['sign_type']
@@ -646,7 +666,6 @@ class Signature(CustomModel):
             return {'error': res, 'message': message}
         res = ''
         model = apps.get_model('meetings', 'Profile')
-        profile = model.objects.get(pk=sign.user.id)
         binary_signature = ''
         model = apps.get_model('meetings', 'Profile')
         profile = model.objects.get(pk=sign.user.id)
