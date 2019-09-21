@@ -571,7 +571,7 @@ class Signature(CustomModel):
             if user.id != sign.user_id:
                 res = 'Invalid user against provided token =>'
                 res += '=> user found='+str(user.id)+', expected user='+str(sign.user.id)
-                res += ' sign id='+sign.id
+                res += ' sign id='+str(sign.id)
                 return res
             post_info = token.post_info
             if post_info.res_id != doc_id:
