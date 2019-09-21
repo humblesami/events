@@ -922,6 +922,9 @@ export class EsignDocDetailsComponent implements OnInit {
                     $('#holder').show();
                     $('.docWrapperContainer').show();
                     toggleNextButton();
+                }).catch(function(er){
+                    $('#holder').html('<h3>Sorry document has been removed now</h3>');
+                    console.log(er);
                 });
             }
             catch(er){
