@@ -661,6 +661,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         onError:function(er){
                             window['bootbox'].alert(er);
+                            console.log(er);
                         }
                     }
                     if(token){

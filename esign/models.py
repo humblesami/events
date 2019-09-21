@@ -568,18 +568,22 @@ class Signature(CustomModel):
             user = token.user
             if not user:
                 return 'Token not associated to any user'
-            if user.id != sign.user_id:
-                res = 'Invalid user against provided token =>'
-                res += '=> user found='+str(user.id)+', expected user='+str(sign.user.id)
-                res += ' sign id='+str(sign.id)
-                return res
-            post_info = token.post_info
-            if post_info.res_id != doc_id:
-                return 'Token not valid for this post'
         else:
             if user.id != 1:
                 if user.id != sign.user.id:
                     return "Unauthorized"
+
+        if user.id != sign.user_id:
+            res = 'Invalid user to for this signature'
+            message = res + '=> user found=' + str(user.username) + ', expected user=' + str(sign.user.username)
+            message += ' sign id=' + str(sign.id) + ' object=esign.SignatureDoc.' + params['document_id']
+            if token:
+                message +' token id=' + str(token.id)
+            return {'error': res, 'message': message}
+
+        post_info = token.post_info
+        if post_info.res_id != doc_id:
+            return 'Token not valid for this post'
         sign.signed_at = datetime.datetime.now()
         binary_signature = ''
         curr_dir = os.path.dirname(__file__)
@@ -634,7 +638,12 @@ class Signature(CustomModel):
         signature_id = params['signature_id']
         sign = Signature.objects.get(id=signature_id)
         if sign.user.id != user.id:
-            return 'Invalid user to get signature'
+            res = 'Invalid user to for this signature'
+            message = res + '=> user found=' + str(user.username) + ', expected user=' + str(sign.user.username)
+            message += ' sign id=' + str(sign.id) + ' object=esign.SignatureDoc.' + params['document_id']
+            if token:
+                message + ' token id=' + str(token.id)
+            return {'error': res, 'message': message}
         res = ''
         model = apps.get_model('meetings', 'Profile')
         profile = model.objects.get(pk=sign.user.id)
@@ -685,7 +694,12 @@ class Signature(CustomModel):
         signature_id = params['signature_id']
         sign = Signature.objects.get(id=signature_id)
         if sign.user.id != user.id:
-            return 'Invalid user to get signature'
+            res = 'Invalid user to for this signature'
+            message = res + '=> user found=' + str(user.username) + ', expected user=' + str(sign.user.username)
+            message += ' sign id=' + str(sign.id) + ' object=esign.SignatureDoc.' + params['document_id']
+            if token:
+                message + ' token id=' + str(token.id)
+            return {'error': res, 'message': message}
         image = ''
         if sign.image:
             image = sign.image
