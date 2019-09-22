@@ -433,19 +433,13 @@
                         save_drawing();
                     }
                 } else {
-                    $('.pdfViewer').css("cursor", "default");
-                    // if ($target.closest('.annotation_button.prop').length > 0)
-                    {
-                    //     $('.topbar:first .pen:first').click();
-                    // } else {
-                        if (activePointId && $target.closest('#comment-wrapper').length == 0) {
-                            activePointId = undefined;
-                            $('.comment-list-form').hide();
-                        } else {
-                            var comment_active = $('.toolbar .comment').hasClass('active');
-                            if (comment_active && $target.closest('#viewer').length == 0)
-                                select_cursor();
-                        }
+                    if (activePointId && $target.closest('#comment-wrapper').length == 0) {
+                        activePointId = undefined;
+                        $('.comment-list-form').hide();
+                    } else {
+                        var comment_active = $('.toolbar .comment').hasClass('active');
+                        if (comment_active && $target.closest('#viewer').length == 0)
+                            select_cursor();
                     }
                 }
             });
@@ -1121,6 +1115,9 @@
                 var tooltype = 'cursor';
 
                 function setActiveToolbarItem(type, button) {
+                    var clicked_annotation_button = $(button);
+                    clicked_annotation_button = clicked_annotation_button.closest('.annotation_button');
+                    button = clicked_annotation_button[0];
                     UI.disablePoint();
                     var oldButton = $('.toolbar button.active');
                     if (oldButton.length > 0) {
@@ -1146,7 +1143,6 @@
                                 break;
                         }
                     }
-                    $(button).addClass('active');
 
                     tooltype = type;
 
@@ -1171,6 +1167,41 @@
                             UI.enableRect(type);
                             break;
                     }
+                    // var clicked_annotation_button = $(button);
+                    // if(clicked_annotation_button.hasClass('selection'))
+                    // {
+
+                    //     var active_button = $('.ToolBarWrapper .topbar .annotation_button.active:first');
+                    //     if(clicked_annotation_button != active_button)
+                    //     {
+                    //         active_button.remove('active');
+                    //         clicked_annotation_button.addClass('active');
+                    //     }
+                    //     else{
+                    //         if(!clicked_annotation_button.hasClass('cursor'))
+                    //         {
+                    //             active_button.remove('active');
+                    //             clicked_annotation_button.closest('.topbar').find('.annotation_button.cursor:fisrt').addClass('active');
+                    //         }
+                    //     }
+                    //     if(clicked_annotation_button.hasClass('pen'))
+                    //     {
+                    //         if(clicked_annotation_button.hasClass('active'))
+                    //         {
+                    //             $('#viewer').addClass('pen_active');
+                    //         }
+                    //         else{
+                    //             $('#viewer').removeClass('pen_active');
+                    //         }
+                    //     }
+                    //     else{
+                    //         $('#viewer').removeClass('pen_active');
+                    //     }
+                    // }
+                    // else{
+                    //     clicked_annotation_button.addClass('active');
+                    // }
+                    clicked_annotation_button.addClass('active');
                 }
 
                 function handleToolbarClick(e) {
@@ -1184,7 +1215,6 @@
                         if (tooltype)
                             setActiveToolbarItem(tooltype, e.target);
                     }
-
                     if (target.hasClass('comment')) {
                         if (target.hasClass('personal')) {
                             comment_sub_type = 'personal';
