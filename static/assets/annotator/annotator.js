@@ -1520,25 +1520,25 @@
                             user_image = '<img class="img-fluid" id="navbar-profile-img" src="'+user_image+'">' ;
 
                         }
-                        else
-                        {
-                            var initials = username.match(/\b\w/g) || [];
-                            initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
-                            user_image = '<span>'+initials+'</span>';
-                        }
                     }
-                    
 
                     var child_info = '';
 					child_info += '<div class="user-pic-time-infoWrapper">';
 					child_info += '<div class="userSmpic icon-user-single">';
-					child_info += +user_image;
+					child_info += '<img src="'+user_image+'" />';
 					child_info += '</div>';
 					child_info += '<div class="user-time-info pt-2">';
                     child_info += '<span class="user text-primary">';
                     child_info += aComment.user_name + '</span>';
-                    child_info += '<span class="time small">';
-                    child_info += window['dt_functions'].timeAgo(aComment.date_time);  + '</span>';
+                    if(aComment.date_time)
+                    {
+                        child_info += '<span class="time small">';
+                        child_info += window['dt_functions'].timeAgo(aComment.date_time)
+                        child_info += '</span>';
+                    }
+                    else{
+                        child_info += '<span class="time small">Unknown time</span>';
+                    }
                     child_info += '</div>';
                     child_info += '</div>';
                     child_info += '<div class="comment-details pt-1 pl-1">';

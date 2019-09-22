@@ -95,7 +95,6 @@ class AnnotationDocument(CustomModel):
             annotation_to_save = None
             new_annotation = {
                 'user_id' : user_id,
-                'date_time' : datetime.datetime.now(),
                 'page' : 1,
                 'type' : user_annot['type'],
                 'uuid' : user_annot['uuid'],
@@ -189,7 +188,6 @@ class AnnotationDocument(CustomModel):
                     point_id=obj.id,
                     body=child['body'],                     
                     user_id=child['commented_by'],
-                    date_time=child['date_time'],
                     uuid = child['uuid']                    
                 )
                 children.append(child_to_save)
@@ -200,11 +198,7 @@ class AnnotationDocument(CustomModel):
 class Annotation(CustomModel):
     name = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-
-    #null for point with subtype=comment
     document = models.ForeignKey(AnnotationDocument, null=True, on_delete=models.CASCADE)
-
-    date_time = models.DateTimeField()
     page = models.IntegerField()
     type = models.CharField(max_length=50)
     uuid = models.CharField(max_length=200)
@@ -225,7 +219,7 @@ class RectangleAnnotation(Annotation):
                 'type': rectangle.annotation_ptr.type,
                 'page': rectangle.annotation_ptr.page,
                 'uuid': rectangle.annotation_ptr.uuid,
-                'date_time': str(rectangle.annotation_ptr.date_time),
+                'date_time': str(rectangle.created_at),
                 'color': rectangle.color,
                 'doc_id': rectangle.document.doc_name,
 
@@ -265,7 +259,7 @@ class DrawingAnnotation(Annotation):
                 'type': drawing.annotation_ptr.type,
                 'page': drawing.annotation_ptr.page,
                 'uuid': drawing.annotation_ptr.uuid,
-                'date_time': str(drawing.annotation_ptr.date_time),
+                'date_time': str(drawing.created_at),
                 'color': drawing.color,
                 'width': drawing.width,
                 'doc_id': drawing.document.doc_name,
@@ -338,7 +332,6 @@ class PointAnnotation(Annotation):
         x = point.get('x')
         y = point.get('y')
         sub_type = ''
-        date_time = point.get('date_time')
         document_id = point.get('document_id')
         user_id = point.get('uid')
         name = point.get('class')
@@ -356,7 +349,7 @@ class PointAnnotation(Annotation):
             return {'point_id': user_point.id, 'new_point': new_point}
         else:
             user_point = PointAnnotation(sub_type=sub_type, pdf_id=document_id, x=x, y=y ,
-                                created_by_id=user_id, user_id=user_id, name=name, date_time=date_time,
+                                created_by_id=user_id, user_id=user_id, name=name,
                                 page=page, type=type, uuid=uuid, comment_doc_id=comment_doc_name)
             user_point.save()
             new_point = 1
@@ -379,7 +372,7 @@ class PointAnnotation(Annotation):
             if point.sub_type == sub_type:
                 comments_points.append({
                     'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
-                    'date_time': str(point.date_time), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
+                    'date_time': str(point.created_at), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
                     'class': 'Annotation', 'counter': 0, 'page': point.page, 'comment_doc_id': point.comment_doc_id, 'comments': []
                 })
                 comments = point.commentannotation_set.all()
@@ -393,17 +386,16 @@ class PointAnnotation(Annotation):
                         'content': comment.body,
                         'user_name': user.name,
                         'user': {'name': user.fullname(), 'id':user.id, 'image': user.image.url},
-                        'date_time': str(comment.date_time)
+                        'date_time': str(comment.created_at)
                     })
                 counter += 1
-        return  comments_points
+        return comments_points
 
 
 class CommentAnnotation(CustomModel):
     body = models.CharField(max_length=500)
     point = models.ForeignKey(PointAnnotation, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-    date_time = models.DateTimeField(auto_now_add=True)
     uuid = models.CharField(max_length=200)
 
     @classmethod
@@ -427,10 +419,8 @@ class CommentAnnotation(CustomModel):
             comment_uuid = comment.get('uuid')
             comment_body = comment.get('content')
             comment_uid = comment.get('uid')
-            comment_date_time = comment.get('date_time')
             if comment:
-                comment = CommentAnnotation(body=comment_body, point_id=point_id, user_id=comment_uid,
-                                            date_time=comment_date_time, uuid=comment_uuid)
+                comment = CommentAnnotation(body=comment_body, point_id=point_id, user_id=comment_uid, uuid=comment_uuid)
                 comment.save()
                 res = {}
                 res['point'] = point
