@@ -24,13 +24,14 @@ class Actions(CustomModel):
 
 
     def get_respondents(self):
-        if self.meeting:
-            return self.meeting.get_audience()
-        else:
-            res = []
-            for obj in self.respondents.all():
-                res.append(obj.id)
-            return res
+        res = []
+        # if self.meeting:
+        #     return self.meeting.get_audience()
+        # else:
+        #     res = []
+        for obj in self.respondents.all():
+            res.append(obj.id)
+        return res
     
     def get_audience(self):
         audience = []

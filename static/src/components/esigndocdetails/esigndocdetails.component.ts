@@ -1010,18 +1010,7 @@ export class EsignDocDetailsComponent implements OnInit {
             {                
                 $(el).css('width', $(el).width());
                 $(el).css('height', $(el).height());
-                // console.log($(el).width(), 59990);
             }
-
-            // var vertical_padding = 0;
-            // var vertical_padding1 = $(el).css('padding-top');
-            // var vertical_padding2 = $(el).css('padding-bottom');
-            // if(vertical_padding1)
-            // {
-            //     vertical_padding1 = parseFloat(vertical_padding1);
-            //     vertical_padding2 = parseFloat(vertical_padding2);
-            //     vertical_padding = vertical_padding1 + vertical_padding2;
-            // }
 
             position = {
                 top: parseFloat(position.top),
@@ -1029,6 +1018,8 @@ export class EsignDocDetailsComponent implements OnInit {
                 width: $(el).width() + 25,
                 height: $(el).height(),
             };
+
+            var the_canvas = $('#the-canvas');
             if(position.left < 5)
             {
                 position.left = 5;
@@ -1072,6 +1063,10 @@ export class EsignDocDetailsComponent implements OnInit {
                 width: position.width / page_zoom,
                 height: position.height / page_zoom,
             };
+            if(db_pos.left < 10)
+            {
+                db_pos.left = 10;
+            }
             // console.log(position, page_zoom, db_pos);
             var db_pos_str = JSON.stringify(db_pos);
             $(el).attr('position',db_pos_str);
