@@ -76,6 +76,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { DocumentsComponent } from '../components/documents/documents.component';
 import { FoldersComponent } from '../components/folders/folders.component';
 import { UserlistComponent } from '../components/userlist/userlist.component';
+import { ActionsComponent } from '../components/actions/actions.component';
 
 
 @NgModule({
@@ -144,6 +145,7 @@ import { UserlistComponent } from '../components/userlist/userlist.component';
         DocumentsComponent,
         FoldersComponent,
         UserlistComponent,
+        ActionsComponent,
     ],
     providers:[
         AuthGuard,

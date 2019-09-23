@@ -515,12 +515,16 @@
                     slected_comment_type = comment_sub_type;
                 }
                 if (slected_comment_type == 'notes') {
+                    
                     comments_wrapper.removeClass('comments');
                     comments_wrapper.addClass('notes');
+
                     comments_wrapper.find('.title:first').html('Personal Notes');
                 } else {
+                    
                     comments_wrapper.removeClass('notes');
-                    comments_wrapper.addClass('notes');
+                    comments_wrapper.addClass('comments');
+
                     comments_wrapper.find('.title:first').html('Comments');
                 }
                 comments_wrapper.show();
