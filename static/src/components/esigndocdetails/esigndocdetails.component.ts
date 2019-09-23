@@ -466,8 +466,8 @@ export class EsignDocDetailsComponent implements OnInit {
             $(document).on("click", ".sign_container", function() {
                 // console.log(4234343);
                 var sign_container = $(this);
-                var my_record = sign_container.attr("my_record");
-                if (my_record == "false" && (!obj_this.isAdmin || obj_this.signature_started)) {
+                var is_my_signature = sign_container.attr("my_record");
+                if (is_my_signature && (!obj_this.isAdmin || obj_this.signature_started)) {
                     return;
                 }
                 
@@ -497,14 +497,17 @@ export class EsignDocDetailsComponent implements OnInit {
                 {
                     let popup_config = {
                         on_load: function(){
-                            var modal_body = $('#signModal .modal-body');
-                            var disable_instruction = $('<span>Please disable admin mode to sign document.</span>');
-                            var disable_admin_btn = $('<button class="btn btn-primary">Disable Admin</button>');
-                            disable_admin_btn.click(function(){
-                                $('#signModal').modal('hide');
-                                obj_this.socketService.set_admin_mode(false);
-                            });
-                            modal_body.html(disable_instruction).append(disable_admin_btn);
+                            var modal_body = $('#signModal .modal-body');                            
+                            if(is_my_signature)
+                            {
+                                var disable_instruction = $('<span>If you want to sign, please disable admin mode.</span>');
+                                var disable_admin_btn = $('<button class="btn btn-primary btn-sm">Disable Admin</button>');
+                                disable_admin_btn.click(function(){
+                                    $('#signModal').modal('hide');
+                                    obj_this.socketService.set_admin_mode(false);
+                                });
+                                modal_body.html(disable_instruction).append(disable_admin_btn);
+                            }                            
                             $('#signModal .modal-footer').find('button:last').before(`
                                 <button class="remove btn-sm btn-danger">Remove</button>
                             `);

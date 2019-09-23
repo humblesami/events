@@ -11,7 +11,6 @@
             </div>
             
 			<div class="main-user-navbar">
-                {{socketService.admin_mode}}
 				<div class="automanage nav-icon" *ngIf="socketService.actually_admin">
                     <a  *ngIf="socketService.admin_mode"
                         (click)="socketService.set_admin_mode(false)"

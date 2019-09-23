@@ -97,7 +97,7 @@ export class DocumentsComponent implements OnInit {
         window['apply_drag_drop'](file_input, resInfo, function(data){
             try{
                 var result = obj_this.docs.concat(data);
-                obj_this.zone.run(() => obj_this.docs = result);                
+                obj_this.zone.run(() => obj_this.docs = result);
             }
             catch(er){
                 console.log(er, 5455);

@@ -485,7 +485,6 @@ class SignatureDoc(File, Actions):
         i = 0
         for signature in signatures:
             signed = False
-            my_record = False
             signature["name"] = signature["user__username"]
             image = signature_objs[i].image
             if image:
@@ -500,10 +499,9 @@ class SignatureDoc(File, Actions):
                 signed = True
             sign_user_id = signature["user__id"]
             if user.id == sign_user_id and sign_user_id:
-                my_record = True
+                signature["my_record"] = True
             signature["signed"] = signed
             signature['signtype'] = signature["type"]
-            signature["my_record"] = my_record
             i = i + 1
         return {"file_url": pdf_doc.url, "doc_data": signatures, 'id': self.id}
 

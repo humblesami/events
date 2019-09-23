@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { VideoCall } from '../app/models/video_call';
 import { Router, ActivatedRouteSnapshot } from "@angular/router";
 import { ChatGroup, ChatUser, AppUser, ChatClient } from '../app/models/chat';
@@ -41,7 +41,7 @@ export class SocketService {
         })
     }
 
-    constructor(private router: Router) {
+    constructor(private router: Router, public zone: NgZone) {
         window['dynamic_files'] = []
         var obj_this = this;
         this.site_config = window['site_config'];
@@ -305,7 +305,8 @@ export class SocketService {
         let obj_this = this;
         obj_this.admin_mode = mode;
         localStorage.setItem('admin_mode', JSON.stringify({admin_mode:mode}));
-        obj_this.on_admin_mode_changed();        
+        obj_this.zone.run(() => obj_this.admin_mode = mode);
+        obj_this.on_admin_mode_changed();
     }
 
     add_chat_user(chat_cleint: ChatClient)
