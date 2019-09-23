@@ -112,7 +112,7 @@ input[type=checkbox]#mail-to-assistant {
 }
 .edit_mode input[type=checkbox]{
     -webkit-appearance: none;
-    border: 2px solid #5869f3;
+    border: 2px solid #4B74B5;
     padding: 9px;
     border-radius: 3px;
     display: inline-block;
@@ -124,7 +124,7 @@ input[type=checkbox]#mail-to-assistant {
     position: absolute;
     top: 0px;
     left: 3px;
-    color: #5869f3;
+    color: #4B74B5;
 }
 .respons-margin{
     margin-top: 2px !important;

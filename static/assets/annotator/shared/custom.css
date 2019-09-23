@@ -462,7 +462,7 @@ body.pdf-viewer {
     color: #000000;
     margin: 0 10px;
 }
-.comment-list-item:first-child{
+.comments .comment-list-item:first-child{
     border-bottom: 1px solid #ddd;
 }
 .comment-list-item .user-time-info {
@@ -530,18 +530,18 @@ body.pdf-viewer {
     margin-top: 0.2rem;
 }
 /****** Full Discussein *******/
-.full-discussion .comment-list-item {
+.comments .full-discussion .comment-list-item {
     padding-left: 2rem !important;
     margin-bottom: -1rem !important;
     border-left: 1px solid #ddd;
 }
-.full-discussion .comment-list-item:first-child{
+.comments .full-discussion .comment-list-item:first-child{
     padding-left: 0 !important;
     margin-bottom: -1rem !important;
     border: 0px;
 } 
-.full-discussion .comment-list-item:first-child::after,
-.full-discussion .comment-list-item:not(:first-child)::after{
+.comments .full-discussion .comment-list-item:first-child::after,
+.comments .full-discussion .comment-list-item:not(:first-child)::after{
     content: "";
     display: block;
     margin: 30px -32px -25px;
@@ -549,13 +549,13 @@ body.pdf-viewer {
     padding-top: 0px;
     border-top: 1px solid #ddd;
 }
-.full-discussion .comment-list-item:first-child::after{
+.comments .full-discussion .comment-list-item:first-child::after{
     margin: 30px 0px -25px;
 }
-.full-discussion .comment-list-item:last-child{
+.comments .full-discussion .comment-list-item:last-child{
     border-left: 0;
 }
-.full-discussion .comment-list-item:last-child::after {
+.comments .full-discussion .comment-list-item:last-child::after {
     border: none;
     padding-bottom: 20px;
 }
@@ -733,12 +733,12 @@ a.list-group-item.contact.active {
 }
 
 /* Documents Comments */
-.comment-list-item .user-time-info .user,
+/* .comment-list-item .user-time-info .user, */
 .comment-list-item .user-time-info .time{
-    padding-bottom: 10px;
+    margin-left: 5px;
 }
 
-.comment-list-item:first-child .user-time-info .time::after {
+.comments .comment-list-item:first-child .user-time-info .time::after {
     content: "Reply";
     margin-left: 1rem;
     background: #6a6969;
