@@ -147,14 +147,14 @@ export class RosterComponent implements OnInit {
             {
                 obj_this.attendees.forEach(el => {
                     el.attendance = attendance;
-                    obj_this.update_attendance(el.id, attendance, 1);
+                    obj_this.update_attendance(el.id, attendance, true);
                 });
             }
             else
             {
                 obj_this.attendees.forEach(el => {
                     el.attendance = '';
-                    obj_this.update_attendance(el.id, attendance,1);
+                    obj_this.update_attendance(el.id, attendance, true);
                 });
             }
     }
