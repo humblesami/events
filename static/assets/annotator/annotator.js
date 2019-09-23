@@ -84,7 +84,7 @@
         validate_key(documentId, key);
         var val = localStorage.getItem(key);
         if (!isNaN(val))
-            val = parseFloat(val);
+            val = parseFloat(val);        
         return val;
     }
 
@@ -236,26 +236,36 @@
                             data.annotations = [];
                         }
                         var message = undefined;
-                        var document_dirty = isDocumentDirty(documentId);
+                        var document_dirty = isDocumentDirty(documentId);                        
                         var to_send = [];
-                        if (data.version > document_version) {
-                            if (document_dirty == 1) {
+                        if(document_dirty != 1)
+                        {
+                            //already uploaded local changes, so just take server version
+                            updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
+                        }
+                        else {
+                            if( data.version >= document_version)
+                            {
                                 message = "Document annotation version=" + data.version + " available from server,";
                                 message += "<br>You have older version=" + document_version + " at local.";
                                 message += "<br>If you download, it will discard your recent changes,";
                                 message += "<br>Do you still want to download?";
                                 bootbox.confirm(message, function(dr) {
                                     if (dr) {
+                                        //Download accepted, local changes are going to be discarded
                                         updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
+                                        unSetDocDirty(documentId);
+                                        setDocVersion(data.version);
                                     } else {
+                                        //Download rejected because although local is behind but these changes are important
                                         updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
                                     }
                                 });
-                            } else {
-                                updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
                             }
-                        } else {
-                            updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
+                            else{
+                                //No need to donwload as local is already upto date
+                                updateLocalAnnotationsFromServer([], data.version, comments, doc_data);
+                            }
                         }
                     }
 
@@ -271,7 +281,7 @@
                         }
                         annotations = annotations.filter(function(annot) {
                             return annot.type != 'point' || annot.sub_type
-                        });
+                        });                        
                         annotations = annotations.concat(comments);
                         annotations.forEach(function(item) {
                             item.class = 'Annotation';
@@ -283,12 +293,11 @@
                             bootbox.alert("invalid annotations");
                             return;
                         }
-                        setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);
-                        setDocVersion(documentId, version);
-                        unSetDocDirty(documentId);
+                        
+                        setCookieStrict(documentId, documentId + '/annotations', annotation_cookie);                        
+                        // console.log(documentId, documentId + '/annotations', annotations);
                         render_details(doc_data);
                     }
-
                 })();
 
                 (function() {
@@ -506,8 +515,12 @@
                     slected_comment_type = comment_sub_type;
                 }
                 if (slected_comment_type == 'notes') {
+                    comments_wrapper.removeClass('comments');
+                    comments_wrapper.addClass('notes');
                     comments_wrapper.find('.title:first').html('Personal Notes');
                 } else {
+                    comments_wrapper.removeClass('notes');
+                    comments_wrapper.addClass('notes');
                     comments_wrapper.find('.title:first').html('Comments');
                 }
                 comments_wrapper.show();
@@ -620,8 +633,7 @@
                 if (hand_drawings.length > 0) {
                     var annotations = getCookieStrict(documentId, documentId + '/annotations');
                     annotations = JSON.parse(annotations);
-                    var combined_drawing = hand_drawings[0];
-                    //console.log(annotations);
+                    var combined_drawing = hand_drawings[0];                    
                     annotations = annotations.filter(function(el) {
                         return el.to_merge != 1
                     });
@@ -724,7 +736,6 @@
                     // console.log(window.innerHeight , cwr_top, window.innerHeight - cwr_top);
                     scroll_div.height(window.innerHeight - cwr_top);
                     var pages_rendered = 0;
-                    // console.log(5544455);
                     if (doc_data && doc_data.first_time) {
                         try{                            
                             if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
@@ -1365,24 +1376,12 @@
                         pointAnnotations.sort(function(a, b) {
                             return a["page"] - b["page"] || a["y"] - b["y"] || a["x"] - b["x"];
                         });
-                        // console.log(pointAnnotations, slected_comment_type);
-                        var cnt = -1;
-                        var counter = -1;
-                        var count = pointAnnotations.length;
-                        for (var i in pointAnnotations) {
-                            ++cnt;
-                            pdfStoreAdapter.getComments(documentId, pointAnnotations[cnt].uuid).then(function(comments) {
-                                ++counter;
-                                var annotationItem = pointAnnotations[counter];
-                                renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);
-                                if (counter + 1 == count) {
-                                    onAllCommentsRendered(point_uuid)
-                                }
-                            });
+                        for (var annotationItem of pointAnnotations) {                            
+                            var comments = annotationItem.comments;
+                            // console.log(comments, 5333);
+                            renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);                            
                         }
-                        if (cnt == -1) {
-                            onAllCommentsRendered(point_uuid);
-                        }
+                        onAllCommentsRendered(point_uuid)
                     });
                 }
 
@@ -1398,7 +1397,7 @@
                     }, 11);
                 }
 
-                function renderCommentsByAnnotation(comments, annotationId, sub_type) {
+                function renderCommentsByAnnotation(comments, annotationId, sub_type) {                    
                     var group = document.createElement('div');
                     group.classList.add("groupcomment");
                     for (var i in comments) {
@@ -1412,6 +1411,7 @@
 
                 function renderComments(comments) {
                     comment_list.html('');
+                    // console.log(comments, 1007);
                     comments.forEach(insertComment);
                 }
                 var selected_comment_item = false;
@@ -1505,15 +1505,18 @@
                 });
 
                 function makeCommentItem(aComment) {
-                    //console.log(aComment);
+                    if(!aComment.date_time)
+                    {
+                        console.log('No time for comment '+aComment.id+' - '+aComment.uuid);
+                    }
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
-                    aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
                     var user_name = aComment.user_name;
-                    var user_image = aComment.user.image;
+                    var user_image = '';
                     if(aComment.user)
                     {
                         username = aComment.user.name;
+                        user_image =  aComment.user.image;
                         if(user_image)
                         {
                             user_image = window['site_config'].server_base_url + aComment.user.image;                            
@@ -1521,21 +1524,25 @@
                     }
 
                     var child_info = '';
-					child_info += '<div class="user-pic-time-infoWrapper">';
-					child_info += '<div class="userSmpic icon-user-single">';
-					child_info += '<img src="'+user_image+'" />';
-					child_info += '</div>';
-					child_info += '<div class="user-time-info pt-2">';
-                    child_info += '<span class="user text-primary">';
-                    child_info += user_name + '</span>';
+                    child_info += '<div class="user-pic-time-infoWrapper">';
+                    if(user_image)
+                    {
+                        child_info += '<div class="userSmpic icon-user-single">';
+                        child_info += '<img src="'+user_image+'" />';
+                        child_info += '</div>';
+                    }
+					
+                    child_info += '<div class="user-time-info pt-2">';
+                    if(user_name){
+                        child_info += '<span class="user text-primary">';
+                        child_info += user_name + '</span>';
+                    }
+
                     if(aComment.date_time)
                     {
                         child_info += '<span class="time small">';
                         child_info += window['dt_functions'].timeAgo(aComment.date_time)
                         child_info += '</span>';
-                    }
-                    else{
-                        child_info += '<span class="time small">Unknown time</span>';
                     }
                     child_info += '</div>';
                     child_info += '</div>';
@@ -1549,8 +1556,8 @@
                     return child;
                 }
 
-                function insertComment(aComment, textBox) {
-                    var child = makeCommentItem(aComment);
+                function insertComment(aComment, textBox) {                    
+                    var child = makeCommentItem(aComment);                    
                     comment_list.append(child);
                     if (textBox)
                         onCOmmentAdded();
@@ -2782,6 +2789,8 @@
                                         var annotations = _getAnnotations(documentId).filter(function(i) {
                                             return i.page === pageNumber && i.class === 'Annotation' && (i.uid == annotation_user_m2.id || (i.type == 'point' && !i.sub_type));
                                         });
+                                        // if(pageNumber == 1)
+                                        // console.log(annotations);
                                         resolve({
                                             documentId: documentId,
                                             pageNumber: pageNumber,
@@ -2802,7 +2811,8 @@
                                 },
                                 getPointAnnotations: function(documentId, sub_type) {
                                     return new Promise(function(resolve, reject) {
-                                        var annotations = _getAnnotations(documentId).filter(function(i) {
+                                        var annotations = _getAnnotations(documentId);                                        
+                                        annotations = annotations.filter(function(i) {
                                             if (sub_type)
                                                 return i.type == 'point' && i.class === 'Annotation' && i.uid == annotation_user_m2.id && i.sub_type;
                                             else
@@ -2890,17 +2900,17 @@
                                             comments_array = [];
                                         }
                                         if (!Array.isArray(comments_array))
-                                            comments_array = [];
+                                            comments_array = [];                                        
                                         resolve(comments_array);
                                     });
                                 },
-                                getAllComments: function getComments(documentId) {
+                                getAllComments: function getComments(documentId) {                                    
                                     return new Promise(function(resolve, reject) {
                                         var points = _getAnnotations(documentId).filter(function(i) {
                                             return i.type === 'point';
                                         }).sort(function(a, b) {
                                             return a["page"] - b["page"] || a["y"] - b["y"] || a["x"] - b["x"];
-                                        });
+                                        });                                        
                                         resolve(points || []);
                                     });
                                 },
@@ -3030,7 +3040,10 @@
                             res = [];
                         else
                             res = JSON.parse(res);
-                        return res;
+                        
+                            // console.log(documentId, documentId + '/annotations', res);
+                        
+                            return res;
                     }
 
                     var annot_save_timeout = undefined;
@@ -3044,10 +3057,12 @@
                             return;
                         }
                         setDocDirty(documentId);
+                        console.log(Date(), 1333);
                         clearTimeout(annot_save_timeout);
                         annot_save_timeout = setTimeout(function() {
-                            saveAnnotationsAtServer();
-                        }, 30000);
+                            console.log(Date(), 555);
+                            saveAnnotationsAtServer();                            
+                        }, 10000);
                     }
 
                     function findAnnotationObject(documentId, annotationId) {
@@ -5482,7 +5497,7 @@
                         var scale = renderOptions.scale;
                         var rotate = renderOptions.rotate;
                         var pageToRender = pdfDocument.getPage(pageNumber);
-                        var pageAnnotations = _PDFJSAnnotate2.default.getAnnotations(documentId, pageNumber);
+                        var pageAnnotations = _PDFJSAnnotate2.default.getAnnotations(documentId, pageNumber);                        
                         var promise_params = [pageToRender, pageAnnotations];
                         return Promise.all(promise_params).then(function(_ref) {
                             var _ref2 = _slicedToArray(_ref, 2);
