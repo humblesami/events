@@ -49,6 +49,7 @@ import { RtcComponent } from '../components/rtc/rtc.component';
 import { SurveysComponent } from '../components/surveys/surveys.component'
 import { SurveyresultsComponent } from '../components/surveyresults/surveyresults.component'
 import { SupportComponent } from '../components/support/support.component';
+import { UserlistComponent } from '../components/userlist/userlist.component';
 import { HttpService } from "./http.service";
 
 
@@ -134,6 +135,7 @@ const appRoutes: Routes = [
 
     { path: 'support', component: SupportComponent},
     { path: 'rtc', component: RtcComponent},
+    { path: 'users', component: UserlistComponent},
 	// otherwise redirect to home
 	{ path: '**', component: PageNotFound }
 ];

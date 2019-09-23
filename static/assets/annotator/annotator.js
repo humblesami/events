@@ -1509,16 +1509,14 @@
                     var child = document.createElement('div');
                     child.className = 'comment-list-item';
                     aComment.date_time = window["dt_functions"]['standeredTime'](aComment.date_time);
-                    var username = aComment.user_name;
-                    var user_image = '';
+                    var user_name = aComment.user_name;
+                    var user_image = aComment.user.image;
                     if(aComment.user)
                     {
                         username = aComment.user.name;
-                        if(aComment.user.image)
+                        if(user_image)
                         {
-                            user_image = window['site_config'].server_base_url + aComment.user.image;
-                            user_image = '<img class="img-fluid" id="navbar-profile-img" src="'+user_image+'">' ;
-
+                            user_image = window['site_config'].server_base_url + aComment.user.image;                            
                         }
                     }
 
@@ -1529,7 +1527,7 @@
 					child_info += '</div>';
 					child_info += '<div class="user-time-info pt-2">';
                     child_info += '<span class="user text-primary">';
-                    child_info += aComment.user_name + '</span>';
+                    child_info += user_name + '</span>';
                     if(aComment.date_time)
                     {
                         child_info += '<span class="time small">';
@@ -2949,7 +2947,7 @@
                                                 } else {
                                                     annotations[index].comments.push(comment);
                                                 }
-                                                console.log(comment);
+                                                // console.log(comment);
                                                 point.comment = comment;
                                                 point.doc_id = documentId;
                                                 point.document_id = doc_info[1];

@@ -1,6 +1,4 @@
 import json
-import datetime
-import uuid
 from django.apps import apps
 from django.db import models
 from django.contrib.auth.models import User
