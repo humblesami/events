@@ -193,7 +193,7 @@ a.DocumentWrapper:hover{
     float: right;
 }
 .kanban-committees-info-box-img a{
-    margin-left: -14px;
+    margin-left: -16px;
     position: relative;
     border: 2px solid #ffffff;
 }
@@ -320,4 +320,7 @@ mention-list.dropup{
 }
 .sub_folders .search.container{
     display: none;
+}
+.main-full-seachbar .btn{
+    border-radius: 0;
 }

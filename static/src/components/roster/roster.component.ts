@@ -32,7 +32,64 @@ export class RosterComponent implements OnInit {
         let obj_this = this;
 		const modalRef = this.modalService.open(ProfilesummaryComponent);
         modalRef.componentInstance.user_id = user_id;
-    }    
+    }
+
+    exe(){
+        let obj_this = this;
+
+        function call_cbs(){
+            obj_this.enable_checkboxes('absent_all','absent');
+            // obj_this.enable_checkboxes('inperson_all','inperson');
+            // obj_this.enable_checkboxes('online_all','online');
+        }
+        try{
+            
+           if(window['bs_cb']){
+            call_cbs();
+           }
+           else{
+            var script_path = 'static/assets/libs/bootstrap/bs-cb.js';
+            var script = document.createElement('script');                
+                script.onload = function(){
+                    call_cbs();
+                    window['bs_cb'] = 1;
+                };
+                script.src = script_path;
+                document.body.appendChild(script);
+           }
+            
+        }
+        catch(er){
+            console.log(er);
+        }
+    }
+    
+    enable_checkboxes(parent_id, child){
+        var clss = '.checkbox-child';
+        var welParent = $('#'+parent_id).checkbox();
+        var welChild = $(clss).checkbox();
+        
+        // check event on parent checkbox
+        welParent.on('check', function(e){
+            // remove ambiguous;
+            welParent.chbxChecked(e.checked);
+            welChild.each(function(i, element) {
+                $(element).chbxChecked(e.checked);
+            });
+        });
+        
+        // check event on child checkbox
+        welChild.on('check', function(e) {
+            var bAnd = true, bOr = false;
+            welChild.each(function(i, element){
+                var bChecked = $(element).chbxChecked();
+                bAnd = bAnd && bChecked, bOr = bOr || bChecked;
+            });
+            
+            var bChecked = bAnd === true || (bAnd === false && bOr === false ? false : null);
+            welParent.chbxChecked(bChecked);
+        });
+    }
 
     get_list(){
         let obj_this = this;
@@ -160,6 +217,9 @@ export class RosterComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.get_list();        
+        this.get_list(); 
+
+       
+        
     }
 }

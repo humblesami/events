@@ -25,8 +25,8 @@ title="{{profile_data.name}}"></app-breadcrumb>
 						<img src="static/assets/images/face-scan.png" alt="" /> Profile 						
 					</div>
 					<div *ngIf="!socketService.admin_mode && my_profile" class="edit_mode">
-						<input [(ngModel)]="edit_mode" type="checkbox" id="fruit1" name="fruit-1" value="Apple">
-						  <label for="fruit1">Edit Mode</label>
+						<input [(ngModel)]="edit_mode" type="checkbox">
+						  <label>Edit Mode</label>
 					</div>
                     <!-- <div *ngIf="my_profile" class="edit-buttons">
                         <a class="btn btn-primary" routerLink="/my-profile/edit">Edit</a>

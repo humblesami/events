@@ -245,7 +245,7 @@ a,
 	color: #3059C9;
 	padding-bottom: 1rem;
 	}
-.ProfileUserNameJonbWrapper {	} #main-div .img-thumbnail-sm {
+#main-div .img-thumbnail-sm {
 	width: 28px;
 	height: 28px;
 	}
@@ -2892,7 +2892,7 @@ select {
 	color: #3059C9;
 	width: 1rem;
 	}
-.Eedit-resume-docs {	} .Eedit-resume-docs-icon {	} .edit-ui-block-header {
+.edit-ui-block-header {
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 1rem;
