@@ -1,6 +1,7 @@
 .roster-height{
     overflow: auto;
     height:calc(100vh - 300px);
+    overflow-x:hidden; 
 }
 .bg-roster{
     background: #f3f3f3;

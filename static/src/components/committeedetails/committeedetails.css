@@ -48,20 +48,8 @@ span.btn.btn-sm{
 a,a:hover{
     color: #3059C9;
 }
-.pending-status{
-    background: #4b74b5;
-    border-radius: 0.2rem;
-    color: #fff;
-    display: inline-block;
-    
-}
-.pending-status span{
-    display: inline-block;
-    overflow: hidden;
-    text-align: center;
-    width: 60px;
-    text-overflow: ellipsis;
-    white-space: nowrap
+.committee-member {
+    width: 70px;
 }
 @media screen and (max-width:480px){
     .kanban-card{

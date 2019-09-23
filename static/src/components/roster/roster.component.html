@@ -9,7 +9,7 @@
             <div class="row mb-2">
                 <div class="col-12 mb-1">
                     <div class="row roster-elements">
-                        <div class="col-3 col-sm-4 p-0">
+                        <div class="col-3 col-sm-4 pl-2 pl-lg-0">
                             Attendee
                         </div>
                         <div class="col-2">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <!-- Attendance -->
-                <div class="container roster-height">
+                <div class="container roster-height p-0">
                     <div class="row">
                         <div class="col-12 mb-1 bg-roster" *ngFor="let obj of attendees">
                             <div class="row roester-data">
@@ -38,7 +38,7 @@
                                                 <img src="{{socketService.server_url}}{{obj.photo}}"/>
                                             </div>                            
                                         </div>
-                                        <div class="col-9">
+                                        <div class="col-9 pl-2 pl-lg-0">
                                             <div class="d-block text-truncate">
                                                 {{obj.name}}
                                             </div>

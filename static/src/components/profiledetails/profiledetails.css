@@ -218,9 +218,16 @@ last-login-details
 }
 .edit-file{
     position: absolute;
-    left: 125px;
-    padding: 4px 5px;
-    border: 1px solid #007bff;
+    left: 120px;
+    padding: 0.3rem 0.4rem 0.3rem 0.5rem;
     border-radius: 50%;
     cursor: pointer;
+    background: #4B74B5;
+    color: #fff;
+    font-size: 0.8rem;
+}
+@media screen and (max-width:576px){
+    .Eedit-resume-docs-icon img{
+        width: 75px;
+    }
 }
