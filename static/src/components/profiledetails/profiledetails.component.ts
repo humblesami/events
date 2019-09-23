@@ -385,11 +385,12 @@ export class ProfileDetailsComponent implements OnInit {
 									file_type: data.file_type
 								}
 								window['upload_single_file'](file, resInfo, data.cloud, (data)=>{
-									if(obj_this.my_profile || obj_this.socketService.is_admin)
+									if(obj_this.my_profile || obj_this.socketService.admin_mode)
 									{
 										obj_this.profile_data.admin_image = data[0].image_url;
-									}
-									$(".feedback-message").append('<p id="success-message" class="alert-success">File Uploaded Successfully </p>').fadeIn("slow");
+                                    }
+                                    var success_message = '<p id="success-message" class="alert-success">File Uploaded Successfully </p>';
+									$(".feedback-message").append(success_message).fadeIn("slow");
 								});
 								
 							}

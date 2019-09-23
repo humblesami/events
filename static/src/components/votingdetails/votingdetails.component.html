@@ -104,12 +104,10 @@ title="{{voting_object.name}}"></app-breadcrumb>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="(socketService.is_admin || voting_object.public_visibility) && voting_object.results.answer_count" class="title-wrapper voting-chart">
+                <div *ngIf="(socketService.admin_mode || voting_object.public_visibility) && voting_object.results.answer_count" class="title-wrapper voting-chart">
                     <div class="modal-header">
                         Results
-                    </div> 
-
-                   
+                    </div>
                     <div class="w-50 ml-25">
                         <div class="canvas_warpper my-5">
                             <div class="canvas_container">

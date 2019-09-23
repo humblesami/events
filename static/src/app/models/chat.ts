@@ -36,8 +36,7 @@ export class UserGroup{
     name: string;
 }
 
-export class AppUser extends BaseClient{
-    is_admin: Boolean;
+export class AppUser extends BaseClient{    
     token: string;
     photo: '';
     user_photo: '';

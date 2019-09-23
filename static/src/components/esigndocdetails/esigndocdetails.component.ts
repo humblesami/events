@@ -196,7 +196,7 @@ export class EsignDocDetailsComponent implements OnInit {
                                 $('#save-doc-data').click();
                                 $('#viewer_container .sign_container').remove();
                                 $('#viewer_container .new_sign').remove();
-                                save_attachemnt_to_meeting();                                
+                                save_attachemnt_to_meeting();
                             }
                             else{
                                 $("#check_box_send_all").prop('checked', false);
@@ -204,6 +204,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         })
                     }
                     else{
+                        $('#save-doc-data').click();
                         save_attachemnt_to_meeting();
                         $('.dragabl-fields').hide();
                     }
@@ -349,9 +350,8 @@ export class EsignDocDetailsComponent implements OnInit {
 
             $(document).off("click", ".save_doc_data")
             $(document).on("click", ".save_doc_data", function(e) {
-                var new_divs = $('.new_sign');
-                var snd_to_all = $("#check_box_send_all").is(':checked');
-                if (new_divs.length == 0 && !snd_to_all) {
+                var new_divs = $('.new_sign');                
+                if (!new_divs.length && !obj_this.selected_respondents.length) {
                     return;
                 }
                 var body = $('<div/>');
@@ -366,6 +366,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 body.append("<h3>Subject</h3>").append(input_subject);
                 body.append("<h3>Message</h3>").append(email_body);
 
+                var snd_to_all = $("#check_box_send_all").is(':checked');
                 var assign_popup = {
                     on_load: function(){
                         $('#signModal .modal-body').html(body);

@@ -36,7 +36,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 					<div class="ui-block p-3">
 						<div class="edit-ui-block-header">
 							<h3 class="m-0 p-0">PERSONAL INFO</h3>
-							<span *ngIf="my_profile || socketService.is_admin" (click)="open('personal')" style="cursor: pointer" class="edit_personal_info"><i class="far fa-edit"></i></span>
+                            <span *ngIf="my_profile || socketService.admin_mode" 
+                                (click)="open('personal')" style="cursor: pointer" 
+                                class="edit_personal_info">
+                                <i class="far fa-edit"></i>
+                            </span>
 						</div>
 
 						<div class="row m-0 align-items-center">
@@ -128,7 +132,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 					<div class="ui-block p-3">
 						<div class="edit-ui-block-header">
 							<h3 class="m-0 p-0">Bio</h3>
-							<span *ngIf="my_profile || socketService.is_admin" (click)="open('bio')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                            <span *ngIf="my_profile || socketService.admin_mode" 
+                                (click)="open('bio')" style="cursor: pointer" 
+                                class="edit_diversity_info">
+                                <i class="far fa-edit"></i>
+                            </span>
 						</div>
 
 						<div *ngIf="profile_data.bio" class="mb-3">
@@ -144,7 +152,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 					<div class="ui-block p-3">
 						<div class="edit-ui-block-header">
 							<h3 class="m-0 p-0">WORK INFO</h3>
-							<span *ngIf="my_profile || socketService.is_admin" (click)="open('work')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                            <span *ngIf="my_profile || socketService.admin_mode" 
+                                (click)="open('work')" style="cursor: pointer" 
+                                class="edit_diversity_info">
+                                <i class="far fa-edit"></i>
+                            </span>
 						</div>
 
 						<div class="admin_info_after_name row">
@@ -225,7 +237,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 					<div class="ui-block p-3">
 						<div class="edit-ui-block-header">
 							<h3 class="m-0 p-0">BOARD INFO</h3>
-							<span *ngIf="socketService.is_admin" (click)="open('board')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                            <span *ngIf="socketService.admin_mode" 
+                                (click)="open('board')" style="cursor: pointer" 
+                                class="edit_diversity_info">
+                                <i class="far fa-edit"></i>
+                            </span>
 						</div>
 
 						<div *ngIf="profile_data.groups">
@@ -296,14 +312,18 @@ title="{{profile_data.name}}"></app-breadcrumb>
 				</div>
 			</div>
 
-            <div *ngIf="my_profile || socketService.is_admin">
+            <div *ngIf="my_profile || socketService.admin_mode">
 				<!-- Diversity Information -->
 				<div class="row assistant mb-3" *ngIf="admin_info">
 					<div class="col-sm-12"  *ngIf="admin_info">
 						<div class="ui-block p-3">
 							<div class="edit-ui-block-header">
 								<h3 class="m-0 p-0">DIVERSITY INFO</h3>
-								 <span *ngIf="my_profile || socketService.is_admin" (click)="open('diversity')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                                 <span *ngIf="my_profile || socketService.admin_mode" 
+                                    (click)="open('diversity')" style="cursor: pointer" 
+                                    class="edit_diversity_info">
+                                    <i class="far fa-edit"></i>
+                                </span>
 							</div>
 							<div class="admin_info_after_name row">
 							  <div *ngIf="profile_data.ethnicity.name"  class="col-lg-6 mb-2">
@@ -446,7 +466,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 					<div class="ui-block p-3">
 						<div class="edit-ui-block-header">
 							<h3 class="m-0 p-0">ADMINISTRATIVE ASSISTANT</h3>
-							<span *ngIf="my_profile || socketService.is_admin" (click)="open('administrative')" style="cursor: pointer" class="edit_diversity_info"><i class="far fa-edit"></i></span>
+                            <span *ngIf="my_profile || socketService.admin_mode" 
+                                (click)="open('administrative')" style="cursor: pointer" 
+                                class="edit_diversity_info">
+                                <i class="far fa-edit"></i>
+                            </span>
 						</div>
 						<div class="row mb-2">
 							<div class="col-sm-12">

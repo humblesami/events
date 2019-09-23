@@ -112,9 +112,8 @@ export class SocketService {
 
     route_changed(route: ActivatedRouteSnapshot){
         this.active_route_snapshot = route;
-    }   
+    }
 
-    is_admin = false;
     admin_mode = false;
     actually_admin = false;
     connect_socket(authorized_user){
@@ -144,7 +143,7 @@ export class SocketService {
         $('#main-div').show();
         for(var i = 0; i < authorized_user.groups.length; i++){
             if( authorized_user.groups[i].name == 'Admin'){
-                obj_this.is_admin = true;
+                obj_this.actually_admin = true;
                 break;
             }
         }
@@ -155,7 +154,7 @@ export class SocketService {
             obj_this.admin_mode = false;
             obj_this.actually_admin = false;
         }
-        else if (!obj_this.is_admin)
+        else if (!obj_this.actually_admin)
         {
             localStorage.setItem('admin_mode', JSON.stringify({admin_mode: true}));
             obj_this.admin_mode = false;
@@ -164,8 +163,7 @@ export class SocketService {
         else
         {
             let admin_mode_obj = JSON.parse(admin_mode_cookie);
-            obj_this.admin_mode = admin_mode_obj['admin_mode'];
-            obj_this.is_admin = obj_this.admin_mode;
+            obj_this.admin_mode = admin_mode_obj['admin_mode'];            
             obj_this.actually_admin = true;
         }
         obj_this.user_data = authorized_user;
@@ -306,9 +304,8 @@ export class SocketService {
     {
         let obj_this = this;
         obj_this.admin_mode = mode;
-        obj_this.is_admin = mode;
         localStorage.setItem('admin_mode', JSON.stringify({admin_mode:mode}));
-        obj_this.on_admin_mode_changed();
+        obj_this.on_admin_mode_changed();        
     }
 
     add_chat_user(chat_cleint: ChatClient)

@@ -50,7 +50,7 @@ var dn_current_site_user = {
         localStorage.removeItem("user");
         dn_current_site_user.cookie = undefined;
         if (window['socket_manager']) {
-            window['socket_manager'].is_admin = false;
+            window['socket_manager'].set_admin_mode(false);
             window['socket_manager'].close_socket();
             window['socket_manager'].user_data = undefined;
         }

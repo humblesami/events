@@ -164,7 +164,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="profile_data && socketService.is_admin && section=='board'" class="">
+                <div *ngIf="profile_data && socketService.admin_mode && section=='board'" class="">
                     <div class="ProFileHeadWrap">
                         BOARD INFO
                     </div>
@@ -174,7 +174,7 @@
                         </label>
                         <div class="UserProfileDiscription">
                             <ng-select
-                            [disabled]="!socketService.is_admin"
+                            [disabled]="!socketService.admin_mode"
                             [items]="choice_fields.committees"
                             [multiple]="true"
                             [closeOnSelect]="false"
@@ -210,7 +210,7 @@
                         </div>
                         <div class="UserProfileDiscription">
                             <ng-select
-                            [disabled]="!socketService.is_admin"
+                            [disabled]="!socketService.admin_mode"
                             [items]="choice_fields.groups"
                             [multiple]="true"
                             [closeOnSelect]="false"
@@ -225,7 +225,7 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="(my_profile || socketService.is_admin) && section == 'diversity'" class="">
+                <div *ngIf="(my_profile || socketService.admin_mode) && section == 'diversity'" class="">
                     <div class="ProFileHeadWrap">
                         DIVERSITY INFO
                     </div>

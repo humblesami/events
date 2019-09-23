@@ -12,7 +12,7 @@
         </li>
         <li class="breadcrumb-item active">{{folder.name}}</li>
     </ul>
-    <div class="edit-buttons" *ngIf="socketService.is_admin && folder">		
+    <div class="edit-buttons" *ngIf="socketService.admin_mode && folder">		
 	</div>
 </div>
 

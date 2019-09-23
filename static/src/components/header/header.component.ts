@@ -48,19 +48,6 @@ export class HeaderComponent implements OnInit {
         this.socketService = sserv;        
     }
 
-    set_admin_mode_text()
-    {
-        let obj_this = this;
-        if (obj_this.socketService.admin_mode)
-        {
-            obj_this.admin_enabled = 'text-success';
-        }
-        else
-        {
-            obj_this.admin_enabled = 'text-danger';
-        }
-    }
-
     admin_enabled = 'text-danger';
 
     admin_mode_handler()
@@ -74,7 +61,6 @@ export class HeaderComponent implements OnInit {
         {
             obj_this.socketService.set_admin_mode(true);
         }
-        obj_this.set_admin_mode_text();
     }
 
     on_search_focus(){
@@ -304,9 +290,6 @@ export class HeaderComponent implements OnInit {
     admin_url = '';
     ngOnInit() {
         let obj_this = this;
-        this.socketService.messenger_active = 1;        
-        $(()=>{
-            obj_this.set_admin_mode_text();
-        });
+        this.socketService.messenger_active = 1;
     }
 }
