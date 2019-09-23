@@ -434,7 +434,7 @@ export class ProfileDetailsComponent implements OnInit {
 		window['app_libs']['signature'].load(()=>{
 			window['init_sign'](sign_config);
 		});
-    }
+	}
 
 	ngOnInit(){
 		

@@ -96,6 +96,7 @@ input[type='radio']:after {
     border: 3px solid #fff;
     box-shadow: 0 0 0 2px #5869f3;
 }
+
 input[type='radio']:checked:after {
     background-color: #5869f3;
 }
@@ -108,6 +109,22 @@ input[type=checkbox]#mail-to-assistant {
     position: relative;
     margin: 5px 5px;
     top: -3px;
+}
+.edit_mode input[type=checkbox]{
+    -webkit-appearance: none;
+    border: 2px solid #5869f3;
+    padding: 9px;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+    margin: 0px 5px -5px 0px;
+}
+.edit_mode input[type=checkbox]:checked:after {
+    content: '\2714';
+    position: absolute;
+    top: 0px;
+    left: 3px;
+    color: #5869f3;
 }
 .respons-margin{
     margin-top: 2px !important;
