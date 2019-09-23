@@ -244,7 +244,7 @@
                             updateLocalAnnotationsFromServer(data.annotations, data.version, comments, doc_data);
                         }
                         else {
-                            if( data.version >= document_version)
+                            if( data.version >= document_version - 1)
                             {
                                 message = "Document annotation version=" + data.version + " available from server,";
                                 message += "<br>You have older version=" + document_version + " at local.";
@@ -485,8 +485,15 @@
 
             function addCommentCount(annotations_of_page, pange_number) {
                 var annotations_of_page = annotations_of_page.filter(function(a) {
-                    return a.type == 'point' && !a.sub_type;
+                    return a.type == 'point';
                 });
+                var note_points = annotations_of_page.filter(function(a) {
+                    return a.sub_type;
+                });
+                if(note_points.length)
+                {
+                    console.log(note_points);
+                }
                 for (var p_index in annotations_of_page) {
                     var c_point = annotations_of_page[p_index];
                     // console.log(c_point);
@@ -896,7 +903,6 @@
                                     scroll_div.show();
                                     console.log(window['dt_functions'].now_full(), 'first page done');
                                 }
-    
                                 if (annotation_mode == 1) {
                                     addCommentCount(annotations_of_page, pange_number);
                                 }
@@ -1376,13 +1382,14 @@
                         point_type = 'personal';
 
                     pdfStoreAdapter.getPointAnnotations(documentId, point_type).then(function(pointAnnotations) {
-                        pointAnnotations = pointAnnotations.annotations;
+                        pointAnnotations = pointAnnotations.annotations;                        
                         pointAnnotations.sort(function(a, b) {
                             return a["page"] - b["page"] || a["y"] - b["y"] || a["x"] - b["x"];
                         });
                         for (var annotationItem of pointAnnotations) {                            
                             var comments = annotationItem.comments;
-                            // console.log(comments, 5333);
+                            if(annotationItem.sub_type)
+                            console.log(comments, 5333);
                             renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);                            
                         }
                         onAllCommentsRendered(point_uuid)

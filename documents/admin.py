@@ -4,7 +4,7 @@ from .annotation import *
 
 
 class FileAdmin(BaseAdmin):
-    list_display = ['id', 'name', 'upload_status', 'file_type', 'content', 'pdf_doc', 'upload_status', 'updated_by', 'html']
+    list_display = ['id', 'name', 'upload_status', 'file_type', 'pdf_doc', 'upload_status', 'updated_by', 'html']
     exclude = ('created_at', 'created_by', 'updated_at', 'updated_by', 'file_type', 'content', 'pdf_doc', 'upload_status', 'html')
 
 

@@ -48,7 +48,6 @@ class AnnotationDocument(CustomModel):
             'comments': comments_points
         }
         return res
-
     
     @classmethod
     def add_annotation(cls, request, params):
@@ -355,39 +354,43 @@ class PointAnnotation(Annotation):
 
     @classmethod
     def get_point_annotations(cls, doc_name=None, doc_id=None, user_id=None):
+        point_objects = []
+        sub_type = None
         if doc_id:
-            point_obj = PointAnnotation.objects.filter(pdf_id=doc_id)
+            point_objects = PointAnnotation.objects.filter(pdf_id=doc_id)
             sub_type = ''
             return_sub_type = False
         else:
-            point_obj = PointAnnotation.objects.filter(document__doc_name=doc_name, user_id=user_id)
+            point_objects = PointAnnotation.objects.filter(document__doc_name=doc_name, user_id=user_id)
             sub_type = 'personal'
             return_sub_type = 'personal'
 
-        comments_points = []
-        counter = 0
-        for point in point_obj:
+        notes_data = []
+        for point in point_objects:
             if point.sub_type == sub_type:
-                comments_points.append({
+                note_point = {
                     'id': point.id, 'uid': point.created_by_id, 'type': point.type, 'uuid': point.uuid,
                     'date_time': str(point.created_at), 'x': point.x, 'y': point.y, 'sub_type': return_sub_type,
                     'class': 'Annotation', 'counter': 0, 'page': point.page, 'comment_doc_id': point.comment_doc_id, 'comments': []
-                })
-                comments = point.commentannotation_set.all()
-                for comment in comments:
-                    user = comment.user
-                    comments_points[counter]['comments'].append({
+                }
+
+                note_objects = point.commentannotation_set.all()
+                note_point_comments = []
+                for note in note_objects:
+                    user = note.user
+                    note_point_comments.append({
                         'class': "Comment",
-                        'uuid': comment.uuid,
+                        'uuid': note.uuid,
                         'point_id': point.uuid,
                         'uid': user.id,
-                        'content': comment.body,
+                        'content': note.body,
                         'user_name': user.name,
                         'user': {'name': user.fullname(), 'id':user.id, 'image': user.image.url},
-                        'date_time': str(comment.created_at)
+                        'date_time': str(note.created_at)
                     })
-                counter += 1
-        return comments_points
+                note_point['comments'] = note_point_comments
+                notes_data.append(note_point)
+        return notes_data
 
 
 class CommentAnnotation(CustomModel):
