@@ -1,7 +1,7 @@
 <app-breadcrumb *ngIf="home_data" title="Home" edit="1" app="meetings" model="news" rid="{{home_data.id}}"></app-breadcrumb>
 <div class="router-outlet home-container" *ngIf="ng_init && home_data">
     <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
-
+    <button class="btn btn-primary" style="display: block" (click)="open()">Testing User Selection</button>
     <div class="container">
         <div id="welcome" *ngIf="home_data">
             <!-- <section *ngIf="home_data && to_do_count" class="todoitembtn">
@@ -299,3 +299,4 @@
         </div>
     </div>
 </div>
+

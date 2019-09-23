@@ -739,6 +739,23 @@ class Profile(user_model, CustomModel):
             return res
 
 
+    @classmethod
+    def get_all_users(cls, request, params):
+        users = None
+        kw = params.get('kw')
+        if kw:
+            users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
+            users = users.values('id', 'name', 'email', 'image')
+        else:
+            users = Profile.objects.all().values('id', 'name', 'email', 'image')
+        users = list(users)
+        data = {
+            'users': users,
+            'total': len(users)
+        }
+        return data
+
+
 # class Resume(File):
 #     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 

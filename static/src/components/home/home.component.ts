@@ -3,6 +3,9 @@ import { DomSanitizer } from '@angular/platform-browser'
 import { HttpService } from '../../app/http.service';
 import { SocketService } from '../../app/socket.service';
 import { Router } from '@angular/router';
+import { UserlistComponent } from '../userlist/userlist.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 declare var $: any;
 @Component({
     styleUrls:['./home.css'],
@@ -17,7 +20,8 @@ export class HomeComponent implements OnInit {
     constructor(private httpService: HttpService,
         public router: Router,
         private sanitizer: DomSanitizer,
-        private socketService: SocketService) {            
+        private socketService: SocketService,
+        private modalService: NgbModal) {            
         $('#collapsibleNavbar').children().eq(0).addClass('active');
     }
 
@@ -168,6 +172,18 @@ export class HomeComponent implements OnInit {
         this.ending_indices[item_type] =  this.start_indices[item_type] + this.visible_limit[item_type];
         console.log(this.visible_limit[item_type],this.start_indices[item_type],items,item_type);
     }
+
+    open() {
+        let obj_this = this;
+		const modalRef = this.modalService.open(UserlistComponent, { backdrop: 'static' });
+        modalRef.componentInstance.input_users = [];
+		modalRef.result.then((result) => {
+            if (result){
+                console.log(result);
+            }
+         });
+    }
+    
     ngOnInit() {
         var obj_this = this;
         $('.home-container').show();
