@@ -17,12 +17,27 @@
                         </div>
                         <div class="col-2">
                             Absent
+                            <input class="form-check-input absent-all"
+                                [(ngModel)]="absent_all"
+                                (change)="check_all($event.target)"
+                                type="checkbox" id="absent_all"
+                            />
                         </div>
                         <div class="col-2">
                             InPerson
+                            <input class="form-check-input inperson-all"
+                                [(ngModel)]="inperson_all"
+                                (change)="check_all($event.target)"
+                                type="checkbox" id="inperson_all"
+                            />
                         </div>
                         <div class="col-2">
                             Online
+                            <input class="form-check-input online-all"
+                                [(ngModel)]="online_all"
+                                (change)="check_all($event.target)"
+                                type="checkbox" id="online_all"
+                            />
                         </div>
                     </div>
                 </div>
@@ -52,20 +67,20 @@
                                     Accept by: Self
                                 </div>
                                 <div class="col-2">
-                                    <input *ngIf="obj.attendance=='absent'" checked type="radio" name="{{obj.id}}" />                    
-                                    <input (click)="update_attendance(obj.id,'absent')" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
+                                    <input *ngIf="obj.attendance=='absent'" class="absent" checked type="radio" name="{{obj.id}}" />                    
+                                    <input (click)="update_attendance(obj.id,'absent')" class="absent" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="absent" />
                                     <input type="hidden" value="{{obj.id}}" />
                                 </div>
                                 <div class="col-2">
-                                    <input *ngIf="obj.attendance=='inperson'" checked type="radio" name="{{obj.id}}" />
-                                    <input (click)="update_attendance(obj.id,'inperson')" *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
+                                    <input *ngIf="obj.attendance=='inperson'" class="inperson" checked type="radio" name="{{obj.id}}" />
+                                    <input (click)="update_attendance(obj.id,'inperson')" class='inperson' *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="inperson" />
                                     <input type="hidden" value="{{obj.id}}" />
                                 </div>
                                 <div class="col-2">
-                                    <input *ngIf="obj.attendance=='online'" checked type="radio" name="{{obj.id}}" />
-                                    <input (click)="update_attendance(obj.id,'online')" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
+                                    <input *ngIf="obj.attendance=='online'" checked class="online" type="radio" name="{{obj.id}}" />
+                                    <input (click)="update_attendance(obj.id,'online')" class="online" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="online" />
                                     <input type="hidden" value="{{obj.id}}" />
                                 </div>
@@ -81,11 +96,11 @@
             <button type="button" class="btn btn-primary btn-sm mr-2" (click)="submit_attendance($event)">Submit</button>
             <button type="button" class="btn btn-danger btn-sm " (click)="close_roster($event)">Cancel</button>
         </div>
-        <div class="ml-auto d-flex">
+        <!-- <div class="ml-auto d-flex">
             <app-paginator *ngIf="attendees.length"            
             (reload_data)="get_list()"
                 >
             </app-paginator>
-        </div>
+        </div> -->
     </div>
 </div>

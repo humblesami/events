@@ -521,10 +521,15 @@ class Event(CustomModel):
         offset = params.get('offset')
         limit = params.get('limit')
         attendees_list = []
-        records = Invitation_Response.objects.filter(event_id=meeting_id)
+        kw = params.get('kw')
+        if kw:
+            profiles = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
+            records = Invitation_Response.objects.filter(event_id=meeting_id, attendee_id__in=profiles.values('id'))
+        else:
+            records = Invitation_Response.objects.filter(event_id=meeting_id)
         total = len(records)
-        if limit:
-            records = records[offset: offset + int(limit)]
+        # if limit:
+        #     records = records[offset: offset + int(limit)]
         for obj in records:
             attendee_data = ws_methods.obj_to_dict(
                 obj.attendee,
