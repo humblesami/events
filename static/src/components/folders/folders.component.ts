@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
 import { RenameService } from 'src/app/rename.service';
@@ -35,6 +35,7 @@ export class FoldersComponent implements OnInit {
     constructor(private httpServ: HttpService,
         private renameSer: RenameService, 
         private userServ: UserService,
+        private zone: NgZone,
         private socketService: SocketService) {        
         this.httpService = httpServ;
         this.userService = userServ;
@@ -47,7 +48,7 @@ export class FoldersComponent implements OnInit {
         evn.preventDefault();
         let obj_this = this;
         if(folder_total_files){
-           obj_this.message = 'Are you sure to delete? This folder contains '+ folder_total_files + ' file(s).';
+            obj_this.message = 'Are you sure to delete? This folder contains '+ folder_total_files + ' file(s).';
         }else{
             obj_this.message = 'Are you sure to delete?';
         }
@@ -100,7 +101,7 @@ export class FoldersComponent implements OnInit {
 
     on_result(result){
         let obj_this = this;
-        obj_this.records = result;
+        obj_this.zone.run(() => obj_this.records = result);        
         obj_this.userService.set_users(result.users);            
         obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
     }
@@ -190,6 +191,7 @@ export class FoldersComponent implements OnInit {
 
     ngOnInit() {
         let obj_this = this;
+        // console.log(477771);        
         if(obj_this.show_results)
         {
             if(!obj_this.input_results)
@@ -199,6 +201,7 @@ export class FoldersComponent implements OnInit {
             try{
                 var ar = JSON.parse(obj_this.input_results);
                 obj_this.on_result(ar);
+                console.log(obj_this.show_results, ar);
             }
             catch(er){
                 console.log(obj_this.input_results, er);

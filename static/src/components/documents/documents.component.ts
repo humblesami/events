@@ -172,7 +172,7 @@ export class DocumentsComponent implements OnInit {
 
     on_result(data){
         let obj_this = this;
-        obj_this.docs = data.docs;
+        obj_this.docs = data;
         obj_this.users = data.users;
     }
 
