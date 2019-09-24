@@ -1,7 +1,7 @@
 <div style="padding:10px" class="container">
     <div class="main-full-seachbar mb-3">
 	<input type="text"
-        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+        (keyup)="$event.target.value; $event.keyCode == 13 ? search_roster($event.target.value): null" 
         placeholder="Search..."  class="form-control"/>
 	</div>
     <div class="roster">
@@ -15,37 +15,34 @@
                         <div class="col-2">
                             Status
                         </div>
-                        <div class="col-2 custom-control custom-checkbox absent-all" (click)="check_all($event.target)">
-                            <!-- Absent
-                            <input class="form-check-input absent-all"
-                                [(ngModel)]="absent_all"
-                                (change)="check_all($event.target)"
-                                type="checkbox" id="absent_all"
-                            /> -->
-
+                        <div 
+                        class="col-2 custom-control custom-checkbox absent-all"
+                        (click)="check_all($event.target)">                            
                                 <input type="checkbox" 
-                                [(ngModel)]="absent_all"
-                                
+                                [(ngModel)]="absent_all"                                
                                 id="absent_all"
                                 class="custom-control-input">
-                                <label class="custom-control-label">Absent</label>
-                              
+                                <label class="custom-control-label">Absent</label>                            
                         </div>
-                        <div class="col-2">
-                            InPerson
-                            <input class="form-check-input inperson-all"
-                                [(ngModel)]="inperson_all"
-                                (change)="check_all($event.target)"
-                                type="checkbox" id="inperson_all"
-                            />
+
+                        <div 
+                        class="col-2 custom-control custom-checkbox inperson-all"
+                        (click)="check_all($event.target)">                            
+                                <input type="checkbox" 
+                                [(ngModel)]="inperson_all"                                
+                                id="inperson_all"
+                                class="custom-control-input">
+                                <label class="custom-control-label">InPerson</label>                            
                         </div>
-                        <div class="col-2">
-                            Online
-                            <input class="form-check-input online-all"
-                                [(ngModel)]="online_all"
-                                (change)="check_all($event.target)"
-                                type="checkbox" id="online_all"
-                            />
+
+                        <div 
+                        class="col-2 custom-control custom-checkbox online-all"
+                        (click)="check_all($event.target)">                            
+                                <input type="checkbox" 
+                                [(ngModel)]="online_all"                                
+                                id="online_all"
+                                class="custom-control-input">
+                                <label class="custom-control-label">Online</label>                            
                         </div>
                     </div>
                 </div>

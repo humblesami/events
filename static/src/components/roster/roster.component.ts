@@ -23,6 +23,7 @@ export class RosterComponent implements OnInit {
     attendance_data = [];    
     
     attendees = [];
+    db_attendees = [];
     count: number;
     absent_all = false;
     inperson_all = false;
@@ -40,9 +41,7 @@ export class RosterComponent implements OnInit {
             obj_this.httpService.count = Number(data.total);
             obj_this.count = data.attendees.length;
             obj_this.attendees = data.attendees;
-            obj_this.absent_all = false;
-            obj_this.inperson_all = false;
-            obj_this.online_all = false;
+            obj_this.db_attendees = obj_this.attendees;
             obj_this.attendance_data = [];
         }        
         let input_data = {
@@ -62,12 +61,77 @@ export class RosterComponent implements OnInit {
         obj_this.httpService.get(final_input, success, null)
     }
 
+    search_roster(val)
+    {
+        let obj_this = this;
+        if (!val)
+        {
+            obj_this.attendees = obj_this.db_attendees;
+        }
+        else
+        {
+            obj_this.attendees = obj_this.db_attendees.filter((el)=>{
+                var mail_matched = false;
+                if(el.email && el.email.toLowerCase().indexOf(val) != -1)
+                {
+                    mail_matched = true;
+                }
+                var name_matched = false;
+                if(el.name && el.name.toLowerCase().indexOf(val) != -1)
+                {
+                    name_matched = true;
+                }
+                return mail_matched || name_matched;
+            });
+        }
+    }
+
     update_attendance(attendee_id: number, val, all_attendees=false){
+        let obj_this = this; 
         if (!all_attendees)
         {
-            this.absent_all = false;
-            this.inperson_all = false;
-            this.online_all = false;
+            if (val == 'absent')
+            {
+                $('#absent_all').prop('indeterminate', true);
+                if (obj_this.inperson_all)
+                {
+                    $('#inperson_all').prop('indeterminate', true);
+                    obj_this.inperson_all = false;
+                }
+                if (obj_this.online_all)
+                {
+                    $('#online_all').prop('indeterminate', true);
+                    obj_this.online_all = false;
+                }
+            }
+            if (val == 'inperson')
+            {
+                $('#inperson_all').prop('indeterminate', true);
+                if (obj_this.absent_all)
+                {
+                    $('#absent_all').prop('indeterminate', true);
+                    obj_this.absent_all = false;
+                }
+                if (obj_this.online_all)
+                {
+                    $('#online_all').prop('indeterminate', true);
+                    obj_this.online_all = false;
+                }
+            }
+            if (val == 'online')
+            {
+                $('#online_all').prop('indeterminate', true);
+                if (obj_this.absent_all)
+                {
+                    $('#absent_all').prop('indeterminate', true);
+                    obj_this.absent_all = false;
+                }
+                if (obj_this.inperson_all)
+                {
+                    $('#inperson_all').prop('indeterminate', true);
+                    obj_this.inperson_all = false;
+                }
+            }
         }
         let attendee = this.attendance_data.find(x=>x.id == attendee_id);        
         if(attendee)
@@ -114,13 +178,13 @@ export class RosterComponent implements OnInit {
         let target = $(el).closest('.custom-checkbox');
         let new_val = false;
         let attendance = '';
-        console.log(el)
+        $('#absent_all').prop('indeterminate', false);
+        $('#inperson_all').prop('indeterminate', false);
+        $('#online_all').prop('indeterminate', false);
         if(target.hasClass('absent-all'))
         {
-            // new_val = $('#absent_all').prop('checked');
-
-            new_val = $('#absent_all').prop('indeterminate', true)
-
+            new_val = $('#absent_all').prop('checked');
+            new_val = !new_val;
             obj_this.absent_all = new_val;
             // $('input[type="radio"].absent').prop('checked', new_val);
             obj_this.online_all = false;
@@ -131,6 +195,7 @@ export class RosterComponent implements OnInit {
         if(target.hasClass('inperson-all'))
         {
             new_val = $('#inperson_all').prop('checked');
+            new_val = !new_val;
             obj_this.inperson_all = new_val;
             $('input[type="radio"].inperson').prop('checked', new_val);
             obj_this.absent_all = false;
@@ -141,6 +206,7 @@ export class RosterComponent implements OnInit {
         if(target.hasClass('online-all'))
         {
             new_val = $('#online_all').prop('checked');
+            new_val = !new_val;
             obj_this.online_all = new_val;
             $('input[type="radio"].online').prop('checked', new_val);
             obj_this.absent_all = false;
@@ -149,14 +215,14 @@ export class RosterComponent implements OnInit {
         }
         if (new_val)
             {
-                obj_this.attendees.forEach(el => {
+                obj_this.db_attendees.forEach(el => {
                     el.attendance = attendance;
                     obj_this.update_attendance(el.id, attendance, true);
                 });
             }
             else
             {
-                obj_this.attendees.forEach(el => {
+                obj_this.db_attendees.forEach(el => {
                     el.attendance = '';
                     obj_this.update_attendance(el.id, attendance, true);
                 });
