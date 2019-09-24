@@ -21,6 +21,7 @@ export class MessengerComponent implements OnInit {
 	chat_initilized = 0;
     searchVal = '';
     user: AppUser;
+    group_state = '';
     is_request_sent = true;
     people_list: Array<ChatUser>;
     selectedPeople : Array<ChatUser>;
@@ -283,21 +284,22 @@ export class MessengerComponent implements OnInit {
     selected_chat_group: ChatGroup;
     group_create_mode(){
         let obj_this = this;
+        obj_this.group_state = 'create'
 		const modalRef = this.modalService.open(ChatgroupComponent, { backdrop: 'static' });
         modalRef.componentInstance.input_users = [];
         modalRef.componentInstance.group_name = '';
 		modalRef.result.then((result) => {
             if (result){
-                this.group_name = result.group_name;
-                this.selectedPeople = result.selectd_users;
-                console.log(result);
+                obj_this.group_name = result.group_name;
+                obj_this.selectedPeople = result.selectd_users;
                 obj_this.create_chat_room();
             }
         });
     }
     
     show_group_members(group: ChatGroup){
-        let obj_this = this;        
+        let obj_this = this;
+        obj_this.group_state = 'update'
         obj_this.group_name = group.name;
         let input_data = {
             args:{
@@ -331,8 +333,9 @@ export class MessengerComponent implements OnInit {
             modalRef.componentInstance.group_name = group.name;
             modalRef.result.then((result) => {
                 if (result){
-                    
-                    // console.log(result);
+                    obj_this.group_name = result.group_name;
+                    obj_this.selectedPeople = result.selectd_users;
+                    obj_this.update_chat_group_members();
                 }
             });
 
