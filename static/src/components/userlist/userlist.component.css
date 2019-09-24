@@ -1,3 +1,7 @@
+.roster .container{
+    padding-left:15px; 
+    padding-right:15px; 
+}
 .btn-group .btn.active{
     color: #fff;
 }
@@ -7,8 +11,15 @@
     left: 0;
     background: #fff;
     width: 100%;
-    height: calc(100vh - 315px);
-    overflow: auto;
+    height: calc(100vh - 375px);
+    overflow: overlay;
+}
+.custom-control-label::before,
+.custom-control-label::after{
+    left: 0;
+}
+.w-70{
+    width: 70px;
 }
 .img-circle{
     width: 50px;

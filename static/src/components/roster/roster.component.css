@@ -34,6 +34,9 @@
     font-weight: 600; 
     font-size: 0.8rem;
 }
+.custom-control-label{
+    font-weight: bold;
+}
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -58,9 +61,6 @@ input[type='radio']:after{
     padding: 4px 16px 4px 14px;
 }
 @media screen and (max-width:992px){
-    .roster-height{
-        height:calc(100vh - 350px);
-    }   
     .display-block{
         display: block !important;
     }
@@ -69,20 +69,16 @@ input[type='radio']:after{
     }
 }
 
-@media screen and (max-width:767px){
-    .roster-height{
-        height:calc(100vh - 370px);
-    }   
-}
-@media screen and (max-width:480px){
+@media screen and (max-width:576px){
+    .custom-control-label::after,
+    .custom-control-label::before{
+        top: 0;
+    }
     .roster-elements{
         font-size: 0.65rem;
     }
     .roester-data{
         font-size: 0.6rem;
-    }
-    .roster-height{
-        height:calc(100vh - 350px);
     }
     input[type='radio']:after{
         width: 12px;

@@ -324,3 +324,7 @@ mention-list.dropup{
 .main-full-seachbar .btn{
     border-radius: 0;
 }
+.chat_group_container .container{
+    padding: 0;
+
+}

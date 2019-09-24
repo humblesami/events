@@ -1,5 +1,11 @@
-<div>
-    <input [(ngModel)]="group_name" />
+<div class="container chat_group_container py-2">
+    <div class="form-group my-2">
+        <label class="font-weight-bold text-primary">Group Name</label>
+        <input [(ngModel)]="group_name" class="form-control form-control-sm"/>
+    </div>
     <app-userlist input_users="{{userlist_input}}" (selectedUsers)="on_user_selected($event)"></app-userlist>
-    <button type="button" class="btn btn-outline-dark" (click)="sendRecord()">Close</button>
+    <div class="my-3 float-right">
+        <button type="button" class="btn btn-sm btn-success mr-1">Create</button>
+        <button type="button" class="btn btn-sm btn-danger" (click)="sendRecord()">Close</button>
+    </div>
 </div>
