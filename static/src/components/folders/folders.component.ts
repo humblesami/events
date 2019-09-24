@@ -101,8 +101,7 @@ export class FoldersComponent implements OnInit {
 
     on_result(result){
         let obj_this = this;
-        obj_this.zone.run(() => obj_this.records = result);        
-        obj_this.userService.set_users(result.users);            
+        obj_this.records = result;
         obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
     }
 
@@ -201,7 +200,6 @@ export class FoldersComponent implements OnInit {
             try{
                 var ar = JSON.parse(obj_this.input_results);
                 obj_this.on_result(ar);
-                console.log(obj_this.show_results, ar);
             }
             catch(er){
                 console.log(obj_this.input_results, er);

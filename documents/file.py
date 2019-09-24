@@ -217,12 +217,8 @@ class File(CustomModel, FilesUpload):
         else:
             docs = model.objects.filter(q_objects)
         docs = docs.values('id', 'name', 'access_token')
-        users_obj = ws_methods.get_model('meetings','Profile')
-        users_obj = users_obj.objects.all()
-        users = list(users_obj.values('id', 'name'))
-        documents = list(docs) 
-        docs = {'docs':documents,'users':users}
-        return docs
+        documents = list(docs)
+        return documents
 
     
     @classmethod

@@ -49,7 +49,7 @@ export class ResourceDetailsComponent implements OnInit {
             params: params,
             args: args
         };
-        console.log(params, 222);
+        // console.log(params, 222);
         obj_this.httpService.get(final_input_data,
             (result: any) => {
                 obj_this.folder = undefined;

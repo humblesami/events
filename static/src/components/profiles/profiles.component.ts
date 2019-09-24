@@ -47,18 +47,9 @@ export class ProfilesComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data,
             (result) => {
-                    // result.records = [{
-                    //     id:1,
-                    //     company:'abc',
-                    //     name:'as',
-                    //     email:'ds',
-                    //     department:'abc',
-                    //     mobile_phone:'12345',
-                    //     group:['admin']
-                    // }].concat(result.records)
                     obj_this.records = result.records;
                     obj_this.records && obj_this.records.length > 0 ? obj_this.no_prof = false : obj_this.no_prof = true;                    
-        }, (error) => {});
+        }, null);
     }
 
     ngOnInit() {

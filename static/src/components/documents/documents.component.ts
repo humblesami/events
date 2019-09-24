@@ -20,7 +20,6 @@ export class DocumentsComponent implements OnInit {
     @Input() res_app: string;
     @Input() res_model: string;
     @Input() readonly: any;
-    @Input() dont_show_files: any;
     @Input() input_results = '';
     @Input() show_results: any;
 
@@ -48,13 +47,14 @@ export class DocumentsComponent implements OnInit {
         private userServ: UserService,
         private ss: SocketService,
         public zone: NgZone) {
+
         this.httpService = httpServ;
         this.userService = userServ;
         this.renameService = renameSer;
         this.socketService = ss;
         window['app_libs']['pdf'].load();
         this.object_id = window['js_utils'].unique_id();
-        ss.doc_objects[this.object_id] = this;        
+        ss.doc_objects[this.object_id] = this;
     }
 
     get_icon_url(source = null){
@@ -145,10 +145,6 @@ export class DocumentsComponent implements OnInit {
 
     get_list(){        
         let obj_this = this;
-        if (obj_this.dont_show_files)
-        {
-            return;
-        }
         obj_this.roterLinkPrefix = obj_this.doc_types[obj_this.res_model];
         let input_data = {
             args:{
@@ -173,7 +169,6 @@ export class DocumentsComponent implements OnInit {
     on_result(data){
         let obj_this = this;
         obj_this.docs = data;
-        obj_this.users = data.users;
     }
 
     ngOnInit() {
