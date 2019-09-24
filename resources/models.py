@@ -105,15 +105,14 @@ class Folder(CustomModel):
     def search_root(cls, kw, user_id, search_types, recursive):
         result = {'files': [], 'folders': []}
         folders = Folder.objects.filter(parent_id=None, users__id=user_id, name__icontains=kw)
+        for folder in folders:
+            result['folders'].append({
+                'id': folder.id,
+                'name': folder.name,
+            })
         if recursive:
             for obj in folders:
                 result = obj.search_folder(kw, user_id, search_types, result, recursive)
-        else:
-            for folder in folders:
-                result['folders'].append({
-                    'id': folder.id,
-                    'name': folder.name,
-                })
         return result
 
     def search_folder(self, kw, user_id, search_types, result, recursive=False):
