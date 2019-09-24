@@ -77,6 +77,8 @@ import { DocumentsComponent } from '../components/documents/documents.component'
 import { FoldersComponent } from '../components/folders/folders.component';
 import { UserlistComponent } from '../components/userlist/userlist.component';
 import { ActionsComponent } from '../components/actions/actions.component';
+import { ChatgroupComponent } from '../components/chatgroup/chatgroup.component';
+import { UserlistmodalComponent } from '../components/userlistmodal/userlistmodal.component';
 
 
 @NgModule({
@@ -146,6 +148,8 @@ import { ActionsComponent } from '../components/actions/actions.component';
         FoldersComponent,
         UserlistComponent,
         ActionsComponent,
+        ChatgroupComponent,
+        UserlistmodalComponent,
     ],
     providers:[
         AuthGuard,
@@ -157,6 +161,6 @@ import { ActionsComponent } from '../components/actions/actions.component';
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [ProfilesummaryComponent]
+    entryComponents: [ChatgroupComponent]
 })
 export class AppModule { }

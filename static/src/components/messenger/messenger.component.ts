@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
 import {HttpService} from "../../app/http.service";
 import {Location} from '@angular/common';
+import { AppUser, ChatGroup, BaseClient, ChatClient, Message, ChatUser } from '../../app/models/chat';
 import {SocketService} from "../../app/socket.service";
-import { AppUser, ChatGroup, BaseClient, ChatClient, Message, ChatUser, ChatGroupMessage, UserMessage } from '../../app/models/chat';
 import { Router } from '@angular/router';
+import { ChatgroupComponent } from '../chatgroup/chatgroup.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 declare var $: any;
 
@@ -27,6 +29,7 @@ export class MessengerComponent implements OnInit {
         private sanitizer: DomSanitizer,
         public router: Router,
         private _location: Location,
+        private modalService: NgbModal,
 		private httpService: HttpService,
         private ss: SocketService
         ) {
@@ -279,18 +282,25 @@ export class MessengerComponent implements OnInit {
     group_mode = 'none';
     selected_chat_group: ChatGroup;
     group_create_mode(){
-        this.group_name = '';
-        this.selected_chat_group = undefined;
-        this.switch_group_mode('edit');
-        setTimeout(function(){
-            $('#group_name').focus()
-        },100);
+        // this.group_name = '';
+        // this.selected_chat_group = undefined;
+        // this.switch_group_mode('edit');
+        // setTimeout(function(){
+        //     $('#group_name').focus()
+        // },100);
+        let obj_this = this;
+		const modalRef = this.modalService.open(ChatgroupComponent, { backdrop: 'static' });
+        modalRef.componentInstance.input_users = [];
+        modalRef.componentInstance.group_name = '';
+		modalRef.result.then((result) => {
+            if (result){
+                console.log(result);
+            }
+        });
     }
     
     show_group_members(group: ChatGroup){
-        let obj_this = this;
-        var mode = obj_this.user.id !== group.created_by.id ? 'view': 'edit';
-        obj_this.switch_group_mode(mode);
+        let obj_this = this;        
         obj_this.group_name = group.name;
         let input_data = {
             args:{
@@ -317,12 +327,19 @@ export class MessengerComponent implements OnInit {
             var ar = obj_this.selected_chat_group.members.filter(function(item){
                 return item.id != my_id;
             });
-            // console.log(ar, 133);
-            obj_this.selectedPeople = ar;
-            if(mode == 'edit')
-            {
-                $('input[role="combobox"]:visible:first').focus();
-            }
+            
+            // console.log(ar);
+            const modalRef = obj_this.modalService.open(ChatgroupComponent, { backdrop: 'static' });
+            modalRef.componentInstance.input_users = ar;
+            modalRef.componentInstance.group_name = group.name;
+            modalRef.result.then((result) => {
+                if (result){
+                    
+                    // console.log(result);
+                }
+            });
+
+
         } , function(){
             console.log('Group members not fetched');
         });

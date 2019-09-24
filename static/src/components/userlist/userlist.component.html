@@ -1,87 +1,60 @@
-<div class="modal-header modal-header-heading">
-    <h1>Select User</h1>
-    <button type="button" class="close" aria-label="Close" (click)="sendRecord()">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<div class="modal-body edit-modal-body">
-
 <div style="padding:10px" class="container">
-<div class="main-full-seachbar mb-3">
-<input type="text"
-    (keyup)="$event.target.value; $event.keyCode == 13 ? user_serach($event.target.value): null"
-    placeholder="Search..."  class="form-control"/>
-</div>
-<div class="roster">
-    <div class="container">
-        <div class="row mb-2">
-            <div class="MeetingBtnWrapper">
-                <div class="btn-group">
-                    <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
-                    <a class="btn" (click)="all_available_users($event.target)">Available</a>
-                    <a class="btn active" (click)="all_profile_users($event.target)">All Users</a>
-                </div>
-            </div>
-            <div class="col-12 mb-1">
-                <div class="row roster-elements">
-                    <div class="col-3 col-sm-4 p-0">
-                        Attendee
-                    </div>
-                    <div class="col-2">
-                        Status
+    <div class="main-full-seachbar mb-3">
+    <input type="text"
+        (keyup)="$event.target.value; $event.keyCode == 13 ? user_serach($event.target.value): null"
+        placeholder="Search..."  class="form-control"/>
+    </div>
+    <div class="roster">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="MeetingBtnWrapper">
+                    <div class="btn-group">
+                        <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
+                        <a class="btn" (click)="all_available_users($event.target)">Available</a>
+                        <a class="btn active" (click)="all_profile_users($event.target)">All Users</a>
                     </div>
                 </div>
-            </div>
-            <!-- Attendance -->
-            <div class="container roster-height">
-                <div class="row">
-                    <div class="col-12 mb-1 bg-roster" *ngFor="let obj of users">
-                        <div class="row roester-data">
-                            <div class="col-3 col-sm-4" (click)="open_dialog(obj.id)">
-                                <div class="row no-gutters" style="cursor: pointer">
-                                    <div class="col-3 d-lg-block">
-                                        <div class="img-flex img-circle">
-                                            <img src="{{socketService.server_url}}/media/{{obj.image}}"/>
-                                        </div>                            
-                                    </div>
-                                    <div class="col-9">
-                                        <div class="d-block text-truncate">
-                                            {{obj.name}}
-                                        </div>
-                                        <div class="d-block text-truncate">
-                                            {{obj.email}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <input class="form-check-input"
-                                [(ngModel)]="obj.selected"
-                                    type="checkbox" id="user-{{obj.id}}"/>
-                                <!-- <input class="form-check-input"  
-                                    checked="{{profile_data.mail_to_assistant}}" 
-                                    (change)="mail_to_assistant_change($event.target.value)"
-                                    type="checkbox" id="mail-to-assistant" required
-                                /> -->
-                            </div>
+                <div class="col-12 mb-1">
+                    <div class="row roster-elements">
+                        <div class="col-3 col-sm-4 p-0">
+                            Attendee
+                        </div>
+                        <div class="col-2">
+                            Status
                         </div>
                     </div>
                 </div>
-            </div>    
-        </div>   
-    </div>           
-</div>
-<!-- <div class="d-flex display-block">
-    <div class="ml-auto d-flex">
-        <app-paginator *ngIf="users.length"
-        (reload_data)="get_list()">
-        </app-paginator>
+                <div class="container roster-height">
+                    <div class="row">
+                        <div class="col-12 mb-1 bg-roster" *ngFor="let obj of users">
+                            <div class="row roester-data">
+                                <div class="col-3 col-sm-4">
+                                    <div class="row no-gutters" style="cursor: pointer">
+                                        <div class="col-3 d-lg-block">
+                                            <div class="img-flex img-circle">
+                                                <img src="{{socketService.server_url}}/media/{{obj.image}}"/>
+                                            </div>                            
+                                        </div>
+                                        <div class="col-9">
+                                            <div class="d-block text-truncate">
+                                                {{obj.name}}
+                                            </div>
+                                            <div class="d-block text-truncate">
+                                                {{obj.email}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-check-input"
+                                    [(ngModel)]="obj.selected"
+                                        type="checkbox" id="user-{{obj.id}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            </div>   
+        </div>           
     </div>
-</div> -->
-</div>
-
-
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-outline-dark" (click)="sendRecord()">Close</button>
 </div>

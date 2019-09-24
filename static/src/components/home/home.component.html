@@ -139,11 +139,10 @@
                         <div class="clearfix">                                
                             <h4 class="mb-3 float-left">
                                 <span class="head-icon-end">
-                                    <i class="icon-docs-line"></i>
-                                    E-Signature Doc
+                                    <i class="icon-draw-pencil"></i>
+                                    E-Signature
                                 </span>
                             </h4>
-                   
                             <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
@@ -156,7 +155,7 @@
                                         <a class="DocumentWrapper gray-bg" routerLink="/signdoc/{{doc.id}}">
                                             <div class="DocIcon">
                                                 <span class="rounded-circle">
-                                                    <i class="icon-doc-file"></i>
+                                                    <i class="icon-e-sign"></i>
                                                 </span>
                                             </div>
                                             <div class="DocText">

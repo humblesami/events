@@ -181,7 +181,7 @@ export class HomeComponent implements OnInit {
             if (result){
                 console.log(result);
             }
-         });
+        });
     }
     
     ngOnInit() {

@@ -1,0 +1,5 @@
+<div>
+    <input [(ngModel)]="group_name" />
+    <app-userlist input_users="{{userlist_input}}" (selectedUsers)="on_user_selected($event)"></app-userlist>
+    <button type="button" class="btn btn-outline-dark" (click)="sendRecord()">Close</button>
+</div>
