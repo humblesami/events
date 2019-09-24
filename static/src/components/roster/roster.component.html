@@ -3,34 +3,9 @@
 	<input type="text"
         (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
         placeholder="Search..."  class="form-control"/>
-    </div>
-    <style>
-        .bootstrap-checkbox {
-    display:inline-block;
-    position:relative;
-    width:13px;
-    height:13px;
-    border:1px solid #000;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.bootstrap-checkbox i{
-    position:absolute;
-    left : -1px;
-    top : -2px;
-}
-    </style>
+	</div>
     <div class="roster">
         <div class="container">
-
-                <input id="absent_all" type="checkbox" value="state"> parent<br/>
-                <input class="checkbox-child absent" type="checkbox" value="child1"> child1<br/>
-                <input class="checkbox-child absent" type="checkbox" value="child2"> child2<br/>
-                <input class="checkbox-child absent" type="checkbox" value="child3"> child3
-
             <div class="row mb-2">
                 <div class="col-12 mb-1">
                     <div class="row roster-elements">
@@ -40,14 +15,21 @@
                         <div class="col-2">
                             Status
                         </div>
-                        <div class="col-2">
-                            Absent
+                        <div class="col-2 custom-control custom-checkbox absent-all" (click)="check_all($event.target)">
+                            <!-- Absent
                             <input class="form-check-input absent-all"
                                 [(ngModel)]="absent_all"
                                 (change)="check_all($event.target)"
                                 type="checkbox" id="absent_all"
-                                value="state"
-                            />
+                            /> -->
+
+                                <input type="checkbox" 
+                                [(ngModel)]="absent_all"
+                                
+                                id="absent_all"
+                                class="custom-control-input">
+                                <label class="custom-control-label">Absent</label>
+                              
                         </div>
                         <div class="col-2">
                             InPerson
@@ -55,7 +37,6 @@
                                 [(ngModel)]="inperson_all"
                                 (change)="check_all($event.target)"
                                 type="checkbox" id="inperson_all"
-                                value="state"
                             />
                         </div>
                         <div class="col-2">
@@ -64,7 +45,6 @@
                                 [(ngModel)]="online_all"
                                 (change)="check_all($event.target)"
                                 type="checkbox" id="online_all"
-                                value="state"
                             />
                         </div>
                     </div>
@@ -95,20 +75,20 @@
                                     Accept by: Self
                                 </div>
                                 <div class="col-2">
-                                    <input *ngIf="obj.attendance=='absent'" class="absent checkbox-child" checked type="checkbox" name="{{obj.id}}" />                    
-                                    <input (click)="update_attendance(obj.id,'absent')" class="absent checkbox-child" *ngIf="obj.attendance!='absent'" type="checkbox" name="{{obj.id}}" />
+                                    <input *ngIf="obj.attendance=='absent'" class="absent" checked type="radio" name="{{obj.id}}" />                    
+                                    <input (click)="update_attendance(obj.id,'absent')" class="absent" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="absent" />
                                     <input type="hidden" value="{{obj.id}}" />
                                 </div>
                                 <div class="col-2">
-                                    <input *ngIf="obj.attendance=='inperson'" class="inperson checkbox-child" checked type="checkbox" name="{{obj.id}}" />
-                                    <input (click)="update_attendance(obj.id,'inperson')" class='inperson checkbox-child' *ngIf="obj.attendance!='inperson'" type="checkbox" name="{{obj.id}}" />
+                                    <input *ngIf="obj.attendance=='inperson'" class="inperson" checked type="radio" name="{{obj.id}}" />
+                                    <input (click)="update_attendance(obj.id,'inperson')" class='inperson' *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="inperson" />
                                     <input type="hidden" value="{{obj.id}}" />
                                 </div>
                                 <div class="col-2">
-                                    <input *ngIf="obj.attendance=='online'" checked class="online checkbox-child" type="checkbox" name="{{obj.id}}" />
-                                    <input (click)="update_attendance(obj.id,'online')" class="online checkbox-child" *ngIf="obj.attendance!='online'" type="checkbox" name="{{obj.id}}" />
+                                    <input *ngIf="obj.attendance=='online'" checked class="online" type="radio" name="{{obj.id}}" />
+                                    <input (click)="update_attendance(obj.id,'online')" class="online" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="online" />
                                     <input type="hidden" value="{{obj.id}}" />
                                 </div>
@@ -121,7 +101,6 @@
     </div>
     <div class="d-flex display-block">            
         <div class="form-buttons">
-            <button (click)="exe()">Button</button>
             <button type="button" class="btn btn-primary btn-sm mr-2" (click)="submit_attendance($event)">Submit</button>
             <button type="button" class="btn btn-danger btn-sm " (click)="close_roster($event)">Cancel</button>
         </div>
