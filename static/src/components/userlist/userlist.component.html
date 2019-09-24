@@ -5,56 +5,52 @@
         placeholder="Search..."  class="form-control"/>
     </div>
     <div class="roster">
+        <div class="MeetingBtnWrapper">
+            <div class="btn-group">
+                <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
+                <a class="btn" (click)="all_available_users($event.target)">Available</a>
+                <a class="btn active" (click)="all_profile_users($event.target)">All Users</a>
+            </div>
+        </div>
         <div class="container">
-            <div class="row mb-2">
-                <div class="MeetingBtnWrapper">
-                    <div class="btn-group">
-                        <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
-                        <a class="btn" (click)="all_available_users($event.target)">Available</a>
-                        <a class="btn active" (click)="all_profile_users($event.target)">All Users</a>
-                    </div>
+            <div class="row py-3">
+                <div class="col-9 col-sm-5 p-0">
+                    <label class="font-weight-bold text-primary">
+                        Attendee
+                    </label>
                 </div>
-                <div class="col-12 mb-1">
-                    <div class="row roster-elements">
-                        <div class="col-3 col-sm-4 p-0">
-                            Attendee
-                        </div>
-                        <div class="col-2">
-                            Status
-                        </div>
-                    </div>
+                <div class="col-3">
+                    <label class="font-weight-bold text-primary">
+                        Status
+                    </label>
                 </div>
-                <div class="container roster-height">
-                    <div class="row">
-                        <div class="col-12 mb-1 bg-roster" *ngFor="let obj of users">
-                            <div class="row roester-data">
-                                <div class="col-3 col-sm-4">
-                                    <div class="row no-gutters" style="cursor: pointer">
-                                        <div class="col-3 d-lg-block">
-                                            <div class="img-flex img-circle">
-                                                <img src="{{socketService.server_url}}/media/{{obj.image}}"/>
-                                            </div>                            
-                                        </div>
-                                        <div class="col-9">
-                                            <div class="d-block text-truncate">
-                                                {{obj.name}}
-                                            </div>
-                                            <div class="d-block text-truncate">
-                                                {{obj.email}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <input class="form-check-input"
-                                    [(ngModel)]="obj.selected"
-                                        type="checkbox" id="user-{{obj.id}}"/>
-                                </div>
+            </div>
+        </div>  
+        <div class="container group-height">  
+            <div class="row mb-2 align-items-center" *ngFor="let obj of users">
+                <div class="col-9 col-sm-5 p-0">
+                    <div class="row no-gutters" style="cursor: pointer">
+                        <div class="col-3 d-none d-lg-block">
+                            <div class="img-flex img-circle">
+                                <img src="{{socketService.server_url}}/media/{{obj.image}}"/>
+                            </div>                            
+                        </div>
+                        <div class="col-9">
+                            <div class="d-block text-truncate">
+                                {{obj.name}}
+                            </div>
+                            <div class="d-block text-truncate">
+                                {{obj.email}}
                             </div>
                         </div>
                     </div>
-                </div>    
+                </div>
+                <div class="col-3">
+                    <input class=""
+                        [(ngModel)]="obj.selected"
+                        type="checkbox" id="user-{{obj.id}}"/>
+                </div>
             </div>   
-        </div>           
+        </div>
     </div>
 </div>
