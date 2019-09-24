@@ -21,10 +21,6 @@ export class ResourcesComponent implements OnInit {
     }
 
     ngOnInit() {
-        let obj_this = this;
-        setTimeout(function(){
-            var create_button = $('#create_new_folder');                        
-            $('app-breadcrumb .edit-buttons').append(create_button);            
-        }, 50);        
+        
     }
 }

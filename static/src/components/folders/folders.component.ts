@@ -12,6 +12,8 @@ declare var $:any;
 })
 export class FoldersComponent implements OnInit {
     @Input() parent_id: number;
+    @Input() input_results = '';
+    @Input() show_results: any;
     parent;
     records = [];
     message ='';
@@ -92,11 +94,15 @@ export class FoldersComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data,
         (result: any) => {
-            obj_this.records = result.records;
-            obj_this.userService.set_users(result.users);
-            // console.log(43434);
-            obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;            
+            obj_this.on_result(result);
         },null);
+    }
+
+    on_result(result){
+        let obj_this = this;
+        obj_this.records = result;
+        obj_this.userService.set_users(result.users);            
+        obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
     }
 
     create_folder_popup_config()
@@ -183,7 +189,22 @@ export class FoldersComponent implements OnInit {
     }
 
     ngOnInit() {
-        let obj_this = this;                
+        let obj_this = this;
+        if(obj_this.show_results)
+        {
+            if(!obj_this.input_results)
+            {
+                return;
+            }
+            try{
+                var ar = JSON.parse(obj_this.input_results);
+                obj_this.on_result(ar);
+            }
+            catch(er){
+                console.log(obj_this.input_results, er);
+            }
+            return;
+        }                
         obj_this.add_folder_create_button();
         if(this.parent_id)
         {

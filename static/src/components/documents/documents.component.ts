@@ -21,6 +21,9 @@ export class DocumentsComponent implements OnInit {
     @Input() res_model: string;
     @Input() readonly: any;
     @Input() dont_show_files: any;
+    @Input() input_results = '';
+    @Input() show_results: any;
+
     docs = [];
     users = [];
     roterLinkPrefix = '';
@@ -140,7 +143,7 @@ export class DocumentsComponent implements OnInit {
         });        
     }
 
-    get_list(){
+    get_list(){        
         let obj_this = this;
         if (obj_this.dont_show_files)
         {
@@ -163,13 +166,33 @@ export class DocumentsComponent implements OnInit {
         // console.log(6565,133);
         this.httpService.get(input_data, function(data){
             // console.log(data, 133);
-            obj_this.docs = data.docs;
-            obj_this.users = data.users;
+            obj_this.on_result(data);
         }, null);
+    }
+
+    on_result(data){
+        let obj_this = this;
+        obj_this.docs = data.docs;
+        obj_this.users = data.users;
     }
 
     ngOnInit() {
         let obj_this = this;
+        if(obj_this.show_results)
+        {
+            if(!obj_this.input_results)
+            {
+                return;
+            }
+            try{
+                var ar = JSON.parse(obj_this.input_results);
+                obj_this.on_result(ar);
+            }
+            catch(er){
+                console.log(obj_this.input_results, er);
+            }
+            return;
+        }
         obj_this.get_list();
         this.parent = {
             app: 'resources',
