@@ -282,19 +282,16 @@ export class MessengerComponent implements OnInit {
     group_mode = 'none';
     selected_chat_group: ChatGroup;
     group_create_mode(){
-        // this.group_name = '';
-        // this.selected_chat_group = undefined;
-        // this.switch_group_mode('edit');
-        // setTimeout(function(){
-        //     $('#group_name').focus()
-        // },100);
         let obj_this = this;
 		const modalRef = this.modalService.open(ChatgroupComponent, { backdrop: 'static' });
         modalRef.componentInstance.input_users = [];
         modalRef.componentInstance.group_name = '';
 		modalRef.result.then((result) => {
             if (result){
+                this.group_name = result.group_name;
+                this.selectedPeople = result.selectd_users;
                 console.log(result);
+                obj_this.create_chat_room();
             }
         });
     }

@@ -27,7 +27,7 @@
                 </div>
             </div>  
             <div class="container group-height">  
-                <div class="row mb-2 align-items-center" (click)="obj.selected = !obj.selected" *ngFor="let obj of users">
+                <div class="row mb-2 align-items-center" (click)="toggle_user_selection(obj)" *ngFor="let obj of users">
                     <div class="col-9 p-0">
                         <div class="d-flex">
                             <div class="w-70">
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="col-3 custom-control custom-checkbox">
-                            <input type="checkbox" 
+                            <input type="checkbox"                             
                             [(ngModel)]="obj.selected"
                             class="custom-control-input">
                             <label class="custom-control-label"></label>

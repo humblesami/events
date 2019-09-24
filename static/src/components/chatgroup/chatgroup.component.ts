@@ -13,15 +13,14 @@ export class ChatgroupComponent implements OnInit {
         
     }
     selected_users = [];
-    on_user_selected(selected_users) {
-        console.log(selected_users, 9995);
-        this.selected_users = selected_users;
-        
+    group_users_changed(selected_users) {        
+        this.selected_users = selected_users;        
     }
 
     sendRecord(){
         console.log(this.selected_users, 3343);
-        this.activeModal.close(this.selected_users);
+        let obj_this = this;
+        this.activeModal.close({group_name: obj_this.group_name, selectd_users: this.selected_users});
     }
 
     userlist_input = '';

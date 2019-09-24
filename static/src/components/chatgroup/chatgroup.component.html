@@ -3,7 +3,7 @@
         <label class="font-weight-bold text-primary">Group Name</label>
         <input [(ngModel)]="group_name" class="form-control form-control-sm"/>
     </div>
-    <app-userlist input_users="{{userlist_input}}" (selectedUsers)="on_user_selected($event)"></app-userlist>
+    <app-userlist input_users="{{userlist_input}}" (group_users_changed)="group_users_changed($event)"></app-userlist>
     <div class="my-3 float-right">
         <button type="button" class="btn btn-sm btn-success mr-1">Create</button>
         <button type="button" class="btn btn-sm btn-danger" (click)="sendRecord()">Close</button>

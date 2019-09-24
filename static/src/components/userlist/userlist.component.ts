@@ -10,7 +10,7 @@ declare var $: any;
 })
 export class UserlistComponent implements OnInit {
     @Input() input_users = '';
-    @Output() selectedUsers : EventEmitter <any> = new EventEmitter();
+    @Output() group_users_changed : EventEmitter <any> = new EventEmitter();
     server_url = window['server_url'];
     httpService: HttpService;
     constructor(private httpServ: HttpService,
@@ -22,13 +22,6 @@ export class UserlistComponent implements OnInit {
     users = [];
     all_users = [];
     count: number;
-
-    on_selection_changed(){
-        let selected_users = this.users.filter((el)=>{
-            return el.selected == true;
-        });
-        this.selectedUsers.emit(selected_users);
-    }
 
     selection_input = [];
     check_user_selected(user_id)
@@ -54,9 +47,8 @@ export class UserlistComponent implements OnInit {
 
             if(obj_this.input_users)
             {
-                obj_this.selection_input = JSON.parse(obj_this.input_users);
-                console.log(32323);
-                obj_this.selectedUsers.emit(obj_this.selection_input);
+                obj_this.selection_input = JSON.parse(obj_this.input_users);                
+                obj_this.group_users_changed.emit(obj_this.selection_input);
             }
 
             obj_this.users.forEach((val)=>{
@@ -83,13 +75,11 @@ export class UserlistComponent implements OnInit {
         this.users = this.all_users.filter((el)=>{
             return el.selected == true;
         });
-        this.apply_active_class(el);
     }
 
     all_profile_users(el)
     {
-        this.users = this.all_users;
-        this.apply_active_class(el);
+        this.users = this.all_users;        
     }
 
     all_available_users(el)
@@ -97,13 +87,14 @@ export class UserlistComponent implements OnInit {
         this.users = this.all_users.filter((el)=>{
             return el.selected == false;
         });
-        this.apply_active_class(el);
     }
 
-    apply_active_class(el)
-    {
-        $(el).parent().find('.active').removeClass('active');
-        $(el).addClass('active');
+    toggle_user_selection(obj){
+        obj.selected = !obj.selected;
+        let selected_users = this.users.filter((el)=>{
+            return el.selected == true;
+        });
+        this.group_users_changed.emit(selected_users);
     }
 
     user_serach(val)
