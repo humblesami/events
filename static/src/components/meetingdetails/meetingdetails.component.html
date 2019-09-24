@@ -26,12 +26,21 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <div class="mr-auto">
                                 <img src="static/assets/images/meeting-icon.png" alt="" /> {{meeting_object.name}}
                             </div>
-                            <div *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')">
-                                <button class="check-status meet-elements position-relative"
+                            <div >
+                                <button 
+                                    *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')"
+                                    class="check-status meet-elements position-relative"
                                     (click)="on_publish_changed($event)"
                                     [ngClass]="meeting_status">
                                     <span class="circle"><i class="fa fa-circle"></i></span>
                                     <span class="status">{{meeting_status}}</span>
+                                </button>
+
+                                <button 
+                                    class="check-status meet-elements position-relative"
+                                    (click)="open_roster()">
+                                    <img style="border-radius:50%" src="{{socketService.server_url}}/static/assets/images/attendees.png" height="15" width="20" />
+                                    <span class="status">Roster</span>
                                 </button>
                             </div>
                         </div>
@@ -51,15 +60,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </div>
                         </div>
                     </div>
-
-                    
-                    <div class="col-12 p-0">
-                        <div class="MeetingBtnWrapper" id="tdmrb{{meeting_object.id}}">
-                            <div class="ChoseButtonHeadWrap" *ngIf="me_as_respondant && meeting_type == 'upcoming'">
-                                <app-meetingresponse my_event="{{meeting_object.my_event}}" class="meeting-detail" meeting_id="{{meeting_object.id}}" attendee_status="{{meeting_object.attendee_status}}" ></app-meetingresponse>
-                            </div>
-                        </div>
-                    </div>                    
 				</div>
 
                 <div class="div1">
@@ -218,10 +218,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">
-            
-            <!-- <button class="btn btn-primary" (click)="open_django(meeting_object.id)">Mark Attendance</button> -->
-            <button class="btn btn-primary btn-meeting" (click)="open_roster()">Rosters</button>
+        <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">            
             <div class="roster-full">
                 <app-roster meeting_id="{{meeting_object.id}}"></app-roster>
             </div>
@@ -411,24 +408,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </form>
             </div>
         </div>
-
-        <!-- <div *ngIf="meeting_type && meeting_type == 'completed'" class="input-group mr-2 border-bottom pb-3">
-            
-                <form class="input-group-text attach_btn btn btn-meeting" (click)="attach_btn_click($event)">
-                    <input (change)="file_change($event)" id="msg_file" type="file"
-                        accept=".pdf,.doc,.docx,.ppt"
-                        multiple
-                        style="display:none"
-                    />
-                    <i class="fas fa-paperclip"></i> <span class="ml-2">Attach Meeting Documents</span>
-                </form>
-
-            <div class="ml-2">
-                <button class="btn btn-meeting" (click)="upload_doucments()">
-                <span>Upload Attached Documents</span>
-            </button>
-            </div>
-        </div> -->
 
         <div *ngIf="meeting_object.sign_docs && meeting_object.sign_docs.length" class="DocumentsSignWrapper title-wrapper border-bottom">
             <div class="clearfix mt-3">
