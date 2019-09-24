@@ -70,9 +70,14 @@ input[type='radio']:after{
 }
 
 @media screen and (max-width:576px){
+    .custom-control{
+        padding-left: 0;
+        margin-bottom: 10px;
+    }
     .custom-control-label::after,
     .custom-control-label::before{
-        top: 0;
+        top: 1rem;
+        left: 0.5rem;
     }
     .roster-elements{
         font-size: 0.65rem;
