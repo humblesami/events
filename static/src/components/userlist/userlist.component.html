@@ -27,10 +27,10 @@
             </div>
         </div>  
         <div class="container group-height">  
-            <div class="row mb-2 align-items-center" *ngFor="let obj of users">
+            <div class="row mb-2 align-items-center" (click)="obj.selected = !obj.selected" *ngFor="let obj of users">
                 <div class="col-9 col-sm-5 p-0">
                     <div class="row no-gutters" style="cursor: pointer">
-                        <div class="col-3 d-none d-lg-block">
+                        <div class="col-3 d-lg-block">
                             <div class="img-flex img-circle">
                                 <img src="{{socketService.server_url}}/media/{{obj.image}}"/>
                             </div>                            
@@ -45,10 +45,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-3">
-                    <input class=""
+                <div class="col-3 custom-control custom-checkbox">
+                        <input type="checkbox" 
                         [(ngModel)]="obj.selected"
-                        type="checkbox" id="user-{{obj.id}}"/>
+                        class="custom-control-input">
+                        <label class="custom-control-label"></label>
                 </div>
             </div>   
         </div>

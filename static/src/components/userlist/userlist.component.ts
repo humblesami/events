@@ -137,6 +137,15 @@ export class UserlistComponent implements OnInit {
         });
     }
 
+    uncheck_user(user_obj)
+    {
+        user_obj.selected = false;
+    }
+    check_user(user_obj)
+    {
+        user_obj.selected = true;
+    }
+
     ngOnInit() {
         this.get_list();        
     }
