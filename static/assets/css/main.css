@@ -2945,13 +2945,15 @@ select {
 	color: #000;
 	}
 .edit-modal-body input[type="date"] {
-	width: 100%;
-	margin-top: 5px;
-	margin-bottom: 10px;
-	display: block;
-	border: 1px solid #dedee8;
-	height: 38px;
-	line-height: 38px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    display: block;
+    border: 1px solid #dedee8;
+    height: 38px;
+    line-height: 38px;
+    color: #000;
+    font-size: 14px;
 	}
 #signModal {
 	z-index: 23;

@@ -332,13 +332,9 @@ h5, .h5 {
     margin-left: 5px;
     background: #fff;
 }
-.roster-img img{
-    width: 24px;
-    height: 23px;
-    overflow: hidden;
-    border-radius: 50%;
-    padding: 2px;
-    margin-right: 5px;
+.roster-users i{
     position: absolute;
     right: 0;
+    font-size: 15px;
+    top: 7px;
 }

@@ -39,8 +39,9 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <button 
                                     class="check-status meet-elements position-relative roster-button"
                                     (click)="open_roster()">
-                                    <span class="roster-img">
-                                        <img src="{{socketService.server_url}}/static/assets/images/attendees.png" />
+                                    <span class="roster-users">
+                                        <!-- <img src="{{socketService.server_url}}/static/assets/images/attendees.png" /> -->
+                                        <i class="fa fa-users"></i>
                                     </span>
                                     <span class="status">Roster</span>
                                 </button>

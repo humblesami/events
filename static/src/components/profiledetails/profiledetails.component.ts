@@ -50,7 +50,8 @@ export class ProfileDetailsComponent implements OnInit {
         this.profile_data = {};
         this.profile_data.login = this.last_login;  
         this.socketService = this.ss;      
-        this.route.params.subscribe(params => this.get_data());        
+		this.route.params.subscribe(params => this.get_data());
+		// window['app_libs']['zebra'].load();
     }
     on_file_drop(container, file_object){
         let obj_this = this;

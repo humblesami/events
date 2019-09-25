@@ -57,11 +57,14 @@ export class ProfileeditComponent implements OnInit {
 
 	constructor(private httpService: HttpService, private formBuilder: FormBuilder, 
         private route: ActivatedRoute, private sanitizer: DomSanitizer,
-        private router: Router,
-    private ss: SocketService,public activeModal: NgbActiveModal) {
+		private router: Router,
+		private ss: SocketService,public activeModal: NgbActiveModal) {
         this.profile_data = {};
         this.profile_data.login = this.last_login;  
-        this.socketService = this.ss;      
+		this.socketService = this.ss;      
+		// window['app_libs']['zebra'].load(function(){
+			
+		// });
         // this.route.params.subscribe(params => this.get_data());
     }
     on_file_drop(container, file_object){
@@ -74,40 +77,7 @@ export class ProfileeditComponent implements OnInit {
         }
     }
 	input_date_format(){
-		setTimeout(function(){
-            $('input[type="date"]').each(function(i, el){
-                // console.log($(el).position().top, 334);
-                $(el).parent().css('position', 'relative');
-                let prev_val = el.value;
-                let overlay_style= 'position: absolute;';
-                overlay_style += 'border: 0px;padding: 5px;margin: 8px 0px 0px 5px;';
-                let overlay = $('<input class="date-overlay" style="'+overlay_style+'" value="'+prev_val+'" />');
-
-                overlay.css({left:$(el).position().left, top:$(el).position().top});                
-                overlay.focus(function(){
-                    $(el).focus();
-                });
-                overlay.blur(function(e){
-                    if(prev_val != overlay.val() && (overlay.val().length == 10 || overlay.val().length == 0))
-                    {                        
-                        prev_val = overlay.val();
-                        el.value = prev_val;
-                    }
-                });
-
-                $(el).parent().append(overlay);
-                $(el).change(function() {
-                    if(!el.value)
-                    {
-                        overlay.val('');
-                        return;
-                    }
-                    let st_date = window['dt_functions'].standardDate(el.value);
-                    prev_val = st_date;
-                    overlay.val(st_date);
-                })
-            })            
-        }, 100);
+		
 	}
 	addFile(event, filter){
 		const obj_this = this;
@@ -230,15 +200,15 @@ export class ProfileeditComponent implements OnInit {
 					obj_this.type_breadCrumb = obj_this.type_breadCrumb +'s';
 				}
 			}
-			obj_this.input_date_format();
 			if(obj_this.resume_drag_drop)
 			{
 				return ;
 			}
+			// $('.profile-edit-container:first input.date').Zebra_DatePicker();
+
 			obj_this.resume_drag_drop = true;
 			var file_input = $('input[name="add_resume"]');
 			file_input.attr('dragdrop', 1);
-			// file_input.attr('input_type', 'image');
 			window['apply_drag_drop'](file_input, null, function(data){
 				try{
 					console.log(data);
@@ -720,12 +690,14 @@ export class ProfileeditComponent implements OnInit {
     }
 	
 	ngOnInit(){
-        // console.log(this.edit_info, 134);
+		// console.log(this.edit_info, 134);
+		
+		
 		if (this.edit_info)
 		{
 			this.section = this.edit_info.section;
 			this.user_id = this.edit_info.user_id;
-			this.get_data()
+			this.get_data();
         }
 	}	
 }

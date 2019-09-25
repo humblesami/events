@@ -10,6 +10,18 @@ var app_libs = window['app_libs'] = {
             js_utils.load_lib(obj_this, on_load);
         }
     },
+    zebra:{
+        style_paths:[
+            "static/assets/libs/zebra/zebra_datepicker.css"
+        ],
+        script_paths:[
+            "static/assets/libs/zebra/zebra_datepicker.src.js"
+        ],
+        load: function(on_load){
+            var obj_this = this;    
+            js_utils.load_lib(obj_this, on_load);
+        }
+    },
     rtc:{
         script_paths:[
             "static/assets/rtc/adapter.js",
