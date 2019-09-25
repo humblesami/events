@@ -162,6 +162,6 @@ import { SearchComponent } from '../components/search/search.component';
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [ChatgroupComponent]
+    entryComponents: [ChatgroupComponent, UserlistmodalComponent]
 })
 export class AppModule { }

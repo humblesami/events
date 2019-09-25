@@ -3,6 +3,8 @@ import { ActivatedRoute } from "@angular/router";
 import { HttpService } from "../../app/http.service";
 import { SocketService } from "../../app/socket.service";
 import { Router } from "@angular/router";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserlistmodalComponent } from '../userlistmodal/userlistmodal.component';
 declare var $:any;
 
 
@@ -26,6 +28,7 @@ export class EsignDocDetailsComponent implements OnInit {
     constructor(private httpService: HttpService,
         private route: ActivatedRoute,
         private ss: SocketService,
+        private modalService: NgbModal,
         private router: Router) {
             window['app_libs']['pdf'].load();
         // this.route.params.subscribe(params => this.get_data());
@@ -54,29 +57,56 @@ export class EsignDocDetailsComponent implements OnInit {
     {
         let obj_this = this;
         obj_this.add_users = true;
-        $('#select_user_modal').on('hidden.bs.modal', function (e) {
-            if (obj_this.add_users)
-            {
-                let input_data = {
-                    doc_id: obj_this.doc_id,
-                    new_respondents: obj_this.selected_respondents
-                }
-                let args = {
-                    app: 'esign',
-                    model: 'SignatureDoc',
-                    method: 'add_new_respondents'
-                }
-                let final_input = {
-                    params: input_data,
-                    args: args
-                }
-                obj_this.httpService.get(final_input, (data:any) =>{
-                    obj_this.all_users_list = obj_this.users_list = obj_this.selected_respondents;
-                }, null)
+        const modalRef = this.modalService.open(UserlistmodalComponent, { backdrop: 'static' });
+        modalRef.componentInstance.input_users = JSON.stringify(obj_this.selected_respondents);
+		modalRef.result.then((result) => {
+            if (result){
+                    if (obj_this.add_users)
+                    {
+                        let input_data = {
+                            doc_id: obj_this.doc_id,
+                            new_respondents: result
+                        }
+                        let args = {
+                            app: 'esign',
+                            model: 'SignatureDoc',
+                            method: 'add_new_respondents'
+                        }
+                        let final_input = {
+                            params: input_data,
+                            args: args
+                        }
+                        obj_this.httpService.get(final_input, (data:any) =>{
+                            obj_this.all_users_list = obj_this.users_list = obj_this.selected_respondents = result;
+                        }, null)
+                    }
+                    obj_this.add_users = false;
             }
-            obj_this.add_users = false;
         });
-        $('#select_user_modal').modal('show');
+
+        // $('#select_user_modal').on('hidden.bs.modal', function (e) {
+        //     if (obj_this.add_users)
+        //     {
+        //         let input_data = {
+        //             doc_id: obj_this.doc_id,
+        //             new_respondents: obj_this.selected_respondents
+        //         }
+        //         let args = {
+        //             app: 'esign',
+        //             model: 'SignatureDoc',
+        //             method: 'add_new_respondents'
+        //         }
+        //         let final_input = {
+        //             params: input_data,
+        //             args: args
+        //         }
+        //         obj_this.httpService.get(final_input, (data:any) =>{
+        //             obj_this.all_users_list = obj_this.users_list = obj_this.selected_respondents;
+        //         }, null)
+        //     }
+        //     obj_this.add_users = false;
+        // });
+        // $('#select_user_modal').modal('show');
         
     }
 

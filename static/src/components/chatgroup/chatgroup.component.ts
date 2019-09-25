@@ -18,7 +18,6 @@ export class ChatgroupComponent implements OnInit {
     }
 
     sendRecord(){
-        console.log(this.selected_users, 3343);
         let obj_this = this;
         this.activeModal.close({group_name: obj_this.group_name, selectd_users: this.selected_users});
     }

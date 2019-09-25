@@ -12,9 +12,9 @@ export class UserlistmodalComponent implements OnInit {
         
     }
     selected_users = [];
-    on_user_selected(selected_users) {
+    on_user_selected(selected_users=[]) {
+        console.log(selected_users);
         this.selected_users = selected_users;
-        
     }
 
     sendRecord(){

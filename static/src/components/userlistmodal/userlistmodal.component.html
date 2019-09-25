@@ -1,4 +1,5 @@
 <div>    
-    <app-userlist input_users="input_users" (on_selection_changed)="on_user_selected($event)"></app-userlist>
-    <button type="button" class="btn btn-outline-dark" (click)="sendRecord()">Close</button>
+    <app-userlist input_users="{{input_users}}" (group_users_changed)="on_user_selected($event)"></app-userlist>
+    <button type="button" class="btn btn-sm btn-primary mr-1" (click)="sendRecord()">Save</button>
+        <button type="button" class="btn btn-sm btn-danger" (click)="activeModal.close()">Close</button>
 </div>
