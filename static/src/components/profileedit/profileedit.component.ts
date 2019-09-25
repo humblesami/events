@@ -205,12 +205,20 @@ export class ProfileeditComponent implements OnInit {
 				return ;
 			}
 			var old_date_val = '';
-			$('.profile-edit-container:first input.date').datepicker({
+			var picker_options = {
 				dateFormat: "yy-mm-dd",
+				changeMonth: true,
+				changeYear: true,
+				showButtonPanel: true,
+				stepMonths: 12,
+				
 				onSelect: function(dateText) {
 					$(this).change();
-				}
-			})
+				}			
+			}
+			$('.profile-edit-container:first input.date').datepicker(picker_options)
+			
+			
 			.focus(function(){
 				old_date_val = this.value;
 			})
