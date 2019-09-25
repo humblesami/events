@@ -23,3 +23,6 @@ button.check-time-btn {
 	position: absolute;
 	object-fit: contain;
 }
+.dlc-file-picker{
+    display: none;
+}

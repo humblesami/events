@@ -209,7 +209,8 @@ class File(CustomModel, FilesUpload):
         parent_field = params.get('parent_field')    
         model = apps.get_model(params['app'], params['model'])
         q_objects = Q()
-        q_objects |= Q(**{parent_field: parent_id})
+        if parent_id:
+            q_objects |= Q(**{parent_field: parent_id})
 
         kw = params.get('kw')
         if kw:
@@ -219,7 +220,6 @@ class File(CustomModel, FilesUpload):
         docs = docs.values('id', 'name', 'access_token')
         documents = list(docs)
         return documents
-
     
     @classmethod
     def change_file_name(cls, request, params):

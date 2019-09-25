@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, NgZone } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
 import { RenameService } from 'src/app/rename.service';
 import { UserService } from 'src/app/user.service';
+import { ActivatedRoute } from '@angular/router';
 declare var $:any;
 
 @Component({
@@ -12,11 +13,11 @@ declare var $:any;
 })
 export class FoldersComponent implements OnInit {
     @Input() parent_id: number;
-    @Input() input_results = '';
-    @Input() show_results: any;
+    @Input() search_kw = '';
     parent;
     records = [];
-    message ='';
+    message = '';
+    parents = [];
     no_resource = false;
     new_folder = undefined;
     show_renamer_button = false;
@@ -34,12 +35,13 @@ export class FoldersComponent implements OnInit {
 
     constructor(private httpServ: HttpService,
         private renameSer: RenameService, 
-        private userServ: UserService,
-        private zone: NgZone,
+        private userServ: UserService,        
+        private route: ActivatedRoute,
         private socketService: SocketService) {        
-        this.httpService = httpServ;
-        this.userService = userServ;
-        this.renameService =renameSer;        
+            let obj_this = this;
+            obj_this.httpService = httpServ;
+            obj_this.userService = userServ;
+            obj_this.renameService = renameSer;            
     }
 
     delete_folder(evn, folder_id, folder_total_files)
@@ -85,23 +87,31 @@ export class FoldersComponent implements OnInit {
         let args = {
             app: 'resources',
             model: 'Folder',
-            method: 'get_records'
+            method: 'search_folders'
         }			
         let final_input_data = {
             params: {
-                parent_id: obj_this.parent_id
-            },                
+                parent_id: obj_this.parent_id,
+                recursive: 1,
+                kw: obj_this.search_kw
+            },
             args: args
         };
+        // console.log(final_input_data.params, 333);
         obj_this.httpService.get(final_input_data,
         (result: any) => {
             obj_this.on_result(result);
         },null);
     }
 
+    @Output() data_loaded: EventEmitter<any> = new EventEmitter();
     on_result(result){
         let obj_this = this;
-        obj_this.records = result;
+        obj_this.records = result.folders;
+        if(obj_this.parent_id)
+        {
+            obj_this.data_loaded.emit(result);
+        }
         obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
     }
 
@@ -185,27 +195,13 @@ export class FoldersComponent implements OnInit {
         create_button.click(function(){            
             obj_this.create_folder_popup_config();
         });
-        $('body').append(create_button);
+        var edit_buttons = $('<div class="edit-buttons"></div>');        
+        $('.breadcrumbSection:first').append(edit_buttons);
+        edit_buttons.append(create_button);
     }
 
     ngOnInit() {
-        let obj_this = this;
-        // console.log(477771);        
-        if(obj_this.show_results)
-        {
-            if(!obj_this.input_results)
-            {
-                return;
-            }
-            try{
-                var ar = JSON.parse(obj_this.input_results);
-                obj_this.on_result(ar);
-            }
-            catch(er){
-                console.log(obj_this.input_results, er);
-            }
-            return;
-        }                
+        let obj_this = this;       
         obj_this.add_folder_create_button();
         if(this.parent_id)
         {

@@ -1,10 +1,8 @@
+import re
 from meetings.model_files.user import *
-from mainapp import  ws_methods
-from django.db.models import Q
 from mainapp.models import CustomModel
 from django_currentuser.middleware import get_current_user
 
-# Create your models here.
 
 class Folder(CustomModel):
     name = models.CharField(max_length = 200)
@@ -23,7 +21,6 @@ class Folder(CustomModel):
         if creating and current_user not in self.users.all():
             self.users.add(current_user.id)
             self.save()
-
 
     def update_child_access(self, ids_to_remove, user_id):
         if self.id:
@@ -65,7 +62,6 @@ class Folder(CustomModel):
         folder.delete()
         return 'done'
 
-
     @classmethod
     def change_folder_name(cls, request, params):
         folder_id = params['folder_id']
@@ -76,64 +72,85 @@ class Folder(CustomModel):
         return 'done'
 
     @classmethod
-    def search_file_folders(cls, request, params):
-        result = {'files': [], 'folders': []}
+    def search_folders(cls, request, params):
+        result = {}
         parent_id = params.get('parent_id')
         user_id = request.user.id
         recursive = params.get('recursive')
-        search_types = params.get('search_types')
-        if not search_types:
-            search_types = ['files', 'folders']
         kw = params.get('kw')
         if not kw:
             kw = ''
         if parent_id:
-            folder = Folder.objects.filter(pk=parent_id,  users__id=user_id, name__icontains=kw)
+            folder = Folder.objects.filter(pk=parent_id, users__id=user_id)
             if folder:
                 folder = folder[0]
-                result = folder.search_folder(kw, user_id, search_types, result, recursive)
+                result['folders'] = folder.search_folder(kw, user_id, [], 'folders', recursive)
                 result['parents'] = cls.get_ancestors(cls, folder)
                 result['id'] = folder.id
                 result['name'] = folder.name
         else:
-            result = cls.search_root(kw, user_id, search_types, recursive)
-            if not kw:
-                del result['files']
+            result['folders'] = cls.search_root(kw, user_id, [], 'folders', recursive)
         return result
 
     @classmethod
-    def search_root(cls, kw, user_id, search_types, recursive):
-        result = {'files': [], 'folders': []}
-        folders = Folder.objects.filter(parent_id=None, users__id=user_id, name__icontains=kw)
-        for folder in folders:
-            result['folders'].append({
-                'id': folder.id,
-                'name': folder.name,
-            })
-        if recursive:
-            for obj in folders:
-                result = obj.search_folder(kw, user_id, search_types, result, recursive)
+    def search_files(cls, request, params):
+        result = { 'files' : []}
+        parent_id = params.get('parent_id')
+        user_id = request.user.id
+        recursive = params.get('recursive')
+        kw = params.get('kw')
+        if not kw:
+            kw = ''
+        if parent_id:
+            folder = Folder.objects.filter(pk=parent_id, users__id=user_id)
+            if folder:
+                folder = folder[0]
+                result['files'] = folder.search_folder(kw, user_id, [], 'files', recursive)
+                result['parents'] = cls.get_ancestors(cls, folder)
+                result['id'] = folder.id
+                result['name'] = folder.name
+        elif recursive:
+            result['files'] = cls.search_root(kw, user_id, [], 'files', recursive)
         return result
 
-    def search_folder(self, kw, user_id, search_types, result, recursive=False):
+    @classmethod
+    def search_root(cls, kw, user_id, results, search_type, recursive=False):
+        folders = Folder.objects.filter(parent_id=None, users__id=user_id)
+        if search_type == 'folders':
+            for folder in folders:
+                folder_obj = folder.__dict__
+                if re.search(kw, folder_obj['name'], re.IGNORECASE):
+                    results.append({
+                        'id': folder_obj['id'],
+                        'name': folder_obj['name'],
+                    })
+        if recursive:
+            for obj in folders:
+                results = obj.search_folder(kw, user_id, results, search_type, recursive)
+        return results
+
+    def search_folder(self, kw, user_id, results, search_type, recursive=False):
         obj = self
-        if 'files' in search_types:
+        if search_type == 'files':
             files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name')
             for file in files:
-                result['files'].append({
+                results.append({
                     'id': file['id'],
                     'name': file['name'],
                 })
-        if 'folders' in search_types:
-            folders = obj.folder_set.filter(users__id=user_id, name__icontains=kw).values('id', 'name')
+        if search_type == 'folders' or recursive:
+            folders = obj.folder_set.filter(users__id=user_id)
             for folder in folders:
-                result['folders'].append({
-                    'id': folder['id'],
-                    'name': folder['name'],
-                })
+                if search_type == 'folders':
+                    folder_obj = folder.__dict__
+                    if re.search(kw, folder_obj['name'], re.IGNORECASE):
+                        results.append({
+                            'id': folder_obj['id'],
+                            'name': folder_obj['name'],
+                        })
                 if recursive:
-                    folder.search_me(kw, user_id, search_types, result, recursive)
-        return result
+                    folder.search_folder(kw, user_id, results, search_type, recursive)
+        return results
 
     def get_ancestors(self, folder_orm):
         parents_list = []
@@ -141,6 +158,7 @@ class Folder(CustomModel):
         while upper_folder:
             parents_list.append({'name':upper_folder.name,'id':upper_folder.id})
             upper_folder = upper_folder.parent
+        parents_list.reverse()
         return parents_list
 
     total_files = 0
@@ -175,7 +193,7 @@ class Folder(CustomModel):
         offset = params.get('offset')
         limit = params.get('limit')
         records = []
-        users_obj = ws_methods.get_model('meetings','Profile')        
+        users_obj = ws_methods.get_model('meetings','Profile')
         users_obj = users_obj.objects.all()
         all_users = list(users_obj.values('id', 'name'))
         if limit:
@@ -217,10 +235,8 @@ class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='documents')
     users = models.ManyToManyField (Profile, related_name='file_audience', blank=True)
 
-
     def __str__(self):
             return self.name
-
 
     @classmethod
     def get_attachments(cls, request, params):
@@ -229,7 +245,6 @@ class ResourceDocument(File):
         docs = docs.values('id', 'name')
         docs = list(docs)
         return docs
-
 
     def save(self, *args, **kwargs):
         if not self.file_type:
@@ -242,7 +257,6 @@ class ResourceDocument(File):
         if creating and current_user not in self.users.all():
             self.users.add(current_user.id)
             self.save()
-    
 
     @property
     def breadcrumb(self):

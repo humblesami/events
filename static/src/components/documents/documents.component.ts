@@ -20,8 +20,8 @@ export class DocumentsComponent implements OnInit {
     @Input() res_app: string;
     @Input() res_model: string;
     @Input() readonly: any;
-    @Input() input_results = '';
-    @Input() show_results: any;
+    @Input() show_files: any;
+    @Input() search_kw = '';
 
     docs = [];
     users = [];
@@ -41,7 +41,6 @@ export class DocumentsComponent implements OnInit {
     object_id = undefined;
     userService: UserService;
     renameService: RenameService;
-    parent;
     constructor(private httpServ: HttpService,
         private renameSer: RenameService, 
         private userServ: UserService,
@@ -82,22 +81,19 @@ export class DocumentsComponent implements OnInit {
 
     on_admin_mode_changed(){
         let obj_this = this;
-        if(!this.socketService.admin_mode || this.readonly)
+        if(!this.socketService.admin_mode || this.readonly || !obj_this.parent_id)
         {
             return;
         }
-        let file_input = $('#dlc-file-picker');   
-        console.log(file_input.length, 3333);     
-        if(file_input.attr('dragdrop'))
-        {
-            return;
-        }
+        let file_input = $('.dlc-file-picker:not(.processed):first');   
+        // console.log(file_input.length, 3333);
         let resInfo = {
             res_app: obj_this.res_app,
             res_model: obj_this.parent_model,
             res_id: obj_this.parent_id
         }
         file_input.attr('dragdrop', 1);
+        file_input.addClass('processed');
         window['apply_drag_drop'](file_input, resInfo, function(data){
             try{
                 var result = obj_this.docs.concat(data);
@@ -147,22 +143,35 @@ export class DocumentsComponent implements OnInit {
     get_list(){        
         let obj_this = this;
         obj_this.roterLinkPrefix = obj_this.doc_types[obj_this.res_model];
+        let args ={
+            app:'documents',
+            model:'File',
+            method: 'get_attachments',
+        };
+        if(obj_this.parent_model == 'Folder')
+        {
+            args = {
+                app:'resources',
+                model:'Folder',
+                method: 'search_files',
+            }
+        }
         let input_data = {
-            args:{
-                app:'documents',
-                model:'File',
-                method: 'get_attachments',
-            },
+            args: args,
             params:{
+                kw: obj_this.search_kw,
                 app: obj_this.res_app,
                 model: obj_this.res_model,
                 parent_field: obj_this.parent_field,
                 parent_id: obj_this.parent_id,
+                recursive: 1,
             }
         }
         // console.log(6565,133);
         this.httpService.get(input_data, function(data){
-            // console.log(data, 133);
+            if(obj_this.parent_model == 'Folder'){
+                data = data.files;
+            }
             obj_this.on_result(data);
         }, null);
     }
@@ -174,27 +183,12 @@ export class DocumentsComponent implements OnInit {
 
     ngOnInit() {
         let obj_this = this;
-        if(obj_this.show_results)
+        // console.log(44, obj_this.parent_id , 77, obj_this.show_files, 123);
+        if(!obj_this.parent_id && !obj_this.show_files)
         {
-            if(!obj_this.input_results)
-            {
-                return;
-            }
-            try{
-                var ar = JSON.parse(obj_this.input_results);
-                obj_this.on_result(ar);
-            }
-            catch(er){
-                console.log(obj_this.input_results, er);
-            }
             return;
         }
         obj_this.get_list();
-        this.parent = {
-            app: 'resources',
-            model: 'Folder',
-            id: this.parent_id
-        }
         setTimeout(function(){
             obj_this.on_admin_mode_changed()
         },10);

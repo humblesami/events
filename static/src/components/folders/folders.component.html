@@ -1,9 +1,10 @@
-<div class="router-outlet  pt-0">
+<div>
     <div class="sub search container">        
         <div class="input-group d-flex main-full-seachbar mb-3">
             <input type="text" [(ngModel)]="search_kw1"
                 (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null"
-                placeholder="Search..." class="form-control py-2 border-right-0 border">
+                placeholder="Search..." 
+                class="form-control py-2 pt-2 border-right-0 border">
             <span class="">
                 <button class="btn bg-white border-left-0 border" 
                 (click)="httpService.search_kw = search_kw1;get_list();">
@@ -59,19 +60,6 @@
                     </div>
                 </a>
             </div>
-        </div>
-        <app-paginator *ngIf="records.length" (reload_data)="get_list()">
-        </app-paginator>
-    </div>
-
-    <div class="sub container" *ngIf="!records.length">
-        <div class="row">
-            <div class="col-lg-12 ">
-                <div class="jumbotron text-center">
-                    <h1>There are no folders for now!</h1>
-                    <hr>
-                </div>
-            </div>
-        </div>
+        </div>        
     </div>
 </div>

@@ -1,4 +1,4 @@
-<div>    
+<div *ngIf="parent_id || show_files">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of docs">
             <a class="DocumentWrapper gray-bg" routerLink="{{roterLinkPrefix+doc.id}}">
@@ -45,6 +45,6 @@
         </div>
     </div>
     <div *ngIf="socketService.admin_mode && !readonly">        
-        <input id="dlc-file-picker" type="file" name='files[]' multiple/>
+        <input class="dlc-file-picker" type="file" name='files[]' multiple/>
     </div>
 </div>

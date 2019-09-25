@@ -16,15 +16,29 @@
 	</div>
 </div>
 
-<div class="router-outlet"> 
-    <div class="container" *ngIf="folder">
-        <div class="main-full-seachbar mb-3">
-            <input type="text" 
-            (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
+<div class="router-outlet">
+    <div class="container">
+        <div class="main-full-seachbar mb-3 mt-3">
+            <input type="text"
+            (keyup)="$event.keyCode == 13 ? search($event): null"
+            (change)="search($event)" 
             placeholder="Search..."  class="form-control"/>
         </div>
 
-        <div *ngIf="folder.files">
+        <div class="sub_folders" *ngIf="!reloading && (search_type != 'files' || socketService.admin_mode)">
+            <div class="pb-3" >
+                <hr>
+                <div class="mt-3 HeadingWrap ResourcesHeadWrapper">
+                    <i class="icon-folder"></i>Folders
+                </div>
+            </div>
+            <app-folders
+            search_kw="{{last_kw}}"
+            (data_loaded)=data_loaded($event)
+            parent_id="{{folder_id}}"></app-folders>
+        </div>
+        
+        <div *ngIf="!reloading && (show_files || folder_id) && search_type != 'folders'">                
             <div class="row">
                 <div class="col-lg-12">
                     <div class="MainTitleHeadWrap ResourcesHeadWrapper">
@@ -34,25 +48,15 @@
                     </div>
                 </div>
             </div>
-                        
-            <app-documents *ngIf="str_files"
-                show_results="1"
-                parent_model="Folder" parent_field="folder_id" 
-                parent_id="{{folder.id}}"
-                input_results="{{str_files}}"
+            <app-documents
+                search_kw="{{last_kw}}"
+                parent_model="Folder" 
+                parent_field="folder_id" 
+                parent_id="{{folder_id}}"
+                show_files="{{show_files}}"
                 res_app="resources" res_model="ResourceDocument">
             </app-documents>
         </div>
         
-
-        <div class="sub_folders" *ngIf="str_folders && (socketService.admin_mode || (folder && folder.sub_folders && folder.sub_folders.length))">
-            <div class="pb-3" [ngClass]="{'pt-5': folder.total > httpService.limit}">
-                <hr *ngIf="folder.files && folder.files.length">
-                <div class="mt-3 HeadingWrap ResourcesHeadWrapper">
-                    <i class="icon-folder"></i>Folders
-                </div>
-            </div>
-            <app-folders show_results="1" input_results="{{str_folders}}" parent_id="{{folder.id}}"></app-folders>
-        </div>
     </div>
 </div>
