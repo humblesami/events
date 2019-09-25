@@ -70,6 +70,10 @@ export class ResourceDetailsComponent implements OnInit {
                 }
                 obj_this.search_options.search_type = search_type;
             }
+            if(!obj_this.search_options.recursive)
+            {
+                obj_this.search_options.recursive = undefined;
+            }
             localStorage.setItem(obj_this.cookie_key, JSON.stringify(obj_this.search_options));
         }
         // console.log(obj_this.search_options, 455);

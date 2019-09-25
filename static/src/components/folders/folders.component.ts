@@ -14,7 +14,7 @@ declare var $:any;
 export class FoldersComponent implements OnInit {
     @Input() search_kw = '';
     @Input() search_type = '';
-    @Input() recursive = false;
+    @Input() recursive : undefined;
     @Input() parent_id: number;
     parent;
     records = [];
@@ -94,7 +94,7 @@ export class FoldersComponent implements OnInit {
         let final_input_data = {
             params: {
                 parent_id: obj_this.parent_id,
-                recursive: 1,
+                recursive: obj_this.recursive,
                 kw: obj_this.search_kw
             },
             args: args

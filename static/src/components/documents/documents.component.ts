@@ -15,7 +15,7 @@ export class DocumentsComponent implements OnInit {
     httpService: HttpService;
     @Input() search_kw = '';
     @Input() search_type = '';
-    @Input() recursive = false;
+    @Input() recursive = undefined;
 
     @Input() parent_field: string;
     @Input() parent_id: string;
@@ -167,7 +167,7 @@ export class DocumentsComponent implements OnInit {
                 model: obj_this.res_model,
                 parent_field: obj_this.parent_field,
                 parent_id: obj_this.parent_id,
-                recursive: 1,
+                recursive: obj_this.recursive,
             }
         }
         // console.log(6565,133);
