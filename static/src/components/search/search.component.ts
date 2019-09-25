@@ -16,9 +16,18 @@ export class SearchComponent implements OnInit {
    }
 
    get_list(event, kw){
-    this.httpService.search_kw = $("#search_input").val();
-    kw= $("#search_input").val();
-    this.onsearch.emit(kw);
+     if(this.httpService.search_kw != $("#search_input").val() || this.httpService.search_kw==''){
+      this.httpService.search_kw = $("#search_input").val();
+      console.log("far ho gae");
+      this.httpService.search_kw = $("#search_input").val();
+      kw= $("#search_input").val();
+      this.onsearch.emit(kw);
+     }else{
+      console.log("ma ni labna");
+      return
+
+     }
+
   }
 
   ngOnInit() {
