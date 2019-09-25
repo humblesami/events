@@ -20,11 +20,14 @@ title="Surveys"></app-breadcrumb>
     </div>
     
 	<div class="container">
-		<div class="main-full-seachbar mb-3">
+        <app-search (onsearch)="get_list()"></app-search>
+        <!--
+        <div class="main-full-seachbar mb-3">
 			<input type="text"
-        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null"
-        placeholder="Search..."  class="form-control"/>
+            (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null"
+            placeholder="Search..."  class="form-control"/>
 		</div>
+        -->
         <div class="row">
             <div class="col col-md-6 col-lg-4 mb-4" *ngFor="let survey of records">
                 <div class="kanban-card position-relative">

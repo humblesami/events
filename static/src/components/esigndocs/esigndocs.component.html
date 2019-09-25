@@ -20,11 +20,14 @@ title="e-Signature"></app-breadcrumb>
     </div>
 
     <div class="container">
-		<div class="main-full-seachbar mb-3">
+    <app-search (onsearch)="get_list()"></app-search>
+    <!--
+        <div class="main-full-seachbar mb-3">
         <input type="text" 
         (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
         placeholder="Search..."  class="form-control"/>
 		</div>
+    -->
     <div class="cards">
 		<div class="row docwrappercontainer">
 			<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4"  *ngFor="let doc of records">
