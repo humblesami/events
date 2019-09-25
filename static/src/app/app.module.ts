@@ -79,7 +79,7 @@ import { UserlistComponent } from '../components/userlist/userlist.component';
 import { ActionsComponent } from '../components/actions/actions.component';
 import { ChatgroupComponent } from '../components/chatgroup/chatgroup.component';
 import { UserlistmodalComponent } from '../components/userlistmodal/userlistmodal.component';
-
+import { SearchComponent } from '../components/search/search.component';
 
 @NgModule({
     imports: [
@@ -150,6 +150,7 @@ import { UserlistmodalComponent } from '../components/userlistmodal/userlistmoda
         ActionsComponent,
         ChatgroupComponent,
         UserlistmodalComponent,
+        SearchComponent,
     ],
     providers:[
         AuthGuard,
