@@ -20,12 +20,48 @@
     <div class="container">
         <div class="main-full-seachbar mb-3 mt-3">
             <input type="text"
-            (keyup)="$event.keyCode == 13 ? search($event): null"
-            (change)="search($event)" 
+            [(ngModel)]="search_options.search_kw"
+            (keyup)="$event.keyCode == 13 ? search(): null"
+            (change)="search()" 
             placeholder="Search..."  class="form-control"/>
         </div>
+        <div class="search_options">
+            <span>
+                <input type="radio" name="search_type" 
+                (change)="search('files')"
+                [checked]="search_options.search_type == 'files'"
+                value="files"  />
+                <label>Files</label>
+            </span>
+            
+            <span>
+                <input type="radio" name="search_type" 
+                (change)="search('folders')"
+                [checked]="search_options.search_type == 'folders'"
+                value="folders"  />
+                <label>Folders</label>
+            </span>
+            
+            <span>
+                <input type="radio" name="search_type" 
+                (change)="search('all')"
+                [checked]="search_options.search_type == 'all'"
+                value="all"  />
+                <label>All</label>
+            </span>
+            
+            <span>
+                <input type="checkbox"
+                [checked]="search_options.recursive"
+                (change)="search('recursive')"
+                name="recursive" />
+                <label>Recursive</label>
+            </span>
+            
+        </div>
+        
 
-        <div class="sub_folders" *ngIf="!reloading && (search_type != 'files' || socketService.admin_mode)">
+        <div class="sub_folders" *ngIf="!reloading && search_options.search_type != 'files'">
             <div class="pb-3" >
                 <hr>
                 <div class="mt-3 HeadingWrap ResourcesHeadWrapper">
@@ -33,12 +69,13 @@
                 </div>
             </div>
             <app-folders
-            search_kw="{{last_kw}}"
+            search_kw="{{search_options.search_kw}}"
+            recursive="{{search_options.recursive}}"
+            search_type="{{search_options.search_type}}"
             (data_loaded)=data_loaded($event)
             parent_id="{{folder_id}}"></app-folders>
         </div>
-        
-        <div *ngIf="!reloading && (show_files || folder_id) && search_type != 'folders'">                
+        <div *ngIf="!reloading && (search_options.recursive || folder_id) && search_options.search_type != 'folders'">                
             <div class="row">
                 <div class="col-lg-12">
                     <div class="MainTitleHeadWrap ResourcesHeadWrapper">
@@ -49,11 +86,12 @@
                 </div>
             </div>
             <app-documents
-                search_kw="{{last_kw}}"
+                search_kw="{{search_options.search_kw}}"
+                recursive="{{search_options.recursive}}"
+                search_type="{{search_options.search_type}}"
                 parent_model="Folder" 
                 parent_field="folder_id" 
                 parent_id="{{folder_id}}"
-                show_files="{{show_files}}"
                 res_app="resources" res_model="ResourceDocument">
             </app-documents>
         </div>

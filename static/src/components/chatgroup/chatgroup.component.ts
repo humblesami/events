@@ -25,6 +25,6 @@ export class ChatgroupComponent implements OnInit {
     userlist_input = '';
     ngOnInit() {
         this.userlist_input = JSON.stringify(this.input_users);
-        console.log(this.input_users, 133);
+        // console.log(this.input_users, 133);
     }
 }

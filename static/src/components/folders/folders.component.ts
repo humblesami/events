@@ -12,8 +12,10 @@ declare var $:any;
     styleUrls: ['./folders.component.css']
 })
 export class FoldersComponent implements OnInit {
-    @Input() parent_id: number;
     @Input() search_kw = '';
+    @Input() search_type = '';
+    @Input() recursive = false;
+    @Input() parent_id: number;
     parent;
     records = [];
     message = '';
@@ -201,7 +203,11 @@ export class FoldersComponent implements OnInit {
     }
 
     ngOnInit() {
-        let obj_this = this;       
+        let obj_this = this;
+        if(obj_this.search_type == 'files')
+        {
+            return;
+        }
         obj_this.add_folder_create_button();
         if(this.parent_id)
         {

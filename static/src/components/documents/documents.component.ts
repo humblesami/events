@@ -13,6 +13,10 @@ declare var $:any;
 })
 export class DocumentsComponent implements OnInit {
     httpService: HttpService;
+    @Input() search_kw = '';
+    @Input() search_type = '';
+    @Input() recursive = false;
+
     @Input() parent_field: string;
     @Input() parent_id: string;
     @Input() parent_model: string;
@@ -21,7 +25,6 @@ export class DocumentsComponent implements OnInit {
     @Input() res_model: string;
     @Input() readonly: any;
     @Input() show_files: any;
-    @Input() search_kw = '';
 
     docs = [];
     users = [];
@@ -183,8 +186,15 @@ export class DocumentsComponent implements OnInit {
 
     ngOnInit() {
         let obj_this = this;
-        // console.log(44, obj_this.parent_id , 77, obj_this.show_files, 123);
-        if(!obj_this.parent_id && !obj_this.show_files)
+        // console.log(obj_this.search_type, obj_this.parent_id, obj_this.recursive);
+        if(
+            obj_this.search_type == 'folders'
+            
+            || 
+            (
+                (!obj_this.parent_id  && !obj_this.recursive)
+            )
+        )
         {
             return;
         }

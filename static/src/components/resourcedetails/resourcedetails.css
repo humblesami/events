@@ -10,6 +10,7 @@
     font-size: 0.85rem;
     font-weight: bold;
 }
+
 button.check-time-btn {
     display: none;
 	width: 30px;
@@ -29,3 +30,9 @@ button.check-time-btn {
 	display: inline-block;
 	margin-bottom: -6px;
 }	
+.search_options>span{
+	margin-right: 10px;
+}
+.search_options>span>label{
+	margin-left: 7px;
+}

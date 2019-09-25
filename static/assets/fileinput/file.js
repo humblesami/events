@@ -2,7 +2,7 @@ window['merge_cloud_files'] = [];
 function apply_drag_drop(input, resInfo, on_files_uploaded){    
     if(!input.length)
     {
-        console.log('invalid file input element');
+        // console.log('invalid file input element');
         return;
     }
 

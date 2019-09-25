@@ -107,8 +107,10 @@ class Folder(CustomModel):
                 folder = folder[0]
                 result['files'] = folder.search_folder(kw, user_id, [], 'files', recursive)
                 result['parents'] = cls.get_ancestors(cls, folder)
-                result['id'] = folder.id
-                result['name'] = folder.name
+                result['parents'].append({
+                    'id': folder.id,
+                    'name': folder.name
+                })
         elif recursive:
             result['files'] = cls.search_root(kw, user_id, [], 'files', recursive)
         return result
