@@ -80,8 +80,8 @@ export class EsignDocDetailsComponent implements OnInit {
                             obj_this.all_users_list = obj_this.users_list = obj_this.selected_respondents = result;
                         }, null)
                     }
-                    obj_this.add_users = false;
             }
+            obj_this.add_users = false;
         });
 
         // $('#select_user_modal').on('hidden.bs.modal', function (e) {
