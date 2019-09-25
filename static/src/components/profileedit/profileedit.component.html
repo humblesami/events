@@ -46,10 +46,11 @@
                         </div>
                         <div class="col-md-6">
                             <label for="birth_date"> <b>Date of Birth</b> </label>
-                            <input value="{{profile_data.birth_date}}" 
-                            (change)="modified_profile_data.birth_date = $event.target.value" 
-                            class="form-control rounded-0" data-date-format="YYYY-MM-DD"
-                            type="date" placeholder="Enter Date of Birth" id="birth_date">
+                            <input 
+                                value="{{profile_data.birth_date}}"
+                                name="birth_date" 
+                                class="form-control rounded-0 date" 
+                                placeholder="Enter Date of Birth" id="birth_date">
                         </div>
                         <div class="col-md-6">
                             <label for="location"> <b>Location</b> </label>
@@ -194,30 +195,31 @@
                             <label for="board_joining_date">
                                 <b>Board Joining Date</b>
                             </label>
-                            <input class="form-control rounded-0" 
-                            value="{{profile_data.board_joining_date}}" 
-                            (change)="modified_profile_data.board_joining_date = $event.target.value"
-                                type="date" data-date-format="YYYY-MM-DD" 
+                            <input 
+                                class="form-control rounded-0 date" 
+                                value="{{profile_data.board_joining_date}}" 
+                                name="board_joining_date"                                  
                                 placeholder="Enter Board Joining Date" 
                                 id="board_joining_date" required>
                         <div class="">
                             <label for="term_start_date">
                                 <b>Term Start Date</b>
                             </label>
-                                <input value="{{profile_data.term_start_date}}" 
-                                (change)="modified_profile_data.term_start_date = $event.target.value"
-                                class="form-control rounded-0" data-date-format="YYYY-MM-DD"  
-                                type="date" placeholder="Enter Term Start Date" 
-                                id="term_start_date" required>
+                                <input 
+                                    value="{{profile_data.term_start_date}}" 
+                                    name="term_start_date" 
+                                    class="form-control rounded-0 date"   
+                                    placeholder="Enter Term Start Date" 
+                                    id="term_start_date" required>
                         </div>
                         <div class="">
                             <label for="term_end_date">
                                 <b>Term End Date</b>
                             </label>
                             <input value="{{profile_data.term_end_date}}" 
-                            (change)="modified_profile_data.term_end_date = $event.target.value"
-                                class="form-control rounded-0" data-date-format="YYYY-MM-DD" 
-                                type="date" placeholder="Enter End Start Date" 
+                            name="term_end_date" 
+                                class="form-control rounded-0 date"  
+                                placeholder="Enter End Start Date" 
                                 id="term_end_date" required>
                         </div>
                         </div>

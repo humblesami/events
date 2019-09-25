@@ -204,7 +204,48 @@ export class ProfileeditComponent implements OnInit {
 			{
 				return ;
 			}
-			// $('.profile-edit-container:first input.date').Zebra_DatePicker();
+			var old_date_val = '';
+			$('.profile-edit-container:first input.date').datepicker({
+				dateFormat: "yy-mm-dd",
+				onSelect: function(dateText) {
+					$(this).change();
+				}
+			})
+			.focus(function(){
+				old_date_val = this.value;
+			})
+			.on("change", function(dateText) {
+				if(!this.value && !this.required)
+				{
+					obj_this.modified_profile_data[this.name] = '';
+					return;
+				}
+				var is_valid = false;
+				if(this.value)
+				{
+					var d = new Date(this.value);
+					var day = d.getDate();
+					var is_valid = !isNaN(d.getDate());
+					var ar = this.value.split('-');
+					// console.log(ar);
+					if (day == ar[ar.length - 1])
+					{
+						is_valid = true;
+					}
+					else{
+						is_valid = false;
+					}
+				}
+				if (!is_valid){
+					var error_label = $('<label class="alert-danger p-2">Given date '+ this.value+' is invalid</label>');
+					$(this).before(error_label);
+					error_label.delay(3000).fadeOut(500);
+					this.value = old_date_val;
+				}
+				else{
+					obj_this.modified_profile_data[this.name] = this.value;
+				}
+			});
 
 			obj_this.resume_drag_drop = true;
 			var file_input = $('input[name="add_resume"]');
@@ -462,7 +503,7 @@ export class ProfileeditComponent implements OnInit {
 		$('.edit_resume').trigger('click');
     }
     onCancel(){
-        this.activeModal.close('Close click');
+        this.activeModal.close();
     }
 
 
