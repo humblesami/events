@@ -86,7 +86,8 @@ export class DocumentsComponent implements OnInit {
         {
             return;
         }
-        let file_input = $('#dlc-file-picker');        
+        let file_input = $('#dlc-file-picker');   
+        console.log(file_input.length, 3333);     
         if(file_input.attr('dragdrop'))
         {
             return;
@@ -197,9 +198,13 @@ export class DocumentsComponent implements OnInit {
         setTimeout(function(){
             obj_this.on_admin_mode_changed()
         },10);
-        $(document).on('focus','.DocText input',function(){
-            this.select();
-        });
+        if(!window['DocText:focus'])
+        {
+            window['DocText:focus'] = 1;
+            $(document).on('focus','.DocText input',function(){
+                this.select();
+            });
+        }
     }
 
     ngOnDestroy(){

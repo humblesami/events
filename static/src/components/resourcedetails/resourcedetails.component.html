@@ -5,19 +5,19 @@
                 Resources
             </a>
         </li>
-        <li class="breadcrumb-item" *ngFor="let parent of folder.parents">                                                
+        <li class="breadcrumb-item" *ngFor="let parent of parents">                                                
             <a routerLink="/resource/{{parent.id}}">
                 {{parent.name}}
             </a>
         </li>
-        <li class="breadcrumb-item active">{{folder.name}}</li>
+        <li *ngIf="folder && folder.name" class="breadcrumb-item active">{{folder.name}}</li>
     </ul>
     <div class="edit-buttons" *ngIf="socketService.admin_mode">		
 	</div>
 </div>
 
 <div class="router-outlet"> 
-    <div class="container">
+    <div class="container" *ngIf="folder">
         <div class="main-full-seachbar mb-3">
             <input type="text" 
             (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 

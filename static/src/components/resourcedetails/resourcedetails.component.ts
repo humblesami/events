@@ -12,6 +12,7 @@ declare var $:any;
 
 export class ResourceDetailsComponent implements OnInit {
     folder: any;
+    parents = [];
     httpService: HttpService;
     socketService: SocketService;    
 
@@ -74,6 +75,7 @@ export class ResourceDetailsComponent implements OnInit {
                 if (parents && parents.length > 0) {
                     parents.reverse();
                 }
+                obj_this.parents = parents;
         }, (error: any) => {
             console.log(error);
         });
