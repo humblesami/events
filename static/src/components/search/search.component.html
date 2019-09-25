@@ -1,6 +1,7 @@
-    <div class="sub search container">        
+    <div class="sub search container" ng-blur="get_list($event, $event.target.value)">        
         <div class="input-group d-flex main-full-seachbar mb-3">
             <input id="search_input" type="text" [(ngModel)]="search_kw1"
+                (blur)="httpService.search_kw = $event.target.value; get_list($event, $event.target.value)"
                 (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list($event, $event.target.value): null"
                 placeholder="Search..." class="form-control py-2 border-right-0 border">
             <span class="">
