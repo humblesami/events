@@ -42,6 +42,10 @@ export class MessengerComponent implements OnInit {
             function registerChatEventListeners()
             {
                 obj_this.user = socketService.user_data;
+                socketService.server_events['chat_group_created'] = function(msg)
+                {
+                    obj_this.socketService.chat_groups.push(msg);
+                }
                 socketService.server_events['chat_message_received'] = function (msg) {
                     try{
                         // console.log(msg, 'chat_message_received');

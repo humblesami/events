@@ -274,7 +274,7 @@ export class SocketService {
             };
             obj_this.socket.on('server_event', function(res){
                 try{
-                    // console.log(res.name);
+                    // console.log(res.name);                    
                     if(!obj_this.server_events[res.name])
                     {
                         if(!obj_this.verified)
