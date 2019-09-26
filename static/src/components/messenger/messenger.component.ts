@@ -292,13 +292,8 @@ export class MessengerComponent implements OnInit {
             obj_this.selectedPeople = result.selectd_users;
             obj_this.create_chat_room();            
         };
-        let members = [];
-        if (obj_this.selected_chat_group && obj_this.selected_chat_group.members)
-        {
-            members = obj_this.selected_chat_group.members;
-        }
         var diaolog_options = {
-            selected_users: members,
+            selected_users: [],
             user_list: [],
             component: ChatgroupComponent,
             extra_input: {},
