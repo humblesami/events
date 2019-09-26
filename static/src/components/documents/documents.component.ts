@@ -3,6 +3,7 @@ import { HttpService } from 'src/app/http.service';
 import {SocketService} from "../../app/socket.service";
 import { RenameService } from 'src/app/rename.service';
 import { UserService } from 'src/app/user.service';
+import { ActivatedRoute } from '@angular/router';
 declare var $:any;
 
 
@@ -31,6 +32,7 @@ export class DocumentsComponent implements OnInit {
     roterLinkPrefix = '';
     show_renamer_button = false;
     selectedUsers = [];
+    parent = undefined;
     selected_docs = [];
     doc_types = {
         MeetingDocument: '/meeting/doc/',
@@ -48,6 +50,7 @@ export class DocumentsComponent implements OnInit {
         private renameSer: RenameService, 
         private userServ: UserService,
         private ss: SocketService,
+        private route: ActivatedRoute,
         public zone: NgZone) {
 
         this.httpService = httpServ;
@@ -173,13 +176,14 @@ export class DocumentsComponent implements OnInit {
         // console.log(6565,133);
         this.httpService.get(input_data, function(data){
             if(obj_this.parent_model == 'Folder'){
-                data = data.files;
+                var doc = data.files;
+                var parents = data.parents
             }
-            obj_this.on_result(data);
+            obj_this.on_result(doc, parents);
         }, null);
     }
 
-    on_result(data){
+    on_result(data,parents){
         let obj_this = this;
         obj_this.docs = data;
     }
@@ -202,6 +206,17 @@ export class DocumentsComponent implements OnInit {
         setTimeout(function(){
             obj_this.on_admin_mode_changed()
         },10);
+        
+        obj_this.parent_id = obj_this.route.snapshot.params.id;
+        if(obj_this.parent_id)
+        {
+            obj_this.parent = {
+                app:'resources',
+                model:'Folder',
+                id: obj_this.parent_id
+            }
+        }
+        
         if(!window['DocText:focus'])
         {
             window['DocText:focus'] = 1;
