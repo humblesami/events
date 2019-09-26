@@ -7,7 +7,7 @@ declare var $;
 
 @Injectable()
 export class SocketService {
-    
+
     io: any;
     socket:any;
     user_data: AppUser;
@@ -19,14 +19,14 @@ export class SocketService {
     user_photo = '';
     on_verified = [];
     verified = false;
-    iframe_url = true;    
+    iframe_url = true;
     not_public_url = 0;
     server_events = {};
     unseen_messages = 0;
 	notificationList = [];
-    current_id = undefined;	      
+    current_id = undefined;
     site_config = undefined;
-    current_model = undefined;    
+    current_model = undefined;
     video_call : VideoCall;
     is_messenger_max = false;
     site_url = '';
@@ -47,14 +47,14 @@ export class SocketService {
         this.site_config = window['site_config'];
         this.site_url = this.site_config.site_url;
         // console.log(this.site_url);
-        obj_this.video_call = new VideoCall(obj_this);        
-        
+        obj_this.video_call = new VideoCall(obj_this);
+
         if(!window['socket_manager'])
         {
             window['socket_manager'] = obj_this;
             // console.log(obj_this, 342);
         }
-        
+
         obj_this.server_url = obj_this.site_config.server_base_url;
         obj_this.media_url = obj_this.server_url + '/media';
         var res = window['js_utils'].is_public_route();
@@ -72,7 +72,7 @@ export class SocketService {
                 {
                     window['functions'].go_to_login();
                     return;
-                }            
+                }
                 // console.log(cuser, 1997);
                 if(cuser && cuser.token)
                 {
@@ -119,14 +119,14 @@ export class SocketService {
     connect_socket(authorized_user){
         var obj_this = this;
         if(!authorized_user)
-        {            
+        {
             console.log('Not authorized');
             return;
         }
         if(!authorized_user.photo)
-        {            
-            this.user_photo = this.media_url + '/profile/ETjUSr1v2n.png';
-        }        
+        {
+            this.user_photo = this.media_url + '/profile/default.png';
+        }
         else{
             this.user_photo = this.server_url + authorized_user.photo;
         }
@@ -163,7 +163,7 @@ export class SocketService {
         else
         {
             let admin_mode_obj = JSON.parse(admin_mode_cookie);
-            obj_this.admin_mode = admin_mode_obj['admin_mode'];            
+            obj_this.admin_mode = admin_mode_obj['admin_mode'];
             obj_this.actually_admin = true;
         }
         obj_this.user_data = authorized_user;
@@ -180,9 +180,9 @@ export class SocketService {
             console.log('Socket connection failed '+complete_server_url+' please run socket server is up');
         });
         obj_this.socket.on('connect',function(){
-            obj_this.socket.off('server_event');            
+            obj_this.socket.off('server_event');
             authorized_user.socket_id = obj_this.socket.id;
-            var socket_error = "Socket connection not established at "+ obj_this.site_config.chat_server + ' because ';            
+            var socket_error = "Socket connection not established at "+ obj_this.site_config.chat_server + ' because ';
             var options = {
                 url: obj_this.site_config.chat_server+'/verify_socket',
                 data: authorized_user,
@@ -204,13 +204,13 @@ export class SocketService {
                     }
                 },
                 error:function(a, b){
-                    socket_error += b.responseText;             
+                    socket_error += b.responseText;
                 },
                 complete:function(){
                     if(socket_error)
                     {
                         console.log(socket_error);
-                    }                    
+                    }
                 }
             };
             $.ajax(options);
@@ -226,7 +226,7 @@ export class SocketService {
                 }
                 if(data.user && data.friends)
                 {
-                    
+
                 }
                 else{
                     console.log('invalid user data ', data);
@@ -262,7 +262,7 @@ export class SocketService {
                 for(let i in data.notifications)
                 {
                     obj_this.add_item_in_notification_list(data.notifications[i], null);
-                }                
+                }
                 // console.log(1111, obj_this.notificationList);
                 obj_this.notificationList = obj_this.notificationList.reverse();
                 obj_this.registerEventListeners();
@@ -274,7 +274,7 @@ export class SocketService {
             };
             obj_this.socket.on('server_event', function(res){
                 try{
-                    // console.log(res.name);                    
+                    // console.log(res.name);
                     if(!obj_this.server_events[res.name])
                     {
                         if(!obj_this.verified)
@@ -287,17 +287,17 @@ export class SocketService {
                         {
                             console.log('Not handeled ', res.name);
                         }
-                    }                                
+                    }
                     else
                         obj_this.server_events[res.name](res.data);
-                    
+
                 }
                 catch(er)
-                {                            
+                {
                     console.log(er.message, ' in '+res.name+' with data ', res);
                 }
             });
-        });        
+        });
     }
 
     set_admin_mode(mode)
@@ -314,7 +314,7 @@ export class SocketService {
         this.chat_users.push(chat_cleint);
     }
 
-    execute_on_verified = function(method){        
+    execute_on_verified = function(method){
         if(this.verified)
             method();
         else
@@ -323,7 +323,7 @@ export class SocketService {
         }
     }
 
-    update_unseen_message_count(event, target: ChatClient) {        
+    update_unseen_message_count(event, target: ChatClient) {
         if(!target)
         {
             console.log('Selection failed for', target);
@@ -335,20 +335,20 @@ export class SocketService {
             console.log('Please ask to add unseen attribute for each friend from service developer of get_user_data');
         }
 		var inc = 0;
-        var obj_this = this;        		
-		try {			
+        var obj_this = this;
+		try {
             switch (event) {
                 case "receive-new-message":
                     inc = 1;
                     break;
                 case "read-new-message":
-                    inc = -1;                                        
-                    break;                
+                    inc = -1;
+                    break;
 				case "user-selected":
-					inc = target.unseen * -1;					
+					inc = target.unseen * -1;
                     break;
             }
-            
+
             target.unseen = target.unseen + inc;
 			obj_this.unseen_messages = obj_this.unseen_messages + inc;
 
@@ -361,7 +361,7 @@ export class SocketService {
 		} catch (er) {
 			console.log("update message count err no ", er);
 		}
-    }    
+    }
 
 	registerEventListeners(){
         var obj_this = this;
@@ -371,10 +371,10 @@ export class SocketService {
             bootbox.alert(res);
         };
 
-        obj_this.server_events['notification_received'] = function (res) {             
-            obj_this.add_item_in_notification_list(res, 1);            
+        obj_this.server_events['notification_received'] = function (res) {
+            obj_this.add_item_in_notification_list(res, 1);
         };
-        
+
         obj_this.server_events['notification_updated'] = function (res) {
             console.log('notifications updated')
         };
@@ -384,7 +384,7 @@ export class SocketService {
         };
         obj_this.server_events['cancelled'] = function(data){
             obj_this.video_call.cancelled(data);
-        };        
+        };
         obj_this.server_events['call_terminated'] = function(data){
             obj_this.video_call.terminated(data);
         };
@@ -397,7 +397,7 @@ export class SocketService {
         obj_this.server_events['started_by_caller'] = function(data){
             obj_this.video_call.started_by_caller(data);
         };
-        
+
 
         obj_this.server_events['error'] = function (res) {
             if(res == 'Invalid Token')
@@ -437,7 +437,7 @@ export class SocketService {
 	emit_server_event(input_data, args) {
         try{
             var options =
-            { 
+            {
                 data:{
                     params: input_data,
                     args : args
@@ -448,7 +448,7 @@ export class SocketService {
         catch(er)
         {
             console.log(er)
-        }        
+        }
 	}
 
     init_route(url){
@@ -487,11 +487,11 @@ export class SocketService {
             });
             let count = item.senders.length;
             let senders = item.senders[0].name;
-            
+
             for(var i=1; i<count -1;i++)
             {
                 senders +=', '+item.senders[i].name;
-            }        
+            }
             if(count > 1)
             {
                 senders += ' and '+item.senders[count -1].name;
@@ -499,8 +499,8 @@ export class SocketService {
             item.body = senders +' '+item.body;
         }
     }
-    
-    add_item_in_notification_list(item, on_receive) {        
+
+    add_item_in_notification_list(item, on_receive) {
         var obj_this = this;
         try{
             if(!item.body)
@@ -519,7 +519,7 @@ export class SocketService {
             console.log(er, 'Invalid notif text '+item.body);
             return;
         }
-        
+
         let route = obj_this.model_routes[item.address.res_app][item.address.res_model];
         if (item.address.info){
             if(item.address.info.file_type)
@@ -539,7 +539,7 @@ export class SocketService {
         if(on_receive)
         {
             for(var i in obj_this.notificationList)
-            {                
+            {
                 if(item.id == obj_this.notificationList[i].id)
                 {
                     obj_this.notificationList[i].body = item.body;
@@ -547,16 +547,16 @@ export class SocketService {
                     in_list = true;
                     break;
                 }
-            }            
+            }
         }
         if(!in_list)
-        {            
+        {
             obj_this.notificationList.push(item);
         }
     }
 
     remove_item_from_notification_list(i) {
-        this.notificationList.splice(i, 1);        
+        this.notificationList.splice(i, 1);
         setTimeout(function(){
             $('.notif:first').click();
             setTimeout(function(){
@@ -578,7 +578,7 @@ export class SocketService {
         }
         catch(er){
             return '';
-        }	
+        }
     }
 
     model_routes = {
@@ -592,8 +592,8 @@ export class SocketService {
             'PointAnnotation': '/doc'
         }
     }
-    
-    close_socket(){        
+
+    close_socket(){
         var socket = window['socket_manager'].socket;
 		if(socket && socket.connected){
 			socket.disconnect();

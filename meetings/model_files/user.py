@@ -202,7 +202,7 @@ class Profile(user_model, CustomModel):
     class Meta:
         verbose_name_plural = "Boardsheet  Users"
     name = models.CharField(max_length=200, default='', blank=True)
-    image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
+    image = models.ImageField(upload_to='profile/', default='profile/default.png', null=True)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(null=True, blank=True)
@@ -226,7 +226,7 @@ class Profile(user_model, CustomModel):
     admin_email = models.CharField(max_length=30, blank=True, null=True)
     admin_work_phone = models.CharField(max_length=30, blank=True, null=True)
     admin_fax = models.CharField(max_length=30, blank=True, null=True)
-    admin_image = models.ImageField(upload_to='profile/', default='profile/ETjUSr1v2n.png', null=True)
+    admin_image = models.ImageField(upload_to='profile/', default='profile/default.png', null=True)
     mail_to_assistant = models.BooleanField(blank=True, null=True)
     term_start_date = models.DateField(blank=True, null=True)
     term_end_date = models.DateField(blank=True, null=True)

@@ -8,8 +8,11 @@ node_modules
 *pycache*
 db.sqlite3
 db.*
-media
-media/*/
+!media/
+media/*
+!media/profile
+media/profile/*
+!media/profile/default.png
 */migrations
 */migrations/*
 */migrations/*.py

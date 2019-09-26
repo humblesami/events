@@ -10,7 +10,7 @@ from meetings.model_files.event import Event
 class News(CustomModel):
     name = models.CharField(max_length=200)
     description = models.TextField(default='', blank=True)
-    photo = models.ImageField(upload_to='home/', default='profile/ETjUSr1v2n.png')
+    photo = models.ImageField(upload_to='home/', default='profile/default.png')
 
     def __str__(self):
         return self.name
