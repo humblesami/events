@@ -121,6 +121,8 @@ export class FoldersComponent implements OnInit {
     create_folder_popup_config()
     {
         let obj_this = this;
+        var folders = obj_this.records;
+        console.log(folders);
         let config = {
             on_load: function(){
                 obj_this.load_create_folder_popup();
@@ -149,13 +151,19 @@ export class FoldersComponent implements OnInit {
                         params: input_data,
                         args: args
                     }
+                    // console.log(input_data, 323);
                     obj_this.httpService.get(final_input_data, function(data){
-                        $('#folder-error').hide();                        
-                        obj_this.zone.run(()=>{                            
-                            let temp = obj_this.records;
-                            temp.push(data);
-                            obj_this.records = temp;
-                        });
+                        $('#folder-error').hide();
+                        // console.log(data, 30006);
+                        let temp = [];
+                        for(var rec of folders)
+                        {
+                            temp.push({id: rec.id, name:rec.namem, parent: rec.parent});
+                        }
+                        temp.push(data);                            
+                        console.log(temp);
+                        obj_this.records = temp;
+                        // obj_this.zone.run(()=> {obj_this.records = temp;});
                     },function(err){
                         $('#folder-error').show()
                         $('#folder-error').text(err);
@@ -194,15 +202,19 @@ export class FoldersComponent implements OnInit {
         $('#signModal').modal('show');
     }
 
-    add_folder_create_button(){        
-        if($('#create_new_folder').length || !this.socketService.admin_mode)
+    add_folder_create_button(){
+        $('#create_new_folder').remove();
+        if(!this.socketService.admin_mode)
         {
             return;
-        }
-        let obj_this = this;
+        }        
+        let obj_this = this;        
         var create_button = $('<button class="btn btn-primary" id="create_new_folder">Create Folder</button>');        
-        create_button.click(function(){            
+        var on_create_click = function(){
             obj_this.create_folder_popup_config();
+        }
+        create_button.click(function(){            
+            on_create_click();
         });
         var edit_buttons = $('<div class="edit-buttons"></div>');        
         $('.breadcrumbSection:first').append(edit_buttons);
