@@ -24,7 +24,7 @@ export class FoldersComponent implements OnInit {
     new_folder = undefined;
     show_renamer_button = false;
     modified_folder_data =undefined;
-    
+
     heading = 'Resources';
     bread_crumb = {
         items: [],
@@ -36,15 +36,15 @@ export class FoldersComponent implements OnInit {
     renameService: RenameService;
 
     constructor(private httpServ: HttpService,
-        private renameSer: RenameService, 
-        private userServ: UserService,        
+        private renameSer: RenameService,
+        private userServ: UserService,
         private zone: NgZone,
         private route: ActivatedRoute,
-        private socketService: SocketService) {        
-            let obj_this = this;            
+        private socketService: SocketService) {
+            let obj_this = this;
             obj_this.httpService = httpServ;
             obj_this.userService = userServ;
-            obj_this.renameService = renameSer;            
+            obj_this.renameService = renameSer;
     }
 
     delete_folder(evn, folder_id, folder_total_files)
@@ -62,7 +62,7 @@ export class FoldersComponent implements OnInit {
         if(!dr)
             {
                 return;
-            }            
+            }
             let input_data = {
                 folder_id: folder_id,
             }
@@ -76,14 +76,14 @@ export class FoldersComponent implements OnInit {
                 args: args
             }
 
-            obj_this.httpService.get(final_input, (data)=>{                        
+            obj_this.httpService.get(final_input, (data)=>{
                 obj_this.records =  obj_this.records.filter((el)=>{
                     return folder_id != el.id;
                 });
             }, null);
         });
     }
-    
+
     get_list()
     {
         let obj_this = this;
@@ -91,7 +91,7 @@ export class FoldersComponent implements OnInit {
             app: 'resources',
             model: 'Folder',
             method: 'search_folders'
-        }			
+        }
         let final_input_data = {
             params: {
                 parent_id: obj_this.parent_id,
@@ -127,7 +127,7 @@ export class FoldersComponent implements OnInit {
             on_load: function(){
                 obj_this.load_create_folder_popup();
             },
-            on_save:function(){						
+            on_save:function(){
                 obj_this.new_folder = $('#new_folder').val();
                 if(!obj_this.new_folder)
                 {
@@ -160,7 +160,7 @@ export class FoldersComponent implements OnInit {
                         {
                             temp.push({id: rec.id, name:rec.namem, parent: rec.parent});
                         }
-                        temp.push(data);                            
+                        temp.push(data);
                         // console.log(temp);
                         obj_this.records = temp;
                         // obj_this.zone.run(()=> {obj_this.records = temp;});
@@ -173,9 +173,9 @@ export class FoldersComponent implements OnInit {
             hide:1,
         }
         window['init_popup'](config);
-    }    
-    
-    load_create_folder_popup(){        
+    }
+
+    load_create_folder_popup(){
         $('#signModal .modal-body').html(`
             <input type="text" name="new_folder" id="new_folder"
             placeholder="Please Enter Folder Name"
@@ -207,27 +207,27 @@ export class FoldersComponent implements OnInit {
         if(!this.socketService.admin_mode)
         {
             return;
-        }        
-        let obj_this = this;        
-        var create_button = $('<button class="btn btn-primary" id="create_new_folder">Create Folder</button>');        
+        }
+        let obj_this = this;
+        var create_button = $('<button class="btn btn-primary" id="create_new_folder">Create Folder</button>');
         var on_create_click = function(){
             obj_this.create_folder_popup_config();
         }
-        create_button.click(function(){            
+        create_button.click(function(){
             on_create_click();
         });
-        var edit_buttons = $('<div class="edit-buttons"></div>');        
+        var edit_buttons = $('<div class="edit-buttons"></div>');
         $('.breadcrumbSection:first').append(edit_buttons);
         edit_buttons.append(create_button);
     }
 
     ngOnInit() {
         let obj_this = this;
+        obj_this.add_folder_create_button();
         if(obj_this.search_type == 'files')
         {
             return;
         }
-        obj_this.add_folder_create_button();
         obj_this.parent_id = obj_this.route.snapshot.params.id;
         if(obj_this.parent_id)
         {
@@ -238,7 +238,7 @@ export class FoldersComponent implements OnInit {
             }
         }
         this.get_list();
-        obj_this.socketService.call_backs_on_mode_changed['handle_folder_create'] = function(){            
+        obj_this.socketService.call_backs_on_mode_changed['handle_folder_create'] = function(){
             if(obj_this.socketService.admin_mode)
             {
                 $('#create_new_folder').remove();
