@@ -77,6 +77,8 @@ class Folder(CustomModel):
         parent_id = params.get('parent_id')
         user_id = request.user.id
         recursive = params.get('recursive')
+        if recursive == 'false':
+            recursive = None
         kw = params.get('kw')
         if not kw:
             kw = ''
@@ -98,6 +100,8 @@ class Folder(CustomModel):
         parent_id = params.get('parent_id')
         user_id = request.user.id
         recursive = params.get('recursive')
+        if recursive == 'false':
+            recursive = None
         kw = params.get('kw')
         if not kw:
             kw = ''
@@ -109,7 +113,7 @@ class Folder(CustomModel):
                 result['parents'] = cls.get_ancestors(cls, folder)
                 result['parents'].append({
                     'id': folder.id,
-                    'name': folder.name
+                    'name': folder.name,
                 })
         elif recursive:
             result['files'] = cls.search_root(kw, user_id, [], 'files', recursive)
@@ -134,11 +138,12 @@ class Folder(CustomModel):
     def search_folder(self, kw, user_id, results, search_type, recursive=False):
         obj = self
         if search_type == 'files':
-            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name')
+            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token')
             for file in files:
                 results.append({
                     'id': file['id'],
                     'name': file['name'],
+                    'access_token': file['access_token']
                 })
         if search_type == 'folders' or recursive:
             folders = obj.folder_set.filter(users__id=user_id)

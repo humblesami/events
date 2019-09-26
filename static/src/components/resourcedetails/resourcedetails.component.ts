@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SocketService } from 'src/app/socket.service';
-// declare var $:any;
+declare var $:any;
 
 @Component({
     selector: 'app-resourcedetails',
@@ -14,6 +14,7 @@ export class ResourceDetailsComponent implements OnInit {
     parents = [];
     folder : any;
     reloading = true;
+    advance_search = false;
     search_options = {
         search_type : 'folders',
         recursive : false,
@@ -22,22 +23,7 @@ export class ResourceDetailsComponent implements OnInit {
     cookie_key = 'resources/root/search';
     constructor(private route: ActivatedRoute, public socketService: SocketService){
         let obj_this = this;
-        let is_not_root = obj_this.route.snapshot.params.id;
-        if(is_not_root)
-        {
-            obj_this.cookie_key = 'resources/inner/search';
-        }
-        let search_options_cookie = localStorage.getItem(obj_this.cookie_key);
-        if(search_options_cookie)
-        {
-            this.search_options = JSON.parse(search_options_cookie);
-        }
-        else{
-            if(is_not_root)
-            {
-                this.search_options.search_type = 'all';
-            }
-        }
+        obj_this.advance_search_toggled(true);
         obj_this.search_options.search_kw = '';
         // console.log(obj_this.search_options, obj_this.cookie_key);
         obj_this.route.params.subscribe(params => {            
@@ -54,10 +40,57 @@ export class ResourceDetailsComponent implements OnInit {
         this.parents = data.parents;
     }
 
+    advance_search_toggled(on_init=false){
+        let obj_this = this;
+        let is_not_root = obj_this.route.snapshot.params.id;
+        if(obj_this.advance_search)
+        {
+            $('.resources .search_options:first').show();
+            if(is_not_root)
+            {
+                obj_this.cookie_key = 'resources/inner/search';
+            }
+            let search_options_cookie = localStorage.getItem(obj_this.cookie_key);
+            if(search_options_cookie)
+            {
+                this.search_options = JSON.parse(search_options_cookie);
+            }
+            else{
+                localStorage.setItem(obj_this.cookie_key, JSON.stringify(search_options_cookie))
+                if(is_not_root)
+                {
+                    this.search_options.search_type = 'all';
+                }
+            }
+        }
+        else{
+            $('.resources .search_options:first').hide();
+        }
+    }
+
     search(search_type=undefined){
         let obj_this = this;
         obj_this.reloading = true;
-        if(search_type)
+        if(!obj_this.advance_search)
+        {
+            let is_not_root = obj_this.route.snapshot.params.id;
+            if(is_not_root)
+            {
+                obj_this.search_options = {
+                    search_type : 'all',
+                    recursive : false,
+                    search_kw : obj_this.search_options.search_kw,
+                }
+            }
+            else{
+                obj_this.search_options = {
+                    search_type : 'folders',
+                    recursive : false,
+                    search_kw : obj_this.search_options.search_kw,
+                }
+            }
+        }
+        else if (search_type)
         {
             if(search_type == 'recursive')
             {
@@ -76,7 +109,7 @@ export class ResourceDetailsComponent implements OnInit {
             }
             localStorage.setItem(obj_this.cookie_key, JSON.stringify(obj_this.search_options));
         }
-        // console.log(obj_this.search_options, 455);
+        console.log(obj_this.search_options, obj_this.advance_search, 455);
         setTimeout(function(){
             obj_this.folder_id = obj_this.route.snapshot.params.id;
             obj_this.reloading = false;

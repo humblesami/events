@@ -29,10 +29,13 @@ button.check-time-btn {
 	width: 70%;
 	display: inline-block;
 	margin-bottom: -6px;
-}	
-.search_options>span{
+}
+.resources .search_options{
+    display: none;
+}
+.resources .search_options>span{
 	margin-right: 10px;
 }
-.search_options>span>label{
+.resources .search_options>span>label{
 	margin-left: 10px;
 }

@@ -17,14 +17,28 @@
 </div>
 
 <div class="router-outlet">
-    <div class="container">
-        <div class="main-full-seachbar mb-3 mt-3">
-            <input type="text"
-            [(ngModel)]="search_options.search_kw"
-            (keyup)="$event.keyCode == 13 ? search(): null"
-            (change)="search()" 
-            placeholder="Search..."  class="form-control"/>
+    <div class="container resources">
+        
+        <div class="sub search pt-4">
+            <div class="input-group d-flex main-full-seachbar mb-3">
+                <input id="search_input" type="text" [(ngModel)]="search_options.search_kw"
+                    (change)="search()"
+                    (keyup)="$event.keyCode == 13 ? search(): null"
+                    placeholder="Search..." class="form-control py-2 border-right-0 border">
+                <span class="">
+                    <button class="btn bg-white border-left-0 border" 
+                    (click)="advance_search=!advance_search;advance_search_toggled()">
+                        <i class="fa fa-home text-muted"></i>
+                    </button>
+
+                    <button class="btn bg-white border-left-0 border" 
+                    (click)="search()">
+                        <i class="fa fa-search text-muted"></i>
+                    </button>                    
+                </span>
+            </div>
         </div>
+
         <div class="search_options">
             <span>
                 <input type="radio" name="search_type" 
