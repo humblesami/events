@@ -135,7 +135,7 @@ export class FoldersComponent implements OnInit {
                 {
                     let input_data = {
                         name: obj_this.new_folder,
-                        parent_id : obj_this.parent_id,
+                        parent_id : obj_this.route.snapshot.params.id,
                     }
                     let args = {
                         app: 'resources',
@@ -209,12 +209,12 @@ export class FoldersComponent implements OnInit {
             return;
         }
         obj_this.add_folder_create_button();
-        if(this.parent_id)
+        if(obj_this.parent_id)
         {
-            this.parent = {
+            obj_this.parent = {
                 app:'resources',
                 model:'Folder',
-                id: this.parent_id
+                id: obj_this.parent_id
             }
         }
         this.get_list();
