@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, NgZone } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
 import { RenameService } from 'src/app/rename.service';
@@ -38,9 +38,10 @@ export class FoldersComponent implements OnInit {
     constructor(private httpServ: HttpService,
         private renameSer: RenameService, 
         private userServ: UserService,        
+        private zone: NgZone,
         private route: ActivatedRoute,
         private socketService: SocketService) {        
-            let obj_this = this;
+            let obj_this = this;            
             obj_this.httpService = httpServ;
             obj_this.userService = userServ;
             obj_this.renameService = renameSer;            
@@ -133,10 +134,12 @@ export class FoldersComponent implements OnInit {
                 }
                 else
                 {
+                    obj_this.parent_id = obj_this.route.snapshot.params.id;
                     let input_data = {
                         name: obj_this.new_folder,
                         parent_id : obj_this.parent_id,
-                    }
+                    };
+
                     let args = {
                         app: 'resources',
                         model: 'Folder',
@@ -147,8 +150,12 @@ export class FoldersComponent implements OnInit {
                         args: args
                     }
                     obj_this.httpService.get(final_input_data, function(data){
-                        $('#folder-error').hide();
-                        obj_this.records.push(data);
+                        $('#folder-error').hide();                        
+                        obj_this.zone.run(()=>{                            
+                            let temp = obj_this.records;
+                            temp.push(data);
+                            obj_this.records = temp;
+                        });
                     },function(err){
                         $('#folder-error').show()
                         $('#folder-error').text(err);
@@ -176,7 +183,7 @@ export class FoldersComponent implements OnInit {
             }
             if(!$(this).val())
             {
-                $('#folder-error').show()
+                $('#folder-error').show();
                 $('#folder-error').text('Enter Valid Name.');
             }
             else
