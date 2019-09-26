@@ -161,7 +161,7 @@ export class FoldersComponent implements OnInit {
                             temp.push({id: rec.id, name:rec.namem, parent: rec.parent});
                         }
                         temp.push(data);                            
-                        console.log(temp);
+                        // console.log(temp);
                         obj_this.records = temp;
                         // obj_this.zone.run(()=> {obj_this.records = temp;});
                     },function(err){
@@ -238,7 +238,7 @@ export class FoldersComponent implements OnInit {
             }
         }
         this.get_list();
-        obj_this.socketService.call_backs_on_mode_changed['handle_folder_create'] = function(){
+        obj_this.socketService.call_backs_on_mode_changed['handle_folder_create'] = function(){            
             if(obj_this.socketService.admin_mode)
             {
                 $('#create_new_folder').remove();
@@ -248,5 +248,8 @@ export class FoldersComponent implements OnInit {
                 $('#create_new_folder').remove();
             }
         }
+    }
+    ngOnDestroy(){
+        delete this.socketService.call_backs_on_mode_changed['handle_folder_create'];
     }
 }

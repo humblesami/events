@@ -106,7 +106,10 @@ export class SocketService {
         let obj_this = this;
         for(let fun_name in obj_this.call_backs_on_mode_changed)
         {
-            obj_this.call_backs_on_mode_changed[fun_name]();
+            if(obj_this.call_backs_on_mode_changed[fun_name])
+            {
+                obj_this.call_backs_on_mode_changed[fun_name]();
+            }
         }
         for (var key in obj_this.doc_objects)
         {
@@ -473,7 +476,6 @@ export class SocketService {
                     selected: true
                 })
             }
-
         }
         
         modalRef.componentInstance.user_input_str = JSON.stringify(dialog_options.user_list);

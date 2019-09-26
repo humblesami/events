@@ -15,16 +15,12 @@ export class ResourceDetailsComponent implements OnInit {
     folder : any;
     reloading = true;
     advance_search = false;
-    search_options = {
-        search_type : 'folders',
-        recursive : false,
-        search_kw : '',
-    }
+    search_options = undefined;
     cookie_key = 'resources/root/search';
     constructor(private route: ActivatedRoute, public socketService: SocketService){
         let obj_this = this;
+        obj_this.seat_default_options();
         obj_this.advance_search_toggled(true);
-        obj_this.search_options.search_kw = '';
         // console.log(obj_this.search_options, obj_this.cookie_key);
         obj_this.route.params.subscribe(params => {            
             obj_this.reloading = true;
@@ -46,27 +42,36 @@ export class ResourceDetailsComponent implements OnInit {
         if(obj_this.advance_search)
         {
             $('.resources .search_options:first').show();
-            $('.bold-setting').addClass('text-primary').removeClass('text-muted small');
-            if(is_not_root)
-            {
-                obj_this.cookie_key = 'resources/inner/search';
-            }
-            let search_options_cookie = localStorage.getItem(obj_this.cookie_key);
-            if(search_options_cookie)
-            {
-                this.search_options = JSON.parse(search_options_cookie);
-            }
-            else{
-                localStorage.setItem(obj_this.cookie_key, JSON.stringify(search_options_cookie))
-                if(is_not_root)
-                {
-                    this.search_options.search_type = 'all';
-                }
-            }
+            $('.bold-setting').addClass('text-primary').removeClass('text-muted small');            
         }
         else{
             $('.resources .search_options:first').hide();
             $('.bold-setting').addClass('text-muted small').removeClass('text-primary');
+        }
+    }
+
+    seat_default_options(){
+        let obj_this = this;
+        let is_not_root = obj_this.route.snapshot.params.id;
+        if(is_not_root)
+        {
+            var prev_phrase = '';
+            if(obj_this.search_options && obj_this.search_options.search_kw)
+            {
+                prev_phrase = obj_this.search_options.search_kw;
+            }
+            obj_this.search_options = {
+                search_type : 'all',
+                recursive : false,
+                search_kw : prev_phrase,
+            }
+        }
+        else{
+            obj_this.search_options = {
+                search_type : 'folders',
+                recursive : false,
+                search_kw : prev_phrase,
+            }
         }
     }
 
@@ -75,22 +80,7 @@ export class ResourceDetailsComponent implements OnInit {
         obj_this.reloading = true;
         if(!obj_this.advance_search)
         {
-            let is_not_root = obj_this.route.snapshot.params.id;
-            if(is_not_root)
-            {
-                obj_this.search_options = {
-                    search_type : 'all',
-                    recursive : false,
-                    search_kw : obj_this.search_options.search_kw,
-                }
-            }
-            else{
-                obj_this.search_options = {
-                    search_type : 'folders',
-                    recursive : false,
-                    search_kw : obj_this.search_options.search_kw,
-                }
-            }
+            obj_this.seat_default_options();
         }
         else if (search_type)
         {
@@ -111,7 +101,7 @@ export class ResourceDetailsComponent implements OnInit {
             }
             localStorage.setItem(obj_this.cookie_key, JSON.stringify(obj_this.search_options));
         }
-        console.log(obj_this.search_options, obj_this.advance_search, 455);
+        // console.log(obj_this.search_options, obj_this.advance_search, 455);
         setTimeout(function(){
             obj_this.folder_id = obj_this.route.snapshot.params.id;
             obj_this.reloading = false;
