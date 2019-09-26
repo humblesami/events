@@ -7,7 +7,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./chatgroup.component.css']
 })
 export class ChatgroupComponent implements OnInit {
-    @Input() input_users_str = '';
+    @Input() user_input_str = '';
     @Input() selection_input_str = '';
     @Input() group_name = '';
     constructor(public activeModal: NgbActiveModal) {
