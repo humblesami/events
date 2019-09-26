@@ -42,3 +42,7 @@
     background: #4B74B5 !important; 
     border-radius: 0px !important;
 }
+
+.disabled_row{
+    background-color: rgb(240, 240, 240);
+}

@@ -456,6 +456,24 @@ export class SocketService {
                     image: usr.photo,
                 })
             }
+            let user_cookie = localStorage.getItem('user');                
+            let cuser = undefined;
+            if(user_cookie)
+            {
+                cuser = JSON.parse(user_cookie);
+            }
+            if (cuser)
+            {
+                dialog_options.user_list.unshift({
+                    id: cuser.id,
+                    name: cuser.name,
+                    email: cuser.email,
+                    image: cuser.photo,
+                    disabled: true,
+                    selected: true
+                })
+            }
+
         }
         
         modalRef.componentInstance.user_input_str = JSON.stringify(dialog_options.user_list);
