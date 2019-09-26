@@ -393,6 +393,7 @@ class ChatGroup(models.Model):
     name = models.CharField(max_length=100)
     members = models.ManyToManyField(Profile, related_name='chat_groups')
     active = models.BooleanField(default=True)
+    owner = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL, related_name='group_owner', related_query_name='group_owner')
     create_time = models.DateTimeField(null=True, auto_now_add=True)
     created_by = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
 
@@ -410,7 +411,8 @@ class ChatGroup(models.Model):
                 me_added = True
         chat_group = ChatGroup(
             name=params['name'],
-            created_by_id=uid
+            created_by_id=uid,
+            owner_id = uid
         )
         chat_group.save()
         if not me_added:
@@ -536,7 +538,13 @@ class ChatGroup(models.Model):
         member_id = params['member_id']
         group_id = params['group_id']
         chat_group = ChatGroup.objects.get(pk=group_id)
-        all_member_set = set(chat_group.members.all())
+        all_member = chat_group.members.all()
+        if chat_group.owner:
+            if member_id == chat_group.owner_id:
+                new_owner = all_member.order_by('-created_at')[0]
+                chat_group.owner = new_owner
+                chat_group.save
+        all_member_set = set(all_member)
         removed_member_set = set(Profile.objects.filter(id=member_id))
         remaining_members = all_member_set - removed_member_set
         chat_group.members.set(remaining_members)
