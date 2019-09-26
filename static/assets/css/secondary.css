@@ -110,6 +110,8 @@ input[type=checkbox]#mail-to-assistant {
     margin: 5px 5px;
     top: -3px;
 }
+
+.search_options input[type=checkbox],
 .edit_mode input[type=checkbox]{
     -webkit-appearance: none;
     border: 2px solid #4B74B5;
@@ -119,12 +121,25 @@ input[type=checkbox]#mail-to-assistant {
     position: relative;
     margin: 0px 5px -5px 0px;
 }
-.edit_mode input[type=checkbox]:checked:after {
+.search_options input[type=checkbox]{
+    border: 0;
+    margin: 0px 0px -2px 0px;
+    box-shadow: 0 0 0 2px #5869f3;
+    padding: 8px;
+}
+.search_options input[type=checkbox]:checked:after,
+.edit_mode input[type=checkbox]:checked:after
+ {
     content: '\2714';
     position: absolute;
     top: 0px;
     left: 3px;
     color: #4B74B5;
+}
+.search_options input[type=checkbox]:checked:after{
+    color: #5869f3;
+    top: -2px;
+    left: 2px;
 }
 .respons-margin{
     margin-top: 2px !important;
