@@ -548,6 +548,7 @@ class ChatGroup(models.Model):
                 new_owner = all_member[0]
                 chat_group.owner = new_owner
                 chat_group.owner.save()
+        chat_group.save()
         return 'done'
 
     @classmethod
