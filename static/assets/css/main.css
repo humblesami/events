@@ -675,9 +675,9 @@ a.kanban-committees-info-box-name {
 /* Responsive */
 
 @media (max-width: 575px) {
-	.DocumentWrapper {
+	/* .DocumentWrapper {
 		margin-left: 13px;
-		}
+		} */
 	}
 /*
 @media (min-width: 576px){

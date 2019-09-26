@@ -37,42 +37,43 @@
                     </button>                    
                 </span>
             </div>
+            <div class="search_options popup">
+                <span>
+                    <input type="radio" name="search_type" 
+                    (change)="search('files')"
+                    [checked]="search_options.search_type == 'files'"
+                    value="files"  />
+                    <label>Files</label>
+                </span>
+                
+                <span>
+                    <input type="radio" name="search_type" 
+                    (change)="search('folders')"
+                    [checked]="search_options.search_type == 'folders'"
+                    value="folders"  />
+                    <label>Folders</label>
+                </span>
+                
+                <span>
+                    <input type="radio" name="search_type" 
+                    (change)="search('all')"
+                    [checked]="search_options.search_type == 'all'"
+                    value="all"  />
+                    <label>All</label>
+                </span>
+                
+                <span>
+                    <input type="checkbox"
+                    [checked]="search_options.recursive"
+                    (change)="search('recursive')"
+                    name="recursive" />
+                    <label>Recursive</label>
+                </span>
+                
+            </div>
         </div>
 
-        <div class="search_options">
-            <span>
-                <input type="radio" name="search_type" 
-                (change)="search('files')"
-                [checked]="search_options.search_type == 'files'"
-                value="files"  />
-                <label>Files</label>
-            </span>
-            
-            <span>
-                <input type="radio" name="search_type" 
-                (change)="search('folders')"
-                [checked]="search_options.search_type == 'folders'"
-                value="folders"  />
-                <label>Folders</label>
-            </span>
-            
-            <span>
-                <input type="radio" name="search_type" 
-                (change)="search('all')"
-                [checked]="search_options.search_type == 'all'"
-                value="all"  />
-                <label>All</label>
-            </span>
-            
-            <span>
-                <input type="checkbox"
-                [checked]="search_options.recursive"
-                (change)="search('recursive')"
-                name="recursive" />
-                <label>Recursive</label>
-            </span>
-            
-        </div>
+       
         
 
         <div class="sub_folders" *ngIf="!reloading && search_options.search_type != 'files'">
@@ -90,15 +91,12 @@
             parent_id="{{folder_id}}"></app-folders>
         </div>
         <div *ngIf="!reloading && (search_options.recursive || folder_id) && search_options.search_type != 'folders'">                
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="MainTitleHeadWrap ResourcesHeadWrapper">
-                        <div class="HeadingWrap">
+            <div class="pb-3" >
+                    <hr>
+                    <div class="mt-3 HeadingWrap ResourcesHeadWrapper">
                             <i class="icon-doc-file"></i> Files
-                        </div>
                     </div>
                 </div>
-            </div>
             <app-documents
                 search_kw="{{search_options.search_kw}}"
                 recursive="{{search_options.recursive}}"

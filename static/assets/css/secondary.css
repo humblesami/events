@@ -343,3 +343,6 @@ mention-list.dropup{
     padding: 0;
 
 }
+.popup{
+    z-index: 3;
+}
