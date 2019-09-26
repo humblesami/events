@@ -24,10 +24,12 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     if (!input_type)
     {
         input_type = 'document';
+        input.attr('accept', '.pdf,.doc,.docx,.html,.xls,.pptx,.ppt,.txt');
     }
     else
     {
         input_type = 'image';
+        input.attr('accept', '.png,.jpg,.jpeg');
     }
     if(multiple)
     {
