@@ -7,7 +7,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./chatgroup.component.css']
 })
 export class ChatgroupComponent implements OnInit {
-    @Input() input_users = [];
+    @Input() input_users_str = '';
+    @Input() selection_input_str = '';
     @Input() group_name = '';
     constructor(public activeModal: NgbActiveModal) {
         
@@ -22,9 +23,7 @@ export class ChatgroupComponent implements OnInit {
         this.activeModal.close({group_name: obj_this.group_name, selectd_users: this.selected_users});
     }
 
-    userlist_input = '';
     ngOnInit() {
-        this.userlist_input = JSON.stringify(this.input_users);
-        // console.log(this.input_users, 133);
+        
     }
 }

@@ -6,10 +6,10 @@
         </div>
         <div class="roster">
             <div class="MeetingBtnWrapper">
-                <div class="btn-group">
-                    <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
-                    <a class="btn" (click)="all_available_users($event.target)">Available</a>
+                <div class="btn-group user-types">
                     <a class="btn active" (click)="all_profile_users($event.target)">All Users</a>
+                    <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
+                    <a class="btn" (click)="all_available_users($event.target)">Available</a>                    
                 </div>
             </div>
             <div class="container">
@@ -27,12 +27,14 @@
                 </div>
             </div>  
             <div class="container group-height">  
-                <div class="row mb-2 align-items-center" (click)="toggle_user_selection(obj)" *ngFor="let obj of users">
+                <div class="row mb-2 align-items-center"
+                *ngFor="let obj of shown_users"
+                (click)="toggle_user_selection(obj)">
                     <div class="col-9 p-0">
                         <div class="d-flex">
                             <div class="w-70">
                                 <div class="img-flex img-circle">
-                                    <img src="{{socketService.server_url}}/media/{{obj.image}}"/>
+                                    <img src="{{socketService.server_url}}{{obj.image}}"/>
                                 </div>
                             </div>
                             <div class="w-75">

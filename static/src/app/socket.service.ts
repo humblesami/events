@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { VideoCall } from '../app/models/video_call';
 import { Router, ActivatedRouteSnapshot } from "@angular/router";
 import { ChatGroup, ChatUser, AppUser, ChatClient } from '../app/models/chat';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 declare var $;
 
 
@@ -41,7 +42,10 @@ export class SocketService {
         })
     }
 
-    constructor(private router: Router, public zone: NgZone) {
+    constructor(private router: Router
+        , private modalService: NgbModal
+        , public zone: NgZone
+        ) {
         window['dynamic_files'] = []
         var obj_this = this;
         this.site_config = window['site_config'];
@@ -423,6 +427,53 @@ export class SocketService {
             window['on_annotation_comment_received'](data);
         };
     };
+
+    user_selection_dialog(dialog_options){
+        let obj_this = this;
+        var selected_users = [];
+        if(dialog_options.selected_users.length)
+        {
+            dialog_options.selected_users.forEach(function(usr){
+                selected_users.push({
+                    id: usr.id,
+                    name: usr.name,
+                    email: '',
+                    image: usr.photo,
+                })
+            });
+        }
+        
+        // console.log(ar);
+        const modalRef = obj_this.modalService.open(dialog_options.component, { backdrop: 'static' });        
+        if(!dialog_options.user_list.length)
+        {
+            for(var usr of obj_this.chat_users)
+            {
+                dialog_options.user_list.push({
+                    id: usr.id,
+                    name: usr.name,
+                    email: '',
+                    image: usr.photo,
+                })
+            }
+        }
+        
+        modalRef.componentInstance.user_input_str = JSON.stringify(dialog_options.user_list);
+        modalRef.componentInstance.selection_input_str = JSON.stringify(selected_users);
+        if(dialog_options.extra_input)
+        {
+            for(var key in dialog_options.extra_input)
+            {
+                modalRef.componentInstance[key] = dialog_options.extra_input[key];
+            }
+        }        
+        
+        modalRef.result.then((result) => {
+            if (result){
+                dialog_options.call_back(result);
+            }
+        });
+    }
 
     emit_rtc_event(event_name, data, audience)
     {

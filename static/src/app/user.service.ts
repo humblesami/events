@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { SocketService } from './socket.service';
+import { UserlistmodalComponent } from 'src/components/userlistmodal/userlistmodal.component';
 
 declare var $: any
 
@@ -12,8 +13,6 @@ export class UserService {
     constructor(private httpService:HttpService, private socketService: SocketService) {
         
     }
-
-
     private users = [];
     selected_object;
     valid_users = [];
@@ -25,10 +24,10 @@ export class UserService {
         this.users = list;
     }
 
-    saveusers(){
+    saveusers(selected_users){
         let obj_this = this;        
         var user_ids = [];        
-        for(var user of obj_this.selectedUsers)
+        for(var user of selected_users)
         {
             user_ids.push(user.id);
         }
@@ -50,7 +49,6 @@ export class UserService {
         (result: any) => {
             console.log(result);           
         },null);
-        $('#select_user_modal').modal('hide');
     }
 
     closemodel(){
@@ -82,18 +80,33 @@ export class UserService {
             params: params,
             args: args
         };
+
+        var on_modal_closed = function(result){
+            obj_this.saveusers(result);
+        };
+
         obj_this.httpService.get(final_input_data,
         (result: any) => {
+            
             if(parent && parent.id)
             {
                 obj_this.valid_users = result.valid;
             }
-            else{                
+            else{
                 obj_this.valid_users = obj_this.users;
             }
+            var valid_users = obj_this.valid_users;
             // console.log(obj_this.valid_users, 54);
             obj_this.selectedUsers = result.selected;
-        },null);
-        $('#select_user_modal').modal('show');
+            // console.log(valid_users, 43434);
+            var diaolog_options = {
+                selected_users: result.selected,
+                user_list: valid_users,
+                component: UserlistmodalComponent,
+                extra_input: {},
+                call_back: on_modal_closed, 
+            };
+            obj_this.socketService.user_selection_dialog(diaolog_options);
+        },null);        
     }
 }

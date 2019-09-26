@@ -9,21 +9,23 @@ declare var $: any;
     styleUrls: ['./userlist.component.css']
 })
 export class UserlistComponent implements OnInit {
-    @Input() input_users = '';
+    @Input() selection_input_str = '';
+    @Input() user_input_str = '';
+
     @Output() group_users_changed : EventEmitter <any> = new EventEmitter();
     server_url = window['server_url'];
     httpService: HttpService;
     constructor(private httpServ: HttpService,
         private socketService: SocketService) {
         this.httpService = httpServ;
-    }    
-    attendance_data = [];    
+    } 
 
-    users = [];
+    shown_users = [];
     all_users = [];
+    selection_input = [];
     count: number;
 
-    selection_input = [];
+    
     check_user_selected(user_id)
     {
         let selected = false;        
@@ -34,27 +36,35 @@ export class UserlistComponent implements OnInit {
                 break;
             }
         }
-
         return selected;
     }
 
     get_list(){
-        let obj_this = this;
+        let obj_this = this;        
+        if(obj_this.selection_input_str)
+        {
+            obj_this.selection_input = JSON.parse(obj_this.selection_input_str);
+            obj_this.group_users_changed.emit(obj_this.selection_input);            
+        }
+        if(obj_this.user_input_str)
+        {
+            obj_this.all_users = JSON.parse(obj_this.user_input_str);
+            // console.log(obj_this.all_users, 223);
+            obj_this.all_users.forEach((val)=>{
+                val.selected = obj_this.check_user_selected(val.id);
+            });
+            this.shown_users = this.all_users;
+            return;
+        }
+
         function success(data){            
             obj_this.httpService.count = Number(data.total);
             obj_this.count = data.users.length;
-            obj_this.users = data.users;
-
-            if(obj_this.input_users)
-            {
-                obj_this.selection_input = JSON.parse(obj_this.input_users);                
-                obj_this.group_users_changed.emit(obj_this.selection_input);
-            }
-
-            obj_this.users.forEach((val)=>{
+            obj_this.all_users = data.users;
+            obj_this.all_users.forEach((val)=>{
                 val.selected = obj_this.check_user_selected(val.id);
             });
-            obj_this.all_users = obj_this.users;
+            this.shown_users = this.all_users;
         }
         let args = {
             app: 'meetings',
@@ -70,31 +80,39 @@ export class UserlistComponent implements OnInit {
         obj_this.httpService.get(final_input, success, (er)=>{console.log(er);})
     }
 
-    all_selected_users(el)
-    {
-        this.users = this.all_users.filter((el)=>{
-            return el.selected == true;
-        });
+    activate_tab(el){
+        $('.user-types:first>a').removeClass('active');
+        $(el).addClass('active');
     }
 
-    all_profile_users(el)
-    {
-        this.users = this.all_users;        
+    all_selected_users(el)
+    {        
+        this.shown_users = this.all_users.filter((el)=>{
+            return el.selected == true;
+        });
+        this.activate_tab(el);        
     }
 
     all_available_users(el)
     {
-        this.users = this.all_users.filter((el)=>{
+        this.shown_users = this.all_users.filter((el)=>{
             return el.selected == false;
         });
+        this.activate_tab(el);
+    }
+
+    all_profile_users(el)
+    {
+        this.shown_users = this.all_users;
+        this.activate_tab(el);
     }
 
     toggle_user_selection(obj){
         obj.selected = !obj.selected;
-        let selected_users = this.users.filter((el)=>{
+        let selection_output = this.all_users.filter((el)=>{
             return el.selected == true;
         });
-        this.group_users_changed.emit(selected_users);
+        this.group_users_changed.emit(selection_output);
     }
 
     user_serach(val)
@@ -113,7 +131,8 @@ export class UserlistComponent implements OnInit {
         {
             obj_this.all_selected_users($('a.btn.active'));
         }
-        obj_this.users = obj_this.users.filter((el)=>{
+        //Shown users are set above (taken from all users)
+        obj_this.shown_users = obj_this.shown_users.filter((el)=>{
             var mail_matched = false;
             if(el.email && el.email.toLowerCase().indexOf(val) != -1)
             {
@@ -137,7 +156,7 @@ export class UserlistComponent implements OnInit {
         user_obj.selected = true;
     }
 
-    ngOnInit() {
+    ngOnInit() {        
         this.get_list();        
     }
 }

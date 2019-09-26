@@ -7,13 +7,14 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     styleUrls: ['./userlistmodal.component.css']
 })
 export class UserlistmodalComponent implements OnInit {
-    @Input() input_users = [];        
+    @Input() user_input_str = '';
+    @Input() selection_input_str = '';
     constructor(public activeModal: NgbActiveModal) {
         
     }
     selected_users = [];
     on_user_selected(selected_users=[]) {
-        console.log(selected_users);
+        // console.log(selected_users);
         this.selected_users = selected_users;
     }
 

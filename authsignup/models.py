@@ -46,7 +46,8 @@ class AuthUser(models.Model):
             model = apps.get_model(app_name, model_name)
 
             users = model.objects.get(pk=parent_id).users.all()
-            valid_audience = list(users.values('id', 'name'))
+            # valid_audience = list(users.values('id', 'name', 'image'))
+            valid_audience = ws_methods.queryset_to_list(users, ['id','name','image'])
         res = {'selected': audience, 'valid': valid_audience}
         return res
 

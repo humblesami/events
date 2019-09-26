@@ -6,7 +6,6 @@ import { AppUser, ChatGroup, BaseClient, ChatClient, Message, ChatUser } from '.
 import {SocketService} from "../../app/socket.service";
 import { Router } from '@angular/router';
 import { ChatgroupComponent } from '../chatgroup/chatgroup.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 declare var $: any;
 
@@ -30,7 +29,6 @@ export class MessengerComponent implements OnInit {
         private sanitizer: DomSanitizer,
         public router: Router,
         private _location: Location,
-        private modalService: NgbModal,
 		private httpService: HttpService,
         private ss: SocketService
         ) {
@@ -288,17 +286,20 @@ export class MessengerComponent implements OnInit {
     selected_chat_group: ChatGroup;
     group_create_mode(){
         let obj_this = this;
-        obj_this.group_state = 'create'
-		const modalRef = this.modalService.open(ChatgroupComponent, { backdrop: 'static' });
-        modalRef.componentInstance.input_users = [];
-        modalRef.componentInstance.group_name = '';
-		modalRef.result.then((result) => {
-            if (result){
-                obj_this.group_name = result.group_name;
-                obj_this.selectedPeople = result.selectd_users;
-                obj_this.create_chat_room();
-            }
-        });
+        obj_this.group_state = 'create';		
+		var on_modal_closed = (result) => {            
+            obj_this.group_name = result.group_name;
+            obj_this.selectedPeople = result.selectd_users;
+            obj_this.create_chat_room();            
+        };
+        var diaolog_options = {
+            selected_users: obj_this.selected_chat_group.members,
+            user_list: [],
+            component: ChatgroupComponent,
+            extra_input: {},
+            call_back: on_modal_closed, 
+        };
+        obj_this.socketService.user_selection_dialog(diaolog_options);
     }
     
     show_group_members(group: ChatGroup){
@@ -326,24 +327,20 @@ export class MessengerComponent implements OnInit {
                     break;
                 }
             }
-            let my_id = obj_this.user.id;
-            var ar = obj_this.selected_chat_group.members.filter(function(item){
-                return item.id != my_id;
-            });
+            var on_modal_closed = function(result){
+                obj_this.group_name = result.group_name;
+                obj_this.selectedPeople = result.selectd_users;
+                obj_this.update_chat_group_members();
+            };
+            var diaolog_options = {
+                selected_users: obj_this.selected_chat_group.members,
+                user_list: [],
+                component: ChatgroupComponent,
+                extra_input: {group_name : group.name},
+                call_back: on_modal_closed, 
+            };
+            obj_this.socketService.user_selection_dialog(diaolog_options);
             
-            // console.log(ar);
-            const modalRef = obj_this.modalService.open(ChatgroupComponent, { backdrop: 'static' });
-            modalRef.componentInstance.input_users = ar;
-            modalRef.componentInstance.group_name = group.name;
-            modalRef.result.then((result) => {
-                if (result){
-                    obj_this.group_name = result.group_name;
-                    obj_this.selectedPeople = result.selectd_users;
-                    obj_this.update_chat_group_members();
-                }
-            });
-
-
         } , function(){
             console.log('Group members not fetched');
         });
