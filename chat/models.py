@@ -543,6 +543,9 @@ class ChatGroup(models.Model):
         removed_member_set = set(Profile.objects.filter(id=member_id))
         remaining_members = all_member_set - removed_member_set
         chat_group.members.set(remaining_members)
+        if not chat_group.members.all():
+            chat_group.delete()
+            return 'done'
         if chat_group.owner:
             if member_id == chat_group.owner_id:
                 new_owner = all_member[0]
