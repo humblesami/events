@@ -28,7 +28,7 @@ export class UserlistComponent implements OnInit {
     
     check_user_selected(user_id)
     {
-        let selected = false;        
+        let selected = false;
         for (const user of this.selection_input) {
             if (user.id == user_id)
             {
@@ -51,7 +51,10 @@ export class UserlistComponent implements OnInit {
             obj_this.all_users = JSON.parse(obj_this.user_input_str);
             // console.log(obj_this.all_users, 223);
             obj_this.all_users.forEach((val)=>{
-                val.selected = obj_this.check_user_selected(val.id);
+                if (!val.selected)
+                {
+                    val.selected = obj_this.check_user_selected(val.id);
+                }
             });
             this.shown_users = this.all_users;
             return;

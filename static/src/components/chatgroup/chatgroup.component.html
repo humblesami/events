@@ -9,7 +9,7 @@
     (group_users_changed)="group_users_changed($event)"
     ></app-userlist>
     <div class="my-3 float-right">
-        <button type="button" class="btn btn-sm btn-primary mr-1" (click)="sendRecord()">Save</button>
+        <button [attr.disabled]="group_name ? null: 'disabled'" type="button" class="btn btn-sm btn-primary mr-1" (click)="sendRecord()">Save</button>
         <button type="button" class="btn btn-sm btn-danger" (click)="activeModal.close()">Close</button>
     </div>
 </div>
