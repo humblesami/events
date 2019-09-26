@@ -46,6 +46,8 @@ export class ResourceDetailsComponent implements OnInit {
         if(obj_this.advance_search)
         {
             $('.resources .search_options:first').show();
+            $('.bold-setting').addClass('text-primary').removeClass('text-muted').css("font-size", "1.2rem");
+            $('.bold-search').css("font-size", "1.3rem");
             if(is_not_root)
             {
                 obj_this.cookie_key = 'resources/inner/search';
@@ -65,6 +67,8 @@ export class ResourceDetailsComponent implements OnInit {
         }
         else{
             $('.resources .search_options:first').hide();
+            $('.bold-setting').addClass('text-muted').removeClass('text-primary').css("font-size", "1rem");
+            $('.bold-search').css("font-size", "1rem");
         }
     }
 
