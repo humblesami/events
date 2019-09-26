@@ -6,7 +6,7 @@ declare var $: any;
 
 @Component({
     selector: 'app-votingresults',
-    styleUrls:['./survey.css'],
+    styleUrls:['./votingresults.css'],
     templateUrl: './votingresults.component.html',
 })
 
