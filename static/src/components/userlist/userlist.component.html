@@ -32,7 +32,7 @@
                 [ngClass]="{disabled_row: obj.disabled}"
                 (click)="obj.disabled ? null: toggle_user_selection(obj)">
                     <div class="col-9 p-0">
-                        <div class="d-flex">
+                        <div class="d-flex align-items-center">
                             <div class="w-70">
                                 <div class="img-flex img-circle">
                                     <img src="{{socketService.server_url}}{{obj.image}}"/>
