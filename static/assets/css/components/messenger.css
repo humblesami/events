@@ -233,11 +233,11 @@
 	background-color: rgba(0,0,0,0.2);
 	}
 .messenger-container .msg-send-box-wrapper {
-    padding-top: 20px;
+    padding-top: 0px;
     padding-left: 10px;
 }
 .me .msg-send-box-wrapper{
-    padding-right: 10px;
+    padding-right: 0;
     padding-left: 0;
 }
 .messenger-container .msg-box-wrapper {
@@ -548,7 +548,7 @@
     }
 .attachment_container
 {
-    margin-top:5px;    
+    margin-top:0px;    
 }
 
 .attachment_container a.download {
@@ -720,7 +720,7 @@ a.contact-item {
 	height: 100%;
 }
 .messenger-container .chat-message {
-    padding-bottom: 12px;
+    padding-bottom: 5px;
 }
 .messenger-container .chat-message .me{
     text-align: right;
