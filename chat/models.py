@@ -539,15 +539,15 @@ class ChatGroup(models.Model):
         group_id = params['group_id']
         chat_group = ChatGroup.objects.get(pk=group_id)
         all_member = chat_group.members.all()
-        if chat_group.owner:
-            if member_id == chat_group.owner_id:
-                new_owner = all_member.order_by('-created_at')[0]
-                chat_group.owner = new_owner
-                chat_group.save
         all_member_set = set(all_member)
         removed_member_set = set(Profile.objects.filter(id=member_id))
         remaining_members = all_member_set - removed_member_set
         chat_group.members.set(remaining_members)
+        if chat_group.owner:
+            if member_id == chat_group.owner_id:
+                new_owner = all_member[0]
+                chat_group.owner = new_owner
+                chat_group.owner.save()
         return 'done'
 
     @classmethod
