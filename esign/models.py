@@ -43,8 +43,6 @@ class SignatureDoc(File, Actions):
 
     def get_all_respondents(self):
         respondent_list = []
-        if self.meeting:
-            respondent_list = self.meeting.get_audience()
         for obj in self.respondents.all():
             respondent_list.append(obj.id)
         return list(dict.fromkeys(respondent_list))
@@ -67,9 +65,10 @@ class SignatureDoc(File, Actions):
         new_respondents = params['new_respondents']
         doc_id = params['doc_id']
         doc_obj = cls.objects.get(pk=doc_id)
-        doc_obj.respondents.remove()
-        for respondent in new_respondents:
-            doc_obj.respondents.add(respondent['id'])
+        ids = []
+        for obj in new_respondents:
+            ids.append(obj['id'])        
+        doc_obj.respondents.set(ids)
         doc_obj.save()
         return 'done'
 

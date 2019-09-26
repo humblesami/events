@@ -53,61 +53,41 @@ export class EsignDocDetailsComponent implements OnInit {
 
     isAdmin = false;
 
+
     add_new_users()
     {
         let obj_this = this;
-        obj_this.add_users = true;
-        const modalRef = this.modalService.open(UserlistmodalComponent, { backdrop: 'static' });
-        modalRef.componentInstance.input_users = JSON.stringify(obj_this.selected_respondents);
-		modalRef.result.then((result) => {
-            if (result){
-                    if (obj_this.add_users)
-                    {
-                        let input_data = {
-                            doc_id: obj_this.doc_id,
-                            new_respondents: result
-                        }
-                        let args = {
-                            app: 'esign',
-                            model: 'SignatureDoc',
-                            method: 'add_new_respondents'
-                        }
-                        let final_input = {
-                            params: input_data,
-                            args: args
-                        }
-                        obj_this.httpService.get(final_input, (data:any) =>{
-                            obj_this.all_users_list = obj_this.users_list = obj_this.selected_respondents = result;
-                        }, null)
-                    }
+        var on_modal_closed = function(result){
+            if (result)
+            {
+                let input_data = {
+                    doc_id: obj_this.doc_id,
+                    new_respondents: result
+                }
+                let args = {
+                    app: 'esign',
+                    model: 'SignatureDoc',
+                    method: 'add_new_respondents'
+                }
+                let final_input = {
+                    params: input_data,
+                    args: args
+                }
+                obj_this.httpService.get(final_input, (data:any) =>{
+                    obj_this.all_users_list = obj_this.users_list = obj_this.selected_respondents = result;
+                }, null)
             }
-            obj_this.add_users = false;
-        });
+        };
 
-        // $('#select_user_modal').on('hidden.bs.modal', function (e) {
-        //     if (obj_this.add_users)
-        //     {
-        //         let input_data = {
-        //             doc_id: obj_this.doc_id,
-        //             new_respondents: obj_this.selected_respondents
-        //         }
-        //         let args = {
-        //             app: 'esign',
-        //             model: 'SignatureDoc',
-        //             method: 'add_new_respondents'
-        //         }
-        //         let final_input = {
-        //             params: input_data,
-        //             args: args
-        //         }
-        //         obj_this.httpService.get(final_input, (data:any) =>{
-        //             obj_this.all_users_list = obj_this.users_list = obj_this.selected_respondents;
-        //         }, null)
-        //     }
-        //     obj_this.add_users = false;
-        // });
-        // $('#select_user_modal').modal('show');
-        
+
+        var diaolog_options = {
+            selected_users: obj_this.selected_respondents,
+            user_list: [],
+            component: UserlistmodalComponent,
+            extra_input: {},
+            call_back: on_modal_closed, 
+        };
+        obj_this.socketService.user_selection_dialog(diaolog_options);
     }
 
     close_users_modal()

@@ -29,8 +29,8 @@
             <div class="container group-height">  
                 <div class="row mb-2 align-items-center"
                 *ngFor="let obj of shown_users"
-                [ngClass]="{disabled_row: obj.disabled}"
-                (click)="obj.disabled ? null: toggle_user_selection(obj)">
+                [ngClass]="{disabled_row: obj.current_user}"
+                (click)="obj.current_user ? null: toggle_user_selection(obj)">
                     <div class="col-9 p-0">
                         <div class="d-flex align-items-center">
                             <div class="w-70">
@@ -50,7 +50,7 @@
                     </div>
                     <div  class="col-3 custom-control custom-checkbox">
                             <input type="checkbox"
-                            [attr.disabled]="obj.disabled ? 'diabled': null"
+                            [attr.disabled]="obj.current_user ? 'diabled': null"
                             [(ngModel)]="obj.selected"
                             class="custom-control-input">
                             <label class="custom-control-label"></label>

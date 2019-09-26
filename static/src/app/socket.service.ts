@@ -472,7 +472,7 @@ export class SocketService {
                     name: cuser.name,
                     email: cuser.email,
                     image: cuser.photo,
-                    disabled: true,
+                    current_user: true,
                     selected: true
                 })
             }
