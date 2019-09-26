@@ -120,7 +120,7 @@ export class MessengerComponent implements OnInit {
                         return;
                     }
                     var group = undefined;
-                    if(obj_this.active_chat_user.is_group && obj_this.active_chat_user.id == data.id)
+                    if(obj_this.active_chat_user && obj_this.active_chat_user.is_group && obj_this.active_chat_user.id == data.id)
                     {
                         group = obj_this.active_chat_user as ChatGroup;                    
                     }
@@ -252,7 +252,7 @@ export class MessengerComponent implements OnInit {
         {
             return;
         }        
-        if(!selected_group.is_group)
+        if(selected_group && !selected_group.is_group)
         {
             selected_group.is_group = true;
         }
