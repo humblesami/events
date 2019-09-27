@@ -286,6 +286,11 @@ a.DocumentWrapper:hover{
 .DocText, .DocInfoVertical{
     background: #638fc9 !important;
 }
+.DocName{
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
 .admin_mode{
     width: 50% !important;
     overflow: hidden;

@@ -5,11 +5,6 @@
 .bordered{
     border: 1px solid #808080;
 }
-.DocName{
-    text-align: center;
-    font-size: 0.85rem;
-    font-weight: bold;
-}
 
 button.check-time-btn {    
 	width: 30px;

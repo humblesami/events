@@ -372,14 +372,13 @@ export class EsignDocDetailsComponent implements OnInit {
                 input_subject.val("Signature Request");
 
                 var meeting_id = $('#dropdown_meeting').val();
-                body.append("<h3 class='border-bottom text-dark pb-2 font-weight-bold'>Sign and Return</h3>");
-                body.append("<h3>Subject</h3>").append(input_subject);
-                body.append("<h3>Message</h3>").append(email_body);
+                body.append("<h6 class='text-primary'>Message</h6>").append(email_body);
 
                 var snd_to_all = $("#check_box_send_all").is(':checked');
                 var assign_popup = {
                     on_load: function(){
                         $('#signModal .modal-body').html(body);
+                        $('#signModal .modal-header').find('.title').html("<h5>Sign and Return</h5>");
                     },
                     on_save: function(){
                         assign_signatures();

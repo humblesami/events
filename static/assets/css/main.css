@@ -115,9 +115,6 @@ body.lightblue {
 body.hidden {
 	overflow: hidden;
 	}
-h5 {
-	font-size: 0.859rem;
-	}
 img {
 	max-width: 100%;
 	}
@@ -742,7 +739,7 @@ a.kanban-committees-info-box-name {
 	overflow: hidden;
 	}
 .modal-header {
-	padding: 5px;
+	padding: 15px 15px 5px;
 	}
 .modal-footer {
 	padding: 5px;
@@ -3144,7 +3141,5 @@ label.check-plus-label-wrap {
 	border: 0;
 }
 .modal-header .title{
-	font-size: 1.5rem;
-    font-weight: bold;
-    padding-left: 6px;
+	color:#000;
 }
