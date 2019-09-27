@@ -464,7 +464,7 @@ a.kanban-committees-info-box-name {
 	}
 .modal-backdrop
 {
-	z-index: 10 !important;
+	z-index: 4 !important;
 }	
 .modal.fade .modal-dialog {
 	-webkit-transform: translate(0, 0);
@@ -1784,7 +1784,7 @@ button {
 	left: 0;
 	width: 230px;
 	overflow: auto;
-	z-index: 3;
+	z-index: 2;
 	background-color: var(--toggle-left-menu-bg);
 	-webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
 	box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
@@ -2515,7 +2515,7 @@ ul.dropdown-menu.scrollable-menu {
 	box-shadow: 0 0.1875rem 0.375rem rgba(33, 37, 41, 0.1);
 	border: 1px solid #dadada;;
 	background: #fff;
-	z-index: 8;
+	z-index: 2;
 	width: calc(100vw - 3rem);
     overflow: hidden;
     width: 320px;
