@@ -334,26 +334,26 @@ export class MessengerComponent implements OnInit {
                 obj_this.selectedPeople = result.selectd_users;
                 obj_this.update_chat_group_members();
             };
+            let diaolog_options = {}
             if (is_owner)
             {
-                var diaolog_options = {
+                diaolog_options = {
                     selected_users: obj_this.selected_chat_group.members,
                     user_list: [],
                     component: ChatgroupComponent,
                     extra_input: {group_name : group.name},
                     call_back: on_modal_closed, 
                 };
-                obj_this.socketService.user_selection_dialog(diaolog_options);
             }
             else
             {
-                var member_diaolog_options = {
+                diaolog_options = {
                     selected_users: obj_this.selected_chat_group.members,
                     user_list: obj_this.selected_chat_group.members,
                     component: ViewmembersComponent
                 };
-                obj_this.socketService.user_selection_dialog(member_diaolog_options);
             }
+            obj_this.socketService.user_selection_dialog(diaolog_options);
             
         } , function(){
             console.log('Group members not fetched');

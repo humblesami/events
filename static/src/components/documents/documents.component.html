@@ -27,8 +27,7 @@
                             </button>
                         </div>
                         <div *ngIf="doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
-                            <input class="form-control renamer"                        
-                                (focus)="renameService.renamer_focused($event.target)" 
+                            <input class="form-control renamer"
                                 (blur)="renameService.renamer_focused_out($event,doc,'file')"
                                 (keyup)="renameService.renamer_focused_out($event,doc,'file')"												
                                 value="{{doc.name}}"

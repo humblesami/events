@@ -3,24 +3,11 @@
     height:calc(100vh - 300px);
     overflow-x:hidden; 
 }
-.bg-roster{
-    background: #f3f3f3;
-    border: 1px solid #f1eeee;
-    align-items: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
 .close-btn
 {
     width: 100%;
     background-color: #21375a !important;
     color: white;
-}
-.img-circle{
-    width: 50px;
-    height: 50px;
-    overflow: hidden;
-    border-radius: 50%; 
 }
 .roster-elements{
     font-size: 1rem;

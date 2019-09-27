@@ -27,7 +27,7 @@
                 </div>
             </div>  
             <div class="container group-height">  
-                <div class="row mb-2 align-items-center"
+                <div class="row align-items-center bg-userlist mb-row"
                 *ngFor="let obj of shown_users"
                 [ngClass]="{disabled_row: obj.current_user}"
                 (click)="obj.current_user ? null: toggle_user_selection(obj)">

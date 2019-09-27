@@ -11,7 +11,7 @@
     left: 0;
     background: #fff;
     width: 100%;
-    height: calc(100vh - 375px);
+    height: calc(100vh - 385px);
     overflow: overlay;
 }
 .custom-control-label::before,
@@ -44,5 +44,10 @@
 }
 
 .disabled_row{
-    background-color: rgb(240, 240, 240);
+    background-color: #ddd;
+    border: 1px solid #ddd;
+}
+.mb-row{
+    margin-bottom: 5px;
+    
 }

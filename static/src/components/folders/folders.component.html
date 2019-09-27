@@ -28,8 +28,7 @@
                                     </button>
                                 </div>										
                                 <div *ngIf="folder.edit_mode" class="d-flex">
-                                    <input class="form-control renamer"                        
-                                        (focus)="renameService.renamer_focused($event.target)" 
+                                    <input class="form-control renamer"
                                         (blur)="renameService.renamer_focused_out($event,folder,'folder')"
                                         (keyup)="renameService.renamer_focused_out($event,folder,'folder')"												
                                         value="{{folder.name}}"

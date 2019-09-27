@@ -3,8 +3,7 @@
     font-size: 0.85rem;
     font-weight: bold;
 }
-button.check-time-btn {
-    display: none;
+button.check-time-btn {    
 	width: 30px;
 	height: 30px;
 	background: green;
