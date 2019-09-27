@@ -327,7 +327,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 else{
                     $('#select_user_modal').modal('show');
                 }
-                on_dropped(new_signature[0]);
+                on_dropped(new_signature[0], 'creating');
             }
 
             $('.drag').draggable({
@@ -1018,12 +1018,18 @@ export class EsignDocDetailsComponent implements OnInit {
             }
         }
 
-        function on_dropped(el){
+        function on_dropped(el, creating=null){
             var position = $(el).position();
             if(!$(el).css('width'))
             {                
                 $(el).css('width', $(el).width());
                 $(el).css('height', $(el).height());
+            }
+            if(creating)
+            {
+                var st_now = $('#viewer_container').scrollTop();
+                var applied_top = position.top += st_now;
+                $(el).css('top', applied_top);
             }
 
             position = {
