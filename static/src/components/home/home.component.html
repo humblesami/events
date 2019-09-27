@@ -1,5 +1,6 @@
 <app-breadcrumb *ngIf="home_data" title="Home" edit="1" app="meetings" model="news" rid="{{home_data.id}}"></app-breadcrumb>
 <div class="router-outlet home-container" *ngIf="ng_init && home_data">
+    <link rel="stylesheet" href="/static/assets/css/components/home.css" />
     <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
     <div class="container">
         <div id="welcome" *ngIf="home_data">
