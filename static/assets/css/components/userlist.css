@@ -6,7 +6,6 @@
     color: #fff;
 }
 .group-height{
-    /* position: absolute; */
     z-index: 1;
     left: 0;
     background: #fff;
@@ -46,6 +45,9 @@
 .disabled_row{
     background-color: #ddd;
     border: 1px solid #ddd;
+}
+.disabled_row .custom-control-label{
+    cursor: auto;
 }
 .mb-row{
     margin-bottom: 5px;
