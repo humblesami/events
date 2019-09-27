@@ -267,7 +267,8 @@ export class ProfileeditComponent implements OnInit {
 						res_app: 'meetings',
 						res_model: 'Profile',
 						res_id: obj_this.profile_data.id,
-						res_field: 'resume'
+						res_field: 'resume',
+						file_type: data.file_type
 					}
 					window['upload_single_file'](file, resInfo, data.cloud, (data)=>{
 						obj_this.profile_data.resume = data[0];
