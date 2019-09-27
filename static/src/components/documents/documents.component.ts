@@ -58,10 +58,9 @@ export class DocumentsComponent implements OnInit {
         this.renameService = renameSer;
         this.socketService = ss;
         window['app_libs']['pdf'].load();
-        this.object_id = window['js_utils'].unique_id();
-        ss.doc_objects[this.object_id] = this;
+        this.object_id = window['js_utils'].unique_id();        
     }
-
+    
     get_icon_url(source = null){
         var icon_url = "/static/assets/images/cloud/local.png";
         switch(source){
@@ -78,21 +77,20 @@ export class DocumentsComponent implements OnInit {
         return icon_url;
     }
 
-    on_mode_changed(){
-        let obj_this = this;        
-        setTimeout(function(){
-            obj_this.on_admin_mode_changed()
-        },10);
-    }
-
     on_admin_mode_changed(){
         let obj_this = this;
         if(!this.socketService.admin_mode || this.readonly || !obj_this.parent_id)
         {
             return;
         }
-        let file_input = $('.dlc-file-picker:not(.processed):first');   
-        // console.log(file_input.length, 3333);
+        setTimeout(function(){
+            obj_this.init_file_drag_drop();
+        }, 10)        
+    }
+
+    init_file_drag_drop(){
+        let obj_this = this;
+        let file_input = $('.dlc-file-picker:not(.processed)');        
         let resInfo = {
             res_app: obj_this.res_app,
             res_model: obj_this.parent_model,
@@ -175,7 +173,8 @@ export class DocumentsComponent implements OnInit {
         }
         // console.log(6565,133);
         this.httpService.get(input_data, function(data){
-            obj_this.on_result(data);
+            obj_this.on_result(data);            
+            obj_this.on_admin_mode_changed();
         }, null);
     }
 
@@ -187,7 +186,9 @@ export class DocumentsComponent implements OnInit {
 
     ngOnInit() {
         let obj_this = this;
-        // console.log(obj_this.search_type, obj_this.parent_id, obj_this.recursive);
+        obj_this.socketService.call_backs_on_mode_changed['handle_file_create'] = function(){
+            obj_this.on_admin_mode_changed();
+        };
         if(
             obj_this.search_type == 'folders'
             
@@ -199,10 +200,7 @@ export class DocumentsComponent implements OnInit {
         {
             return;
         }
-        obj_this.get_list();
-        setTimeout(function(){
-            obj_this.on_admin_mode_changed()
-        },10);
+        obj_this.get_list();        
         
         obj_this.parent_id = obj_this.route.snapshot.params.id;
         if(obj_this.parent_id)
@@ -223,7 +221,7 @@ export class DocumentsComponent implements OnInit {
         }
     }
 
-    ngOnDestroy(){
-        delete this.socketService.doc_objects[this.object_id];
+    ngOnDestroy(){        
+        delete this.socketService.call_backs_on_mode_changed['handle_file_create'];
     }
 }

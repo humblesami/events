@@ -399,16 +399,11 @@ class ChatGroup(models.Model):
 
     @classmethod
     def create(cls, request, params):
-        audience = []
         uid = request.user.id
         me_added = False
         member_ids = []
         for obj in params.get('members'):
             member_ids.append(obj['id'])
-            if uid != obj['id']:
-                audience.append(obj['id'])
-            else:
-                me_added = True
         chat_group = ChatGroup(
             name=params['name'],
             created_by_id=uid,
@@ -420,13 +415,19 @@ class ChatGroup(models.Model):
         chat_group.members.set(member_ids)
         chat_group.save()
 
+        owner = chat_group.owner
         created_chat_group = {
             'name': params['name'],
             'id': chat_group.id,
-            'members': params.get('members')
+            'members': params.get('members'),
+            'owner': {
+                'id': uid,
+                'name': owner.fullname(),
+                'image': owner.image.url
+            }
         }
         events = [
-            {'name': 'chat_group_created', 'data': created_chat_group, 'audience': audience}
+            {'name': 'chat_group_created', 'data': created_chat_group, 'audience': member_ids}
         ]
         res = ws_methods.emit_event(events)
         if res == 'done':
