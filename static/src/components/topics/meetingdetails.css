@@ -10,6 +10,7 @@
 h5, .h5 {
     font-size: 0.898rem;
 }
+
 .active{
     background-color: #9c4784 !important;
     color: white;
@@ -171,29 +172,20 @@ h5, .h5 {
 } */
 
 
-
-
 .title-wrapper .modal-header{
-    margin:25px 0;
-    padding: 0 0 15px;
+    margin: 0px 0 25px;
+    padding: 10px 0;
     font-size: 30px;
     font-weight: 400;
     background: transparent !important;
     color: #2B2B2B;
 }
-.boardsheet-table .thead-light th {
-    color: #3059C9;
-    background-color: transparent;
-    border-color: transparent;
-    font-size: 18px;
-    font-weight: 500;
-    border-bottom: 1px solid #dee2e6;
-}
+
 
 .SurveysInfoBox {
     background: #f3f3f3;
     min-height: 110px;
-    /* border-radius: 3px; */
+    border-radius: 3px;
     border: 1px solid #f1eeee;    
     padding: 5px 15px;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
@@ -203,18 +195,13 @@ h5, .h5 {
     line-height: 1.3;
     color: #515365;
 }
-.attachedActions{
-    margin-bottom: 1rem;
-    border-bottom: 5px solid #f3f3f3;
-    padding-bottom: 1rem;
-    color: #000000;
-}
 
 .SurveysInfoBoxTitle h5 span{
   display:block;
   font-weight:400;
   font-size:13px;
 }
+
 .meeting-details-roster-info-img{
     margin-right: 15px;
 }
@@ -290,51 +277,4 @@ h5, .h5 {
 
 .anchor-mb{
     margin-bottom: 0.5rem;
-}
-.attendee-card button{
-    font-size: 0.85rem;
-}
-.roster-full {
-    position: absolute;
-    z-index: 3;
-    left: 0;
-    top: 40px;
-    background: #fff;
-    width: 100%;
-    height: calc(100% - 40px);
-    display: none;
-    overflow: auto;
-}
-.btn-meeting
-{
-    font-weight: bold;
-    font-size: 0.9rem;
-}
-
-.table > tbody > tr{
-    border: 1px solid #dee2e6
-}
-@media screen and (max-width: 390px){
-    .roster-full{
-        top: 0px;
-        height: calc(100% - 25px);
-    }   
-}
-@media (min-width: 280px){
-    .MainTitleHeadWrap {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-}
-.roster-button{
-    top: -8px;
-    margin-left: 5px;
-    background: #fff;
-}
-.roster-users i{
-    position: absolute;
-    right: 0;
-    font-size: 15px;
-    top: 7px;
 }

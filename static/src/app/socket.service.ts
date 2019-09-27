@@ -431,7 +431,7 @@ export class SocketService {
         };
     };
 
-
+    
     user_selection_dialog(dialog_options){
         let obj_this = this;
         var selected_users = [];
@@ -487,7 +487,8 @@ export class SocketService {
             {
                 modalRef.componentInstance[key] = dialog_options.extra_input[key];
             }
-        }
+        }        
+        
         if (dialog_options.call_back)
         {
             modalRef.result.then((result) => {

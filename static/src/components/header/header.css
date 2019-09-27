@@ -1,0 +1,16 @@
+.after_enable{
+    font-size: 1.5rem;
+}
+.header-container
+{
+    border-bottom: 1px solid gainsboro;
+}
+
+@media (max-width: 575px) {
+    button.showmouseawaybutton.notification-icon{
+        font-size: 10px;
+        width: 26px;
+        height: 26px;
+        margin: 0 3px;
+    }
+}

@@ -2,7 +2,6 @@
 *ngIf="surveyDetails"
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Surveys", "link":"/surveys"}, {"title":"{{surveyDetails.name}}", "link":"/survey/{{surveyDetails.id}}"}]'
 title="Results"></app-breadcrumb>
-<link rel="stylesheet" href="/assets/css/components/surveyresults.css">
 <div class="router-outlet">
     <link rel="stylesheet" href="/static/assets/css/survey.css" />
     <div class="container" *ngIf="surveyDetails">
@@ -13,7 +12,7 @@ title="Results"></app-breadcrumb>
                         <div *ngIf="surveyDetails.name" class="col-sm-12">
                             <div class="MainTitleHeadWrap row justify-content-between">
                                 <div class="HeadingWrap">
-                                   <img src="static/assets/images/meeting-icon.png" alt="" />  {{surveyDetails.name}}
+                                    <img src="static/assets/images/meeting-icon.png" alt="" />  {{surveyDetails.name}}
                                 </div>
                                 <div style="height: 50px;width:50px;">
                                     <canvas id="progress-chart"></canvas>
