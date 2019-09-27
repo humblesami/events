@@ -175,18 +175,14 @@ export class DocumentsComponent implements OnInit {
         }
         // console.log(6565,133);
         this.httpService.get(input_data, function(data){
-            if(obj_this.parent_model == 'Folder'){
-                var doc = data.files;
-                var parents = data.parents
-            }
-            obj_this.on_result(doc, parents);
+            obj_this.on_result(data);
         }, null);
     }
 
-    on_result(data,parents){
+    on_result(data){
         let obj_this = this;
         obj_this.docs = data;
-        // $(".doc_container").css("visibility","visible");
+        $(".doc_container").css("visibility","visible");
     }
 
     ngOnInit() {
