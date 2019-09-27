@@ -41,9 +41,13 @@ export class MessengerComponent implements OnInit {
             function registerChatEventListeners()
             {
                 obj_this.user = socketService.user_data;
-                socketService.server_events['chat_group_created'] = function(msg)
+                socketService.server_events['chat_group_created'] = function(created_group)
                 {
-                    obj_this.socketService.chat_groups.push(msg);
+                    if(created_group.owner.id != obj_this.socketService.user_data.id)
+                    {
+                        console.log("owner should not receive this, please fix it");
+                        obj_this.socketService.chat_groups.push(created_group);
+                    }
                 }
                 socketService.server_events['chat_message_received'] = function (msg) {
                     try{
