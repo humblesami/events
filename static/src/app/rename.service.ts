@@ -31,18 +31,12 @@ export class RenameService {
         this.name_is_changed = true;
     }
 
-    renamer_focused(el)
-    {        
-        $(el).next('button').show();    
-    }
-
     renamer_focused_out(evn,folder,type=null){
         if(evn.type=='keyup' && evn.keyCode != 13)
         {
             return;
         }
         var el = evn.target;
-        $(el).next('button').hide();
         $(el).closest('.DocName').css("display","block");
         $(el).closest('.DocName').find('input.renamer').css("width","100%");
         this.rename_object(el, folder, type);
