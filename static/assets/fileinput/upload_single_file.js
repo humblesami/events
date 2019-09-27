@@ -48,15 +48,27 @@ function upload_single_file(files, resInfo, cloud=false, success)
         url: url,
         data: formData,
         type: 'POST',            
-        // dataType: 'JSON',
+        dataType: 'JSON',
         headers: headers,
         contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
         processData: false, // NEEDED, DON'T OMIT THIS
         success: function(data){
             try{
-                success(data = JSON.parse(data));
+                var error_message = data.error;
+                if(error_message)
+                {
+                    console.log(error_message);
+                    if(error_message.message)
+                    {
+                        error_message = error_message.message;
+                    }
+                    $(".feedback-message").append(error_message);
+                }
+                else
                 // console.log($('.file-input-picker-container:visible').closest('.modal:visible').length, 232);
-                $('.file-input-picker-container:visible').closest('.modal:visible').find('#close-btn').click();
+                {
+                    $('.file-input-picker-container:visible').closest('.modal:visible').find('#close-btn').click();
+                }
             }
             catch(er){
                 console.log(data);

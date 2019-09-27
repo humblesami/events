@@ -673,6 +673,25 @@ def generate_default_image(name):
     img.save(img_path)
     return 'profile' + pic_name
 
+from django.core.files.temp import NamedTemporaryFile
+from urllib.request import urlopen
+import urllib
+
+def download_image(file):
+    img_temp = NamedTemporaryFile(delete=True)
+    try:
+        if file['source'] == 'Google':
+            headers = {'Authorization':'Bearer '+file['access_token']}
+            request = urllib.request.Request(file['url'], headers=headers)
+            img_temp.write(urlopen(request).read())
+        else:
+            img_temp.write(urlopen(file['url']).read())
+        img_temp.flush()
+        return img_temp
+    except urllib.error.HTTPError as e:
+        return str(e.code) + e.reason
+
+
 #
 #
 # def authenticate(data):

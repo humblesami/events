@@ -44,7 +44,6 @@ def upload_files(request):
         docs = ws_methods.get_error_message()
     return HttpResponse(docs)
 
-
 @csrf_exempt
 @api_view(["GET", "POST"])
 def upload_single_file(request):   
@@ -65,26 +64,25 @@ def upload_single_file(request):
             for file in cloud_data:
                 with transaction.atomic():
                     if file_type == 'image':
-                        img_temp = NamedTemporaryFile(delete=True)
-                        if file['source'] == 'Google':
-                            headers = {'Authorization':'Bearer '+file['access_token']}
-                            request = urllib.request.Request(file['url'], headers=headers)
-                            img_temp.write(urlopen(request).read())
-                        else:
-                            img_temp.write(urlopen(file['url']).read())
-                        img_temp.flush()
+                        img_temp = ws_methods.download_image(file)
+                        if type(img_temp) == str:
+                            res = {
+                                'error': {'data': img_temp, 'message': 'unable to upload file.'}
+                            }
+                            res = json.dumps(res)
+                            return HttpResponse(res)
                         file_obj = getattr(obj, file_field)
                         file_obj.save(file['file_name'], DjangoFile(img_temp))
                         setattr(obj,file_field, file_obj)
+                        obj.save()                        
+                    else:    
+                        created_file = File(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
+                        created_file.save()
+                        file_obj = getattr(obj, file_field)
+                        file_obj = created_file
+                        setattr(obj,file_field, file_obj)
                         obj.save()
-                        return
-                    created_file = File(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
-                    created_file.save()
-                    file_obj = getattr(obj, file_field)
-                    file_obj = created_file
-                    setattr(obj,file_field, file_obj)
-                    obj.save()
-                    docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
+                        docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
         else:
             for key in request.FILES:
                 files = request.FILES.getlist(key)
@@ -96,7 +94,11 @@ def upload_single_file(request):
                         file_obj = getattr(obj, file_field)
                         file_obj = created_file
                         setattr(obj,file_field, file_obj)
-                        obj.save()
+                        if file_obj.id:
+                            obj.save()
+                        else:
+                            res = ws_methods.get_error_message()
+                            return {'error': {'data': res, 'message': 'unable to upload file.'}}
                         # created_file = obj.resume.attachment.save(name=file.name, attachment=file)
                         docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})
 
@@ -127,14 +129,13 @@ def upload_single_image_file(request):
             for file in cloud_data:
                 with transaction.atomic():
                     if file_type == 'image':
-                        img_temp = NamedTemporaryFile(delete=True)
-                        if file['source'] == 'Google':
-                            headers = {'Authorization':'Bearer '+file['access_token']}
-                            request = urllib.request.Request(file['url'], headers=headers)
-                            img_temp.write(urlopen(request).read())
-                        else:
-                            img_temp.write(urlopen(file['url']).read())
-                        img_temp.flush()
+                        img_temp = ws_methods.download_image(file)
+                        if type(img_temp) == str:
+                            res = {
+                                'error': {'data': img_temp, 'message': 'unable to upload file.'}
+                            }
+                            res = json.dumps(res)
+                            return HttpResponse(res)
                         file_obj = getattr(obj, file_field)
                         file_obj.save(file['file_name'], DjangoFile(img_temp))
                         setattr(obj,file_field, file_obj)

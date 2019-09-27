@@ -105,22 +105,26 @@ class File(CustomModel, FilesUpload):
                     return
             if self.pending_tasks == 1:
                 if self.html:
-                    self.content = self.html
+                    self.content = self.html                   
                 else:
-                    if not self.pdf_doc:
+                    if not self.pdf_doc:                        
                         raise Exception('File conversion failed')
-                    if not self.pdf_doc.file:
+                    if not self.pdf_doc.file:                        
                         raise Exception('File conversion failed.')
                     try:
                         self.content = text_extractor(self.pdf_doc)
-                    except:
-                        pass
+                    except:                        
+                        raise Exception('unable to extract file content')
                 self.pending_tasks = 0
                 self.save()
             pass
         except:
+            try:
+                self.delete()
+            except:
+                pass
             res = ws_methods.get_error_message()
-            a = 1
+            raise Exception(res)
 
     def get_pdf(self):
         tmp = self.attachment.url.split('.')
@@ -149,8 +153,8 @@ class File(CustomModel, FilesUpload):
             else:
                 subprocess.check_call(
                     ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'pdf',
-                     '-o', res_pdf_path, '-d', 'document',
-                     pth])
+                    '-o', res_pdf_path, '-d', 'document',
+                    pth])
                 res = open(res_pdf_path, 'rb')
             if ext != "pdf":
                 res = open(res_pdf_path, 'rb')
@@ -168,8 +172,9 @@ class File(CustomModel, FilesUpload):
             res_pdf_path = self.exclude_extension(res_pdf_path) + ".xhtml"
             subprocess.check_call(
                 ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'xhtml',
-                 '-o', res_pdf_path,
-                 pth])
+                '-o', res_pdf_path,
+                pth]
+                )
             res = open(res_pdf_path, 'rb')
             self.pdf_doc.save(filename + ".xhtml", DjangoFile(res))
             read = res.read()

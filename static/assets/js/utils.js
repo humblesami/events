@@ -247,7 +247,7 @@ var js_utils = window['js_utils'] = {
         {
             if(element.length > 1)
             {
-                element = element.fisrt();
+                console.log(element);                
                 console.log(selector + ' found more than one');
             }
             else{
