@@ -298,44 +298,6 @@ div.comment-body span{
     width: 92%;
     margin: 0 auto 15px auto;
 }
-/*
-.replies-wrapper:first
-{
-    width: 96%;
-}
-.reply-input:first
-{
-    width: 90%;
-}
-
-.reply-textarea-conatiner
-{
-    width: 95%;
-    margin-left: 2.5%;
-}
-.o_view_manager_content .comments .reply-input
-{
-    width: 101%;
-    margin-left: 3%;
-}
-.o_view_manager_content .oform
-{
-    width: 97.5%;
-    margin-left: -2.5%;
-}
-.o_view_manager_content .reply.container
-{
-    width: 95%;
-}
-
-.o_view_manager_content .comments .label
-{
-    margin-right: 5%;
-}
-.o_view_manager_content .comments .message.reply{	
-    width: 90%;
-}*/
-
 .comments.main-container{
     padding-bottom: 40px;
 }
