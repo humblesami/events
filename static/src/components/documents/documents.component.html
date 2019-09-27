@@ -44,7 +44,7 @@
             </a>
         </div>
     </div>
-    <div>
+    <div *ngIf="docs && docs.length">
         {{docs.length}} documents
     </div>
     <div *ngIf="socketService.admin_mode && !readonly">        

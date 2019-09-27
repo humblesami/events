@@ -46,7 +46,7 @@
                 </a>
             </div>
         </div>
-        <div>
+        <div *ngIf="records && records.length">
             {{records.length}} folders
         </div>
     </div>
