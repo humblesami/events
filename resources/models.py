@@ -118,12 +118,18 @@ class Folder(CustomModel):
     def search_root(cls, kw, user_id, results, search_type, recursive=False):
         folders = Folder.objects.filter(parent_id=None, users__id=user_id)
         if search_type == 'folders':
+            records = []
             for folder in folders:
+                folder.total_files = 0
+                folder.files_in_folder(folder)
+                total_files = folder.total_files
+
                 folder_obj = folder.__dict__
                 if re.search(kw, folder_obj['name'], re.IGNORECASE):
                     results.append({
                         'id': folder_obj['id'],
                         'name': folder_obj['name'],
+                        'total_files': total_files,
                     })
         if recursive:
             for obj in folders:
@@ -142,13 +148,19 @@ class Folder(CustomModel):
                 })
         if search_type == 'folders' or recursive:
             folders = obj.folder_set.filter(users__id=user_id)
+            records = []
             for folder in folders:
+                folder.total_files = 0
+                folder.files_in_folder(folder)
+                total_files = folder.total_files
+
                 if search_type == 'folders':
                     folder_obj = folder.__dict__
                     if re.search(kw, folder_obj['name'], re.IGNORECASE):
                         results.append({
                             'id': folder_obj['id'],
                             'name': folder_obj['name'],
+                            'total_files' : total_files,
                         })
                 if recursive:
                     folder.search_folder(kw, user_id, results, search_type, recursive)

@@ -111,6 +111,7 @@ export class FoldersComponent implements OnInit {
     on_result(result){
         let obj_this = this;
         obj_this.records = result.folders;
+        // console.log(obj_this.records, 12345687);
         if(obj_this.parent_id)
         {
             obj_this.data_loaded.emit(result);
