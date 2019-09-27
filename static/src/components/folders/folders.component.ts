@@ -116,6 +116,7 @@ export class FoldersComponent implements OnInit {
             obj_this.data_loaded.emit(result);
         }
         obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
+        $(".folder_container").css("visibility","visible");
     }
 
     create_folder_popup_config()

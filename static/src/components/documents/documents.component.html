@@ -1,4 +1,4 @@
-<div *ngIf="parent_id || recursive">
+<div *ngIf="parent_id || recursive" >
     <div class="row">
         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of docs">
             <a class="DocumentWrapper gray-bg" routerLink="{{roterLinkPrefix+doc.id}}">

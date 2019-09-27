@@ -186,6 +186,7 @@ export class DocumentsComponent implements OnInit {
     on_result(data,parents){
         let obj_this = this;
         obj_this.docs = data;
+        // $(".doc_container").css("visibility","visible");
     }
 
     ngOnInit() {

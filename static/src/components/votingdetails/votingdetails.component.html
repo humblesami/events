@@ -132,10 +132,13 @@ title="{{voting_object.name}}"></app-breadcrumb>
                     <div class="modal-header">
                         <div><i class="icon-doc-file"></i> Voting Documents</div> 
                     </div>
-                    <app-documents *ngIf="socketService.admin_mode || (voting_object.voting_docs && voting_object.voting_docs.length)" parent_model="Voting" parent_field="voting_id" 
+                    <app-documents *ngIf="socketService.admin_mode || (voting_object.voting_docs && voting_object.voting_docs.length)" 
+                    parent_model="Voting" 
+                    parent_field="voting_id" 
                     parent_id="{{voting_object.id}}"
                     res_app="voting" 
                     res_model="VotingDocument"></app-documents>
+
                 </div>
                 
             </div>
