@@ -56,35 +56,6 @@ body {
 .border-bottom {
     border-bottom: 1px solid #E1E1E1!important;
 }
-/*
-@media (min-width: 576px){
-	.container {
-		max-width: 540px;
-				}
-			}
-
-@media (min-width: 768px){
-	.container {
-		max-width: 720px;
-				}
-			}
-
-@media (min-width: 992px){
-	.container {
-		max-width: 960px;
-				}
-			}
-@media (min-width: 1200px){
-	.container {
-		max-width: 1140px;
-				}
-			}
-
-@media (min-width: 1540px){
-	.container {
-		max-width: 1360px;
-				}
-			}*/
 
 :focus {
 	box-shadow: none;
@@ -293,17 +264,6 @@ a,
 	justify-content: center;
 	height: 100px;
 	}
-/* .DocIcon span.rounded-circle {
-    background: #ffffff;
-    display: flex;
-    padding: 0;
-    width: 60px;
-    height: 60px;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.27);
-			} */
 
 .DocIcon i {
 	font-size: 3rem;
@@ -367,8 +327,6 @@ button:focus {
 	position: relative;
 	}
 #signature_editor {
-	/* width: calc(100vw - 50px);
-    height: 198px; */
 	margin-top: 5px;
 	margin-bottom: 5px;
 	}
@@ -378,13 +336,6 @@ button:focus {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	}
-/*
-@media (min-width: 576px) {
-    #signature_editor {
-        width: 465px;
-    			}
-			} */
-
 .kbw-signature canvas {
 	border: 1px solid #313030;
 	}
@@ -511,6 +462,10 @@ a.kanban-committees-info-box-name {
 	opacity: .5;
 	z-index: 2;
 	}
+.modal-backdrop
+{
+	z-index: 10 !important;
+}	
 .modal.fade .modal-dialog {
 	-webkit-transform: translate(0, 0);
 	transform: translate(0, 0);
@@ -586,7 +541,6 @@ a.kanban-committees-info-box-name {
 	flex-direction: column;
 	}
 .kanban-folder-border {
-	/* border: 1px solid #dee2e6!important; */
 	border: 1px solid #dee2e6;
 	position: relative;
 	margin-bottom: -1px;
@@ -598,13 +552,7 @@ a.kanban-committees-info-box-name {
 	display: block;
 	margin-bottom: 15px;
 	}
-/* .kanban-folder a {
-    color: #777777;
-    display: flex;
-    align-items: center;
-    text-transform: capitalize;
-    font-weight: 400;
-			} */
+
 
 .kanban-profiles-user-img {
 	margin-right: 15px;
@@ -670,50 +618,6 @@ a.kanban-committees-info-box-name {
 	overflow: hidden;
 	}
 /* Responsive */
-
-@media (max-width: 575px) {
-	/* .DocumentWrapper {
-		margin-left: 13px;
-		} */
-	}
-/*
-@media (min-width: 576px){
-	.kanban-card {
-        -ms-flex: 0 0 100%;
-        flex: 0 0 100%;
-        max-width: 100%;
-    			}
-			}
-@media (min-width: 768px){
-	.kanban-card {
-        -ms-flex: 0 0 100%;
-        flex: 0 0 100%;
-        max-width: 100%;
-    			}
-			}
-@media (min-width: 992px){
-	.kanban-card {
-        -ms-flex: 0 0 50%;
-        flex: 0 0 50%;
-        max-width: 50%;
-}
-			}
-@media (min-width: 1200px){
-	.kanban-card {
-        -ms-flex: 0 0 33.333333%;
-		flex: 0 0 33.333333%;
-		max-width: 33.333333%;
-}
-			}
-@media (min-width: 1540px){
-	.kanban-card {
-		-ms-flex: 0 0 25%;
-		flex: 0 0 25%;
-		max-width: 25%;
-				}
-			}
- */
-
 
 
 #backTop {
@@ -815,51 +719,6 @@ button.navbar-toggler {
 	margin-bottom: 0;
 	list-style: none;
 	}
-/*
-.mobile-chatroom button, .navbar-profile-menu button{
-	background: transparent;
-	border: transparent;
-	color: #ffffff;
-	font-size: 14px;
-	font-weight: bolder;
-			}
-
-.nav-icon button{
-	background: var(--header-icon-color);
-    border-radius: 50% !important;
-    padding: 0;
-    color: #ffffff;
-    outline: none;
-    font-size: 16px;
-    border: none;
-    opacity: 0.9;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-	cursor: pointer;
-	position: relative;
-	margin: 0 5px;
-			}
-.nav-icon button:hover{
-	opacity: 1;
-			}
-
-.brand-logo a{
-    color: white;
-    font-weight: bolder;
-    font-size: 21px;
-    background: #884775;
-    padding: 3px 6px;
-    display: inline-block;
-    border-radius: 5px;
-			}
-
-.brand-logo a:hover{
-    background: silver;
-			}
-*/
 
 #search-btn,
 .cursor_chooser,
@@ -910,7 +769,6 @@ button.navbar-toggler {
 	color: #ffffff;
 	}
 .nav-sub-link {
-	/* color: black !important; */
 	width: 100%;
 	}
 .MainHeader.navbar .navbar-nav li.nav-item.dropdown.show .dropdown-menu {
@@ -986,60 +844,6 @@ input#search-box {
 	outline: 0;
 	box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
 	}
-/*
-.topsearchbar{
-    flex-grow: 0;
-    flex-basis: 100%;
-    position: absolute;
-    right: 120px;
-    left: 55px;
-
-			}
-
-.topsearchbar .dropdown-menu{
-    min-width: 100%;
-    padding: 15px;
-			}
-
-.topsearchbar label, .topsearchbar .form-control{
-    font-size: 0.895em;
-			}
-
-.topsearchbar .form-control-search{
-    background-color: rgba(255, 255, 255, 0.97);
-    border-bottom: 5px solid #7c7bad !important ;
-    height: 53px;
-    line-height: 30px;
-    font-size: 12px;
-			}
-
-.topsearchbar .dropdown-toggle-split{
-    background: #eaeaea;
-    color: black;
-    border: none;
-			}
-.topsearchbar .dropdown-toggle-split:after{
-    vertical-align: middle;
-			}
-
-.topsearchbar .submit-btn{
-    background: #d6d5d5;
-    color: black;
-    border: none;
-			}
-
-.topsearchbar button{
-    height: 30px;
-    line-height: 30px;
-    padding-top:0;
-    padding-bottom: 0;
-    border: none;
-			}
-
-.topsearchbar .form-control-search, .topsearchbar button:active, .topsearchbar button:focus{
-    border: none;
-    box-shadow: 0 0 0 0rem rgba(108, 117, 125, 0) !important;
-			} */
 
 .show_search_results {
 	height: calc(100vh - 121px);
@@ -1139,16 +943,6 @@ div#search-modal {
 	text-align: center;
 	color: #ffffff;
 	}
-/*
-.topsearchbar .dropdown.dropdown-lg .dropdown-menu{
-  overflow: hidden;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border: 1px solid #76767617;
-  border-top: none;
-  margin-top: 0px;
-  margin-left: -1px;
-			}*/
 
 /*End Of Nav*/
 
@@ -1311,10 +1105,6 @@ div#search-modal {
 .nav-icon button:hover {
 	opacity: 1;
 	}
-/* .dropdown:hover>.dropdown-menu {
-    display: block;
-			} */
-
 .dropdown>.dropdown-toggle:active {
 	/*Without this, clicking will make it sticky*/
 	pointer-events: none;
@@ -2071,9 +1861,6 @@ button {
 i.icon-folder.app-menu__icon {
 	font-size: 17px;
 	}
-/* .sidenav-toggled .app-menu__icon {
-      text-align: center;
-  			}*/
 
 .app-menu__label {
 	white-space: nowrap;
@@ -2275,16 +2062,27 @@ i.icon-folder.app-menu__icon {
 	border-radius: 50px;
 	padding: .375rem 1.55rem;
 	}
+	.bs-btnwrap .btn.btn-secondary,
+	.btn-secondary:not(:disabled):not(.disabled):active{
+		background-color: rgba(99, 143, 201, 0.25);
+		border-color:rgba(99, 143, 201, 0.25);
+	}	
+	.btn-secondary:not(:disabled):not(.disabled):active:focus{
+		box-shadow: none;
+	}
 body.public .app-content {
 	margin-left: 0 !important;
 	}
+body.public .app-sidebar
+{
+	display:none;
+}	
+body.public .router-outlet{
+    height: 100vh !important;
+}
 .MeetingHeadWrapper {
 	display: flex;
 	justify-content: flex-end;
-	/* border-bottom: 1px solid #E1E1E1; */
-	/* margin-top: 1.3rem; */
-	/* margin-bottom: 1.3rem; */
-	/* padding-bottom: 1.3rem; */
 	margin: 1rem 0 1rem 0;
 	}
 .MainTitleHeadWrap {
@@ -2331,7 +2129,8 @@ body.public .app-content {
 	margin-right: 10px;
 	}
 .sidebar-mini.sidenav-toggled .app-sidebar {
-	overflow: auto;
+	overflow-y: auto;
+    overflow-x: hidden;
 	}
 .app-content {
 	position: relative;
@@ -2383,7 +2182,6 @@ span.kanban-upcoming-meeting-date {
 	border-radius: 3px;
 	flex-direction: column;
 	height: 100%;
-	/* border: 1px solid rgba(99, 143, 201, 0.25); */
 	}
 .kanban-card.survey {
 	width: 240px;
@@ -2456,6 +2254,16 @@ span.kanban-upcoming-meeting-date {
 	min-width: 90px;
 	font-size: 0.86rem;
 	}
+.home-modal-calendar  .upcomingButton button {
+	margin-right: 8px;
+	font-size: 14px;
+	min-width: 90px;
+}
+.home-modal-calendar .upcomingButton button i{
+	font-size:12px;
+	margin-right:5px;
+}	
+
 .res-message {
 	border: 2px solid;
 	padding: 5%;
@@ -2725,7 +2533,18 @@ ul.dropdown-menu.scrollable-menu {
     .popup.messenger .ng-dropdown-panel.ng-select-bottom
     {
         width: 98.2%;
-    }
+	}
+	.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected .ng-option-label {
+		font-weight: 500;
+	}
+	.ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
+		margin: .3rem;
+		font-family: "Roboto" !important;
+	}
+	.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+		background-color: #c0c0c0;
+		color: black;
+	}	
 .popup.messenger .messenger-container {	
 	height: calc(100vh - 180px);
 	overflow: hidden;
@@ -3011,16 +2830,6 @@ label.check-plus-label-wrap {
 	border-radius: 0;
 	border: 1px solid #ffffff;
 	}
-/* .main-full-seachbar:before {
-	font-family: 'boardsheet' !important;
-	content: "\e903";
-	position: absolute;
-	top: 50%;
-	color: #000000;
-	transform: translateY(-50%);
-	right: 20px;
-	font-size: 18px;
-	} */
 .pending-status {
     font-size: .8rem;
     padding: .5rem .3rem;
@@ -3142,4 +2951,129 @@ label.check-plus-label-wrap {
 }
 .modal-header .title{
 	color:#000;
+}
+ /* From Secondry */
+ .container{
+    padding-left:20px; 
+    padding-right:20px; 
+}
+.img-flex img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.survey-results{
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    background: #f3f3f3;
+    border-radius: 50%;
+}
+.droppable_holder{
+    width:200px;
+    height:200px;
+    border: 10px dashed #ccc;
+}
+.droppable_holder.hover {
+    border: 10px dashed #0c0;
+}
+hr{
+    margin: 0;
+}
+.saved_sign{
+    cursor:pointer;
+    width:190px;
+    height:40px;
+    border:2px dotted gray;
+    font-weight: bold;
+    color:black;
+    z-index:1;
+    overflow:hidden;
+    background-color: antiquewhite;
+}
+table.table.my-3 input[type='radio']{
+    margin-right: 10px;
+}
+input[type='radio']:after {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    top: -3px;
+    left: -1px;
+    background: #fff;
+    position: relative;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #5869f3;
+}
+input[type='radio']:checked:after {
+    background-color: #5869f3;
+}
+input[type=checkbox]#mail-to-assistant {
+    -webkit-appearance: none;
+	border: 2px solid #4b74b5;
+	padding: 8px;
+	border-radius: 3px;
+	display: inline-block;
+    position: relative;
+    margin: 5px 5px;
+    top: -3px;
+}
+.search_options input[type=checkbox],
+.edit_mode input[type=checkbox]{
+    -webkit-appearance: none;
+    border: 2px solid #4B74B5;
+    padding: 9px;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+    margin: 0px 5px -5px 0px;
+}
+.search_options input[type=checkbox]{
+    border: 0;
+    margin: 0px 0px -2px 0px;
+    box-shadow: 0 0 0 2px #5869f3;
+    padding: 8px;
+}
+.search_options input[type=checkbox]:checked:after,
+.edit_mode input[type=checkbox]:checked:after
+ {
+    content: '\2714';
+    position: absolute;
+    top: 0px;
+    left: 3px;
+    color: #4B74B5;
+}
+.search_options input[type=checkbox]:checked:after{
+    color: #5869f3;
+    top: -2px;
+    left: 2px;
+}
+.respons-margin{
+    margin-top: 2px !important;
+    padding: 0 0 0 2% !important;
+}
+.CommentsWrap{
+    padding-bottom: 10px !important;
+}
+.comment:last-of-type{
+    border: none !important;
+    margin-bottom:0 !important;
+}
+select, button, a, input[type="radio"], input[type="checkbox"], input[type="button"]{
+    cursor: pointer;
+}
+.badge-warning.position-absolute{
+    top: 0;
+    right: 0;
+}
+.fc-row .fc-content-skeleton tbody td{
+    top: -3px !important;
+}
+.fc-time-grid-event .fc-time,
+.fc-time-grid-event > .fc-content{
+    color: #fff;
+    font-size: 1rem;
 }
