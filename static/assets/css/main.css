@@ -2692,9 +2692,11 @@ ul.dropdown-menu.scrollable-menu {
 	}
 .edit-buttons.edit-mode a.save {
 	background: #4B74B5;
+	border-radius: 20px;
 	}
 .edit-buttons.edit-mode a.cancel {
 	background: #FF5454;
+	border-radius: 20px;
 	}
 .details-card.edit-mode {
 	margin: 0 0 45px;

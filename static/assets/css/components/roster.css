@@ -58,7 +58,7 @@ input[type='radio']:after{
 }
 .form-buttons button{
     border-radius: 20px;
-    padding: 4px 16px 4px 14px;
+    width: 70px;
 }
 @media screen and (max-width:992px){
     .display-block{
