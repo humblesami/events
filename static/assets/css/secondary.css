@@ -291,6 +291,20 @@ a.DocumentWrapper:hover{
     font-size: 0.85rem;
     font-weight: bold;
 }
+.DocName h5 {
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 0;
+    font-weight: 700;
+}
+.doc-info {
+    width: 70%;
+    display: inline-block;
+}
+.doc_icons{
+	position: absolute;
+	object-fit: contain;
+}
 .admin_mode{
     width: 50% !important;
     overflow: hidden;
