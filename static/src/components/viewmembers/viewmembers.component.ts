@@ -8,7 +8,7 @@ declare var $: any;
 @Component({
     selector: 'app-viewmembers',
     templateUrl: './viewmembers.component.html',
-    styleUrls: ['./viewmembers.component.css', '../userlist/userlist.component.css']
+    styleUrls: ['./viewmembers.component.css']
 })
 export class ViewmembersComponent implements OnInit {
     @Input() selection_input_str = '';
