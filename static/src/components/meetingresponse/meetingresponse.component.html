@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/components/meetingresponse.css">
 <div [ngClass]="{greyout:!my_event}" class="upcomingButton" id="tdmrb{{meeting_id}}">
     <button [disabled]="!my_event" (click)="respond_invitation('accepted', meeting_id)" class="">
         <i *ngIf="attendee_status == 'accepted'" class="fa fa-check fa-lg" style="color:white" modifiers="{}"></i>

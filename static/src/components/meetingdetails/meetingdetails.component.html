@@ -7,7 +7,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
 *ngIf="meeting_type == 'archive' || meeting_type == 'completed'"
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
-
+<link rel="stylesheet" href="/assets/css/components/comments.css">
+<link rel="stylesheet" href="/assets/css/components/meetingdetails.css">
 <div class="router-outlet">
     <div class="page-links">
         <span class="prev next-prev-link" title="Privious">

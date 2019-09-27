@@ -180,7 +180,7 @@ th.d-none.d-md-block{
     margin-block-end: -1px;
 }
 /* Committee */
-a:hover{
+a.kanban-committees-info-box:hover{
     color: #959595; 
 }
 a.DocumentWrapper:hover{
@@ -346,6 +346,7 @@ mention-list.dropup{
 .popup{
     z-index: 3;
 }
+.modal-footer .btn,
 .chat_group_container  button{
     border-radius: 20px;
     width: 70px;
