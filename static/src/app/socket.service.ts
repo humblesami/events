@@ -431,6 +431,7 @@ export class SocketService {
         };
     };
 
+
     user_selection_dialog(dialog_options){
         let obj_this = this;
         var selected_users = [];
@@ -486,13 +487,15 @@ export class SocketService {
             {
                 modalRef.componentInstance[key] = dialog_options.extra_input[key];
             }
-        }        
-        
-        modalRef.result.then((result) => {
-            if (result){
-                dialog_options.call_back(result);
-            }
-        });
+        }
+        if (dialog_options.call_back)
+        {
+            modalRef.result.then((result) => {
+                if (result){
+                    dialog_options.call_back(result);
+                }
+            });
+        }
     }
 
     emit_rtc_event(event_name, data, audience)

@@ -564,11 +564,16 @@ class ChatGroup(models.Model):
                 'id': mem.id,
                 'name': mem.name,
                 'photo': mem.image.url,
+                'image': mem.image.url
             })
+        is_owner = False
+        if group_obj.owner_id == request.user.id:
+            is_owner = True
         group = {
             'id': group_obj.id,
             'name': group_obj.name,
             'members': group_members,
+            'is_owner': is_owner,
             'created_by': {
                 'id': group_obj.created_by.id,
                 'name': group_obj.created_by.name,
@@ -830,10 +835,14 @@ class AuthUserChat(models.Model):
             chat_groups_list = []
             for obj in chat_groups:
                 unseen = len(MessageStatus.objects.filter(message__chat_group_id=obj.id, read=False))
+                is_owner = False
+                if obj.owner_id == request.user.id:
+                    is_owner = True
                 chat_group = {
                     'id': obj.id, 'name': obj.name, 'unseen': unseen,
                     'photo': '/static/assets/images/group.jpeg',
                     'members': [],
+                    'is_owner': is_owner,
                     'created_by': {
                         'id': obj.created_by.id,
                         'name': obj.created_by.name,

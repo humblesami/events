@@ -80,6 +80,7 @@ import { ActionsComponent } from '../components/actions/actions.component';
 import { ChatgroupComponent } from '../components/chatgroup/chatgroup.component';
 import { UserlistmodalComponent } from '../components/userlistmodal/userlistmodal.component';
 import { SearchComponent } from '../components/search/search.component';
+import { ViewmembersComponent } from '../components/viewmembers/viewmembers.component';
 
 @NgModule({
     imports: [
@@ -151,6 +152,7 @@ import { SearchComponent } from '../components/search/search.component';
         ChatgroupComponent,
         UserlistmodalComponent,
         SearchComponent,
+        ViewmembersComponent,
     ],
     providers:[
         AuthGuard,
@@ -162,6 +164,6 @@ import { SearchComponent } from '../components/search/search.component';
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [ChatgroupComponent, UserlistmodalComponent]
+    entryComponents: [ChatgroupComponent, UserlistmodalComponent, ViewmembersComponent]
 })
 export class AppModule { }

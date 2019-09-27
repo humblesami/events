@@ -6,6 +6,7 @@ import { AppUser, ChatGroup, BaseClient, ChatClient, Message, ChatUser } from '.
 import {SocketService} from "../../app/socket.service";
 import { Router } from '@angular/router';
 import { ChatgroupComponent } from '../chatgroup/chatgroup.component';
+import { ViewmembersComponent } from '../viewmembers/viewmembers.component';
 
 declare var $: any;
 
@@ -317,6 +318,7 @@ export class MessengerComponent implements OnInit {
             }
         }
         obj_this.httpService.post(input_data, function(data){
+            let is_owner = data.is_owner;
             obj_this.selected_chat_group = data as ChatGroup;
             var all_chat_groups = obj_this.socketService.chat_groups;
             for(var n=0; n < all_chat_groups.length; n++)
@@ -332,14 +334,26 @@ export class MessengerComponent implements OnInit {
                 obj_this.selectedPeople = result.selectd_users;
                 obj_this.update_chat_group_members();
             };
-            var diaolog_options = {
-                selected_users: obj_this.selected_chat_group.members,
-                user_list: [],
-                component: ChatgroupComponent,
-                extra_input: {group_name : group.name},
-                call_back: on_modal_closed, 
-            };
-            obj_this.socketService.user_selection_dialog(diaolog_options);
+            if (is_owner)
+            {
+                var diaolog_options = {
+                    selected_users: obj_this.selected_chat_group.members,
+                    user_list: [],
+                    component: ChatgroupComponent,
+                    extra_input: {group_name : group.name},
+                    call_back: on_modal_closed, 
+                };
+                obj_this.socketService.user_selection_dialog(diaolog_options);
+            }
+            else
+            {
+                var member_diaolog_options = {
+                    selected_users: obj_this.selected_chat_group.members,
+                    user_list: obj_this.selected_chat_group.members,
+                    component: ViewmembersComponent
+                };
+                obj_this.socketService.user_selection_dialog(member_diaolog_options);
+            }
             
         } , function(){
             console.log('Group members not fetched');
