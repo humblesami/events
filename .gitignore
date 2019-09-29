@@ -12,7 +12,7 @@ db.*
 media/*
 !media/profile
 media/profile/*
-!media/profile/default.png
+!media/profile/default.pngx
 !media/profile/ETjUSr1v2n.png
 */migrations
 */migrations/*
