@@ -201,6 +201,22 @@ var js_utils = window['js_utils'] = {
             }
         }
     },
+    move_element: function(arr, old_index, new_index){
+        while (old_index < 0) {
+            old_index += arr.length;
+        }
+        while (new_index < 0) {
+            new_index += arr.length;
+        }
+        if (new_index >= arr.length) {
+            var k = new_index - arr.length + 1;
+            while (k--) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+        return arr; // for testing purposes
+    },
     read_file: function(file, call_back) {
         var reader = new FileReader();        
         reader.readAsDataURL(file, "UTF-8");
@@ -273,6 +289,17 @@ var js_utils = window['js_utils'] = {
         }
         result =  result.join(' ');
         return result;
+    },
+    sort_by_two_keys:function(json_array){
+        var cmp = function(x, y){
+            return x > y ? 1 : x < y ? -1 : 0; 
+        };
+        return json_array.sort(function(a, b){
+            return cmp( 
+                [cmp(a.online, b.online), cmp(a.name, b.name)], 
+                [cmp(b.online, a.online), cmp(b.name, a.name)]
+            );
+        });
     },
     is_public_route: function (url){
         if(!url)

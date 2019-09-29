@@ -245,13 +245,14 @@ export class SocketService {
 
                 obj_this.unseen_messages = data.unseen;
                 obj_this.chat_clients = new Array<ChatClient>();
-                for(var kk in data.chat_groups)
+                for(var grp of data.chat_groups)
                 {
-                    obj_this.chat_clients.push(data.chat_groups[kk]);
+                    obj_this.chat_clients.push(grp);
                 }
-                for(var km in data.friends)
+                data.friends = window['js_utils'].sort_by_two_keys(data.friends);
+                for(var frd of data.friends)
                 {
-                    obj_this.chat_clients.push(data.friends[km]);
+                    obj_this.chat_clients.push(frd);
                 }
                 obj_this.chat_groups = data.chat_groups;
                 obj_this.chat_users = data.friends;

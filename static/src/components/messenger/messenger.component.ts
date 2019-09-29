@@ -96,14 +96,34 @@ export class MessengerComponent implements OnInit {
                         console.log(user , "Should never happen now");
                         return;
                     }
-                    var temp = socketService.chat_users.filter(function(item){
-                        return item.id == user.id;
-                    });
-                    if(temp.length == 0){
+                    var i = 0;
+                    var item_index = -1;
+                    var filteredObj = undefined;
+                    for(var item of socketService.chat_users)
+                    {
+                        if(item.id == user.id)
+                        {
+                            filteredObj = item;
+                            item_index = i;
+                            break;
+                        }
+                        i++;
+                    }
+                    if(item_index == -1){
                         console.log(user , " not found");
                         return;
                     }
-                    let client = temp[0] as ChatClient;
+                    var new_idex = socketService.chat_users.length - 1;
+                    let client = filteredObj as ChatClient;
+                    if(user.online)
+                    {
+                        new_idex = 0;
+                        window['js_utils'].move_element(socketService.chat_users, item_index, new_idex);
+                    }
+                    else{
+                        window['js_utils'].move_element(socketService.chat_users, item_index, new_idex);
+                    }
+                    // console.log(user.online, item_index)
                     client.online = user.online;
                 }
 
