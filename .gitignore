@@ -13,6 +13,7 @@ media/*
 !media/profile
 media/profile/*
 !media/profile/default.png
+!media/profile/ETjUSr1v2n.png
 */migrations
 */migrations/*
 */migrations/*.py
