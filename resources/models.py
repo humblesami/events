@@ -14,15 +14,43 @@ class Folder(CustomModel):
     def __str__(self):
         return self.name
     
+
+    def get_accurate_name(self):
+        if self.parent:
+            self.personal = self.parent.personal
+            folder_with_same_name = Folder.objects.filter(parent_id=self.parent.id, name=self.name)
+            if len(folder_with_same_name) > 1:
+                count = 0
+                while folder_with_same_name:
+                    count += 1
+                    folder_with_same_name = Folder.objects.filter(parent_id=self.parent.id, name=self.name+'-'+str(count))
+                return self.name + '-' + str(count)
+            else:
+                return self.name
+        else:
+            folder_with_same_name = Folder.objects.filter(parent__isnull=True, name=self.name)
+            if len(folder_with_same_name) > 1:
+                count = 0
+                while folder_with_same_name:
+                    count += 1
+                    folder_with_same_name = Folder.objects.filter(parent__isnull=True, name=self.name+'-'+str(count))
+                return self.name + '-' + str(count)
+            else:
+                return self.name
+
+
     def save(self, *args, **kwargs):
         current_user = get_current_user()
         creating = False
+        name_updated = False
         if not self.pk:
             creating = True
-            if self.parent:
-                self.personal = self.parent.personal
+            name_updated = True
+        if not name_updated:
+            self.name = self.get_accurate_name()
         super(Folder, self).save(*args, **kwargs)
         if creating and current_user not in self.users.all():
+            name_updated = True
             self.users.add(current_user.id)
             self.save()
 
@@ -165,7 +193,7 @@ class Folder(CustomModel):
     def search_folder(self, kw, user_id, results, search_type, recursive=False):
         obj = self
         if search_type == 'files':
-            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token', 'personal').order_by('-pk')
+            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token', 'personal', 'created_by_id').order_by('-pk')
             for file in files:
                 personal = False
                 if file['personal'] and file['created_by_id'] == user_id:
@@ -295,16 +323,40 @@ class ResourceDocument(File):
         docs = list(docs)
         return docs
 
+
+    def get_accurate_name(self):
+        file_with_same_name = ResourceDocument.objects.filter(folder_id=self.folder.id, name=self.name)
+        if len(file_with_same_name) > 1:
+            count = 0
+            while file_with_same_name:
+                count += 1
+                file_name = self.name.split('.')
+                if len(file_name) >= 2:
+                    file_name[len(file_name)-2] = file_name[len(file_name)-2] + '-' + str(count)
+                else:
+                    file_name[len(file_name)-1] = file_name[len(file_name)-1] + '-' + str(count)
+                diff_name = '.'.join(file_name)
+                file_with_same_name = ResourceDocument.objects.filter(folder_id=self.folder.id, name=diff_name)
+            return diff_name
+        else:
+            return self.name
+
+
     def save(self, *args, **kwargs):
         if not self.file_type:
             self.file_type = 'resource'
         current_user = get_current_user()
         creating = False
+        name_updated = False
         if not self.pk:
             creating = True
+            name_updated = True
             self.personal = self.folder.personal
+        if not name_updated:
+            self.name = self.get_accurate_name()
         super(ResourceDocument, self).save(*args, **kwargs)
         if creating and current_user not in self.users.all():
+            name_updated = False
             self.users.add(current_user.id)
             self.save()
 
