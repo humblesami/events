@@ -512,7 +512,7 @@ class SignatureDoc(File, Actions):
         if kw:
             docs = search_db({'kw': kw, 'search_models': {'esign': ['SignatureDoc']}})
         else:
-            docs = cls.objects.all()
+            docs = cls.objects.all().order_by('-pk')
 
         total_cnt = docs.count()
         offset = params.get('offset')

@@ -648,7 +648,7 @@ def search_db(params, search_fields=None):
                 q_objects |= Q(**{field+'__contains': params['kw']})
                 kwargs.update({'{0}__{1}'.format(field, 'contains'): search_text})
             model_obj = apps.get_model(app_name, model_name)
-            search_result = model_obj.objects.filter(q_objects)
+            search_result = model_obj.objects.filter(q_objects).order_by('-pk')
             results = search_result
     return results
 

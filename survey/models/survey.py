@@ -98,13 +98,6 @@ class Survey(Actions):
 
     @classmethod
     def get_records(cls, request, params):
-        # res = {
-        #     'app': cls._meta.app_label,
-        #     'model': cls._meta.model_name,
-        #     'user': request.user,
-        #     'permissions': ['view'],
-        # }
-        # has_permission = ws_methods.has_permission(res)
         surveys = []
         kw = params.get('kw')
         uid = request.user.id
@@ -119,14 +112,14 @@ class Survey(Actions):
         else:
             # docs = cls.objects.all()    
             if results_visibility:
-                survey_list = Survey.objects.all().distinct()
+                survey_list = Survey.objects.all().order_by('-pk').distinct()
             else:
                 survey_list = Survey.objects.filter(
                     (Q(meeting__id__isnull=False) & Q(meeting__attendees__id=uid))
                         |
                         (Q(topic__id__isnull=False) & Q(topic__event__attendees__id=uid))
                         |
-                        Q(respondents__id=uid)).distinct()
+                        Q(respondents__id=uid)).order_by('-pk').distinct()
         if params.get('meeting_id'):
             meeting_id = params.get('meeting_id')
             survey_list = survey_list.filter(meeting_id=meeting_id)

@@ -58,7 +58,7 @@ class Committee(CustomModel):
         if kw:
             committees_orm = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Committee']}})
         else:
-            committees_orm = Committee.objects.filter()
+            committees_orm = Committee.objects.filter().order_by('-pk')
         total_cnt = committees_orm.count()
         offset = params.get('offset')
         limit = params.get('limit')

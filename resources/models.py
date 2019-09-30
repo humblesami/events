@@ -83,7 +83,7 @@ class Folder(CustomModel):
         if not kw:
             kw = ''
         if parent_id:
-            folder = Folder.objects.filter(pk=parent_id, users__id=user_id)
+            folder = Folder.objects.filter(pk=parent_id, users__id=user_id).order_by('-pk')
             if folder:
                 folder = folder[0]
                 result['folders'] = folder.search_folder(kw, user_id, [], 'folders', recursive)
@@ -106,7 +106,7 @@ class Folder(CustomModel):
         if not kw:
             kw = ''
         if parent_id:
-            folder = Folder.objects.filter(pk=parent_id, users__id=user_id)
+            folder = Folder.objects.filter(pk=parent_id, users__id=user_id).order_by('-pk')
             if folder:
                 folder = folder[0]
                 result = folder.search_folder(kw, user_id, [], 'files', recursive)                
@@ -116,7 +116,7 @@ class Folder(CustomModel):
 
     @classmethod
     def search_root(cls, kw, user_id, results, search_type, recursive=False):
-        folders = Folder.objects.filter(parent_id=None, users__id=user_id)
+        folders = Folder.objects.filter(parent_id=None, users__id=user_id).order_by('-pk')
         if search_type == 'folders':
             records = []
             for folder in folders:
@@ -139,7 +139,7 @@ class Folder(CustomModel):
     def search_folder(self, kw, user_id, results, search_type, recursive=False):
         obj = self
         if search_type == 'files':
-            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token')
+            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token').order_by('-pk')
             for file in files:
                 results.append({
                     'id': file['id'],
@@ -147,7 +147,7 @@ class Folder(CustomModel):
                     'access_token': file['access_token']
                 })
         if search_type == 'folders' or recursive:
-            folders = obj.folder_set.filter(users__id=user_id)
+            folders = obj.folder_set.filter(users__id=user_id).order_by('-pk')
             records = []
             for folder in folders:
                 folder.total_files = 0
@@ -199,16 +199,16 @@ class Folder(CustomModel):
                 folders = folders.filter(Q(parent__isnull=True) & Q(users__id=user_id))
         else:
             if parent_id:
-                folders = Folder.objects.filter(Q(parent_id=parent_id) & Q(users__id=user_id))
+                folders = Folder.objects.filter(Q(parent_id=parent_id) & Q(users__id=user_id)).order_by('-pk')
             else:
-                folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id))
+                folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id)).order_by('-pk')
 
         total_cnt = folders.count()
         offset = params.get('offset')
         limit = params.get('limit')
         records = []
         users_obj = ws_methods.get_model('meetings','Profile')
-        users_obj = users_obj.objects.all()
+        users_obj = users_obj.objects.all().order_by('-pk')
         all_users = list(users_obj.values('id', 'name'))
         if limit:
             folders = folders[offset: offset + int(limit)]

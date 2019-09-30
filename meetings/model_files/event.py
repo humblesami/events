@@ -458,18 +458,9 @@ class Event(CustomModel):
         results = None
         kw = params.get('kw')
         if kw:
-            # ar = []
-            # models = []
-            # fields = []
-            # models.append(name='Event', fields=fields)
-            #
-            # fields = ['name', 'email']
-            # models.append(name='Profile', fields=fields)
-            # ar.append(SearchApp(name='meetings', models=models))
-
             results = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Event']}})
         else:
-            results = Event.objects.all()
+            results = Event.objects.all().order_by('-pk')
         if meeting_type == 'archived':
             meetings = results.filter(archived=True, publish=True)
         elif meeting_type == 'draft':

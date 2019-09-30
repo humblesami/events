@@ -331,10 +331,10 @@ class Profile(user_model, CustomModel):
         if kw:
             profiles = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
         else:
-            profiles = Profile.objects.all()
+            profiles = Profile.objects.all().order_by('-pk')
             
         if group:
-            profiles = profiles.filter(groups__name__iexact=group)
+            profiles = profiles.filter(groups__name__iexact=group).order_by('-pk')
         
         total_cnt = profiles.count()
         offset = params.get('offset')

@@ -267,7 +267,7 @@ class Voting(Actions):
         if kw:
             votings = ws_methods.search_db({'kw': kw, 'search_models': {'voting': ['Voting']}})
         else:
-            votings = Voting.objects.all()
+            votings = Voting.objects.all().order_by('-pk')
 
         votings = Actions.gt_my_open_actions(votings, request.user)
 
