@@ -492,10 +492,10 @@
                 var note_points = annotations_of_page.filter(function(a) {
                     return a.sub_type;
                 });
-                if(note_points.length)
-                {
-                    console.log(note_points);
-                }
+                // if(note_points.length)
+                // {
+                //     console.log(note_points);
+                // }
                 for (var p_index in annotations_of_page) {
                     var c_point = annotations_of_page[p_index];
                     // console.log(c_point);
@@ -806,7 +806,7 @@
                                         uint8Array[i] = raw.charCodeAt(i);
                                     }
                                     doc_data.doc = uint8Array;
-                                    console.log(window['dt_functions'].now_full(), 'skipped download ');
+                                    // console.log(window['dt_functions'].now_full(), 'skipped download ');
                                 }
                                 else
                                 {
@@ -817,7 +817,7 @@
                                 RENDER_OPTIONS.document_data = doc_data;
                                 site_functions.hideLoader(doc_loading_step);
                                 doc_loading_step = 'document content';
-                                site_functions.showLoader(doc_loading_step);                                                                
+                                site_functions.showLoader(doc_loading_step);
                                 PDFJS.getDocument(doc_data.doc).then(function(pdf_data) {
                                     console.log(window['dt_functions'].now_full(), 'download completed');
                                     pdf_doc_data = pdf_data;
@@ -912,7 +912,7 @@
                                 if(pange_number == NUM_PAGES)
                                 {
                                     on_document_rendered();
-                                    console.log(window['dt_functions'].now_full(), 'document done');
+                                    // console.log(window['dt_functions'].now_full(), 'document done');
                                 }
                             }
                             
@@ -1391,7 +1391,7 @@
                         for (var annotationItem of pointAnnotations) {                            
                             var comments = annotationItem.comments;
                             if(annotationItem.sub_type)
-                            console.log(comments, 5333);
+                            // console.log(comments, 5333);
                             renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);                            
                         }
                         onAllCommentsRendered(point_uuid)
@@ -3055,7 +3055,7 @@
                             return;
                         }
                         setDocDirty(documentId);
-                        console.log(Date(), 1333);
+                        // console.log(Date(), 1333);
                         clearTimeout(annot_save_timeout);
                         annot_save_timeout = setTimeout(function() {
                             console.log(Date(), 555);

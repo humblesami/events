@@ -53,13 +53,14 @@ export class ResourceDetailsComponent implements OnInit {
     seat_default_options(){
         let obj_this = this;
         let is_not_root = obj_this.route.snapshot.params.id;
-        if(is_not_root)
+        var prev_phrase = '';
+        if(obj_this.search_options && obj_this.search_options.search_kw)
         {
-            var prev_phrase = '';
-            if(obj_this.search_options && obj_this.search_options.search_kw)
-            {
-                prev_phrase = obj_this.search_options.search_kw;
-            }
+            prev_phrase = obj_this.search_options.search_kw;
+        }
+        // console.log(prev_phrase, 4343);
+        if(is_not_root)
+        {            
             obj_this.search_options = {
                 search_type : 'all',
                 recursive : false,
@@ -75,35 +76,30 @@ export class ResourceDetailsComponent implements OnInit {
         }
     }
 
-    search(search_type=undefined){
+    search(st=undefined){        
         let obj_this = this;
+        if(st)
+        {
+            obj_this.search_options.search_type = st;
+        }
+        var word = $('#search_input').val();
+        obj_this.search_options.search_kw = word;
         obj_this.reloading = true;
         if(!obj_this.advance_search)
         {
             obj_this.seat_default_options();
         }
-        else if (search_type)
+        else if (obj_this.search_options.search_type)
         {
-            if(search_type == 'recursive')
+            if(obj_this.search_options.search_type == 'files' && obj_this.cookie_key.indexOf('root') > -1)
             {
-                obj_this.search_options.recursive = !obj_this.search_options.recursive;
-            }
-            else{
-                if(search_type == 'files' && obj_this.cookie_key.indexOf('root') > -1)
-                {
-                    obj_this.search_options.recursive = true;
-                }
-                obj_this.search_options.search_type = search_type;
-            }
-            if(!obj_this.search_options.recursive)
-            {
-                obj_this.search_options.recursive = undefined;
+                obj_this.search_options.recursive = true;
             }
             localStorage.setItem(obj_this.cookie_key, JSON.stringify(obj_this.search_options));
         }
-        // console.log(obj_this.search_options, obj_this.advance_search, 455);
+        // console.log(obj_this.search_options.recursive, 444);
         setTimeout(function(){
-            obj_this.folder_id = obj_this.route.snapshot.params.id;
+            obj_this.folder_id = obj_this.route.snapshot.params.id;            
             obj_this.reloading = false;
         }, 20);
     }
@@ -113,6 +109,7 @@ export class ResourceDetailsComponent implements OnInit {
         let obj_this = this;
         // $('.search_options>input[values="'+obj_this.search_options.search_type+'"]').prop('checked', true);
         obj_this.folder_id = obj_this.route.snapshot.params.id;
+        // console.log(43434);
         obj_this.search();
     }
 }

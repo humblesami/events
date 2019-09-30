@@ -225,6 +225,7 @@ export class FoldersComponent implements OnInit {
     ngOnInit() {
         let obj_this = this;
         obj_this.add_folder_create_button();
+        // console.log(obj_this.search_kw, obj_this.search_type, obj_this.recursive);
         if(obj_this.search_type == 'files')
         {
             return;

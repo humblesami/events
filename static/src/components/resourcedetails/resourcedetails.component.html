@@ -21,9 +21,8 @@
         
         <div class="sub search pt-4">
             <div class="input-group d-flex main-full-seachbar mb-3">
-                <input id="search_input" type="text" [(ngModel)]="search_options.search_kw"
-                    (change)="search()"
-                    (keyup)="$event.keyCode == 13 ? search(): null"
+                <input id="search_input" type="text"
+                    (change)="search()"                    
                     placeholder="Search..." class="form-control py-2 border-0">
                 <span class="">
                     <button class="btn bg-white border-left" 
@@ -64,8 +63,8 @@
                 
                 <span>
                     <input type="checkbox"
-                    [checked]="search_options.recursive"
                     (change)="search('recursive')"
+                    [(ngModel)]="search_options.recursive"
                     name="recursive" />
                     <label>Recursive</label>
                 </span>
@@ -75,7 +74,7 @@
         
 
         <div class="sub_folders" *ngIf="!reloading && search_options.search_type != 'files'">
-            <app-folders       
+            <app-folders
             search_kw="{{search_options.search_kw}}"
             recursive="{{search_options.recursive}}"
             search_type="{{search_options.search_type}}"

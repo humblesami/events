@@ -174,7 +174,7 @@ export class DocumentComponent implements OnInit {
                 $('.loadingoverlay').hide();
             }
             else{
-                console.log(window['dt_functions'].now_full(), 'doc info fetched');
+                // console.log(window['dt_functions'].now_full(), 'doc info fetched');
                 window['app_libs']['pdf'].load(function(){
                     window['pdf_js_module'].pdf_render(doc_data);
                 });
