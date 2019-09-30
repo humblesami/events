@@ -84,6 +84,8 @@ export class FoldersComponent implements OnInit {
         });
     }
 
+    personal = false;
+
     get_list()
     {
         let obj_this = this;
@@ -111,6 +113,13 @@ export class FoldersComponent implements OnInit {
     on_result(result){
         let obj_this = this;
         obj_this.records = result.folders;
+        console.log(result);
+        
+        if(result.personal)
+        {
+            obj_this.personal = result.personal;
+            obj_this.add_folder_create_button();
+        }
         if(obj_this.parent_id)
         {
             obj_this.data_loaded.emit(result);
@@ -205,7 +214,7 @@ export class FoldersComponent implements OnInit {
 
     add_folder_create_button(){
         $('#create_new_folder').remove();
-        if(!this.socketService.admin_mode)
+        if(!this.socketService.admin_mode && !this.personal)
         {
             return;
         }

@@ -33,6 +33,7 @@ export class DocumentsComponent implements OnInit {
     roterLinkPrefix = '';
     show_renamer_button = false;
     selectedUsers = [];
+    personal = false;
     parent = undefined;
     selected_docs = [];
     doc_types = {
@@ -175,10 +176,30 @@ export class DocumentsComponent implements OnInit {
         }
         // console.log(6565,133);
         this.httpService.get(input_data, function(data){
+            if(data.files)            
+            {
+                obj_this.personal = data.personal;                
+                if(!data.me && data.personal)
+                {
+                    obj_this.personal_access = false;
+                }
+                data = data.files;
+            }
             obj_this.on_result(data);
-            obj_this.on_admin_mode_changed();
+            if (!obj_this.personal)
+            {
+                obj_this.on_admin_mode_changed();
+            }
+            else
+            {
+                setTimeout(function(){
+                    obj_this.init_file_drag_drop();
+                }, 10);
+            }
         }, null);
     }
+
+    personal_access = true;
 
     on_result(data){
         let obj_this = this;

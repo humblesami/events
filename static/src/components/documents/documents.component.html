@@ -1,4 +1,4 @@
-<div *ngIf="docs.length || socketService.admin_mode" >
+<div *ngIf="docs.length || socketService.admin_mode || personal" >
     <div class="doc_container">
         <h3 class="text-dark pb-3">
             <i class="icon-doc-file text-primary"></i> {{title}}
@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of docs">
             <a class="DocumentWrapper gray-bg" routerLink="{{roterLinkPrefix+doc.id}}">
-                <div *ngIf="!deleting && socketService.admin_mode && !readonly" class="doc-del-btn"
+                <div *ngIf="!deleting && (socketService.admin_mode || personal) && !readonly" class="doc-del-btn"
                 (click)="delete_file($event, doc.id)">
                     <i class="far fa-trash-alt pointer" ></i>
                 </div>                
@@ -22,19 +22,19 @@
                 </div>
                 <div class="DocText" (click)="renameService.prevent_default($event, doc)">
                     <div class="DocName">
-                        <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
+                        <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode || personal}">
                             <span class="text-truncate doc-info">{{doc.name}}</span>
                             <span class="d-flex">
-                                <button (click)="renameService.enable_rename($event, doc)" *ngIf="socketService.admin_mode" class="btn btn-sm btn-primary ml-2 mr-1">
+                                <button (click)="renameService.enable_rename($event, doc)" *ngIf="socketService.admin_mode || personal" class="btn btn-sm btn-primary ml-2 mr-1">
                                     <i class="fas fa-edit "></i>
                                 </button>
-                                <button *ngIf="res_model=='ResourceDocument' && socketService.admin_mode" 
-                                    (click)="userService.get_access_details(doc,'resources','ResourceDocument', parent)" class="btn btn-sm btn-primary">
+                                <button *ngIf="res_model=='ResourceDocument' && (socketService.admin_mode || personal)" 
+                                (click)="userService.get_access_details(doc,'resources','ResourceDocument', parent)" class="btn btn-sm btn-primary">
                                     <i class="fa fa-user-plus"></i>
                                 </button>
                             </span>
                         </div>
-                        <div *ngIf="doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode}">
+                        <div *ngIf="personal_access && doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode || personal}">
                             <input class="form-control renamer"
                                 (blur)="renameService.renamer_focused_out($event,doc,'file')"
                                 (keyup)="renameService.renamer_focused_out($event,doc,'file')"												
@@ -54,7 +54,7 @@
     <div *ngIf="docs && docs.length">
         {{docs.length}} documents
     </div>
-    <div *ngIf="socketService.admin_mode && !readonly">        
+    <div *ngIf="(personal || socketService.admin_mode) && !readonly">        
         <input class="dlc-file-picker" type="file" name='files[]' multiple/>
     </div>
 </div>

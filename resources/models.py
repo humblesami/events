@@ -150,6 +150,8 @@ class Folder(CustomModel):
         parent_id = params.get('parent_id')
         user_id = request.user.id
         recursive = params.get('recursive')
+        personal = False
+        me = False
         if recursive == 'false':
             recursive = None
         kw = params.get('kw')
@@ -159,10 +161,19 @@ class Folder(CustomModel):
             folder = Folder.objects.filter(pk=parent_id, users__id=user_id).order_by('-pk')
             if folder:
                 folder = folder[0]
+                if folder.personal:
+                    personal = folder.personal
+                    if folder.created_by_id == request.user.id:
+                        me = True
                 result = folder.search_folder(kw, user_id, [], 'files', recursive)                
         elif recursive:
             result = cls.search_root(kw, user_id, [], 'files', recursive)
-        return result
+        data = {
+            'files': result,
+            'personal': personal,
+            'me': me
+        }
+        return data
 
     @classmethod
     def search_root(cls, kw, user_id, results, search_type, recursive=False):
