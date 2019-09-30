@@ -166,7 +166,7 @@ class Folder(CustomModel):
     def search_folder(self, kw, user_id, results, search_type, recursive=False):
         obj = self
         if search_type == 'files':
-            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token').order_by('-pk')
+            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token', 'personal').order_by('-pk')
             for file in files:
                 personal = False
                 if file['personal'] and file['created_by_id'] == user_id:
