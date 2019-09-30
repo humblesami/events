@@ -23,7 +23,6 @@ def upload_files(request):
         res_app = req['res_app']
         res_model = req['res_model']
         res_id = req['res_id']
-        personal = req.get('personal')
         model = ws_methods.get_model(res_app, res_model)
         obj = model.objects.get(pk=res_id)
         cloud_data = req.get('cloud_data')            
@@ -31,19 +30,13 @@ def upload_files(request):
             cloud_data = json.loads(cloud_data)            
             for file in cloud_data:
                 with transaction.atomic():
-                    if personal:
-                        created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'], peronal=personal)
-                    else:
-                        created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
+                    created_file = obj.documents.create(name=file['name'], cloud_url=file['url'], file_name=file['file_name'])
                     docs.append({'id':created_file.id, 'name': file['name'], 'access_token': created_file.access_token})
         for key in request.FILES:
             files = request.FILES.getlist(key)            
             for file in files:
                 with transaction.atomic():
-                    if personal:
-                        created_file = obj.documents.create(name=file.name, file_name=file.name, attachment=file, personal=personal)
-                    else:
-                        created_file = obj.documents.create(name=file.name, file_name=file.name, attachment=file)
+                    created_file = obj.documents.create(name=file.name, file_name=file.name, attachment=file)
                     docs.append({'id':created_file.id, 'name': file.name, 'access_token': "Local"})
 
         docs = json.dumps(docs)

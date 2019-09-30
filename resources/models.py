@@ -62,9 +62,6 @@ class Folder(CustomModel):
             name =name,
         )
         parent_id = params.get('parent_id')
-        personal = params.get('personal')
-        if personal:
-            folder.personal = personal
         if parent_id:        
             folder.parent_id = parent_id
         folder.save()
