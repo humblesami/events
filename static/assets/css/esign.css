@@ -39,8 +39,9 @@ body.public #viewer_container
 	}
 .new_sign .field_type {
 	margin: 0 .5rem;
-	padding: 0 .3rem;
-	flex: 1;
+    padding: 0 .3rem;
+    
+	/* flex: 1; */
 	}
 .new_sign input.field_type {
 	border-radius: .2rem;
@@ -51,19 +52,31 @@ body.public #viewer_container
     height: 80%;
     top: 5%;
 }
-
+.new_sign{
+    padding: 0;
+    min-width: 80px;
+    min-height:30px;
+    width: 180px;
+    height:40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sign_container,
+.new_sign .field_type,
+.new_sign .user_name{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .new_sign.active_signature{
-    display: block;
+    /* display: block; */
     box-shadow: 0px 0px 0px 8px yellow;
 }
 .sign_container{
-    cursor: pointer;    
+    cursor: pointer;   
 }
-.new_sign{
-    padding: 0;
-    width:160px;
-    height:40px;
-}
+
 
 .sign_container[signed="true"]{
     background: white;

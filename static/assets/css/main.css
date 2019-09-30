@@ -286,10 +286,6 @@ span.rounded-circle img {
 	border-color: #4b74b5;
 	background: #4b74b5;
 	}
-.btn-primary:hover {
-	border-color: #638FC9;
-    background: #638FC9;
-	}
 .btn-primary:focus,
 .btn-primary.focus {
 	color: #ffffff;
@@ -1839,10 +1835,12 @@ button {
 .app-menu__item:first-child {
 	border-top: 1px solid transparent;
 	}
+.btn-primary:hover,
 .app-menu__item.active,
 .app-menu__item:hover,
 .app-menu__item:focus {
-	background: #638FC9;
+	background: #375990;
+	border-color: #375990;
 	text-decoration: none;
 	color: #ffffff;
 	}
@@ -2111,7 +2109,8 @@ body.public .router-outlet{
     width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+	white-space: nowrap;
+	padding: .375rem .375rem;
 	}
 .MeetingHeadWrapper .btn i,
 .MeetingBtnWrapper .btn i {
