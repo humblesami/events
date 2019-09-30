@@ -294,13 +294,17 @@ span.rounded-circle img {
 .btn-primary.focus {
 	color: #ffffff;
 	background-color: #4b74b5;
-	border: none;
 	outline: none;
 	box-shadow: none;
 	}
 button:focus {
 	outline: transparent;
 	}
+a:not([href]):not([tabindex]):focus, 
+a:not([href]):not([tabindex]):hover,	
+a:not([href]):not([tabindex])	{
+	color: #fff;
+}
 .btn-primary:not(:disabled):not(.disabled):active,
 .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {
