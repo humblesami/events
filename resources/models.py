@@ -19,7 +19,8 @@ class Folder(CustomModel):
         creating = False
         if not self.pk:
             creating = True
-            self.personal = self.parent.personal
+            if self.parent:
+                self.personal = self.parent.personal
         super(Folder, self).save(*args, **kwargs)
         if creating and current_user not in self.users.all():
             self.users.add(current_user.id)
