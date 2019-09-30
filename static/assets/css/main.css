@@ -2417,7 +2417,8 @@ a.kanban-card.profiledataresume .DocumentWrapper {
 .meet-elementsInfo {
 	display: block;
 	border-radius: 0;
-	padding: 0 10px 8px 0px;
+    padding: 0 10px 8px 0px;
+    border-bottom: 1px solid #e1e1e1;
 	margin: 5px 0 25px 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
