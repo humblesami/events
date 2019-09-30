@@ -24,6 +24,21 @@ class Folder(CustomModel):
             self.users.add(current_user.id)
             self.save()
 
+
+    def create_personal_folder(cls, request, params):
+        personal_folder = None
+        try:
+            personal_folder = cls.objects.filter(personal=True, created_by_id = request.user.id)
+            if not personal_folder:
+                personal_folder = cls(name='My Folder', personal=True)
+                personal_folder.save()
+                personal_folder.users.add(request.user.id)
+                personal_folder.save()
+        except:
+            if personal_folder:
+                personal_folder.delete()
+
+
     def update_child_access(self, ids_to_remove, user_id):
         if self.id:
             documents = self.documents.all()

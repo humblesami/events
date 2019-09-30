@@ -119,6 +119,11 @@ class AuthUser(models.Model):
             user_data['user_photo'] = user_data['photo']
         except:
             pass
+        """ Creating Peronsl Folder if not exists """
+        folder_model = ws_methods.get_model('resources', 'Folder')
+        method_to_call =  getattr(folder_model, 'create_personal_folder')
+        request.user = user
+        method_to_call(folder_model, request, {})
         return user_data
 
     @classmethod
