@@ -383,7 +383,7 @@ breadcrumb
 	margin: 0 3px;
 	font-size: 12px;
 	border-radius: 20px;
-	width: 70px;
+	min-width: 70px;
 	overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2114,7 +2114,7 @@ body.public .router-outlet{
     background: transparent;
     color: #3059C9;
     font-size: inherit;
-    width: 100px;
+    min-width: 70px;
     overflow: hidden;
     text-overflow: ellipsis;
 	white-space: nowrap;

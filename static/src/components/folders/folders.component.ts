@@ -113,7 +113,7 @@ export class FoldersComponent implements OnInit {
     on_result(result){
         let obj_this = this;
         obj_this.records = result.folders;
-        console.log(result);
+        // console.log(result);
         
         if(result.personal)
         {
@@ -250,7 +250,7 @@ export class FoldersComponent implements OnInit {
         }
         this.get_list();
         obj_this.socketService.call_backs_on_mode_changed['handle_folder_create'] = function(){
-            if(obj_this.socketService.admin_mode)
+            if(obj_this.socketService.admin_mode || obj_this.personal)
             {
                 $('#create_new_folder').remove();
                 obj_this.add_folder_create_button();
