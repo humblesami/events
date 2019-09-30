@@ -3,15 +3,12 @@
     <link rel="stylesheet" href="/static/assets/css/home_calendar.css" />
     <div class="container">
         <div id="welcome" *ngIf="home_data">
-            <!-- <section *ngIf="home_data && to_do_count" class="todoitembtn">
-                <button  (click)="scroll_to_do()">Todo Items: {{to_do_count}}</button>
-            </section> -->
             <section class="HomepageDocumentSection">
                 <div class="row">
-                    <div class="col-md-7 WelcomeContent">
-                    <h3 class="text-dark pb-1 mb-3">
-                        <span class="head-icon-end"> <i class="icon-newspaper"></i> {{home_data.news.name}}</span>
-                    </h3>
+                    <div class="col-md-7 WelcomeContent">                    
+                        <h3 class="text-dark pb-1 mb-3">
+                            <i class="icon-newspaper text-primary"></i> {{home_data.news.name}}
+                        </h3>                    
                     <div class="HomePageDiscription">
                         <div *ngIf="home_data.description" class="HomePageContentText">
                             <div class="HomePageContentImg img-flex">                        
@@ -33,14 +30,16 @@
             </section>
             
             <section *ngIf="to_do_count" class="HomepageDocumentSection">            
-                <h2 class="border-bottom text-dark pb-3 mb-0"><i class="icon-action"></i> Actions</h2>
+                <h3 class="text-dark pb-1 mb-3 border-bottom">
+                    <i class="icon-action text-primary"></i> Actions
+                </h3>
                 <!--Surveys-->
                 <div id="to-do">
                     <div class="carousel slide carousel-multi-item pt-3 pb-4" data-ride="carousel"
                     *ngIf="home_data.to_do_items.pending_surveys.length">
                         <div class="clearfix">
                             <h4 class="text-primary pb-3 float-left">
-                                Surveys
+                               <i class="icon-committees"></i> Surveys
                             </h4>
                             <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_surveys.length > visible_limit['survey']">
                                 <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_surveys, 'survey')"  data-slide="prev"><i class="fa fa-chevron-left"></i></a>
@@ -136,11 +135,8 @@
                     <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" 
                     class="carousel slide carousel-multi-item pt-3 pb-4" data-ride="carousel">
                         <div class="clearfix">                                
-                            <h4 class="mb-3 float-left">
-                                <span class="head-icon-end">
-                                    <i class="icon-draw-pencil"></i>
-                                    E-Signature
-                                </span>
+                            <h4 class="text-primary pb-3 float-left">
+                               <i class="icon-draw-pencil"></i> E-Signature
                             </h4>
                             <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_documents, 'sign_doc')" href="#multi-item-sign-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
@@ -179,15 +175,11 @@
                     <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" 
                     class="carousel slide carousel-multi-item  pt-3 pb-4" data-ride="carousel">
                         <div class="clearfix">
-                            <h4 class="mb-3 float-left">
-                                <span class="head-icon-end">
-                                <i class="icon-voting"></i>
-                                Voting / Approvals
-                                </span>
-                            </h4>
-                                                       
-                            
-                            <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
+                            <h4 class="text-primary pb-3 float-left">
+                                <i class="icon-voting"></i> Voting / Approvals
+                            </h4>                                                  
+                            <div class="controls-top float-right btn-group mb-2" 
+                                *ngIf="home_data.to_do_items.pending_votings.length > visible_limit['voting']">
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
                                 <a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.to_do_items.pending_votings, 'voting')" href="#multi-item-voting" data-slide="next"><i class="fa fa-chevron-right"></i></a>
                             </div>
@@ -246,8 +238,10 @@
             <div class="HomepageDocumentSection">
                 <div class="clearfix">
 					<div class="d-flex justify-content-between border-bottom align-items-center text-dark mb-4">
-						<h2 class="mb-3 float-left"><span class="head-icon-end"><i class="icon-docs-line"></i> Documents</span></h2>
-						<!-- <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
+                        <h3 class="text-dark pb-1 mb-3">
+                            <i class="icon-docs-line text-primary"></i> Documents
+                        </h3>
+                        <!-- <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.doc_ids.length > visible_limit['news_doc']">
 							<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
 							<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.doc_ids, 'news_doc')" href="#multi-item-docs" data-slide="next"><i class="fa fa-chevron-right"></i></a>
 						</div> -->
@@ -266,7 +260,9 @@
     class="carousel slide carousel-multi-item container py-0 pb-4" data-ride="carousel">
 		<div class="clearfix">
 			<div class="d-flex justify-content-between border-bottom align-items-center text-dark mb-4">
-				<h2 class="mb-3 float-left"><span class="head-icon-end"><i class="icon-play-button"></i> Videos</span></h2>
+                <h3 class="text-dark pb-1 mb-3">
+                    <i class="icon-play-button text-primary"></i> Videos
+                </h3>
 				<div class="controls-top float-right btn-group mb-2" *ngIf="home_data.video_ids.length > visible_limit['news_video']">
 					<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(-1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
 					<a class="btn-floating btn btn-sm btn-primary" (click)="get_slider_start_index(1, home_data.video_ids, 'news_video')" href="#multi-item-videos" data-slide="next"><i class="fa fa-chevron-right"></i></a>

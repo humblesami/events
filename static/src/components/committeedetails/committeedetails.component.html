@@ -12,70 +12,65 @@ title="{{committee.name}}"></app-breadcrumb>
                 <i class="fa fa-angle-right"></i>
             </span>
         </div>
-
-        <div class="container">
-            <div *ngIf="committee" class="deatils-form">
-                <div class="col-lg-12">
-                    <div class="MainTitleHeadWrap">
-                        <div class="HeadingWrap text-capitalize">
-                            <img src="static/assets/images/committees.png" alt="" /> {{committee.name}}
+        <div *ngIf="committee" class="deatils-form">
+            <div class="col-lg-12">
+                <h4 class="text-dark py-3 border-bottom mb-4">
+                    <i class="icon-committees text-primary"></i> {{committee.name}}
+                </h4> 
+            </div>
+            <div  class="container">
+                <app-search (onsearch)="get_list(committee.id)"></app-search>
+                    <!--
+                        <div class="main-full-seachbar mb-3">
+                    <input type="text" 
+                    (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(committee.id): null" 
+                    placeholder="Search..."  class="form-control"/>
+                </div>
+                    -->
+                <div  *ngIf="committee.description" class="pb-0 members-details">
+                    <div class="meet-elements">
+                        Description
+                    </div>
+                    <label class="meet-elementsInfo text-overflow-visible text-justify" [innerHtml]="committee.description"></label>
+                </div>
+                <div class="MainTitleHeadWrap">
+                    <h4 class="text-dark my-2">
+                        <i class="fa fa-users text-primary"></i> Members
+                    </h4> 
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4" *ngFor="let profile of committee.users">
+                        <div class="kanban-card">
+                            <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
+                                <div class="kanban-profiles-user-img img-flex">
+                                    <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
+                                </div>
+                                <div class="">
+                                    <div class="font-weight-bolder">
+                                        {{profile.name}}
+                                    </div>
+                                    <div class="kanban-profiles-user-InfoLIST">
+                                        <i class="fas fa-envelope"></i>{{profile.email}}
+                                    </div>
+                                    <div *ngIf="profile.committees && profile.committees.length > 0">
+                                        <p for="job-title" class="mb-1">
+                                            <b>Committees</b>
+                                        </p>                                                    
+                                        <span class="committee-member" *ngFor="let com of profile.committees">
+                                            <span  routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
+                                        </span>                                                                                            
+                                    </div>
+                                    <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
+                                    <div *ngIf="profile.state" class="">
+                                        <b>Status : </b> {{profile.state}}
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div  class="container">
-                    <app-search (onsearch)="get_list(committee.id)"></app-search>
-                     <!--
-                         <div class="main-full-seachbar mb-3">
-                        <input type="text" 
-                        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(committee.id): null" 
-                        placeholder="Search..."  class="form-control"/>
-                    </div>
-                     -->
-                    <div  *ngIf="committee.description" class="pb-0 members-details">
-                        <div class="meet-elements">
-                            Description
-                        </div>
-                        <label class="meet-elementsInfo text-overflow-visible text-justify" [innerHtml]="committee.description"></label>
-                    </div>
-                    <div class="MainTitleHeadWrap">
-                        <div class="HeadingWrap">
-                            <i class="fa fa-users"></i> Members
-                        </div>
-                    </div>
-		            <div class="row">
-                        <div class="col-sm-12 col-md-6 col-lg-4 mb-4" *ngFor="let profile of committee.users">
-                            <div class="kanban-card">
-                                <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
-                                    <div class="kanban-profiles-user-img img-flex">
-                                        <img class="img-thumbnail-md" alt='N/A' src="{{socketService.server_url}}{{profile.photo}}">
-                                    </div>
-                                    <div class="">
-                                        <div class="font-weight-bolder">
-                                            {{profile.name}}
-                                        </div>
-                                        <div class="kanban-profiles-user-InfoLIST">
-                                            <i class="fas fa-envelope"></i>{{profile.email}}
-                                        </div>
-                                        <div *ngIf="profile.committees && profile.committees.length > 0">
-                                            <p for="job-title" class="mb-1">
-                                                <b>Committees</b>
-                                            </p>                                                    
-                                            <span class="committee-member" *ngFor="let com of profile.committees">
-                                                <span  routerLink="/committees/{{com['id']}}">{{com['name']}}</span>
-                                            </span>                                                                                            
-                                        </div>
-                                        <div *ngIf="profile.response_by">Response By: {{profile.response_by}}</div>
-                                        <div *ngIf="profile.state" class="">
-                                            <b>Status : </b> {{profile.state}}
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(committee.id)">
-                    </app-paginator>
-                </div>
+                <app-paginator *ngIf="committee.users.length" (reload_data)="get_list(committee.id)">
+                </app-paginator>
             </div>
         </div>
     </div>

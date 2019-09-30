@@ -1236,7 +1236,6 @@ div#search-modal {
 	padding: 0 0 70px;
 	}
 @media (max-width: 767px) {
-	h3,
 	.h3 {
 		font-size: 1.0rem;
 		}
@@ -2115,18 +2114,9 @@ body.public .router-outlet{
 	position: relative;
 	top: -1px;
 	}
-.HeadingWrap {
-	color: #2B2B2B;
-	font-size: 30px;
-	}
 .HeadingWrap>img {
 	position: relative;
 	top: -2px;
-	}
-.HeadingWrap i {
-	color: #4B74B5;
-	font-size: 22px;
-	margin-right: 10px;
 	}
 .sidebar-mini.sidenav-toggled .app-sidebar {
 	overflow-y: auto;
@@ -2426,7 +2416,6 @@ a.kanban-card.profiledataresume .DocumentWrapper {
 	}
 .meet-elementsInfo {
 	display: block;
-	border-bottom: 1px solid #e1e1e1;
 	border-radius: 0;
 	padding: 0 10px 8px 0px;
 	margin: 5px 0 25px 0;

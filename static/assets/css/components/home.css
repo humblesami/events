@@ -400,14 +400,6 @@ span.to-do-count{
     z-index: 3;
     cursor: pointer;
 }
-
-.HomepageDocumentSection .icon-action{
-	margin-right: .2rem;
-	color: #3059C9;
-	width: 23px;
-	font-size: 1.8rem;
-}
-
 #event-summary tr
 {
     display: none;

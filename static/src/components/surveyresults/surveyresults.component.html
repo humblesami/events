@@ -11,9 +11,9 @@ title="Results"></app-breadcrumb>
                     <div class="row">
                         <div *ngIf="surveyDetails.name" class="col-sm-12">
                             <div class="MainTitleHeadWrap row justify-content-between">
-                                <div class="HeadingWrap">
-                                    <img src="static/assets/images/meeting-icon.png" alt="" />  {{surveyDetails.name}}
-                                </div>
+                                <h3 class="text-dark mb-0">
+                                    <i class="icon-action text-primary"></i> {{surveyDetails.name}}
+                                </h3>
                                 <div style="height: 50px;width:50px;">
                                     <canvas id="progress-chart"></canvas>
                                 </div>

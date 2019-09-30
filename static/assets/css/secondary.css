@@ -89,7 +89,7 @@ a.DocumentWrapper:hover{
 }
 
 .check-status.Unpublished .circle{
-    right: -0.4rem;
+    right: 0.2rem;
 }
 
 .check-status.Published .status{
@@ -98,6 +98,10 @@ a.DocumentWrapper:hover{
 .check-status.Unpublished .status{
     left: 0.5rem;
 }
+.check-status .circle i{
+    font-size: 1.4rem;
+}
+
 .accordion .card:first-of-type{
     border: 1px solid rgba(0,0,0,.125);
 }

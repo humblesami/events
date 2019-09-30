@@ -77,9 +77,9 @@
         <div class="sub_folders" *ngIf="!reloading && search_options.search_type != 'files'">
             <div class="pb-3" class="folder_container" style="visibility:hidden">
                 <hr>
-                <div class="mt-3 HeadingWrap ResourcesHeadWrapper">
-                    <i class="icon-folder"></i>Folders
-                </div>
+                <h4 class="text-dark my-2">
+                    <i class="icon-folder text-primary"></i> Folders
+                </h4>                
             </div>
             <app-folders
             search_kw="{{search_options.search_kw}}"
@@ -91,9 +91,9 @@
         <div *ngIf="!reloading && (search_options.recursive || folder_id) && search_options.search_type != 'folders'">                
             <div class="pb-3" class="doc_container" style="visibility:hidden">
                     <hr>
-                    <div class="mt-3 HeadingWrap ResourcesHeadWrapper">
-                            <i class="icon-doc-file"></i> Files
-                    </div>
+                    <h4 class="text-dark my-2">
+                        <i class="icon-doc-file text-primary"></i> Files
+                    </h4> 
                 </div>
             <app-documents
                 search_kw="{{search_options.search_kw}}"
