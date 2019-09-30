@@ -75,36 +75,26 @@
         
 
         <div class="sub_folders" *ngIf="!reloading && search_options.search_type != 'files'">
-            <div class="pb-3" class="folder_container" style="visibility:hidden">
-                <hr>
-                <h4 class="text-dark my-2">
-                    <i class="icon-folder text-primary"></i> Folders
-                </h4>                
-            </div>
-            <app-folders
+            <app-folders       
             search_kw="{{search_options.search_kw}}"
             recursive="{{search_options.recursive}}"
             search_type="{{search_options.search_type}}"
             (data_loaded)=data_loaded($event)
             parent_id="{{folder_id}}"></app-folders>
-        </div>
-        <div *ngIf="!reloading && (search_options.recursive || folder_id) && search_options.search_type != 'folders'">                
-            <div class="pb-3" class="doc_container" style="visibility:hidden">
-                    <hr>
-                    <h4 class="text-dark my-2">
-                        <i class="icon-doc-file text-primary"></i> Files
-                    </h4> 
-                </div>
-            <app-documents
-                search_kw="{{search_options.search_kw}}"
-                recursive="{{search_options.recursive}}"
-                search_type="{{search_options.search_type}}"
-                parent_model="Folder" 
-                parent_field="folder_id" 
-                parent_id="{{folder_id}}"
-                res_app="resources" res_model="ResourceDocument">
-            </app-documents>
-        </div>
+        </div>        
+        <app-documents
+            
+            *ngIf="!reloading && (folder_id || search_options.recursive) && (search_options.recursive || folder_id) 
+            && search_options.search_type != 'folders'"
+
+            search_kw="{{search_options.search_kw}}"
+            recursive="{{search_options.recursive}}"
+            search_type="{{search_options.search_type}}"
+            parent_model="Folder" 
+            parent_field="folder_id" 
+            parent_id="{{folder_id}}"
+            res_app="resources" res_model="ResourceDocument">
+        </app-documents>
         
     </div>
 </div>

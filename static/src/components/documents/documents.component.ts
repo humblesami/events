@@ -17,6 +17,7 @@ export class DocumentsComponent implements OnInit {
     @Input() search_kw = '';
     @Input() search_type = '';
     @Input() recursive = undefined;
+    @Input() title = 'Files';
 
     @Input() parent_field: string;
     @Input() parent_id: string;
@@ -79,13 +80,14 @@ export class DocumentsComponent implements OnInit {
 
     on_admin_mode_changed(){
         let obj_this = this;
+        // console.log(444, obj_this.parent_id);
         if(!this.socketService.admin_mode || this.readonly || !obj_this.parent_id)
         {
             return;
         }
         setTimeout(function(){
             obj_this.init_file_drag_drop();
-        }, 10)        
+        }, 10)
     }
 
     init_file_drag_drop(){
@@ -173,19 +175,22 @@ export class DocumentsComponent implements OnInit {
         }
         // console.log(6565,133);
         this.httpService.get(input_data, function(data){
-            obj_this.on_result(data);            
+            obj_this.on_result(data);
             obj_this.on_admin_mode_changed();
         }, null);
     }
 
     on_result(data){
         let obj_this = this;
-        obj_this.docs = data;
-        $(".doc_container").css("visibility","visible");
+        obj_this.docs = data;        
     }
 
     ngOnInit() {
         let obj_this = this;
+        if(!obj_this.parent_id)
+        {
+            obj_this.parent_id = obj_this.route.snapshot.params.id;
+        }
         obj_this.socketService.call_backs_on_mode_changed['handle_file_create'] = function(){
             obj_this.on_admin_mode_changed();
         };
@@ -200,9 +205,7 @@ export class DocumentsComponent implements OnInit {
         {
             return;
         }
-        obj_this.get_list();        
-        
-        obj_this.parent_id = obj_this.route.snapshot.params.id;
+        obj_this.get_list();                
         if(obj_this.parent_id)
         {
             obj_this.parent = {

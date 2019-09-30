@@ -81,16 +81,16 @@ title="{{topic.name}}"></app-breadcrumb>
     <section *ngIf="socketService.admin_mode || (topic.docs && topic.docs.length)" class="HomepageDocumentSection">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
-                    <div class="main-heading">
-						<h1>
-                        	Documents
-                    	</h1>
-					</div>
-                </div>
-                <div *ngIf="topic && topic.id" class="col-sm-12">
-                    <app-documents parent_model="Topic" parent_field="agenda_id" parent_id="{{topic.id}}"
-                    res_app="meetings" res_model="AgendaDocument"></app-documents>
+                <div  class="col-sm-12">
+                    <app-documents 
+                    *ngIf="topic && topic.id"
+                    title="Documents"
+                    parent_model="Topic" 
+                    parent_field="agenda_id" 
+                    parent_id="{{topic.id}}"
+                    res_app="meetings" 
+                    res_model="AgendaDocument">
+                    </app-documents>
                 </div>
             </div>
         </div>
