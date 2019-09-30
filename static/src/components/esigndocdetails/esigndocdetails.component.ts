@@ -518,7 +518,7 @@ export class EsignDocDetailsComponent implements OnInit {
                                 modal_body.html(disable_instruction).append(disable_admin_btn);
                             }                            
                             $('#signModal .modal-footer').find('button:last').before(`
-                                <button class="remove btn-sm btn-danger">Remove</button>
+                                <button class="remove btn btn-sm btn-danger">Remove</button>
                             `);
                             $('#signModal button.remove').click(remove_sign);
                         },
