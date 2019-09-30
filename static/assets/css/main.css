@@ -287,9 +287,8 @@ span.rounded-circle img {
 	background: #4b74b5;
 	}
 .btn-primary:hover {
-	color: white;
-	border-color: #4b74b5;
-    background: #4b74b5;
+	border-color: #638FC9;
+    background: #638FC9;
 	}
 .btn-primary:focus,
 .btn-primary.focus {
@@ -380,10 +379,10 @@ breadcrumb
 	margin: 0 3px;
 	font-size: 12px;
 	border-radius: 20px;
-	padding: 5px 15px 6px 15px;
-	}
-.edit-buttons a:not([href]):not([tabindex]) {
-	color: white;
+	width: 70px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 	}
 .breadcrumbSection .breadcrumb {
 	padding: 0;
@@ -2100,12 +2099,19 @@ body.public .router-outlet{
 .MeetingBtnWrapper .btn-group {
 	overflow: auto;
 	}
+.btn-group{
+	display: flex;
+}	
 .MeetingHeadWrapper .btn,
 .MeetingBtnWrapper .btn {
 	border: 1px solid #D7DAE2;
-	background: transparent;
-	color: #3059C9;
-	font-size: inherit;
+    background: transparent;
+    color: #3059C9;
+    font-size: inherit;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 	}
 .MeetingHeadWrapper .btn i,
 .MeetingBtnWrapper .btn i {
@@ -2417,8 +2423,8 @@ a.kanban-card.profiledataresume .DocumentWrapper {
 .meet-elementsInfo {
 	display: block;
 	border-radius: 0;
-    padding: 0 10px 8px 0px;
-    border-bottom: 1px solid #e1e1e1;
+	padding: 0 10px 8px 0px;	
+	border-bottom: 1px solid #e1e1e1;
 	margin: 5px 0 25px 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -2462,9 +2468,6 @@ a.kanban-card.profiledataresume .DocumentWrapper {
 	}
 ul.dropdown-menu.scrollable-menu {
 	margin-top: 30px;
-	}
-.edit-buttons a {
-	color: white;
 	}
 .edit-buttons.edit-mode {
 	justify-content: center;

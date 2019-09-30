@@ -328,13 +328,15 @@ h5, .h5 {
     }
 }
 .roster-button{
-    top: -8px;
+    width: 7rem;
+    border-radius: 25px;
+    height: 30px;
+    top: -10px;
     margin-left: 5px;
-    background: #fff;
+    position: relative;
 }
-.roster-users i{
+.roster-button i{
     position: absolute;
-    right: 0;
-    font-size: 15px;
-    top: 7px;
+    right: 10px;
+    top: 6px;
 }
