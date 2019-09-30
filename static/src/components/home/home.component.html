@@ -39,7 +39,7 @@
                     *ngIf="home_data.to_do_items.pending_surveys.length">
                         <div class="clearfix">
                             <h4 class="text-primary pb-3 float-left">
-                               <i class="icon-committees"></i> Surveys
+                               <i class="icon-action"></i> Surveys
                             </h4>
                             <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_surveys.length > visible_limit['survey']">
                                 <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1, home_data.to_do_items.pending_surveys, 'survey')"  data-slide="prev"><i class="fa fa-chevron-left"></i></a>
