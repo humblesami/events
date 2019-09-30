@@ -8,6 +8,8 @@ class Folder(CustomModel):
     name = models.CharField(max_length = 200)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     users = models.ManyToManyField(Profile, related_name='folder_audience', blank=True)
+    personal = models.BooleanField(default=False, null=True)
+
 
     def __str__(self):
         return self.name
@@ -248,6 +250,7 @@ class Folder(CustomModel):
 class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='documents')
     users = models.ManyToManyField (Profile, related_name='file_audience', blank=True)
+    personal = models.BooleanField(default=False, null=True)
 
     def __str__(self):
             return self.name
