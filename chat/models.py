@@ -102,17 +102,18 @@ class Notification(models.Model):
         if sender.id in audience:
             audience.remove(sender.id)
         senders_for_mention = {}
+        count = 0
         if mentioned_list:
             for uid in mentioned_list:
                 user_notification = UserNotification(notification_id=mention_notification.id, sender_id=sender.id, user_id=uid)
                 user_notification.save()
-                senders_for_mention[uid] = UserNotification.get_senders(cls, uid, mention_notification.id)
+                senders_for_mention[uid], count = UserNotification.get_senders(cls, uid, mention_notification.id)
             audience = list(set(audience) - set(mentioned_list))
         senders_for_all = {}
         for uid in audience:
             user_notification = UserNotification(notification_id=notification.id, sender_id=sender.id, user_id=uid)
             user_notification.save()
-            senders_for_all[uid] = UserNotification.get_senders(cls, uid, notification.id)
+            senders_for_all[uid], count = UserNotification.get_senders(cls, uid, notification.id)
 
         meta = notification.get_meta(obj_res)
         text = ' ' + meta['template'] + ' ' + meta['name_place']
