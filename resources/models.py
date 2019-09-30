@@ -60,7 +60,7 @@ class Folder(CustomModel):
         try:
             personal_folder = cls.objects.filter(personal=True, created_by_id = request.user.id)
             if not personal_folder:
-                personal_folder = cls(name='My Folder', personal=True)
+                personal_folder = cls(name=request.user.name, personal=True)
                 personal_folder.save()
                 personal_folder.users.add(request.user.id)
                 personal_folder.save()
