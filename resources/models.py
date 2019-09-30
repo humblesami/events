@@ -62,6 +62,9 @@ class Folder(CustomModel):
             name =name,
         )
         parent_id = params.get('parent_id')
+        personal = params.get('personal')
+        if personal:
+            folder.personal = personal
         if parent_id:        
             folder.parent_id = parent_id
         folder.save()
@@ -107,6 +110,9 @@ class Folder(CustomModel):
                 result['parents'] = cls.get_ancestors(cls, folder)
                 result['id'] = folder.id
                 result['name'] = folder.name
+                personal = False
+                if folder.personal and folder.created_by_id == user_id:
+                    result['personal'] = folder.personal
         else:
             result['folders'] = cls.search_root(kw, user_id, [], 'folders', recursive)
         return result
@@ -143,10 +149,14 @@ class Folder(CustomModel):
 
                 folder_obj = folder.__dict__
                 if re.search(kw, folder_obj['name'], re.IGNORECASE):
+                    personal = False
+                    if folder_obj['personal'] and folder_obj['created_by_id'] == user_id:
+                        personal = True
                     results.append({
                         'id': folder_obj['id'],
                         'name': folder_obj['name'],
                         'total_files': total_files,
+                        'personal': personal
                     })
         if recursive:
             for obj in folders:
@@ -158,10 +168,14 @@ class Folder(CustomModel):
         if search_type == 'files':
             files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token').order_by('-pk')
             for file in files:
+                personal = False
+                if file['personal'] and file['created_by_id'] == user_id:
+                    personal = True
                 results.append({
                     'id': file['id'],
                     'name': file['name'],
-                    'access_token': file['access_token']
+                    'access_token': file['access_token'],
+                    'personal': personal
                 })
         if search_type == 'folders' or recursive:
             folders = obj.folder_set.filter(users__id=user_id).order_by('-pk')
@@ -174,10 +188,14 @@ class Folder(CustomModel):
                 if search_type == 'folders':
                     folder_obj = folder.__dict__
                     if re.search(kw, folder_obj['name'], re.IGNORECASE):
+                        personal = False
+                        if folder_obj['personal'] and folder_obj['created_by_id'] == user_id:
+                            personal = True
                         results.append({
                             'id': folder_obj['id'],
                             'name': folder_obj['name'],
                             'total_files' : total_files,
+                            'personal': personal
                         })
                 if recursive:
                     folder.search_folder(kw, user_id, results, search_type, recursive)
