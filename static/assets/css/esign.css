@@ -44,8 +44,13 @@ body.public #viewer_container
 	}
 .new_sign input.field_type {
 	border-radius: .2rem;
-	border: 1px solid #999999;
-	}
+    border: 1px solid #999999;
+    position: absolute;
+    left: 5%;
+    width: 80%;
+    height: 80%;
+    top: 5%;
+}
 
 .new_sign.active_signature{
     display: block;

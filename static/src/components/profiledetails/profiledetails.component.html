@@ -21,12 +21,12 @@ title="{{profile_data.name}}"></app-breadcrumb>
         <div class="row">
             <div class="col-lg-12">
                 <div class="MainTitleHeadWrap">
-					<h3 class="text-dark mb-0">
-						<i class="icon-profile text-primary"></i> Profile
-					</h3>
+                    <h3 class="text-dark mb-0">
+                        <i class="icon-profile text-primary"></i> Profile
+                    </h3>
 					<div *ngIf="!socketService.admin_mode && my_profile" class="edit_mode">
-						<input [(ngModel)]="edit_mode" type="checkbox">
-						  <label>Edit Mode</label>
+                        <input [(ngModel)]="edit_mode" type="checkbox">
+                        <label>Edit Mode</label>
 					</div>
                     <!-- <div *ngIf="my_profile" class="edit-buttons">
                         <a class="btn btn-primary" routerLink="/my-profile/edit">Edit</a>
@@ -53,11 +53,13 @@ title="{{profile_data.name}}"></app-breadcrumb>
 									<div class="col-auto">
 										<div class="top-header">
 											<div class="top-header-author">
-												<a href="javascript:void(0);">
-													<div class="author-thumb img-flex" (click)="change_image()">
-															<label *ngIf="(edit_mode && my_profile) || socketService.admin_mode" for="file-input" class="edit-file">
+												<a>
+													<div class="author-thumb img-flex">
+                                                            <label *ngIf="(edit_mode && my_profile) || socketService.admin_mode" 
+                                                            (click)="change_image()"
+                                                            for="file-input" class="edit-file">
 																<i class="fa fa-edit update"></i>
-															</label> 
+															</label>
 														<img *ngIf="profile_data.image" src="{{socketService.server_url}}{{profile_data.image}}">
 														<img *ngIf="!profile_data.image"  src="static/assets/images/no-profile.png">
 													</div>
@@ -96,7 +98,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							</div>
 							<div class="col-sm-7">
 								<div class="row justify-content-end">
-									<div class="col-7 col-sm-12 col-md-6 p-0" *ngIf="my_profile">
+                                    <div class="col-7 col-sm-12 col-md-6 p-0" *ngIf="(edit_mode && my_profile)" >
 										<h4 class="title-h4" style="cursor: pointer" (click)='update_sign()'> 
 											<i class="icon-draw-pencil"></i>
 											E-Signature</h4>
@@ -480,8 +482,11 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							<div class="col-sm-12">
 								<div class="ProfileUserNameJonbWrapper">
 									<div class="author-thumb-wrap">
-										<div (click)="change_admin_image()" style="cursor: pointer" class="author-thumb img-flex">
-											<label *ngIf="(edit_mode && my_profile) || socketService.admin_mode"  for="file-input" class="edit-file">
+										<div style="cursor: pointer" class="author-thumb img-flex">
+                                            <label 
+                                            *ngIf="(edit_mode && my_profile) || socketService.admin_mode"
+                                            (click)="change_admin_image()"
+                                            for="file-input" class="edit-file">
 												<i class="fa fa-edit update"></i>
 											</label>
 											<img *ngIf="profile_data.admin_image" class="img-thumbnail-lg" src="{{socketService.server_url}}{{profile_data.admin_image}}">

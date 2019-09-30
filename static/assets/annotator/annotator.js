@@ -390,7 +390,9 @@
 
                 $('body').on('click', '.cb-container.autosave input', function() {
                     if ($(this).prop('checked'))
+                    {
                         saveAnnotationsAtServer();
+                    }
                 });
 
                 $('body').on('click', '.toolbar .back', function() {
@@ -971,7 +973,7 @@
                                             if(n_list[j].address.res_app == address.res_app &&
                                                 n_list[j].address.res_model == address.res_model &&
                                                 n_list[j].address.res_id == address.res_id){
-                                                console.log(i, j, n_list[j].count, 134);
+                                                // console.log(i, j, n_list[j].count, 134);
                                                 $(el).attr('counter',$(el).attr('counter') + n_list[j].count);
                                             }
                                         }
@@ -2135,7 +2137,7 @@
                      *
                      * @param {Event} e The DOM event to be handled
                      */
-                    document.addEventListener('click', function handleDocumentClick(e) {
+                    document.addEventListener('click', function(e) {
                         // console.log(7887);
                         if (!$('.toolbar .cursor').hasClass('active')) {
                             return;
@@ -2151,22 +2153,7 @@
                             emitter.emit('annotation:click', target);
                             clickNode = target;
                         }
-                    }); // var mouseOverNode;
-                    // document.addEventListener('mousemove', function handleDocumentMousemove(e) {
-                    //   var target = findAnnotationAtPoint(e.clientX, e.clientY);
-                    //
-                    //   // Emit annotation:mouseout if target was mouseout'd
-                    //   if (mouseOverNode && !target) {
-                    //     emitter.emit('annotation:mouseout', mouseOverNode);
-                    //   }
-                    //
-                    //   // Emit annotation:mouseover if target was mouseover'd
-                    //   if (target && mouseOverNode !== target) {
-                    //     emitter.emit('annotation:mouseover', target);
-                    //   }
-                    //
-                    //   mouseOverNode = target;
-                    // });
+                    });
                     function fireEvent() {
                         emitter.emit.apply(emitter, arguments);
                     };
@@ -4361,9 +4348,9 @@
                         anchor.style.height = '25px';
                         overlay.appendChild(anchor);
                         parentNode.appendChild(overlay);
-                        document.addEventListener('click', handleDocumentClick);
-                        document.addEventListener('keyup', handleDocumentKeyup);
-                        document.addEventListener('mousedown', handleDocumentMousedown);
+                        document.addEventListener('click', click29);
+                        document.addEventListener('keyup', key_up29);
+                        document.addEventListener('mousedown', mouse_down29);
                         anchor.addEventListener('click', deleteAnnotation);
                         anchor.addEventListener('mouseover', function() {
                             anchor.style.color = '#35A4DC';
@@ -4394,11 +4381,11 @@
                             overlay.parentNode.removeChild(overlay);
                             overlay = null;
                         }
-                        document.removeEventListener('click', handleDocumentClick);
-                        document.removeEventListener('keyup', handleDocumentKeyup);
-                        document.removeEventListener('mousedown', handleDocumentMousedown);
-                        document.removeEventListener('mousemove', handleDocumentMousemove);
-                        document.removeEventListener('mouseup', handleDocumentMouseup);
+                        document.removeEventListener('click', click29);
+                        document.removeEventListener('keyup', key_up29);
+                        document.removeEventListener('mousedown', mouse_down29);
+                        document.removeEventListener('mousemove', mouse_move29);
+                        document.removeEventListener('mouseup', mouse_up29);
                         (0, _utils.enableUserSelect)();
                     }
                     /**
@@ -4438,7 +4425,7 @@
                      *
                      * @param {Event} e The DOM event that needs to be handled
                      */
-                    function handleDocumentClick(e) {
+                    function click29(e) {
                         if (!(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
                         } // Remove current overlay
@@ -4455,7 +4442,7 @@
                      *
                      * @param {Event} e The DOM event that needs to be handled
                      */
-                    function handleDocumentKeyup(e) {
+                    function key_up29(e) {
                         if (overlay && e.keyCode === 46 && e.target.nodeName.toLowerCase() !== 'textarea' && e.target.nodeName.toLowerCase() !== 'input') {
                             deleteAnnotation();
                         }
@@ -4467,7 +4454,7 @@
                      *
                      * @param {Event} e The DOM event that needs to be handled
                      */
-                    function handleDocumentMousedown(e) {
+                    function mouse_down29(e) {
 
                         if (e.target !== overlay) {
                             return;
@@ -4491,8 +4478,8 @@
                         if (delbtn && delbtn.style)
                             delbtn.style.display = 'none';
 
-                        document.addEventListener('mousemove', handleDocumentMousemove);
-                        document.addEventListener('mouseup', handleDocumentMouseup);
+                        document.addEventListener('mousemove', mouse_move29);
+                        document.addEventListener('mouseup', mouse_up29);
                         (0, _utils.disableUserSelect)();
                         object_to_move = $('.new_comments_count[point_id="' + annotationId + '"]');
                         if (object_to_move.length == 0)
@@ -4505,7 +4492,7 @@
                      *
                      * @param {Event} e The DOM event that needs to be handled
                      */
-                    function handleDocumentMousemove(e) {
+                    function mouse_move29(e) {
                         var annotationId = overlay.getAttribute('data-target-id');
                         var parentNode = overlay.parentNode;
                         var rect = parentNode.getBoundingClientRect();
@@ -4532,7 +4519,7 @@
                      *
                      * @param {Event} e The DOM event that needs to be handled
                      */
-                    function handleDocumentMouseup(e) {
+                    function mouse_up29(e) {
                         var annotationId = overlay.getAttribute('data-target-id');
                         var target = document.querySelectorAll('[data-pdf-annotate-id="' + annotationId + '"]');
                         var type = target[0].getAttribute('data-pdf-annotate-type');
@@ -4597,20 +4584,7 @@
                                                 annotation.x = modelX;
                                             }
                                         }
-                                    }); // } else if (type === 'strikeout') {
-                                    //   var { deltaX, deltaY } = getDelta('x1', 'y1');
-                                    //   [...target].forEach(target, (t, i) => {
-                                    //     if (deltaY !== 0) {
-                                    //       t.setAttribute('y1', parseInt(t.getAttribute('y1'), 10) + deltaY);
-                                    //       t.setAttribute('y2', parseInt(t.getAttribute('y2'), 10) + deltaY);
-                                    //       annotation.rectangles[i].y = parseInt(t.getAttribute('y1'), 10);
-                                    //     }
-                                    //     if (deltaX !== 0) {
-                                    //       t.setAttribute('x1', parseInt(t.getAttribute('x1'), 10) + deltaX);
-                                    //       t.setAttribute('x2', parseInt(t.getAttribute('x2'), 10) + deltaX);
-                                    //       annotation.rectangles[i].x = parseInt(t.getAttribute('x1'), 10);
-                                    //     }
-                                    //   });
+                                    });
                                 })();
                             } else if (type === 'drawing') {
                                 (function() {
@@ -4642,8 +4616,8 @@
                         }, 0);
                         overlay.style.background = '';
                         overlay.style.cursor = '';
-                        document.removeEventListener('mousemove', handleDocumentMousemove);
-                        document.removeEventListener('mouseup', handleDocumentMouseup);
+                        document.removeEventListener('mousemove', mouse_move29);
+                        document.removeEventListener('mouseup', mouse_up29);
                         (0, _utils.enableUserSelect)();
                     }
                     /**
@@ -4713,20 +4687,20 @@
                     /**
                      * Handle document.mousedown event
                      */
-                    function handleDocumentMousedown(e) {
+                    function mouse_down30(e) {
                         //console.log(e, 777);
                         if (is_mobile_device)
                             $('body').css('overflow', 'hidden');
                         path = null;
                         lines = [];
 
-                        document.addEventListener('mousemove', handleDocumentMousemove);
-                        document.addEventListener('mouseup', handleDocumentMouseup);
+                        document.addEventListener('mousemove', mouse_move30);
+                        document.addEventListener('mouseup', mouse_up30);
 
-                        document.addEventListener('touchmove', handleDocumentMousemove, {
+                        document.addEventListener('touchmove', mouse_move30, {
                             passive: false
                         });
-                        document.addEventListener('touchend', handleDocumentMouseup);
+                        document.addEventListener('touchend', mouse_up30);
                     }
                     /**
                      * Handle document.mouseup event
@@ -4734,7 +4708,7 @@
                      * @param {Event} e The DOM event to be handled
                      */
 
-                    function handleDocumentMouseup(e) {
+                    function mouse_up30(e) {
                         //console.log(777);
                         if (e.changedTouches)
                             e = e.changedTouches[0];
@@ -4756,11 +4730,11 @@
                                 (0, _appendChild2.default)(svg, annotation);
                             });
                         }
-                        document.removeEventListener('mousemove', handleDocumentMousemove);
-                        document.removeEventListener('mouseup', handleDocumentMouseup);
+                        document.removeEventListener('mousemove', mouse_move30);
+                        document.removeEventListener('mouseup', mouse_up30);
 
-                        document.removeEventListener('touchmove', handleDocumentMousemove);
-                        document.removeEventListener('touchend', handleDocumentMouseup);
+                        document.removeEventListener('touchmove', mouse_move30);
+                        document.removeEventListener('touchend', mouse_up30);
                         if (is_mobile_device)
                             $('body').css('overflow', 'auto');
                     }
@@ -4787,7 +4761,7 @@
                      * @param {Event} e The DOM event to be handled
                      */
 
-                    function handleDocumentMousemove(e) {
+                    function mouse_move30(e) {
                         e.preventDefault();
                         //console.log(e); 
                         if (e.touches) {
@@ -4800,12 +4774,12 @@
                      *
                      * @param {Event} e The DOM event to be handled
                      */
-                    function handleDocumentKeyup(e) { // Cancel rect if Esc is pressed
+                    function key_up30(e) { // Cancel rect if Esc is pressed
                         if (e.keyCode === 27) {
                             lines = null;
                             path.parentNode.removeChild(path);
-                            document.removeEventListener('mousemove', handleDocumentMousemove);
-                            document.removeEventListener('mouseup', handleDocumentMouseup);
+                            document.removeEventListener('mousemove', mouse_move30);
+                            document.removeEventListener('mouseup', mouse_up30);
                         }
                     }
                     /**
@@ -4861,8 +4835,8 @@
                         if (is_mobile_device)
                             $('body').css('overflow', 'hidden');
                         _enabled = true;
-                        document.addEventListener('mousedown', handleDocumentMousedown);
-                        document.addEventListener('touchstart', handleDocumentMousedown);
+                        document.addEventListener('mousedown', mouse_down30);
+                        document.addEventListener('touchstart', mouse_down30);
                         (0, _utils.disableUserSelect)();
                     }
                     /**
@@ -4873,8 +4847,8 @@
                             return;
                         }
                         _enabled = false;
-                        document.removeEventListener('mousedown', handleDocumentMousedown);
-                        document.removeEventListener('touchstart', handleDocumentMousedown);
+                        document.removeEventListener('mousedown', mouse_down30);
+                        document.removeEventListener('touchstart', mouse_down30);
                         (0, _utils.enableUserSelect)();
                     } /***/
                 }, /* 31 */ function(module, exports, __webpack_require__) {
@@ -4907,7 +4881,7 @@
                      *
                      * @param {Event} The DOM event to be handled
                      */
-                    function handleDocumentMouseup(e) {
+                    function mouse_up31(e) {
                         if (input || !(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
                         }
@@ -5021,7 +4995,7 @@
                             return;
                         }
                         _enabled = true;
-                        document.addEventListener('mouseup', handleDocumentMouseup);
+                        document.addEventListener('mouseup', mouse_up31);
                     }
                     /**
                      * Disable point annotation behavior
@@ -5031,7 +5005,7 @@
                             return;
                         }
                         _enabled = false;
-                        document.removeEventListener('mouseup', handleDocumentMouseup);
+                        document.removeEventListener('mouseup', mouse_up31);
                     } /***/
                 }, /* 32 */ function(module, exports, __webpack_require__) {
                     'use strict';
@@ -5088,7 +5062,7 @@
                      *
                      * @param {Event} e The DOM event to handle
                      */
-                    function handleDocumentMousedown(e) {
+                    function mouse_down32(e) {
                         var svg = void 0;
                         if (_type !== 'area' || !(svg = (0, _utils.findSVGAtPoint)(e.clientX, e.clientY))) {
                             return;
@@ -5103,7 +5077,7 @@
                         overlay.style.border = '3px solid ' + _utils.BORDER_COLOR;
                         overlay.style.borderRadius = '3px';
                         svg.parentNode.appendChild(overlay);
-                        document.addEventListener('mousemove', handleDocumentMousemove);
+                        document.addEventListener('mousemove', mouse_move32);
                         (0, _utils.disableUserSelect)();
                     }
                     /**
@@ -5111,7 +5085,7 @@
                      *
                      * @param {Event} e The DOM event to handle
                      */
-                    function handleDocumentMousemove(e) {
+                    function mouse_move32(e) {
                         var svg = overlay.parentNode.querySelector('svg.annotationLayer');
                         var rect = svg.getBoundingClientRect();
                         if (originX + (e.clientX - originX) < rect.right) {
@@ -5127,14 +5101,14 @@
                      *
                      * @param {Event} e The DOM event to handle
                      */
-                    function handleDocumentKeyup(e) { // Cancel rect if Esc is pressed
+                    function keyup_32(e) { // Cancel rect if Esc is pressed
                         if (e.keyCode === 27) {
                             var selection = window.getSelection();
                             selection.removeAllRanges();
                             if (overlay && overlay.parentNode) {
                                 overlay.parentNode.removeChild(overlay);
                                 overlay = null;
-                                document.removeEventListener('mousemove', handleDocumentMousemove);
+                                document.removeEventListener('mousemove', mouse_move32);
                             }
                         }
                     }
@@ -5209,7 +5183,8 @@
                      *
                      * @param {Event} e The DOM event to handle
                      */
-                    function handleDocumentMouseup32(data_tool_type) {
+                    function mouseup32(data_tool_type) {
+                        console.log(data_tool_type, 40);
                         if (typeof data_tool_type != 'string') {
                             return;
                         }
@@ -5240,7 +5215,7 @@
                             }]);
                             overlay.parentNode.removeChild(overlay);
                             overlay = null;
-                            document.removeEventListener('mousemove', handleDocumentMousemove);
+                            document.removeEventListener('mousemove', mouse_move32);
                             (0, _utils.enableUserSelect)();
                         }
                     }
@@ -5254,10 +5229,10 @@
                             return;
                         }
                         _enabled = true;
-                        document.addEventListener('mouseup', handleDocumentMouseup32);
-                        document.addEventListener('mousedown', handleDocumentMousedown);
-                        document.addEventListener('keyup', handleDocumentKeyup);
-                        handleDocumentMouseup32(type);
+                        document.addEventListener('mouseup', mouseup32);
+                        document.addEventListener('mousedown', mouse_down32);
+                        document.addEventListener('keyup', keyup_32);
+                        mouseup32(type);
                     }
                     /**
                      * Disable rect behavior
@@ -5267,9 +5242,9 @@
                             return;
                         }
                         _enabled = false;
-                        document.removeEventListener('mouseup', handleDocumentMouseup32);
-                        document.removeEventListener('mousedown', handleDocumentMousedown);
-                        document.removeEventListener('keyup', handleDocumentKeyup);
+                        document.removeEventListener('mouseup', mouseup32);
+                        document.removeEventListener('mousedown', mouse_down32);
+                        document.removeEventListener('keyup', keyup_32);
                     } /***/
                 }, /* 33 */ function(module, exports, __webpack_require__) {
                     'use strict';
@@ -5304,7 +5279,7 @@
                      *
                      * @param {Event} e The DOM event to handle
                      */
-                    function handleDocumentMouseup(e) {
+                    function mouse_up_enable_text(e) {
                         if (input || !(0, _utils.findSVGAtPoint)(e.clientX, e.clientY)) {
                             return;
                         }
@@ -5408,7 +5383,7 @@
                             return;
                         }
                         _enabled = true;
-                        document.addEventListener('mouseup', handleDocumentMouseup);
+                        document.addEventListener('mouseup', mouse_up_enable_text);
                     }
                     /**
                      * Disable text behavior
@@ -5418,7 +5393,7 @@
                             return;
                         }
                         _enabled = false;
-                        document.removeEventListener('mouseup', handleDocumentMouseup);
+                        document.removeEventListener('mouseup', mouse_up_enable_text);
                     } /***/
                 }, /* 34 */ function(module, exports, __webpack_require__) {
                     'use strict';
@@ -5875,7 +5850,7 @@
             }
 
             function closePicker() {
-                document.removeEventListener('keyup', handleDocumentKeyup);
+                document.removeEventListener('keyup', key_up4);
                 if (picker && picker.parentNode) {
                     picker.parentNode.removeChild(picker);
                 }
@@ -5902,7 +5877,7 @@
                     });
                 }
 
-                document.addEventListener('keyup', handleDocumentKeyup);
+                document.addEventListener('keyup', key_up4);
                 el.appendChild(picker);
                 isPickerOpen = true;
             }
@@ -5917,7 +5892,7 @@
                 return e;
             }
 
-            function handleDocumentKeyup(e) {
+            function key_up4(e) {
                 if (e.keyCode === 27) {
                     closePicker();
                 }
