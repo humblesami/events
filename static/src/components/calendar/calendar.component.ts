@@ -210,7 +210,8 @@ export class CalendarComponent implements OnInit {
     }
 
     navigate_meeting() {
-        var obj_this = this;        
-        obj_this.router.navigate(['/upcoming/meeting/' + obj_this.selected_event.id]);
+        var obj_this = this;
+        var link = '/upcoming/meeting/' + obj_this.selected_event.id;
+        obj_this.router.navigate([link]);
     }
 }

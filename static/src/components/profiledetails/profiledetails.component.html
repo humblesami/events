@@ -98,7 +98,7 @@ title="{{profile_data.name}}"></app-breadcrumb>
 							</div>
 							<div class="col-sm-7">
 								<div class="row justify-content-end">
-                                    <div class="col-7 col-sm-12 col-md-6 p-0" *ngIf="(edit_mode && my_profile)" >
+                                    <div class="col-7 col-sm-12 col-md-6 p-0" *ngIf="my_profile && (edit_mode || socketService.admin_mode)" >
 										<h4 class="title-h4" style="cursor: pointer" (click)='update_sign()'> 
 											<i class="icon-draw-pencil"></i>
 											E-Signature</h4>

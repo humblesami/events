@@ -159,9 +159,9 @@ function init_sign(config) {
                     
                 </div>
                 <div class="modal-footer">
-                <button class="btn btn-danger btn-sm DocsBtn" id="clear-signature-btn">Clear</button>
-                <button class="btn btn-primary btn-sm DocsBtn" id="save-signature-btn">Save</button>
-                <button class="btn btn-sm btn-default" id="close-signature-btn" data-dismiss="modal">Close</button>
+                    <button class="btn btn-danger btn-sm DocsBtn" id="clear-signature-btn">Clear</button>
+                    <button class="btn btn-primary btn-sm DocsBtn" id="save-signature-btn">Save</button>
+                    <button class="btn btn-sm btn-default" id="close-signature-btn" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
