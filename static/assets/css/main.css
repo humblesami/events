@@ -1809,10 +1809,15 @@ button {
 .app-menu__item:first-child {
 	border-top: 1px solid transparent;
 	}
-.btn-primary:hover,
-.app-menu__item.active,
 .app-menu__item:hover,
 .app-menu__item:focus {
+	background: #5f89cc;
+	border-color: #5f89cc;
+	color: #ffffff;
+}	
+.btn-primary:hover,
+.app-menu__item.active
+{
 	background: #375990;
 	border-color: #375990;
 	text-decoration: none;
