@@ -22,7 +22,7 @@
                         <div class="DocText" (click)="renameService.prevent_default($event)">
                             <div class="DocName">
                                 <div *ngIf="!folder.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': (socketService.admin_mode || personal)}">
-                                    <span class="text-truncate resource-info">{{folder.name}} ({{folder.total_files}})</span>
+                                    <span class="text-truncate resource-info">{{folder.name}} ({{folder.total_files || 0}})</span>
                                     <span class="d-flex">
                                         <button *ngIf="(socketService.admin_mode || personal)" 
                                         (click)="renameService.enable_rename($event, folder)"

@@ -15,7 +15,11 @@
 					<form class="col-lg-12">
 						<div class="form-group">
 							<div *ngIf="comment_subtype === 1">
-								<div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" (click)="manage_comment()" (keyup)="save_comment_key_up($event, null)" placeholder="Add commnet here." contenteditable="true" class="mention-div-comment active-mention border rounded p-2" rows="4" id="comment"></div>
+                                <div (keydown)="comment_reply_keydown($event)" [mentionConfig]= "mentionConfig" 
+                                (click)="manage_comment()" (keyup)="save_comment_key_up($event, null)" placeholder="Add commnet here." contenteditable="true" 
+                                class="mention-div-comment active-mention border rounded p-2" 
+                                rows="4" id="comment">
+                                </div>
 							</div>
 							<div *ngIf="comment_subtype === 2">
 								<div 
@@ -48,41 +52,46 @@
 			<div *ngIf="comment_subtype == 1">				
 				<div class="container bg-light mb-3" *ngFor="let c of comments">	
 					<div id="comment-{{c.id}}" *ngIf="c" class="CommentWrapper">	
-						<div class="commnet-info row pt-3">
-							<a routerLink="/profile/{{c.user.id}}" class="col-2 col-sm-1">
+						<div class="commnet-info row pt-2">
+							<a routerLink="/profile/{{c.user.id}}" class="col-2 pl-1 col-sm-1">
 								<div class="comments-user-img-wrap img-flex">
 									<img src="{{socketService.server_url}}{{c.user.photo}}" alt="user">
 								</div>
 							</a>
 							<div class="col-10 pl-0 col-sm-11">
-								<b class="text-primary font-weight-bold mt-1" *ngIf="c.user">{{c.user.name}}</b>
-								<small class="text-secondary ml-1 mt-1">{{c.create_date | dateAgo }}</small>
-								<a *ngIf="c.id" class="comment-reply" title="Add reply" (click)="commentReply($event, c)">
-									<i class="fa fa-reply text-primary ml-1 mt-1"></i>
-								</a>
-								<span class="ml-1 mt-1 bg-secondary px-3" (click)="showReplies($event, c)" title="Replies" *ngIf="c.children && c.children.length" style="border-radius: 25px;cursor: pointer;">
-									<span *ngIf="!c['showRep']"><i class="fa fa-angle-down text-white"></i></span>
-									<span *ngIf="c['showRep']"><i class="fa fa-angle-up text-white"></i></span>
-								</span>
-								<span *ngIf="c.children && c.children.length" class="float-right d-none d-sm-block">{{c.children.length}} Replies</span>
+                                <div class="mt-1">
+                                    <span class="text-primary font-weight-bold mt-1" *ngIf="c.user">{{c.user.name}}</span>
+                                    <small class="text-secondary ml-1 mt-1">{{c.create_date | dateAgo }}</small>
+                                    <a *ngIf="c.id" class="comment-reply" title="Add reply" (click)="commentReply($event, c)">
+                                        <i class="fa fa-reply text-primary ml-1 mt-1"></i>
+                                    </a>
+                                    <span (click)="showReplies($event, c)" *ngIf="c.children && c.children.length" class="btn-primary reply-count">
+                                        {{c.children.length}} <span *ngIf="c.children.length == 1">Reply</span>
+                                        <span *ngIf="c.children.length > 1">Replies</span>
+                                        <span class="ml-2" *ngIf="!c['showRep']"><i class="fa fa-angle-down text-white"></i></span>
+                                        <span class="ml-2" *ngIf="c['showRep']"><i class="fa fa-angle-up text-white"></i></span>
+                                    </span>
+                                </div>                                
 								<input type="hidden" class="comment_id" value="{{c.id}}" />
-								<p class="commnet-content text-justify" [innerHtml]="c.body.trim()"></p>
+								<p class="commnet-content text-justify mt-2" [innerHtml]="c.body.trim()"></p>
 							</div>							
 						</div>
 						
 						
 						<!-- Reply-->
 						<div class="reply-container" *ngIf="c['showRep'] && c.children && c.children.length">
-							<div class="commnet-info row mb-3" *ngFor="let rep of c.children" [ngClass]="{'border-bottom' : c.showRep}">
+							<div class="commnet-info row pt-3 pl-2" *ngFor="let rep of c.children" [ngClass]="{'border-top' : c.showRep}">
 								<a routerLink="/profile/{{rep.user.id}}" class="col-2 col-sm-1">
 									<div class="comments-user-img-wrap">
 										<img src="{{socketService.server_url}}{{rep.user.photo}}" alt="user">
 									</div>
 								</a>
-								<div class="col-10 col-sm-11 pl-0">
-									<b class="text-primary font-weight-bold mt-1">{{rep.user.name}}</b>
-									<small class="text-secondary ml-2 mt-1">{{rep.create_date | dateAgo }}</small>
-									<p class="reply-content text-justify" [innerHtml]="rep.body.trim()"></p>
+								<div class="col-10 pl-2 col-sm-11">
+                                    <div class="mt-1">
+                                        <span class="text-primary font-weight-bold mt-1">{{rep.user.name}}</span>
+                                        <small class="text-secondary ml-2 mt-1">{{rep.create_date | dateAgo }}</small>
+                                    </div>									
+									<p class="reply-content text-justify mt-2" [innerHtml]="rep.body.trim()"></p>
 								</div>
 							</div>
 						</div>
