@@ -4,12 +4,43 @@
 <div class="pager-div">
     <aside class="app-sidebar">
         <ul class="app-menu">
-            <li><a class="app-menu__item" routerLink="/" data-toggle="tooltip" data-placement="right" title="Dashboard"><i class="icon-dashboard app-menu__icon"></i> <span class="app-menu__label">Dashboard</span></a></li>
-            <li><a class="app-menu__item" routerLink="/meetings/upcoming" data-toggle="tooltip" data-placement="right" title="Meetings"><i class="icon-meeting app-menu__icon"></i> <span class="app-menu__label">Meetings</span></a></li>
-            <li><a class="app-menu__item" routerLink="/votings" data-toggle="tooltip" data-placement="right" title="Actions"><i class="icon-action app-menu__icon"></i> <span class="app-menu__label">Actions</span></a> </li>
-            <li><a class="app-menu__item" routerLink="/resources" data-toggle="tooltip" data-placement="right" title="Resources"><i class="icon-folder app-menu__icon"></i> <span class="app-menu__label">Resources</span></a> </li>
-            <li><a class="app-menu__item" routerLink="/committees" data-toggle="tooltip" data-placement="right" title="Committees"><i class="icon-committees	 app-menu__icon"></i> <span class="app-menu__label">Committees</span></a> </li>
-            <li><a class="app-menu__item" routerLink="/profiles" data-toggle="tooltip" data-placement="right" title="Profiles"><i class="icon-profile app-menu__icon"></i> <span class="app-menu__label">Profiles</span></a> </li>
+            <li (click)="activate_link($event.target, '/')">
+                <a class="app-menu__item"                 
+                title="Dashboard">
+                <i class="icon-dashboard app-menu__icon"></i>
+                <span class="app-menu__label">Dashboard</span>
+                </a>
+            </li>
+            <li (click)="activate_link($event.target, '/meetings/upcoming')">
+                <a  class="app-menu__item">
+                    <i class="icon-meeting app-menu__icon"></i>
+                    <span class="app-menu__label">Meetings</span>
+                </a>
+            </li>
+            <li (click)="activate_link($event.target,'/votings')">
+                <a class="app-menu__item" title="Actions">
+                    <i class="icon-action app-menu__icon"></i>
+                    <span class="app-menu__label">Actions</span>
+                </a>
+            </li>
+            <li (click)="activate_link($event.target,'/resources')">
+                <a class="app-menu__item" title="Resources">
+                    <i class="icon-folder app-menu__icon"></i>
+                    <span class="app-menu__label">Resources</span>
+                </a>
+            </li>
+            <li (click)="activate_link($event.target, '/committees')">
+                <a class="app-menu__item" title="Committees">
+                    <i class="icon-committees	 app-menu__icon"></i>
+                    <span class="app-menu__label">Committees</span>
+                </a>
+            </li>
+            <li (click)="activate_link($event.target, '/profiles')">
+                <a class="app-menu__item" title="Profiles">
+                    <i class="icon-profile app-menu__icon"></i>
+                    <span class="app-menu__label">Profiles</span>
+                </a>
+            </li>
         </ul>
     </aside>
     <div class="app-content">

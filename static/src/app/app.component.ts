@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {SocketService} from './socket.service';
 import { UserService } from './user.service';
+import { Router } from '@angular/router';
 declare var $:any;
 
 @Component({
@@ -10,7 +11,7 @@ declare var $:any;
 
 export class AppComponent {        
     userService: UserService;
-    constructor(private ss: SocketService, userServ: UserService)
+    constructor(private ss: SocketService, userServ: UserService, private router: Router)
     {
         this.userService = userServ;
         console.log(Date()+'-' + new Date().getMilliseconds());
@@ -25,7 +26,17 @@ export class AppComponent {
 	topFunction() {        
 		document.body.scrollTop = 0;
 		$("html, body").animate({ scrollTop: 0 }, 600);
-	}
+    }
+    
+    activate_link(dom_el, link){        
+        var el = $(dom_el).closest('li');
+        if(el.length)
+        {
+            el.closest('ul').find('a.active').removeClass('active');                        
+            el.children('a').addClass('active');
+            this.router.navigate([link]);
+        }        
+    }
 
 	scrollFunction() {
 		if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {

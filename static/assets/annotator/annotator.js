@@ -122,9 +122,47 @@
             $('.router-outlet').show();
             saveAnnotationsAtServer('Leaving');
         }
-    }
+    }    
     
-    var scroll_div;
+    var scroll_div;    
+
+
+    $(function() {
+        var last_active_was_comment = false;
+        $(document).on('mouseup', '#viewer', function(e) {
+            if (e.button == 2)
+                return;
+            if (annotation_mode != 1)
+                return;
+            setTimeout(function() {
+                var selection = window.getSelection();
+                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
+                    var ctxMenu = $('.annotation-options.ContextMenuPopup');
+                    ctxMenu.css({
+                        'left': e.pageX - ctxMenu.width() / 2,
+                        'top': e.clientY + 12
+                    }).show();
+                    //console.log(ctxMenu.position());
+                    contextMenuShown = true;
+                } else {
+                    var pen_active = $('.toolbar .pen').hasClass('active');
+                    var cursor_active = $('.toolbar .cursor').hasClass('active');
+                    var comment_active = $('.toolbar .comment').hasClass('active');
+                    if (comment_active) {
+                        if (last_active_was_comment)
+                            last_active_was_comment = true;
+                        else {
+                            last_active_was_comment = false;
+                        }
+                    }
+                    else if (!pen_active && !cursor_active) {
+                        select_cursor();
+                    }
+                }
+            }, 10);
+        });
+    });
+
 
     function module0(module, exports, __webpack_require__) {
         try {
@@ -136,10 +174,7 @@
 
             var save_drawing = function() {};
             var activePointId = undefined;
-            var documentId = false;
-            var dh = $(document).height();
-            var dw = $(document).width();
-            // var note_wrapper = $('#notification-wrapper');            
+            var documentId = false;           
             var commentText;// = comments_wrapper.find('#commentText');
             var comment_list_div;// = comments_wrapper.find('.comment-list:first');
             var comment_list;// = comments_wrapper.find('.comment-list-container:first');
@@ -437,20 +472,41 @@
                         loadALlCommentsOnDocument();
                     }
                 }
-                if (contextMenuShown && !$target.is('.ContextMenuPopup button') && !$target.is('.ContextMenuPopup .colored'))
-                    $('.ContextMenuPopup').hide();
-                if ($('.topbar:first .pen:first').hasClass('active')) {
-                    if (hand_drawings.length > 0 && $target.closest('#viewer').length == 0) {
-                        save_drawing();
+                if (contextMenuShown)
+                {
+                    // console.log(contextMenuShown, 883);
+                    $target = $target.closest('.ContextMenuPopup button');
+                    if($target.length)
+                    {
+                        target = $target[0];                        
                     }
-                } else {
-                    if (activePointId && $target.closest('#comment-wrapper').length == 0) {
-                        activePointId = undefined;
-                        $('.comment-list-form').hide();
+                    else{
+                        $target = $(e.target).closest('.ColorPalettePopup');
+                        if($target.length)
+                        {
+                            target = $target[0];
+                        }
+                        else{
+                            // console.log(e.target);
+                            $('.ContextMenuPopup').hide();
+                        }
+                    }
+                }
+                else{
+                    $('.ContextMenuPopup').hide();                
+                    if ($('.topbar:first .pen:first').hasClass('active')) {
+                        if (hand_drawings.length > 0 && $target.closest('#viewer').length == 0) {
+                            save_drawing();
+                        }
                     } else {
-                        var comment_active = $('.toolbar .comment').hasClass('active');
-                        if (comment_active && $target.closest('#viewer').length == 0)
-                            select_cursor();
+                        if (activePointId && $target.closest('#comment-wrapper').length == 0) {
+                            activePointId = undefined;
+                            $('.comment-list-form').hide();
+                        } else {
+                            var comment_active = $('.toolbar .comment').hasClass('active');
+                            if (comment_active && $target.closest('#viewer').length == 0)
+                                select_cursor();
+                        }
                     }
                 }
             });
@@ -1190,45 +1246,11 @@
                             UI.enableRect(type);
                             break;
                     }
-                    // var clicked_annotation_button = $(button);
-                    // if(clicked_annotation_button.hasClass('selection'))
-                    // {
-
-                    //     var active_button = $('.ToolBarWrapper .topbar .annotation_button.active:first');
-                    //     if(clicked_annotation_button != active_button)
-                    //     {
-                    //         active_button.remove('active');
-                    //         clicked_annotation_button.addClass('active');
-                    //     }
-                    //     else{
-                    //         if(!clicked_annotation_button.hasClass('cursor'))
-                    //         {
-                    //             active_button.remove('active');
-                    //             clicked_annotation_button.closest('.topbar').find('.annotation_button.cursor:fisrt').addClass('active');
-                    //         }
-                    //     }
-                    //     if(clicked_annotation_button.hasClass('pen'))
-                    //     {
-                    //         if(clicked_annotation_button.hasClass('active'))
-                    //         {
-                    //             $('#viewer').addClass('pen_active');
-                    //         }
-                    //         else{
-                    //             $('#viewer').removeClass('pen_active');
-                    //         }
-                    //     }
-                    //     else{
-                    //         $('#viewer').removeClass('pen_active');
-                    //     }
-                    // }
-                    // else{
-                    //     clicked_annotation_button.addClass('active');
-                    // }
                     clicked_annotation_button.addClass('active');
                 }
 
-                function handleToolbarClick(e) {
-                    var active_btn = $('.topbar:first .active');
+                function handleToolbarClick(e) {                    
+                    var active_btn = $('.topbar:first .active');                    
                     var target = $(e.target);
                     target = target.closest('button');
                     if (target.hasClass('pen') && active_btn.hasClass('pen')) {
@@ -1246,27 +1268,13 @@
                         }
                     }
                 }
-
-                $('body').on('click', '.toolbar.topbar:first button, .toolbar.annotation-options:first button', handleToolbarClick);
-            })();
-
-            // Clear toolbar button
-            (function() {
-                function handleClearClick(e) {
-                    if (confirm('Are you sure you want to clear annotations?')) {
-                        for (var i = 0; i < NUM_PAGES; i++) {
-                            document.querySelector('div#pageContainer' + (i + 1) + ' svg.annotationLayer').innerHTML = '';
-                        }
-                        setCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/annotations', '[]');
-                    }
-                }
-                //document.querySelector('a.clear').addEventListener('click', handleClearClick);
+                
+                $('body').on('click', '.toolbar.topbar:first button, .annotation-options:first button', handleToolbarClick);                
             })();
 
 
             // Comment stuff
-            (function(window, document) {
-                var obj_this = this;
+            (function(window, document) {                
                 var on_annotation_comment_received = function(data) {
                     var annot_doc = $('#annotated-doc-conatiner');
                     if (annot_doc.length < 1) {
@@ -1641,10 +1649,6 @@
                     activeAnnotationItem = false;
                 }
 
-                var ww = $(window).width();
-                var wh = $(window).height();
-                var dh = $(document).height();
-
                 $('body').on('click', '.toolbar:first .comment', function() {
                     UI.destroyEditOverlay();
                     if ($(this).is('.personal'))
@@ -1664,8 +1668,6 @@
     }
 
     function module1(module, exports, __webpack_require__) {
-
-        var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
         (function() {
             if (typeof twttr === "undefined" || twttr === null) {
                 var twttr = {};
@@ -5718,42 +5720,6 @@
             /* WEBPACK VAR INJECTION */
         }.call(exports, __webpack_require__(3)(module)))
     }
-
-    $(function() {
-        var last_active_was_comment = false;
-        $(document).on('mouseup', '#viewer', function(e) {
-            if (e.button == 2)
-                return;
-            if (annotation_mode != 1)
-                return;
-            setTimeout(function() {
-                var selection = window.getSelection();
-                if (annotation_mode == 1 && selection.type == 'Range' && (selection.baseOffset != 0 || selection.focusOffset != 0)) {
-                    var ctxMenu = $('.annotation-options.ContextMenuPopup');
-                    ctxMenu.css({
-                        'left': e.pageX - ctxMenu.width() / 2,
-                        'top': e.clientY + 12
-                    }).show();
-                    //console.log(ctxMenu.position());
-                    contextMenuShown = true;
-                } else {
-                    var pen_active = $('.toolbar .pen').hasClass('active');
-                    var cursor_active = $('.toolbar .cursor').hasClass('active');
-                    var comment_active = $('.toolbar .comment').hasClass('active');
-                    if (comment_active) {
-                        if (last_active_was_comment)
-                            last_active_was_comment = true;
-                        else {
-                            last_active_was_comment = false;
-                        }
-                    }
-                    else if (!pen_active && !cursor_active) {
-                        select_cursor();
-                    }
-                }
-            }, 10);
-        });
-    });
 
     function module3(module, exports) {
 
