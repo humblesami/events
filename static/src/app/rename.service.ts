@@ -42,8 +42,8 @@ export class RenameService {
         this.rename_object(el, folder, type);
     }
 
-    prevent_default(evn){
-        if(!this.socketService.admin_mode)
+    prevent_default(evn, personal){        
+        if(!this.socketService.admin_mode && !personal)
         {
             return;
         }

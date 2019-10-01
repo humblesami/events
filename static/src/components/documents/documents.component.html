@@ -20,7 +20,7 @@
                         <i class="icon-doc-file"></i>
                     </span>
                 </div>
-                <div class="DocText" (click)="renameService.prevent_default($event, doc)">
+                <div class="DocText" (click)="renameService.prevent_default($event, personal)">
                     <div class="DocName">
                         <div *ngIf="!doc.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': socketService.admin_mode || personal}">
                             <span class="text-truncate doc-info">{{doc.name}}</span>

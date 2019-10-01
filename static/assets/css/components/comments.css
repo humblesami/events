@@ -321,3 +321,6 @@ div#comment{
     border-radius: 15px;
     cursor: pointer;
 }
+.comments .btn-default{
+    z-index: 0;
+}
