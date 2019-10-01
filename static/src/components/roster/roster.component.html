@@ -71,19 +71,19 @@
                                 <div class="col-2">
                                     Accept by: Self
                                 </div>
-                                <div class="col-2">
+                                <div class="col-2 pl-1">
                                     <input *ngIf="obj.attendance=='absent'" class="absent" checked type="radio" name="{{obj.id}}" />                    
                                     <input (click)="update_attendance(obj.id,'absent')" class="absent" *ngIf="obj.attendance!='absent'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="absent" />
                                     <input type="hidden" value="{{obj.id}}" />
                                 </div>
-                                <div class="col-2 col-sm-3 col-md-2">
+                                <div class="col-2 col-sm-3 col-md-2 pl-0">
                                     <input *ngIf="obj.attendance=='inperson'" class="inperson" checked type="radio" name="{{obj.id}}" />
                                     <input (click)="update_attendance(obj.id,'inperson')" class='inperson' *ngIf="obj.attendance!='inperson'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="inperson" />
                                     <input type="hidden" value="{{obj.id}}" />
                                 </div>
-                                <div class="col-2">
+                                <div class="col-2 pl-0">
                                     <input *ngIf="obj.attendance=='online'" checked class="online" type="radio" name="{{obj.id}}" />
                                     <input (click)="update_attendance(obj.id,'online')" class="online" *ngIf="obj.attendance!='online'" type="radio" name="{{obj.id}}" />
                                     <input type="hidden" value="online" />

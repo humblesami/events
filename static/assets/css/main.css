@@ -285,21 +285,6 @@ span.rounded-circle img {
 .ml-25 {
 	margin-left: 25% !important;
 	}
-.btn-primary {
-	color: #ffffff;
-	border-color: #4b74b5;
-	background: #4b74b5;
-	}
-.btn-primary:focus,
-.btn-primary.focus {
-	color: #ffffff;
-	background-color: #4b74b5;
-	outline: none;
-	box-shadow: none;
-	}
-	a:not([href]).btn-primary:hover{
-		color: #fff;
-	}
 button:focus {
 	outline: transparent;
 	}
@@ -368,9 +353,6 @@ breadcrumb
 	font-size: 12px;
 	border-radius: 20px;
 	min-width: 70px;
-	overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 	}
 .breadcrumbSection .breadcrumb {
 	padding: 0;
@@ -3060,4 +3042,18 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
 .fc-time-grid-event > .fc-content{
     color: #fff;
     font-size: 1rem;
+}
+ /* .btn-primary */
+ .btn-primary {
+	border-color: #4b74b5;
+	background: #4b74b5;
+	}
+.btn-primary:focus,
+.btn-primary.focus {
+	background-color: #4b74b5;
+	outline: none;
+	box-shadow: none;
+	}
+a.btn-primary:not([href]):not([tabindex]){
+	color: #fff;
 }
