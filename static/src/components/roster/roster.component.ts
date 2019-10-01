@@ -146,6 +146,11 @@ export class RosterComponent implements OnInit {
 
     submit_attendance(e){        
         let obj_this = this;
+        if (!obj_this.attendance_data || !obj_this.attendance_data.length)
+        {
+            obj_this.close_roster(e);
+            return;
+        }
         let input_data = {
             meeting_id: obj_this.meeting_id,
             attendance_data: obj_this.attendance_data,
@@ -163,6 +168,7 @@ export class RosterComponent implements OnInit {
         // console.log(final_input);
         obj_this.httpService.post(final_input, function(data){
             console.log(data);
+            obj_this.attendance_data = [];
         }, null);
         obj_this.close_roster(e);
     }
