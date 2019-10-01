@@ -433,8 +433,8 @@ class CommentAnnotation(CustomModel):
                 document_id = params['document_id']
 
                 if len(comment_body) > 20:                    
-                    comment_body = '=> '+ comment_body[0: 20] + '...'                
-                text = 'You have new comment '+ comment_body +' on '
+                    comment_body = '=> '+ comment_body[0: 20] + '...'
+                text = 'You have new comment '+ comment_body + ' on '
                 if doc_type == 'meeting':
                     res_model = 'MeetingDocument'
                     model = apps.get_model('meetings', res_model)

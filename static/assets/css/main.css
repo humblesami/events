@@ -1597,24 +1597,31 @@ div#search-modal {
 	color: #000000;
 	font-weight: 400;
 	}
-.notification-container .contact {
-	cursor: pointer;
-	color: black;
-	border: 0;
-	border-top: 1px solid #000000;
-	border-radius: 0;
-	padding: 6px 0;
-	font-size: 13px;
-	font-weight: 600;
-	}
-.notification-container .contact:first-child {
-	border: 0;
-	}
-.notification-container .chat-items.list-group {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	}
+    .notification-container .chat-items.list-group {
+        
+        list-style: none;
+                
+        }
+
+.notification-container .chat-items.list-group li>a {
+    margin: 2px 0;
+    padding: 5px;
+    color: #484343;
+    border: 0;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.notification-container .chat-items.list-group li:last-child>a{
+    border-bottom: 0;
+}
+.notification-container .chat-items.list-group li>a:hover{
+    background: #487db6;
+    color: white;
+}
+        
+
 .notification-container .chat-list-close,
 .notification-container .notification-list-close {
 	cursor: pointer;
