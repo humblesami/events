@@ -218,12 +218,12 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         </div>
 
         <div *ngIf="meeting_object.attendees && meeting_object.attendees.length" class="meeting-details-roster title-wrapper">            
-            <div class="roster-full">
+            <!-- <div class="roster-full">
                 <app-roster meeting_id="{{meeting_object.id}}"></app-roster>
             </div>
             <div class="modal-header btn-meeting" *ngIf="meeting_object.inline_roster">
                 Roster
-            </div>
+            </div> -->
             <div class="row" *ngIf="meeting_object.inline_roster">
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of meeting_object.attendees">
                     <div class="kanban-card">

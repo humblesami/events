@@ -81,6 +81,7 @@ import { ChatgroupComponent } from '../components/chatgroup/chatgroup.component'
 import { UserlistmodalComponent } from '../components/userlistmodal/userlistmodal.component';
 import { SearchComponent } from '../components/search/search.component';
 import { ViewmembersComponent } from '../components/viewmembers/viewmembers.component';
+import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     imports: [
@@ -160,10 +161,11 @@ import { ViewmembersComponent } from '../components/viewmembers/viewmembers.comp
         HttpService,
         RenameService,
         UserService,
-        Location, 
+        Location,
+        NgbActiveModal, 
         {provide: LocationStrategy, useClass: HashLocationStrategy}
     ],
     bootstrap: [AppComponent],
-    entryComponents: [ChatgroupComponent, UserlistmodalComponent, ViewmembersComponent]
+    entryComponents: [ChatgroupComponent, UserlistmodalComponent, ViewmembersComponent, RosterComponent, ProfilesummaryComponent]
 })
 export class AppModule { }

@@ -53,7 +53,10 @@ export class MeetingDetailsComponent implements OnInit {
         }, 51);
     }
     open_roster(){
-        $('.roster-full').show();
+        // $('.roster-full').show();
+        let obj_this = this;
+		const modalRef = this.modalService.open(RosterComponent, { size: 'lg', backdrop: 'static' });
+		modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
     }
 
     on_publish_changed(e){
