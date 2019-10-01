@@ -1665,21 +1665,8 @@ div#search-modal {
 	padding-left: 10px;
 	padding-right: 10px;
 	}
-.notification-container .un-read-msg {
-	background: #dc3545;
-	color: white;
-	border-radius: 20px;
-	padding: 1px 5px !important;
-	padding-top: 2px;
-	font-weight: bold;
-	font-size: 10px;
-	position: absolute;
-	top: 0px;
-	right: -2px;
-	}
-.notification-container .un-read-msg {
-	right: 0 !important;
-	}
+
+
 .notification-container .notification-btn {
 	background: white;
 	padding: 5px;
@@ -1700,10 +1687,7 @@ div#search-modal {
 a.showmouseawaybutton.fa.meetodoo-noti {
 	padding: 0 !important;
 	}
-.notification-container .mobile-chatroom.nav-icon.dropdown span {
-	display: block;
-	padding: 0 10px;
-	}
+
 .notification-container .main-user-navbar button {
 	margin: 0 3px;
 	}
@@ -3049,7 +3033,7 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
     font-size: 1rem;
 }
  /* .btn-primary */
- .btn-primary {
+.btn-primary {
 	border-color: #4b74b5;
 	background: #4b74b5;
 	}
