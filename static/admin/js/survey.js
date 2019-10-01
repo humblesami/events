@@ -14,7 +14,7 @@ function on_add_choice_click(el){
   let choices = $(element).parent().next().find('textarea').val();
   config = {
   on_load: function(){
-        $('#signModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input" placeholder="Pres Enter to Add your choices"/>');
+        $('#appModal .modal-body').html('<input type="text" value="'+choices+'" class="tag_input" placeholder="Pres Enter to Add your choices"/>');
         $('.tag_input').tagsInput({
           placeholder: 'Type your choice and press enter to add it.'
         });
@@ -33,7 +33,7 @@ function on_add_choice_click(el){
       {
         parent.find('.choice_error').remove();
         $('.submit-row').find('input[type="submit"]').removeAttr('disabled');
-        $('#signModal').modal('hide');
+        $('#appModal').modal('hide');
       }
       append_choices(parent, choices);
     }

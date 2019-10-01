@@ -132,8 +132,8 @@
 
 // function init_sign(config) {
 //     var sign_lib = 0;    
-//     $('#signModal').remove();
-//     $('body').append(`<div class="modal fade" id="signModal" role="dialog" style="z-index:1053" aria-hidden="true">
+//     $('#appModal').remove();
+//     $('body').append(`<div class="modal fade" id="appModal" role="dialog" style="z-index:1053" aria-hidden="true">
 //         <div class="modal-dialog modal-md modal-dialog-centered">
 //             <div class="modal-content">
 //                 <div class="modal-header">
@@ -291,7 +291,7 @@
 // //                    }
 
 //                 }            );*/
-//             $('#signModal .modal-footer button').click();
+//             $('#appModal .modal-footer button').click();
 //         });
 
 //         draw_sign_btn.click(function () {
@@ -361,7 +361,7 @@
 //         // dn_rpc_object(
 //         //     signature_url.get,  input_data,
 //         //      function (d) {
-//         //         $('#signModal').modal('show');
+//         //         $('#appModal').modal('show');
 //         //         setTimeout(function () {
 //         //             load_signature(d);
 //         //         }, 200);

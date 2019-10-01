@@ -81,7 +81,7 @@ export class ProfileDetailsComponent implements OnInit {
 		let config = {
 			on_load: function(){
 				$(document).ready(function(){
-					$('#signModal .modal-body').html(
+					$('#appModal .modal-body').html(
 						`
 						<div class="row label-control-form">
 							<div class="container">
@@ -295,7 +295,7 @@ export class ProfileDetailsComponent implements OnInit {
 			hide_on_save: true,
 			on_load: function(){
 				$(document).ready(function(){
-					$('#signModal .modal-body').html(
+					$('#appModal .modal-body').html(
 						`
 						<input type="file" 
 							accept=".jpg,.jpeg,.png" 
@@ -363,7 +363,7 @@ export class ProfileDetailsComponent implements OnInit {
 			hide_on_save: true,
 			on_load: function(){
 				$(document).ready(function(){
-					$('#signModal .modal-body').html(
+					$('#appModal .modal-body').html(
 						`
 						<input type="file" 
 							accept=".jpg,.jpeg,.png" 

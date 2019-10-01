@@ -377,8 +377,8 @@ export class EsignDocDetailsComponent implements OnInit {
                 var snd_to_all = $("#check_box_send_all").is(':checked');
                 var assign_popup = {
                     on_load: function(){
-                        $('#signModal .modal-body').html(body);
-                        $('#signModal .modal-header').find('.title').html("<h5>Sign and Return</h5>");
+                        $('#appModal .modal-body').html(body);
+                        $('#appModal .modal-header').find('.title').html("<h5>Sign and Return</h5>");
                     },
                     on_save: function(){
                         assign_signatures();
@@ -499,33 +499,33 @@ export class EsignDocDetailsComponent implements OnInit {
                             sign_container.remove();
                         }
                     }
-                    $('#signModal').modal('hide');
+                    $('#appModal').modal('hide');
                     window['dn_rpc_object'](ajax_options);
                 }
                 if(obj_this.isAdmin && !obj_this.signature_started)
                 {
                     let popup_config = {
                         on_load: function(){
-                            var modal_body = $('#signModal .modal-body');                            
+                            var modal_body = $('#appModal .modal-body');                            
                             if(is_my_signature)
                             {
                                 var disable_instruction = $('<span>If you want to sign, please disable admin mode.</span>');
                                 var disable_admin_btn = $('<button class="btn btn-primary btn-sm">Disable Admin</button>');
                                 disable_admin_btn.click(function(){
-                                    $('#signModal').modal('hide');
+                                    $('#appModal').modal('hide');
                                     obj_this.socketService.set_admin_mode(false);
                                 });
                                 modal_body.html(disable_instruction).append(disable_admin_btn);
                             }                            
-                            $('#signModal .modal-footer').find('button:last').before(`
+                            $('#appModal .modal-footer').find('button:last').before(`
                                 <button class="remove btn btn-sm btn-danger">Remove</button>
                             `);
-                            $('#signModal button.remove').click(remove_sign);
+                            $('#appModal button.remove').click(remove_sign);
                         },
                         no_save:1,
                         hide_on_save: true,
                         on_shown: function(){
-                            $('#signModal button.remove').click(remove_sign);
+                            $('#appModal button.remove').click(remove_sign);
                         }
                     }
                     window['init_popup'](popup_config);
@@ -585,13 +585,13 @@ export class EsignDocDetailsComponent implements OnInit {
                                 var selected_sign_type = sign_container.attr('signtype');
                                 var read_only = selected_sign_type == 'date' ? 'disabled' : '';
                                 selected_sign_type = window['js_utils'].camel_case(selected_sign_type);
-                                $('#signModal .modal-header .title:first').html(selected_sign_type);
-                                $('#signModal .modal-body').html(`
+                                $('#appModal .modal-header .title:first').html(selected_sign_type);
+                                $('#appModal .modal-body').html(`
                                     <input id="sign_data" class="form-control" placeholder="Please Enter `+selected_sign_type+`" value="`+sign_data.text+`" `+read_only+` />
                                 `);
                             },
                             on_save:function(){
-                                var sign_text = $('#signModal #sign_data').val();
+                                var sign_text = $('#appModal #sign_data').val();
                                 submit_response(sign_data.image, sign_text);
                             },
                             hide_on_save: true,

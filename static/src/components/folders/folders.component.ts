@@ -186,7 +186,7 @@ export class FoldersComponent implements OnInit {
     }
 
     load_create_folder_popup(){
-        $('#signModal .modal-body').html(`
+        $('#appModal .modal-body').html(`
             <input type="text" name="new_folder" id="new_folder"
             placeholder="Please Enter Folder Name"
             class="form-control new_folder" required/>
@@ -209,7 +209,7 @@ export class FoldersComponent implements OnInit {
                 $('#folder-error').hide();
             }
         });
-        $('#signModal').modal('show');
+        $('#appModal').modal('show');
     }
 
     add_folder_create_button(){

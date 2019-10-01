@@ -675,7 +675,7 @@ export class ProfileeditComponent implements OnInit {
 						$('#code-error').hide();
 						obj_this.modified_profile_data['two_factor_auth'] = obj_this.selectedTwoFactorAuth['id'];
 						obj_this.modified_profile_data['mobile_verified'] = true;
-						$('#signModal').modal('hide');
+						$('#appModal').modal('hide');
 					},function(err){
 						$('#code-error').show()
 						$('#code-error').text(err);
@@ -712,7 +712,7 @@ export class ProfileeditComponent implements OnInit {
     
     load_verification_popup(){
         setTimeout(function(){
-            $('#signModal .modal-body').html(`
+            $('#appModal .modal-body').html(`
                 <input type="text" name="verification_code" id="verification_code"
                 placeholder="Please Enter Mobile Verification Code"
                 class="form-control verification-code" required/>

@@ -1,6 +1,6 @@
 
 function init_popup(config) {
-    var modal_obj = $('#signModal');
+    var modal_obj = $('#appModal');
     modal_obj.find('.modal-header span').html('');
     modal_obj.find('.modal-footer button:not(#save-sig):not(#close-btn)').remove();
     var save_btn = modal_obj.find('#save-sig');
@@ -41,12 +41,12 @@ $(function(){
         var c_label = this;        
         var label_show = {
             on_load: function(){
-                $('#signModal .modal-body').html(c_label.innerHTML);
+                $('#appModal .modal-body').html(c_label.innerHTML);
             }
         }
         init_popup(label_show);
     });
-    $('#signModal').on('shown.bs.modal', function(){
+    $('#appModal').on('shown.bs.modal', function(){
         $(this).find('input:visible:first').focus();
     })
 })
