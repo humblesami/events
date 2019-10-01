@@ -447,7 +447,7 @@ export class SocketService {
         }
         
         // console.log(ar);
-        const modalRef = obj_this.modalService.open(dialog_options.component, { backdrop: 'static', windowClass : "align-middle" });     
+        const modalRef = obj_this.modalService.open(dialog_options.component, { backdrop: 'static', windowClass : "align-modal-middle" });     
         if(!dialog_options.user_list.length)
         {
             for(var usr of obj_this.chat_users)

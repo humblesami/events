@@ -226,8 +226,8 @@ mention-list.dropup{
     border-radius: 50%; 
     margin-left: 10px;
 }
-.align-middle .modal-dialog{
-    display: flex;
+.align-modal-middle.modal{
+    display: flex !important;
     flex-direction: column;
     justify-content: center;
     overflow: auto;
