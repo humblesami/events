@@ -186,19 +186,10 @@ mention-list.dropup{
 .main-full-seachbar .btn{
     border-radius: 0;
 }
-.chat_group_container .container{
-    padding: 0;
-
-}
 .popup{
     z-index: 3;
 }
-.modal-footer .btn,
-.chat_group_container  button{
-    border-radius: 20px;
-    min-width: 70px;
-    margin-top: 10px;
-}
+
 .roster-full {
     position: absolute;
     z-index: 1;

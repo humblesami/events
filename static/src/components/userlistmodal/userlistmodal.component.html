@@ -1,12 +1,12 @@
 
-<div class="container chat_group_container py-3">
+<div class="container user-modal-container py-3">
     <app-userlist 
     user_input_str="{{user_input_str}}" 
     selection_input_str="{{selection_input_str}}"
     (group_users_changed)="on_user_selected($event)"
     ></app-userlist>
     <div class="my-3 float-right">
-        <button type="button" class="btn btn-sm btn-primary mr-1" (click)="sendRecord()">Save</button>
-        <button type="button" class="btn btn-sm btn-danger" (click)="activeModal.close()">Close</button>
+        <button type="button" class="btn btn-primary mr-1" (click)="sendRecord()">Save</button>
+        <button type="button" class="btn btn-danger" (click)="activeModal.close()">Close</button>
     </div>
 </div>

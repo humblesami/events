@@ -348,11 +348,15 @@ breadcrumb
 	min-height: 40px;
 	padding: 0 20px 0 15px;
 	}
-.breadcrumbSection .btn {
-	margin: 0 3px;
-	font-size: 12px;
-	border-radius: 20px;
-	min-width: 70px;
+	.modal-content button.btn,
+	.edit-buttons .btn,
+	.modal-footer .btn,
+	.chat_group_container  button{
+		border-radius: 20px;
+		min-width: 80px;
+		font-size: 13px;
+		margin:0 3px;
+
 	}
 .breadcrumbSection .breadcrumb {
 	padding: 0;
@@ -616,7 +620,6 @@ a.kanban-committees-info-box-name {
 	}
 .modal-footer {
 	padding: 5px;
-	display: block;
 	border: 1px dotted silver;
 	text-align: right;
 	}
@@ -2070,18 +2073,7 @@ body.public .router-outlet{
 .btn-group{
 	display: flex;
 }	
-.MeetingHeadWrapper .btn,
-.MeetingBtnWrapper .btn {
-	border: 1px solid #D7DAE2;
-    background: transparent;
-    color: #3059C9;
-    font-size: inherit;
-    min-width: 70px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-	white-space: nowrap;
-	padding: .375rem .375rem;
-	}
+
 .MeetingHeadWrapper .btn i,
 .MeetingBtnWrapper .btn i {
 	font-size: 15px;
@@ -2905,12 +2897,13 @@ label.check-plus-label-wrap {
 {
     min-width: 50%;
 }
+#signature_modal .modal-dialog {
+    min-width: auto;
+}
 .btn-default{
 	border: 1px solid #ddd;
 }
-.modal-footer .btn{
-	border: 0;
-}
+
 .modal-header .title{
 	color:#000;
 }
@@ -3058,4 +3051,24 @@ a:not([href]).app-menu__item:hover{
 }
 a:not([href]).app-menu__item{
     color: white;
+}
+.MeetingHeadWrapper .btn,
+.MeetingBtnWrapper .btn {
+	border: 1px solid #D7DAE2;
+    background: transparent;
+    color: #3059C9;
+    font-size: inherit;
+	min-width: 95px;
+	margin:0;
+	border-radius: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: .375rem .375rem;
+	}
+
+@media screen and (max-width:576px){
+	.MeetingHeadWrapper .btn, .MeetingBtnWrapper .btn{
+		min-width: 65px
+	}
 }

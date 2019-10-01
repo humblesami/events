@@ -1,4 +1,4 @@
-<div class="container chat_group_container py-2">
+<div class="container user-modal py-2">
     <div class="form-group my-2">
         <label class="font-weight-bold text-primary">Group Name</label>
         <input [(ngModel)]="group_name" class="form-control form-control-sm"/>
@@ -9,7 +9,7 @@
     (group_users_changed)="group_users_changed($event)"
     ></app-userlist>
     <div class="my-3 float-right">
-        <button [attr.disabled]="group_name ? null: 'disabled'" type="button" class="btn btn-sm btn-primary mr-1" (click)="sendRecord()">Save</button>
-        <button type="button" class="btn btn-sm btn-danger" (click)="activeModal.close()">Close</button>
+        <button [attr.disabled]="group_name ? null: 'disabled'" type="button" class="btn btn-primary mr-1" (click)="sendRecord()">Save</button>
+        <button type="button" class="btn btn-danger" (click)="activeModal.close()">Close</button>
     </div>
 </div>

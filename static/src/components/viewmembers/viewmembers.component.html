@@ -1,57 +1,57 @@
-<div class="container chat_group_container py-3">
-<div class="container">
-    <div class="main-full-seachbar mb-3">
-    <input type="text"
-        (keyup)="$event.target.value; $event.keyCode == 13 ? user_serach($event.target.value): null"
-        placeholder="Search..."  class="form-control"/>
-    </div>
-    <div class="roster">
-        <div class="container">
-            <div class="row py-2">
-                <div class="col-9 p-0">
-                    <label class="font-weight-bold text-primary">
-                        Attendee
-                    </label>
+<div class="container user-modal-container py-3">
+    <div class="">
+        <div class="main-full-seachbar mb-3">
+        <input type="text"
+            (keyup)="$event.target.value; $event.keyCode == 13 ? user_serach($event.target.value): null"
+            placeholder="Search..."  class="form-control"/>
+        </div>
+        <div class="roster">
+            <div class="container">
+                <div class="row py-2">
+                    <div class="col-9 p-0">
+                        <label class="font-weight-bold text-primary">
+                            Attendee
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <label class="font-weight-bold text-primary">
+                            Status
+                        </label>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <label class="font-weight-bold text-primary">
-                        Status
-                    </label>
-                </div>
-            </div>
-        </div>  
-        <div class="container group-height">  
-            <div class="row align-items-center bg-userlist mb-row"
-            *ngFor="let obj of shown_users">
-                <div class="col-9 p-0">
-                    <div class="d-flex align-items-center">
-                        <div class="w-70">
-                            <div class="img-flex img-circle">
-                                <img src="{{socketService.server_url}}{{obj.image}}"/>
+            </div>  
+            <div class="container group-height">  
+                <div class="row align-items-center bg-userlist mb-row"
+                *ngFor="let obj of shown_users">
+                    <div class="col-9 p-0">
+                        <div class="d-flex align-items-center">
+                            <div class="w-70">
+                                <div class="img-flex img-circle">
+                                    <img src="{{socketService.server_url}}{{obj.image}}"/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="w-75">
-                            <div class="d-block text-truncate">
-                                {{obj.name}}
-                            </div>
-                            <div class="d-block text-truncate">
-                                {{obj.email}}
+                            <div class="w-75">
+                                <div class="d-block text-truncate">
+                                    {{obj.name}}
+                                </div>
+                                <div class="d-block text-truncate">
+                                    {{obj.email}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div  class="col-3 custom-control custom-checkbox">
-                        <input type="checkbox"
-                        disabled="disabled"
-                        [(ngModel)]="obj.selected"
-                        class="custom-control-input">
-                        <label class="custom-control-label"></label>
-                </div>
-            </div>   
+                    <div  class="col-3 custom-control custom-checkbox">
+                            <input type="checkbox"
+                            disabled="disabled"
+                            [(ngModel)]="obj.selected"
+                            class="custom-control-input">
+                            <label class="custom-control-label"></label>
+                    </div>
+                </div>   
+            </div>
         </div>
     </div>
-  </div>
-  <div class="my-3 float-right">
-      <button type="button" class="btn btn-sm btn-danger" (click)="activeModal.close()">Close</button>
-  </div>
+    <div class="my-3 float-right">
+        <button type="button" class="btn btn-danger" (click)="activeModal.close()">Close</button>
+    </div>
 </div>

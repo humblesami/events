@@ -143,11 +143,10 @@ function init_sign(config) {
             <div class="modal-content">
                 <div class="modal-header">
                 <div class="DocsButtonWrapper">
-                        <span class="btn btn-primary btn-sm DocsBtn" id="draw-sig">Draw</span>
-                        <button id="upload-sig-btn" class="btn btn-sm btn-primary DocsBtn o_select_file_button" title="Select" type="button">Upload</button>
+                        <button class="btn btn-primary DocsBtn" id="draw-sig">Draw</button>
+                        <button id="upload-sig-btn" class="btn btn-primary DocsBtn o_select_file_button" title="Select" type="button">Upload</button>
                         <input id="upload-sig" accept=".jpg,.png,.jpeg" style="display:none" type="file">
-                        <span class="btn btn-primary btn-sm DocsBtn" id="auto-signature-btn">Auto</span>
-                        <!-- <span class="btn btn-primary btn-sm DocsBtn" id="insert-sig">Insert</span> -->
+                        <button class="btn btn-primary DocsBtn" id="auto-signature-btn">Auto</button>
                     </div>   
                 <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
@@ -159,9 +158,9 @@ function init_sign(config) {
                     
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-danger btn-sm DocsBtn" id="clear-signature-btn">Clear</button>
-                    <button class="btn btn-primary btn-sm DocsBtn" id="save-signature-btn">Save</button>
-                    <button class="btn btn-sm btn-default" id="close-signature-btn" data-dismiss="modal">Close</button>
+                    <button class="btn btn-danger DocsBtn" id="clear-signature-btn">Clear</button>
+                    <button class="btn btn-primary DocsBtn" id="save-signature-btn">Save</button>
+                    <button class="btn btn-default" id="close-signature-btn" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

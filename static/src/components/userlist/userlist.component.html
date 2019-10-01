@@ -1,62 +1,62 @@
-<div class="container">
-        <div class="main-full-seachbar mb-3">
-        <input type="text"
-            (keyup)="$event.target.value; $event.keyCode == 13 ? user_serach($event.target.value): null"
-            placeholder="Search..."  class="form-control"/>
+<div>
+    <div class="main-full-seachbar mb-3">
+    <input type="text"
+        (keyup)="$event.target.value; $event.keyCode == 13 ? user_serach($event.target.value): null"
+        placeholder="Search..."  class="form-control"/>
+    </div>
+    <div class="roster">
+        <div class="MeetingBtnWrapper">
+            <div class="btn-group user-types">
+                <a class="btn active" (click)="all_profile_users($event.target)">All Users</a>
+                <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
+                <a class="btn" (click)="all_available_users($event.target)">Available</a>                    
+            </div>
         </div>
-        <div class="roster">
-            <div class="MeetingBtnWrapper">
-                <div class="btn-group user-types">
-                    <a class="btn active" (click)="all_profile_users($event.target)">All Users</a>
-                    <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
-                    <a class="btn" (click)="all_available_users($event.target)">Available</a>                    
+        <div class="container">
+            <div class="row py-2">
+                <div class="col-9 p-0">
+                    <span class="font-weight-bold text-primary">
+                        Attendee
+                    </span>
+                </div>
+                <div class="col-3">
+                    <span class="font-weight-bold text-primary">
+                        Status
+                    </span>
                 </div>
             </div>
-            <div class="container">
-                <div class="row py-2">
-                    <div class="col-9 p-0">
-                        <span class="font-weight-bold text-primary">
-                            Attendee
-                        </span>
-                    </div>
-                    <div class="col-3">
-                        <span class="font-weight-bold text-primary">
-                            Status
-                        </span>
-                    </div>
-                </div>
-            </div>  
-            <div class="container group-height">  
-                <div class="row align-items-center bg-userlist mb-row"
-                *ngFor="let obj of shown_users"
-                [ngClass]="{disabled_row: obj.current_user}"
-                (click)="obj.current_user ? null: toggle_user_selection(obj)">
-                    <div class="col-9 p-0">
-                        <div class="d-flex align-items-center">
-                            <div class="w-70">
-                                <div class="img-flex img-circle">
-                                    <img src="{{socketService.server_url}}{{obj.image}}"/>
-                                </div>
+        </div>  
+        <div class="container group-height">  
+            <div class="row align-items-center bg-userlist mb-row"
+            *ngFor="let obj of shown_users"
+            [ngClass]="{disabled_row: obj.current_user}"
+            (click)="obj.current_user ? null: toggle_user_selection(obj)">
+                <div class="col-9 p-0">
+                    <div class="d-flex align-items-center">
+                        <div class="w-70">
+                            <div class="img-flex img-circle">
+                                <img src="{{socketService.server_url}}{{obj.image}}"/>
                             </div>
-                            <div class="w-75">
-                                <div class="d-block text-truncate">
-                                    {{obj.name}}
-                                </div>
-                                <div class="d-block text-truncate">
-                                    {{obj.email}}
-                                </div>
+                        </div>
+                        <div class="w-75">
+                            <div class="d-block text-truncate">
+                                {{obj.name}}
+                            </div>
+                            <div class="d-block text-truncate">
+                                {{obj.email}}
                             </div>
                         </div>
                     </div>
-                    <div  class="col-3 custom-control custom-checkbox">
-                            <input type="checkbox"
-                            [attr.disabled]="obj.current_user ? 'diabled': null"
-                            [checked]="obj.selected == true"
-                            [(ngModel)]="obj.selected"
-                            class="custom-control-input">
-                            <label class="custom-control-label"></label>
-                    </div>
-                </div>   
-            </div>
+                </div>
+                <div  class="col-3 custom-control custom-checkbox">
+                        <input type="checkbox"
+                        [attr.disabled]="obj.current_user ? 'diabled': null"
+                        [checked]="obj.selected == true"
+                        [(ngModel)]="obj.selected"
+                        class="custom-control-input">
+                        <label class="custom-control-label"></label>
+                </div>
+            </div>   
         </div>
     </div>
+</div>
