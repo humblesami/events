@@ -147,6 +147,10 @@ export class SocketService {
                 obj_this.actually_admin = true;
                 break;
             }
+            else
+            {
+                obj_this.actually_admin = false;
+            }
         }
         var admin_mode_cookie = localStorage.getItem('admin_mode');
         if (!admin_mode_cookie)
