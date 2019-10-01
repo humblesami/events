@@ -118,6 +118,6 @@ export class ViewmembersComponent implements OnInit {
     }
     
     ngOnInit() {        
-        this.get_list();        
+        this.get_list();
     }
 }

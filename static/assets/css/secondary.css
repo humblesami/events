@@ -199,7 +199,17 @@ mention-list.dropup{
     min-width: 70px;
     margin-top: 10px;
 }
-
+.roster-full {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 40px;
+    background: #fff;
+    width: 100%;
+    height: calc(100% - 40px);
+    display: none;
+    overflow: auto;
+}
 .bg-userlist,
 .bg-roster{
     background: #f3f3f3;
@@ -215,4 +225,16 @@ mention-list.dropup{
     overflow: hidden;
     border-radius: 50%; 
     margin-left: 10px;
+}
+.align-middle .modal-dialog{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: auto;
+}
+@media screen and (max-width: 390px){
+    .roster-full{
+        top: 0px;
+        height: calc(100% - 25px);
+    }   
 }

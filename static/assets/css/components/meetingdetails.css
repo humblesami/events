@@ -294,17 +294,7 @@ h5, .h5 {
 .attendee-card button{
     font-size: 0.85rem;
 }
-.roster-full {
-    position: absolute;
-    z-index: 3;
-    left: 0;
-    top: 40px;
-    background: #fff;
-    width: 100%;
-    height: calc(100% - 40px);
-    display: none;
-    overflow: auto;
-}
+
 .btn-meeting
 {
     font-weight: bold;
@@ -314,11 +304,24 @@ h5, .h5 {
 .table > tbody > tr{
     border: 1px solid #dee2e6
 }
-@media screen and (max-width: 390px){
-    .roster-full{
-        top: 0px;
-        height: calc(100% - 25px);
-    }   
+.roster-button{
+    width: 7rem;
+    border-radius: 25px;
+    height: 30px;
+    margin-left: 5px;
+    position: relative;
+    top:-10px;
+}
+.roster-button i{
+    position: absolute;
+    right: 10px;
+    top: 6px;
+}
+@media (max-width: 576px){
+    .roster-button{
+        top: 5px;
+        left: -5px;
+    } 
 }
 @media (min-width: 280px){
     .MainTitleHeadWrap {
@@ -326,17 +329,4 @@ h5, .h5 {
         justify-content: space-between;
         align-items: center;
     }
-}
-.roster-button{
-    width: 7rem;
-    border-radius: 25px;
-    height: 30px;
-    top: -10px;
-    margin-left: 5px;
-    position: relative;
-}
-.roster-button i{
-    position: absolute;
-    right: 10px;
-    top: 6px;
 }

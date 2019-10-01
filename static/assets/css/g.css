@@ -1,17 +1,11 @@
 .roster-full{
-    position: absolute;
-    z-index: 1;
-    left: 0;
     top: 70px;
-    background: #fff;
-    width: 100%;
     height: calc(100% - 70px);
-    overflow: auto;
 }
 
 .group-height{
     overflow: auto;
-    height:calc(100vh - 200px);
+    max-height:calc(100vh - 200px);
 }
 .groups{
     cursor: pointer;

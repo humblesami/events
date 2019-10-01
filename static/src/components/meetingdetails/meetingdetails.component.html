@@ -26,8 +26,8 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             <h3 class="text-dark mb-0">
                                 <i class="icon-meeting text-primary"></i> {{meeting_object.name}}
                             </h3>
-                                <div class="ml-auto">
-                                    <button 
+                            <div class="ml-auto">
+                                <button 
                                     *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')"
                                     class="check-status meet-elements position-relative"
                                     (click)="on_publish_changed($event)"
@@ -36,7 +36,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <span class="status">{{meeting_status}}</span>
                                 </button>
 
-                                <button 
+                                <button *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')"
                                     class="btn btn-primary btn-sm roster-button"
                                     (click)="open_roster()">
                                         <i class="fa fa-users"></i> Roster                                    

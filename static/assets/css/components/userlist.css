@@ -10,7 +10,7 @@
     left: 0;
     background: #fff;
     width: 100%;
-    height: calc(100vh - 385px);
+    max-height: calc(100vh - 385px);
     overflow: overlay;
 }
 .custom-control-label::before,
