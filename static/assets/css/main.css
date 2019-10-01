@@ -442,16 +442,14 @@ a.kanban-committees-info-box-name {
 .modal.fade .modal-dialog {
 	-webkit-transform: translate(0, 0);
 	transform: translate(0, 0);
-	}
-.modal-dialog {
-	z-index: 23;
-	}
-.modal-dialog-centered {
 	display: -ms-flexbox;
 	display: flex;
 	-ms-flex-align: center;
 	align-items: center;
+	min-height: calc(100% - (1.75rem * 2));
+	margin: 1.75rem auto;
 	}
+
 .bootbox {
 	display: flex !important;
 	justify-content: center;

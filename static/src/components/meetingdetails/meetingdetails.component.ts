@@ -56,11 +56,14 @@ export class MeetingDetailsComponent implements OnInit {
         // $('.roster-full').show();
         let obj_this = this;
 		const modalRef = this.modalService.open(RosterComponent, { size: 'lg', backdrop: 'static' });
-		modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
+        modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
+        modalRef.componentInstance.meeting_type = obj_this.meeting_object.exectime;
+        modalRef.result.then(function(data){
+            obj_this.meeting_object.attendance_marked = data && data.attendance_marked;
+        })
     }
 
     on_publish_changed(e){
-
         let obj_this = this;
         let args = {
             app: 'meetings',
@@ -97,12 +100,21 @@ export class MeetingDetailsComponent implements OnInit {
             {
                 obj_this.meeting_status = 'Published';
                 obj_this.applicable_publish_action = 'Unpublish';
-                // obj_this.meeting_type = 'upcoming';
-                // obj_this.title = 'Upcoming';
-                // var elm = $('li.breadcrumb-item a').last();
-                // var parent_elm = elm.parent();
-                // elm.remove();
-                // parent_elm.append('<a href="#/meetings/upcoming">Upcoming Meetings</a>');
+                if(new Date(obj_this.meeting_object.end_date) > new Date())
+                {
+                    obj_this.meeting_type = 'upcoming';
+                    var elm = $('li.breadcrumb-item a').last();
+                    var parent_elm = elm.parent();
+                    elm.remove();
+                    parent_elm.append('<a href="#/meetings/upcoming">Upcoming Meetings</a>');
+                }
+                else{
+                    obj_this.meeting_type = 'completed';
+                    var elm = $('li.breadcrumb-item a').last();
+                    var parent_elm = elm.parent();
+                    elm.remove();
+                    parent_elm.append('<a href="#/meetings/completed">Completed Meetings</a>');
+                }
             }
             obj_this.meeting_object.publish = !is_published;
         }, function(){

@@ -6,7 +6,7 @@
 	</div>
     <div class="roster">
         <div class="container">
-            <div class="row mb-2">
+            <div class="row mb-2" [ngClass]="{disabled: meeting_type != 'completed' && meeting_type != 'ongoing'}">
                 <div class="col-12 mb-1">
                     <div class="row roster-elements">
                         <div class="col-3 col-sm-3 col-md-4 pl-2 pl-lg-0">
@@ -58,7 +58,7 @@
                                                 <img src="{{socketService.server_url}}{{obj.photo}}"/>
                                             </div>                            
                                         </div>
-                                        <div class="col-9 pl-2 pl-lg-0">
+                                        <div class="col-9 pl-2">
                                             <div class="d-block text-truncate">
                                                 {{obj.name}}
                                             </div>
@@ -103,7 +103,9 @@
     
     <div class="d-flex display-block float-right">            
         <div class="form-buttons">
-            <button type="button" class="btn btn-primary mr-2" (click)="submit_attendance($event)">Submit</button>
+            <button type="button" class="btn btn-primary mr-2"
+            *ngIf="meeting-type=='completed'"
+            (click)="submit_attendance($event)">Submit</button>
             <button type="button" class="btn btn-danger" (click)="close_roster($event)">Close</button>
         </div>
     </div>

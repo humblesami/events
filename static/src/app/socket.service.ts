@@ -58,7 +58,7 @@ export class SocketService {
             window['socket_manager'] = obj_this;
             // console.log(obj_this, 342);
         }
-
+        obj_this.chat_users = [];
         obj_this.server_url = obj_this.site_config.server_base_url;
         obj_this.media_url = obj_this.server_url + '/media';
         var res = window['js_utils'].is_public_route();

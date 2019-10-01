@@ -15,4 +15,7 @@ button.check-time-btn {
 	width: 70%;
 	display: inline-block;
 	margin-bottom: -6px;
-}		
+}
+.icon-folder.personal{
+	color: green;
+}	

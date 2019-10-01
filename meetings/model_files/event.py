@@ -110,9 +110,8 @@ class Event(CustomModel):
 
     @property
     def attendance_marked(self):
-        attendance = Invitation_Response.objects.filter(
-            Q(event_id=self.id) & (Q(attendance__isnull=True) | Q(attendance=''))).distinct()
-        if attendance:
+        unmarked = Invitation_Response.objects.filter(event_id=self.id, attendance__isnull=True).distinct()
+        if unmarked:
             return False
         else:
             return True
@@ -233,7 +232,8 @@ class Event(CustomModel):
             check_meeting = Invitation_Response.objects.get(event_id=meeting_id, attendee_id=atten['id'])
             check_meeting.attendance = atten['attendance']
             check_meeting.save()
-        return 'done'
+        attendance_marked = Event.objects.get(pk=meeting_id).attendance_marked
+        return {'attendance_marked': attendance_marked}
 
     @classmethod
     def respond_invitation(cls, request, params):

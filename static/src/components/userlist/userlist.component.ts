@@ -56,7 +56,7 @@ export class UserlistComponent implements OnInit {
                     val.selected = obj_this.check_user_selected(val.id);
                 }
             });
-            this.shown_users = this.all_users;
+            obj_this.shown_users = obj_this.all_users;
             return;
         }
 
@@ -67,7 +67,7 @@ export class UserlistComponent implements OnInit {
             obj_this.all_users.forEach((val)=>{
                 val.selected = obj_this.check_user_selected(val.id);
             });
-            this.shown_users = this.all_users;
+            obj_this.shown_users = obj_this.all_users;
         }
         let args = {
             app: 'meetings',
@@ -89,33 +89,37 @@ export class UserlistComponent implements OnInit {
     }
 
     all_selected_users(el)
-    {        
-        this.shown_users = this.all_users.filter((el)=>{
+    {   
+        let obj_this = this;     
+        obj_this.shown_users = obj_this.all_users.filter((el)=>{
             return el.selected == true;
         });
-        this.activate_tab(el);        
+        obj_this.activate_tab(el);        
     }
 
     all_available_users(el)
     {
-        this.shown_users = this.all_users.filter((el)=>{
+        let obj_this = this;
+        obj_this.shown_users = obj_this.all_users.filter((el)=>{
             return el.selected == false;
         });
-        this.activate_tab(el);
+        obj_this.activate_tab(el);
     }
 
     all_profile_users(el)
     {
-        this.shown_users = this.all_users;
-        this.activate_tab(el);
+        let obj_this = this;
+        obj_this.shown_users = obj_this.all_users;
+        obj_this.activate_tab(el);
     }
 
     toggle_user_selection(obj){
+        let obj_this = this;
         obj.selected = !obj.selected;
-        let selection_output = this.all_users.filter((el)=>{
+        let selection_output = obj_this.all_users.filter((el)=>{
             return el.selected == true;
         });
-        this.group_users_changed.emit(selection_output);
+        obj_this.group_users_changed.emit(selection_output);
     }
 
     user_serach(val)

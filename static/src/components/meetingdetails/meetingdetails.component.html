@@ -4,7 +4,7 @@ rid="{{meeting_object.id}}" edit="1" delete="1"
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
 <app-breadcrumb app="meetings" model="event" 
-*ngIf="meeting_type == 'archive' || meeting_type == 'completed'"
+*ngIf="meeting_type == 'archived' || meeting_type == 'completed'"
 routes='[{"title":"{{meeting_type}} Meetings", "link":"/meetings/{{meeting_type}}"}]'
 title="{{meeting_object.name}}"></app-breadcrumb>
 
@@ -35,11 +35,16 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                     <span class="circle"><i class="fa fa-circle"></i></span>
                                     <span class="status">{{meeting_status}}</span>
                                 </button>
-
-                                <button *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')"
+                                <button
                                     class="btn btn-primary btn-sm roster-button"
                                     (click)="open_roster()">
                                         <i class="fa fa-users"></i> Roster                                    
+                                </button>
+                                <button *ngIf="meeting_type == 'completed' && socketService.admin_mode" 
+                                class="btn btn-primary btn-sm roster-button" 
+                                [disabled]="!meeting_object.attendance_marked"
+                                (click)="move_to_archive(meeting_object.id)">
+                                    <span name="archive">Move to Archive</span>
                                 </button>
                             </div>
                         </div>
@@ -51,11 +56,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                 <span *ngIf="title === 'Completed'" class="badge badge-success">{{title}}</span>
                                 <span *ngIf="title === 'Archived'" class="badge badge-danger">{{title}}</span>
                                 <span *ngIf="title === 'Upcoming'" class="badge badge-warning">{{title}}</span>
-                            </div>
-                            <div *ngIf="meeting_object && meeting_object.attendance_marked == true && meeting_type && meeting_type == 'completed'">
-                                <button class="btn btn-meeting btn-archive" (click)="move_to_archive(meeting_object.id)">
-                                    <span name="archive">Move to Archive</span>
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -268,7 +268,44 @@ title="{{meeting_object.name}}"></app-breadcrumb>
         </div>
 
         <div *ngIf="meeting_object.surveys.length || meeting_object.votings.length || meeting_object.sign_docs.length">
-            <h3 class="mt-3 attachedActions"><i class="icon-business text-primary"></i> Attached Actions</h3>
+            <h3 class="mt-3 attachedActions">
+                <i class="icon-business text-primary"></i> 
+                Attached Actions
+            </h3>
+        </div>
+
+        <div *ngIf="meeting_object.sign_docs && meeting_object.sign_docs.length" class="DocumentsSignWrapper title-wrapper">
+            <div class="clearfix mt-3">
+                <h4 class="my-3 text-primary float-left">
+                    Documents To Sign
+                </h4>
+                <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.sign_docs.length > visible_limit['sign_doc']">
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.sign_docs, 'sign_doc')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
+                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.sign_docs, 'sign_doc')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
+            <div class="row docwrappercontainer">
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of meeting_object.sign_docs.slice(start_indices['sign_doc'], ending_indices['sign_doc'])">
+                    <a routerLink="/signdoc/{{doc.id}}" class="">
+                        <div class="DocumentWrapper gray-bg">
+                            <div class="DocIcon">
+                                <span class="rounded-circle">
+                                    <i class="icon-doc-file"></i>
+                                </span>
+                            </div>
+                            <div class="DocText">
+                                <div class="DocName text-truncate">
+                                    <h5 class="text-truncate">{{doc.name}}</h5>
+                                </div>
+                                <div class="SignatureText text-truncate font-11">
+                                    <span>Status: </span>
+                                    <span class="pending-status">{{doc.signature_status}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <div *ngIf="meeting_object.surveys && meeting_object.surveys.length" class="title-wrapper border-bottom">
@@ -319,7 +356,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
 
         <div *ngIf="meeting_object.votings && meeting_object.votings.length" class="title-wrapper border-bottom">
             <!--Votings-->
@@ -413,39 +450,6 @@ title="{{meeting_object.name}}"></app-breadcrumb>
             </div>
         </div>
 
-        <div *ngIf="meeting_object.sign_docs && meeting_object.sign_docs.length" class="DocumentsSignWrapper title-wrapper border-bottom">
-            <div class="clearfix mt-3">
-                <h4 class="my-3 text-primary float-left">
-                    Documents To Sign
-                </h4>
-                <div class="controls-top float-right btn-group mb-2" *ngIf="meeting_object.sign_docs.length > visible_limit['sign_doc']">
-                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(-1,meeting_object.sign_docs, 'sign_doc')" data-slide="prev"><i class="fa fa-chevron-left"></i></a>
-                    <a class="btn-floating btn btn-sm btn-primary text-white" (click)="get_slider_start_index(1, meeting_object.sign_docs, 'sign_doc')" data-slide="next"><i class="fa fa-chevron-right"></i></a>
-                </div>
-            </div>
-			<div class="row docwrappercontainer">
-				<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of meeting_object.sign_docs.slice(start_indices['sign_doc'], ending_indices['sign_doc'])">
-					<a routerLink="/signdoc/{{doc.id}}" class="">
-						<div class="DocumentWrapper gray-bg">
-							<div class="DocIcon">
-								<span class="rounded-circle">
-									<i class="icon-doc-file"></i>
-								</span>
-							</div>
-							<div class="DocText">
-								<div class="DocName text-truncate">
-									<h5 class="text-truncate">{{doc.name}}</h5>
-								</div>
-								<div class="SignatureText text-truncate font-11">
-									<span>Status: </span>
-									<span class="pending-status">{{doc.signature_status}}</span>
-								</div>
-							</div>
-						</div>
-					</a>
-                </div>
-            </div>
-        </div>
         <app-comments *ngIf="is_attendee && meetObjLoaded" res_app="{{discussion_params.app}}" res_model="{{discussion_params.model}}" res_id="{{meeting_object.id}}" [mention_list]="meeting_object.attendees"></app-comments>
     </div>
 </div>

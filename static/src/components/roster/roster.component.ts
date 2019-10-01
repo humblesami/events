@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
-import { ChatUser } from 'src/app/models/chat';
 import { SocketService } from 'src/app/socket.service';
 import { NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { ProfilesummaryComponent } from '../profilesummary/profilesummary.component';
@@ -14,6 +13,7 @@ declare var $: any;
 
 export class RosterComponent implements OnInit {
     @Input() meeting_id: number;
+    @Input() meeting_type: string;
     server_url = window['server_url'];
     httpService: HttpService;
     constructor(private httpServ: HttpService,        
@@ -169,15 +169,12 @@ export class RosterComponent implements OnInit {
         }
         // console.log(final_input);
         obj_this.httpService.post(final_input, function(data){
-            console.log(data);
             obj_this.attendance_data = [];
+            obj_this.close_roster(data);
         }, null);
-        obj_this.close_roster(e);
     }
-    close_roster(e){
-        // console.log(e.target);
-        // $(e.target).closest('.roster-full').hide();
-        this.activeModal2.close('closed');
+    close_roster(data){
+        this.activeModal2.close(data);
     }
 
 

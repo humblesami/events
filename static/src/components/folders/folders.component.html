@@ -8,18 +8,18 @@
     <div class="sub cards container">
         <div class="row docwrappercontainer mb-0">
             <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of records">
-                <a routerLink="/resource/{{folder.id}}" class="">
+                <a routerLink="/resource/{{folder.id}}" title="{{folder.personal ? 'My Folder': ''}}">
                     <div class="DocumentWrapper">
-                        <div *ngIf="folder && folder.id && (socketService.admin_mode || folder.personal)" class="doc-del-btn"
+                        <div *ngIf="folder && folder.id && (socketService.admin_mode || personal)" class="doc-del-btn"
                         (click)="delete_folder($event, folder.id , folder.total_files)">
                         <i class="far fa-trash-alt pointer" ></i>
                         </div>
                         <div class="DocIcon">
                             <span class="rounded-circle">
-                                <i class="icon-folder"></i>
+                                <i class="icon-folder" [ngClass]="{personal : !personal && folder.personal}"></i>
                             </span>
                         </div>                        
-                        <div class="DocText" (click)="renameService.prevent_default($event, personal)">
+                        <div class="DocText" (click)="renameService.prevent_default($event, folder.personal)">
                             <div class="DocName">
                                 <div *ngIf="!folder.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': (socketService.admin_mode || folder.personal)}">
                                     <span class="text-truncate resource-info">{{folder.name}} ({{folder.total_files || 0}})</span>
