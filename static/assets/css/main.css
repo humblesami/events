@@ -623,18 +623,17 @@ a.kanban-committees-info-box-name {
 	border: 1px dotted silver;
 	text-align: right;
 	}
-.modal-header button.close {
-    margin: 0;
-    padding: 0;
-    padding-bottom: 4px;
-    padding-left: 1px;
-    width: 30px;
-    height: 30px;
-    color: #ffffff;
-    text-align: center;
-    border-radius: 50%;
-    background: #FF1A1A;
-}
+	.modal-header button.close {
+		padding: 0;
+		position: absolute;
+		right: 18px;
+		color: #ffffff;
+		width: 23px;
+		opacity: 0.7;
+		border-radius: 50%;
+		background: #FF1A1A;
+		top: 18px;
+	}
 .del {
 	cursor: pointer;
 	}
