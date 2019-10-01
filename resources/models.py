@@ -16,27 +16,38 @@ class Folder(CustomModel):
     
 
     def get_accurate_name(self):
+        count = 0
         if self.parent:
             self.personal = self.parent.personal
             folder_with_same_name = Folder.objects.filter(parent_id=self.parent.id, name=self.name)
             if len(folder_with_same_name) > 1:
-                count = 0
                 while folder_with_same_name:
                     count += 1
                     folder_with_same_name = Folder.objects.filter(parent_id=self.parent.id, name=self.name+'-'+str(count))
                 return self.name + '-' + str(count)
             else:
-                return self.name
+                name = self.name
+                while folder_with_same_name:
+                    count += 1
+                    folder_with_same_name = Folder.objects.filter(parent_id=self.parent.id, name=self.name+'-'+str(count))
+                    if not folder_with_same_name:
+                        name = self.name+'-'+str(count)
+                return name
         else:
             folder_with_same_name = Folder.objects.filter(parent__isnull=True, name=self.name)
             if len(folder_with_same_name) > 1:
-                count = 0
                 while folder_with_same_name:
                     count += 1
                     folder_with_same_name = Folder.objects.filter(parent__isnull=True, name=self.name+'-'+str(count))
                 return self.name + '-' + str(count)
             else:
-                return self.name
+                name = self.name
+                while folder_with_same_name:
+                    count += 1
+                    folder_with_same_name = Folder.objects.filter(parent__isnull=True, name=self.name+'-'+str(count))
+                    if not folder_with_same_name:
+                        name = self.name+'-'+str(count)
+                return name
 
 
     def save(self, *args, **kwargs):
