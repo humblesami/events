@@ -26,17 +26,7 @@ export class AppComponent {
 	topFunction() {        
 		document.body.scrollTop = 0;
 		$("html, body").animate({ scrollTop: 0 }, 600);
-    }
-    
-    activate_link(dom_el, link){        
-        var el = $(dom_el).closest('li');
-        if(el.length)
-        {
-            el.closest('ul').find('a.active').removeClass('active');                        
-            el.children('a').addClass('active');
-            this.router.navigate([link]);
-        }        
-    }
+    }    
 
 	scrollFunction() {
 		if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
@@ -64,12 +54,6 @@ export class AppComponent {
             event.preventDefault();
             $('body.user').toggleClass('sidenav-toggled');
         });
-
-        setTimeout(function(){
-            var url_now = obj_this.router.url;
-            $('ul.app-menu:first a[placeholder="'+url_now+'"]').addClass('active');
-        },20);
-        
         
         $('body').on('click', '.main-nav-header [data-toggle="treeview"]', function(event){
             console.log('toggleing 2');

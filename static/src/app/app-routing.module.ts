@@ -174,7 +174,9 @@ export class AppRoutingModule {
                 }
                 localStorage.setItem('previous_url', current_url);
                 localStorage.setItem('current_url', next_url);
-                site_functions.hideLoader('Route');                
+                site_functions.hideLoader('Route');
+                $('ul.app-menu:first a.active').removeClass('active');
+                $('ul.app-menu:first a[routerLink="'+next_url+'"]').addClass('active');
                 
             }
             else if (event instanceof RoutesRecognized) {                
