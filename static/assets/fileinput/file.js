@@ -1,5 +1,5 @@
 window['merge_cloud_files'] = [];
-function apply_drag_drop(input, resInfo, on_files_uploaded){    
+function apply_drag_drop(input, resInfo, on_files_uploaded){
     if(!input.length)
     {
         // console.log('invalid file input element');
@@ -74,6 +74,10 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         });
     }
     
+    $('.file-drop-zone').css('cursor','pointer').click(()=>{
+        input.click();
+    })
+
     var elm = input.next().find('.cloud_pickers_container');
     var current_cloud_number = $(".cloud_pickers_container").index(elm);    
 
