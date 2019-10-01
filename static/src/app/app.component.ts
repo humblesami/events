@@ -64,6 +64,12 @@ export class AppComponent {
             event.preventDefault();
             $('body.user').toggleClass('sidenav-toggled');
         });
+
+        setTimeout(function(){
+            var url_now = obj_this.router.url;
+            $('ul.app-menu:first a[placeholder="'+url_now+'"]').addClass('active');
+        },20);
+        
         
         $('body').on('click', '.main-nav-header [data-toggle="treeview"]', function(event){
             console.log('toggleing 2');

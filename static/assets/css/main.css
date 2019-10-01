@@ -3057,3 +3057,9 @@ select, button, a, input[type="radio"], input[type="checkbox"], input[type="butt
 a.btn-primary:not([href]):not([tabindex]){
 	color: #fff;
 }
+a:not([href]).app-menu__item:hover{
+    color: white;
+}
+a:not([href]).app-menu__item{
+    color: white;
+}
