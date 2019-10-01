@@ -30,15 +30,15 @@
             </section>
             
             <section *ngIf="to_do_count" class="HomepageDocumentSection">            
-<h3 class="text-dark pb-1 mb-3 border-bottom">
-                    <i class="icon-action text-primary"></i> Actions
+                <h3 class="text-dark pb-2 border-bottom">
+                    <i class="icon-business text-primary"></i> Actions
                 </h3>
                 <!--Surveys-->
                 <div id="to-do">
-                    <div class="carousel slide carousel-multi-item pt-3 pb-4" data-ride="carousel"
+                    <div class="carousel slide carousel-multi-item py-2" data-ride="carousel"
                     *ngIf="home_data.to_do_items.pending_surveys.length">
                         <div class="clearfix">
-                            <h4 class="text-primary pb-3 float-left">
+                            <h4 class="text-primary pb-1 float-left">
                                 <i class="icon-action"></i> Surveys
                             </h4>
                             <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_surveys.length > visible_limit['survey']">
@@ -133,9 +133,9 @@
                     <!--Documents-->
                     
                     <div *ngIf="home_data.to_do_items.pending_documents.length" id="multi-item-sign-docs" 
-                    class="carousel slide carousel-multi-item pt-3 pb-4" data-ride="carousel">
+                    class="carousel slide carousel-multi-item py-2" data-ride="carousel">
                         <div class="clearfix">                                
-                            <h4 class="text-primary pb-3 float-left">
+                            <h4 class="text-primary pb-1 float-left">
                                <i class="icon-draw-pencil"></i> E-Signature
                             </h4>
                             <div class="controls-top float-right btn-group mb-2" *ngIf="home_data.to_do_items.pending_documents.length > visible_limit['sign_doc']">
@@ -173,9 +173,9 @@
                     </div>                 
                     <!--Votings-->
                     <div *ngIf="home_data.to_do_items.pending_votings.length" id="multi-item-voting" 
-                    class="carousel slide carousel-multi-item  pt-3 pb-4" data-ride="carousel">
+                    class="carousel slide carousel-multi-item  py-2" data-ride="carousel">
                         <div class="clearfix">
-                            <h4 class="text-primary pb-3 float-left">
+                            <h4 class="text-primary pb-1 float-left">
                                 <i class="icon-voting"></i> Voting / Approvals
                             </h4>
                         <div class="controls-top float-right btn-group mb-2" 
