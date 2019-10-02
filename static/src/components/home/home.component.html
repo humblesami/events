@@ -153,16 +153,15 @@
                                                     <i class="icon-e-sign"></i>
                                                 </span>
                                             </div>
-                                            <div class="DocText">
-                                                <div class="DocName text-truncate">
-                                                    <h5 class="text-truncate">{{doc.name}}</h5>
+                                            <div class="DocInfoVertical">
+                                                <div class="text-truncate">
+                                                    {{doc.name}}
                                                 </div>
                                                 <div *ngIf="doc && doc.meeting__name" class="DocMeeting">
                                                     Meeting: {{doc.meeting__name}}
                                                 </div>
-                                                <div class="SignatureText font-11">
-                                                    <span>Status: </span>
-                                                    <span class="pending-status">{{doc.signature_status}}</span>
+                                                <div class="text-truncate">
+                                                    Status: {{doc.signature_status}}
                                                 </div>
                                             </div>
                                         </a>

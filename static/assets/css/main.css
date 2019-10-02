@@ -435,7 +435,7 @@ a.kanban-committees-info-box-name {
 	animation: loading 2s linear infinite;
 	}
 .modal {
-	z-index: 22;
+	z-index: 4;
 	}
 .modal-backdrop.fade {
 	opacity: .5;
@@ -443,7 +443,7 @@ a.kanban-committees-info-box-name {
 	}
 .modal-backdrop
 {
-	z-index: 4 !important;
+	z-index: 2 !important;
 }	
 .modal.fade .modal-dialog {
 	-webkit-transform: translate(0, 0);
@@ -2436,7 +2436,7 @@ ul.dropdown-menu.scrollable-menu {
 .edit-buttons.edit-mode {
 	justify-content: center;
 	position: absolute;
-	z-index: 14;
+	z-index: 1;
 	width: 98.2%;
 	left: 1.7%;
 	bottom: 3px;
@@ -2735,7 +2735,7 @@ select {
     color: #000;
 }	
 #appModal {
-	z-index: 23;
+	z-index: 5;
 	}
 h4.title-h4 {
 	color: #3059C9;
