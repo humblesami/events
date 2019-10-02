@@ -710,9 +710,9 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
                 $('#select_user_modal').modal('show');
             });
+            
 
-
-            $("#nxxt_sign").click(function() {
+            $("#nxxt_sign1").click(function() {
                 var d = $.grep(doc_data, function(v) {
                     return !v.signed && v.my_record;
                 });
@@ -924,7 +924,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 return !v.signed && v.my_record;
             });
             if (d.length > 0) {
-                // $("#nxxt_sign").show();
+                $("#nxxt_sign").show();
             }
         }
 
@@ -997,7 +997,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 var selector = '.new_sign[page=' + pageNum + ']';
                 $(selector).show();
 
-                //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
+                // $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
                 setTimeout(function() {
                     loadSignatures({
                         "doc_data": doc_data,                    
