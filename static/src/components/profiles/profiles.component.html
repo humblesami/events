@@ -19,13 +19,6 @@
 			</div>
 		</div>
         <app-search (onsearch)="get_list()"></app-search>
-        <!--
-        <div class="main-full-seachbar mb-3">
-        <input type="text" 
-        (keyup)="httpService.search_kw = $event.target.value; $event.keyCode == 13 ? get_list(): null" 
-        placeholder="Search..."  class="form-control"/>
-        </div>
-        -->
 
         <div *ngIf="records && records.length" class="d-none d-sm-block">
             <div class="row text-primary">
@@ -48,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="row d-none d-sm-block">
+        <div class="row d-none d-sm-block mb-2">
             <div class="col-12">
                 <div class="mb-1" *ngFor="let profile of records">
                     <div class="kanban-profile-card">
@@ -94,7 +87,7 @@
             </div>		
         </div>
         <!-- Mobile View-->
-        <div class="row mobile-kanbann">
+        <div class="row mobile-kanbann mb-2">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4" *ngFor="let profile of records">
                 <div class="kanban-card">
                     <a routerLink="/profile/{{profile.id}}" class="kanban-profiles-user-info-box">
@@ -122,9 +115,8 @@
         </div>
         <!-- End Mobile View-->
 
-    <app-paginator *ngIf="records.length" (reload_data)="get_list()">
-    </app-paginator>
-
+        <app-paginator *ngIf="records.length" (reload_data)="get_list()">
+        </app-paginator>
     </div>
 
     <div class="container" *ngIf="no_prof">

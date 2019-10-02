@@ -29,22 +29,25 @@ title="e-Signature"></app-breadcrumb>
 		</div>
     -->
     <div class="cards">
-		<div class="row docwrappercontainer">
+		<div class="row">
 			<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4"  *ngFor="let doc of records">
 				<a routerLink="/signdoc/{{doc.id}}" class="">
 					<div class="DocumentWrapper gray-bg">
+                        <div *ngIf="doc.id && socketService.admin_mode" class="doc-del-btn"
+                            (click)="delete_file($event, doc.id)">
+                            <i class="far fa-trash-alt pointer" ></i>
+                        </div>
 						<div class="DocIcon">
 							<span class="rounded-circle">
 								<i class="icon-e-sign"></i>
 							</span>
-						</div>
+                        </div>
 						<div class="DocInfoVertical">
 							<div class="text-truncate">
 								{{doc.name}}
 							</div>
 							<div class="text-truncate">
-                                <span>Status: </span>
-                                <span class="pending-status">{{doc.signature_status}}</span>
+                                Status: {{doc.signature_status}}
 							</div>
                         </div>
 					</div>
