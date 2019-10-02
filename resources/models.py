@@ -188,7 +188,7 @@ class Folder(CustomModel):
 
     @classmethod
     def search_root(cls, kw, user_id, results, search_type, recursive=False):
-        folders = Folder.objects.filter(parent_id=None, users__id=user_id).order_by('-pk')
+        folders = Folder.objects.filter(parent_id=None, users__id=user_id).order_by('-personal', '-pk')
         if search_type == 'folders':
             records = []
             for folder in folders:
@@ -283,9 +283,9 @@ class Folder(CustomModel):
                 folders = folders.filter(Q(parent__isnull=True) & Q(users__id=user_id))
         else:
             if parent_id:
-                folders = Folder.objects.filter(Q(parent_id=parent_id) & Q(users__id=user_id)).order_by('-pk')
+                folders = Folder.objects.filter(Q(parent_id=parent_id) & Q(users__id=user_id)).order_by('-pk', '-personal')
             else:
-                folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id)).order_by('-pk')
+                folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id)).order_by('-pk', '-personal')
 
         total_cnt = folders.count()
         offset = params.get('offset')
