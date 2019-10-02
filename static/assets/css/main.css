@@ -252,12 +252,15 @@ a,
 	text-transform: capitalize;
 	font-family: 'Roboto', sans-serif;
 	background: #638fc9;
-	padding: 10px;
+	padding: 5px;
     transition: all 0.2s ease;  
     font-size: 0.85rem;
 	font-weight: bold;
 	text-align: center;
-    
+	height: 45px;
+	display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .DocumentWrapper:hover .DocText {
 	background: #2699FB
@@ -2872,7 +2875,7 @@ label.check-plus-label-wrap {
 .DocumentWrapper input.renamer {
 	height: auto;
 	font-size: 0.85rem;
-	padding: 7px 6px;
+	padding: 0px 5px;
     }
 .doc-del-btn {
 	position: absolute;
