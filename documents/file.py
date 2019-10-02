@@ -3,9 +3,12 @@ import os
 import base64
 import re
 import subprocess
+import urllib
+from urllib.request import urlopen
 
 from PIL import Image
 from django.apps import apps
+from django.core.files.temp import NamedTemporaryFile
 from fpdf import FPDF
 from PyPDF2 import PdfFileReader
 from mainapp import settings, ws_methods
@@ -16,11 +19,14 @@ from django.core.files import File as DjangoFile
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 
+
 def validate_file_extension(value):
     ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
     valid_extensions = ['.pdf', '.odt', '.doc', '.docx', '.xlsx', '.xls', '.ppt', '.pptx']
     if not ext.lower() in valid_extensions:
-        raise ValidationError(u'Unsupported file extension. Only pdf and microsoft office documents(odt, doc,docx,ppt.pptx,xls,xlsx) are allowed')
+        raise ValidationError(
+            u'Unsupported file extension. Only pdf and microsoft office documents(odt, doc,docx,ppt.pptx,xls,xlsx) are allowed')
+
 
 def text_extractor(f):
     pdf = PdfFileReader(f)
@@ -47,7 +53,7 @@ class File(CustomModel, FilesUpload):
     access_token = models.CharField(max_length=512, null=True, blank=True)
 
     def __str__(self):
-        return self.name        
+        return self.name
 
     pending_tasks = 3
 
@@ -56,21 +62,22 @@ class File(CustomModel, FilesUpload):
             if self.pending_tasks == 3:
                 file_data = None
                 if self.cloud_url:
-                    headers = None
+                    headers = {}
                     if self.access_token:
-                        headers = {'Authorization':'Bearer '+self.access_token}
+                        headers = {'Authorization': 'Bearer ' + self.access_token}
                     self.file_name = re.sub('[^0-9a-zA-Z\.]+', '_', self.file_name)
-                    file_data = ws_methods.http(self.cloud_url, headers)
-                    if file_data == b'Not Found':
-                        raise Exception('Not found')
-                    pth = settings.BASE_DIR + '/media/files/'+self.file_name
-                    f = open(pth, 'wb')
-                    f.write(file_data)
-                    f.close()
-                    res = open(pth, 'rb')
-                    file_data = res
+                    try:
+                        request = urllib.request.Request(self.cloud_url, headers=headers)
+                        img_temp = NamedTemporaryFile(delete=True)
+                        img_temp.write(urlopen(request).read())
+                        img_temp.flush()
+                        file_data = img_temp
+                    except urllib.error.HTTPError as e:
+                        msg = str(e.code) + e.reason
+                        raise Exception(msg)
+
                     self.binary_data = ''
-                    cloud_url = self.cloud_url      
+                    cloud_url = self.cloud_url
                     if 'https://www.googleapis.com' in cloud_url:
                         self.access_token = 'Google'
                     elif 'files.1drv.com' in cloud_url:
@@ -87,7 +94,7 @@ class File(CustomModel, FilesUpload):
 
                 if file_data is None:
                     if not self.attachment:
-                        self.pending_tasks = 0
+                        raise ValidationError('No file provided')
                     else:
                         if self.pk:
                             if self.attachment != File.objects.get(pk=self.id).attachment:
@@ -105,15 +112,15 @@ class File(CustomModel, FilesUpload):
                     return
             if self.pending_tasks == 1:
                 if self.html:
-                    self.content = self.html                   
+                    self.content = self.html
                 else:
-                    if not self.pdf_doc:                        
+                    if not self.pdf_doc:
                         raise Exception('File conversion failed')
-                    if not self.pdf_doc.file:                        
+                    if not self.pdf_doc.file:
                         raise Exception('File conversion failed.')
                     try:
                         self.content = text_extractor(self.pdf_doc)
-                    except:                        
+                    except:
                         raise Exception('unable to extract file content')
                 self.pending_tasks = 0
                 self.save()
@@ -153,8 +160,8 @@ class File(CustomModel, FilesUpload):
             else:
                 subprocess.check_call(
                     ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'pdf',
-                    '-o', res_pdf_path, '-d', 'document',
-                    pth])
+                     '-o', res_pdf_path, '-d', 'document',
+                     pth])
                 res = open(res_pdf_path, 'rb')
             if ext != "pdf":
                 res = open(res_pdf_path, 'rb')
@@ -172,9 +179,9 @@ class File(CustomModel, FilesUpload):
             res_pdf_path = self.exclude_extension(res_pdf_path) + ".xhtml"
             subprocess.check_call(
                 ['/usr/bin/python3', '/usr/bin/unoconv', '-f', 'xhtml',
-                '-o', res_pdf_path,
-                pth]
-                )
+                 '-o', res_pdf_path,
+                 pth]
+            )
             res = open(res_pdf_path, 'rb')
             self.pdf_doc.save(filename + ".xhtml", DjangoFile(res))
             read = res.read()
@@ -211,7 +218,7 @@ class File(CustomModel, FilesUpload):
     @classmethod
     def get_attachments(cls, request, params):
         parent_id = params.get('parent_id')
-        parent_field = params.get('parent_field')    
+        parent_field = params.get('parent_field')
         model = apps.get_model(params['app'], params['model'])
         q_objects = Q()
         if parent_id:
@@ -219,13 +226,13 @@ class File(CustomModel, FilesUpload):
 
         kw = params.get('kw')
         if kw:
-            docs = ws_methods.search_db({'kw': kw, 'search_models': { params['app']: [params['model']]}})
+            docs = ws_methods.search_db({'kw': kw, 'search_models': {params['app']: [params['model']]}})
         else:
             docs = model.objects.filter(q_objects)
         docs = docs.values('id', 'name', 'access_token')
         documents = list(docs)
         return documents
-    
+
     @classmethod
     def change_file_name(cls, request, params):
         doc_id = params['doc_id']
@@ -234,7 +241,7 @@ class File(CustomModel, FilesUpload):
         file.name = name
         file.save()
         return 'done'
-    
+
     @classmethod
     def delete_file(csl, request, params):
         doc_id = params['doc_id']
@@ -286,6 +293,7 @@ class File(CustomModel, FilesUpload):
             "url": url,
             'doc_name': file_obj.name,
             'breadcrumb': breadcrumb,
+            'is_respondent': is_respondent,
             'mention_list': mention_list
         }
         return {'data': doc}

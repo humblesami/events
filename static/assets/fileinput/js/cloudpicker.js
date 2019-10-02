@@ -107,7 +107,8 @@ $(function(){
                 console.log('Google api not loaded yet');
             }
         }
-    
+        // 'client_id': '638526982862-2apirds295obf1hbv16kmi4bn55cp4fo.apps.googleusercontent.com',
+        // 'client_id': '921039722572-u3aq7gvjgk42gj590ve3qf5fc1schjf0.apps.googleusercontent.com',
         function onAuthApiLoad() {
             console.log('APi Loaded');
             window.gapi.auth.authorize({

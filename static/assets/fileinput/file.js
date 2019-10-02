@@ -50,16 +50,16 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         </div>
         <div`+multiple+` input_type=${input_type} class="cloud_pickers_container d-flex justify-content-center align-items-center pb-1">
             <div class="google_drive_picker picker border">
-                <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" title="Google Drive">                
+                <img class="img-fluid" src="/static/assets/images/cloud/gdrive.png" title="Google Drive">
             </div>
             <div class="one_drive_picker picker border">
-                <img class="img-fluid" src="/static/assets/images/cloud/onedrive.png" title="OneDrive">                
+                <img class="img-fluid" src="/static/assets/images/cloud/onedrive.png" title="OneDrive">
             </div>
             <div class="drop_box_picker picker border">
-                <img class="img-fluid" src="/static/assets/images/cloud/dropbox.png" title="Dropbox">                
+                <img class="img-fluid" src="/static/assets/images/cloud/dropbox.png" title="Dropbox">
             </div>
             <div class="local_picker picker border btn btn-primary btn-file">
-                <i class="glyphicon glyphicon-folder-open"></i>&nbsp;  
+                <i class="glyphicon glyphicon-folder-open"></i>&nbsp;
                 <span class="hidden-xs" style="padding-right:8px;">Browse</span>
             </div>
         </div>
@@ -73,20 +73,20 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             $('.cloud_pickers_container .picker').css('visibility','visible');
         });
     }
-    
+
     $('.file-drop-zone').css('cursor','pointer').click(()=>{
         input.click();
     })
 
     var elm = input.next().find('.cloud_pickers_container');
-    var current_cloud_number = $(".cloud_pickers_container").index(elm);    
+    var current_cloud_number = $(".cloud_pickers_container").index(elm);
 
 
     parent.find('.local_picker').click(function(){
         input.click();
     });
     var drop_zone = parent.find('.file-drop-zone:first');
-    dropZone = drop_zone[0];    
+    dropZone = drop_zone[0];
 
     function on_dragenter(evn){
         evn.preventDefault();
@@ -107,14 +107,14 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             }
         }
     }
-    function on_drop(evn){        
+    function on_drop(evn){
         $(drop_zone).removeClass('dragenter');
         if(!evn.dataTransfer)
         {
             console.log('No files data found');
             return;
         }
-        var new_files = evn.dataTransfer.files;        
+        var new_files = evn.dataTransfer.files;
         element.files = new_files;
         preview_files(new_files);
     }
@@ -125,15 +125,15 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     dropZone.addEventListener('drop', on_drop, false);
 
 
-    input.cloud_urls = [];    
+    input.cloud_urls = [];
     function merge_cloud_files(new_files){
-        // console.log(new_files, 4444);        
+        // console.log(new_files, 4444);
         if(multiple)
-        {            
+        {
             preview_files(new_files, 1);
         }
         else
-        {          
+        {
             preview_files(new_files,1);
         }
         for(var file of new_files)
@@ -143,7 +143,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
     }
 
     window['merge_cloud_files'][current_cloud_number] = merge_cloud_files;
-    
+
     function upload_files(files, cloud=false)
     {
         // console.log(files, 13);
@@ -169,7 +169,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         {
             formData.append('cloud_data', JSON.stringify(files));
         }
-        
+
         formData.append('res_app', resInfo.res_app);
         formData.append('res_model', resInfo.res_model);
         formData.append('res_id', resInfo.res_id);
@@ -191,7 +191,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
         $.ajax({
             url: url,
             data: formData,
-            type: 'POST',            
+            type: 'POST',
             // dataType: 'JSON',
             headers: headers,
             contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
@@ -205,14 +205,14 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                     $(".feedback-message").append('<p id="success-message" class="alert-danger">Invalid data from file save</p>');
                     return;
                 }
-                
+
                 if(Array.isArray(data))
-                {                    
+                {
                     if(on_files_uploaded)
                     {
                         parent.find('.file-box').remove();
-                        parent.find('.preview-conatiner').html('');                        
-                        on_files_uploaded(data);                        
+                        parent.find('.preview-conatiner').html('');
+                        on_files_uploaded(data);
                     }
                     $(".feedback-message").append('<p id="success-message" class="alert-success">'+ files.length +' File(s) Uploaded Successfully </p>').fadeIn("slow");
                 }
@@ -226,7 +226,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             },
             complete:function(){
                 js_utils.removeLoader(file_input_picker);
-                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');                
+                $('.file-drop-zone-title').removeClass('loading').html('Drag & drop files here …');
                 setTimeout(function(){
                     $(".feedback-message").fadeOut("slow");
                     $(".feedback-message").html('');
@@ -286,7 +286,6 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             return;
         }
 
-
         parent.find('.feedback-message').html('');
         var thumbnail = `
         <div class="file-preview-other file-box border p-1">
@@ -315,8 +314,8 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             upload_files(files, cloud);
         }
         else
-        {            
-            var name_box = parent.closest('form').find('input[name="name"]');            
+        {
+            var name_box = parent.closest('form').find('input[name="name"]');
             var single_file = files[0];
             let file_name = single_file.name.split('.');
             file_name.pop();
@@ -324,6 +323,18 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
             name_box.val(file_name);
             parent.closest('fieldset').find('[name="file_name"]').val(single_file.name);
             $('.file-drop-zone-title').html('File '+single_file.name+' ready to be uploaded...');
+
+            var url_box = parent.closest('form').find('[name="cloud_url"]');
+            if(url_box.length)
+            {
+                url_box.val(single_file.url);
+            }
+            var access_token_box = parent.closest('form').find('[name="access_token"]');
+            console.log(access_token_box[0], 33);
+            if(access_token_box.length)
+            {
+                access_token_box.val(single_file.access_token);
+            }
             if(on_files_uploaded)
             {
                 data = {
@@ -350,9 +361,9 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
 }
 
 
-(function(){    
+(function(){
     // console.log(99999999999,  window['merge_cloud_files']);
-    window.addEventListener("message", function(response){        
+    window.addEventListener("message", function(response){
         // this.console.log(response, 1444504);
         if(response.data)
         {
@@ -365,7 +376,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 {
                     window['merge_cloud_files'][cloud_number](files);
                 }
-            }    
+            }
         }
     })
 })()
