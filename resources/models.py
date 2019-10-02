@@ -2,6 +2,7 @@ import re
 from meetings.model_files.user import *
 from mainapp.models import CustomModel
 from django_currentuser.middleware import get_current_user
+from django.db.models import Q
 
 
 class Folder(CustomModel):
@@ -15,40 +16,15 @@ class Folder(CustomModel):
         return self.name
     
 
-    def get_accurate_name(self):
-        count = 0
-        if self.parent:
-            self.personal = self.parent.personal
-            folder_with_same_name = Folder.objects.filter(parent_id=self.parent.id, name=self.name)
-            if len(folder_with_same_name) > 1:
-                while folder_with_same_name:
-                    count += 1
-                    folder_with_same_name = Folder.objects.filter(parent_id=self.parent.id, name=self.name+'-'+str(count))
-                return self.name + '-' + str(count)
-            else:
-                name = self.name
-                while folder_with_same_name:
-                    count += 1
-                    folder_with_same_name = Folder.objects.filter(parent_id=self.parent.id, name=self.name+'-'+str(count))
-                    if not folder_with_same_name:
-                        name = self.name+'-'+str(count)
-                return name
-        else:
-            folder_with_same_name = Folder.objects.filter(parent__isnull=True, name=self.name)
-            if len(folder_with_same_name) > 1:
-                while folder_with_same_name:
-                    count += 1
-                    folder_with_same_name = Folder.objects.filter(parent__isnull=True, name=self.name+'-'+str(count))
-                return self.name + '-' + str(count)
-            else:
-                name = self.name
-                while folder_with_same_name:
-                    count += 1
-                    folder_with_same_name = Folder.objects.filter(parent__isnull=True, name=self.name+'-'+str(count))
-                    if not folder_with_same_name:
-                        name = self.name+'-'+str(count)
-                return name
-
+    def get_accurate_name(self, user_id):
+        name = self.name
+        folder_with_same_name = Folder.objects.filter(
+            ~Q(pk=self.pk) & Q(name=name) & Q(users__in=[user_id]))
+        while folder_with_same_name:
+            name = name + '_1'
+            folder_with_same_name = Folder.objects.filter(
+                ~Q(pk=self.pk) & Q(name=name) & Q(users__in=[user_id]))
+        return name
 
     def save(self, *args, **kwargs):
         current_user = get_current_user()
@@ -58,7 +34,9 @@ class Folder(CustomModel):
             creating = True
             name_updated = True
         if not name_updated:
-            self.name = self.get_accurate_name()
+            same_name = Folder.objects.filter(Q(name=self.name) & ~Q(pk=self.pk))
+            if same_name:
+                self.name = self.get_accurate_name(current_user.id)
         super(Folder, self).save(*args, **kwargs)
         if creating and current_user not in self.users.all():
             name_updated = True
@@ -127,7 +105,11 @@ class Folder(CustomModel):
         folder = Folder.objects.get(pk=folder_id)
         folder.name = name
         folder.save()
-        return 'done'
+        data = {
+            'id': folder.id,
+            'name': folder.name
+        }
+        return data
 
     @classmethod
     def search_folders(cls, request, params):

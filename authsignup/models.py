@@ -96,7 +96,11 @@ class AuthUser(models.Model):
         item = model.objects.get(pk=item_id)
         item.name = name
         item.save()
-        return 'done'
+        data = {
+            'id': item.id,
+            'name': item.name
+        }
+        return data
     
     @classmethod
     def do_login(cls, request, user, name, referer_address):

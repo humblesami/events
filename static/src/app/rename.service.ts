@@ -103,7 +103,7 @@ export class RenameService {
             args: args
         }
         obj_this.httpService.get(final_input, (data)=>{
-            item.name = item_name;
+            item.name = data.name;
             //console.log(item, 133);
         }, null);        
     }
