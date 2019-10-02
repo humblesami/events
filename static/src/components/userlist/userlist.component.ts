@@ -49,15 +49,18 @@ export class UserlistComponent implements OnInit {
         if(obj_this.user_input_str)
         {
             obj_this.all_users = JSON.parse(obj_this.user_input_str);
-            // console.log(obj_this.all_users, 223);
-            obj_this.all_users.forEach((val)=>{
-                if (!val.selected)
-                {
-                    val.selected = obj_this.check_user_selected(val.id);
-                }
-            });
-            obj_this.shown_users = obj_this.all_users;
-            return;
+            if (obj_this.all_users.length)
+            {
+                obj_this.all_users = JSON.parse(obj_this.user_input_str);
+                obj_this.all_users.forEach((val)=>{
+                    if (!val.selected)
+                    {
+                        val.selected = obj_this.check_user_selected(val.id);
+                    }
+                });
+                obj_this.shown_users = obj_this.all_users;
+                return;
+            }
         }
 
         function success(data){            

@@ -240,6 +240,7 @@ class Profile(user_model, CustomModel):
 
     UniqueConstraint(fields=['email'], name='unique_email')
 
+
     def __str__(self):
         return self.fullname()
 
@@ -745,13 +746,20 @@ class Profile(user_model, CustomModel):
         kw = params.get('kw')
         if kw:
             users = ws_methods.search_db({'kw': kw, 'search_models': {'meetings': ['Profile']}})
-            users = users.values('id', 'name', 'email', 'image')
+
         else:
-            users = Profile.objects.all().values('id', 'name', 'email', 'image')
-        users = list(users)
+            users = Profile.objects.all()
+        user_list = []
+        for user in users:
+            user_list.append({
+                'id': user.id,
+                'name': user.name,
+                'email': user.email,
+                'image': user.image.url
+            })
         data = {
-            'users': users,
-            'total': len(users)
+            'users': user_list,
+            'total': len(user_list)
         }
         return data
 

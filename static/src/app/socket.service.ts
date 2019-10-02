@@ -450,38 +450,41 @@ export class SocketService {
         const modalRef = obj_this.modalService.open(dialog_options.component, { backdrop: 'static', windowClass : "align-modal-middle" });     
         if(!dialog_options.user_list.length)
         {
-            for(var usr of obj_this.chat_users)
+            if (obj_this.chat_users.length)
             {
-                dialog_options.user_list.push({
-                    id: usr.id,
-                    name: usr.name,
-                    email: '',
-                    image: usr.photo,
-                })
-            }
-            let user_cookie = localStorage.getItem('user');                
-            let cuser = undefined;
-            if(user_cookie)
-            {
-                cuser = JSON.parse(user_cookie);
-            }
-            let owner = false;
-            let default_selected = false;
-            if (dialog_options.owner)
-            {
-                default_selected = true;
-                owner = dialog_options.owner;
-            }
-            if (cuser)
-            {
-                dialog_options.user_list.unshift({
-                    id: cuser.id,
-                    name: cuser.name,
-                    email: cuser.email,
-                    image: cuser.photo,
-                    current_user: owner,
-                    selected: default_selected
-                })
+                for(var usr of obj_this.chat_users)
+                {
+                    dialog_options.user_list.push({
+                        id: usr.id,
+                        name: usr.name,
+                        email: '',
+                        image: usr.photo,
+                    })
+                }
+                let user_cookie = localStorage.getItem('user');                
+                let cuser = undefined;
+                if(user_cookie)
+                {
+                    cuser = JSON.parse(user_cookie);
+                }
+                let owner = false;
+                let default_selected = false;
+                if (dialog_options.owner)
+                {
+                    default_selected = true;
+                    owner = dialog_options.owner;
+                }
+                if (cuser)
+                {
+                    dialog_options.user_list.unshift({
+                        id: cuser.id,
+                        name: cuser.name,
+                        email: cuser.email,
+                        image: cuser.photo,
+                        current_user: owner,
+                        selected: default_selected
+                    })
+                }
             }
         }
         
