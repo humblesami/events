@@ -193,7 +193,7 @@ class Folder(CustomModel):
             records = []
             for folder in folders:
                 folder.total_files = 0
-                folder.files_in_folder(folder)
+                folder.files_in_folder(folder,user_id)
                 total_files = folder.total_files
 
                 folder_obj = folder.__dict__
@@ -231,7 +231,7 @@ class Folder(CustomModel):
             records = []
             for folder in folders:
                 folder.total_files = 0
-                folder.files_in_folder(folder)
+                folder.files_in_folder(folder, user_id)
                 total_files = folder.total_files
 
                 if search_type == 'folders':
@@ -260,13 +260,13 @@ class Folder(CustomModel):
         return parents_list
 
     total_files = 0
-    def files_in_folder(self, folder):
-        folder.total_files += self.documents.count()
+    def files_in_folder(self, folder,user_id):
+        folder.total_files += self.documents.filter(users__id=user_id).count()
             # if sub_folder.folder_set.values():
         # new_total = 0
         for sub_folder in self.folder_set.all():
             new_folder = Folder.objects.get(pk=sub_folder.id)
-            new_folder.files_in_folder(folder)
+            new_folder.files_in_folder(folder,user_id)
 
 
     @classmethod
@@ -298,7 +298,7 @@ class Folder(CustomModel):
             folders = folders[offset: offset + int(limit)]
         for folder in folders:
             folder.total_files = 0
-            folder.files_in_folder(folder)
+            folder.files_in_folder(folder,user_id)
             total_files = folder.total_files
             cd = ws_methods.obj_to_dict(folder, fields=['name', 'id'])
             cd['total_files'] = total_files
