@@ -4,10 +4,11 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve --host 0.0.0.0 --aot --disable-host-check",
-        "build": "ng build",
+        "build": "ng build && gzipper --verbose ./build",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "gzipper": "gzipper"
     },
     "private": true,
     "dependencies": {
