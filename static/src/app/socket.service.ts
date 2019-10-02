@@ -465,6 +465,13 @@ export class SocketService {
             {
                 cuser = JSON.parse(user_cookie);
             }
+            let owner = false;
+            let default_selected = false;
+            if (dialog_options.owner)
+            {
+                default_selected = true;
+                owner = dialog_options.owner;
+            }
             if (cuser)
             {
                 dialog_options.user_list.unshift({
@@ -472,8 +479,8 @@ export class SocketService {
                     name: cuser.name,
                     email: cuser.email,
                     image: cuser.photo,
-                    current_user: true,
-                    selected: true
+                    current_user: owner,
+                    selected: default_selected
                 })
             }
         }

@@ -364,6 +364,7 @@ export class MessengerComponent implements OnInit {
                 diaolog_options = {
                     selected_users: obj_this.selected_chat_group.members,
                     user_list: [],
+                    owner: true,
                     component: ChatgroupComponent,
                     extra_input: {group_name : group.name},
                     call_back: on_modal_closed, 
