@@ -89,10 +89,9 @@
                                 <span class="unseen" *ngIf="cg.unseen">
                                     {{cg.unseen}}
                                 </span>
-                                <span class="show_members_btn group-single-btn" (click)="show_group_members(cg, $event)">
-                                <!-- <span class="group-single-btn" (click)="show_group_members(cg, $event)"> -->
+                                <button class="group-single-btn" (click)="show_group_members(cg, $event)">
                                     Members
-                                </span>
+                                </button>
                             </a>
                         </div>
                     </li>

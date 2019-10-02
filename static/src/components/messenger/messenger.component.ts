@@ -327,7 +327,11 @@ export class MessengerComponent implements OnInit {
         obj_this.socketService.user_selection_dialog(diaolog_options);
     }
     
-    show_group_members(group: ChatGroup){
+    show_group_members(group: ChatGroup,ev=undefined){
+        if(ev){
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
         let obj_this = this;
         obj_this.group_state = 'update'
         obj_this.group_name = group.name;

@@ -97,16 +97,14 @@
         </div>           
     </div>
 
-    <div class="float-left mt-2">
+    <div class="float-left my-3">
         {{attendees.length}} Records 
     </div>
     
-    <div class="d-flex display-block float-right">            
-        <div class="form-buttons">
-            <button type="button" class="btn btn-primary mr-2"
-            *ngIf="meeting_type=='completed'"
-            (click)="submit_attendance($event)">Submit</button>
-            <button type="button" class="btn btn-danger" (click)="close_roster($event)">Close</button>
-        </div>
+    <div class="d-flex display-block float-right my-3">            
+        <button type="button" class="btn btn-primary"
+        *ngIf="meeting_type=='completed'"
+        (click)="submit_attendance($event)">Submit</button>
+        <button type="button" class="btn btn-danger" (click)="close_roster($event)">Close</button>
     </div>
 </div>
