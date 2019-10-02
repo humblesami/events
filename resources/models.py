@@ -80,14 +80,17 @@ class Folder(CustomModel):
         folder = Folder(
             name =name,
         )
+        personal = False
         parent_id = params.get('parent_id')
         if parent_id:        
             folder.parent_id = parent_id
+            folder.personal = folder.parent.personal
         folder.save()
         data = {
             'name': folder.name,
             'id': folder.id,
             'parent': parent_id,
+            'personal': folder.personal
         }
         return data
 

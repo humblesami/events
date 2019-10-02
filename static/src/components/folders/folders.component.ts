@@ -168,7 +168,7 @@ export class FoldersComponent implements OnInit {
                         let temp = [];
                         for(var rec of folders)
                         {
-                            temp.push({id: rec.id, name:rec.name , parent: rec.parent});
+                            temp.push({id: rec.id, name:rec.name , parent: rec.parent, personal: rec.personal});
                         }
                         temp.push(data);
                         // console.log(temp);
