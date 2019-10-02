@@ -12,9 +12,8 @@ button.check-time-btn {
 	font-size: 17px;
 	}
 .resource-info{
-	width: 70%;
+	width: 100%;
 	display: inline-block;
-	margin-bottom: -6px;
 }
 .icon-folder.personal{
 	color: green;

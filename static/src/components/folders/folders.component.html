@@ -1,6 +1,5 @@
 <div  class="folder_container" *ngIf="records && records.length">
-        <div class="pb-3" class="folder_container">
-            <hr>
+        <div class="pb-3" class="folder_container pt-2">
             <h4 class="text-dark my-2">
                 <i class="icon-folder text-primary"></i> Folders
             </h4>
@@ -20,23 +19,22 @@
                                 </span>
                             </div>                        
                             <div class="DocText" (click)="renameService.prevent_default($event, folder.personal)">
-                                <div class="DocName" [ngClass]="{'mt-2': (!socketService.admin_mode && !folder.personal)}">
-                                    <div *ngIf="!folder.edit_mode" [ngClass]="{'d-flex justify-content-between align-items-center': (socketService.admin_mode || folder.personal)}">
-                                        <span class="text-truncate resource-info">{{folder.name}} ({{folder.total_files || 0}})</span>
-                                        <span class="d-flex" [ngClass]="{'mt-1': (socketService.admin_mode || folder.personal)}">
-                                            <button *ngIf="(socketService.admin_mode || folder.personal)" 
-                                            (click)="renameService.enable_rename($event, folder)"
-                                            class="btn btn-sm btn-primary mr-1">
-                                                <i class="fas fa-edit "></i>
-                                            </button>
-                                            <button *ngIf="(socketService.admin_mode || folder.personal)"
-                                            (click)="userService.get_access_details(folder,'resources','Folder',parent)" class="btn btn-sm btn-primary">
-                                                <i class="fa fa-user-plus"></i>
-                                            </button>
-                                        </span>
+                                <div class="DocName w-100">
+                                    <div *ngIf="!folder.edit_mode" [ngClass]="{'d-flex align-items-center': (socketService.admin_mode || folder.personal)}">
+                                        <span class="text-truncate resource-info" [ngClass]="{'mt-2': (!socketService.admin_mode && !folder.personal)}">{{folder.name}} ({{folder.total_files || 0}})</span>                                      
+                                        <button *ngIf="(socketService.admin_mode || folder.personal)" 
+                                        (click)="renameService.enable_rename($event, folder)"
+                                        class="btn btn-sm btn-primary mr-1">
+                                            <i class="fas fa-edit "></i>
+                                        </button>
+                                        <button *ngIf="(socketService.admin_mode || folder.personal)"
+                                        (click)="userService.get_access_details(folder,'resources','Folder',parent)" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-user-plus"></i>
+                                        </button>                                       
                                     </div>
                                     <div *ngIf="folder.edit_mode" class="d-flex">
                                         <input class="form-control renamer"
+                                            (blur)="renameService.renamer_focused_out($event,folder,'folder')"	
                                             (keyup)="renameService.renamer_focused_out($event,folder,'folder')"												
                                             value="{{folder.name}}"
                                             (change)="renameService.renamer_changed($event.target)">
@@ -52,7 +50,7 @@
                     </a>
                 </div>
             </div>
-            <div *ngIf="records && records.length" class="mb-2">
+            <div *ngIf="records && records.length" class="mb-4">
                 {{records.length}} folders
             </div>
         </div>

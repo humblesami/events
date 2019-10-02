@@ -252,7 +252,7 @@ a,
 	text-transform: capitalize;
 	font-family: 'Roboto', sans-serif;
 	background: #638fc9;
-	padding: 5px;
+	padding: 10px;
     transition: all 0.2s ease;  
     font-size: 0.85rem;
 	font-weight: bold;
