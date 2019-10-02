@@ -445,7 +445,7 @@ a.kanban-committees-info-box-name {
 {
 	z-index: 2 !important;
 }	
-.modal.fade .modal-dialog {
+.modal.fade .modal-dialog:not(.modal-top-fixed) {
 	-webkit-transform: translate(0, 0);
 	transform: translate(0, 0);
 	display: -ms-flexbox;
