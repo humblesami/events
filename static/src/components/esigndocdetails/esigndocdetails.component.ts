@@ -472,13 +472,9 @@ export class EsignDocDetailsComponent implements OnInit {
             });
 
             $(document).off("click", ".sign_container")
-            $(document).on("click", ".sign_container", function() {
-                // console.log(4234343);
+            $(document).on("click", ".sign_container", function() {                
                 var sign_container = $(this);
                 var is_my_signature = sign_container.attr("my_record");
-                if (is_my_signature && (!obj_this.isAdmin || obj_this.signature_started)) {
-                    return;
-                }
                 
                 var signature_id = sign_container.attr("id");
                 var signature_dom = sign_container;
@@ -502,6 +498,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     $('#appModal').modal('hide');
                     window['dn_rpc_object'](ajax_options);
                 }
+
                 if(obj_this.isAdmin && !obj_this.signature_started)
                 {
                     let popup_config = {
@@ -532,6 +529,13 @@ export class EsignDocDetailsComponent implements OnInit {
                     return;
                 }
 
+                else{
+                    if(is_my_signature)
+                    {
+                        get_signature_data();
+                    }
+                }
+
                 function get_signature_data()
                 {
                     ajax_options = {
@@ -557,8 +561,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     // console.log(ajax_options.data.params);
                     window['dn_rpc_object'](ajax_options);
-                }
-                get_signature_data();
+                }                
 
 
                 function on_sign_got(sign_data)
