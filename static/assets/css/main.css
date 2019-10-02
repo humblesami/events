@@ -2878,7 +2878,7 @@ label.check-plus-label-wrap {
 .DocumentWrapper input.renamer {
 	height: auto;
 	font-size: 0.85rem;
-	padding: 0px 5px;
+	padding: 7px 5px;
     }
 .doc-del-btn {
 	position: absolute;

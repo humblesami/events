@@ -125,10 +125,12 @@ a.DocumentWrapper:hover{
     padding: 0;
     font-weight: 700;
 }
+.resource-info,
 .doc-info {
-    width: 70%;
+    width: 100%;
     display: inline-block;
 }
+
 .doc_icons{
 	position: absolute;
 	object-fit: contain;
