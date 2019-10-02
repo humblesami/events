@@ -104,6 +104,7 @@ export class UserService {
                 user_list: valid_users,
                 component: UserlistmodalComponent,
                 extra_input: {},
+                owner: obj.personal,
                 call_back: on_modal_closed, 
             };
             obj_this.socketService.user_selection_dialog(diaolog_options);
