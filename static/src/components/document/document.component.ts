@@ -124,7 +124,6 @@ export class DocumentComponent implements OnInit {
             // console.log(Date(), data, new Date().getMilliseconds(),  'doc data downloaded');
             data.file_type = doc_type;
             obj_this.doc_data = data;
-            
             if (data.breadcrumb)
             {
                 obj_this.breadcrumb = JSON.stringify(data.breadcrumb);
@@ -159,7 +158,8 @@ export class DocumentComponent implements OnInit {
                 type : doc_type,
                 attendees: data.attendees,
                 doc_name: data.name,
-                mp_signature_status:data.mp_signature_status
+                mp_signature_status:data.mp_signature_status,
+                is_respondent: data.is_respondent
             };
             if(data.url)
             {
@@ -175,10 +175,10 @@ export class DocumentComponent implements OnInit {
             }
             else{
                 // console.log(window['dt_functions'].now_full(), 'doc info fetched');
-                window['app_libs']['pdf'].load(function(){
+                window['app_libs']['pdf'].load(function(){                    
                     window['pdf_js_module'].pdf_render(doc_data);
                 });
-            }
+            }            
         };
         if(!doc_type){
             //console.log("No doc_type");

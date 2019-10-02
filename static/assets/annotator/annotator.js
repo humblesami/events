@@ -465,6 +465,10 @@
                 if (e.button == 2)
                     return;
                 var $target = $(e.target);
+                if ($target.closest('#viewer').length == 0)
+                {
+                    $target.closest('#viewer').css('cursor', 'auto');
+                }
                 if (comment_item_focused) {
                     var not_in_comments = $target.closest('#comment-wrapper').length == 0;
                     if (not_in_comments) {
@@ -616,8 +620,7 @@
             function showHideAnnotations(rotate_degree) {
                 var doc_data = RENDER_OPTIONS.document_data;
                 var doc_type = doc_data.type;
-                if (rotate_degree == 0 && (doc_type == 'meeting' || doc_type == 'topic')) {
-                    annotation_mode = 1;
+                if (rotate_degree == 0 && doc_data.is_respondent && (doc_type == 'meeting' || doc_type == 'topic')) {                    
                     RENDER_OPTIONS.showAnnotations = true;
                     var pen_size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
                     var pen_color = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';
@@ -627,10 +630,11 @@
                 } else {
                     annotation_mode = 0;
                     $('.annot-toggler').hide();
-                    if (doc_type == 'meeting' || doc_type == 'topic')
+                    if ((doc_type == 'meeting' || doc_type == 'topic') && doc_data.is_respondent)
                         annotation_mode = 2;
                     RENDER_OPTIONS.showAnnotations = false;
                     $('.topbar:first .annotation_button').hide();
+                    $('.topbar:first').show();
                     if (doc_data.type == 'signature') {
                         $('.strt_sign').attr('doc_id', doc_data.id);
                         if (doc_data.mp_signature_status == "Pending") {
@@ -807,7 +811,7 @@
                     var pages_rendered = 0;
                     if (doc_data && doc_data.first_time) {
                         try{                            
-                            if (doc_data.type == 'meeting' || doc_data.type == 'topic') {
+                            if (doc_data.is_respondent && (doc_data.type == 'meeting' || doc_data.type == 'topic')) {
                                 window['show_annotation'] = true;
                             } else {
                                 window['show_annotation'] = false
@@ -980,8 +984,12 @@
                         function on_document_rendered(){
                             try{
                                 $('.ToolBarWrapper>div').css({display: 'flex'});
-                                document_version = getDocumentVersion(documentId);
+                                document_version = getDocumentVersion(documentId);                                
                                 if(!(doc_data && doc_data.first_time))
+                                {
+                                    return;
+                                }
+                                if(!annotation_mode)
                                 {
                                     return;
                                 }
@@ -1398,7 +1406,7 @@
                         });
                         for (var annotationItem of pointAnnotations) {                            
                             var comments = annotationItem.comments;
-                            if(annotationItem.sub_type)
+                            // if(annotationItem.sub_type)
                             // console.log(comments, 5333);
                             renderCommentsByAnnotation(comments, annotationItem.uuid, annotationItem.sub_type);                            
                         }
