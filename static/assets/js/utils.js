@@ -316,18 +316,24 @@ var js_utils = window['js_utils'] = {
         }
         else{
             focus_el = focus_el_selector;
-            if(focus_el.left && focus_el.top)
-            {
-                position = focus_el;
+        }
+        position = focus_el.position();
+        if(!position.left && !position.top){
+            position = {
+                left: focus_el.css('left'),
+                top: focus_el.css('top'),
             }
-            else{
-                focus_el = focus_el_selector;
-                if(focus_el.length != 1)
-                {
-                    console.log('Invalid focus el' + scroll_el.length + ' found', focus_el_selector, focus_el);
-                    return;
-                }
-                position = focus_el.position();
+            if(position.left){
+                position.left = parseFloat(position.left);
+            }
+            if(position.top){
+                position.top = parseFloat(position.top);
+            }
+            if(!position.left){
+                position.left = 0;
+            }
+            if(!position.top){
+                position.top = 0;
             }
         }
         if(typeof(scroll_el_selector) == 'string')

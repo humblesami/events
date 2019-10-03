@@ -722,17 +722,18 @@ export class EsignDocDetailsComponent implements OnInit {
                     $(this).hide();
                     return;
                 }
-                var sign = my_pending_sign[0];                
+                var sign = my_pending_sign[0];
+                var sign_box = $(`.sign_container[id=${sign.id}]:visible:first`);       
                 if(obj_this.signature_started || !obj_this.socketService.admin_mode)
                 {
                     $('#btn_sign_guide').show();
-                    $(`.sign_container[id=${sign.id}]:visible`).css({
+                    sign_box.css({
                         border: "solid 3px yellow"
                     })
-                }   
+                }
                 
                 var on_page_rendered = function(){
-                    window['js_utils'].scroll_to_element(sign, '#viewer_container');
+                    window['js_utils'].scroll_to_element(sign_box, '#viewer_container');
                 }
                 renderPage(sign.page, on_page_rendered);
             });            
@@ -1013,7 +1014,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 //  $("#btn_sign_guide").css({top:$('#page_container1').scrollTop()});
                 setTimeout(function() {
                     loadSignatures({
-                        "doc_data": doc_data,                    
+                        "doc_data": doc_data,
                     });
                     if(on_page_renderd)
                     {
