@@ -233,12 +233,14 @@
 
 
 #nxxt_sign {
-    top: 5px;
+    top: 3px;
+    left:5px;
     display: none;
     background: rgba(228, 21, 21, 0.9);
     color: white;
     position: absolute;
-    z-index: 2;
+    position: absolute;
+    z-index: 1;
     width: 140px;
     padding: 10px;
     cursor: pointer;

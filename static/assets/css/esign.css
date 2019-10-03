@@ -99,3 +99,25 @@ body.public #viewer_container
     width: fit-content;
     margin: 0 auto;
 }
+#btn_sign_guide{
+    top: 2px;
+    left:2px;    
+    display: none;
+    background: rgba(228, 21, 21, 0.9);
+    color: white;
+    position: absolute;
+    z-index: 1;
+    width: 140px;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom-right-radius: 78px;
+    border-top-right-radius: 78px;
+}
+
+@media screen and (max-width: 600px) {
+    #btn_sign_guide {
+        width: 90px!important;
+        height: 25px;
+        font-size: 0.8em;
+    }
+}

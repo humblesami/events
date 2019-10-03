@@ -341,6 +341,9 @@ class SignatureDoc(File, Actions):
 
         doc_data = self.get_doc_data(user, token)
         sign_count = self.signature_set.filter(signed=True)
+        signature_required = self.signature_set.filter(user_id=request.user.id, signed=False).count()
+        if signature_required > 0:
+            doc_data['signature_required'] = True
         if sign_count:
             doc_data['signature_started'] = True
         doc_data['doc_name'] = self.name

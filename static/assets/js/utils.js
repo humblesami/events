@@ -301,6 +301,51 @@ var js_utils = window['js_utils'] = {
             );
         });
     },
+    scroll_to_element: function(focus_el_selector, scroll_el_selector){
+        var focus_el = undefined;
+        var scroll_el = undefined;
+        var position = undefined;
+        if(typeof(focus_el_selector) == 'string')
+        {
+            focus_el = $(focus_el_selector).first();
+            if(focus_el.length != 1)
+            {
+                console.log('Invalid focus el' + scroll_el.length + ' found', focus_el_selector, focus_el);
+                return;
+            }
+        }
+        else{
+            focus_el = focus_el_selector;
+            if(focus_el.left && focus_el.top)
+            {
+                position = focus_el;
+            }
+            else{
+                focus_el = focus_el_selector;
+                if(focus_el.length != 1)
+                {
+                    console.log('Invalid focus el' + scroll_el.length + ' found', focus_el_selector, focus_el);
+                    return;
+                }
+                position = focus_el.position();
+            }
+        }
+        if(typeof(scroll_el_selector) == 'string')
+        {
+            scroll_el = $(scroll_el_selector).first();
+        }
+        else{
+            scroll_el = scroll_el_selector;
+        }        
+        if(scroll_el.length != 1)
+        {
+            console.log('Invalid focus el' + scroll_el.length + ' found', scroll_el_selector, scroll_el);
+            return;
+        }
+        console.log(position);
+        scroll_el.scrollTop(position.top)
+        scroll_el.scrollLeft(position.left);
+    },
     is_public_route: function (url){
         if(!url)
         {
