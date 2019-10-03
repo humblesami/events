@@ -943,7 +943,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 page_zoom = scale = parseFloat(scale);
             }
             else{
-                scale = page_zoom = 1.5;
+                scale = page_zoom = 1;
             }
             $('#scaleSelect').val(page_zoom);
             canvas = document.getElementById('the-canvas')

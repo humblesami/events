@@ -526,8 +526,16 @@ class SignatureDoc(File, Actions):
             total = sign_doc.signature_set.filter().count()
             doc['all'] = {
                 'pending': pending_count,
-                'total': total
+                'total': total,
             }
+            if total != pending_count:
+                doc['sign_started'] = 'Yes'
+            if total == 0:
+                doc['all']['status'] = 'TBA'
+            elif pending_count == 0:
+                doc['all']['status'] = 'Completed'
+            else:
+                doc['all']['status'] = ' Pending '+str(pending_count)+'/'+str(total)
 
             doc['id'] = sign_doc.id
             doc['name'] = sign_doc.name

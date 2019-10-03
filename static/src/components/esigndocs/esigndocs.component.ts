@@ -93,9 +93,8 @@ export class EsignDocsComponent implements OnInit {
             args: args
         };
         obj_this.httpService.get(final_input_data,
-        (result: any) => {
-            
-            obj_this.records = result.records;            
+        (result: any) => {            
+            obj_this.records = result.records;
             // console.log(new Date(), 444);
         },
         (error: any) => {

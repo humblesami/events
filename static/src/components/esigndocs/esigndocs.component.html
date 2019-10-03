@@ -33,7 +33,7 @@ title="e-Signature"></app-breadcrumb>
                         </div>
 						<div class="DocIcon">
 							<span class="rounded-circle">
-								<i class="icon-e-sign"></i>
+								<i class="icon-e-sign" [ngClass]="{'text-muted': doc.sign_started}"></i>
 							</span>
                         </div>
 						<div class="DocInfoVertical">
@@ -41,7 +41,10 @@ title="e-Signature"></app-breadcrumb>
 								{{doc.name}}
 							</div>
 							<div class="text-truncate">
-                                Status: {{doc.signature_status}}
+                                My Status: {{doc.signature_status}}
+                            </div>
+                            <div class="text-truncate">
+                                All Status: {{doc.all.status}}
 							</div>
                         </div>
 					</div>
