@@ -281,7 +281,7 @@ class SignatureDoc(File, Actions):
             return 'Invalid esign doc'
         res = doc_obj.get_detail(request, params)
         if type(res) is str:
-            return str
+            return res
         doc_obj = cls.objects.filter(id=file_id)
         if doc_obj:
             doc_obj = doc_obj[0]
@@ -638,6 +638,10 @@ class Signature(CustomModel):
         jango_file = DjangoFile(binary_data)
         sign.image.save('sign_image.png', jango_file)
         status = sign.document.get_pending_sign_count(user.id)
+        if not status['pending']:
+            if token:
+                PostUserToken.validate_token(token.token)
+                return 'done'
         return {'image': binary_signature, 'status': status}
 
     @classmethod

@@ -276,9 +276,9 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
                 var field_left = parseFloat(new_signature[0].style.left);
                 var field_top = parseFloat(new_signature[0].style.top);
-
-                // console.log(field_left, field_top);
                 
+                // console.log(field_left, field_top);
+
                 field_top -= ($('.PdfTopBtnsWrapper').height() + 20);
                 field_top += $('#viewer_container').scrollTop();                
                 
@@ -646,6 +646,10 @@ export class EsignDocDetailsComponent implements OnInit {
                         },
                         type:"POST",
                         onSuccess: function(data) {
+                            if (data == 'done')
+                            {
+                                window.open(window['site_config'].server_base_url+'/response-sumbitted', '_self');
+                            }
                             obj_this.signature_started = true;                        
                             for(var i =0;i<doc_data.length;i++)
                             {
@@ -700,7 +704,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
                 $('#select_user_modal').modal('show');
             });
-
+            
 
             $("#nxxt_sign").click(function() {
                 var d = $.grep(doc_data, function(v) {
@@ -870,6 +874,23 @@ export class EsignDocDetailsComponent implements OnInit {
                             $('.dragabl-fields').show();
                         }
                     }
+                },
+                onError: function(err){
+                    console.log(err);
+                    $(document).ready(()=>{
+                        $('body').html(`
+                        <div class="jumbotron vertical-center"> 
+                            <div class="container">
+                                <div class="row text-center">
+                                    <h3>${err}</h3>
+                                </div>
+                                <div class="row text-center">
+                                    <a class="btn btn-primary" href="${window['site_config'].server_base_url}">Login</a>
+                                </div>
+                            </div>
+                        </div>
+                        `);
+                    });
                 }
             };
             if(token){
@@ -1010,7 +1031,7 @@ export class EsignDocDetailsComponent implements OnInit {
             };
 
             var the_canvas = $('#the-canvas');
-
+            
             if(position.left < 0)
             {
                 position.left = 0;
@@ -1046,7 +1067,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 position.top = 5;
                 $(el).css('top', position.top+'px');
             }
-
+            
             var db_pos = {
                 top: position.top / page_zoom,
                 left: position.left / page_zoom,

@@ -403,3 +403,9 @@ body.public #viewer_container{
     height: calc(100vh - 50px);
     overflow-y: auto;
 }
+.vertical-center {
+    min-height: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
