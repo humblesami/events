@@ -317,8 +317,9 @@ var js_utils = window['js_utils'] = {
         else{
             focus_el = focus_el_selector;
         }
+        
         position = focus_el.position();
-        if(!position.left && !position.top){
+        if(!position || (position && (!position.left || !position.top))){
             position = {
                 left: focus_el.css('left'),
                 top: focus_el.css('top'),
@@ -348,9 +349,22 @@ var js_utils = window['js_utils'] = {
             console.log('Invalid focus el' + scroll_el.length + ' found', scroll_el_selector, scroll_el);
             return;
         }
-        console.log(position);
-        scroll_el.scrollTop(position.top)
+        var focus_el_rect = { 
+            width: focus_el.width(),
+            height: focus_el.height()
+        }
+        var scroll_el_rect = { 
+            width: scroll_el.width(),
+            height: scroll_el.height()
+        }
+
+        // console.log(position, 445);
+        position.left = position.left -  scroll_el_rect.width /2 + focus_el_rect.width /2;
+        position.top = position.top - scroll_el_rect.height/2 + focus_el_rect.height /2;
+        // console.log(position, 115);
+
         scroll_el.scrollLeft(position.left);
+        scroll_el.scrollTop(position.top);
     },
     is_public_route: function (url){
         if(!url)

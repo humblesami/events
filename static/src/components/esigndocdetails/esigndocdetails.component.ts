@@ -204,7 +204,7 @@ export class EsignDocDetailsComponent implements OnInit {
                                 }
                                 $('.dragabl-fields').hide();
                                 $('.new_sign,.sign_container').remove();
-                                $('#btn_sign_guide').hide();
+                                toggle_guide_btn(false, 'reset');
                                 $('#save-doc-data').click();
                                 $('#viewer_container .sign_container').remove();
                                 $('#viewer_container .new_sign').remove();
@@ -669,12 +669,6 @@ export class EsignDocDetailsComponent implements OnInit {
                                 }
                             }
                             on_sign_saved(signature_dom, data);
-                            // console.log(data.status.signature_status)
-                            if($('.sign_container[signed="false"]').length == 0)                        
-                            {
-                                $("#btn_sign_guide").hide(); 
-                            }
-                            // $("#btn_sign_guide").click();
                         },
                         onError:function(er){
                             window['bootbox'].alert(er);
@@ -713,30 +707,46 @@ export class EsignDocDetailsComponent implements OnInit {
                 $('#select_user_modal').modal('show');
             });
             
-
+            var last_focused_sign_number = -1;
             $('#btn_sign_guide').click(function() {
-                var my_pending_sign = $.grep(doc_data, function(v) {
+                var my_pending_signs = $.grep(doc_data, function(v) {
                     return !v.signed && v.my_record;
                 });
-                if (my_pending_sign.length == 0) {
+                var clicked_on_save = $(this).attr('on_sign_saved');
+                if(clicked_on_save)
+                {
+                    $(this).removeAttr('on_sign_saved');
+                }
+                if (my_pending_signs.length == 0) {
                     $(this).hide();
+                    if(!clicked_on_save)
+                    {
+                        window['bootbox'].alert('You have completed assigned signatures, thank you.');
+                    }
                     return;
                 }
-                var sign = my_pending_sign[0];
-                var sign_box = $(`.sign_container[id=${sign.id}]:visible:first`);       
-                if(obj_this.signature_started || !obj_this.socketService.admin_mode)
+                $(this).html('Next Signature');
+                if(last_focused_sign_number >= my_pending_signs.length - 1)
                 {
-                    $('#btn_sign_guide').show();
+                    var t_message = 'Yoy have seen all '+my_pending_signs.length+' pending signatures';
+                    t_message += ', so welcome back to the first place to sign at document';
+                    window['bootbox'].alert(t_message);
+                    last_focused_sign_number = 0;
+                }
+                else{
+                    last_focused_sign_number++;
+                }
+                
+                var sign = my_pending_signs[last_focused_sign_number];
+                var on_page_rendered = function(){
+                    var sign_box = $(`.sign_container[id=${sign.id}]:visible:first`);
+                    window['js_utils'].scroll_to_element(sign_box, '#viewer_container');
                     sign_box.css({
                         border: "solid 3px yellow"
                     })
                 }
-                
-                var on_page_rendered = function(){
-                    window['js_utils'].scroll_to_element(sign_box, '#viewer_container');
-                }
                 renderPage(sign.page, on_page_rendered);
-            });            
+            });
 
 
             $('#select_user_modal').on('hidden.bs.modal', function () {
@@ -745,6 +755,18 @@ export class EsignDocDetailsComponent implements OnInit {
             });
         });
 
+        function toggle_guide_btn(bool, source=undefined)
+        {
+            // console.log(888, bool, source, 111);
+            if(bool)
+            {
+                $('#btn_sign_guide').show();
+            }
+            else{
+                $('#btn_sign_guide').hide();
+            }
+        }
+        toggle_guide_btn(false, 'init');
 
         function save_attachemnt_to_meeting(){
             ajax_options = {
@@ -773,29 +795,16 @@ export class EsignDocDetailsComponent implements OnInit {
             window['dn_rpc_object'](ajax_options);
         }
         
-        function get_url(url)
-        {
-            if (token)
-            {
-                return url + '_public';
-            }
-            return url;
-        }
         function loadData() {
             console.log('Loading doc data', Date());
             window['functions'].showLoader('esign-doc');
-            var doc_data_ws = 'ws_get_details';
-            if(!$('body').hasClass('user'))
-            {
-                doc_data_ws = 'wsp_get_details'
-            }
-            let url = '';
+            var doc_data_ws = 'ws_get_detail';
             ajax_options = {
                 data: {
                     args:{
                         app: 'esign',
                         model: 'SignatureDoc',
-                        method: 'ws_get_detail'
+                        method: doc_data_ws
                     },
                     params: {
                         document_id: obj_this.doc_id,
@@ -819,13 +828,20 @@ export class EsignDocDetailsComponent implements OnInit {
                     }
                     doc_data = data.doc_data;
                     obj_this.signature_required = data.signature_required;
+                    obj_this.signature_started = data.signature_started;
                     if(data.signature_required)
                     {
-                        $('#btn_sign_guide').show();
+                        if(!obj_this.socketService.admin_mode)
+                        {
+                            toggle_guide_btn(true);
+                        }
+                        else if(obj_this.signature_started)
+                        {
+                            toggle_guide_btn(true);
+                        }
                     }
                     obj_this.doc.sign_count = doc_data.length;
                     obj_this.doc.doc_name = data.doc_name || 'Unnamed';
-                    obj_this.signature_started = data.signature_started;
 
                     if(data.binary)
                     {
@@ -931,15 +947,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     console.log('Invalid signature dom');
                 }
             }
-        }
-
-        function toggleNextButton() {
-            var d = $.grep(doc_data, function(v) {
-                return !v.signed && v.my_record;
-            });
-            if (d.length > 0) {
-                // $("#btn_sign_guide").show();
-            }
+            $("#btn_sign_guide").attr('on_sign_saved', 1).click();
         }
 
         function renderPDF(pdf_url) {
@@ -966,7 +974,6 @@ export class EsignDocDetailsComponent implements OnInit {
                     renderPage(pageNum);
                     $('#holder').show();
                     $('.docWrapperContainer').show();
-                    toggleNextButton();
                 }).catch(function(er){
                     $('#holder').html('<h3>Sorry document has been removed now</h3>');
                     console.log(er);
@@ -997,33 +1004,28 @@ export class EsignDocDetailsComponent implements OnInit {
                     canvasContext: ctx,
                     viewport: viewport
                 };
-                page.render(renderContext).promise.catch(function (reason) {
+                page.render(renderContext).then(function(){
+                    pageNum = num;
+                    document.getElementById('page_num').textContent = pageNum;
+                    document.getElementById('page_count').textContent = pdfDoc.numPages;
+                    $('.sign_container').hide();
+                    $('.new_sign').hide();
+                    var selector = '.new_sign[page=' + pageNum + ']';
+                    $(selector).show();
+                    setTimeout(function() {
+                        loadSignatures({
+                            "doc_data": doc_data,
+                        });
+                        if(on_page_renderd)
+                        {
+                            on_page_renderd();
+                        }
+                    }, 50);
+                    window['functions'].hideLoader('esign-doc');
+                }).catch(function (reason) {
                     console.log('stopped ' + reason);
                 });
-                // console.log('Page rendered', Date());
-
-
-                pageNum = num;
-                document.getElementById('page_num').textContent = pageNum;
-                document.getElementById('page_count').textContent = pdfDoc.numPages;
-                $('.sign_container').hide();
-                $('.new_sign').hide();
-                var selector = '.new_sign[page=' + pageNum + ']';
-                $(selector).show();
-
-                //  $("#btn_sign_guide").css({top:$('#page_container1').scrollTop()});
-                setTimeout(function() {
-                    loadSignatures({
-                        "doc_data": doc_data,
-                    });
-                    if(on_page_renderd)
-                    {
-                        on_page_renderd();
-                    }
-                }, 50);
-                window['functions'].hideLoader('esign-doc');
-            });
-            // Update page counters            
+            });       
         }
 
         function on_field_type_given(el){            

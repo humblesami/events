@@ -3177,8 +3177,6 @@
                         value: true
                     });
                     exports.default = appendChild;
-                    var _objectAssign = __webpack_require__(12);
-                    var _objectAssign2 = _interopRequireDefault(_objectAssign);
                     var _renderLine = __webpack_require__(13);
                     var _renderLine2 = _interopRequireDefault(_renderLine);
                     var _renderPath = __webpack_require__(16);
