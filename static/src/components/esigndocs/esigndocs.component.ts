@@ -12,11 +12,10 @@ export class EsignDocsComponent implements OnInit {
     records = [];
     httpService: HttpService;
     socketService: SocketService;
-    constructor(private httpServ: HttpService,public router: Router, private sock: SocketService) { 
-        window['app_libs']['pdf'].load();
+    constructor(private httpServ: HttpService,public router: Router, private sock: SocketService) {         
+        // console.log(Date(), 99222);
         this.httpService = httpServ;
-        this.socketService = sock;
-        this.get_list();
+        this.socketService = sock;        
     }
     uploadClick(){
         // console.log('yyyyyyyyyyyyyyyyyyyyy ');
@@ -97,7 +96,7 @@ export class EsignDocsComponent implements OnInit {
         (result: any) => {
             
             obj_this.records = result.records;            
-            // console.log(result.records);
+            // console.log(new Date(), 444);
         },
         (error: any) => {
             //console.log(error);
@@ -105,7 +104,10 @@ export class EsignDocsComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
+    ngOnInit() {        
+        // console.log(Date(), 3433);
+        this.get_list();
+        window['app_libs']['pdf'].load();
         window['json_functions'].find_activate_link('.MeetingBtnWrapper');
     }
 }

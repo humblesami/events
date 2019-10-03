@@ -175,8 +175,7 @@ class SignatureDoc(File, Actions):
             'token_required': True
         }
         send_email_on_creation(email_data)
-        doc_data = self.get_doc_data(user, False)
-        return doc_data
+        return 'done'
 
     def add_pages_for_sign(self):
         if not self.original_pdf or not self.signature_set.all().exists():

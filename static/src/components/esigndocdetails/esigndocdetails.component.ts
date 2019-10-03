@@ -102,8 +102,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
 
     ngOnInit() {
-        var obj_this = this;
-        
+        var obj_this = this;        
         var
             canvas,
             pdf_url,
@@ -453,7 +452,14 @@ export class EsignDocDetailsComponent implements OnInit {
                                 }
                             },
                             onSuccess: function(data) {
-                                obj_this.router.navigate(['/signdocs']);
+                                // obj_this.router.navigate(['/signdocs']);
+                                if(data == 'done')
+                                {
+                                    window.open('/#/signdocs', '_self');
+                                }
+                                else{
+                                    console.log(data, 1343);
+                                }
                             }
                         }
                         window['dn_rpc_object'](ajax_options);
@@ -811,7 +817,7 @@ export class EsignDocDetailsComponent implements OnInit {
                         }
                     }
                     doc_data = data.doc_data;
-                    console.log(data, 44);
+                    // console.log(data, 44);
                     obj_this.doc.sign_count = doc_data.length;
                     obj_this.doc.doc_name = data.doc_name || 'Unnamed';
                     obj_this.signature_started = data.signature_started;
