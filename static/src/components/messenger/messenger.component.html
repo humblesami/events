@@ -162,16 +162,18 @@
                         <div [ngClass]="{me: msg.sender.id == user.id}">
                             <div class="msg-send-box-wrapper">
                                 <div  *ngIf="msg.body" class="msg-send-box-text" [innerHTML]="msg.body"></div>
-                                <div class="attachment_container">                                    
+                                <div class="attachment_container">
                                     <div *ngFor="let doc of msg.attachments">
                                         <a *ngIf="doc.url" contenteditable="false"
                                         href="{{socketService.server_url}}{{doc.url}}"
                                         target="__blank"
                                         class="download">
                                             <span class="file_name">
-                                                <i class="fa fa-download"></i>{{doc.name}}
+                                                {{doc.name}}
+                                                <i *ngIf="!doc.moved" class="fa fa-save p-2" (click)="move_to_my_folder($event,doc)"></i>
+                                                <i class="fa fa-download"></i>                                                
                                             </span>
-                                        </a>
+                                        </a>                                        
                                     </div>
                                 </div>
                             </div>

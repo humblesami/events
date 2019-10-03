@@ -8,6 +8,7 @@ from documents.file import File
 from django.contrib import admin
 from django.contrib.auth.models import User
 from meetings.model_files.user import Profile, create_group
+from resources.models import Folder, ResourceDocument
 
 
 class PostAddress(models.Model):
@@ -634,6 +635,7 @@ class Message(models.Model):
                 doc.attachment.save(file_name, image_data, save=True)
                 attachment_urls.append({
                     'name': file_name,
+                    'id': doc.attachment.id,
                     'url': doc.attachment.url
                 })
 
@@ -704,7 +706,9 @@ class Message(models.Model):
             for att in MessageDocument.objects.filter(message_id=obj.id):
                 dict_obj['attachments'].append({
                     'name': att.name,
-                    'url': att.attachment.url
+                    'url': att.attachment.url,
+                    'id':att.id,
+                    'moved':att.moved
                 })
             ar.append(dict_obj)
         return ar
@@ -725,6 +729,21 @@ class Message(models.Model):
         target_id = params['target_id']
         data = cls.get_message_list(uid, target_id, 0)
         return data
+    @classmethod
+    def move_to_folder(cls, request, params):
+        file_id_is = params['file_id']
+        
+        file = File.objects.get(pk=file_id_is)
+        my_folder = Folder.objects.get(created_by_id=request.user.id,personal=True)
+        doc = ResourceDocument(folder_id=my_folder.id, attachment=file.attachment, file_name=file.file_name, name=file.name, personal=True)
+        doc.save()
+
+        doc = MessageDocument.objects.get(pk=file_id_is)
+        doc.moved = True
+        doc.save()
+
+        return "File Saved Successfully"
+
 
     @classmethod
     def get_old_messages(cls, request, params):
@@ -760,6 +779,7 @@ class MessageStatus(models.Model):
 
 class MessageDocument(File):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    moved = models.BooleanField(default=False)
 
 
 class AuthUserChat(models.Model):

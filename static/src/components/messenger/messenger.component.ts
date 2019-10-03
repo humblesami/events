@@ -194,6 +194,33 @@ export class MessengerComponent implements OnInit {
     {
         this.switch_group_mode('none');
     }
+    
+    move_to_my_folder(ev, doc)    
+    {
+        ev.preventDefault();
+        ev.stopPropagation();
+        doc.moved = true;
+        var file_id = doc.id;
+        let obj_this = this;
+        let input_data = {
+            args:{
+                app:'chat',
+                model:'message',
+                method:'move_to_folder',
+                no_loader:1,
+            },
+            params: {
+                group_id: obj_this.active_chat_user.id,
+                member_id: obj_this.user.id,
+                file_id: file_id
+            },
+        }
+        obj_this.httpService.post(input_data, function(data){                        
+            alert(data);
+        } , function(){
+            console.log("Nothing");
+        });    
+    }
 
     change_messenger_view()
     {
@@ -727,7 +754,8 @@ export class MessengerComponent implements OnInit {
             let args = {
                 app: 'chat',
                 model: 'message',
-                method: 'send'
+                method: 'send',
+                no_loader:1,
             }
             if(input_data.attachments.length > 0)
             {
@@ -749,10 +777,9 @@ export class MessengerComponent implements OnInit {
             input_data = {
                 params: input_data,
                 args: args
-            };
-            input_data['no_loader'] = 1;            
+            };           
 			obj_this.httpService.post(input_data, function (data){
-                // console.log(data);
+                console.log(data);
                 if(data.attachments.length)
                 {
                     let messages = obj_this.active_chat_user.messages;
@@ -761,7 +788,7 @@ export class MessengerComponent implements OnInit {
                     for(var i= len -1; i>=0; i--)
                     {
                         if(messages[i].uuid == data.uuid)
-                        {
+                        {                            
                             messages[i].attachments = data.attachments;
                             window['js_utils'].removeLoader($('.chat-message').eq(i));
                             // console.log(i, 1007);
