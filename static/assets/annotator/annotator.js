@@ -620,7 +620,8 @@
             function showHideAnnotations(rotate_degree) {
                 var doc_data = RENDER_OPTIONS.document_data;
                 var doc_type = doc_data.type;
-                if (rotate_degree == 0 && doc_data.is_respondent && (doc_type == 'meeting' || doc_type == 'topic')) {                    
+                if (rotate_degree == 0 && doc_data.is_respondent && (doc_type == 'meeting' || doc_type == 'topic')) {
+                    annotation_mode = 1;
                     RENDER_OPTIONS.showAnnotations = true;
                     var pen_size = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/size') || 1;
                     var pen_color = getCookieStrict(RENDER_OPTIONS.documentId, RENDER_OPTIONS.documentId + '/pen/color') || '#000000';
