@@ -102,7 +102,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
 
     ngOnInit() {
-        var obj_this = this;        
+        var obj_this = this;
         var
             canvas,
             pdf_url,
@@ -884,7 +884,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 onError: function(err){
                     console.log(err);
                     $(document).ready(()=>{
-                        $('body').html(`
+                        $('#holder').html(`
                         <div class="jumbotron vertical-center"> 
                             <div class="container">
                                 <div class="row text-center">
@@ -895,7 +895,8 @@ export class EsignDocDetailsComponent implements OnInit {
                                 </div>
                             </div>
                         </div>
-                        `);
+                        `).show();
+                        window['functions'].hideLoader('esign-doc');
                     });
                 }
             };

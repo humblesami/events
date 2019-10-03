@@ -3,6 +3,8 @@ from meetings.model_files.user import *
 from mainapp.models import CustomModel
 from django_currentuser.middleware import get_current_user
 from django.db.models import Q
+from django.db.models.signals import m2m_changed
+from mainapp.settings import server_base_url
 
 
 class Folder(CustomModel):
@@ -312,6 +314,46 @@ class Folder(CustomModel):
             'files': files_set
         }
         return data
+
+
+    def resource_invitation_email(self, audience, action=None):
+        template_data = {
+            'folder_id': self.id,
+            'folder_name': self.name,
+            'server_base_url': server_base_url
+        }
+        post_info = {}
+        post_info['res_app'] = self._meta.app_label
+        post_info['res_model'] = self._meta.model_name
+        post_info['res_id'] = self.id
+        if action:
+            template_name = 'resources/removed_from_folder_email.html'
+            token_required = False
+        else:
+            template_name = 'resources/added_to_folder_email.html'
+            token_required = False
+        email_data = {
+            'subject': self.name,
+            'audience': audience,
+            'post_info': post_info,
+            'template_data': template_data,
+            'template_name': template_name,
+            'token_required': token_required
+        }
+        ws_methods.send_email_on_creation(email_data)
+
+
+def save_folder_users(sender, instance, action, pk_set, **kwargs):
+    if action == 'post_remove':
+        removed_respondents = list(pk_set)
+        instance.resource_invitation_email(removed_respondents, 'removed')
+    if action == "post_add":
+        new_added_respondets = list(pk_set)
+        if new_added_respondets:
+            instance.resource_invitation_email(new_added_respondets)
+
+m2m_changed.connect(save_folder_users, sender=Folder.users.through)
+
 
 
 class ResourceDocument(File):

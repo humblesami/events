@@ -17,6 +17,7 @@ export class FoldersComponent implements OnInit {
     @Input() recursive : undefined;
     @Input() parent_id: number;
     parent;
+    access_denied = false;
     records = [];
     message = '';
     parents = [];
@@ -112,9 +113,13 @@ export class FoldersComponent implements OnInit {
     @Output() data_loaded: EventEmitter<any> = new EventEmitter();
     on_result(result){
         let obj_this = this;
-        obj_this.records = result.folders;
-        // console.log(result);
-        
+        if (Object.entries(result).length === 0)
+        {
+            obj_this.access_denied = true;
+            $('div.sub.search').hide();
+            return;
+        }
+        obj_this.records = result.folders;        
         if(result.personal)
         {
             obj_this.personal = result.personal;

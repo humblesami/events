@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    {% if folder_id %}
+            <a style="padding:5px; margin:5px" href="{{server_base_url}}/#/resource/{{folder_id}}">{{folder_name}}</a>
+    {% endif %}
+<div id="div1"><h2>
+    {% if error %}
+        {{ error }}
+    {% elif success %}
+        {{ success }}
+    {% endif %}
+
+</h2></div>
+</body>
+</html>

@@ -434,7 +434,7 @@ export class SocketService {
     user_selection_dialog(dialog_options){
         let obj_this = this;
         var selected_users = [];
-        if(dialog_options.selected_users.length)
+        if(dialog_options.selected_users && dialog_options.selected_users.length)
         {
             dialog_options.selected_users.forEach(function(usr){
                 selected_users.push({

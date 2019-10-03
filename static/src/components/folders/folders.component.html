@@ -58,3 +58,14 @@
             </div>
         </div>
     </div>
+
+    <div class="container pt-3" *ngIf="access_denied">
+		<div class="row">
+			<div class="col-lg-12 ">
+				<div class="jumbotron text-center">
+                    <h1>No access to this resource</h1>
+                    <hr>
+                </div>
+			</div>
+		</div>
+	</div>
