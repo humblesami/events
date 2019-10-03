@@ -104,6 +104,7 @@ class File(CustomModel, FilesUpload):
                         else:
                             self.pending_tasks = 2
 
+            self.cloud_url = ''
             super(File, self).save(*args, **kwargs)
             if self.pending_tasks == 2:
                 if self.file_type != 'message':

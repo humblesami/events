@@ -102,7 +102,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
 
     ngOnInit() {
-        var obj_this = this;
+        var obj_this = this;        
         var
             canvas,
             pdf_url,
@@ -153,7 +153,7 @@ export class EsignDocDetailsComponent implements OnInit {
                     return;
                 pageNum++;
                 renderPage(pageNum);
-            });        
+            });
 
 
 
@@ -202,7 +202,7 @@ export class EsignDocDetailsComponent implements OnInit {
                                 }
                                 $('.dragabl-fields').hide();
                                 $('.new_sign,.sign_container').remove();
-                                $('#nxxt_sign').hide();
+                                $('#btn_sign_guide').hide();
                                 $('#save-doc-data').click();
                                 $('#viewer_container .sign_container').remove();
                                 $('#viewer_container .new_sign').remove();
@@ -670,9 +670,9 @@ export class EsignDocDetailsComponent implements OnInit {
                             // console.log(data.status.signature_status)
                             if($('.sign_container[signed="false"]').length == 0)                        
                             {
-                                $("#nxxt_sign").hide(); 
+                                $("#btn_sign_guide").hide(); 
                             }
-                            // $("#nxxt_sign").click();
+                            // $("#btn_sign_guide").click();
                         },
                         onError:function(er){
                             window['bootbox'].alert(er);
@@ -712,23 +712,26 @@ export class EsignDocDetailsComponent implements OnInit {
             });
             
 
-            $("#nxxt_sign").click(function() {
-                var d = $.grep(doc_data, function(v) {
+            $("#btn_sign_guide").click(function() {
+                var my_pending_sign = $.grep(doc_data, function(v) {
                     return !v.signed && v.my_record;
                 });
-                if (d.length == 0) {
+                if (my_pending_sign.length == 0) {
                     $(this).hide();
                     return;
                 }
-                var sign = d[0];
-                var next_top = canvas.height * (sign.top / 100);
+                var sign = my_pending_sign[0];
+                var position = my_pending_sign.position();
 
+                if(obj_this.signature_started || !obj_this.socketService.admin_mode)
+                {
+                    $('#btn_sign_guide').show();
+                }
+
+                $('viewer_container').scrollTo(position.top, position.left);
+                var next_top = canvas.height * (sign.top / 100);
                 var next_left = canvas.width * (sign.left / 100);
                 renderPage(sign.page);
-
-                // $(this).html("NEXT>").animate({
-                //     top: ($('#page_container1').height() / 2) + "px"
-                // }, 500);
 
                 setTimeout(function() {
                     $(`.sign_container[id=${sign.id}]:visible`).css({
@@ -837,11 +840,13 @@ export class EsignDocDetailsComponent implements OnInit {
                         send_to_all = data.send_to_all;
                         pdf_url = window['site_config'].server_base_url + data.file_url;
                         console.log('Dcownloading doc from '+pdf_url, Date());
-
                         window['app_libs']['pdf'].load(function(){
                             renderPDF(pdf_url);
                         });
 
+                        if(!data.meetings){
+                            return;
+                        }
                         obj_this.meetings = data.meetings;
                         for(var k=0; k< data.meetings.length; k++)
                         {
@@ -931,7 +936,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 return !v.signed && v.my_record;
             });
             if (d.length > 0) {
-                // $("#nxxt_sign").show();
+                // $("#btn_sign_guide").show();
             }
         }
 
@@ -1004,7 +1009,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 var selector = '.new_sign[page=' + pageNum + ']';
                 $(selector).show();
 
-                //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
+                //  $("#btn_sign_guide").css({top:$('#page_container1').scrollTop()});
                 setTimeout(function() {
                     loadSignatures({
                         "doc_data": doc_data,                    

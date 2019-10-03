@@ -298,6 +298,9 @@ class SignatureDoc(File, Actions):
             doc_data['binary'] = result
             return doc_data
 
+        if doc_data.get('signature_started'):
+            return doc_data
+
         meetings = Event.objects.filter(publish=True).exclude(archived=True)
         meetings = queryset_to_list(meetings, fields=['id', 'name'])
         meeting_id = doc_obj.meeting_id

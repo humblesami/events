@@ -170,7 +170,7 @@
                                         class="download">
                                             <span class="file_name">
                                                 {{doc.name}}
-                                                <i *ngIf="!doc.moved" class="fa fa-save p-2" (click)="move_to_my_folder($event,doc)"></i>
+                                                <i title="Move to my folder*"*ngIf="!doc.moved" class="fa fa-save p-2" (click)="move_to_my_folder($event,doc)"></i>
                                                 <i class="fa fa-download"></i>                                                
                                             </span>
                                         </a>                                        

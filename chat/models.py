@@ -635,7 +635,7 @@ class Message(models.Model):
                 doc.attachment.save(file_name, image_data, save=True)
                 attachment_urls.append({
                     'name': file_name,
-                    'id': doc.attachment.id,
+                    'id': doc.id,
                     'url': doc.attachment.url
                 })
 
