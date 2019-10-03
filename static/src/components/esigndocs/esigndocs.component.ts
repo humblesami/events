@@ -95,13 +95,14 @@ export class EsignDocsComponent implements OnInit {
         };
         obj_this.httpService.get(final_input_data,
         (result: any) => {
-            obj_this.records = result.records;
+            
+            obj_this.records = result.records;            
+            // console.log(result.records);
         },
         (error: any) => {
             //console.log(error);
             //alert(error);
-        });      
-        
+        });
     }
 
     ngOnInit() {

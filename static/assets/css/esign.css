@@ -80,17 +80,22 @@ body.public #viewer_container
     justify-content: center;
 }
 
-
 .sign_container[signed="true"]{
     background: white;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .sign_container[signed="true"] img{
     object-fit: contain;
 }
 
 .check_box_send_all span{
     font-size: 13px;
+}
+#page_container{
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
 }

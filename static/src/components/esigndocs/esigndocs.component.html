@@ -27,7 +27,7 @@ title="e-Signature"></app-breadcrumb>
 			<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4"  *ngFor="let doc of records">
 				<a routerLink="/signdoc/{{doc.id}}" class="">
 					<div class="DocumentWrapper gray-bg">
-                        <div *ngIf="doc.id && socketService.admin_mode" class="doc-del-btn"
+                        <div *ngIf="!doc.all.total && doc.id && socketService.admin_mode" class="doc-del-btn"
                             (click)="delete_file($event, doc.id)">
                             <i class="far fa-trash-alt pointer" ></i>
                         </div>

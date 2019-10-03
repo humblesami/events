@@ -523,6 +523,13 @@ class SignatureDoc(File, Actions):
         sign_docs = []
         for sign_doc in docs:
             doc = sign_doc.get_pending_sign_count(request.user.id)
+            pending_count = sign_doc.signature_set.filter(signed=False).count()
+            total = sign_doc.signature_set.filter().count()
+            doc['all'] = {
+                'pending': pending_count,
+                'total': total
+            }
+
             doc['id'] = sign_doc.id
             doc['name'] = sign_doc.name
             sign_docs.append(doc)

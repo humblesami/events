@@ -1,8 +1,15 @@
 ﻿<app-breadcrumb app="esign" model="signaturedoc" 
-*ngIf="doc && !is_public && doc.doc_name"
+*ngIf="doc && doc.sign_count && !is_public && doc.doc_name"
+rid="{{doc.id}}" edit="1"
+routes='[{"title":"Actions", "link":"/actions"}, {"title":"Esignature", "link":"/signdocs"}]'
+title="{{doc.doc_name}}"></app-breadcrumb>
+
+<app-breadcrumb app="esign" model="signaturedoc" 
+*ngIf="doc && !doc.sign_count && !is_public && doc.doc_name"
 rid="{{doc.id}}" delete="1" edit="1"
 routes='[{"title":"Actions", "link":"/actions"}, {"title":"Esignature", "link":"/signdocs"}]'
 title="{{doc.doc_name}}"></app-breadcrumb>
+
 <div class="router-outlet">
     <link rel="stylesheet" href="/static/assets/css/esign.css" />
     <div name="id" class="e_sign_doc_id" invisible="1" ></div>
@@ -104,12 +111,8 @@ title="{{doc.doc_name}}"></app-breadcrumb>
                     <div id="viewer_container" style="position:relative;">
                         <div id="nxxt_sign">START
                             SIGNING</div>
-
-                        <div id="page_container1" style="position:relative;">
-
-                            <div id="page_container">
-                                <canvas id="the-canvas" ></canvas>
-                            </div>
+                        <div id="page_container">
+                            <canvas id="the-canvas" ></canvas>
                         </div>
                     </div>
                 </div>

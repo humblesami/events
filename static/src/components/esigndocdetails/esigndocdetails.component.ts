@@ -21,6 +21,7 @@ export class EsignDocDetailsComponent implements OnInit {
     all_profile_users:any = [];
     is_public = false;
     users_list = [];
+    sign_count = 0;
     all_users_list = [];
     selectedUser: any;
     socketService: SocketService;
@@ -264,7 +265,7 @@ export class EsignDocDetailsComponent implements OnInit {
             function handleDropEvent(event, ui) {
                 var new_signature = $(ui.helper).clone().removeClass('drag').addClass("new_sign");
                 new_signature.draggable({
-                    containment: "#the-canvas",
+                    containment: "#page_container",
                     scroll: true,                    
                     cursor: 'move'
                 });
@@ -274,9 +275,17 @@ export class EsignDocDetailsComponent implements OnInit {
                     return;
                 }
                 var field_left = parseFloat(new_signature[0].style.left);
-                var field_top = parseFloat(new_signature[0].style.top) - $(this).parent().parent().position().top + $(this).parent().scrollTop();            
+                var field_top = parseFloat(new_signature[0].style.top);
+
+                // console.log(field_left, field_top);
                 
-                field_left -= 210;
+                field_top -= ($('.PdfTopBtnsWrapper').height() + 20);
+                field_top += $('#viewer_container').scrollTop();                
+                
+                field_left -= ($('.PdfButtonWrapper').width() + 80);
+                field_left += $('#viewer_container').scrollLeft();
+
+                // console.log(field_left, field_top);
 
                 new_signature.css({
                     position: 'absolute',
@@ -339,22 +348,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 drop: handleDropEvent,
                 accept: ".drag",
                 tolerance: "touch",                
-            });
-            
-
-            //Drag already existing field within page
-            $("#page_container1").droppable({
-                drop: function(event, ui) {
-                    var sign_left = ui.position.left;
-                    var sign_top = ui.position.top;
-                    $(ui.helper[0]).css({
-                        left: sign_left,
-                        top: sign_top
-                    });
-                    on_dropped(ui.helper[0]);
-                },
-                accept: ".new_sign",
-                tolerance: "touch",
             });
             //End Dragable
 
@@ -460,10 +453,7 @@ export class EsignDocDetailsComponent implements OnInit {
                                 }
                             },
                             onSuccess: function(data) {
-                                loadData();
-                                new_divs.hide().removeClass("new_sign");
-                                $('.youtubeVideoModal').modal('hide');
-                                $("#nxxt_sign").click();
+                                obj_this.router.navigate(['/signdocs']);
                             }
                         }
                         window['dn_rpc_object'](ajax_options);
@@ -710,9 +700,9 @@ export class EsignDocDetailsComponent implements OnInit {
                 }
                 $('#select_user_modal').modal('show');
             });
-            
 
-            $("#nxxt_sign1").click(function() {
+
+            $("#nxxt_sign").click(function() {
                 var d = $.grep(doc_data, function(v) {
                     return !v.signed && v.my_record;
                 });
@@ -725,21 +715,12 @@ export class EsignDocDetailsComponent implements OnInit {
 
                 var next_left = canvas.width * (sign.left / 100);
                 renderPage(sign.page);
-                $('html, #page_container1').animate({
-                    scrollTop: next_top - 150,
-                    scrollLeft: next_left - 150,
-                }, 500);
 
-                $(this).html("NEXT>").animate({
-                    top: ($('#page_container1').height() / 2) + "px"
-                }, 500);
+                // $(this).html("NEXT>").animate({
+                //     top: ($('#page_container1').height() / 2) + "px"
+                // }, 500);
 
                 setTimeout(function() {
-                    $('#nxxt_sign').html("NEXT>").animate({
-
-                        top: next_top - $('#page_container1').scrollTop() + "px"
-                    }, 1000);
-
                     $(`.sign_container[id=${sign.id}]:visible`).css({
                         border: "solid 3px yellow"
                     })
@@ -751,10 +732,6 @@ export class EsignDocDetailsComponent implements OnInit {
                 obj_this.selectedUser = undefined;
                 $('.ng-select-user-list .ng-input input').focus();
             });
-            
-            if ($('#save-doc-data').hasClass("o_invisible_modifier")) {
-                $('#page_container1')[0].style.height = "calc(100vh - 165px)";
-            }
         });
 
 
@@ -830,6 +807,8 @@ export class EsignDocDetailsComponent implements OnInit {
                         }
                     }
                     doc_data = data.doc_data;
+                    console.log(data, 44);
+                    obj_this.doc.sign_count = doc_data.length;
                     obj_this.doc.doc_name = data.doc_name || 'Unnamed';
                     obj_this.signature_started = data.signature_started;
 
@@ -924,7 +903,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 return !v.signed && v.my_record;
             });
             if (d.length > 0) {
-                $("#nxxt_sign").show();
+                // $("#nxxt_sign").show();
             }
         }
 
@@ -997,7 +976,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 var selector = '.new_sign[page=' + pageNum + ']';
                 $(selector).show();
 
-                // $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
+                //  $("#nxxt_sign").css({top:$('#page_container1').scrollTop()});
                 setTimeout(function() {
                     loadSignatures({
                         "doc_data": doc_data,                    
@@ -1022,17 +1001,6 @@ export class EsignDocDetailsComponent implements OnInit {
 
         function on_dropped(el, creating=null){
             var position = $(el).position();
-            if(!$(el).css('width'))
-            {                
-                $(el).css('width', $(el).width());
-                $(el).css('height', $(el).height());
-            }
-            if(creating)
-            {
-                var st_now = $('#viewer_container').scrollTop();
-                var applied_top = position.top += st_now;
-                $(el).css('top', applied_top);
-            }
 
             position = {
                 top: parseFloat(position.top),
@@ -1042,43 +1010,43 @@ export class EsignDocDetailsComponent implements OnInit {
             };
 
             var the_canvas = $('#the-canvas');
-            if(position.left < 5)
+
+            if(position.left < 0)
             {
-                position.left = 5;
+                position.left = 0;
                 $(el).css('left', '5px');
             }
             var the_canvas = $('#the-canvas');
-            if( position.width > the_canvas.width())
-            {
-                position.width = the_canvas.width()
-                $(el).width(position.width)
-            }
-            if( position.height > the_canvas.height())
-            {
-                position.height = the_canvas.height()
-                $(el).height(position.height);
-            }
-            if(page_zoom < 1)
-            {
-                if(position.left < the_canvas.position().left)
-                {
-                    position.left = the_canvas.position().left + 5;
-                    $(el).css('left', position.left+'px');
-                    position.left = 5;
-                }
-                else if(position.left + position.width > the_canvas.position().left + the_canvas.width())
-                {
-                    position.left = the_canvas.position().left + the_canvas.width() - position.width - 30;
-                    $(el).css('left', position.left+'px');
-                    position.left = position.left - the_canvas.position().left;
-                }
+            var pos_right = position.left + position.width;
+            var pos_bottom = position.top + position.height;
 
-                if(position.top + position.height > the_canvas.position().top + the_canvas.height())
-                {
-                    position.top = the_canvas.height() - position.height - 30;
-                    $(el).css('top', position.top+'px');
-                }
+            var canvas_left = the_canvas.position().left;
+            var canvas_top = the_canvas.position().top
+            var canvas_right = the_canvas.width() + canvas_left;
+            var canvas_bottom = the_canvas.height() + canvas_top;
+
+            if(pos_right + 5 > canvas_right)
+            {
+                position.left = canvas_right - position.width - 5;
+                $(el).css('left', position.left+'px');
             }
+            if(position.left < 5)
+            {
+                position.left = 5;
+                $(el).css('left', position.left+'px');
+            }
+
+            if(pos_bottom + 5 > canvas_bottom)
+            {
+                position.top = canvas_bottom - position.height - 5;
+                $(el).css('top', position.top+'px');
+            }
+            if(position.top < 5)
+            {
+                position.top = 5;
+                $(el).css('top', position.top+'px');
+            }
+
             var db_pos = {
                 top: position.top / page_zoom,
                 left: position.left / page_zoom,

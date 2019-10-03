@@ -2,6 +2,7 @@
 function init_popup(config) {
     var modal_obj = $('#appModal');
     modal_obj.find('.modal-header span').html('');
+    modal_obj.find('.modal-body').html('');
     modal_obj.find('.modal-footer button:not(#save-sig):not(#close-btn)').remove();
     var save_btn = modal_obj.find('#save-sig');
     if(!config.no_save)
