@@ -28,7 +28,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                             </h3>
                             <div class="ml-auto">
                                 <button 
-                                    *ngIf="(meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')"
+                                    *ngIf="(socketService.admin_mode && meeting_type && meeting_type == 'upcoming' || meeting_type == 'draft')"
                                     class="check-status meet-elements position-relative"
                                     (click)="on_publish_changed($event)"
                                     [ngClass]="meeting_status">
@@ -41,8 +41,7 @@ title="{{meeting_object.name}}"></app-breadcrumb>
                                         <i class="fa fa-users"></i> Roster                                    
                                 </button>
                                 <button *ngIf="meeting_type == 'completed' && socketService.admin_mode" 
-                                class="btn btn-primary btn-sm roster-button" 
-                                [disabled]="!meeting_object.attendance_marked"
+                                class="btn btn-primary btn-sm roster-button"
                                 (click)="move_to_archive(meeting_object.id)">
                                     <span name="archive">Move to Archive</span>
                                 </button>

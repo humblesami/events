@@ -1,4 +1,5 @@
 import io
+import json
 import os
 import base64
 import re
@@ -77,10 +78,22 @@ class File(CustomModel, FilesUpload):
                     self.file_name = re.sub('[^0-9a-zA-Z\.]+', '_', self.file_name)
                     try:
                         request = urllib.request.Request(self.cloud_url, headers=headers)
-                        img_temp = NamedTemporaryFile(delete=True)
-                        img_temp.write(urlopen(request).read())
-                        img_temp.flush()
-                        file_data = img_temp
+                        url_opened = None
+                        try:
+                            url_opened = urlopen(request)
+                        except Exception as ex:
+                            try:
+                                my_bytes_value = ws_methods.http(self.cloud_url, headers)
+                                my_json = ws_methods.bytes_to_json(my_bytes_value)
+                                my_json = my_json['error']
+                                raise Exception(my_json)
+                            except:
+                                raise
+                        file_content = url_opened.read()
+                        file_temp = NamedTemporaryFile(delete=True)
+                        file_temp.write(file_content)
+                        file_temp.flush()
+                        file_data = file_temp
                     except urllib.error.HTTPError as e:
                         msg = str(e.code) + e.reason
                         raise Exception(msg)
@@ -131,7 +144,7 @@ class File(CustomModel, FilesUpload):
             pass
         except:
             try:
-                if creating:
+                if creating and self.pk:
                     self.delete()
             except:
                 pass

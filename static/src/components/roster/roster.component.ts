@@ -89,7 +89,11 @@ export class RosterComponent implements OnInit {
     }
 
     update_attendance(attendee_id: number, val, all_attendees=false){
-        let obj_this = this; 
+        let obj_this = this;
+        if(!obj_this.socketService.admin_mode)
+        {
+            return;
+        }
         if (!all_attendees)
         {
             if (val == 'absent')
@@ -181,6 +185,10 @@ export class RosterComponent implements OnInit {
     check_all(el)
     {
         let obj_this = this;
+        if(!obj_this.socketService.admin_mode)
+        {
+            return;
+        }
         let target = $(el).closest('.custom-checkbox');
         let new_val = false;
         let attendance = '';

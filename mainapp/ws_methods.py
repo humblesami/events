@@ -673,6 +673,15 @@ def generate_default_image(name):
     img.save(img_path)
     return 'profile' + pic_name
 
+def bytes_to_json(my_bytes_value):
+    my_json = {'error': 'Invalid bytes value to get json'}
+    try:
+        my_json = my_bytes_value.decode('utf8').replace("'", '"')
+        my_json = json.loads(my_json)
+    except:
+        pass
+    return my_json
+
 from django.core.files.temp import NamedTemporaryFile
 from urllib.request import urlopen
 import urllib

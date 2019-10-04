@@ -59,6 +59,7 @@ export class MeetingDetailsComponent implements OnInit {
         modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
         modalRef.componentInstance.meeting_type = obj_this.meeting_object.exectime;
         modalRef.result.then(function(data){
+            // console.log(data, 133);
             obj_this.meeting_object.attendance_marked = data && data.attendance_marked;
         })
     }
@@ -251,6 +252,7 @@ export class MeetingDetailsComponent implements OnInit {
 
     move_to_archive(meeting_id:number)
     {
+        console.log(43);
         let obj_this = this;
         if (meeting_id)
         {
@@ -263,13 +265,16 @@ export class MeetingDetailsComponent implements OnInit {
                 params: {meeting_id: meeting_id},
                 args: args,
                 no_loader: 1
-            };
+            };            
             if (obj_this.meeting_object.attendance_marked)
-            {
+            {                
                 obj_this.httpService.get(input_data, function(data){
                     var url = '/meeting/archived/' + meeting_id
                     obj_this.router.navigate([url]);
                 }, null)
+            }
+            else{
+                window['bootbox'].alert('Please click Roster to mark all attendance first');
             }
         }
     }
