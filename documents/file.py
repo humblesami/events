@@ -256,6 +256,7 @@ class File(CustomModel, FilesUpload):
         url = file_obj.pdf_doc.url
         breadcrumb = []
         mention_list = []
+        is_respondent = False
         file_type = file_obj.file_type
         if file_type == 'meeting':
             breadcrumb = file_obj.meetingdocument.breadcrumb
