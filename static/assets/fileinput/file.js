@@ -333,7 +333,7 @@ function apply_drag_drop(input, resInfo, on_files_uploaded){
                 url_box.val(single_file.url);
             }
             var access_token_box = parent.closest('form').find('[name="access_token"]');
-            console.log(access_token_box[0], 33);
+            // console.log(access_token_box[0], 33);
             if(access_token_box.length)
             {
                 access_token_box.val(single_file.access_token);

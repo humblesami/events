@@ -6,11 +6,11 @@
             placeholder="Search..."  class="form-control"/>
         </div>
         <div class="roster">
-            <div class="container">
+            <div class="container" *ngIf="shown_users.length">
                 <div class="row py-2">
                     <div class="col-9 p-0">
                         <label class="font-weight-bold text-primary">
-                            Attendee
+                            User Info
                         </label>
                     </div>
                     <div class="col-3">
@@ -21,6 +21,9 @@
                 </div>
             </div>  
             <div class="container group-height">  
+                <div *ngIf="!shown_users.length" class="row no-data">
+                    <h4>No Users</h4>
+                </div>
                 <div class="row align-items-center bg-userlist mb-row"
                 *ngFor="let obj of shown_users">
                     <div class="col-9 p-0">

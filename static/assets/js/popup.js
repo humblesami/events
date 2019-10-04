@@ -1,7 +1,7 @@
 
 function init_popup(config) {
     var modal_obj = $('#appModal');
-    modal_obj.find('.modal-header span').html('');
+    modal_obj.find('.modal-header .title').html('');
     modal_obj.find('.modal-body').html('');
     modal_obj.find('.modal-footer button:not(#save-sig):not(#close-btn)').remove();
     var save_btn = modal_obj.find('#save-sig');
@@ -33,6 +33,20 @@ function init_popup(config) {
     if(config.on_load)
     {
         config.on_load();
+        if(modal_obj.find('.modal-header:first').text() == '')
+        {
+            modal_obj.find('.modal-header .title:first').html('Dialog')
+        }
+    }
+    if(config.title)
+    {
+        modal_obj.find('.modal-header .title:first').html(config.title);
+    }
+    else{
+        if(!modal_obj.find('.modal-header .title:first').html())
+        {
+            modal_obj.find('.modal-header .title:first').html('Dialog');
+        }
     }
     modal_obj.modal('show');
 };

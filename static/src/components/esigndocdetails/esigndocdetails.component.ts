@@ -500,6 +500,7 @@ export class EsignDocDetailsComponent implements OnInit {
                 if(obj_this.isAdmin && !obj_this.signature_started)
                 {
                     let popup_config = {
+                        title: 'Remove Signature',
                         on_load: function(){
                             var modal_body = $('#appModal .modal-body');
                             if(is_my_signature)

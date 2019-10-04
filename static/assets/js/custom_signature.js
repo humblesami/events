@@ -142,7 +142,7 @@ function init_sign(config) {
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                <div class="DocsButtonWrapper">
+                <div class="mb-1">
                         <button class="btn btn-primary DocsBtn" id="draw-sig">Draw</button>
                         <button id="upload-sig-btn" class="btn btn-primary DocsBtn o_select_file_button" title="Select" type="button">Upload</button>
                         <input id="upload-sig" accept=".jpg,.png,.jpeg" style="display:none" type="file">
