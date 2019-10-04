@@ -732,3 +732,6 @@ a.contact-item {
 /* .chat-message .me .file_name i{
 	display: none;
 } */
+.messenger-navbar{
+    display: none;
+}

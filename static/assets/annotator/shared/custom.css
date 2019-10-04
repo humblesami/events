@@ -741,7 +741,7 @@ a.list-group-item.contact.active {
 .comments .comment-list-item:first-child .user-time-info .time::after {
     content: "Reply";
     margin-left: 1rem;
-    background: #6a6969;
+    background: #487db6;
     border-radius: 10px;
     padding: 3px 10px;
     font-size:10px;

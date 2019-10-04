@@ -46,27 +46,16 @@ var dt_js = {
     },
     getMeetingTime: function (dt)
     {
-        if (!dt)
-            dt = new Date();
-        else if (typeof dt == 'string')
-            dt = new Date(dt);
-    
-        var mm = dt.getMinutes();
-        var h = dt.getHours();
-        var s = dt.getSeconds();
+        dt = this.getDateVals(dt)
         var postfix = 'AM';
-        if(h>12)
+        if(dt.hours > 12)
         {
-            h = h%12;
+            dt.hours = dt.hours%12;
             postfix = 'PM'
         }
-        if (h < 10)
-            h = "0" + h;
-        if (mm < 10)
-            mm = "0" + mm;
-        if (s < 10)
-            s = "0" + s;        
-        return h + ":" + mm+ ' '+postfix;
+        dt.hours = this.addZero(dt.hours);
+        dt.minutes = this.addZero(dt.minutes);        
+        return dt.hours + ":" + dt.minutes+ ' '+postfix;
     },
     getDateTimeString: function(dt) {
         if (!dt)
@@ -103,18 +92,62 @@ var dt_js = {
         res += ' '+obj_this.getMeetingTime(dt);        
         return res;
     },
+    getDateVals: function(dt){
+        dt = this.get_dt(dt);
+        return {
+            month: dt.getMonth(),
+            year: dt.getFullYear(),
+            date: dt.getDate(),
+            hours: dt.getHours(),
+            minutes: dt.getMinutes(),
+            seconds: dt.getSeconds(),
+            milli: dt.getMilliseconds(),
+        }
+    },
+    getDateString: function(dt){        
+        dt = this.getDateVals(dt);
+        dt.year +'-'+ this.addZero(dt.month) +'-'+ this.addZero(dt.date);
+    },
+    getStandardDate: function(dt){
+        dt = this.getDateVals(dt);
+        var month = this.monthShortNames[dt.month];
+        var res = month + ' '+this.addZero(dt.date)+','+dt.year;
+        return res;
+    },
+    getStandardDateTime: function(dt){
+        console.log(dt);
+        var res = this.getStandardDate(dt)+' '+this.getMeetingTime(dt);
+        return res;
+    },
+    get_dt: function(dt){
+        if (typeof(dt) == 'datetime')
+        {
+            return dt;
+        }
+        if(!dt)
+        {
+            dt = new Date()
+        }
+        else{
+            dt = new Date(dt);            
+        }
+        return dt;
+    },
     date: function(dt){
         this.getDateString(dt);
     },
     now: function(){
-        return this.getDateTimeString()
+        return this.getDateTimeString();
     },
-    addInterval: function(interval_type, n, dt=Date()){  
-        // console.log(typeof(dt), dt, 455);      
-        if(typeof(dt) == 'string')
+    addZero: function(val){
+        if(val < 10)
         {
-            dt = new Date(dt);
+            val = '0'+val;
         }
+        return val;
+    },
+    addInterval: function(interval_type, n, dt){          
+        dt = this.get_dt(dt);
         switch(interval_type){
             case 'y':
                 dt.setFullYear(dt.getFullYear() + n);

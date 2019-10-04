@@ -364,7 +364,14 @@ var js_utils = window['js_utils'] = {
         // console.log(position, 115);
 
         scroll_el.scrollLeft(position.left);
-        scroll_el.scrollTop(position.top);
+
+        var scroll_now = scroll_el.scrollTop();
+        var distance = Math.abs(position.top - scroll_now);        
+        var animate_time = distance * 1.5;
+        // console.log(distance, 133, animate_time);
+        scroll_el.animate({
+            scrollTop: position.top
+        }, animate_time);
     },
     is_public_route: function (url){
         if(!url)

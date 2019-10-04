@@ -120,3 +120,6 @@ body.public #viewer_container
         font-size: 0.8em;
     }
 }
+.doc-container.admin #btn_sign_guide{
+    visibility: hidden;
+}

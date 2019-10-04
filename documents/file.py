@@ -59,7 +59,16 @@ class File(CustomModel, FilesUpload):
 
     def save(self, *args, **kwargs):
         try:
+            creating = False
+            if not self.pk:
+                creating = True
             if self.pending_tasks == 3:
+                if not creating:
+                    if self.attachment != File.objects.get(pk=self.id).attachment:
+                        self.pending_tasks = 2
+                    else:
+                        self.pending_tasks = 0
+
                 file_data = None
                 if self.cloud_url:
                     headers = {}
@@ -87,6 +96,7 @@ class File(CustomModel, FilesUpload):
                     else:
                         self.access_token = 'Unknown Cloud'
                     self.pending_tasks = 2
+                    self.cloud_url = ''
                     self.attachment.save(self.file_name, file_data)
                     return
                 else:
@@ -96,15 +106,8 @@ class File(CustomModel, FilesUpload):
                     if not self.attachment:
                         raise ValidationError('No file provided')
                     else:
-                        if self.pk:
-                            if self.attachment != File.objects.get(pk=self.id).attachment:
-                                self.pending_tasks = 2
-                            else:
-                                self.pending_tasks = 0
-                        else:
-                            self.pending_tasks = 2
+                        self.pending_tasks = 2
 
-            self.cloud_url = ''
             super(File, self).save(*args, **kwargs)
             if self.pending_tasks == 2:
                 if self.file_type != 'message':
@@ -128,7 +131,8 @@ class File(CustomModel, FilesUpload):
             pass
         except:
             try:
-                self.delete()
+                if creating:
+                    self.delete()
             except:
                 pass
             res = ws_methods.get_error_message()
