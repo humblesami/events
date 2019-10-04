@@ -3092,3 +3092,8 @@ a:not([href]).app-menu__item{
     width: 100%;
     text-align: center;
 }
+.modal-custom-footer{
+    width: 100%;
+    text-align: right;
+    padding-top: 10px;    
+}
