@@ -16,11 +16,13 @@ export class RosterComponent implements OnInit {
     @Input() meeting_type: string;
     server_url = window['server_url'];
     httpService: HttpService;
+    // socketService: SocketService;
     constructor(private httpServ: HttpService,        
-            private socketService: SocketService, 
+            public socketService: SocketService, 
             private activeModal2: NgbActiveModal,
             private modalService: NgbModal) {
                 this.httpService = httpServ;
+                // this.socketService = sock;
     }    
     attendance_data = [];    
     
