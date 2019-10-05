@@ -45,23 +45,14 @@ export class MeetingDetailsComponent implements OnInit {
         this.route.params.subscribe(params => this.get_data());
     }
 
-    open_modal(meeting_id) {
-		const modalRef = this.modalService.open(RosterComponent);
-        modalRef.componentInstance.meeting_id = meeting_id;
-        setTimeout(function(){
-            $('ngb-modal-window.show .modal-dialog').addClass('modal-lg').addClass('modal-dialog-centered');
-        }, 51);
-    }
     open_roster(){
-        // $('.roster-full').show();
         let obj_this = this;
-		const modalRef = this.modalService.open(RosterComponent, { size: 'lg', backdrop: 'static' });
+		const modalRef = this.modalService.open(RosterComponent, { backdrop: 'static' });
         modalRef.componentInstance.meeting_id = obj_this.meeting_object.id;
         modalRef.componentInstance.meeting_type = obj_this.meeting_object.exectime;
         modalRef.result.then(function(data){
-            // console.log(data, 133);
             obj_this.meeting_object.attendance_marked = data && data.attendance_marked;
-        })
+        });
     }
 
     on_publish_changed(e){

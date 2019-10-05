@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
-import { NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import { ProfilesummaryComponent } from '../profilesummary/profilesummary.component';
+import { UserService } from 'src/app/user.service';
 declare var $: any;
 
 @Component({
@@ -16,13 +17,11 @@ export class RosterComponent implements OnInit {
     @Input() meeting_type: string;
     server_url = window['server_url'];
     httpService: HttpService;
-    // socketService: SocketService;
     constructor(private httpServ: HttpService,        
             public socketService: SocketService, 
-            private activeModal2: NgbActiveModal,
-            private modalService: NgbModal) {
+            private activeModal: NgbActiveModal,
+            private userServie: UserService) {
                 this.httpService = httpServ;
-                // this.socketService = sock;
     }    
     attendance_data = [];    
     
@@ -35,8 +34,8 @@ export class RosterComponent implements OnInit {
 
     open_dialog(user_id) {
         let obj_this = this;
-		const modalRef = this.modalService.open(ProfilesummaryComponent);
-        modalRef.componentInstance.user_id = user_id;
+        // console.log(user_id, 776);
+		this.userServie.show_profile_summary(user_id);
     }    
 
     get_list(){
@@ -180,10 +179,8 @@ export class RosterComponent implements OnInit {
         }, null);
     }
     close_roster(data){
-        this.activeModal2.close(data);
+        this.activeModal.close(data);
     }
-
-
     check_all(el)
     {
         let obj_this = this;
@@ -202,7 +199,6 @@ export class RosterComponent implements OnInit {
             new_val = $('#absent_all').prop('checked');
             new_val = !new_val;
             obj_this.absent_all = new_val;
-            // $('input[type="radio"].absent').prop('checked', new_val);
             obj_this.online_all = false;
             obj_this.inperson_all = false
             attendance = 'absent';

@@ -50,6 +50,11 @@
     cursor: auto;
 }
 .mb-row{
-    margin-bottom: 5px;
-    
+    margin-bottom: 5px;   
+}
+.user-info{
+    cursor: pointer;
+}
+.user-info:hover{
+    box-shadow: 0 0 0 0.4rem rgba(255, 255, 255, 0.15);
 }

@@ -27,7 +27,7 @@
                 <div class="row align-items-center bg-userlist mb-row"
                 *ngFor="let obj of shown_users">
                     <div class="col-9 p-0">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center user-info" (click)="show_profile_summary(obj.id)">
                             <div class="w-70">
                                 <div class="img-flex img-circle">
                                     <img src="{{socketService.server_url}}{{obj.image}}"/>

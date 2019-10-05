@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../../app/http.service';
 import { SocketService } from 'src/app/socket.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserService } from 'src/app/user.service';
 
 declare var $: any;
 
@@ -18,6 +19,7 @@ export class ViewmembersComponent implements OnInit {
     server_url = window['server_url'];
     httpService: HttpService;
     constructor(private httpServ: HttpService,
+        private userService: UserService,
         private socketService: SocketService,public activeModal: NgbActiveModal) {
         this.httpService = httpServ;
     } 
@@ -27,6 +29,10 @@ export class ViewmembersComponent implements OnInit {
     selection_input = [];
     count: number;
 
+    show_profile_summary(user_id)
+    {
+        this.userService.show_profile_summary(user_id);
+    }
     
     check_user_selected(user_id)
     {

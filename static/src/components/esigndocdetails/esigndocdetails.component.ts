@@ -767,7 +767,7 @@ export class EsignDocDetailsComponent implements OnInit {
 
         function toggle_guide_btn(bool, source=undefined)
         {
-            console.log(bool, source);
+            // console.log(bool, source);
             if(bool)
             {
                 $('#btn_sign_guide').show();

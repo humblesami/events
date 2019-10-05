@@ -429,7 +429,6 @@ export class SocketService {
             window['on_annotation_comment_received'](data);
         };
     };
-
     
     user_selection_dialog(dialog_options){
         let obj_this = this;
@@ -445,9 +444,8 @@ export class SocketService {
                 })
             });
         }
-        
-        // console.log(ar);
-        const modalRef = obj_this.modalService.open(dialog_options.component, { backdrop: 'static', windowClass : "align-modal-middle" });     
+
+        const modalRef = obj_this.modalService.open(dialog_options.component, { backdrop: 'static' });     
         if(!dialog_options.user_list.length)
         {
             if (obj_this.chat_users.length)

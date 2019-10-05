@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { SocketService } from './socket.service';
 import { UserlistmodalComponent } from 'src/components/userlistmodal/userlistmodal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProfilesummaryComponent } from 'src/components/profilesummary/profilesummary.component';
 
 declare var $: any
 
@@ -10,7 +12,8 @@ declare var $: any
 export class UserService {
     server_url;
     
-    constructor(private httpService:HttpService, private socketService: SocketService) {
+    constructor(private httpService:HttpService, private socketService: SocketService,
+        private modalService: NgbModal) {
         
     }
     private users = [];
@@ -22,6 +25,13 @@ export class UserService {
     {
         // console.log(list, 133);
         this.users = list;
+    }
+
+    show_profile_summary(profile_id){
+        let obj_this = this;
+        const modalRef = obj_this.modalService.open(ProfilesummaryComponent);
+        modalRef.componentInstance.user_id = profile_id;
+        // console.log(profile_id, 8);
     }
 
     saveusers(selected_users){

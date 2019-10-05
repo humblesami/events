@@ -5,7 +5,7 @@
           <div class="col-sm-12 col-md-4 mb-2">
               <div class="ProfileUserNameJonbWrapper">
                   <div class="ProfileChangeSaveWrapper img-flex mb-1">
-                      <img *ngIf="profile_data.photo" src="{{socketService.server_url}}{{profile_data.photo}}">
+                      <img *ngIf="profile_data.photo" src="{{server_url}}{{profile_data.photo}}">
                       <img *ngIf="!profile_data.photo"  src="static/assets/images/no-profile.png">
                   </div>
 

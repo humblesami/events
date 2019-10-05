@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { HttpService } from '../../app/http.service';
-import { SocketService } from 'src/app/socket.service';
+import { UserService } from 'src/app/user.service';
 declare var $: any;
 
 @Component({
@@ -13,13 +13,11 @@ export class UserlistComponent implements OnInit {
     @Input() user_input_str = '';
 
     @Output() group_users_changed : EventEmitter <any> = new EventEmitter();
-    server_url = window['server_url'];
-    httpService: HttpService;
-    constructor(private httpServ: HttpService,
-        private socketService: SocketService) {
-        this.httpService = httpServ;
-    } 
-
+    server_url = window['site_config'].server_base_url;
+    constructor(private httpService: HttpService,
+        public userService: UserService) {
+            
+    }
     shown_users = [];
     all_users = [];
     selection_input = [];

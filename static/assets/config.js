@@ -68,7 +68,7 @@ if(current_site_base_url.indexOf('www.') > -1)
 }
 
 site_config.site_url = current_site_base_url;
-
+window['server_url'] = site_config.server_base_url;
 site_config.public_urls = ['login']
 //console.log(site_config);
 site_config['app_name'] = 'meetings';
