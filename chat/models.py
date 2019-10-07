@@ -734,7 +734,7 @@ class Message(models.Model):
         file_id_is = params['file_id']
         
         file = File.objects.get(pk=file_id_is)
-        my_folder = Folder.objects.get(created_by_id=request.user.id,personal=True)
+        my_folder = Folder.objects.get(created_by_id=request.user.id, personal=True, parent_id__isnull=True)
         doc = ResourceDocument(folder_id=my_folder.id, attachment=file.attachment, file_name=file.file_name, name=file.name, personal=True)
         doc.save()
 
