@@ -38,7 +38,7 @@ class SignatureDoc(File, Actions):
             self.file_type = 'esign'
         super(SignatureDoc, self).save(*args, **kwargs)
         if create:
-            self.original_pdf = self.pdf_doc
+            # self.original_pdf = self.pdf_doc
             self.save()
 
     def get_all_respondents(self):
@@ -103,6 +103,8 @@ class SignatureDoc(File, Actions):
             self.remove_all_signature()
             sign_top = 5
             c = 0
+            height = 95
+            inc_sign_top = height + 15
             for user_id in users:
                 user_ids.append(user_id)
                 if c == 0:
@@ -115,15 +117,15 @@ class SignatureDoc(File, Actions):
                     type='signature',
                     left=sign_left,
                     top=sign_top,
-                    height=40,
-                    width=140,
+                    height=height,
+                    width=height*2+10,
                     zoom=100
                 )
                 obj.updated_by_id = user.id
                 obj.save()
                 if c == 1:
                     c = 0
-                    sign_top += 50
+                    sign_top += inc_sign_top
                     continue
                 c += 1
             self.add_pages_for_sign()
@@ -178,10 +180,12 @@ class SignatureDoc(File, Actions):
         return 'done'
 
     def add_pages_for_sign(self):
-        if not self.original_pdf or not self.signature_set.all().exists():
+        if not self.signature_set.all().exists():
             return
-        pth = MEDIA_ROOT + "/" + self.original_pdf.name
+        if not self.original_pdf:
+            self.original_pdf = self.pdf_doc
 
+        pth = MEDIA_ROOT + "/" + self.original_pdf.name
         input = PdfFileReader(open(pth, "rb"))
         if input.isEncrypted:
             input.decrypt('')
@@ -235,11 +239,17 @@ class SignatureDoc(File, Actions):
         for page_number in range(signaturepdf.getNumPages()):
             output.addPage(signaturepdf.getPage(page_number))
 
+        if os.path.isfile(signature_only_pdf_path):
+            os.remove(signature_only_pdf_path)
+
         output_pdf_path = MEDIA_ROOT + "/files/sign-doc-output-pages" + str(self.id) + ".pdf"
         with open(output_pdf_path, "wb") as outputStream:
             output.write(outputStream)
         res = open(output_pdf_path, 'rb')
+        self.pending_tasks = 0
         self.pdf_doc.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
+        if os.path.isfile(output_pdf_path):
+            os.remove(output_pdf_path)
 
     def remove_all_signature(self):
         self.signature_set.all().delete()
@@ -417,7 +427,7 @@ class SignatureDoc(File, Actions):
                     pdf.set_font('Arial', 'U', 15)
                     # Special case, we have restricted our users to read super admin
                     try:
-                        sign_name = s.user.username
+                        sign_name = s.user.name
                     except:
                         sign_name = 'Root'
                     pdf.cell(5, 5, sign_name)
@@ -484,12 +494,12 @@ class SignatureDoc(File, Actions):
             signature_objs = self.signature_set.filter(user_id=user.id)
 
         signatures = queryset_to_list(signature_objs,
-                                      fields=['user__id', 'user__username', 'id', 'type', 'page', 'field_name', 'zoom',
+                                      fields=['user__id', 'user__name', 'id', 'type', 'page', 'field_name', 'zoom',
                                               'width', 'height', 'top', 'left', 'created_at'])
         i = 0
         for signature in signatures:
             signed = False
-            signature["name"] = signature["user__username"]
+            signature["name"] = signature["user__name"]
             image = signature_objs[i].image
             if image:
                 if token:
@@ -560,7 +570,7 @@ class Signature(CustomModel):
     date = models.DateField(null=True, blank=True)
 
     document = models.ForeignKey(SignatureDoc, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     page = models.IntegerField(null=True, blank=True)
     left = models.FloatField(null=True, blank=True)
     top = models.FloatField(null=True, blank=True)
@@ -615,7 +625,7 @@ class Signature(CustomModel):
 
         if user.id != sign.user_id:
             res = 'Invalid user to for this signature'
-            message = res + '=> user found=' + str(user.username) + ', expected user=' + str(sign.user.username)
+            message = res + '=> user found=' + str(user.name) + ', expected user=' + str(sign.user.name)
             message += ' sign id=' + str(sign.id) + ' object=esign.SignatureDoc.' + params['document_id']
             if token:
                 message +' token id=' + str(token.id)
@@ -680,7 +690,7 @@ class Signature(CustomModel):
         sign = Signature.objects.get(id=signature_id)
         if sign.user.id != user.id:
             res = 'Invalid user to for this signature'
-            message = res + '=> user found=' + str(user.username) + ', expected user=' + str(sign.user.username)
+            message = res + '=> user found=' + str(user.name) + ', expected user=' + str(sign.user.name)
             message += ' sign id=' + str(sign.id) + ' object=esign.SignatureDoc.' + params['document_id']
             if token:
                 message + ' token id=' + str(token.id)
@@ -735,7 +745,7 @@ class Signature(CustomModel):
         sign = Signature.objects.get(id=signature_id)
         if sign.user.id != user.id:
             res = 'Invalid user to for this signature'
-            message = res + '=> user found=' + str(user.username) + ', expected user=' + str(sign.user.username)
+            message = res + '=> user found=' + str(user.name) + ', expected user=' + str(sign.user.name)
             message += ' sign id=' + str(sign.id) + ' object=esign.SignatureDoc.' + params['document_id']
             if token:
                 message + ' token id=' + str(token.id)
