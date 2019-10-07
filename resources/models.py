@@ -145,6 +145,35 @@ class Folder(CustomModel):
                 obj.save()
         return 'done'
 
+    res = []
+    @classmethod
+    def folders_recursive_childs(cls, request, params):
+        parent_id = params.get('parent_id')
+        user_id = request.user.id
+        if parent_id:
+            folder = Folder.objects.filter(pk=parent_id, users__id=user_id).order_by('-pk')
+            if folder:
+                folder = folder[0]
+                res = {
+                    'id': folder.id,
+                    'name': folder.name,
+                    'sub_folders': folder.folders_recursive_subchilds(folder, user_id)
+                }
+        return res
+
+ 
+    def folders_recursive_subchilds(self, folder , user_id):
+        result = []
+        sub_folders = Folder.objects.filter(parent=folder.id, users__id=user_id)
+        if sub_folders:
+             for sub_folder in sub_folders:       
+                result.append({
+                    'id': sub_folder.id,
+                    'name': sub_folder.name,
+                    'sub_folders': sub_folder.folders_recursive_subchilds(sub_folder, user_id)
+                })
+        return result
+
     @classmethod
     def change_folder_name(cls, request, params):
         folder_id = params['folder_id']

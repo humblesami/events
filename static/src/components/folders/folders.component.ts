@@ -86,7 +86,26 @@ export class FoldersComponent implements OnInit {
     }
 
     personal = false;
-
+    folders_recursive_childs(folder_id){
+        let obj_this = this;
+        let args = {
+            app: 'resources',
+            model: 'Folder',
+            method: 'folders_recursive_childs'
+        }
+        let final_input_data = {
+            params: {
+                parent_id: folder_id,
+            },
+            args: args
+        };
+        // console.log(final_input_data.params, 333);
+        obj_this.httpService.get(final_input_data,
+        (result: any) => {
+            console.log(result);
+            // obj_this.on_result(result);
+        },null);
+    }
     get_list()
     {
         let obj_this = this;
