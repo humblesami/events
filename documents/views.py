@@ -124,10 +124,14 @@ def upload_single_image_file(request):
         obj = model.objects.get(pk=res_id)
         cloud_data = req.get('cloud_data')
 
+        if file_type != 'image':
+            docs = json.dumps(docs)
+            return HttpResponse(docs)
+            return {'error': 'Invalid'}
         if cloud_data:
-            cloud_data = json.loads(cloud_data)            
-            for file in cloud_data:
-                with transaction.atomic():
+            cloud_data = json.loads(cloud_data)
+            with transaction.atomic():
+                for file in cloud_data:
                     if file_type == 'image':
                         img_temp = ws_methods.download_image(file)
                         if type(img_temp) == str:
@@ -142,10 +146,10 @@ def upload_single_image_file(request):
                         obj.save()
                         docs.append({'image_url':file_obj.url})
         else:
-            for key in request.FILES:
-                files = request.FILES.getlist(key)            
-                for file in files:
-                    with transaction.atomic():
+            with transaction.atomic():
+                for key in request.FILES:
+                    files = request.FILES.getlist(key)
+                    for file in files:
                         if file_type == 'image':
                             curr_dir = os.path.dirname(__file__)
                             directory = curr_dir.replace('documents', 'media')

@@ -107,24 +107,59 @@ export class RenameService {
             //console.log(item, 133);
         }, null);        
     }
-    movables = {files: [], folders:[]}
+    objects_to_move = {files:[], folders:[], current_parent_id: undefined};
+
     make_movable(evn, item_id, key){
         let obj_this = this;
         evn.stopPropagation();
         evn.preventDefault();
-        var movable = $(evn.target).closest('.draggable');
+        var movable = $(evn.target).closest('a.doc,a.folder');
         if(movable.hasClass('draggable'))
         {
-            var item_index = obj_this[key].indexOf(item_id);
-            obj_this.movables[key].splice(item_index, 1);
+            var item_index = obj_this.objects_to_move[key].indexOf(item_id);
+            obj_this.objects_to_move[key].splice(item_index, 1);
             movable.removeClass('draggable');
         }
         else{
-            obj_this.movables[key].push(item_id);            
+            obj_this.objects_to_move[key].push(item_id);            
             movable.addClass('draggable');
         }
-        $('a.folder.droppable').removeClass('droppable');
-        $('a.folder.not(.draggable)').addClass('.droppable');
-        console.log(obj_this.movables, 24454);
+        $('a.folder.droppable').removeClass('droppable');        
+        $('a.folder:not(.draggable)').addClass('droppable');
+        // console.log(obj_this.movables, 24454);
+    }
+
+    load_movables(folder_id){
+        let obj_this = this;
+        var parent_id = obj_this.objects_to_move.current_parent_id;
+        if(folder_id == parent_id)
+        {
+            $('a.doc').each(function(i, el){
+                if(obj_this.objects_to_move.files.indexOf(el.attr('item_id')) != -1)
+                {
+                    $(this).closest('a.doc)').removeClass('.draggable').addClass('draggable');
+                }
+            });
+            $('a.folder').each(function(i, el){
+                if(obj_this.objects_to_move.files.indexOf(el.attr('item_id')) != -1)
+                {
+                    $(this).closest('a.folder)').removeClass('.draggable').addClass('draggable');
+                }
+            });
+        }
+        else{
+            if(obj_this.objects_to_move.files.length || obj_this.objects_to_move.folders.length)
+            {
+                                
+            }
+        }
+    }
+
+    on_files_moved(){
+
+    }
+
+    on_folders_moved(){
+
     }
 }

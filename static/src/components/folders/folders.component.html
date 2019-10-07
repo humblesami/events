@@ -9,17 +9,16 @@
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of records">
                     <a routerLink="/resource/{{folder.id}}" 
                     title="{{folder.personal ? 'My Folder': ''}}"
-                    class="folder">
-                        <div class="DocumentWrapper">
+                    class="folder DocumentWrapper">
                             <div class="doc-del-btn d-flex" *ngIf="folder.id && !(!personal && folder.personal) && (socketService.admin_mode || personal)">
                                 <div class="pointer"
                                 title="Move"
-                                (click)="make_movable($event, folder.id, 'folders')">
+                                (click)="renameService.make_movable($event, parent_id, folder.id, 'folders')">
                                     <i class="fas fa-cut" ></i>
                                 </div>
                                 <div class="pointer paste"
                                 title="Paste Here"
-                                (click)="paste_resources($event)">
+                                (click)="on_paste_clicked($event, folder.id)">
                                     <i class="fa fa-clipboard" ></i>
                                 </div>  
                                 <div class="pointer"
@@ -64,7 +63,6 @@
                                     </div>
                                 </div>              
                             </div>
-                        </div>
                     </a>
                 </div>
             </div>

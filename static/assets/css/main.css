@@ -3109,9 +3109,9 @@ a.doc.draggable, a.folder.draggable{
     border: 2px solid red;
 }
 
-a.folder.paste{
+a.folder .paste{
     display: none;
 }
-a.folder.paste.draggable{
+a.folder.droppable .paste{
     display: block;
 }

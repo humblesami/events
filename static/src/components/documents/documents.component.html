@@ -11,7 +11,7 @@
                 <div class="doc-del-btn d-flex" *ngIf="!deleting && (socketService.admin_mode || personal) && !readonly">
                     <div class="pointer"
                     title="Move"
-                    (click)="renameService.make_movable($event, doc.id, 'files')">
+                    (click)="renameService.make_movable($event, parent_id, doc.id, 'files')">
                         <i class="fas fa-cut" ></i>
                     </div>
                     <div class="pointer"

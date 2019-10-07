@@ -203,7 +203,11 @@ export class DocumentsComponent implements OnInit {
 
     on_result(data){
         let obj_this = this;
-        obj_this.docs = data;        
+        obj_this.docs = data;
+        var load_preselected = function(){
+            obj_this.renameService.load_movables(obj_this.parent_id);
+        }
+        setTimeout(load_preselected, 200);
     }
 
     ngOnInit() {
@@ -239,9 +243,17 @@ export class DocumentsComponent implements OnInit {
         if(!window['DocText:focus'])
         {
             window['DocText:focus'] = 1;
-            $(document).on('focus','.DocText input',function(){
+            $(document).on('focus','.DocText input', function(){
                 this.select();
             });
+        }
+
+        obj_this.renameService.on_files_moved = function(){            
+            var object_ids = obj_this.renameService[obj_this.parent_id].files;
+            obj_this.docs = obj_this.docs.filter(function(item){
+                return object_ids.indexOf(item.id) == -1
+            });
+            obj_this.renameService.objects_to_move[obj_this.parent_id].files = [];
         }
     }
 

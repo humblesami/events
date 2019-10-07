@@ -1,4 +1,7 @@
 import re
+
+from django.db import transaction
+
 from meetings.model_files.user import *
 from mainapp.models import CustomModel
 from django_currentuser.middleware import get_current_user
@@ -104,6 +107,45 @@ class Folder(CustomModel):
         return 'done'
 
     @classmethod
+    def can_be_parent(cls, folder_id, target_folder_id):
+        if folder_id == target_folder_id:
+            return False
+        target_folder_id = Folder.objects.get(pk=target_folder_id).values('parent_id')
+        target_folder_id = target_folder_id.get('parent_id')
+        if not target_folder_id:
+            return True
+        return cls.can_be_parent(folder_id, target_folder_id)
+
+    @classmethod
+    def is_valid_paste_candidate(cls, request, params):
+        target_folder_id = params['folder_id']
+        current_parent_id = params['parent_id']
+        res = cls.can_be_parent(current_parent_id, target_folder_id)
+        if res:
+            return {'valid_parent': True}
+        else:
+            return {'invalid': True}
+
+    @classmethod
+    def move_objects(cls, request, params):
+        objects_to_move = params['objects_to_move']
+        target_folder_id = params['folder_id']
+        current_parent_id = params['parent_id']
+        with transaction.atomic():
+            file_ids = objects_to_move['files']
+            folder_ids = objects_to_move['folders']
+            cls.can_be_parent(current_parent_id, target_folder_id)
+            for obj_id in file_ids:
+                obj = ResourceDocument.objects.get(pk=obj_id)
+                obj.folder_id = target_folder_id
+                obj.save()
+            for obj_id in folder_ids:
+                obj = Folder.objects.get(pk=obj_id)
+                obj.parent_id = target_folder_id
+                obj.save()
+        return 'done'
+
+    @classmethod
     def change_folder_name(cls, request, params):
         folder_id = params['folder_id']
         name = params['name']
@@ -131,6 +173,8 @@ class Folder(CustomModel):
             folder = Folder.objects.filter(pk=parent_id, users__id=user_id).order_by('-pk')
             if folder:
                 folder = folder[0]
+                folder_with_objects_to_move = params.get('folder_with_objects_to_move')
+                result['can_be_parent'] = cls.can_be_parent()
                 result['folders'] = folder.search_folder(kw, user_id, [], 'folders', recursive)
                 result['parents'] = cls.get_ancestors(cls, folder)
                 result['id'] = folder.id

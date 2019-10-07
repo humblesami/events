@@ -228,6 +228,20 @@ var js_utils = window['js_utils'] = {
             console.log(evt, 333);
         }
     },
+
+    remove_items_by_indices: function(array, indices){
+        for(var ind of indices)
+        {
+            for(var i = 0; i < array.length; i++)
+            {
+                if(ind == i)
+                {
+                    array.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    },
     unique_id: function(){
         let rand = (((1+Math.random())*0x10000)|0).toString(16).substring(1);
         var now = new Date();

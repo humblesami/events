@@ -71,19 +71,21 @@ class File(CustomModel, FilesUpload):
                         self.pending_tasks = 0
 
                 file_data = None
-                if self.cloud_url:
+                if self.cloud_url and (creating or self.file_type == 'esign'):
+                    cloud_url = self.cloud_url
+                    self.cloud_url = ''
                     headers = {}
                     if self.access_token:
                         headers = {'Authorization': 'Bearer ' + self.access_token}
                     self.file_name = re.sub('[^0-9a-zA-Z\.]+', '_', self.file_name)
                     try:
-                        request = urllib.request.Request(self.cloud_url, headers=headers)
+                        request = urllib.request.Request(cloud_url, headers=headers)
                         url_opened = None
                         try:
                             url_opened = urlopen(request)
                         except Exception as ex:
                             try:
-                                my_bytes_value = ws_methods.http(self.cloud_url, headers)
+                                my_bytes_value = ws_methods.http(cloud_url, headers)
                                 my_json = ws_methods.bytes_to_json(my_bytes_value)
                                 my_json = my_json['error']
                                 raise Exception(my_json)
@@ -99,7 +101,6 @@ class File(CustomModel, FilesUpload):
                         raise Exception(msg)
 
                     self.binary_data = ''
-                    cloud_url = self.cloud_url
                     if 'https://www.googleapis.com' in cloud_url:
                         self.access_token = 'Google'
                     elif 'files.1drv.com' in cloud_url:
@@ -109,7 +110,6 @@ class File(CustomModel, FilesUpload):
                     else:
                         self.access_token = 'Unknown Cloud'
                     self.pending_tasks = 2
-                    self.cloud_url = ''
                     self.attachment.save(self.file_name, file_data)
                     return
                 else:

@@ -1,5 +1,4 @@
-﻿import { Component, OnInit, Input } from '@angular/core';
-import { HttpService } from '../../app/http.service';
+﻿import { Component, OnInit } from '@angular/core';
 import { SocketService } from 'src/app/socket.service';
 import { RenameService } from 'src/app/rename.service';
 declare var $:any;
