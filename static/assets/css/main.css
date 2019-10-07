@@ -2892,10 +2892,18 @@ label.check-plus-label-wrap {
     }
 .doc-del-btn {
 	position: absolute;
-	right: 0;
+	right: 0;	
+}
+.doc-del-btn > .pointer {	
 	padding: 3px 7px;
 	border-radius: 50%;
 	border: 1px solid #ede;
+}
+.doc-del-btn > .pointer:last-child {	
+	padding: 3px 7px;
+	border-radius: 50%;
+    border: 1px solid #ede;
+    margin-left: 5px;
 }
 .doc-del-btn:hover {
 	color: red;
@@ -3096,4 +3104,14 @@ a:not([href]).app-menu__item{
     width: 100%;
     text-align: right;
     padding-top: 10px;    
+}
+a.doc.draggable, a.folder.draggable{
+    border: 2px solid red;
+}
+
+a.folder.paste{
+    display: none;
+}
+a.folder.paste.draggable{
+    display: block;
 }

@@ -235,6 +235,12 @@ export class FoldersComponent implements OnInit {
         $('.breadcrumbSection:first').append(edit_buttons);
         edit_buttons.append(create_button);
     }
+    
+    on_paste_clicked(folder_id){
+        console.log(folder_id, this.renameService.movables);
+        this.renameService.movables.files = [];
+        this.renameService.movables.folders = [];
+    }
 
     ngOnInit() {
         let obj_this = this;

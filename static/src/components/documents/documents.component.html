@@ -7,11 +7,19 @@
     
     <div class="row">
         <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let doc of docs">
-            <a class="DocumentWrapper gray-bg" routerLink="{{roterLinkPrefix+doc.id}}">
-                <div *ngIf="!deleting && (socketService.admin_mode || personal) && !readonly" class="doc-del-btn"
-                (click)="delete_file($event, doc.id)">
-                    <i class="far fa-trash-alt pointer" ></i>
-                </div>                
+            <a class="DocumentWrapper gray-bg doc" routerLink="{{roterLinkPrefix+doc.id}}">
+                <div class="doc-del-btn d-flex" *ngIf="!deleting && (socketService.admin_mode || personal) && !readonly">
+                    <div class="pointer"
+                    title="Move"
+                    (click)="renameService.make_movable($event, doc.id, 'files')">
+                        <i class="fas fa-cut" ></i>
+                    </div>
+                    <div class="pointer"
+                    title="Delete"
+                    (click)="delete_file($event, doc.id)">
+                        <i class="far fa-trash-alt" ></i>
+                    </div>                    
+                </div>
                 <div class="p-1 pos-abs" style="left:5px">
                     <img height="20px" width="20px" src="{{get_icon_url(doc.access_token)}}" alt="" class="doc_icons">
                 </div>

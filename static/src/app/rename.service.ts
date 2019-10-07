@@ -107,4 +107,24 @@ export class RenameService {
             //console.log(item, 133);
         }, null);        
     }
+    movables = {files: [], folders:[]}
+    make_movable(evn, item_id, key){
+        let obj_this = this;
+        evn.stopPropagation();
+        evn.preventDefault();
+        var movable = $(evn.target).closest('.draggable');
+        if(movable.hasClass('draggable'))
+        {
+            var item_index = obj_this[key].indexOf(item_id);
+            obj_this.movables[key].splice(item_index, 1);
+            movable.removeClass('draggable');
+        }
+        else{
+            obj_this.movables[key].push(item_id);            
+            movable.addClass('draggable');
+        }
+        $('a.folder.droppable').removeClass('droppable');
+        $('a.folder.not(.draggable)').addClass('.droppable');
+        console.log(obj_this.movables, 24454);
+    }
 }
