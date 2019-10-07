@@ -661,7 +661,7 @@ class Signature(CustomModel):
         jango_file = DjangoFile(binary_data)
         sign.image.save('sign_image.png', jango_file)
         status = sign.document.get_pending_sign_count(user.id)
-        if not status['pending']:
+        if not status['pending'] or status['pending'] == 0:
             if token:
                 PostUserToken.validate_token(token.token)
                 return 'done'
