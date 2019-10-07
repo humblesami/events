@@ -21,7 +21,7 @@ from restoken.models import PostUserToken
 from meetings.model_files.event import Event
 from meetings.model_files.user import Profile
 
-from mainapp.settings import MEDIA_ROOT, server_base_url
+from mainapp.settings import MEDIA_ROOT, server_base_url, BASE_DIR
 from mainapp.ws_methods import queryset_to_list, send_email_on_creation, search_db
 from mainapp.models import CustomModel
 
@@ -180,11 +180,12 @@ class SignatureDoc(File, Actions):
         return 'done'
 
     def add_pages_for_sign(self):
+        files_to_delete = []
         if not self.signature_set.all().exists():
             return
         if not self.original_pdf:
             self.original_pdf = self.pdf_doc
-
+        files_to_delete.append(BASE_DIR+self.pdf_doc.url)
         pth = MEDIA_ROOT + "/" + self.original_pdf.name
         input = PdfFileReader(open(pth, "rb"))
         if input.isEncrypted:
@@ -238,18 +239,17 @@ class SignatureDoc(File, Actions):
         signaturepdf = PdfFileReader(open(signature_only_pdf_path, "rb"))
         for page_number in range(signaturepdf.getNumPages()):
             output.addPage(signaturepdf.getPage(page_number))
-
-        if os.path.isfile(signature_only_pdf_path):
-            os.remove(signature_only_pdf_path)
-
+        files_to_delete.append(signature_only_pdf_path)
         output_pdf_path = MEDIA_ROOT + "/files/sign-doc-output-pages" + str(self.id) + ".pdf"
         with open(output_pdf_path, "wb") as outputStream:
             output.write(outputStream)
         res = open(output_pdf_path, 'rb')
         self.pending_tasks = 0
         self.pdf_doc.save(self.original_pdf.name.replace('converted/', '').replace('original/',''), DjangoFile(res))
-        if os.path.isfile(output_pdf_path):
-            os.remove(output_pdf_path)
+        files_to_delete.append(output_pdf_path)
+        for file_to_delete in files_to_delete:
+            if os.path.isfile(file_to_delete):
+                os.remove(file_to_delete)
 
     def remove_all_signature(self):
         self.signature_set.all().delete()
