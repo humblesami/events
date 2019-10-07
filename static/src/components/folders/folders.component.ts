@@ -86,26 +86,7 @@ export class FoldersComponent implements OnInit {
     }
 
     personal = false;
-    folders_recursive_childs(folder_id){
-        let obj_this = this;
-        let args = {
-            app: 'resources',
-            model: 'Folder',
-            method: 'folders_recursive_childs'
-        }
-        let final_input_data = {
-            params: {
-                parent_id: folder_id,
-            },
-            args: args
-        };
-        // console.log(final_input_data.params, 333);
-        obj_this.httpService.get(final_input_data,
-        (result: any) => {
-            console.log(result);
-            // obj_this.on_result(result);
-        },null);
-    }
+
     get_list()
     {
         let obj_this = this;
@@ -118,13 +99,18 @@ export class FoldersComponent implements OnInit {
             params: {
                 parent_id: obj_this.parent_id,
                 recursive: obj_this.recursive,
-                kw: obj_this.search_kw
+                kw: obj_this.search_kw,
+                folder_with_objects_to_move: obj_this.renameService.objects_to_move.current_parent_id
             },
             args: args
         };
         // console.log(final_input_data.params, 333);
         obj_this.httpService.get(final_input_data,
         (result: any) => {
+            // if(obj_this.renameService.objects_to_move.current_parent_id)
+            // {
+            //     console.log(11, result.can_be_parent, 22, obj_this.parent_id, final_input_data.params.folder_with_objects_to_move, 44)
+            // }
             obj_this.on_result(result);
         },null);
     }
@@ -149,7 +135,7 @@ export class FoldersComponent implements OnInit {
             obj_this.data_loaded.emit(result);
         }
         var load_preselected = function(){
-            obj_this.renameService.load_movables(obj_this.parent_id);
+            obj_this.renameService.load_movables(obj_this.parent_id, 'folder', result.can_be_parent);
         }
         obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
         if(obj_this.parent_id)
@@ -274,28 +260,34 @@ export class FoldersComponent implements OnInit {
         let final_input_data = {
             params: {
                 folder_id: folder_id,
-                movables: obj_this.renameService.objects_to_move,
+                objects_to_move: obj_this.renameService.objects_to_move,
             },
             args: args
         };
         // console.log(final_input_data.params, 333);
         obj_this.httpService.get(final_input_data,(result: any) => {            
             obj_this.on_result(result);
+            obj_this.can_be_parent = result.can_be_parent;
             obj_this.renameService.on_files_moved();
             obj_this.renameService.on_folders_moved();
         },null);        
     }
+    can_be_parent = false;
 
     ngOnInit() {
         let obj_this = this;
-        console.log(obj_this.renameService.objects_to_move);
-        obj_this.renameService.on_files_moved = function(){            
-            var object_ids = obj_this.renameService.objects_to_move.files;
-            obj_this.records = obj_this.records.filter(function(item){
-                return object_ids.indexOf(item.id) == -1
-            });
-            obj_this.renameService.objects_to_move.folders = [];
+        if(obj_this.renameService.objects_to_move.current_parent_id)
+        {
+            var on_folders_moved = function(){
+                var object_ids = obj_this.renameService.objects_to_move.folders;
+                obj_this.records = obj_this.records.filter(function(item){
+                    return object_ids.indexOf(item.id) == -1
+                });
+                obj_this.renameService.objects_to_move.folders = [];
+            }
+            obj_this.renameService.on_folders_moved = on_folders_moved;
         }
+        
         obj_this.add_folder_create_button();
         // console.log(obj_this.search_kw, obj_this.search_type, obj_this.recursive);
         if(obj_this.search_type == 'files')

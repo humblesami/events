@@ -109,10 +109,14 @@ export class RenameService {
     }
     objects_to_move = {files:[], folders:[], current_parent_id: undefined};
 
-    make_movable(evn, item_id, key){
+    make_movable(evn, parent_id, item_id, key){
         let obj_this = this;
         evn.stopPropagation();
         evn.preventDefault();
+        if(parent_id != this.objects_to_move.current_parent_id)
+        {
+            obj_this.objects_to_move = {files:[], folders:[], current_parent_id: parent_id};
+        }
         var movable = $(evn.target).closest('a.doc,a.folder');
         if(movable.hasClass('draggable'))
         {
@@ -121,7 +125,7 @@ export class RenameService {
             movable.removeClass('draggable');
         }
         else{
-            obj_this.objects_to_move[key].push(item_id);            
+            obj_this.objects_to_move[key].push(item_id);
             movable.addClass('draggable');
         }
         $('a.folder.droppable').removeClass('droppable');        
@@ -129,28 +133,45 @@ export class RenameService {
         // console.log(obj_this.movables, 24454);
     }
 
-    load_movables(folder_id){
+    load_movables(folder_id, load_type, can_be_parent=false){
         let obj_this = this;
         var parent_id = obj_this.objects_to_move.current_parent_id;
-        if(folder_id == parent_id)
+        if(obj_this.objects_to_move.files.length || obj_this.objects_to_move.folders.length)
         {
-            $('a.doc').each(function(i, el){
-                if(obj_this.objects_to_move.files.indexOf(el.attr('item_id')) != -1)
-                {
-                    $(this).closest('a.doc)').removeClass('.draggable').addClass('draggable');
-                }
-            });
-            $('a.folder').each(function(i, el){
-                if(obj_this.objects_to_move.files.indexOf(el.attr('item_id')) != -1)
-                {
-                    $(this).closest('a.folder)').removeClass('.draggable').addClass('draggable');
-                }
-            });
-        }
-        else{
-            if(obj_this.objects_to_move.files.length || obj_this.objects_to_move.folders.length)
+            if(folder_id == parent_id)
             {
-                                
+                // console.log(obj_this.objects_to_move.files, 455);
+                var item_id_el = undefined;
+                var item_val = undefined;
+                if(load_type == 'file')
+                {
+                    $('a.doc').each(function(i, el){
+                        // console.log(i, el);
+                        el = $(el);                        
+                        item_id_el = el.closest('.DocumentWrapper').find('.item_id');
+                        item_val = parseInt(item_id_el.val());
+                        if(obj_this.objects_to_move.files.indexOf(item_val) != -1)
+                        {
+                            el.closest('a.doc').removeClass('draggable').addClass('draggable');
+                        }
+                    });
+                }
+                else{
+                    $('a.folder').each(function(i, el){
+                        // console.log(el, i);
+                        el = $(el);
+                        item_id_el = el.closest('.DocumentWrapper').find('.item_id');
+                        item_val = parseInt(item_id_el.val());
+                        if(obj_this.objects_to_move.files.indexOf(item_val) != -1)
+                        {
+                            el.closest('a.folder').removeClass('draggable').addClass('draggable');
+                        }
+                    });
+                }
+                
+            }
+            else if(load_type == 'folder' && can_be_parent){                
+                $('a.folder').removeClass('droppable').addClass('droppable');
             }
         }
     }

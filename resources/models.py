@@ -1,7 +1,5 @@
 import re
-
 from django.db import transaction
-
 from meetings.model_files.user import *
 from mainapp.models import CustomModel
 from django_currentuser.middleware import get_current_user
@@ -11,15 +9,13 @@ from mainapp.settings import server_base_url
 
 
 class Folder(CustomModel):
-    name = models.CharField(max_length = 200)
+    name = models.CharField(max_length=200)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     users = models.ManyToManyField(Profile, related_name='folder_audience', blank=True)
     personal = models.BooleanField(default=False, null=True)
 
-
     def __str__(self):
         return self.name
-    
 
     def get_accurate_name(self, user_id):
         name = self.name
@@ -48,11 +44,10 @@ class Folder(CustomModel):
             self.users.add(current_user.id)
             self.save()
 
-
     def create_personal_folder(cls, request, params):
         personal_folder = None
         try:
-            personal_folder = cls.objects.filter(personal=True, created_by_id = request.user.id)
+            personal_folder = cls.objects.filter(personal=True, created_by_id=request.user.id)
             if not personal_folder:
                 personal_folder = cls(name=request.user.name, personal=True)
                 personal_folder.save()
@@ -61,7 +56,6 @@ class Folder(CustomModel):
         except:
             if personal_folder:
                 personal_folder.delete()
-
 
     def update_child_access(self, ids_to_remove, user_id):
         if self.id:
@@ -80,14 +74,14 @@ class Folder(CustomModel):
         return 'done'
 
     @classmethod
-    def create_new(cls,request,params):        
-        name = params['name']        
+    def create_new(cls, request, params):
+        name = params['name']
         folder = Folder(
-            name =name,
+            name=name,
         )
         personal = False
         parent_id = params.get('parent_id')
-        if parent_id:        
+        if parent_id:
             folder.parent_id = parent_id
             folder.personal = folder.parent.personal
         folder.save()
@@ -108,10 +102,13 @@ class Folder(CustomModel):
 
     @classmethod
     def can_be_parent(cls, folder_id, target_folder_id):
+        if folder_id:
+            folder_id = int(folder_id)
+        if target_folder_id:
+            target_folder_id = int(target_folder_id)
         if folder_id == target_folder_id:
             return False
-        target_folder_id = Folder.objects.get(pk=target_folder_id).values('parent_id')
-        target_folder_id = target_folder_id.get('parent_id')
+        target_folder_id = Folder.objects.get(pk=target_folder_id).parent_id
         if not target_folder_id:
             return True
         return cls.can_be_parent(folder_id, target_folder_id)
@@ -130,7 +127,7 @@ class Folder(CustomModel):
     def move_objects(cls, request, params):
         objects_to_move = params['objects_to_move']
         target_folder_id = params['folder_id']
-        current_parent_id = params['parent_id']
+        current_parent_id = objects_to_move['current_parent_id']
         with transaction.atomic():
             file_ids = objects_to_move['files']
             folder_ids = objects_to_move['folders']
@@ -145,7 +142,6 @@ class Folder(CustomModel):
                 obj.save()
         return 'done'
 
-    res = []
     @classmethod
     def folders_recursive_childs(cls, request, params):
         parent_id = params.get('parent_id')
@@ -161,12 +157,11 @@ class Folder(CustomModel):
                 }
         return res
 
- 
-    def folders_recursive_subchilds(self, folder , user_id):
+    def folders_recursive_subchilds(self, folder, user_id):
         result = []
         sub_folders = Folder.objects.filter(parent=folder.id, users__id=user_id)
         if sub_folders:
-             for sub_folder in sub_folders:       
+            for sub_folder in sub_folders:
                 result.append({
                     'id': sub_folder.id,
                     'name': sub_folder.name,
@@ -203,7 +198,8 @@ class Folder(CustomModel):
             if folder:
                 folder = folder[0]
                 folder_with_objects_to_move = params.get('folder_with_objects_to_move')
-                result['can_be_parent'] = cls.can_be_parent()
+                if folder_with_objects_to_move:
+                    result['can_be_parent'] = cls.can_be_parent(folder_with_objects_to_move, parent_id)
                 result['folders'] = folder.search_folder(kw, user_id, [], 'folders', recursive)
                 result['parents'] = cls.get_ancestors(cls, folder)
                 result['id'] = folder.id
@@ -217,7 +213,7 @@ class Folder(CustomModel):
 
     @classmethod
     def search_files(cls, request, params):
-        result = { 'files' : []}
+        result = {'files': []}
         parent_id = params.get('parent_id')
         user_id = request.user.id
         recursive = params.get('recursive')
@@ -236,7 +232,7 @@ class Folder(CustomModel):
                     personal = folder.personal
                     if folder.created_by_id == request.user.id:
                         me = True
-                result = folder.search_folder(kw, user_id, [], 'files', recursive)                
+                result = folder.search_folder(kw, user_id, [], 'files', recursive)
         elif recursive:
             result = cls.search_root(kw, user_id, [], 'files', recursive)
         data = {
@@ -253,7 +249,7 @@ class Folder(CustomModel):
             records = []
             for folder in folders:
                 folder.total_files = 0
-                folder.files_in_folder(folder,user_id)
+                folder.files_in_folder(folder, user_id)
                 total_files = folder.total_files
 
                 folder_obj = folder.__dict__
@@ -275,7 +271,7 @@ class Folder(CustomModel):
     def search_folder(self, kw, user_id, results, search_type, recursive=False):
         obj = self
         if search_type == 'files':
-            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token', 'personal', 'created_by_id').order_by('-pk')
+            files = obj.documents.filter(users__id=user_id, name__icontains=kw).values('id', 'name', 'access_token','personal', 'created_by_id').order_by('-pk')
             for file in files:
                 personal = False
                 if file['personal'] and file['created_by_id'] == user_id:
@@ -303,7 +299,7 @@ class Folder(CustomModel):
                         results.append({
                             'id': folder_obj['id'],
                             'name': folder_obj['name'],
-                            'total_files' : total_files,
+                            'total_files': total_files,
                             'personal': personal
                         })
                 if recursive:
@@ -314,20 +310,17 @@ class Folder(CustomModel):
         parents_list = []
         upper_folder = folder_orm.parent
         while upper_folder:
-            parents_list.append({'name':upper_folder.name,'id':upper_folder.id})
+            parents_list.append({'name': upper_folder.name, 'id': upper_folder.id})
             upper_folder = upper_folder.parent
         parents_list.reverse()
         return parents_list
 
     total_files = 0
-    def files_in_folder(self, folder,user_id):
+    def files_in_folder(self, folder, user_id):
         folder.total_files += self.documents.filter(users__id=user_id).count()
-            # if sub_folder.folder_set.values():
-        # new_total = 0
         for sub_folder in self.folder_set.all():
             new_folder = Folder.objects.get(pk=sub_folder.id)
-            new_folder.files_in_folder(folder,user_id)
-
+            new_folder.files_in_folder(folder, user_id)
 
     @classmethod
     def get_records(cls, request, params):
@@ -343,30 +336,29 @@ class Folder(CustomModel):
                 folders = folders.filter(Q(parent__isnull=True) & Q(users__id=user_id))
         else:
             if parent_id:
-                folders = Folder.objects.filter(Q(parent_id=parent_id) & Q(users__id=user_id)).order_by('-pk', '-personal')
+                folders = Folder.objects.filter(Q(parent_id=parent_id) & Q(users__id=user_id)).order_by('-pk','-personal')
             else:
-                folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id)).order_by('-pk', '-personal')
+                folders = Folder.objects.filter(Q(parent__isnull=True) & Q(users__id=user_id)).order_by('-pk','-personal')
 
         total_cnt = folders.count()
         offset = params.get('offset')
         limit = params.get('limit')
         records = []
-        users_obj = ws_methods.get_model('meetings','Profile')
+        users_obj = ws_methods.get_model('meetings', 'Profile')
         users_obj = users_obj.objects.all().order_by('-pk')
         all_users = list(users_obj.values('id', 'name'))
         if limit:
             folders = folders[offset: offset + int(limit)]
         for folder in folders:
             folder.total_files = 0
-            folder.files_in_folder(folder,user_id)
+            folder.files_in_folder(folder, user_id)
             total_files = folder.total_files
             cd = ws_methods.obj_to_dict(folder, fields=['name', 'id'])
             cd['total_files'] = total_files
             records.append(cd)
         current_cnt = len(records)
-        res = {'records':records, 'total':total_cnt, 'count':current_cnt, 'users': all_users}
+        res = {'records': records, 'total': total_cnt, 'count': current_cnt, 'users': all_users}
         return res
-
 
     @classmethod
     def resource_search_details(cls, request, params):
@@ -387,7 +379,6 @@ class Folder(CustomModel):
             'files': files_set
         }
         return data
-
 
     def resource_invitation_email(self, audience, action=None):
         template_data = {
@@ -425,17 +416,17 @@ def save_folder_users(sender, instance, action, pk_set, **kwargs):
         if new_added_respondets:
             instance.resource_invitation_email(new_added_respondets)
 
-m2m_changed.connect(save_folder_users, sender=Folder.users.through)
 
+m2m_changed.connect(save_folder_users, sender=Folder.users.through)
 
 
 class ResourceDocument(File):
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name='documents')
-    users = models.ManyToManyField (Profile, related_name='file_audience', blank=True)
+    users = models.ManyToManyField(Profile, related_name='file_audience', blank=True)
     personal = models.BooleanField(default=False, null=True)
 
     def __str__(self):
-            return self.name
+        return self.name
 
     @classmethod
     def get_attachments(cls, request, params):
@@ -445,7 +436,6 @@ class ResourceDocument(File):
         docs = list(docs)
         return docs
 
-
     def get_accurate_name(self):
         file_with_same_name = ResourceDocument.objects.filter(folder_id=self.folder.id, name=self.name)
         if len(file_with_same_name) > 1:
@@ -454,15 +444,14 @@ class ResourceDocument(File):
                 count += 1
                 file_name = self.name.split('.')
                 if len(file_name) >= 2:
-                    file_name[len(file_name)-2] = file_name[len(file_name)-2] + '-' + str(count)
+                    file_name[len(file_name) - 2] = file_name[len(file_name) - 2] + '-' + str(count)
                 else:
-                    file_name[len(file_name)-1] = file_name[len(file_name)-1] + '-' + str(count)
+                    file_name[len(file_name) - 1] = file_name[len(file_name) - 1] + '-' + str(count)
                 diff_name = '.'.join(file_name)
                 file_with_same_name = ResourceDocument.objects.filter(folder_id=self.folder.id, name=diff_name)
             return diff_name
         else:
             return self.name
-
 
     def save(self, *args, **kwargs):
         if not self.file_type:
