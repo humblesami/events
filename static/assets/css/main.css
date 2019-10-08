@@ -165,7 +165,7 @@ b {
 	position: absolute;
 	top: 0px;
 	right: 2px;
-	z-index: 4;
+	z-index: 1;
 	line-height: 1;
 	}
 button,

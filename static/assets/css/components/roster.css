@@ -5,15 +5,15 @@
     padding-left: 5px;
     padding-right: 5px;
 }
-.bg-heading{
-    background: #4B74B5;
-    color: #fff;
-    align-items: center; 
-}
 .roster-height{
     overflow-y: overlay;
-    max-height:calc(100vh - 290px);
+    max-height:calc(100vh - 295px);
     font-size: 13px;
+}
+.bg-heading > div{
+    line-height: inherit;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
 }
 .close-btn
 {
@@ -48,23 +48,19 @@ input[type='radio']:after{
     min-width: 70px;
     font-size: 13px;
 }
-.left-margin{
-    margin-left: -20px; 
-    align-items: center;
-}
 .pl-25{
     padding-left: 0.25rem; 
 }
 .bg-heading label{
     margin-bottom:0;
 }
+.custom-control-label::before,
+.custom-control-label::after{
+    left: -1.25rem;
+}
 .disabled{
     pointer-events:none;
     background: lightgrey;
-}
-.custom-control{
-    display: flex;
-    align-items: center;
 }
 @media screen and (max-width:992px){
     .display-block{
@@ -81,15 +77,6 @@ input[type='radio']:after{
 }
 
 @media screen and (max-width:576px){
-    .custom-control{
-        padding-left: 0;
-        margin-bottom: 10px;
-    }
-    .custom-control-label::after,
-    .custom-control-label::before{
-        top: 1rem;
-        left: 0.5rem;
-    }
     input[type='radio']:after{
         width: 12px;
         height: 12px;
@@ -99,20 +86,30 @@ input[type='radio']:after{
     .pl-25{
         padding-left: 0.75rem; 
     }
+
+
+}
+@media screen and (max-width:480px){
+    .bg-heading{
+        font-size: 0.7rem;
+    }
     .custom-control-label::before,
     .custom-control-label::after
     {
-        top:-0.75rem;
-        left: 0.65rem;
+        top:-0.35rem;
+        left: 50%;
     }
     .custom-control-label span{
-        position: absolute;
-        top: 0.25rem;
+        position: relative;
+        top: 0.5rem;
+        left: 20%;
     }
-
+    .custom-control{
+        padding-left:0; 
+    }
 }
-@media screen and (max-width:380px){
-    .bg-heading{
-        font-size: 0.7rem;
+@media screen and (max-width:320px){
+    .custom-control-label span{
+        left: 10%;
     }
 }

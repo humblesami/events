@@ -2,16 +2,20 @@
     padding-left:15px; 
     padding-right:15px; 
 }
+.roster{
+    border: 2px solid #f3f3f3;
+    margin: 5px;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
 .btn-group .btn.active{
     color: #fff;
 }
 .group-height{
-    z-index: 1;
-    left: 0;
-    background: #fff;
-    width: 100%;
-    max-height: calc(100vh - 385px);
-    overflow: overlay;
+    overflow-y: overlay;
+    max-height:calc(100vh - 370px);
+    font-size: 13px;
 }
 .custom-control-label::before,
 .custom-control-label::after{

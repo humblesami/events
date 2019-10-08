@@ -1,69 +1,65 @@
-<div>
-    <div class="main-full-seachbar mb-3">
+<div class="roster">
+    <div class="d-flex main-full-seachbar my-2">
     <input type="text"
         (keyup)="$event.target.value; $event.keyCode == 13 ? user_serach($event.target.value): null"
         placeholder="Search..."  class="form-control"/>
     </div>
-    <div class="roster">
-        <div class="MeetingBtnWrapper">
-            <div class="btn-group user-types">
-                <a class="btn active" (click)="all_profile_users($event.target)">All Users</a>
-                <a class="btn" (click)="all_selected_users($event.target)">Selected</a>
-                <a class="btn" (click)="all_available_users($event.target)">Available</a>                    
-            </div>
+    <div class="MeetingBtnWrapper">
+        <div class="btn-group user-types">
+            <a class="btn active" (click)="all_profile_users($event.target)">All Users <span>({{count}})</span></a>
+            <a class="btn" (click)="all_selected_users($event.target)">Selected <span>({{selected_user_count}})</span></a>
+            <a class="btn" (click)="all_available_users($event.target)">Available <span>({{available_user_count}})</span></a>                  
         </div>
-        <div class="container" *ngIf="shown_users.length">
-            <div class="row py-2">
-                <div class="col-9 p-0">
-                    <span class="font-weight-bold text-primary">
-                        User Info
-                    </span>
-                </div>
-                <div class="col-3">
-                    <span class="font-weight-bold text-primary">
-                        Status
-                    </span>
-                </div>
-            </div>
-        </div>  
-        <div class="container group-height">
-            <div *ngIf="!shown_users.length" class="row no-data">
-                <h4>No Users</h4>
-            </div>
-            <div class="row align-items-center bg-userlist mb-row"
+    </div>
+
+    <div class="d-flex bg-heading my-1" *ngIf="shown_users.length">
+        <div class="col-9">
+            <label class="font-weight-bold">
+                User List
+            </label>
+        </div>
+        <div class="col-3">
+            <label class="font-weight-bold">
+                Status
+            </label>
+        </div>
+    </div>
+        <!-- Attendance -->
+    <div class="group-height">
+        <div *ngIf="!shown_users.length" class="row no-data">
+            <h4>No Users</h4>
+        </div>
+        <div class="d-flex py-2 mb-1 bg-roster rounded" 
             *ngFor="let obj of shown_users"
-            [ngClass]="{disabled_row: obj.current_user}"
-            >
-                <div class="col-9 p-0 user-info" title="Click to see profile"
-                (click)="userService.show_profile_summary(obj.id)"
-                >
-                    <div class="d-flex align-items-center">
-                        <div class="w-70">
-                            <div class="img-flex img-circle">
-                                <img src="{{server_url}}{{obj.image}}"/>
-                            </div>
+            [ngClass]="{disabled_row: obj.current_user}">
+            <div class="col-9">
+                <div class="d-flex left-margin" 
+                    title="Click to see profile"
+                    (click)="userService.show_profile_summary(obj.id)" 
+                    [ngStyle] = "{'cursor': 'pointer'}">
+                    <div class="d-block">
+                        <div class="img-flex img-circle">
+                            <img src="{{server_url}}{{obj.image}}"/>
+                        </div>                            
+                    </div>
+                    <div class="w-75 ml-1">
+                        <div class="text-truncate">
+                            {{obj.name}}
                         </div>
-                        <div class="w-75">
-                            <div class="d-block text-truncate">
-                                {{obj.name}}
-                            </div>
-                            <div class="d-block text-truncate">
-                                {{obj.email}}
-                            </div>
+                        <div class="text-truncate">
+                            {{obj.email}}
                         </div>
                     </div>
                 </div>
-                <div 
-                (click)="obj.current_user ? null: toggle_user_selection(obj)"
-                class="col-3 custom-control custom-checkbox">
-                        <input type="checkbox"
-                        [attr.disabled]="obj.current_user ? 'diabled': null"
-                        [checked]="obj.selected == true"
-                        [(ngModel)]="obj.selected"
-                        class="custom-control-input">
-                        <label class="custom-control-label"></label>
-                </div>
-            </div>   
+            </div>
+            <div class="col-3 custom-control custom-checkbox" (click)="obj.current_user ? null: toggle_user_selection(obj)">
+                <input type="checkbox"
+                [attr.disabled]="obj.current_user ? 'diabled': null"
+                [checked]="obj.selected == true"
+                [(ngModel)]="obj.selected"
+                class="custom-control-input">
+                <label class="custom-control-label"></label>
+            </div>
         </div>
-    </div>
+    </div>  
 </div>
