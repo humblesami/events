@@ -21,7 +21,9 @@ export class UserlistComponent implements OnInit {
     shown_users = [];
     all_users = [];
     selection_input = [];
-    count: number;
+    count: number = 0;
+    available_user_count = 0;
+    selected_user_count = 0;
 
     
     check_user_selected(user_id)
@@ -42,6 +44,7 @@ export class UserlistComponent implements OnInit {
         if(obj_this.selection_input_str)
         {
             obj_this.selection_input = JSON.parse(obj_this.selection_input_str);
+            obj_this.selected_user_count = obj_this.selection_input.length;
             obj_this.group_users_changed.emit(obj_this.selection_input);            
         }
         if(obj_this.user_input_str)
@@ -57,6 +60,8 @@ export class UserlistComponent implements OnInit {
                     }
                 });
                 obj_this.shown_users = obj_this.all_users;
+                obj_this.count = obj_this.all_users.length;
+                obj_this.available_user_count = obj_this.count - obj_this.selected_user_count;
                 return;
             }
         }
@@ -64,6 +69,7 @@ export class UserlistComponent implements OnInit {
         function success(data){            
             obj_this.httpService.count = Number(data.total);
             obj_this.count = data.users.length;
+            obj_this.available_user_count = obj_this.count - obj_this.selected_user_count;
             obj_this.all_users = data.users;
             obj_this.all_users.forEach((val)=>{
                 val.selected = obj_this.check_user_selected(val.id);
@@ -95,7 +101,7 @@ export class UserlistComponent implements OnInit {
         obj_this.shown_users = obj_this.all_users.filter((el)=>{
             return el.selected == true;
         });
-        obj_this.activate_tab(el);        
+        obj_this.activate_tab(el);
     }
 
     all_available_users(el)
@@ -120,6 +126,8 @@ export class UserlistComponent implements OnInit {
         let selection_output = obj_this.all_users.filter((el)=>{
             return el.selected == true;
         });
+        obj_this.selected_user_count = selection_output.length;
+        obj_this.available_user_count = obj_this.count - obj_this.selected_user_count;
         obj_this.group_users_changed.emit(selection_output);
     }
 
