@@ -8,8 +8,10 @@
             <div class="row docwrappercontainer mb-0">
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4" *ngFor="let folder of records">
                     <a routerLink="/resource/{{folder.id}}" 
-                    title="{{folder.personal ? 'My Folder': ''}}"
-                    class="folder DocumentWrapper">
+                    title="{{folder.personal ? 'My Folder': ''}}"                    
+                    class="folder DocumentWrapper"
+                    [ngClass]="{personal: folder.personal}"
+                    >
                         <input type="hidden" class="item_id" value="{{folder.id}}" />
                         <div class="pointer paste"
                         title="Paste Here"
@@ -19,7 +21,7 @@
                         <div class="doc-del-btn d-flex" *ngIf="folder.id && !(!personal && folder.personal) && (socketService.admin_mode || personal)">
                             <div class="pointer"
                             title="Move"
-                            (click)="renameService.make_movable($event, parent_id, folder.id, 'folders')">
+                            (click)="renameService.make_movable($event, parent_id, folder.id, 'folders', folder.personal)">
                                 <i class="fas fa-cut" ></i>
                             </div>                            
                             <div class="pointer"

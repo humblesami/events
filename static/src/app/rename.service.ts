@@ -107,15 +107,22 @@ export class RenameService {
             //console.log(item, 133);
         }, null);        
     }
-    objects_to_move = {files:[], folders:[], current_parent_id: undefined};
+    objects_to_move = {files:[], folders:[], current_parent_id: undefined, personal: undefined};
 
-    make_movable(evn, parent_id, item_id, key){
+    make_movable(evn, parent_id, item_id, key, personal = false){
         let obj_this = this;
         evn.stopPropagation();
         evn.preventDefault();
-        if(parent_id != this.objects_to_move.current_parent_id)
+        if((!parent_id && !this.objects_to_move.current_parent_id) || parent_id != this.objects_to_move.current_parent_id)
         {
-            obj_this.objects_to_move = {files:[], folders:[], current_parent_id: parent_id};
+            obj_this.objects_to_move = {files:[], folders:[], current_parent_id: parent_id, personal: personal};
+        }
+        else{
+            if(personal != obj_this.objects_to_move.personal)
+            {
+                console.log('Personal and other objects can not be mixed');
+                return;
+            }
         }
         var movable = $(evn.target).closest('a.doc,a.folder');
         if(movable.hasClass('draggable'))
@@ -128,8 +135,15 @@ export class RenameService {
             obj_this.objects_to_move[key].push(item_id);
             movable.addClass('draggable');
         }
-        $('a.folder.droppable').removeClass('droppable');
-        $('a.folder:not(.draggable)').addClass('droppable');
+        if(personal)
+        {
+            $('a.folder.droppable').removeClass('droppable');
+            $('a.folder.personal').addClass('droppable');
+        }
+        else{
+            $('a.folder.droppable').removeClass('droppable');
+            $('a.folder:not(.personal)').addClass('droppable');
+        }
         // console.log(obj_this.movables, 24454);
     }
 
@@ -177,7 +191,7 @@ export class RenameService {
     reset_moveable_values(){
         let obj_this = this;
         // console.log(obj_this.objects_to_move, 44444444);
-        obj_this.objects_to_move = {files:[], folders:[], current_parent_id: undefined};
+        obj_this.objects_to_move = {files:[], folders:[], current_parent_id: undefined, personal: undefined};
         // console.log(obj_this.objects_to_move);
         $('.breadcrumbSection .edit-buttons .paste').remove();
         $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
