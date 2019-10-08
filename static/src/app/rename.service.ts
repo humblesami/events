@@ -128,7 +128,7 @@ export class RenameService {
             obj_this.objects_to_move[key].push(item_id);
             movable.addClass('draggable');
         }
-        $('a.folder.droppable').removeClass('droppable');        
+        $('a.folder.droppable').removeClass('droppable');
         $('a.folder:not(.draggable)').addClass('droppable');
         // console.log(obj_this.movables, 24454);
     }
@@ -158,7 +158,6 @@ export class RenameService {
                 }
                 else{
                     $('a.folder').each(function(i, el){
-                        // console.log(el, i);
                         el = $(el);
                         item_id_el = el.closest('.DocumentWrapper').find('.item_id');
                         item_val = parseInt(item_id_el.val());
@@ -166,13 +165,12 @@ export class RenameService {
                         {
                             el.closest('a.folder').removeClass('draggable').addClass('draggable');
                         }
+                        else{
+                            el.closest('a.folder').removeClass('droppable').addClass('droppable');
+                        }
                     });
                 }
-                
-            }
-            else if(load_type == 'folder' && can_be_parent){                
-                $('a.folder').removeClass('droppable').addClass('droppable');
-            }
+            }            
         }
     }
 

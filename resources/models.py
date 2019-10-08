@@ -101,7 +101,7 @@ class Folder(CustomModel):
         return 'done'
 
     @classmethod
-    def can_be_parent(cls, folder_id, target_folder_id):
+    def is_valid_parent(cls, folder_id, target_folder_id):
         if folder_id:
             folder_id = int(folder_id)
         if target_folder_id:
@@ -111,27 +111,22 @@ class Folder(CustomModel):
         target_folder_id = Folder.objects.get(pk=target_folder_id).parent_id
         if not target_folder_id:
             return True
-        return cls.can_be_parent(folder_id, target_folder_id)
-
-    @classmethod
-    def is_valid_paste_candidate(cls, request, params):
-        target_folder_id = params['folder_id']
-        current_parent_id = params['parent_id']
-        res = cls.can_be_parent(current_parent_id, target_folder_id)
-        if res:
-            return {'valid_parent': True}
-        else:
-            return {'invalid': True}
+        return cls.is_valid_parent(folder_id, target_folder_id)
 
     @classmethod
     def move_objects(cls, request, params):
         objects_to_move = params['objects_to_move']
         target_folder_id = params['folder_id']
         current_parent_id = objects_to_move['current_parent_id']
+        if current_parent_id == target_folder_id:
+            return 'done'
+        file_ids = objects_to_move['files']
+        folder_ids = objects_to_move['folders']
+        for fid in folder_ids:
+            can_be_aprent = cls.is_valid_parent(fid, target_folder_id)
+            if not can_be_aprent:
+                return 'Can not move a prent in its children'
         with transaction.atomic():
-            file_ids = objects_to_move['files']
-            folder_ids = objects_to_move['folders']
-            cls.can_be_parent(current_parent_id, target_folder_id)
             for obj_id in file_ids:
                 obj = ResourceDocument.objects.get(pk=obj_id)
                 obj.folder_id = target_folder_id
@@ -197,9 +192,21 @@ class Folder(CustomModel):
             folder = Folder.objects.filter(pk=parent_id, users__id=user_id).order_by('-pk')
             if folder:
                 folder = folder[0]
-                folder_with_objects_to_move = params.get('folder_with_objects_to_move')
-                if folder_with_objects_to_move:
-                    result['can_be_parent'] = cls.can_be_parent(folder_with_objects_to_move, parent_id)
+                folder_ids_to_move = params.get('folder_ids_to_move')
+                current_parent_id = params.get('current_parent_id')
+                result['can_be_parent'] = True
+                if current_parent_id == parent_id:
+                    result['can_be_parent'] = False
+                else:
+                    len_moving_folders = 0
+                    if folder_ids_to_move:
+                        len_moving_folders = len(folder_ids_to_move)
+                    if len_moving_folders > 0:
+                        for fid in folder_ids_to_move:
+                            can_be_parent = cls.is_valid_parent(fid, parent_id)
+                            if not can_be_parent:
+                                result['can_be_parent'] = False
+                                break
                 result['folders'] = folder.search_folder(kw, user_id, [], 'folders', recursive)
                 result['parents'] = cls.get_ancestors(cls, folder)
                 result['id'] = folder.id

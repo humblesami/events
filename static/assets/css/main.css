@@ -3105,10 +3105,15 @@ a:not([href]).app-menu__item{
     text-align: right;
     padding-top: 10px;    
 }
+.DocumentWrapper .paste{
+    position: absolute;
+    padding: 3px 7px;
+    border-radius: 50%;
+    border: 1px solid #ede;        
+}
 a.doc.draggable, a.folder.draggable{
     border: 2px solid red;
 }
-
 a.folder .paste{
     display: none;
 }

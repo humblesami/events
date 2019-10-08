@@ -11,17 +11,17 @@
                     title="{{folder.personal ? 'My Folder': ''}}"
                     class="folder DocumentWrapper">
                         <input type="hidden" class="item_id" value="{{folder.id}}" />
+                        <div class="pointer paste"
+                        title="Paste Here"
+                        (click)="on_paste_clicked($event, folder.id)">
+                            <i class="fa fa-clipboard" ></i>
+                        </div>
                         <div class="doc-del-btn d-flex" *ngIf="folder.id && !(!personal && folder.personal) && (socketService.admin_mode || personal)">
                             <div class="pointer"
                             title="Move"
                             (click)="renameService.make_movable($event, parent_id, folder.id, 'folders')">
                                 <i class="fas fa-cut" ></i>
-                            </div>
-                            <div class="pointer paste"
-                            title="Paste Here"
-                            (click)="on_paste_clicked($event, folder.id)">
-                                <i class="fa fa-clipboard" ></i>
-                            </div>  
+                            </div>                            
                             <div class="pointer"
                             title="Delete"
                             (click)="delete_folder($event, folder.id , folder.total_files)">

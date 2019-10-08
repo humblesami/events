@@ -100,20 +100,22 @@ export class FoldersComponent implements OnInit {
                 parent_id: obj_this.parent_id,
                 recursive: obj_this.recursive,
                 kw: obj_this.search_kw,
-                folder_with_objects_to_move: obj_this.renameService.objects_to_move.current_parent_id
+                folder_ids_to_move: obj_this.renameService.objects_to_move.folders,
+                current_parent_id: obj_this.renameService.objects_to_move.current_parent_id
             },
             args: args
         };
         // console.log(final_input_data.params, 333);
         obj_this.httpService.get(final_input_data,
         (result: any) => {
-            // if(obj_this.renameService.objects_to_move.current_parent_id)
-            // {
-            //     console.log(11, result.can_be_parent, 22, obj_this.parent_id, final_input_data.params.folder_with_objects_to_move, 44)
-            // }
+            if(obj_this.renameService.objects_to_move.current_parent_id)
+            {
+                obj_this.can_be_parent = result.can_be_parent;                
+            }            
             obj_this.on_result(result);
         },null);
     }
+    can_be_parent = false;
 
     @Output() data_loaded: EventEmitter<any> = new EventEmitter();
     on_result(result){
@@ -136,6 +138,17 @@ export class FoldersComponent implements OnInit {
         }
         var load_preselected = function(){
             obj_this.renameService.load_movables(obj_this.parent_id, 'folder', result.can_be_parent);
+            // console.log(obj_this.renameService.objects_to_move.current_parent_id, 777, obj_this.can_be_parent);
+            if(obj_this.renameService.objects_to_move.current_parent_id && obj_this.can_be_parent)
+            {            
+                var paste_button_html = '<button class="btn btn-primary paste"> Paste ';
+                paste_button_html += '('+ (obj_this.renameService.objects_to_move.files.length+obj_this.renameService.objects_to_move.folders.length)+' items) Here';
+                paste_button_html += '</button>';
+                var paste_button = $(paste_button_html);
+                paste_button.click(obj_this.on_paste_clicked);
+                $('.breadcrumbSection .edit-buttons:first .paste').remove();
+                $('.breadcrumbSection .edit-buttons:first').prepend(paste_button);                
+            }
         }
         obj_this.records && obj_this.records.length > 0 ? obj_this.no_resource = false : obj_this.no_resource = true;
         if(obj_this.parent_id)
@@ -243,15 +256,18 @@ export class FoldersComponent implements OnInit {
             on_create_click();
         });
         var edit_buttons = $('<div class="edit-buttons"></div>');
+        $('.breadcrumbSection .edit-buttons:first').remove();
         $('.breadcrumbSection:first').append(edit_buttons);
-        edit_buttons.append(create_button);
+        edit_buttons.append(create_button);        
     }
 
-    on_paste_clicked(evn, folder_id){
+    on_paste_clicked(evn=undefined, folder_id=undefined){
         let obj_this = this;
-        evn.stopPropagation();
-        evn.preventDefault();
-
+        if(evn)
+        {
+            evn.preventDefault();
+            evn.stopPropagation();
+        }
         let args = {
             app: 'resources',
             model: 'Folder',
@@ -259,20 +275,21 @@ export class FoldersComponent implements OnInit {
         }
         let final_input_data = {
             params: {
-                folder_id: folder_id,
+                folder_id: obj_this.parent_id,
                 objects_to_move: obj_this.renameService.objects_to_move,
             },
             args: args
         };
+        if(folder_id)
+        {
+            final_input_data.params.folder_id = folder_id;
+        }
         // console.log(final_input_data.params, 333);
-        obj_this.httpService.get(final_input_data,(result: any) => {            
-            obj_this.on_result(result);
-            obj_this.can_be_parent = result.can_be_parent;
+        obj_this.httpService.get(final_input_data,(result: any) => {
             obj_this.renameService.on_files_moved();
             obj_this.renameService.on_folders_moved();
-        },null);        
-    }
-    can_be_parent = false;
+        }, null);
+    }    
 
     ngOnInit() {
         let obj_this = this;
@@ -288,7 +305,7 @@ export class FoldersComponent implements OnInit {
             obj_this.renameService.on_folders_moved = on_folders_moved;
         }
         
-        obj_this.add_folder_create_button();
+        obj_this.add_folder_create_button();        
         // console.log(obj_this.search_kw, obj_this.search_type, obj_this.recursive);
         if(obj_this.search_type == 'files')
         {
