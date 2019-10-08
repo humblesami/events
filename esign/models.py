@@ -40,15 +40,14 @@ class SignatureDoc(File, Actions):
             create = True
             self.file_type = 'esign'
         super(SignatureDoc, self).save(*args, **kwargs)
-        if create:
-            # self.original_pdf = self.pdf_doc
-            self.save()
+
 
     def get_all_respondents(self):
         respondent_list = []
         for obj in self.respondents.all():
             respondent_list.append(obj.id)
         return list(dict.fromkeys(respondent_list))
+
 
     def get_pending_sign_count(self, uid):
         pending_count = self.signature_set.filter(user_id=uid, signed=False).count()
@@ -606,7 +605,7 @@ class SignatureDoc(File, Actions):
         sign_doc.meeting_id = meeting_id
         sign_doc.send_to_all = send_to_all
         if send_to_all:
-            sign_doc.signature_set.all().delete()
+            sign_doc.signature_set.all().delete()        
         sign_doc.save()
         return res
 

@@ -60,18 +60,22 @@ class File(CustomModel, FilesUpload):
 
     def save(self, *args, **kwargs):
         try:
+            file_changed = False
             creating = False
             if not self.pk:
+                file_changed = True
                 creating = True
             if self.pending_tasks == 3:
                 if not creating:
                     if self.attachment != File.objects.get(pk=self.id).attachment:
                         self.pending_tasks = 2
+                        file_changed = True
                     else:
                         self.pending_tasks = 0
 
                 file_data = None
                 if self.cloud_url and (creating or self.file_type == 'esign'):
+                    file_changed = True
                     cloud_url = self.cloud_url
                     self.cloud_url = ''
                     headers = {}
@@ -112,13 +116,13 @@ class File(CustomModel, FilesUpload):
                     self.pending_tasks = 2
                     self.attachment.save(self.file_name, file_data)
                     return
-                else:
+                elif file_changed:
                     self.access_token = 'Local'
 
                 if file_data is None:
                     if not self.attachment:
                         raise ValidationError('No file provided')
-                    else:
+                    elif file_changed:
                         self.pending_tasks = 2
 
             super(File, self).save(*args, **kwargs)
