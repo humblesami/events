@@ -140,7 +140,7 @@ export class RenameService {
         {
             if(folder_id == parent_id)
             {
-                // console.log(obj_this.objects_to_move.files, 455);
+                console.log(obj_this.objects_to_move, 455);
                 var item_id_el = undefined;
                 var item_val = undefined;
                 if(load_type == 'file')
@@ -172,6 +172,16 @@ export class RenameService {
                 }
             }            
         }
+    }
+
+    reset_moveable_values(){
+        let obj_this = this;
+        // console.log(obj_this.objects_to_move, 44444444);
+        obj_this.objects_to_move = {files:[], folders:[], current_parent_id: undefined};
+        // console.log(obj_this.objects_to_move);
+        $('.breadcrumbSection .edit-buttons .paste').remove();
+        $('.breadcrumbSection .edit-buttons .cancle_btn').remove();
+        $('a.folder .paste').remove();
     }
 
     on_files_moved(){
