@@ -3,7 +3,7 @@ import io
 import json
 import base64
 import datetime
-
+from django.core.files.base import ContentFile
 from fpdf import FPDF
 from random import randint
 from collections import OrderedDict
@@ -184,9 +184,25 @@ class SignatureDoc(File, Actions):
         if not self.signature_set.all().exists():
             return
         if not self.original_pdf:
-            self.original_pdf = self.pdf_doc
-        files_to_delete.append(BASE_DIR+self.pdf_doc.url)
-        pth = MEDIA_ROOT + "/" + self.original_pdf.name
+            new_file = ContentFile(self.pdf_doc.read())
+            new_file.name = self.pdf_doc.name
+            self.original_pdf = new_file
+            self.pending_tasks = 0
+            self.save()
+        else:
+            new_file = ContentFile(self.original_pdf.read())
+            new_file.name = self.original_pdf.name
+            self.pdf_doc = new_file
+            self.pending_tasks = 0
+            self.save()
+        
+        file_path = MEDIA_ROOT.replace('media', '')
+        # files_to_delete.append(BASE_DIR+self.pdf_doc.url)
+        pdf_url = self.pdf_doc.url[1:]
+        if pdf_url.startswith('\\'):
+            pdf_url = self.pdf_doc.url[1:]
+
+        pth = file_path + pdf_url
         input = PdfFileReader(open(pth, "rb"))
         if input.isEncrypted:
             input.decrypt('')
@@ -220,15 +236,24 @@ class SignatureDoc(File, Actions):
             output.addPage(input.getPage(page_number))
         current_pg = input.getNumPages() + 1
 
+        sign_top = 5
+        sign_heigh = 95
+        sign_bottom = 0
         for sign in self.signature_set.all():
             count = count + 1
             sign.page = current_pg
+            sign.top = sign_top
             if sign.left > 10:
                 sign.left = width - sign.width - 10
             sign.save()
-            if (count == 9):
+            if count%2 == 0:
+                sign_top += 15 + sign_heigh
+                sign_bottom = sign_heigh + sign_top
+            if (sign_bottom >= height):
                 pdf.add_page(orientation=orientation)
                 count = 0
+                sign_top = 5
+                sign_bottom = 0
                 current_pg += 1
 
         signature_only_pdf_path = MEDIA_ROOT + "/files/signature-pdf-pages" + str(self.id) + ".pdf"
