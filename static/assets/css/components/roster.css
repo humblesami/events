@@ -1,25 +1,25 @@
 .roster{
     border: 2px solid #f3f3f3;
-    margin-bottom: 5px;
-    padding-top: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.bg-heading{
+    background: #4B74B5;
+    color: #fff;
+    align-items: center; 
 }
 .roster-height{
-    overflow: auto;
-    max-height:calc(100vh - 300px);
-    overflow-x:hidden; 
+    overflow-y: overlay;
+    max-height:calc(100vh - 290px);
+    font-size: 13px;
 }
 .close-btn
 {
     width: 100%;
     background-color: #21375a !important;
     color: white;
-}
-.roster-elements{
-    font-weight: bold;
-    color: #4b74b5;
-}
-.roester-data{
-    align-items: center;
 }
 .custom-control-label{
     font-weight: bold;
@@ -48,12 +48,35 @@ input[type='radio']:after{
     min-width: 70px;
     font-size: 13px;
 }
+.left-margin{
+    margin-left: -20px; 
+    align-items: center;
+}
+.pl-25{
+    padding-left: 0.25rem; 
+}
+.bg-heading label{
+    margin-bottom:0;
+}
+.disabled{
+    pointer-events:none;
+    background: lightgrey;
+}
+.custom-control{
+    display: flex;
+    align-items: center;
+}
 @media screen and (max-width:992px){
     .display-block{
         display: block !important;
     }
     .form-buttons{
         margin-bottom:10px; 
+    }
+}
+@media screen and (max-width:768px){
+    .left-margin{
+        margin-left: 0;
     }
 }
 
@@ -67,20 +90,29 @@ input[type='radio']:after{
         top: 1rem;
         left: 0.5rem;
     }
-    .roster-elements{
-        font-size: 0.65rem;
-    }
-    .roester-data{
-        font-size: 0.6rem;
-    }
     input[type='radio']:after{
         width: 12px;
         height: 12px;
         top: 0;
         left: 0;
     }
+    .pl-25{
+        padding-left: 0.75rem; 
+    }
+    .custom-control-label::before,
+    .custom-control-label::after
+    {
+        top:-0.75rem;
+        left: 0.65rem;
+    }
+    .custom-control-label span{
+        position: absolute;
+        top: 0.25rem;
+    }
+
 }
-.disabled{
-    pointer-events:none;
-    background: lightgrey;
+@media screen and (max-width:380px){
+    .bg-heading{
+        font-size: 0.7rem;
+    }
 }

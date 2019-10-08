@@ -317,12 +317,6 @@ h5, .h5 {
     right: 10px;
     top: 6px;
 }
-@media (max-width: 576px){
-    .roster-button{
-        top: 5px;
-        left: -5px;
-    } 
-}
 @media (min-width: 280px){
     .MainTitleHeadWrap {
         display: flex;
